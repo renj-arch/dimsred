@@ -1,0 +1,49 @@
+name: Daily PIB Feed
+
+on:
+  schedule:
+    - cron: '0 2,6,10,14 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Fetch PIB RSS feed
+        run: node scripts/fetch-pib-rss.js
+
+      - name: Generate quiz questions
+        run: node scripts/generate-quiz.js
+
+      - name: Generate knowledge base from study notes
+        run: node scripts/generate-knowledge-base.js
+
+      - name: Commit and push
+        run: |
+          git stash --include-untracked
+          git pull --rebase
+          git stash pop || true
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          if ! git diff --staged --quiet; then
+            git commit -m "Daily PIB feed update $(date +'%Y-%m-%d')"
+            git push
+          else
+            echo "No new PIB items to commit"
+          fi

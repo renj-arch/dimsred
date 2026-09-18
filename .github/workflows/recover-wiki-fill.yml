@@ -1,0 +1,254 @@
+name: Wiki Fill Recovery
+
+on:
+  workflow_dispatch:
+    inputs:
+      run-id:
+        description: 'Wiki Fill run ID whose chunk artifacts to merge (required — empty fails fast)'
+        required: false
+        default: ''
+      dry-run:
+        description: 'true = merge locally without committing/pushing'
+        required: false
+        default: 'true'
+
+concurrency:
+  group: data-fill
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: read
+
+env:
+  NODE_OPTIONS: --max-old-space-size=6144
+
+jobs:
+  recover:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      # Recovery #18 failed because an empty run-id input made the workflow
+      # scan its own artifacts (which never include quiz-chunk-N). Require the
+      # target run explicitly so we never silently recover nothing.
+      - name: Resolve target run id (must be given explicitly)
+        id: resolve
+        run: |
+          RUN_ID="${{ inputs.run-id }}"
+          if [ -z "$RUN_ID" ]; then
+            echo "::error::'run-id' input is required."
+            echo "::error::Dispatch this workflow WITH the run ID of the Wiki Fill run whose chunk artifacts should be merged"
+            echo "::error::(find it via: gh api repos/${GITHUB_REPOSITORY}/actions/runs?event=schedule — or the URL .../actions/runs/<run-id>)."
+            exit 1
+          fi
+          echo "Using target run-id: $RUN_ID"
+          echo "run-id=$RUN_ID" >> "$GITHUB_OUTPUT"
+
+      # Retrying downloader: actions/download-artifact fires all downloads in
+      # parallel and aborts the whole step on any single transient 503. This
+      # fetches each artifact sequentially with retry/backoff (flaky blob
+      # responses can't sink the batch) and unzips+deletes each archive as it
+      # lands, keeping the 14 GB runner out of disk trouble (run #441).
+      # Added debug step to list actual artifact names in case of pattern mismatch.
+      - name: List available chunk artifacts (debug)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          RUN_ID="${{ steps.resolve.outputs.run-id }}"
+          API="https://api.github.com/repos/${GITHUB_REPOSITORY}/actions/runs/${RUN_ID}/artifacts?per_page=100"
+          # NB: must use ${GITHUB_TOKEN} — the old ${TOKEN} reference was empty,
+          # sending this request unauthenticated, where shared runner IPs get
+          # rate-limited into an error JSON that looked like "0 artifacts"
+          # (recovery #19).
+          resp=$(curl -sS --retry 5 --retry-all-errors --retry-delay 3 \
+            -H "Authorization: Bearer ${GITHUB_TOKEN}" -H "Accept: application/vnd.github+json" \
+            "${API}") || { echo "ERROR: artifact list request failed"; exit 1; }
+          echo "--- artifact list raw response (first 400 chars) ---"
+          printf '%s' "$resp" | cut -c1-400
+          echo "----------------------------------------------------"
+          printf '%s' "$resp" | node -e '
+            const d = JSON.parse(require("fs").readFileSync(0, "utf8"));
+            if (d.message && !Array.isArray(d.artifacts)) {
+              console.error("::error::artifact list API said: " + d.message);
+              process.exit(1);
+            }
+            const arts = d.artifacts || [];
+            arts.forEach(a => {
+              console.log("Found artifact:", a.name, "expired:", a.expired);
+            });
+            // Artifact NAMES are 'chunk-N' as uploaded by daily-wiki-fill
+            // (the quiz-chunk-N.json names are files INSIDE each artifact).
+            // Accept both spellings defensively. Wrong '^quiz-chunk-N' pattern
+            // is why recoveries #18/#20 matched nothing.
+            const chunks = arts.filter(a => /^(quiz-)?chunk-[0-9]+$/.test(a.name) && a.expired !== true);
+            console.log("Usable quiz-chunk-N artifacts:", chunks.length, "/", arts.length, "total (total_count:", d.total_count, ")");
+            if (chunks.length === 0) {
+              console.error("::error::No non-expired quiz-chunk-N artifacts in this run — nothing to recover (expired or wrong run-id?).");
+              process.exit(1);
+            }
+          '
+
+      # ── Baseline FIRST, then chunks ONE AT A TIME ──
+      # Run #458 died with "No space left on device": all 27 unzipped chunks
+      # (~25 GB) were pulled before the baseline copy ran. Restoring the
+      # baseline while the disk is still empty, then downloading → merging →
+      # freeing each chunk in turn caps peak usage at roughly one chunk (~1 GB).
+      - name: Download baseline data from run
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/download-run-artifacts.sh
+          bash scripts/download-run-artifacts.sh "${{ steps.resolve.outputs.run-id }}" '^baseline$' baseline \
+            || echo "baseline artifact missing/expired — will fall back to checkout data/"
+
+      - name: Preserve feed-owned files
+        run: |
+          mkdir -p preserve-feed
+          for f in current-affairs.json pib-archive.json; do
+            if [ -f "data/questions/$f" ]; then
+              cp "data/questions/$f" "preserve-feed/$f" && echo "preserved $f from checkout"
+            elif [ -f "baseline/data/questions/$f" ]; then
+              cp "baseline/data/questions/$f" "preserve-feed/$f" && echo "preserved $f from baseline"
+            else
+              echo "note: $f not found — skipping preserve"
+            fi
+          done
+
+      - name: Restore baseline data (early, while disk has headroom)
+        run: |
+          if [ -d baseline/data ]; then
+            rm -rf data && cp -r baseline/data data && echo "restored from baseline/data"
+          elif [ -d baseline ] && [ -n "$(ls -A baseline 2>/dev/null)" ]; then
+            rm -rf data && cp -r baseline data && echo "restored from baseline (flat layout)"
+          else
+            echo "WARNING: no baseline artifact — using checkout data/ as baseline ($(ls data | head -3 | tr '\n' ' '))"
+          fi
+          rm -rf baseline
+          df -h / || true
+
+      - name: Merge chunks incrementally (download, merge, free — repeat)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/download-run-artifacts.sh
+          mkdir -p chunks
+          # One chunk resident at a time: merge-chunks.js consumes (and now
+          # deletes) every quiz-chunk-* it ingests, so each round starts from
+          # a near-empty workspace. Missing numbers are tolerated — chunks
+          # run with fail-fast: false and some may legitimately be absent.
+          for i in $(seq 1 40); do
+            if bash scripts/download-run-artifacts.sh "${{ steps.resolve.outputs.run-id }}" "^chunk-${i}$" chunks; then
+              node scripts/merge-chunks.js || echo "WARNING: merge errored for chunk $i (continuing)"
+            else
+              echo "chunk-$i not present — skipping"
+            fi
+            find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
+            df -h / | tail -1
+          done
+          # Final sweep for anything the numbered pass missed (renamed or
+          # previously failed artifacts); .ok markers prevent re-downloads.
+          if bash scripts/download-run-artifacts.sh "${{ steps.resolve.outputs.run-id }}" '^(quiz-)?chunk-[0-9]+$' chunks; then
+            node scripts/merge-chunks.js || true
+          fi
+          find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
+          df -h / || true
+
+      # Save checkpoint after merge in case subsequent steps fail
+      - run: |
+          mkdir -p checkpoints
+          cp data/quiz.json checkpoints/quiz-recovered.json 2>/dev/null || true
+          echo "Checkpoint saved: checkpoints/quiz-recovered.json"
+
+      # merge-chunks.js consumes chunks/ but never deletes it, and the commit
+      # step's `git add -A` runs in this same job — sweeping the ~7GB of
+      # quiz-chunk-*.json.part.* files into the commit (run #9 died pushing
+      # them: >100MB blobs → runner shutdown). Drop the workspace now.
+      - name: Drop merge workspace (must not reach the commit)
+        run: rm -rf chunks chunk-src baseline
+
+      - run: node scripts/split-quiz-to-categories.js
+
+      - name: Re-apply feed-owned files
+        run: |
+          for f in current-affairs.json pib-archive.json; do
+            if [ -f "preserve-feed/$f" ]; then
+              cp "preserve-feed/$f" "data/questions/$f" && echo "re-applied $f"
+            else
+              echo "note: no preserved $f — leaving merged version"
+            fi
+          done
+          rm -rf preserve-feed
+
+      - run: node scripts/cleanup-questions.js
+      - run: node scripts/dedup-sentence-flood.js
+      - run: node scripts/inject-handpicked-gk.js
+
+      - name: Classify new sub-topics into correct categories
+        run: node scripts/classify-global.cjs
+
+      - run: node scripts/build-archive-single.js
+
+      # Rebuild the per-file archive index so current-affairs.html's archive
+      # progress total stays in sync with archive.html/catalog.json.
+      - run: node scripts/build-archive-index.mjs
+
+      - run: |
+          cp archive.html data/archive.html
+          mkdir -p "$RUNNER_TEMP"
+          cp data/quiz.json "$RUNNER_TEMP/quiz.json"
+          for f in data/quiz.json.part.*; do
+            [ -f "$f" ] && cp "$f" "$RUNNER_TEMP/quiz.json${f##*quiz.json}"
+          done
+
+      - name: Rebuild timeline map from question data
+        continue-on-error: true
+        run: |
+          NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+
+      - name: Commit and push recovered wiki data
+        run: |
+          if [ "${{ inputs.dry-run }}" = "true" ]; then
+            echo "DRY RUN — would have committed and pushed. Showing pending changes:"
+            git add -A ':!chunks' ':!chunk-src' ':!baseline'
+            git diff --cached --stat | tail -20
+            git reset -q
+            exit 0
+          fi
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git checkout -B main 2>/dev/null || true
+          git reset HEAD -- . 2>/dev/null
+          git add -A ':!chunks' ':!chunk-src' ':!baseline'
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Wiki fill recovery — run ${{ steps.resolve.outputs.run-id }} $(date +'%Y-%m-%d %H:%M UTC')"
+            for i in 1 2 3; do
+              if git pull --rebase 2>/dev/null; then
+                echo "Rebased cleanly"
+              else
+                echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
+                git rebase --abort
+                git fetch origin main 2>/dev/null
+                git merge --no-edit origin/main 2>/dev/null || {
+                  node scripts/resolve-data-merge.js
+                  git commit --no-edit 2>/dev/null || true
+                }
+              fi
+              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
+              sleep 5
+            done || true
+          fi

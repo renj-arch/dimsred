@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Chemistry Derivations Session 4 — NEET Chemistry | vlymbooq</title>
+    <meta name="description" content="NEET Chemistry derivations: Faraday's Laws, Kohlrausch's Law, Conductance, Standard Electrode Potentials, Gibbs & Cell Potential, Complex Rate Laws, Arrhenius Deep-Dive, Catalysis. Beginner-friendly step-by-step.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/neet/course/chemistry/lesson-derivations-chemistry-4.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px;align-items:flex-start}
+        .side{width:220px;flex-shrink:0}
+        .sidebar-nav{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:10px;display:flex;flex-direction:column;gap:2px;font-size:.85em}
+        .sidebar-nav a{display:block;padding:8px 10px;border-radius:8px;color:var(--text-sec);transition:all .15s}
+        .sidebar-nav a:hover{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav a.active{background:rgba(52,211,153,.1);color:var(--emerald);font-weight:600}
+        .sidebar-nav .section-head{font-size:.7em;text-transform:uppercase;color:var(--text-muted);padding:8px 10px 2px;letter-spacing:.5px}
+        .main{flex:1;min-width:0}
+        .main h1{font-size:1.5em;font-weight:900;margin-bottom:4px}
+        .main h2{font-size:1.25em;font-weight:700;margin:28px 0 12px;color:var(--emerald);line-height:1.5}
+        .main h3{font-size:1.05em;font-weight:600;margin:20px 0 8px;color:var(--emerald)}
+        .main h4{font-size:.95em;font-weight:600;margin:16px 0 8px;color:#fbbf24}
+        .main p{color:var(--text-sec);line-height:1.7;margin-bottom:10px;font-size:.92em}
+        .deriv-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:12px 0}
+        .step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+        .step:last-child{margin-bottom:0}
+        .step-num{background:rgba(52,211,153,.1);color:var(--emerald);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700;flex-shrink:0;margin-top:2px}
+        .step-text{font-size:.88em;line-height:1.65;color:var(--text-sec);flex:1}
+        .step-text strong{color:var(--text)}
+        .step-text .math{color:#fbbf24;font-style:italic}
+        .formula-box{background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:var(--radius);padding:12px 16px;margin:10px 0;font-size:.9em;color:#60a5fa;text-align:center;font-weight:600}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin:14px 0}
+        .diagram-box svg{display:block;margin:0 auto;max-width:100%;height:auto}
+        .diagram-caption{text-align:center;font-size:.75em;color:var(--text-muted);margin-top:6px}
+        .tip-box,.neet-box,.example-box{border-radius:var(--radius);padding:12px 16px;margin:12px 0}
+        .tip-box{background:rgba(248,113,113,.06);border-left:3px solid #f87171}
+        .tip-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:#f87171}
+        .tip-text,.neet-text,.ex-text{font-size:.85em;line-height:1.6;color:var(--text-sec)}
+        .neet-box{background:rgba(167,139,250,.06);border-left:3px solid #a78bfa}
+        .neet-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:#a78bfa}
+        .example-box{background:rgba(52,211,153,.06);border-left:3px solid var(--emerald)}
+        .ex-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:var(--emerald)}
+        .ex-soln{font-size:.82em;line-height:1.5;color:var(--text-sec);margin-top:4px;padding-top:4px;border-top:1px solid var(--border)}
+        .math{color:#fbbf24}
+        .speaker-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:600;border:1px solid rgba(52,211,153,.2);cursor:pointer;background:rgba(52,211,153,.06);color:var(--emerald);transition:all .2s;vertical-align:middle;margin-left:8px}
+        .speaker-btn:hover{background:rgba(52,211,153,.15)}
+        .speaker-btn.speaking{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171;animation:pulse 1s ease-in-out infinite}
+        @media(max-width:800px){.flex-row{flex-direction:column}.side{width:100%}}
+        @media print{.nav,.sidebar-nav,.download-btn,.speaker-btn{display:none!important}.container{padding:0}.deriv-box{break-inside:avoid}.diagram-box{break-inside:avoid}}
+        @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+        @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+    </style>
+    <script>
+        const LECT={
+            faraday:`Welcome to Faraday's Laws of Electrolysis. Faraday's first law states that the mass of a substance deposited or liberated at an electrode is directly proportional to the quantity of electricity passed. m equals Z Q where Z is the electrochemical equivalent. Q equals I t. Faraday's second law states that when the same quantity of electricity is passed through different electrolytes, the masses deposited are proportional to their equivalent weights. m is proportional to E where E is equivalent weight. The Faraday constant F equals 96485 coulombs per mole and represents the charge of one mole of electrons.`,
+            kohlrausch:`Welcome to Kohlrausch's Law. Kohlrausch's law states that the molar conductivity of an electrolyte at infinite dilution is the sum of the individual contributions of its cations and anions. Lambda infinity equals lambda cation plus lambda anion. This law is used to calculate the molar conductivity of weak electrolytes at infinite dilution, which cannot be obtained directly. It also helps in calculating the degree of dissociation alpha equals Lambda over Lambda infinity.`,
+            conductance:`Welcome to Conductance and Cell Constant. The conductance of an electrolytic solution is the reciprocal of resistance. Conductance G equals 1 over R. Specific conductivity kappa equals 1 over rho equals G times cell constant where cell constant is l over A for a conductivity cell. Molar conductivity Lambda equals kappa divided by C where C is concentration. Lambda increases with dilution because more ions are produced and interionic attractions decrease.`,
+            electrode:`Welcome to Standard Electrode Potentials. The standard electrode potential E naught is the potential of an electrode measured against the standard hydrogen electrode under standard conditions of 1 molar concentration 1 atmosphere pressure and 298 Kelvin. The standard hydrogen electrode is assigned a potential of zero volts. More positive E naught means greater tendency to get reduced. The electrochemical series ranks elements by their standard reduction potentials.`,
+            gibbs_cell:`Welcome to Gibbs Free Energy and Cell Potential. The relationship between Gibbs free energy and cell potential is delta G equals minus n F E. Under standard conditions delta G naught equals minus n F E naught. The equilibrium constant is related by delta G naught equals minus R T ln K equals minus n F E naught. So E naught equals R T over n F times ln K. At 298 Kelvin this gives E naught equals 0 point 0 5 9 1 over n times log K.`,
+            complex_rates:`Welcome to Complex Rate Laws. Reactions can have complex rate laws beyond simple zero first and second order. The rate determining step is the slowest step in a reaction mechanism. The molecularity of a reaction is the number of molecules that collide in the rate determining step. Pseudo first order reactions occur when one reactant is in large excess making its concentration effectively constant. The Arrhenius equation describes how temperature affects the rate constant.`,
+            catalysis:`Welcome to Catalysis. A catalyst increases the rate of a reaction by providing an alternative pathway with lower activation energy. The catalyst participates in the reaction but is regenerated at the end. In homogeneous catalysis the catalyst is in the same phase as the reactants. In heterogeneous catalysis the catalyst is in a different phase. Enzymes are biological catalysts with remarkable specificity. The activation energy lowering by a catalyst can be described by the Arrhenius equation.`
+        };
+        let synth = window.speechSynthesis;
+        let currentUtter = null;
+        function speakText(btn, id) {
+            if (!synth || !LECT[id]) return;
+            if (currentUtter) { synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; return; }
+            let u = new SpeechSynthesisUtterance(LECT[id]);
+            u.rate = 0.88; u.pitch = 1; u.volume = 1;
+            u.onend = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            u.onerror = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            currentUtter = u; btn.classList.add('speaking');
+            synth.speak(u);
+        }
+        function stopSpeech() { if (synth) synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; }
+        document.addEventListener('click', function(e) { if (!e.target.closest('.speaker-btn')) stopSpeech(); });
+    </script>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../../index.html" class="brand"><img src="../../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../../index.html">Home</a><a href="../../../dashboard.html">Dashboard</a><a href="../../index.html">NEET</a><a href="../index.html">Course</a><a href="index.html" class="active">Chemistry</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="section-head">Chemistry</div>
+                    <a href="lesson-physical-chemistry.html">Physical Chemistry</a>
+                    <a href="lesson-organic-chemistry.html">Organic Chemistry</a>
+                    <a href="lesson-inorganic-chemistry.html">Inorganic Chemistry</a>
+                    <a href="lesson-environmental-chemistry.html">Environmental Chemistry</a>
+                    <div class="section-head" style="margin-top:8px">Derivations</div>
+                    <a href="lesson-derivations-chemistry.html">Session 1</a>
+                    <a href="lesson-derivations-chemistry-2.html">Session 2</a>
+                    <a href="lesson-derivations-chemistry-3.html">Session 3</a>
+                    <a href="lesson-derivations-chemistry-4.html" class="active">Session 4</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Chemistry Derivations — Session 4</div>
+                    <h1>Electrochemistry & Kinetics Deep-Dive</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Faraday's laws, Kohlrausch's law, conductance, standard electrode potentials, Gibbs free energy & cell potential, complex rate laws, Arrhenius deep-dive, and catalysis for NEET.</div>
+                </div>
+
+                <!-- 1. FARADAY'S LAWS -->
+                <h2 id="faraday">1. Faraday's Laws of Electrolysis <button class="speaker-btn" onclick="speakText(this,'faraday')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Electrolysis is used to refine metals (like copper purification), electroplate jewelry, produce chlorine and aluminum, and recharge batteries. Faraday's laws tell us exactly how much product forms for a given amount of electricity — essential for industrial electrochemical processes. Every time you charge your phone, Faraday's laws are at work.</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="180" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="22" text-anchor="middle" fill="#a1a1aa" font-size="11">Electrolysis — Cu deposition at cathode</text>
+                        <rect x="50" y="50" width="130" height="110" rx="4" fill="rgba(96,165,250,.04)" stroke="#60a5fa" stroke-width="1.5"/>
+                        <text x="115" y="70" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="600">Cathode (−)</text>
+                        <rect x="60" y="80" width="12" height="60" rx="2" fill="#f87171"/>
+                        <rect x="62" y="132" width="70" height="8" rx="1" fill="#f87171" opacity="0.4">
+                            <animate attributeName="height" values="8;16;24;32;40" dur="8s" repeatCount="indefinite"/>
+                            <animate attributeName="y" values="132;124;116;108;100" dur="8s" repeatCount="indefinite"/>
+                        </rect>
+                        <text x="90" y="150" text-anchor="middle" fill="#f87171" font-size="7">Cu deposition</text>
+                        <text x="115" y="90" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="7">Cu²⁺ + 2e⁻ → Cu</text>
+                        <rect x="240" y="50" width="130" height="110" rx="4" fill="rgba(248,113,113,.04)" stroke="#f87171" stroke-width="1.5"/>
+                        <text x="305" y="70" text-anchor="middle" fill="#f87171" font-size="10" font-weight="600">Anode (+)</text>
+                        <rect x="250" y="80" width="12" height="60" rx="2" fill="#f87171"/>
+                        <text x="305" y="90" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="7">Cu → Cu²⁺ + 2e⁻</text>
+                        <text x="305" y="150" text-anchor="middle" fill="#f87171" font-size="7">Cu dissolves</text>
+                        <circle cx="115" cy="120" r="4" fill="#fbbf24" opacity="0.6"/>
+                        <text x="115" y="123" text-anchor="middle" fill="#fff" font-size="5">Cu²⁺</text>
+                        <circle cx="180" cy="140" r="3" fill="#fbbf24" opacity="0.4">
+                            <animate attributeName="cx" values="180;170;160;150;140;130;120" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="140;130;120;115;110;115;120" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="210" y="175" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="9">m = Z·I·t &nbsp; F = 96485 C/mol</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 1.1: Electrolytic cell for copper purification. Cu²⁺ ions migrate to the cathode, where they deposit as copper metal.</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>Faraday's First Law:</strong> The mass (m) of a substance deposited at an electrode is directly proportional to the charge (Q) passed: m = ZQ, where Z is the electrochemical equivalent. Since Q = It (current × time): m = ZIt.</p>
+                <p><strong>Faraday's Second Law:</strong> When the same quantity of electricity passes through different electrolytes, the masses deposited are proportional to their equivalent weights: m₁/m₂ = E₁/E₂.</p>
+
+                <h4>🔍 Step-by-Step: Deriving m = ZIt</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>The charge of one mole of electrons is the Faraday constant.</strong> <span class="math">F = e × N_A = 1.602×10⁻¹⁹ × 6.022×10²³ = 96485 C/mol</span>. This is the charge of 1 mole of electrons.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>For an ion with charge n, the charge required to deposit 1 mole is nF.</strong> For Cu²⁺: n = 2, so charge = 2F. For Ag⁺: n = 1, so charge = F. For Al³⁺: n = 3, so charge = 3F.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Mass deposited = (Molar mass × Charge passed) / (n × F).</strong> <span class="math">m = (M × Q) / (n × F) = (M × I × t) / (n × F)</span>. The electrochemical equivalent Z = M/(nF). For Cu (M = 63.5, n = 2): Z = 63.5/(2×96485) = 3.29×10⁻⁴ g/C.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">m = M·I·t / (n·F) &nbsp; F = 96485 C/mol &nbsp; Z = M/(nF) &nbsp; For same Q: m₁/m₂ = E₁/E₂</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — n-Value</div>
+                    <div class="tip-text">The n in Faraday's law is the number of electrons involved in the half-reaction, NOT the oxidation state alone. For Al³⁺ → Al, n = 3. For Cu²⁺ → Cu, n = 2. For O₂ evolution (2H₂O → O₂ + 4H⁺ + 4e⁻), n = 4. Also: make sure current is in amperes and time in seconds.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Faraday's Laws</div>
+                    <div class="neet-text">
+                        • "How much Cu (M = 63.5, n = 2) is deposited by 2 A for 965 s?" → Q = 2×965 = 1930 C. m = (63.5×1930)/(2×96485) = 0.635 g.<br>
+                        • "Same current passed through CuSO₄ and AgNO₃. Ratio of masses?" → m_Cu/m_Ag = E_Cu/E_Ag = (63.5/2)/(108/1) = 31.75/108 = 0.294.<br>
+                        • "How much time for 1.08 g Ag (M = 108, n = 1) with 1 A?" → t = m·n·F/(M·I) = 1.08×1×96485/(108×1) = 965 s.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 1: Faraday's Law</div>
+                    <div class="ex-text">A current of 5 A is passed through a CuSO₄ solution for 30 minutes. Calculate the mass of Cu deposited. (Cu = 63.5 g/mol, n = 2, F = 96485 C/mol)</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Q = 5 × 30×60 = 9000 C. m = (63.5 × 9000)/(2 × 96485) = 571500/192970 = 2.96 g. <strong>Key insight:</strong> Always check that time is in seconds, not minutes.</div>
+                </div>
+
+                <!-- 2. KOHLRAUSCH'S LAW -->
+                <h2 id="kohlrausch">2. Kohlrausch's Law <button class="speaker-btn" onclick="speakText(this,'kohlrausch')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Kohlrausch's law allows us to determine the conductivity of weak electrolytes at infinite dilution — something we cannot measure directly because weak electrolytes don't fully dissociate even at high dilution. This is essential for calculating the degree of dissociation and the dissociation constant of weak acids and bases.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>At <strong>infinite dilution</strong> (Λₘ°), each ion contributes a fixed amount to the total molar conductivity, regardless of the other ion it's paired with. Λₘ° = ν⁺λ⁺° + ν⁻λ⁻°, where ν is the number of ions and λ° is the ionic conductivity at infinite dilution. This law is used to find Λₘ° for weak electrolytes by adding the Λₘ° of strong electrolytes.</p>
+
+                <h4>🔍 Step-by-Step: Applying Kohlrausch's Law</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>At infinite dilution, ions behave independently.</strong> <span class="math">Λₘ° = λ⁺° + λ⁻°</span> for a binary electrolyte. For example, NaCl: <span class="math">Λₘ°(NaCl) = λ°(Na⁺) + λ°(Cl⁻)</span>. These ionic conductivities are tabulated constants.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>For weak electrolytes like CH₃COOH, Λₘ° can be found using strong electrolytes.</strong> <span class="math">Λₘ°(CH₃COOH) = Λₘ°(HCl) + Λₘ°(CH₃COONa) − Λₘ°(NaCl)</span>. This works because: <span class="math">(H⁺+Cl⁻) + (Na⁺+CH₃COO⁻) − (Na⁺+Cl⁻) = H⁺ + CH₃COO⁻</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Degree of dissociation α = Λₘ/Λₘ°.</strong> For a weak electrolyte at concentration C, α can be found. Then the dissociation constant: <span class="math">Kₐ = Cα²/(1−α)</span>. For very weak acids (α ≪ 1): <span class="math">Kₐ ≈ Cα²</span>.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Λₘ° = ν⁺λ⁺° + ν⁻λ⁻° &nbsp; α = Λₘ/Λₘ° &nbsp; Kₐ = Cα²/(1−α)</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Units</div>
+                    <div class="tip-text">Molar conductivity (Λₘ) has units of S·cm²/mol or S·m²/mol. Specific conductivity (κ) has units S/cm or S/m. The relationship: Λₘ = κ × 1000/C (if C is in mol/L and κ in S/cm). Always check which unit system the problem uses.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Kohlrausch's Law</div>
+                    <div class="neet-text">
+                        • "Λₘ°(HCl) = 426 S·cm²/mol, Λₘ°(NaCl) = 126, Λₘ°(CH₃COONa) = 91. Find Λₘ°(CH₃COOH)." → 426 + 91 − 126 = 391 S·cm²/mol.<br>
+                        • "Λₘ for 0.01 M CH₃COOH is 16.2 S·cm²/mol. Find α if Λₘ° = 391." → α = 16.2/391 = 0.0414 (4.14%).<br>
+                        • "Which has highest Λₘ°: NaCl, MgCl₂, AlCl₃?" → AlCl₃ (more ions: 4 per formula unit).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 2: Kohlrausch's Law</div>
+                    <div class="ex-text">Λₘ for 0.00 5 M CH₃COOH is 19.2 S·cm²/mol. Λₘ°(HCl)=426, Λₘ°(NaCl)=126, Λₘ°(CH₃COONa)=91. Find Kₐ for CH₃COOH.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Λₘ°(CH₃COOH) = 426 + 91 − 126 = 391. α = 19.2/391 = 0.0491. Kₐ = Cα²/(1−α) = 0.005×(0.0491)²/(0.951) = 1.27×10⁻⁵. <strong>Key insight:</strong> This matches the standard Kₐ of acetic acid (1.8×10⁻⁵ approximately).</div>
+                </div>
+
+                <!-- 3. CONDUCTANCE -->
+                <h2 id="conductance">3. Conductance & Cell Constant <button class="speaker-btn" onclick="speakText(this,'conductance')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Conductivity measurements are used to check water purity (pure water has very low conductivity), monitor industrial processes, test battery electrolytes, and even measure salinity in environmental monitoring. A simple conductivity meter can detect dissolved ions in water.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>Resistance</strong> (R) of a solution follows R = ρ·l/A, where ρ is resistivity, l is distance between electrodes, and A is electrode area. <strong>Conductance</strong> G = 1/R. <strong>Specific conductivity</strong> (κ) = 1/ρ = G × (l/A) = G × cell constant. <strong>Molar conductivity</strong> Λₘ = κ/C. As concentration decreases, Λₘ increases because interionic attractions weaken.</p>
+
+                <h4>🔍 Step-by-Step: Variation of Conductivity with Concentration</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>For strong electrolytes, Λₘ follows Kohlrausch's empirical law.</strong> <span class="math">Λₘ = Λₘ° − A√C</span>. A plot of Λₘ vs √C is linear. The intercept gives Λₘ°, and the slope gives the constant A (related to ion-ion interactions).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>For weak electrolytes, Λₘ increases sharply at very low concentrations.</strong> This is because the degree of dissociation increases rapidly as concentration decreases. The Λₘ vs √C plot is not linear — it curves upward at low concentrations.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>The cell constant G* = l/A must be determined experimentally.</strong> This is done by measuring the resistance of a standard KCl solution of known conductivity. <span class="math">G* = κ(KCl) × R(KCl)</span>. Once known, the same cell constant is used for unknown solutions.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">G = 1/R &nbsp; κ = G × G* &nbsp; Λₘ = κ/C &nbsp; Strong: Λₘ = Λₘ° − A√C</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Specific vs Molar Conductivity</div>
+                    <div class="tip-text">Specific conductivity (κ) <strong>decreases</strong> with dilution (fewer ions per unit volume). Molar conductivity (Λₘ) <strong>increases</strong> with dilution (each mole of electrolyte contributes more to conductivity). This distinction is frequently tested in NEET.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Conductance</div>
+                    <div class="neet-text">
+                        • "Resistance of 0.1 M KCl in a cell is 100 Ω. κ(KCl) = 0.0129 S/cm. Find cell constant." → G* = κ × R = 0.0 129 × 100 = 1.29 cm⁻¹.<br>
+                        • "Λₘ of 0.01 M solution is 120 S·cm²/mol. κ = Λₘ × C/1000 = 120 × 0.01/1000 = 0.0 012 S/cm."<br>
+                        • "Which has higher Λₘ: 0.1 M NaCl or 0.001 M NaCl?" → 0.001 M (more dilute → less ion-pairing → higher Λₘ).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 3: Conductance</div>
+                    <div class="ex-text">A conductivity cell has electrodes of area 2 cm² separated by 1 cm. The resistance of 0.01 M KCl solution is 200 Ω. Find κ and Λₘ. (κ(KCl) = 0.00141 S/cm)</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Cell constant = l/A = 1/2 = 0.5 cm⁻¹. G = 1/200 = 0.005 S. κ = 0.005 × 0.5 = 0.0025 S/cm. Λₘ = κ×1000/C = 0.0025×1000/0.01 = 250 S·cm²/mol. <strong>Key insight:</strong> Factor of 1000 converts L to cm³.</div>
+                </div>
+
+                <!-- 4. STANDARD ELECTRODE POTENTIALS -->
+                <h2 id="electrode">4. Standard Electrode Potentials <button class="speaker-btn" onclick="speakText(this,'electrode')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>The electrochemical series tells us which metals will corrode, which batteries produce higher voltage, and which reactions are feasible. It's why zinc protects iron from rusting (galvanization), why lithium batteries have high voltage, and why some metals displace others from solution.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>The <strong>standard hydrogen electrode (SHE)</strong> is assigned E° = 0 V. All other electrode potentials are measured relative to SHE under standard conditions. A more positive E° means the species has a greater tendency to be <strong>reduced</strong> (gain electrons). A more negative E° means it tends to be <strong>oxidized</strong> (lose electrons). The electrochemical series ranks elements by E°: F₂ (+2.87 V) is the strongest oxidizing agent, Li⁺ (−3.04 V) is the strongest reducing agent.</p>
+
+                <h4>🔍 Step-by-Step: Calculating Cell Potential</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Cell potential (EMF) = E°(cathode) − E°(anode).</strong> The cathode is where reduction occurs (higher E°), and the anode is where oxidation occurs (lower E°). For the Daniel cell: Cu²⁺/Cu (E° = +0.34 V), Zn²⁺/Zn (E° = −0.76 V). E°_cell = 0.34 − (−0.76) = +1.10 V.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>A positive E°_cell indicates a spontaneous reaction.</strong> ΔG° = −nFE°_cell. If E°_cell > 0, ΔG° < 0 → spontaneous. If E°_cell < 0, the reaction is non-spontaneous (requires external voltage).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>The electrochemical series helps predict displacement reactions.</strong> A metal with more negative E° can displace a metal with more positive E° from its salt solution. Zn (E° = −0.76 V) displaces Cu²⁺ (E° = +0.34 V) because Zn is more easily oxidized.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">E°_cell = E°_cathode − E°_anode &nbsp; | &nbsp; Cell spontaneous if E°_cell > 0</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Reversing Signs</div>
+                    <div class="tip-text">Standard reduction potentials are always written as reduction reactions. When a half-cell undergoes oxidation, the sign is <strong>reversed</strong>. But the easiest method: keep all values as reduction potentials, identify cathode (higher E°) and anode (lower E°), and use E°_cell = E°_cathode − E°_anode. Don't flip signs manually.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Electrode Potentials</div>
+                    <div class="neet-text">
+                        • "E° for Zn²⁺/Zn = −0.76 V, Cu²⁺/Cu = +0.34 V. Find E°_cell." → 0.34 − (−0.76) = 1.10 V.<br>
+                        • "Can Fe (E° = −0.44 V) displace Cu from CuSO₄?" → Yes, Fe is more negative → Fe is oxidized, Cu²⁺ is reduced.<br>
+                        • "Arrange in increasing reducing power: Li (−3.04), Mg (−2.36), Cu (+0.34)." → Cu < Mg < Li (more negative = stronger reducing agent).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 4: Standard Electrode Potentials</div>
+                    <div class="ex-text">Calculate the standard EMF of the cell: Mg|Mg²⁺||Ag⁺|Ag. E°(Mg²⁺/Mg) = −2.36 V, E°(Ag⁺/Ag) = +0.80 V.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Anode (oxidation): Mg. Cathode (reduction): Ag. E°_cell = 0.80 − (−2.36) = +3.16 V. ΔG° = −nFE° = −2 × 96485 × 3.16 = −610 kJ/mol. Highly spontaneous. <strong>Key insight:</strong> This is why Mg is used as a sacrificial anode to protect steel.</div>
+                </div>
+
+                <!-- 5. GIBBS FREE ENERGY & CELL -->
+                <h2 id="gibbs-cell">5. Gibbs Free Energy & Cell Potential <button class="speaker-btn" onclick="speakText(this,'gibbs_cell')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>The relationship between Gibbs free energy, cell potential, and equilibrium constant connects three fundamental concepts in chemistry. It allows us to calculate battery voltage from thermodynamic data, predict if a reaction is feasible, and determine equilibrium constants from electrochemical measurements.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>The maximum electrical work from an electrochemical cell equals −nFE. This work equals the change in Gibbs free energy: <strong>ΔG = −nFE</strong>. Under standard conditions: <strong>ΔG° = −nFE°</strong>. Since ΔG° = −RT ln K, we get <strong>E° = (RT/nF) ln K</strong>. At 298 K: E° = (0.0591/n) log K. These equations form the bridge between thermodynamics and electrochemistry.</p>
+
+                <h4>🔍 Step-by-Step: Deriving E° = (0.0591/n) log K</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Start with three fundamental equations.</strong> <span class="math">ΔG° = −nFE°</span> (from electrochemistry), <span class="math">ΔG° = −RT ln K</span> (from thermodynamics). Equate: <span class="math">−nFE° = −RT ln K → E° = RT ln K / nF</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Convert ln to log₁₀ and substitute constants.</strong> <span class="math">E° = (2.303RT/nF) × log K</span>. At 298 K: R = 8.314 J/(mol·K), F = 96485 C/mol. <span class="math">2.303 × 8.314 × 298 / 96485 = 0.0591</span>. So: <span class="math">E° = (0.0591/n) × log K</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Application to equilibrium constant calculation.</strong> For a cell with E° = 1.10 V (Daniel cell, n = 2): <span class="math">log K = nE°/0.0591 = 2 × 1.10/0.0591 = 37.2 → K = 1.6×10³⁷</span>. This enormous K means the reaction goes virtually to completion.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">ΔG° = −nFE° &nbsp; ΔG° = −RT ln K &nbsp; E° = (0.0591/n) log K (at 298 K)</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Sign of ΔG°</div>
+                    <div class="tip-text">A positive E° gives negative ΔG° (spontaneous). A negative E° gives positive ΔG° (non-spontaneous). Students sometimes confuse: E° > 0 means the reaction as written (reduction at cathode, oxidation at anode) is spontaneous. Also: E° is intensive, but ΔG° is extensive — doubling the reaction doubles ΔG° but doesn't change E°.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Gibbs & Cell</div>
+                    <div class="neet-text">
+                        • "E° = 0.46 V for a 2-electron cell. Find K." → log K = 2×0.46/0.0591 = 15.56 → K = 3.6×10¹⁵.<br>
+                        • "For a cell, K = 10¹⁰ at 298 K. Find E° for n = 1." → E° = 0.0591 × 10/1 = 0.591 V.<br>
+                        • "ΔG° = −100 kJ/mol for a 2-electron reaction. Find E°." → E° = −ΔG°/(nF) = 100000/(2×96485) = 0.518 V.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 5: Gibbs & Cell</div>
+                    <div class="ex-text">For the reaction Zn + Cu²⁺ → Zn²⁺ + Cu, E° = 1.10 V, n = 2. Find ΔG° and K at 298 K.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> ΔG° = −2 × 96485 × 1.10 = −212267 J = −212.3 kJ/mol. log K = 2 × 1.10/0.0591 = 37.2. K = 10³⁷·² ≈ 1.6×10³⁷. <strong>Key insight:</strong> E° = 1.10 V corresponds to a very large equilibrium constant — the reaction is essentially complete.</div>
+                </div>
+
+                <!-- 6. COMPLEX RATE LAWS -->
+                <h2 id="complex-rates">6. Complex Rate Laws & Reaction Mechanisms <button class="speaker-btn" onclick="speakText(this,'complex_rates')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Most real-world reactions don't follow simple zero/first/second order kinetics. Understanding complex rate laws is essential for modeling atmospheric chemistry, biochemical pathways, and industrial processes. The concept of rate-determining step explains why some reactions are faster or slower than their stoichiometry suggests.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>The <strong>rate-determining step (RDS)</strong> is the slowest step in a multistep reaction mechanism — it determines the overall reaction rate. <strong>Molecularity</strong> is the number of molecules that collide in an elementary step (unimolecular, bimolecular, termolecular). <strong>Pseudo-first-order</strong> reactions occur when one reactant is in large excess, making its concentration effectively constant. The <strong>Arrhenius equation</strong> k = Ae^(−Eₐ/RT) describes temperature dependence.</p>
+
+                <h4>🔍 Step-by-Step: Rate-Determining Step</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Consider a two-step mechanism.</strong> Step 1 (slow): <span class="math">A + B → C</span>, Step 2 (fast): <span class="math">C → D + E</span>. The overall rate is determined by Step 1: <span class="math">Rate = k[A][B]</span>. The intermediate C is consumed as fast as it's formed.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>If the first step is fast and reversible, followed by a slow step.</strong> Step 1 (fast): A ⇌ B + C. Step 2 (slow): B + D → E. The rate depends on [B], which is in equilibrium: <span class="math">[B] = K[A]</span> (assuming C is constant). So: <span class="math">Rate = k₂[B][D] = k₂K[A][D] = k_obs[A][D]</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Pseudo-first-order approximation.</strong> For reaction A + B → products: If [B]₀ ≫ [A]₀, [B] stays nearly constant. <span class="math">Rate = k[A][B] ≈ k'[A]</span> where <span class="math">k' = k[B]₀</span>. The reaction appears to be first order. This is common in hydrolysis reactions where water is the solvent.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Rate determined by slowest step &nbsp; Pseudo-1st-order: k' = k[B]₀ &nbsp; Molecularity: number of reacting species</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Order vs Molecularity</div>
+                    <div class="tip-text">Order is <strong>experimental</strong> (determined from data) and can be fractional, zero, or negative. Molecularity is <strong>theoretical</strong> (from mechanism) and must be a positive integer ≤ 3. For elementary reactions only, order equals molecularity. For complex reactions, order may differ from the stoichiometric coefficients.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Complex Kinetics</div>
+                    <div class="neet-text">
+                        • "A 2-step mechanism with slow first step: overall rate = k[A][B]."<br>
+                        • "CH₃COOCH₃ + H₂O → CH₃COOH + CH₃OH in large excess water: pseudo-first-order."<br>
+                        • "Rate = k[A]²[B]⁰. The order is 2 (w.r.t. A) + 0 (w.r.t. B) = 2 overall. Fractional order possible."
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 6: Rate-Determining Step</div>
+                    <div class="ex-text">A proposed mechanism: (1) NO₂ + NO₂ → NO₃ + NO (slow), (2) NO₃ + CO → NO₂ + CO₂ (fast). Write the overall reaction and rate law.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Overall: NO₂ + CO → NO + CO₂ (NO₃ is intermediate, NO₂ is catalyst). Rate law: Rate = k[NO₂]² (from the slow step). <strong>Key insight:</strong> The rate law depends only on the slow step, not on the overall stoichiometry.</div>
+                </div>
+
+                <!-- 7. ARRHENIUS DEEP-DIVE -->
+                <h2 id="arrhenius-deep">7. Arrhenius Equation — Temperature Dependence <button class="speaker-btn" onclick="speakText(this,'complex_rates')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>The Arrhenius equation explains why reactions speed up when heated — the rule of thumb that a 10°C rise doubles the reaction rate. It's used to determine activation energy, predict reaction rates at different temperatures, and understand why some reactions are temperature-sensitive while others aren't.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>The Arrhenius equation <strong>k = Ae^(−Eₐ/RT)</strong> has two factors: A (frequency factor — how often molecules collide with correct orientation) and e^(−Eₐ/RT) (Boltzmann factor — fraction of molecules with energy ≥ Eₐ). The linear form <strong>ln k = ln A − Eₐ/RT</strong> allows us to determine Eₐ from experimental data by plotting ln k vs 1/T.</p>
+
+                <h4>🔍 Step-by-Step: Determining Activation Energy</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>The logarithmic form of the Arrhenius equation.</strong> <span class="math">ln k = ln A − Eₐ/(RT)</span>. Rearranged: <span class="math">ln k = (−Eₐ/R)(1/T) + ln A</span>. This is y = mx + c: ln k vs 1/T gives a straight line with slope = −Eₐ/R.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Two-point form for calculating Eₐ.</strong> <span class="math">ln(k₂/k₁) = (Eₐ/R)(1/T₁ − 1/T₂)</span>. This is useful when you have rate constants at two temperatures. For example, if k doubles when T increases from 300 K to 310 K: Eₐ = R·ln(2)/(1/300−1/310).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>The pre-exponential factor A represents collision frequency and steric effects.</strong> According to collision theory: <span class="math">k = P·Z·e^(−Eₐ/RT)</span>, where Z is the collision frequency and P is the steric factor (orientation requirement). For gas-phase reactions, Z ≈ 10¹⁰ L·mol⁻¹·s⁻¹. P ranges from 1 (favorable orientation) to 10⁻⁶ (stringent orientation).</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">ln(k₂/k₁) = (Eₐ/R)(1/T₁ − 1/T₂) &nbsp; | &nbsp; Slope of ln k vs 1/T = −Eₐ/R</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Temperature in K</div>
+                    <div class="tip-text">Always use <strong>Kelvin</strong>, never Celsius. A 10°C change = 10 K change, but the ratio 1/T₁ − 1/T₂ is not the same as 1/(T₁−T₂). For example, 300 K to 310 K: 1/300 − 1/310 = 0.00333 − 0.00323 = 1.08×10⁻⁴ K⁻¹. Don't use the difference directly.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Arrhenius Deep-Dive</div>
+                    <div class="neet-text">
+                        • "Rate doubles when T rises from 300 K to 310 K. Find Eₐ." → Eₐ = R·ln2/(1/300−1/310) = 8.314×0.693/1.08×10⁻⁴ = 53.6 kJ/mol.<br>
+                        • "A plot of ln k vs 1/T has slope −5000 K. Find Eₐ." → Eₐ = 5000 × 8.314 = 41570 J/mol = 41.6 kJ/mol.<br>
+                        • "Two reactions have Eₐ = 20 kJ and 80 kJ. Which is more temperature sensitive?" → The one with higher Eₐ (80 kJ) is more temperature sensitive — a given T increase causes a larger rate increase.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 7: Arrhenius Equation</div>
+                    <div class="ex-text">A reaction has k = 0.02 s⁻¹ at 300 K and k = 0.08 s⁻¹ at 320 K. Find Eₐ and the pre-exponential factor A.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> ln(0.08/0.02) = ln(4) = 1.386. Eₐ = 8.314 × 1.386/(1/300−1/320) = 11.52/2.08×10⁻⁴ = 55385 J/mol ≈ 55.4 kJ/mol. For A: ln A = ln k + Eₐ/RT = ln(0.02) + 55385/(8.314×300) = −3.912 + 22.2 = 18.29. A = 8.8×10⁷ s⁻¹. <strong>Key insight:</strong> A high A means many collisions per second.</div>
+                </div>
+
+                <!-- 8. CATALYSIS -->
+                <h2 id="catalysis">8. Catalysis — Lowering Activation Energy <button class="speaker-btn" onclick="speakText(this,'catalysis')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Catalysts are essential in modern life — catalytic converters in cars reduce pollution, enzymes in your body digest food, the Haber process makes fertilizer using iron catalyst, and zeolites crack petroleum into gasoline. A catalyst can increase reaction rates by factors of millions or more, making otherwise impractical processes commercially viable.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>A <strong>catalyst</strong> provides an alternative reaction pathway with a lower activation energy. It participates in the reaction but is regenerated unchanged. The catalyst does NOT affect ΔG, ΔH, or the equilibrium constant — it only speeds up the rate at which equilibrium is reached. <strong>Homogeneous catalysts</strong> are in the same phase as reactants (e.g., acid catalysts). <strong>Heterogeneous catalysts</strong> are in a different phase (e.g., solid catalysts for gas reactions).</p>
+
+                <h4>🔍 Step-by-Step: How Catalysts Work</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>A catalyst lowers Eₐ without changing ΔH.</strong> The Arrhenius equation: <span class="math">k = Ae^(−Eₐ/RT)</span>. If Eₐ decreases, k increases exponentially. Lowering Eₐ by just 10 kJ/mol can increase the rate by a factor of 50 at 300 K (<span class="math">e^(10000/8.314×300) = e^4 = 55</span>).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Catalyst is not consumed.</strong> In the catalyzed mechanism: Step 1: <span class="math">A + Cat → A−Cat</span>. Step 2: <span class="math">A−Cat + B → AB + Cat</span>. The catalyst is regenerated in Step 2. Net: <span class="math">A + B → AB</span>. The catalyst does not appear in the overall balanced equation.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Enzyme catalysis — the lock-and-key model.</strong> Enzymes are highly specific biological catalysts. The substrate binds to the enzyme's active site (lock-and-key or induced fit). The Michaelis-Menten equation describes enzyme kinetics: <span class="math">Rate = V_max[S]/(K_m + [S])</span>. At low [S], rate ∝ [S]. At high [S], rate = V_max (saturation).</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Catalyst: lowers Eₐ, unchanged at end, no effect on ΔG or K_eq &nbsp; Enzyme kinetics: Rate = V_max[S]/(K_m + [S])</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Catalyst Effect on Equilibrium</div>
+                    <div class="tip-text">A catalyst speeds up both forward and reverse reactions <strong>equally</strong>. It does NOT shift the equilibrium position. The equilibrium constant K is unchanged. The catalyst only helps equilibrium be reached faster. Also: catalysts are specific — a catalyst for one reaction may not work for another.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Catalysis</div>
+                    <div class="neet-text">
+                        • "Which is true: catalyst changes ΔG, ΔH, or Eₐ?" → Only Eₐ (activation energy) is changed. ΔG and ΔH remain the same.<br>
+                        • "Example of homogeneous catalysis?" → Acid-catalyzed hydrolysis of esters. Catalyst (H⁺) is in the same aqueous phase.<br>
+                        • "Example of heterogeneous catalysis?" → Haber process: Fe(s) catalyzes N₂(g) + 3H₂(g) ⇌ 2NH₃(g). Different phases.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 8: Catalysis</div>
+                    <div class="ex-text">An uncatalyzed reaction has Eₐ = 120 kJ/mol. A catalyst lowers Eₐ to 80 kJ/mol. How much faster is the catalyzed reaction at 300 K?</div>
+                    <div class="ex-soln"><strong>Solution:</strong> k_cat/k_uncat = e^{(Eₐ_uncat − Eₐ_cat)/RT} = e^{(40000)/(8.314×300)} = e^{16.04} = 9.2×10⁶. The reaction is about 9.2 million times faster. <strong>Key insight:</strong> A 40 kJ/mol reduction in Eₐ causes an enormous rate increase due to the exponential relationship.</div>
+                </div>
+
+                <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.82em">
+                    End of Session 4 — Electrochemistry & Kinetics Deep-Dive. All four chemistry derivation sessions are now complete.
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/theme.js"></script>
+</body>
+</html>
