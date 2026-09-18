@@ -1024,6 +1024,8 @@ var MANUAL_SPANS = {
 var TOPIC_OVERRIDES = {
   'Manusmriti': [-200, 200],
   'Red Army': [1918, 1946],
+  'Ali Arshad Mir': [1951, 2008],
+  'Pieter Bogaers': [1924, 2008],
   '1885 Kashmir earthquake': [1885, 1885],
   // Buddhist Jataka tales: canonical Pali-canon stories of the Buddha's past lives,
   // traditionally taught by the Buddha himself and canonized ~4th-3rd century BCE.
@@ -4086,6 +4088,17 @@ function main() {
   var staleParts = [];
   try { staleParts = fs.readdirSync(TIMELINE_DIR).filter(function (f) { return /^timeline\.nodes\.\d+\.json$/.test(f); }); } catch (e) { staleParts = []; }
   for (var staleFile of staleParts) { try { fs.unlinkSync(path.join(TIMELINE_DIR, staleFile)); } catch (e) { } }
+  // Structural guard on every emitted node: spans must never render backwards, and
+  // descriptions must never carry the unicode-replacement char from a bad decode.
+  for (var gz = 0; gz < nodes.length; gz++) {
+    var gnode = nodes[gz];
+    if (gnode.span && gnode.span.min > gnode.span.max) {
+      var gswap = gnode.span.min; gnode.span.min = gnode.span.max; gnode.span.max = gswap;
+    }
+    if (gnode.desc && gnode.desc.indexOf('\uFFFD') !== -1) {
+      gnode.desc = gnode.desc.replace(/\uFFFD/g, '');
+    }
+  }
   var nodeParts = [], curPart = [], curBytes = 0, nodeJson = '';
   for (var nd of nodes) {
     nodeJson = JSON.stringify(nd);
