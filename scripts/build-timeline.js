@@ -1023,6 +1023,7 @@ var MANUAL_SPANS = {
 // editions and colonial-era publications.
 var TOPIC_OVERRIDES = {
   'Manusmriti': [-200, 200],
+  'Red Army': [1918, 1946],
   '1885 Kashmir earthquake': [1885, 1885],
   // Buddhist Jataka tales: canonical Pali-canon stories of the Buddha's past lives,
   // traditionally taught by the Buddha himself and canonized ~4th-3rd century BCE.
@@ -3123,7 +3124,11 @@ function autoDescFor(name, qs) {
 // one odd mined topic cannot silently kill the whole timeline build: prefer the
 // auto-desc, then fall back to a contextual "name — category" line (same shape
 // as seedFallback, used by curated seeds).
+var SUBTOPIC_DESCS = {
+  'Red Army': 'the Workers and Peasants Red Army; the Soviet Union\u2019s military force from 1918 until it was renamed the Soviet Army in 1946'
+};
 function topicDescFor(name, label, qs) {
+  if (SUBTOPIC_DESCS[name]) return SUBTOPIC_DESCS[name];
   var d = autoDescFor(name, qs);
   if (d) return d;
   return capDesc(String(name || '').trim() + ' \u2014 ' + label);
