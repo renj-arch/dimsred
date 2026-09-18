@@ -4,6 +4,7 @@
 // Usage: node scripts/build-timeline.js
 var fs = require('fs');
 var path = require('path');
+var cp = require('child_process');
 
 var DATA = path.join(__dirname, '..', 'data', 'questions');
 var OUT = path.join(__dirname, '..', 'data', 'timeline.json');
@@ -4109,6 +4110,32 @@ function main() {
     if (gnode.desc && gnode.desc.indexOf('\uFFFD') !== -1) {
       gnode.desc = gnode.desc.replace(/\uFFFD/g, '');
     }
+  }
+  // Desc preservation: node descriptions are extractive ("best first sentence"),
+  // so a rebuild with shifted question counts can silently regress a curated/fixed
+  // desc back to a clause fragment. If HEAD's committed timeline already carries a
+  // desc for a node id, keep it; only descriptions of brand-new nodes come from the
+  // fresh extract. This keeps post-processed desc fixes sticky across wiki fills.
+  try {
+    var preserveMap = {}, preservedSources = 0;
+    var prevPartNames = cp.execFileSync('git', ['ls-tree', '--name-only', 'HEAD', 'data/']).toString('utf8').split('\n').filter(function (f) { return /timeline\.nodes\.\d+\.json$/.test(f); });
+    for (var piPrev of prevPartNames) {
+      var prevPartFile = piPrev.indexOf('data/') === 0 ? piPrev : 'data/' + piPrev;
+      var prevPartText = cp.execFileSync('git', ['show', 'HEAD:' + prevPartFile], { maxBuffer: 512 * 1024 * 1024 });
+      var prevPartArr = JSON.parse(prevPartText.toString('utf8'));
+      for (var prevNode of prevPartArr) {
+        if (prevNode && prevNode.id && prevNode.desc) { preserveMap[prevNode.id] = prevNode.desc; preservedSources++; }
+      }
+    }
+    if (preservedSources > 0) {
+      var preservedApplied = 0;
+      for (var curNode of nodes) {
+        if (curNode.desc && preserveMap[curNode.id]) { curNode.desc = preserveMap[curNode.id]; preservedApplied++; }
+      }
+      console.error('preserved ' + preservedApplied + ' existing node descriptions (' + preservedSources + ' descs read from HEAD)');
+    }
+  } catch (e) {
+    console.error('desc preservation skipped (' + e.message + ')' + (e.stderr ? ': ' + e.stderr.toString() : ''));
   }
   var nodeParts = [], curPart = [], curBytes = 0, nodeJson = '';
   for (var nd of nodes) {
