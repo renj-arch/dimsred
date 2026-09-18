@@ -595,7 +595,7 @@ function openProfile(id) {
       if (c.count != null && c.count <= 0) return '';
       var catKey = esc(c.key).replace(/'/g, "\\'");
       var catLabel = esc(c.label).replace(/'/g, "\\'");
-      return '<div class="cat-row" onclick="toggleDrill(this,\'' + catKey + '\',\'' + catLabel + '\')"><span class="n">' + esc(c.label) + '</span> <span class="c">' + (c.count || 0) + '</span></div>'
+      return '<div class="cat-row" data-key="' + catKey + '" data-label="' + catLabel + '" onclick="toggleDrill(this,\'' + catKey + '\',\'' + catLabel + '\')"><span class="n">' + esc(c.label) + '</span> <span class="c">' + (c.count || 0) + '</span></div>'
         + '<div class="drill-body" style="display:none"></div>';
     }).join('');
   document.getElementById('profile').classList.add('open');
@@ -604,6 +604,8 @@ function openProfile(id) {
   _storyCap = 40;
   _linOpen = new Set();
   renderProfileExtras(n);
+  var firstRow = document.querySelector('#profile .cat-row');
+  if (firstRow && firstRow.dataset.key) toggleDrill(firstRow, firstRow.dataset.key, firstRow.dataset.label);
   window.scrollTo(0, 0);
 }
 var _profileNode = null;
