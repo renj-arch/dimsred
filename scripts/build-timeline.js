@@ -4090,8 +4090,19 @@ function main() {
   for (var staleFile of staleParts) { try { fs.unlinkSync(path.join(TIMELINE_DIR, staleFile)); } catch (e) { } }
   // Structural guard on every emitted node: spans must never render backwards, and
   // descriptions must never carry the unicode-replacement char from a bad decode.
+  // Also pin authoritative Wikidata-verified lifespans (data/timeline-person-spans.json)
+  // onto any implausibly long person span.
+  var PERSON_SPANS = {};
+  try { PERSON_SPANS = JSON.parse(fs.readFileSync(path.join(__dirname, 'timeline-person-spans.json'), 'utf8')); } catch (e) { }
   for (var gz = 0; gz < nodes.length; gz++) {
     var gnode = nodes[gz];
+    if (gnode.type === 'person') {
+      var gsp = PERSON_SPANS[gnode.name];
+      if (gsp && Array.isArray(gsp) && gsp.length === 2
+          && (!gnode.span || (gnode.span.max - gnode.span.min) > 120)) {
+        gnode.span = { min: gsp[0], max: gsp[1] };
+      }
+    }
     if (gnode.span && gnode.span.min > gnode.span.max) {
       var gswap = gnode.span.min; gnode.span.min = gnode.span.max; gnode.span.max = gswap;
     }
