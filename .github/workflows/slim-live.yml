@@ -1,0 +1,36 @@
+name: Slim live mirror
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: slim-live
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rebuild slim live branch (orphan root)
+        run: |
+          set -e
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git rm -r -q --cached data/questions 2>/dev/null || true
+          git rm -q --cached upsc_sorted_topics.csv topics.txt 2>/dev/null || true
+          TREE=$(git write-tree)
+          ROOT=$(git commit-tree "$TREE" -m "slim live $(date -u +'%Y-%m-%d %H:%M UTC')")
+          git push --force origin "$ROOT:refs/heads/live"
+          echo "live -> $ROOT"

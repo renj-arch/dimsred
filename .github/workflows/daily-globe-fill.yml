@@ -1,0 +1,241 @@
+name: Globe Fill
+
+on:
+  schedule:
+    - cron: '0 0 * * *'  # Daily kickstart fallback
+  workflow_dispatch:
+
+concurrency:
+  group: globe-fill
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Pull latest
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git pull --rebase
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: repo
+          path: .
+          retention-days: 1
+
+  fetch-wiki:
+    needs: setup
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Configure git
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+
+      - name: Fetch Wikipedia categories
+        run: node scripts/wikipedia-fetch.js
+      - name: Fetch Wikidata SPARQL
+        run: node scripts/wikidata-multi-fetch.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: wiki-data
+          path: data/wiki-*.json
+          retention-days: 1
+
+  static-fill:
+    needs: setup
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repo
+          path: .
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Generate static data
+        run: node scripts/create-static-data.js
+
+      - name: Rebuild river pts lookup
+        run: node scripts/extract-river-lookup.js
+
+      - name: Enrich river entries with flow paths
+        run: node scripts/enrich-river-pts.js
+
+      - name: Fill all parts 1-10
+        run: |
+          node scripts/fill-globe-part1.js && node scripts/fill-globe-part2.js
+          node scripts/fill-globe-part3.js && node scripts/fill-globe-part4.js
+          node scripts/fill-globe-part5.js && node scripts/fill-globe-part6.js
+          node scripts/fill-globe-part7.js && node scripts/fill-globe-part8.js
+          node scripts/fill-globe-part9.js && node scripts/fill-globe-part10.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: filled-html
+          path: 3d-globe.html
+          retention-days: 1
+
+  wiki-merge:
+    needs: [static-fill, fetch-wiki]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v4
+        with:
+          name: repo
+          path: .
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: filled-html
+          path: .
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: wiki-data
+          path: data/
+
+      - name: Fill wiki data (part 11)
+        run: node scripts/fill-globe-part11.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged-html
+          path: 3d-globe.html
+          retention-days: 1
+
+  post:
+    needs: wiki-merge
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Pull latest
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git pull --rebase
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: merged-html
+          path: .
+
+      - name: Fetch contemporaries
+        run: node scripts/fetch-contemporaries.js
+      - name: Insert contemporaries
+        run: node scripts/insert-contemporaries.js
+      - name: Escape apostrophes
+        run: node scripts/fix-apostrophes.js
+      - name: Deduplicate globe entries
+        run: node scripts/dedup-globe.js
+      - name: Recompute total entry count from data
+        run: node scripts/recount-globe.js
+
+      - name: Stamp build time
+        run: |
+          node -e "
+            const fs = require('fs');
+            let h = fs.readFileSync('3d-globe.html', 'utf8');
+            const now = new Date().toISOString();
+            if (h.indexOf('__GLOBE_BUILD_TIME__') !== -1) {
+              h = h.split('__GLOBE_BUILD_TIME__').join(now);
+            } else {
+              h = h.replace(/var GLOBE_UPDATED='[^']*'/, \"var GLOBE_UPDATED='\" + now + \"'\");
+            }
+            fs.writeFileSync('3d-globe.html', h);
+          "
+
+      - name: Validate syntax
+        continue-on-error: true
+        run: |
+          node -e "
+            const fs = require('fs');
+            let h = fs.readFileSync('3d-globe.html', 'utf8');
+            const ms = h.indexOf('<script type=\"module\">');
+            const me = h.indexOf('</script>', ms);
+            const js = h.substring(ms + 23, me);
+            fs.writeFileSync('/tmp/globe-check.mjs', js);
+          "
+          node --check /tmp/globe-check.mjs
+
+      - name: Commit and push
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git checkout -B main 2>/dev/null || true
+          git reset HEAD -- . 2>/dev/null
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Globe fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+            for i in 1 2 3; do
+              if git pull --rebase 2>/dev/null; then
+                echo "Rebased cleanly"
+              else
+                echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
+                git rebase --abort
+                git fetch origin main 2>/dev/null
+                git merge --no-edit origin/main 2>/dev/null || {
+                  node scripts/resolve-data-merge.js
+                  git commit --no-edit 2>/dev/null || true
+                }
+              fi
+              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
+              sleep 5
+            done || true
+          fi
+
+      - name: Trigger next run
+        if: success()
+        run: gh workflow run "Globe Fill" --ref main
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}

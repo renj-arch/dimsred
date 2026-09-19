@@ -1,0 +1,420 @@
+name: Wiki Fill
+
+on:
+  schedule:
+    - cron: '0 0 * * *'
+  workflow_dispatch:
+    inputs:
+      chunk:
+        description: 'Chunk to process (1-27, leave empty for all)'
+        required: false
+        default: ''
+
+concurrency:
+  group: data-fill
+
+permissions:
+  contents: write
+  actions: write
+
+env:
+  NODE_OPTIONS: --max-old-space-size=12288
+
+jobs:
+  # ── Setup: prepare baseline quiz.json, PIB feeds ──
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - run: |
+          git fetch origin
+          git reset --hard origin/main
+          git clean -fd
+
+      - run: node scripts/rebuild-quiz-json.js
+
+      - name: Restore quiz.json from runner temp
+        run: |
+          if [ -f "$RUNNER_TEMP/quiz.json" ]; then
+            cp "$RUNNER_TEMP/quiz.json" data/quiz.json
+            for f in "$RUNNER_TEMP"/quiz.json.part.*; do
+              [ -f "$f" ] && cp "$f" "data/quiz.json${f##*quiz.json}"
+            done
+            echo "Restored quiz.json from runner temp"
+          fi
+
+      - run: node scripts/fetch-pib-rss.js
+      - run: node scripts/update-pib-archive.js
+
+      - run: node scripts/rebuild-quiz-json.js
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: baseline
+          path: data/
+          retention-days: 1
+
+  # ── Wiki chunks: 27 runners, capped at 20 in parallel ──
+  # Each chunk is bounded by its discovery budgets (LINK_BUDGET limits how many
+  # linked pages a single category may traverse per run at ~2.5s/request and
+  # concurrency 2 — worst case a 200k budget would run ~70h). Linked pages are
+  # persisted to the link pool and re-mined next run, so the caps only spread
+  # discovery across runs, never drop data. Timeout lifted to the GitHub-hosted
+  # runner max (360 min) as headroom on top of the cut link budget.
+  wiki-chunks:
+    needs: setup
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chunk: ${{ fromJSON(inputs.chunk != '' && format('[{0}]', inputs.chunk) || '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27]') }}
+      max-parallel: 20
+      fail-fast: false
+    timeout-minutes: 360
+    # A chunk that hits the runner's hard timeout (or fails) must not abort the
+    # whole run: run #434 lost 17 successful chunks' data because 10 slow chunks
+    # were killed at the 360-min cap, which cancelled merge+finalize. Each chunk
+    # now self-stops at WIKI_FILL_TIME_BUDGET_MIN; this flag keeps the rest of
+    # the run alive even if a chunk still dies.
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - uses: actions/download-artifact@v4
+        with:
+          name: baseline
+          path: data/
+
+      - run: node scripts/rebuild-quiz-json.js
+
+      - name: Validate requested chunk
+        if: inputs.chunk != ''
+        run: |
+          case "${{ inputs.chunk }}" in
+            1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27) echo "Single-chunk run: only chunk ${{ inputs.chunk }}";;
+            *) echo "::error::chunk must be 1-27, got '${{ inputs.chunk }}'"; exit 1;;
+          esac
+
+      - name: Prepare chunk output file
+        run: |
+          cp data/quiz.json data/quiz-chunk-${{ matrix.chunk }}.json
+          for f in data/quiz.json.part.*; do
+            [ -f "$f" ] && cp "$f" "data/quiz-chunk-${{ matrix.chunk }}.json${f#data/quiz.json}"
+          done
+
+      - name: Wiki fill
+        run: node scripts/wiki-fill-all.cjs
+        env:
+          WIKI_FILL_CHUNK: ${{ matrix.chunk }}
+          WIKI_FILL_CHUNKS: 27
+          WIKI_FILL_ALL: '1'
+          QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
+          WIKI_FILL_CONCURRENCY: 5
+          WIKI_FILL_PER_ARTICLE: 2000
+          # Raised so under-covered (single-shard) categories can surface more
+          # fresh content instead of the run time being dominated by re-checking
+          # already-covered pages in the big saturated categories. The
+          # wikiDone/barren-skip fix reclaims the time wasted re-fetching barren
+          # articles, so higher budgets translate into more net-new questions.
+          WIKI_FILL_TOPIC_BUDGET: 200000
+          WIKI_FILL_REVISIT_BUDGET: 200000
+          WIKI_FILL_LINK_BUDGET: 200000
+          WIKI_FILL_LINK_PER_ARTICLE: 200
+          WIKI_FILL_LINK_FETCH: 500
+          WIKI_FILL_CAT_DEPTH: 30
+          WIKI_FILL_MAX_PAGES: 1000000
+          # Reserve at least ~65% of each chunk's wall-clock budget for question
+          # generation by capping how much time discovery (category members +
+          # recursive link traversal) may consume. The persisted link/category
+          # pools ensure anything not reached this run is re-mined next run, so
+          # every chunk is guaranteed to add new questions rather than spending
+          # its whole window enumerating an ever-deeper frontier.
+          WIKI_FILL_DISCOVERY_BUDGET_PCT: 35
+          WIKI_FILL_DELAY_MS: 2500
+          # Self-stop budget: 280 min leaves 80 min of headroom before the
+          # runner's 360-min hard timeout. Run #508 proved 330 was too tight —
+          # the link-following loop only respected the discovery budget, ate the
+          # remaining window, and chunks were killed at the 360-min cap before
+          # upload-artifact ran, losing the merged data. The script now also
+          # enforces TIME_BUDGET inside the link-traversal loops (not just the
+          # discovery budget), so a chunk always exits cleanly (code 0) with time
+          # to upload — never killed mid-run by the runner timeout.
+          WIKI_FILL_TIME_BUDGET_MIN: 280
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: chunk-${{ matrix.chunk }}
+          path: |
+            data/quiz-chunk-${{ matrix.chunk }}.json
+            data/quiz-chunk-${{ matrix.chunk }}.json.part.*
+          retention-days: 1
+
+      # Runs when the run is manually cancelled mid-chunk. GitHub does not
+      # expose the *canceller* in the github.* context (only actor/actor_id =
+      # triggerer), so record which account started this run here and point to
+      # Settings → Security log → Actions, the only place the canceller's user
+      # id is authoritatively recorded.
+      - name: Cancellation receipt
+        if: cancelled()
+        run: |
+          echo "## Run cancelled" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Run #${{ github.run_number }} (id ${{ github.run_id }}), chunk ${{ matrix.chunk }}" >> "$GITHUB_STEP_SUMMARY"
+          echo "- Started by: \`${{ github.actor }}\` (user id ${{ github.actor_id }})" >> "$GITHUB_STEP_SUMMARY"
+          echo "- To confirm WHO cancelled: GitHub Security log (Settings → Security log → Actions) records the cancelling user id — the Actions context/api do not expose it." >> "$GITHUB_STEP_SUMMARY"
+
+  # ── Merge: combine all chunk outputs ──
+  merge:
+    needs: wiki-chunks
+    # Merge whatever chunks succeeded — a failed/timed-out chunk must not throw
+    # away the rest (run #434). merge-chunks.js skips missing chunks and no-ops
+    # cleanly when there are none.
+    # NOT `always()`: when the run is manually cancelled GitHub re-evaluates
+    # this condition for running jobs, and `always()` evaluates true so the
+    # merge would keep running for hours. `!cancelled()` stops it immediately.
+    # A chunk timing out is NOT a run cancellation, so the salvage stays intact.
+    if: ${{ !cancelled() }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      # ── Baseline FIRST, then chunks ONE AT A TIME ──
+      # Run #458 died with "No space left on device": all 27 unzipped chunks
+      # (~25 GB) landed on disk before the baseline restore ran. Pulling the
+      # baseline while disk is empty, then download→merge→free per chunk,
+      # caps peak usage at roughly one chunk (~1 GB). merge-chunks.js deletes
+      # each quiz-chunk-* file as it consumes it.
+      - name: Download baseline data
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/download-run-artifacts.sh
+          bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^baseline$' baseline
+
+      - name: Preserve feed-owned files
+        run: |
+          mkdir -p preserve-feed
+          for f in current-affairs.json pib-archive.json; do
+            if [ -f "data/questions/$f" ]; then
+              cp "data/questions/$f" "preserve-feed/$f" && echo "preserved $f from checkout"
+            elif [ -f "baseline/data/questions/$f" ]; then
+              cp "baseline/data/questions/$f" "preserve-feed/$f" && echo "preserved $f from baseline"
+            else
+              echo "note: $f not found — skipping preserve"
+            fi
+          done
+
+      - name: Restore baseline data (early, frees checkout data/)
+        run: |
+          df -h / || true
+          if [ -d baseline/data ]; then
+            rm -rf data && cp -r baseline/data data && echo "restored from baseline/data"
+          elif [ -d baseline ] && [ -n "$(ls -A baseline 2>/dev/null)" ]; then
+            rm -rf data && cp -r baseline data && echo "restored from baseline (flat layout)"
+          else
+            echo "WARNING: no baseline artifact — merging over checkout data/"
+            mkdir -p data
+          fi
+          rm -rf baseline
+          df -h / || true
+
+      - name: Merge chunks incrementally (download, merge, free — repeat)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          chmod +x scripts/download-run-artifacts.sh
+          mkdir -p chunks
+          for i in $(seq 1 40); do
+            if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" "^chunk-${i}$" chunks; then
+              node scripts/merge-chunks.js || echo "WARNING: merge errored for chunk $i (continuing)"
+            else
+              echo "chunk-$i not produced this run — skipping"
+            fi
+            find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
+            df -h / | tail -1
+          done
+          if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^chunk-[0-9]+$' chunks; then
+            node scripts/merge-chunks.js || true
+          fi
+          find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
+          df -h / || true
+
+      - run: node scripts/split-quiz-to-categories.js
+
+      - name: Re-apply feed-owned files (keep newest feed additions)
+        run: |
+          for f in current-affairs.json pib-archive.json; do
+            if [ -f "preserve-feed/$f" ]; then
+              cp "preserve-feed/$f" "data/questions/$f" && echo "re-applied $f"
+            else
+              echo "note: no preserved $f — leaving merged version"
+            fi
+          done
+          rm -rf preserve-feed
+
+      - run: node scripts/cleanup-questions.js
+      - run: node scripts/dedup-sentence-flood.js
+      - run: node scripts/inject-handpicked-gk.js
+
+      # Auto-route newly generated sub-topics to their correct category (✓-ticking
+      # them) so fresh wiki content lands in the right place. 0 moves when clean.
+      - name: Classify new sub-topics into correct categories
+        run: node scripts/classify-global.cjs
+        continue-on-error: true
+
+      # quiz.json (+ shards, ~4.8 GB) is consumed only within this job (split,
+      # cleanup, dedup). Setup rebuilds it fresh from the committed
+      # data/questions on the next run, so dropping it here keeps the merged
+      # artifact and finalize download ~5 GB lighter (build-timeline reads
+      # data/questions, not quiz.json).
+      - name: Drop quiz.json from merged upload
+        run: |
+          rm -f data/quiz.json
+          rm -f data/quiz.json.part.*
+
+      # The archive tail used to run inline in this job. When the merge phase ran
+      # long (~5h), build-archive-single.js outlived merge's default 360-minute
+      # GitHub-hosted job ceiling and GitHub cancelled the whole job (run #519 —
+      # no artifact uploaded → finalize skipped). Archive building now runs in
+      # its own job (`archive`) below with a fresh time budget.
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged-raw
+          path: data/
+          retention-days: 1
+
+  # ── Archive tail: build archive.html + indexes in a dedicated job ──
+  # Split out of `merge` (run #519: build-archive-single.js hit merge's default
+  # 6h cap and cancelled the job before `merged` was uploaded). This job gets a
+  # fresh 360-min budget and re-uploads the final payload under `merged`.
+  archive:
+    needs: [merge]
+    if: ${{ !cancelled() && needs.merge.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - run: npm install
+
+      - name: Download merged wiki data
+        uses: actions/download-artifact@v4
+        with:
+          name: merged-raw
+          path: data/
+
+      - run: node scripts/build-archive-single.js
+
+      # Rebuild the per-file archive index so current-affairs.html's archive
+      # progress total (read from data/questions/archive-index.json) stays in
+      # sync with archive.html/catalog.json. Without this the index is left at
+      # the previous snapshot's count while the archive keeps growing.
+      - run: node scripts/build-archive-index.mjs
+
+      - run: |
+          cp archive.html data/archive.html
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: merged
+          path: data/
+          retention-days: 1
+
+  # ── Finalize: commit wiki data, advance progress, chain to feed workflow ──
+  finalize:
+    needs: [archive]
+    # `!cancelled()` (not `always()`): a manual cancel must also stop an already
+    # running commit/push/self-dispatch, otherwise finalize keeps going for the
+    # whole cancellation window. Chunk failures still reach finalize via archive.
+    if: ${{ !cancelled() && needs.archive.result == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Download merged wiki data
+        uses: actions/download-artifact@v4
+        with:
+          name: merged
+          path: data/
+
+      - run: cp -f data/archive.html archive.html 2>/dev/null || true
+
+      - name: Rebuild timeline map from question data
+        continue-on-error: true
+        run: |
+          NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+
+      - run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git checkout -B main 2>/dev/null || true
+          git reset HEAD -- . 2>/dev/null
+          git add -A
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+            for i in 1 2 3; do
+              if git pull --rebase 2>/dev/null; then
+                echo "Rebased cleanly"
+              else
+                echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
+                git rebase --abort
+                git fetch origin main 2>/dev/null
+                git merge --no-edit origin/main 2>/dev/null || {
+                  node scripts/resolve-data-merge.js
+                  git commit --no-edit 2>/dev/null || true
+                }
+              fi
+              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
+              sleep 5
+            done || true
+            touch "$RUNNER_TEMP/changes-committed"
+          fi
+
+      - run: |
+          if [ -f "$RUNNER_TEMP/changes-committed" ]; then
+            echo "Wiki data committed; starting next run automatically"
+            gh workflow run daily-wiki-fill.yml 2>/dev/null && echo "Self-dispatched next Wiki Fill" || echo "Self-dispatch failed (non-fatal)"
+          else
+            echo "No wiki data changes — chain ends here"
+          fi
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}

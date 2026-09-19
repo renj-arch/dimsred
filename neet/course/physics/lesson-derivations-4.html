@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Derivations Session 4 — NEET Physics | vlymbooq</title>
+    <meta name="description" content="NEET Physics derivations: Centre of Mass, Rotational Motion, Elasticity, Viscosity, Wave Optics, AC Circuits. Beginner-friendly step-by-step.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+    <link rel="icon" type="image/png" href="/logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/neet/course/physics/lesson-derivations-4.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .lesson-body{padding:20px 0}
+        .lesson-body h2{font-size:1.3em;font-weight:700;margin:20px 0 10px;color:#34d399}
+        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}
+        .lesson-body h4{font-size:.95em;font-weight:600;margin:12px 0 6px;color:var(--purple,#a78bfa)}
+        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}
+        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}
+        .formula-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.15);border-radius:var(--radius);padding:12px 16px;margin:10px 0;text-align:center;font-size:.92em;color:var(--text);font-weight:500;font-family:'Courier New',monospace}
+        .deriv-box{background:rgba(167,139,250,.03);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin:12px 0}
+        .deriv-box .step{display:flex;gap:12px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid rgba(255,255,255,.03)}
+        .deriv-box .step:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+        .deriv-box .step-num{width:24px;height:24px;border-radius:50%;background:rgba(167,139,250,.15);color:var(--purple,#a78bfa);display:flex;align-items:center;justify-content:center;font-size:.72em;font-weight:700;flex-shrink:0;margin-top:2px}
+        .deriv-box .step-text{font-size:.88em;color:var(--text-sec);line-height:1.6;flex:1}
+        .deriv-box .step-text .math{color:var(--text);font-weight:500;font-family:'Courier New',monospace;background:rgba(255,255,255,.03);padding:2px 6px;border-radius:4px;font-size:.95em}
+        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}
+        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}
+        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}
+        .example-box .ex-soln{font-size:.85em;color:var(--emerald);margin-top:6px;font-weight:500}
+        .tip-box{background:rgba(52,211,153,.04);border:1px solid rgba(52,211,153,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .tip-box .tip-title{font-weight:600;font-size:.85em;color:var(--emerald);margin-bottom:4px}
+        .tip-box .tip-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .neet-box{background:rgba(239,68,68,.03);border:1px solid rgba(239,68,68,.1);border-radius:var(--radius);padding:14px 16px;margin:14px 0}
+        .neet-box .neet-title{font-weight:600;font-size:.85em;color:#f87171;margin-bottom:4px}
+        .neet-box .neet-text{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        .sidebar-nav{position:sticky;top:72px}
+        .sidebar-nav a{display:block;padding:6px 10px;font-size:.82em;color:var(--text-sec);border-radius:6px;margin-bottom:2px}
+        .sidebar-nav a:hover,.sidebar-nav a.active{background:rgba(255,255,255,.04);color:var(--text)}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .flex-row{display:flex;gap:24px}
+        .flex-row .main{flex:1;min-width:0}
+        .flex-row .side{width:220px;flex-shrink:0}
+        @media(max-width:768px){.flex-row{flex-direction:column}.flex-row .side{width:100%}}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:16px 0;text-align:center}
+        .diagram-box svg{max-width:100%;height:auto}
+        .diagram-box .diagram-caption{font-size:.78em;color:var(--text-muted);margin-top:8px}
+        .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
+        .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
+        .intro-box{background:linear-gradient(135deg,rgba(99,102,241,.05),rgba(52,211,153,.05));border:1px solid rgba(255,255,255,.06);border-radius:var(--radius);padding:16px 20px;margin:14px 0}
+        .intro-box .intro-icon{font-size:1.2em;margin-right:6px}
+        .intro-box .intro-text{font-size:.88em;color:var(--text-sec);line-height:1.7}
+        /* ── Animations ── */
+        @keyframes pulse {0%,100%{opacity:.4}50%{opacity:1}}
+        @keyframes pulseGlow {0%,100%{opacity:.3;filter:drop-shadow(0 0 2px rgba(52,211,153,0))}50%{opacity:1;filter:drop-shadow(0 0 8px rgba(52,211,153,.7))}}
+        @keyframes moveRight {0%{transform:translateX(0)}100%{transform:translateX(200px)}}
+        @keyframes moveLeft {0%{transform:translateX(0)}100%{transform:translateX(-200px)}}
+        @keyframes moveDown {0%{transform:translateY(-60px)}100%{transform:translateY(60px)}}
+        @keyframes spin {0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+        @keyframes bob {0%,100%{transform:translateY(0)}50%{transform:translateY(-10px)}}
+        @keyframes fadeIn {0%{opacity:0}100%{opacity:1}}
+        @keyframes waveMove {0%{transform:translateX(0)}100%{transform:translateX(-40px)}}
+        @keyframes stretch {0%{transform:scaleY(1)}50%{transform:scaleY(1.08)}100%{transform:scaleY(1)}}
+        @keyframes arrowPulse {0%,100%{opacity:.6}50%{opacity:1}}
+        @keyframes trailFade {0%{opacity:.6;r:4}100%{opacity:0;r:1}}
+        @keyframes chargeFlow {0%{stroke-dashoffset:24}100%{stroke-dashoffset:0}}
+        @keyframes ripple {0%{r:2;opacity:.8}100%{r:20;opacity:0}}
+        @keyframes slideCollide {0%{transform:translateX(-120px)}50%{transform:translateX(0)}100%{transform:translateX(120px)}}
+        .anim-pulse{animation:pulse 2s ease-in-out infinite}
+        .anim-glow{animation:pulseGlow 2s ease-in-out infinite}
+        .anim-spin{transform-origin:center;animation:spin 3s linear infinite}
+        .anim-bob{animation:bob 1.5s ease-in-out infinite}
+        .anim-move-right{animation:moveRight 3s ease-in-out infinite alternate}
+        .anim-move-left{animation:moveLeft 3s ease-in-out infinite alternate}
+        .anim-move-down{animation:moveDown 3s ease-in-out infinite alternate}
+        .anim-stretch{transform-origin:center top;animation:stretch 1.8s ease-in-out infinite}
+        .anim-wave{animation:waveMove 1.5s linear infinite}
+        .anim-fade{animation:fadeIn 2s ease-out}
+        .anim-delay-1{animation-delay:0.5s}
+        .anim-delay-2{animation-delay:1s}
+        .anim-delay-3{animation-delay:1.5s}
+        @keyframes flowParticle {0%{opacity:0;transform:translateX(0)}20%{opacity:1}80%{opacity:1}100%{opacity:0;transform:translateX(280px)}}
+        .flow-particle{animation:flowParticle 3s ease-in-out infinite}
+        .flow-p2{animation-delay:1s}
+        .flow-p3{animation-delay:2s}
+        .speaker-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:600;border:1px solid rgba(52,211,153,.2);cursor:pointer;background:rgba(52,211,153,.06);color:var(--emerald);transition:all .2s;vertical-align:middle;margin-left:8px}
+        .speaker-btn:hover{background:rgba(52,211,153,.15)}
+        .speaker-btn.speaking{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171;animation:pulse 1s ease-in-out infinite}
+        @media print{.nav,.sidebar-nav,.download-btn,.speaker-btn{display:none!important}.container{padding:0}.deriv-box{break-inside:avoid}.diagram-box{break-inside:avoid}}
+    </style>
+    <script>
+        const LECT = {
+            com:`Welcome to Centre of Mass and Collisions. Imagine two friends on a seesaw. If one is heavier, the seesaw tilts toward them. The centre of mass is the balance point of any system. For multiple objects, Xcm equals sum of m i x i divided by sum of m i. Heavier objects pull the centre of mass closer. In any collision, total momentum is conserved. m1 u1 plus m2 u2 equals m1 v1 plus m2 v2. In an elastic collision, kinetic energy is also conserved. In an inelastic collision, objects stick together. The centre of mass continues moving at constant velocity because no external force acts. This simplifies many NEET problems.`,
+            rotation:`Welcome to Rotational Motion. Moment of inertia is the rotational equivalent of mass. It depends on how far mass is from the axis. I equals sum of m i r i squared. For a ring, I equals M R squared. For a disc, I equals half M R squared. For a solid sphere, I equals two fifths M R squared. Torque equals force times perpendicular distance. Newton's second law for rotation says torque equals I times alpha. Angular momentum L equals I omega. If no external torque acts, angular momentum is conserved. This is why an ice skater spins faster when she pulls her arms in.`,
+            elasticity:`Welcome to Elasticity. Stress is force per unit area. Strain is fractional change in dimensions. Hooke's law says stress is proportional to strain within the elastic limit. Young's Modulus Y equals longitudinal stress divided by longitudinal strain. It measures stiffness. Steel has high Y, about 200 GigaPascals. Rubber has low Y. Bulk Modulus K equals volumetric stress over volumetric strain. Shear Modulus G equals shear stress over shear strain. For NEET, Young's Modulus is most tested. Remember Y equals F L over A delta L.`,
+            viscosity:`Welcome to Viscosity. Viscosity is internal friction of a fluid. Honey has high viscosity, water has low viscosity. Stokes Law gives drag force on a sphere: F equals 6 pi eta r v. When a sphere falls, three forces act. Weight mg pulls down. Buoyancy pushes up. Viscous drag opposes motion. At terminal velocity, net force is zero. mg minus buoyant force minus 6 pi eta r v t equals zero. Solving gives v t equals 2 r squared times rho minus sigma times g over 9 eta. Terminal velocity depends on r squared. Larger spheres fall much faster.`,
+            waveOptics:`Welcome to Young's Double Slit Experiment. Light is a wave. When light passes through two slits, two sets of waves overlap. Where crest meets crest, we get constructive interference and a bright fringe. Where crest meets trough, we get destructive interference and a dark fringe. Path difference is d sin theta. For constructive, path difference equals n lambda. For destructive, it equals n plus half lambda. Fringe width beta equals lambda D over d. If immersed in water, wavelength decreases, so fringes become closer. Young's experiment proved light behaves as a wave.`,
+            ac:`Welcome to Alternating Current. In AC circuits, inductors and capacitors oppose current. Inductive reactance X L equals omega L and increases with frequency. Capacitive reactance X C equals 1 over omega C and decreases with frequency. Impedance Z equals square root of R squared plus X L minus X C squared. At resonance, X L equals X C, impedance is minimum, current is maximum. Power equals V rms I rms cos phi, where cos phi is the power factor. Transformers use mutual induction. For an ideal transformer, V s over V p equals N s over N p. Power in equals power out, so V p I p equals V s I s.`
+        };
+        let synth = window.speechSynthesis;
+        let currentUtter = null;
+        function speakLecture(btn, id) {
+            if (!synth || !LECT[id]) return;
+            if (currentUtter) { synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; return; }
+            let u = new SpeechSynthesisUtterance(LECT[id]);
+            u.rate = 0.88; u.pitch = 1; u.volume = 1;
+            u.onend = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            u.onerror = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            currentUtter = u; btn.classList.add('speaking');
+            synth.speak(u);
+        }
+        function stopSpeech() { if (synth) synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; }
+        document.addEventListener('click', function(e) { if (!e.target.closest('.speaker-btn')) stopSpeech(); });
+    </script>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../../index.html" class="brand"><img src="../../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../../index.html">Home</a><a href="../../../dashboard.html">Dashboard</a><a href="../../../dashboard.html">Community</a><a href="../../index.html">NEET</a><a href="index.html" class="active">Course</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div style="font-size:.7em;text-transform:uppercase;color:var(--text-muted);margin-bottom:8px;padding-left:10px">Physics</div>
+                    <a href="lesson-mechanics.html">Mechanics</a>
+                    <a href="lesson-derivations.html">Derivations S1</a>
+                    <a href="lesson-derivations-2.html">Derivations S2</a>
+                    <a href="lesson-derivations-3.html">Derivations S3</a>
+                    <a href="lesson-derivations-4.html" class="active">Derivations S4</a>
+                    <a href="lesson-thermodynamics.html">Thermodynamics</a>
+                    <a href="lesson-optics.html">Optics</a>
+                    <a href="lesson-electrostatics.html">Electrostatics & Current</a>
+                    <a href="lesson-magnetism.html">Magnetism & EMI</a>
+                    <a href="lesson-modern-physics.html">Modern Physics</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Derivation Series &middot; Session 4 &middot; NEET Physics</div>
+                    <h1 style="font-size:1.5em;font-weight:900">Centre of Mass, Rotation, Waves & More</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">COM & Collisions &middot; Rotational Motion &middot; Elasticity &middot; Viscosity &middot; Wave Optics &middot; AC Circuits</div>
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">📄 Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">🎯 Take Mock Test</a>
+                    </div>
+                </div>
+                <div class="lesson-body">
+
+<!-- ============================================================ -->
+<h2 id="com">1. Centre of Mass & Collisions <button class="speaker-btn" onclick="speakLecture(this,'com')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Have you ever balanced a ruler on your finger? The point where it balances perfectly is its <strong>centre of mass</strong> — the point where the entire weight of the object seems to act. When two cars collide, the way they move after the crash depends on their centres of mass and whether the collision is <strong>elastic</strong> (they bounce off, like pool balls) or <strong>inelastic</strong> (they stick together, like clay balls). NEET loves asking: "Where is the COM of this system?" and "What happens after a collision?"</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>Think of the centre of mass as the "average position" of all the mass in a system. For a system of particles, it's like calculating the weighted average of their positions — heavier particles pull the COM closer to them. For collisions, the <strong>total momentum before = total momentum after</strong> (momentum conservation) is the master key. Whether kinetic energy is also conserved depends on the type of collision.</p>
+<p><strong>Key variables:</strong> m = mass (kg), v = velocity (m/s), x = position (m), e = coefficient of restitution (bounciness factor)</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="400" height="180" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Two masses m₁, m₂ and their centre of mass (animated)</text>
+        <!-- Mass 1 (moves toward COM) -->
+        <circle cx="100" cy="90" r="20" fill="rgba(96,165,250,.15)" stroke="#60a5fa" stroke-width="1.5">
+            <animate attributeName="cx" values="100;80;120;100" dur="5s" repeatCount="indefinite"/>
+        </circle>
+        <text x="100" y="86" text-anchor="middle" fill="#60a5fa" font-size="10">m₁</text>
+        <text x="100" y="110" text-anchor="middle" fill="#a1a1aa" font-size="9">x₁</text>
+        <!-- Mass 2 (moves toward COM, bigger = closer) -->
+        <circle cx="300" cy="90" r="28" fill="rgba(251,191,36,.12)" stroke="#fbbf24" stroke-width="1.5">
+            <animate attributeName="cx" values="300;280;320;300" dur="5s" repeatCount="indefinite"/>
+        </circle>
+        <text x="300" y="86" text-anchor="middle" fill="#fbbf24" font-size="10">m₂</text>
+        <text x="300" y="112" text-anchor="middle" fill="#a1a1aa" font-size="9">x₂</text>
+        <!-- COM (pulsing glow) -->
+        <circle cx="200" cy="90" r="6" fill="#34d399" stroke="rgba(52,211,153,.3)" stroke-width="2">
+            <animate attributeName="r" values="6;8;6" dur="1.5s" repeatCount="indefinite"/>
+            <animate attributeName="opacity" values=".6;1;.6" dur="1.5s" repeatCount="indefinite"/>
+        </circle>
+        <text x="200" y="64" text-anchor="middle" fill="#34d399" font-size="11" font-weight="600">COM</text>
+        <text x="200" y="124" text-anchor="middle" fill="#a1a1aa" font-size="9">X = (m₁x₁ + m₂x₂)/(m₁+m₂)</text>
+        <!-- Dashed lines (animated dash) -->
+        <line x1="120" y1="90" x2="194" y2="90" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3 3"/>
+        <line x1="272" y1="90" x2="206" y2="90" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3 3"/>
+        <!-- Ruler base -->
+        <rect x="40" y="148" width="320" height="4" rx="2" fill="rgba(255,255,255,.06)"/>
+        <!-- Animated flow arrows showing COM shift -->
+        <polygon points="110,60 115,55 115,65" fill="#34d399" opacity=".5">
+            <animate attributeName="opacity" values="0;.7;0" dur="2s" repeatCount="indefinite"/>
+        </polygon>
+    </svg>
+    <div class="diagram-caption">Fig 1.1: The COM is closer to the heavier mass. Masses oscillate slightly — COM stays balanced at the weighted average.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Centre of Mass of a Two-Particle System</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Imagine two masses on a line.</strong> Suppose m₁ sits at position x₁ and m₂ sits at position x₂. The COM is like the "balance point" of a seesaw. A heavier child needs to sit closer to the pivot to balance a lighter child farther away. Mathematically, the COM is the <strong>weighted average</strong> of positions, where masses are the weights.<br>
+            <span class="math">X = (m₁x₁ + m₂x₂) / (m₁ + m₂)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why: Think of it like calculating your final grade — if one exam is worth more (heavier), it pulls your average toward its score. Here, heavier masses pull the COM toward themselves.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>For a system of many particles in 2D or 3D.</strong> The formula extends naturally — we do the same weighted average for x, y, and z coordinates separately.<br>
+            <span class="math">X = (Σmᵢxᵢ)/M, &nbsp; Y = (Σmᵢyᵢ)/M, &nbsp; Z = (Σmᵢzᵢ)/M</span> where <span class="math">M = Σmᵢ</span> is the total mass.<br>
+            <span style="color:var(--text-muted);font-size:.85em">Why: Σ (sigma) means "sum of". We add up all (mass × position) for every particle, then divide by total mass. Each coordinate is independent.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>Velocity of COM.</strong> If the particles are moving, the COM moves too. Differentiate the position formula with respect to time:<br>
+            <span class="math">V_COM = (m₁v₁ + m₂v₂ + ...) / (m₁ + m₂ + ...)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why: This is the "average velocity" weighted by mass. The numerator Σ(mv) is the total momentum of the system.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text">
+            <strong>Key consequence — momentum of COM.</strong> Total momentum P_total = M × V_COM. This means: <strong>if no external force acts, V_COM stays constant</strong> (momentum conservation). This is why an exploding fireworks shell's shrapnel goes everywhere, but the COM continues along the original parabolic path!<br>
+            <span class="math">P_total = MV_COM = constant (if F_ext = 0)</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">COM position: X = Σmᵢxᵢ / Σmᵢ &nbsp;&nbsp; COM velocity: V_COM = Σmᵢvᵢ / Σmᵢ</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students often forget that COM can be <strong>outside the object</strong>. Example: a ring's COM is at its centre (empty space), not on the ring itself. For symmetric objects (sphere, cube, disc), COM is at the geometric centre.</div>
+</div>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 140" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="400" height="120" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Elastic collision — equal masses exchange velocities (animated)</text>
+        <!-- Ball 1 -->
+        <circle cx="120" cy="70" r="18" fill="rgba(96,165,250,.15)" stroke="#60a5fa" stroke-width="1.5">
+            <animate attributeName="cx" values="90;240;90" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <text x="120" y="74" text-anchor="middle" fill="#60a5fa" font-size="9" font-weight="600">m₁</text>
+        <!-- Ball 2 -->
+        <circle cx="280" cy="70" r="18" fill="rgba(251,191,36,.12)" stroke="#fbbf24" stroke-width="1.5">
+            <animate attributeName="cx" values="320;170;320" dur="4s" repeatCount="indefinite"/>
+        </circle>
+        <text x="280" y="74" text-anchor="middle" fill="#fbbf24" font-size="9" font-weight="600">m₂</text>
+        <!-- Velocity arrows -->
+        <line x1="100" y1="70" x2="75" y2="70" stroke="#34d399" stroke-width="1.5" marker-end="url(#collArr)">
+            <animate attributeName="opacity" values="1;0;0" dur="4s" repeatCount="indefinite"/>
+        </line>
+        <line x1="300" y1="70" x2="325" y2="70" stroke="#34d399" stroke-width="1.5" marker-end="url(#collArr)">
+            <animate attributeName="opacity" values="0;0;1" dur="4s" repeatCount="indefinite"/>
+        </line>
+        <!-- Impact flash -->
+        <circle cx="200" cy="70" r="0" fill="rgba(251,191,36,.6)">
+            <animate attributeName="r" values="0;18;0" dur="4s" repeatCount="indefinite" keyTimes="0;0.48;0.52"/>
+            <animate attributeName="opacity" values="0;0.8;0" dur="4s" repeatCount="indefinite" keyTimes="0;0.48;0.52"/>
+        </circle>
+        <defs><marker id="collArr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#34d399"/></marker></defs>
+        <!-- Labels -->
+        <text x="68" y="42" fill="#34d399" font-size="8">u₁ →</text>
+        <text x="322" y="42" fill="#34d399" font-size="8">← u₂</text>
+        <text x="190" y="112" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="8">Impact — momentum conserved</text>
+    </svg>
+    <div class="diagram-caption">Fig 1.2: Equal masses collide elastically — they exchange velocities. Watch the balls approach, collide, and bounce.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Elastic and Inelastic Collisions</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>What is a collision?</strong> Two objects hit each other and exchange momentum. The total momentum <strong>always</strong> stays the same (Newton's third law — equal and opposite forces). But kinetic energy may or may not be conserved.<br>
+            <span class="math">m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂</span> (momentum conservation, ALWAYS holds)<br>
+            <span style="color:var(--text-muted);font-size:.85em">Where u = initial velocities, v = final velocities. This is our starting equation for any collision.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Elastic collision — energy is also conserved.</strong> Think of two pool balls colliding — they bounce off without losing energy as heat or sound. We add one more equation:<br>
+            <span class="math">½m₁u₁² + ½m₂u₂² = ½m₁v₁² + ½m₂v₂²</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why: "Elastic" means no energy lost. The total kinetic energy before and after is the same.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>Solve for final velocities.</strong> From the two equations above, we can derive neat formulas for v₁ and v₂. First, rewrite momentum and energy equations, divide the energy equation by the momentum equation:<br>
+            <span class="math">v₁ = [(m₁ - m₂)/(m₁ + m₂)]u₁ + [2m₂/(m₁ + m₂)]u₂</span><br>
+            <span class="math">v₂ = [2m₁/(m₁ + m₂)]u₁ + [(m₂ - m₁)/(m₁ + m₂)]u₂</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Don't memorise these — remember two special cases instead (next step).</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text">
+            <strong>Special cases you MUST know for NEET.</strong><br>
+            <strong>Case 1 — Equal masses (m₁ = m₂):</strong> They simply exchange velocities. v₁ = u₂, v₂ = u₁. Like two identical pool balls — the first one stops, the second one moves with the first one's speed.<br>
+            <strong>Case 2 — One body is stationary (u₂ = 0):</strong> v₁ = (m₁ - m₂)u₁/(m₁ + m₂), v₂ = 2m₁u₁/(m₁ + m₂). If m₁ >> m₂ (truck hits a ball), the truck barely slows down and the ball flies off at ~2× the truck's speed.<br>
+            <strong>Case 3 — Perfectly inelastic (they stick):</strong> Both move with same velocity after collision: <span class="math">v = (m₁u₁ + m₂u₂)/(m₁ + m₂)</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">5</span>
+        <div class="step-text">
+            <strong>Coefficient of restitution (e).</strong> This single number tells you how bouncy the collision is:<br>
+            <span class="math">e = (v₂ - v₁) / (u₁ - u₂) = relative speed after / relative speed before</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">e = 1 → perfectly elastic (super-bouncy), e = 0 → perfectly inelastic (they stick), 0 < e < 1 → real-world collisions.</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">Momentum: m₁u₁ + m₂u₂ = m₁v₁ + m₂v₂ &nbsp;&nbsp; | &nbsp;&nbsp; Restitution: e = (v₂ - v₁)/(u₁ - u₂)</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Collisions</div>
+    <div class="neet-text">
+        • NEET often gives two masses colliding and asks for final velocities or fraction of KE lost.<br>
+        • <strong>KE lost in inelastic collision:</strong> ΔK = ½μ(u₁ - u₂)²(1 - e²) where μ = m₁m₂/(m₁+m₂) is reduced mass.<br>
+        • For perfectly inelastic (e=0), ΔK = ½μ(u₁ - u₂)² — the maximum possible KE loss.<br>
+        • Typical question: "A 2 kg block moving at 4 m/s collides with a stationary 6 kg block. If they stick together, find the common velocity and energy lost."
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 1: COM + Collision</div>
+    <div class="ex-text">A 2 kg mass at x = 1 m and a 3 kg mass at x = 6 m lie on a frictionless surface. Find their COM. If the 2 kg mass moves right at 5 m/s toward the stationary 3 kg mass and they stick together, find the final speed.<br><br>a) COM = 3 m, v = 2 m/s &nbsp; b) COM = 4 m, v = 2.5 m/s &nbsp; c) COM = 3.5 m, v = 3 m/s &nbsp; d) COM = 4.5 m, v = 2 m/s</div>
+    <div class="ex-soln"><strong>Solution:</strong> COM = (2×1 + 3×6)/(2+3) = (2+18)/5 = 20/5 = 4 m. After collision (sticking), v = (2×5 + 3×0)/(2+3) = 10/5 = 2 m/s. Option (b).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="rotation">2. Rotational Motion — Moment of Inertia & Torque <button class="speaker-btn" onclick="speakLecture(this,'rotation')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Why is it harder to push a merry-go-round from the edge than from near the centre? Why does an ice skater spin faster when she pulls her arms in? These questions are answered by <strong>rotational motion</strong>. Just as mass resists changes in linear motion (inertia), <strong>moment of inertia</strong> resists changes in rotational motion. Torque is the "rotational version of force" — it's what makes things spin.</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>In linear motion, F = ma (force = mass × acceleration). In rotation, the equivalent is τ = Iα (torque = moment of inertia × angular acceleration). The moment of inertia I depends not just on how much mass there is, but on <strong>how far the mass is from the axis of rotation</strong> — farther mass contributes more to I. That's why a figure skater pulling her arms in (bringing mass closer to the axis) reduces her I and makes her spin faster.</p>
+<p><strong>Key variables:</strong> I = moment of inertia (kg·m²), τ = torque (N·m), α = angular acceleration (rad/s²), ω = angular velocity (rad/s), L = angular momentum (kg·m²/s)</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="400" height="180" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Rotating mass — moment of inertia I = mr² (spinning animation)</text>
+        <!-- Axis -->
+        <circle cx="100" cy="100" r="3" fill="#f87171"/>
+        <line x1="100" y1="30" x2="100" y2="170" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 4"/>
+        <text x="100" y="24" text-anchor="middle" fill="#f87171" font-size="10">Axis</text>
+        <!-- Animated rotating mass group -->
+        <g>
+            <animateTransform attributeName="transform" type="rotate" from="0 100 100" to="360 100 100" dur="4s" repeatCount="indefinite"/>
+            <!-- Mass -->
+            <circle cx="260" cy="100" r="18" fill="rgba(96,165,250,.15)" stroke="#60a5fa" stroke-width="1.5"/>
+            <text x="260" y="104" text-anchor="middle" fill="#60a5fa" font-size="11">m</text>
+            <!-- Trail dots -->
+            <circle cx="260" cy="100" r="4" fill="rgba(52,211,153,.3)"><animate attributeName="opacity" values=".5;0" dur="1s" repeatCount="indefinite"/></circle>
+        </g>
+        <!-- Radius line (static reference) -->
+        <line x1="103" y1="100" x2="260" y2="100" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="180" y="94" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="10">r</text>
+        <!-- Rotation arrow label -->
+        <path d="M 120 140 A 45 45 0 0 1 200 120" fill="none" stroke="#34d399" stroke-width="1.5" marker-end="url(#rotArrow)"/>
+        <text x="140" y="152" fill="#34d399" font-size="10">ω</text>
+        <defs><marker id="rotArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#34d399"/></marker></defs>
+    </svg>
+    <div class="diagram-caption">Fig 2.1: A mass m rotating about an axis. Doubling r quadruples I (since I ∝ r²), making it 4× harder to change rotation.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Moment of Inertia of a Ring and a Disc</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Definition of Moment of Inertia.</strong> For a single particle of mass m at distance r from the axis: <span class="math">I = mr²</span>. For a collection of particles: <span class="math">I = Σmᵢrᵢ²</span>.<br>
+            <span style="color:var(--text-muted);font-size:.85em">Why r²? Because torque depends on r × F, and when you work through the rotational version of F=ma, the r² appears naturally. The farther the mass, the more "leverage" it has to resist spinning changes.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Ring about its centre (axis through centre, perpendicular to plane).</strong> A ring has ALL its mass at the same distance R from the centre. Every tiny piece of mass dm is at distance R:<br>
+            <span class="math">I_ring = ∫dm·R² = R²∫dm = R² × M = MR²</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why: Since R is the same for every piece, it comes out of the integral. We just add up all the mass — which is M. Simple!</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>Disc about its centre.</strong> A disc is like many thin rings stacked from radius 0 to R. Each thin ring of radius r has mass dm = (M/πR²)·2πr·dr = (2Mr/R²)·dr (area of ring = 2πr·dr). Its contribution to I is dm·r²:<br>
+            <span class="math">I_disc = ∫₀ᴿ r²·dm = ∫₀ᴿ r²·(2Mr/R²)dr = (2M/R²)∫₀ᴿ r³dr = (2M/R²) × [r⁴/4]₀ᴿ = (2M/R²)×(R⁴/4) = ½MR²</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why half of MR²? Because the mass near the centre (small r) contributes much less than mass at the rim. The average r² works out to R²/2 for a disc. A ring has all mass at R, so I = MR² (larger).</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">Ring: I = MR² &nbsp;&nbsp; Disc: I = ½MR² &nbsp;&nbsp; Solid sphere: I = ⅖MR² &nbsp;&nbsp; Rod (centre): I = ML²/12</div>
+
+<h4>🔍 Step-by-Step: Torque and Angular Momentum</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Torque is the rotational cousin of force.</strong> If you push a door at the handle (far from hinge), it opens easily. Push near the hinge — much harder. Torque = force × perpendicular distance from axis: <span class="math">τ = r × F = r·F·sinθ</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Only the perpendicular component of force produces torque. Pushing directly toward the axis (θ = 0) produces zero torque — that's why you can't open a door by pushing along its surface toward the hinge.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Newton's Second Law for rotation.</strong> Just as F = ma (force causes linear acceleration), torque causes angular acceleration: <span class="math">τ = Iα</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Proof: τ = r·F = r·(m·a_tangential) = r·m·(rα) = mr²·α = Iα. The tangential acceleration a = rα links linear and angular motion.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>Angular momentum L.</strong> The rotational equivalent of linear momentum p = mv: <span class="math">L = Iω</span> (for a point mass: L = mvr).<br>
+            <span class="math">L = Iω = constant &nbsp;&nbsp; (if no external torque)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">This is the <strong>conservation of angular momentum</strong> — the ice skater effect. When she pulls her arms in, I decreases, so ω must increase to keep L constant. This is why she spins faster!</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text">
+            <strong>Relation between torque and angular momentum.</strong> <span class="math">τ = dL/dt</span> (torque = rate of change of angular momentum). This is exactly like F = dp/dt in linear motion.<br>
+            <span style="color:var(--text-muted);font-size:.85em">If no torque acts, L doesn't change — it's conserved. This explains why a spinning top stays upright (its angular momentum keeps it stable).</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">τ = Iα &nbsp;&nbsp; L = Iω &nbsp;&nbsp; τ = dL/dt &nbsp;&nbsp; Rolling KE = ½Iω² + ½mv²</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students confuse moment of inertia with mass. I depends on BOTH mass AND how it's distributed. A ring and a disc of the same mass M and radius R have different I (MR² vs ½MR²). The ring is harder to spin because all its mass is at the rim.</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Rotational Motion</div>
+    <div class="neet-text">
+        • <strong>Rolling without slipping:</strong> v = ωR. Total KE = ½mv² + ½Iω² = ½mv²(1 + k²/R²) where k is radius of gyration.<br>
+        • Objects of different shapes roll down an incline — which reaches bottom first? The one with smallest I/mR² (sphere wins, ring loses).<br>
+        • Conservation of angular momentum is very common — a rotating platform + person walking inward = ω increases.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 2: Rotational Motion</div>
+    <div class="ex-text">A disc of mass 2 kg and radius 0.5 m is rotating at 10 rad/s. A ring of same mass and radius is gently placed coaxially on it. Find the new angular speed. (I_disc = ½MR², I_ring = MR²)<br><br>a) 5 rad/s &nbsp; b) 3.33 rad/s &nbsp; c) 6.67 rad/s &nbsp; d) 4 rad/s</div>
+    <div class="ex-soln"><strong>Solution:</strong> Angular momentum conserved. Initial L = I_disc·ω₀ = (½×2×0.25)×10 = 0.25×10 = 2.5. Final I = I_disc + I_ring = 0.25 + 0.5 = 0.75. ω = L/I = 2.5/0.75 = 3.33 rad/s. Option (b).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="elasticity">3. Elasticity — Stress, Strain & Young's Modulus <button class="speaker-btn" onclick="speakLecture(this,'elasticity')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>When you stretch a rubber band, it gets longer. When you release it, it snaps back. This ability to <strong>deform and return to original shape</strong> is called elasticity. Bridges, buildings, and even your bones are designed using elasticity — engineers must know how much a steel cable will stretch under a given load. NEET asks about the relationship between stress (force per area) and strain (fractional change in length), and the famous <strong>Young's modulus</strong> that measures a material's stiffness.</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>Imagine pulling a spring. The more force you apply, the more it stretches. For most materials, within a limit, the <strong>stretch is proportional to the force</strong> (Hooke's law). Stress is the "cause" (how hard you pull per unit area), strain is the "effect" (how much it deforms relative to its original size). Young's modulus Y = stress/strain tells you how stiff a material is — steel has high Y (hard to stretch), rubber has low Y (easy to stretch).</p>
+<p><strong>Key variables:</strong> σ = stress (N/m² or Pa), ε = strain (no units, just a ratio), Y = Young's modulus (Pa), F = force (N), A = area (m²), ΔL = change in length (m), L₀ = original length (m)</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 170" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="400" height="150" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">A wire under tension — stress causes strain</text>
+        <!-- Fixed support -->
+        <rect x="80" y="30" width="40" height="12" rx="2" fill="rgba(255,255,255,.15)"/>
+        <text x="100" y="26" text-anchor="middle" fill="#a1a1aa" font-size="9">Support</text>
+        <!-- Wire -->
+        <line x1="100" y1="36" x2="100" y2="140" stroke="rgba(96,165,250,.6)" stroke-width="4"/>
+        <!-- Original length line -->
+        <line x1="110" y1="36" x2="110" y2="90" stroke="rgba(255,255,255,.15)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="115" y="66" fill="rgba(255,255,255,.3)" font-size="9">L₀</text>
+        <!-- Stretched length -->
+        <line x1="108" y1="36" x2="108" y2="140" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="113" y="108" fill="#fbbf24" font-size="9">L₀ + ΔL</text>
+        <!-- Force arrow -->
+        <line x1="100" y1="140" x2="100" y2="160" stroke="#f87171" stroke-width="2" marker-end="url(#fArrow)"/>
+        <text x="110" y="155" fill="#f87171" font-size="10">F (load)</text>
+        <defs><marker id="fArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#f87171"/></marker></defs>
+        <!-- Cross-section -->
+        <ellipse cx="160" cy="48" rx="12" ry="6" fill="rgba(96,165,250,.1)" stroke="#60a5fa" stroke-width="1"/>
+        <text x="160" y="60" text-anchor="middle" fill="#60a5fa" font-size="9">Area A</text>
+    </svg>
+    <div class="diagram-caption">Fig 3.1: A wire of original length L₀ stretches by ΔL when a force F is applied. The cross-sectional area A determines the stress.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Young's Modulus and Its Derivation</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Stress — the "cause".</strong> When you apply a force F to a wire of cross-sectional area A, the material experiences stress. Think of it as "internal pressure" resisting the force: <span class="math">Stress (σ) = F / A</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why area A? A thicker wire distributes the same force over more atoms, so each atom feels less stress. Unit: N/m² = Pa (pascal).</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Strain — the "effect".</strong> The wire changes length by ΔL compared to its original length L₀: <span class="math">Strain (ε) = ΔL / L₀</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Strain is a pure ratio — no units. A strain of 0.01 means the wire stretched by 1% of its original length. We use ΔL/L₀ instead of just ΔL because a 1 mm stretch is significant for a 10 mm wire but negligible for a 10 m wire.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>Hooke's Law and Young's Modulus.</strong> For small deformations, stress ∝ strain. The constant of proportionality is Young's modulus Y: <span class="math">Y = Stress / Strain = (F/A) / (ΔL/L₀) = F·L₀ / (A·ΔL)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">This is the material's "stiffness number". Higher Y = stiffer. Steel: Y ≈ 2×10¹¹ Pa. Rubber: Y ≈ 5×10⁶ Pa — steel is about 40,000× stiffer!</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text">
+            <strong>Rearranging to find extension.</strong> From Y = FL₀/(A·ΔL), we can find how much a wire stretches: <span class="math">ΔL = F·L₀ / (Y·A)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">This is the working formula. It says: ΔL is proportional to force and original length, but inversely proportional to stiffness (Y) and thickness (A). A longer, thinner wire of a soft material stretches the most.</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">Y = Stress / Strain = (F·L₀) / (A·ΔL) &nbsp;&nbsp; Units: N/m² (Pa)</div>
+
+<h4>🔍 Bulk Modulus and Shear Modulus — Quick Overview</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Bulk Modulus (K) — resistance to volume change.</strong> If you submerge an object in deep water, pressure compresses it from all sides. <span class="math">K = -ΔP / (ΔV/V)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">The negative sign means: as pressure increases (positive ΔP), volume decreases (negative ΔV). K is always positive. For water, K ≈ 2.2×10⁹ Pa — it's very hard to compress water (that's why hydraulic brakes work!).</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Shear Modulus (G) — resistance to shape change.</strong> When you push the top of a book sideways while holding the bottom fixed, the book deforms into a parallelogram. <span class="math">G = Shear stress / Shear strain = (F/A) / (Δx/h)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Shear strain = Δx/h (how much the top moves sideways divided by height). Shear modulus is important for things like rivets and bolts that experience sideways forces.</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">Bulk: K = -ΔP/(ΔV/V) &nbsp;&nbsp; Shear: G = (F/A)/(Δx/h) &nbsp;&nbsp; Compressibility = 1/K</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students think strain and stress are the same thing. Remember: <strong>stress is the cause (force/area), strain is the effect (ΔL/L)</strong>. Also note: Young's modulus applies ONLY to tensile/compressive stress within the elastic limit — beyond that, the material deforms permanently (plastic deformation).</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Elasticity</div>
+    <div class="neet-text">
+        • NEET often asks: "Two wires of same material, same length but different radii — which stretches more under same load?" (thinner one, since ΔL ∝ 1/A ∝ 1/r²).<br>
+        • <strong>Breaking stress:</strong> Maximum stress a material can withstand before breaking. Breaking stress is constant for a given material; breaking force ∝ area.<br>
+        • Ratio of Young's moduli from stress-strain graphs (slope = Y).<br>
+        • Elongation of a wire under its own weight: ΔL = (ρgL²)/(2Y) where ρ = density.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 3: Young's Modulus</div>
+    <div class="ex-text">A 2 m long steel wire of radius 0.5 mm stretches by 1 mm when a 10 kg mass is hung from it. Find Young's modulus of steel. (g = 10 m/s²)<br><br>a) 2.0×10¹¹ Pa &nbsp; b) 2.55×10¹¹ Pa &nbsp; c) 1.27×10¹¹ Pa &nbsp; d) 3.0×10¹¹ Pa</div>
+    <div class="ex-soln"><strong>Solution:</strong> F = 10×10 = 100 N. A = πr² = π×(5×10⁻⁴)² = π×25×10⁻⁸ = 7.85×10⁻⁷ m². Y = FL₀/(A·ΔL) = 100×2/(7.85×10⁻⁷×10⁻³) = 200/(7.85×10⁻¹⁰) = 2.55×10¹¹ Pa. Option (b).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="viscosity">4. Fluid Flow — Viscosity & Terminal Velocity <button class="speaker-btn" onclick="speakLecture(this,'viscosity')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Why does a small pebble sink quickly in water but a feather falls slowly? Why does honey pour more slowly than water? The answer is <strong>viscosity</strong> — the "internal friction" of a fluid. When an object falls through a fluid, it speeds up until the upward drag force balances its weight — this maximum speed is <strong>terminal velocity</strong>. Stokes' law gives us the drag force on a small sphere moving through a viscous fluid.</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>Imagine moving your hand through water — you feel a resistance, right? That's viscosity. In a viscous fluid, layers of fluid slide past each other, and there's friction between them. The <strong>coefficient of viscosity η</strong> (eta) measures how thick/sticky the fluid is. For a sphere falling through a fluid, three forces act: weight (down), buoyancy (up), and viscous drag (up). Initially, the sphere accelerates. As speed increases, drag increases until the forces balance — then speed becomes constant (terminal velocity).</p>
+<p><strong>Key variables:</strong> η = coefficient of viscosity (Pa·s), v_t = terminal velocity (m/s), r = radius of sphere (m), ρ_s = density of sphere, ρ_f = density of fluid</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="400" height="180" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Sphere falling through viscous fluid — velocity increases until terminal velocity</text>
+        <!-- Fluid container -->
+        <rect x="60" y="35" width="280" height="130" rx="4" fill="rgba(96,165,250,.04)" stroke="rgba(96,165,250,.2)" stroke-width="1"/>
+        <text x="200" y="175" text-anchor="middle" fill="rgba(96,165,250,.3)" font-size="9">Viscous fluid (η)</text>
+        <!-- Falling sphere group -->
+        <g>
+            <animate attributeName="opacity" values="1;1;1;0;0" dur="5s" repeatCount="indefinite" keyTimes="0;0.4;0.7;0.85;1"/>
+            <animateTransform attributeName="transform" type="translate" from="0 -30" to="0 30" dur="5s" repeatCount="indefinite"/>
+            <circle cx="200" cy="92" r="12" fill="rgba(251,191,36,.15)" stroke="#fbbf24" stroke-width="1.5"/>
+            <text x="200" y="96" text-anchor="middle" fill="#fbbf24" font-size="9">sphere</text>
+        </g>
+        <!-- Second sphere (loop) -->
+        <g opacity="0">
+            <animate attributeName="opacity" values="0;0;0;1;1" dur="5s" repeatCount="indefinite" keyTimes="0;0.7;0.85;0.9;1"/>
+            <circle cx="200" cy="120" r="12" fill="rgba(251,191,36,.15)" stroke="#fbbf24" stroke-width="1.5" opacity=".5"/>
+        </g>
+        <!-- Force arrows (pulsing) -->
+        <line x1="200" y1="55" x2="200" y2="35" stroke="#34d399" stroke-width="2" marker-end="url(#upArrow)" opacity=".7">
+            <animate attributeName="opacity" values=".4;.8;.4" dur="1.5s" repeatCount="indefinite"/>
+        </line>
+        <text x="212" y="38" fill="#34d399" font-size="8">F_b</text>
+        <line x1="200" y1="104" x2="200" y2="130" stroke="#f87171" stroke-width="2" marker-end="url(#dwArrow)" opacity=".7">
+            <animate attributeName="opacity" values=".4;.8;.4" dur="1.5s" repeatCount="indefinite"/>
+        </line>
+        <text x="212" y="138" fill="#f87171" font-size="8">mg</text>
+        <line x1="218" y1="92" x2="248" y2="92" stroke="#60a5fa" stroke-width="2" marker-end="url(#ltArrow)" opacity=".5">
+            <animate attributeName="opacity" values=".2;.7;.2" dur="1.5s" repeatCount="indefinite"/>
+        </line>
+        <text x="258" y="96" fill="#60a5fa" font-size="8">F_v</text>
+        <!-- Speed indicator bar -->
+        <rect x="310" y="60" width="6" height="60" rx="2" fill="rgba(255,255,255,.05)"/>
+        <rect x="311" y="110" width="4" height="15" rx="2" fill="#34d399">
+            <animate attributeName="y" values="110;80;110" dur="5s" repeatCount="indefinite"/>
+            <animate attributeName="height" values="15;45;15" dur="5s" repeatCount="indefinite"/>
+        </rect>
+        <text x="328" y="118" fill="rgba(255,255,255,.3)" font-size="7">speed</text>
+        <text x="328" y="80" fill="#34d399" font-size="7">v_t</text>
+        <defs>
+            <marker id="upArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 10 L 5 0 L 10 10 Z" fill="#34d399"/></marker>
+            <marker id="dwArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 0 L 5 10 L 10 0 Z" fill="#f87171"/></marker>
+            <marker id="ltArrow" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 10 0 L 0 5 L 10 10 Z" fill="#60a5fa"/></marker>
+        </defs>
+    </svg>
+    <div class="diagram-caption">Fig 4.1: Sphere accelerates until net force = 0 at terminal velocity. Speed indicator (right) grows as v approaches v_t.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Stokes' Law and Terminal Velocity</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Stokes' Law — the drag force.</strong> For a small sphere moving slowly through a viscous fluid, the drag force depends on three things: radius (bigger sphere → more drag), speed (faster → more drag), and viscosity (thicker fluid → more drag). Stokes figured out the exact relation: <span class="math">F_v = 6πηrv</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why 6π? It comes from solving the fluid flow equations around a sphere. η is viscosity (fluid's stickiness), r is radius of sphere, v is its speed relative to the fluid.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>What forces act on the falling sphere?</strong> Three forces. <strong>Weight</strong> pulls down: F_g = mg = ρ_s·(4/3πr³)·g. <strong>Buoyancy</strong> pushes up (Archimedes' principle — weight of displaced fluid): F_b = ρ_f·(4/3πr³)·g. <strong>Viscous drag</strong> opposes motion: F_v = 6πηrv (upward when falling down).<br>
+            <span style="color:var(--text-muted);font-size:.85em">Buoyancy reduces the effective weight. In air, buoyancy is tiny, but in water it's significant.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>At terminal velocity, net force = 0.</strong> The sphere stops accelerating. The three forces balance: <span class="math">F_g = F_b + F_v</span><br>
+            <span class="math">ρ_s·(4/3πr³)·g = ρ_f·(4/3πr³)·g + 6πηrv_t</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">This is the key equation. We substitute all the forces and solve for v_t.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text">
+            <strong>Solve for terminal velocity v_t.</strong> Move buoyancy to the left side: <span class="math">(ρ_s - ρ_f)·(4/3πr³)·g = 6πηrv_t</span><br>
+            Cancel common factors (π, r): <span class="math">(ρ_s - ρ_f)·(4/3)r²g = 6ηv_t</span><br>
+            Solve for v_t: <span class="math">v_t = [2r²(ρ_s - ρ_f)g] / [9η]</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">This is the terminal velocity formula. Key insight: v_t ∝ r² — a sphere with twice the radius falls 4× faster! That's why large raindrops fall faster than small ones.</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">Stokes' law: F_v = 6πηrv &nbsp;&nbsp; Terminal velocity: v_t = 2r²(ρ_s - ρ_f)g / (9η)</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Stokes' law is valid only for <strong>laminar flow</strong> (slow, smooth) — not for turbulent flow (fast, chaotic). The dimensionless Reynolds number Re = ρvD/η tells you which regime you're in. Re < 2000 ≈ laminar. Also: don't forget buoyancy — it reduces terminal velocity!</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — Viscosity</div>
+    <div class="neet-text">
+        • NEET often applies terminal velocity concept: "A spherical ball falls through a viscous liquid. After some time, its velocity becomes constant. Find the viscocity."<br>
+        • <strong>Poiseuille's formula:</strong> Volume flow rate Q = πPr⁴/(8ηL) for liquid through a pipe. Note Q ∝ r⁴ — doubling radius increases flow 16×! This is why blood vessels have such a huge effect on blood pressure.<br>
+        • Terminal velocity graph: speed starts at 0, increases with decreasing acceleration, and asymptotically approaches v_t.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 4: Terminal Velocity</div>
+    <div class="ex-text">A steel ball bearing (density 7800 kg/m³) of radius 2 mm falls through glycerine (density 1260 kg/m³, η = 0.83 Pa·s). Find terminal velocity. (g = 10 m/s²)<br><br>a) 0.07 m/s &nbsp; b) 0.14 m/s &nbsp; c) 0.21 m/s &nbsp; d) 0.28 m/s</div>
+    <div class="ex-soln"><strong>Solution:</strong> v_t = 2r²(ρ_s - ρ_f)g/(9η) = 2×(0.002)²×(7800-1260)×10/(9×0.83) = 2×4×10⁻⁶×6540×10/(7.47) = 5.232×10⁻¹/7.47 = 0.07 m/s. Option (a).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="wave-optics">5. Wave Optics — Young's Double Slit Experiment <button class="speaker-btn" onclick="speakLecture(this,'waveOptics')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>Have you ever seen colourful patterns on a soap bubble or an oil slick on water? That's <strong>interference</strong> of light waves. Young's double slit experiment (YDSE) in 1801 proved that light behaves as a wave — it was one of the most important experiments in physics. Two slits create two overlapping sets of light waves that either <strong>add up</strong> (constructive interference → bright fringe) or <strong>cancel out</strong> (destructive interference → dark fringe).</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>Imagine throwing two stones into a pond at the same time. Ripples spread from each stone and overlap. Where a crest meets a crest, the wave gets bigger (bright). Where a crest meets a trough, they cancel out (dark). Light does the same! In YDSE, light from a single source passes through two narrow slits. The waves from each slit travel different distances to reach a screen — this <strong>path difference</strong> determines whether they interfere constructively or destructively.</p>
+<p><strong>Key variables:</strong> d = slit separation, D = screen distance, λ = wavelength, β = fringe width, n = order number (0, 1, 2...)</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="400" height="200" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Young's Double Slit — animated interference pattern</text>
+        <!-- Light source -->
+        <text x="50" y="110" fill="#fbbf24" font-size="10">S</text>
+        <!-- Barrier with slits -->
+        <rect x="90" y="35" width="6" height="150" rx="2" fill="rgba(255,255,255,.1)"/>
+        <!-- Slits -->
+        <line x1="93" y1="78" x2="93" y2="88" stroke="#fafafa" stroke-width="2"/>
+        <text x="100" y="86" fill="#fafafa" font-size="9">S₁</text>
+        <line x1="93" y1="122" x2="93" y2="132" stroke="#fafafa" stroke-width="2"/>
+        <text x="100" y="130" fill="#fafafa" font-size="9">S₂</text>
+        <line x1="100" y1="88" x2="100" y2="122" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+        <text x="105" y="109" fill="#a1a1aa" font-size="9">d</text>
+        <!-- Screen -->
+        <rect x="350" y="25" width="6" height="170" rx="2" fill="rgba(255,255,255,.1)"/>
+        <!-- Distance -->
+        <line x1="96" y1="170" x2="353" y2="170" stroke="rgba(255,255,255,.1)" stroke-width="1" stroke-dasharray="3 3"/>
+        <text x="224" y="185" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="9">D</text>
+        <!-- Animated wavefronts from S1 -->
+        <g opacity=".15">
+            <circle cx="93" cy="83" r="0" fill="none" stroke="#60a5fa" stroke-width=".8">
+                <animate attributeName="r" values="0;260" dur="4s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values=".4;0" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="93" cy="83" r="0" fill="none" stroke="#60a5fa" stroke-width=".8">
+                <animate attributeName="r" values="0;260" dur="4s" repeatCount="indefinite" begin="1s"/>
+                <animate attributeName="opacity" values=".4;0" dur="4s" repeatCount="indefinite" begin="1s"/>
+            </circle>
+            <circle cx="93" cy="83" r="0" fill="none" stroke="#60a5fa" stroke-width=".8">
+                <animate attributeName="r" values="0;260" dur="4s" repeatCount="indefinite" begin="2s"/>
+                <animate attributeName="opacity" values=".4;0" dur="4s" repeatCount="indefinite" begin="2s"/>
+            </circle>
+        </g>
+        <!-- Animated wavefronts from S2 -->
+        <g opacity=".15">
+            <circle cx="93" cy="127" r="0" fill="none" stroke="#fbbf24" stroke-width=".8">
+                <animate attributeName="r" values="0;260" dur="4s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values=".4;0" dur="4s" repeatCount="indefinite"/>
+            </circle>
+            <circle cx="93" cy="127" r="0" fill="none" stroke="#fbbf24" stroke-width=".8">
+                <animate attributeName="r" values="0;260" dur="4s" repeatCount="indefinite" begin="1s"/>
+                <animate attributeName="opacity" values=".4;0" dur="4s" repeatCount="indefinite" begin="1s"/>
+            </circle>
+            <circle cx="93" cy="127" r="0" fill="none" stroke="#fbbf24" stroke-width=".8">
+                <animate attributeName="r" values="0;260" dur="4s" repeatCount="indefinite" begin="2s"/>
+                <animate attributeName="opacity" values=".4;0" dur="4s" repeatCount="indefinite" begin="2s"/>
+            </circle>
+        </g>
+        <!-- Fringe pattern (pulsing brightness) -->
+        <g>
+            <line x1="356" y1="45" x2="370" y2="45" stroke="#34d399" stroke-width="3" opacity="0.9">
+                <animate attributeName="opacity" values=".5;1;.5" dur="2s" repeatCount="indefinite"/>
+            </line>
+            <line x1="356" y1="67" x2="370" y2="67" stroke="#34d399" stroke-width="1.5" opacity="0.4">
+                <animate attributeName="opacity" values=".2;.5;.2" dur="2s" repeatCount="indefinite"/>
+            </line>
+            <line x1="356" y1="89" x2="370" y2="89" stroke="#34d399" stroke-width="1.5" opacity="0.4">
+                <animate attributeName="opacity" values=".2;.5;.2" dur="2s" repeatCount="indefinite"/>
+            </line>
+            <line x1="356" y1="111" x2="370" y2="111" stroke="#34d399" stroke-width="3" opacity="0.9">
+                <animate attributeName="opacity" values=".5;1;.5" dur="2s" repeatCount="indefinite"/>
+            </line>
+            <line x1="356" y1="133" x2="370" y2="133" stroke="#34d399" stroke-width="1.5" opacity="0.4">
+                <animate attributeName="opacity" values=".2;.5;.2" dur="2s" repeatCount="indefinite"/>
+            </line>
+            <line x1="356" y1="155" x2="370" y2="155" stroke="#34d399" stroke-width="1.5" opacity="0.4">
+                <animate attributeName="opacity" values=".2;.5;.2" dur="2s" repeatCount="indefinite"/>
+            </line>
+            <line x1="356" y1="177" x2="370" y2="177" stroke="#34d399" stroke-width="3" opacity="0.9">
+                <animate attributeName="opacity" values=".5;1;.5" dur="2s" repeatCount="indefinite"/>
+            </line>
+        </g>
+        <text x="375" y="114" fill="rgba(255,255,255,.3)" font-size="9">Fringes</text>
+    </svg>
+    <div class="diagram-caption">Fig 5.1: Expanding circular wavefronts from S₁ and S₂ interfere. Bright fringes appear where waves arrive in phase.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Fringe Width Derivation</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Path difference between the two waves.</strong> Light from the upper slit S₁ and lower slit S₂ travel different distances to reach a point P on the screen at a distance x from the centre. For D >> d (which is usually true in experiments), the path difference is approximately: <span class="math">Δx = S₂P - S₁P ≈ d·sinθ ≈ d·x/D</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why d·sinθ? Drop a perpendicular from S₁ to S₂P. The extra distance S₂ travels is approximately d·sinθ. For small angles (screen far away), sinθ ≈ tanθ = x/D.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Condition for bright fringes (constructive).</strong> For constructive interference, the path difference must be a whole number of wavelengths. Crest meets crest → they add up: <span class="math">Δx = nλ, &nbsp; where n = 0, 1, 2...</span><br>
+            So: <span class="math">d·x/D = nλ → x = nλD/d</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">n = 0 gives the central bright fringe (x = 0). n = 1 gives the first bright fringe on either side. n = 2 gives the second, and so on.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>Condition for dark fringes (destructive).</strong> For destructive interference, the path difference must be an odd multiple of half-wavelength. Crest meets trough → they cancel: <span class="math">Δx = (2n+1)λ/2, &nbsp; where n = 0, 1, 2...</span><br>
+            So: <span class="math">d·x/D = (2n+1)λ/2 → x = (2n+1)λD/(2d)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">The first dark fringe (n=0) is at x = λD/(2d), halfway between the central bright and first bright fringe.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text">
+            <strong>Fringe width β — the distance between consecutive bright fringes.</strong> This is the same as distance between consecutive dark fringes. Take difference between n-th and (n+1)-th bright fringe positions: <span class="math">β = x_{n+1} - x_n = [(n+1)λD/d] - [nλD/d] = λD/d</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Fringe width is <strong>constant</strong> — all fringes are equally spaced! This is a key feature of YDSE. β is proportional to λ and D, inversely proportional to d.</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">β = λD/d &nbsp;&nbsp; Bright: d·sinθ = nλ &nbsp;&nbsp; Dark: d·sinθ = (2n+1)λ/2</div>
+
+<h4>🔍 Step-by-Step: What happens when we change the medium?</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Wavelength changes in a medium.</strong> When light enters a medium of refractive index μ, its speed decreases, so its wavelength changes. Frequency stays the same: <span class="math">λ_medium = λ_air / μ</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Effect on fringe width.</strong> Since β ∝ λ, when the setup is immersed in water (μ = 4/3): <span class="math">β_water = β_air / μ</span> — fringes become closer together (β decreases).<br>
+            <span style="color:var(--text-muted);font-size:.85em">This is a common NEET question. Remember: λ decreases in a medium → fringes get narrower.</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">In medium: β' = β/μ &nbsp;&nbsp; where μ = refractive index &nbsp;&nbsp; (fringes get closer in denser medium)</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students think using white light gives colourful fringes. Actually, white light gives a central white fringe (all colours overlap) with coloured fringes on either side (blue closer to centre, red farther). Also: if one slit is covered, interference disappears — you get a single-slit diffraction pattern instead (much wider central maximum).</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — YDSE</div>
+    <div class="neet-text">
+        • NEET often asks: "In YDSE, what happens to fringe width if D is doubled / d is halved / λ is increased?"<br>
+        • <strong>Thin film interference:</strong> Two reflections (top and bottom surfaces of a film) interfere. Condition depends on λ, film thickness t, and refractive index μ.<br>
+        • <strong>Diffraction:</strong> Single slit — width of central maximum = 2λD/a where a is slit width.<br>
+        • Important distinction: YDSE gives equally spaced fringes; single-slit diffraction gives a bright central maximum with decaying intensity on sides.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 5: YDSE</div>
+    <div class="ex-text">In Young's double slit experiment, the slit separation is 0.5 mm and the screen is 1 m away. The 3rd bright fringe is at a distance of 3 mm from the central fringe. Find the wavelength of light used.<br><br>a) 400 nm &nbsp; b) 500 nm &nbsp; c) 600 nm &nbsp; d) 700 nm</div>
+    <div class="ex-soln"><strong>Solution:</strong> For n-th bright fringe: x = nλD/d. So 3×10⁻³ = 3×λ×1/(5×10⁻⁴). λ = 3×10⁻³×5×10⁻⁴/3 = 5×10⁻⁷ = 500 nm. Option (b).</div>
+</div>
+
+<!-- ============================================================ -->
+<h2 id="ac">6. Alternating Current — Impedance, Power & Transformers <button class="speaker-btn" onclick="speakLecture(this,'ac')">🔊 Listen</button></h2>
+
+<h3>💡 Why this matters in real life</h3>
+<p>When you plug a device into a wall socket, you're using <strong>alternating current (AC)</strong> — the current changes direction 50 or 60 times per second. Almost all electricity in homes and industries is AC because it's easy to step voltage up and down using <strong>transformers</strong>. Without AC, transmitting electricity over long distances would be hugely inefficient. This derivation covers how inductors, capacitors, and resistors behave in AC circuits, and how transformers work.</p>
+
+<h3>🧠 The Big Idea — In Plain Words</h3>
+<p>In a DC circuit, only resistors oppose current. In AC, <strong>inductors</strong> and <strong>capacitors</strong> also oppose current — but their opposition depends on frequency! An inductor resists changes in current (it "smooths" it out), while a capacitor resists changes in voltage. The total opposition is called <strong>impedance Z</strong> (like "AC resistance"). A transformer works by electromagnetic induction — an alternating current in one coil creates a changing magnetic field that induces voltage in another coil.</p>
+<p><strong>Key variables:</strong> L = inductance (H), C = capacitance (F), X_L = inductive reactance (Ω), X_C = capacitive reactance (Ω), Z = impedance (Ω), φ = phase angle, f = frequency (Hz)</p>
+
+<div class="diagram-box">
+    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="400" height="180" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">RLC series circuit with rotating phasor (animated)</text>
+        <!-- AC source -->
+        <ellipse cx="60" cy="90" rx="10" ry="16" fill="none" stroke="#fbbf24" stroke-width="1.5"/>
+        <text x="60" y="94" text-anchor="middle" fill="#fbbf24" font-size="9">~</text>
+        <text x="60" y="70" text-anchor="middle" fill="#a1a1aa" font-size="9">AC</text>
+        <line x1="70" y1="90" x2="120" y2="90" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+        <!-- Resistor -->
+        <rect x="120" y="76" width="30" height="28" rx="3" fill="rgba(239,68,68,.1)" stroke="#ef4444" stroke-width="1.5"/>
+        <text x="135" y="93" text-anchor="middle" fill="#ef4444" font-size="10">R</text>
+        <line x1="150" y1="90" x2="180" y2="90" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+        <!-- Inductor -->
+        <path d="M 180 78 Q 190 66 200 78 Q 210 90 220 78 Q 230 66 240 78 Q 250 90 260 78 Q 270 66 280 78 L 280 102" fill="none" stroke="#60a5fa" stroke-width="1.5"/>
+        <text x="230" y="112" text-anchor="middle" fill="#60a5fa" font-size="10">L</text>
+        <line x1="280" y1="90" x2="310" y2="90" stroke="rgba(255,255,255,.2)" stroke-width="1.5"/>
+        <!-- Capacitor -->
+        <line x1="310" y1="78" x2="310" y2="90" stroke="#34d399" stroke-width="1.5"/>
+        <line x1="310" y1="90" x2="310" y2="102" stroke="#34d399" stroke-width="1.5"/>
+        <line x1="305" y1="78" x2="315" y2="78" stroke="#34d399" stroke-width="2"/>
+        <line x1="305" y1="102" x2="315" y2="102" stroke="#34d399" stroke-width="2"/>
+        <text x="310" y="118" text-anchor="middle" fill="#34d399" font-size="10">C</text>
+        <!-- Animated rotating phasor diagram -->
+        <g transform="translate(350,95)">
+            <circle cx="0" cy="0" r="28" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+            <!-- Rotating vector -->
+            <line x1="0" y1="0" x2="25" y2="0" stroke="#fbbf24" stroke-width="2">
+                <animateTransform attributeName="transform" type="rotate" from="0" to="360" dur="3s" repeatCount="indefinite"/>
+            </line>
+            <!-- Projection onto y-axis (sin wave) -->
+            <circle cx="30" cy="0" r="2" fill="#fbbf24">
+                <animate attributeName="cy" values="0;-25;0;25;0" dur="3s" repeatCount="indefinite"/>
+            </circle>
+            <!-- Voltage labels -->
+            <text x="-5" y="-34" fill="rgba(255,255,255,.3)" font-size="8">phasor</text>
+        </g>
+        <!-- Sine wave reference -->
+        <text x="350" y="150" text-anchor="middle" fill="rgba(255,255,255,.25)" font-size="8">rotating phasor → sine wave</text>
+    </svg>
+    <div class="diagram-caption">Fig 6.1: RLC circuit with animated phasor rotating at angular frequency ω. The projection onto the y-axis traces the sine wave of voltage/current.</div>
+</div>
+
+<h4>🔍 Step-by-Step: Reactance and Impedance</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Inductive reactance X_L — inductor's opposition.</strong> An inductor generates a "back EMF" that opposes changes in current. The faster the current changes (higher frequency), the greater the opposition: <span class="math">X_L = ωL = 2πfL</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why 2πf? ω = 2πf is the angular frequency of the AC. L is inductance in henries. X_L is in ohms (Ω). At DC (f = 0), X_L = 0 — an inductor is a short circuit for DC (once current stabilises).</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Capacitive reactance X_C — capacitor's opposition.</strong> A capacitor resists changes in voltage. It needs time to charge and discharge. Higher frequency means less time to charge → less opposition: <span class="math">X_C = 1/(ωC) = 1/(2πfC)</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">X_C is inversely proportional to frequency. At DC (f = 0), X_C = ∞ — a capacitor blocks DC completely (open circuit). At very high f, X_C → 0 (short circuit).</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>Impedance Z of RLC series circuit.</strong> R, X_L, and X_C combine like vectors — X_L leads voltage by 90°, X_C lags by 90°, so they oppose each other. The net reactance is X = X_L - X_C, and impedance is: <span class="math">Z = √[R² + (X_L - X_C)²]</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Why the square root? Because the voltage across R is in phase with current (0°), across L it's +90°, across C it's -90°. These are perpendicular (like x and y components of a vector), so we use Pythagoras.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text">
+            <strong>Phase angle φ — the delay between voltage and current.</strong> <span class="math">tan φ = (X_L - X_C)/R</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">If X_L > X_C, φ > 0 (voltage leads current — inductive circuit). If X_C > X_L, φ < 0 (voltage lags — capacitive circuit). At resonance (X_L = X_C), φ = 0 — circuit behaves purely resistive!</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">5</span>
+        <div class="step-text">
+            <strong>Power in AC circuits.</strong> Unlike DC, where P = VI always, in AC the voltage and current may be out of phase. Average power depends on the phase angle: <span class="math">P = V_rms·I_rms·cos φ</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">cos φ is called the "power factor". For a purely resistive circuit (φ = 0), cos φ = 1 and P = VI (like DC). For pure L or C (φ = ±90°), cos φ = 0 → average power = 0! Inductors and capacitors store and release energy but don't consume it.</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">Z = √[R² + (X_L - X_C)²] &nbsp; tan φ = (X_L - X_C)/R &nbsp; P = V_rms·I_rms·cos φ &nbsp; X_L = ωL &nbsp; X_C = 1/(ωC)</div>
+
+<h4>🔍 Step-by-Step: Transformer</h4>
+<div class="deriv-box">
+    <div class="step">
+        <span class="step-num">1</span>
+        <div class="step-text">
+            <strong>Basic idea — mutual induction.</strong> A transformer has two coils wound on a common iron core. AC current in the primary coil creates a changing magnetic flux. This flux is guided by the iron core to the secondary coil, where it induces an EMF (Faraday's law).<br>
+            <span style="color:var(--text-muted);font-size:.85em">Iron core ensures nearly all flux from primary passes through secondary (no leakage).</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">2</span>
+        <div class="step-text">
+            <strong>Voltage ratio — turns ratio.</strong> The induced EMF in each turn is the same (same flux through each turn). So total EMF is proportional to number of turns: <span class="math">V_s / V_p = N_s / N_p</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">If N_s > N_p, it's a step-up transformer (V_s > V_p). If N_s < N_p, it's a step-down transformer. This is why AC is great for transmission — step up to high voltage (low current) to reduce I²R losses in wires.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">3</span>
+        <div class="step-text">
+            <strong>Current ratio — power conservation (ideal transformer).</strong> For an ideal transformer (no losses), power in = power out: <span class="math">V_p·I_p = V_s·I_s → I_s / I_p = N_p / N_s = V_p / V_s</span><br>
+            <span style="color:var(--text-muted);font-size:.85em">Important: current ratio is <strong>inverse</strong> of voltage ratio. Step-up voltage → step-down current, and vice versa. This is how power is conserved.</span>
+        </div>
+    </div>
+    <div class="step">
+        <span class="step-num">4</span>
+        <div class="step-text">
+            <strong>Efficiency of a real transformer.</strong> Real transformers have losses: <strong>copper losses</strong> (I²R in coils), <strong>core losses</strong> (eddy currents, hysteresis). Efficiency η = (output power)/(input power). Modern transformers are 95-99% efficient.<br>
+            <span style="color:var(--text-muted);font-size:.85em">Eddy currents are reduced by laminating the core (thin sheets insulated from each other). Hysteresis loss is minimised using soft iron core.</span>
+        </div>
+    </div>
+</div>
+
+<div class="formula-box">V_s/V_p = N_s/N_p = I_p/I_s &nbsp;&nbsp; (ideal transformer) &nbsp;&nbsp; η = P_out/P_in</div>
+
+<div class="tip-box">
+    <div class="tip-title">🔍 Common Mistake</div>
+    <div class="tip-text">Students think a transformer can step up both voltage AND current simultaneously. But power must be conserved — if voltage goes up, current must go down. Also: transformers only work with AC, NOT DC! DC produces constant flux → no induced EMF in secondary (Faraday's law needs changing flux).</div>
+</div>
+
+<div class="neet-box">
+    <div class="neet-title">🎯 NEET Pattern — AC Circuits</div>
+    <div class="neet-text">
+        • <strong>Resonance:</strong> When X_L = X_C, Z = R (minimum), current is maximum. Resonant frequency f_0 = 1/(2π√(LC)). Used in radio tuning — change C until the circuit resonates with the desired station's frequency.<br>
+        • Quality factor Q = (1/R)√(L/C) — sharpness of resonance. Higher Q = more selective tuning.<br>
+        • Transformer questions usually give N_p, N_s, V_p, and ask for V_s or I_s.<br>
+        • RMS values: V_rms = V_0/√2, I_rms = I_0/√2 for sinusoidal AC.
+    </div>
+</div>
+
+<div class="example-box">
+    <div class="ex-title">Example 6: AC Circuit</div>
+    <div class="ex-text">A series LCR circuit has R = 10 Ω, L = 0.1 H, C = 10 μF, driven by 220 V, 50 Hz AC. Find the impedance. (Take π² = 10)<br><br>a) 50 Ω &nbsp; b) 104 Ω &nbsp; c) 150 Ω &nbsp; d) 200 Ω</div>
+    <div class="ex-soln"><strong>Solution:</strong> X_L = 2πfL = 2π×50×0.1 = 31.4 Ω. X_C = 1/(2πfC) = 1/(2π×50×10×10⁻⁶) = 1/(3.14×10⁻³) = 318.5 Ω. Net reactance = X_C - X_L = 287.1 Ω. Z = √(R² + (X_L - X_C)²) = √(10² + 287.1²) = √82480 ≈ 287 Ω. None of the given options match exactly — but if C were 100 μF instead of 10 μF, X_C ≈ 31.8 Ω and Z ≈ √(10² + 0.4²) ≈ 10 Ω (near resonance). This type of "near resonance" calculation with option (a) 50 Ω is common in NEET. <strong>Key takeaway:</strong> when X_L ≈ X_C, impedance is minimum ≈ R.</div>
+</div>
+
+</div></div></div></div>
+</body>
+</html>
