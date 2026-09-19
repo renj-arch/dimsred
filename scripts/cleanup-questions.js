@@ -1,6 +1,6 @@
 const fs = require('fs');
 const path = require('path');
-const { iterQuizQuestions, MAX_SHARD_BYTES } = require('./lib/quiz-store');
+const { iterQuizQuestions, createStreamingShardWriter } = require('./lib/quiz-store');
 
 const quizPath = path.join(__dirname, '..', 'data', 'quiz.json');
 
@@ -120,54 +120,57 @@ function isBad(q) {
   return false;
 }
 
-// Streamed filter + rewrite. The old code held the entire corpus in memory
-// through readQuiz() plus the filtered copy and handed it to writeQuiz() — the
-// same whole-corpus heap that eventually OOMs as the corpus grows. This mirrors
-// writeQuiz's exact shard layout and per-question byte measurement while walking
-// the questions one shard at a time, so peak heap stays bounded instead.
-const HEADER = Buffer.byteLength('{"questions":[]}');
-const shards = [];
-let cur = [];
-let curLen = HEADER;
-let before = 0;
-let kept = 0;
-
+// Streamed filter + rewrite. The old code held the ENTIRE filtered corpus in
+// memory (shards.push(cur) accumulated every kept question), which OOMs as the
+// corpus grows (recovery run #33, FATAL heap OOM at 6 GB). This streams each
+// kept question into an incremental on-disk writer (createStreamingShardWriter,
+// the same pattern merge-chunks.js and dedup-sentence-flood.js already use), so
+// peak heap is bounded by one shard (~300 MB serialized) instead of the whole
+// corpus.
+const TMP = quizPath + '.clean-tmp';
 function removeParts(p) {
   for (let i = 0; fs.existsSync(p + '.part.' + i); i++) fs.unlinkSync(p + '.part.' + i);
 }
+function clearTmp() {
+  try { fs.unlinkSync(TMP); } catch (e) {}
+  for (let i = 0; i < 1000; i++) { try { fs.unlinkSync(TMP + '.part.' + i); } catch (e) { break; } }
+}
 
+let before = 0;
+let kept = 0;
+let readErr = null;
+clearTmp();
+const writer = createStreamingShardWriter(TMP, rest);
 try {
   iterQuizQuestions(quizPath, (q) => {
     before++;
     if (isBad(q)) return;
-    const qLen = Buffer.byteLength(JSON.stringify(q));
-    if (cur.length && curLen + qLen + 1 > MAX_SHARD_BYTES) {
-      shards.push(cur);
-      cur = [];
-      curLen = HEADER;
-    }
-    cur.push(q);
-    curLen += qLen + 1;
+    writer.add(q);
     kept++;
   });
 } catch (e) {
+  readErr = e;
   console.error('Warning: Could not parse quiz.json (' + e.message + '). Skipping cleanup.');
+}
+
+if (readErr) {
+  clearTmp();
   process.exit(0);
 }
 
-removeParts(quizPath);
-if (shards.length === 0) {
+const res = writer.finish();
+if (kept === 0) {
+  clearTmp();
   const out = {};
   for (const k of Object.keys(primary)) out[k] = primary[k];
-  out.questions = cur;
+  out.questions = [];
   fs.writeFileSync(quizPath, JSON.stringify(out));
-} else {
-  shards.push(cur);
-  shards.forEach((sh, i) => {
-    fs.writeFileSync(quizPath + '.part.' + i, JSON.stringify({ questions: sh }));
-  });
-  const header = Object.assign({}, rest, { questions: [], shardCount: shards.length });
-  fs.writeFileSync(quizPath, JSON.stringify(header));
+} else if (res.shards) {
+  removeParts(quizPath);
+  for (let i = 0; i < res.shards; i++) {
+    fs.renameSync(TMP + '.part.' + i, quizPath + '.part.' + i);
+  }
+  fs.renameSync(TMP, quizPath);
 }
 
 console.log('Cleaned: ' + before + ' → ' + kept + ' questions (-' + (before - kept) + ' garbage)');
