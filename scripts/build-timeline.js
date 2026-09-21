@@ -2266,7 +2266,7 @@ function extractRelations(scanSource, nodes, topicMap) {
   // common English words, clause fillers, topic catch-alls). A kinship edge to
   // one of them is noise ("Noah -spouse-> Native", "-descends from-> Hebrew
   // Bible"); seeded entities are never on this list even if a name collides.
-  var JUNK_KIN_ENDPOINTS = ['generally', 'native', 'around', 'according', 'american', 'four', 'run', 'brown', 'father', 'child', 'william', 'sam', 'apapolo', 'basch', 'aus', 'indiana', 'apocryphon', 'hebrew bible', 'jews', 'main', 'daughter', 'find', 'british', 'internet', 'place', 'law', 'guide', 'six', 'big'];
+  var JUNK_KIN_ENDPOINTS = ['generally', 'native', 'around', 'according', 'american', 'four', 'run', 'brown', 'father', 'child', 'william', 'sam', 'apapolo', 'basch', 'aus', 'indiana', 'apocryphon', 'hebrew bible', 'jews', 'main', 'daughter', 'find', 'british', 'internet', 'place', 'law', 'guide', 'six', 'big', 'mother', 'son', 'three', 'seven', 'former', 'met', 'older', 'eventually', 'however', 'secondly'];
   function isJunkKinEndpoint(id) {
     var nd = NODE_BY_ID[id];
     if (!nd || nd.seed) return false;
