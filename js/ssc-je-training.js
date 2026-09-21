@@ -51,6 +51,8 @@
   merge(ALL, window.SSC_JE_ENC5_NUCLEAR);
   merge(ALL, window.SSC_JE_ENC5_RENEW);
   merge(ALL, window.SSC_JE_GAPS);
+    merge(ALL, window.SSC_JE_MECHENG);
+  merge(ALL, window.SSC_JE_ESEMAINS);
   }
 
   var SUBJECTS = {
@@ -76,7 +78,12 @@
     gasturb:    { name: "Gas Turbines & Jet Propulsion",   icon: "\u2708", color: "#f472b6" },
     powerplant: { name: "Power Plant Practice",            icon: "\u269B", color: "#38bdf8" },
     nuclear:    { name: "Nuclear Power Stations",          icon: "\u2622", color: "#a855f7" },
-    renew:      { name: "Renewable Energy Sources",        icon: "\u2600", color: "#22c55e" }
+    renew:      { name: "Renewable Energy Sources",        icon: "\u2600", color: "#22c55e" },
+    mechatronics: { name: "Mechatronics & Robotics",          icon: "\u25B3", color: "#facc15" },
+    maintenance: { name: "Maintenance Engineering",           icon: "\u25C7", color: "#34d399" },
+    imor:       { name: "Industrial Management & OR",         icon: "\u2234", color: "#fb7185" },
+    esepre:     { name: "UPSC ESE: Prelims",                  icon: "\u2630", color: "#a78bfa" },
+    esemain:    { name: "UPSC ESE: Mains",                    icon: "\u2637", color: "#fbbf24" }
   };
 
   var Q_COUNTS = [10, 25, 50, 0];
@@ -332,7 +339,7 @@
     var h = '<div class="ssc-menu">';
     h += '<div class="ssc-title">SSC-JE Mechanical Engineering</div>';
     h += '<div class="ssc-stats">' + totalCount() + " questions across " + Object.keys(SUBJECTS).length + " subjects</div>";
-    h += '<div class="ssc-stat-note">* Engineering Mathematics, Gas Turbines, Power Plant, Nuclear & Renewable are bonus topics beyond the official SSC-JE syllabus</div>';
+    h += '<div class="ssc-stat-note">* Engineering Mathematics, Gas Turbines, Power Plant, Nuclear, Renewable, Mechatronics, Maintenance, IM &amp; OR and the UPSC ESE Prelims/Mains sets are bonus topics beyond the official SSC-JE syllabus \u2014 added for GATE/ESE preparation.</div>';
     if (_saved) {
       h += '<div class="ssc-resume">';
       h += '<div class="ssc-resume-info">';
@@ -489,7 +496,7 @@
     h += '</div>';
     h += '<div class="ssc-bar-wrap"><div class="ssc-bar-fill" style="width:' + pct + '%"></div></div>';
     h += '<div class="ssc-card">';
-    h += '<div class="ssc-qnum">Q' + (state.idx + 1) + ' / ' + state.total + '</div>';
+    h += '<div class="ssc-qnum">Q' + (state.idx + 1) + ' / ' + state.total + (q.exam ? ' <span style="color:var(--amber)">' + q.exam + '</span>' : '') + '</div>';
     h += '<div class="ssc-qtext">' + q.q + '</div>';
 
     h += '<div class="ssc-section">';
