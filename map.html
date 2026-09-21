@@ -124,6 +124,7 @@ h1{font-size:1.45em}
     <button class="btn" id="btnIn" title="Zoom in toward present">Zoom in</button>
     <button class="btn" id="btnFull">Max zoom out</button>
     <button class="btn" id="btnAll" title="Show every dated topic at once, regardless of zoom level">Show all</button>
+    <button class="btn" id="btnFlow" title="Open the UPSC flowchart cheat sheet for a topic">Flowchart</button>
     <input class="searchbar" id="search" type="text" placeholder="Search any person, movement, disease, scheme, topic…">
     <select class="searchbar" id="catFilter" style="flex:0 0 auto;max-width:250px;cursor:pointer"><option value="">All categories</option></select>
   </div>
@@ -900,6 +901,17 @@ loadTimelineData().then(function (t) {
   buildEadj();
   buildCatOptions();
   render();
+  var btnFlow = document.getElementById('btnFlow');
+  if (btnFlow) btnFlow.onclick = function () { window.open('flowchart.html', '_blank'); };
+  function hashRoute() {
+    var m = /^#id=(.+)$/.exec(location.hash || '');
+    if (!m) return;
+    var d;
+    try { d = decodeURIComponent(m[1]); } catch (e) { return; }
+    if (nodeById(d)) openProfile(d);
+  }
+  window.addEventListener('hashchange', hashRoute);
+  if (location.hash) hashRoute();
 }).catch(function () {
   document.getElementById('canvas').innerHTML = '<div class="loading">data/timeline.json not found — run <code>node scripts/build-timeline.js</code>.</div>';
 });

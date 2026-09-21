@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPSC Flowchart — knowledge cheat sheet</title>
+<style>
+:root{
+--purple:#a78bfa;--amber:#fb923c;--rose:#fb7185;--teal:#2dd4bf;--cyan:#22d3ee;--slate:#94a3b8;
+--red:#ef4444;--green:#34d399;--gold:#fbbf24;
+--bg:#0f1117;--bg2:#161a24;--line:#2a3040;--txt:#e5e9f0;--txt2:#9aa4b8}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:radial-gradient(1200px 700px at 70% -10%,#1c2333 0%,var(--bg) 55%);color:var(--txt)}
+header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(15,17,23,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);flex-wrap:wrap}
+header h1{font-size:15px;margin:0 10px 0 4px;font-weight:800;letter-spacing:.4px;white-space:nowrap}
+header h1 b{color:var(--purple)}
+.btn{background:var(--bg2);color:var(--txt);border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-size:12.5px;cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:#3a4a63}
+.btn:disabled{opacity:.35;cursor:default}
+.searchbar{flex:1 1 240px;max-width:430px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:7px 11px;font-size:13px;outline:none}
+.searchbar:focus{border-color:var(--purple)}
+.crumb{margin:10px 14px 2px;font-size:12.5px;color:var(--txt2);overflow-x:auto;white-space:nowrap}
+.crumb a{color:var(--cyan);cursor:pointer;text-decoration:none}
+.topichead{margin:4px 14px 8px}
+.topichead .name{font-size:22px;font-weight:800;line-height:1.2}
+.topichead .meta{color:var(--txt2);font-size:12.5px;margin-top:4px}
+.topichead .desc{font-size:13px;color:var(--txt);max-width:820px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:8px 12px;margin-top:6px}
+.topichead .points{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
+.topichead .point{background:var(--bg2);border:1px solid var(--line);color:var(--txt2);border-radius:20px;padding:2px 10px;font-size:11.5px}
+.topichead .point b{color:var(--txt)}
+#chartwrap{margin:0 8px;overflow:auto}
+#chart{display:block;margin:0 auto;min-width:880px}
+svg text{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
+.ncard{cursor:pointer}
+.ncard.hero{cursor:default}
+.ncard:hover rect.card{filter:brightness(1.25)}
+.ncard.hero:hover rect.card{filter:none;stroke-width:1.8}
+.card{stroke-width:1.6}
+.avatar-txt{font-weight:700;fill:#fff;pointer-events:none}
+.nname{font-size:11.5px;font-weight:700;fill:var(--txt)}
+.nsub{font-size:9.5px;fill:var(--txt2)}
+.rel-bg{fill:#0b0e14;stroke:var(--line);stroke-width:.6}
+.edge-lbl{font-size:9.5px}
+.link-dash{stroke:#384258;stroke-dasharray:4 5;stroke-width:1.2;opacity:.85}
+.lane-name{font-size:13px;font-weight:800;letter-spacing:.5px}
+.lane-name .cnt{font-weight:500;color:var(--txt2)}
+.msg{color:var(--txt2);font-size:13px;padding:6px 14px;max-width:820px;line-height:1.5}
+.sample{display:inline-block;margin:2px 4px 2px 0;background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:20px;padding:4px 12px;font-size:12px;cursor:pointer}
+.sample:hover{border-color:var(--purple)}
+footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;line-height:1.5}
+</style>
+</head>
+<body>
+<header>
+  <h1><b>&#9673;</b> UPSC Flowchart</h1>
+  <button class="btn" id="bBack" title="Back">&#8592;</button>
+  <button class="btn" id="bFwd" title="Forward">&#8594;</button>
+  <input class="searchbar" id="q" type="text" list="topiclist" placeholder="Search any topic: Revolt of 1857, Gandhi, Constitution, Earthquake…" autocomplete="off">
+  <datalist id="topiclist"></datalist>
+  <button class="btn" id="bGo">Go</button>
+  <button class="btn" id="bTimeline" title="Open this topic's full timeline profile on the map" disabled>Open in timeline map</button>
+  <button class="btn" id="bPhotos" title="Fetch live Wikipedia thumbnails for people without a photo">Live photos</button>
+</header>
+<div class="crumb" id="crumb"></div>
+<div class="topichead" id="topichead"></div>
+<div id="chartwrap"><svg id="chart" xmlns="http://www.w3.org/2000/svg"></svg></div>
+<div class="msg" id="msg">Loading knowledge graph…</div>
+<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Every line is a real relationship — family, succession, founding, battles, geography. Click any card to drill into that topic's own sub-flowchart; <b>Live photos</b> pulls Wikipedia portraits for people without one.</footer>
+<script>
+var NODES=[],EDGES=[],LINKS=[];
+var BY_ID={},BY_NAME={},NAME_CNT={} ,ADJ={},LADJ={},IMGS={};
+var POS={},CARDS=[],CUR=null,UNIQ=0,TRAIL=[];
+var CW=178,CH=80,DX=24,DY=20,PERROW=6;
+
+var TYPE_COLOR={
+  person:'#a78bfa',event:'#fb923c',disease:'#fb7185',scheme:'#2dd4bf',org:'#22d3ee',concept:'#94a3b8',
+  war:'#ef4444',battle:'#ef4444',country:'#10b981',nation:'#10b981',empire:'#64748b',
+  geography:'#34d399',place:'#10b981',earthquake:'#fb7185',river:'#38bdf8',mountain:'#6b7280',
+  volcano:'#ef4444',animal:'#34d399',plant:'#84cc16',asteroid:'#fbbf24',comet:'#f472b6',
+  treaty:'#38bdf8',book:'#a3e635',festival:'#d946ef',dynasty:'#c084fc',temple:'#f59e0b',
+  monument:'#f59e0b',school:'#22d3ee',university:'#22d3ee',movement:'#fb923c'};
+var TYPE_LANE={
+  treaty:'polity',movement:'events',festival:'events',award:'events',conference:'events',
+  dynasty:'family',school:'polity',university:'polity',college:'polity',institute:'polity',
+  journal:'polity',newspaper:'polity',book:'knowledge',law:'polity',act:'polity',bill:'polity'};
+
+var KIN_RELS=['father','mother','parent','parents','son','daughter','child','children','brother','sister','sibling','siblings','spouse','wife','husband','partner of','ex-wife','ex-husband','divorced','grandfather','grandmother','grandson','granddaughter','grandparent','grandchild','uncle','aunt','nephew','niece','cousin','step-father','step-mother','step-son','step-daughter','step-brother','step-sister','half-brother','half-sister','father-in-law','mother-in-law','son-in-law','daughter-in-law','brother-in-law','sister-in-law','great-grandfather','great-grandmother','great-grandson','great-granddaughter','great-uncle','great-aunt','great-nephew','great-niece','great-great-grandfather','great-great-grandson','descends from','relative of','heir of','ward of','guardian of','ancestor','descendant','forefather','married'];
+var BATTLE_RELS=['commanded','commander','commander of','commander-in-chief','led','command','commander-in-chief of','fought','fought in','fought at','fought against','participated','participated in','joined','joined the','killed','killed at','killed in','died at','died in battle','dying','martyr','martyred at','defeated','defeated by','defeated at','captured','captured by','besieged','besieged by','victorious','victory at','victory of','victory over','victor at','general','general of','military leader','soldier of','officer','army of','army','commander of the army','siege of','attacked','attacking','invaded','invading','conquered','conquering','looted','sacked','captain','admiral','colonel','warrior','lieutenant','in battle of','during the battle','during the war','took part'];
+var SEQ_RELS=['succeeded by','preceded','predecessor of','successor of','succeeded','followed by','following','preceding','founded','established','created','formed','inaugurated'];
+var FOUND_RELS=['founded','established','founder of','founder','established by','created by','creator of','inaugurated','formed'];
+
+var FIXED_ORDER=['events','war','family','polity','people','knowledge','geo'];
+var FIXED_TITLE={events:'Key Events',war:'War & Battles',family:'Family & Dynasty',polity:'Polity & Institutions',people:'People & Society',knowledge:'Concepts & Discoveries',geo:'Geography, Countries & Places'};
+var FIXED_COLOR={events:'#fb923c',war:'#ef4444',family:'#a78bfa',polity:'#22d3ee',people:'#d1b3ff',knowledge:'#94a3b8',geo:'#34d399'};
+
+function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function canon(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/gi,' ').replace(/\s+/g,' ').trim();}
+function escRe(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function fmtYear(y){return y==null?'':(y<0?(-y)+' BC':String(y));}
+function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)%360;}
+function colorFor(t){return TYPE_COLOR[t]||'hsl('+hashStr(t)+',62%,60%)';}
+function typeLabel(t){return String(t||'misc').replace(/[-_]+/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});}
+function spanLabel(n){
+  if(!n||!n.span)return 'undated';
+  var s=n.span;
+  return (n.timebase==='era'?'era ~':'')+fmtYear(s.min)+(s.max>s.min?'–'+fmtYear(s.max):'');
+}
+function initials(n){
+  var p=String(n.name||'?').split(/\s+/).filter(Boolean);
+  var a=(p[0]||'').charAt(0),b=p[1]?p[1].charAt(0):'';
+  return (a+b).toUpperCase()||'?';
+}
+function trunc(s,n){s=String(s||'');return s.length>n?s.slice(0,n-1)+'\u2026':s;}
+function byProminence(a,b){
+  var pa=(a.seed?4:0)+(a.type==='person'?2:0)+(a.type==='event'?1:0)+(a.count||0)/1e9;
+  var pb=(b.seed?4:0)+(b.type==='person'?2:0)+(b.type==='event'?1:0)+(b.count||0)/1e9;
+  return pb-pa;
+}
+function inList(r,list){return list.indexOf(r)!==-1;}
+function laneOf(n,rel){
+  var t=n.type;
+  if(TYPE_LANE[t])return TYPE_LANE[t];
+  if(t==='event')return 'events';
+  if(t==='war'||t==='battle')return 'war';
+  if(t==='person'){
+    if(inList(rel,KIN_RELS))return 'family';
+    if(inList(rel,BATTLE_RELS))return 'war';
+    if(inList(rel,FOUND_RELS))return 'polity';
+    return 'people';
+  }
+  if(t==='org'||t==='scheme')return 'polity';
+  if(t==='concept'||t==='disease')return 'knowledge';
+  if(t==='geography'||t==='place'||t==='country'||t==='nation'||t==='earthquake'||t==='river'||t==='mountain'||t==='volcano'||t==='region'||t==='city'||t==='town'||t==='island'||t==='sea'||t==='ocean'||t==='lake'||t==='desert'||t==='forest')return 'geo';
+  return 't'+t;
+}
+
+function findByName(q){
+  var c=canon(q);
+  if(BY_NAME[c]&&BY_NAME[c].length)return BY_NAME[c].slice().sort(byProminence)[0];
+  var best=null;
+  for(var k in BY_NAME){
+    if(k.indexOf(c)===-1)continue;
+    var cand=BY_NAME[k].slice().sort(byProminence)[0];
+    if(!best||byProminence(cand,best)<0)best=cand;
+  }
+  return best;
+}
+function fetchJson(url){return fetch(url).then(function(r){if(!r.ok)throw new Error(url+' '+r.status);return r.json();});}
+function loadData(){
+  return fetchJson('data/timeline.json').then(function(t){
+    if(Array.isArray(t.nodes))return t;
+    var urls=[];
+    for(var i=0;i<(t.nodesParts||0);i++)urls.push('data/timeline.nodes.'+i+'.json');
+    return Promise.all(urls.map(fetchJson)).then(function(parts){
+      var all=[];
+      for(var p of parts)all=all.concat(p);
+      t.nodes=all;
+      return t;
+    });
+  });
+}
+function loadImages(){return fetchJson('data/person-images.json').then(function(o){for(var k in o)IMGS[canon(k)]=o[k];}).catch(function(){});}
+
+function buildIndexes(){
+  BY_ID={};BY_NAME={};NAME_CNT={};ADJ={};LADJ={};
+  for(var i=0;i<NODES.length;i++){
+    var n=NODES[i];
+    BY_ID[n.id]=n;
+    var c=canon(n.name);
+    BY_NAME[c]=BY_NAME[c]||[];
+    var a=BY_NAME[c];
+    if(a.indexOf(n)===-1)a.push(n);
+    NAME_CNT[c]=(NAME_CNT[c]||0)+(n.count||0);
+  }
+  for(var j=0;j<EDGES.length;j++){
+    var e=EDGES[j];
+    if(!ADJ[e.a])ADJ[e.a]={};ADJ[e.a][e.b]=e.rel;
+    if(!ADJ[e.b])ADJ[e.b]={};ADJ[e.b][e.a]=e.rel;
+  }
+  for(var k=0;k<LINKS.length;k++){
+    var l=LINKS[k];
+    if(!LADJ[l.a])LADJ[l.a]={};if(!LADJ[l.b])LADJ[l.b]={};
+    LADJ[l.a][l.b]=l.w;LADJ[l.b][l.a]=l.w;
+  }
+  var names=Object.keys(BY_NAME).sort(function(a,b){return (NAME_CNT[b]||0)-(NAME_CNT[a]||0);});
+  var dl=document.getElementById('topiclist'),frag=document.createDocumentFragment();
+  for(var m=0;m<names.length&&m<6000;m++){
+    var o=document.createElement('option');
+    o.value=BY_NAME[names[m]][0].name;
+    frag.appendChild(o);
+  }
+  dl.appendChild(frag);
+}
+
+function graphFor(id){
+  var central=BY_ID[id];
+  if(!central)return null;
+  var caps={events:16,war:16,family:36,polity:14,people:14,knowledge:14,geo:14};
+  var lane={events:[],war:[],family:[],polity:[],people:[],knowledge:[],geo:[]};
+  var dyn={};
+  var seen={};
+  function cand(cid,rel){
+    if(cid===id||seen[cid])return;
+    var n=BY_ID[cid];
+    if(!n||(n.level||0)>3)return;
+    seen[cid]=1;
+    var lk=laneOf(n,rel);
+    if(lk.charAt(0)==='t'){
+      dyn[n.type]=dyn[n.type]||[];
+      if(dyn[n.type].length<14)dyn[n.type].push({node:n,rel:rel});
+    }else{
+      if(lane[lk].length<caps[lk])lane[lk].push({node:n,rel:rel});
+    }
+  }
+  var fa=ADJ[id]||{};
+  for(var ob in fa)cand(ob,fa[ob]);
+  var la=LADJ[id]||{};
+  for(var lb in la)cand(lb,'related');
+  function expand(src,rels,dst,cap){
+    for(var i=0;i<EDGES.length&&dst.length<cap;i++){
+      var e=EDGES[i];
+      if(rels.indexOf(e.rel)===-1)continue;
+      var n2=null;
+      if(e.a===src.node.id)n2=BY_ID[e.b];
+      else if(e.b===src.node.id)n2=BY_ID[e.a];
+      if(!n2||(n2.level||0)>3)continue;
+      if(seen[n2.id])continue;
+      seen[n2.id]=1;
+      dst.push({node:n2,rel:e.rel});
+    }
+  }
+  var famX=[],seqX=[];
+  lane.family.slice().forEach(function(o){if(o.node.type==='person')expand(o,KIN_RELS,famX,40);});
+  famX.forEach(function(o){
+    var lk=laneOf(o.node,o.rel);
+    if(lk==='family'){if(lane.family.length<caps.family)lane.family.push(o);}
+    else if(lane[lk]&&lane[lk].length<caps[lk])lane[lk].push(o);
+  });
+  lane.events.slice().forEach(function(o){expand(o,SEQ_RELS,seqX,10);});
+  lane.polity.slice().forEach(function(o){expand(o,SEQ_RELS,seqX,10);});
+  lane.war.slice().forEach(function(o){expand(o,SEQ_RELS,seqX,8);});
+  seqX.forEach(function(o){
+    var lk=laneOf(o.node,o.rel);
+    if(lane[lk]&&lane[lk].length<caps[lk])lane[lk].push(o);
+    else if(lk.charAt(0)==='t'){dyn[o.node.type]=dyn[o.node.type]||[];if(dyn[o.node.type].length<14)dyn[o.node.type].push(o);}
+  });
+  var dynNames=Object.keys(dyn).sort(function(a,b){return dyn[b].length-dyn[a].length;});
+  var order=[].concat(FIXED_ORDER);
+  dynNames.forEach(function(t){
+    order.push('t'+t);
+    lane['t'+t]=dyn[t];
+  });
+  var items=[];
+  var idset={};idset[id]=1;
+  order.forEach(function(lk){
+    var arr=lane[lk];
+    if(!arr)return;
+    arr.forEach(function(it){
+      if(idset[it.node.id])return;
+      idset[it.node.id]=1;
+      items.push({lane:lk,node:it.node,rel:it.rel});
+    });
+  });
+  return {central:central,order:order,lane:lane,items:items,idset:idset};
+}
+function relPrio(r){
+  if(inList(r,KIN_RELS))return 0;
+  if(inList(r,BATTLE_RELS)||inList(r,SEQ_RELS)||inList(r,FOUND_RELS))return 1;
+  return 2;
+}
+function subEdges(idset){
+  var out={};
+  for(var a in idset){
+    var fa=ADJ[a]||{};
+    for(var b in fa){
+      if(b===a||!idset[b])continue;
+      var key=a<b?JSON.stringify([a,b]):JSON.stringify([b,a]);
+      if(!out[key])out[key]={a:a,b:b,rel:fa[b]};
+      else if(relPrio(fa[b])<relPrio(out[key].rel))out[key].rel=fa[b];
+    }
+  }
+  var arr=[];
+  for(var k in out)arr.push(out[k]);
+  arr.sort(function(x,y){
+    var d=relPrio(x.rel)-relPrio(y.rel);
+    if(d)return d;
+    if(x.a!==y.a)return x.a<y.a?-1:1;
+    return x.b<y.b?-1:(x.b>y.b?1:0);
+  });
+  return arr.slice(0,175);
+}
+function subLinks(idset){
+  var out={};
+  for(var a in idset){
+    var la=LADJ[a]||{};
+    for(var b in la){
+      if(b===a||!idset[b])continue;
+      if((la[b]||0)<2)continue;
+      var key=a<b?JSON.stringify([a,b]):JSON.stringify([b,a]);
+      var pair=a<b?[a,b]:[b,a];
+      var w=la[b]||0;
+      if(!out[key]||w>out[key].w)out[key]={a:pair[0],b:pair[1],w:w};
+    }
+  }
+  var arr=[];
+  for(var k in out)arr.push(out[k]);
+  arr.sort(function(x,y){return y.w-x.w;});
+  return arr.slice(0,46);
+}
+
+function layout(g){
+  var perLane={};
+  g.order.forEach(function(lk){perLane[lk]=[];});
+  g.items.forEach(function(it){perLane[it.lane].push(it);});
+  g.order.forEach(function(lk){
+    var arr=perLane[lk];
+    arr.sort(function(a,b){
+      var ay=a.node.span?a.node.span.min:1e9;
+      var by=b.node.span?b.node.span.min:1e9;
+      if(ay!==by)return ay-by;
+      return a.node.id<b.node.id?-1:1;
+    });
+  });
+  var W=DX*2+PERROW*CW+(PERROW-1)*DX;
+  var HEAD=96;
+  var laneTop={};
+  var y=HEAD;
+  var H=0;
+  g.order.forEach(function(lk){
+    var arr=perLane[lk];
+    var rows=arr.length?Math.ceil(arr.length/PERROW):0;
+    laneTop[lk]=y;
+    y+=22+rows*CH+(rows?rows-1:0)*DY+14;
+    H=y;
+  });
+  H=y;
+  POS={};
+  g.order.forEach(function(lk){
+    var arr=perLane[lk];
+    for(var i=0;i<arr.length;i++){
+      var col=i%PERROW,row=Math.floor(i/PERROW);
+      var cx=DX+col*(CW+DX);
+      var cy=laneTop[lk]+22+row*(CH+DY);
+      POS[arr[i].node.id]={x:cx,y:cy,lane:lk};
+    }
+  });
+  POS[g.central.id]=POS[g.central.id]||{x:W/2-CW/2,y:8,lane:'hero'};
+  return {W:W,H:H,perLane:perLane,laneTop:laneTop};
+}
+function ctr(id){var p=POS[id];return {x:p.x+CW/2,y:p.y+CH/2};}
+function anchors(P,Q){
+  var c1=ctr(P),c2=ctr(Q);
+  var dx=c2.x-c1.x,dy=c2.y-c1.y;
+  var a,b;
+  if(Math.abs(dx)>=Math.abs(dy)){
+    if(dx>=0){a={x:c1.x+CW/2,y:c1.y};b={x:c2.x-CW/2,y:c2.y};}
+    else{a={x:c1.x-CW/2,y:c1.y};b={x:c2.x+CW/2,y:c2.y};}
+  }else{
+    if(dy>=0){a={x:c1.x,y:c1.y+CH/2};b={x:c2.x,y:c2.y-CH/2};}
+    else{a={x:c1.x,y:c1.y-CH/2};b={x:c2.x,y:c2.y+CH/2};}
+  }
+  return {a:a,b:b};
+}
+function edgePath(P,Q){
+  var A=anchors(P,Q),a=A.a,b=A.b;
+  var k=(hashStr(P+'~'+Q)%2)?8:-8,m=0.55;
+  if(a.x===b.x){
+    var q1=a.y+Math.max(6,(b.y-a.y)*0.35),q2=b.y-Math.max(6,(b.y-a.y)*0.35);
+    return 'M '+a.x+' '+a.y+' C '+(a.x+k)+' '+q1+', '+(b.x-k)+' '+q2+', '+b.x+' '+b.y;
+  }
+  return 'M '+a.x+' '+a.y+' C '+(a.x+(b.x-a.x)*m)+' '+(a.y+k)+', '+(b.x-(b.x-a.x)*m)+' '+(b.y+k)+', '+b.x+' '+b.y;
+}
+
+function cardSvg(id,laneColor,opts){
+  opts=opts||{};
+  var n=BY_ID[id];
+  var col=opts.color||(n.type?colorFor(n.type):laneColor);
+  var p=POS[id];
+  var sub=opts.sub||spanLabel(n);
+  var x=p.x,y=p.y;
+  var idx=opts.idx!=null?opts.idx:UNIQ++;
+  var inner='<rect class="card" x="0" y="0" width="'+CW+'" height="'+CH+'" rx="11" fill="'+opts.fill+'" stroke="'+col+'"><title>'+esc(n.name)+(n.desc?' — '+esc(n.desc.slice(0,200)):'')+' · '+esc(sub)+' · click to open this topic\'s sub-flowchart</title></rect>';
+  var txtx=12;
+  if(n.type==='person'){
+    var img=IMGS[canon(n.name)];
+    if(img){
+      inner+='<defs><clipPath id="clip'+idx+'"><circle cx="21" cy="'+(CH/2)+'" r="15"/></clipPath></defs>'
+       +'<image x="6" y="'+(CH/2-15)+'" width="30" height="30" href="'+img+'" preserveAspectRatio="xMidYMid slice" clip-path="url(#clip'+idx+')"/>';
+    }else{
+      inner+='<text class="avatar-txt" data-av="'+idx+'" x="21" y="'+(CH/2+5)+'" text-anchor="middle" font-size="12">'+esc(initials(n))+'</text>';
+    }
+    txtx=42;
+    CARDS[idx]={id:id,name:n.name};
+  }else{
+    inner+='<rect x="12" y="'+(CH/2-7)+'" width="6" height="14" rx="3" fill="'+col+'"/>';
+  }
+  inner+='<text class="nname" x="'+txtx+'" y="'+(CH/2-3)+'" font-size="11.5">'+esc(trunc(n.name,46))+'</text>';
+  inner+='<text class="nsub" x="'+txtx+'" y="'+(CH/2+13)+'" font-size="10">'+esc(sub)+(opts.extra?' · '+esc(opts.extra):'')+(opts.extraMeta?' · '+esc(opts.extraMeta):'')+'</text>';
+  return '<g class="ncard'+(opts.hero?' hero':'')+'" data-idx="'+idx+'" transform="translate('+x+','+y+')">'+inner+'</g>';
+}
+
+function navStack(){
+  var b=document.getElementById('bBack'),f=document.getElementById('bFwd');
+  b.disabled=history.state&&history.state.depth<=0||!history.state;
+  f.disabled=!history.state||history.state.depth>=TRAIL.length-1;
+}
+function navigate(id,push){
+  if(id===CUR)return;
+  var h='#id='+encodeURIComponent(id);
+  if(push){
+    TRAIL.push(id);
+    if(TRAIL.length>10)TRAIL.shift();
+    history.pushState({depth:TRAIL.length-1},'',h);
+  }else{
+    history.replaceState({depth:TRAIL.length-1},'',h);
+  }
+  renderFlow(id);
+}
+function route(){
+  var m=/^#id=(.+)$/.exec(location.hash||'');
+  if(m){
+    renderFlow(decodeURIComponent(m[1]));
+    return;
+  }
+  var q=/^#q=(.+)$/.exec(location.hash||'');
+  if(q){
+    var n=findByName(decodeURIComponent(q[1]));
+    if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);return;}
+  }
+  home();
+}
+
+function renderFlow(id){
+  var g=graphFor(id);
+  if(!g){msg('Unknown topic: '+id);return;}
+  CUR=id;
+  if(TRAIL[TRAIL.length-1]!==id)TRAIL.push(id);
+  if(TRAIL.length>10)TRAIL.shift();
+  var geo=layout(g);
+  var edges=subEdges(g.idset);
+  var links=subLinks(g.idset);
+  var laneColor={};
+  g.order.forEach(function(lk){
+    if(lk.charAt(0)==='t')laneColor[lk]=colorFor(lk.slice(1));
+    else laneColor[lk]=FIXED_COLOR[lk]||colorFor('concept');
+  });
+  var used={};
+  edges.forEach(function(e){
+    var cl=laneColor[POS[e.b]&&POS[e.b].lane]||'#9aa4b8';
+    used[cl]=1;
+  });
+  used['#9aa4b8']=1;
+  var markers='';
+  Object.keys(used).forEach(function(c){
+    var mid=c.replace('#','');
+    markers+='<marker id="arw'+mid+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="'+c+'"/></marker>';
+  });
+  var body='<defs>'+markers+'</defs>';
+  CARDS=[];
+  links.forEach(function(l){
+    body+='<path class="link-dash" d="'+edgePath(l.a,l.b)+'" fill="none"><title>related · weight '+l.w+'</title></path>';
+  });
+  var drawn={};
+  edges.forEach(function(e){
+    var key=JSON.stringify(e.a<e.b?[e.a,e.b]:[e.b,e.a]);
+    if(drawn[key])return;drawn[key]=1;
+    var tp=POS[e.b]&&laneColor[POS[e.b].lane]?laneColor[POS[e.b].lane]:'#9aa4b8';
+    var path=edgePath(e.a,e.b);
+    body+='<path d="'+path+'" fill="none" stroke="'+tp+'" stroke-width="1.4" marker-end="url(#arw'+tp.replace('#','')+')"><title>'+esc((BY_ID[e.a]?BY_ID[e.a].name:'?')+' —'+esc(e.rel)+'→ '+(BY_ID[e.b]?BY_ID[e.b].name:'?'))+'</title></path>';
+    var A=anchors(e.a,e.b);
+    var mx=(A.a.x+A.b.x)/2,my=(A.a.y+A.b.y)/2;
+    var tx=esc(trunc(e.rel,28)),tw=tx.replace(/&amp;/g,'&').length*5.6+8;
+    if(Math.abs(A.a.x-A.b.x)+Math.abs(A.a.y-A.b.y)>170){
+      body+='<rect class="rel-bg" x="'+(mx-tw/2)+'" y="'+(my-8)+'" width="'+tw+'" height="13" rx="6"/>'
+       +'<text class="edge-lbl" x="'+mx+'" y="'+(my+2)+'" text-anchor="middle" fill="'+tp+'">'+tx+'</text>';
+    }
+  });
+  g.order.forEach(function(lk){
+    var a=g.items.filter(function(it){return it.lane===lk;});
+    var y=geo.laneTop[lk];
+    body+='<text class="lane-name" x="16" y="'+(y+2)+'" fill="'+(laneColor[lk])+'">'+esc(laneTitle(lk))+' <tspan class="cnt">· '+a.length+'</tspan></text>';
+  });
+  g.items.forEach(function(it){
+    body+=cardSvg(it.node.id,laneColor[it.lane],{fill:shade(laneColor[it.lane]),extra:shortRel(it.rel),idx:UNIQ++});
+  });
+  var hero=BY_ID[id];
+  body+=cardSvg(id,'#fbbf24',{fill:'rgba(251,191,36,0.12)',color:'#fbbf24',hero:true,extra:'focus topic',extraMeta:(hero.type)+' · '+(hero.count||0)+' mentions',idx:UNIQ++});
+  var svg=document.getElementById('chart');
+  svg.setAttribute('viewBox','0 0 '+geo.W+' '+geo.H);
+  svg.setAttribute('width',geo.W);
+  svg.setAttribute('height',geo.H);
+  svg.innerHTML=body;
+  paintHead(hero);
+  paintCrumb();
+  msg('');
+  document.getElementById('bTimeline').disabled=false;
+  navStack();
+  window.scrollTo(0,0);
+}
+function shortRel(r){return trunc(r,30);}
+function shade(c){
+  var m=/^#([0-9a-f]{6})$/i.exec(c)||/^#([0-9a-f]{3})$/i.exec(c);
+  c=m?m[1]:'9aa4b8';
+  var r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);
+  return 'rgba('+Math.round(r*0.13)+','+Math.round(g*0.13)+','+Math.round(b*0.16)+',0.32)';
+}
+function laneTitle(lk){return lk.charAt(0)==='t'?typeLabel(lk.slice(1)):FIXED_TITLE[lk];}
+function paintHead(n){
+  var th=document.getElementById('topichead');
+  var meta=[n.type,spanLabel(n),(n.count||0)+' mentions',(n.seed?'curated spine':'')].filter(Boolean).join(' · ');
+  var pts='';
+  (n.cats||[]).slice(0,4).forEach(function(c){pts+='<span class="point"><b>'+esc(c)+'</b></span>';});
+  th.innerHTML='<div class="meta">'+esc(meta)+'</div>'
+   +'<div class="name">'+esc(n.name)+'</div>'
+   +(pts?'<div class="points">'+pts+'</div>':'')
+   +(n.desc?'<div class="desc">'+esc(n.desc)+'</div>':'');
+}
+function paintCrumb(){
+  var el=document.getElementById('crumb');
+  if(!TRAIL.length){el.textContent='';return;}
+  el.innerHTML='Paths: '+TRAIL.map(function(id,i){
+    var n=BY_ID[id];
+    if(!n)return '';
+    return '<a onclick="jump('+i+')" title="'+esc((n.type||'')+' • '+esc(spanLabel(n)))+'">'+esc(trunc(n.name,28))+'</a>';
+  }).join(' › ');
+}
+function jump(i){
+  var id=TRAIL[i];
+  if(!id)return;
+  history.replaceState({depth:i},'','#id='+encodeURIComponent(id));
+  renderFlow(id);
+}
+function home(){
+  CUR=null;
+  document.getElementById('chart').setAttribute('viewBox','0 0 900 200');
+  document.getElementById('chart').innerHTML='';
+  document.getElementById('topichead').innerHTML='';
+  document.getElementById('crumb').textContent='';
+  document.getElementById('bTimeline').disabled=true;
+  var samples=['Revolt of 1857','Indian National Congress','Mahatma Gandhi','Partition of Bengal','Ashoka','Quit India Movement','Battle of Plassey','Jallianwala Bagh massacre'];
+  msg('Start with a topic below, or search above.');
+  var el=document.getElementById('msg');
+  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: use <b>Live photos</b> on a person to pull their Wikipedia portrait.</small>';
+}
+function pick(s){var n=findByName(s);if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}}
+function msg(t){document.getElementById('msg').textContent=t;}
+
+var photoBusy=0;
+function loadLivePhotos(){
+  var queue=[];
+  var todo=CARDS.filter(function(c){return c&&!IMGS[canon(c.name)];});
+  todo.forEach(function(c){queue.push(c);});
+  var B=document.getElementById('bPhotos');
+  B.textContent='Loading photos…';
+  B.disabled=true;
+  function pump(){
+    while(photoBusy<6&&queue.length){
+      photoBusy++;
+      var c=queue.shift();
+      fetchWikiPhoto(c.name).then(function(url){
+        if(url){IMGS[canon(c.name)]=url;applyPhoto(c,url);}
+      }).catch(function(){}).then(function(){photoBusy--;pump();});
+    }
+    if(photoBusy===0&&!queue.length){B.textContent='Live photos';B.disabled=false;}
+    else if(photoBusy===0&&queue.length)setTimeout(pump,200);
+  }
+  if(!todo.length){B.textContent='All have photos';setTimeout(function(){B.textContent='Live photos';},1200);return;}
+  pump();
+}
+function applyPhoto(c,url){
+  var card=document.querySelector('#chart .ncard[data-idx="'+c.idx+'"]');
+  if(!card)return;
+  var old=card.querySelectorAll('[data-av]')[0];
+  if(old){old.remove();}
+  var x=POS[c.id]?POS[c.id].x+6:22,yy=POS[c.id]?(POS[c.id].y+CH/2-15):25;
+  var img=document.createElementNS('http://www.w3.org/2000/svg','image');
+  img.setAttribute('x',x);img.setAttribute('y',yy);
+  img.setAttribute('width',30);img.setAttribute('height',30);
+  img.setAttribute('href',url);
+  img.setAttribute('preserveAspectRatio','xMidYMid slice');
+  card.insertBefore(img,card.firstChild);
+}
+function fetchWikiPhoto(name){
+  var u='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(name).replace(/%20/g,'_');
+  return fetch(u).then(function(r){if(!r.ok)throw 0;return r.json();}).then(function(j){
+    if(j&&j.thumbnail&&j.thumbnail.source)return j.thumbnail.source;
+    throw 0;
+  }).catch(function(){
+    return fetch('https://en.wikipedia.org/w/api.php?action=opensearch&search='+encodeURIComponent(name)+'&format=json&origin=*&limit=1').then(function(r){return r.json();}).then(function(j){
+      if(j&&j[1]&&j[1][0])return fetch('https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(j[1][0]).replace(/%20/g,'_')).then(function(r){return r.json();}).then(function(z){return z&&z.thumbnail?z.thumbnail.source:null;}).catch(function(){return null;});
+      return null;
+    });
+  });
+}
+
+document.getElementById('q').addEventListener('keydown',function(e){if(e.key==='Enter'){var n=findByName(this.value);if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}else msg('No topic named "'+this.value+'"');}});
+document.getElementById('bGo').onclick=function(){
+  var n=findByName(document.getElementById('q').value);
+  if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}
+  else msg('No topic named "'+document.getElementById('q').value+'"');
+};
+document.getElementById('bBack').onclick=function(){history.back();};
+document.getElementById('bFwd').onclick=function(){history.forward();};
+document.getElementById('bTimeline').onclick=function(){
+  if(CUR)window.open('map.html#id='+encodeURIComponent(CUR),'_blank');
+};
+document.getElementById('bPhotos').onclick=loadLivePhotos;
+document.getElementById('chart').addEventListener('click',function(ev){
+  var t=ev.target;
+  while(t&&t!==this&&t.getAttribute&&t.getAttribute('data-idx')==null)t=t.parentNode;
+  if(!t||t===this)return;
+  var el=document.querySelector('#chart .ncard[data-idx="'+t.getAttribute('data-idx')+'"]');
+  if(!el||(' '+el.className.baseVal+' ').indexOf(' hero ')!==-1)return;
+  var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
+  if(id)navigate(id,true);
+});
+window.addEventListener('popstate',function(){
+  var m=/^#id=(.+)$/.exec(location.hash||'');
+  if(m)renderFlow(decodeURIComponent(m[1]));
+  else if(TRAIL.length)renderFlow(TRAIL[0]);
+  else home();
+  navStack();
+});
+window.addEventListener('hashchange',function(){route();});
+
+loadData().then(function(t){
+  NODES=t.nodes||[];EDGES=t.edges||[];LINKS=t.links||[];
+  buildIndexes();
+  return loadImages();
+}).then(function(){
+  msg('');
+  route();
+}).catch(function(err){
+  document.getElementById('msg').textContent='Could not load data/timeline.json — run node scripts/build-timeline.js first. ('+err.message+')';
+});
+</script>
+</body>
+</html>
