@@ -2063,6 +2063,25 @@ function kinSpanFor(seg) {
   if (!pts.length) pts = [y.min, y.max];
   return { min: Math.min.apply(null, pts), max: Math.max.apply(null, pts) };
 }
+// Coarse identity bucket for bare first-name persons (Margaret, Maria, Anne …).
+// Different mentions of a bare first name no longer stack onto one node; identity
+// is split by the era the mention's own sentence pins down. Coarse by design —
+// a medieval Margaret should NEVER absorb a 20th-century Margaret, while two
+// medieval mentions of the same woman SHOULD still share a node. Undated mentions
+// share one residual node per name.
+function kinBucketFor(span) {
+  if (!span || span.min == null || span.max == null) return 'undated';
+  // Midpoint (not min): someone who lived 1856-1920 is one identity, not split in
+  // two by the 1857 colonial/freedom boundary; coarse era buckets absorb noise.
+  var y = Math.round(span.min + (span.max - span.min) / 2);
+  var e = eraOf(y);
+  return e || 'undated';
+}
+// True when a captured kin name is a bare single word (no surname, no title form)
+// — the collision-prone first-name class that provision must disambiguate by era.
+function isBareSingleName(canon) {
+  return !/\s/.test(canon) && !/^[A-Za-z]\./.test(canon);
+}
 function provisionKinPersons(eachQuestion, nodes, topicMap) {
   // Kin-capture budget: phrases mined per full-corpus sweep. A full sweep of
   // 13.8M questions holds ~0.9-1.6M kin-bearing captures; the old hard-stop at
@@ -2096,22 +2115,33 @@ function provisionKinPersons(eachQuestion, nodes, topicMap) {
     if (!kinPersonOk(name)) return;
     var canon = canonName(name);
     if (!canon) return;
-    var existing = lookup[canon];
+    var span = kinSpanFor(seg);
+    // Bare first names: split identity by the era of the mention's own sentence so
+    // the medieval Margaret (died 1310) and a modern Margaret (b. 1925) become two
+    // nodes instead of one 495-row junk hub. Multi-word names carry enough identity
+    // on their own and keep the plain-name key.
+    var isSingle = isBareSingleName(canon);
+    var key = isSingle ? (canon + '~' + (kinBucketFor(span) || 'undated')) : canon;
+    var existing = lookup[key];
     if (existing) {
       if (existing.type === 'person') { existing.kin = true; return; }
       if (kinPersonOk(existing.name)) { existing.type = 'person'; existing.kin = true; stats.promoted++; }
       return;
     }
-    if (prov[canon]) return;
+    if (prov[key]) return;
     // Unify with a longer person node ("Samprati" vs "Samprati Chandragupta") by
     // adding the short form as an alias instead of shipping a duplicate dot.
-    var candToks = canon.split(' ');
+    // Never for bare first names: era-blind suffix matching would glue the medieval
+    // Margaret to any "Anne Margaret" node. Their identity is pinned by era above.
     var matchLong = null;
-    var byLast = peopleByLastToken[candToks[candToks.length - 1]] || [];
-    for (var bl of byLast) {
-      if (bl.name && canonName(bl.name).length > canon.length + 1 && canonName(bl.name).slice(-(canon.length + 1)) === ' ' + canon) {
-        matchLong = bl;
-        break;
+    if (!isSingle) {
+      var candToks = canon.split(' ');
+      var byLast = peopleByLastToken[candToks[candToks.length - 1]] || [];
+      for (var bl of byLast) {
+        if (bl.name && canonName(bl.name).length > canon.length + 1 && canonName(bl.name).slice(-(canon.length + 1)) === ' ' + canon) {
+          matchLong = bl;
+          break;
+        }
       }
     }
     if (matchLong) {
@@ -2120,10 +2150,9 @@ function provisionKinPersons(eachQuestion, nodes, topicMap) {
       matchLong.kin = true;
       return;
     }
-    prov[canon] = true;
-    var span = kinSpanFor(seg);
+    prov[key] = true;
     var node = {
-      id: 'kin|' + name,
+      id: 'kin|' + name + (isSingle ? '~' + (kinBucketFor(span) || 'undated') : ''),
       name: name,
       type: 'person',
       span: span,
@@ -2178,8 +2207,17 @@ function provisionKinPersons(eachQuestion, nodes, topicMap) {
 function extractRelations(scanSource, nodes, topicMap) {
   // --- Build the name resolver with RAW name strings and a canonical lookup. ---
   // Keep the LONGEST raw form per canonical key so "J. R. D. Tata" wins over "Tata".
-  var canonIndex = {};   // canonical -> id
+  var canonIndex = {};   // canonical -> id, or array of ids for era-bucketed bare first names
   var rawByName = {};    // canonical -> longest raw string
+  // Bare-first-name kin persons ("Margaret", "Maria") are era-bucketed into several
+  // nodes sharing one canonical name. Index them so addName/mentions() can route each
+  // mention to the era-correct node instead of collapsing every Margaret onto one id.
+  var kinInfo = {};
+  for (var kinEx of nodes) {
+    if (kinEx.kin !== true || kinEx.type !== 'person' || !kinEx.name) continue;
+    var kc0 = canonName(kinEx.name);
+    if (isBareSingleName(kc0)) (kinInfo[kc0] = kinInfo[kc0] || []).push(kinEx);
+  }
   function addName(nm, id) {
     if (!nm) return;
     var c = canonName(nm);
@@ -2187,6 +2225,18 @@ function extractRelations(scanSource, nodes, topicMap) {
     if (GENERIC_TOPICS.indexOf(c) !== -1) return;
     // Exclude bare year/decade names ("1857", "1920s") which are not real entities
     if (/^\d{3,4}s?$/.test(c)) return;
+    var amb = kinInfo[c];
+    if (amb && amb.length > 1) {
+      if (!canonIndex[c]) { canonIndex[c] = [id]; rawByName[c] = nm; }
+      else if (Array.isArray(canonIndex[c])) {
+        if (canonIndex[c].indexOf(id) === -1) canonIndex[c].push(id);
+        if (nm.length > (rawByName[c] || '').length) rawByName[c] = nm;
+      } else {
+        canonIndex[c] = [canonIndex[c], id];
+        if (nm.length > (rawByName[c] || '').length) rawByName[c] = nm;
+      }
+      return;
+    }
     if (!canonIndex[c]) { canonIndex[c] = id; rawByName[c] = nm; }
     else if (nm.length > (rawByName[c] || '').length) rawByName[c] = nm;
   }
@@ -2301,6 +2351,24 @@ function extractRelations(scanSource, nodes, topicMap) {
   // be re-resolved to another entity (the seed Julius Caesar).
   var NAME_TITLES = ['president','king','queen','emperor','empress','archduke','prince','princess','saint','sir','lady','lord','pope','cardinal','bishop','archbishop','shah','tsar','czar','tsarina','czarina','general','colonel','major','captain','lieutenant','marshal','admiral','commander','duke','duchess','count','countess','baron','baroness','maharaja','maharani','raja','rani','sultan','sultana','khan','sheikh','mullah','imam','mother','father','elder','younger','grand','great','dr','doctor','prof','professor','mrs','ms','mr','miss','rev','hon'];
 
+  // For bare first names keyed into several era-bucketed kin nodes, pick the node
+  // whose era matches the sentence the mention appears in. No bucket match -> null so
+  // the caller falls back to the first candidate (least-bad, never a wrong-era merge).
+  function pickKinId(ids, txt, at) {
+    if (!Array.isArray(ids) || ids.length < 2) return ids;
+    var sent = sentenceAt(txt, at);
+    var sb = kinBucketFor(bioSpan(txt.slice(sent.start, sent.end)));
+    var cand = [];
+    for (var ci = 0; ci < ids.length; ci++) {
+      var cn0 = NODE_BY_ID[ids[ci]];
+      if (!cn0) continue;
+      if (kinBucketFor(cn0.span) === sb && (cn0.kin || cn0.seed)) cand.push({ id: ids[ci], count: cn0.count || 0 });
+    }
+    if (cand.length === 1) return cand[0].id;
+    if (cand.length > 1) { cand.sort(function (x, y) { return y.count - x.count; }); return cand[0].id; }
+    return null;
+  }
+
   function mentions(txt) {
     var out = [];
     var m;
@@ -2308,7 +2376,8 @@ function extractRelations(scanSource, nodes, topicMap) {
     nameRe.lastIndex = 0;
     while ((m = nameRe.exec(txt))) {
       if (m.index < skipTo) continue;
-      var id = canonIndex[canonName(m[2])];
+      var ids0 = canonIndex[canonName(m[2])];
+      var id = Array.isArray(ids0) ? (pickKinId(ids0, txt, m.index) || ids0[0]) : ids0;
       if (id) {
         var cont = false;
         if (/\s/.test(m[2])) {
