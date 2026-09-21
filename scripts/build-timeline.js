@@ -2262,6 +2262,16 @@ function extractRelations(scanSource, nodes, topicMap) {
   var NODE_BY_ID = {};
   for (var nn0 of nodes) NODE_BY_ID[nn0.id] = nn0;
   function isPersonId(id) { var nd = NODE_BY_ID[id]; return !!(nd && nd.type === 'person'); }
+  // Catch-all "person" endpoints the raw-name matcher casts as people (single
+  // common English words, clause fillers, topic catch-alls). A kinship edge to
+  // one of them is noise ("Noah -spouse-> Native", "-descends from-> Hebrew
+  // Bible"); seeded entities are never on this list even if a name collides.
+  var JUNK_KIN_ENDPOINTS = ['generally', 'native', 'around', 'according', 'american', 'four', 'run', 'brown', 'father', 'child', 'william', 'sam', 'apapolo', 'basch', 'aus', 'indiana', 'apocryphon', 'hebrew bible', 'jews', 'main', 'daughter', 'find', 'british', 'internet', 'place', 'law', 'guide', 'six', 'big'];
+  function isJunkKinEndpoint(id) {
+    var nd = NODE_BY_ID[id];
+    if (!nd || nd.seed) return false;
+    return JUNK_KIN_ENDPOINTS.indexOf(canonName(nd.name)) !== -1;
+  }
   // Precision rule: a kinship edge from a LOOSE form is only trusted when its
   // sentence names at most two distinct people. A third named person makes the
   // coupling ambiguous ("John's brother, who married Mary"). Anchored forms —
@@ -2277,6 +2287,7 @@ function extractRelations(scanSource, nodes, topicMap) {
   }
   function ensureEdge(a, b, rel) {
     if (!a || !b || a === b) return;
+    if (isJunkKinEndpoint(a) || isJunkKinEndpoint(b)) return;
     if (PERSON_KIN.indexOf(rel) !== -1 && !(isPersonId(a) && isPersonId(b))) return;
     var k = a + '\u0000' + b + '\u0000' + rel;
     if (!edges[k]) {
@@ -4173,7 +4184,14 @@ function main() {
   var LINEAGE_UA = { uncle: 1, aunt: 1, 'great-uncle': 1, 'great-aunt': 1 };
   var LINEAGE_NI = { nephew: 1, niece: 1, 'great-nephew': 1, 'great-niece': 1 };
   var LINEAGE_SPOUSE = { husband: 1, wife: 1, spouse: 1, 'partner of': 1, consort: 1, 'ex-wife': 1, 'ex-husband': 1, divorced: 1 };
-  var LINEAGE_ROLE_INV = { parent: 'child', child: 'parent', gp: 'gn', gn: 'gp', ua: 'ni', ni: 'ua', sibling: 'sibling' };
+  // Looser ancestral claims. Previously these resolved to role 'other', so the
+  // sanitizer never age-checked or conflict-checked them, letting "descends from
+  // Cain" coexist with "descends from Seth". Edge {a,b,'descends from'} means
+  // "a descends from b" → b is the ancestor. Depth 4 keeps them strictly weaker
+  // than direct parent/grand claims in the same-slot resolution.
+  var LINEAGE_ANCESTOR = { 'descends from': 1, ancestor: 1, forefather: 1 };
+  var LINEAGE_DESCENDANT = { descendant: 1 };
+  var LINEAGE_ROLE_INV = { parent: 'child', child: 'parent', gp: 'gn', gn: 'gp', ua: 'ni', ni: 'ua', sibling: 'sibling', anc: 'desc', desc: 'anc' };
   function lineageRole(rel) {
     if (LINEAGE_PARENT[rel]) return 'parent';
     if (LINEAGE_CHILD[rel]) return 'child';
@@ -4183,6 +4201,8 @@ function main() {
     if (LINEAGE_UA[rel]) return 'ua';
     if (LINEAGE_NI[rel]) return 'ni';
     if (LINEAGE_SPOUSE[rel]) return 'spouse';
+    if (LINEAGE_ANCESTOR[rel]) return 'anc';
+    if (LINEAGE_DESCENDANT[rel]) return 'desc';
     return 'other';
   }
   function lineageRolePlausible(g) {
@@ -4191,6 +4211,8 @@ function main() {
     if (r === 'child') return lineageAgeOk(g.b, g.a, 10);
     if (r === 'gp') return lineageAgeOk(g.a, g.b, 24, 40);
     if (r === 'gn') return lineageAgeOk(g.b, g.a, 24, 40);
+    if (r === 'anc') return lineageAgeOk(g.b, g.a, 5);
+    if (r === 'desc') return lineageAgeOk(g.a, g.b, 5);
     return true;
   }
   // Generation distance to rank claims on the same slot: parent/child is the
@@ -4200,6 +4222,7 @@ function main() {
   function lineageDepth(rel) {
     if (LINEAGE_PARENT[rel] || LINEAGE_CHILD[rel] || LINEAGE_SIBLING[rel] || LINEAGE_SPOUSE[rel]) return 1;
     if (LINEAGE_GP[rel] || LINEAGE_GN[rel] || LINEAGE_UA[rel] || LINEAGE_NI[rel]) return 2;
+    if (LINEAGE_ANCESTOR[rel] || LINEAGE_DESCENDANT[rel]) return 4;
     return 99;
   }
   var lineageNodeById = {};

@@ -642,6 +642,50 @@ function renderProfileExtras(n) {
   renderLineage(n);
 }
 
+// Single common-English-word / catch-all "person" nodes the raw-name matcher
+// sometimes casts as people ("Native", "Father", "According"). Holding them out
+// of the lineage tab stops nonsense rows ("Noah -spouse-> Native"). Seeded
+// entities are never junk even if their name collides.
+var JUNK_LINEAGE_RE = /^(?:generally|native|around|according|american|four|run|brown|father|child|william|sam|apapolo|basch|aus|indiana|apocryphon|hebrew bible|jews|main|daughter|find|british|internet|place|law|guide|six|big)$/;
+function lineageJunk(e) {
+  var t = nodeById(e.target);
+  if (t && t.seed) return false;
+  var nm = (t ? t.name : e.target.replace(/^seed\|/, '')).toLowerCase().trim();
+  return JUNK_LINEAGE_RE.test(nm);
+}
+// Directness of a relation, for dedupe: a person gets ONE row, kept by the most
+// direct claim (parent/child > grand > great-grand > loose "descends from").
+function lineageRank(rel) {
+  if (/^(?:father|mother|son|daughter|brother|sister|spouse|wife|husband|partner of|sibling|parent|child|children)$/.test(rel)) return 4;
+  if (/^(?:grandfather|grandmother|grandson|granddaughter|grandparent|grandchild|uncle|aunt|nephew|niece|cousin|sibling)$/.test(rel)) return 3;
+  if (/^great-/.test(rel)) return 2;
+  if (/^(?:descends from|ancestor|descendant|relative of)$/.test(rel)) return 1;
+  return 0;
+}
+// Era sanity: auto-mined kin edges sometimes glue an ancient figure to a modern
+// stranger ("Noah -wife-> Henry Benedict Stuart" 1722-1819). If both ends carry
+// spans, drop pairs whose midpoints are implausibly far apart.
+function lineageEraOk(e, base) {
+  var t = nodeById(e.target);
+  if (!t || !t.span || !base || !base.span) return true;
+  var mb = (t.span.min + t.span.max) / 2;
+  var m0 = (base.span.min + base.span.max) / 2;
+  var gap = Math.abs(mb - m0);
+  if (/spouse|wife|husband|partner of|sibling|brother|sister|father|mother|son|daughter|child|parent/.test(e.rel)) return gap <= 250;
+  return gap <= 1200;
+}
+function lineageDedupe(list) {
+  var best = {};
+  for (var e of list) {
+    var cur = best[e.target];
+    if (!cur || lineageRank(e.rel) > lineageRank(cur.rel)) best[e.target] = e;
+  }
+  return Object.keys(best).map(function (id) { return best[id]; });
+}
+function lineageFilter(list, base) {
+  return lineageDedupe(list.filter(function (e) { return !lineageJunk(e) && lineageEraOk(e, base); }));
+}
+
 function renderLineage(n) {
   var el = document.getElementById('p-line');
   if (!el) return;
@@ -649,21 +693,21 @@ function renderLineage(n) {
   function linEdges(id) {
     return (_eadj[id] || []).filter(function (e) { return FAMILY_RE.test(e.rel); });
   }
-  var kids = linEdges(n.id).filter(function (e) { return e.target !== n.id; });
+  var kids = lineageFilter(linEdges(n.id).filter(function (e) { return e.target !== n.id; }), n);
   if (!kids.length) {
     el.innerHTML = '<div class="lin-empty">No family-lineage links yet - these grow as more relation facts are mined.</div>';
     return;
   }
   function buildRows(id, depth, pathSet) {
     if (depth > 3) return '';
-    var ch = linEdges(id).filter(function (e) { return e.target !== id && !pathSet.has(e.target); });
+    var ch = lineageFilter(linEdges(id).filter(function (e) { return e.target !== id && !pathSet.has(e.target); }), n);
     ch.sort(function (x, y) { return (x.dir === 'out' ? 1 : 0) - (y.dir === 'out' ? 1 : 0) || x.rel.localeCompare(y.rel); });
     var rows = '';
     for (var k of ch) {
       var cn = nodeById(k.target);
       var nm = cn ? cn.name : k.target.replace(/^seed\|/, '');
       var col = cn ? (TYPE_COLOR[cn.type] || '#71717a') : '#71717a';
-      var subKids = linEdges(k.target).filter(function (e) { return e.target !== k.target && !pathSet.has(e.target); });
+      var subKids = lineageFilter(linEdges(k.target).filter(function (e) { return e.target !== k.target && !pathSet.has(e.target); }), n);
       var canExpand = subKids.length > 0 && depth < 3;
       var isExpanded = _linOpen.has(k.target);
       rows += '<div class="lin-row" style="margin-left:' + (depth * 20) + 'px">'
