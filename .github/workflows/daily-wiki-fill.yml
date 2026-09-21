@@ -413,6 +413,10 @@ jobs:
           if [ -f "$RUNNER_TEMP/changes-committed" ]; then
             echo "Wiki data committed; starting next run automatically"
             gh workflow run daily-wiki-fill.yml 2>/dev/null && echo "Self-dispatched next Wiki Fill" || echo "Self-dispatch failed (non-fatal)"
+            # GITHUB_TOKEN pushes never fire on:push workflows, so slim-live (main
+            # -> live -> Cloudflare production) would silently skip after every bot
+            # commit. Dispatch it explicitly to keep production fresh.
+            gh workflow run slim-live.yml 2>/dev/null && echo "Self-dispatched Slim Live" || echo "Slim Live dispatch failed (non-fatal)"
           else
             echo "No wiki data changes — chain ends here"
           fi
