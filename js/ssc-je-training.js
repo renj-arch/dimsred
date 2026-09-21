@@ -53,6 +53,7 @@
   merge(ALL, window.SSC_JE_GAPS);
     merge(ALL, window.SSC_JE_MECHENG);
   merge(ALL, window.SSC_JE_ESEMAINS);
+  merge(ALL, window.SSC_JE_PYG);
   }
 
   var SUBJECTS = {
