@@ -28,6 +28,8 @@ header h1 b{color:var(--purple)}
 .topichead .points{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .topichead .point{background:var(--bg2);border:1px solid var(--line);color:var(--txt2);border-radius:20px;padding:2px 10px;font-size:11.5px}
 .topichead .point b{color:var(--txt)}
+.topichead .point em{font-style:normal;font-weight:700;color:var(--cyan)}
+.topichead .point.more{color:var(--cyan)}
 #chartwrap{margin:0 8px;overflow:auto;padding:6px 0 26px;text-align:center}
 #chart{display:inline-block;vertical-align:top}
 #chart[data-flow="1"]{max-width:98vw}
@@ -73,10 +75,15 @@ path.link-hover{stroke-width:3;stroke:#7dd3fc;stroke-opacity:.95;filter:drop-sha
 .note .nh .meta{font-weight:400;color:var(--txt2);font-size:11.5px}
 .note .nb{padding:6px 14px 12px;font-size:12.5px;line-height:1.55;color:var(--txt);white-space:pre-wrap;word-break:break-word;max-height:260px;overflow-y:auto}
 .note .nb b{color:var(--cyan)}
+.note .nb .relx{margin-top:8px;padding-top:6px;border-top:1px dashed var(--line);font-size:11.5px;line-height:1.5}
+.note .nb .relx .tag{display:inline-block;font-weight:700;text-transform:uppercase;letter-spacing:.04em;font-size:9.5px;color:var(--cyan);margin-bottom:2px}
 .note .nb .close{float:right;cursor:pointer;color:var(--txt2);font-size:12px;margin-left:8px}
 .note .nb .close:hover{color:var(--rose)}
 .zoombox{display:inline-flex;gap:4px;margin-left:2px}
 .zoombox .btn{padding:5px 8px;line-height:1}
+.wt{pointer-events:none}
+.wlow{opacity:.35}
+body.hidelow .wlow{opacity:.06;pointer-events:none}
 footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;line-height:1.5}
 </style>
 </head>
@@ -92,6 +99,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
   <button class="btn" id="bPhotos" title="Fetch live Wikipedia thumbnails for people without a photo">Live photos</button>
   <button class="btn" id="bRand" title="Drill into a random topic from the graph">Random</button>
   <button class="btn" id="bCopy" title="Copy a deep link to the current topic">Copy link</button>
+  <button class="btn" id="bWt" title="Dim cards with low practice-question weight" disabled>Hide low</button>
   <span class="zoombox"><button class="btn" id="bZmOut" title="Zoom out">&#8722;</button><button class="btn" id="bZFit" title="Fit whole mind-map to screen">&#10697;</button><button class="btn" id="bZmIn" title="Zoom in">&#43;</button></span>
   <span class="zoombox"><button class="btn" id="bGrw" title="Grow the mind-map one ring deeper">&#8635; Grow</button><button class="btn" id="bShr" title="Shrink the mind-map one ring" disabled>&#8634; Shrink</button></span>
 </header>
@@ -102,7 +110,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
 <div id="chartwrap"><svg id="chart" xmlns="http://www.w3.org/2000/svg"></svg></div>
 <div class="note" id="note"></div>
 <div class="msg" id="msg">Loading knowledge graph…</div>
-<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a real relationship; dashed lines are co-mentions. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) · <b>double-click</b> to drill into it as the new centre · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one.</footer>
+<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a real relationship; dashed lines are co-mentions. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) · <b>double-click</b> to drill into it as the new centre · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
 <script>
 var NODES=[],EDGES=[],LINKS=[];
 var BY_ID={},BY_NAME={},NAME_CNT={} ,ADJ={},LADJ={},IMGS={},CADJ={},CUR_CENTRAL={};
@@ -235,7 +243,7 @@ function fetchJson(url){return fetch(url).then(function(r){if(!r.ok)throw new Er
 // that graft onto the mined graph at load time — each branch becomes a section
 // node and every item a curated card under it, so a topic like World War II can
 // carry the full encyclopedic tree the mined co-mentions alone can't express.
-var LAYERS={};
+var LAYERS={},WT={};
 // Curated edges live in CADJ, not ADJ: authored tree is only visible when you
 // open that topic itself, so another topic that just happens to co-mention the
 // central (Ashoka —related→ Gandhi) can never drag the whole Gandhi tree in.
@@ -268,6 +276,11 @@ function resolveItem(name,type){
 // priority. Assigned during curate() and read by graphFor() when ordering lanes.
 var LAYER_SO=0;
 var NOTES={};
+// Per-link relevance evidence from the curated tree, keyed 'topicName\u0000itemName'
+// -> the corpus sentence that connects the card to the topic. Notes are context-
+// free (keyed by card name only), so this is what lets a card's note explain why
+// it belongs on the topic it's currently being viewed under.
+var REL_EV={};
 function curate(layers){
   LAYER_SO=0;
   Object.keys(layers||{}).forEach(function(key){
@@ -287,6 +300,7 @@ function curate(layers){
         var c=canon(it.name);
         if(it.note)NOTES[c]=String(it.note).trim();
         if(it.desc&&!NOTES[c])NOTES[c]=String(it.desc).trim();
+        if(it.ev)REL_EV[canon(key)+'\u0000'+c]=String(it.ev).trim();
         var iid='crt|'+key+'|I|'+path+'#'+ii;
         var real=resolveItem(it.name,it.type);
         if(real){
@@ -324,6 +338,8 @@ function loadImages(){return fetchJson('data/person-images.json').then(function(
   .then(function(){
     try{var s=localStorage.getItem('fc_photos');if(s){var o=JSON.parse(s);for(var k in o){if(o[k]&&!IMGS[k])IMGS[k]=o[k];}}}catch(e){}
   });}
+// Exam-weight tags (data/topic-weight.json): red/amber/grey badge + low card dim.
+function loadWeight(){return fetchJson('data/topic-weight.json').then(function(w){WT=w||{};var b=document.getElementById('bWt');if(b&&Object.keys(WT).length)b.disabled=false;}).catch(function(){WT={};});}
 
 function buildIndexes(){
   BY_ID={};BY_NAME={};NAME_CNT={};ADJ={};LADJ={};
@@ -698,7 +714,15 @@ function cardSvg(id,laneColor,opts){
   CARDS[idx]={id:id,name:n.name,idx:idx};
   var nnote=NOTES[canon(n.name)]||n.desc||'';
   var titleTxt=esc(n.name)+(nnote?' — '+esc(nnote.slice(0,600)):'')+' · '+esc(sub)+(NOTES[canon(n.name)]?' · click a card to read its full note':' · click to grow this branch · double-click to open');
-  var inner='<rect class="card" x="0" y="0" width="'+CW+'" height="'+CH+'" rx="11" fill="'+opts.fill+'" stroke="'+col+'"><title>'+titleTxt+'</title></rect>';
+  var wbadge='';
+  var wt=WT[canon(n.name)];
+  if(wt){
+    var wcol=wt.imp==='high'?'#ef4444':wt.imp==='med'?'#fbbf24':'#9ca3af';
+    titleTxt+=' · '+(wt.imp)+' weight ('+wt.q+' practice Qs)';
+    wbadge='<circle class="wt" cx="'+(CW-16)+'" cy="14" r="9" fill="'+wcol+'"/>'
+      +'<text class="wt" x="'+(CW-16)+'" y="17.5" text-anchor="middle" font-size="7.5" font-weight="700" fill="#fff">'+esc(fmtCnt(wt.q))+'</text>';
+  }
+  var inner='<rect class="card" x="0" y="0" width="'+CW+'" height="'+CH+'" rx="11" fill="'+opts.fill+'" stroke="'+col+'"><title>'+titleTxt+'</title></rect>'+wbadge;
   var txtx=12;
   if(n.type==='person'){
     var img=IMGS[canon(n.name)];
@@ -722,7 +746,7 @@ function cardSvg(id,laneColor,opts){
     var d=trunc(n.desc.replace(/\s+/g,' ').trim(),44);
     if(d)inner+='<text class="ndesc" x="'+txtx+'" y="'+(CH/2+26)+'" font-size="8.5">'+esc(d)+'</text>';
   }
-  return '<g class="ncard'+(opts.hero?' hero':'')+(opts.cls?' '+opts.cls:'')+'" data-idx="'+idx+'" transform="translate('+x+','+y+')">'+inner+'</g>';
+  return '<g class="ncard'+(opts.hero?' hero':'')+(opts.cls?' '+opts.cls:'')+(wt&&wt.imp==='low'?' wlow':'')+'" data-idx="'+idx+'" transform="translate('+x+','+y+')">'+inner+'</g>';
 }
 
 function navStack(){
@@ -953,11 +977,17 @@ function showNote(id){
     if(CADJ[src]&&CADJ[src][id]&&BY_ID[src])m.push(BY_ID[src].name);
   });
   var rel=m.length?' — in <b>'+esc(m[0])+'</b>':'';
+  var hero=BY_ID[CUR];
+  var ev=hero?REL_EV[canon(hero.name)+'\u0000'+canon(n.name)]:'';
+  var relx='';
+  if(ev&&canon(hero&&hero.name)!==canon(n.name)){
+    relx='<div class="relx"><span class="tag">Relation to '+esc(hero.name)+'</span><br>'+esc(ev)+'</div>';
+  }
   var meta=[n.type,spanLabel(n)].filter(Boolean).join(' · ');
   el.className='note on';
   el.innerHTML='<div class="nh">'+esc(n.name)+(meta?' <span class="meta">'+esc(meta)+'</span>':'')
     +'<span style="margin-left:auto"><span class="close" onclick="closeNote()" title="Close">&#10005;</span></span></div>'
-    +'<div class="nb">'+esc(txt)+rel+'</div>';
+    +'<div class="nb">'+esc(txt)+rel+relx+'</div>';
   el.scrollIntoView({block:'nearest'});
 }
 function closeNote(){
@@ -983,7 +1013,24 @@ function paintHead(n){
   var th=document.getElementById('topichead');
   var meta=[n.type,spanLabel(n),(n.count||0)+' mentions',(CUR_CENTRAL[n.id]?'curated spine':'')].filter(Boolean).join(' · ');
   var pts='';
-  (n.cats||[]).forEach(function(c){pts+='<span class="point"><b>'+esc(typeof c==='string'?c:(c&&c.label)||'')+'</b></span>';});
+  // The graph stores one cats entry per question-bank shard, so a broad topic
+  // like Mahatma Gandhi carries 500+ pills that are really ~170 subjects. Merge
+  // by subject label, rank by question count and show only the top few.
+  var agg={};
+  (n.cats||[]).forEach(function(c){
+    var label=typeof c==='string'?c:(c&&c.label)||'';
+    if(!label)return;
+    var e=agg[label]||(agg[label]={count:0,n:0});
+    e.count+=(c&&c.count)||1;e.n++;
+  });
+  var catArr=Object.keys(agg).map(function(k){return {label:k,count:agg[k].count,n:agg[k].n};})
+    .sort(function(a,b){return b.count-a.count;});
+  var CAT_TOP=6;
+  catArr.slice(0,CAT_TOP).forEach(function(p){
+    pts+='<span class="point" title="'+(p.n>1?p.n+' question-bank shards · ':'')+p.count+' matching questions"><b>'+esc(p.label)+'</b> <em>'+fmtCnt(p.count)+'</em></span>';
+  });
+  var rem=catArr.length-CAT_TOP;
+  if(rem>0)pts+='<span class="point more" title="'+rem+' more subjects cover this topic">+'+rem+' more</span>';
   th.innerHTML='<div class="meta">'+esc(meta)+'</div>'
    +'<div class="name">'+esc(n.name)+'</div>'
    +(pts?'<div class="points">'+pts+'</div>':'')
@@ -1165,6 +1212,14 @@ document.getElementById('bTimeline').onclick=function(){
 document.getElementById('bPhotos').onclick=loadLivePhotos;
 document.getElementById('bRand').onclick=randTopic;
 document.getElementById('bCopy').onclick=copyLink;
+var lowDim=false;
+document.getElementById('bWt').onclick=function(){
+  lowDim=!lowDim;
+  document.body.classList.toggle('hidelow',lowDim);
+  var b=document.getElementById('bWt');
+  b.textContent=lowDim?'Show low':'Hide low';
+  b.title=lowDim?'Show every card again':'Dim cards with low practice-question weight';
+};
 document.getElementById('bZmOut').onclick=function(){zoomDir(-1);};
 document.getElementById('bZFit').onclick=function(){ZSCALE=0;applyZoom();};
 document.getElementById('bZmIn').onclick=function(){zoomDir(1);};
@@ -1249,6 +1304,8 @@ loadData().then(function(t){
   buildIndexes();
   buildRandPool();
   return loadImages();
+}).then(function(){
+  return loadWeight();
 }).then(function(){
   msg('');
   route();
