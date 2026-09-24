@@ -28,25 +28,55 @@ header h1 b{color:var(--purple)}
 .topichead .points{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}
 .topichead .point{background:var(--bg2);border:1px solid var(--line);color:var(--txt2);border-radius:20px;padding:2px 10px;font-size:11.5px}
 .topichead .point b{color:var(--txt)}
-#chartwrap{margin:0 8px;overflow:auto}
-#chart{display:block;margin:0 auto;min-width:880px}
+#chartwrap{margin:0 8px;overflow:auto;padding:6px 0 26px;text-align:center}
+#chart{display:inline-block;vertical-align:top}
+#chart[data-flow="1"]{max-width:98vw}
 svg text{font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif}
 .ncard{cursor:pointer}
 .ncard.hero{cursor:default}
 .ncard:hover rect.card{filter:brightness(1.25)}
 .ncard.hero:hover rect.card{filter:none;stroke-width:1.8}
+.ncard.wcard rect.card{opacity:.82;stroke-dasharray:4 3}
+.ncard.wcard .nsub{opacity:.7}
+.ncard.pinned rect.card{stroke:#fbbf24;stroke-width:2.6;stroke-dasharray:6 3;filter:drop-shadow(0 0 6px rgba(251,191,36,.35))}
 .card{stroke-width:1.6}
 .avatar-txt{font-weight:700;fill:#fff;pointer-events:none}
 .nname{font-size:11.5px;font-weight:700;fill:var(--txt)}
 .nsub{font-size:9.5px;fill:var(--txt2)}
-.rel-bg{fill:#0b0e14;stroke:var(--line);stroke-width:.6}
-.edge-lbl{font-size:9.5px}
+.ndesc{font-size:8.5px;fill:var(--txt2);opacity:.82}
+.rel-bg{fill:#0b0e14;stroke:var(--line);stroke-width:.6;pointer-events:none}
+.edge-lbl{font-size:9.5px;pointer-events:none}
 .link-dash{stroke:#384258;stroke-dasharray:4 5;stroke-width:1.2;opacity:.85}
+path.edge,path.link-dash{transition:stroke-width .12s ease,stroke .12s ease,opacity .12s ease,filter .12s ease;cursor:pointer}
+path.edge-hover{stroke-width:3.2;filter:drop-shadow(0 0 6px rgba(255,255,255,.3))}
+path.link-hover{stroke-width:3;stroke:#7dd3fc;stroke-opacity:.95;filter:drop-shadow(0 0 6px rgba(255,255,255,.28))}
+.ncard.hlcard rect.card{filter:brightness(1.6) drop-shadow(0 0 7px rgba(255,255,255,.25));stroke-width:3}
 .lane-name{font-size:13px;font-weight:800;letter-spacing:.5px}
 .lane-name .cnt{font-weight:500;color:var(--txt2)}
+.guide{fill:none;stroke:#1d2433;stroke-width:1.4;stroke-dasharray:3 8;opacity:.7}
+.guide.rim{stroke:var(--purple);opacity:.25}
 .msg{color:var(--txt2);font-size:13px;padding:6px 14px;max-width:820px;line-height:1.5}
 .sample{display:inline-block;margin:2px 4px 2px 0;background:var(--bg2);border:1px solid var(--line);color:var(--txt);border-radius:20px;padding:4px 12px;font-size:12px;cursor:pointer}
 .sample:hover{border-color:var(--purple)}
+.lpill{display:flex;gap:6px;flex-wrap:wrap;margin:6px 14px 0;align-items:center}
+.lpill .phint{font-size:12px;color:var(--txt2)}
+.pill{background:var(--bg2);border:1px solid var(--line);color:var(--txt2);border-radius:16px;padding:3px 10px;font-size:11.5px;cursor:pointer;white-space:nowrap}
+.pill b{font-weight:600}
+.pill.on{color:var(--txt);border-color:var(--purple)}
+.pill:hover{border-color:#3a4a63}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin:2px 14px 8px;align-items:center;font-size:12px;color:var(--txt2)}
+.chip{background:var(--bg2);border:1px solid var(--line);color:var(--cyan);border-radius:20px;padding:3px 11px;font-size:11.5px;cursor:pointer;white-space:nowrap}
+.chip:hover{border-color:var(--purple)}
+.note{margin:6px 14px 0;background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:0;display:none;max-width:860px}
+.note.on{display:block}
+.note .nh{display:flex;align-items:baseline;gap:8px;padding:10px 14px 0;font-size:13px;font-weight:700}
+.note .nh .meta{font-weight:400;color:var(--txt2);font-size:11.5px}
+.note .nb{padding:6px 14px 12px;font-size:12.5px;line-height:1.55;color:var(--txt);white-space:pre-wrap;word-break:break-word;max-height:260px;overflow-y:auto}
+.note .nb b{color:var(--cyan)}
+.note .nb .close{float:right;cursor:pointer;color:var(--txt2);font-size:12px;margin-left:8px}
+.note .nb .close:hover{color:var(--rose)}
+.zoombox{display:inline-flex;gap:4px;margin-left:2px}
+.zoombox .btn{padding:5px 8px;line-height:1}
 footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;line-height:1.5}
 </style>
 </head>
@@ -60,17 +90,28 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
   <button class="btn" id="bGo">Go</button>
   <button class="btn" id="bTimeline" title="Open this topic's full timeline profile on the map" disabled>Open in timeline map</button>
   <button class="btn" id="bPhotos" title="Fetch live Wikipedia thumbnails for people without a photo">Live photos</button>
+  <button class="btn" id="bRand" title="Drill into a random topic from the graph">Random</button>
+  <button class="btn" id="bCopy" title="Copy a deep link to the current topic">Copy link</button>
+  <span class="zoombox"><button class="btn" id="bZmOut" title="Zoom out">&#8722;</button><button class="btn" id="bZFit" title="Fit whole mind-map to screen">&#10697;</button><button class="btn" id="bZmIn" title="Zoom in">&#43;</button></span>
+  <span class="zoombox"><button class="btn" id="bGrw" title="Grow the mind-map one ring deeper">&#8635; Grow</button><button class="btn" id="bShr" title="Shrink the mind-map one ring" disabled>&#8634; Shrink</button></span>
 </header>
+<div class="lpill" id="lpill"></div>
 <div class="crumb" id="crumb"></div>
 <div class="topichead" id="topichead"></div>
+<div class="chips" id="chips"></div>
 <div id="chartwrap"><svg id="chart" xmlns="http://www.w3.org/2000/svg"></svg></div>
+<div class="note" id="note"></div>
 <div class="msg" id="msg">Loading knowledge graph…</div>
-<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Every line is a real relationship — family, succession, founding, battles, geography. Click any card to drill into that topic's own sub-flowchart; <b>Live photos</b> pulls Wikipedia portraits for people without one.</footer>
+<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a real relationship; dashed lines are co-mentions. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) · <b>double-click</b> to drill into it as the new centre · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one.</footer>
 <script>
 var NODES=[],EDGES=[],LINKS=[];
-var BY_ID={},BY_NAME={},NAME_CNT={} ,ADJ={},LADJ={},IMGS={};
+var BY_ID={},BY_NAME={},NAME_CNT={} ,ADJ={},LADJ={},IMGS={},CADJ={},CUR_CENTRAL={};
 var POS={},CARDS=[],CUR=null,UNIQ=0,TRAIL=[];
+var ZBASE=null,ZSCALE=0; // base pixel size of current flow + zoom factor (0 = fit)
 var CW=178,CH=80,DX=24,DY=20,PERROW=6;
+var HIDDEN={};try{HIDDEN=JSON.parse(localStorage.getItem('fc_hidden')||'{}')||{};}catch(e){HIDDEN={};}
+var RAND_POOL=[];
+function fmtCnt(n){n=n||0;if(n>=1000000)return (n/1000000).toFixed(1)+'M';if(n>=1000)return (n/1000).toFixed(1)+'k';if(n>=100)return Math.round(n/10)*10+'+';return String(n);}
 
 var TYPE_COLOR={
   person:'#a78bfa',event:'#fb923c',disease:'#fb7185',scheme:'#2dd4bf',org:'#22d3ee',concept:'#94a3b8',
@@ -79,23 +120,48 @@ var TYPE_COLOR={
   volcano:'#ef4444',animal:'#34d399',plant:'#84cc16',asteroid:'#fbbf24',comet:'#f472b6',
   treaty:'#38bdf8',book:'#a3e635',festival:'#d946ef',dynasty:'#c084fc',temple:'#f59e0b',
   monument:'#f59e0b',school:'#22d3ee',university:'#22d3ee',movement:'#fb923c'};
-var TYPE_LANE={
-  treaty:'polity',movement:'events',festival:'events',award:'events',conference:'events',
-  dynasty:'family',school:'polity',university:'polity',college:'polity',institute:'polity',
-  journal:'polity',newspaper:'polity',book:'knowledge',law:'polity',act:'polity',bill:'polity'};
+// One sub-lane per node type. LANE_HINT folds look-alike types together
+// (battle into war); LANE_PRIO decides top-to-bottom order; LANE_CAP limits cards.
+var LANE_HINT={battle:'war'};
+var LANE_PRIO={war:0,event:10,person:20,empire:26,org:30,scheme:31,dynasty:36,concept:40,disease:41,volcano:50,place:55};
+var LANE_CAP={war:16,event:16,person:36,empire:16,org:14,scheme:14,concept:14,dynasty:14,place:14,disease:14,volcano:14};
+// Empires, cities and a few eras that the auto-extractor mistagged as `person`
+// in older data. Pure presentation fix — only affects which lane a card sits in.
+var EXTRA_TYPE={
+  'delhi sultanate':'empire','abbasid caliphate':'empire','umayyad caliphate':'empire',
+  'rashidun caliphate':'empire','fatimid caliphate':'empire','ottoman caliphate':'empire',
+  'mongol empire':'empire','chola empire':'empire','gupta empire':'empire','maurya empire':'empire',
+  'athens':'place','sparta':'place','babylon':'place','assyria':'place','carthage':'place',
+  'thrace':'place','britannia':'place','phoenicia':'place','persia':'place','mesopotamia':'place',
+  'byzantium':'place','meiji restoration':'event','tang dynasty':'dynasty'};
 
 var KIN_RELS=['father','mother','parent','parents','son','daughter','child','children','brother','sister','sibling','siblings','spouse','wife','husband','partner of','ex-wife','ex-husband','divorced','grandfather','grandmother','grandson','granddaughter','grandparent','grandchild','uncle','aunt','nephew','niece','cousin','step-father','step-mother','step-son','step-daughter','step-brother','step-sister','half-brother','half-sister','father-in-law','mother-in-law','son-in-law','daughter-in-law','brother-in-law','sister-in-law','great-grandfather','great-grandmother','great-grandson','great-granddaughter','great-uncle','great-aunt','great-nephew','great-niece','great-great-grandfather','great-great-grandson','descends from','relative of','heir of','ward of','guardian of','ancestor','descendant','forefather','married'];
 var BATTLE_RELS=['commanded','commander','commander of','commander-in-chief','led','command','commander-in-chief of','fought','fought in','fought at','fought against','participated','participated in','joined','joined the','killed','killed at','killed in','died at','died in battle','dying','martyr','martyred at','defeated','defeated by','defeated at','captured','captured by','besieged','besieged by','victorious','victory at','victory of','victory over','victor at','general','general of','military leader','soldier of','officer','army of','army','commander of the army','siege of','attacked','attacking','invaded','invading','conquered','conquering','looted','sacked','captain','admiral','colonel','warrior','lieutenant','in battle of','during the battle','during the war','took part'];
 var SEQ_RELS=['succeeded by','preceded','predecessor of','successor of','succeeded','followed by','following','preceding','founded','established','created','formed','inaugurated'];
 var FOUND_RELS=['founded','established','founder of','founder','established by','created by','creator of','inaugurated','formed'];
 
-var FIXED_ORDER=['events','war','family','polity','people','knowledge','geo'];
-var FIXED_TITLE={events:'Key Events',war:'War & Battles',family:'Family & Dynasty',polity:'Polity & Institutions',people:'People & Society',knowledge:'Concepts & Discoveries',geo:'Geography, Countries & Places'};
-var FIXED_COLOR={events:'#fb923c',war:'#ef4444',family:'#a78bfa',polity:'#22d3ee',people:'#d1b3ff',knowledge:'#94a3b8',geo:'#34d399'};
-
-function esc(s){return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function esc(s){if(s&&typeof s==='object')s='';return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+// Classes that never co-mention a person for real: a "Mahatma Gandhi — COVID-19"
+// hook is always paragraph noise (a donated dictionary term inside a GS paper),
+// never a relationship worth showing as a card. Blocked for co-mentions only.
+var NOISE_TYPES={disease:1,scheme:1,plant:1,animal:1,volcano:1,asteroid:1,comet:1};
 function canon(s){return String(s||'').toLowerCase().replace(/[^a-z0-9]+/gi,' ').replace(/\s+/g,' ').trim();}
-function escRe(s){return String(s).replace(/[.*+?^${}()|[\]\\]/g,'\\$&');}
+function hasVizNeighbours(n,need){
+  var deg=0;
+  var a=ADJ[n.id]||{},la=LADJ[n.id]||{};
+  for(var k in a){var m=BY_ID[k];if(m&&!isJunk(m)&&!isHub(m)&&(m.level||0)<=3&&++deg>=need)return true;}
+  for(var k2 in la){var m2=BY_ID[k2];if(m2&&!isJunk(m2)&&!isHub(m2)&&(m2.level||0)<=3&&++deg>=need)return true;}
+  return false;
+}
+function buildRandPool(){
+  RAND_POOL=NODES.filter(function(n){
+    if(isJunk(n)||isHub(n))return false;
+    if(!((n.seed)||((n.level||4)<=3)||n.type==='person'))return false;
+    if((n.count||0)<2)return false;
+    // only topics whose flow actually renders cards
+    return hasVizNeighbours(n,2);
+  });
+}
 function fmtYear(y){return y==null?'':(y<0?(-y)+' BC':String(y));}
 function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)%360;}
 function colorFor(t){return TYPE_COLOR[t]||'hsl('+hashStr(t)+',62%,60%)';}
@@ -118,34 +184,128 @@ function byProminence(a,b){
 }
 function inList(r,list){return list.indexOf(r)!==-1;}
 function laneOf(n,rel){
-  var t=n.type;
-  if(TYPE_LANE[t])return TYPE_LANE[t];
-  if(t==='event')return 'events';
-  if(t==='war'||t==='battle')return 'war';
-  if(t==='person'){
-    if(inList(rel,KIN_RELS))return 'family';
-    if(inList(rel,BATTLE_RELS))return 'war';
-    if(inList(rel,FOUND_RELS))return 'polity';
-    return 'people';
-  }
-  if(t==='org'||t==='scheme')return 'polity';
-  if(t==='concept'||t==='disease')return 'knowledge';
-  if(t==='geography'||t==='place'||t==='country'||t==='nation'||t==='earthquake'||t==='river'||t==='mountain'||t==='volcano'||t==='region'||t==='city'||t==='town'||t==='island'||t==='sea'||t==='ocean'||t==='lake'||t==='desert'||t==='forest')return 'geo';
-  return 't'+t;
+  var nm=canon(n.name||'');
+  var t=EXTRA_TYPE[nm]||(n.type||'misc');
+  return LANE_HINT[t]||t;
+}
+// "Suleiman" and "Suleiman the Magnificent" are the same person reached via two ids.
+// Drop honorific/regnal tokens to fingerprint an entity within a single flow.
+var ALIAS_STOP={the:1,i:1,ii:1,iii:1,iv:1,v:1,vi:1,vii:1,viii:1,ix:1,x:1,de:1,von:1,el:1,al:1,of:1,great:1,magnificent:1,sr:1,jr:1};
+function aliasKey(n){
+  var toks=canon(n.name||'').split(' ').filter(function(w){return w&&!ALIAS_STOP[w]&&!/^[ivxlc]+$/.test(w);});
+  return (n.type||'misc')+'|'+toks.join(' ');
+}
+function sameEntity(a,b){
+  if(aliasKey(a)!==aliasKey(b))return false;
+  var sa=a.span,sb=b.span;
+  // when both sides are dated, the entity fingerprints must actually overlap in time
+  if(sa&&sb&&sa.min!=null&&sa.max!=null&&sb.min!=null&&sb.max!=null)return !(sa.min>sb.max||sb.min>sa.max);
+  return true;
 }
 
 function findByName(q){
   var c=canon(q);
-  if(BY_NAME[c]&&BY_NAME[c].length)return BY_NAME[c].slice().sort(byProminence)[0];
-  var best=null;
+  function good(b){return !!b&&!isJunk(b)&&((b.count||0)>=2||b.cur);}
+  var arr=BY_NAME[c];
+  if(arr&&arr.length){
+    var hits=arr.filter(good).sort(byProminence);
+    if(hits.length)return hits[0];
+  }
+  // Fallback: keys that CONTAIN the query. If any key has the query as a whole
+  // word, ignore mid-word matches ("music" → "Indian Classical Music", not
+  // "Alan Wilson (musician)"); then pick the most prominent candidate.
+  function wordBoundary(k){return new RegExp('(^| )'+c.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'( |$)').test(k);}
+  var word=[],rest=[];
   for(var k in BY_NAME){
     if(k.indexOf(c)===-1)continue;
     var cand=BY_NAME[k].slice().sort(byProminence)[0];
+    if(!good(cand))continue;
+    (wordBoundary(k)?word:rest).push(cand);
+  }
+  var pool=word.length?word:rest;
+  var best=null;
+  for(var p=0;p<pool.length;p++){
+    var cand=pool[p];
     if(!best||byProminence(cand,best)<0)best=cand;
   }
   return best;
 }
 function fetchJson(url){return fetch(url).then(function(r){if(!r.ok)throw new Error(url+' '+r.status);return r.json();});}
+// Curated "topic layers": authored per-topic mind-trees (data/topic-layers.json)
+// that graft onto the mined graph at load time — each branch becomes a section
+// node and every item a curated card under it, so a topic like World War II can
+// carry the full encyclopedic tree the mined co-mentions alone can't express.
+var LAYERS={};
+// Curated edges live in CADJ, not ADJ: authored tree is only visible when you
+// open that topic itself, so another topic that just happens to co-mention the
+// central (Ashoka —related→ Gandhi) can never drag the whole Gandhi tree in.
+function cadj(a,b,rel){
+  if(!CADJ[a])CADJ[a]={};if(!CADJ[b])CADJ[b]={};
+  CADJ[a][b]=rel;CADJ[b][a]=rel;
+}
+function midYear(x){
+  if(!x||!x.span||x.span.min==null||x.span.max==null)return null;
+  return (x.span.min+x.span.max)/2;
+}
+function bornAfter(x,y){
+  if(!x||!x.span||!y||!y.span)return false;
+  if(x.span.min==null||y.span.max==null)return false;
+  return x.span.min>y.span.max;
+}
+function resolveItem(name,type){
+  var c=canon(name);
+  var arr=BY_NAME[c];
+  if(!arr||!arr.length)return null;
+  var good=arr.filter(function(n){return !isJunk(n)&&!isHub(n)&&(n.count||0)>=1;});
+  if(!good.length)return null;
+  var byType=good.filter(function(n){return n.type===type&&(n.level||0)<=3;});
+  var pool=(byType.length?byType:good).slice();
+  pool.sort(byProminence);
+  return pool[0];
+}
+// Author-order sequence for curated sections, so the tree renders the branches
+// in the human-written order (Personal Life → … → Legacy) instead of by type
+// priority. Assigned during curate() and read by graphFor() when ordering lanes.
+var LAYER_SO=0;
+var NOTES={};
+function curate(layers){
+  LAYER_SO=0;
+  Object.keys(layers||{}).forEach(function(key){
+    var topic=layers[key];
+    if(!topic||!topic.branches||!topic.branches.length)return;
+    var central=findByName(key);
+    if(!central||isJunk(central))return;
+    CUR_CENTRAL[central.id]=1;
+    function addBranch(parentId,br,bi,path){
+      var bid='crt|'+key+'|B|'+path;
+      if(BY_ID[bid])return;
+      var bnode={id:bid,name:String(br.title||'').trim(),type:br.type||'concept',count:1,level:0,seed:true,cur:1,section:String(br.title||'').trim(),cats:[],desc:typeof br.desc==='string'?br.desc:'',_so:LAYER_SO++};
+      if(!bnode.name)return;
+      NODES.push(bnode);
+      cadj(parentId,bid,'covers');
+      (br.items||[]).forEach(function(it,ii){
+        var c=canon(it.name);
+        if(it.note)NOTES[c]=String(it.note).trim();
+        if(it.desc&&!NOTES[c])NOTES[c]=String(it.desc).trim();
+        var iid='crt|'+key+'|I|'+path+'#'+ii;
+        var real=resolveItem(it.name,it.type);
+        if(real){
+          cadj(bid,real.id,it.rel||br.rel||'topic of');
+        }else{
+          if(BY_ID[iid])return;
+          NODES.push({id:iid,name:String(it.name||'').trim(),type:it.type||'concept',count:1,level:0,seed:true,cur:1,desc:typeof it.desc==='string'?it.desc:''});
+          cadj(bid,iid,it.rel||br.rel||'topic of');
+        }
+      });
+      // nested branches become their own section lanes, still in author order,
+      // so a sub-tree like "Indian Freedom Struggle → Non-Cooperation Movement"
+      // renders as sibling lanes directly after the parent branch
+      (br.branches||[]).forEach(function(sub,sj){addBranch(bid,sub,sj,path+'.'+sj);});
+      return bid;
+    }
+    topic.branches.forEach(function(br,bi){addBranch(central.id,br,bi,String(bi));});
+  });
+}
 function loadData(){
   return fetchJson('data/timeline.json').then(function(t){
     if(Array.isArray(t.nodes))return t;
@@ -159,7 +319,11 @@ function loadData(){
     });
   });
 }
-function loadImages(){return fetchJson('data/person-images.json').then(function(o){for(var k in o)IMGS[canon(k)]=o[k];}).catch(function(){});}
+function loadImages(){return fetchJson('data/person-images.json').then(function(o){for(var k in o)IMGS[canon(k)]=o[k];})
+  .catch(function(){})
+  .then(function(){
+    try{var s=localStorage.getItem('fc_photos');if(s){var o=JSON.parse(s);for(var k in o){if(o[k]&&!IMGS[k])IMGS[k]=o[k];}}}catch(e){}
+  });}
 
 function buildIndexes(){
   BY_ID={};BY_NAME={};NAME_CNT={};ADJ={};LADJ={};
@@ -174,94 +338,222 @@ function buildIndexes(){
   }
   for(var j=0;j<EDGES.length;j++){
     var e=EDGES[j];
+    // Skip edges that touch a junk-kin node or a missing node: 91% of the shipped
+    // edge table is auto-mined junk–junk noise, so indexing only the real edges
+    // keeps both the graph and the edge scan fast and correct.
+    var na=BY_ID[e.a],nb=BY_ID[e.b];
+    if(!na||!nb||isJunk(na)||isJunk(nb))continue;
     if(!ADJ[e.a])ADJ[e.a]={};ADJ[e.a][e.b]=e.rel;
     if(!ADJ[e.b])ADJ[e.b]={};ADJ[e.b][e.a]=e.rel;
   }
   for(var k=0;k<LINKS.length;k++){
     var l=LINKS[k];
+    var la0=BY_ID[l.a],lb=BY_ID[l.b];
+    if(!la0||!lb||isJunk(la0)||isJunk(lb))continue;
     if(!LADJ[l.a])LADJ[l.a]={};if(!LADJ[l.b])LADJ[l.b]={};
     LADJ[l.a][l.b]=l.w;LADJ[l.b][l.a]=l.w;
   }
   var names=Object.keys(BY_NAME).sort(function(a,b){return (NAME_CNT[b]||0)-(NAME_CNT[a]||0);});
   var dl=document.getElementById('topiclist'),frag=document.createDocumentFragment();
   for(var m=0;m<names.length&&m<6000;m++){
+    var best=BY_NAME[names[m]].slice().sort(byProminence)[0];
+    if(!best||isJunk(best)||((best.count||0)<2&&!best.cur))continue;
     var o=document.createElement('option');
-    o.value=BY_NAME[names[m]][0].name;
+    o.value=best.name;
     frag.appendChild(o);
   }
   dl.appendChild(frag);
 }
 
+// Single-token names that are never personal names: clause/discourse fragments
+// ("Tim", "Damage", "Subsequently") and abstract common nouns ("Red", "Straw",
+// "Light") that the kin miner absorbs when a paragraph-lead noun slips into a
+// "…was the son|founder of…" pattern. Same words the builder's KIN_BAN_WORDS
+// refuses; enforced here so already-shipped data stays just as clean. Seeded
+// topics are exempt — a curated name wins even if it collides.
+var JUNK_KIN_NAME=/^(?:tim|damage|times|ultimately|observer|originally|democratic|eventually|begin|however|subsequently|previously|instead|soon|secondly|met|colonial|national|imperial|former|finally|afterwards|before|previous|manchus|population|appendix|conclusion|introduction|features|objectives|measures|schemes|programmes|policies|impacts|causes|effects|principles|basics|types|government|administration|parliament|legislature|judiciary|executive|photograph|photographs|pictures|archives|documents|references|summary|red|fine|straw|light|craft|gun|wing|forest|paper|transport|television|weir|kaiser|fuel|labour|commerce|industry|state|capital|revenue|budget|currency|debt|exchange|market|mineral|son|black|steel|manhattan|virginia|munich|manitoba|stirling|bandai)$/;
+function isJunk(n){
+  if(n.kin===true&&(n.count||0)<2)return true;
+  return n.kin===true&&!n.seed&&JUNK_KIN_NAME.test(canon(n.name||''));
+}
+function isHub(n){
+  return (n.count||0)>=5000;
+}
+var KIN_LONG=['ancestor','descendant','descends from','forefather','grandfather','grandmother','grandson','granddaughter','grandparent','grandchild','great-grandfather','great-grandmother','great-grandson','great-granddaughter','great-uncle','great-aunt','great-nephew','great-niece','great-great-grandfather','great-great-grandson','heir of','ward of','relative of'];
+function spanGap(a,b){
+  var sa=a.span,sb=b.span;
+  if(!sa||!sb||sa.min==null||sb.min==null)return 0;
+  return Math.max(0,sa.min-sb.max,sb.min-sa.max);
+}
+function kinIncompatible(a,b,rel){
+  if(inList(rel,KIN_RELS)===false)return false;
+  if(inList(rel,KIN_LONG))return false;
+  return spanGap(a,b)>100;
+}
+// Depth development: FLOW_HOP is the number of radial "rings" the map grows to.
+// Each hop expands the frontier one level deeper. PIN can deepen one extra ring.
+var FLOW_HOP=2,BUDGET=360,PIN={},LASTG=null;
 function graphFor(id){
   var central=BY_ID[id];
   if(!central)return null;
-  var caps={events:16,war:16,family:36,polity:14,people:14,knowledge:14,geo:14};
-  var lane={events:[],war:[],family:[],polity:[],people:[],knowledge:[],geo:[]};
-  var dyn={};
+  var lane={};
   var seen={};
-  function cand(cid,rel){
+  var weakCnt={};
+  var hopOf={};
+  var levels=[[central]];
+  seen[id]=1;hopOf[id]=0;
+  // A topic with an authored mind-tree (a neighbour whose id is crt|…) is drawn
+  // as that tree: the authored branches ARE the relevance map, so the broad
+  // co-mention flood (COVID-19 · Malaria · Fisheries · MGNREGA next to Gandhi)
+  // is dropped entirely and never upstages the curated spine.
+  var curated=!!CUR_CENTRAL[id];
+  function capOf(t){return LANE_CAP[t]||14;}
+  function pushCard(lk,node,rel,w,hp,cur){
+    if(!lane[lk])lane[lk]=[];
+    var arr=lane[lk];
+    // merge aliases: keep the stronger (seed beats non-seed, then count)
+    for(var i=0;i<arr.length;i++){
+      if(!sameEntity(arr[i].node,node))continue;
+      var c=arr[i];
+      if((node.seed?1:0)!==(c.node.seed?1:0)){if(node.seed)arr[i]={node:node,rel:rel,w:w,hp:hp,cur:cur};}
+      else if((node.count||0)>(c.node.count||0))arr[i]={node:node,rel:rel,w:w,hp:hp,cur:cur};
+      if(arr[i].hp>hp)arr[i].hp=hp;
+      return true;
+    }
+    // Weak co-mentions (related, low weight) can flood a lane with distant,
+    // off-topic chains (e.g. an Opium-War tail inside the Ming flow). Cap how
+    // many such faint links any single lane will carry; strong facts always win.
+    var isWeak=(rel==='related'&&(w||0)<4);
+    if(isWeak&&weakCnt[lk]>=6)return false;
+    if(cur||arr.length<capOf(lk)){arr.push({node:node,rel:rel,w:w,hp:hp,cur:cur});if(isWeak)weakCnt[lk]=(weakCnt[lk]||0)+1;return true;}
+    return false;
+  }
+  function cand(cid,rel,w,src,hp){
     if(cid===id||seen[cid])return;
     var n=BY_ID[cid];
-    if(!n||(n.level||0)>3)return;
-    seen[cid]=1;
-    var lk=laneOf(n,rel);
-    if(lk.charAt(0)==='t'){
-      dyn[n.type]=dyn[n.type]||[];
-      if(dyn[n.type].length<14)dyn[n.type].push({node:n,rel:rel});
-    }else{
-      if(lane[lk].length<caps[lk])lane[lk].push({node:n,rel:rel});
+    // curated edges carry their own authority: a listed item at corpus level 4
+    // (deep sub-topic) is exactly what the authored mind-tree wants shown
+    var fromSection=src&&src.section;
+    if(!n||(!fromSection&&(n.level||0)>3)||isJunk(n))return;
+    if(rel==='related'&&(w||0)<2)return;
+    // a co-mention born only after the topic itself ended (COVID-19 beside a
+    // figure who died in 1984, Instagram beside Indira) is a corpus artifact —
+    // modern articles contrast with her, they don't relate to her. Famous later
+    // PERSONS are exempt: Xuanzang/Faxian recorded Ashoka's pillars centuries
+    // later and that tie is exactly the source the docs are mining.
+    if(rel==='related'&&!curated&&bornAfter(n,central)&&
+       !(n.type==='person'&&(w||0)>=8&&/^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$/.test(n.name)))return;
+    // deeper hops need progressively stronger co-mentions, else off-topic chains
+    // (each level re-mentions the one before) flood the outer rings
+    if(rel==='related'&&hp>=2&&(w||0)<4)return;
+    // chained co-mentions far from the topic's own era are paragraph noise
+    // (Ashoka —related…→ French Revolution —related…→ COVID-19), and an hp-2
+    // typed edge dragged in through a middle person is usually that person's own
+    // genealogy, not the topic's (Ashoka → Kanishka → his great-grandfather, or
+    // → Maratha Empire 'preceded'). Same era rule as the map-side Story strip;
+    // direct hop-1 facts are left alone and undated targets ride through.
+    if(hp>=2&&!curated){
+      var mt=midYear(n),m0=midYear(central);
+      if(mt!=null&&m0!=null&&Math.abs(mt-m0)>300)return;
+    }
+    // curated topics: no co-mention cards at all — the authored tree is the map
+    if(curated&&rel==='related')return;
+    // a person never really relates to these classes; a corps-level event never
+    // relates to a scheme dictionary term (Gandhi—COVID-19, WWII—MGNREGA noise)
+    if(rel==='related'&&src&&((src.type==='person'&&NOISE_TYPES[n.type])||(src.type==='event'&&n.type==='scheme')))return;
+    // Kinship is only meaningful between two humans: a "wife of Nehru" line inside
+    // a Tuberculosis topic must never surface "Tuberculosis —wife→ Nehru".
+    if(rel!=='related'&&inList(rel,KIN_RELS)&&!(src&&src.type==='person'&&n.type==='person'))return;
+    // A mega-hub (Constantine, Alexander, Muhammad, …) linked by a kin relation to a
+    // small/undated person is overwhelmingly a name-ambiguity misfire. Hubs stay
+    // as related/event cards, but never as kin inside the person lane.
+    if(rel!=='related'&&inList(rel,KIN_RELS)&&n.type==='person'&&isHub(n))return;
+    if(rel!=='related'&&kinIncompatible(src,n,rel))return;
+    var tot=0;for(var k in lane)tot+=lane[k].length;
+    if(tot>=BUDGET)return;
+    seen[cid]=1;hopOf[cid]=hp;
+    var lk=n.section||fromSection||laneOf(n,rel);
+    if(pushCard(lk,n,rel,w,hp,!!(n.cur||fromSection)))(levels[hp]=levels[hp]||[]).push(n);
+  }
+  function expandRing(nodes,hp){
+    for(var f=0;f<nodes.length;f++){
+      var src=nodes[f];
+      // curated trees stop at authored nodes: a real curated card (Nehru) must
+      // not drag in Nehru's own co-mention cloud two hops deep
+      if(curated&&hp>=2&&String(src.id).indexOf('crt|')!==0)continue;
+      // local copy — never write CADJ keys back into the shared ADJ, or the
+      // authored edges would leak into every later topic that reaches this node
+      var fa={};for(var k1 in ADJ[src.id])fa[k1]=ADJ[src.id][k1];
+      // the authored tree's edges (stored in CADJ) only join the walk when the
+      // source IS the curated central or one of its cells — real nodes like the
+      // central never bleed their tree into other topics' flows
+      if(curated&&(src.id===id||String(src.id).indexOf('crt|')===0)){
+        var c0=CADJ[src.id]||{};
+        for(var k2 in c0)fa[k2]=c0[k2];
+      }
+      for(var ob in fa)cand(ob,fa[ob],0,src,hp);
+      if(curated)continue; // no co-mention flood in curated mode
+      var la=LADJ[src.id]||{};
+      var lKeys=Object.keys(la).sort(function(a,b){return (la[b]||0)-(la[a]||0);});
+      for(var i=0;i<lKeys.length;i++)cand(lKeys[i],'related',la[lKeys[i]],src,hp);
     }
   }
-  var fa=ADJ[id]||{};
-  for(var ob in fa)cand(ob,fa[ob]);
-  var la=LADJ[id]||{};
-  for(var lb in la)cand(lb,'related');
-  function expand(src,rels,dst,cap){
-    for(var i=0;i<EDGES.length&&dst.length<cap;i++){
-      var e=EDGES[i];
-      if(rels.indexOf(e.rel)===-1)continue;
-      var n2=null;
-      if(e.a===src.node.id)n2=BY_ID[e.b];
-      else if(e.b===src.node.id)n2=BY_ID[e.a];
-      if(!n2||(n2.level||0)>3)continue;
-      if(seen[n2.id])continue;
-      seen[n2.id]=1;
-      dst.push({node:n2,rel:e.rel});
+  // curated trees always grow to ring 3 in one go: ring1 = branches,
+  // ring2 = their curated items, ring3 = nested sub-movement items
+  var rounds=curated?Math.max(FLOW_HOP,3):FLOW_HOP;
+  for(var r=1;r<=rounds;r++){
+    expandRing(levels[r-1]||[],r);
+    // pinned cards get one extra hop so clicking a card grows its subtree in place
+    if(r===rounds&&Object.keys(PIN).length){
+      var last=levels[r]||[];
+      for(var p=0;p<last.length;p++){
+        if(PIN[last[p].id])expandRing([last[p]],r+1);
+      }
     }
   }
-  var famX=[],seqX=[];
-  lane.family.slice().forEach(function(o){if(o.node.type==='person')expand(o,KIN_RELS,famX,40);});
-  famX.forEach(function(o){
-    var lk=laneOf(o.node,o.rel);
-    if(lk==='family'){if(lane.family.length<caps.family)lane.family.push(o);}
-    else if(lane[lk]&&lane[lk].length<caps[lk])lane[lk].push(o);
+  // order sub-lanes: priority first, then card count (bigger lane first).
+  // Lanes that carry real typed facts (an actual "succeeded by"/kin/etc edge,
+  // or a strong related link) float above lanes that are only faint co-mentions,
+  // so a topic's own story reads first and distant chains sink to the bottom.
+  var boosted={};
+  Object.keys(lane).forEach(function(lk){
+    var hasTyped=false,hasStrong=false,allCur=true;
+    lane[lk].forEach(function(c){
+      if(!c.cur)allCur=false;
+      if(c.rel!=='related')hasTyped=true;
+      else if((c.w||0)>=4)hasStrong=true;
+    });
+    // curated sections are the authored mind-tree spine: float them to the top
+    boosted[lk]=(allCur?-9:0)+(hasTyped?-3:0)+(hasStrong&&!hasTyped?-1:0);
   });
-  lane.events.slice().forEach(function(o){expand(o,SEQ_RELS,seqX,10);});
-  lane.polity.slice().forEach(function(o){expand(o,SEQ_RELS,seqX,10);});
-  lane.war.slice().forEach(function(o){expand(o,SEQ_RELS,seqX,8);});
-  seqX.forEach(function(o){
-    var lk=laneOf(o.node,o.rel);
-    if(lane[lk]&&lane[lk].length<caps[lk])lane[lk].push(o);
-    else if(lk.charAt(0)==='t'){dyn[o.node.type]=dyn[o.node.type]||[];if(dyn[o.node.type].length<14)dyn[o.node.type].push(o);}
+  // in curated flows the author's branch order is the tree order
+  var laneSo={};
+  Object.keys(lane).forEach(function(lk){
+    laneSo[lk]=Infinity;
+    lane[lk].forEach(function(c){if(c.node._so!=null&&c.node._so<laneSo[lk])laneSo[lk]=c.node._so;});
   });
-  var dynNames=Object.keys(dyn).sort(function(a,b){return dyn[b].length-dyn[a].length;});
-  var order=[].concat(FIXED_ORDER);
-  dynNames.forEach(function(t){
-    order.push('t'+t);
-    lane['t'+t]=dyn[t];
+  var order=Object.keys(lane);
+  order.sort(function(a,b){
+    if(curated&&laneSo[a]<1e9&&laneSo[b]<1e9){
+      if(laneSo[a]!==laneSo[b])return laneSo[a]-laneSo[b];
+    }
+    var pa=(LANE_PRIO[a]!=null?LANE_PRIO[a]:90)+boosted[a];
+    var pb=(LANE_PRIO[b]!=null?LANE_PRIO[b]:90)+boosted[b];
+    if(pa!==pb)return pa-pb;
+    var d=lane[b].length-lane[a].length;
+    if(d)return d;
+    return a<b?-1:(a>b?1:0);
   });
   var items=[];
   var idset={};idset[id]=1;
   order.forEach(function(lk){
-    var arr=lane[lk];
-    if(!arr)return;
-    arr.forEach(function(it){
+    lane[lk].forEach(function(it){
       if(idset[it.node.id])return;
       idset[it.node.id]=1;
-      items.push({lane:lk,node:it.node,rel:it.rel});
+      items.push({lane:lk,node:it.node,rel:it.rel,w:it.w,hop:it.hp||1});
     });
   });
-  return {central:central,order:order,lane:lane,items:items,idset:idset};
+  return {central:central,order:order,lane:lane,items:items,idset:idset,curated:curated};
 }
 function relPrio(r){
   if(inList(r,KIN_RELS))return 0;
@@ -271,7 +563,8 @@ function relPrio(r){
 function subEdges(idset){
   var out={};
   for(var a in idset){
-    var fa=ADJ[a]||{};
+    var fa={};for(var z in ADJ[a])fa[z]=ADJ[a][z];
+    if(CADJ[a])for(var ck in CADJ[a])fa[ck]=CADJ[a][ck];
     for(var b in fa){
       if(b===a||!idset[b])continue;
       var key=a<b?JSON.stringify([a,b]):JSON.stringify([b,a]);
@@ -287,7 +580,7 @@ function subEdges(idset){
     if(x.a!==y.a)return x.a<y.a?-1:1;
     return x.b<y.b?-1:(x.b>y.b?1:0);
   });
-  return arr.slice(0,175);
+  return arr.slice(0,400);
 }
 function subLinks(idset){
   var out={};
@@ -309,43 +602,66 @@ function subLinks(idset){
 }
 
 function layout(g){
-  var perLane={};
-  g.order.forEach(function(lk){perLane[lk]=[];});
-  g.items.forEach(function(it){perLane[it.lane].push(it);});
+  // Radial mind-map: the focus topic is the hub, and every hop of the expanded
+  // graph sits on its own concentric ring — hop-1 facts nearest the centre,
+  // deeper discoveries (and curated branch leaves) radiating outward. Each lane
+  // keeps one angular sector proportional to its card count, like a tree's crown.
+  var M=34,GAP=30,MINR=210;
+  var sector={};
   g.order.forEach(function(lk){
-    var arr=perLane[lk];
-    arr.sort(function(a,b){
-      var ay=a.node.span?a.node.span.min:1e9;
-      var by=b.node.span?b.node.span.min:1e9;
-      if(ay!==by)return ay-by;
-      return a.node.id<b.node.id?-1:1;
+    var arr=g.items.filter(function(it){return it.lane===lk;});
+    if(!arr.length)return;
+    sector[lk]=arr;
+  });
+  var lanes=g.order.filter(function(lk){return sector[lk];});
+  var total=0,share={};
+  lanes.forEach(function(lk){share[lk]=sector[lk].length;total+=share[lk];});
+  var GAP_D=Math.PI/22;
+  // with many lanes the fixed 8° gaps would eat half the circle; cap the total
+  // gap budget instead so big curated trees keep a usable orbit
+  var gapBudget=Math.min(GAP_D*lanes.length,Math.PI/3);
+  var usable=2*Math.PI-gapBudget;
+  // radius needed per ring: the busiest lane at that hop dictates it, because
+  // consecutive cards around the ring need arc = (CW+GAP)/R*cards
+  var maxHop=1;
+  g.items.forEach(function(it){if(it.hop>maxHop)maxHop=it.hop;});
+  var ringR=[0];
+  for(var h=1;h<=maxHop;h++){
+    var need=MINR;
+    lanes.forEach(function(lk){
+      var n=g.items.filter(function(it){return it.lane===lk&&it.hop===h;}).length;
+      if(!n)return;
+      var r=Math.ceil((n*(CW+GAP))/(usable*share[lk]/Math.max(1,total))*100)/100;
+      if(r>need)need=r;
     });
-  });
-  var W=DX*2+PERROW*CW+(PERROW-1)*DX;
-  var HEAD=96;
-  var laneTop={};
-  var y=HEAD;
-  var H=0;
-  g.order.forEach(function(lk){
-    var arr=perLane[lk];
-    var rows=arr.length?Math.ceil(arr.length/PERROW):0;
-    laneTop[lk]=y;
-    y+=22+rows*CH+(rows?rows-1:0)*DY+14;
-    H=y;
-  });
-  H=y;
+    // radial clearance: a whole card width between rings at the 3/9 o'clock angles
+    var minPrev=(ringR[h-1]||MINR)+CW+GAP;
+    ringR[h]=Math.max(need,minPrev);
+  }
+  var R=ringR[maxHop];
+  var W=2*(R+M+CW/2),H=2*(R+M+CH/2);
+  var cx=R+M+CW/2,cy=R+M+CH/2;
   POS={};
-  g.order.forEach(function(lk){
-    var arr=perLane[lk];
-    for(var i=0;i<arr.length;i++){
-      var col=i%PERROW,row=Math.floor(i/PERROW);
-      var cx=DX+col*(CW+DX);
-      var cy=laneTop[lk]+22+row*(CH+DY);
-      POS[arr[i].node.id]={x:cx,y:cy,lane:lk};
+  POS[g.central.id]={x:cx-CW/2,y:cy-CH/2,lane:'hero'};
+  var gapPer=lanes.length?(gapBudget/ lanes.length):GAP_D;
+  var a0=-Math.PI/2, laneTitles={};
+  lanes.forEach(function(lk){
+    var arr=sector[lk];
+    var wid=usable*share[lk]/Math.max(1,total);
+    var lastH=1;
+    for(var h=1;h<=maxHop;h++){
+      var hs=arr.filter(function(x){return x.hop===h;}).sort(function(a,b){return (b.w||0)-(a.w||0);});
+      if(!hs.length)continue;
+      lastH=h;
+      hs.forEach(function(it,i){
+        var a=a0+wid*(i+0.5)/hs.length;
+        POS[it.node.id]={x:cx+Math.cos(a)*ringR[h]-CW/2,y:cy+Math.sin(a)*ringR[h]-CH/2,lane:it.lane};
+      });
     }
+    laneTitles[lk]={a:a0+wid/2,r:ringR[lastH]+46};
+    a0+=wid+gapPer;
   });
-  POS[g.central.id]=POS[g.central.id]||{x:W/2-CW/2,y:8,lane:'hero'};
-  return {W:W,H:H,perLane:perLane,laneTop:laneTop};
+  return {W:W,H:H,ringR:ringR,cx:cx,cy:cy,laneTitle:laneTitles};
 }
 function ctr(id){var p=POS[id];return {x:p.x+CW/2,y:p.y+CH/2};}
 function anchors(P,Q){
@@ -379,7 +695,10 @@ function cardSvg(id,laneColor,opts){
   var sub=opts.sub||spanLabel(n);
   var x=p.x,y=p.y;
   var idx=opts.idx!=null?opts.idx:UNIQ++;
-  var inner='<rect class="card" x="0" y="0" width="'+CW+'" height="'+CH+'" rx="11" fill="'+opts.fill+'" stroke="'+col+'"><title>'+esc(n.name)+(n.desc?' — '+esc(n.desc.slice(0,200)):'')+' · '+esc(sub)+' · click to open this topic\'s sub-flowchart</title></rect>';
+  CARDS[idx]={id:id,name:n.name,idx:idx};
+  var nnote=NOTES[canon(n.name)]||n.desc||'';
+  var titleTxt=esc(n.name)+(nnote?' — '+esc(nnote.slice(0,600)):'')+' · '+esc(sub)+(NOTES[canon(n.name)]?' · click a card to read its full note':' · click to grow this branch · double-click to open');
+  var inner='<rect class="card" x="0" y="0" width="'+CW+'" height="'+CH+'" rx="11" fill="'+opts.fill+'" stroke="'+col+'"><title>'+titleTxt+'</title></rect>';
   var txtx=12;
   if(n.type==='person'){
     var img=IMGS[canon(n.name)];
@@ -390,13 +709,20 @@ function cardSvg(id,laneColor,opts){
       inner+='<text class="avatar-txt" data-av="'+idx+'" x="21" y="'+(CH/2+5)+'" text-anchor="middle" font-size="12">'+esc(initials(n))+'</text>';
     }
     txtx=42;
-    CARDS[idx]={id:id,name:n.name};
   }else{
     inner+='<rect x="12" y="'+(CH/2-7)+'" width="6" height="14" rx="3" fill="'+col+'"/>';
   }
   inner+='<text class="nname" x="'+txtx+'" y="'+(CH/2-3)+'" font-size="11.5">'+esc(trunc(n.name,46))+'</text>';
-  inner+='<text class="nsub" x="'+txtx+'" y="'+(CH/2+13)+'" font-size="10">'+esc(sub)+(opts.extra?' · '+esc(opts.extra):'')+(opts.extraMeta?' · '+esc(opts.extraMeta):'')+'</text>';
-  return '<g class="ncard'+(opts.hero?' hero':'')+'" data-idx="'+idx+'" transform="translate('+x+','+y+')">'+inner+'</g>';
+  var subs=[sub];
+  if(opts.extra)subs.push(opts.extra);
+  if(opts.extraMeta)subs.push(opts.extraMeta);
+  if(opts.count!=null)subs.push('·'+fmtCnt(opts.count));
+  inner+='<text class="nsub" x="'+txtx+'" y="'+(CH/2+13)+'" font-size="10">'+esc(trunc(subs.join(' · '),30))+'</text>';
+  if(n.desc){
+    var d=trunc(n.desc.replace(/\s+/g,' ').trim(),44);
+    if(d)inner+='<text class="ndesc" x="'+txtx+'" y="'+(CH/2+26)+'" font-size="8.5">'+esc(d)+'</text>';
+  }
+  return '<g class="ncard'+(opts.hero?' hero':'')+(opts.cls?' '+opts.cls:'')+'" data-idx="'+idx+'" transform="translate('+x+','+y+')">'+inner+'</g>';
 }
 
 function navStack(){
@@ -416,6 +742,26 @@ function navigate(id,push){
   }
   renderFlow(id);
 }
+function applyZoom(){
+  var svg=document.getElementById('chart');
+  if(!ZBASE||!svg.dataset.flow)return;
+  var s=ZSCALE>0?ZSCALE:0; // 0 = fit-to-screen
+  if(s>0){
+    svg.style.width=(ZBASE.w*s)+'px';
+    svg.style.height=(ZBASE.h*s)+'px';
+  }else{
+    svg.style.width='100%';
+    svg.style.height='auto';
+  }
+}
+function zoomDir(d){
+  if(!ZBASE)return;
+  var presets=[0,0.5,0.75,1,1.5,2,3,4,6];
+  var i=presets.indexOf(ZSCALE);
+  if(i<0)i=presets.lastIndexOf(ZSCALE);
+  ZSCALE=presets[Math.max(0,Math.min(presets.length-1,i+d))];
+  applyZoom();
+}
 function route(){
   var m=/^#id=(.+)$/.exec(location.hash||'');
   if(m){
@@ -431,22 +777,53 @@ function route(){
 }
 
 function renderFlow(id){
+  var hero=BY_ID[id];
+  if(!hero){msg('Unknown topic: '+id);return;}
+  if(CUR!==id)PIN={}; // fresh topic resets the in-place expansion pins
+  if(isJunk(hero)){
+    CUR=id;
+    if(TRAIL[TRAIL.length-1]!==id)TRAIL.push(id);
+    if(TRAIL.length>10)TRAIL.shift();
+    paintHead(hero);
+    paintCrumb();
+    msg('This name is a scraped fragment pulled out of a sentence, not a real topic. Its "connections" are sentence co-mentions, so no chart is shown.');
+    var chips=junkSuggestions(hero.name)||'';
+    document.getElementById('chips').innerHTML=chips;
+    var svg=document.getElementById('chart');
+    svg.dataset.flow='1';
+    svg.setAttribute('viewBox','0 0 420 130');
+    svg.setAttribute('width',420);
+    svg.setAttribute('height',130);
+    ZBASE={w:420,h:130};ZSCALE=0;applyZoom();
+    POS[id]={x:120,y:8,lane:'hero'};
+    svg.innerHTML=cardSvg(id,'#fbbf24',{fill:'rgba(251,191,36,0.12)',color:'#fbbf24',hero:true,extra:'scraped fragment',idx:UNIQ++});
+    document.getElementById('bTimeline').disabled=false;
+    var bg=document.getElementById('bGrw'),bs=document.getElementById('bShr');
+    if(bg)bg.disabled=true;if(bs)bs.disabled=true;
+    renderPills({order:[],items:[]});
+    navStack();
+    window.scrollTo(0,0);
+    return;
+  }
   var g=graphFor(id);
   if(!g){msg('Unknown topic: '+id);return;}
+  LASTG=g;
   CUR=id;
   if(TRAIL[TRAIL.length-1]!==id)TRAIL.push(id);
   if(TRAIL.length>10)TRAIL.shift();
-  var geo=layout(g);
+  var vorder=g.order.filter(function(lk){return !HIDDEN[lk]&&g.items.some(function(it){return it.lane===lk;});});
+  var gv={central:g.central,order:vorder,items:g.items,idset:g.idset};
+  var geo=layout(gv);
   var edges=subEdges(g.idset);
   var links=subLinks(g.idset);
   var laneColor={};
-  g.order.forEach(function(lk){
-    if(lk.charAt(0)==='t')laneColor[lk]=colorFor(lk.slice(1));
-    else laneColor[lk]=FIXED_COLOR[lk]||colorFor('concept');
+  gv.order.forEach(function(lk){
+    laneColor[lk]=colorFor(lk);
   });
   var used={};
   edges.forEach(function(e){
-    var cl=laneColor[POS[e.b]&&POS[e.b].lane]||'#9aa4b8';
+    if(!POS[e.a]||!POS[e.b])return;
+    var cl=laneColor[POS[e.b].lane]||'#9aa4b8';
     used[cl]=1;
   });
   used['#9aa4b8']=1;
@@ -456,17 +833,25 @@ function renderFlow(id){
     markers+='<marker id="arw'+mid+'" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="'+c+'"/></marker>';
   });
   var body='<defs>'+markers+'</defs>';
+  // radial guide rings mark each hop-orbit of the expanding mind-map
+  (geo.ringR||[]).forEach(function(rr,i){
+    if(!i||!rr)return;
+    body+='<circle class="guide'+(i===1?' rim':'')+'" cx="'+geo.cx+'" cy="'+geo.cy+'" r="'+rr+'"/>';
+  });
+  var cx=geo.cx,cy=geo.cy;
   CARDS=[];
   links.forEach(function(l){
-    body+='<path class="link-dash" d="'+edgePath(l.a,l.b)+'" fill="none"><title>related · weight '+l.w+'</title></path>';
+    if(!POS[l.a]||!POS[l.b])return;
+    body+='<path class="link-dash" data-a="'+esc(l.a)+'" data-b="'+esc(l.b)+'" d="'+edgePath(l.a,l.b)+'" fill="none"><title>related · weight '+l.w+'</title></path>';
   });
   var drawn={};
   edges.forEach(function(e){
+    if(!POS[e.a]||!POS[e.b])return;
     var key=JSON.stringify(e.a<e.b?[e.a,e.b]:[e.b,e.a]);
     if(drawn[key])return;drawn[key]=1;
     var tp=POS[e.b]&&laneColor[POS[e.b].lane]?laneColor[POS[e.b].lane]:'#9aa4b8';
     var path=edgePath(e.a,e.b);
-    body+='<path d="'+path+'" fill="none" stroke="'+tp+'" stroke-width="1.4" marker-end="url(#arw'+tp.replace('#','')+')"><title>'+esc((BY_ID[e.a]?BY_ID[e.a].name:'?')+' —'+esc(e.rel)+'→ '+(BY_ID[e.b]?BY_ID[e.b].name:'?'))+'</title></path>';
+    body+='<path class="edge" data-a="'+esc(e.a)+'" data-b="'+esc(e.b)+'" d="'+path+'" fill="none" stroke="'+tp+'" stroke-width="1.4" marker-end="url(#arw'+tp.replace('#','')+')"><title>'+esc((BY_ID[e.a]?BY_ID[e.a].name:'?')+' —'+esc(e.rel)+'→ '+(BY_ID[e.b]?BY_ID[e.b].name:'?'))+'</title></path>';
     var A=anchors(e.a,e.b);
     var mx=(A.a.x+A.b.x)/2,my=(A.a.y+A.b.y)/2;
     var tx=esc(trunc(e.rel,28)),tw=tx.replace(/&amp;/g,'&').length*5.6+8;
@@ -475,41 +860,130 @@ function renderFlow(id){
        +'<text class="edge-lbl" x="'+mx+'" y="'+(my+2)+'" text-anchor="middle" fill="'+tp+'">'+tx+'</text>';
     }
   });
-  g.order.forEach(function(lk){
-    var a=g.items.filter(function(it){return it.lane===lk;});
-    var y=geo.laneTop[lk];
-    body+='<text class="lane-name" x="16" y="'+(y+2)+'" fill="'+(laneColor[lk])+'">'+esc(laneTitle(lk))+' <tspan class="cnt">· '+a.length+'</tspan></text>';
+  // lane titles float mid-sector around the map
+  var lt=geo.laneTitle||{};
+  Object.keys(lt).forEach(function(lk){
+    var t=lt[lk];
+    var a=t.a;
+    var x=geo.cx+Math.cos(a)*t.r, y=geo.cy+Math.sin(a)*t.r;
+    body+='<text class="lane-name" text-anchor="middle" x="'+x+'" y="'+(y+4)+'" fill="'+(laneColor[lk])+'">'+esc((laneTitle(lk)).toUpperCase())+'</text>';
   });
   g.items.forEach(function(it){
-    body+=cardSvg(it.node.id,laneColor[it.lane],{fill:shade(laneColor[it.lane]),extra:shortRel(it.rel),idx:UNIQ++});
+    if(gv.order.indexOf(it.lane)===-1)return;
+    var extra=it.rel==='related'&&it.w?('related · w'+it.w):shortRel(it.rel);
+    var weak=(it.rel==='related'&&(it.w||0)<4);
+    var cl=(weak?'wcard ':'')+(PIN[it.node.id]?'pinned':'');
+    body+=cardSvg(it.node.id,laneColor[it.lane],{fill:shade(laneColor[it.lane]),extra:extra+(weak?' · distant':''),count:it.node.count||0,idx:UNIQ++,cls:cl});
   });
   var hero=BY_ID[id];
   body+=cardSvg(id,'#fbbf24',{fill:'rgba(251,191,36,0.12)',color:'#fbbf24',hero:true,extra:'focus topic',extraMeta:(hero.type)+' · '+(hero.count||0)+' mentions',idx:UNIQ++});
   var svg=document.getElementById('chart');
+  svg.dataset.flow='1';
   svg.setAttribute('viewBox','0 0 '+geo.W+' '+geo.H);
-  svg.setAttribute('width',geo.W);
-  svg.setAttribute('height',geo.H);
+  svg.style.width=geo.W+'px';
+  svg.style.height=geo.H+'px';
+  ZBASE={w:geo.W,h:geo.H};
+  applyZoom();
   svg.innerHTML=body;
+  attachEdgeHovers(svg);
   paintHead(hero);
   paintCrumb();
   msg('');
+  if(!g.items.length){
+    var why=isJunk(hero)?'This name is a scraped fragment pulled from a sentence, not a real topic.'
+      :((hero.level||4)>3?'This is a deep sub-topic (level '+(hero.level||4)+'); its connections appear only after a full data rebuild.'
+      :'No connected topics found for "'+hero.name+'".');
+    msg(why+' Try the chips above, Live photos, Grow, or the timeline map.');
+  }
+  // depth controls reflect the current ring count
+  var bg=document.getElementById('bGrw'),bs=document.getElementById('bShr');
+  if(bg)bg.disabled=FLOW_HOP>=4;
+  if(bs)bs.disabled=FLOW_HOP<=1;
+  if(bg)bg.title='Grow the mind-map one ring deeper (currently '+FLOW_HOP+')';
+  var chips=relatedChipsHTML(id);
+  if(isJunk(hero)){
+    var js=junkSuggestions(hero.name);
+    if(js)chips=js+(chips?' '+chips:'');
+  }
+  document.getElementById('chips').innerHTML=chips;
   document.getElementById('bTimeline').disabled=false;
+  renderPills(g);
   navStack();
   window.scrollTo(0,0);
 }
 function shortRel(r){return trunc(r,30);}
+function attachEdgeHovers(svg){
+  var ps=[].slice.call(svg.querySelectorAll('.edge,.link-dash'));
+  for(var i=0;i<ps.length;i++){
+    (function(p){
+      p.addEventListener('mouseenter',function(){hilitePath(p);});
+      p.addEventListener('mouseleave',function(){clearHilite();});
+    })(ps[i]);
+  }
+  svg.addEventListener('mouseleave',function(){clearHilite();});
+}
+function hilitePath(p){
+  clearHilite();
+  var ea=p.getAttribute('data-a'),eb=p.getAttribute('data-b');
+  var svg=document.getElementById('chart');
+  var ps=svg.querySelectorAll('.edge,.link-dash');
+  for(var i=0;i<ps.length;i++){
+    var q=ps[i],a=q.getAttribute('data-a'),b=q.getAttribute('data-b');
+    if((a===ea&&b===eb)||(a===eb&&b===ea)){
+      q.classList.add((' '+q.getAttribute('class')+' ').indexOf(' link-dash ')!==-1?'link-hover':'edge-hover');
+    }else{
+      q.style.opacity=0.06;
+    }
+  }
+  var cs=svg.querySelectorAll('.ncard');
+  for(var j=0;j<cs.length;j++){
+    var c=CARDS[cs[j].getAttribute('data-idx')];
+    if(c&&(c.id===ea||c.id===eb))cs[j].classList.add('hlcard');
+  }
+}
+function showNote(id){
+  var el=document.getElementById('note');
+  if(!el)return;
+  var n=BY_ID[id];
+  if(!n){el.className='note';el.innerHTML='';return;}
+  var txt=NOTES[canon(n.name)]||(n.desc||'');
+  if(!txt){el.className='note';el.innerHTML='';return;}
+  var m=[];
+  Object.keys(CADJ).forEach(function(src){
+    if(CADJ[src]&&CADJ[src][id]&&BY_ID[src])m.push(BY_ID[src].name);
+  });
+  var rel=m.length?' — in <b>'+esc(m[0])+'</b>':'';
+  var meta=[n.type,spanLabel(n)].filter(Boolean).join(' · ');
+  el.className='note on';
+  el.innerHTML='<div class="nh">'+esc(n.name)+(meta?' <span class="meta">'+esc(meta)+'</span>':'')
+    +'<span style="margin-left:auto"><span class="close" onclick="closeNote()" title="Close">&#10005;</span></span></div>'
+    +'<div class="nb">'+esc(txt)+rel+'</div>';
+  el.scrollIntoView({block:'nearest'});
+}
+function closeNote(){
+  var el=document.getElementById('note');
+  if(el){el.className='note';el.innerHTML='';}
+}
+function clearHilite(){
+  var svg=document.getElementById('chart');
+  if(!svg)return;
+  var ps=svg.querySelectorAll('.edge,.link-dash');
+  for(var i=0;i<ps.length;i++){ps[i].classList.remove('edge-hover','link-hover');ps[i].style.opacity='';}
+  var cs=svg.querySelectorAll('.ncard.hlcard');
+  for(var j=0;j<cs.length;j++)cs[j].classList.remove('hlcard');
+}
 function shade(c){
   var m=/^#([0-9a-f]{6})$/i.exec(c)||/^#([0-9a-f]{3})$/i.exec(c);
   c=m?m[1]:'9aa4b8';
   var r=parseInt(c.slice(0,2),16),g=parseInt(c.slice(2,4),16),b=parseInt(c.slice(4,6),16);
   return 'rgba('+Math.round(r*0.13)+','+Math.round(g*0.13)+','+Math.round(b*0.16)+',0.32)';
 }
-function laneTitle(lk){return lk.charAt(0)==='t'?typeLabel(lk.slice(1)):FIXED_TITLE[lk];}
+function laneTitle(lk){return typeLabel(lk);}
 function paintHead(n){
   var th=document.getElementById('topichead');
-  var meta=[n.type,spanLabel(n),(n.count||0)+' mentions',(n.seed?'curated spine':'')].filter(Boolean).join(' · ');
+  var meta=[n.type,spanLabel(n),(n.count||0)+' mentions',(CUR_CENTRAL[n.id]?'curated spine':'')].filter(Boolean).join(' · ');
   var pts='';
-  (n.cats||[]).slice(0,4).forEach(function(c){pts+='<span class="point"><b>'+esc(c)+'</b></span>';});
+  (n.cats||[]).forEach(function(c){pts+='<span class="point"><b>'+esc(typeof c==='string'?c:(c&&c.label)||'')+'</b></span>';});
   th.innerHTML='<div class="meta">'+esc(meta)+'</div>'
    +'<div class="name">'+esc(n.name)+'</div>'
    +(pts?'<div class="points">'+pts+'</div>':'')
@@ -532,23 +1006,104 @@ function jump(i){
 }
 function home(){
   CUR=null;
-  document.getElementById('chart').setAttribute('viewBox','0 0 900 200');
+  var ch=document.getElementById('chart');
+  ch.dataset.flow='';
+  ch.setAttribute('viewBox','0 0 900 200');
+  ch.style.width='100%';
+  ch.style.height='auto';
+  ZBASE=null;ZSCALE=0;
   document.getElementById('chart').innerHTML='';
   document.getElementById('topichead').innerHTML='';
   document.getElementById('crumb').textContent='';
+  document.getElementById('chips').innerHTML='';
+  document.getElementById('lpill').innerHTML='';
+  closeNote();
   document.getElementById('bTimeline').disabled=true;
-  var samples=['Revolt of 1857','Indian National Congress','Mahatma Gandhi','Partition of Bengal','Ashoka','Quit India Movement','Battle of Plassey','Jallianwala Bagh massacre'];
+  var samples=['Revolt of 1857','Indian National Congress','Mahatma Gandhi','Partition of Bengal','Ashoka','Quit India Movement','Battle of Plassey','Volcano'];
   msg('Start with a topic below, or search above.');
   var el=document.getElementById('msg');
-  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: use <b>Live photos</b> on a person to pull their Wikipedia portrait.</small>';
+  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: <b>/</b> focuses search · <b>Random</b> explores · <b>Live photos</b> pulls Wikipedia portraits for people.</small><br><small>Dashed lines are related topics (weight = co-mention strength); arrow edges are typed relationships. Every lane is one node type (Person, Event, Concept, Volcano, Org, Scheme, Disease…) — hover any link to trace how it connects the two cards.</small>';
 }
-function pick(s){var n=findByName(s);if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}}
+function pick(s){var n=findByName(s);if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}else{msg('No topic "'+s+'" in this dataset. Curated volcano topics appear after re-running the timeline build.');}}
 function msg(t){document.getElementById('msg').textContent=t;}
+
+function junkSuggestions(name){
+  var c=canon(name);
+  var list=[],seen={};
+  var arr=BY_NAME[c]||[];
+  arr.forEach(function(n){if(!isJunk(n)&&!isHub(n)&&(n.count||0)>=2&&!seen[n.id]){seen[n.id]=1;list.push(n);}});
+  if(list.length<4){
+    var extra=[];
+    for(var k in BY_NAME){
+      if(k.indexOf(c)===-1||k===c)continue;
+      var b=BY_NAME[k].slice().sort(byProminence)[0];
+      if(!b||isJunk(b)||isHub(b)||(b.count||0)<5||seen[b.id])continue;
+      seen[b.id]=1;extra.push(b);
+    }
+    extra.sort(byProminence);
+    list=list.concat(extra.slice(0,6));
+  }
+  if(!list.length)return '';
+  return 'Best matches: '+list.slice(0,6).map(function(n){return '<span class="chip" data-id="'+esc(n.id)+'" title="type '+esc(n.type)+' · '+(n.count||0)+' mentions">'+esc(trunc(n.name,30))+'</span>';}).join('');
+}
+function relatedChipsHTML(id){
+  var pool=[],seen={},self=id;
+  // curated flows reuse the already-validated tree: chips are the authored
+  // cards of the current topic, so no COVID-19/Malaria/Fisheries noise
+  if(LASTG&&LASTG.curated&&LASTG.central.id===id){
+    for(var ci=0;ci<LASTG.items.length;ci++){
+      var it=LASTG.items[ci];
+      if(it.node.id===id||seen[it.node.id])continue;
+      seen[it.node.id]=1;
+      pool.push({id:it.node.id,w:8,rel:it.rel});
+    }
+  }else{
+    var fa=ADJ[id]||{};
+    for(var o in fa){if(o===self)continue;var n=BY_ID[o];if(!n||isJunk(n)||isHub(n)||seen[o])continue;seen[o]=1;pool.push({id:o,w:8,rel:fa[o]});}
+    var la=LADJ[id]||{};
+    var keys=Object.keys(la).sort(function(a,b){return la[b]-la[a];});
+    for(var j=0;j<keys.length;j++){var b=keys[j];if(b===self)continue;var m=BY_ID[b];if(!m||isJunk(m)||isHub(m)||seen[b])continue;if((la[b]||0)<2)continue;if(NOISE_TYPES[m.type])continue;seen[b]=1;pool.push({id:b,w:la[b],rel:'related'});}
+  }
+  pool.sort(function(x,y){return y.w-x.w;});
+  pool=pool.slice(0,16);
+  if(!pool.length)return '';
+  return 'Related: '+pool.map(function(c){
+    var cn=BY_ID[c.id];
+    return '<span class="chip" data-id="'+esc(c.id)+'" title="'+esc(c.rel)+(c.w?' · weight '+c.w:'')+'">'+esc(trunc(cn?cn.name:'?',24))+(c.rel!=='related'?' '+esc(c.rel):'')+'</span>';
+  }).join('');
+}
+function renderPills(g){
+  var el=document.getElementById('lpill');
+  if(!el)return;
+  var cnts={};
+  g.items.forEach(function(it){cnts[it.lane]=(cnts[it.lane]||0)+1;});
+  var lanes=g.order.filter(function(lk){return cnts[lk]>0;});
+  if(!lanes.length){el.innerHTML='';return;}
+  var h='<span class="phint">Lanes:</span>';
+  lanes.forEach(function(lk){
+    h+='<button class="pill'+(HIDDEN[lk]?'':' on')+'" data-lane="'+esc(lk)+'" title="toggle the '+esc(laneTitle(lk))+' lane">'+esc(laneTitle(lk))+' <b>'+cnts[lk]+'</b></button>';
+  });
+  h+='<button class="pill'+(Object.keys(HIDDEN).length?'':' on')+'" data-lane="__all" title="show every lane">All</button>';
+  el.innerHTML=h;
+}
+function randTopic(){
+  if(!RAND_POOL.length)return;
+  var n=RAND_POOL[(Math.random()*RAND_POOL.length)|0];
+  if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}
+}
+function copyLink(){
+  var b=document.getElementById('bCopy');
+  if(CUR){navigator.clipboard.writeText(location.href.split('#')[0]+'#id='+encodeURIComponent(CUR)).then(function(){
+    var t=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=t;},1200);
+  }).catch(function(){});}else{
+    navigator.clipboard.writeText(location.href).catch(function(){});
+  }
+}
 
 var photoBusy=0;
 function loadLivePhotos(){
   var queue=[];
-  var todo=CARDS.filter(function(c){return c&&!IMGS[canon(c.name)];});
+  var todo=CARDS.filter(function(c){var nn=c&&BY_ID[c.id];return nn&&nn.type==='person'&&!IMGS[canon(nn.name)];});
   todo.forEach(function(c){queue.push(c);});
   var B=document.getElementById('bPhotos');
   B.textContent='Loading photos…';
@@ -558,7 +1113,7 @@ function loadLivePhotos(){
       photoBusy++;
       var c=queue.shift();
       fetchWikiPhoto(c.name).then(function(url){
-        if(url){IMGS[canon(c.name)]=url;applyPhoto(c,url);}
+        if(url){var k=canon(c.name);IMGS[k]=url;try{localStorage.setItem('fc_photos',JSON.stringify(IMGS));}catch(e){}applyPhoto(c,url);}
       }).catch(function(){}).then(function(){photoBusy--;pump();});
     }
     if(photoBusy===0&&!queue.length){B.textContent='Live photos';B.disabled=false;}
@@ -578,7 +1133,10 @@ function applyPhoto(c,url){
   img.setAttribute('width',30);img.setAttribute('height',30);
   img.setAttribute('href',url);
   img.setAttribute('preserveAspectRatio','xMidYMid slice');
-  card.insertBefore(img,card.firstChild);
+  // insert after the card rect (before the name text) so the photo paints on top
+  var rect=card.querySelector('rect.card');
+  if(rect)rect.parentNode.insertBefore(img,rect.nextSibling);
+  else card.insertBefore(img,card.firstChild);
 }
 function fetchWikiPhoto(name){
   var u='https://en.wikipedia.org/api/rest_v1/page/summary/'+encodeURIComponent(name).replace(/%20/g,'_');
@@ -605,7 +1163,57 @@ document.getElementById('bTimeline').onclick=function(){
   if(CUR)window.open('map.html#id='+encodeURIComponent(CUR),'_blank');
 };
 document.getElementById('bPhotos').onclick=loadLivePhotos;
+document.getElementById('bRand').onclick=randTopic;
+document.getElementById('bCopy').onclick=copyLink;
+document.getElementById('bZmOut').onclick=function(){zoomDir(-1);};
+document.getElementById('bZFit').onclick=function(){ZSCALE=0;applyZoom();};
+document.getElementById('bZmIn').onclick=function(){zoomDir(1);};
+document.getElementById('lpill').addEventListener('click',function(ev){
+  var t=ev.target;
+  while(t&&t!==this&&!(t.classList&&t.classList.contains('pill')))t=t.parentNode;
+  if(!t||t===this)return;
+  var lk=t.getAttribute('data-lane');
+  if(lk==='__all')HIDDEN={};else if(HIDDEN[lk])delete HIDDEN[lk];else HIDDEN[lk]=1;
+  try{localStorage.setItem('fc_hidden',JSON.stringify(HIDDEN));}catch(e){}
+  if(CUR)renderFlow(CUR);
+});
+document.getElementById('chips').addEventListener('click',function(ev){
+  var t=ev.target;
+  while(t&&t!==this&&!(t.classList&&t.classList.contains('chip')))t=t.parentNode;
+  if(!t||t===this)return;
+  var id=t.getAttribute('data-id');
+  if(id)navigate(id,true);
+});
+document.addEventListener('keydown',function(e){
+  var tag=e.target&&e.target.tagName||'';
+  var editing=tag==='INPUT'||tag==='TEXTAREA'||(e.target&&e.target.isContentEditable);
+  if(!editing&&(e.key==='/'||e.key==='s'||e.key==='S')){e.preventDefault();var q=document.getElementById('q');q.focus();q.select();return;}
+  if(e.key==='Escape'){var inp=document.getElementById('q');inp.value='';inp.blur();return;}
+  if(!editing&&e.altKey&&e.key==='ArrowLeft'){history.back();}
+  if(!editing&&e.altKey&&e.key==='ArrowRight'){history.forward();}
+});
+var pinTimer=null;
 document.getElementById('chart').addEventListener('click',function(ev){
+  var t=ev.target;
+  while(t&&t!==this&&t.getAttribute&&t.getAttribute('data-idx')==null)t=t.parentNode;
+  if(!t||t===this)return;
+  var el=document.querySelector('#chart .ncard[data-idx="'+t.getAttribute('data-idx')+'"]');
+  if(!el||(' '+el.className.baseVal+' ').indexOf(' hero ')!==-1)return;
+  var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
+  if(!id)return;
+  showNote(id);
+  // single click grows that card's branch in place (pin it so its subtree keeps
+  // expanding outward); double-click navigates into it (see dblclick handler).
+  // The re-render is deferred ~230ms so a double-click navigates before the
+  // card table is rebuilt underneath the pending second click target.
+  clearTimeout(pinTimer);
+  pinTimer=setTimeout(function(){
+    if(PIN[id])delete PIN[id];else PIN[id]=1;
+    if(CUR)renderFlow(CUR);
+  },230);
+});
+document.getElementById('chart').addEventListener('dblclick',function(ev){
+  clearTimeout(pinTimer);
   var t=ev.target;
   while(t&&t!==this&&t.getAttribute&&t.getAttribute('data-idx')==null)t=t.parentNode;
   if(!t||t===this)return;
@@ -614,6 +1222,14 @@ document.getElementById('chart').addEventListener('click',function(ev){
   var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
   if(id)navigate(id,true);
 });
+document.getElementById('bGrw').onclick=function(){
+  if(FLOW_HOP>=4)return;
+  FLOW_HOP++;if(CUR)renderFlow(CUR);
+};
+document.getElementById('bShr').onclick=function(){
+  if(FLOW_HOP<=1)return;
+  FLOW_HOP--;if(CUR)renderFlow(CUR);
+};
 window.addEventListener('popstate',function(){
   var m=/^#id=(.+)$/.exec(location.hash||'');
   if(m)renderFlow(decodeURIComponent(m[1]));
@@ -626,6 +1242,12 @@ window.addEventListener('hashchange',function(){route();});
 loadData().then(function(t){
   NODES=t.nodes||[];EDGES=t.edges||[];LINKS=t.links||[];
   buildIndexes();
+  return fetchJson('data/topic-layers.json').catch(function(){return {};});
+}).then(function(layers){
+  LAYERS=layers||{};
+  try{curate(LAYERS);}catch(e){console.error('curate',e);}
+  buildIndexes();
+  buildRandPool();
   return loadImages();
 }).then(function(){
   msg('');

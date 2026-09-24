@@ -157,6 +157,7 @@ var _edges = [];
 var _eadj = {};
 var _linOpen = new Set();
 var _nodeByIdMap = {};
+var _kinRescue = {};
 var _catByKey = {};
 
 var MIN_YEAR = -4000;   // Sumer (c. 4000 BC) precedes the Indus Valley / start of Ancient India
@@ -562,12 +563,11 @@ function buildNodeMap() {
 }
 
 function nodeById(id) {
-  return _nodeByIdMap[id] || null;
+  return _nodeByIdMap[id] || _kinRescue[id] || null;
 }
 
 function openProfile(id) {
-  var n = null;
-  for (var x of NODES) { if (x.id === id) { n = x; break; } }
+  var n = nodeById(id);
   if (!n) return;
   var p = document.getElementById('pbody');
   var color = TYPE_COLOR[n.type] || '#71717a';
@@ -615,13 +615,13 @@ var _storyCap = 40;
 function renderProfileExtras(n) {
   var con = document.getElementById('p-con');
   var story = document.getElementById('p-story');
-  var conns = (_adj[n.id] || []).slice().sort(function (x, y) { return y.w - x.w; });
+  var conns = (_adj[n.id] || []).slice().filter(function (c) { return !isConnJunk(c.id); }).sort(function (x, y) { return y.w - x.w; });
   if (con) {
     var conShown = conns.slice(0, _conCap);
     con.innerHTML = conns.length
       ? conShown.map(function (c) {
         var cn = nodeById(c.id);
-        return '<span class="chip" onclick="openProfile(\'' + esc(c.id).replace(/'/g, "\\'") + '\')">' + esc(cn ? cn.name : c.id.replace(/^seed\|/, '')) + ' <b>' + c.w + '</b></span>';
+        return '<span class="chip" onclick="openProfile(\'' + esc(c.id).replace(/'/g, "\\'") + '\')">' + esc(cn ? cn.name : c.id.replace(/^(?:seed|kin)\|/, '')) + ' <b>' + c.w + '</b></span>';
       }).join('')
       + (conns.length > _conCap ? '<span class="chip chip-more" onclick="expandConn()">+' + (conns.length - _conCap) + ' more</span>' : '')
       : '<div class="loading">No strong connections — this entity stands alone.</div>';
@@ -630,7 +630,7 @@ function renderProfileExtras(n) {
     var items = [];
     for (var c of conns) {
       var cn = nodeById(c.id);
-      if (cn && cn.span) items.push({ min: cn.span.min, label: cn.name, w: c.w, color: TYPE_COLOR[cn.type] || '#71717a', desc: cn.desc });
+      if (cn && cn.span && (c.w || 0) >= 3 && storyBeatOk(cn, n)) items.push({ min: cn.span.min, label: cn.name, w: c.w, color: TYPE_COLOR[cn.type] || '#71717a', desc: cn.desc });
     }
     items.sort(function (a, b) { return (a.min - b.min) || (b.w - a.w); });
     var storyShown = items.slice(0, _storyCap);
@@ -647,12 +647,46 @@ function renderProfileExtras(n) {
 // sometimes casts as people ("Native", "Father", "According"). Holding them out
 // of the lineage tab stops nonsense rows ("Noah -spouse-> Native"). Seeded
 // entities are never junk even if their name collides.
-var JUNK_LINEAGE_RE = /^(?:generally|native|around|according|american|four|run|brown|father|child|william|sam|apapolo|basch|aus|indiana|apocryphon|hebrew bible|jews|main|daughter|find|british|internet|place|law|guide|six|big|mother|son|three|seven|former|met|older|eventually|however|secondly|subsequently|previously|instead|soon|jewish|male|next|man|london|new york)$/;
+var JUNK_LINEAGE_RE = /^(?:generally|native|around|according|american|four|run|brown|father|child|william|sam|apapolo|basch|aus|indiana|apocryphon|hebrew bible|jews|main|daughter|find|british|internet|place|law|guide|six|big|mother|son|three|seven|former|met|older|eventually|however|secondly|subsequently|previously|instead|soon|jewish|male|next|man|london|new york|national|imperial|finally|afterwards|before|previous|manchus|population|appendix|conclusion|introduction|features|objectives|measures|schemes|programmes|policies|impacts|causes|effects|principles|basics|types|government|administration|parliament|legislature|judiciary|executive|photograph|photographs|pictures|archives|documents|references|summary|tim|damage|times|ultimately|observer|originally|democratic|begin|colonial|red|fine|straw|light|craft|gun|wing|forest|paper|transport|television|weir|kaiser|fuel|labour|commerce|industry|state|capital|revenue|budget|currency|debt|exchange|market|mineral|black|steel|manhattan|virginia|munich|manitoba|stirling|bandai|secretary|treasurer|clerk|officer|official|administrator|manager|commissioner|inspector|superintendent|bureaucrat|captain|colonel|major|lieutenant|sergeant|advocate|attorney|magistrate|physician|surgeon|professor|chairman|chair|spokesman|spokesperson|politician|minister|powers|italian|said|still|great|german|north|reportedly|assembly|train|dog|age|home|league|hindu|muslim|iii|viii|under|over|box|bird|crow|well|lot|part|line|gold|hand|foot|water|hill|gate|side|world|city|town|page|words|team|note|bible|roman|greek|indian|just|younger|will|mughal|day|saw|sahib|crown|young|brahmin|nizam|master|austrian|royal|weaver|court|civil|bengali|university|revolutionary|high|way|specifically|elder|poor|field|church|universal|low|guardian|judge|god|nun|dowager|common|notably|strong|blood|spirit|witch|action|senate|latin|english|french|dutch|good|small|short|men|count|countess|consort|reverend|pretender|mayor|director|businessman|earth|albrecht|entered)$/;
 function lineageJunk(e) {
   var t = nodeById(e.target);
   if (t && t.seed) return false;
-  var nm = (t ? t.name : e.target.replace(/^seed\|/, '')).toLowerCase().trim();
-  return JUNK_LINEAGE_RE.test(nm);
+  var nm = (t ? t.name : e.target.replace(/^(?:seed|kin)\|/, '')).toLowerCase().trim();
+  // a common-noun "person" (Secretary, Four, According) is never a relative
+  if (JUNK_LINEAGE_RE.test(nm)) return true;
+  if (t && (t.count || 0) < 2) {
+    // a single mention is only trustworthy as a plain proper name (rescue
+    // candidates like Tushar Gandhi); fragments like "Four" are already caught
+    // by the name test. Direction and chronology are judged below, not by fame.
+    return false;
+  }
+  return false;
+}
+// Kin direction sanity: the mined edges are read "base —rel→ target". A stamp
+// that claims base had a "child" OLDER than itself (or a "father" YOUNGER) has
+// been read back-to-front from a sentence and is dropped, not flipped.
+function lineageSuspicious(e, base) {
+  var t = nodeById(e.target);
+  if (!t || !t.span || !base || !base.span) return false;
+  if (t.span.min == null || base.span.min == null) return false;
+  if (/^(?:child|children|son|daughter)$/.test(e.rel)) return t.span.min < base.span.min - 20;
+  if (/^(?:father|mother|parent|parents)$/.test(e.rel)) return t.span.max <= base.span.min + 15;
+  // a "wife" born half a century after the base is a chained mis-attribution
+  if (/^(?:spouse|wife|husband|partner of)$/.test(e.rel)) return t.span.min > base.span.min + 60;
+  return false;
+}
+// Surname-collision guard: a kin target that is just one of the base's own name
+// tokens ("Mahatma Gandhi" ← "Gandhi") with only modest mentions is the mined
+// twin of the base itself, not a separate relative. High-count names are a real
+// person and stay.
+function lineageSurname(e, base) {
+  var t = nodeById(e.target);
+  if (!t || !base) return false;
+  if ((t.count || 0) >= 80) return false;
+  var nm = String(t.name || '').toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim();
+  if (nm.indexOf(' ') !== -1) return false;
+  var toks = String(base.name || '').toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim().split(' ');
+  return toks.indexOf(nm) !== -1;
 }
 // Directness of a relation, for dedupe: a person gets ONE row, kept by the most
 // direct claim (parent/child > grand > great-grand > loose "descends from").
@@ -675,16 +709,82 @@ function lineageEraOk(e, base) {
   if (/spouse|wife|husband|partner of|sibling|brother|sister|father|mother|son|daughter|child|parent/.test(e.rel)) return gap <= 250;
   return gap <= 1200;
 }
+function lineageBetter(e, cur) {
+  var re = lineageRank(e.rel), rc = lineageRank(cur.rel);
+  if (re !== rc) return re > rc;
+  var de = /^(?:son|daughter|child|children|grandson|granddaughter)$/.test(e.rel);
+  var dc = /^(?:son|daughter|child|children|grandson|granddaughter)$/.test(cur.rel);
+  if (de !== dc) return de;
+  var te = nodeById(e.target), tc = nodeById(cur.target);
+  var se = te && te.span, sc = tc && tc.span;
+  if (!!se !== !!sc) return !!se;
+  return false;
+}
+function lineageSamePerson(e, o) {
+  var te = nodeById(e.target), to = nodeById(o.target);
+  if (!te || !to) return false;
+  var ne = String(te.name || '').toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim();
+  var no = String(to.name || '').toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim();
+  if (!ne || !no || ne === no) return ne === no;
+  var te_ = ne.split(' '), to_ = no.split(' ');
+  if (te_.length === 1 && (to_[0] === te_[0] || to_[to_.length - 1] === te_[0])) return true;
+  if (to_.length === 1 && (te_[0] === to_[0] || te_[te_.length - 1] === to_[0])) return true;
+  return false;
+}
 function lineageDedupe(list) {
   var best = {};
   for (var e of list) {
     var cur = best[e.target];
     if (!cur || lineageRank(e.rel) > lineageRank(cur.rel)) best[e.target] = e;
   }
-  return Object.keys(best).map(function (id) { return best[id]; });
+  var names = [], out = [];
+  for (var id in best) {
+    var idRow = best[id], fit = -1;
+    for (var i = 0; i < names.length; i++) {
+      if (lineageSamePerson(idRow, names[i])) { fit = i; break; }
+    }
+    if (fit === -1) { names.push(idRow); out.push(idRow); }
+    else if (lineageBetter(idRow, names[fit])) { out.splice(out.indexOf(names[fit]), 1, idRow); names[fit] = idRow; }
+  }
+  return out;
 }
 function lineageFilter(list, base) {
-  return lineageDedupe(list.filter(function (e) { return !lineageJunk(e) && lineageEraOk(e, base); }));
+  return lineageDedupe(list.filter(function (e) { return !lineageJunk(e) && !lineageSuspicious(e, base) && !lineageSurname(e, base) && lineageEraOk(e, base); }));
+}
+// Same junk rules for the Connected chips and the Story strip: a single-mention
+// fragment, a common-noun "person" (Secretary, British people…) or an undated
+// name never rides the profile panel of a real topic.
+function isConnJunk(cid) { return lineageJunk({ target: cid }); }
+// Story stays near the person: a co-mention history from 3400 BC to the present
+// is paragraph noise. Only neighbours whose time overlaps the topic's era, even
+// loosely, belong on the story line.
+function storyEraOk(cn, base) {
+  if (!cn.span) return false;
+  if (!base || !base.span) return true;
+  if (base.span.min == null || base.span.max == null) return true;
+  // a dated topic tells a dated story: undated neighbours cannot be placed on
+  // its line, and neighbours living centuries away are paragraph noise
+  if (cn.span.min == null || cn.span.max == null) return false;
+  var mb = (cn.span.min + cn.span.max) / 2;
+  var m0 = (base.span.min + base.span.max) / 2;
+  return Math.abs(mb - m0) <= 260;
+}
+// Story beats are dated, bounded events — not regions, schemes or timeless
+// encyclopedic spans ("Maharashtra", "MGNREGA", "Hinduism", "18th century"),
+// which only co-mention because the empty word appears beside any date.
+var STORY_PLACE_TYPES={place:1,country:1,geography:1,state:1,region:1,province:1,city:1,town:1,village:1};
+var STORY_BAD_TYPES={disease:1,scheme:1,plant:1,animal:1,volcano:1,asteroid:1,comet:1};
+var STORY_JUNK_NAME=/\b(?:18th century|19th century|17th century|20th century|enlightenment|middle ages|renaissance|reformation|prisoner of war|colonial india|early modern|modern age|friends)\b/;
+function storyBeatOk(cn, base) {
+  if (!storyEraOk(cn, base)) return false;
+  if (!cn.span || cn.span.max == null || cn.span.min == null) return false;
+  if (STORY_PLACE_TYPES[cn.type] || STORY_BAD_TYPES[cn.type]) return false;
+  if (STORY_JUNK_NAME.test(String(cn.name || '').toLowerCase())) return false;
+  if (cn.span.max - cn.span.min > 400) return false;
+  // ongoing pre-1800 entities (Gujarat 1800–2026, Mumbai 1661–2026) are regions,
+  // not story beats — Gujarat's own story is everybody's story
+  if (cn.span.min <= 1800 && cn.span.max >= 2000) return false;
+  return true;
 }
 
 function renderLineage(n) {
@@ -706,7 +806,7 @@ function renderLineage(n) {
     var rows = '';
     for (var k of ch) {
       var cn = nodeById(k.target);
-      var nm = cn ? cn.name : k.target.replace(/^seed\|/, '');
+      var nm = cn ? cn.name : k.target.replace(/^(?:seed|kin)\|/, '');
       var col = cn ? (TYPE_COLOR[cn.type] || '#71717a') : '#71717a';
       var subKids = lineageFilter(linEdges(k.target).filter(function (e) { return e.target !== k.target && !pathSet.has(e.target); }), n);
       var canExpand = subKids.length > 0 && depth < 3;
@@ -891,14 +991,53 @@ function loadTimelineData() {
     });
   });
 }
+// Auto-mined kin persons are questionable unless they are seeded or accumulated
+// real mentions. Two junk classes are dropped: single-mention sentence fragments
+// ("kin|Tim", "kin|Damage") and single-token common nouns the kin miner absorbs
+// ("Red", "Straw", "Light" as "…was the founder of…"). Same words as the
+// builder's KIN_BAN_WORDS and flowchart.html's JUNK_KIN_NAME. flowchart.html
+// already hides them at render time; map.html drops them here so they never
+// plot, search, fill category counts, or leak into a profile's
+// Connected/Story/Lineage rows — and any edge/link that still points at a
+// dropped id is pruned too (dangling "kin|…" endpoints are the same junk).
+var JUNK_KIN_NAME=/^(?:tim|damage|times|ultimately|observer|originally|democratic|eventually|begin|however|subsequently|previously|instead|soon|secondly|met|colonial|national|imperial|former|finally|afterwards|before|previous|manchus|population|appendix|conclusion|introduction|features|objectives|measures|schemes|programmes|policies|impacts|causes|effects|principles|basics|types|government|administration|parliament|legislature|judiciary|executive|photograph|photographs|pictures|archives|documents|references|summary|red|fine|straw|light|craft|gun|wing|forest|paper|transport|television|weir|kaiser|fuel|labour|commerce|industry|state|capital|revenue|budget|currency|debt|exchange|market|mineral|son|black|steel|manhattan|virginia|munich|manitoba|stirling|bandai)$/;
+function isJunkKin(n) {
+  if (!n) return false;
+  if (n.kin === true && (n.count || 0) < 2) return true;
+  return n.kin === true && !n.seed && JUNK_KIN_NAME.test(String(n.name || '').toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim());
+}
 loadTimelineData().then(function (t) {
   TL = t;
-  NODES = t.nodes;
-  _links = t.links || [];
-  _edges = t.edges || [];
+  var keep = {};
+  for (var nd of t.nodes) { if (!isJunkKin(nd)) keep[nd.id] = true; }
+  NODES = t.nodes.filter(function (n) { return keep[n.id]; });
+  _links = (t.links || []).filter(function (l) { return keep[l.a] && keep[l.b]; });
+  _edges = (t.edges || []).filter(function (e) { return keep[e.a] && keep[e.b]; });
   buildNodeMap();
   buildAdj();
   buildEadj();
+  // Single-mention relatives dropped by isJunkKin are still real people (Tushar
+  // Gandhi, Ela Gandhi). Re-admit them for the Lineage tab ONLY — never into the
+  // map, search, Connected or Story pools — by holding them in a side table and
+  // re-adding the edges that touch them. The render-time lineage filters
+  // (lineageJunk/Suspicious/Surname/EraOk) still decide which of those edges are
+  // chronologically honest enough to display.
+  for (var ru of t.nodes) {
+    if (ru.kin !== true) continue;
+    if (ru.count >= 2) continue;
+    if (JUNK_LINEAGE_RE.test(String(ru.name || '').toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim())) continue;
+    _kinRescue[ru.id] = ru;
+  }
+  for (var rj of t.edges) {
+    var rA = _kinRescue[rj.a], rB = _kinRescue[rj.b];
+    if (!!rA === !!rB) continue; // both kept or both junk — nothing to rescue
+    if (rA && !_nodeByIdMap[rj.b]) continue;
+    if (rB && !_nodeByIdMap[rj.a]) continue;
+    if (!_eadj[rj.a]) _eadj[rj.a] = [];
+    if (!_eadj[rj.b]) _eadj[rj.b] = [];
+    _eadj[rj.a].push({ target: rj.b, rel: rj.rel, dir: 'out' });
+    _eadj[rj.b].push({ target: rj.a, rel: rj.rel, dir: 'in' });
+  }
   buildCatOptions();
   render();
   var btnFlow = document.getElementById('btnFlow');

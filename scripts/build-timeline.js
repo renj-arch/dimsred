@@ -135,6 +135,10 @@ var SEED = {
     'Anglo-Mysore Wars', 'Anglo-Maratha Wars', 'First Anglo-Sikh War', 'Second Anglo-Sikh War',
     'Sino-Indian War', 'Indo-Pakistani War of 1965', 'Bangladesh Liberation War', 'Kargil War'
   ]},
+  volcanoes: { type: 'volcano', level: 1, list: [
+    'Volcano', 'Mount Vesuvius', 'Krakatoa', 'Mount Etna', 'Barren Island', 'Mount Tambora',
+    'Mount Pinatubo', 'Mauna Loa', 'Toba catastrophe theory', '2020\u20132022 Taal Volcano eruptions'
+  ]},
   reforms: { type: 'event', level: 1, list: [
     'Economic liberalisation in India', 'LPG reforms', 'Demonetisation in India',
     'Goods and Services Tax (India)', 'Five-Year Plans (India)', 'Bank nationalisation in India',
@@ -307,8 +311,46 @@ var SEED = {
   ]}
 };
 
+// Promote select music/art/culture sub-topics to flowchart-visible prominence
+// (level <= 3), so curated MANUAL_LINKS can surface them as drill-down cards even
+// though the writer keeps ordinary sub-topics at level 4. Keyed on the stripped
+// sub-topic name (leading "✓ " bullets and case/whitespace removed).
+var PROMOTE_TOPICS = {
+  'indian classical music': 3,
+  'hindustani classical music': 3,
+  'carnatic music': 3,
+  'mewati gharana': 3,
+  'kirana gharana': 3,
+  'agra gharana': 3,
+  'bishnupur gharana': 3,
+  'indore gharana': 3,
+  'ajrara gharana': 3,
+  'gharana': 3,
+  'tabla': 3,
+  'sitar': 3,
+  'sarod': 3,
+  'veena': 3,
+  'bharatanatyam': 3,
+  'tiruchirappalli': 3,
+  'bande ali khan': 3,
+  'amjad ali khan': 3,
+  'bahadur khan musician': 3
+};
+
+// Sub-topics whose auto-detected type is wrong (keyed on stripped lowercase name).
+// e.g. cities scraped as generic "concept" → place cards (geo lane), musicians the
+// descriptor regex missed → person cards (people lane).
+var TYPE_TOPICS = {
+  'tiruchirappalli': 'place',
+  'trichy': 'place',
+  'bande ali khan': 'person',
+  'amjad ali khan': 'person',
+  'bahadur khan musician': 'person'
+};
+
 // Extra colloquial / shortened names per entity (merged with the auto aliases).
 var EXTRA_ALIASES = {
+  'Mohammad Ali Jinnah': ['Muhammad Ali Jinnah', 'Jinnah', 'Quaid-i-Azam', 'Quaid-e-Azam'],
   'Demonetisation in India': ['demonetisation', 'notebandi'],
   'Economic liberalisation in India': ['liberalisation', 'new economic policy'],
   'Bangladesh Liberation War': ['bangladesh war', 'liberation war 1971', '1971 war'],
@@ -334,6 +376,16 @@ var EXTRA_ALIASES = {
   'Pompey': ['pompey the great', 'gnaeus pompeius magnus'],
   'Octavia Minor': ['octavia the younger'],
   'Indus Valley Civilization': ['harappan civilization', 'indus valley'],
+  'Volcano': ['volcanoes', 'volcanic eruption', 'volcanic eruptions', 'active volcano', 'volcanic activity'],
+  'Mount Vesuvius': ['vesuvius', 'mount vesuvio'],
+  'Krakatoa': ['krakatau', 'krakatoa eruption', 'eruption of krakatoa'],
+  'Mount Etna': ['etna'],
+  'Barren Island': ['barren island volcano', 'barren islands', 'barren volcanology'],
+  'Mount Tambora': ['tambora', 'tambora eruption', 'eruption of tambora'],
+  'Mount Pinatubo': ['pinatubo', 'pinatubo eruption', 'eruption of pinatubo'],
+  'Mauna Loa': ['mauna loa volcano', 'mauna loa eruption'],
+  'Toba catastrophe theory': ['toba eruption', 'toba supervolcano', 'toba volcano', 'toba'],
+  '2020\u20132022 Taal Volcano eruptions': ['taal volcano', 'taal eruption'],
   'Gupta Empire': ['guptas'],
   'Maurya Empire': ['mauryan empire', 'mauryas'],
   'Mughal Empire': ['mughals'],
@@ -848,6 +900,10 @@ var MANUAL_SPANS = {
   'Lumbini': [-563, -563], 'Kushinagar': [-483, -483], 'Rajgir': [-600, -400], 'Pataliputra': [-490, 550],
   'Gandhara': [-600, 500], 'Mathura': [-600, 500], 'Vatsa': [-600, -300], 'Rigveda': [-1500, -1000],
   'Roman Republic': [-509, -27], 'Hellenistic period': [-323, -31], 'Parthian Empire': [-247, 224],
+  'Volcano': [79, 2026], 'Mount Vesuvius': [79, 1944], 'Krakatoa': [416, 1883], 'Mount Etna': [-396, 2026],
+  'Barren Island': [1787, 2026], 'Mount Tambora': [1815, 1815], 'Mount Pinatubo': [1991, 1991], 'Mauna Loa': [1843, 2022],
+  'Toba catastrophe theory': [-74000, -74000],
+  '2020\u20132022 Taal Volcano eruptions': [2020, 2022],
   'Sasanian Empire': [224, 651],
   'Athens': [-600, -146], 'Sparta': [-650, -146],
   'Huna invasions of India': [450, 570], 'Huns': [370, 469], 'Vikings': [793, 1066],
@@ -935,6 +991,7 @@ var MANUAL_SPANS = {
   'Adolf Hitler': [1889, 1945], 'Vladimir Lenin': [1870, 1924], 'Joseph Stalin': [1878, 1953],
   'Franklin D. Roosevelt': [1882, 1945], 'Winston Churchill': [1874, 1965], 'Mao Zedong': [1893, 1976],
   'Nelson Mandela': [1918, 2013], 'Martin Luther King Jr.': [1929, 1968],
+  'Pope John Paul II': [1920, 2005], 'NASA': [1958, 2026],
   'Red Turban Rebellion': [1351, 1368], 'Battle of Lake Poyang': [1363, 1363], 'Jingnan Campaign': [1399, 1402],
   'Ming conquest of Yunnan': [1381, 1382], 'Treasure voyages': [1405, 1433], 'Forbidden City': [1406, 1420],
   'Yongle Encyclopedia': [1403, 1408],
@@ -1105,6 +1162,10 @@ var TOPIC_OVERRIDES = {
   'Mongol Empire': [1206, 1368], 'Crusades': [1095, 1291],
   'Mahavira': [-599, -527], 'Samudragupta': [335, 380], 'Chanakya': [-350, -275],
   'Aryabhata': [476, 550], 'Kalidasa': [400, 455], 'Nagarjuna': [150, 250], 'Shivaji': [1630, 1680],
+  // People mined as inert sub-topics got reference-year spans (Pope John Paul II
+  // at 1846–2026 from old 19th-century citations). Pin the real lifespans so
+  // profile Story rows land on the right years instead of a century off.
+  'Pope John Paul II': [1920, 2005], 'NASA': [1958, 2026],
   'Vedic period': [-1500, -500], 'Indus Valley Civilisation': [-3300, -1300], 'Nalanda mahavihara': [427, 1197],
   // Sub-topics sharing names with the curated world spine — pin their spans too so
   // auto-extracted reference years (e.g. Roman Empire -148..1970) don't show twice.
@@ -1286,6 +1347,17 @@ var TOPIC_DESCS = {
   'Ghadar Movement': 'early 20th-century revolutionary movement of overseas Indians',
   'Azad Hind Fauj': 'Indian National Army raised by Subhas Chandra Bose in World War II',
   'Radcliffe Line': '1947 boundary drawn by Radcliffe between India and Pakistan',
+  // volcanoes
+  'Volcano': 'a vent where molten rock, ash and gas escape from beneath the Earth\u2019s crust',
+  'Mount Vesuvius': 'active Italian volcano whose 79 CE eruption buried Pompeii and Herculaneum',
+  'Krakatoa': 'Indonesian volcano whose catastrophic 1883 eruption triggered massive tsunamis',
+  'Mount Etna': 'Europe\u2019s tallest active volcano, on Sicily',
+  'Barren Island': 'India\u2019s only active volcano, in the Andaman Sea',
+  'Mount Tambora': 'Indonesian volcano whose 1815 eruption brought the Year Without a Summer',
+  'Mount Pinatubo': 'Philippine volcano whose 1991 eruption was the 20th century\u2019s biggest',
+  'Mauna Loa': 'the world\u2019s largest active volcano, on Hawai\u2019i Island',
+  'Toba catastrophe theory': 'super-eruption at Toba ~74,000 years ago, studied as a human population bottleneck',
+  '2020\u20132022 Taal Volcano eruptions': 'eruption sequence that turned Volcano Island, Taal, into a national park case study',
   // wars
   'Battle of Plassey': '1757 battle that gave the British rule over Bengal',
   'Battle of Buxar': '1764 battle that sealed British supremacy in eastern India',
@@ -1980,6 +2052,34 @@ function kinTrimName(nm) {
   return out.replace(/[.,;:!?]+$/, '').trim();
 }
 var KIN_ROLE_WORDS = ['he', 'she', 'his', 'his own', 'her', 'her own', 'their', 'their own', 'they', 'him', 'himself', 'herself', 'themselves', 'the', 'a', 'an', 'and', 'or', 'of', 'in', 'on', 'at', 'by', 'named', 'called', 'also', 'one', 'who', 'whom', 'whose', 'what', 'when', 'where', 'which', 'how', 'then', 'thus', 'this', 'that', 'these', 'those', 'after', 'before', 'later', 'earlier', 'shortly', 'during', 'even', 'only', 'first', 'second', 'third', 'both', 'all', 'some', 'many', 'most', 'other', 'others', 'another', 'such', 'own', 'there', 'here', 'would', 'could', 'should', 'was', 'were', 'had', 'been', 'but', 'with', 'from', 'having', 'so', 'while', 'since', 'until', 'unless', 'though', 'although', 'because', 'therefore', 'meanwhile', 'indeed', 'thenceforth', 'means', 'leading', 'became', 'against', 'through', 'swiss', 'death', 'time', 'care', 'power', 'old', 'house', 'life', 'army', 'navy', 'tribe', 'clan', 'regent', 'actor', 'actress', 'pharaoh', 'king', 'queen', 'emperor', 'empress', 'prince', 'princess', 'duke', 'duchess', 'lord', 'lady', 'sir', 'saint', 'guru', 'prophet', 'caliph', 'pope', 'bishop'];
+// Adjectives / demonyms / religious-group terms the kin regex captures as fake
+// "persons" ("the eldest son of Jewish dairy farmers" → "Jewish"; "a Native
+// American chief"; "the Muslim ruler of Malwa"). Neither these nor role/kinship
+// words are personal names in an exam corpus, so refuse to provision them as kin
+// nodes at all. KIN_ETHNIC above already blocks the ethnica it knows; this list
+// covers the demonyms, nationalities and religious adjectives it does not.
+var KIN_BAN_WORDS = ['jewish', 'jew', 'jews', 'hebrew', 'hebrews', 'israeli', 'israelite', 'israelites', 'samaritan', 'samaritans', 'semite', 'semitic', 'native', 'natives', 'aboriginal', 'aborigine', 'aborigines', 'american', 'americans', 'british', 'english', 'french', 'german', 'germans', 'italian', 'italians', 'spanish', 'portuguese', 'russian', 'dutch', 'polish', 'swedish', 'norwegian', 'danish', 'finnish', 'swiss', 'irish', 'scottish', 'welsh', 'canadian', 'canadians', 'australian', 'australians', 'mexican', 'mexicans', 'brazilian', 'brazilians', 'argentine', 'argentinian', 'pakistani', 'pakistanis', 'bangladeshi', 'bangladeshis', 'bhutanese', 'lankan', 'cambodian', 'laotian', 'malaysian', 'malaysians', 'singaporean', 'singaporeans', 'indonesian', 'indonesians', 'filipino', 'filipinos', 'afghani', 'afghanis', 'iranian', 'iranians', 'iraqi', 'iraqis', 'syrian', 'syrians', 'lebanese', 'palestinian', 'palestinians', 'saudi', 'yemeni', 'omani', 'emirati', 'qatari', 'qataris', 'jordanian', 'jordanians', 'kuwaiti', 'libyan', 'libyans', 'sudanese', 'kenyan', 'kenyans', 'nigerian', 'nigerians', 'ghanaian', 'tanzanian', 'somali', 'ugandan', 'zambian', 'zimbabwean', 'roman', 'romans', 'byzantine', 'byzantines', 'christian', 'christians', 'muslim', 'muslims', 'buddhist', 'buddhists', 'hindu', 'hindus', 'jain', 'jains', 'sikh', 'sikhs', 'zoroastrian', 'zoroastrians', 'parsi', 'parsis', 'protestant', 'protestants', 'catholic', 'catholics', 'orthodox', 'shia', 'sunni', 'sufi', 'sufis', 'vaishnava', 'saiva', 'pagan', 'atheist', 'atheists', 'people', 'persons', 'individual', 'individuals', 'human', 'humans', 'being', 'child', 'children', 'son', 'daughter', 'father', 'mother', 'brother', 'sister', 'husband', 'wife', 'spouse', 'parents', 'family', 'families', 'grandfather', 'grandmother', 'man', 'woman', 'men', 'women', 'boy', 'girl', 'boys', 'girls',
+  // Sub-topic fragment words that kin captures routinely mis-promote as "people"
+  // ("National · founded", "Afterwards · succeeded by"). These are never human
+  // names: a single-token name equal to one of these is a sentence fragment, not
+  // a person, so it must not be provisioned as a kin node or re-typed as one.
+  'national', 'imperial', 'former', 'finally', 'afterwards', 'before', 'previous', 'manchus',
+  'population', 'appendix', 'conclusion', 'introduction', 'features', 'objectives', 'measures',
+  'schemes', 'programmes', 'policies', 'impacts', 'causes', 'effects', 'principles', 'basics',
+  'types', 'government', 'administration', 'parliament', 'legislature', 'judiciary', 'executive',
+  'photograph', 'photographs', 'pictures', 'archives', 'documents', 'references', 'summary',
+  // More clause/discourse fragments the raw-name classes still cast as "people"
+  // ("Tim · founded", "Damage · succeeded by", "The Observer"; "he met him").
+  'tim', 'damage', 'times', 'ultimately', 'observer', 'originally', 'democratic', 'eventually',
+  'begin', 'however', 'subsequently', 'previously', 'instead', 'soon', 'secondly', 'met',
+  'colonial', 'dame', 'four', 'one', 'once', 'firstly', 'thirdly',  // 'one'/'once' block "firstly…one was the son": the numeral/ordinal forms too
+  // Single-token ABSTRACT/common nouns the kin regex absorbs because the corpus
+  // paragraphs them ("Fine" / "Straw" / "Light" / "Transport" as paragraph lead
+  // subjects in "…was the son|founder of…"). These are never personal names.
+  'red', 'fine', 'straw', 'light', 'craft', 'gun', 'wing', 'forest', 'paper', 'transport',
+  'television', 'weir', 'kaiser', 'fuel', 'labour', 'commerce', 'industry', 'state',
+  'capital', 'revenue', 'budget', 'currency', 'debt', 'exchange', 'market', 'mineral',
+  'manhattan', 'virginia', 'munich', 'manitoba', 'stirling', 'bandai'];
 var KIN_PARTICLES = {};
 for (var kp of ['de', 'du', 'von', 'van', 'van der', 'der', 'den', 'des', 'di', 'da', 'das', 'del', 'della', 'dos', 'las', 'los', 'la', 'le', 'les', 'ter', 'ten', 'te', 'zu', 'zur', 'am', 'af', 'av', 'y', 'e', 'o', 'a', 'l', 'd', 'de\'', 'l\'', 'd\'', 'ibn', 'bin', 'binti', 'abu', 'al', 'el', 'ul', 'as', 'of', 'the']) KIN_PARTICLES[kp] = true;
 var KIN_RAW_FULL = '[A-Z][A-Za-z\u00C0-\u017F\u2019\'.\-]+(?:\\s+[A-Z][A-Za-z\u00C0-\u017F\u2019\'.\-]+){0,3}';
@@ -2006,6 +2106,7 @@ function kinPersonOk(nm) {
   if (KIN_REGION_NAMES.indexOf(lc) !== -1) return false;
   if (KIN_TITLE_STRIP.indexOf(lc) !== -1) return false;
   if (KIN_ETHNIC.indexOf(lc) !== -1) return false;
+  if (KIN_BAN_WORDS.indexOf(lc) !== -1) return false;
   if (KIN_NON_PERSON_END.test(c.replace(/\b[A-Z]\./g, ' '))) return false;
   if (GENERIC_TOPICS.indexOf(lc) !== -1) return false;
   // Reject clause-lead junk ("He", "He also", "The", "One of whom", "By …")
@@ -3098,7 +3199,17 @@ if (x && possGap) {
   }
   if (typeof scanSource === 'function') scanSource(handleQuestion);
   else if (scanSource && scanSource.all) { for (var itl of scanSource.all) handleQuestion(itl); }
-  return Object.keys(edges).map(function (k) { return edges[k]; });
+  var res = Object.keys(edges).map(function (k) { return edges[k]; });
+  // Drop edges that touch a junk auto-mined kin node (kin && single mention) or a
+  // node that no longer exists. In a full rebuild ~90% of raw captures are
+  // junk–junk ("Four —succeeded by→ Achim"), so this keeps the shipped edge table
+  // small and lets the client render the true relations directly.
+  return res.filter(function (e) {
+    var eA = NODE_BY_ID[e.a], eB = NODE_BY_ID[e.b];
+    if (!eA || !eB) return false;
+    if ((eA.kin === true && (eA.count || 0) < 2) || (eB.kin === true && (eB.count || 0) < 2)) return false;
+    return true;
+  });
 }
 
 function modeSpan(spans) {
@@ -3322,14 +3433,15 @@ function main() {
           }
         }
       }
+      var tkey = tname.replace(/^\s*✓\s*/, '').replace(/[^A-Za-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
       var node = {
         id: id,
         name: tname,
-        type: isAutoPerson ? 'person' : typeOf(tname),
+        type: isAutoPerson ? 'person' : (TYPE_TOPICS[tkey] || typeOf(tname)),
         span: span,
         era: timebase === 'era' ? eraId : eraOf(span && span.min),
         timebase: timebase,
-        level: isAutoPerson ? 2 : 4,
+        level: isAutoPerson ? 2 : (PROMOTE_TOPICS[tkey] || 4),
         cats: [{ key: key, label: label, count: qs.length }],
         count: qs.length,
         desc: nodeDesc || (!isAutoPerson ? topicDescFor(tname, label, qs) : null)
@@ -3438,9 +3550,16 @@ function main() {
 
   // Absorb sub-topic nodes whose name matches a seed, so the map never shows
   // two dots for the same entity (e.g. "Albert Einstein" seed + sub-topic).
+  // Also match seed ALIASES: a sub-topic carrying an alternate spelling of a seed
+  // ("Muhammad Ali Jinnah" vs the "Mohammad Ali Jinnah" seed) is the same entity
+  // and must fold into it, not ship as a near-duplicate card.
   var seedByName = {};
   for (var sn2 of seedNodes) {
     seedByName[sn2.name.toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim()] = sn2;
+    for (var sa2 of (sn2.aliases || [])) {
+      var sck = sa2.toLowerCase().replace(/[^a-z0-9]+/gi, ' ').trim();
+      if (sck.length >= 3 && /^\d{3,4}s?$/.test(sck) === false && GENERIC_TOPICS.indexOf(sck) === -1 && !seedByName[sck]) seedByName[sck] = sn2;
+    }
   }
   nodes = nodes.filter(function (nd) {
     if (nd.id.indexOf('seed|') === 0) return true;
@@ -4110,7 +4229,47 @@ function main() {
     ['seed|Yaudheya', 'seed|Kushan Empire', 2],
     ['seed|Nayanar', 'seed|Basavanna', 2],
     ['seed|Alvar', 'seed|Nayanar', 2],
-    ['seed|Alvar', 'seed|Ramanuja', 2]
+    ['seed|Alvar', 'seed|Ramanuja', 2],
+    // Music web: classical carnatic/hindustani umbrella over genres, gharanas and
+    // instruments, plus musicians + birthplace linked by topic name so the flowchart
+    // drill-down surfaces them as concept/place cards.
+    ['seed|Indian classical music', 'seed|Carnatic music', 4],
+    ['seed|Indian classical music', 'seed|Hindustani classical music', 4],
+    ['seed|Indian classical music', 'seed|Tabla', 3],
+    ['seed|Indian classical music', 'seed|Sitar', 3],
+    ['seed|Indian classical music', 'seed|Sarod', 3],
+    ['seed|Indian classical music', 'seed|Veena', 3],
+    ['seed|Carnatic music', 'seed|M. S. Subbulakshmi', 4],
+    ['seed|Carnatic music', 'seed|M. K. Thyagaraja Bhagavathar', 4],
+    ['seed|Carnatic music', 'seed|Bharatanatyam', 2],
+    ['seed|Hindustani classical music', 'seed|Mewati gharana', 4],
+    ['seed|Hindustani classical music', 'seed|Kirana gharana', 4],
+    ['seed|Hindustani classical music', 'seed|Agra gharana', 4],
+    ['seed|Hindustani classical music', 'seed|Bishnupur gharana', 3],
+    ['seed|Hindustani classical music', 'seed|Indore gharana', 3],
+    ['seed|Hindustani classical music', 'seed|Ajrara gharana', 2],
+    ['seed|Hindustani classical music', 'seed|Gharana', 3],
+    ['seed|Mewati gharana', 'seed|Gharana', 2],
+    ['seed|M. K. Thyagaraja Bhagavathar', 'seed|Tiruchirappalli', 3],
+    ['seed|M. K. Thyagaraja Bhagavathar', 'seed|M. S. Subbulakshmi', 3],
+    // Kirana gharana lineage: the gharanas founder and its known Karim-Wahid/Bhimsen
+    // vocalist descendants, so drilling into Bande Ali Khan surfaces the gharana and
+    // fellow exponents as cards.
+    ['seed|Bande Ali Khan', 'seed|Kirana gharana', 5],
+    ['seed|Abdul Karim Khan', 'seed|Kirana gharana', 4],
+    ['seed|Abdul Wahid Khan', 'seed|Kirana gharana', 4],
+    ['seed|Bhimsen Joshi', 'seed|Kirana gharana', 5],
+    ['seed|Gangubai Hangal', 'seed|Kirana gharana', 4],
+    ['seed|Bande Ali Khan', 'seed|Abdul Karim Khan', 4],
+    ['seed|Bande Ali Khan', 'seed|Abdul Wahid Khan', 4],
+    ['seed|Abdul Karim Khan', 'seed|Abdul Wahid Khan', 3],
+    ['seed|Bhimsen Joshi', 'seed|Abdul Karim Khan', 3],
+    ['seed|Bhimsen Joshi', 'seed|Gangubai Hangal', 2],
+    ['seed|Bande Ali Khan', 'seed|Hindustani classical music', 3],
+    ['seed|Bhimsen Joshi', 'seed|Hindustani classical music', 3],
+    ['seed|Amjad Ali Khan', 'seed|Sarod', 4],
+    ['seed|Bahadur Khan (musician)', 'seed|Sarod', 3],
+    ['seed|Amjad Ali Khan', 'seed|Indian classical music', 2]
   ];
   var linkMap = {};
   for (var li of links) linkMap[li.a + '\u0000' + li.b] = li.w;
