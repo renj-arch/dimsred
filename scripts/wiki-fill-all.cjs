@@ -2959,6 +2959,78 @@ const CATEGORIES = [
     'Power Grid Corporation of India','GAIL','Oil India','National Mineral Development Corporation','Life Insurance Corporation of India','General Insurance Corporation','State Bank of India','Shipping Corporation of India','Container Corporation of India',
     'IRCTC','Disinvestment in India'
   ]},
+  // ══UPSC batch 2══ State legislatures of India ──
+  { name:"State legislatures of India", wikiCat:"State legislatures of India", keywords:[
+    'legislature','legislative','assembly','vidhan','member of the legislative','parliament of a state','bicameral','unicameral','legislator','act of a state','mla',
+    'legislative council'
+  ], topics:[
+    'State legislatures of India','State Legislative Assemblies of India','State Legislative Councils of India','Member of the Legislative Assembly (India)','Andhra Pradesh Legislature','Assam Legislature','Bihar Legislature','Jammu and Kashmir Legislature',
+    'Karnataka Legislature','Maharashtra Legislature','Tamil Nadu Legislature','Telangana Legislature','Uttar Pradesh Legislature'
+  ]},
+  // ══UPSC batch 2══ Law enforcement agencies of India ──
+  { name:"Law enforcement agencies of India", wikiCat:"Law enforcement agencies of India", keywords:[
+    'police','investigation','bureau','force','vigilance','enforcement','paramilitary','anti-terror','special investigation','agency','crime',
+    'protection force','police service'
+  ], topics:[
+    'Law enforcement in India','Central Bureau of Investigation','Enforcement Directorate','National Investigation Agency','Border Security Force','Central Reserve Police Force','Indo-Tibetan Border Police','Sashastra Seema Bal',
+    'Indian Police Service','Central Vigilance Commission','Railway Protection Force','Special Investigation Team (India)','Rajasthan Police Service','Uttar Pradesh Anti–Terrorist Squad'
+  ]},
+  // ══UPSC batch 2══ Reservation in India ──
+  { name:"Reservation in India", wikiCat:"Reservation in India", keywords:[
+    'reservation','quota','backward','obc','other backward','creamy','mandal','commission','caste','social justice','affirmative',
+    'economically weaker','scheduled','agitation','women s reservation','reserved'
+  ], topics:[
+    'Reservation in India','Economically Weaker Section','Other Backward Class','Creamy layer','Forward caste','Mandal Commission','Kalelkar Commission','Narendran Commission',
+    'National Commission for Backward Classes','Indra Sawhney and Others v. Union of India','Ashoka Kumar Thakur v. Union of India','State of Madras v. Champakam Dorairajan','Court cases related to reservation in India','Communal Award','One Hundred and Third Amendment of the Constitution of India','One Hundred and Fourth Amendment of the Constitution of India',
+    'Women\'s Reservation Bill, 2010','Reserved political positions in India','Mahadalit','Bhutia-Lepcha','Ministry of Social Justice and Empowerment','National Commission for Denotified, Nomadic and Semi-Nomadic Tribes','Reservation policy in Tamil Nadu','Reservation policy in Indian Institutes of Technology',
+    'Maratha reservation agitation','Jat reservation agitation','Patidar reservation agitation','Mandal Commission protests of 1990','2006 Indian anti-reservation protests'
+  ]},
+  // ══UPSC batch 2══ Mass media in India ──
+  { name:"Mass media in India", wikiCat:"Mass media in India", keywords:[
+    'media','press','broadcast','newspaper','journalism','news','publication','radio','television','transmission','information and broadcasting',
+    'regulator','call signs','publicity'
+  ], topics:[
+    'Mass media in India','Ministry of Information and Broadcasting (India)','Press Registrar General of India','Press Information Bureau','Editors Guild of India','Paid news in India','Free Press of India','New India Samachar',
+    'National Media Centre, New Delhi','Media bias in South Asia','Call signs in India','Prasar Bharati','Press Trust of India','United News of India'
+  ]},
+  // ══UPSC batch 2══ Censorship in India ──
+  { name:"Censorship in India", wikiCat:"Censorship in India", keywords:[
+    'censorship','film certification','freedom of the press','press ','censor','hate speech','sedition','emergency','code for digital','defamation','media',
+    'television','internet'
+  ], topics:[
+    'Censorship in India','Central Board of Film Certification','Freedom of the press in India','Freedom of the press in British India','Vernacular Press Act, 1878','Section 124A of the Indian Penal Code','Hate speech laws in India','The Emergency (India)',
+    'Information Technology Act, 2000','Personal Data Protection Bill, 2019','Television in India','Censorship in Kashmir','Ethical Code for Digital News Websites'
+  ]},
+  // ══UPSC batch 2══ Human rights in India ──
+  { name:"Human rights in India", wikiCat:"Human rights in India", keywords:[
+    'human rights','fundamental rights','article 21','civil liberties','freedom','atrocit','discrimination','lgbtq','abortion','surrogacy','national integration',
+    'pedestrian rights','child rights','justice'
+  ], topics:[
+    'Human rights in India','Fundamental rights in India','Article 21 of the Constitution of India','Scheduled Caste and Scheduled Tribe (Prevention of Atrocities) Act, 1989','LGBTQ rights in India','Abortion in India','Surrogacy in India','Persecution of Chakmas in Arunachal Pradesh',
+    'National Integration Council','Pedestrian rights in India','Bandhua Mukti Morcha','Legal status of Jainism as a distinct religion in India','Half-widow'
+  ]},
+  // ══UPSC batch 2══ Insurance in India ──
+  { name:"Insurance in India", wikiCat:"Insurance in India", keywords:[
+    'insurance','insurer','bima','policy','premium','reinsurance','irda','actuar','repository','coverage'
+  ], topics:[
+    'Insurance in India','Insurance Regulatory and Development Authority','Insurance Act, 1938','Insurance Repository in India','Agricultural insurance in India','Pradhan Mantri Fasal Bima Yojana','Pradhan Mantri Suraksha Bima Yojana','Institute of Actuaries of India',
+    'Insurance Brokers Association of India','Two-wheeler insurance','Life Insurance Corporation of India'
+  ]},
+  // ══UPSC batch 2══ Consumer protection in India ──
+  { name:"Consumer protection in India", wikiCat:"Consumer protection in India", keywords:[
+    'consumer','protection act','consumer forum','redressal','consumer court','product liability','standards','warranty','unfair trade','grievance'
+  ], topics:[
+    'Consumer Protection Act, 2019','Consumer Protection Act, 1986','Central Consumer Protection Authority','Consumer court','Grievance redressal','Jago Grahak Jago','Ministry of Consumer Affairs, Food and Public Distribution','National Consumer Disputes Redressal Commission'
+  ]},
+  // ══UPSC batch 2══ Sustainable Development Goals ──
+  { name:"Sustainable Development Goals", wikiCat:"Sustainable Development Goals", keywords:[
+    'sustainable development','sdg','goal','target','2030 agenda','development goal','poverty','hunger','climate action','gender equality','partnership',
+    'sustainability','global goals'
+  ], topics:[
+    'Sustainable Development Goals','Sustainable Development Goal 1','Sustainable Development Goal 2','Sustainable Development Goal 3','Sustainable Development Goal 4','Sustainable Development Goal 5','Sustainable Development Goal 6','Sustainable Development Goal 7',
+    'Sustainable Development Goal 8','Sustainable Development Goal 9','Sustainable Development Goal 10','Sustainable Development Goal 11','Sustainable Development Goal 12','Sustainable Development Goal 13','Sustainable Development Goal 14','Sustainable Development Goal 15',
+    'Sustainable Development Goal 16','Sustainable Development Goal 17','List of Sustainable Development Goal targets and indicators','High-level Political Forum on Sustainable Development','Digital public goods','Sustainability','Inclusive wealth','Global Goals Week'
+  ]},
 
 ];
 
