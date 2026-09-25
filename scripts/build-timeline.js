@@ -2006,6 +2006,10 @@ function typeOf(name) {
   if (/organisation|organization|department|commission|committee|\bcouncil\b|\bboard\b|authority|university|institute|association|tribunal|\bcourt\b|ministry|bureau|\bbank\b|corporation|\bcompany\b|federation|academy|foundation|\btrust\b|\bagency\b|\bforce\b|\barmy\b|\bnavy\b|air force|\bpolice\b|\bservices\b|chamber of commerce|chamber\b|exchange\b|stock exchange|great places|gram panchayat|panchayat\b|sabha\b|parliament|lok sabha|rajya sabha|vigilance|\bport\b authority/i.test(n)) return 'org';
   if (/^[a-z][a-z\s'-]*(?: river| mountain| peak| plateau| desert| glacier| volcano| island| archipelago| bay| gulf| strait| sea| ocean| lake| valley| hills| range| ghats| pass| cape| delta| estuary| port| harbour| harbor| fort| temple| dam| canal| lagoon| atoll| reef| wetlands| marshe| backwaters| sanctuary| national park| biosphere reserve| tiger reserve| bird sanctuary)$/i.test(n) ||
       /(?:river|mountain|\bmount\b|peak|plateau|desert|glacier|volcano|island|archipelago|bay\b|gulf|strait|\bsea\b|\bocean\b|\blake\b|valley|hills|range|ghats|pass|cape|delta|estuary|port\b|harbour|harbor|fort\b|temple\b|dam\b|canal|lagoon|atoll|reef\b|wetland|mangrove|backwaters|sanctuary|national park|the ghats|himalayas|peninsula|coast\b)/i.test(n)) return 'place';
+  // High-confidence named physical features / places that a pure keyword pass
+  // misses (bare proper nouns like "Ganges", "Kaveri", "Ladakh", "Sri Lanka").
+  var GEO_PLACE = /^(?:ganga|ganges|yamuna|jhelum|chenab|ravi|beas|sutlej|brahmaputra|barak|godavari|krishna|kaveri|karnataka|tungabhadra|narmada|tapi|tapti|mahanadi|damodar|ghaggar|chambal|betwa|banganga|sabarmati|mahaanadi|luni|koshi|hugli|hooghly|periyar|vaigai|mahananda|thar desert|ladakh|kargil|siachen|punjab|kutch|saurashtra|cherrapunji|mawsynram|darjeeling|shillong|nilgiris|anaimalai|kodaikanal|ooty|aranmula|sundarbans|palk|thattekad|wular|dal lake|nainital|loktak|chilika|pulicat|vembanad|ashtamudi|kolleru|lonar|andaman|nicobar|lakshadweep|maldives|sri lanka|bengal|arabian sea|pacific|atlantic|indian ocean|mediterranean|red sea|caspian|black sea|baltic|persian gulf|gulf of mexico|gulf of mannar|malacca|sicily|sumatra|borneo|java|madagascar|greenland|himalayas|western ghats|eastern ghats|aravalli|vindhya|satpura|anaimalai|deccan|malwa|chota nagpur|konkan|malabar|coromandel|kanara|mariana|sahel|kalahari|gobi|sahara|arabia|mongolia)$/i;
+  if (GEO_PLACE.test(n)) return 'place';
   return 'concept';
 }
 
@@ -3509,6 +3513,9 @@ function main() {
       (byTopic[t] = byTopic[t] || []).push(q);
     }
     for (var tname of Object.keys(byTopic)) {
+      // Mined sub-topic names may carry a leading checkbox ("✓ History of agriculture")
+      // that must never leak into ids/names shipped to the UI.
+      tname = tname.replace(/^\s*✓\s*/, '').replace(/\s*✓\s*$/, '').trim();
       var id = key + '|' + tname;
       if (seen[id]) {
         seen[id].cats.push({ key: key, label: label, count: byTopic[tname].length });
@@ -3559,7 +3566,7 @@ function main() {
         name: tname,
         type: isAutoPerson ? 'person' : (TYPE_TOPICS[tkey] || typeOf(tname)),
         span: span,
-        era: timebase === 'era' ? eraId : eraOf(span && span.min),
+        era: timebase === 'era' ? eraId : (span ? eraOf(Math.round((span.min + span.max) / 2)) : null),
         timebase: timebase,
         level: isAutoPerson ? 2 : (PROMOTE_TOPICS[tkey] || 4),
         cats: [{ key: key, label: label, count: qs.length }],
