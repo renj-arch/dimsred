@@ -1,10 +1,10 @@
-name: Timeline Build (build-timeline.js)
+name: Timeline + Mind-tree + Geography Build
 
 on:
   workflow_dispatch:
     inputs:
       commit:
-        description: 'Commit + push regenerated data/timeline*.json (false = build for log/stats only)'
+        description: 'Commit + push regenerated data/timeline*.json, topic-layers.json and geography HTML (false = build for log/stats only)'
         required: false
         default: 'true'
 
@@ -30,11 +30,25 @@ jobs:
         with:
           node-version: 22
 
-      # build-timeline.js only requires node builtins (fs/path/child_process).
+      # Full offline rebuild chain (no npm deps, no network):
+      #   build-timeline.js          → data/timeline.json + timeline.nodes.*.json
+      #   gen-topic-layers.js        → data/topic-layers.json (the "mind-tree"),
+      #                                reads timeline.json + node parts
+      #   build-geography-diagrams.js → geography-diagrams.html (concept pack)
+      #   build-geography-figures.js  → geography-figures.html (figure pack)
+      # build-timeline.js requires only node builtins (fs/path/child_process).
       # child_process shells out to `git ls-tree`/`git show` to diff old node
       # parts, so no npm install is needed.
       - name: Rebuild timeline map from question data
         run: node scripts/build-timeline.js
+
+      - name: Rebuild mind-tree (topic-layers.json)
+        run: node scripts/gen-topic-layers.js
+
+      - name: Rebuild geography diagram packs
+        run: |
+          node scripts/build-geography-diagrams.js
+          node scripts/build-geography-figures.js
 
       - name: Commit + push regenerated timeline
         if: inputs.commit == 'true'
@@ -45,11 +59,11 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null
-          git add -A data/
+          git add -A data/ geography-diagrams.html geography-figures.html
           if git diff --staged --quiet; then
             echo "No timeline changes to commit"
           else
-            git commit -m "Timeline rebuild $(date +'%Y-%m-%d %H:%M UTC')"
+            git commit -m "Timeline + mind-tree + geography rebuild $(date +'%Y-%m-%d %H:%M UTC')"
             git pull --rebase 2>/dev/null || { echo "Rebase conflict — aborting and merging"; git rebase --abort 2>/dev/null; git fetch origin main 2>/dev/null; git merge --no-edit origin/main 2>/dev/null || true; }
             git push && echo "Pushed timeline rebuild" || echo "Push failed"
           fi
