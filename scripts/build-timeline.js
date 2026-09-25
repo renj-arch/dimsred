@@ -1799,10 +1799,11 @@ var NEWS_CATS = ['current-affairs', 'pib-archive', 'announcements', 'rbi-press-r
 // Keyword → era classifier. Used ONLY when a topic has no dateable content, so a
 // year-less topic still lands in the right era band instead of being dumped at "now".
 var ERA_KEYWORDS = {
-  ancient: /indus|harappa|vedic|vedas|maurya|gupta|sunga|kushan|satavahana|nanda|saka|pallava|chalukya|chola|chera|pandya|sangam|buddha|ashoka|kalinga|panini|aryabhata|sushruta|charaka|kalidasa|mahajanapada|bhimbetka|prehistoric|stone age|bronze age|iron age|ganapati/i,
-  medieval: /sultanate|mughal|mamluk|khilji|tughlaq|sayyid|lodi|vijayanagara|maratha|rashtrakuta|pratihara|gurjara|bhakti|sufi|bahmani|ahom|rajput|kakatiya|adil shahi|qutub|iqta|mansabdar|delhi sultanate/i,
-  freedom: /1857|sepoy|mutiny|swadeshi|satyagraha|non-cooperation|civil disobedience|quit india|partition|jallianwala|khilafat|salt march|bardoli|champaran|gandhi|nehru|tilak|gokhale|bose|congress|independence movement|revolt of 1857|british|east india|viceroy/i,
-  republic: /constitution|planning commission|five year|green revolution|liberalisation|gst|election commission|rajya sabha|lok sabha|republic day|sarkaria|mandal commission|nehruvian/i
+  ancient: /indus|harappa|vedic|vedas|maurya|gupta|sunga|kushan|satavahana|nanda|saka|pallava|chalukya|chola|chera|pandya|sangam|buddha|ashoka|kalinga|panini|aryabhata|sushruta|charaka|kalidasa|mahajanapada|bhimbetka|prehistoric|stone age|bronze age|iron age|ganapati|greek|roman|persian|mesopotam|babylon|assyri|sumer|akkad|hittite|phoenici|minoan|mycenaean|shang|zhou|qin|shan dynasty|tang|song|yuan|ming|qin|aztec|inca|carthage|trojan|sparta|athens|celtic|egyptian|pharaoh|ancient china/i,
+  medieval: /sultanate|mughal|mamluk|khilji|tughlaq|sayyid|lodi|vijayanagara|maratha|rashtrakuta|pratihara|gurjara|bhakti|sufi|bahmani|ahom|rajput|kakatiya|adil shahi|qutub|iqta|mansabdar|delhi sultanate|mongol|byzant|ottoman|viking|feudal|sassanid|seljuk|abbasid|umayyad|fatimid|crusade|crusader|norman|anglo-saxon|medieval|kabul|ghazni scholar/i,
+  colonial: /east india company|british east india|company rule|subsidiary alliance|doctrine of lapse|carnatic wars|battle of plassey|battle of buxar|bengal renaissance|early british|british raj|colonial/i,
+  freedom: /1857|sepoy|mutiny|swadeshi|satyagraha|non-cooperation|civil disobedience|quit india|partition|jallianwala|khilafat|salt march|bardoli|champaran|gandhi|nehru|tilak|gokhale|bose|congress|independence movement|revolt of 1857|british|east india|viceroy|swaraj|boycott|hartal|round table|simla conference|cripps|purna swaraj|indian national army|royal indian navy|naval mutiny|cabinet mission|wavell|mountbatten|freedom struggle|national movement/i,
+  republic: /constitution|planning commission|five[-\s]year|green revolution|liberalisation|gst|election commission|rajya sabha|lok sabha|republic day|sarkaria|mandal commission|nehruvian|post-independence|privatis|economic reform|bank national|demonetisation|digital india|niti aayog|twelfth plan|contemporary|republic/i
 };
 var CATEGORY_ERA = {
   'ancient-india': 'ancient',
@@ -1811,7 +1812,7 @@ var CATEGORY_ERA = {
 
 function eraForTopic(tname, catKey) {
   var t = String(tname || '').toLowerCase();
-  for (var eid of ['ancient', 'medieval', 'freedom', 'republic']) {
+  for (var eid of ['ancient', 'medieval', 'colonial', 'freedom', 'republic']) {
     if (ERA_KEYWORDS[eid].test(t)) return eid;
   }
   return CATEGORY_ERA[catKey] || null;
@@ -1987,11 +1988,24 @@ function topicYears(name, qs, catKey) {
   return robustSpan(fl, catKey, trusted);
 }
 
+// Sub-topic auto-type classifier. Run on any sub-topic name that is not a curated
+// seed and has no curated TYPE_TOPICS entry, so mined wiki topics land on the map
+// with a real lane (person / place / scheme / org / event...) instead of a default
+// "concept" pile. Order matters: person-ish titles win over "of" phrasing.
 function typeOf(name) {
   var n = name.toLowerCase();
-  if (/movement|rebellion|revolt|revolution|protest|uprising|agitation|campaign|satyagraha|march|massacre|mutiny|jallianwala/i.test(n)) return 'event';
-  if (/scheme|yojana|mission|programme|program|policy|act\b|treaty|agreement|organisation|organization|department|commission|committee|bank|corporation|authority|university|institute|association/i.test(n)) return 'org';
-  if (/disease|virus|flu|pandemic|epidemic|malaria|cholera|smallpox|polio|leprosy|tuberculosis|covid|famine|plague|dengue|chikungunya/i.test(n)) return 'disease';
+  var nonPerson = /^(?:mother (?:dairy|goddess|earth|india|nature|tongue|board|theresa medal)|sister (?:cities?|nations)|baba (?:store|shop)|guru (?:granth|nanasak)|dr\b\.?\s+(?:reddy|doom))\b/i;
+  // Persons: honorific-led names, or names with a bracketed profession/role.
+  if (!nonPerson.test(n) &&
+      (/^(?:dr|drs|sir|saint|st\.|mahatma|sardar|sardarni|bapu|gur(u|udeva|udev)|swami|swamiji|pandit|pandita|raja|maharaja|rani|maharani|nawab|begum|sheikh|shaikh|ustad|maulana|maulvi|pope|bishop|sister|mother|bhagat|baba|acharya|shri|shrimati|smt\.|mr\.|mrs\.)\b/i.test(n) ||
+      /\([^)]*(?:musician|physicist|chemist|biologist|astronomer|poet|writer|author|novelist|playwright|philosopher|reformer|scientist|economist|historian|artist|painter|sculptor|composer|singer|actor|actress|politician|statesman|general|admiral|marshal|captain|major|emperor|empress|king|queen|ruler|leader|activist|freedom fighter|revolutionary|social worker|guru|saint|acharya|scholar|jurist|judge|lawyer|barrister|diplomat|ambassador|entrepreneur|industrialist|doctor|surgeon|aviator|explorer|astronaut|mathematician|physician|engineer|warrior|chieftain|zamindar|zamindari|sultan|naval commander|prime minister|president|viceroy|governor|chancellor)\)/i.test(n) ||
+      /\s(?:ji|saheb|sahib|singh|khan|bose|nehru|gandhi|modi|shastri|gandhi|patel|tagore|bose|jinnah|anand|rama?n|ramanujan|tendulkar|kohli|kapoor|biharilal|munda|phule|kurien|amte)\s*$/i.test(n))) return 'person';
+  if (/disease|virus|flu|pandemic|epidemic|malaria|cholera|smallpox|polio|leprosy|tuberculosis|covid|famine|plague|dengue|chikungunya|syndrome|disorder\b|infection|ailment|illness/i.test(n)) return 'disease';
+  if (/movement|rebellion|revolt|revolution|protest|uprising|agitation|campaign|satyagraha|march|massacre|mutiny|invasion|siege|expedition|conquest|jallianwala|\bbattle\b|\bwar\b|\bact\b|\btreaty\b|proclamation|declaration|partition of|occupation of/i.test(n)) return 'event';
+  if (/scheme|yojana|abhiyan|\bmission\b|\bprogramme\b|\bprogram\b|\bpolicy\b|initiative|\bdrive\b|\bfund\b|\band yojana\b|\bscheme of\b/i.test(n)) return 'scheme';
+  if (/organisation|organization|department|commission|committee|\bcouncil\b|\bboard\b|authority|university|institute|association|tribunal|\bcourt\b|ministry|bureau|\bbank\b|corporation|\bcompany\b|federation|academy|foundation|\btrust\b|\bagency\b|\bforce\b|\barmy\b|\bnavy\b|air force|\bpolice\b|\bservices\b|chamber of commerce|chamber\b|exchange\b|stock exchange|great places|gram panchayat|panchayat\b|sabha\b|parliament|lok sabha|rajya sabha|vigilance|\bport\b authority/i.test(n)) return 'org';
+  if (/^[a-z][a-z\s'-]*(?: river| mountain| peak| plateau| desert| glacier| volcano| island| archipelago| bay| gulf| strait| sea| ocean| lake| valley| hills| range| ghats| pass| cape| delta| estuary| port| harbour| harbor| fort| temple| dam| canal| lagoon| atoll| reef| wetlands| marshe| backwaters| sanctuary| national park| biosphere reserve| tiger reserve| bird sanctuary)$/i.test(n) ||
+      /(?:river|mountain|\bmount\b|peak|plateau|desert|glacier|volcano|island|archipelago|bay\b|gulf|strait|\bsea\b|\bocean\b|\blake\b|valley|hills|range|ghats|pass|cape|delta|estuary|port\b|harbour|harbor|fort\b|temple\b|dam\b|canal|lagoon|atoll|reef\b|wetland|mangrove|backwaters|sanctuary|national park|the ghats|himalayas|peninsula|coast\b)/i.test(n)) return 'place';
   return 'concept';
 }
 
@@ -3366,7 +3380,7 @@ function selectBestSent(qs, nm, esc) {
       if (s3.length < 14 || !/\s/.test(s3) || /\s[A-Z]$/.test(s3)) continue;
       if (nameRe !== null && nameRe.test(s3)) {
         if (s3.length < anyNLen) { anyN = s3; anyNLen = s3.length; }
-      } else if (s3.length < anyLen) { any = s3; anyLen = s3.length; }
+      } else if (nameRe === null && s3.length < anyLen) { any = s3; anyLen = s3.length; }
     }
   }
   return anyN || any;
@@ -3376,7 +3390,7 @@ function selectBestSent(qs, nm, esc) {
 // own questions for a defining sentence ("X is/was/refers to …"), else the shortest
 // clean first sentence of a fact, else any readable sentence, and as a guaranteed
 // last resort a neutral line — so autoDescFor never leaves a node without a desc.
-function autoDescFor(name, qs) {
+function descWithSource(name, qs) {
   var nm = String(name || '').replace(/^[^a-z0-9]+/i, '').trim();
   if (!nm) return null;
   var esc = escapeRe(nm);
@@ -3391,10 +3405,16 @@ function autoDescFor(name, qs) {
     if (/^(?:also|commonly|usually|sometimes|often|informally|formally|literally|figuratively)?\s*(?:known as|called|referred to as|abbreviated(?: as)?|shortened|termed)\b/i.test(d)) continue;
     if (d && d.length < 190 && d.length < bestLen) { best = d; bestLen = d.length; }
   }
-  if (best) return capDesc(best);
+  if (best) return { desc: capDesc(best), src: 'definition' };
   var fb = selectBestSent(qs, nm, esc);
-  if (fb) return capDesc(fb);
-  if (qs && qs.length) return capDesc(nm);
+  if (fb) return { desc: capDesc(fb), src: 'sentence' };
+  return null;
+}
+
+function autoDescFor(name, qs) {
+  var dw = descWithSource(name, qs);
+  if (dw) return dw.desc;
+  if (qs && qs.length) return capDesc(String(name || '').replace(/^[^a-z0-9]+/i, '').trim());
   return null;
 }
 
@@ -3413,6 +3433,16 @@ function topicDescFor(name, label, qs) {
   var d = autoDescFor(name, qs);
   if (d) return d;
   return capDesc(String(name || '').trim() + ' \u2014 ' + label);
+}
+
+// Source-tagged variant of topicDescFor: reports WHERE a sub-topic's description
+// came from ("curated", "definition", "sentence", "person-bio", "fallback") so the
+// output graph carries honest provenance for every auto description.
+function descAndSrcFor(name, label, qs) {
+  if (SUBTOPIC_DESCS[name]) return { desc: SUBTOPIC_DESCS[name], src: 'curated' };
+  var dw = descWithSource(name, qs);
+  if (dw) return dw;
+  return { desc: capDesc(String(name || '').trim() + ' \u2014 ' + label), src: 'fallback' };
 }
 
 var SEED_TYPE_LABEL = {
@@ -3521,6 +3551,9 @@ function main() {
         }
       }
       var tkey = tname.replace(/^\s*✓\s*/, '').replace(/[^A-Za-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+      var descObj = isAutoPerson
+        ? (nodeDesc ? { desc: nodeDesc, src: 'person-bio' } : null)
+        : (nodeDesc ? { desc: nodeDesc, src: 'person-bio' } : descAndSrcFor(tname, label, qs));
       var node = {
         id: id,
         name: tname,
@@ -3531,7 +3564,8 @@ function main() {
         level: isAutoPerson ? 2 : (PROMOTE_TOPICS[tkey] || 4),
         cats: [{ key: key, label: label, count: qs.length }],
         count: qs.length,
-        desc: nodeDesc || (!isAutoPerson ? topicDescFor(tname, label, qs) : null)
+        desc: descObj ? descObj.desc : null,
+        evDesc: descObj ? descObj.src : null
       };
       seen[id] = node;
       nodes.push(node);
@@ -4633,6 +4667,14 @@ function main() {
   console.log('Wrote ' + OUT);
   console.log('timeline nodes split into ' + nodeParts.length + ' parts: ' + partSizes.map(function (s) { return (s / 1048576).toFixed(2) + ' MiB'; }).join(', '));
   console.log('nodes: ' + nodes.length + ' (with time span: ' + withSpan + ', ' + (withSpan / nodes.length * 100).toFixed(1) + '%)');
+  var undatedByType = {};
+  nodes.forEach(function (n) { if (!n.span) undatedByType[n.type] = (undatedByType[n.type] || 0) + 1; });
+  var undatedKeys = Object.keys(undatedByType).sort(function (a, b) { return undatedByType[b] - undatedByType[a]; });
+  if (undatedKeys.length) console.log('undated by type: ' + undatedKeys.map(function (k) { return k + '=' + undatedByType[k]; }).join(', '));
+  var evCounts = {};
+  nodes.forEach(function (n) { if (n.evDesc) evCounts[n.evDesc] = (evCounts[n.evDesc] || 0) + 1; });
+  var evKeys = Object.keys(evCounts).sort(function (a, b) { return evCounts[b] - evCounts[a]; });
+  if (evKeys.length) console.log('desc provenance: ' + evKeys.map(function (k) { return k + '=' + evCounts[k]; }).join(', '));
   var totalSeeds = 0;
   var seedTypeCounts = {};
   for (var gk of Object.keys(SEED)) { totalSeeds += SEED[gk].list.length; seedTypeCounts[SEED[gk].type] = (seedTypeCounts[SEED[gk].type] || 0) + SEED[gk].list.length; }
