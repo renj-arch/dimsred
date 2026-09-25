@@ -1,0 +1,55 @@
+name: Timeline Build (build-timeline.js)
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit + push regenerated data/timeline*.json (false = build for log/stats only)'
+        required: false
+        default: 'true'
+
+concurrency:
+  group: timeline-build
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  NODE_OPTIONS: --max-old-space-size=12288
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # build-timeline.js only requires node builtins (fs/path/child_process).
+      # child_process shells out to `git ls-tree`/`git show` to diff old node
+      # parts, so no npm install is needed.
+      - name: Rebuild timeline map from question data
+        run: node scripts/build-timeline.js
+
+      - name: Commit + push regenerated timeline
+        if: inputs.commit == 'true'
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null
+          git add -A data/
+          if git diff --staged --quiet; then
+            echo "No timeline changes to commit"
+          else
+            git commit -m "Timeline rebuild $(date +'%Y-%m-%d %H:%M UTC')"
+            git pull --rebase 2>/dev/null || { echo "Rebase conflict — aborting and merging"; git rebase --abort 2>/dev/null; git fetch origin main 2>/dev/null; git merge --no-edit origin/main 2>/dev/null || true; }
+            git push && echo "Pushed timeline rebuild" || echo "Push failed"
+          fi
