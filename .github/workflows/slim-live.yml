@@ -25,6 +25,7 @@ jobs:
         with:
           ref: main
           fetch-depth: 1
+          filter: blob:none
           token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Rebuild slim live branch (orphan root)
