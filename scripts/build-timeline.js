@@ -3548,9 +3548,10 @@ function main() {
     }
     for (var tname of Object.keys(byTopic)) {
       // Mined sub-topic names may carry a leading checkbox ("✓ History of agriculture")
-      // that must never leak into ids/names shipped to the UI.
-      tname = tname.replace(/^\s*✓\s*/, '').replace(/\s*✓\s*$/, '').trim();
-      var id = key + '|' + tname;
+      // that must never leak into ids/names shipped to the UI. byTopic is keyed by the
+      // RAW mined name, so keep indexing it with `tname` and ship the cleaned name.
+      var tnameClean = tname.replace(/^\s*✓\s*/, '').replace(/\s*✓\s*$/, '').trim();
+      var id = key + '|' + tnameClean;
       if (seen[id]) {
         seen[id].cats.push({ key: key, label: label, count: byTopic[tname].length });
         seen[id].count += byTopic[tname].length;
@@ -3562,9 +3563,9 @@ function main() {
       // not appear in the curated SEED spine. Type it as a person at detail level 2 and
       // pin a birth–death span from the questions, so future wiki additions land on the
       // map as purple person bars automatically instead of as generic undated topics.
-      var nodeDesc = personDescFor(tname, qs);
+      var nodeDesc = personDescFor(tnameClean, qs);
       var isAutoPerson = !!nodeDesc;
-      var span = topicYears(tname, qs, key);
+      var span = topicYears(tnameClean, qs, key);
       if (isAutoPerson) {
         var autoBio = bioSpansFor(qs);
         if (autoBio) span = autoBio;
@@ -3580,7 +3581,7 @@ function main() {
           if (ap) { span = { min: ap.min, max: ap.max }; timebase = 'archive'; }
         }
         if (!span) {
-          eraId = eraForTopic(tname, key);
+          eraId = eraForTopic(tnameClean, key);
           if (eraId) {
             var eobj = ERAS.find(function (x) { return x.id === eraId; });
             var mid = Math.round((eobj.min + eobj.max) / 2);
@@ -3591,14 +3592,14 @@ function main() {
           }
         }
       }
-      var tkey = tname.replace(/^\s*✓\s*/, '').replace(/[^A-Za-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
+      var tkey = tnameClean.replace(/[^A-Za-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim().toLowerCase();
       var descObj = isAutoPerson
         ? (nodeDesc ? { desc: nodeDesc, src: 'person-bio' } : null)
-        : (nodeDesc ? { desc: nodeDesc, src: 'person-bio' } : descAndSrcFor(tname, label, qs));
+        : (nodeDesc ? { desc: nodeDesc, src: 'person-bio' } : descAndSrcFor(tnameClean, label, qs));
       var node = {
         id: id,
-        name: tname,
-        type: isAutoPerson ? 'person' : (TYPE_TOPICS[tkey] || typeOf(tname)),
+        name: tnameClean,
+        type: isAutoPerson ? 'person' : (TYPE_TOPICS[tkey] || typeOf(tnameClean)),
         span: span,
         era: timebase === 'era' ? eraId : (span ? eraOf(Math.round((span.min + span.max) / 2)) : null),
         timebase: timebase,
