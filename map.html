@@ -167,8 +167,8 @@ var FULL = { start: MIN_YEAR, end: MAX_YEAR };
 var HISTORY = [];
 var SHOW_ALL = false;   // "Show all" forces every level (including sub-topics) on screen
 
-var TYPE_COLOR = { person: 'var(--purple,#a78bfa)', event: 'var(--amber,#f59e0b)', disease: 'var(--rose,#fb7185)', scheme: 'var(--cyan,#22d3ee)', org: 'var(--cyan,#22d3ee)', concept: '#71717a' };
-var TYPE_FILTERS = { person: true, event: true, disease: true, scheme: true, org: true, concept: true };
+var TYPE_COLOR = { person: 'var(--purple,#a78bfa)', event: 'var(--amber,#f59e0b)', disease: 'var(--rose,#fb7185)', scheme: 'var(--cyan,#22d3ee)', org: 'var(--cyan,#22d3ee)', place: 'var(--emerald,#34d399)', volcano: '#fb923c', concept: '#71717a' };
+var TYPE_FILTERS = { person: true, event: true, disease: true, scheme: true, org: true, place: true, volcano: true, concept: true };
 
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
@@ -427,6 +427,8 @@ function render() {
     html += '<div class="loading" style="margin:20px 14px">Nothing at this zoom — scroll up or zoom out.</div>';
   } else if (count === 0 && filtered.length === 0 && activeCat) {
     html += '<div class="loading" style="margin:20px 14px">No ' + esc(_catByKey[activeCat] || activeCat) + ' topics in this window — zoom out or scroll.</div>';
+  } else if (count === 0 && filtered.length === 0 && searchText) {
+    html += '<div class="loading" style="margin:20px 14px">No topic matching &ldquo;' + esc(searchText) + '&rdquo;</div>';
   }
 
   var canvasBottom = curY;
@@ -859,6 +861,10 @@ function toggleDrill(row, catKey, catLabel) {
   body.innerHTML = '<div class="loading">Loading…</div>';
   var n = _profileNode;
   loadCategory(catKey, function (catData) {
+    if (catData.missing) {
+      body.innerHTML = '<div class="loading" style="font-weight:700">' + esc(catLabel) + ' — question file not generated yet</div>';
+      return;
+    }
     var qs = [];
     if (!n.seed) {
       for (var q of catData.questions) {
@@ -896,6 +902,10 @@ function loadCategory(key, cb) {
   var xhr = new XMLHttpRequest();
   xhr.open('GET', 'data/questions/' + key + '.json', true);
   xhr.onload = function () {
+    if (xhr.status === 404) {
+      cb({ label: key, questions: [], missing: true });
+      return;
+    }
     try {
       var parsed = JSON.parse(xhr.responseText);
       var questions = [];
@@ -911,7 +921,7 @@ function loadCategory(key, cb) {
     } catch (e) { _catCache[key] = { label: key, questions: [] }; }
     cb(_catCache[key]);
   };
-  xhr.onerror = function () { _catCache[key] = { label: key, questions: [] }; cb(_catCache[key]); };
+  xhr.onerror = function () { cb({ label: key, questions: [], missing: true }); };
   xhr.send();
 }
 
@@ -1039,6 +1049,17 @@ loadTimelineData().then(function (t) {
     _eadj[rj.b].push({ target: rj.a, rel: rj.rel, dir: 'in' });
   }
   buildCatOptions();
+  // Start the time axis at the real data bounds instead of a fixed -4000 clamp,
+  // so deep-span nodes (Toba c. -74000, early geological eras) no longer get
+  // pinned to the edge of the chart.
+  var _dmin = Infinity, _dmax = -Infinity;
+  for (var _nd of NODES) { if (_nd.span) { if (_nd.span.min < _dmin) _dmin = _nd.span.min; if (_nd.span.max > _dmax) _dmax = _nd.span.max; } }
+  if (isFinite(_dmin)) {
+    MIN_YEAR = _dmin;
+    MAX_YEAR = Math.max(_dmax, 2026);
+    WINDOW = { start: MIN_YEAR, end: MAX_YEAR };
+    FULL = { start: MIN_YEAR, end: MAX_YEAR };
+  }
   render();
   var btnFlow = document.getElementById('btnFlow');
   if (btnFlow) btnFlow.onclick = function () { window.open('flowchart.html', '_blank'); };

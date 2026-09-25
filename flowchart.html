@@ -114,6 +114,10 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
 <script>
 var NODES=[],EDGES=[],LINKS=[];
 var BY_ID={},BY_NAME={},NAME_CNT={} ,ADJ={},LADJ={},IMGS={},CADJ={},CUR_CENTRAL={};
+// A topic is "curated" when it seeds an authored mind-tree, OR when it IS the
+// authored tree cell itself (an id like crt|topic|Branch|item). Both must be
+// drawn as the authored tree, never as the mined co-mention flood.
+function isCurFl(id){return !!CUR_CENTRAL[id]||String(id).indexOf('crt|')===0;}
 var POS={},CARDS=[],CUR=null,UNIQ=0,TRAIL=[];
 var ZBASE=null,ZSCALE=0; // base pixel size of current flow + zoom factor (0 = fit)
 var CW=178,CH=80,DX=24,DY=20,PERROW=6;
@@ -425,7 +429,7 @@ function graphFor(id){
   // as that tree: the authored branches ARE the relevance map, so the broad
   // co-mention flood (COVID-19 · Malaria · Fisheries · MGNREGA next to Gandhi)
   // is dropped entirely and never upstages the curated spine.
-  var curated=!!CUR_CENTRAL[id];
+  var curated=isCurFl(id);
   function capOf(t){return LANE_CAP[t]||14;}
   function pushCard(lk,node,rel,w,hp,cur){
     if(!lane[lk])lane[lk]=[];
@@ -940,7 +944,7 @@ function renderFlow(id){
   // depth controls reflect the current ring count
   var bg=document.getElementById('bGrw'),bs=document.getElementById('bShr');
   if(bg)bg.disabled=FLOW_HOP>=4;
-  if(bs)bs.disabled=FLOW_HOP<=1;
+  if(bs)bs.disabled=FLOW_HOP<=(isCurFl(id)?3:1);
   if(bg)bg.title='Grow the mind-map one ring deeper (currently '+FLOW_HOP+')';
   var chips=relatedChipsHTML(id);
   if(isJunk(hero)){
@@ -1158,11 +1162,18 @@ function randTopic(){
 }
 function copyLink(){
   var b=document.getElementById('bCopy');
-  if(CUR){navigator.clipboard.writeText(location.href.split('#')[0]+'#id='+encodeURIComponent(CUR)).then(function(){
-    var t=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=t;},1200);
-  }).catch(function(){});}else{
-    navigator.clipboard.writeText(location.href).catch(function(){});
+  var text=CUR?location.href.split('#')[0]+'#id='+encodeURIComponent(CUR):location.href;
+  function fallbackCopy(){
+    try{
+      var t=document.createElement('textarea');t.value=text;t.setAttribute('readonly','');
+      t.style.position='fixed';t.style.opacity='0';document.body.appendChild(t);t.select();
+      var ok=document.execCommand('copy');document.body.removeChild(t);return ok;
+    }catch(e){return false;}
   }
+  function flash(){var t=b.textContent;b.textContent='Copied!';setTimeout(function(){b.textContent=t;},1200);}
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(flash,function(){if(fallbackCopy())flash();});
+  }else if(fallbackCopy()){flash();}
 }
 
 var photoBusy=0;
@@ -1300,7 +1311,8 @@ document.getElementById('bGrw').onclick=function(){
   FLOW_HOP++;if(CUR)renderFlow(CUR);
 };
 document.getElementById('bShr').onclick=function(){
-  if(FLOW_HOP<=1)return;
+  var floor=(CUR&&isCurFl(CUR))?3:1;
+  if(FLOW_HOP<=floor)return;
   FLOW_HOP--;if(CUR)renderFlow(CUR);
 };
 window.addEventListener('popstate',function(){
