@@ -427,10 +427,16 @@ function autoScore(titleRaw, topic) {
   if (tt.length) rel = tt.some(function (w) { return w.length > 2 && t.indexOf(w) !== -1; }) ? 2 : -3;
   return hint + ext + rel + (AUTO_REJECT.test(t) ? -4 : 0) + bigNum;
 }
+async function fetchT(url, opts, ms) {
+  var ctl = new AbortController();
+  var to = setTimeout(function () { ctl.abort(); }, ms || 12000);
+  try { return await fetch(url, Object.assign({ signal: ctl.signal }, opts || {})); }
+  finally { clearTimeout(to); }
+}
 async function commonsSearch(q) {
   var url = 'https://commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=6&srlimit=20&format=json&srsearch=' + encodeURIComponent(q);
   var r;
-  try { r = await fetch(url, { headers: { 'User-Agent': AUTO_UA } }); } catch (e) { return []; }
+  try { r = await fetchT(url, { headers: { 'User-Agent': AUTO_UA } }); } catch (e) { return []; }
   if (!r.ok) return [];
   var j = await r.json();
   return (j.query && j.query.search) ? j.query.search.map(function (s) { return s.title; }) : [];
@@ -438,7 +444,7 @@ async function commonsSearch(q) {
 async function fileOK(fname) {
   if (AUTO_EXCLUDE_IMG[fname]) return false;
   try {
-    var r = await fetch('https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(fname) + '?width=200', { redirect: 'manual' });
+    var r = await fetchT('https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(fname) + '?width=200', { redirect: 'manual' });
     return r.status === 302;
   } catch (e) { return false; }
 }
@@ -470,7 +476,12 @@ async function autoFill(unmatchedList) {
   var resolved = [];
   var still = [];
   var cap = Math.min(unmatchedList.length, 60); // bound build time; the rest wait for the next run
+  var deadline = Date.now() + (parseInt(process.env.FIGURES_MAX_MS || '900000', 10)); // hard wall-clock budget
   for (var i = 0; i < cap; i++) {
+    if (Date.now() > deadline) {
+      for (var rj = i; rj < cap; rj++) still.push(unmatchedList[rj]);
+      break;
+    }
     var key = norm(unmatchedList[i]);
     var fname = null;
     var via = 'cache';

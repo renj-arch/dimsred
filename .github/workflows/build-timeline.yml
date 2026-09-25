@@ -51,6 +51,7 @@ jobs:
         run: |
           node scripts/build-geography-diagrams.js
           node scripts/build-geography-figures.js
+          node scripts/build-subject-figures.js
 
       - name: Commit + push regenerated timeline
         if: inputs.commit == 'true'
@@ -61,7 +62,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null
-          git add -A data/ geography-diagrams.html geography-figures.html
+          git add -A data/ geography-diagrams.html geography-figures.html subject-figures-index.html *-figures.html
           if git diff --staged --quiet; then
             echo "No timeline changes to commit"
           else
