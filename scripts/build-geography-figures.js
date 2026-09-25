@@ -36,7 +36,7 @@ var FIGURES = [
     sec: 'India \u00b7 Maps', title: 'India \u2014 States & UTs (Political)',
     marks: ['28 states + 8 UTs', 'capitals', 'neighbouring countries (China / Pak / Nepal / Bangladesh / Myanmar)', 'practice: redraw from a blank outline'],
     src: 'Source: Wikimedia Commons (Planemad) \u00b7 CC BY-SA 3.0',
-    topics: ['india political map', 'states and union territories of india', 'states of india', 'union territories of india', 'gir']
+    topics: ['india political map', 'states and union territories of india', 'states of india', 'union territories of india']
   },
   {
     url: C('India_physical_map.svg'),
@@ -78,7 +78,7 @@ var FIGURES = [
     sec: 'World \u00b7 Geophysics', title: 'Tectonic Plate Boundaries (World)',
     marks: ['convergent (Himalayan front)', 'divergent (Mid-Atlantic ridge, East Pacific rise)', 'transform (San Andreas)', 'Indian plate, Eurasian plate, Pacific ring of fire'],
     src: 'Source: Wikimedia Commons (USGS-derived) \u00b7 Public domain',
-    topics: ['plate tectonics', 'tectonic plates', 'continental drift', 'volcano', 'earthquake', 'mauna loa', 'barren island']
+    topics: ['plate tectonics', 'tectonic plates', 'continental drift', 'volcano', 'earthquake']
   },
   {
     url: C('Tectonic_plate_boundaries.png'),
@@ -99,7 +99,7 @@ var FIGURES = [
     sec: 'World \u00b7 Geomorphology', title: 'Stratovolcano / Composite Cone \u2014 Cross-section',
     marks: ['alternating lava & pyroclastic layers', 'central vent + conduit', 'magma chamber', 'side vent', 'contrast: shield (Mauna Loa) v/s cinder cone'],
     src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
-    topics: ['volcano', 'mauna loa', 'volcanic eruption']
+    topics: ['volcano', 'volcanic eruption']
   },
   {
     url: C('Epicenter_Diagram.svg', 900),
@@ -170,7 +170,7 @@ var FIGURES = [
     sec: 'India \u00b7 Borders', title: 'India 1947 \u2014 Radcliffe Line & McMahon Line (Survey of India)',
     marks: ['Radcliffe Line border with Pakistan (part of today\u2019s LoC/Wagah)', 'McMahon Line border with China in the east', 'borders inherited at Independence, 1947', 'mark historical British-India provinces + princely states'],
     src: 'Source: Wikimedia Commons (Survey of India) \u00b7 Public domain',
-    topics: ['line of control', 'radcliffe line', 'mcmahon line']
+    topics: ['radcliffe line', 'mcmahon line']
   },
   {
     url: C('Kashmir_map.svg'),
@@ -178,6 +178,125 @@ var FIGURES = [
     marks: ['Line of Control (India\u2013Pakistan) dividing J&K', 'Siachen Glacier to the north-east (Saltoro)', 'Gilgit-Baltistan (west of LoC)', 'Pok / Kargil sectors', 'mark for UPSC: border-dispute + mountain-warfare answers'],
     src: 'Source: Wikimedia Commons \u00b7 CC BY-SA',
     topics: ['kashmir', 'line of control', 'siachen glacier']
+  },
+  {
+    url: C('Barren_Island_map.jpg'),
+    sec: 'India \u00b7 Geomorphology', title: 'Barren Island \u2014 India\u2019s Only Active Volcano',
+    marks: ['volcanic cone rising from the Andaman arc', 'position in the Andaman Islands (east of the Great Andamans)', 'subduction of the Indo-Australian plate under the Burma plate', 'only confirmed active volcano on the South Asian mainland shelf'],
+    src: 'Source: Wikimedia Commons \u00b7 Public domain',
+    topics: ['barren island']
+  },
+  {
+    url: C('Taal_lake_vicinity.png'),
+    sec: 'World \u00b7 Geomorphology', title: 'Taal Volcano & Lake \u2014 Vicinity Map',
+    marks: ['Taal volcano island inside Taal Lake (caldera lake)', 'Batangas province / Luzon position', 'Caldera rim & main crater', '2020\u20132022 eruption activity on the island'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
+    topics: ['taal volcano', 'volcano', 'volcanic eruption']
+  },
+  {
+    url: C('Hawaiian_Eruption-numbers.svg'),
+    sec: 'World \u00b7 Geomorphology', title: 'Shield Volcano \u2014 Hawaiian-Type Eruption',
+    marks: ['broad, low-angle slopes built by fluid basaltic lava', 'central summit caldera + flank rift zones', 'contrast with composite cones (steep, layered)', 'typical of Mauna Loa / Mauna Kea & the Deccan traps type volcanism'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 4.0',
+    topics: ['mauna loa', 'shield volcano']
+  },
+  {
+    url: C('Gujarat_Gir_Somnath_district_locator_map.png'),
+    sec: 'India \u00b7 Sanctuary & Forest', title: 'Gir Forest & Gir Somnath District \u2014 Locator',
+    marks: ['Gir National Park & Wildlife Sanctuary (last Asiatic lion habitat)', 'Saurashtra / Gujarat location', 'coastal districts around Gir Somnath', 'mark for UPSC: Asiatic lion conservation + Project Lion answers'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
+    topics: ['gir', 'gir national park']
+  },
+  {
+    url: C('Amazon_river_basin.png'),
+    sec: 'World \u00b7 Rivers', title: 'Amazon River \u2014 Basin',
+    marks: ['largest drainage basin on Earth', 'rises in the Andes, empties into the Atlantic', 'Amazon rainforest + it is the biggest river by discharge', 'tributaries: Negro, Madeira, Xingu, Tapaj\u00f3s'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
+    topics: ['amazon river']
+  },
+  {
+    url: C('Mississippi_River_Watershed_Map_North_America.png'),
+    sec: 'World \u00b7 Rivers', title: 'Mississippi\u2013Missouri \u2014 Basin & Watershed',
+    marks: ['Mississippi + Missouri + Ohio = huge US watershed', 'drains ~40% of the conterminous US', 'Gulf of Mexico outlet via the Mississippi Delta', 'tributaries: Missouri, Ohio, Tennessee, Arkansas'],
+    src: 'Source: Wikimedia Commons \u00b7 Public domain',
+    topics: ['mississippi river']
+  },
+  {
+    url: C('Missouri_River_basin_map.png'),
+    sec: 'World \u00b7 Rivers', title: 'Missouri River \u2014 Basin',
+    marks: ['longest river in the US', 'tributary of the Mississippi', 'Great Plains drainage', 'dams: Garrison, Oahe, Fort Peck'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 4.0',
+    topics: ['missouri river']
+  },
+  {
+    url: C('Mediterranean_Sea_location_map_(blank).svg'),
+    sec: 'World \u00b7 Seas', title: 'Mediterranean Sea \u2014 Location Map',
+    marks: ['links Atlantic (Gibraltar strait) to Asia', 'marginal seas: Adriatic, Aegean, Ionian, Black Sea via Bosporus', 'Suez canal connexion to the Red Sea & Indian Ocean', 'surrounding countries & the Levant coast'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
+    topics: ['mediterranean sea']
+  },
+  {
+    url: C('Gulf_of_Mexico_with_Labeled_Territorial_Waters.jpg'),
+    sec: 'World \u00b7 Seas', title: 'Gulf of Mexico \u2014 Territorial Waters',
+    marks: ['bounded by US (Florida\u2013Texas), Mexico, Cuba', 'Yucat\u00e1n Channel & Florida Strait connexions', 'Loop current \u2192 Gulf Stream feeds the Atlantic', 'hurricane breeding ground; oil platforms (GoM basin)'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY 4.0',
+    topics: ['gulf of mexico']
+  },
+  {
+    url: C('Caspian_Sea.svg'),
+    sec: 'World \u00b7 Seas', title: 'Caspian Sea \u2014 Regional Map',
+    marks: ['largest enclosed inland water body (Sea/Lake debate)', 'borders 5 states: Russia, Iran, Azerbaijan, Kazakhstan, Turkmenistan', 'Baku oil fields; Amu Darya & Volga inflow', 'below sea level (Caspian Depression)'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 4.0',
+    topics: ['caspian sea']
+  },
+  {
+    url: C('Baltic_Sea_location_map.svg'),
+    sec: 'World \u00b7 Seas', title: 'Baltic Sea \u2014 Location Map',
+    marks: ['semi-enclosed, almost freshwater (Baltic \u2018anomaly\u2019)', 'shallow, brackish, highly polluted historically', 'borders: Sweden, Finland, Baltics, Poland, Germany, Russia', 'connects to North Sea via Kattegat/Skagerrak'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0 de',
+    topics: ['baltic sea']
+  },
+  {
+    url: C('Atlantic_Ocean_-_en.png'),
+    sec: 'World \u00b7 Oceans', title: 'Atlantic Ocean \u2014 Geography',
+    marks: ['2nd largest ocean; the classic S-shape between Americas & Afro-Eurasia', 'Mid-Atlantic ridge (divergent boundary) in the middle', 'Bermuda triangle / trade routes & Gulf Stream', 'Mariana-depth: Puerto Rico Trench is the deepest Atlantic point'],
+    src: 'Source: Wikimedia Commons \u00b7 Public domain',
+    topics: ['atlantic ocean']
+  },
+  {
+    url: C('Southern_Indian_Ocean_islands_bathymetric_location_map-2.png'),
+    sec: 'World \u00b7 Oceans', title: 'Southern Ocean \u2014 Bathymetry & Islands',
+    marks: ['encircles Antarctica south of 60\u00b0S', 'Antarctic Circumpolar Current (largest ocean current)', 'no land boundary (it is a ring of ocean)', 'sea ice & polar climate; Marion & Prince Edward islands'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY 4.0',
+    topics: ['southern ocean']
+  },
+  {
+    url: C('Major_cities_threatened_by_sea_level_rise.png'),
+    sec: 'World \u00b7 Climate', title: 'Sea Level Rise \u2014 Major Cities Threatened',
+    marks: ['coastal megacities exposed: Mumbai, Dhaka, Shanghai, NY, Lagos...', 'delta + low-lying island states most vulnerable', 'thermosteric + glacial/island ice melt contributions', 'sea-level rise as a climate-change exam answer map'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
+    topics: ['sea level rise']
+  },
+  {
+    url: C('Marshall_Islands_location_map.svg'),
+    sec: 'World \u00b7 Islands', title: 'Marshall Islands \u2014 Location Map',
+    marks: ['two island chains: Ratak (sunrise) & Ralik (sunset)', 'atoll structure (Majuro, Kwajalein)', 'US Compact / Kwajalein missile range', 'climate-vulnerable low-lying atoll state'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY 3.0',
+    topics: ['marshall islands']
+  },
+  {
+    url: C('Solomon_Islands_location_map.svg'),
+    sec: 'World \u00b7 Islands', title: 'Solomon Islands \u2014 Location Map',
+    marks: ['archipelago east of New Guinea (Melanesia)', 'Guadalcanal (WWII battle site)', 'on the Pacific ring of fire (tectonically active)', 'militarisation & geopolitics (2022 China security pact)'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY 3.0',
+    topics: ['solomon islands']
+  },
+  {
+    url: C('Faroe_Islands_location_map.svg'),
+    sec: 'World \u00b7 Islands', title: 'Faroe Islands \u2014 Location Map',
+    marks: ['18 volcanic islands between Norway & Iceland', 'autonomous territory of Denmark', 'North Atlantic drift climate (mild for the latitude)', 'deep fjords/fjord-like inlets & basaltic cliffs'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
+    topics: ['faroe islands']
   }
 ];
 
@@ -195,6 +314,20 @@ Object.keys(layers).forEach(function (k) {
   if (!TOPIC_GEO_REGEX.test(name) && !GEO_CORE[norm(name)]) return;
   if (GEO_EXCLUDE[norm(name)]) return;
   layerTopics.push({ name: name, n: norm(name) });
+  // Also walk the mind-tree branches so geography-shaped items that live inside a
+  // seed's lane (e.g. "Amazon River", "Gulf of Mexico") are visible to the pack.
+  var L = layers[k];
+  if (L && Array.isArray(L.branches)) {
+    L.branches.forEach(function (lane) {
+      if (!lane || !Array.isArray(lane.items)) return;
+      lane.items.forEach(function (it) {
+        var iname = (it && (it.name || it.title)) || '';
+        if (!iname || (!TOPIC_GEO_REGEX.test(iname) && !GEO_CORE[norm(iname)])) return;
+        if (GEO_EXCLUDE[norm(iname)]) return;
+        layerTopics.push({ name: iname, n: norm(iname) });
+      });
+    });
+  }
 });
 
 // ---- match topics -> figures ----
@@ -207,12 +340,13 @@ var figureKeys = FIGURES.map(function (f) {
   return { fig: f, keys: (f.topics || []).map(tokens) };
 });
 var unmatched = [];
+var seenUnmatched = {};
 layerTopics.forEach(function (t) {
   var tn = tokens(t.name);
   var hit = figureKeys.some(function (fk) {
     return fk.keys.some(function (ks) { return isSubset(ks, tn); });
   });
-  if (!hit) unmatched.push(t.name);
+  if (!hit && !seenUnmatched[norm(t.name)]) { seenUnmatched[norm(t.name)] = 1; unmatched.push(t.name); }
 });
 
 // ---- build pages ----
