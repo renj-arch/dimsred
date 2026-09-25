@@ -2817,6 +2817,149 @@ const CATEGORIES = [
   ], topics:[
     'History of Kerala','Chera dynasty','Zamorin','Kingdom of Calicut','Travancore','Kingdom of Cochin','Malabar Coast','Portuguese India','Dutch Malabar','Invasion of Kerala','Malayalam','Malayalam script','Malayalam literature','Thunchaththu Ezhuthachan','Lilathilakam','Aithihyamala','Keralolpathi','Kerala renaissance','Sree Narayana Guru','Vaikom Satyagraha','Guruvayur Satyagraha','Malayali Memorial','Aikya Kerala movement','Kerala Varma Valiya Koil Thampuran','Swathi Thirunal Rama Varma','Kunjali Marakkar','Pazhassi Raja','Raja Kesavadas','Muziris','Kodungallur','Kerala backwaters','Vembanad','Ashtamudi Lake','Palakkad Gap','Western Ghats','Agastya Mala','Periyar River','Bharathappuzha','Theyyam','Koodiyattam','Kathakali','Mohiniyattam','Ottan Thullal','Chakyar Koothu','Onam','Vishu','Thiruvathira','Sabarimala','Guruvayur Temple','Padmanabhaswamy Temple','Kerala Sahitya Akademi','Kerala cuisine','Kerala model','Kudumbashree','M. T. Vasudevan Nair','Kumaran Asan','Vallathol Narayana Menon'
   ]},
+  // ══UPSC 2026 additions══ Parliament & Legislature ──
+  { name:"Parliament & Legislature", wikiCat:"Parliament_of_India", keywords:[
+    'parliament','lok sabha','rajya sabha','speaker','legislat','committee','motion','censure','adjourn','prorog','whip','no-confidence',
+    'money bill','finance bill','cabinet','minister','leader of the house','leader of the opposition'
+  ], topics:[
+    'Parliament of India','Lok Sabha','Rajya Sabha','Speaker of the Lok Sabha','Deputy Speaker of the Lok Sabha','Leader of the House','Leader of the Opposition in Lok Sabha','Question Hour','Zero Hour',
+    'Adjournment motion','Censure motion','Motion of no confidence in India','Money bill','Finance bill','Public Accounts Committee (India)','Estimates Committee','Committee on Public Undertakings','Prorogation',
+    'Dissolution of parliament','Whip (politics)','Union Council of Ministers','Leader of the Opposition in Rajya Sabha','Parliamentary privilege'
+  ]},
+  // ══UPSC 2026 additions══ Elections & Electoral Management ──
+  { name:"Elections & Electoral Management", wikiCat:"Election_Commission_of_India", keywords:[
+    'election','electoral','voting','evm','vvpat','delimitation','anti-defection','political party','model code','electoral roll','representation of the people','reform',
+    'exit poll','postal voting'
+  ], topics:[
+    'Election Commission of India','Chief Election Commissioner of India','Election Commissioner (India)','Model Code of Conduct','Electronic voting in India','Voter-verified paper audit trail','First-past-the-post voting','Anti-defection law (India)','Delimitation Commission of India',
+    'List of political parties in India','Electoral roll','Exit poll','Opinion poll','Postal voting','Booth capturing','None of the above','Association for Democratic Reforms','Representation of the People Act, 1951',
+    'Proxy voting'
+  ]},
+  // ══UPSC 2026 additions══ Fiscal Policy & Taxation ──
+  { name:"Fiscal Policy & Taxation", wikiCat:"Taxation_in_India", keywords:[
+    'tax','taxation','budget','gst','finance commission','frbm','levy','cess','excise','duty','revenue','deficit',
+    'fiscal','surcharge','income tax','corporate tax','customs','permanent account number'
+  ], topics:[
+    'Taxation in India','Union budget of India','Economic Survey of India','Goods and Services Tax (India)','GST Council','Income tax in India','Corporate tax','Minimum Alternate Tax','Securities transaction tax',
+    'Dividend distribution tax','Equalisation Levy','Cess','Direct tax','Indirect tax','Capital gains tax','Finance Commission (India)','Fifteenth Finance Commission','Fiscal Responsibility and Budget Management Act, 2003',
+    'Permanent Account Number','Tax deduction at source','General Anti-Avoidance Rule','Advance pricing agreement','Black money','Charitable trust'
+  ]},
+  // ══UPSC 2026 additions══ Development Finance & Public Banks ──
+  { name:"Development Finance & Public Banks", wikiCat:"Development_finance_institutions", keywords:[
+    'development finance','bank','nabard','sidbi','nhb','exim','nbfid','mudra','refinance','national bank','ifci','institution',
+    'fund'
+  ], topics:[
+    'National Bank for Agriculture and Rural Development','Small Industries Development Bank of India','National Housing Bank','National Bank for Financing Infrastructure and Development','Export–Import Bank of India','Micro Units Development and Refinance Agency Bank','National Cooperative Development Corporation','Power Finance Corporation','Rural Electrification Corporation',
+    'National Small Industries Corporation','National Investment and Infrastructure Fund','Industrial Finance Corporation of India','Kerala Financial Corporation'
+  ]},
+  // ══UPSC 2026 additions══ India & World Trade ──
+  { name:"India & World Trade", wikiCat:"World_Trade_Organization", keywords:[
+    'wto','trade','tariff','quota','export','import','gatt','trims','trips','free trade','anti-dumping','subsidy',
+    'most favoured','national treatment','customs union','rcep','preferential trading'
+  ], topics:[
+    'World Trade Organization','General Agreement on Tariffs and Trade','General Agreement on Trade in Services','Agreement on Trade-Related Aspects of Intellectual Property Rights','Agreement on Trade-Related Investment Measures','Agreement on Agriculture','Doha Development Round','Most favoured nation','National treatment',
+    'Anti-dumping','Trade barrier','Tariff','Preferential trading area','Free trade area','Customs union','Economic integration','Regional Comprehensive Economic Partnership','Global value chain',
+    'Trade facilitation','Bali Package','Market access','Rules of origin'
+  ]},
+  // ══UPSC 2026 additions══ Multilateral & Regional Groupings ──
+  { name:"Multilateral & Regional Groupings", wikiCat:"International_relations", keywords:[
+    'brics','saarc','sco','asean','bimstec','nuclear','nsg','mtcr','g20','g77','g4','non-aligned',
+    'quad','diplomacy','iaea','ctbt','multilateral','regional','summit','wassenaar','indian ocean'
+  ], topics:[
+    'Non-Aligned Movement','BRICS','Shanghai Cooperation Organisation','Group of Twenty','G4 nations','IBSA Dialogue Forum','BIMSTEC','South Asian Association for Regional Cooperation','Association of Southeast Asian Nations',
+    'Mekong–Ganga Cooperation','Indian Ocean Rim Association','East Asia Summit','Asia–Europe Meeting','Quadrilateral Security Dialogue','African Continental Free Trade Area','Group of 77','Nuclear Suppliers Group','Missile Technology Control Regime',
+    'Australia Group','Wassenaar Arrangement','Hague Code of Conduct','International Atomic Energy Agency','Comprehensive Nuclear-Test-Ban Treaty'
+  ]},
+  // ══UPSC 2026 additions══ Environmental Treaties & Conventions ──
+  { name:"Environmental Treaties & Conventions", wikiCat:"Environmental_treaties", keywords:[
+    'climate','protocol','convention','treaty','ozone','carbon','biodiversity','ramsar','cites','basel','stockholm','minamata',
+    'cbd','unfccc','paris','kyoto','montreal','mitigation','adaptation','redd','wetland','desert','ecology'
+  ], topics:[
+    'United Nations Framework Convention on Climate Change','Kyoto Protocol','Paris Agreement','Montreal Protocol','Vienna Convention for the Protection of the Ozone Layer','United Nations Convention to Combat Desertification','Convention on Biological Diversity','Cartagena Protocol on Biosafety','Nagoya Protocol',
+    'Ramsar Convention','Convention on International Trade in Endangered Species of Wild Fauna and Flora','Basel Convention','Stockholm Convention on Persistent Organic Pollutants','Rotterdam Convention','Minamata Convention on Mercury','United Nations Environment Programme','Intergovernmental Panel on Climate Change','Nationally determined contribution',
+    'Green Climate Fund','Adaptation Fund','Global Environment Facility','Loss and damage (climate change)','Carbon credit','Carbon offset','Blue carbon','REDD+','Kunming-Montreal Global Biodiversity Framework',
+    'Climate finance','Just transition'
+  ]},
+  // ══UPSC 2026 additions══ Urbanisation & Urban Governance ──
+  { name:"Urbanisation & Urban Governance", wikiCat:"Urban_planning_in_India", keywords:[
+    'urban','city','smart city','amrut','pmay','slum','municipal','master plan','development authority','real estate','habitat','transit',
+    'local body','amenities'
+  ], topics:[
+    'Urbanisation in India','Smart Cities Mission','Atal Mission for Rejuvenation and Urban Transformation','Pradhan Mantri Awas Yojana','Urban renewal','Transit-oriented development','Affordable housing','Slum','Real Estate (Regulation and Development) Act, 2016',
+    'Municipal corporation (India)','Municipal governance in India','Nagar Panchayat','Seventy-fourth Amendment of the Constitution of India','Delhi Development Authority'
+  ]},
+  // ══UPSC 2026 additions══ Indian Diaspora & Overseas Indians ──
+  { name:"Indian Diaspora & Overseas Indians", wikiCat:"Indian_diaspora", keywords:[
+    'diaspora','overseas','non-resident','nri','pio','oci','pravasi','remittance','migration','emigr','indian abroad','gulf'
+  ], topics:[
+    'Indian diaspora','Overseas Citizenship of India','Non-resident Indian and person of Indian origin','Pravasi Bharatiya Divas','Pravasi Bharatiya Samman','Remittance','Vande Bharat Mission','Indian Americans','Indian Canadians',
+    'British Indians','Indian Singaporeans','H-1B visa','Indian South Africans','Indians in Malaysia'
+  ]},
+  // ══UPSC 2026 additions══ Ports, Shipping & Maritime ──
+  { name:"Ports, Shipping & Maritime", wikiCat:"Ports_and_harbours_of_India", keywords:[
+    'port','harbour','shipping','maritime','waterway','seaport','coast guard','cargo','container','logistics','merchant navy','ship',
+    'docks'
+  ], topics:[
+    'Sagarmala','Jawaharlal Nehru Port','Kandla Port','Paradip Port','Visakhapatnam Port','Kolkata Port','Mumbai Port','Cochin Port','New Mangalore Port',
+    'V. O. Chidambaranar Port','Chennai Port','Ennore Port','Inland waterways of India','National Waterway 1','National Waterway 2','National Waterway 3','National Waterway 4','National Waterway 5',
+    'National Waterway 6','Indian Coast Guard','International Maritime Organization','Law of the sea','Exclusive economic zone'
+  ]},
+  // ══UPSC 2026 additions══ Defence Production & Strategic Platforms ──
+  { name:"Defence Production & Strategic Platforms", wikiCat:"Defence_industry_of_India", keywords:[
+    'defence','defense','missile','drdo','brahmos','agni','prithvi','akash','tejas','vikrant','arihant','armament',
+    'strategic','indigenous','warship','submarine','fighter','helicopter','tank','production'
+  ], topics:[
+    'Defence Research and Development Organisation','Hindustan Aeronautics Limited','Bharat Electronics Limited','Bharat Dynamics Limited','BrahMos','Agni-V','Prithvi (missile)','Akash (missile)','Nag (missile)',
+    'Astra (missile)','Pinaka multi-barrel rocket launcher','HAL Tejas','HAL Light Combat Helicopter','INS Vikrant (2013)','INS Arihant','Project 75 (India)','Defence Acquisition Council','Dassault Rafale',
+    'Arjun (tank)','Garden Reach Shipbuilders & Engineers','Make in India','Mishra Dhatu Nigam','Advanced Medium Combat Aircraft'
+  ]},
+  // ══UPSC 2026 additions══ Irrigation, Water & Flood Management ──
+  { name:"Irrigation, Water & Flood Management", wikiCat:"Irrigation_in_India", keywords:[
+    'irrigation','water','drip','sprinkler','rainwater','aquifer','groundwater','canal','flood','dam','watershed','jal shakti',
+    'hydrology','command area','tube well'
+  ], topics:[
+    'Irrigation in India','Pradhan Mantri Krishi Sinchai Yojana','Micro-irrigation','Drip irrigation','Sprinkler irrigation','Bharat Nirman','Atal Bhujal Yojana','Jal Shakti Abhiyan','Groundwater recharge',
+    'Kuttanad','Rainwater harvesting','Check dam','Water well','Tube well','Aquifer','Polavaram Project','Groundwater in India'
+  ]},
+  // ══UPSC 2026 additions══ Digital Privacy & Data Governance ──
+  { name:"Digital Privacy & Data Governance", wikiCat:"Information_privacy", keywords:[
+    'privacy','data protection','aadhaar','cyber','digital personal data','dpdp','data localisation','encryption','surveillance','right to privacy','biometric','uidai',
+    'cybercrime','it act'
+  ], topics:[
+    'Right to privacy','Digital Personal Data Protection Act, 2023','Information Technology Act, 2000','Indian Computer Emergency Response Team','Aadhaar','Unique Identification Authority of India','Data localization','Data sovereignty','Mass surveillance',
+    'End-to-end encryption','Privacy law','General Data Protection Regulation','Right to Information Act, 2005','Biometrics','Cybercrime','Unified Payments Interface','Privacy','Data protection'
+  ]},
+  // ══UPSC 2026 additions══ Cooperatives & Rural Institutions ──
+  { name:"Cooperatives & Rural Institutions", wikiCat:"Cooperatives_in_India", keywords:[
+    'cooperative','co-op','amul','iffco','kribhco','nafed','dairy','cooperation','pacs','credit society','agricultural marketing','federation'
+  ], topics:[
+    'Ministry of Cooperation','National Cooperative Development Corporation','National Agricultural Cooperative Marketing Federation of India','IFFCO','KRIBHCO','Amul','National Dairy Development Board','Mother Dairy','Cooperative movement in India',
+    'Cooperative banking','Ninety-seventh Amendment of the Constitution of India','Cooperative federalism','International Co-operative Alliance','Primary Agricultural Credit Society'
+  ]},
+  // ══UPSC 2026 additions══ Local Government & Panchayati Raj ──
+  { name:"Local Government & Panchayati Raj", wikiCat:"Local_government_in_India", keywords:[
+    'panchayati','panchayat','gram','sabha','zila','local government','municipal','73rd','74th','pesa','scheduled areas'
+  ], topics:[
+    'Local government in India','Panchayati raj','Seventy-third Amendment of the Constitution of India','Gram panchayat','Gram Sabha','Zila Parishad','Panchayat Samiti','Nyaya Panchayat','Fifth Schedule to the Constitution of India',
+    'Panchayats (Extension to Scheduled Areas) Act, 1996','National Panchayati Raj Day','Municipal council (India)','Village council'
+  ]},
+  // ══UPSC 2026 additions══ Disaster Risk Reduction & Management ──
+  { name:"Disaster Risk Reduction & Management", wikiCat:"Disaster_management", keywords:[
+    'disaster','cyclone','earthquake','landslide','flood','tsunami','ndma','ndrf','sendai','warning','resilience','drought',
+    'heat wave','authority'
+  ], topics:[
+    'Disaster management','National Disaster Management Authority','National Disaster Response Force','National Institute of Disaster Management','Disaster Management Act, 2005','India Meteorological Department','Tropical cyclone','Landslide','Early warning system',
+    'Sendai Framework','Hyogo Framework for Action','United Nations Office for Disaster Risk Reduction','Tsunami warning system','Earthquake','Civil defence','Disaster risk reduction'
+  ]},
+  // ══UPSC 2026 additions══ Public Enterprises & Disinvestment ──
+  { name:"Public Enterprises & Disinvestment", wikiCat:"Government-owned_companies_of_India", keywords:[
+    'psu','public sector','disinvestment','central public sector','public enterprise','strategic sector','undertaking','maharatna','navratna','miniratna','corporation'
+  ], topics:[
+    'Public Sector Undertakings in India','Bharat Petroleum','Hindustan Petroleum','Indian Oil Corporation','Oil and Natural Gas Corporation','Coal India','Steel Authority of India','Bharat Heavy Electricals','NTPC',
+    'Power Grid Corporation of India','GAIL','Oil India','National Mineral Development Corporation','Life Insurance Corporation of India','General Insurance Corporation','State Bank of India','Shipping Corporation of India','Container Corporation of India',
+    'IRCTC','Disinvestment in India'
+  ]},
+
 ];
 
 

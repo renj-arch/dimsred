@@ -139,23 +139,26 @@ jobs:
           WIKI_FILL_LINK_FETCH: 500
           WIKI_FILL_CAT_DEPTH: 30
           WIKI_FILL_MAX_PAGES: 1000000
-          # Reserve at least ~65% of each chunk's wall-clock budget for question
+          # Reserve at least ~55% of each chunk's wall-clock budget for question
           # generation by capping how much time discovery (category members +
           # recursive link traversal) may consume. The persisted link/category
           # pools ensure anything not reached this run is re-mined next run, so
           # every chunk is guaranteed to add new questions rather than spending
-          # its whole window enumerating an ever-deeper frontier.
-          WIKI_FILL_DISCOVERY_BUDGET_PCT: 35
+          # its whole window enumerating an ever-deeper frontier. Bumped 35->45 so
+          # the newly added UPSC-focused wiki categories get their member lists
+          # discovered in the same run instead of deferring to the link pool.
+          WIKI_FILL_DISCOVERY_BUDGET_PCT: 45
           WIKI_FILL_DELAY_MS: 2500
-          # Self-stop budget: 280 min leaves 80 min of headroom before the
-          # runner's 360-min hard timeout. Run #508 proved 330 was too tight —
-          # the link-following loop only respected the discovery budget, ate the
+          # Self-stop budget: 300 min leaves 60 min of headroom before the runner's
+          # 360-min hard timeout. Run #508 proved 330 was too tight — the
+          # link-following loop only respected the discovery budget, ate the
           # remaining window, and chunks were killed at the 360-min cap before
           # upload-artifact ran, losing the merged data. The script now also
           # enforces TIME_BUDGET inside the link-traversal loops (not just the
           # discovery budget), so a chunk always exits cleanly (code 0) with time
-          # to upload — never killed mid-run by the runner timeout.
-          WIKI_FILL_TIME_BUDGET_MIN: 280
+          # to upload — never killed mid-run by the runner timeout. Raised 280->300
+          # so the 17 added wiki categories get a fuller generation slot.
+          WIKI_FILL_TIME_BUDGET_MIN: 300
 
       - uses: actions/upload-artifact@v4
         with:
