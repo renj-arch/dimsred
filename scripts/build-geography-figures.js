@@ -391,6 +391,7 @@ function marksHtml(marks) {
 }
 
 function pageFor(f) {
+  var badge = f.auto ? '<div class="auto-badge">AUTO-SUGGESTED \u00b7 verify image &amp; labels before exam use</div>' : '';
   var imgs = '';
   if (f.cls === 'trio') {
     imgs = '<div class="fig-img img-em"><img src="' + f.url + '" alt="' + esc(f.title) + '"></div>';
@@ -400,43 +401,153 @@ function pageFor(f) {
   return '<section class="page">' +
     '<div class="num">' + esc(f.sec) + '</div>' +
     '<div class="fig-title">' + esc(f.title) + '</div>' +
-    imgs + marksHtml(f.marks) +
+    badge + imgs + marksHtml(f.marks) +
     '<div class="fig-src">' + esc(f.src) + '</div>' +
     '</section>';
 }
 
-var pages = FIGURES.map(pageFor);
-
-var missingNote = '';
-if (unmatched.length) {
-  missingNote = '<div class="missing"><b>Future topics not yet assigned a figure</b> (add a matching topic key in scripts/build-geography-figures.js):<br>' +
-    esc(unmatched.slice(0, 40).join(' \u00b7 ')) + (unmatched.length > 40 ? ' \u00b7 +' + (unmatched.length - 40) + ' more' : '') + '</div>';
+// ---- AUTO figure fill: discover a Commons figure for topics still unmatched ----
+// Quality gates ("build with care"): search the Commons API, score candidates by how
+// map-like the filename is, prefer svg > png > jpg, reject photo/subject pages, and
+// adopt only files whose Special:FilePath redirect resolves. Picks are cached in
+// data/geo-auto-figures.json (git-tracked via data/) so images stay stable between
+// builds AND can be hand-overridden. Every auto page is badged in the pack.
+var AUTO_CACHE_FILE = path.join(DATA, 'geo-auto-figures.json');
+var AUTO_UA = 'dimsred-geo-figures/1.0 (https://github.com/renj-arch/dimsred; educational build)';
+var AUTO_REJECT = /monument|museum|statue|memorial|selfie|portrait|headshot|palace|fort|flag|logo|emblem|coat of arms|coin|stamp|poster|postcard|painting|church|mosque|temple|bridg|rail|train|hotel|aircraft|shipping|\.pdf|\.djvu|\.ogg|\.ogv|\.webm|\.mid|_thumb/;
+var AUTO_EXCLUDE_IMG = {};
+function autoScore(titleRaw, topic) {
+  var raw = String(titleRaw).toLowerCase();
+  var t = norm(raw);
+  var ext = /\.svg$/i.test(raw) ? 3 : (/\.png$/i.test(raw) ? 2 : (/\.jpe?g$/i.test(raw) ? 1.2 : (/\.gif$/i.test(raw) ? 0.8 : -10)));
+  var hint = /map|locator|topograph|outline|projection/.test(t) ? 2 : (/relief|physical|political|location|orthograph|globe|continent|terrain|satellite|aerial/.test(t) ? 1 : 0);
+  var bigNum = /[0-9]{4,}/.test(t) ? -1 : 0;
+  var rel = 0;
+  var tt = tokens(topic || '');
+  if (tt.length) rel = tt.some(function (w) { return w.length > 2 && t.indexOf(w) !== -1; }) ? 2 : -3;
+  return hint + ext + rel + (AUTO_REJECT.test(t) ? -4 : 0) + bigNum;
+}
+async function commonsSearch(q) {
+  var url = 'https://commons.wikimedia.org/w/api.php?action=query&list=search&srnamespace=6&srlimit=20&format=json&srsearch=' + encodeURIComponent(q);
+  var r;
+  try { r = await fetch(url, { headers: { 'User-Agent': AUTO_UA } }); } catch (e) { return []; }
+  if (!r.ok) return [];
+  var j = await r.json();
+  return (j.query && j.query.search) ? j.query.search.map(function (s) { return s.title; }) : [];
+}
+async function fileOK(fname) {
+  if (AUTO_EXCLUDE_IMG[fname]) return false;
+  try {
+    var r = await fetch('https://commons.wikimedia.org/wiki/Special:FilePath/' + encodeURIComponent(fname) + '?width=200', { redirect: 'manual' });
+    return r.status === 302;
+  } catch (e) { return false; }
+}
+async function resolveAuto(name) {
+  var queries = [name + ' map', name + ' map filetype:drawing', name + ' location map', name + ' topographic map', name + ' locator map', name];
+  for (var qi = 0; qi < queries.length; qi++) {
+    var hits = await commonsSearch(queries[qi]);
+    var best = null;
+    var bestAny = null;
+    hits.forEach(function (h) {
+      var sc = autoScore(h, name);
+      if (sc < 3) return;
+      var fname = String(h).replace(/^File:/, '');
+      if (sc >= 4 && (!best || best.s < sc)) best = { f: fname, s: sc, q: queries[qi] };
+      if (!bestAny || bestAny.s < sc) bestAny = { f: fname, s: sc, q: queries[qi] };
+    });
+    // prefer a real map/locator (score >= 4); fall back to any relevant image (>= 3)
+    var cand = best || bestAny;
+    if (cand && (await fileOK(cand.f))) return cand;
+    await new Promise(function (res) { setTimeout(res, 250); });
+  }
+  return null;
+}
+async function autoFill(unmatchedList) {
+  var cache = {};
+  if (fs.existsSync(AUTO_CACHE_FILE)) {
+    try { cache = JSON.parse(fs.readFileSync(AUTO_CACHE_FILE, 'utf8')); } catch (e) { cache = {}; }
+  }
+  var resolved = [];
+  var still = [];
+  var cap = Math.min(unmatchedList.length, 60); // bound build time; the rest wait for the next run
+  for (var i = 0; i < cap; i++) {
+    var key = norm(unmatchedList[i]);
+    var fname = null;
+    var via = 'cache';
+    if (cache[key] && (await fileOK(cache[key]))) {
+      fname = cache[key];
+    } else {
+      var hit = null;
+      try { hit = await resolveAuto(unmatchedList[i]); } catch (e) { hit = null; }
+      if (hit) { fname = hit.f; via = hit.q; }
+      await new Promise(function (res) { setTimeout(res, 200); });
+    }
+    if (fname) {
+      AUTO_EXCLUDE_IMG[fname] = 1;
+      cache[key] = fname;
+      resolved.push({ name: unmatchedList[i], file: fname, via: via });
+    } else {
+      still.push(unmatchedList[i]);
+    }
+  }
+  for (var ti = cap; ti < unmatchedList.length; ti++) still.push(unmatchedList[ti]);
+  if (Object.keys(cache).length) fs.writeFileSync(AUTO_CACHE_FILE, JSON.stringify(cache, null, 2));
+  return { resolved: resolved, still: still };
 }
 
-var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
-  '<title>GS Geography Figures (UPSC Mains)</title>' +
-  '<style>' +
-  'body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;background:#e5e7eb;color:#111827}' +
-  'section.page{background:#fff;max-width:980px;margin:16px auto;padding:26px 28px;box-shadow:0 1px 4px rgba(0,0,0,.18);page-break-after:always}' +
-  'section.page:last-child{page-break-after:auto}' +
-  'header h1{font-size:18px;margin:0 0 2px}' +
-  '.num{font-size:10px;letter-spacing:.14em;color:#0e7490;font-weight:700;text-transform:uppercase}' +
-  '.fig-title{font-size:15px;font-weight:700;margin:2px 0 6px}' +
-  '.fig-src{font-size:9.5px;color:#6b7280;margin:6px 0 0}' +
-  '.fig-img{display:flex;justify-content:center;align-items:center;background:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:14px;margin:8px 0}' +
-  '.fig-img img{max-width:100%;height:auto}' +
-  '.fig-img.img-em{flex-direction:column;gap:6px}' +
-  '.marks{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:11px;line-height:1.7}' +
-  '.marks b{color:#166534}.marks ul{margin:4px 0 0;padding-left:16px}.marks li{margin:1px 0}' +
-  '.missing{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:9.5px;color:#92400e;line-height:1.6;margin-bottom:8px}' +
-  '@page{size:A4;margin:10mm}' +
-  '@media print{body{background:#fff}section.page{box-shadow:none;margin:0;padding:0}.fig-img{break-inside:avoid}}</style>' +
-  '</head><body>' +
-  '<section class="page"><header><span class="num">GS Paper 1 \u00b7 Geography \u00b7 UPSC Mains</span><h1>Geography Figures \u2014 Real Labelled Outlines</h1><p class="meta">' + FIGURES.length + ' figures \u00b7 live images from Wikimedia Commons & NOAA (needs internet) \u00b7 print-ready A4 \u00b7 auto-built by scripts/build-geography-figures.js</p></header>' + missingNote + '</section>' +
-  pages.join('') +
-  '</body></html>';
+async function main() {
+  var curatedPages = FIGURES.map(pageFor);
+  var fill = await autoFill(unmatched);
+  var autoEntries = fill.resolved.map(function (x) {
+    return {
+      url: C(x.file),
+      auto: true,
+      sec: 'World \u00b7 Auto',
+      title: x.name + ' \u2014 Suggested Figure',
+      marks: ['locate / label this feature plus its surrounding countries & water bodies', 'state co-ordinates, hemisphere and climatic belt', 'verify the image really is the feature (auto-suggested)'],
+      src: 'Source: auto-suggested from Wikimedia Commons \u00b7 CC BY-SA \u2014 verify before exam',
+      topics: [norm(x.name)]
+    };
+  });
+  var pages = curatedPages.concat(autoEntries.map(pageFor));
 
-fs.writeFileSync(OUT_FILE, html);
-console.log('Wrote ' + OUT_FILE + ' (' + FIGURES.length + ' figures)');
-console.log('Unmatched geography topics (no figure yet): ' + unmatched.length);
-unmatched.slice(0, 25).forEach(function (n) { console.log('  - ' + n); });
+  var missingNote = '';
+  if (fill.still.length) {
+    missingNote = '<div class="missing"><b>Topics still needing a figure</b> (name could not be auto-matched \u2014 improve in scripts/build-geography-figures.js):<br>' +
+      esc(fill.still.slice(0, 40).join(' \u00b7 ')) + (fill.still.length > 40 ? ' \u00b7 +' + (fill.still.length - 40) + ' more' : '') + '</div>';
+  }
+
+  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<title>GS Geography Figures (UPSC Mains)</title>' +
+    '<style>' +
+    'body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;background:#e5e7eb;color:#111827}' +
+    'section.page{background:#fff;max-width:980px;margin:16px auto;padding:26px 28px;box-shadow:0 1px 4px rgba(0,0,0,.18);page-break-after:always}' +
+    'section.page:last-child{page-break-after:auto}' +
+    'header h1{font-size:18px;margin:0 0 2px}' +
+    '.num{font-size:10px;letter-spacing:.14em;color:#0e7490;font-weight:700;text-transform:uppercase}' +
+    '.fig-title{font-size:15px;font-weight:700;margin:2px 0 6px}' +
+    '.fig-src{font-size:9.5px;color:#6b7280;margin:6px 0 0}' +
+    '.fig-img{display:flex;justify-content:center;align-items:center;background:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:14px;margin:8px 0}' +
+    '.fig-img img{max-width:100%;height:auto}' +
+    '.fig-img.img-em{flex-direction:column;gap:6px}' +
+    '.auto-badge{background:#fffbeb;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:9px;letter-spacing:.08em;padding:3px 8px;display:inline-block;margin-bottom:6px;font-weight:700}' +
+    '.marks{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:11px;line-height:1.7}' +
+    '.marks b{color:#166534}.marks ul{margin:4px 0 0;padding-left:16px}.marks li{margin:1px 0}' +
+    '.missing{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:9.5px;color:#92400e;line-height:1.6;margin-bottom:8px}' +
+    '@page{size:A4;margin:10mm}' +
+    '@media print{body{background:#fff}section.page{box-shadow:none;margin:0;padding:0}.fig-img{break-inside:avoid}}</style>' +
+    '</head><body>' +
+    '<section class="page"><header><span class="num">GS Paper 1 \u00b7 Geography \u00b7 UPSC Mains</span><h1>Geography Figures \u2014 Real Labelled Outlines</h1><p class="meta">' + (FIGURES.length + autoEntries.length) + ' figures (' + FIGURES.length + ' curated + ' + autoEntries.length + ' auto) \u00b7 live images from Wikimedia Commons & NOAA (needs internet) \u00b7 print-ready A4 \u00b7 auto-built by scripts/build-geography-figures.js</p></header>' + missingNote + '</section>' +
+    pages.join('') +
+    '</body></html>';
+
+  fs.writeFileSync(OUT_FILE, html);
+  console.log('Wrote ' + OUT_FILE + ' (' + (FIGURES.length + autoEntries.length) + ' figures = ' + FIGURES.length + ' curated + ' + autoEntries.length + ' auto)');
+  console.log('Auto-resolved figures: ' + fill.resolved.length);
+  fill.resolved.forEach(function (x) { console.log('  + ' + x.name + ' -> ' + x.file + (x.via !== 'cache' ? '  [via "' + x.via + '"]' : '  [cached]')); });
+  console.log('Unmatched geography topics (no figure yet): ' + fill.still.length);
+  fill.still.slice(0, 25).forEach(function (n) { console.log('  - ' + n); });
+}
+
+if (process.env.GEO_AUTO_DEMO) { unmatched = process.env.GEO_AUTO_DEMO.split(',').map(function (s) { return s.trim(); }).filter(Boolean); }
+main().catch(function (e) { console.error(e); process.exit(1); });
