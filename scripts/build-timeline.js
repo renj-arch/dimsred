@@ -313,6 +313,31 @@ var SEED = {
   geography: { type: 'concept', level: 4, list: [
     'Suez Canal', 'Panama Canal', 'McMahon Line', 'Line of Actual Control', 'Line of Control',
     'Siachen Glacier', 'Doklam'
+  ]},
+  // UPSC economic-administration entities: the batch wiki categories add lots of
+  // regulator/institution sub-topics, and these hubs deserve authored mind-trees
+  // even though they arrive as plain sub-topics (level 4) from those fills.
+  upscCommissions: { type: 'org', level: 3, list: [
+    'GST Council', 'NITI Aayog', 'Competition Commission of India', 'Securities and Exchange Board of India',
+    'Telecom Regulatory Authority of India', 'Insurance Regulatory and Development Authority of India',
+    'National Bank for Financing Infrastructure and Development', 'National Green Tribunal',
+    'Insolvency and Bankruptcy Board of India', 'Financial Stability and Development Council'
+  ]},
+  upscSchemes: { type: 'scheme', level: 3, list: [
+    'Jal Jeevan Mission', 'PM-KISAN', 'Pradhan Mantri Awas Yojana', 'Smart Cities Mission',
+    'Atal Mission for Rejuvenation and Urban Transformation', 'National Rural Livelihood Mission',
+    'Pradhan Mantri Grameen Sadak Yojana', 'Direct Benefit Transfer', 'Aspirational Districts Programme',
+    'Pradhan Mantri Jan Arogya Yojana'
+  ]},
+  upscEconomics: { type: 'concept', level: 3, list: [
+    'Minimum Alternate Tax', 'Securities Transaction Tax', 'Equalisation Levy',
+    'Insolvency and Bankruptcy Code', 'Digital Rupee', 'Unified Payments Interface',
+    'Monetary Policy Committee'
+  ]},
+  upscInstitutions: { type: 'org', level: 3, list: [
+    'National Investigation Agency', 'Central Bureau of Investigation',
+    'District Mineral Foundation Trust', 'National Cooperative Development Corporation',
+    'Export\u2013Import Bank of India', 'Small Industries Development Bank of India'
   ]}
 };
 
@@ -339,7 +364,35 @@ var PROMOTE_TOPICS = {
   'tiruchirappalli': 3,
   'bande ali khan': 3,
   'amjad ali khan': 3,
-  'bahadur khan musician': 3
+  'bahadur khan musician': 3,
+  // Economic-administration sub-topics from the UPSC category fills: promote the
+  // headline PIB/polity/economy titles to flowchart-visible cards (level 3).
+  'gst council': 3,
+  'niti aayog': 3,
+  'direct benefit transfer': 3,
+  'make in india': 3,
+  'start-up india': 3,
+  'digital india': 3,
+  'aspirational districts programme': 3,
+  'jal jeevan mission': 3,
+  'smart cities mission': 3,
+  'pm kisan': 3,
+  'pradhan mantri awas yojana': 3,
+  'pradhan mantri jan arogya yojana': 3,
+  'pradhan mantri grameen sadak yojana': 3,
+  'pradhan mantri kisan samman nidhi': 3,
+  'national rural livelihood mission': 3,
+  'atal mission for rejuvenation and urban transformation': 3,
+  'e-rupi': 3,
+  'svamitva': 3,
+  'one nation one ration card': 3,
+  'production linked incentive': 3,
+  'equalisation levy': 3,
+  'securities transaction tax': 3,
+  'minimum alternate tax': 3,
+  'digital rupee': 3,
+  'vande bharat': 3,
+  'unified payments interface': 3
 };
 
 // Sub-topics whose auto-detected type is wrong (keyed on stripped lowercase name).
