@@ -297,10 +297,45 @@ var FIGURES = [
     marks: ['18 volcanic islands between Norway & Iceland', 'autonomous territory of Denmark', 'North Atlantic drift climate (mild for the latitude)', 'deep fjords/fjord-like inlets & basaltic cliffs'],
     src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
     topics: ['faroe islands']
+  },
+  {
+    url: C('Heard_Island_and_McDonald_Islands_location_map_Topographic_791px.png'),
+    sec: 'World \u00b7 Islands', title: 'Heard Island & McDonald Islands \u2014 Sub-Antarctic Locator',
+    marks: ['southern Indian Ocean, ~53\u00b0S (sub-Antarctic / polar-front belt)', 'Australian external territory', 'Big Ben volcano \u2192 Mawson Peak (2,745 m, Australia\u2019s highest peak)', 'glaciated Laurens Peninsula; periglacial tundra climate', 'no permanent population \u2014 research & conservation reserve'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0',
+    topics: ['heard island and mcdonald islands', 'heard and mcdonald islands', 'heard island']
+  },
+  {
+    url: C('Coney_Island_Aerial.jpg'),
+    sec: 'World \u00b7 Coastal Landforms', title: 'Coney Island \u2014 Barrier Beach (New York)',
+    marks: ['southern shore of Brooklyn, New York City', 'sand spit / barrier beach built by longshore drift', 'western end of the Rockaway\u2013Coney barrier chain', 'heavily urbanised resort & boardwalk district', 'geomorphology: beach ridge vs lagoon behind'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA',
+    topics: ['coney island', 'coney island brooklyn']
+  },
+  {
+    url: C('Southern_Hemisphere_LamAz.svg'),
+    sec: 'World \u00b7 Globe Concepts', title: 'Southern Hemisphere \u2014 Lambert Azimuthal View',
+    marks: ['lands south of the Equator (Antarctica, Australia; most of S America & southern Africa)', 'seasons reversed relative to the Northern Hemisphere', 'Coriolis deflects moving air LEFT \u2192 lows spin clockwise', 'Southern Westerlies belt (Roaring Forties) 40\u201360\u00b0S', 'stars: Southern Cross; polar cell & circumpolar vortex over Antarctica'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA',
+    topics: ['southern hemisphere', 'hemisphere']
+  },
+  {
+    url: C('National_parks_of_the_United_States_and_their_areas_(labelled).png'),
+    sec: 'World \u00b7 Wildlife & Protected Areas', title: 'National Parks of the US \u2014 Labelled by Area',
+    marks: ['Yellowstone 1872 = world\u2019s first national park', 'National Park Service established 1916 (Organic Act)', '63 parks, sizes labelled (ha)', 'model for IUCN Category II protected areas', 'parallel: India\u2019s national parks, tiger reserves & biosphere reserves'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA (derivative of NASA imagery)',
+    topics: ['national park service', 'national parks of the united states', 'us national parks']
+  },
+  {
+    url: C('Cuba_Bahia_de_Cochinos-en.svg'),
+    sec: 'World \u00b7 Locator', title: 'Bay of Pigs (Bah\u00eda de Cochinos) \u2014 Cuba',
+    marks: ['bay on Cuba\u2019s southern coast (Zapata Peninsula / Gulf of Cazones)', 'site of the failed 1961 US-backed invasion', 'swampy Zapata coastal plain \u2014 hindered the landing force', 'Caribbean locator: Cuba 145 km from Florida', 'label Havana and the US state of Florida'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA',
+    topics: ['bay of pigs', 'bay of pigs invasion', 'bahia de cochinos', 'cuba']
   }
 ];
 
-var SECTION = { 'India \u00b7 Maps': 1, 'India \u00b7 Geophysics': 1, 'India \u00b7 Climate': 1, 'World \u00b7 Geophysics': 1, 'World \u00b7 Geomorphology': 1, 'World \u00b7 Climate': 1, 'World \u00b7 Oceanography': 1 };
+var SECTION = { 'India \u00b7 Maps': 1, 'India \u00b7 Geophysics': 1, 'India \u00b7 Climate': 1, 'World \u00b7 Geophysics': 1, 'World \u00b7 Geomorphology': 1, 'World \u00b7 Climate': 1, 'World \u00b7 Oceanography': 1, 'World \u00b7 Islands': 1, 'World \u00b7 Coastal Landforms': 1, 'World \u00b7 Globe Concepts': 1, 'World \u00b7 Wildlife & Protected Areas': 1, 'World \u00b7 Locator': 1 };
 
 // ---- load geography topic names from topic-layers.json ----
 var TOPIC_GEO_REGEX = /canal|glacier|volcan|river|plateau|desert|sea\b|\blake\b|strait|monsoon|cyclone|earthquake|island|mountain|range|coast|peninsula|gulf|bay\b|delta|tectonic|soil|climate|forest|national park|sanctuary|wildlife|wetland|drought|flood|tsunami|hurricane|typhoon|el ni\u00f1o|la ni\u00f1a|ocean|hemisphere|tropic|equator|atoll|reef|watershed|estuary|fjord|mangrove|coral|savanna|prairie|steppe|taiga|tundra|pampas/i;
