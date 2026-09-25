@@ -323,21 +323,16 @@ function fnNeighbors(seed) {
   fam.sort(function (a, b) { return b.weight - a.weight; });
   return fam;
 }
-var FACET_REL = {
-  person: 'figure in',
-  event: 'event in',
-  centre: 'place of',
-  organisation: 'institution of',
-  disease: 'linked to',
-  concept: 'concept of'
-};
+// Co-mention links never get a fabricated relation verb ("figure in"), which
+// would read as an asserted fact. They are labelled honestly as a mention; only
+// real typed/kin edges keep their asserted verb.
 function linkNeighbors(seed) {
   var seen = {};
   var m = ladj[seed.id] || {};
   function relOf(tid, tn) {
     var asserted = assertedRelFor(seed.id, tid);
     var typed = adj[seed.id] && adj[seed.id][tid];
-    return asserted || typed || FACET_REL[facetOf(tn)] || 'related to';
+    return asserted || typed || 'mentioned with';
   }
   function srcOf(tid) {
     if (adj[seed.id] && adj[seed.id][tid]) return 'graph';
@@ -364,7 +359,9 @@ function linkNeighbors(seed) {
   if (all.length >= 8) {
     var maxW = all[0].weight;
     var floor = Math.max(3, Math.round(maxW * 0.05));
-    var kept = all.filter(function (x) { return x.weight >= floor; });
+    // The weight floor trims weak co-mention noise; real typed/kin edges are
+    // always kept whatever their co-weight.
+    var kept = all.filter(function (x) { return x.src === 'graph' || x.weight >= floor; });
     return kept.length >= 8 ? kept : all;
   }
   var wide = pick(true);
@@ -453,7 +450,7 @@ function makeBranches(seed) {
       title: 'Family & Relations', type: 'person', rel: 'relative of',
       desc: 'Direct kin and closest relations recorded for ' + seed.name + '.',
       items: fam.slice(0, 12).map(function (f) {
-        return { name: f.name, type: f.type, rel: f.rel, src: f.src || 'graph', desc: briefOf(f.node), note: noteFor(f.name), ev: evidenceFor(seed.name, f.name) };
+        return { name: f.name, type: f.type, rel: f.rel, src: f.src || 'graph', w: f.weight, desc: briefOf(f.node), note: noteFor(f.name), ev: evidenceFor(seed.name, f.name) };
       })
     });
   }
@@ -470,7 +467,7 @@ function makeBranches(seed) {
     var arr = buckets[b.key];
     if (!arr || !arr.length) return;
     var items = arr.slice(0, b.key === 'concept' ? 14 : 10).map(function (L) {
-      return { name: L.name, type: L.type, rel: L.rel, src: L.src || 'co', desc: briefOf(L.node), note: noteFor(L.name), ev: evidenceFor(seed.name, L.name) };
+      return { name: L.name, type: L.type, rel: L.rel, src: L.src || 'co', w: L.weight, desc: briefOf(L.node), note: noteFor(L.name), ev: evidenceFor(seed.name, L.name) };
     });
     if (!items.length) return;
     bs.push({ title: b.title, type: b.type, rel: b.rel, desc: 'The ' + b.title.toLowerCase() + ' linked to ' + seed.name + '.', items: items });

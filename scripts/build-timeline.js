@@ -37,7 +37,11 @@ function yearSignals(text) {
     if (isBC) { lo = -n * 100; hi = -(n * 100 - 99); }
     else { lo = (n - 1) * 100; hi = Math.min(n * 100 - 1, 2026); }
     if (lo > 2026) continue;
-    add(lo, true); add(hi, true);
+    add(lo, true);
+    // A "21st century" mention is a present-period signal, not a hard end date:
+    // trusting its 2026 ceiling would date any historical entity that merely
+    // cites it as far as today. Emit only the century's start for the current one.
+    if (isBC || lo < 2000) add(hi, true);
   }
   // "2500 BCE" / "320 AD" — an explicit year + era.
   var re2 = /\b(\d{1,4})\s*(BC|BCE|AD|CE)\b/gi;
@@ -50,7 +54,8 @@ function yearSignals(text) {
   while ((m = re3.exec(t))) {
     var lo3 = (m[1] - 1) * 100, hi3 = Math.min(m[1] * 100 - 1, 2026);
     if (lo3 > 2026) continue;
-    add(lo3, true); add(hi3, true);
+    add(lo3, true);
+    if (lo3 < 2000) add(hi3, true);
   }
   // Decade ("1950s", "in the 1990s") — take the starting year.
   var re4 = /\b(1[0-9]{3}|20[0-2][0-9])s\b/gi;
@@ -1779,6 +1784,35 @@ function robustSpan(ys, catKey, trustedSet) {
   var HUGE = 300;       // years — different subject/reference era
   var MIN_FRAC = 0.25;  // a separated cluster is noise only if it holds < this fraction
   var s = ys.slice().sort(function (a, b) { return a - b; });
+  // Present-day tail trim: question text often cross-references years >= 2010 (a
+  // "2026 budget" fact sat beside a historical topic, a book citation, a modern
+  // aftermath line). For a NON-person entity those are not evidence the entity
+  // extends to today — drop them when real historical content exists and the
+  // untrusted modern years are a lone/scattered minority. Genuinely contemporary
+  // topics (all years >= 2010), trusted anchors and a tight recent series (COVID
+  // 2019-2026) all survive untouched.
+  var PAST_YEAR = 2010;
+  var hist = [], mod = [];
+  for (var yi = 0; yi < ys.length; yi++) {
+    if (ys[yi] >= PAST_YEAR) mod.push(ys[yi]); else hist.push(ys[yi]);
+  }
+  if (hist.length && mod.length) {
+    var modUnt = [];
+    for (var mu of mod) if (!(trustedSet && trustedSet[mu])) modUnt.push(mu);
+    var uniqP = {}, mnP = Infinity, mxP = -Infinity;
+    for (var mj of modUnt) {
+      uniqP[mj] = 1;
+      if (mj < mnP) mnP = mj;
+      if (mj > mxP) mxP = mj;
+    }
+    var nUP = Object.keys(uniqP).length;
+    var tightRecent = nUP >= 3 && (mxP - mnP) < 10;
+    var solidRecent = nUP >= 3 && modUnt.length / ys.length >= 0.3;
+    if (nUP > 0 && !tightRecent && !solidRecent) {
+      s = ys.filter(function (y) { return y < PAST_YEAR || (trustedSet && trustedSet[y]); })
+            .sort(function (a, b) { return a - b; });
+    }
+  }
   if (s.length <= 2) return { min: s[0], max: s[s.length - 1] };
   var changed = true;
   while (changed && s.length > 2) {
