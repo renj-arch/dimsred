@@ -214,11 +214,23 @@ function nodeLevel(n) {
   return 4;
 }
 
+// How deep a topic may be and still be drawn, measured from the data instead of
+// hardcoded. The old fixed "3" at wide zoom hid 448,983 of 529,755 topics --
+// 161 of the 162 pre-4000-BC ones among them -- so the axis could span back to
+// 74000 BC while the only things on screen started at 4000 BC. Phones and iPads
+// keep a shallower depth: half a million placements is what crashed mobile
+// Safari here. The DOM stays virtualized either way, so only the visible
+// viewport is ever emitted.
+var MAX_LEVEL = 4;
+function measureMaxLevel() {
+  var m = 0;
+  for (var i = 0; i < NODES.length; i++) { var l = nodeLevel(NODES[i]); if (l > m) m = l; }
+  return m;
+}
+
 function detailThreshold() {
-  if (SHOW_ALL) return 4;           // Show all: every level, every sub-topic
-  var range = WINDOW.end - WINDOW.start;
-  if (range > 800) return 3;        // full-to-mid zoom: movements, people, orgs, schemes, diseases
-  return 4;                         // zoomed within a few centuries: all sub-topics too
+  if (SHOW_ALL) return MAX_LEVEL;
+  return IS_SMALL ? 3 : MAX_LEVEL;
 }
 
 function inWindow(span) {
@@ -1049,11 +1061,16 @@ loadTimelineData().then(function (t) {
     _eadj[rj.b].push({ target: rj.a, rel: rj.rel, dir: 'in' });
   }
   buildCatOptions();
-  // Start the time axis at the real data bounds instead of a fixed -4000 clamp,
-  // so deep-span nodes (Toba c. -74000, early geological eras) no longer get
-  // pinned to the edge of the chart.
+  // The time axis spans every topic in the data, oldest at the very top, so the
+  // scale never hides a year that content exists for. The floor is the oldest
+  // real topic (Toba catastrophe theory, c. 74000 BC) and the ceiling the
+  // newest. Prehistory is a thin band at the top of a tall canvas; pan and zoom
+  // reach it, and detailThreshold() no longer filters those topics away, which
+  // is what used to make this axis look like a lie ("74000 BC" on screen, but
+  // nothing older than 4000 BC anywhere in it).
   var _dmin = Infinity, _dmax = -Infinity;
   for (var _nd of NODES) { if (_nd.span) { if (_nd.span.min < _dmin) _dmin = _nd.span.min; if (_nd.span.max > _dmax) _dmax = _nd.span.max; } }
+  MAX_LEVEL = measureMaxLevel();
   if (isFinite(_dmin)) {
     MIN_YEAR = _dmin;
     MAX_YEAR = Math.max(_dmax, 2026);
