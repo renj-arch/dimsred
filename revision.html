@@ -28,6 +28,9 @@ h1{font-size:1.8em;font-weight:800;margin-bottom:8px;background:linear-gradient(
 .bullets{list-style:none;padding:0}
 .bullets li{padding:8px 0;border-bottom:1px solid var(--border);font-size:.95em}
 .bullets li:last-child{border-bottom:none}
+.bullets li.none{color:var(--text-sec);font-style:italic}
+.fact-type{font-size:.72em;text-transform:uppercase;letter-spacing:.05em;opacity:.75;margin-left:6px}
+.section-note{font-size:.7em;text-transform:none;letter-spacing:0;font-weight:400;opacity:.7;margin-left:6px}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
 .fact-tag{background:var(--card);padding:6px 12px;border-radius:20px;font-size:.85em;border:1px solid var(--border)}
 .comparison-table{width:100%;border-collapse:collapse;margin:16px 0}
@@ -62,13 +65,19 @@ h1{font-size:1.8em;font-weight:800;margin-bottom:8px;background:linear-gradient(
     
     <div class="section-title">📝 Quick Summary</div>
     <div class="summary-box" id="modalSummary"></div>
-    
-    <div class="section-title">🎯 Key Points</div>
+
+    <div class="section-title">✅ Primary Facts <span class="section-note">verified as being about this entity</span></div>
     <ul class="bullets" id="modalBullets"></ul>
-    
-    <div class="section-title">📊 Important Facts</div>
-    <div class="facts" id="modalFacts"></div>
-    
+
+    <div class="section-title">🔗 Direct Relationships</div>
+    <ul class="bullets" id="modalRelationships"></ul>
+
+    <div class="section-title">🧩 Context</div>
+    <ul class="bullets" id="modalContext"></ul>
+
+    <div class="section-title">🗂 Neighbor Entities <span class="section-note">graph links, not facts</span></div>
+    <div class="facts" id="modalNeighbors"></div>
+
     <div class="section-title">🔄 Related Topics</div>
     <div id="modalComparisons"></div>
   </div>
@@ -89,9 +98,11 @@ function escapeHtml(s) {
 
 function matchesQuery(topicName, data, q) {
   if (topicName.toLowerCase().includes(q)) return true;
-  var hay = (data.summary || '');
-  (data.bullets || []).forEach(function (b) { hay += ' ' + b; });
-  (data.facts || []).forEach(function (f) { hay += ' ' + f; });
+  // Index the verified facts, not the legacy summary/bullet blobs: searching
+  // should not surface a topic because of text that is not about it.
+  var hay = '';
+  (data.primaryFacts || []).forEach(function (f) { hay += ' ' + (f.fact || ''); });
+  (data.neighbors || []).forEach(function (n) { hay += ' ' + (n.entity || ''); });
   return hay.toLowerCase().includes(q);
 }
 
@@ -161,27 +172,46 @@ function openModal(topicName) {
   if (!data) return;
 
   document.getElementById('modalTitle').textContent = topicName;
-  document.getElementById('modalSummary').textContent = data.summary || 'No summary available';
 
-  var bulletsHTML = '';
-  if (data.bullets && data.bullets.length > 0) {
-    data.bullets.forEach(function(bullet) {
-      bulletsHTML += '<li>' + escapeHtml(bullet) + '</li>';
-    });
-  } else {
-    bulletsHTML = '<li>No key points available</li>';
-  }
-  document.getElementById('modalBullets').innerHTML = bulletsHTML;
+  // Quick summary is derived from the primary facts only, so it can never
+  // inherit a neighbour's biography.
+  var owned = data.primaryFacts || [];
+  document.getElementById('modalSummary').textContent =
+    owned.length ? owned.slice(0, 2).map(function (f) { return f.fact; }).join(' ')
+                 : 'No verified fact for this entity yet.';
 
-  var factsHTML = '';
-  if (data.facts && data.facts.length > 0) {
-    data.facts.forEach(function(fact) {
-      factsHTML += '<span class="fact-tag">' + escapeHtml(fact) + '</span>';
-    });
-  } else {
-    factsHTML = '<span class="fact-tag">No facts available</span>';
+  function list(items, render, empty) {
+    if (!items || !items.length) return '<li>' + escapeHtml(empty) + '</li>';
+    return items.map(render).join('');
   }
-  document.getElementById('modalFacts').innerHTML = factsHTML;
+
+  document.getElementById('modalBullets').innerHTML =
+    owned.length
+      ? owned.map(function (f) {
+          var tag = (f.factType && f.factType !== 'CORE_FACT')
+            ? ' <span class="fact-type">' + escapeHtml(String(f.factType).toLowerCase()) + '</span>' : '';
+          return '<li>' + escapeHtml(f.fact) + tag + '</li>';
+        }).join('')
+      : '<li class="none">No verified fact for this entity yet.</li>';
+
+  document.getElementById('modalRelationships').innerHTML =
+    list(data.directRelationships, function (r) {
+      return '<li>' + escapeHtml(r.entity || '') +
+        ' <span class="fact-type">' + escapeHtml(r.rel || 'related') + '</span></li>';
+    }, 'No direct relationships recorded');
+
+  document.getElementById('modalContext').innerHTML =
+    list(data.context, function (c) {
+      return '<li>' + escapeHtml(c.fact || c.text || '') + '</li>';
+    }, 'No additional context');
+
+  var nb = data.neighbors || [];
+  document.getElementById('modalNeighbors').innerHTML = nb.length
+    ? nb.map(function (n) {
+        return '<span class="fact-tag" title="' + escapeHtml(n.rel || '') + '">' +
+          escapeHtml(n.entity || n.name || '') + '</span>';
+      }).join('')
+    : '<span class="fact-tag">No neighbors</span>';
 
   var compHTML = '';
   if (data.comparisons && data.comparisons.length > 0) {

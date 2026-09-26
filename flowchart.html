@@ -95,6 +95,8 @@ path.link-hover{stroke-width:3;stroke:#7dd3fc;stroke-opacity:.95;filter:drop-sha
 #revpanel ul{margin:0 0 4px;padding-left:18px}
 #revpanel li{font-size:12.5px;line-height:1.5;margin-bottom:4px;color:var(--txt)}
 #revpanel .fact{display:inline-block;background:var(--bg2);border:1px solid var(--line);color:var(--cyan);border-radius:14px;padding:2px 9px;font-size:11px;margin:0 6px 6px 0}
+#revpanel .ftag{display:inline-block;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--purple);border:1px solid var(--line);border-radius:10px;padding:0 6px;margin-left:5px;vertical-align:1px}
+#revpanel .revnone{color:var(--muted);font-style:italic}
 #revpanel table{border-collapse:collapse;width:100%;font-size:12px;margin-top:4px}
 #revpanel th,#revpanel td{border:1px solid var(--line);padding:5px 8px;text-align:left}
 #revpanel th{color:var(--txt2);font-weight:600}
@@ -1157,14 +1159,48 @@ function renderRevision(hero){
   }
   btn.disabled=false;
   var isCur=(data.curated?'authored':'auto');
-  var h='<div class="revcard"><span class="rtag">UPSC Revision \u00b7 '+isCur+' \u00b7 '+esc(String(data.facts?data.facts.length:0)+' facts')+'</span>'
-   +'<p>'+esc(data.summary||'')+'</p>';
-  if(data.bullets&&data.bullets.length){
-    h+='<h4>Key Points</h4><ul>'+data.bullets.slice(0,6).map(function(b){return '<li>'+esc(stripBullet(b))+'</li>';}).join('')+'</ul>';
+  // Sections are kept separate on purpose: PRIMARY FACTS are the only
+  // statements proven to be about the selected entity, relationships and
+  // neighbours are graph structure, and neither may be presented as fact.
+  var owned=(data.primaryFacts||[]);
+  var h='<div class="revcard"><span class="rtag">UPSC Revision \u00b7 '+isCur+' \u00b7 '+esc(String(owned.length)+' verified facts')+'</span>';
+
+  if(owned.length){
+    h+='<h4>Primary Facts</h4><ul>';
+    owned.slice(0,8).forEach(function(f){
+      var tag=(f.factType&&f.factType!=='CORE_FACT')?' <span class="ftag">'+esc(String(f.factType).toLowerCase())+'</span>':'';
+      h+='<li>'+esc(f.fact||'')+tag+'</li>';
+    });
+    h+='</ul>';
+  }else{
+    h+='<h4>Primary Facts</h4><p class="revnone">No verified fact for this entity yet. '+
+      'Related entries below are graph links, not facts about '+esc(hero?hero.name:'')+'.</p>';
   }
-  if(data.facts&&data.facts.length){
-    h+='<h4>Facts &amp; Dates</h4><div>'+data.facts.slice(0,6).map(function(f){return '<span class="fact">'+esc(f)+'</span>';}).join('')+'</div>';
+
+  if(data.directRelationships&&data.directRelationships.length){
+    h+='<h4>Direct Relationships</h4><ul>';
+    data.directRelationships.slice(0,8).forEach(function(r){
+      h+='<li>'+esc(r.entity||'')+' <span class="ftag">'+esc(r.rel||'related')+'</span></li>';
+    });
+    h+='</ul>';
   }
+
+  if(data.context&&data.context.length){
+    h+='<h4>Context</h4><ul>';
+    data.context.slice(0,6).forEach(function(c){
+      h+='<li>'+esc(c.fact||c.text||'')+'</li>';
+    });
+    h+='</ul>';
+  }
+
+  if(data.neighbors&&data.neighbors.length){
+    h+='<h4>Neighbor Entities</h4><div>';
+    data.neighbors.slice(0,24).forEach(function(n){
+      h+='<span class="fact" title="'+esc(n.rel||'')+'">'+esc(n.entity||n.name||'')+'</span>';
+    });
+    h+='</div>';
+  }
+
   (data.comparisons||[]).forEach(function(cp){
     if(!cp.table||!cp.table.length)return;
     h+='<h4>'+esc(cp.title)+'</h4><table><thead><tr><th>Topic</th><th>Key Point</th></tr></thead><tbody>';
