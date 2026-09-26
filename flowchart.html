@@ -98,6 +98,7 @@ path.link-hover{stroke-width:3;stroke:#7dd3fc;stroke-opacity:.95;filter:drop-sha
 #revpanel .fact{display:inline-block;background:var(--bg2);border:1px solid var(--line);color:var(--cyan);border-radius:14px;padding:2px 9px;font-size:11px;margin:0 6px 6px 0}
 #revpanel .ftag{display:inline-block;font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--purple);border:1px solid var(--line);border-radius:10px;padding:0 6px;margin-left:5px;vertical-align:1px}
 #revpanel .revnone{color:var(--muted);font-style:italic}
+#revpanel .revnbs .sep{opacity:.5;font-size:9px;vertical-align:1px}
 #revpanel table{border-collapse:collapse;width:100%;font-size:12px;margin-top:4px}
 #revpanel th,#revpanel td{border:1px solid var(--line);padding:5px 8px;text-align:left}
 #revpanel th{color:var(--txt2);font-weight:600}
@@ -205,20 +206,78 @@ function fmtYear(y){return y==null?'':(y<0?(-y)+' BC':String(y));}
 function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)%360;}
 function colorFor(t){return TYPE_COLOR[t]||'hsl('+hashStr(t)+',62%,60%)';}
 function typeLabel(t){return String(t||'misc').replace(/[-_]+/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});}
+// Several nodes share one name and carry different spans, because span is the
+// co-mention window of whichever source shard built that node: "Beijing" exists
+// as indian-architeology-epigraphy-7|Beijing 1860-2026,
+// telecom-postal-9|Beijing 1860-2025, world-geography-18|Beijing 2008-2022 and
+// world-geography-59|Beijing 2009-2009. Picking whichever node wins the
+// prominence sort made the displayed range depend on an arbitrary tie-break, so
+// the span is resolved from the whole name group instead.
+var _dspanCache={};
+function displaySpan(n){
+  if(!n||!n.name)return n;
+  var c=canon(n.name);
+  if(!c)return n;
+  if(_dspanCache[c])return _dspanCache[c];
+  var arr=(BY_NAME[c]&&BY_NAME[c].length)?BY_NAME[c]:[n];
+  var cy=new Date().getFullYear();
+  var out=null;
+  if(n.type==='person'){
+    // Prefer a lifespan-grade span: a real death year in the past. If none
+    // exists, fall back to a window reaching the present, which is the only
+    // evidence there is that the person is alive.
+    var life=null,present=null;
+    arr.forEach(function(x){
+      var s=x.span;
+      if(!s||s.min==null||s.max==null)return;
+      var w=s.max-s.min;
+      if(s.max<cy&&w>0&&w<=122&&!(w>=80&&(s.min%100===0||s.max%100===99))){
+        if(!life||(x.count||0)>(life.n.count||0))life={n:x,s:s};
+      }else if(s.max>=cy){
+        if(!present||w<(present.s.max-present.s.min))present={n:x,s:s};
+      }
+    });
+    var pick=life||present;
+    if(pick)out={min:pick.s.min,max:pick.s.max,type:'person',timebase:pick.n.timebase};
+  }else{
+    // Places, concepts, events and orgs have no lifespan here, so the honest
+    // aggregate is the union of every mention window under this name.
+    var lo=null,hi=null,tb=n.timebase;
+    arr.forEach(function(x){
+      var s=x.span;
+      if(!s||s.min==null||s.max==null)return;
+      if(lo==null||s.min<lo)lo=s.min;
+      if(hi==null||s.max>hi)hi=s.max;
+    });
+    if(lo!=null)out={min:lo,max:hi,type:n.type,timebase:tb};
+  }
+  _dspanCache[c]=out||null;
+  return out||n;
+}
 function spanLabel(n){
+  n=displaySpan(n);
   if(!n||!n.span)return 'undated';
   var s=n.span;
   if(s.min==null||s.max==null)return 'undated';
-  // A person's real lifespan is <= ~122y; a wider min-max window is the corpus
-  // mention range (Washington "1699-2026", Ford "1839-2025"), not his life
-  // dates. Full-century/decade bands (LBJ "1900-1999", Garfield "1831-1939")
-  // are the same artifact at a tighter width.
+  var thisYear=new Date().getFullYear();
   if(n.type==='person'){
+    // span is the window in which this subject is co-mentioned across the
+    // source articles behind its id, NOT a lifespan. A window running up to
+    // the present year means the subject is still going - it does not mean the
+    // subject died this year (Bindra "1982-2026", Anand "1969-2026").
+    if(s.max>=thisYear)return 'b. '+fmtYear(s.min)+'\u2013present';
+    // A real lifespan is <= ~122y. Anything wider, or a full-century band
+    // (LBJ "1900-1999", Garfield "1831-1939"), is the mention window again.
     var r=s.max-s.min;
-    if(r>125)return 'undated';
+    if(r<=0)return 'undated';
+    if(r>122)return 'undated';
     if(r>=80&&(s.min%100===0||s.max%100===99))return 'undated';
+    return fmtYear(s.min)+'\u2013'+fmtYear(s.max);
   }
-  return (n.timebase==='era'?'era ~':'')+fmtYear(s.min)+(s.max>s.min?'-'+fmtYear(s.max):'');
+  // Places, concepts, events and orgs have no lifespan in this data, so a
+  // range here is only ever a source window. Say so rather than implying the
+  // entity began in 1799 (Karnataka, formed 1956) or ended in 2026 (Beijing).
+  return 'in sources '+fmtYear(s.min)+(s.max>s.min?'\u2013'+fmtYear(s.max):'');
 }
 function initials(n){
   var p=String(n.name||'?').split(/\s+/).filter(Boolean);
@@ -400,7 +459,7 @@ function loadRevision(){return fetchJson('data/revision-content.json').then(func
 }).catch(function(){REV={};REV_BY_CANON={};});}
 
 function buildIndexes(){
-  BY_ID={};BY_NAME={};NAME_CNT={};ADJ={};LADJ={};
+  BY_ID={};BY_NAME={};NAME_CNT={};ADJ={};LADJ={};_dspanCache={};
   for(var i=0;i<NODES.length;i++){
     var n=NODES[i];
     BY_ID[n.id]=n;
@@ -1205,9 +1264,12 @@ function renderRevision(hero){
   }
 
   if(data.neighbors&&data.neighbors.length){
-    h+='<h4>Neighbor Entities</h4><div>';
+    h+='<h4>Neighbor Entities</h4><div class="revnbs">';
     data.neighbors.slice(0,24).forEach(function(n){
-      h+='<span class="fact" title="'+esc(n.rel||'')+'">'+esc(n.entity||n.name||'')+'</span>';
+      // A real separator in the markup, not just a CSS margin: margin-only
+      // inline chips concatenate when the panel is copied or read aloud
+      // ("SportsDhyan ChandNational Rifle Association").
+      h+='<span class="fact" title="'+esc(n.rel||'')+'">'+esc(n.entity||n.name||'')+'<span class="sep"> \u00b7 </span></span>';
     });
     h+='</div>';
   }
