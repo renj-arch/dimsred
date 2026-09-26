@@ -22,9 +22,12 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # PAT, not GITHUB_TOKEN: GitHub suppresses workflow triggers for
+      # GITHUB_TOKEN pushes, so the rebuild commit would never reach
+      # "Slim live mirror" and production would stay stale.
       - uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.PAT }}
           fetch-depth: 1
           filter: blob:none
 
