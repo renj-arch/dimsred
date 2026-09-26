@@ -29,6 +29,8 @@ h1{font-size:1.8em;font-weight:800;margin-bottom:8px;background:linear-gradient(
 .bullets li{padding:8px 0;border-bottom:1px solid var(--border);font-size:.95em}
 .bullets li:last-child{border-bottom:none}
 .bullets li.none{color:var(--text-sec);font-style:italic}
+p.none{color:var(--text-sec);font-style:italic}
+.card-badge{margin-top:6px;font-size:.72em;letter-spacing:.04em;text-transform:uppercase;opacity:.65}
 .fact-type{font-size:.72em;text-transform:uppercase;letter-spacing:.05em;opacity:.75;margin-left:6px}
 .section-note{font-size:.7em;text-transform:none;letter-spacing:0;font-weight:400;opacity:.7;margin-left:6px}
 .facts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
@@ -141,10 +143,21 @@ function renderTopics() {
 
     var h3 = document.createElement('h3');
     h3.textContent = topicName;
+    var owned = data.primaryFacts || [];
     var p = document.createElement('p');
-    p.textContent = data.summary || 'No summary available';
+    // Derived from verified facts, so a card can never advertise text that is
+    // not about the entity.
+    p.textContent = owned.length
+      ? owned.slice(0, 2).map(function (f) { return f.fact; }).join(' ')
+      : 'No verified fact for this entity yet.';
+    if (!owned.length) p.className = 'none';
+    var badge = document.createElement('div');
+    badge.className = 'card-badge';
+    badge.textContent = owned.length + (owned.length === 1 ? ' fact' : ' facts') +
+      ' \u00b7 ' + (data.neighbors || []).length + ' links';
     card.appendChild(h3);
     card.appendChild(p);
+    card.appendChild(badge);
     card.onclick = function() { openModal(topicName); };
     grid.appendChild(card);
   });

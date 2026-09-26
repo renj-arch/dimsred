@@ -82,7 +82,8 @@ path.link-hover{stroke-width:3;stroke:#7dd3fc;stroke-opacity:.95;filter:drop-sha
 .note .nb .close:hover{color:var(--rose)}
 .note-rev{border-bottom:1px dashed var(--line);padding:9px 14px 11px;font-size:12.5px;line-height:1.55}
 .note-rev .rvsum{color:var(--txt)}
-.note-rev .rvfacts{margin-top:6px}
+ .note-rev .rvfacts{margin-top:6px}
+ .note-rev .rvnb{margin-top:6px;font-size:11px;color:var(--muted)}
 .note-rev .fact{display:inline-block;background:var(--bg2);border:1px solid var(--line);color:var(--cyan);border-radius:14px;padding:2px 9px;font-size:11px;margin:0 6px 6px 0}
 .rvlnk{color:var(--cyan);cursor:pointer;text-decoration:none;font-weight:600}
 .rvlnk:hover{text-decoration:underline}
@@ -1122,10 +1123,23 @@ function closeNote(){
 }
 function revInner(data){
   if(!data)return '';
-  var h='<span class="rtag">UPSC Revision \u00b7 '+(data.curated?'authored':'auto')+'</span>'
-   +'<div class="rvsum">'+esc(data.summary||'')+'</div>';
-  if(data.facts&&data.facts.length){
-    h+='<div class="rvfacts">'+data.facts.slice(0,5).map(function(f){return '<span class="fact">'+esc(f)+'</span>';}).join('')+'</div>';
+  // Compact surface for the node popup. It reads the same verified primary
+  // facts as the Revision panel rather than the legacy fact strings, which
+  // still carried their own emoji prefixes and could show unverified text.
+  var owned=data.primaryFacts||[];
+  var h='<span class="rtag">UPSC Revision \u00b7 '+(data.curated?'authored':'auto')+'</span>';
+  if(owned.length){
+    h+='<div class="rvsum">'+esc(owned[0].fact)+'</div>';
+    h+='<div class="rvfacts">'+owned.slice(0,5).map(function(f){
+      return '<span class="fact" title="'+esc(f.factType||'fact')+'">'+esc(f.fact)+'</span>';
+    }).join('')+'</div>';
+  }else{
+    h+='<div class="rvsum" style="opacity:.75;font-style:italic">No verified fact for this entity.</div>';
+  }
+  var nb=data.neighbors||[];
+  if(nb.length){
+    h+='<div class="rvnb">graph links: '+esc(nb.slice(0,8).map(function(n){return n.entity||n.name||'';}).filter(Boolean).join(' \u00b7 '))+
+       (nb.length>8?' \u00b7 +'+(nb.length-8)+' more':'')+'</div>';
   }
   return h;
 }
@@ -1140,9 +1154,6 @@ function cleanDesc(d){
 }
 function revKeysFor(name){
   return REV_BY_CANON[canon(name)]||null;
-}
-function stripBullet(s){
-  return String(s||'').replace(/^\u2022\s*/,'');
 }
 function renderRevision(hero){
   var el=document.getElementById('revpanel');
