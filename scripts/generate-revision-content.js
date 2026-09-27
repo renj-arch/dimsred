@@ -396,9 +396,29 @@ function gatherPrimary(topicName, selectedId, entityType) {
 // "king of Magadha" is a short label, so it is owned.
 // "A theory is, in general, a set of propositions..." is a dictionary entry for
 // a common noun, so it is not about Toba and is dropped.
+// gen-topic-layers.js synthesises placeholder blurbs as branch descriptions
+// ("Direct kin and closest relations recorded for X.", "The people & leaders
+// linked to X."). They are UI scaffolding, not statements about the entity,
+// but they reach the desc pool and were being admitted as CORE_FACTs, so a
+// revision card could open on a sentence that says nothing.
+var PLACEHOLDER = [
+  /\brecorded for\b/i,
+  /\blinked to\b/i,
+  /\bconnected to\b/i,
+  /\bneighbours? in this branch\b/i,
+  /^the .* linked to /i
+];
+function isPlaceholderDesc(desc) {
+  var t = String(desc || '').trim();
+  if (!t) return true;
+  for (var i = 0; i < PLACEHOLDER.length; i++) if (PLACEHOLDER[i].test(t)) return true;
+  return false;
+}
+
 function nodeDescIsOwned(desc, selectedId) {
   var text = String(desc).trim();
   if (!text) return false;
+  if (isPlaceholderDesc(text)) return false;
   if (EO.mentionsEntity(text, selectedId, idSet, aliasIndex)) return true;
   return text.length < 90;
 }

@@ -16,6 +16,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var FAS = require('./lib/figure-auto-score.js');
 
 var DATA = path.join(__dirname, '..', 'data');
 var LAYERS_FILE = path.join(DATA, 'topic-layers.json');
@@ -417,15 +418,15 @@ var AUTO_UA = 'dimsred-geo-figures/1.0 (https://github.com/renj-arch/dimsred; ed
 var AUTO_REJECT = /monument|museum|statue|memorial|selfie|portrait|headshot|palace|fort|flag|logo|emblem|coat of arms|coin|stamp|poster|postcard|painting|church|mosque|temple|bridg|rail|train|hotel|aircraft|shipping|\.pdf|\.djvu|\.ogg|\.ogv|\.webm|\.mid|_thumb/;
 var AUTO_EXCLUDE_IMG = {};
 function autoScore(titleRaw, topic) {
-  var raw = String(titleRaw).toLowerCase();
-  var t = norm(raw);
-  var ext = /\.svg$/i.test(raw) ? 3 : (/\.png$/i.test(raw) ? 2 : (/\.jpe?g$/i.test(raw) ? 1.2 : (/\.gif$/i.test(raw) ? 0.8 : -10)));
-  var hint = /map|locator|topograph|outline|projection/.test(t) ? 2 : (/relief|physical|political|location|orthograph|globe|continent|terrain|satellite|aerial/.test(t) ? 1 : 0);
-  var bigNum = /[0-9]{4,}/.test(t) ? -1 : 0;
-  var rel = 0;
-  var tt = tokens(topic || '');
-  if (tt.length) rel = tt.some(function (w) { return w.length > 2 && t.indexOf(w) !== -1; }) ? 2 : -3;
-  return hint + ext + rel + (AUTO_REJECT.test(t) ? -4 : 0) + bigNum;
+  // Scoring lives in scripts/lib/figure-auto-score.js. This builder used to keep
+  // its own copy of the arithmetic, which is how a one-line relevance bug (any
+  // topic token counting as a match, so "Long Island" accepted an Easter Island
+  // map) shipped here and in the subject builder at the same time.
+  return FAS.autoScore(titleRaw, topic, {
+    hintRe: /map|locator|topograph|outline|projection/,
+    hint2Re: /relief|physical|political|location|orthograph|globe|continent|terrain|satellite|aerial/,
+    rejectRe: AUTO_REJECT
+  }).score;
 }
 async function fetchT(url, opts, ms) {
   var ctl = new AbortController();

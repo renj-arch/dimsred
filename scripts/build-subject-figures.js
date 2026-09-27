@@ -20,6 +20,7 @@
 
 var fs = require('fs');
 var path = require('path');
+var FAS = require('./lib/figure-auto-score.js');
 
 var QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
 var CACHE_FILE = path.join(__dirname, '..', 'data', 'subject-figures-cache.json');
@@ -40,20 +41,14 @@ function C(name, w) { return 'https://commons.wikimedia.org/wiki/Special:FilePat
 var AUTO_UA = 'dimsred-subject-figures/1.0 (https://github.com/renj-arch/dimsred; educational build)';
 var AUTO_REJECT = /monument|museum|statue|memorial|selfie|portrait|headshot|palace|fort|flag|logo|emblem|coat of arms|coin|stamp|poster|postcard|painting|church|mosque|temple|bridg|rail|train|hotel|aircraft|shipping|\.pdf|\.djvu|\.ogg|\.ogv|\.webm|\.mid|_thumb/;
 var AUTO_EXCLUDE_IMG = {};
-function tokens(s) {
-  return norm(String(s).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '')).split(' ').filter(Boolean);
-}
 function autoScore(titleRaw, topic) {
-  var raw = String(titleRaw).toLowerCase();
-  var t = norm(raw);
-  var ext = /\.svg$/i.test(raw) ? 3 : (/\.png$/i.test(raw) ? 2 : (/\.jpe?g$/i.test(raw) ? 1.2 : (/\.gif$/i.test(raw) ? 0.8 : -10)));
-  var hint = /map|locator|topograph|outline|projection|chart|diagram|structure|scheme|anatomy|schemat/.test(t) ? 2 :
-    (/relief|physical|political|location|orthograph|globe|continent|terrain|satellite|circuit|graph|flow|schematic/.test(t) ? 1 : 0);
-  var bigNum = /[0-9]{4,}/.test(t) ? -1 : 0;
-  var rel = 0;
-  var tt = tokens(topic || '');
-  if (tt.length) rel = tt.some(function (w) { return w.length > 2 && t.indexOf(w) !== -1; }) ? 2 : -3;
-  return hint + ext + rel + (AUTO_REJECT.test(t) ? -4 : 0) + bigNum;
+  // Scoring lives in scripts/lib/figure-auto-score.js, shared with
+  // build-geography-figures.js so the two cannot drift apart again.
+  return FAS.autoScore(titleRaw, topic, {
+    hintRe: /map|locator|topograph|outline|projection|chart|diagram|structure|scheme|anatomy|schemat/,
+    hint2Re: /relief|physical|political|location|orthograph|globe|continent|terrain|satellite|circuit|graph|flow|schematic/,
+    rejectRe: AUTO_REJECT
+  }).score;
 }
 async function fetchT(url, opts, ms) {
   var ctl = new AbortController();
@@ -179,14 +174,24 @@ function subjectPage(subj) {
     '</body></html>';
 }
 function indexPage(all) {
+  // Every figure in a non-geography pack is an unverified auto-suggestion, so
+  // the index must not present them as content. It used to print "6 figures" for
+  // 21 subjects whose figures had all been graded `template` by
+  // scripts/import-figures.js -- 126 unverified images advertised as material.
+  // The verified count is stated per subject, and it is zero everywhere except
+  // the curated geography pack.
   var items = all.map(function (s) {
-    return '<li><a href="' + esc(s.slug) + '-figures.html">' + esc(s.name) + '</a> \u2014 ' + s.figs.length + ' figures</li>';
+    return '<li><a href="' + esc(s.slug) + '-figures.html">' + esc(s.name) +
+      '</a> \u2014 ' + s.figs.length + ' suggested \u00b7 <b>0 verified</b></li>';
   }).join('');
   return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>UPSC Subject Figures \u2014 Index</title>' +
     '<style>' + CSS + '</style></head><body>' +
     '<section class="page"><header><span class="num">GS \u00b7 All Subjects \u00b7 UPSC</span>' +
     '<h1>UPSC Subject Figures \u2014 Index</h1>' +
-    '<p class="meta">Per-subject printable figure packs, auto-suggested from Wikimedia Commons. Every image is badged for verification.</p></header></section>' +
+    '<p class="meta">Per-subject printable figure packs. Only the Geography pack is curated. ' +
+    'Every other pack holds unverified auto-suggestions from Wikimedia Commons \u2014 ' +
+    '0 of them have been checked, so treat them as leads to verify, not as study material. ' +
+    'Run scripts/import-figures.js to see the current verification grade per figure.</p></header></section>' +
     '<ul class="idx"><li><a href="geography-figures.html">Geography</a> \u2014 curated figure pack</li>' + items + '</ul>' +
     '</body></html>';
 }

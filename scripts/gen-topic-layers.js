@@ -23,71 +23,80 @@ for (var p = 0; p < tl.nodesParts; p++) {
 }
 console.log('nodes:', nodes.length, 'edges:', tl.edges.length, 'links:', tl.links.length);
 
-// ---- shared logic copied from flowchart.html (must stay in sync) ----
-function canon(s) {
-  return String(s || '').toLowerCase().trim().replace(/\s+/g, ' ');
-}
-var JUNK_KIN = /^(?:day|austrian|earth|albrecht|just|will|mughal|saw|sahib|crown|young|brahmin|nizam|master|royal|weaver|court|civil|bengali|university|revolutionary|high|way|specifically|elder|poor|field|church|universal|low|guardian|judge|god|nun|dowager|common|notably|strong|blood|spirit|witch|action|senate|latin|english|french|dutch|good|small|short|men|count|countess|consort|reverend|pretender|mayor|director|businessman|entered|tim|damage|times|ultimately|observer|originally|democratic|eventually|begin|however|subsequently|previously|instead|soon|secondly|met|colonial|national|imperial|former|finally|afterwards|before|previous|manchus|population|appendix|conclusion|introduction|features|objectives|measures|schemes|programmes|policies|impacts|causes|effects|principles|basics|types|government|administration|parliament|legislature|judiciary|executive|photograph|photographs|pictures|archives|documents|references|summary|red|fine|straw|light|craft|gun|wing|forest|paper|transport|television|weir|kaiser|fuel|labour|commerce|industry|state|capital|revenue|budget|currency|debt|exchange|market|mineral|son|black|steel|manhattan|virginia|munich|manitoba|stirling|bandai)$/;
-function isJunk(n) {
-  if (!n) return true;
-  if (n.kin === true && (n.count || 0) < 2) return true;
-  return n.kin === true && !n.seed && JUNK_KIN.test(canon(n.name || ''));
-}
-function isHub(n) { return (n.count || 0) >= 5000; }
-// Personal-name gate for the People & Leaders lane: the graph sometimes types
-// places/dynasties/abstract terms as `person` (Uttar Pradesh 1500-2026), so a
-// candidate only counts when some node under that name is a credible real
-// person — a curated seed, or a count>=2 person node whose name does not look
-// like a place/regime/organisation/abstract label.
-var REJECT_PERSON = /\b(pradesh|arabia|island|islands|city|state|region|province|county|district|republic|kingdom|empire|horde|dynasty|sultanate|caliphate|falls|gulf|desert|river|valley|mountains?|plateau|coast|peninsula|sierra|angeles|york|jersey|dakota|hampshire|georgia|france|germany|england|poland|turkey|russia|china|japan|india|egypt|leone|babylon|assyria|persia|greek|roman|ottoman|byzantine|maya|judaism|orthodox|protestant|christian|buddhist|purge|eagles|giants|yankees|league|committee|commission|congress|parliament|government|ministry|department|bureau|university|college|school|company|society|association|party|club|tribunal|court|army|navy|police|programme|program|plan|scheme|policy|reform|movement|revolution|war|battle|treaty|agreement|act|law|code|era|age|period|industry|market|sports|theatre|film|album|song|book|novel|game|series|show|channel|newspaper|herald|times|post|weekly|monthly|tea|tobacco|rice|cotton|railway|airport|rail|route|station|airline|front|brothers|good|church|mosque|temple|fort|harbour|harbor)\b/i;
-function isCrediblePerson(name) {
-  var arr = byName[canon(name)] || [];
-  for (var i = 0; i < arr.length; i++) {
-    var n = arr[i];
-    if (!n || n.type !== 'person') continue;
-    if (n.seed) return true;
-    if ((n.count || 0) >= 2 && !REJECT_PERSON.test(n.name || '')) return true;
-  }
-  return false;
-}
+// ---- graph resolver: single implementation, shared with flowchart.html ----
+// The copies of these functions used to live here under the comment "shared
+// logic copied from flowchart.html (must stay in sync)". A differential audit
+// (scripts/audit-shared-logic.js) found 9 of 20 symbols had silently diverged,
+// so the logic now lives in scripts/lib/graph-core.js and is injected.
+//
+// Two policies used to differ between this file and flowchart.html and are now
+// explicit switches rather than accidents of copy-paste. Both are now ON by
+// default, each because it was measured first (scripts/audit-canon-delta.js):
+//
+//   strict canon   ON. flowchart.html already keyed names with GC.canon(),
+//                  which strips punctuation, while this file used
+//                  GC.canonLoose(). The two were indexing 25.5% of nodes into
+//                  DIFFERENT key spaces. Unifying adds 37 previously
+//                  unresolvable topics -- B. R. Ambedkar, M. L. King Jr.,
+//                  J. F. Kennedy, A. P. J. Abdul Kalam, Sun Yat-sen,
+//                  Chandrayaan-1/3, the Hundred Years' War, 9/11 -- every one
+//                  of which had no topic layer at all, so the flowchart fell
+//                  back to raw co-mentions for them. Use --loose-canon to
+//                  reproduce the old behaviour.
+//   prominence     ON ('graph'). The old 'count' rank is measurably broken:
+//                  over 126 same-named groups it resolves "John Marshall" and
+//                  "Eli Whitney" to animal-husbandry concepts because the
+//                  mistyped concept outscores the real person on count. On the
+//                  generated layers it changes 0 of 8750 items (resolveItem
+//                  already pins the type first), so adopting it is free.
+//                  Use --prominence=count to reproduce the old behaviour.
+var GC = require('./lib/graph-core.js');
+// One type authority for every consumer (scripts/lib/type-authority.js). The
+// raw corpus type is the LAST resort: 392,872 of 529,755 nodes carry `concept`,
+// which the authority documents as "unclassified", not as a real semantic type.
+// Left unconsulted, Gujarat/Delhi/Bihar/Mathura were filed under Key Concepts
+// and typed `concept`, so 836 of 893 known-place members landed in the wrong
+// lane. The authority resolves Gujarat -> place/state, Nepal -> place/country,
+// and honestly reports Mathura/Magadha/Slayer as `misc` instead of inventing a
+// type for them. Bucketing and the emitted item type both read from it, so the
+// lane and the card can never disagree.
+var TA = require('./lib/type-authority.js');
+var TYPE_AUTHORITY = TA.makeTypeAuthority();
+var ARGV = process.argv.slice(2);
+var STRICT_CANON = ARGV.indexOf('--loose-canon') === -1;
+var PROM_ARG = ARGV.filter(function (a) { return a.indexOf('--prominence=') === 0; })[0];
+var PROMINENCE = PROM_ARG ? PROM_ARG.split('=')[1] : 'graph';
+var HUB_ARG = ARGV.filter(function (a) { return a.indexOf('--hub=') === 0; })[0];
+var HUB_THRESHOLD = HUB_ARG ? parseInt(HUB_ARG.split('=')[1], 10) : GC.HUB_DEFAULT;
 
 var byId = {};
 var byName = {};
+var canon = STRICT_CANON ? GC.canon : GC.canonLoose;
 nodes.forEach(function (n) {
   byId[n.id] = n;
   var c = canon(n.name);
   (byName[c] = byName[c] || []).push(n);
 });
-function byProminence(a, b) {
-  var d = (b.count || 0) - (a.count || 0);
-  if (d) return d;
-  return String(a.id).localeCompare(String(b.id));
-}
-function findByName(q) {
-  var c = canon(q);
-  function good(b) { return !!b && !isJunk(b) && ((b.count || 0) >= 2 || b.cur); }
-  var arr = byName[c];
-  if (arr && arr.length) {
-    var hits = arr.filter(good).sort(byProminence);
-    if (hits.length) return hits[0];
-  }
-  return null;
-}
-function resolveItem(name, type) {
-  var c = canon(name);
-  var arr = byName[c];
-  if (!arr || !arr.length) return null;
-  var good = arr.filter(function (n) { return !isJunk(n) && !isHub(n) && (n.count || 0) >= 1; });
-  if (!good.length) return null;
-  var byType = good.filter(function (n) { return n.type === type && (n.level || 0) <= 3; });
-  var pool = (byType.length ? byType : good).slice();
-  pool.sort(byProminence);
-  return pool[0];
-}
-// ---- /shared ----
+// Kinship-mining sentence duplicates that shadow a real node under the same
+// name ("kin|Sweden~medieval", typed person). Only the ones duplicating a clean
+// sibling are removed, so no name loses its last candidate.
+GC.pruneAliasDuplicates(byName);
+
+var R = GC.makeResolver({
+  byName: byName,
+  canonFn: canon,
+  prominence: PROMINENCE,
+  hubThreshold: HUB_THRESHOLD
+});
+var isJunk = R.isJunk;
+var isHub = R.isHub;
+var isCrediblePerson = R.isCrediblePerson;
+var findByName = R.findByName;
+var byProminence = function (a, b) { return GC.byProminence(a, b, PROMINENCE); };
+var resolveItem = R.resolveItem;
 
 // index typed edges: both endpoints must be real, non-junk, non-hub nodes
-var FAMILY = /^(father|mother|parent|parents|son|daughter|child|children|brother|sister|sibling|spouse|wife|husband|partner of|ex-wife|ex-husband|divorced|grandfather|grandmother|grandson|granddaughter|grandparent|grandchild|uncle|aunt|nephew|niece|cousin|brother-in-law|sister-in-law|son-in-law|daughter-in-law|father-in-law|mother-in-law|mentored by|succeded by|succeeded by|successor of|predecessor of)$/;
+var FAMILY = GC.FAMILY;
 // Direction-aware asserted verbs for real-real non-family typed edges. The map
 // has the forward label (a REL b as "a founded b") and the inverse label (the
 // same edge read from b's side, "b founded by a"). Only verbs with a confident
@@ -376,72 +385,13 @@ var BRANCH_OF = [
   { key: 'disease',       title: 'Health & Disease',    type: 'disease',  rel: 'associated with' },
   { key: 'concept',       title: 'Key Concepts',        type: 'concept',  rel: 'concept of' }
 ];
-var PLACE_WORDS = ['city', 'town', 'village', 'place', 'state', 'region', 'province', 'country', 'island', 'mountain', 'river', 'lake', 'sea', 'ocean', 'desert', 'capital', 'district', 'delta', 'coast', 'plateau', 'range', 'archipelago', 'peninsula', 'valley', 'forest', 'kingdom', 'empire', 'republic', 'colony', 'cape', 'bay', 'gulf', 'islands', 'coastline'];
-var PLACE_HINT = new RegExp('(?:^|[^A-Za-z])(' + PLACE_WORDS.join('|') + ')(?:[^A-Za-z]|$)', 'i');
-var PLACE_CAT = /(?:world-geography|physiograph|biogeographic|ecoregion|biome|place|capital|island|mountain|coast|plateau|river-|lake|\bwetland\b|\bdelta\b|\bocean\b|\bsea\b|\bdesert\b|\bvalley\b|\bpeninsula\b|\bhimalaya\b|western.?ghat)/i;
-function facetOf(n) {
-  var ty = n.type;
-  // the graph sometimes types agreements/treaties/reports as `org`; route those
-  // to the event lane so they read "event in" rather than "institution of"
-  if (ty === 'org') {
-    var nmO = n.name || '';
-    if (/^(?:the\s+)?(?:agreement|treaty|act|convention|pact|accord|declaration|report|protocol|charter|conference|summit|election|campaign|movement|battle|war|resolution|reform)\b/i.test(nmO) ||
-        /(?:agreement|treaty|convention|pact|accord|declaration|report|protocol|charter|resolution|movement|war)s?$/i.test(nmO)) return 'event';
-  }
-  if (ty === 'person') return 'person';
-  if (ty === 'event') return 'event';
-  if (ty === 'org') return 'organisation';
-  if (ty === 'disease') return 'disease';
-  if (ty === 'concept') {
-    var nm = n.name || '';
-    // Only clearly-geographic concepts belong to Geography & Places. A generic
-    // single-token concept (Empire, Holocaust, State of emergency) must NOT be
-    // re-labelled as a place just because a geo keyword appears in its category.
-    var catKeys = (n.cats || []).map(function (c) { return c.key || ''; });
-    var strongCat = catKeys.length && catKeys.every(function (k) { return PLACE_CAT.test(k); }) && PLACE_HINT.test(nm);
-    var strongName = PLACE_HINT.test(nm) && !/^(empire|state|republic|kingdom|colony|movement|war|treaty|organization|society|company|industry|government|committee|commission|group|party|front|union)$/i.test(nm) &&
-      !/^(state of|status of|city of|end of|start of)/i.test(nm);
-    return (strongCat || strongName) ? 'centre' : 'concept';
-  }
-  return 'concept';
-}
-function dispYear(y) {
-  if (y == null) return '';
-  if (y < 0) return (-y) + ' BCE';
-  return String(y);
-}
-function dispSpan(span) {
-  if (!span || span.min == null) return '';
-  if (span.min === span.max) return dispYear(span.min);
-  return dispYear(span.min) + '–' + dispYear(span.max);
-}
-// Clean a mined corpus sentence into a one-line revision brief, or synthesize a
-// short fallback (span+era+type) when the corpus text is a bare fragment.
-var FRAG_LEAD = /^(?:in\s+(?:the|this|that|a|an)\s+|during\s+(?:the|this|that|a|an)\s+|on\s+(?:the|this|that|a|an)\s+)/i;
-function briefOf(n) {
-  var raw = String(n.desc || '').trim().replace(/\s+/g, ' ');
-  var d = raw;
-  // strip leading "In the..." style fragments and dangling newlines
-  d = d.replace(/^NOTE:\s*/i, '');
-  if (d.length > 4 && FRAG_LEAD.test(d) && !/,\s|\.\.\./.test(d.slice(0, 60))) d = d.replace(FRAG_LEAD, '');
-  // drop trailing boilerplate / indexing
-  d = d.replace(/\\n+/g, ' ').replace(/\[(?:citation needed|source needed)\]/gi, '');
-  var name = n.name || '';
-  // a desc that merely restates the title adds nothing — force the fallback
-  if (d.length < 24 || new RegExp('^' + name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '$', 'i').test(d) ||
-      d === 'The ' + name || d === name + ' (' || /^(the\s+)?'?$/i.test(d)) d = '';
-  var span = n.span;
-  if (n.type === 'event' && span && span.min != null && d && !/^-?\d/.test(d)) {
-    d = dispSpan(span) + ' — ' + d;
-  }
-  if (d.length > 140) d = d.slice(0, 137) + '…';
-  if (d.length >= 18) return d;
-  // synthesize a compact fallback
-  var era = { ancient: 'ancient', medieval: 'medieval India', colonial: 'colonial era', freedom: 'freedom struggle era', republic: 'post-independence India', contemporary: 'contemporary' }[n.era] || '';
-  var yrs = dispSpan(span);
-  var syn = [name, [era, yrs].filter(Boolean).join(', ')].filter(Boolean);
-  return syn.join(' — ') + '.';
-}
+var PLACE_WORDS = GC.PLACE_WORDS;
+var PLACE_HINT = GC.PLACE_HINT;
+var PLACE_CAT = GC.PLACE_CAT;
+var facetOf = GC.facetOf;
+var dispYear = GC.dispYear;
+var dispSpan = GC.dispSpan;
+var briefOf = GC.briefOf;
 function makeBranches(seed) {
   var bs = [];
   var fam = fnNeighbors(seed);
@@ -460,14 +410,17 @@ function makeBranches(seed) {
   links = links.filter(function (L) { return !(L.type === 'person' && famSeen[canon(L.name)]); });
   var buckets = {};
   links.forEach(function (L) {
-    var f = facetOf(L.node);
+    // Bucket on the AUTHORITATIVE type, not the raw corpus one, so a place the
+    // gazetteer recognises reaches the Geography lane instead of Key Concepts.
+    L.authType = (TYPE_AUTHORITY.describe(L.node) || {}).type || L.type;
+    var f = facetOf({ name: L.name, type: L.authType, cats: L.node.cats });
     (buckets[f] = buckets[f] || []).push(L);
   });
   BRANCH_OF.forEach(function (b) {
     var arr = buckets[b.key];
     if (!arr || !arr.length) return;
     var items = arr.slice(0, b.key === 'concept' ? 14 : 10).map(function (L) {
-      return { name: L.name, type: L.type, rel: L.rel, src: L.src || 'co', w: L.weight, desc: briefOf(L.node), note: noteFor(L.name), ev: evidenceFor(seed.name, L.name) };
+      return { name: L.name, type: L.authType, rel: L.rel, src: L.src || 'co', w: L.weight, desc: briefOf(L.node), note: noteFor(L.name), ev: evidenceFor(seed.name, L.name) };
     });
     if (!items.length) return;
     bs.push({ title: b.title, type: b.type, rel: b.rel, desc: 'The ' + b.title.toLowerCase() + ' linked to ' + seed.name + '.', items: items });
@@ -515,9 +468,22 @@ seedSet.forEach(function (seed) {
 console.log('with branches:', withBranches, '| empty:', noBranches, '| preserved hand-authored:', skippedHandAuthored);
 
 // preserve any other existing layers (non-seed topics) untouched
+//
+// ...except a legacy spelling that is the SAME entity as something we just
+// built. Seeds are written under canon (L445) but the historical file carried
+// raw spellings too, so "el niño" and "el ni o", "covid-19" and "covid 19",
+// "al biruni" and "al-biruni" all survived as separate keys. flowchart.html
+// resolves both to ONE central node, yet mints branch ids from the RAW key
+// (crt|<key>|B|<n>), so it grafted two full branch sets onto that node --
+// duplicated sections in the tree, not lost data. Prefer the freshly built
+// canon entry and drop the duplicate spelling.
+var droppedDupes = 0;
 Object.keys(existing).forEach(function (k) {
-  if (!outLayers[k]) outLayers[k] = existing[k];
+  if (outLayers[k]) return;
+  if (outLayers[canon(k)]) { droppedDupes++; return; }
+  outLayers[k] = existing[k];
 });
+if (droppedDupes) console.log('dropped duplicate-spelling keys:', droppedDupes);
 
 fs.writeFileSync(out, JSON.stringify(outLayers, null, 1), 'utf8');
 console.log('wrote', out, Object.keys(outLayers).length, 'topics');
@@ -526,7 +492,11 @@ console.log('wrote', out, Object.keys(outLayers).length, 'topics');
 var check = ['pokhran-ii', 'mahatma gandhi', 'adolf hitler', 'indira gandhi', 'indian national congress', 'alexander the great', 'covid-19'];
 var itemsN = 0, resN = 0;
 check.forEach(function (k) {
-  var t = outLayers[k];
+  // Layers are keyed by canon, so the probe must canon too. Looking up the raw
+  // string reported MISSING for "pokhran-ii" and "covid-19" when both were
+  // present under "pokhran ii" / "covid 19" -- a false alarm that reads like
+  // data loss.
+  var t = outLayers[canon(k)];
   if (!t) { console.log('check:', k, 'MISSING'); return; }
   var n = 0, r = 0;
   (t.branches || []).forEach(function (b) { (b.items || []).forEach(function (it) { n++; if (resolveItem(it.name, it.type)) r++; }); });

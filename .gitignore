@@ -25,6 +25,13 @@ data/questions/state-tracker.json
 !data/topic-layers.json
 !data/revision-content.json
 !data/topic-weight.json
+# Auto-picked Commons figures. Both figure builders document these caches as the
+# thing that keeps image picks stable across builds and hand-overridable, and
+# build-geography-figures.js even claims it is "git-tracked via data/". Under the
+# blanket `data/*` rule above it was NOT tracked, so the caches were lost on every
+# fresh clone and every rebuild silently re-rolled all ~123 unverified figures.
+!data/geo-auto-figures.json
+!data/subject-figures-cache.json
 question-bank/
 add_entries.js
 add_entries_phase2.js
