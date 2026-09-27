@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>GK Current Affairs Archive — vlymbooq</title>
+<meta name="description" content="Complete archive of 15333501 GK & Current Affairs questions with explanations. Free practice for competitive exams. Browse by subject tree.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="stylesheet" href="css/style.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--border-hover:rgba(255,255,255,.1);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--cyan:#22d3ee;--radius:12px;--radius-lg:16px}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:var(--text);text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:8px}
+.brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);white-space:nowrap}
+.nav-links a.active,.nav-links a:hover{background:rgba(167,139,250,.1);color:var(--purple)}
+.page-wrap{display:flex;max-width:1100px;margin:0 auto;padding:24px;gap:24px}
+.sidebar{width:280px;flex-shrink:0;position:sticky;top:80px;align-self:flex-start;max-height:calc(100vh - 96px);overflow-y:auto;scrollbar-width:thin}
+.sidebar-title{font-size:.8em;font-weight:600;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted);margin-bottom:12px}
+.sidebar-cat{margin-bottom:2px}
+.sidebar-link,.sidebar-subj-link,.sidebar-subsub-link{display:flex;align-items:center;justify-content:space-between;padding:6px 12px;border-radius:8px;font-size:.85em;color:var(--text-sec);cursor:pointer}
+.sidebar-link.active,.sidebar-subj-link.active,.sidebar-subsub-link.active{background:rgba(167,139,250,.12);color:var(--text)}
+.sidebar-icon{margin-right:6px}
+.sidebar-count{font-size:.78em;color:var(--text-muted);padding:1px 6px;border-radius:4px;background:var(--bg-card)}
+.sidebar-subjects{display:none;margin-left:12px}
+.sidebar-subjects.open{display:block}
+.sidebar-subj-link{padding:4px 10px;font-size:.82em}
+.sidebar-subsubs{display:none;margin-left:12px}
+.sidebar-subsubs.open{display:block}
+.sidebar-subsub-link{padding:3px 8px;font-size:.78em}
+.main-content{flex:1;min-width:0}
+.breadcrumb{font-size:.85em;color:var(--text-muted);margin-bottom:20px}
+.breadcrumb span{color:var(--text-sec)}
+.breadcrumb .current{color:var(--text)}
+.page-title{font-size:1.6em;font-weight:800;margin-bottom:4px;letter-spacing:-.5px}
+.page-sub{color:var(--text-sec);font-size:.9em;margin-bottom:24px}
+.loading{text-align:center;padding:40px;color:var(--text-muted)}
+.search-bar{position:relative;margin-bottom:20px;display:flex;align-items:center;gap:8px}.search-info{cursor:pointer;color:var(--text-muted);font-size:1.2em;flex-shrink:0;transition:color .2s}.search-info:hover{color:var(--purple)}.search-bar input{width:100%;padding:12px 16px;border-radius:100px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font-size:.9em;outline:none;font-family:inherit;transition:border-color .2s}.search-bar input:focus{border-color:var(--purple)}.search-bar input::placeholder{color:var(--text-muted)}.search-results-info{font-size:.85em;color:var(--text-sec);margin-bottom:16px;padding:8px 0}.search-no-results{text-align:center;padding:40px;color:var(--text-muted)}
+.subj-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;cursor:pointer;display:block}
+.subj-card:hover{background:var(--bg-hover);border-color:var(--border-hover)}
+.subj-card-name{font-weight:600;font-size:.95em;margin-bottom:4px}
+.subj-card-count{font-size:.8em;color:var(--text-muted);margin-bottom:8px}
+.subj-card-preview{font-size:.75em;color:var(--text-muted);line-height:1.5;overflow:hidden;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical}
+.question-list{display:flex;flex-direction:column;gap:12px}
+.q-item{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px}
+.q-item:hover{background:var(--bg-hover)}
+.q-num{font-size:.75em;color:var(--text-muted);margin-bottom:4px}
+.q-tags{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:6px}
+.tag{font-size:.7em;padding:2px 8px;border-radius:100px;font-weight:500}
+.cat-tag{background:rgba(167,139,250,.12);color:var(--purple)}
+.date-tag{background:rgba(34,211,238,.08);color:var(--cyan)}
+.q-question{font-size:.95em;font-weight:500;margin-bottom:8px;line-height:1.6}
+.q-answer{font-size:.85em;margin-bottom:6px}
+.a-label{color:var(--text-muted)}
+.a-value{color:var(--emerald);font-weight:600}
+.explain-btn{background:transparent;border:1px solid var(--border);color:var(--text-sec);padding:5px 12px;border-radius:100px;cursor:pointer;font-size:.78em}
+.explain-btn:hover{background:var(--bg-hover);border-color:var(--border-hover)}
+.q-explain{background:rgba(167,139,250,.05);border-radius:8px;padding:12px;margin-top:8px;font-size:.82em;color:var(--text-sec);line-height:1.7;display:none}
+.q-explain.show{display:block}
+@media(max-width:768px){.sidebar{display:none}.page-wrap{padding:16px;flex-direction:column}}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a class="active" href="archive.html">Archive</a><a href="about.html">About</a></div></div></nav><div class="page-wrap"><aside class="sidebar"><div class="sidebar-title">Categories</div><div id="sidebar-root"></div></aside><main class="main-content"><div class="search-bar"><input type="text" id="searchInput" placeholder="Search questions..." oninput="onSearchInput(this.value)" autocomplete="off"><span class="search-info" onclick="alert('Search tips:\n\n• Type any keyword — matches whole words (and variants, e.g. kushan finds kushans/kushana) in question, answer, explanation\n• Multiple words = all must match (AND search)\n• date:YYYY-MM-DD — filter by exact date\n• date:YYYY-MM — filter by month\n• Combine e.g. date:2026-07-22 Arjuna\n\nClick a category in sidebar to browse.')" title="Search help">ⓘ</span></div><div class="breadcrumb" id="breadcrumb">Archive</div><div class="content-panel" id="view-welcome"><h1 class="page-title">📚 GK Current Affairs Archive</h1><p class="page-sub">15333501 questions across 135 categories — last updated <time id="build-time" datetime="2026-09-27T08:21:03.500Z">27 Sept 2026, 08:21 am UTC</time>. Click a category to browse.</p><div class="subj-grid" id="welcome-grid"></div></div><div class="content-panel" id="view-content" style="display:none"></div></main></div><script>
+var CAT_INDEX = [];
+var _indexLoaded = false;
+var _pendingSearch = null;
+var _cache = {};
+var _currentCat = null, _currentSubj = null, _currentSubSub = null;
+function loadIndex() {
+  if (_indexLoaded) return;
+  var xhr = new XMLHttpRequest();
+  xhr.timeout = 60000;
+  xhr.onload = function() {
+    if (xhr.status !== 200) { showIndexError(); return; }
+    try { CAT_INDEX = JSON.parse(xhr.responseText); }
+    catch (e) { showIndexError(); return; }
+    _indexLoaded = true;
+    buildSidebar();
+    buildWelcomeGrid();
+    if (_pendingSearch !== null) { var q = _pendingSearch; _pendingSearch = null; doSearch(q); }
+  };
+  xhr.onerror = xhr.ontimeout = showIndexError;
+  xhr.open('GET', 'data/questions/archive-cat-index.json');
+  xhr.send();
+}
+function showIndexError() {
+  var root = document.getElementById('sidebar-root');
+  if (root && !_indexLoaded) root.innerHTML = '<div class="sidebar-subsub-loading">Could not load archive index. Check your connection.</div>';
+  var grid = document.getElementById('welcome-grid');
+  if (grid && !_indexLoaded) grid.innerHTML = '<div class="loading">Could not load archive index. Check your connection.</div>';
+}
+function toggleExplain(btn) {
+  var e = btn.nextElementSibling;
+  e.classList.toggle('show');
+  btn.textContent = e.classList.contains('show') ? '📘 Hide' : '📖 Explanation';
+}
+function selectCategory(ci) {
+  _currentSubj = _currentSubSub = null;
+  var c = CAT_INDEX[ci];
+  document.querySelectorAll('.sidebar-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subj-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subsub-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subjects').forEach(function(s){s.classList.remove('open')});
+  document.querySelectorAll('.sidebar-subsubs').forEach(function(s){s.classList.remove('open')});
+  var link = document.querySelector('.sidebar-link[data-ci="' + ci + '"]');
+  if(link) link.classList.add('active');
+  var subjs = document.getElementById('subj-' + ci);
+  if(subjs) subjs.classList.add('open');
+  document.getElementById('breadcrumb').innerHTML = '<span class="current">' + escHtml(c.name) + '</span>';
+  showCategory(ci);
+  return false;
+}
+function showCategory(ci) {
+  var c = CAT_INDEX[ci];
+  _currentCat = ci;
+  var panel = document.getElementById('view-content');
+  panel.style.display = 'block';
+  document.getElementById('view-welcome').style.display = 'none';
+  var h = '<h2 class="page-title">' + c.icon + ' ' + escHtml(c.name) + '</h2><p class="page-sub">Choose a topic:</p><div class="subj-grid">';
+  c.subjects.forEach(function(subj, si) {
+    var preview = subj.subSubjects.slice(0, 3).map(function(s){return escHtml(s.name)}).join('<br>');
+    h += '<a href="#" class="subj-card" onclick="return selectSubject(' + ci + ',' + si + ')"><div class="subj-card-name">' + escHtml(subj.name) + '</div><div class="subj-card-count">' + subj.total + ' questions</div><div class="subj-card-preview">' + preview + '</div></a>';
+  });
+  h += '</div>';
+  panel.innerHTML = h;
+  panel.scrollTop = 0;
+  window.scrollTo(0, 0);
+}
+function selectSubject(ci, si) {
+  _currentSubSub = null;
+  var c = CAT_INDEX[ci], subj = c.subjects[si];
+  document.querySelectorAll('.sidebar-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subj-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subsub-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subjects').forEach(function(s){s.classList.remove('open')});
+  document.querySelectorAll('.sidebar-subsubs').forEach(function(s){s.classList.remove('open')});
+  var link = document.querySelector('.sidebar-link[data-ci="' + ci + '"]');
+  if(link) link.classList.add('active');
+  var subjs = document.getElementById('subj-' + ci);
+  if(subjs) subjs.classList.add('open');
+  var subjLink = document.querySelector('.sidebar-subj-link[data-ci="' + ci + '"][data-si="' + si + '"]');
+  if(subjLink) subjLink.classList.add('active');
+  var ssEl = document.getElementById('ss-' + ci + '-' + si);
+  if(ssEl) ssEl.classList.add('open');
+  var ssRk = ci + '-' + si;
+  if (ssEl && !_ssRendered[ssRk]) renderSubsubs(ssEl, ci, si);
+  document.getElementById('breadcrumb').innerHTML = '<a href="#" onclick="return selectCategory(' + ci + ')">' + escHtml(c.name) + '</a> <span class="sep">›</span> <span class="current">' + escHtml(subj.name) + '</span>';
+  _currentCat = ci; _currentSubj = si;
+  showSubject(ci, si);
+  return false;
+}
+function showSubject(ci, si) {
+  var c = CAT_INDEX[ci], subj = c.subjects[si];
+  var panel = document.getElementById('view-content');
+  panel.style.display = 'block';
+  document.getElementById('view-welcome').style.display = 'none';
+  var PAGE = 200;
+  var total = subj.subSubjects.length;
+  var h = '<h2 class="page-title">' + c.icon + ' ' + escHtml(subj.name) + '</h2><p class="page-sub">' + escHtml(c.name) + ' — choose a sub-topic:</p><div class="subj-grid">';
+  var count = Math.min(PAGE, total);
+  for (var ssi = 0; ssi < count; ssi++) {
+    var ss = subj.subSubjects[ssi];
+    h += '<a href="#" class="subj-card" onclick="return selectSubSubject(' + ci + ',' + si + ',' + ssi + ')"><div class="subj-card-name">' + escHtml(ss.name) + '</div><div class="subj-card-count">' + ss.count + ' questions</div></a>';
+  }
+  h += '</div>';
+  if (total > PAGE) {
+    h += '<div style="text-align:center;margin:20px 0"><button class="subj-card load-more" onclick="loadMoreSubtopics(' + ci + ',' + si + ',' + PAGE + ')">Show more sub-topics (' + (total - PAGE) + ' remaining)</button></div>';
+  }
+  panel.innerHTML = h;
+  window.scrollTo(0, 0);
+}
+function loadMoreSubtopics(ci, si, shown) {
+  var subj = CAT_INDEX[ci].subjects[si];
+  var total = subj.subSubjects.length;
+  var PAGE = 200;
+  var panel = document.getElementById('view-content');
+  var grid = panel.querySelector('.subj-grid');
+  var next = Math.min(shown + PAGE, total);
+  for (var ssi = shown; ssi < next; ssi++) {
+    var ss = subj.subSubjects[ssi];
+    grid.insertAdjacentHTML('beforeend', '<a href="#" class="subj-card" onclick="return selectSubSubject(' + ci + ',' + si + ',' + ssi + ')"><div class="subj-card-name">' + escHtml(ss.name) + '</div><div class="subj-card-count">' + ss.count + ' questions</div></a>');
+  }
+  var btn = panel.querySelector('.load-more');
+  if (next >= total) {
+    if (btn) btn.parentNode.parentNode.removeChild(btn.parentNode);
+  } else {
+    btn.textContent = 'Show more sub-topics (' + (total - next) + ' remaining)';
+    btn.setAttribute('onclick', 'return loadMoreSubtopics(' + ci + ',' + si + ',' + next + ')');
+  }
+  return false;
+}
+function selectSubSubject(ci, si, ssi) {
+  var c = CAT_INDEX[ci], subj = c.subjects[si], ss = subj.subSubjects[ssi];
+  document.querySelectorAll('.sidebar-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subj-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subsub-link').forEach(function(l){l.classList.remove('active')});
+  document.querySelectorAll('.sidebar-subjects').forEach(function(s){s.classList.remove('open')});
+  document.querySelectorAll('.sidebar-subsubs').forEach(function(s){s.classList.remove('open')});
+  var link = document.querySelector('.sidebar-link[data-ci="' + ci + '"]');
+  if(link) link.classList.add('active');
+  var subjs = document.getElementById('subj-' + ci);
+  if(subjs) subjs.classList.add('open');
+  var subjLink = document.querySelector('.sidebar-subj-link[data-ci="' + ci + '"][data-si="' + si + '"]');
+  if(subjLink) subjLink.classList.add('active');
+  var ssEl = document.getElementById('ss-' + ci + '-' + si);
+  if(ssEl) ssEl.classList.add('open');
+  var ssRk = ci + '-' + si;
+  if (ssEl && !_ssRendered[ssRk]) renderSubsubs(ssEl, ci, si);
+  var ssLink = document.querySelector('.sidebar-subsub-link[data-ci="' + ci + '"][data-si="' + si + '"][data-ssi="' + ssi + '"]');
+  if(ssLink) ssLink.classList.add('active');
+  document.getElementById('breadcrumb').innerHTML = '<a href="#" onclick="return selectCategory(' + ci + ')">' + escHtml(c.name) + '</a> <span class="sep">›</span> <a href="#" onclick="return selectSubject(' + ci + ',' + si + ')">' + escHtml(subj.name) + '</a> <span class="sep">›</span> <span class="current">' + escHtml(ss.name) + '</span>';
+  _currentCat = ci; _currentSubj = si; _currentSubSub = ssi;
+  renderQuestions(ci, si, ssi);
+  return false;
+}
+function renderQuestions(ci, si, ssi) {
+  var subj = CAT_INDEX[ci].subjects[si], ss = subj.subSubjects[ssi];
+  var panel = document.getElementById('view-content');
+  panel.style.display = 'block';
+  document.getElementById('view-welcome').style.display = 'none';
+  panel.innerHTML = '<div class="loading">Loading questions...</div>';
+  loadCategory(ci, function() {
+    var data = _cache[ci];
+    var qs = data[subj.name] && data[subj.name].subSubjects && data[subj.name].subSubjects[ss.name];
+    if (!qs) { panel.innerHTML = '<div class="loading">No questions found.</div>'; return; }
+    var h = '<h2 class="page-title">' + CAT_INDEX[ci].icon + ' ' + escHtml(ss.name) + '</h2>';
+    h += '<p class="page-sub">' + escHtml(subj.name) + ' — ' + escHtml(CAT_INDEX[ci].name) + '</p>';
+    h += '<div class="question-list">';
+    qs.forEach(function(q, qi) { h += renderQuestionItem(q, qi); });
+    h += '</div>';
+    panel.innerHTML = h;
+    window.scrollTo(0, 0);
+  });
+}
+function loadCategory(ci, cb) {
+  if (_cache[ci]) { cb(); return; }
+  var files = CAT_INDEX[ci].file;
+  if (!Array.isArray(files)) files = [files];
+  var merged = {};
+  var loaded = 0;
+  var failed = false;
+  var panel = document.getElementById('view-content');
+  files.forEach(function(url, fi) {
+    (function attempt(attemptNum) {
+      var xhr = new XMLHttpRequest();
+      xhr.timeout = 30000;
+      xhr.onload = function() {
+        if (xhr.status !== 200) {
+          if (attemptNum < 1) { setTimeout(function() { attempt(attemptNum + 1); }, 1000); return; }
+          onFail(); return;
+        }
+        var data;
+        try { data = JSON.parse(xhr.responseText); } catch(e) {
+          if (attemptNum < 1) { setTimeout(function() { attempt(attemptNum + 1); }, 1000); return; }
+          onFail(); return;
+        }
+        for (var sk in data) {
+          if (!merged[sk]) merged[sk] = { subSubjects: {} };
+          var ss = data[sk].subSubjects;
+          for (var ssk in ss) {
+            if (ssk === '__proto__' || ssk === 'constructor') continue;
+            if (!merged[sk].subSubjects[ssk]) merged[sk].subSubjects[ssk] = [];
+            merged[sk].subSubjects[ssk] = merged[sk].subSubjects[ssk].concat(ss[ssk]);
+          }
+        }
+        loaded++;
+        if (loaded === files.length) {
+          var allKeys = Object.keys(merged);
+          if (allKeys.length > 1) {
+            var targetKey = CAT_INDEX[ci].subjects[0].name;
+            if (!merged[targetKey]) merged[targetKey] = { subSubjects: {} };
+            for (var ki = 0; ki < allKeys.length; ki++) {
+              if (allKeys[ki] === targetKey) continue;
+              var otherSS = merged[allKeys[ki]].subSubjects;
+              for (var ssk2 in otherSS) {
+                if (ssk2 === '__proto__' || ssk2 === 'constructor') continue;
+                if (!merged[targetKey].subSubjects[ssk2]) merged[targetKey].subSubjects[ssk2] = [];
+                merged[targetKey].subSubjects[ssk2] = merged[targetKey].subSubjects[ssk2].concat(otherSS[ssk2]);
+              }
+            }
+          }
+          _cache[ci] = merged; cb();
+        }
+      };
+      xhr.onerror = function() { if (attemptNum < 1) { setTimeout(function() { attempt(attemptNum + 1); }, 1000); } else { onFail(); } };
+      xhr.ontimeout = function() { if (attemptNum < 1) { setTimeout(function() { attempt(attemptNum + 1); }, 1000); } else { onFail(); } };
+      xhr.open('GET', url, true);
+      xhr.send();
+    })(0);
+    function onFail() {
+      if (!failed) {
+        failed = true;
+        _cache[ci] = {};
+        panel.innerHTML = '<div class="loading" style="color:var(--red)">⚠️ Failed to load ' + CAT_INDEX[ci].name + '. Check your connection and try again.</div>';
+      }
+      cb();
+    }
+  });
+}
+function renderQuestionItem(q, i) {
+  var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
+  return '<div class="q-item"><div class="q-num">#' + (i+1) + '</div>'
+    + '<div class="q-tags"><span class="tag cat-tag">' + escHtml(q.category) + '</span>'
+    + (date ? '<span class="tag date-tag">' + date + '</span>' : '') + '</div>'
+    + '<div class="q-question">' + escHtml(q.question) + '</div>'
+    + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>'
+    + (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.fact) + '</div>' : '') + '</div>';
+}
+function escHtml(s) {
+  if(!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+var _searchTimer = null;
+var RESULTS_PER_PAGE = 400;
+var MAX_SEARCH_RESULTS = 500000;
+var SEARCH_CHUNK = 2000;
+var PREFIX_TOL = 4;
+var _searchAll = [];
+var _searchRendered = 0;
+var _searchQuery = '';
+var _searchLoading = false;
+var _searchTotalFiles = 0;
+var _searchDoneFiles = 0;
+var _searchToken = 0;
+var _searchStartToken = 0;
+var _searchDateFilter = null;
+var _searchTextWords = [];
+var _searchCapHit = false;
+var _searchQueue = [];
+var _searchCur = null;
+var _searchNarrowed = false;
+var _filterState = 'idle';
+var _filterMap = new Map();
+var _filterCommon = new Set();
+var _filterBitsCache = new Map();
+var _filterWaiters = [];
+function onSearchInput(val) {
+  clearTimeout(_searchTimer);
+  _searchTimer = setTimeout(function(){ doSearch(val); }, 250);
+}
+function _searchCountLabel(n) {
+  return n.toLocaleString() + ' result' + (n === 1 ? '' : 's');
+}
+function _b64Bits(s) {
+  var bin = atob(s);
+  var out = new Uint8Array(bin.length);
+  for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+function _filterLoadDone() {
+  var w = _filterWaiters; _filterWaiters = [];
+  for (var i = 0; i < w.length; i++) w[i]();
+}
+function loadFilterIndex() {
+  if (_filterState !== 'idle') return;
+  _filterState = 'loading';
+  var xhr = new XMLHttpRequest();
+  xhr.timeout = 60000;
+  xhr.onload = function() {
+    if (xhr.status !== 200) { _filterState = 'failed'; _filterLoadDone(); return; }
+    var man;
+    try { man = JSON.parse(xhr.responseText); } catch (e) { _filterState = 'failed'; _filterLoadDone(); return; }
+    var common = man.common || [];
+    for (var i = 0; i < common.length; i++) _filterCommon.add(common[i]);
+    var shards = man.shards || [];
+    if (!shards.length) { _filterState = 'ready'; _filterLoadDone(); return; }
+    var got = 0;
+    var failed = false;
+    for (var si = 0; si < shards.length; si++) {
+      (function(sname) {
+        var x = new XMLHttpRequest();
+        x.timeout = 60000;
+        x.onload = function() {
+          if (failed) return;
+          if (x.status !== 200) { failed = true; _filterState = 'failed'; _filterLoadDone(); return; }
+          try {
+            var d = JSON.parse(x.responseText);
+            var wl = d.w, ml = d.m;
+            for (var wi = 0; wi < wl.length; wi++) _filterMap.set(wl[wi], ml[wi]);
+          } catch (e) { failed = true; _filterState = 'failed'; _filterLoadDone(); return; }
+          got++;
+          if (got === shards.length && !failed) { _filterState = 'ready'; _filterLoadDone(); }
+        };
+        x.onerror = x.ontimeout = function() { if (!failed) { failed = true; _filterState = 'failed'; _filterLoadDone(); } };
+        x.open('GET', 'data/questions/' + sname);
+        x.send();
+      })(shards[si]);
+    }
+  };
+  xhr.onerror = xhr.ontimeout = function() { _filterState = 'failed'; _filterLoadDone(); };
+  xhr.open('GET', 'data/questions/search-filter.json');
+  xhr.send();
+}
+function doSearch(query) {
+  query = query.trim().toLowerCase();
+  if (!_indexLoaded) { _pendingSearch = query; return; }
+  var panel = document.getElementById('view-content');
+  var welcome = document.getElementById('view-welcome');
+  _searchToken++;
+  if (!query) {
+    _searchLoading = false;
+    if (_currentCat !== null) {
+      if (_currentSubSub !== null) { renderQuestions(_currentCat, _currentSubj, _currentSubSub); }
+      else if (_currentSubj !== null) { showSubject(_currentCat, _currentSubj); }
+      else { showCategory(_currentCat); }
+    } else {
+      welcome.style.display = 'block';
+      panel.style.display = 'none';
+    }
+    return;
+  }
+  welcome.style.display = 'none';
+  panel.style.display = 'block';
+  _searchAll = [];
+  _searchRendered = 0;
+  _searchQuery = query;
+  _searchLoading = true;
+  _searchDoneFiles = 0;
+  _searchCapHit = false;
+  _searchStartToken = _searchToken;
+  var rawWords = query.split(/\s+/);
+  _searchDateFilter = null;
+  _searchTextWords = [];
+  for (var ri = 0; ri < rawWords.length; ri++) {
+    var pw = rawWords[ri];
+    if (pw.indexOf('date:') === 0) { _searchDateFilter = pw.slice(5); continue; }
+    var m = pw.toLowerCase().match(/[a-z0-9]+/g);
+    if (m) for (var mi = 0; mi < m.length; mi++) if (m[mi].length >= 2) _searchTextWords.push(m[mi]);
+  }
+  if (_filterState !== 'ready' && _filterState !== 'failed') {
+    if (_filterState === 'idle') loadFilterIndex();
+    _filterWaiters.push(function() { doSearch(query); });
+    return;
+  }
+  var cand = null;
+  if (_filterState === 'ready') {
+    try {
+      for (var k = 0; k < _searchTextWords.length; k++) {
+        var w = _searchTextWords[k];
+        if (_filterCommon.has(w)) continue;
+        var enc = _filterMap.get(w);
+        if (enc === undefined) { cand = []; break; }
+        var bits;
+        if (_filterBitsCache.has(w)) bits = _filterBitsCache.get(w);
+        else { bits = _b64Bits(enc); _filterBitsCache.set(w, bits); }
+        if (cand === null) { cand = bits.slice(); }
+        else {
+          if (cand.length !== bits.length) { cand = []; break; }
+          for (var bb = 0; bb < cand.length; bb++) cand[bb] &= bits[bb];
+        }
+      }
+    } catch (e) { cand = null; }
+  }
+  if (cand !== null && cand.length === 0) {
+    _searchLoading = false;
+    panel.innerHTML = '<div class="search-no-results">No questions matching "<strong>' + escHtml(query) + '</strong>"</div>';
+    return;
+  }
+  _searchQueue = [];
+  if (cand === null) {
+    for (var ci = 0; ci < CAT_INDEX.length; ci++) _searchQueue.push(ci);
+    _searchNarrowed = false;
+  } else {
+    var NB = CAT_INDEX.length;
+    for (var cb = 0; cb < cand.length; cb++) {
+      if (cand[cb]) {
+        var base = cb * 8;
+        for (var bi = 0; bi < 8; bi++) {
+          if (cand[cb] & (1 << bi)) {
+            var ci2 = base + bi;
+            if (ci2 < NB) _searchQueue.push(ci2);
+          }
+        }
+      }
+    }
+    _searchNarrowed = _searchQueue.length > 0;
+  }
+  _searchTotalFiles = _searchQueue.length;
+  _searchCur = null;
+  showSearchResults();
+  _scanChunk();
+}
+function _nextQuestion() {
+  while (_searchCur.skI < _searchCur.skKeys.length) {
+    var sk = _searchCur.skKeys[_searchCur.skI];
+    var subj = _searchCur.data[sk];
+    if (!subj.subSubjects) { _searchCur.skI++; continue; }
+    if (!_searchCur.sskKeys) _searchCur.sskKeys = Object.keys(subj.subSubjects);
+    while (_searchCur.sskI < _searchCur.sskKeys.length) {
+      var ssk = _searchCur.sskKeys[_searchCur.sskI];
+      var arr = subj.subSubjects[ssk];
+      if (_searchCur.qi < arr.length) {
+        return { sk: sk, ssk: ssk, q: arr[_searchCur.qi++] };
+      }
+      _searchCur.qi = 0;
+      _searchCur.sskI++;
+    }
+    _searchCur.sskKeys = null;
+    _searchCur.sskI = 0;
+    _searchCur.skI++;
+  }
+  return null;
+}
+function _tokWords(s) {
+  if (!s) return [];
+  var m = String(s).toLowerCase().match(/[a-z0-9]+/g);
+  return m || [];
+}
+function _matchesQuery(q) {
+  if (_searchDateFilter) {
+    var qDate = (q.pubDate||'').split('T')[0];
+    if (qDate.indexOf(_searchDateFilter) !== 0) return false;
+  }
+  if (_searchTextWords.length) {
+    var pools = [_tokWords(q.question), _tokWords(q.answer), _tokWords(q.fact)];
+    for (var wi = 0; wi < _searchTextWords.length; wi++) {
+      var w = _searchTextWords[wi];
+      if (w.length < 2) continue;
+      var found = false;
+      for (var pi = 0; pi < pools.length && !found; pi++) {
+        var toks = pools[pi];
+        for (var ti = 0; ti < toks.length; ti++) {
+          var t = toks[ti];
+          if (t.length >= w.length && t.indexOf(w) === 0 && (t.length - w.length) <= PREFIX_TOL) { found = true; break; }
+        }
+      }
+      if (!found) return false;
+    }
+  }
+  return true;
+}
+function _scanChunk() {
+  if (!_searchLoading || _searchStartToken !== _searchToken) return;
+  var scanned = 0;
+  while (scanned < SEARCH_CHUNK) {
+    if (_searchCapHit) { _finishSearch(); return; }
+    if (!_searchCur) {
+      if (_searchQueue.length === 0) { _finishSearch(); return; }
+      var ci = _searchQueue[0];
+      if (!_cache[ci]) {
+        loadCategory(ci, function() { _scanChunk(); });
+        return;
+      }
+      _searchQueue.shift();
+      _searchCur = { ci: ci, data: _cache[ci], skKeys: Object.keys(_cache[ci]), skI: 0, sskKeys: null, sskI: 0, qi: 0 };
+    }
+    var item = _nextQuestion();
+    if (!item) {
+      var doneCi = _searchCur.ci;
+      _searchCur = null;
+      delete _cache[doneCi];
+      _searchDoneFiles++;
+      continue;
+    }
+    scanned++;
+    if (_matchesQuery(item.q)) {
+      _searchAll.push({category: CAT_INDEX[_searchCur.ci].name, icon: CAT_INDEX[_searchCur.ci].icon, subject: item.sk, subSubject: item.ssk, question: item.q});
+      if (_searchAll.length >= MAX_SEARCH_RESULTS) _searchCapHit = true;
+    }
+  }
+  _renderSearchHeader();
+  _appendSearchPage();
+  setTimeout(_scanChunk, 0);
+}
+function _finishSearch() {
+  _searchLoading = false;
+  _renderSearchHeader();
+  _appendSearchPage();
+}
+function _renderSearchHeader() {
+  var head = document.getElementById('searchHead');
+  if (!head) return;
+  var scope = _searchNarrowed ? ' across <strong>' + _searchTotalFiles + ' of ' + CAT_INDEX.length + '</strong> categories' : '';
+  var txt;
+  if (_searchCapHit) {
+    txt = 'Found <strong>' + _searchCountLabel(_searchAll.length) + '</strong> for "' + escHtml(_searchQuery) + '" — showing first ' + MAX_SEARCH_RESULTS.toLocaleString() + '. Refine your search to see more.';
+  } else if (_searchAll.length === 0 && _searchLoading) {
+    txt = 'Searching <strong>' + _searchDoneFiles + '/' + _searchTotalFiles + '</strong> files' + scope + '…';
+  } else if (_searchLoading) {
+    txt = 'Found <strong>' + _searchCountLabel(_searchAll.length) + '</strong> so far · searching <strong>' + _searchDoneFiles + '/' + _searchTotalFiles + '</strong> files' + scope + '…';
+  } else {
+    txt = 'Found <strong>' + _searchCountLabel(_searchAll.length) + '</strong> for "' + escHtml(_searchQuery) + '"';
+  }
+  head.innerHTML = txt;
+}
+function _searchItemHTML(r) {
+  var q = r.question;
+  var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
+  var h = '<div class="q-item"><div class="q-tags"><span class="tag cat-tag">' + escHtml(r.category) + ' &rsaquo; ' + escHtml(r.subject) + ' &rsaquo; ' + escHtml(r.subSubject) + '</span>' + (date?'<span class="tag date-tag">'+date+'</span>':'') + '</div>';
+  h += '<div class="q-question">' + escHtml(q.question) + '</div>';
+  h += '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>';
+  h += (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.fact) + '</div>' : '') + '</div>';
+  return h;
+}
+function _appendSearchPage() {
+  var list = document.getElementById('searchQuestionList');
+  if (!list) return;
+  var next = Math.min(_searchRendered + RESULTS_PER_PAGE, _searchAll.length);
+  if (next <= _searchRendered) return;
+  var chunk = [];
+  for (var i = _searchRendered; i < next; i++) chunk.push(_searchItemHTML(_searchAll[i]));
+  var frag = document.createElement('div');
+  frag.innerHTML = chunk.join('');
+  while (frag.firstChild) list.appendChild(frag.firstChild);
+  _searchRendered = next;
+  var btn = document.getElementById('searchMoreBtn');
+  if (_searchRendered < _searchAll.length) {
+    var left = _searchAll.length - _searchRendered;
+    if (!btn) {
+      btn = document.createElement('button');
+      btn.id = 'searchMoreBtn';
+      btn.style.cssText = 'display:block;margin:18px auto;padding:10px 22px;border-radius:8px;border:1px solid var(--purple);background:rgba(99,102,241,.12);color:var(--purple);cursor:pointer;font-size:.85em;font-weight:700';
+      btn.onclick = function() { _appendSearchPage(); };
+      list.parentNode.appendChild(btn);
+    }
+    btn.textContent = 'Show more (' + left.toLocaleString() + ' more)';
+  } else if (btn) {
+    btn.remove();
+  }
+}
+function showSearchResults() {
+  var panel = document.getElementById('view-content');
+  if (_searchAll.length === 0 && !_searchLoading) {
+    panel.innerHTML = '<div class="search-no-results">No questions matching "<strong>' + escHtml(_searchQuery) + '</strong>"</div>';
+    return;
+  }
+  var h = '<div class="search-results-info" id="searchHead"></div>';
+  h += '<div class="question-list" id="searchQuestionList"></div>';
+  panel.innerHTML = h;
+  _searchRendered = 0;
+  _renderSearchHeader();
+  _appendSearchPage();
+}
+function localizeBuildTime() {
+  var el = document.getElementById('build-time');
+  if (!el) return;
+  var d = new Date(el.getAttribute('datetime'));
+  el.textContent = d.toLocaleDateString([], { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit', timeZoneName: 'short' });
+}
+localizeBuildTime();
+var _ssRendered = {};
+function renderSubsubs(el, ci, si) {
+  var c = CAT_INDEX[ci]; if (!c || !c.subjects[si]) return;
+  var subj = c.subjects[si];
+  var h = '';
+  for (var ssi = 0; ssi < subj.subSubjects.length; ssi++) {
+    var ss = subj.subSubjects[ssi];
+    h += '<a href="#" class="sidebar-subsub-link" data-ci="' + ci + '" data-si="' + si + '" data-ssi="' + ssi + '" onclick="return selectSubSubject(' + ci + ',' + si + ',' + ssi + ')"><span class="sidebar-label">' + escHtml(ss.name) + '</span><span class="sidebar-count">' + ss.count + '</span></a>';
+  }
+  el.innerHTML = h;
+  _ssRendered[ci + '-' + si] = true;
+}
+function buildSidebar() {
+  var root = document.getElementById('sidebar-root');
+  if (!root) return;
+  var h = '';
+  for (var ci = 0; ci < CAT_INDEX.length; ci++) {
+    var c = CAT_INDEX[ci];
+    h += '<div class="sidebar-cat">';
+    h += '<a href="#" class="sidebar-link" data-ci="' + ci + '" onclick="return selectCategory(' + ci + ')"><span class="sidebar-icon">' + escHtml(c.icon) + '</span><span class="sidebar-label">' + escHtml(c.name) + '</span><span class="sidebar-count">' + c.total + '</span></a>';
+    h += '<div class="sidebar-subjects" id="subj-' + ci + '">';
+    for (var si = 0; si < c.subjects.length; si++) {
+      var subj = c.subjects[si];
+      h += '<a href="#" class="sidebar-subj-link" data-ci="' + ci + '" data-si="' + si + '" onclick="return selectSubject(' + ci + ',' + si + ')"><span class="sidebar-label">' + escHtml(subj.name) + '</span><span class="sidebar-count">' + subj.total + '</span></a>';
+      h += '<div class="sidebar-subsubs" id="ss-' + ci + '-' + si + '"><span class="sidebar-subsub-loading">click to load sub-topics</span></div>';
+    }
+    h += '</div></div>';
+  }
+  root.innerHTML = h;
+}
+function buildWelcomeGrid() {
+  var grid = document.getElementById('welcome-grid');
+  if (!grid) return;
+  var h = '';
+  CAT_INDEX.forEach(function(c, ci) {
+    h += '<a href="#" class="subj-card" onclick="return selectCategory(' + ci + ')"><div class="subj-card-name">' + escHtml(c.icon) + ' ' + escHtml(c.name) + '</div><div class="subj-card-count">' + c.total + ' questions</div></a>';
+  });
+  grid.innerHTML = h;
+}
+loadIndex();
+</script><script>if('serviceWorker' in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
+</body>
+</html>

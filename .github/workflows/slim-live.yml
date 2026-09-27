@@ -1,0 +1,58 @@
+name: Slim live mirror
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: slim-live
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 1
+          filter: blob:none
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Rebuild slim live branch (orphan root)
+        run: |
+          set -e
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git rm -r -q --cached data/questions 2>/dev/null || true
+          git rm -q --cached upsc_sorted_topics.csv topics.txt 2>/dev/null || true
+          TREE=$(git write-tree)
+          ROOT=$(git commit-tree "$TREE" -m "slim live $(date -u +'%Y-%m-%d %H:%M UTC')")
+          git push --force origin "$ROOT:refs/heads/live"
+          echo "live -> $ROOT"
+          echo "LIVE_TREE=$ROOT" >> "$GITHUB_ENV"
+
+      - name: Stage slim site for direct upload
+        run: |
+          set -e
+          mkdir -p live-dist
+          git archive "$LIVE_TREE" | tar -x -C live-dist
+          echo "size: $(du -sh live-dist | cut -f1)"
+          echo "files: $(find live-dist -type f | wc -l)"
+
+      - name: Deploy slim site to Cloudflare Pages (direct upload)
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        run: |
+          npx --yes wrangler@3 pages deploy live-dist \
+            --project-name=studypro \
+            --branch=main \
+            --account-id="$CLOUDFLARE_ACCOUNT_ID"

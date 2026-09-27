@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPSC Quick Revision — vlymbooq</title>
+<style>
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--text:#fafafa;--text-sec:#a1a1aa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6;padding:20px}
+.container{max-width:900px;margin:0 auto}
+.header{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+h1{font-size:1.8em;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.search-bar{width:100%;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:1em;margin-bottom:20px;outline:none}
+.search-bar:focus{border-color:var(--purple)}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:24px}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s}
+.topic-card:hover{border-color:var(--purple);transform:translateY(-2px)}
+.topic-card h3{font-size:1.1em;font-weight:700;margin-bottom:8px;color:var(--text)}
+.topic-card p{font-size:.85em;color:var(--text-sec);margin-bottom:12px}
+.revision-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:1000;overflow:auto;padding:20px}
+.revision-modal.active{display:block}
+.modal-content{max-width:800px;margin:40px auto;background:var(--bg);border-radius:16px;padding:24px;border:1px solid var(--border)}
+.close-btn{float:right;font-size:1.5em;cursor:pointer;color:var(--text-sec);margin-bottom:16px}
+.close-btn:hover{color:var(--text)}
+.section-title{font-size:1.2em;font-weight:700;margin:20px 0 12px;color:var(--purple)}
+.summary-box{background:var(--card);padding:16px;border-radius:8px;border-left:4px solid var(--emerald);margin-bottom:20px}
+.bullets{list-style:none;padding:0}
+.bullets li{padding:8px 0;border-bottom:1px solid var(--border);font-size:.95em}
+.bullets li:last-child{border-bottom:none}
+.bullets li.none{color:var(--text-sec);font-style:italic}
+p.none{color:var(--text-sec);font-style:italic}
+.card-badge{margin-top:6px;font-size:.72em;letter-spacing:.04em;text-transform:uppercase;opacity:.65}
+.fact-type{font-size:.72em;text-transform:uppercase;letter-spacing:.05em;opacity:.75;margin-left:6px}
+.section-note{font-size:.7em;text-transform:none;letter-spacing:0;font-weight:400;opacity:.7;margin-left:6px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.fact-tag{background:var(--card);padding:6px 12px;border-radius:20px;font-size:.85em;border:1px solid var(--border)}
+.comparison-table{width:100%;border-collapse:collapse;margin:16px 0}
+.comparison-table th,.comparison-table td{padding:10px;text-align:left;border-bottom:1px solid var(--border)}
+.comparison-table th{color:var(--purple);font-weight:700}
+.load-btn{display:block;margin:20px auto 0;padding:10px 20px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:.9em;cursor:pointer}
+.load-btn:hover{border-color:var(--purple)}
+@media(max-width:600px){
+  .topic-grid{grid-template-columns:1fr}
+  .modal-content{margin:20px;padding:16px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="header">
+    <h1>UPSC Quick Revision</h1>
+    <p style="color:var(--text-sec)" id="topicCount">Loading topics…</p>
+  </div>
+  
+  <input type="text" class="search-bar" id="search" placeholder="Search topics, key points, facts (e.g., 'independence', 'gandhi', 'economy')...">
+  
+  <div class="topic-grid" id="topicGrid"></div>
+  <button class="load-btn" id="loadMore" style="display:none">Load more topics</button>
+  <p class="footer-note" id="footerNote" style="color:var(--text-sec);font-size:.8em;text-align:center;margin-top:24px"></p>
+</div>
+
+<div class="revision-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <span class="close-btn" id="closeBtn" onclick="closeModal()" role="button" aria-label="Close">×</span>
+    <h2 id="modalTitle"></h2>
+    
+    <div class="section-title">📝 Quick Summary</div>
+    <div class="summary-box" id="modalSummary"></div>
+
+    <div class="section-title">✅ Primary Facts <span class="section-note">verified as being about this entity</span></div>
+    <ul class="bullets" id="modalBullets"></ul>
+
+    <div class="section-title">🔗 Direct Relationships</div>
+    <ul class="bullets" id="modalRelationships"></ul>
+
+    <div class="section-title">🧩 Context</div>
+    <ul class="bullets" id="modalContext"></ul>
+
+    <div class="section-title">🗂 Neighbor Entities <span class="section-note">graph links, not facts</span></div>
+    <div class="facts" id="modalNeighbors"></div>
+
+    <div class="section-title">🔄 Related Topics</div>
+    <div id="modalComparisons"></div>
+  </div>
+</div>
+
+<script>
+var revisionData = {};
+var allTopics = [];
+var filteredTopics = [];
+var visibleCount = 50;
+var PAGE = 50;
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function matchesQuery(topicName, data, q) {
+  if (topicName.toLowerCase().includes(q)) return true;
+  // Index the verified facts, not the legacy summary/bullet blobs: searching
+  // should not surface a topic because of text that is not about it.
+  var hay = '';
+  (data.primaryFacts || []).forEach(function (f) { hay += ' ' + (f.fact || ''); });
+  (data.neighbors || []).forEach(function (n) { hay += ' ' + (n.entity || ''); });
+  return hay.toLowerCase().includes(q);
+}
+
+// Load revision content
+fetch('data/revision-content.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    revisionData = data;
+    allTopics = Object.keys(data).sort(function(a, b) { return a.localeCompare(b); });
+    filteredTopics = allTopics;
+    var genAt = '';
+    for (var k in data) {
+      if (data[k].generatedAt) { genAt = data[k].generatedAt; break; }
+    }
+    document.getElementById('topicCount').textContent = 'Revision content for ' + allTopics.length + ' UPSC topics';
+    document.getElementById('footerNote').textContent = genAt ? 'Generated ' + new Date(genAt).toUTCString() : '';
+    renderTopics();
+  })
+  .catch(function(e) {
+    console.error('Failed to load revision data:', e);
+    document.getElementById('topicGrid').innerHTML = '<p style="color:var(--text-sec)">Failed to load revision data. Please ensure data/revision-content.json exists.</p>';
+  });
+
+function renderTopics() {
+  var grid = document.getElementById('topicGrid');
+  grid.innerHTML = '';
+
+  var shown = filteredTopics.slice(0, visibleCount);
+
+  shown.forEach(function(topicName) {
+    var data = revisionData[topicName];
+    if (!data) return;
+
+    var card = document.createElement('div');
+    card.className = 'topic-card';
+
+    var h3 = document.createElement('h3');
+    h3.textContent = topicName;
+    var owned = data.primaryFacts || [];
+    var p = document.createElement('p');
+    // Derived from verified facts, so a card can never advertise text that is
+    // not about the entity.
+    p.textContent = owned.length
+      ? owned.slice(0, 2).map(function (f) { return f.fact; }).join(' ')
+      : 'No verified fact for this entity yet.';
+    if (!owned.length) p.className = 'none';
+    var badge = document.createElement('div');
+    badge.className = 'card-badge';
+    badge.textContent = owned.length + (owned.length === 1 ? ' fact' : ' facts') +
+      ' \u00b7 ' + (data.neighbors || []).length + ' links';
+    card.appendChild(h3);
+    card.appendChild(p);
+    card.appendChild(badge);
+    card.onclick = function() { openModal(topicName); };
+    grid.appendChild(card);
+  });
+
+  var loadBtn = document.getElementById('loadMore');
+  if (filteredTopics.length > visibleCount) {
+    loadBtn.style.display = 'block';
+    loadBtn.textContent = 'Load more (' + (filteredTopics.length - visibleCount) + ' more)';
+  } else {
+    loadBtn.style.display = 'none';
+  }
+
+  if (shown.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text-sec);grid-column:1/-1;text-align:center">No topics match your search.</p>';
+  }
+}
+
+document.getElementById('loadMore').onclick = function() {
+  visibleCount += PAGE;
+  renderTopics();
+};
+
+function openModal(topicName) {
+  var data = revisionData[topicName];
+  if (!data) return;
+
+  document.getElementById('modalTitle').textContent = topicName;
+
+  // Quick summary is derived from the primary facts only, so it can never
+  // inherit a neighbour's biography.
+  var owned = data.primaryFacts || [];
+  document.getElementById('modalSummary').textContent =
+    owned.length ? owned.slice(0, 2).map(function (f) { return f.fact; }).join(' ')
+                 : 'No verified fact for this entity yet.';
+
+  function list(items, render, empty) {
+    if (!items || !items.length) return '<li>' + escapeHtml(empty) + '</li>';
+    return items.map(render).join('');
+  }
+
+  document.getElementById('modalBullets').innerHTML =
+    owned.length
+      ? owned.map(function (f) {
+          var tag = (f.factType && f.factType !== 'CORE_FACT')
+            ? ' <span class="fact-type">' + escapeHtml(String(f.factType).toLowerCase()) + '</span>' : '';
+          return '<li>' + escapeHtml(f.fact) + tag + '</li>';
+        }).join('')
+      : '<li class="none">No verified fact for this entity yet.</li>';
+
+  document.getElementById('modalRelationships').innerHTML =
+    list(data.directRelationships, function (r) {
+      return '<li>' + escapeHtml(r.entity || '') +
+        ' <span class="fact-type">' + escapeHtml(r.rel || 'related') + '</span></li>';
+    }, 'No direct relationships recorded');
+
+  document.getElementById('modalContext').innerHTML =
+    list(data.context, function (c) {
+      return '<li>' + escapeHtml(c.fact || c.text || '') + '</li>';
+    }, 'No additional context');
+
+  var nb = data.neighbors || [];
+  document.getElementById('modalNeighbors').innerHTML = nb.length
+    ? nb.map(function (n) {
+        return '<span class="fact-tag" title="' + escapeHtml(n.rel || '') + '">' +
+          escapeHtml(n.entity || n.name || '') + '</span>';
+      }).join('')
+    : '<span class="fact-tag">No neighbors</span>';
+
+  var compHTML = '';
+  if (data.comparisons && data.comparisons.length > 0) {
+    data.comparisons.forEach(function(comp) {
+      compHTML += '<p style="margin-bottom:8px;color:var(--text-sec)">' + escapeHtml(comp.title) + '</p>';
+      compHTML += '<table class="comparison-table"><thead><tr><th>Topic</th><th>Key Point</th></tr></thead><tbody>';
+      (comp.table || []).forEach(function(row) {
+        compHTML += '<tr><td>' + escapeHtml(row.topic) + '</td><td>' + escapeHtml(row.keyPoint) + '</td></tr>';
+      });
+      compHTML += '</tbody></table>';
+    });
+  } else {
+    compHTML = '<p style="color:var(--text-sec)">No related topics available</p>';
+  }
+  document.getElementById('modalComparisons').innerHTML = compHTML;
+
+  document.getElementById('modal').classList.add('active');
+  document.getElementById('closeBtn').focus();
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+}
+
+// Search functionality
+document.getElementById('search').addEventListener('input', function(e) {
+  var query = e.target.value.trim().toLowerCase();
+  visibleCount = PAGE;
+
+  if (query.length < 2) {
+    filteredTopics = allTopics;
+  } else {
+    filteredTopics = allTopics.filter(function(topic) {
+      return matchesQuery(topic, revisionData[topic], query);
+    });
+  }
+  renderTopics();
+});
+
+// Close modal on outside click
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target.id === 'modal') {
+    closeModal();
+  }
+});
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeModal();
+  }
+});
+</script>
+</body>
+</html>
