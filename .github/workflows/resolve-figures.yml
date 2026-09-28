@@ -50,10 +50,12 @@ jobs:
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          if git diff --quiet -- data/figure-files-auto.json; then
+          # git add first: `git diff` cannot see an untracked file, which is why
+          # the first run's 13 resolved picks were produced but never committed.
+          git add data/figure-files-auto.json
+          if git diff --cached --quiet -- data/figure-files-auto.json; then
             echo "No change in figure-files-auto.json — nothing to commit."
           else
-            git add data/figure-files-auto.json
             git commit -m "Resolve Commons figures for all curated UPSC topics"
             git push
           fi

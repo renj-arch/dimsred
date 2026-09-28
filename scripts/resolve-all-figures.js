@@ -29,6 +29,7 @@ async function main() {
   var topics = JSON.parse(fs.readFileSync(TOPICS_FILE, 'utf8'));
   var results = {};
   var unresolved = [];
+  var picks = [];
   var stats = { tier1: 0, tier2: 0, tier3: 0, total: 0 };
 
   var subjects = Object.keys(topics).filter(function (s) { return s.charAt(0) !== '_'; });
@@ -45,6 +46,7 @@ async function main() {
       try { r = await R.resolve(topic); } catch (e) { r = null; }
       if (r) {
         results[slug][topic] = { file: r.file, tier: r.tier, conf: r.conf, method: r.method };
+        picks.push(slug + ' :: ' + topic + '  ->  ' + r.file + '  [' + r.method + ' T' + r.tier + ']');
         if (r.tier === 1) stats.tier1++;
         else if (r.tier === 2) stats.tier2++;
         else stats.tier3++;
@@ -72,10 +74,11 @@ async function main() {
     fs.writeFileSync(process.env.RESOLVE_REPORT,
       'figure resolution report\n' +
       'topics: ' + stats.total + '\n' +
-      'high confidence: ' + stats.tier1 + '\n' +
-      'medium: ' + stats.tier2 + '\n' +
-      'low: ' + stats.tier3 + '\n' +
+      'high confidence (T1): ' + stats.tier1 + '\n' +
+      'medium (T2): ' + stats.tier2 + '\n' +
+      'low (T3): ' + stats.tier3 + '\n' +
       'gaps: ' + unresolved.length + '\n\n' +
+      'RESOLVED (' + picks.length + '):\n' + picks.map(function (p) { return '  ' + p; }).join('\n') + '\n\n' +
       'GAPS:\n' + unresolved.map(function (u) { return '  ' + u; }).join('\n') + '\n');
     console.log('Report: ' + process.env.RESOLVE_REPORT);
   }
