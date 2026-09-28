@@ -28,7 +28,14 @@ var CACHE_FILE = path.join(__dirname, '..', 'data', 'subject-figures-cache.json'
 var AUTO_FILE = path.join(__dirname, '..', 'data', 'figure-files-auto.json');
 // Picks below this confidence are treated as no answer. The resolver skips
 // rather than guesses, so a low number here means fewer figures, never worse.
-var AUTO_MIN_CONF = parseFloat(process.env.FIGURE_MIN_CONF || '0.75');
+// 0.85 is deliberate: the resolver scores tier-1 (Wikidata/category) and
+// tier-2 (the topic's own article) picks at 0.9+, and tier-3 filename-search
+// picks at 0.8. Auditing a full run showed every wrong figure came from the
+// tier-3 band -- a UN peacekeeping helmet for the Security Council, a
+// projection map of Asia for the Asian Games, a minister's press photo for
+// telecom spectrum. Those now stay unpublished instead of appearing as
+// "resolved", and the topic reads as a gap to be curated by hand.
+var AUTO_MIN_CONF = parseFloat(process.env.FIGURE_MIN_CONF || '0.85');
 var ROOT = path.join(__dirname, '..');
 var TOPICS_PER_SUBJECT = process.env.TOPICS_PER_SUBJECT ? parseInt(process.env.TOPICS_PER_SUBJECT, 10) : 6;
 var GLOBAL_LIMIT = process.env.GLOBAL_LIMIT ? parseInt(process.env.GLOBAL_LIMIT, 10) : 150;

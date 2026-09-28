@@ -255,6 +255,12 @@ function pickImage(imgs, articleTitle, concept, opts){
     if(!isLead){
       if(!diagram&&!nameHit.length)return;
       if(!diagram&&ncov<0.66)return;
+      // A raster only counts as a diagram because its name says "map" or
+      // "chart", which says nothing about the subject it draws: that let
+      // "India location map 3.png" serve as the figure for "india major ports
+      // map". Line drawings (SVG) keep the looser rule, because a labelled
+      // schematic often names only part of the concept.
+      if(diagram&&!/\.svg$/i.test(f)&&ncov<0.66)return;
       // When the article's own title names the WHOLE concept, any real figure
       // inside it is about that concept by construction -- a map in "List of
       // national parks of India" is a parks map -- so the filename may be loose.
