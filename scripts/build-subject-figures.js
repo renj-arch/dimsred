@@ -350,11 +350,12 @@ async function main() {
     console.log('     contamination (Democratic Party as an Animal Husbandry figure).');
     console.log('     The default FIGURE_SOURCE=curated uses data/figure-topics-curated.json,');
     console.log('     which is grounded in the UPSC Paper-1 syllabus and is on-topic.');
-    console.log('  2. the IMAGES. Even with curated topics, each image is a Wikimedia');
-    console.log('     auto-match that a human has not eyeballed. Every figure stays badged');
-    console.log('     "auto-suggested" and should be checked before exam use.');
+    console.log('  2. the IMAGES. Each image is either a hand-picked file or a resolver');
+    console.log('     pick matched against the topic\u2019s own Wikipedia article and Wikimedia');
+    console.log('     structured data. Every figure is badged with how it was chosen, and');
+    console.log('     labels should still be checked before exam use.');
     console.log('');
-    console.log('Build on-topic packs (still unverified images):');
+    console.log('Build packs:');
     console.log('  FIGURES_ALLOW_UNVERIFIED=1 node scripts/build-subject-figures.js');
     console.log('Preview without writing:');
     console.log('  FIGURES_ALLOW_UNVERIFIED=1 FIGURES_DRY_RUN=1 node scripts/build-subject-figures.js');

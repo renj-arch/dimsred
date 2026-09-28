@@ -56,11 +56,37 @@ function isDiagramish(title, desc){
   return DIAGRAM_RE.test(t);
 }
 
+var API_CALLS = 0;
+var API_FAIL = 0;
+
+// jget used to return null on any non-2xx, which made a Wikimedia rate-limit
+// (429) or a 5xx indistinguishable from "this concept has no figure". The first
+// CI run then wrote 95 fake gaps from a single throttled burst. Failures are
+// retried with backoff, counted, and reported so a throttled run fails loudly
+// instead of committing silence.
 async function jget(url){
-  var ctl=new AbortController(); var to=setTimeout(function(){ctl.abort();},14000);
-  try{ var r=await fetch(url,{signal:ctl.signal,headers:{'User-Agent':UA}}); if(!r.ok)return null; return await r.json(); }
-  catch(e){ return null; } finally{ clearTimeout(to); }
+  for(var attempt=0;attempt<3;attempt++){
+    var ctl=new AbortController(); var to=setTimeout(function(){ctl.abort();},20000);
+    try{
+      var r=await fetch(url,{signal:ctl.signal,headers:{'User-Agent':UA}});
+      if(r.ok){ API_CALLS++; return await r.json(); }
+      API_CALLS++;
+      if(r.status===429||r.status>=500){
+        var ra=parseInt(r.headers.get('retry-after')||'0',10);
+        await new Promise(function(res){setTimeout(res,(ra>0?ra*1000:0)+(attempt+1)*1500);});
+        continue;
+      }
+      API_FAIL++; // 4xx other than 429: permanent, do not retry
+      return null;
+    }catch(e){
+      API_CALLS++;
+      await new Promise(function(res){setTimeout(res,(attempt+1)*1500);});
+    } finally{ clearTimeout(to); }
+  }
+  API_FAIL++;
+  return null;
 }
+function apiStats(){ return { calls: API_CALLS, fail: API_FAIL }; }
 
 // Figure-words describe the KIND of figure wanted, not the concept, so they are
 // removed before the concept lookup. The subject noun is deliberately kept:
@@ -165,6 +191,31 @@ async function leadFile(title){
 
 function stripExt(f){return f.replace(/\.(svg|png|jpe?g|gif|webp)$/i,'');}
 
+// How many of the concept's own words appear in this filename. Zero means the
+// file is only related through some other record (an article, a category, a
+// depicts statement) and is therefore not safe to publish on its own.
+function nameHitCount(f, ctoks){
+  if(!ctoks||!ctoks.length)return 0;
+  var ftoks=contentTokens(stripExt(f));
+  return ctoks.filter(function(c){return stemMatch(c,ftoks);}).length;
+}
+
+// Like conceptQuery(), but the stopwords stay. "laser types diagram" must not
+// collapse to the single token "laser", or every laser file in
+// Category:Laser printers reads as full coverage of the topic.
+function topicGateTokens(topic){
+  var t=String(topic==null?'':topic).toLowerCase()
+    .replace(FIGURE_WORD_RE,' ')
+    .replace(/[^a-z0-9\s]/g,' ')
+    .replace(/\s+/g,' ').trim();
+  var seen={};
+  return t.split(' ').filter(function(w){
+    w=norm(w);
+    if(!w||seen[w])return false;
+    seen[w]=1; return true;
+  });
+}
+
 // Pick the article image that is demonstrably about the concept.
 // Gate 1 (safety): concept tokens must be covered by title+filename together,
 //   so an unrelated picture inside the right article cannot pass on title alone.
@@ -197,6 +248,10 @@ function pickImage(imgs, articleTitle, concept, opts){
     // mound, India.jpg" for "stupas india". The pageimage is exempt: it was
     // chosen to represent the whole article.
     var ncov=ctoks.length?nameHit.length/ctoks.length:0;
+    // No concept word in the filename at all -> never acceptable, however
+    // complete the article title is. This is what rejected "PD-icon.svg" for
+    // "writs types", where the one-word article title alone read as full cover.
+    if(!nameHit.length)return;
     if(!isLead){
       if(!diagram&&!nameHit.length)return;
       if(!diagram&&ncov<0.66)return;
@@ -320,10 +375,16 @@ async function resolve(topic,opts){
   FIGURE_WORD_RE.lastIndex=0;
 
   // Tier 1: Wikimedia's own assertion that a file depicts this concept.
+  // Both structured tiers are still name-gated: "Siddha medicine" resolving to
+  // "1 Om.svg" (depicts) and "laser types" to Corona charging.svg (category
+  // Laser printers) passed because membership alone was treated as proof.
+  var ctoks1 = contentTokens(concept);
   var qids=await topicQids(topic);
   for(var i=0;i<Math.min(qids.length,3);i++){
     var q=qids[i];
-    var dep=(await filesDepicting(q.qid)).filter(function(f){return isDiagramish(f,'')&&!isSymbol(f);});
+    var dep=(await filesDepicting(q.qid)).filter(function(f){
+      return isDiagramish(f,'') && !isSymbol(f) && nameHitCount(f,ctoks1)>=1;
+    });
     if(dep.length){
       dep.sort(bySvgThenName);
       var v=await verifyFiles([dep[0]]);
@@ -331,11 +392,29 @@ async function resolve(topic,opts){
     }
     var cat=await p373(q.qid);
     if(cat){
-      var cf=(await filesInCategory('Category:'+cat)).filter(function(f){return isDiagramish(f,'')&&!isSymbol(f);});
-      if(cf.length){
-        cf.sort(bySvgThenName);
-        var v2=await verifyFiles([cf[0]]);
-        if(v2.length)return {file:v2[0],tier:1,conf:0.92,method:'category:'+cat,qid:q.qid};
+      var catToks=contentTokens(cat);
+      // Category membership alone is not proof: Category:Day would otherwise
+      // vouch for a twilight photo under "earth day". The category name and
+      // the filename together must cover most of the topic, and a photo (which
+      // has no diagram structure to identify it) must at least open with the
+      // concept instead of a brand ("Alcoa Earth Day").
+      var gToks=topicGateTokens(topic);
+      var cf=(await filesInCategory('Category:'+cat)).filter(function(f){
+        if(!gToks.length)return false;
+        var ft=contentTokens(stripExt(f));
+        var hit=gToks.filter(function(c){return stemMatch(c,catToks)||stemMatch(c,ft);}).length;
+        if(hit/gToks.length<0.66)return false;
+        if(isDiagramish(f,''))return true;
+        // Captions often open with a year ("1962 World Health Day poster").
+        var li=0;
+        while(ft[li]&&/^\d+$/.test(ft[li]))li++;
+        var lead=ft[li];
+        return !!lead&&gToks.some(function(c){return tokMatch(c,lead);});
+      });
+      var cpick=pickImage(cf,concept,concept,{wantsDiagram:wantsDiagram});
+      if(cpick){
+        var v2=await verifyFiles([cpick]);
+        if(v2.length)return {file:v2[0],tier:1,conf:0.9,method:'category:'+cat,qid:q.qid};
       }
     }
   }
@@ -396,5 +475,5 @@ async function resolve(topic,opts){
 }
 
 module.exports={resolve:resolve,isDiagramish:isDiagramish,norm:norm,topicQids:topicQids,
-  filesDepicting:filesDepicting,filesInCategory:filesInCategory,
+  filesDepicting:filesDepicting,filesInCategory:filesInCategory,apiStats:apiStats,
   conceptQuery:conceptQuery,pickArticle:pickArticle,pickImage:pickImage};
