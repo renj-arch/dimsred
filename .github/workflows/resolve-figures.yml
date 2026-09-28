@@ -1,0 +1,67 @@
+name: Resolve Figures
+
+# Resolves a confident Wikimedia Commons figure for every curated UPSC syllabus
+# topic and commits the result to data/figure-files-auto.json.
+#
+# Why a workflow: the resolver is network-bound (several Wikimedia API calls per
+# topic across 126 topics) and takes several minutes, which is awkward to run
+# locally and can hit tooling timeouts.
+#
+# The question shards are deliberately NOT used for figure topics: each subject's
+# shard set is a near-complete A-Z English Wikipedia sweep, which is what
+# previously produced figures like the Democratic Party under Animal Husbandry.
+# Topics come from data/figure-topics-curated.json (UPSC Paper-1 syllabus).
+
+on:
+  workflow_dispatch:
+    inputs:
+      delay_ms:
+        description: 'Delay between API calls (ms) — raise if rate-limited'
+        required: false
+        default: '150'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: resolve-figures
+  cancel-in-progress: false
+
+jobs:
+  resolve:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Resolve figures for all curated topics
+        env:
+          RESOLVE_DELAY_MS: ${{ github.event.inputs.delay_ms || '150' }}
+          RESOLVE_REPORT: figure-resolution-report.txt
+        run: node scripts/resolve-all-figures.js
+
+      - name: Commit resolved figures if changed
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          if git diff --quiet -- data/figure-files-auto.json; then
+            echo "No change in figure-files-auto.json — nothing to commit."
+          else
+            git add data/figure-files-auto.json
+            git commit -m "Resolve Commons figures for all curated UPSC topics"
+            git push
+          fi
+
+      - name: Upload resolution report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: figure-resolution-report
+          path: figure-resolution-report.txt
+          retention-days: 30

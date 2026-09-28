@@ -29,6 +29,18 @@ var TOPICS_PER_SUBJECT = process.env.TOPICS_PER_SUBJECT ? parseInt(process.env.T
 var GLOBAL_LIMIT = process.env.GLOBAL_LIMIT ? parseInt(process.env.GLOBAL_LIMIT, 10) : 150;
 var GEO_SKIP = /geograph/i;
 
+// Every figure this script produces is an unverified auto-suggestion. The
+// topics it picks are the highest-count subtopics in the question shards, and
+// those shards are contaminated: each subject's set is a near-complete A-Z
+// English Wikipedia sweep rather than subject-specific material. A raw scan of
+// the 22 animal-husbandry-dairy shards returned 3,855 hits for "Democratic
+// Party", 848 for "High-speed rail" and 567 for "James K. Polk", which is how
+// the Democratic Party ended up as a figure under Animal Husbandry & Dairy.
+// So building is now opt-in and the write path is inspectable before it lands.
+var ALLOW_UNVERIFIED = /^(1|true|yes)$/i.test(String(process.env.FIGURES_ALLOW_UNVERIFIED || ''));
+var DRY_RUN = /^(1|true|yes)$/i.test(String(process.env.FIGURES_DRY_RUN || '')) ||
+  process.argv.indexOf('--dry-run') !== -1;
+
 function norm(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim(); }
 function slug(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, ''); }
 function esc(s) {
@@ -71,7 +83,31 @@ async function fileOK(fname) {
     return r.status === 302;
   } catch (e) { return false; }
 }
+// A "figure" in this repo means something a candidate can sketch, label or
+// trace: a map, a diagram, a schematic, a structure. A photograph of a real
+// place is not a figure, however well it matches the topic. The shared scorer's
+// bestAny fallback used to admit jpg photos (ext 1.2 + hint 2 + rel 2 = 5.2 > 3),
+// which is how "national parks india map" got a photo of Valley of Flowers and
+// "biodiversity hotspots india" got a photo of the Western Ghats. A topic only
+// accepts a bare photo when the topic itself asks for one (a "photo" topic or a
+// topic that IS a specific place/species/building).
+// Word boundaries matter here: an earlier version of this regex had none, so
+// "Valley of floWERS national park" matched "flow" and the bare photo passed the
+// visual check for "national parks india map".
+var VISUAL_RE = /\b(map|maps|locator|locator map|topograph|topographic|outline|projection|chart|charts|diagram|diagrams|structure|structures|scheme|schemes|schematic|schematics|anatomy|anatomical|graph|flow|flowchart|network|networks|cycle|cycles|process|processes|layer|layers|architecture|evolution|timeline|taxonomy|classification|composition|division|divisions|distribution|zone|zones|belt|belts|region|regions|system|systems|index|matrix|framework|hierarchy|model|models|profile|profiles|axis|axes|relief|physical|political)\b/;
+var PHOTO_OK_RE = /\bphoto(t)?(graph)?\b|\bpicture\b|\bimage of\b|\bview of\b|\bscene\b|\bpanorama\b|\bsunset\b|\bsunrise\b|\bnight\b/i;
+function wantsVisual(name) {
+  if (PHOTO_OK_RE.test(name)) return false;
+  if (/\bphoto\b|\bphotograph\b/i.test(name)) return true;
+  // Topics whose own words name a concrete scene/thing are legitimately photos.
+  return !/\b(breed|species|flower|bird|mammal|fish|tree|flower|mountain|river|beach|fort|temple|mosque|palace|statue|monument|building|bridge|dam|harbour|port|lake|island|falls|valley|glacier)\b/i.test(name);
+}
+function isVisualCandidate(fname) {
+  var t = norm(fname);
+  return VISUAL_RE.test(t) || /\.svg$/i.test(fname);
+}
 async function resolveAuto(name) {
+  var needVisual = wantsVisual(name);
   var queries = [name, name + ' diagram', name + ' chart', name + ' map', name + ' filetype:drawing'];
   for (var qi = 0; qi < queries.length; qi++) {
     var hits = await commonsSearch(queries[qi]);
@@ -81,14 +117,82 @@ async function resolveAuto(name) {
       var sc = autoScore(h, name);
       if (sc < 3) return;
       var fname = String(h).replace(/^File:/, '');
+      if (process.env.FIG_DEBUG) {
+        console.log('    [dbg] q="' + queries[qi] + '" score=' + sc.toFixed(1) +
+          ' needVisual=' + needVisual + ' isVisual=' + isVisualCandidate(fname) +
+          ' file="' + fname + '"');
+      }
+      if (needVisual && !isVisualCandidate(fname)) return; // reject bare photos for figure topics
       if (sc >= 4 && (!best || best.s < sc)) best = { f: fname, s: sc, q: queries[qi] };
       if (!bestAny || bestAny.s < sc) bestAny = { f: fname, s: sc, q: queries[qi] };
     });
-    var cand = best || bestAny;
+    var cand = best || (needVisual ? null : bestAny);
     if (cand && (await fileOK(cand.f))) return cand;
     await new Promise(function (res) { setTimeout(res, 250); });
   }
   return null;
+}
+
+// ---- curated topic source (data/figure-topics-curated.json) ----
+// The question shards cannot be used to pick figure topics: every subject's
+// set is a near-complete A-Z English Wikipedia sweep, so the highest-count
+// subtopics are generic topics rather than subject material. That is how the
+// Democratic Party became an Animal Husbandry figure. Curated topics come from
+// the UPSC Paper-1 syllabus instead, in explicit priority order, and are never
+// read from the shards.
+var CURATED_FILE = path.join(__dirname, '..', 'data', 'figure-topics-curated.json');
+var EXACT_FILE = path.join(__dirname, '..', 'data', 'figure-files-curated.json');
+var DISPLAY_NAME = {
+  'animal-husbandry-dairy': 'Animal Husbandry & Dairy',
+  'applied-sciences': 'Applied Sciences',
+  'ayurveda-traditional-medicine': 'Ayurveda & Traditional Medicine',
+  'computer-it': 'Computer & IT',
+  'courts-cases-verdicts': 'Courts, Cases & Verdicts',
+  'environment-ecology': 'Environment & Ecology',
+  'important-days': 'Important Days',
+  'indian-archaeology-epigraphy': 'Indian Archaeology & Epigraphy',
+  'indian-architecture': 'Indian Architecture',
+  'indian-aviation-shipping': 'Indian Aviation & Shipping',
+  'indian-cinema': 'Indian Cinema',
+  'indian-demographics-census': 'Indian Demographics & Census',
+  'indian-handicrafts-coins': 'Indian Handicrafts & Coins',
+  'indian-music-fine-arts': 'Indian Music & Fine Arts',
+  'indian-society': 'Indian Society',
+  'indian-wildlife-national-parks': 'Indian Wildlife & National Parks',
+  'international-relations': 'International Relations',
+  'meteorology-climate': 'Meteorology & Climate',
+  'sports': 'Sports',
+  'telecom-postal': 'Telecom & Postal',
+  'women-society': 'Women & Society'
+};
+function curatedSubjects() {
+  var raw = JSON.parse(fs.readFileSync(CURATED_FILE, 'utf8'));
+  // Optional hand-picked exact Commons files. When a topic has one, the builder
+  // uses it verbatim (the geography-pack method) and never searches. Without an
+  // entry the builder falls back to the auto search, which is only reliable for
+  // diagram-style topics, so a missing hand-pick is a known coverage gap rather
+  // than something to paper over with a wrong auto-pick.
+  var exact = {};
+  try {
+    if (fs.existsSync(EXACT_FILE)) {
+      var ex = JSON.parse(fs.readFileSync(EXACT_FILE, 'utf8'));
+      Object.keys(ex).forEach(function (s) { if (s.charAt(0) !== '_') exact[s] = ex[s]; });
+    }
+  } catch (e) { exact = {}; }
+  var out = {};
+  Object.keys(raw).forEach(function (slug) {
+    if (slug.charAt(0) === '_') return;
+    var list = [].concat(raw[slug] || []);
+    var topics = {};
+    // Descending synthetic counts so the curated order survives the builder's
+    // count sort and the first-listed topic is the first figure tried.
+    list.forEach(function (t, i) {
+      t = String(t).trim();
+      if (goodTopic(t)) topics[t] = list.length - i;
+    });
+    out[slug] = { total: list.length, topics: topics, exact: exact[slug] || {}, display: DISPLAY_NAME[slug] || slug };
+  });
+  return out;
 }
 
 // ---- scan question files -> subjects with topics ----
@@ -141,23 +245,28 @@ function marksHtml(marks) {
   return '<div class="marks"><b>Mark in exam:</b><ul>' + marks.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>';
 }
 function pageFor(f) {
+  var badge = f.hand
+    ? '<div class="auto-badge" style="background:#f0fdf4;border-color:#86efac;color:#166534">HAND-PICKED \u00b7 file chosen &amp; checked for this topic \u00b7 still verify labels</div>'
+    : '<div class="auto-badge">AUTO-SUGGESTED \u00b7 verify image &amp; labels before exam use</div>';
   return '<section class="page">' +
     '<div class="num">' + esc(f.sec) + '</div>' +
     '<div class="fig-title">' + esc(f.title) + '</div>' +
-    '<div class="auto-badge">AUTO-SUGGESTED \u00b7 verify image &amp; labels before exam use</div>' +
+    badge +
     '<div class="fig-img"><img src="' + f.url + '" alt="' + esc(f.title) + '"></div>' +
     marksHtml(f.marks) +
     '<div class="fig-src">' + esc(f.src) + '</div>' +
     '</section>';
 }
 function subjectPage(subj) {
+  var handN = subj.figs.filter(function (x) { return x.hand; }).length;
   var pages = subj.figs.map(function (x) {
     return {
       url: C(x.file),
       sec: 'GS Figures \u00b7 ' + subj.name,
       title: x.name + ' \u2014 Suggested Figure',
+      hand: x.hand,
       marks: ['sketch / label the key parts of this feature', 'note its location, dates or structure as relevant to the subject', 'verify the image really is the feature (auto-suggested)'],
-      src: 'Source: auto-suggested from Wikimedia Commons \u00b7 CC BY-SA \u2014 verify before exam',
+      src: (x.hand ? 'Source: Wikimedia Commons (hand-picked file)' : 'Source: auto-suggested from Wikimedia Commons \u00b7 CC BY-SA') + ' \u2014 verify before exam',
     };
   });
   var missing = '';
@@ -169,40 +278,71 @@ function subjectPage(subj) {
     '<style>' + CSS + '</style></head><body>' +
     '<section class="page"><header><span class="num">GS Figures \u00b7 ' + esc(subj.name) + ' \u00b7 UPSC</span>' +
     '<h1>' + esc(subj.name) + ' \u2014 Suggested Figures</h1>' +
-    '<p class="meta">' + subj.figs.length + ' figures \u00b7 auto-suggested from Wikimedia Commons (needs internet) \u00b7 print-ready A4 \u00b7 built by scripts/build-subject-figures.js</p></header>' + missing + '</section>' +
+    '<p class="meta">' + subj.figs.length + ' figures (' + handN + ' hand-picked, ' + (subj.figs.length - handN) + ' auto-suggested) \u00b7 topics from UPSC syllabus \u00b7 from Wikimedia Commons (needs internet) \u00b7 print-ready A4 \u00b7 built by scripts/build-subject-figures.js</p></header>' + missing + '</section>' +
     pages.map(pageFor).join('') +
     '</body></html>';
 }
 function indexPage(all) {
-  // Every figure in a non-geography pack is an unverified auto-suggestion, so
-  // the index must not present them as content. It used to print "6 figures" for
-  // 21 subjects whose figures had all been graded `template` by
-  // scripts/import-figures.js -- 126 unverified images advertised as material.
-  // The verified count is stated per subject, and it is zero everywhere except
-  // the curated geography pack.
+  // The figures in these packs are on-topic, because topics now come from the
+  // curated syllabus list (data/figure-topics-curated.json) instead of the
+  // contaminated question shards. The images are still unverified Wikimedia
+  // auto-matches, so the count of *checked* figures is stated, not implied.
   var items = all.map(function (s) {
     return '<li><a href="' + esc(s.slug) + '-figures.html">' + esc(s.name) +
-      '</a> \u2014 ' + s.figs.length + ' suggested \u00b7 <b>0 verified</b></li>';
+      '</a> \u2014 ' + s.figs.length + ' figures \u00b7 topics from UPSC syllabus \u00b7 <b>0 images verified</b></li>';
   }).join('');
   return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>UPSC Subject Figures \u2014 Index</title>' +
     '<style>' + CSS + '</style></head><body>' +
     '<section class="page"><header><span class="num">GS \u00b7 All Subjects \u00b7 UPSC</span>' +
     '<h1>UPSC Subject Figures \u2014 Index</h1>' +
-    '<p class="meta">Per-subject printable figure packs. Only the Geography pack is curated. ' +
-    'Every other pack holds unverified auto-suggestions from Wikimedia Commons \u2014 ' +
-    '0 of them have been checked, so treat them as leads to verify, not as study material. ' +
-    'Run scripts/import-figures.js to see the current verification grade per figure.</p></header></section>' +
+    '<p class="meta">Per-subject printable figure packs. The Geography pack is hand-curated. ' +
+    'The other packs pick their topics from the curated UPSC syllabus list in ' +
+    '<code>data/figure-topics-curated.json</code> \u2014 so each figure is on-topic \u2014 but every ' +
+    'image is an auto-match from Wikimedia Commons that no human has checked, so each one is ' +
+    'badged "auto-suggested" and should be verified before exam use. The question shards are ' +
+    'deliberately NOT used here: each subject\'s shard set is a near-complete A\u2013Z Wikipedia sweep, ' +
+    'which is what previously produced figures like the Democratic Party under Animal Husbandry.</p></header></section>' +
     '<ul class="idx"><li><a href="geography-figures.html">Geography</a> \u2014 curated figure pack</li>' + items + '</ul>' +
     '</body></html>';
 }
 
 // ---- main ----
 async function main() {
+  if (!ALLOW_UNVERIFIED) {
+    console.log('Refusing to build figure packs without opt-in.');
+    console.log('Two separate things are unverified here:');
+    console.log('  1. topic SOURCE. FIGURE_SOURCE=shards reads topics from the question');
+    console.log('     files, and those are A-Z Wikipedia sweeps, so figures inherit the');
+    console.log('     contamination (Democratic Party as an Animal Husbandry figure).');
+    console.log('     The default FIGURE_SOURCE=curated uses data/figure-topics-curated.json,');
+    console.log('     which is grounded in the UPSC Paper-1 syllabus and is on-topic.');
+    console.log('  2. the IMAGES. Even with curated topics, each image is a Wikimedia');
+    console.log('     auto-match that a human has not eyeballed. Every figure stays badged');
+    console.log('     "auto-suggested" and should be checked before exam use.');
+    console.log('');
+    console.log('Build on-topic packs (still unverified images):');
+    console.log('  FIGURES_ALLOW_UNVERIFIED=1 node scripts/build-subject-figures.js');
+    console.log('Preview without writing:');
+    console.log('  FIGURES_ALLOW_UNVERIFIED=1 FIGURES_DRY_RUN=1 node scripts/build-subject-figures.js');
+    return;
+  }
   var cache = {};
   if (fs.existsSync(CACHE_FILE)) {
     try { cache = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')); } catch (e) { cache = {}; }
   }
-  var subjects = scanSubjects();
+  var source = String(process.env.FIGURE_SOURCE || 'curated').toLowerCase();
+  var subjects = source === 'shards' ? scanSubjects() : curatedSubjects();
+  // HAND_PICKED_ONLY=1 renders just the hand-verified files from
+  // data/figure-files-curated.json and never touches the network search. It is
+  // fast and deterministic, so it is the right mode for a quick refresh of the
+  // known-good figures; the auto search is a separate, slower, best-effort pass.
+  var HAND_ONLY = /^(1|true|yes)$/i.test(String(process.env.HAND_PICKED_ONLY || ''));
+  if (source === 'shards') {
+    console.log('WARNING: FIGURE_SOURCE=shards — topics come from the contaminated question files.');
+  } else {
+    console.log('Topic source: curated (data/figure-topics-curated.json)');
+  }
+  if (HAND_ONLY) console.log('Mode: HAND_PICKED_ONLY — hand-verified files only, no search.');
   var names = Object.keys(subjects)
     .filter(function (s) { return !GEO_SKIP.test(s); })
     .sort(function (a, b) { return subjects[b].total - subjects[a].total; });
@@ -227,12 +367,19 @@ async function main() {
     });
     var figs = [];
     var unmatched = [];
+    var exact = subjects[sname].exact || {};
     for (var ti = 0; ti < order.length && figs.length < TOPICS_PER_SUBJECT && budget > 0; ti++) {
       if (Date.now() > deadline) { budget = 0; break; }
       var tname = order[ti];
       var key = norm(tname);
       var fname = null;
-      if (cache[key] && (await fileOK(cache[key]))) {
+      // A hand-picked exact file wins and is used verbatim (geography method).
+      var hand = exact[tname];
+      if (hand && (await fileOK(hand))) {
+        fname = hand;
+      } else if (HAND_ONLY) {
+        unmatched.push(tname); // hand-picked-only mode never falls back to search
+      } else if (cache[key] && (await fileOK(cache[key]))) {
         fname = cache[key];
       } else {
         var hit = null;
@@ -244,15 +391,25 @@ async function main() {
       }
       if (fname && figs.length < TOPICS_PER_SUBJECT) {
         AUTO_EXCLUDE_IMG[fname] = 1;
-        figs.push({ name: tname, file: fname });
+        figs.push({ name: tname, file: fname, hand: !!hand });
       }
     }
     if (figs.length) {
       var s = slug(sname);
       if (usedSlugs[s]) s = s + '-' + (++usedSlugs[s]);
       else usedSlugs[s] = 1;
-      made.push({ slug: s, name: sname, figs: figs, unmatched: unmatched });
+      made.push({ slug: s, name: subjects[sname].display || sname, figs: figs, unmatched: unmatched });
     }
+  }
+
+  if (DRY_RUN) {
+    console.log('DRY RUN — no files written. Would write:');
+    made.forEach(function (subj) {
+      console.log('  ' + (subj.slug + '-figures.html').padEnd(46) + subj.figs.length + ' figs (0 verified)');
+    });
+    if (made.length) console.log('  ' + 'subject-figures-index.html'.padEnd(46) + made.length + ' subjects');
+    console.log('Cache entries after this run: ' + Object.keys(cache).length);
+    return;
   }
 
   made.forEach(function (subj) {

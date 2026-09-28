@@ -32,6 +32,16 @@ data/questions/state-tracker.json
 # fresh clone and every rebuild silently re-rolled all ~123 unverified figures.
 !data/geo-auto-figures.json
 !data/subject-figures-cache.json
+# Curated figure inputs. The question shards are contaminated (each subject's set
+# is a near-complete A-Z Wikipedia sweep), so figure topics are curated from the
+# UPSC syllabus by hand in these two files. They must be tracked: the build and
+# the GitHub resolver both need them, and they are the only record of which
+# figure belongs to which subject. figure-files-curated.json holds hand-picked
+# exact Commons filenames (the geography-pack method, always wins);
+# figure-files-auto.json is the structured-data resolver's output.
+!data/figure-topics-curated.json
+!data/figure-files-curated.json
+!data/figure-files-auto.json
 question-bank/
 add_entries.js
 add_entries_phase2.js
