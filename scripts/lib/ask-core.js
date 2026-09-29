@@ -134,6 +134,23 @@
     { key: 'evidence', re: /\b(example|instance|evidence|data|recent|since)\b/i, label: 'evidence' }
   ];
 
+  // The instruction words that tell the candidate *what to do* rather than what
+  // the question is about. "Discuss Section 66A ... with reference to Article 19"
+  // asks about Section 66A and Article 19, not about "discussing" or
+  // "referencing". Left in the term list they become coverage anchors, and a
+  // corpus sentence about IT Act reform will never contain the word "discuss" --
+  // so a perfectly answerable question gets refused for failing to quote the
+  // exam paper's own scaffolding. They are still read for the `type` verdict
+  // above; they are simply excluded from retrieval and coverage.
+  var SCAFFOLD = {};
+  ('discuss discussed discussion examine examined explain explained analyse analyzed ' +
+   'analyse evaluate evaluated assess assessed appraise illustrate illustrated ' +
+   'describe described comment commented review reviewed consider considered ' +
+   'critically brief briefly note noted highlight highlights elaborate illustrate ' +
+   'reference references regard regards light context perspective basis ' +
+   'terms term means detail details examine')   // deliberate duplicate guard: set, not list
+    .split(' ').forEach(function (w) { if (w) SCAFFOLD[w] = 1; });
+
   function analyse(q) {
     var s = String(q || '');
     var nq = norm(s);
@@ -141,7 +158,7 @@
     for (var i = 0; i < VERBS.length; i++) {
       if (VERBS[i].re.test(nq)) { type = VERBS[i].type; break; }
     }
-    var base = tokens(s);
+    var base = tokens(s).filter(function (t) { return !SCAFFOLD[t]; });
     var weights = {};
     base.forEach(function (t) { weights[t] = 1; });
 
