@@ -328,8 +328,9 @@ function indexPage(all) {
     var prov = [handN ? handN + ' hand-picked' : '',
                 resN ? resN + ' auto-resolved' : '',
                 otherN ? otherN + ' auto-suggested' : ''].filter(Boolean).join(' \u00b7 ');
+    if (!s.figs.length) prov = 'no verified figures yet';
     return '<li><a href="' + esc(s.slug) + '-figures.html">' + esc(s.name) +
-      '</a> \u2014 ' + s.figs.length + ' figures \u00b7 ' + esc(prov) + '</li>';
+      '</a> \u2014 ' + s.figs.length + ' figures' + (prov ? ' \u00b7 ' + esc(prov) : '') + '</li>';
   }).join('');
   return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>UPSC Subject Figures \u2014 Index</title>' +
     '<style>' + CSS + '</style></head><body>' +
@@ -458,12 +459,14 @@ async function main() {
         figs.push({ name: tname, file: fname, hand: !!hand, source: source || 'cache' });
       }
     }
-    if (figs.length) {
-      var s = slug(sname);
-      if (usedSlugs[s]) s = s + '-' + (++usedSlugs[s]);
-      else usedSlugs[s] = 1;
-      made.push({ slug: s, name: subjects[sname].display || sname, figs: figs, unmatched: unmatched });
-    }
+    // Every subject in the curated list gets a page, even when no topic
+    // cleared the confidence bar. Dropping them used to leave the previous
+    // build's pack on disk: unreachable from the index, but still published,
+    // still showing figures that no longer pass the gate.
+    var s = slug(sname);
+    if (usedSlugs[s]) s = s + '-' + (++usedSlugs[s]);
+    else usedSlugs[s] = 1;
+    made.push({ slug: s, name: subjects[sname].display || sname, figs: figs, unmatched: unmatched });
   }
 
   if (DRY_RUN) {
