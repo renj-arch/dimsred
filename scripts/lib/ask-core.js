@@ -172,10 +172,6 @@
       ONTOLOGY[key].forEach(function (phrase) {
         if (!PHRASE_RE.test(phrase)) return;              // phrases only, no bare tokens
         boosts.push(phrase);
-        phrase.split(' ').forEach(function (w) {
-          if (w.length < 4) return;
-          weights[w] = Math.max(weights[w] || 0, 0.3);      // low weight, recall only
-        });
       });
     });
 
@@ -235,7 +231,7 @@
   // BM25 over the real field set. The only non-standard part is that ontology
   // phrase components enter the query at reduced weight, so a synonym can widen
   // recall without being able to outrank a literal title match.
-  function bm25(idx, weights) {
+  function bm25(idx, weights, boosts) {
     var k1 = 1.2, b = 0.75;
     var out = [];
     var terms = Object.keys(weights);
@@ -258,6 +254,14 @@
       });
       terms.forEach(function (phrase) {
         if (nameN === norm(phrase)) s += 8;                     // title is exactly the phrase
+      });
+      // Ontology boosts are applied as a title bonus only: a node literally
+      // titled "Tenth Schedule" (or "Anti-defection law (India)") tells us more
+      // than any synonym injected at query time ever could, and keeping them out
+      // of `weights` stops a synonym from being counted as evidence coverage.
+      (boosts || []).forEach(function (ph) {
+        var pn = norm(ph);
+        if (nameN.indexOf(pn) !== -1) s += 3;                   // phrase inside the title
       });
       if (s > 0) out.push({ i: i, score: s, direct: true });
     }
@@ -287,6 +291,10 @@
   var ASK_OBJECT = /\b(what are|what is|what was|why (is|are|was|were|do|does|did)|how (is|are|was|were|do|does|did|can|should)|when (is|was|did)|who (is|was|are|were))\b/i;
   // Demand nouns: these are what the answer must cover, not what it is about.
   var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|roles?|status|positions?)\b/i;
+  // Qualifier nouns like "nature", "role", "process" sit in front of a named
+  // subject ("the changing nature of caste") and must trigger the same head-noun
+  // cut: "of caste" is what the question is about, not "the changing nature".
+  var QUALIFIER_NOUN = /\b(changing\s+)?(natures?|roles?|aspects?|features?|characteristics?|process|processes|dynamics?|concept|concepts|idea|ideas|notion|notions|question|questions|issue|issues|problem|problems|evolution|evolutions|status)\b/i;
 
   // Returns the noun phrase a question is about. Question words, imperatives
   // and demand nouns are all removed, so "What were the aims and outcomes of the
@@ -299,6 +307,29 @@
     t = t.replace(/^(please\s+)?(can you|could you|would you|i want to know|explain to me|tell me about|write an? (answer|essay) (on|for)?)\s+/i, '');
     t = t.replace(ASK_OBJECT, ' ');
     t = t.replace(ASK_VERB, ' ');
+    // "the impact of urbanisation on social and economic development in India" is
+    // a question about urbanisation, not about "impact" or "development". When a
+    // demand noun introduces an "of X", the subject is X; and when X runs up
+    // against a positional clause ("on/about/in/for/with/at/by/under/against")
+    // that clause names what the impact is ON rather than what the question is
+    // about. So cut to the head noun after "of", then to that first positional word.
+    var ofIdx = t.search(/\bof\b/i);
+    if (ofIdx !== -1) {
+      DEMAND_NOUN.lastIndex = 0;
+      QUALIFIER_NOUN.lastIndex = 0;
+      var leadCatchesSubject =
+        DEMAND_NOUN.test(t.slice(0, ofIdx)) || QUALIFIER_NOUN.test(t.slice(0, ofIdx));
+      if (leadCatchesSubject) {
+        var afterOf = t.slice(ofIdx + 2);
+        var head = afterOf.match(
+          /^\s*(?:the\s+)?([A-Za-z0-9'’\-]+(?:\s+[A-Za-z0-9'’\-]+)*?)\s+(?:on|in|about|for|with|at|by|under|against|regarding|concerning|and|or)\b/i
+        );
+        t = head ? head[1] : afterOf.replace(/^\s*(?:the\s+)?/, '');
+      }
+    }
+    // A trailing "in <JURISDICTION>" names the container, not the subject:
+    // "What is the anti-defection law in India?" is about the anti-defection law.
+    t = t.replace(/\s+\bin\s+[A-Za-z][A-Za-z'’\-]*\s*$/i, ' ');
     // Demand phrases: "... the aims and outcomes of X", "... the environmental
     // impact of X". Cut back to the head noun on the far side of the last
     // preposition, which is where the named subject sits.
@@ -347,8 +378,14 @@
   // A proper-noun run alone is often too narrow. In "the anti-defection law in
   // India" the run is just "India", and India is not the subject of the
   // question; the subject is "anti-defection law in India". So reach leftwards
-  // from the run across stopwords and take up to two content words that sit
-  // immediately beside it, which is where a head noun lives.
+  // from the run and take up to two content words that sit immediately beside
+  // it, which is where a head noun lives.
+  //
+  // The returned span keeps the original stopwords ("on", "of", "the"). An
+  // earlier version stripped them, producing the mash "Agreement Agriculture
+  // World Trade Organisation WTO" — which is a phrase no node title contains,
+  // so the subject gate failed on a question the corpus does have partial
+  // material for. Stopwords stay in the span; matching handles them.
   //
   // This must not swallow a demand phrase: in "the environmental impact of the
   // Bhopal gas tragedy" the token before "Bhopal" is "impact", which names what
@@ -362,8 +399,9 @@
       if (words[i].replace(/[^A-Za-z0-9'’\-]/g, '') === run.split(' ')[0]) { at = i; break; }
     }
     if (at < 0) return run;
-    var extra = [];
-    for (var j = at - 1; j >= 0 && extra.length < 2; j--) {
+    var start = at;
+    var taken = 0;
+    for (var j = at - 1; j >= 0 && taken < 2; j--) {
       var raw = words[j];
       // Never reach across a sentence boundary. "...menaces. Highlight the role
       // of FATF" widened leftwards into the previous sentence's imperative
@@ -376,29 +414,70 @@
       if (SCAFFOLD[norm(w)]) break;                          // "Highlight"/"Discuss" ends the subject
       if (STOP.indexOf(norm(w)) !== -1) continue;   // look straight through "of/the/in"
       if (DEMAND_NOUN.test(w)) break;                          // a demand noun ends the subject
-      extra.unshift(w);
+      start = j;
+      taken++;
     }
-    return (extra.join(' ') + ' ' + run).trim();
+    return words.slice(start, at + run.split(' ').length).join(' ').trim()
+      .replace(/[.,;:]+$/, '');                                // the span ends at a word, not a full stop
   }
 
-  // A subject often ends in the acronym it just expanded: "Financial Action
-  // Task Force FATF". No node is titled with both the expansion and the
-  // acronym, so the exact phrase never matches. Strip trailing acronym-shaped
-  // tokens and try each shorter form, keeping the full string first so an
-  // exact title match still wins.
+  // British/American spelling is the same word to a reader, and node titles
+  // use whichever form Wikipedia happened to use: a subject saying
+  // "World Trade Organisation" must still match the node "Dispute settlement
+  // in the World Trade Organization".
+  function foldSZ(s) { return String(s).replace(/isation/g, 'ization'); }
+
+  // Every contiguous word window of the subject span, longest first. The subject
+  // may be a whole phrase the corpus never titles verbatim ("Agreement on
+  // Agriculture of World Trade Organisation (WTO)") while one of its windows is
+  // titled exactly ("agreement agriculture") or is contained in a longer
+  // title ("world trade organisation" inside "Dispute settlement in the World
+  // Trade Organization"). Windows are what let a stopworded, acronym-suffixed
+  // span find its articles.
+  //
+  // Stopwords are removed BEFORE windowing. Two bugs taught this:
+  //   "world trade" (a 2-word window of the long subject) matched "1 World
+  //   Trade Center" and friends — four sentences about Manhattan real estate
+  //   offered as evidence for a farm-subsidies question;
+  //   "anti-defection law in india" (stopwords kept) matched nothing, because
+  //   the node is titled "Anti-defection law (India)" and the window's stray
+  //   "in" broke contiguity.
+  // So: strip stopwords, then window with a floor of 3 words — unless the
+  // subject itself is shorter, in which case keep what there is ("Bhopal").
   function subjectVariants(subj) {
-    var words = String(subj || '').trim().split(/\s+/);
-    var out = [subj];
-    var i = words.length;
-    while (i > 1) {
-      var last = words[i - 1];
-      var lastRaw = String(last).replace(/[().]/g, '');
-      if (!/^[A-Za-z0-9]{2,6}$/.test(lastRaw)) break;
-      if (!(lastRaw === lastRaw.toUpperCase() && /[A-Za-z]/.test(lastRaw))) break;
-      i--;
-      out.push(words.slice(0, i).join(' '));
+    var words = String(subj || '').trim().split(/\s+/).filter(Boolean)
+      .filter(function (w) { return STOP.indexOf(norm(w)) === -1; });
+    if (!words.length) words = String(subj || '').trim().split(/\s+/).filter(Boolean);
+    var out = [], seen = {};
+    var minLen = Math.min(3, words.length);
+    function push(arr) {
+      if (arr.length < minLen) return;
+      var ns = norm(arr.join(' '));
+      if (!ns || seen[ns]) return;
+      seen[ns] = 1;
+      out.push(ns);
+      var folded = foldSZ(ns);
+      if (!seen[folded]) { seen[folded] = 1; out.push(folded); }
     }
-    return out.map(norm).filter(Boolean);
+    if (words.length <= 1) { push(words); return out; }
+    for (var len = words.length; len >= minLen; len--) {
+      for (var i = 0; i + len <= words.length; i++) push(words.slice(i, i + len));
+    }
+    return out;
+  }
+
+  // Does this node's title carry the subject? Per variant: multi-word windows
+  // must appear contiguous in the title, a single-word subject must be a whole
+  // token. Checked in longest-first order so an exact title match wins before
+  // any shorter window can.
+  function titleMatchesSubject(nameNorm, variants) {
+    var title = foldSZ(nameNorm);
+    for (var i = 0; i < variants.length; i++) {
+      var v = variants[i];
+      if (v.indexOf(' ') === -1) { if (tokenSet(title)[v] === 1) return true; }
+      else if (title.indexOf(v) !== -1) return true;
+    }
+    return false;
   }
 
   // Anchors are the candidate's own rare words: the terms that identify the
@@ -450,19 +529,20 @@
   function retrieve(idx, question, limit) {
     var a = analyse(question);
     limit = limit || 12;
-    var hits = bm25(idx, a.weights);
+    var hits = bm25(idx, a.weights, a.boosts);
     if (!hits.length) {
       return { analysis: a, candidates: [], evidence: [], coverage: 0, refused: true, reason: 'no term in the question appears anywhere in the index' };
     }
     var top = hits.slice(0, 40);
     var ranked = expand(idx, top, limit * 3);
 
-    // Work out what the question is about before scoring anything. A
-    // proper-noun run, widened to include the head noun beside it, is the
-    // strongest signal; the loose noun-phrase parse is the fallback for
-    // lowercase subjects like "urban flooding" or "federalism".
+    // Work out what the question is about before scoring anything. The noun-phrase
+    // parse is primary: it is what correctly reads "the impact of urbanisation on
+    // food security in India" as being about urbanisation, a phrase no capitalised
+    // run ever captures. The proper-noun run, widened to include the head noun
+    // beside it, is the fallback for subjects the grammar does not catch.
     var prop = properNounRun(question);
-    var subject = (prop ? widenSubject(question, prop) : '') || subjectOf(question);
+    var subject = subjectOf(question) || (prop ? widenSubject(question, prop) : '');
     var anchors = anchorsOf(idx, a.terms, subject);
 
     // Evidence must come from a node that is genuinely competitive. Without this
@@ -479,11 +559,9 @@
     // together by the generic word "impact". Restricting evidence to the subject's
     // own articles is what turns a keyword soup into an answer about the thing
     // that was asked.
-    // The subject often ends with an acronym it just expanded ("...Task Force
-    // FATF") and no node title carries both, so match against every shortened
-    // form as well — longest first, so the exact title still wins.
+    // The subject is a phrase no node may title verbatim, so match every
+    // contiguous word window of it — longest first, so the exact title wins.
     var subjVariants = subjectVariants(subject);
-    var multiEarly = subjVariants.length && Object.keys(tokenSet(subjVariants[0])).length > 1;
 
     var evidence = [];
     ranked.forEach(function (r) {
@@ -491,11 +569,7 @@
       var p = idx.nodes[r.i];
       if (!p) return;
       if (subjVariants.length) {
-        var nameNorm = norm(p.node.name);
-        var onSubject = multiEarly
-          ? subjVariants.some(function (v) { return nameNorm.indexOf(v) !== -1; })
-          : subjVariants.some(function (v) { return tokenSet(nameNorm)[v] === 1; });
-        if (!onSubject) return;
+        if (!titleMatchesSubject(norm(p.node.name), subjVariants)) return;
       }
       // Only the question's *distinctive* terms may qualify a sentence as
       // evidence. Anchoring on any query word let "law" and "india" carry
@@ -564,12 +638,9 @@
     var subjList = Object.keys(subjTokens);
     var subjectMatched = null;
     if (subjList.length) {
-      var multi = subjList.length > 1;
       subjectMatched = ranked.some(function (r) {
         if (r.score < floor) return false;
-        var nameNorm = norm(idx.nodes[r.i].node.name);
-        if (multi) return subjVariants.some(function (v) { return nameNorm.indexOf(v) !== -1; });
-        return subjVariants.some(function (v) { return tokenSet(nameNorm)[v] === 1; });
+        return titleMatchesSubject(norm(idx.nodes[r.i].node.name), subjVariants);
       });
     }
 

@@ -116,7 +116,7 @@ console.log(pass + ' passed, ' + fail + ' failed');
 // A topic with no vocabulary at all falls back to anchoring on its own name.
 // That fallback is where substring matching previously caused false facts, so
 // it gets its own table. Note the candidate entity and the topic under test are
-// different, exactly as in gen-theory: the topic is "Rang Mahal, Sri Ganganagar"
+// different, exactly as in the Mains node layer: the topic is "Rang Mahal, Sri Ganganagar"
 // and the candidate is a co-occurring node. Its 4-letter token "rang" used to
 // match "Petermann Ranges" and "Song Hye-rang"; both must be rejected, while a
 // real mention of the topic name must survive.

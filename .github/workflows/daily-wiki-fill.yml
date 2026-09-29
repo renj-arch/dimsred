@@ -376,10 +376,30 @@ jobs:
 
       - run: cp -f data/archive.html archive.html 2>/dev/null || true
 
+      # The Mains bank is hand-authored and nothing regenerates it, so this is
+      # the only automated check that a truncated edit or a missing
+      # "not official UPSC key" disclaimer cannot ship. Deliberately NOT
+      # continue-on-error: a reader who believes a model answer is an official
+      # key will reproduce it in the hall. Placed before the heavy rebuilds so
+      # it fails in seconds. Cost of a genuine failure is one stalled chain,
+      # not lost data — the run does not advance its progress marker, so the
+      # next run re-harvests the same range once the bank is fixed.
+      - name: Validate Mains answer bank
+        run: node scripts/validate-mains.js
+
       - name: Rebuild timeline map from question data
         continue-on-error: true
         run: |
           NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+
+      # Rebuild the Ask engine's retrieval index from the fresh timeline nodes.
+      # It was generated exactly once and never rebuilt, so ask.html served a
+      # frozen index while the corpus grew. Reads timeline.nodes.*.json, which
+      # the step above just produced; if that was skipped/failed, so is this.
+      - name: Rebuild Ask engine index
+        continue-on-error: true
+        run: |
+          NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-ask-index.js || echo "ask index rebuild skipped/failed — questions still committed"
 
       - run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
@@ -420,6 +440,14 @@ jobs:
             # -> live -> Cloudflare production) would silently skip after every bot
             # commit. Dispatch it explicitly to keep production fresh.
             gh workflow run slim-live.yml 2>/dev/null && echo "Self-dispatched Slim Live" || echo "Slim Live dispatch failed (non-fatal)"
+            # Daily question growth changes which topics need figures and where
+            # the flowcharts should point, so refresh both after each commit too.
+            # resolve-figures is network-bound (~126 topics) and runs standalone;
+            # build-timeline rebuilds the flowchart + geography packs. Both are
+            # non-fatal: a failed dispatch just means figures/flowcharts stay at
+            # the last successful rebuild.
+            gh workflow run resolve-figures.yml 2>/dev/null && echo "Self-dispatched Resolve Figures" || echo "Resolve Figures dispatch failed (non-fatal)"
+            gh workflow run build-timeline.yml 2>/dev/null && echo "Self-dispatched Build Timeline" || echo "Build Timeline dispatch failed (non-fatal)"
           else
             echo "No wiki data changes — chain ends here"
           fi

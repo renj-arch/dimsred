@@ -4,55 +4,67 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>UPSC Mains Practice — Model Answers</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
-  :root{ --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#f3f4f6; --acc:#0e7490; --warn:#b45309; --warnbg:#fffbeb; }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  .wrap{max-width:900px;margin:0 auto;padding:18px 16px 80px}
-  header.hd{background:#fff;border-radius:10px;padding:22px 24px;box-shadow:0 1px 4px rgba(0,0,0,.12);margin-bottom:14px}
-  .num{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
-  h1{font-size:24px;margin:6px 0 8px}
-  .disc{background:var(--warnbg);border:1px solid #fcd34d;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#78350f;line-height:1.6}
-  .disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px}
-  .meta{font-size:12.5px;color:var(--muted);margin-top:10px}
-  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
-  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:12.5px;cursor:pointer;font-weight:600;color:#374151}
-  .chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
-  .search{flex:1;min-width:180px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px}
-  .q{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.12);padding:18px 20px;margin:12px 0}
-  .q h2{font-size:15.5px;margin:0 0 8px;line-height:1.5}
-  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
-  .tag{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;background:#f3f4f6;color:#4b5563;border-radius:5px;padding:3px 8px}
-  .tag.m{background:#ecfdf5;color:#047857}
-  .tag.d{background:#fef2f2;color:#b91c1c}
-  .badge{display:inline-block;font-size:10px;letter-spacing:.08em;font-weight:700;border-radius:5px;padding:3px 8px;margin-bottom:10px}
-  .badge.model{background:#eff6ff;border:1px solid #93c5fd;color:#1d4ed8}
-  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:7px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer}
-  .btn.sec{background:#fff;color:var(--acc)}
-  .ans{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
-  .ans h3{font-size:13px;margin:14px 0 5px;color:#111827}
-  .ans p{margin:0 0 8px;font-size:13.5px;line-height:1.68}
-  .box{border-radius:8px;padding:11px 14px;margin:12px 0;font-size:12.5px;line-height:1.65}
-  .box b{display:block;margin-bottom:5px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
-  .box.marks{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d}
-  .box.pit{background:#fef2f2;border:1px solid #fecaca;color:#7f1d1d}
-  .box.laws{background:#f8fafc;border:1px solid var(--line);color:#334155}
-  .box ul{margin:0;padding-left:17px}.box li{margin:3px 0}
-  .kw{font-size:11.5px;color:var(--muted);margin-top:10px}
-  .kw span{background:#f3f4f6;border-radius:4px;padding:2px 7px;margin-right:5px;display:inline-block}
-  .empty{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
-  .load{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
-  @page{size:A4;margin:14mm}
-  @media print{
-    body{background:#fff}
-    .wrap{max-width:none;padding:0}
-    .bar,.btn,.search,.hint{display:none!important}
-    .q{box-shadow:none;break-inside:avoid;border:1px solid #ddd;margin:0 0 10px}
-    .ans h3{break-after:avoid}
-  }
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--rose:#fb7185;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;text-decoration:none;color:var(--text)}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+header.hd{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+.num{font-size:11px;letter-spacing:.14em;color:var(--text-sec);text-transform:uppercase}
+h1{font-size:24px;margin:6px 0 8px}
+.disc{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--text-sec);line-height:1.6}
+.disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px;color:var(--purple)}
+.meta{font-size:12.5px;color:var(--text-sec);margin-top:10px}
+.bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+.chip{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:7px 14px;font-size:12.5px;cursor:pointer;font-weight:600;color:var(--text-sec)}
+.chip[aria-pressed="true"]{background:rgba(167,139,250,.15);border-color:var(--purple);color:var(--purple)}
+.search{flex:1;min-width:180px;border:1px solid var(--border);border-radius:100px;padding:9px 12px;font-size:13.5px;background:var(--card);color:var(--text);outline:none}
+.search:focus{border-color:var(--purple)}
+.q{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin:12px 0}
+.q h2{font-size:15.5px;margin:0 0 8px;line-height:1.5}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+.tag{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;background:var(--bg);border:1px solid var(--border);color:var(--text-sec);border-radius:5px;padding:3px 8px}
+.tag.m{background:rgba(52,211,153,.1);border-color:rgba(52,211,153,.3);color:var(--emerald)}
+.tag.d{background:rgba(239,68,68,.1);border-color:rgba(239,68,68,.3);color:var(--rose)}
+.badge{display:inline-block;font-size:10px;letter-spacing:.08em;font-weight:700;border-radius:5px;padding:3px 8px;margin-bottom:10px}
+.badge.model{background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.3);color:var(--cyan)}
+.btn{border:1px solid var(--purple);background:var(--purple);color:#fff;border-radius:100px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer}
+.btn.sec{background:transparent;color:var(--purple)}
+.ans{margin-top:14px;border-top:1px solid var(--border);padding-top:14px}
+.ans h3{font-size:13px;margin:14px 0 5px;color:var(--text)}
+.ans p{margin:0 0 8px;font-size:13.5px;line-height:1.68}
+.box{border-radius:10px;padding:11px 14px;margin:12px 0;font-size:12.5px;line-height:1.65}
+.box b{display:block;margin-bottom:5px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.box.marks{background:rgba(52,211,153,.06);border:1px solid rgba(52,211,153,.25);color:var(--emerald)}
+.box.marks li{color:var(--text-sec)}
+.box.pit{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.25);color:var(--rose)}
+.box.pit li{color:var(--text-sec)}
+.box.laws{background:var(--bg);border:1px solid var(--border);color:var(--text-sec)}
+.box ul{margin:0;padding-left:17px}.box li{margin:3px 0}
+.kw{font-size:11.5px;color:var(--text-sec);margin-top:10px}
+.kw span{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px;margin-right:5px;display:inline-block}
+.empty{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
+.load{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
+@page{size:A4;margin:14mm}
+@media print{
+  body{background:#fff}
+  .wrap{max-width:none;padding:0}
+  .bar,.btn,.search,.hint{display:none!important}
+  .q{box-shadow:none;break-inside:avoid;border:1px solid #ddd;margin:0 0 10px}
+  .ans h3{break-after:avoid}
+}
 </style>
 </head>
 <body>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a href="archive.html">Archive</a><a href="map.html">Map</a><a href="ask.html">Ask</a><a href="revision.html">Revision</a><a class="active" href="mains.html">Mains</a><a href="about.html">About</a></div></div></nav>
 <div class="wrap">
   <header class="hd">
     <div class="num">UPSC Mains &middot; Model answers &middot; Practice</div>

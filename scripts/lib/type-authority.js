@@ -14,8 +14,8 @@
  *
  * WHY A DEDICATED AUTHORITY
  * -------------------------
- * Every consumer needed the same answer (flowchart.html, gen-outline.js,
- * validate-graph.js, gen-topic-layers.js) and each one re-derived it slightly
+ * Every consumer needed the same answer (flowchart.html, validate-graph.js,
+ * gen-topic-layers.js) and each one re-derived it slightly
  * differently, which is how `Uttar Pradesh` stayed a `person`. Resolving the
  * type in exactly one place makes the lanes impossible to get wrong
  * individually, and validate-graph.js asserts that every consumer uses this

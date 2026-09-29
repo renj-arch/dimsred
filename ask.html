@@ -4,54 +4,63 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Ask Vlymbooq — Zero-AI Retrieval</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
 <style>
-  :root{ --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#f3f4f6; --acc:#0e7490; --warn:#b45309; --warnbg:#fffbeb; --ok:#047857; --okbg:#ecfdf5; }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
-  .wrap{max-width:900px;margin:0 auto;padding:18px 16px 80px}
-  header.hd{background:#fff;border-radius:10px;padding:22px 24px;box-shadow:0 1px 4px rgba(0,0,0,.12);margin-bottom:14px}
-  .num{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
-  h1{font-size:24px;margin:6px 0 8px}
-  .disc{background:var(--warnbg);border:1px solid #fcd34d;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#78350f;line-height:1.6}
-  .disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px}
-  .meta{font-size:12.5px;color:var(--muted);margin-top:10px}
-  .ask-box{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.12);padding:20px 22px;margin:14px 0}
-  .ask-box label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
-  .ask-row{display:flex;gap:10px}
-  .ask-row textarea{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit;resize:vertical;min-height:80px}
-  .ask-row textarea:focus{outline:2px solid var(--acc);outline-offset:-1px}
-  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:7px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
-  .btn:hover{background:#0c5f76}
-  .btn:disabled{opacity:.5;cursor:not-allowed}
-  .result{margin:16px 0}
-  .refusal{background:var(--warnbg);border:1px solid #fcd34d;border-radius:10px;padding:18px 20px}
-  .refusal h2{font-size:15px;margin:0 0 8px;color:#78350f}
-  .refusal p{margin:0;font-size:13.5px;color:#78350f}
-  .refusal .reason{font-size:12.5px;color:#92400e;margin-top:10px;font-style:italic}
-  .answer{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.12);padding:20px 22px}
-  .answer h2{font-size:15px;margin:0 0 12px}
-  .cov-bar{display:flex;align-items:center;gap:10px;margin:10px 0 14px}
-  .cov-bar .label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:70px}
-  .cov-bar .track{flex:1;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden}
-  .cov-bar .fill{height:100%;border-radius:4px}
-  .cov-bar .pct{font-size:12px;font-weight:700;min-width:36px;text-align:right}
-  .ev{border-left:3px solid var(--acc);padding:10px 14px;margin:10px 0;background:#f8fafc;border-radius:0 8px 8px 0}
-  .ev .src{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
-  .ev .src a{color:var(--acc);text-decoration:none}
-  .ev .src a:hover{text-decoration:underline}
-  .ev p{margin:0;font-size:13.5px;line-height:1.65}
-  .ev .cat{font-size:10.5px;color:var(--muted);margin-top:4px}
-  .diag{font-size:11.5px;color:var(--muted);margin-top:14px;padding-top:10px;border-top:1px solid var(--line)}
-  .diag span{display:inline-block;background:#f3f4f6;border-radius:4px;padding:2px 7px;margin:2px 3px 2px 0}
-  .empty{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
-  .load{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
-  .err{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 16px;font-size:13px;color:#7f1d1d;margin:14px 0}
-  .samples{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-  .samples button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 10px;font-size:11.5px;cursor:pointer;color:#374151}
-  .samples button:hover{border-color:var(--acc);color:var(--acc)}
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--rose:#fb7185;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+header.hd{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+.num{font-size:11px;letter-spacing:.14em;color:var(--text-sec);text-transform:uppercase}
+h1{font-size:24px;margin:6px 0 8px}
+.disc{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--text-sec);line-height:1.6}
+.disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px;color:var(--purple)}
+.meta{font-size:12.5px;color:var(--text-sec);margin-top:10px}
+.ask-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin:14px 0}
+.ask-box label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-sec);display:block;margin-bottom:8px}
+.ask-row{display:flex;gap:10px}
+.ask-row textarea{flex:1;border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit;resize:vertical;min-height:80px;background:var(--bg);color:var(--text);outline:none}
+.ask-row textarea:focus{border-color:var(--purple)}
+.btn{border:1px solid var(--purple);background:var(--purple);color:#fff;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#8b7cf7}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.result{margin:16px 0}
+.refusal{background:var(--card);border:1px solid rgba(245,158,11,.4);border-radius:14px;padding:18px 20px}
+.refusal h2{font-size:15px;margin:0 0 8px;color:var(--amber)}
+.refusal p{margin:0;font-size:13.5px;color:var(--text-sec)}
+.refusal .reason{font-size:12.5px;color:var(--amber);margin-top:10px;font-style:italic}
+.answer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
+.answer h2{font-size:15px;margin:0 0 12px}
+.cov-bar{display:flex;align-items:center;gap:10px;margin:10px 0 14px}
+.cov-bar .label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-sec);min-width:70px}
+.cov-bar .track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.cov-bar .fill{height:100%;border-radius:4px}
+.cov-bar .pct{font-size:12px;font-weight:700;min-width:36px;text-align:right}
+.ev{border-left:3px solid var(--purple);padding:10px 14px;margin:10px 0;background:var(--bg);border-radius:0 10px 10px 0}
+.ev .src{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--purple);margin-bottom:4px}
+.ev .src a{color:var(--purple);text-decoration:none}
+.ev .src a:hover{text-decoration:underline}
+.ev p{margin:0;font-size:13.5px;line-height:1.65;color:var(--text)}
+.ev .cat{font-size:10.5px;color:var(--text-muted);margin-top:4px}
+.diag{font-size:11.5px;color:var(--text-sec);margin-top:14px;padding-top:10px;border-top:1px solid var(--border)}
+.diag span{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px;margin:2px 3px 2px 0}
+.empty{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
+.load{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
+.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--rose);margin:14px 0}
+.samples{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.samples button{border:1px solid var(--border);background:var(--bg);border-radius:100px;padding:5px 12px;font-size:11.5px;cursor:pointer;color:var(--text-sec);white-space:nowrap}
+.samples button:hover{border-color:var(--purple);color:var(--purple)}
 </style>
 </head>
 <body>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a href="archive.html">Archive</a><a href="map.html">Map</a><a class="active" href="ask.html">Ask</a><a href="about.html">About</a></div></div></nav>
 <div class="wrap">
   <header class="hd">
     <div class="num">Vlymbooq &middot; Zero-AI Retrieval &middot; UPSC</div>
