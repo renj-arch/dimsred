@@ -300,17 +300,30 @@
     // capitalise; verbs and question words do not.
   function properNounRun(text) {
     var words = String(text || '').replace(/[?!]+$/, '').split(/\s+/);
-    var run = [], started = false;
+    var runs = [], cur = [];
     for (var i = 0; i < words.length; i++) {
       var w = words[i].replace(/[^A-Za-z0-9'’\-]/g, '');
-      if (!w) { if (run.length) break; else continue; }
-      // Skip the opening imperative before considering capitalisation.
-      if (!started && SENTENCE_LEAD.test(w)) { if (run.length) break; else continue; }
-      // A capitalised word continues the run even if it is a stopword ("The").
-      if (/^[A-Z]/.test(w)) { run.push(w); started = true; continue; }
-      if (started) break;
+      if (!w) { if (cur.length) { runs.push(cur); cur = []; } continue; }
+      if (/^[A-Z]/.test(w)) { cur.push(w); continue; }
+      if (cur.length) { runs.push(cur); cur = []; }
     }
-    return run.join(' ');
+    if (cur.length) runs.push(cur);
+    if (!runs.length) return '';
+    // Return the longest run. A sentence opener like "Recent" is 1 word; the
+    // real subject ("Indian Constitution", "Natural Gas") is usually longer.
+    // On a tie, prefer an all-caps acronym ("NGT") over a regular proper noun
+    // ("India"), then prefer the later run — it sits closer to the question verb.
+    function isAcronym(w) { return w.length >= 2 && w === w.toUpperCase(); }
+    var best = runs[0];
+    for (var j = 1; j < runs.length; j++) {
+      var bAc = best.every(isAcronym), rAc = runs[j].every(isAcronym);
+      if (runs[j].length > best.length) { best = runs[j]; continue; }
+      if (runs[j].length === best.length) {
+        if (rAc && !bAc) { best = runs[j]; continue; }
+        if (rAc === bAc) best = runs[j];
+      }
+    }
+    return best.join(' ');
   }
 
   // A proper-noun run alone is often too narrow. In "the anti-defection law in
