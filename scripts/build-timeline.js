@@ -28,6 +28,38 @@ function yearSignals(text) {
     points.push(y);
     if (trust) trusted[y] = true;
   }
+
+  // Deep time: "324 million years ago", "4.5 billion years", "65 Ma", "12 kya".
+  // These are collected SEPARATELY and never enter `points`, so a geological
+  // age cannot stretch a node's chronological span from 1947 back to the
+  // Precambrian and blow out every axis that reads it. A node with deep time
+  // and no ordinary year keeps a null span (it stays honestly undated) and
+  // carries the age as a separate `deepTime` field for the UI to label.
+  var deepPts = [];
+  var DEEP = [
+    // "4.5 billion years", "324 million years ago", "65 thousand years"
+    { re: /\b(\d+(?:\.\d+)?)\s*(billion|million|thousand)\s+years?\b/gi, mul: { billion: 1e9, million: 1e6, thousand: 1e3 } },
+    // "65 Ma", "540 Ma", "12 kya", "2.58 mya" -- the standard deep-time suffixes
+    { re: /\b(\d+(?:\.\d+)?)\s*(mya|kyr|ky|Ma|Ka)\b/g, mul: { mya: 1e6, kyr: 1e3, ky: 1e3, Ma: 1e6, Ka: 1e9 } },
+    // "12,000 years ago", "1,00,000 years ago". "ago" (or "before present") is
+    // required, because a bare "5,000 years" is a DURATION -- how long the Indus
+    // valley lasted -- and reading a duration as a date is a fabricated one.
+    { re: /\b(\d{1,3}(?:,\d{3})+)\s+years?\s+(?:ago|before present)\b/gi, comma: true },
+    // Five-digit BC years: "74000 BC". The era regex above is \d{1,4}, so these
+    // used to be dropped on the floor. They are past the 10,000-year floor that
+    // add() enforces, so they belong to deep time, not to the chronological span.
+    { re: /\b(\d{5,7})\s*(BC|BCE)\b/gi, bcEra: true }
+  ];
+  for (var di = 0; di < DEEP.length; di++) {
+    var spec = DEEP[di], dm;
+    while ((dm = spec.re.exec(t))) {
+      var val;
+      if (spec.comma) val = parseInt(dm[1].replace(/,/g, ''), 10);
+      else if (spec.bcEra) val = parseInt(dm[1], 10);
+      else val = parseFloat(dm[1]) * spec.mul[dm[2].toLowerCase() === 'ma' ? 'Ma' : dm[2].toLowerCase()];
+      if (isFinite(val) && val > 10000) deepPts.push(-Math.round(val));
+    }
+  }
   var m;
   // "3rd century BC" / "3rd century AD" — an explicit era suffix.
   var re1 = /\b(\d{1,4})\s*(st|nd|rd|th)\s+centur(?:y|ies)\s+(BC|BCE|AD|CE)\b/gi;
@@ -67,8 +99,11 @@ function yearSignals(text) {
   var UNITS = '(?:metres?|meters?|m\\b|km\\b|kgs?|kilograms?|kilometres?|kilometers?|miles?|li\\b|feet|ft\\b|inches?|cm\\b|mm\\b|acres?|hectares?|tonnes?|tons?|grams?|litres?|liters?|ml\\b|points?|pts\\b|percent|%|rupees?|rs\\b|lakh|crore|dollars?|paise|tractors|markets?|messages?|people|persons|students|soldiers|troops|workers|farmers|villagers|monks?|nuns?|monasteries?|horses?|elephants?|cattle\\b|cows?|camels?|sheep\\b|goats?|buffaloes?|houses?|buildings?|villages?|states?|districts?|coins?|years?|yrs?|masters?)';
   var re5 = new RegExp('(?<!\\b(?:' + UNITS + ')[\\s-]|&\\s)\\b(1[0-9]{3}|20[0-2][0-9])\\b(?!' + '[\\s-]*(?:' + UNITS + ')\\b|' + '[\\s-]*&[\\s-]*\\d)', 'gi');
   while ((m = re5.exec(t))) { add(+m[1]); }
-  if (!points.length) return null;
-  return { min: Math.min.apply(null, points), max: Math.max.apply(null, points), trusted: trusted };
+  var deep = deepPts.length
+    ? { min: Math.min.apply(null, deepPts), max: Math.max.apply(null, deepPts) }
+    : null;
+  if (!points.length) return deep ? { min: null, max: null, trusted: trusted, deep: deep } : null;
+  return { min: Math.min.apply(null, points), max: Math.max.apply(null, points), trusted: trusted, deep: deep };
 }
 
 function yearsFrom(text) {
@@ -1997,6 +2032,7 @@ var MEAS_NEAR_BLANK = /_+[- ]?(?:metres?|meters?|m\b|km\b|kg\b|kgs?|kilometres?|
 function topicYears(name, qs, catKey) {
   var ys = [];
   var trusted = {};
+  var deepTimes = [];
   for (var q of qs) {
     var qtext = [q.question, q.answer, q.fact, q.hint].filter(Boolean).join(' ');
     var ansIsNum = /^\s*(1[0-9]{3}|20[0-2][0-9])\s*$/.test(q.answer || '');
@@ -2005,8 +2041,11 @@ function topicYears(name, qs, catKey) {
     }
     var fy = yearSignals(qtext);
     if (fy) {
-      ys.push(fy.min); ys.push(fy.max);
+      // `min`/`max` are null when the text carried deep time only; pushing a
+      // null into ys would poison the median/MAD span maths.
+      if (fy.min !== null && fy.max !== null) { ys.push(fy.min); ys.push(fy.max); }
       for (var k of Object.keys(fy.trusted)) trusted[k] = true;
+      if (fy.deep) deepTimes.push(fy.deep);
     }
   }
   // A sub-topic's own questions are topically coherent, so every extracted year is
@@ -2018,8 +2057,18 @@ function topicYears(name, qs, catKey) {
   if (TOPIC_OVERRIDES[name]) {
     return { min: TOPIC_OVERRIDES[name][0], max: TOPIC_OVERRIDES[name][1] };
   }
-  if (!fl.length) return null;
-  return robustSpan(fl, catKey, trusted);
+  // Deep time is reported alongside the span, never as one: a node whose only
+  // date is "65 million years ago" gets a null span (honestly undated on the
+  // chronological axis) plus the age, rather than a span that would stretch
+  // every axis reading it back to the Mesozoic.
+  var deep = deepTimes.length
+    ? { min: Math.min.apply(null, deepTimes.map(function (d) { return d.min; })),
+        max: Math.max.apply(null, deepTimes.map(function (d) { return d.max; })) }
+    : null;
+  if (!fl.length) return deep ? { min: null, max: null, deep: deep } : null;
+  var sp = robustSpan(fl, catKey, trusted);
+  if (sp && deep) sp.deep = deep;
+  return sp;
 }
 
 // Sub-topic auto-type classifier. Run on any sub-topic name that is not a curated
@@ -3530,7 +3579,11 @@ function main() {
         bioSpans: [],
         ownTopics: {},
         pyMin: null,
-        pyMax: null
+        pyMax: null,
+        // Deep time ("65 million years ago") is accumulated separately from ys,
+        // so a geological age can never enter the chronological span maths.
+        deepMin: null,
+        deepMax: null
       });
     }
   }
@@ -3570,6 +3623,13 @@ function main() {
         var autoBio = bioSpansFor(qs);
         if (autoBio) span = autoBio;
       }
+      // A deep-time-only topic ("65 million years ago") has no chronological
+      // span at all. Keep the age, but treat the span as absent: leaving
+      // {min:null,max:null} in place would skip the undated/era fallback below
+      // AND hand eraOf() the midpoint (null+null)/2 = 0, inventing an era for
+      // the year zero.
+      var topicDeep = (span && span.deep) ? span.deep : null;
+      if (span && (span.min == null || span.max == null)) span = null;
       var timebase = null;
       var eraId = null;
       if (!span) {
@@ -3609,6 +3669,7 @@ function main() {
         desc: descObj ? descObj.desc : null,
         evDesc: descObj ? descObj.src : null
       };
+      if (topicDeep) node.deepTime = topicDeep;
       seen[id] = node;
       nodes.push(node);
     }
@@ -3627,8 +3688,14 @@ function main() {
         var allText = [q2.question, q2.answer, q2.fact, q2.hint].filter(Boolean).join(' ');
         var fy = yearSignals(allText);
         if (fy) {
-          sd.ys.push(fy.min); sd.ys.push(fy.max);
+          // A deep-time-only mention yields null min/max; pushing those into ys
+          // would corrupt the span maths, so the age goes to its own bucket.
+          if (fy.min !== null && fy.max !== null) { sd.ys.push(fy.min); sd.ys.push(fy.max); }
           for (var tk of Object.keys(fy.trusted)) sd.trusted[tk] = true;
+          if (fy.deep) {
+            sd.deepMin = sd.deepMin === null ? fy.deep.min : Math.min(sd.deepMin, fy.deep.min);
+            sd.deepMax = sd.deepMax === null ? fy.deep.max : Math.max(sd.deepMax, fy.deep.max);
+          }
         }
         var bs = bioSpan(allText);
         if (bs) sd.bioSpans.push(bs);
@@ -3707,6 +3774,10 @@ function main() {
       desc: desc
     };
     if (span && span.archive) node.timebase = 'archive';
+    // Deep time is a label, not an axis position: recorded only, never mixed
+    // into `span`, so the chronological window that every view reads is
+    // unchanged by a "65 million years ago" mention.
+    if (sd.deepMin !== null && sd.deepMin !== undefined) node.deepTime = { min: sd.deepMin, max: sd.deepMax };
     nodes.push(node);
     seedNodes.push(node);
   }
