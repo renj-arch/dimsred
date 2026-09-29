@@ -148,6 +148,7 @@
    'describe described comment commented review reviewed consider considered ' +
    'critically brief briefly note noted highlight highlights elaborate illustrate ' +
    'reference references regard regards light context perspective basis ' +
+   'role roles status positions ' +
    'terms term means detail details examine')   // deliberate duplicate guard: set, not list
     .split(' ').forEach(function (w) { if (w) SCAFFOLD[w] = 1; });
 
@@ -285,7 +286,7 @@
   var ASK_VERB = /\b(what|why|how|when|where|who|which|explain|examine|discuss|analyse|analyze|evaluate|assess|appraise|describe|outline|elaborate|illustrate|comment)\b/i;
   var ASK_OBJECT = /\b(what are|what is|what was|why (is|are|was|were|do|does|did)|how (is|are|was|were|do|does|did|can|should)|when (is|was|did)|who (is|was|are|were))\b/i;
   // Demand nouns: these are what the answer must cover, not what it is about.
-  var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?)\b/i;
+  var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|roles?|status|positions?)\b/i;
 
   // Returns the noun phrase a question is about. Question words, imperatives
   // and demand nouns are all removed, so "What were the aims and outcomes of the
@@ -363,13 +364,41 @@
     if (at < 0) return run;
     var extra = [];
     for (var j = at - 1; j >= 0 && extra.length < 2; j--) {
-      var w = words[j].replace(/[^A-Za-z0-9'’\-]/g, '');
+      var raw = words[j];
+      // Never reach across a sentence boundary. "...menaces. Highlight the role
+      // of FATF" widened leftwards into the previous sentence's imperative
+      // "Highlight", producing the subject "Highlight role Financial Action
+      // Task Force FATF", which matches no node title and made the engine
+      // refuse a question the corpus actually has material for.
+      if (/[.!?:]["')\]]?$/.test(raw)) break;
+      var w = raw.replace(/[^A-Za-z0-9'’\-]/g, '');
       if (!w) break;
+      if (SCAFFOLD[norm(w)]) break;                          // "Highlight"/"Discuss" ends the subject
       if (STOP.indexOf(norm(w)) !== -1) continue;   // look straight through "of/the/in"
       if (DEMAND_NOUN.test(w)) break;                          // a demand noun ends the subject
       extra.unshift(w);
     }
     return (extra.join(' ') + ' ' + run).trim();
+  }
+
+  // A subject often ends in the acronym it just expanded: "Financial Action
+  // Task Force FATF". No node is titled with both the expansion and the
+  // acronym, so the exact phrase never matches. Strip trailing acronym-shaped
+  // tokens and try each shorter form, keeping the full string first so an
+  // exact title match still wins.
+  function subjectVariants(subj) {
+    var words = String(subj || '').trim().split(/\s+/);
+    var out = [subj];
+    var i = words.length;
+    while (i > 1) {
+      var last = words[i - 1];
+      var lastRaw = String(last).replace(/[().]/g, '');
+      if (!/^[A-Za-z0-9]{2,6}$/.test(lastRaw)) break;
+      if (!(lastRaw === lastRaw.toUpperCase() && /[A-Za-z]/.test(lastRaw))) break;
+      i--;
+      out.push(words.slice(0, i).join(' '));
+    }
+    return out.map(norm).filter(Boolean);
   }
 
   // Anchors are the candidate's own rare words: the terms that identify the
@@ -450,20 +479,22 @@
     // together by the generic word "impact". Restricting evidence to the subject's
     // own articles is what turns a keyword soup into an answer about the thing
     // that was asked.
-    var subjNormEarly = norm(subject);
-    var subjListEarly = Object.keys(tokenSet(subjNormEarly));
-    var multiEarly = subjListEarly.length > 1;
+    // The subject often ends with an acronym it just expanded ("...Task Force
+    // FATF") and no node title carries both, so match against every shortened
+    // form as well — longest first, so the exact title still wins.
+    var subjVariants = subjectVariants(subject);
+    var multiEarly = subjVariants.length && Object.keys(tokenSet(subjVariants[0])).length > 1;
 
     var evidence = [];
     ranked.forEach(function (r) {
       if (r.score < floor) return;
       var p = idx.nodes[r.i];
       if (!p) return;
-      if (subjListEarly.length) {
+      if (subjVariants.length) {
         var nameNorm = norm(p.node.name);
         var onSubject = multiEarly
-          ? nameNorm.indexOf(subjNormEarly) !== -1
-          : tokenSet(nameNorm)[subjNormEarly] === 1;
+          ? subjVariants.some(function (v) { return nameNorm.indexOf(v) !== -1; })
+          : subjVariants.some(function (v) { return tokenSet(nameNorm)[v] === 1; });
         if (!onSubject) return;
       }
       // Only the question's *distinctive* terms may qualify a sentence as
@@ -537,8 +568,8 @@
       subjectMatched = ranked.some(function (r) {
         if (r.score < floor) return false;
         var nameNorm = norm(idx.nodes[r.i].node.name);
-        if (multi) return nameNorm.indexOf(subjNorm) !== -1;
-        return tokenSet(nameNorm)[subjNorm] === 1;
+        if (multi) return subjVariants.some(function (v) { return nameNorm.indexOf(v) !== -1; });
+        return subjVariants.some(function (v) { return tokenSet(nameNorm)[v] === 1; });
       });
     }
 
