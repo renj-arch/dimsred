@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UPSC Mains Practice — Model Answers</title>
+<style>
+  :root{ --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#f3f4f6; --acc:#0e7490; --warn:#b45309; --warnbg:#fffbeb; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:18px 16px 80px}
+  header.hd{background:#fff;border-radius:10px;padding:22px 24px;box-shadow:0 1px 4px rgba(0,0,0,.12);margin-bottom:14px}
+  .num{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  h1{font-size:24px;margin:6px 0 8px}
+  .disc{background:var(--warnbg);border:1px solid #fcd34d;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#78350f;line-height:1.6}
+  .disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px}
+  .meta{font-size:12.5px;color:var(--muted);margin-top:10px}
+  .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
+  .chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:7px 14px;font-size:12.5px;cursor:pointer;font-weight:600;color:#374151}
+  .chip[aria-pressed="true"]{background:var(--acc);border-color:var(--acc);color:#fff}
+  .search{flex:1;min-width:180px;border:1px solid var(--line);border-radius:8px;padding:9px 12px;font-size:13.5px}
+  .q{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.12);padding:18px 20px;margin:12px 0}
+  .q h2{font-size:15.5px;margin:0 0 8px;line-height:1.5}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin:0 0 10px}
+  .tag{font-size:10.5px;letter-spacing:.06em;text-transform:uppercase;font-weight:700;background:#f3f4f6;color:#4b5563;border-radius:5px;padding:3px 8px}
+  .tag.m{background:#ecfdf5;color:#047857}
+  .tag.d{background:#fef2f2;color:#b91c1c}
+  .badge{display:inline-block;font-size:10px;letter-spacing:.08em;font-weight:700;border-radius:5px;padding:3px 8px;margin-bottom:10px}
+  .badge.model{background:#eff6ff;border:1px solid #93c5fd;color:#1d4ed8}
+  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:7px;padding:8px 14px;font-size:12.5px;font-weight:700;cursor:pointer}
+  .btn.sec{background:#fff;color:var(--acc)}
+  .ans{margin-top:14px;border-top:1px solid var(--line);padding-top:14px}
+  .ans h3{font-size:13px;margin:14px 0 5px;color:#111827}
+  .ans p{margin:0 0 8px;font-size:13.5px;line-height:1.68}
+  .box{border-radius:8px;padding:11px 14px;margin:12px 0;font-size:12.5px;line-height:1.65}
+  .box b{display:block;margin-bottom:5px;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+  .box.marks{background:#f0fdf4;border:1px solid #bbf7d0;color:#14532d}
+  .box.pit{background:#fef2f2;border:1px solid #fecaca;color:#7f1d1d}
+  .box.laws{background:#f8fafc;border:1px solid var(--line);color:#334155}
+  .box ul{margin:0;padding-left:17px}.box li{margin:3px 0}
+  .kw{font-size:11.5px;color:var(--muted);margin-top:10px}
+  .kw span{background:#f3f4f6;border-radius:4px;padding:2px 7px;margin-right:5px;display:inline-block}
+  .empty{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+  .load{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+  @page{size:A4;margin:14mm}
+  @media print{
+    body{background:#fff}
+    .wrap{max-width:none;padding:0}
+    .bar,.btn,.search,.hint{display:none!important}
+    .q{box-shadow:none;break-inside:avoid;border:1px solid #ddd;margin:0 0 10px}
+    .ans h3{break-after:avoid}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hd">
+    <div class="num">UPSC Mains &middot; Model answers &middot; Practice</div>
+    <h1>Mains Practice &mdash; model answers</h1>
+    <div class="disc">
+      <b>Read this first</b>
+      <span id="disc">These are model answers written for practice, not official UPSC answer keys. UPSC's own finalised answers differ in content and approach.</span>
+    </div>
+    <div class="meta" id="howto"></div>
+  </header>
+
+  <div class="bar">
+    <button class="chip" data-paper="all" aria-pressed="true">All papers</button>
+    <span id="paperChips"></span>
+    <input class="search" id="q" type="search" placeholder="Search questions, topics, keywords&hellip;" aria-label="Search questions">
+  </div>
+
+  <div id="list"><div class="load">Loading&hellip;</div></div>
+</div>
+
+<script>
+'use strict';
+var STATE = { data: null, paper: 'all', term: '' };
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+function el(id) { return document.getElementById(id); }
+
+// Fold accents and punctuation so "fema" matches "FEMA" and "prize" matches
+// "prize-winning", the way a candidate would expect a search box to behave.
+function norm(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function paperName(id) {
+  var ps = STATE.data.papers || [];
+  for (var i = 0; i < ps.length; i++) if (ps[i].id === id) return ps[i].name;
+  return id;
+}
+
+function visible() {
+  var qs = (STATE.data.questions || []).filter(function (q) {
+    if (STATE.paper !== 'all' && q.paper !== STATE.paper) return false;
+    if (!STATE.term) return true;
+    var hay = norm([q.question, q.topic, (q.keywords || []).join(' '), (q.laws || []).join(' ')].join(' '));
+    return hay.indexOf(STATE.term) !== -1;
+  });
+  return qs;
+}
+
+function card(q) {
+  var secs = (q.answer || []).map(function (s) {
+    return '<h3>' + esc(s.h) + '</h3><p>' + esc(s.p) + '</p>';
+  }).join('');
+  var marks = (q.marksGuide || []).map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('');
+  var pits = (q.pitfalls || []).map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('');
+  var laws = (q.laws || []).length
+    ? '<div class="box laws"><b>Laws, cases and provisions cited</b>' + esc((q.laws || []).join(' &middot; ')) + '</div>'
+    : '';
+  var kw = (q.keywords || []).length
+    ? '<div class="kw">' + (q.keywords || []).map(function (k) { return '<span>' + esc(k) + '</span>'; }).join('') + '</div>'
+    : '';
+  var yrs = (q.years || []).length ? esc(q.years.join(', ')) : '';
+  var diff = q.difficulty === 'high' ? '<span class="tag d">Hard</span>'
+          : q.difficulty === 'medium' ? '<span class="tag">Medium</span>' : '<span class="tag">Easy</span>';
+
+  return '<section class="q" id="q-' + esc(q.id) + '">' +
+    '<div class="tags"><span class="tag">' + esc(paperName(q.paper)) + '</span>' +
+      diff +
+      '<span class="tag m">' + esc(q.marks) + ' marks</span>' +
+      (yrs ? '<span class="tag">' + yrs + '</span>' : '') +
+    '</div>' +
+    '<h2>' + esc(q.question) + '</h2>' +
+    '<div class="badge model">MODEL ANSWER &middot; not an official UPSC key &middot; write your own attempt first</div>' +
+    '<button class="btn" data-open="' + esc(q.id) + '">Show the model answer</button>' +
+    '<div class="ans" id="ans-' + esc(q.id) + '" hidden>' + secs +
+      '<div class="box marks"><b>What the examiner rewards</b><ul>' + marks + '</ul></div>' +
+      '<div class="box pit"><b>How this is answered badly</b><ul>' + pits + '</ul></div>' +
+      laws + kw +
+    '</div>' +
+  '</section>';
+}
+
+function render() {
+  var qs = visible();
+  if (!qs.length) {
+    el('list').innerHTML = '<div class="empty">No question matches that filter. ' +
+      'The bank is deliberately small and hand-authored, so gaps are real &mdash; ' +
+      'see the note in <code>data/mains-questions.json</code>.</div>';
+    return;
+  }
+  el('list').innerHTML = qs.map(card).join('');
+}
+
+function boot(data) {
+  STATE.data = data;
+  if (data.meta && data.meta.disclaimer) el('disc').textContent = data.meta.disclaimer;
+  if (data.meta && data.meta.howToUse) el('howto').textContent = data.meta.howToUse;
+
+  // One chip per paper, with its live question count.
+  var counts = {};
+  (data.questions || []).forEach(function (q) { counts[q.paper] = (counts[q.paper] || 0) + 1; });
+  el('paperChips').innerHTML = (data.papers || []).map(function (p) {
+    return '<button class="chip" data-paper="' + esc(p.id) + '" aria-pressed="false" title="' + esc(p.sub || '') + '">' +
+      esc(p.name) + ' (' + (counts[p.id] || 0) + ')</button>';
+  }).join('');
+  render();
+}
+
+document.addEventListener('click', function (e) {
+  var chip = e.target.closest('.chip');
+  if (chip) {
+    STATE.paper = chip.getAttribute('data-paper');
+    var all = document.querySelectorAll('.chip');
+    for (var i = 0; i < all.length; i++) {
+      all[i].setAttribute('aria-pressed', all[i] === chip ? 'true' : 'false');
+    }
+    render();
+    return;
+  }
+  var open = e.target.closest('[data-open]');
+  if (open) {
+    var box = el('ans-' + open.getAttribute('data-open'));
+    if (box) {
+      var showing = !box.hidden;
+      box.hidden = showing;
+      open.textContent = showing ? 'Show the model answer' : 'Hide the model answer';
+      open.className = showing ? 'btn' : 'btn sec';
+    }
+  }
+});
+
+el('q').addEventListener('input', function (e) {
+  STATE.term = norm(e.target.value);
+  render();
+});
+
+// A file:// page cannot fetch() its own data (CORS), which is the single most
+// likely reason a student sees nothing. Say so, and say how to fix it, rather
+// than showing a blank page.
+fetch('data/mains-questions.json')
+  .then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(boot)
+  .catch(function (err) {
+    el('list').innerHTML = '<div class="empty">Could not load <code>data/mains-questions.json</code> (' + esc(err.message) + ').' +
+      '<br><br>This page reads its data over HTTP. If you opened the file directly, run ' +
+      '<code>python -m http.server 8123</code> in the project folder and visit ' +
+      '<code>http://127.0.0.1:8123/mains.html</code>.</div>';
+  });
+</script>
+</body>
+</html>

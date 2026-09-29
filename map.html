@@ -172,9 +172,28 @@ var TYPE_FILTERS = { person: true, event: true, disease: true, scheme: true, org
 
 function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
 
+// Ordinary history fits in four digits, but the corpus also carries deep time
+// ("65 million years ago"). Raw output for those was "65000000 BC", so large
+// magnitudes are grouped and named. The BC axis convention is kept.
 function fmtYear(y) {
   if (y == null) return '';
-  return y < 0 ? (-y) + ' BC' : String(y);
+  var neg = y < 0, a = Math.abs(y), out;
+  if (a >= 1e9) out = (a/1e9).toFixed(a/1e9 < 10 ? 1 : 0).replace(/\.0$/,'') + ' billion';
+  else if (a >= 1e6) out = (a/1e6).toFixed(a/1e6 < 10 ? 1 : 0).replace(/\.0$/,'') + ' million';
+  else if (a >= 1e4) out = String(a).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  else out = String(a);
+  return neg ? out + ' BC' : out;
+}
+// Deep time is a label, not an axis position: nodes carrying `deepTime` sit on
+// the chronological axis by their ordinary years (or nowhere), and this is the
+// age they are actually known for.
+function fmtDeep(d) {
+  if (!d || d.min == null) return '';
+  var a = Math.abs(d.min), out;
+  if (a >= 1e9) out = (a/1e9).toFixed(a/1e9 < 10 ? 1 : 0).replace(/\.0$/,'') + ' billion years ago';
+  else if (a >= 1e6) out = (a/1e6).toFixed(a/1e6 < 10 ? 1 : 0).replace(/\.0$/,'') + ' million years ago';
+  else out = fmtYear(d.min).replace(/ BC$/, ' years ago');
+  return out;
 }
 
 // Same word-boundary + inflection rules as scripts/build-timeline.js, so the
@@ -281,7 +300,10 @@ function render() {
       + '</div>'
       + '<div class="undated-chips"' + (uExpand ? ' style="max-height:310px"' : '') + '>'
       + shownU.map(function (u2) {
-        return '<button class="chip" onclick="openProfile(\'' + esc(u2.id).replace(/'/g, "\\'") + '\')">' + esc(u2.name) + ' <b>' + u2.count + '</b></button>';
+        // A deep-time node has no place on this axis, so it lands here. Naming
+        // its age keeps "No date" honest instead of reading as "unknown".
+        var deep = u2.deepTime ? ' <i>' + fmtDeep(u2.deepTime) + '</i>' : '';
+        return '<button class="chip" onclick="openProfile(\'' + esc(u2.id).replace(/'/g, "\\'") + '\')">' + esc(u2.name) + deep + ' <b>' + u2.count + '</b></button>';
       }).join('')
       + '</div></div>';
   }

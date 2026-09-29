@@ -21,9 +21,21 @@
 var fs = require('fs');
 var path = require('path');
 var FAS = require('./lib/figure-auto-score.js');
+var RESOLVER = require('./lib/figure-resolve.js');
 
 var QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
 var CACHE_FILE = path.join(__dirname, '..', 'data', 'subject-figures-cache.json');
+var AUTO_FILE = path.join(__dirname, '..', 'data', 'figure-files-auto.json');
+// Picks below this confidence are treated as no answer. The resolver skips
+// rather than guesses, so a low number here means fewer figures, never worse.
+// 0.85 is deliberate: the resolver scores tier-1 (Wikidata/category) and
+// tier-2 (the topic's own article) picks at 0.9+, and tier-3 filename-search
+// picks at 0.8. Auditing a full run showed every wrong figure came from the
+// tier-3 band -- a UN peacekeeping helmet for the Security Council, a
+// projection map of Asia for the Asian Games, a minister's press photo for
+// telecom spectrum. Those now stay unpublished instead of appearing as
+// "resolved", and the topic reads as a gap to be curated by hand.
+var AUTO_MIN_CONF = parseFloat(process.env.FIGURE_MIN_CONF || '0.85');
 var ROOT = path.join(__dirname, '..');
 var TOPICS_PER_SUBJECT = process.env.TOPICS_PER_SUBJECT ? parseInt(process.env.TOPICS_PER_SUBJECT, 10) : 6;
 var GLOBAL_LIMIT = process.env.GLOBAL_LIMIT ? parseInt(process.env.GLOBAL_LIMIT, 10) : 150;
@@ -179,6 +191,16 @@ function curatedSubjects() {
       Object.keys(ex).forEach(function (s) { if (s.charAt(0) !== '_') exact[s] = ex[s]; });
     }
   } catch (e) { exact = {}; }
+  // Precomputed resolver output from the GitHub workflow. Loading it here means
+  // a build never needs the network at all when the workflow has run: the picks
+  // are already resolved, verified, and committed by scripts/resolve-all-figures.js.
+  var auto = {};
+  try {
+    if (fs.existsSync(AUTO_FILE)) {
+      var au = JSON.parse(fs.readFileSync(AUTO_FILE, 'utf8'));
+      Object.keys(au).forEach(function (s) { if (s.charAt(0) !== '_') auto[s] = au[s]; });
+    }
+  } catch (e) { auto = {}; }
   var out = {};
   Object.keys(raw).forEach(function (slug) {
     if (slug.charAt(0) === '_') return;
@@ -190,7 +212,8 @@ function curatedSubjects() {
       t = String(t).trim();
       if (goodTopic(t)) topics[t] = list.length - i;
     });
-    out[slug] = { total: list.length, topics: topics, exact: exact[slug] || {}, display: DISPLAY_NAME[slug] || slug };
+    out[slug] = { total: list.length, topics: topics, exact: exact[slug] || {},
+                  auto: auto[slug] || {}, display: DISPLAY_NAME[slug] || slug };
   });
   return out;
 }
@@ -245,9 +268,12 @@ function marksHtml(marks) {
   return '<div class="marks"><b>Mark in exam:</b><ul>' + marks.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>';
 }
 function pageFor(f) {
+  var resolved = f.source === 'auto' || f.source === 'live';
   var badge = f.hand
     ? '<div class="auto-badge" style="background:#f0fdf4;border-color:#86efac;color:#166534">HAND-PICKED \u00b7 file chosen &amp; checked for this topic \u00b7 still verify labels</div>'
-    : '<div class="auto-badge">AUTO-SUGGESTED \u00b7 verify image &amp; labels before exam use</div>';
+    : resolved
+      ? '<div class="auto-badge" style="background:#eff6ff;border-color:#93c5fd;color:#1d4ed8">AUTO-RESOLVED \u00b7 matched from the topic\u2019s own Wikipedia article / Wikimedia structured data \u00b7 check labels</div>'
+      : '<div class="auto-badge">AUTO-SUGGESTED \u00b7 verify image &amp; labels before exam use</div>';
   return '<section class="page">' +
     '<div class="num">' + esc(f.sec) + '</div>' +
     '<div class="fig-title">' + esc(f.title) + '</div>' +
@@ -259,49 +285,65 @@ function pageFor(f) {
 }
 function subjectPage(subj) {
   var handN = subj.figs.filter(function (x) { return x.hand; }).length;
+  var resN = subj.figs.filter(function (x) { return x.source === 'auto' || x.source === 'live'; }).length;
+  var legacyN = subj.figs.length - handN - resN;
   var pages = subj.figs.map(function (x) {
     return {
       url: C(x.file),
       sec: 'GS Figures \u00b7 ' + subj.name,
       title: x.name + ' \u2014 Suggested Figure',
       hand: x.hand,
-      marks: ['sketch / label the key parts of this feature', 'note its location, dates or structure as relevant to the subject', 'verify the image really is the feature (auto-suggested)'],
-      src: (x.hand ? 'Source: Wikimedia Commons (hand-picked file)' : 'Source: auto-suggested from Wikimedia Commons \u00b7 CC BY-SA') + ' \u2014 verify before exam',
+      source: x.source,
+      marks: ['sketch / label the key parts of this feature', 'note its location, dates or structure as relevant to the subject', 'verify the image really is the feature'],
+      src: (x.hand ? 'Source: Wikimedia Commons (hand-picked file)'
+        : x.source && x.source !== 'legacy' ? 'Source: auto-resolved from Wikimedia Commons (structured match) \u00b7 CC BY-SA'
+        : 'Source: auto-suggested from Wikimedia Commons \u00b7 CC BY-SA') + ' \u2014 verify before exam',
     };
   });
   var missing = '';
   if (subj.unmatched.length) {
-    missing = '<div class="missing"><b>' + esc(subj.name) + ' \u2014 topics still needing a figure</b> (no usable Commons image found):<br>' +
+    missing = '<div class="missing"><b>' + esc(subj.name) + ' \u2014 topics still needing a figure</b> (no confident Commons image found):<br>' +
       esc(subj.unmatched.slice(0, 20).join(' \u00b7 ')) + (subj.unmatched.length > 20 ? ' \u00b7 +' + (subj.unmatched.length - 20) + ' more' : '') + '</div>';
   }
+  var counts = subj.figs.length + ' figures (' + handN + ' hand-picked, ' + resN + ' auto-resolved' +
+    (legacyN ? ', ' + legacyN + ' auto-suggested' : '') + ')';
   return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>' + esc(subj.name) + ' Figures (UPSC)</title>' +
     '<style>' + CSS + '</style></head><body>' +
     '<section class="page"><header><span class="num">GS Figures \u00b7 ' + esc(subj.name) + ' \u00b7 UPSC</span>' +
     '<h1>' + esc(subj.name) + ' \u2014 Suggested Figures</h1>' +
-    '<p class="meta">' + subj.figs.length + ' figures (' + handN + ' hand-picked, ' + (subj.figs.length - handN) + ' auto-suggested) \u00b7 topics from UPSC syllabus \u00b7 from Wikimedia Commons (needs internet) \u00b7 print-ready A4 \u00b7 built by scripts/build-subject-figures.js</p></header>' + missing + '</section>' +
+    '<p class="meta">' + counts + ' \u00b7 topics from UPSC syllabus \u00b7 from Wikimedia Commons (needs internet) \u00b7 print-ready A4 \u00b7 built by scripts/build-subject-figures.js</p></header>' + missing + '</section>' +
     pages.map(pageFor).join('') +
     '</body></html>';
 }
 function indexPage(all) {
-  // The figures in these packs are on-topic, because topics now come from the
+  // The figures in these packs are on-topic, because topics come from the
   // curated syllabus list (data/figure-topics-curated.json) instead of the
-  // contaminated question shards. The images are still unverified Wikimedia
-  // auto-matches, so the count of *checked* figures is stated, not implied.
+  // contaminated question shards. Provenance is stated per pack rather than
+  // implied: hand-picked files, resolver picks (matched against the topic's own
+  // Wikipedia article / Wikimedia structured data), and anything left over.
   var items = all.map(function (s) {
+    var handN = s.figs.filter(function (x) { return x.hand; }).length;
+    var resN = s.figs.filter(function (x) { return x.source === 'auto' || x.source === 'live'; }).length;
+    var otherN = s.figs.length - handN - resN;
+    var prov = [handN ? handN + ' hand-picked' : '',
+                resN ? resN + ' auto-resolved' : '',
+                otherN ? otherN + ' auto-suggested' : ''].filter(Boolean).join(' \u00b7 ');
+    if (!s.figs.length) prov = 'no verified figures yet';
     return '<li><a href="' + esc(s.slug) + '-figures.html">' + esc(s.name) +
-      '</a> \u2014 ' + s.figs.length + ' figures \u00b7 topics from UPSC syllabus \u00b7 <b>0 images verified</b></li>';
+      '</a> \u2014 ' + s.figs.length + ' figures' + (prov ? ' \u00b7 ' + esc(prov) : '') + '</li>';
   }).join('');
   return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>UPSC Subject Figures \u2014 Index</title>' +
     '<style>' + CSS + '</style></head><body>' +
     '<section class="page"><header><span class="num">GS \u00b7 All Subjects \u00b7 UPSC</span>' +
     '<h1>UPSC Subject Figures \u2014 Index</h1>' +
     '<p class="meta">Per-subject printable figure packs. The Geography pack is hand-curated. ' +
-    'The other packs pick their topics from the curated UPSC syllabus list in ' +
-    '<code>data/figure-topics-curated.json</code> \u2014 so each figure is on-topic \u2014 but every ' +
-    'image is an auto-match from Wikimedia Commons that no human has checked, so each one is ' +
-    'badged "auto-suggested" and should be verified before exam use. The question shards are ' +
-    'deliberately NOT used here: each subject\'s shard set is a near-complete A\u2013Z Wikipedia sweep, ' +
-    'which is what previously produced figures like the Democratic Party under Animal Husbandry.</p></header></section>' +
+    'The other packs take their topics from the curated UPSC syllabus list in ' +
+    '<code>data/figure-topics-curated.json</code>, and each image is either a hand-picked file or a ' +
+    'resolver pick matched against the topic\u2019s own Wikipedia article and Wikimedia structured data ' +
+    '(<code>data/figure-files-auto.json</code>, produced by the Resolve Figures workflow). Every figure ' +
+    'is badged with how it was chosen, and labels should still be checked before exam use. The question ' +
+    'shards are deliberately NOT used here: each subject\u2019s shard set is a near-complete A\u2013Z Wikipedia ' +
+    'sweep, which is what previously produced figures like the Democratic Party under Animal Husbandry.</p></header></section>' +
     '<ul class="idx"><li><a href="geography-figures.html">Geography</a> \u2014 curated figure pack</li>' + items + '</ul>' +
     '</body></html>';
 }
@@ -316,11 +358,12 @@ async function main() {
     console.log('     contamination (Democratic Party as an Animal Husbandry figure).');
     console.log('     The default FIGURE_SOURCE=curated uses data/figure-topics-curated.json,');
     console.log('     which is grounded in the UPSC Paper-1 syllabus and is on-topic.');
-    console.log('  2. the IMAGES. Even with curated topics, each image is a Wikimedia');
-    console.log('     auto-match that a human has not eyeballed. Every figure stays badged');
-    console.log('     "auto-suggested" and should be checked before exam use.');
+    console.log('  2. the IMAGES. Each image is either a hand-picked file or a resolver');
+    console.log('     pick matched against the topic\u2019s own Wikipedia article and Wikimedia');
+    console.log('     structured data. Every figure is badged with how it was chosen, and');
+    console.log('     labels should still be checked before exam use.');
     console.log('');
-    console.log('Build on-topic packs (still unverified images):');
+    console.log('Build packs:');
     console.log('  FIGURES_ALLOW_UNVERIFIED=1 node scripts/build-subject-figures.js');
     console.log('Preview without writing:');
     console.log('  FIGURES_ALLOW_UNVERIFIED=1 FIGURES_DRY_RUN=1 node scripts/build-subject-figures.js');
@@ -330,6 +373,13 @@ async function main() {
   if (fs.existsSync(CACHE_FILE)) {
     try { cache = JSON.parse(fs.readFileSync(CACHE_FILE, 'utf8')); } catch (e) { cache = {}; }
   }
+  // Cache values now record how the pick was made. Bare strings from older
+  // runs are marked 'cache' (unknown provenance) and are therefore never
+  // presented as a resolved figure.
+  Object.keys(cache).forEach(function (k) {
+    var v = cache[k];
+    cache[k] = (typeof v === 'string') ? { file: v, source: 'cache' } : v;
+  });
   var source = String(process.env.FIGURE_SOURCE || 'curated').toLowerCase();
   var subjects = source === 'shards' ? scanSubjects() : curatedSubjects();
   // HAND_PICKED_ONLY=1 renders just the hand-verified files from
@@ -373,39 +423,57 @@ async function main() {
       var tname = order[ti];
       var key = norm(tname);
       var fname = null;
+      var source = null;
       // A hand-picked exact file wins and is used verbatim (geography method).
       var hand = exact[tname];
+      var auto = subjects[sname].auto || {};
+      var ap = auto[tname];
       if (hand && (await fileOK(hand))) {
-        fname = hand;
+        fname = hand; source = 'hand';
       } else if (HAND_ONLY) {
         unmatched.push(tname); // hand-picked-only mode never falls back to search
-      } else if (cache[key] && (await fileOK(cache[key]))) {
-        fname = cache[key];
+      } else if (ap && ap.file && Number(ap.conf) >= AUTO_MIN_CONF && (await fileOK(ap.file))) {
+        // Committed by the Resolve Figures workflow: already resolved against
+        // Wikimedia structured data and existence-checked there.
+        fname = ap.file; source = 'auto'; cache[key] = { file: fname, source: 'auto' };
+      } else if (cache[key] && cache[key].file && (await fileOK(cache[key].file))) {
+        fname = cache[key].file;
+        source = cache[key].source || 'cache';
       } else {
         var hit = null;
-        try { hit = await resolveAuto(tname); } catch (e) { hit = null; }
-        if (hit) { fname = hit.f; cache[key] = fname; }
-        else unmatched.push(tname);
+        if (/^(1|true|yes)$/i.test(String(process.env.LEGACY_SEARCH || ''))) {
+          // Opt-in only: the old free-text search matched historic maps of
+          // North America to Indian topics, so it is no longer the default.
+          try { hit = await resolveAuto(tname); } catch (e) { hit = null; }
+          if (hit) { fname = hit.f; source = 'legacy'; cache[key] = { file: fname, source: 'legacy' }; }
+        } else {
+          try { hit = await RESOLVER.resolve(tname); } catch (e) { hit = null; }
+          if (hit && Number(hit.conf) >= AUTO_MIN_CONF) { fname = hit.file; source = 'live'; cache[key] = { file: fname, source: 'live' }; }
+        }
+        if (!fname) unmatched.push(tname);
         budget--;
         await new Promise(function (res) { setTimeout(res, 180); });
       }
       if (fname && figs.length < TOPICS_PER_SUBJECT) {
         AUTO_EXCLUDE_IMG[fname] = 1;
-        figs.push({ name: tname, file: fname, hand: !!hand });
+        figs.push({ name: tname, file: fname, hand: !!hand, source: source || 'cache' });
       }
     }
-    if (figs.length) {
-      var s = slug(sname);
-      if (usedSlugs[s]) s = s + '-' + (++usedSlugs[s]);
-      else usedSlugs[s] = 1;
-      made.push({ slug: s, name: subjects[sname].display || sname, figs: figs, unmatched: unmatched });
-    }
+    // Every subject in the curated list gets a page, even when no topic
+    // cleared the confidence bar. Dropping them used to leave the previous
+    // build's pack on disk: unreachable from the index, but still published,
+    // still showing figures that no longer pass the gate.
+    var s = slug(sname);
+    if (usedSlugs[s]) s = s + '-' + (++usedSlugs[s]);
+    else usedSlugs[s] = 1;
+    made.push({ slug: s, name: subjects[sname].display || sname, figs: figs, unmatched: unmatched });
   }
 
   if (DRY_RUN) {
     console.log('DRY RUN — no files written. Would write:');
     made.forEach(function (subj) {
-      console.log('  ' + (subj.slug + '-figures.html').padEnd(46) + subj.figs.length + ' figs (0 verified)');
+      var vN = subj.figs.filter(function (x) { return x.hand || x.source === 'auto' || x.source === 'live'; }).length;
+      console.log('  ' + (subj.slug + '-figures.html').padEnd(46) + subj.figs.length + ' figs (' + vN + ' resolved)');
     });
     if (made.length) console.log('  ' + 'subject-figures-index.html'.padEnd(46) + made.length + ' subjects');
     console.log('Cache entries after this run: ' + Object.keys(cache).length);

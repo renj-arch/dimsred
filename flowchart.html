@@ -265,7 +265,31 @@ function buildRandPool(){
     return hasVizNeighbours(n,2);
   });
 }
-function fmtYear(y){return y==null?'':(y<0?(-y)+' BC':String(y));}
+// Years run to four digits for ordinary history, but the corpus also carries
+// deep time ("65 million years ago", "4.5 billion years"). Printing those raw
+// gave "65000000 BC", so large magnitudes are grouped and named. Note the axis
+// convention is kept: these are still BC years, not the "Ma" of geology
+// literature.
+function fmtYear(y){
+  if(y==null)return '';
+  var neg=y<0, a=Math.abs(y);
+  var out;
+  if(a>=1e9) out=(a/1e9).toFixed(a/1e9<10?1:0).replace(/\.0$/,'')+' billion';
+  else if(a>=1e6) out=(a/1e6).toFixed(a/1e6<10?1:0).replace(/\.0$/,'')+' million';
+  else if(a>=1e4) out=String(a).replace(/\B(?=(\d{3})+(?!\d))/g,',');
+  else out=String(a);
+  return neg?out+' BC':out;
+}
+// Deep-time age as a phrase, for nodes that carry `deepTime` instead of a span.
+function fmtDeep(d){
+  if(!d||d.min==null)return '';
+  var a=Math.abs(d.min);
+  var out;
+  if(a>=1e9) out=(a/1e9).toFixed(a/1e9<10?1:0).replace(/\.0$/,'')+' billion years ago';
+  else if(a>=1e6) out=(a/1e6).toFixed(a/1e6<10?1:0).replace(/\.0$/,'')+' million years ago';
+  else out=fmtYear(d.min).replace(/ BC$/,' years ago');
+  return out;
+}
 function hashStr(s){var h=2166136261;for(var i=0;i<s.length;i++){h^=s.charCodeAt(i);h=Math.imul(h,16777619);}return (h>>>0)%360;}
 function colorFor(t){return TYPE_COLOR[t]||'hsl('+hashStr(t)+',62%,60%)';}
 function typeLabel(t){return String(t||'misc').replace(/[-_]+/g,' ').replace(/\b\w/g,function(c){return c.toUpperCase();});}
@@ -277,6 +301,12 @@ function typeLabel(t){return String(t||'misc').replace(/[-_]+/g,' ').replace(/\b
 // prominence sort made the displayed range depend on an arbitrary tie-break, so
 // the span is resolved from the whole name group instead.
 var _dspanCache={};
+// displaySpan must return a NODE carrying the resolved span, not a bare span
+// object. spanLabel (the only caller) reads `n.span`, so returning
+// `{min,max,type}` made every dated node fall through to "undated" --
+// "Gandhiji" showed no dates at all. Copying the node keeps `name`, `type`,
+// `count` and `deepTime` intact alongside the resolved span.
+function nodeWithSpan(n,span){var c={};for(var k in n)c[k]=n[k];c.span=span;return c;}
 function displaySpan(n){
   if(!n||!n.name)return n;
   var c=canon(n.name);
@@ -301,27 +331,31 @@ function displaySpan(n){
       }
     });
     var pick=life||present;
-    if(pick)out={min:pick.s.min,max:pick.s.max,type:'person',timebase:pick.n.timebase};
+    if(pick)out=nodeWithSpan(pick.n,{min:pick.s.min,max:pick.s.max});
   }else{
     // Places, concepts, events and orgs have no lifespan here, so the honest
     // aggregate is the union of every mention window under this name.
-    var lo=null,hi=null,tb=n.timebase;
+    var lo=null,hi=null;
     arr.forEach(function(x){
       var s=x.span;
       if(!s||s.min==null||s.max==null)return;
       if(lo==null||s.min<lo)lo=s.min;
       if(hi==null||s.max>hi)hi=s.max;
     });
-    if(lo!=null)out={min:lo,max:hi,type:nt(n),timebase:tb};
+    if(lo!=null)out=nodeWithSpan(n,{min:lo,max:hi});
   }
   _dspanCache[c]=out||null;
   return out||n;
 }
 function spanLabel(n){
   n=displaySpan(n);
-  if(!n||!n.span)return 'undated';
+  if(!n)return 'undated';
+  // Deep time first: a node known for a geological age but with no ordinary
+  // year should read "65 million years ago", not "undated" -- and a node with
+  // BOTH keeps its chronological label, because that is what the axis shows.
+  var deep=n.deepTime?fmtDeep(n.deepTime):'';
+  if(!n.span||n.span.min==null||n.span.max==null)return deep||'undated';
   var s=n.span;
-  if(s.min==null||s.max==null)return 'undated';
   var thisYear=new Date().getFullYear();
   if(nt(n)==='person'){
     // span is the window in which this subject is co-mentioned across the
