@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask Vlymbooq — Zero-AI Retrieval</title>
+<style>
+  :root{ --ink:#111827; --muted:#6b7280; --line:#e5e7eb; --bg:#f3f4f6; --acc:#0e7490; --warn:#b45309; --warnbg:#fffbeb; --ok:#047857; --okbg:#ecfdf5; }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+  .wrap{max-width:900px;margin:0 auto;padding:18px 16px 80px}
+  header.hd{background:#fff;border-radius:10px;padding:22px 24px;box-shadow:0 1px 4px rgba(0,0,0,.12);margin-bottom:14px}
+  .num{font-size:11px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase}
+  h1{font-size:24px;margin:6px 0 8px}
+  .disc{background:var(--warnbg);border:1px solid #fcd34d;border-radius:8px;padding:12px 14px;font-size:12.5px;color:#78350f;line-height:1.6}
+  .disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px}
+  .meta{font-size:12.5px;color:var(--muted);margin-top:10px}
+  .ask-box{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.12);padding:20px 22px;margin:14px 0}
+  .ask-box label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);display:block;margin-bottom:8px}
+  .ask-row{display:flex;gap:10px}
+  .ask-row textarea{flex:1;border:1px solid var(--line);border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit;resize:vertical;min-height:80px}
+  .ask-row textarea:focus{outline:2px solid var(--acc);outline-offset:-1px}
+  .btn{border:1px solid var(--acc);background:var(--acc);color:#fff;border-radius:7px;padding:10px 18px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+  .btn:hover{background:#0c5f76}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+  .result{margin:16px 0}
+  .refusal{background:var(--warnbg);border:1px solid #fcd34d;border-radius:10px;padding:18px 20px}
+  .refusal h2{font-size:15px;margin:0 0 8px;color:#78350f}
+  .refusal p{margin:0;font-size:13.5px;color:#78350f}
+  .refusal .reason{font-size:12.5px;color:#92400e;margin-top:10px;font-style:italic}
+  .answer{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.12);padding:20px 22px}
+  .answer h2{font-size:15px;margin:0 0 12px}
+  .cov-bar{display:flex;align-items:center;gap:10px;margin:10px 0 14px}
+  .cov-bar .label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--muted);min-width:70px}
+  .cov-bar .track{flex:1;height:8px;background:#e5e7eb;border-radius:4px;overflow:hidden}
+  .cov-bar .fill{height:100%;border-radius:4px}
+  .cov-bar .pct{font-size:12px;font-weight:700;min-width:36px;text-align:right}
+  .ev{border-left:3px solid var(--acc);padding:10px 14px;margin:10px 0;background:#f8fafc;border-radius:0 8px 8px 0}
+  .ev .src{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--acc);margin-bottom:4px}
+  .ev .src a{color:var(--acc);text-decoration:none}
+  .ev .src a:hover{text-decoration:underline}
+  .ev p{margin:0;font-size:13.5px;line-height:1.65}
+  .ev .cat{font-size:10.5px;color:var(--muted);margin-top:4px}
+  .diag{font-size:11.5px;color:var(--muted);margin-top:14px;padding-top:10px;border-top:1px solid var(--line)}
+  .diag span{display:inline-block;background:#f3f4f6;border-radius:4px;padding:2px 7px;margin:2px 3px 2px 0}
+  .empty{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+  .load{text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+  .err{background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:14px 16px;font-size:13px;color:#7f1d1d;margin:14px 0}
+  .samples{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .samples button{border:1px solid var(--line);background:#fff;border-radius:6px;padding:5px 10px;font-size:11.5px;cursor:pointer;color:#374151}
+  .samples button:hover{border-color:var(--acc);color:var(--acc)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hd">
+    <div class="num">Vlymbooq &middot; Zero-AI Retrieval &middot; UPSC</div>
+    <h1>Ask Vlymbooq</h1>
+    <div class="disc">
+      <b>How this works</b>
+      This engine answers UPSC questions <em>only</em> from material in this site's own corpus. It retrieves verbatim sentences with source links. It never generates text, never uses an AI model, and never guesses. If the corpus doesn't cover your question, it says so.
+    </div>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <div class="ask-box">
+    <label for="q">Your UPSC question</label>
+    <div class="ask-row">
+      <textarea id="q" placeholder="e.g. What is the anti-defection law in India?"></textarea>
+      <button class="btn" id="ask">Ask</button>
+    </div>
+    <div class="samples" id="samples"></div>
+  </div>
+
+  <div id="out"><div class="load">Loading index&hellip;</div></div>
+</div>
+
+<script src="scripts/lib/ask-core.js"></script>
+<script>
+'use strict';
+var IDX = null;
+var STATE = { question: '' };
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+function el(id) { return document.getElementById(id); }
+
+var SAMPLES = [
+  'What is the anti-defection law in India?',
+  'Discuss the environmental impact of the Bhopal gas tragedy.',
+  'What were the aims and outcomes of the Indian National Congress at its founding in 1885?',
+  'Examine whether the constitutional office of the Lok Sabha Speaker has become vulnerable to partisan politics under the current anti-defection regime.'
+];
+
+function covColor(pct) {
+  if (pct >= 60) return '#059669';
+  if (pct >= 34) return '#d97706';
+  return '#dc2626';
+}
+
+function renderRefusal(res) {
+  var a = res.analysis || {};
+  var diag = '';
+  if (res.subject || (res.anchors && res.anchors.length)) {
+    diag = '<div class="diag">';
+    if (res.subject) diag += '<span>subject: ' + esc(res.subject) + '</span>';
+    if (res.anchors && res.anchors.length) diag += '<span>anchors: ' + res.anchors.map(esc).join(', ') + '</span>';
+    if (a.ontologyHits && a.ontologyHits.length) diag += '<span>ontology: ' + a.ontologyHits.map(esc).join(', ') + '</span>';
+    diag += '</div>';
+  }
+  return '<div class="result"><div class="refusal">' +
+    '<h2>Cannot answer from corpus</h2>' +
+    '<p>The Vlymbooq corpus does not contain enough quotable material to answer this question reliably.</p>' +
+    '<p class="reason">' + esc(res.reason || '') + '</p>' +
+    diag +
+  '</div></div>';
+}
+
+function renderAnswer(res) {
+  var a = res.analysis || {};
+  var pct = Math.round((res.coverage || 0) * 100);
+  var col = covColor(pct);
+  var ev = (res.evidence || []).map(function (e) {
+    var src = e.node && e.node.id
+      ? '<a href="map.html#id=' + encodeURIComponent(e.node.id) + '" target="_blank">' + esc(e.node.name) + '</a>'
+      : esc(e.node ? e.node.name : '');
+    var cat = e.node && e.node.cats && e.node.cats[0] ? ' &middot; ' + esc(e.node.cats[0].label) : '';
+    return '<div class="ev">' +
+      '<div class="src">' + src + cat + '</div>' +
+      '<p>' + esc(e.sentence) + '</p>' +
+    '</div>';
+  }).join('');
+
+  var diag = '';
+  if (res.subject || (res.anchors && res.anchors.length)) {
+    diag = '<div class="diag">';
+    if (res.subject) diag += '<span>subject: ' + esc(res.subject) + '</span>';
+    if (res.anchors && res.anchors.length) diag += '<span>anchors: ' + res.anchors.map(esc).join(', ') + '</span>';
+    if (a.ontologyHits && a.ontologyHits.length) diag += '<span>ontology: ' + a.ontologyHits.map(esc).join(', ') + '</span>';
+    diag += '</div>';
+  }
+
+  return '<div class="result"><div class="answer">' +
+    '<h2>Answer</h2>' +
+    '<div class="cov-bar">' +
+      '<span class="label">Coverage</span>' +
+      '<div class="track"><div class="fill" style="width:' + pct + '%;background:' + col + '"></div></div>' +
+      '<span class="pct" style="color:' + col + '">' + pct + '%</span>' +
+    '</div>' +
+    ev +
+    diag +
+  '</div></div>';
+}
+
+function render(res) {
+  if (!res) { el('out').innerHTML = '<div class="empty">No result.</div>'; return; }
+  if (res.refused) {
+    el('out').innerHTML = renderRefusal(res);
+  } else {
+    el('out').innerHTML = renderAnswer(res);
+  }
+}
+
+function doAsk() {
+  if (!IDX) { el('out').innerHTML = '<div class="err">Index not loaded yet.</div>'; return; }
+  var q = el('q').value.trim();
+  if (!q) { el('out').innerHTML = '<div class="empty">Type a question first.</div>'; return; }
+  STATE.question = q;
+  el('ask').disabled = true;
+  el('out').innerHTML = '<div class="load">Searching&hellip;</div>';
+  setTimeout(function () {
+    try {
+      var res = VlymbooqAsk.retrieve(IDX, q, 12);
+      render(res);
+    } catch (err) {
+      el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+    }
+    el('ask').disabled = false;
+  }, 30);
+}
+
+function boot(idx, meta) {
+  IDX = idx;
+  var m = meta || {};
+  var kept = m.nodesKept || idx.N || 0;
+  var scanned = m.nodesScanned || '?';
+  el('meta').textContent = 'Index: ' + kept.toLocaleString() + ' quotable nodes (from ' +
+    scanned.toLocaleString() + ' scanned) &middot; built ' + (m.builtAt || '?').slice(0, 10) +
+    ' &middot; zero AI, zero generation';
+  el('samples').innerHTML = SAMPLES.map(function (s) {
+    return '<button data-q="' + esc(s) + '">' + esc(s.length > 60 ? s.slice(0, 57) + '…' : s) + '</button>';
+  }).join('');
+  el('out').innerHTML = '<div class="empty">Ask a question above. The engine will either return verbatim corpus sentences with source links, or tell you it cannot answer.</div>';
+}
+
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('#ask');
+  if (btn) { doAsk(); return; }
+  var samp = e.target.closest('[data-q]');
+  if (samp) {
+    el('q').value = samp.getAttribute('data-q');
+    doAsk();
+  }
+});
+
+el('q').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) doAsk();
+});
+
+fetch('data/ask-index.json')
+  .then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(function (data) {
+    var nodes = data.nodes.map(function (arr) {
+      return { id: arr[0], name: arr[1], type: arr[2], cats: arr[3] ? [{ key: arr[3], label: arr[3] }] : [], desc: arr[4] };
+    });
+    var idx = VlymbooqAsk.buildIndex({ nodes: nodes, links: data.links || {} });
+    boot(idx, data.meta);
+  })
+  .catch(function (err) {
+    el('out').innerHTML = '<div class="err">Could not load <code>data/ask-index.json</code> (' + esc(err.message) + ').' +
+      '<br><br>This page reads its data over HTTP. If you opened the file directly, run ' +
+      '<code>python -m http.server 8123</code> in the project folder and visit ' +
+      '<code>http://127.0.0.1:8123/ask.html</code>.</div>';
+  });
+</script>
+</body>
+</html>

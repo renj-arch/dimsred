@@ -42,6 +42,14 @@ data/questions/state-tracker.json
 !data/figure-topics-curated.json
 !data/figure-files-curated.json
 !data/figure-files-auto.json
+# mains.html fetches this bank at runtime. slim-live builds its deploy from the
+# git index (git write-tree), so an un-allowlisted file here would publish a
+# mains page that silently renders nothing.
+!data/mains-questions.json
+# ask.html fetches this prebuilt retrieval index at runtime. Same reasoning as
+# mains-questions.json: slim-live builds from the git index, so without this the
+# Ask page would load with no data.
+!data/ask-index.json
 question-bank/
 add_entries.js
 add_entries_phase2.js
