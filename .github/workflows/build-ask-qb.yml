@@ -1,0 +1,129 @@
+name: Ask Question-Bank Build
+
+# Rebuilds the Ask question-bank tables (routing directory, entity list,
+# concept table) from the current data/questions corpus.
+#
+# WHY THIS IS SEPARATE FROM build-ask-index.js:
+#   build-ask-index.js  -> data/ask-index.json      (timeline engine index)
+#   this workflow       -> data/ask-qb/*.json|.tsv  (question-bank tables)
+# The Wiki Fill already runs build-ask-index.js in `finalize`, so the timeline
+# index was self-refreshing while the Q/B tables silently went stale — run
+# #560 left 3,74,175 records invisible to the question bank. Wiki Fill
+# self-dispatches this workflow after each commit so both stay in step.
+#
+# WHY ITS OWN WORKFLOW, NOT A STEP IN `finalize`:
+#   A runner needs ~9.4 GB free (8.5 GB data/questions + 838 MB of shards).
+#   That merge phase has a documented history of dying with "No space left on
+#   device" (run #458) and of outgrowing the 6 h job ceiling (runs #434, #519).
+#   A self-dispatch gets a fresh runner with a full disk and a full 6 h budget,
+#   and cannot jeopardise the job that actually commits the question data.
+#
+# ONLY THE SMALL TABLES ARE COMMITTED. The 828 MB of evidence shards are
+# gitignored (.gitignore:60) and exceed GitHub's blob limits (largest shard
+# 57 MB). They are deleted after the tables are built. Keeping the freshness
+# check green does NOT mean the page can serve full-corpus evidence — that
+# needs Git LFS or external artifact storage, still undecided.
+
+on:
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit + push regenerated data/ask-qb tables (false = build for log/stats only)'
+        required: false
+        default: 'true'
+  # Backstop. Wiki Fill self-dispatch is non-fatal, so a failed dispatch leaves
+  # the tables stale until something else runs. This cron self-heals that.
+  schedule:
+    - cron: '30 4 * * *'
+
+concurrency:
+  group: ask-qb-build
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  NODE_OPTIONS: --max-old-space-size=12288
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 330
+    steps:
+      # PAT, not GITHUB_TOKEN: GitHub suppresses workflow triggers for
+      # GITHUB_TOKEN pushes, so the rebuild commit would never reach
+      # "Slim live mirror" and production would stay stale.
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          filter: blob:none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Report disk before build
+        run: df -h /
+
+      # No npm install: all three builders use only node builtins plus the
+      # local scripts/lib/ask-qb.js, matching build-timeline.yml's offline
+      # pattern. This also keeps the 8.5 GB checkout as the only large thing
+      # on disk.
+      - name: Report staleness before build
+        continue-on-error: true
+        run: node scripts/check-ask-qb-fresh.js || echo "Tables are stale (expected before a rebuild)"
+
+      # Order matters: the dir + concept builders read the shards listed in
+      # manifest.json, so the shards must be written first.
+      - name: Build evidence shards
+        run: node scripts/build-ask-qb.js
+
+      - name: Build entity directory
+        run: node scripts/build-ask-qb-dir.js
+
+      - name: Build concept table
+        run: node scripts/build-ask-qb-concepts.js
+
+      # Hard gate: if the tables still disagree with the corpus after a full
+      # rebuild, something is wrong upstream and committing would only replace
+      # one stale snapshot with another.
+      - name: Verify tables now match the corpus
+        run: node scripts/check-ask-qb-fresh.js
+
+      # Free ~838 MB before the git ops. Nothing tracked is lost: the shards are
+      # gitignored and the four tables were derived from them above.
+      - name: Drop evidence shards
+        run: |
+          rm -f data/ask-qb/ask-qb.*.json
+          df -h /
+
+      # `!= 'false'`, not `== 'true'`: the `inputs` context is only populated for
+      # workflow_dispatch, so on the cron backstop `inputs.commit` is empty and an
+      # `== 'true'` test would build the tables and then silently skip the commit,
+      # making the cron backstop useless. This commits unless explicitly opted out.
+      - name: Commit + push regenerated tables
+        if: inputs.commit != 'false'
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null
+          # Specific paths, not `git add -A`: a typo in the builders writing a
+          # stray large file must never reach a 10 MB-a-day history.
+          git add data/ask-qb/manifest.json data/ask-qb/dir.json data/ask-qb/entities.tsv data/ask-qb/concepts.json
+          if git diff --staged --quiet; then
+            echo "No question-bank table changes to commit"
+          else
+            git commit -m "Ask question-bank rebuild $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+            git pull --rebase 2>/dev/null || { echo "Rebase conflict — aborting and merging"; git rebase --abort 2>/dev/null; git fetch origin main 2>/dev/null; git merge --no-edit origin/main 2>/dev/null || true; }
+            git push && echo "Pushed question-bank rebuild" || echo "Push failed"
+          fi
+
+      - name: Summary
+        if: always()
+        run: |
+          node -e "const m=require('./data/ask-qb/manifest.json');const s=m.stats||{};console.log('### Ask question-bank rebuild\n- records: '+s.records+'\n- categories: '+m.categories.length+'\n- sentences kept: '+s.keptSent)" >> "$GITHUB_STEP_SUMMARY" || true

@@ -396,6 +396,11 @@ jobs:
       # It was generated exactly once and never rebuilt, so ask.html served a
       # frozen index while the corpus grew. Reads timeline.nodes.*.json, which
       # the step above just produced; if that was skipped/failed, so is this.
+      #
+      # NOTE: this is the TIMELINE index (data/ask-index.json) only. It does NOT
+      # build the question-bank tables under data/ask-qb/ — those have their own
+      # builders and their own workflow (build-ask-qb.yml, self-dispatched below).
+      # Running this step alone leaves the question bank stale.
       - name: Rebuild Ask engine index
         continue-on-error: true
         run: |
@@ -448,6 +453,14 @@ jobs:
             # the last successful rebuild.
             gh workflow run resolve-figures.yml 2>/dev/null && echo "Self-dispatched Resolve Figures" || echo "Resolve Figures dispatch failed (non-fatal)"
             gh workflow run build-timeline.yml 2>/dev/null && echo "Self-dispatched Build Timeline" || echo "Build Timeline dispatch failed (non-fatal)"
+            # The Ask question-bank tables (data/ask-qb/) are a SEPARATE artifact
+            # from the timeline index rebuilt in `finalize`, and nothing used to
+            # rebuild them, so they went stale on every fill — run #560 left
+            # 3,74,175 records invisible. Its own workflow (not a step here) so the
+            # ~838 MB build gets a fresh runner and a full disk instead of risking
+            # the job that commits the question data. Its daily cron backstops the
+            # non-fatal dispatch above.
+            gh workflow run build-ask-qb.yml 2>/dev/null && echo "Self-dispatched Ask Question-Bank Build" || echo "Ask Q/B dispatch failed (non-fatal)"
           else
             echo "No wiki data changes — chain ends here"
           fi
