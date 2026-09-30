@@ -54,7 +54,16 @@ jobs:
         run: |
           node scripts/build-geography-diagrams.js
           node scripts/build-geography-figures.js
-          node scripts/build-subject-figures.js
+          # build-subject-figures.js refuses to write unless FIGURES_ALLOW_UNVERIFIED=1
+          # (see main() in that script). Without it this step printed the warning and
+          # returned without writing, so subject-figures-index.html and the 24
+          # *-figures.html packs in this repo were stale artifacts of a manual run.
+          # FIGURE_SOURCE=curated is the default and the safe one: topics come from
+          # data/figure-topics-curated.json (UPSC Paper-1 syllabus) rather than the
+          # A-Z Wikipedia question shards, which is what previously produced figures
+          # like the Democratic Party under Animal Husbandry. Set explicitly so a
+          # future default change cannot silently reintroduce the contaminated source.
+          FIGURES_ALLOW_UNVERIFIED=1 FIGURE_SOURCE=curated node scripts/build-subject-figures.js
 
       - name: Commit + push regenerated timeline
         if: inputs.commit == 'true'

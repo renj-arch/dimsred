@@ -245,23 +245,39 @@ function scanSubjects() {
   return subjects;
 }
 
-// ---- html rendering (style mirrors the geography pack) ----
-var CSS = 'body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;background:#e5e7eb;color:#111827}' +
-  'section.page{background:#fff;max-width:980px;margin:16px auto;padding:26px 28px;box-shadow:0 1px 4px rgba(0,0,0,.18);page-break-after:always}' +
+// ---- html rendering ----
+// Palette matches ask.html and the other site pages (dark-only, same
+// --bg/--card/--border/--cyan/--text tokens) so these packs no longer render
+// as a white island. Printing stays light: these are print-ready A4 packs and
+// a dark sheet wastes toner and can render badges unreadable.
+var CSS = ':root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--cyan:#22d3ee;' +
+  '--emerald:#34d399;--amber:#f59e0b;--rose:#fb7185;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}' +
+  'body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;background:var(--bg);color:var(--text)}' +
+  'section.page{background:var(--card);max-width:980px;margin:16px auto;padding:26px 28px;box-shadow:0 1px 4px rgba(0,0,0,.5);page-break-after:always;border:1px solid var(--border)}' +
   'section.page:last-child{page-break-after:auto}' +
   'header h1{font-size:18px;margin:0 0 2px}' +
-  '.num{font-size:10px;letter-spacing:.14em;color:#0e7490;font-weight:700;text-transform:uppercase}' +
+  '.num{font-size:10px;letter-spacing:.14em;color:var(--cyan);font-weight:700;text-transform:uppercase}' +
   '.fig-title{font-size:15px;font-weight:700;margin:2px 0 6px}' +
-  '.fig-src{font-size:9.5px;color:#6b7280;margin:6px 0 0}' +
-  '.fig-img{display:flex;justify-content:center;align-items:center;background:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:14px;margin:8px 0}' +
+  '.fig-src{font-size:9.5px;color:var(--text-muted);margin:6px 0 0}' +
+  '.fig-img{display:flex;justify-content:center;align-items:center;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px;margin:8px 0}' +
   '.fig-img img{max-width:100%;height:auto}' +
-  '.auto-badge{background:#fffbeb;border:1px solid #fca5a5;border-radius:6px;color:#b91c1c;font-size:9px;letter-spacing:.08em;padding:3px 8px;display:inline-block;margin-bottom:6px;font-weight:700}' +
-  '.marks{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:11px;line-height:1.7}' +
-  '.marks b{color:#166534}.marks ul{margin:4px 0 0;padding-left:16px}.marks li{margin:1px 0}' +
-  '.missing{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:9.5px;color:#92400e;line-height:1.6;margin-bottom:8px}' +
-  'ul.idx{list-style:none;padding:0;margin:0}ul.idx li{background:#fff;max-width:980px;margin:10px auto;padding:14px 20px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.12)}ul.idx a{color:#0e7490;font-weight:700;text-decoration:none;font-size:14px}' +
+  '.auto-badge{background:rgba(251,113,133,.12);border:1px solid var(--rose);border-radius:6px;color:var(--rose);font-size:9px;letter-spacing:.08em;padding:3px 8px;display:inline-block;margin-bottom:6px;font-weight:700}' +
+  '.marks{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.35);border-radius:8px;padding:10px 14px;margin-top:10px;font-size:11px;line-height:1.7}' +
+  '.marks b{color:var(--emerald)}.marks ul{margin:4px 0 0;padding-left:16px}.marks li{margin:1px 0}' +
+  '.missing{background:rgba(245,158,11,.1);border:1px solid rgba(245,158,11,.35);border-radius:8px;padding:10px 14px;font-size:9.5px;color:var(--amber);line-height:1.6;margin-bottom:8px}' +
+  'ul.idx{list-style:none;padding:0;margin:0}ul.idx li{background:var(--card);max-width:980px;margin:10px auto;padding:14px 20px;border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.4);border:1px solid var(--border)}ul.idx a{color:var(--cyan);font-weight:700;text-decoration:none;font-size:14px}' +
+  'a{color:var(--cyan)}code{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:1px 5px;font-size:11px}' +
   '@page{size:A4;margin:10mm}' +
-  '@media print{body{background:#fff}section.page{box-shadow:none;margin:0;padding:0}.fig-img{break-inside:avoid}}';
+  // Light for print only: these packs are print-ready A4.
+  '@media print{body{background:#fff;color:#111827}section.page{background:#fff;border:0;box-shadow:none;margin:0;padding:0}' +
+  'ul.idx li{background:#fff;border:0;box-shadow:none}ul.idx a,.num{color:#0e7490}.fig-src{color:#6b7280}' +
+  '.fig-img{background:#fafafa;border:1px solid #e5e7eb;break-inside:avoid}' +
+  '.auto-badge{background:#fffbeb;border-color:#fca5a5;color:#b91c1c}' +
+  '.marks{background:#f0fdf4;border-color:#bbf7d0}.marks b{color:#166534}' +
+  '.missing{background:#fffbeb;border-color:#fde68a;color:#92400e}code{background:#f3f4f6;border-color:#e5e7eb}' +
+  // !important: the two badge variants set background/border/color as inline
+  // style attributes, which a class rule cannot otherwise beat.
+  '.auto-badge{background:#fffbeb!important;border-color:#fca5a5!important;color:#b91c1c!important}}';
 
 function marksHtml(marks) {
   if (!marks || !marks.length) return '';
@@ -269,10 +285,14 @@ function marksHtml(marks) {
 }
 function pageFor(f) {
   var resolved = f.source === 'auto' || f.source === 'live';
+  // Badge colours live here rather than only in CSS because each variant needs
+  // a different accent. They are rgba fills rather than solid light hex so the
+  // dark card shows through; the @media print block in CSS reasserts solid
+  // light values, since these packs are print-ready A4.
   var badge = f.hand
-    ? '<div class="auto-badge" style="background:#f0fdf4;border-color:#86efac;color:#166534">HAND-PICKED \u00b7 file chosen &amp; checked for this topic \u00b7 still verify labels</div>'
+    ? '<div class="auto-badge" style="background:rgba(52,211,153,.12);border-color:var(--emerald);color:var(--emerald)">HAND-PICKED \u00b7 file chosen &amp; checked for this topic \u00b7 still verify labels</div>'
     : resolved
-      ? '<div class="auto-badge" style="background:#eff6ff;border-color:#93c5fd;color:#1d4ed8">AUTO-RESOLVED \u00b7 matched from the topic\u2019s own Wikipedia article / Wikimedia structured data \u00b7 check labels</div>'
+      ? '<div class="auto-badge" style="background:rgba(34,211,238,.12);border-color:var(--cyan);color:var(--cyan)">AUTO-RESOLVED \u00b7 matched from the topic\u2019s own Wikipedia article / Wikimedia structured data \u00b7 check labels</div>'
       : '<div class="auto-badge">AUTO-SUGGESTED \u00b7 verify image &amp; labels before exam use</div>';
   return '<section class="page">' +
     '<div class="num">' + esc(f.sec) + '</div>' +
