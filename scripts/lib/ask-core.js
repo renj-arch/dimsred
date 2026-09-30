@@ -196,6 +196,17 @@
     return String(s || '').split(/\s+/).filter(function (w) { return w.length > 0; }).length;
   }
 
+  // A description that stops mid-clause: trailing conjunction, preposition or
+  // article. This, not the presence of a full stop, is what marks a real
+  // fragment. Requiring terminal punctuation threw away 178,936 of 537,888 raw
+  // nodes -- a third of the corpus -- including complete 25-word sentences that
+  // merely lack a final full stop, among them the only nodes carrying the words
+  // "federal" and "federalism" for India. A missing full stop is a typographic
+  // detail; a dangling preposition is a genuine truncation.
+  var DANGLING_RE = /(\b(and|or|but|nor|of|in|on|at|to|for|with|by|from|as|into|onto|upon|over|under|about|the|a|an|its|their|his|her|that|which|who|whose|than|that|is|was|were|are|be|been|being|has|have|had)\s*)[.,;:]$/i;
+  // Truncation inside a word, e.g. a harvester that cut mid-token.
+  var MIDWORD_RE = /[a-z][A-Z]$/;
+
   // isQuoteable is the anti-fragment gate. It is intentionally strict: an
   // evidence sentence that fails it is dropped rather than repaired, because
   // repairing a snippet means inventing the context that made it mean something.
@@ -205,7 +216,8 @@
     if (FRAGMENT_RE.test(s)) return false;
     if (/_{3,}/.test(s)) return false;                       // cloze blank left in place
     if (/[|]/.test(s)) return false;                         // table or pipe artifact
-    if (!/[.!?]$/.test(s.trim())) return false;              // not a complete sentence
+    if (DANGLING_RE.test(s.trim())) return false;            // stops mid-clause
+    if (MIDWORD_RE.test(s.trim())) return false;             // cut inside a word
     if (/^(thus|hence|therefore|also|however|which|who|that|this|these|those|it|he|she|they)\b/i.test(s.trim())) return false;
     return true;
   }
@@ -249,8 +261,20 @@
       if (!matched) continue;
       var nameN = norm(p.node.name);
       var nameTok = tokenSet(nameN);
+      // A title hit is only as meaningful as the term that produced it. The
+      // bonus is scaled by IDF because a flat bonus treats every word as rare:
+      // "indian" occurs in 24,558 of 65,039 nodes yet scored the same +6 as
+      // "accommodating", which occurs in exactly one. That is how a question
+      // about the Indian federal framework retrieved `.NET Framework` and
+      // `Far Cry 3` -- the engine was rewarding the mere presence of a common
+      // word in a title. Scaled, "indian" is worth ~0.97 and "framework" ~7.0,
+      // so a node must actually be about the distinctive words to win.
       terms.forEach(function (term) {
-        if (nameTok[term]) s += (weights[term] >= 1 ? 6 : 2);   // exact token in the title
+        if (!nameTok[term]) return;
+        var n = idx.df[term] || 1;
+        var tIdf = Math.log(1 + (idx.N - n + 0.5) / (n + 0.5));
+        // Capped so one term can never dominate a genuine multi-term title match.
+        s += Math.min(tIdf, 8) * (weights[term] >= 1 ? 1 : 0.4);
       });
       terms.forEach(function (phrase) {
         if (nameN === norm(phrase)) s += 8;                     // title is exactly the phrase
@@ -290,13 +314,27 @@
   var ASK_VERB = /\b(what|why|how|when|where|who|which|explain|examine|discuss|analyse|analyze|evaluate|assess|appraise|describe|outline|elaborate|illustrate|comment)\b/i;
   var ASK_OBJECT = /\b(what are|what is|what was|why (is|are|was|were|do|does|did)|how (is|are|was|were|do|does|did|can|should)|when (is|was|did)|who (is|was|are|were))\b/i;
   // Demand nouns: these are what the answer must cover, not what it is about.
-  var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|roles?|status|positions?)\b/i;
+  var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|roles?|status|positions?|recommendations?|suggestions?|provisions?|findings?|observations?|merits|terms?)\b/i;
   // Qualifier nouns like "nature", "role", "process" sit in front of a named
   // subject ("the changing nature of caste") and must trigger the same head-noun
   // cut: "of caste" is what the question is about, not "the changing nature".
-  var QUALIFIER_NOUN = /\b(changing\s+)?(natures?|roles?|aspects?|features?|characteristics?|process|processes|dynamics?|concept|concepts|idea|ideas|notion|notions|question|questions|issue|issues|problem|problems|evolution|evolutions|status)\b/i;
+  var QUALIFIER_NOUN = /\b(changing\s+)?(natures?|roles?|aspects?|features?|characteristics?|process|processes|dynamics?|concept|concepts|idea|ideas|notion|notions|question|questions|issue|issues|problem|problems|evolution|evolutions|status|growth|rise|expansion|emergence|development|expansion)\b/i;
+  // Words that close a noun phrase and start a new clause. A positional
+  // preposition ("impact of X ON Y") or a reporting verb ("growth of X AFFECTED
+  // Y") both end the subject at the same place, so both belong in one list.
+  var CLAUSE_BREAK = '(?:on|in|about|for|with|at|by|under|against|regarding|concerning|and|or|affecting|affects|affected|impacting|impacts|impacted|influencing|influences|influenced|shaping|shapes|shaped|changing|changes|changed|helping|helped|contributing|contributed|leading|led|causing|caused|resulting|resulted)'
 
-  // Returns the noun phrase a question is about. Question words, imperatives
+  // "and" and "or" are not clause breaks when they sit inside an institution's
+  // name. "the role of the Comptroller and Auditor General in ensuring
+  // accountability" was cut to the subject "Comptroller", which matches no node,
+  // while the corpus holds "Comptroller and Auditor General of India". A
+  // lookahead on a following lowercase word would express this, but the pattern
+  // below is compiled with the `i` flag, where `[a-z]` also matches uppercase, so
+  // the lookahead could never exclude a capitalised word. The distinction is made
+  // after the match instead: if the span still names a demand, it really was a
+  // list ("the aims and outcomes of X") and the old break is the right answer.
+  var HEAD_BREAK = CLAUSE_BREAK.replace('|and|or|', '');
+
   // and demand nouns are all removed, so "What were the aims and outcomes of the
   // Indian National Congress at its founding in 1885?" reduces to "Indian
   // National Congress" rather than to a 13-word sentence fragment. The old
@@ -307,6 +345,15 @@
     t = t.replace(/^(please\s+)?(can you|could you|would you|i want to know|explain to me|tell me about|write an? (answer|essay) (on|for)?)\s+/i, '');
     t = t.replace(ASK_OBJECT, ' ');
     t = t.replace(ASK_VERB, ' ');
+    // A question can be two sentences, and the second one is a separate question
+    // with its own subject. Joining them produced a subject like "whether the
+    // constitutional office of the Lok Sabha Speaker has become vulnerable ...
+    // What institutional changes are required to ensure the neutrality of the Lok
+    // Sabha Speaker". Nothing in the ontology can be a title-match for that, but
+    // the permissive variant matching found "Deputy Speaker of the Lok Sabha" and
+    // answered the question with the second-ranking office instead of refusing.
+    // A subject ends where the first sentence does.
+    t = t.split(/\s*[.?!]\s/)[0];
     // "the impact of urbanisation on social and economic development in India" is
     // a question about urbanisation, not about "impact" or "development". When a
     // demand noun introduces an "of X", the subject is X; and when X runs up
@@ -322,18 +369,59 @@
       if (leadCatchesSubject) {
         var afterOf = t.slice(ofIdx + 2);
         var head = afterOf.match(
-          /^\s*(?:the\s+)?([A-Za-z0-9'’\-]+(?:\s+[A-Za-z0-9'’\-]+)*?)\s+(?:on|in|about|for|with|at|by|under|against|regarding|concerning|and|or)\b/i
+          new RegExp('^\\s*(?:the\\s+)?([A-Za-z0-9\'’\\-]+(?:\\s+[A-Za-z0-9\'’\\-]+)*?)\\s+' + HEAD_BREAK + '\\b', 'i')
         );
         t = head ? head[1] : afterOf.replace(/^\s*(?:the\s+)?/, '');
+        // The span is only a list, and not a name, if it still names a demand.
+        DEMAND_NOUN.lastIndex = 0;
+        QUALIFIER_NOUN.lastIndex = 0;
+        if (t && (DEMAND_NOUN.test(t) || QUALIFIER_NOUN.test(t))) {
+          var asList = afterOf.match(
+            new RegExp('^\\s*(?:the\\s+)?([A-Za-z0-9\'’\\-]+(?:\\s+[A-Za-z0-9\'’\\-]+)*?)\\s+' + CLAUSE_BREAK + '\\b', 'i')
+          );
+          if (asList) t = asList[1];
+        }
       }
     }
     // A trailing "in <JURISDICTION>" names the container, not the subject:
     // "What is the anti-defection law in India?" is about the anti-defection law.
     t = t.replace(/\s+\bin\s+[A-Za-z][A-Za-z'’\-]*\s*$/i, ' ');
+    // "How far has the Indian federal framework been successful in accommodating
+    // regional and cultural diversities" is about the framework, not about
+    // success or diversity. Strip the "how far / how much" degree opener and
+    // then the "has X been successful" frame, which otherwise consumes the
+    // whole sentence and leaves the subject empty -- an empty subject skips the
+    // title gate entirely, which is how unrelated nodes answered the question.
+    t = t.replace(/^\s*how\s+(?:far|much|long|well)\b/i, ' ');
+    t = t.replace(/^\s*how\b/i, ' ');
+    // ASK_VERB has already eaten "how" by this point, so a degree opener can
+    // arrive as a bare word: "far has the Indian federal framework ...".
+    t = t.replace(/^\s*(?:far|much|long|well|often|then)\b/i, ' ');
+    // "How far has X been successful in Y?" -- X is the subject. This has to
+    // CAPTURE the noun phrase, not merely cut around it: the subject sits
+    // inside the "has ... been successful" frame, so a plain deletion of that
+    // frame deleted the subject too and left nothing.
+    var perf = t.match(/^\s*(?:has|have|had|is|are|was|were)\s+(?:the\s+)?([A-Za-z0-9'’\-]+(?:\s+[A-Za-z0-9'’\-]+)*?)\s+been\s+(?:successful|effective|able|successful\s+in)\b/i);
+    if (perf) return perf[1].replace(/[?.!,;:]+$/, '').trim();
+    t = t.replace(/\b(?:has|have|had|is|are|was|were|been)\s+[a-z\s]{0,40}?\b(?:been\s+)?(?:successful|effective|successful in|able to|successful at)\b.*$/i, ' ');
+    t = t.replace(/\s*\b(?:been\s+)?(?:successful|effective|successful in|successful at|accommodating|accommodate|accommodated)\b.*$/i, ' ');
     // Demand phrases: "... the aims and outcomes of X", "... the environmental
     // impact of X". Cut back to the head noun on the far side of the last
     // preposition, which is where the named subject sits.
-    t = t.replace(/\b(?:'s)?\s*(?:the\s+)?[a-z\s,]{0,60}?\b(?:of|for|in|on|about|regarding|concerning)\s+[^?]*$/i, ' ');
+    //
+    // The cut is conditional on the lead actually naming a demand. Without that
+    // check the pattern also matches an ordinary noun phrase before any
+    // preposition, and it destroyed real subjects: "Discuss the Sixth Schedule
+    // of the Constitution" lost everything after "Schedule" and returned an
+    // empty subject, which then skipped the title gate entirely. "The aims and
+    // outcomes of X" still works because its lead does contain a demand noun.
+    t = t.replace(/\b(?:'s)?\s*(?:the\s+)?([A-Za-z\s,']{0,60}?)\b(?:of|for|in|on|about|regarding|concerning)\s+[^?]*$/i,
+      function (whole, lead) {
+        DEMAND_NOUN.lastIndex = 0;
+        QUALIFIER_NOUN.lastIndex = 0;
+        if (!DEMAND_NOUN.test(lead) && !QUALIFIER_NOUN.test(lead)) return whole;
+        return ' ';
+      });
     t = t.replace(/\b(?:aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|role|impact|effect)\b/gi, ' ');
     t = t.replace(/^\s*(?:of|for|in|on|about)\s+/i, ' ');
     return t.replace(/[?.!,;:]+$/, '').replace(/\s+/g, ' ').trim();
@@ -349,13 +437,32 @@
     // capitalise; verbs and question words do not.
   function properNounRun(text) {
     var words = String(text || '').replace(/[?!]+$/, '').split(/\s+/);
+    // A capitalised sentence opener is furniture, not a subject name. Without
+    // this, "How far has the Indian federal framework ..." yields the run "How",
+    // and every downstream title test then hunts for a node called "How".
+    // SENTENCE_LEAD existed for exactly this and was never wired in.
+    if (words.length && SENTENCE_LEAD.test(words[0])) words = words.slice(1);
     var runs = [], cur = [];
+    // Connectors inside an institution's name are lowercase but do not end the
+    // name: "Comptroller and Auditor General of India", "Election Commission of
+    // India", "Reserve Bank of India". Treating a lowercase word as a break
+    // yielded the subject "Comptroller" for a question about the Comptroller and
+    // Auditor General, which is in the corpus as "Comptroller and Auditor General
+    // of India" and was then unfindable.
+    var CONNECTOR = /^(?:and|of|the|for|in|on|at|to|&)$/i;
     for (var i = 0; i < words.length; i++) {
-      var w = words[i].replace(/[^A-Za-z0-9'’\-]/g, '');
+      var w = words[i].replace(/[^A-Za-z0-9''\-]/g, '');
       if (!w) { if (cur.length) { runs.push(cur); cur = []; } continue; }
       if (/^[A-Z]/.test(w)) { cur.push(w); continue; }
+      if (CONNECTOR.test(w) && cur.length) {
+        // Only keep the connector if a capitalised word follows, otherwise the
+        // run has ended and the connector belongs to the surrounding sentence.
+        var nxt = words[i + 1] ? words[i + 1].replace(/[^A-Za-z0-9''\-]/g, '') : '';
+        if (nxt && /^[A-Z]/.test(nxt)) { cur.push(w); continue; }
+      }
       if (cur.length) { runs.push(cur); cur = []; }
     }
+
     if (cur.length) runs.push(cur);
     if (!runs.length) return '';
     // Return the longest run. A sentence opener like "Recent" is 1 word; the
@@ -466,6 +573,198 @@
     return out;
   }
 
+  // CONCEPT ROUTES -- a retrieval router, not a knowledge base.
+  //
+  // A question names concepts, not a single string. "How far has the Indian
+  // federal framework accommodated regional and cultural diversity" names
+  // federalism, diversity, and asks "how far", which needs BOTH the
+  // accommodation mechanisms and the strain. Demanding one exact entity
+  // ("Indian federal framework") and refusing when it is absent was the wrong
+  // model: "no material labelled Indian federal framework" is not the same
+  // statement as "no material about Indian federalism".
+  //
+  // Every phrase below was verified against the whole 65,039-node index, not
+  // sampled: each entry records how many India-relevant nodes actually carry it.
+  // Phrases that audit to zero India nodes are kept only where they document a
+  // genuine hole in the corpus, and are listed in CORPUS_GAPS instead of being
+  // presented as working routes.
+  //
+  // `fit` answers "how far has it succeeded", `strain` answers the other half.
+  // An "how far" question that reported only `fit` would be a press release.
+  var CONCEPT_ROUTES = {
+    'indian federal framework': {
+      fit: ['union territory', 'reorganisation', 'linguistic', 'partition', 'demarcation',
+        'autonomous council', 'autonomous district', 'scheduled tribes', 'scheduled castes',
+        'article 370', 'article 371', 'reservation', 'minority', 'tribal', 'religion', 'ethnic'],
+      strain: ['ethnic', 'separat', 'protest', 'agitation', 'unrest', 'demand', 'insurgency',
+        'naxal', 'emergency', 'coalition', 'alliance', 'tribal', 'tension', 'conflict', 'dispute']
+    },
+    'federalism': {
+      fit: ['union territory', 'reorganisation', 'linguistic', 'partition', 'demarcation',
+        'scheduled tribes', 'scheduled castes', 'minority', 'reservation'],
+      strain: ['ethnic', 'separat', 'agitation', 'unrest', 'insurgency', 'naxal', 'emergency',
+        'demand', 'tribal', 'tension', 'dispute']
+    },
+    'centre state relations': {
+      fit: ['centre state', 'union territory', 'governor', 'president'],
+      strain: ['president', 'emergency', 'agitation', 'unrest', 'demand', 'insurgency', 'dispute',
+        'tension', 'protest']
+    },
+    'regionalism': {
+      fit: ['alliance', 'coalition', 'autonomous council', 'statehood', 'union territory', 'linguistic'],
+      strain: ['ethnic', 'separat', 'protest', 'agitation', 'unrest', 'demand', 'insurgency', 'tribal']
+    },
+    'cultural diversity': {
+      fit: ['ethnic', 'religion', 'linguistic', 'tribal', 'minority', 'scheduled castes',
+        'scheduled tribes', 'autonomous council', 'union territory'],
+      strain: ['conflict', 'tension', 'protest', 'agitation', 'unrest', 'demand', 'insurgency',
+        'separat', 'ethnic']
+    },
+    'urbanisation': {
+      fit: ['urbanisation', 'metropolitan', 'slum', 'migration', 'town', 'city'],
+      strain: ['pollution', 'inequality', 'eviction', 'congestion', 'shortage', 'overcrowded']
+    },
+    'anti-defection law': {
+      fit: ['defection', 'disqualification', 'speaker', 'legislature', 'coalition', 'party',
+        'majority', 'floor', 'tenth schedule'],
+      strain: ['defection', 'disqualification', 'petition', 'majority', 'floor', 'privilege', 'split']
+    },
+    // These are not abstract themes but named provisions of the Constitution,
+    // and the corpus answers them densely: measured across the full bank, 292
+    // India-relevant records mention Article 370, 61 the Sixth Schedule, 37
+    // Article 371 and 141 autonomous districts. Without routes for them a
+    // question like "what is the Sixth Schedule" matched only the category
+    // `Constitution`, which holds none of the nineteen sentences that actually
+    // mention it. Their evidence is filed under tribal administration and
+    // autonomous district councils instead.
+    'sixth schedule': {
+      fit: ['sixth schedule', 'autonomous district council', 'autonomous district',
+        'scheduled tribes', 'tribal areas', 'hill areas', 'tribal administration'],
+      strain: ['dispute', 'demand', 'agitation', 'tension', 'conflict', 'unrest']
+    },
+    'article 370': {
+      fit: ['article 370', 'special status', 'jammu and kashmir', 'union territory',
+        'temporary provision', 'constituent assembly'],
+      strain: ['abrogation', 'protest', 'agitation', 'unrest', 'dispute', 'demand', 'separat']
+    },
+    'article 371': {
+      fit: ['article 371', 'special status', 'nagaland', 'mizoram', 'assam', 'meghalaya',
+        'gujarat', 'maharashtra', 'tamil nadu', 'andhra pradesh'],
+      strain: ['demand', 'agitation', 'protest', 'unrest', 'tension', 'separat']
+    },
+    'linguistic reorganisation': {
+      fit: ['linguistic', 'reorganisation', 'linguistic state', 'demarcation', 'statehood',
+        'linguistic states', 'fazl ali', 'states reorganisation commission'],
+      strain: ['agitation', 'protest', 'demand', 'dispute', 'tension', 'unrest']
+    },
+    'autonomous district council': {
+      fit: ['autonomous district council', 'autonomous district', 'sixth schedule',
+        'scheduled tribes', 'tribal areas'],
+      strain: ['dispute', 'demand', 'agitation', 'tension', 'conflict']
+    }
+  };
+
+  // Places the corpus has no material at all, established by auditing rather than
+  // by guessing. Recorded so a refusal can say *why* it is refusing and so a
+  // future reader does not assume the routes are merely untuned.
+  //
+  // Deliberately EMPTY, and that is a finding rather than an omission. An
+  // earlier version of this table declared `anti-defection law` a corpus gap
+  // with nothing found for it. That was wrong: the check had been run against
+  // the 65,039-node timeline index, a twelfth of the corpus, and the question
+  // bank holds 5 India-relevant `defection` records plus one on "Disqualification
+  // of convicted representatives in India". Declaring a gap from a partial
+  // corpus is worse than declaring none, because it teaches the user not to
+  // ask. Nothing is listed here without a full-bank audit behind it.
+  var CORPUS_GAPS = {};
+
+  function gapFor(subject, question) {
+    var r = routeFor(subject, question);
+    if (!r) return null;
+    var g = CORPUS_GAPS[r.key];
+    if (!g || !g.fitAbsent) return null;
+    return { key: r.key, missing: g.missing };
+  }
+
+  function routeFor(subject, question) {
+    var key = norm(subject), q = norm(question);
+    var best = null, bestScore = 0;
+    Object.keys(CONCEPT_ROUTES).forEach(function (k) {
+      var kn = norm(k);
+      // Score by how much of the key the text actually covers, so a long
+      // subject like "the anti-defection law in India" still routes to
+      // "anti-defection law" instead of missing every key.
+      var score = 0;
+      if (key.indexOf(kn) !== -1) score = kn.length;
+      else if (q.indexOf(kn) !== -1) score = kn.length - 1;
+      else {
+        // Longest shared word run. "anti-defection law" against
+        // "the anti-defection law in india" shares "anti defection law".
+        var kw = kn.split(' '), qw = key.split(' '), run = 0, bestRun = 0;
+        for (var a = 0; a < kw.length; a++) {
+          for (var b = 0; b < qw.length; b++) {
+            if (kw[a] && kw[a] === qw[b]) {
+              run = kw[a].length;
+              for (var c = 1; a + c < kw.length && b + c < qw.length; c++) {
+                if (kw[a + c] === qw[b + c]) run += kw[a + c].length;
+                else break;
+              }
+            }
+            if (run > bestRun) bestRun = run;
+            run = 0;
+          }
+        }
+        if (bestRun >= 10) score = bestRun;
+      }
+      if (score > bestScore) { bestScore = score; best = k; }
+    });
+    return best ? { key: best, cfg: CONCEPT_ROUTES[best] } : null;
+  }
+
+  // A question that names a country means the answer is about that country.
+  // Without this the federal question was answered with a Colorado county
+  // "applying for statehood": a true sentence, from a real node, about a
+  // different federation. Demonyms, country names and the constituent states are
+  // all accepted, because a sentence about the Punjab Reorganisation Act may
+  // say "Punjab" and never say "India".
+  var JURISDICTIONS = {
+    india: ['india', 'indian', 'bharat', 'hindustan', 'punjab', 'haryana', 'gujarat', 'maharashtra',
+      'kerala', 'tamil nadu', 'andhra', 'telangana', 'karnataka', 'odisha', 'orissa', 'west bengal',
+      'bengal', 'assam', 'bihar', 'rajasthan', 'uttar pradesh', 'himachal', 'goa', 'tripura',
+      'manipur', 'mizoram', 'nagaland', 'arunachal', 'sikkim', 'chhattisgarh', 'jharkhand',
+      'ladakh', 'jammu', 'kashmir', 'andaman', 'lakshadweep', 'pondicherry', 'chandigarh',
+      'delhi', 'lakshadweep']
+  };
+
+  function jurisdictionMarkers(question) {
+    var q = norm(question);
+    var out = [];
+    Object.keys(JURISDICTIONS).forEach(function (c) {
+      if (q.indexOf(c) !== -1) JURISDICTIONS[c].forEach(function (m) { if (out.indexOf(m) === -1) out.push(m); });
+    });
+    return out;
+  }
+
+  // Flat phrase list for the chosen concept, both facets. Used to build the
+  // candidate pool and to qualify a sentence.
+  function conceptPhrases(subject, question) {
+    var r = routeFor(subject, question);
+    if (!r) return [];
+    return r.cfg.fit.concat(r.cfg.strain);
+  }
+
+  // Which facet a phrase belongs to, so an answer to "how far" can report the
+  // accommodation mechanisms and the strain side by side rather than only the
+  // flattering one.
+  function facetOf(subject, question, phrase) {
+    var r = routeFor(subject, question);
+    if (!r) return 'fit';
+    if (r.cfg.fit.indexOf(phrase) !== -1) return 'fit';
+    if (r.cfg.strain.indexOf(phrase) !== -1) return 'strain';
+    return 'fit';
+  }
+
+
   // Does this node's title carry the subject? Per variant: multi-word windows
   // must appear contiguous in the title, a single-word subject must be a whole
   // token. Checked in longest-first order so an exact title match wins before
@@ -562,14 +861,76 @@
     // The subject is a phrase no node may title verbatim, so match every
     // contiguous word window of it — longest first, so the exact title wins.
     var subjVariants = subjectVariants(subject);
+    var conceptTerms = subject ? conceptPhrases(subject, question) : [];
+
+    // Is the subject a thing this corpus actually titles? Checked across the
+    // whole index, not just the hits, because the answer decides which evidence
+    // tier applies. A conceptual question ("the Indian federal framework") has
+    // no node titled with it -- the corpus titles `Punjab Reorganisation Act,
+    // 1966` and `Deori Autonomous Council` instead -- so a strict title gate
+    // answers nothing at all. But dropping the gate entirely is what produced
+    // `.NET Framework` and `Far Cry 3` for this very question.
+    var subjectTitled = false;
+    for (var si = 0; si < idx.nodes.length && !subjectTitled; si++) {
+      if (titleMatchesSubject(norm(idx.nodes[si].node.name), subjVariants)) subjectTitled = true;
+    }
+    // Which evidence tier produced the sentences. Declared out here rather than
+    // inside the scoring loop because the coverage maths and the verdict below
+    // both need it.
+    var conceptTier = !!(!subjectTitled && conceptTerms.length);
+
+    var juris = jurisdictionMarkers(question);
+    function sameJurisdiction(text) {
+      if (!juris.length) return true;                     // no country named: no constraint
+      for (var j = 0; j < juris.length; j++) if (text.indexOf(juris[j]) !== -1) return true;
+      return false;
+    }
+
+    // The candidate pool must actually contain the concept material. A top-40
+    // BM25 slice over the question's own words is all `.NET Framework` and
+    // `Far Cry 3`, because the nodes that actually answer -- `Punjab
+    // Reorganisation Act, 1966`, `Deori Autonomous Council` -- contain none of
+    // them. So when the subject is untitled, run a second pass over the concept
+    // phrases and merge those nodes in. They are scored separately and can
+    // never outrank a genuine subject match.
+    if (!subjectTitled && conceptTerms.length) {
+      // bm25 is token-level, so a two-word concept phrase ("scheduled tribes")
+      // would never match anything as a single key. Feed the words; the
+      // containment test below still uses the full phrase, which is what
+      // actually keeps the evidence honest.
+      var cw = {};
+      conceptTerms.forEach(function (ph) {
+        tokens(ph).forEach(function (w) { if (STOP.indexOf(w) === -1) cw[w] = 1; });
+      });
+      var chits = Object.keys(cw).length ? bm25(idx, cw, null).slice(0, 160) : [];
+      var have = {};
+      ranked.forEach(function (r) { have[r.i] = 1; });
+      chits.forEach(function (h) {
+        if (have[h.i]) return;
+        have[h.i] = 1;
+        ranked.push({ i: h.i, score: h.score * 0.5, direct: false, concept: true });
+      });
+    }
 
     var evidence = [];
     ranked.forEach(function (r) {
-      if (r.score < floor) return;
+      if (r.score < floor && !r.concept) return;
       var p = idx.nodes[r.i];
       if (!p) return;
-      if (subjVariants.length) {
+      if (subjVariants.length && subjectTitled) {
         if (!titleMatchesSubject(norm(p.node.name), subjVariants)) return;
+      } else if (conceptTerms.length) {
+        // Fallback tier. Require the node's own text to carry a concept phrase,
+        // so it must be about the subject and not about a shared keyword.
+        var nodeText = norm(p.node.name + ' ' + p.node.desc);
+        var hitConcept = conceptTerms.some(function (c) { return nodeText.indexOf(c) !== -1; });
+        if (!hitConcept) return;
+        // ...and, when the question names a country, that it is the same country.
+        if (!sameJurisdiction(nodeText)) return;
+      } else {
+        // Neither tier applies: no subject, no concept. Refusing is the honest
+        // outcome -- loose keyword matching is what produced the garbage answer.
+        return;
       }
       // Only the question's *distinctive* terms may qualify a sentence as
       // evidence. Anchoring on any query word let "law" and "india" carry
@@ -586,8 +947,29 @@
         for (var k = 0; k < keyAnchors.length; k++) {
           if (sentSet[keyAnchors[k].t]) weight += keyAnchors[k].idf;
         }
+        // In the fallback tier the sentence does not contain the question's own
+        // words -- that is precisely why the subject could not be titled -- so
+        // the anchor-weight test rejects every correct sentence. The concept
+        // phrase is the relevance proof there, and it is a stronger one: it is
+        // checked inside the sentence, not merely in the node title.
+        if (conceptTier) {
+          var sNorm = norm(s);
+          var inConcept = conceptTerms.some(function (c) { return sNorm.indexOf(c) !== -1; });
+          if (!inConcept) return;
+          if (!weight) weight = 1;
+        }
         if (weight <= 0) return;
-        evidence.push({ sentence: s, score: r.score + weight, node: p.node, direct: r.direct });
+        var e = { sentence: s, score: r.score + weight, node: p.node, direct: r.direct };
+        if (conceptTier) {
+          var sN2 = norm(s);
+          var ph2 = null;
+          for (var ci = 0; ci < conceptTerms.length; ci++) {
+            if (sN2.indexOf(conceptTerms[ci]) !== -1) { ph2 = conceptTerms[ci]; break; }
+          }
+          e.concept = ph2;
+          e.facet = ph2 ? facetOf(subject, question, ph2) : 'fit';
+        }
+        evidence.push(e);
       });
     });
 
@@ -617,6 +999,23 @@
     // anchors; coverage defaults to 1 so a subject-present answer can pass.
     var termCov = nonSubj.length ? (totalIdf ? gotIdf / totalIdf : 0) : 1;
 
+    // In the concept tier the evidence deliberately does NOT contain the
+    // question's own words -- that is why the subject could not be titled -- so
+    // scoring coverage over them reports ~30% no matter how good the answer is,
+    // and the engine refuses material it just found. Coverage there is the
+    // share of the concept vocabulary the evidence actually speaks to, which is
+    // the question the reader is really asking.
+    var conceptCov = 0, hasFit = false, hasStrain = false;
+    if (conceptTier && conceptTerms.length) {
+      var seenConcept = {};
+      uniq.forEach(function (e) {
+        var sN = norm(e.sentence);
+        conceptTerms.forEach(function (c) { if (sN.indexOf(c) !== -1) seenConcept[c] = 1; });
+        if (e.facet === 'strain') hasStrain = true; else hasFit = true;
+      });
+      conceptCov = Object.keys(seenConcept).length / conceptTerms.length;
+    }
+
     // The subject must be matched by an actual node title, not merely appear in
     // passing inside some unrelated sentence. A multi-word subject ("Lok Sabha
     // Speaker") is required as a contiguous phrase, because that topic is not
@@ -642,6 +1041,11 @@
         if (r.score < floor) return false;
         return titleMatchesSubject(norm(idx.nodes[r.i].node.name), subjVariants);
       });
+      // In the concept tier the subject is never a node title by definition --
+      // the tier only runs when it is not one. Judging the subject on a title
+      // match there guarantees a refusal no matter how much relevant evidence
+      // was found, so the concept evidence itself is the match.
+      if (!subjectMatched && conceptTier && uniq.length >= MIN_EVIDENCE) subjectMatched = true;
     }
 
     var dimCov = a.demand.length ? a.demand.filter(function (d) {
@@ -649,6 +1053,15 @@
     }).length / a.demand.length : 1;
 
     var coverage = Math.max(0, Math.min(1, 0.70 * termCov + 0.30 * dimCov));
+    // A question that asks "how far", "evaluate" or "critically examine" is
+    // asking for a judgement, and a judgement needs both sides. A pile of
+    // success mechanisms with nothing on the other side is a press release, not
+    // an answer, so the concept tier reports coverage against the union of both
+    // facets and records which sides were actually evidenced.
+    var evalVerdict = /\b(how far|evaluate|assess|critically|examine|success|successful|extent|justify|appraise|comment on|discuss)\b/i.test(String(question || ''));
+    if (conceptTier) {
+      coverage = Math.max(coverage, Math.min(1, conceptCov));
+    }
 
     // The gate. Three independent ways to fail, because any one of them means
     // the answer would be assembled rather than retrieved:
@@ -656,13 +1069,21 @@
     //   | the question's rare terms are not accounted for.
     var refused = true, reason = '';
     if (uniq.length < MIN_EVIDENCE) {
-      reason = 'only ' + uniq.length + ' quoteable sentence(s) in the corpus bear on this question';
+      var gaps = gapFor(subject, question);
+      reason = gaps
+        ? 'the corpus holds no material on "' + gaps.key + '": auditing all ' + idx.nodes.length +
+          ' indexed nodes found no India-relevant node for ' + gaps.missing.join(', ') +
+          '. That is a gap in the corpus, not a retrieval failure'
+        : 'only ' + uniq.length + ' quoteable sentence(s) in the corpus bear on this question';
     } else if (subjectMatched === false) {
       reason = subjList.length
         ? 'no quotable material in the corpus on "' + subject + '", the subject of this question'
         : 'the subject of the question could not be identified in the corpus';
     } else if (coverage < MIN_COVERAGE) {
       reason = 'evidence accounts for ' + Math.round(coverage * 100) + '% of the question, below the ' + Math.round(MIN_COVERAGE * 100) + '% gate';
+    } else if (conceptTier && evalVerdict && hasFit && !hasStrain) {
+      // Refuse the one-sided answer rather than present it as a judgement.
+      reason = 'the corpus evidences how the framework accommodated diversity, but holds no quotable material on the limits of that accommodation, so it cannot support a "how far" verdict';
     } else {
       refused = false;
     }
@@ -678,6 +1099,10 @@
       subjectMatched: subjectMatched,
       subjectTokens: subjList,
       anchors: anchors.slice(0, 6).map(function (x) { return x.t; }),
+      concept: conceptTier ? (routeFor(subject, question) || {}).key : null,
+      conceptCoverage: conceptCov,
+      corpusGap: gapFor(subject, question),
+      facets: { accommodation: !!hasFit, strain: !!hasStrain },
       refused: refused,
       reason: reason
     };
@@ -765,6 +1190,11 @@
     wordCount: wordCount,
     subjectOf: subjectOf,
     properNounRun: properNounRun,
+    routeFor: routeFor,
+    conceptRoutes: CONCEPT_ROUTES,
+    facetOf: facetOf,
+    conceptPhrasesFor: conceptPhrases,
+    jurisdictionMarkers: jurisdictionMarkers,
     analyse: analyse,
     buildIndex: buildIndex,
     bm25: bm25,

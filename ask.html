@@ -85,9 +85,32 @@ h1{font-size:24px;margin:6px 0 8px}
 </div>
 
 <script src="scripts/lib/ask-core.js"></script>
+<script src="scripts/lib/ask-qb.js"></script>
+<script src="scripts/lib/ask-answer.js"></script>
+<script src="scripts/lib/ask-browser.js"></script>
 <script>
 'use strict';
+// The question-bank path is OFF by default and must be turned on deliberately.
+//
+// Measured over 52 exam-style questions (see scripts/check-ask-qb-fresh.js for
+// the staleness guard and the builders for the data), it answered 14 and refused
+// 38. Of the 14, about half were on target: a question about the Comptroller and
+// Auditor General, public interest litigation, judicial independence, the GST,
+// parliamentary opposition and demographic transition all returned the right
+// corpus entries. The rest were confident misses, because the admission gate
+// accepted an entity that merely overlapped the subject's tokens: a question
+// about biodiversity conservation and development was answered with Google and
+// Wikipedia, one about misinformation with a 1462 treaty, and one about
+// infrastructure investment with a United States act.
+//
+// For a study tool a confident wrong answer is worse than a refusal, because an
+// aspirant cannot tell one from a finding. Until the admission gate is
+// tightened, the timeline engine below answers instead.
+var ASK_QB_ENABLED = false;
+
 var IDX = null;
+var QB_READY = false;
+var QB_ERROR = null;
 var STATE = { question: '' };
 
 function esc(s) {
@@ -173,12 +196,90 @@ function render(res) {
   }
 }
 
+// Evidence from the question bank. These are verbatim corpus sentences attributed
+// to the entity whose entry they came from, so the citation is the entity name
+// and its archive category. There is no per-sentence anchor: the derived shards
+// deliberately do not carry record ids, because that is most of the 828 MB.
+function renderQbEvidence(items) {
+  return items.map(function (e) {
+    var cats = (e.cats || []).map(function (c) {
+      return c.label || c.key || c;
+    });
+    var cat = cats.length ? ' &middot; ' + esc(cats[0]) : '';
+    return '<div class="ev">' +
+      '<div class="src"><a href="archive.html" target="_blank">' + esc(e.entity) + '</a>' + cat + '</div>' +
+      '<p>' + esc(e.sentence) + '</p>' +
+    '</div>';
+  }).join('');
+}
+
+function renderQb(result) {
+  var r = result.route || {};
+  var diag = '<div class="diag">';
+  if (r.subject) diag += '<span>subject: ' + esc(r.subject) + '</span>';
+  if (r.concept) diag += '<span>concept: ' + esc(r.concept) + '</span>';
+  if (r.matchedEntity) diag += '<span>entity: ' + esc(r.matchedEntity) + '</span>';
+  diag += '<span>' + esc(r.conceptTier ? 'concept route' : 'entity route') + '</span>';
+  if (result.missing) {
+    diag += '<span>' + result.missing + ' shard(s) not deployed</span>';
+  }
+  diag += '</div>';
+
+  if (!result.evidence.length) {
+    return '<div class="result"><div class="refusal">' +
+      '<h2>Cannot answer from corpus</h2>' +
+      '<p>No quotable corpus sentence carried enough of the subject to answer this question reliably.</p>' +
+      diag +
+    '</div></div>';
+  }
+
+  return '<div class="result"><div class="answer">' +
+    '<h2>Answer</h2>' +
+    '<p class="reason">' + result.evidence.length + ' verbatim corpus sentence(s) &middot; no AI, no generation</p>' +
+    renderQbEvidence(result.evidence) +
+    diag +
+  '</div></div>';
+}
+
 function doAsk() {
-  if (!IDX) { el('out').innerHTML = '<div class="err">Index not loaded yet.</div>'; return; }
   var q = el('q').value.trim();
   if (!q) { el('out').innerHTML = '<div class="empty">Type a question first.</div>'; return; }
   STATE.question = q;
   el('ask').disabled = true;
+
+  // The question bank is the primary source: it is the whole corpus, not the
+  // timeline subset. The timeline engine stays as a fallback so the page still
+  // answers if the routing tables or the evidence shards are not deployed.
+  if (ASK_QB_ENABLED && QB_READY) {
+    el('out').innerHTML = '<div class="load">Searching the question bank&hellip;</div>';
+    VlymbooqAskBrowser.ask(q, { limit: 8 }).then(function (result) {
+      // A shard that is missing is a signal, not an answer. The adapter reports
+      // it as `missing` precisely so the caller can fall back, and without this
+      // the page rendered a refusal while the timeline index was sitting right
+      // there with an answer.
+      if (!result.evidence.length && result.missing && IDX) {
+        renderTimeline(q);
+        return;
+      }
+      el('out').innerHTML = renderQb(result);
+    }).catch(function (err) {
+      if (IDX) renderTimeline(q);
+      else el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+    }).then(function () {
+      el('ask').disabled = false;
+    });
+    return;
+  }
+
+  if (!IDX) {
+    el('out').innerHTML = '<div class="load">Loading&hellip;</div>';
+    return;
+  }
+  renderTimeline(q);
+  el('ask').disabled = false;
+}
+
+function renderTimeline(q) {
   el('out').innerHTML = '<div class="load">Searching&hellip;</div>';
   setTimeout(function () {
     try {
@@ -187,8 +288,25 @@ function doAsk() {
     } catch (err) {
       el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
     }
-    el('ask').disabled = false;
   }, 30);
+}
+
+// One status line for both indexes, because either can finish loading first and
+// neither should overwrite the other.
+var TIMELINE_META = null;
+function updateStatus() {
+  var bits = [];
+  if (TIMELINE_META) bits.push(TIMELINE_META);
+  if (QB_READY) {
+    var s = VlymbooqAskBrowser.stats() || {};
+    bits.push('Question bank: ' + (s.records || 0).toLocaleString() + ' records, ' +
+      (s.keptSentences || 0).toLocaleString() + ' sentences, snapshot ' +
+      (s.builtAt ? s.builtAt.slice(0, 10) : '?'));
+  } else if (QB_ERROR) {
+    bits.push('Question bank unavailable: ' + QB_ERROR.message);
+  }
+  bits.push('zero AI, zero generation');
+  el('meta').textContent = bits.join(' &middot; ');
 }
 
 function boot(idx, meta) {
@@ -196,14 +314,20 @@ function boot(idx, meta) {
   var m = meta || {};
   var kept = m.nodesKept || idx.N || 0;
   var scanned = m.nodesScanned || '?';
-  el('meta').textContent = 'Index: ' + kept.toLocaleString() + ' quotable nodes (from ' +
-    scanned.toLocaleString() + ' scanned) &middot; built ' + (m.builtAt || '?').slice(0, 10) +
-    ' &middot; zero AI, zero generation';
+  TIMELINE_META = 'Timeline: ' + kept.toLocaleString() + ' quotable nodes (from ' +
+    scanned.toLocaleString() + ' scanned), built ' + (m.builtAt || '?').slice(0, 10);
+  updateStatus();
   el('samples').innerHTML = SAMPLES.map(function (s) {
     return '<button data-q="' + esc(s) + '">' + esc(s.length > 60 ? s.slice(0, 57) + '…' : s) + '</button>';
   }).join('');
   el('out').innerHTML = '<div class="empty">Ask a question above. The engine will either return verbatim corpus sentences with source links, or tell you it cannot answer.</div>';
 }
+
+// The question-bank index is a snapshot of the archive, and the archive keeps
+// growing: a new record reaches Ask only after `npm run build-ask-qb`. Showing
+// the snapshot date makes a stale index visible instead of looking like a
+// missing topic. `npm run check-ask-qb-fresh` fails if the two counts diverge.
+if (QB_READY) updateStatus();
 
 document.addEventListener('click', function (e) {
   var btn = e.target.closest('#ask');
@@ -219,6 +343,19 @@ el('q').addEventListener('keydown', function (e) {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) doAsk();
 });
 
+// The question-bank routing tables (~10.5 MB, nearly all the entity table) load
+// in the background. The page is usable before they arrive, because the timeline
+// index is enough to answer, and because a missing table only means the question
+// bank is unavailable for now.
+VlymbooqAskBrowser.boot(VlymbooqAskAnswer, VlymbooqAskQb).then(function () {
+  QB_READY = true;
+  QB_ERROR = null;
+  updateStatus();
+}).catch(function (err) {
+  QB_ERROR = err;
+  updateStatus();
+});
+
 fetch('data/ask-index.json')
   .then(function (r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
@@ -232,6 +369,13 @@ fetch('data/ask-index.json')
     boot(idx, data.meta);
   })
   .catch(function (err) {
+    if (QB_ERROR) {
+      el('out').innerHTML = '<div class="err">Could not load the retrieval data (' +
+        esc(QB_ERROR.message) + ').<br><br>This page reads its data over HTTP. If you opened the file ' +
+        'directly, run <code>python -m http.server 8123</code> in the project folder and visit ' +
+        '<code>http://127.0.0.1:8123/ask.html</code>.</div>';
+      return;
+    }
     el('out').innerHTML = '<div class="err">Could not load <code>data/ask-index.json</code> (' + esc(err.message) + ').' +
       '<br><br>This page reads its data over HTTP. If you opened the file directly, run ' +
       '<code>python -m http.server 8123</code> in the project folder and visit ' +

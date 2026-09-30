@@ -50,6 +50,14 @@ data/questions/state-tracker.json
 # mains-questions.json: slim-live builds from the git index, so without this the
 # Ask page would load with no data.
 !data/ask-index.json
+# Ask's question-bank routing tables. The browser needs these to decide which
+# corpus shards a question routes to: the manifest and directory are tiny, the
+# entity table is 10.4 MB, and the concept table is measured category evidence.
+# The evidence shards themselves (828 MB under data/ask-qb/, ask-qb.*.json) are
+# deliberately NOT allowlisted; ask.html treats a 404 on those as "not deployed"
+# and falls back to the timeline engine.
+!data/ask-qb/
+data/ask-qb/ask-qb.*.json
 question-bank/
 add_entries.js
 add_entries_phase2.js
