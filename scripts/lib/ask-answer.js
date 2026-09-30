@@ -25,8 +25,41 @@
 // The hint table is only a fallback, and it earns its place on conceptual
 // questions. "How far has Indian federalism succeeded" has no entity to look up,
 // so the route comes from the concept's vocabulary instead.
+
+// A subject that names a relationship rather than a thing cannot be looked up.
+// "Examine the relationship between the union executive and parliament" reduces
+// to the whole clause, "Analyse the relationship between inequality and economic
+// growth" to "the relationship", and "Examine the challenges facing India's
+// banking sector" to "the facing India's banking sector", where "facing" is a
+// participle left stranded after "challenges" was stripped as a demand noun.
+//
+// These are the worst possible subjects, because the word carrying the
+// relationship is a common noun that titles real corpus entries. "the
+// relationship" matched the entity "Relationship between Google and Wikipedia",
+// "the associated with judicial appointments" matched nothing sensible, and
+// "the relationship between development and left-wing extremism" matched
+// "Same-sex relationship". A relational subject is therefore treated as no
+// subject at all: it does not constrain the entity gate and does not become
+// text to match, so admission falls to the concept vocabulary. If the concept
+// cannot ground the question either, the answer is a refusal, which is the
+// honest outcome.
+// Matched anywhere in the subject, not only at the front, because the country
+// often leads: "India's relations" and "the United States' relations" are
+// relational subjects with the relational noun in the middle, and anchoring the
+// test at the front let all three of those through.
+var RELATIONAL_HEAD = /\b(?:relationship|relationships|relation|relations|association|associations|links?|connections?|interactions?|overlaps?|interface|nexus|dependence|reliance|interplay)\b/i;
+var PARTICIPLE_REMNANT = /^(?:the\s+)?(?:associated|posed|facing|governing|involving|concerning|relating|pertaining|regarding|undergoing)\b/i;
+var PREPOSITION_HEAD = /^(?:the\s+)?(?:between|among|amongst|of|for|with|against|about|on|in)\b/i;
+
+function isTopicalSubject(subject) {
+  var s = String(subject || '').trim();
+  if (!s) return false;
+  return !(RELATIONAL_HEAD.test(s) || PARTICIPLE_REMNANT.test(s) || PREPOSITION_HEAD.test(s));
+}
+
 function route(question, dir, entityDir, concepts) {
   var subject = ask.subjectOf(question) || '';
+  var topical = isTopicalSubject(subject);
   var concept = ask.routeFor(subject, question);
   // Admission uses the `fit` vocabulary only. A `strain` phrase describes the
   // cost side of a concept and is reported separately, because admitting on it
@@ -54,7 +87,7 @@ function route(question, dir, entityDir, concepts) {
     });
   };
 
-  if (entityDir && subject) {
+  if (entityDir && subject && topical) {
     var cands = entityDir.candidates(subject);
     for (var i = 0; i < cands.length && picked.length < 6; i++) {
       // Only a confident match is allowed to constrain the entity gate. A weak
@@ -91,6 +124,16 @@ function route(question, dir, entityDir, concepts) {
 
   return {
     subject: subject,
+    // What the scorer treats as the entity anchor. This is deliberately not the
+    // same field as `subject`, which is kept for display. The scorer matches
+    // entities by idf-weighted overlap with its subject tokens, so a subject of
+    // "the relationship" gives it one common noun to match and every corpus
+    // entry with that word in its name wins, which is how a question about
+    // biodiversity conservation came to be answered with the relationship
+    // between Google and Wikipedia. Without a topical subject there is no
+    // anchor to match on, so the gate stays shut and admission can only come
+    // from a concept phrase.
+    anchorSubject: topical ? subject : '',
     matchedEntity: matchedName,
     entityPhrase: entityPhrase,
     // A concept route with no matched entity is the conceptual case, where the
@@ -103,8 +146,9 @@ function route(question, dir, entityDir, concepts) {
     // normal case for statutory and institutional subjects: "the Sixth Schedule
     // of the Constitution" and "the Fazl Ali Commission" are named in the
     // corpus only inside the sentences of other entities, so the subject has to
-    // be matched against sentence text.
-    subjectPhrases: entityPhrase ? [] : qb.subjectPhrases(subject),
+    // be matched against sentence text. A relational subject is not matched
+    // against text either, for the reason given above.
+    subjectPhrases: (entityPhrase || !topical) ? [] : qb.subjectPhrases(subject),
     // Jurisdiction defaults to India. The corpus is an Indian exam corpus, so an
     // unqualified question is about India, and saying so lets the country filter
     // run. Without it the filter is inert on any question that does not name a

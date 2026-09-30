@@ -127,7 +127,7 @@
           lists.push(state.qb.scoreShard(out.rows, question, {
             conceptPhrases: route.phrases,
             jurisdiction: route.jurisdiction,
-            subject: route.subject,
+            subject: route.anchorSubject,
             entityPhrase: route.entityPhrase,
             conceptTier: route.conceptTier,
             subjectPhrases: route.subjectPhrases,
