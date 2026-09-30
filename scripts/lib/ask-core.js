@@ -1045,8 +1045,30 @@
       // the tier only runs when it is not one. Judging the subject on a title
       // match there guarantees a refusal no matter how much relevant evidence
       // was found, so the concept evidence itself is the match.
-      if (!subjectMatched && conceptTier && uniq.length >= MIN_EVIDENCE) subjectMatched = true;
+      //
+      // But the concept evidence is only a match if it actually speaks to the
+      // concept. Without the second condition a question about the
+      // anti-defection law was answered with the definition of a coalition, the
+      // Deputy Speaker and a 1920 Akali Dal entry, on 18.75% concept coverage:
+      // the rescue fired on three sentences that had nothing to do with the
+      // subject. Concept coverage now has to clear the same bar as the main
+      // gate. Federalism clears it at 85% and still answers, which is the
+      // intended behaviour; the anti-defection question now refuses.
+      if (!subjectMatched && conceptTier && uniq.length >= MIN_EVIDENCE && conceptCov >= MIN_COVERAGE) {
+        subjectMatched = true;
+      }
     }
+
+    // A subject the question states as a clause is not a topic, and matching a
+    // clause against node titles finds whatever happens to be in it. "Examine
+    // whether the constitutional office of the Lok Sabha Speaker has become
+    // vulnerable to partisan politics" reduced to the whole clause, and the
+    // permissive variant matching then found "Deputy Speaker of the Lok Sabha"
+    // and answered a question about the Speaker's neutrality with the
+    // second-ranking office. There is no title to match, so say so instead of
+    // guessing one.
+    var clauseSubject = /^(?:whether|if|how|why|that|which|when|where)\b/i.test(subjNorm) ||
+      /\b(?:has|have|had|is|are|was|were)\s+(?:been\s+)?(?:become|became|required|needed|possible|vulnerable|affected|able)\b/i.test(subjNorm);
 
     var dimCov = a.demand.length ? a.demand.filter(function (d) {
       return uniq.some(function (e) { return e.sentence.search(d.re) !== -1; });
@@ -1075,6 +1097,9 @@
           ' indexed nodes found no India-relevant node for ' + gaps.missing.join(', ') +
           '. That is a gap in the corpus, not a retrieval failure'
         : 'only ' + uniq.length + ' quoteable sentence(s) in the corpus bear on this question';
+    } else if (clauseSubject) {
+      reason = 'the question is phrased as a clause ("' + subject.slice(0, 80) +
+        '…") rather than naming a topic, so the engine cannot tell which subject it should be held to';
     } else if (subjectMatched === false) {
       reason = subjList.length
         ? 'no quotable material in the corpus on "' + subject + '", the subject of this question'
