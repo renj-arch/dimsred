@@ -1,0 +1,70 @@
+name: Ask Retrieval Audit
+
+# Regression gate for the zero-AI retrieval engine in scripts/lib/ask-core.js.
+#
+# WHY A SEPARATE WORKFLOW, NOT A STEP IN build-ask-qb.yml:
+#   That workflow is a 330-minute, 9.4 GB disk job whose entire job is to
+#   regenerate the question-bank tables. The audit needs neither: it reads the
+#   65,039-node data/ask-index.json (a few MB) and runs in about a second. A
+#   regression here is a code defect, and it should not wait hours behind a
+#   corpus rebuild to be discovered -- nor should a failing audit be able to
+#   stop the rebuild that keeps production honest.
+#
+# WHAT IT PROTECTS:
+#   Every Ask answer is assembled by retrieve() from corpus text, so the failure
+#   mode that matters is answering a question the corpus cannot support. That
+#   output looks authoritative and the reader cannot tell it was assembled from
+#   fragments, which is why the audit fails on an unwanted ANSWER at least as
+#   loudly as on an unwanted refusal. A cautious refusal is cheap; a confident
+#   wrong answer is not.
+#
+# The audit also fails when a refusal stops naming the missing term. "No term in
+# the question appears anywhere in the index" is true of every absent-term
+# refusal and therefore tells the reader nothing about what is missing.
+
+on:
+  push:
+    paths:
+      - scripts/lib/ask-core.js
+      - scripts/ask-audit.js
+      - scripts/build-ask-index.js
+      - data/ask-index.json
+  workflow_dispatch:
+
+concurrency:
+  group: ask-audit
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Report index size
+        run: |
+          node -e "const p=require('./data/ask-index.json');console.log('nodes: '+p.nodes.length)"
+
+      # The audit exits nonzero on any unexpected verdict, so a regression
+      # blocks the merge rather than being noticed later in a live answer.
+      - name: Retrieval audit
+        run: node scripts/ask-audit.js -v
+
+      - name: Summary
+        if: always()
+        run: |
+          {
+            echo "### Ask retrieval audit"
+            echo ""
+            echo '```'
+            node scripts/ask-audit.js 2>&1 || true
+            echo '```'
+          } >> "$GITHUB_STEP_SUMMARY"
