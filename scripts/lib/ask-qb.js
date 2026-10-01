@@ -893,7 +893,14 @@ function scoreShard(rows, question, opts) {
         else sScore -= 2.5;
       }
       if (!(sScore > 3)) continue;
-      out.push({ sentence: s, entity: entity, cats: cats, score: sScore, concept: conceptHit });
+      // The 4th shard element is parallel provenance, indexed by sentence. It is
+      // looked up by position, not by matching text, so it cannot be misaligned
+      // by a duplicate sentence; when a shard predates it, `meta` is undefined
+      // and the sentence stays uncited rather than gaining a guessed source.
+      var prov = (row[3] || [])[j];
+      out.push({ sentence: s, entity: entity, cats: cats, score: sScore,
+        concept: conceptHit,
+        source: prov && prov.source, pubDate: prov && prov.pubDate });
     }
   }
 

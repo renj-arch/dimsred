@@ -87,6 +87,9 @@ h1{font-size:24px;margin:6px 0 8px}
 <script src="scripts/lib/ask-core.js"></script>
 <script src="scripts/lib/ask-qb.js"></script>
 <script src="scripts/lib/ask-answer.js"></script>
+<script src="scripts/lib/ask-entity-evidence.js"></script>
+<script src="scripts/lib/ask-compose.js"></script>
+<script src="scripts/lib/build-ask-qb-buckets-hash.js"></script>
 <script src="scripts/lib/ask-browser.js"></script>
 <script>
 'use strict';
@@ -107,6 +110,154 @@ h1{font-size:24px;margin:6px 0 8px}
 // aspirant cannot tell one from a finding. Until the admission gate is
 // tightened, the timeline engine below answers instead.
 var ASK_QB_ENABLED = false;
+
+// Structured mains answering. Kept off until the evidence shards are deployed:
+// with them absent every heading resolves but nothing can be quoted, and a page
+// that renders nine "not quotable" headings is worse than one that says the
+// feature is unavailable. The flag is separate from ASK_QB_ENABLED because the
+// navigational path works off shards while this path additionally needs the
+// entity table, and they should be able to ship on different days.
+var ASK_MAINS_ENABLED = false;
+
+// An authored outline maps a question shape to the entities whose corpus
+// sentences will fill each heading. A term can be a list: the first that resolves
+// wins, so "water stress" can fall back to the "water scarcity" entry the corpus
+// actually stores. The alternates are not decoration -- without them the
+// water-stress question reports itself absent while the corpus holds 24 sentences
+// on the subject (scripts/diag-water-stress.js).
+//
+// Each entry is [heading, entity name, alternates]. Keeping this in the page
+// rather than in a shard means it is reviewable and editable without a rebuild.
+var ASK_MAINS_OUTLINES = {
+"water stress regional distribution": [
+["1. What water stress is", "water stress", ["water scarcity", "water deficit"]],
+["2. Regional variation", "water scarcity in india", ["drought", "rainfall variability"]],
+["3. Why it happens", "causes of water stress", ["groundwater depletion", "over-extraction of groundwater"]],
+["4. Most affected", "water scarcity", ["drought", "water supply"]],
+["5. Irrigated agriculture", "irrigation", ["irrigation in india", "canal irrigation"]],
+["6. What can be done", "rainwater harvesting", ["water conservation", "watershed development"]],
+["7. Way forward", "water security", ["integrated water resources management"]]
+],
+"ocean currents water masses marine life coastal environment": [
+["1. What a current is", "ocean current", []],
+["2. Current drives climate", "gulf stream", ["north atlantic drift"]],
+["3. Current drives aridity", "canary current", ["benguela current", "humboldt current"]],
+["4. Current drives fisheries", "upwelling", []],
+["5. Water mass as habitat", "antarctic bottom water", ["thermohaline circulation"]],
+["6. Warm water, reefs", "coral reef", ["coral reefs"]],
+["7. Currents connect oceans", "antarctic circumpolar current", ["agulhas current"]],
+["8. Peru upwelling coast", "humboldt current", ["peru current"]],
+["9. Current failure", "el nino", ["el nino southern oscillation"]],
+["10. Water masses", "water mass", ["water masses", "thermohaline circulation"]]
+],
+"indian ocean region national security": [
+["1. Economic security", "sea trade", ["shipping", "maritime trade", "sea lanes"]],
+["2. Energy security", "energy security", ["oil imports", "energy imports"]],
+["3. Maritime frontier", "territorial waters", ["coastline", "EEZ"]],
+["4. Island territories", "Andaman and Nicobar Islands", ["andaman and nicobar"]],
+["5. Geopolitical competition", "china", ["chinese navy"]],
+["6. Maritime chokepoints", "Strait of Hormuz", ["bab el mandeb"]],
+["7. Non-traditional threats", "piracy", ["maritime terrorism"]],
+["8. Regional influence", "SAGAR", ["sagar amendment"]]
+],
+"land degradation agricultural productivity food security": [
+["1. Land degradation", "land degradation", ["soil degradation", "desertification"]],
+["2. Agricultural productivity", "agricultural productivity", ["crop productivity"]],
+["3. Food security", "food security", ["food insecurity"]],
+["4. Soil health", "soil fertility", ["soil health"]],
+["5. Way forward", "agroforestry", ["soil conservation"]]
+],
+"urbanisation social economic governance": [
+["1. What urbanisation is", "urbanisation", ["urbanization", "urban population"]],
+["2. Social transformation", "social change", ["social mobility", "migration"]],
+["3. Economic transformation", "economic development", ["employment", "services sector"]],
+["4. Governance challenges", "urban governance", ["municipal corporation", "local government"]],
+["5. Infrastructure needs", "infrastructure", ["housing", "sanitation", "transport"]],
+["6. 74th Amendment", "73rd amendment", ["74th amendment", "urban local bodies"]],
+["7. Way forward", "smart city", ["urban planning", "sustainable urban development"]]
+],
+"climate change impact adaptation mitigation": [
+["1. What climate change is", "climate change", ["global warming", "greenhouse effect"]],
+["2. Causes", "greenhouse gas", ["carbon emission", "fossil fuel"]],
+["3. Impacts on India", "climate change in india", ["monsoon", "sea level rise", "extreme weather"]],
+["4. Adaptation measures", "climate adaptation", ["disaster management", "resilience"]],
+["5. Mitigation strategies", "climate mitigation", ["renewable energy", "carbon reduction"]],
+["6. International agreements", "paris agreement", ["cop", "climate summit"]],
+["7. Way forward", "sustainable development", ["low carbon economy", "green growth"]]
+],
+"federalism centre state relations": [
+["1. What federalism is", "federalism", ["federal structure", "division of powers"]],
+["2. Constitutional provisions", "constitution", ["union list", "state list", "concurrent list"]],
+["3. Centre-state relations", "centre state relations", ["interstate council", "zonal council"]],
+["4. Fiscal federalism", "fiscal federalism", ["finance commission", "tax sharing"]],
+["5. Inter-state disputes", "interstate dispute", ["interstate water dispute", "boundary dispute"]],
+["6. Recent developments", "article 370", ["article 356", "governor"]],
+["7. Way forward", "cooperative federalism", ["decentralisation", "autonomy"]]
+],
+"social justice empowerment inclusion": [
+["1. Constitutional provisions", "constitution", ["fundamental rights", "directive principles"]],
+["2. Social justice mechanisms", "social justice", ["reservation", "affirmative action"]],
+["3. Caste issues", "caste", ["scheduled castes", "scheduled tribes", "obc"]],
+["4. Gender equality", "gender equality", ["women empowerment", "women rights"]],
+["5. Minority rights", "minority", ["religious minority", "linguistic minority"]],
+["6. Economic inclusion", "inclusive growth", ["poverty alleviation", "rural development"]],
+["7. Way forward", "social development", ["education", "healthcare", "skill development"]]
+],
+"indigenous knowledge systems preservation": [
+["1. What indigenous knowledge is", "indigenous knowledge", ["traditional knowledge", "local knowledge"]],
+["2. Types of knowledge", "traditional medicine", ["ayurveda", "siddha", "unani", "folk medicine"]],
+["3. Cultural significance", "cultural heritage", ["tribal culture", "indigenous practices"]],
+["4. Ecological knowledge", "ethnobotany", ["traditional ecological knowledge", "medicinal plants"]],
+["5. Challenges", "threat", ["loss", "erosion", "modernisation", "displacement"]],
+["6. Preservation efforts", "documentation", ["traditional practices", "digital documentation"]],
+["7. Way forward", "integration", ["modern science", "traditional knowledge", "sustainable development"]]
+],
+"fundamental rights constitution": [
+["1. What are fundamental rights", "fundamental rights", ["constitutional rights", "civil liberties"]],
+["2. Right to equality", "article 14", ["article 15", "article 16", "equality before law"]],
+["3. Right to freedom", "article 19", ["freedom of speech", "freedom of movement", "freedom of assembly"]],
+["4. Right against exploitation", "article 23", ["article 24", "child labour", "trafficking"]],
+["5. Right to religion", "article 25", ["secularism", "religious freedom", "article 26"]],
+["6. Cultural and educational rights", "article 29", ["article 30", "minority rights", "language"]],
+["7. Right to constitutional remedies", "article 32", ["judicial review", "writ", "supreme court"]]
+],
+"poverty alleviation programmes": [
+["1. What is poverty", "poverty", ["poverty line", "bpl", "multidimensional poverty"]],
+["2. Poverty causes", "causes of poverty", ["unemployment", "inequality", "lack of education"]],
+["3. Government programmes", "rural development", ["mnrega", "national rural employment guarantee", "rural employment"]],
+["4. Food security", "food security", ["public distribution system", "pds", "ration card"]],
+["5. Social security", "social security", ["pension", "insurance", "welfare schemes"]],
+["6. Urban poverty", "urban poverty", ["slum", "housing", "urban livelihood"]],
+["7. Way forward", "inclusive growth", ["skill development", "education", "employment generation"]]
+],
+"disaster management framework": [
+["1. What is disaster management", "disaster management", ["natural disaster", "disaster response"]],
+["2. Institutional framework", "ndma", ["national disaster management authority", "sdma", "ddma"]],
+["3. Types of disasters", "natural disaster", ["cyclone", "flood", "earthquake", "drought"]],
+["4. Preparedness", "disaster preparedness", ["early warning", "mitigation", "preparedness"]],
+["5. Response mechanism", "disaster response", ["relief", "rescue", "emergency response"]],
+["6. Rehabilitation", "rehabilitation", ["reconstruction", "recovery", "disaster relief"]],
+["7. Way forward", "resilience", ["climate adaptation", "community participation", "technology"]]
+],
+"biodiversity conservation": [
+["1. What is biodiversity", "biodiversity", ["species diversity", "ecosystem diversity", "genetic diversity"]],
+["2. Biodiversity in India", "biodiversity hotspot", ["western ghats", "eastern himalayas", "india biodiversity"]],
+["3. Threats to biodiversity", "threat", ["habitat loss", "poaching", "invasive species", "climate change"]],
+["4. Conservation measures", "conservation", ["protected area", "national park", "wildlife sanctuary", "biosphere reserve"]],
+["5. Legal framework", "wildlife protection act", ["forest act", "biodiversity act", "environmental law"]],
+["6. International conventions", "cbd", ["convention on biological diversity", "ramsar", "cites"]],
+["7. Way forward", "sustainable development", ["community conservation", "ex situ conservation", "habitat restoration"]]
+],
+"women empowerment challenges": [
+["1. Constitutional provisions", "constitution", ["gender equality", "women rights", "article 14"]],
+["2. Education and health", "women education", ["literacy", "maternal health", "nutrition"]],
+["3. Economic empowerment", "women employment", ["workforce participation", "economic independence", "shg"]],
+["4. Political participation", "political representation", ["reservation", "panchayat", "women in politics"]],
+["5. Safety and security", "women safety", ["domestic violence", "sexual harassment", "anti dowry"]],
+["6. Social challenges", "gender discrimination", ["patriarchy", "social norms", "glass ceiling"]],
+["7. Way forward", "gender equality", ["policy intervention", "awareness", "implementation"]]
+]
+};
 
 var IDX = null;
 var QB_READY = false;
@@ -241,11 +392,103 @@ function renderQb(result) {
   '</div></div>';
 }
 
+// One outline, matched by the question's own content. A mains question is not
+// routed through the entity router: the router finds the single best entity for
+// a question and a mains question names several, so routing it produced an empty
+// anchor and a refusal. Matching an outline key against the question instead is
+// honest about what is happening -- the structure was chosen, not discovered --
+// and the key is displayed with the answer so the reader sees which structure was
+// used.
+function pickOutline(q) {
+var keys = Object.keys(ASK_MAINS_OUTLINES);
+var low = q.toLowerCase();
+var best = null, bestScore = 0;
+keys.forEach(function (k) {
+var words = k.split(' ').filter(function (w) { return w.length > 3; });
+var hits = words.filter(function (w) { return low.indexOf(w) !== -1; }).length;
+var score = words.length ? hits / words.length : 0;
+if (score > bestScore) { bestScore = score; best = k; }
+});
+if (!best || bestScore < 0.4) return null;
+return { key: best, outline: ASK_MAINS_OUTLINES[best], score: bestScore };
+}
+
+// A structured answer: authored headings, the corpus's own sentences under each,
+// provenance on every line, and an explicit note wherever the corpus is silent.
+function renderMains(composed, key) {
+var h = '<div class="result"><div class="answer">' +
+'<h2>Evidence dossier</h2>' +
+'<div class="diag"><span>structure: ' + esc(key) + '</span>' +
+'<span>' + composed.counts.answered + '/' + composed.total + ' headings answered</span>';
+if (composed.missingShards) h += '<span>' + composed.missingShards + ' shard(s) not deployed</span>';
+h += '<span>' + composed.fetchedShards + ' shard(s) fetched</span></div>';
+
+composed.sections.forEach(function (s) {
+h += '<h3>' + esc(s.label) + '</h3>';
+if (s.status === 'answered') {
+s.lines.forEach(function (l) {
+var t = l.trust || {};
+h += '<div class="ev"><div class="src">' +
+'<a href="archive.html" target="_blank">' + esc(l.entity) + '</a>' +
+' &middot; ' + esc(t.source || 'no source') +
+' &middot; ' + esc(String(t.pubDate || 'undated').slice(0, 10)) +
+' &middot; ' + esc(t.state) + '</div><p>' + esc(l.text) + '</p></div>';
+});
+} else if (s.status === 'unquoted') {
+h += '<div class="gap"><p>' + esc(s.gaps[0] ? s.gaps[0].text : 'No quotable sentence.') + '</p></div>';
+} else {
+h += '<div class="gap"><p><strong>Not covered by this corpus.</strong></p>';
+s.gaps.forEach(function (g) { h += '<p>' + esc(g.text) + '</p>'; });
+h += '</div>';
+}
+});
+
+h += '<h3>Way forward</h3>' +
+'<div class="gap"><p>Not retrieved. Recommendations and a conclusion are ' +
+'judgement rather than corpus content, and this system does not generate them.</p></div>';
+h += '<div class="diag"><span>' + composed.quoted + ' verbatim sentence(s)</span>' +
+'<span>' + composed.entities.length + ' entities</span>' +
+'<span>provenance ok/flagged/unverified ' +
+composed.provenance.ok + '/' + composed.provenance.flagged + '/' +
+composed.provenance.unverified + '</span></div>';
+h += '<p class="reason">' + esc(composed.argumentNote) + '</p>';
+h += '</div></div>';
+return h;
+}
+
 function doAsk() {
-  var q = el('q').value.trim();
-  if (!q) { el('out').innerHTML = '<div class="empty">Type a question first.</div>'; return; }
-  STATE.question = q;
-  el('ask').disabled = true;
+var q = el('q').value.trim();
+if (!q) { el('out').innerHTML = '<div class="empty">Type a question first.</div>'; return; }
+STATE.question = q;
+el('ask').disabled = true;
+
+// Structured mains answering is tried first when enabled, because it is the only
+// path that can return an answer for a multi-entity question. It falls through
+// to the navigational question-bank path and then to the timeline when it has no
+// outline or quotes nothing.
+if (ASK_MAINS_ENABLED && QB_READY) {
+var picked = pickOutline(q);
+if (picked) {
+el('out').innerHTML = '<div class="load">Gathering corpus evidence&hellip;</div>';
+VlymbooqAskBrowser.mains(q, picked.outline, {}).then(function (composed) {
+if (!composed.counts.answered && ASK_QB_ENABLED) {
+el('out').innerHTML = '<div class="load">Searching the question bank&hellip;</div>';
+VlymbooqAskBrowser.ask(q, { limit: 8 }).then(function (result) {
+el('out').innerHTML = (result.evidence.length || !(result.missing && IDX))
+? renderQb(result) : renderTimeline(q);
+}).catch(function (err) {
+if (IDX) renderTimeline(q);
+else el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+});
+return;
+}
+el('out').innerHTML = renderMains(composed, picked.key);
+}).catch(function (err) {
+el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+}).then(function () { el('ask').disabled = false; });
+return;
+}
+}
 
   // The question bank is the primary source: it is the whole corpus, not the
   // timeline subset. The timeline engine stays as a fallback so the page still
@@ -348,12 +591,16 @@ el('q').addEventListener('keydown', function (e) {
 // index is enough to answer, and because a missing table only means the question
 // bank is unavailable for now.
 VlymbooqAskBrowser.boot(VlymbooqAskAnswer, VlymbooqAskQb).then(function () {
-  QB_READY = true;
-  QB_ERROR = null;
-  updateStatus();
+return VlymbooqAskBrowser.loadBuckets().catch(function (e) {
+console.warn('bucket manifest not available, falling back to categories:', e);
+});
+}).then(function () {
+QB_READY = true;
+QB_ERROR = null;
+updateStatus();
 }).catch(function (err) {
-  QB_ERROR = err;
-  updateStatus();
+QB_ERROR = err;
+updateStatus();
 });
 
 fetch('data/ask-index.json')

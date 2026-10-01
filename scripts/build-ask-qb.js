@@ -44,6 +44,11 @@ function splitSentences(text) {
 
 // A record is reduced to quotable sentences plus provenance. Nothing is
 // generated: every sentence is a verbatim slice of the record's own `fact`.
+//
+// Each sentence keeps the source and date of the record it came from, because a
+// quote whose provenance has been thrown away cannot be checked by a reader, and
+// the corpus is largely `source: Wiki` with 2026 dates -- exactly the kind of
+// material that needs a visible caveat rather than silent trust.
 function sentencesOf(rec) {
   var fact = String(rec.fact || '').trim();
   if (!fact) return [];
@@ -53,7 +58,7 @@ function sentencesOf(rec) {
     var s = sents[i].trim();
     if (ask.wordCount(s) < MIN_SENTENCE_WORDS) continue;
     if (!ask.isQuoteable(s)) continue;
-    out.push(s);
+    out.push({ text: s, source: rec.source, pubDate: rec.pubDate });
   }
   return out;
 }
@@ -121,17 +126,22 @@ function main() {
         var sents = sentencesOf(x.r);
         if (!sents.length) return;
         var ek = slug(name);
-        if (!ents[ek]) ents[ek] = { name: name, sents: [], cats: {} };
+        if (!ents[ek]) ents[ek] = { name: name, sents: [], cats: {}, meta: [] };
         ents[ek].cats[cat.name] = 1;
         sents.forEach(function (s) {
           // Dedupe per entity: the same Wikipedia paragraph backs many
           // fill-blank items, and a repeated sentence must not occupy several
           // evidence slots.
-          var k = s.slice(0, 160);
+          var k = s.text.slice(0, 160);
           if (seenSent[ek + '\u0000' + k]) { stats.dupes++; return; }
           seenSent[ek + '\u0000' + k] = 1;
           if (ents[ek].sents.length >= MAX_SENTENCES_PER_ENTITY) return;
-          ents[ek].sents.push(s);
+          ents[ek].sents.push(s.text);
+          // Provenance is a parallel array, not part of the sentence string, so
+          // the sentence stays byte-identical to the corpus and the shard's
+          // retrieval shape is unchanged for existing readers. A missing entry
+          // means "no provenance", which reads as unverified rather than fine.
+          ents[ek].meta.push({ source: s.source || '', pubDate: s.pubDate || '' });
           stats.keptSent++;
         });
       });
@@ -139,8 +149,8 @@ function main() {
 
     var list = Object.keys(ents).map(function (k) {
       var e = ents[k];
-      // [entity, [sentences], [categories]]
-      return [e.name, e.sents, Object.keys(e.cats)];
+      // [entity, [sentences], [categories], [{source, pubDate}, ...]]
+      return [e.name, e.sents, Object.keys(e.cats), e.meta];
     }).filter(function (r) { return r[1].length; });
 
     if (!list.length) return;
