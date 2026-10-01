@@ -925,6 +925,25 @@
         'agricultural credit', 'crop insurance', 'soil health', 'fertilizer'],
       strain: ['distress', 'suicide', 'debt', 'loss', 'drought', 'flood', 'climate']
     },
+    // "Scientific temper" is a corpus entity (`✓ Scientific temper`) but had no
+    // route, so a mains question naming it produced routeFor() === null and only
+    // the direct entity hit saved it. It also has no single home category: its 36
+    // occurrences sit in thirteen source files across Environment & Ecology,
+    // Science & Technology, Health & Medicine, Indian Music & Fine Arts and
+    // others, and the only category holding enough sentences to index it is the
+    // first of those -- which is why it looks misfiled. So the vocabulary is
+    // listed here rather than pinned to one category, and retrieval decides
+    // where the evidence lives.
+    'scientific temper': {
+      fit: ['scientific temper', 'scientific attitude', 'rationality', 'rational',
+        'reason', 'reasoned', 'empiricism', 'empirical', 'evidence-based', 'scepticism',
+        'skepticism', 'critical thinking', 'open-minded', 'enquiry', 'inquiry',
+        'experimentation', 'observation', 'superstition', 'superstitious',
+        'dogma', 'dogmatic', 'tradition', 'orthodox', 'blind faith',
+        'scientific method', 'reasonableness'],
+      strain: ['superstition', 'superstitious', 'dogma', 'dogmatic', 'blind faith',
+        'ignorance', 'illiteracy', 'myth', 'mythology', 'ritual', 'orthodox']
+    },
     'agricultural reforms': {
       fit: ['agricultural reform', 'farm law', 'farmers bill', 'contract farming', 'emarketing',
         'apmc', 'agricultural produce market committee', 'farmers protest', 'agricultural marketing',
