@@ -58,6 +58,15 @@ data/questions/state-tracker.json
 # and falls back to the timeline engine.
 !data/ask-qb/
 data/ask-qb/ask-qb.*.json
+# Entity buckets: the same rows repartitioned by entity hash, 968 MB across 512
+# files. The bucket manifest is small and IS committed; the buckets are not.
+data/ask-qb/bucket/*
+!data/ask-qb/bucket/buckets.json
+# Phrase index: phrase -> the buckets containing it, 162 MB across 512 files. Same
+# reasoning as the entity buckets -- a build artefact of build-ask-qb-phrases.js,
+# regenerated from the question bank rather than edited. Unlisted, a 404 on a
+# phrase shard degrades Ask to entity-only retrieval, which is handled.
+data/ask-qb/phrase/*
 question-bank/
 add_entries.js
 add_entries_phase2.js
