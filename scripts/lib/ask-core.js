@@ -54,8 +54,9 @@
   // because it refers to an internal document the reader cannot see.
   var FRAGMENT_RE = /^(paragraph|para\.?|section|sec\.?|table|figure|fig\.?|chapter|see also|see|cf\.?|ibid)\b\s*[-:.]?\s*/i;
   // Coverage below this and the engine refuses instead of answering.
-  var MIN_COVERAGE = 0.34;
-  var MIN_EVIDENCE = 3;
+  // Lowered from 0.34 to 0.25 to allow more answers when partial relevant content exists
+  var MIN_COVERAGE = 0.25;
+  var MIN_EVIDENCE = 2;
 
   var STOP = ('a an the and or of to in on for is are was were be been being has have had with under from by as at this that these those ' +
     'it its his her their they them we you your our not no nor but if then than so such very more most other another each any some all ' +
@@ -81,7 +82,26 @@
     'constitution': ['constitution', 'constitutional amendment'],
     'federalism': ['federalism', 'federal'],
     'paternalism': ['paternalism', 'paternalistic'],
-    'beneficence': ['beneficence', 'non-maleficence', 'nonmaleficence']
+    'beneficence': ['beneficence', 'non-maleficence', 'nonmaleficence'],
+    'urbanisation': ['urbanization', 'urban area', 'urban population', 'city', 'metropolitan'],
+    'globalisation': ['globalization', 'global economy', 'international trade', 'world market'],
+    'secularism': ['secular', 'religious freedom', 'state religion', 'neutrality'],
+    'socialism': ['socialist', 'socialist economy', 'public sector', 'state ownership'],
+    'democracy': ['democratic', 'democratic institutions', 'representative democracy', 'participatory democracy'],
+    'decentralisation': ['decentralization', 'local government', 'panchayat', 'municipality', 'local self government'],
+    'sustainable development': ['sustainability', 'sustainable', 'environmental sustainability', 'green development'],
+    'human rights': ['civil rights', 'fundamental rights', 'human rights violation', 'civil liberties'],
+    'rule of law': ['law and order', 'judicial independence', 'legal framework', 'due process'],
+    'inclusive growth': ['inclusive development', 'inclusive economy', 'social inclusion', 'economic inclusion'],
+    'good governance': ['governance', 'transparency', 'accountability', 'responsiveness', 'efficiency'],
+    'strategic autonomy': ['strategic independence', 'non alignment', 'foreign policy independence'],
+    'digital india': ['digital transformation', 'digital infrastructure', 'e governance', 'digital economy'],
+    'make in india': ['manufacturing', 'industrial policy', 'domestic production', 'manufacturing sector'],
+    'swachh bharat': ['sanitation', 'cleanliness', 'waste management', 'hygiene', 'public sanitation'],
+    'smart cities': ['smart city', 'urban infrastructure', 'urban planning', 'municipal infrastructure'],
+    'skill india': ['skill development', 'vocational training', 'employment skills', 'workforce development'],
+    'indigenous knowledge': ['traditional knowledge', 'traditional medicine', 'folk knowledge', 'tribal knowledge', 'local knowledge'],
+    'traditional medicine': ['ayurveda', 'siddha', 'unani', 'homeopathy', 'ayush', 'herbal medicine']
   };
   var PHRASE_RE = /\s/;   // guard: only phrases, never bare tokens
 
@@ -279,6 +299,13 @@
       terms.forEach(function (phrase) {
         if (nameN === norm(phrase)) s += 8;                     // title is exactly the phrase
       });
+      // Bonus for multi-word phrase matches in description - these are more specific
+      var descN = norm(p.node.desc || '');
+      var descTok = descN.split(' ');
+      for (var pi = 0; pi < terms.length - 1; pi++) {
+        var phrase2 = terms[pi] + ' ' + terms[pi + 1];
+        if (descN.indexOf(phrase2) !== -1) s += 2;              // phrase in description
+      }
       // Ontology boosts are applied as a title bonus only: a node literally
       // titled "Tenth Schedule" (or "Anti-defection law (India)") tells us more
       // than any synonym injected at query time ever could, and keeping them out
@@ -286,6 +313,7 @@
       (boosts || []).forEach(function (ph) {
         var pn = norm(ph);
         if (nameN.indexOf(pn) !== -1) s += 3;                   // phrase inside the title
+        if (descN.indexOf(pn) !== -1) s += 1.5;                 // phrase in description
       });
       if (s > 0) out.push({ i: i, score: s, direct: true });
     }
@@ -415,12 +443,34 @@
     // of the Constitution" lost everything after "Schedule" and returned an
     // empty subject, which then skipped the title gate entirely. "The aims and
     // outcomes of X" still works because its lead does contain a demand noun.
+    //
+    // The lead may also hold the subject itself, in which case deleting the span
+    // deletes the subject: "examine the constitutional morality and its
+    // significance in indian democracy" has the demand noun `significance` in
+    // its lead, and the subject `constitutional morality` sits before it, so
+    // the cut returned an empty subject -- and an empty subject skips the title
+    // gate entirely, which is how unrelated nodes answered the question.
+    //
+    // "the aims and outcomes of X" is the other shape: demand nouns first,
+    // subject after the preposition, and there the cut is right. So keep the
+    // cut only when the lead has no content words of its own; when it does,
+    // keep the lead and drop the trailing clause instead.
     t = t.replace(/\b(?:'s)?\s*(?:the\s+)?([A-Za-z\s,']{0,60}?)\b(?:of|for|in|on|about|regarding|concerning)\s+[^?]*$/i,
       function (whole, lead) {
         DEMAND_NOUN.lastIndex = 0;
         QUALIFIER_NOUN.lastIndex = 0;
         if (!DEMAND_NOUN.test(lead) && !QUALIFIER_NOUN.test(lead)) return whole;
-        return ' ';
+        // Content words the lead carries besides the demand nouns themselves.
+        var leftover = lead
+          .replace(DEMAND_NOUN, ' ')
+          .replace(QUALIFIER_NOUN, ' ')
+          .replace(/\b(?:and|or|the|its|their|his|her|a|an|of|in|on|for|to|is|are|was|were|be)\b/gi, ' ')
+          .replace(/[^A-Za-z0-9\s'\-T]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+        // Imperative openers are question furniture, not a subject.
+        leftover = leftover.replace(/^(?:critically|comment|describe|outline|elaborate|illustrate|examine|discuss|analyse|analyze|evaluate|assess|appraise|compare|distinguish|differentiate|explain)\b/i, '').trim();
+        return leftover.length >= 4 ? ' ' + leftover + ' ' : ' ';
       });
     t = t.replace(/\b(?:aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|role|impact|effect)\b/gi, ' ');
     t = t.replace(/^\s*(?:of|for|in|on|about)\s+/i, ' ');
@@ -661,6 +711,300 @@
       fit: ['autonomous district council', 'autonomous district', 'sixth schedule',
         'scheduled tribes', 'tribal areas'],
       strain: ['dispute', 'demand', 'agitation', 'tension', 'conflict']
+    },
+    'indian ocean region': {
+      fit: ['indian ocean', 'maritime', 'sea trade', 'shipping', 'strait', 'chokepoint',
+        'energy security', 'oil imports', 'energy imports', 'sea lanes', 'territorial waters',
+        'coastline', 'eez', 'exclusive economic zone', 'andaman', 'nicobar', 'sagar',
+        'operation atalanta', 'piracy', 'maritime terrorism', 'china', 'chinese navy'],
+      strain: ['piracy', 'maritime terrorism', 'chokepoint', 'competition', 'security']
+    },
+    'maritime security': {
+      fit: ['maritime', 'navy', 'coast guard', 'piracy', 'maritime terrorism', 'strait',
+        'chokepoint', 'sea lanes', 'territorial waters', 'eez', 'exclusive economic zone'],
+      strain: ['piracy', 'terrorism', 'security', 'threat']
+    },
+    'parliamentary committees': {
+      fit: ['parliamentary committee', 'standing committee', 'select committee', 'parliament',
+        'committee', 'oversight', 'scrutiny', 'legislative', 'parliamentary oversight',
+        'legislature', 'lok sabha', 'rajya sabha', 'parliamentary procedure'],
+      strain: ['executive', 'accountability', 'oversight', 'scrutiny', 'government']
+    },
+    'executive accountability': {
+      fit: ['accountability', 'executive', 'oversight', 'scrutiny', 'parliament', 'legislature',
+        'government', 'parliamentary control', 'ministerial responsibility'],
+      strain: ['accountability', 'oversight', 'scrutiny', 'corruption', 'misuse']
+    },
+    'climate change': {
+      fit: ['climate change', 'global warming', 'greenhouse gas', 'carbon emission', 'paris agreement',
+        'climate summit', 'cop', 'carbon footprint', 'renewable energy', 'solar', 'wind',
+        'climate adaptation', 'climate mitigation', 'sea level rise', 'extreme weather'],
+      strain: ['vulnerability', 'adaptation', 'mitigation', 'impact', 'risk', 'disaster']
+    },
+    'environmental protection': {
+      fit: ['environment', 'pollution', 'air pollution', 'water pollution', 'soil pollution',
+        'biodiversity', 'conservation', 'wildlife', 'forest', 'deforestation',
+        'environmental impact', 'sustainable development', 'eco-friendly', 'green'],
+      strain: ['degradation', 'threat', 'endangered', 'pollution', 'loss', 'damage']
+    },
+    'economic development': {
+      fit: ['economic growth', 'gdp', 'development', 'industrialisation', 'industrialization',
+        'manufacturing', 'services sector', 'infrastructure', 'investment', 'fdi',
+        'economic policy', 'fiscal policy', 'monetary policy', 'reform', 'liberalisation'],
+      strain: ['inequality', 'poverty', 'unemployment', 'slowdown', 'crisis', 'recession']
+    },
+    'social justice': {
+      fit: ['social justice', 'equality', 'inequality', 'caste', 'reservation', 'affirmative action',
+        'discrimination', 'inclusion', 'marginalised', 'marginalized', 'minority',
+        'women empowerment', 'gender equality', 'social welfare', 'rights'],
+      strain: ['discrimination', 'exclusion', 'oppression', 'inequality', 'violence', 'harassment']
+    },
+    'international relations': {
+      fit: ['foreign policy', 'diplomacy', 'international relations', 'bilateral', 'multilateral',
+        'strategic partnership', 'alliance', 'treaty', 'agreement', 'summit',
+        'united nations', 'un', 'saarc', 'bimstec', 'asean', 'brics', 'quad'],
+      strain: ['conflict', 'dispute', 'tension', 'border', 'war', 'terrorism']
+    },
+    'science and technology': {
+      fit: ['science', 'technology', 'innovation', 'research', 'development', 'space',
+        'isro', 'satellite', 'missile', 'nuclear', 'biotechnology', 'it', 'information technology',
+        'artificial intelligence', 'ai', 'digital', 'technology transfer'],
+      strain: ['challenge', 'ethical', 'risk', 'security', 'dependence', 'gap']
+    },
+    'agriculture': {
+      fit: ['agriculture', 'farming', 'crop', 'irrigation', 'green revolution', 'food security',
+        'farmer', 'agricultural policy', 'msp', 'minimum support price', 'subsidy',
+        'agricultural credit', 'crop insurance', 'soil health', 'fertilizer'],
+      strain: ['distress', 'suicide', 'debt', 'loss', 'drought', 'flood', 'climate']
+    },
+    'healthcare': {
+      fit: ['health', 'healthcare', 'medical', 'hospital', 'public health', 'disease',
+        'epidemic', 'pandemic', 'vaccine', 'immunisation', 'immunization', 'health policy',
+        'ayushman bharat', 'primary health centre', 'phc', 'rural health'],
+      strain: ['shortage', 'inequality', 'access', 'affordability', 'outbreak', 'mortality']
+    },
+    'education': {
+      fit: ['education', 'school', 'college', 'university', 'literacy', 'learning',
+        'education policy', 'right to education', 'rte', 'neet', 'skill development',
+        'higher education', 'technical education', 'digital education', 'online learning'],
+      strain: ['inequality', 'access', 'quality', 'dropout', 'unemployment', 'skill gap']
+    },
+    'indigenous knowledge': {
+      fit: ['indigenous knowledge', 'traditional knowledge', 'traditional medicine', 'ayurveda',
+        'siddha', 'unani', 'folk medicine', 'tribal knowledge', 'local knowledge',
+        'indigenous practices', 'traditional practices', 'cultural heritage', 'ethnobotany',
+        'traditional ecological knowledge', 'indigenous rights', 'tribal culture'],
+      strain: ['loss', 'erosion', 'threat', 'extinction', 'modernisation', 'displacement']
+    },
+    'traditional medicine': {
+      fit: ['ayurveda', 'siddha', 'unani', 'homeopathy', 'naturopathy', 'yoga',
+        'traditional medicine', 'ayush', 'herbal medicine', 'folk medicine',
+        'sushruta', 'charaka', 'traditional healing', 'indigenous healing'],
+      strain: ['regulation', 'standardisation', 'quality', 'integration', 'scientific validation']
+    },
+    'fundamental rights': {
+      fit: ['fundamental rights', 'article 14', 'article 19', 'article 21', 'right to equality',
+        'right to freedom', 'right to life', 'constitutional rights', 'civil liberties',
+        'right to education', 'right to information', 'right to privacy'],
+      strain: ['violation', 'restriction', 'suspension', 'emergency', 'limitation']
+    },
+    'directive principles': {
+      fit: ['directive principles', 'dpsp', 'social justice', 'welfare state', 'socialist principles',
+        'distribution of wealth', 'equal pay', 'living wage', 'public health', 'education'],
+      strain: ['non enforceable', 'implementation', 'judicial review', 'conflict']
+    },
+    'judiciary': {
+      fit: ['supreme court', 'high court', 'judiciary', 'judicial review', 'constitutional interpretation',
+        'judicial activism', 'collegium system', 'judicial independence', 'court',
+        'justice delivery', 'case backlog', 'legal system'],
+      strain: ['interference', 'executive', 'politicisation', 'delay', 'corruption']
+    },
+    'election commission': {
+      fit: ['election commission', 'eci', 'elections', 'voting', 'electoral process',
+        'voter id', 'electoral bonds', 'free and fair elections', 'model code of conduct',
+        'voter turnout', 'electoral reforms'],
+      strain: ['manipulation', 'rigging', 'violence', 'malpractice', 'dispute']
+    },
+    'pds food security': {
+      fit: ['public distribution system', 'pds', 'food security', 'food subsidy', 'ration card',
+        'fair price shop', 'fps', 'food grain allocation', 'targeted pds', 'nutrition security'],
+      strain: ['leakage', 'corruption', 'diversion', 'quality', 'exclusion error']
+    },
+    'poverty alleviation': {
+      fit: ['poverty', 'poverty alleviation', 'bpl', 'below poverty line', 'poverty line',
+        'rural poverty', 'urban poverty', 'poverty estimation', 'multidimensional poverty',
+        'poverty reduction', 'anti poverty programme'],
+      strain: ['persistent poverty', 'inequality', 'exclusion', 'measurement', 'challenges']
+    },
+    'unemployment': {
+      fit: ['unemployment', 'employment', 'job creation', 'labour force', 'unemployment rate',
+        'underemployment', 'disguised unemployment', 'youth unemployment', 'skill gap',
+        'employment generation', 'job market'],
+      strain: ['job loss', 'underemployment', 'informal sector', 'migration', 'distress']
+    },
+    'inflation': {
+      fit: ['inflation', 'price rise', 'cpi', 'wpi', 'monetary policy', 'interest rate',
+        'rbi', 'repo rate', 'inflation targeting', 'food inflation', 'fuel inflation'],
+      strain: ['high inflation', 'hyperinflation', 'price volatility', 'cost of living', 'impact']
+    },
+    'banking sector': {
+      fit: ['banking', 'banks', 'rbi', 'monetary policy', 'financial inclusion', 'npa',
+        'non performing assets', 'bank nationalisation', 'privatisation', 'digital banking',
+        'payment system', 'financial stability'],
+      strain: ['npa crisis', 'bank fraud', 'liquidity', 'solvency', 'risk']
+    },
+    'fiscal policy': {
+      fit: ['fiscal policy', 'budget', 'fiscal deficit', 'revenue deficit', 'primary deficit',
+        'taxation', 'direct tax', 'indirect tax', 'gst', 'public expenditure',
+        'fiscal consolidation', 'federal transfers'],
+      strain: ['high deficit', 'debt', 'fiscal imbalance', 'revenue shortfall']
+    },
+    'external sector': {
+      fit: ['external sector', 'balance of payments', 'current account', 'capital account',
+        'foreign exchange', 'forex reserves', 'exchange rate', 'rupee', 'fdi', 'fii',
+        'external debt', 'trade balance', 'current account deficit'],
+      strain: ['cad', 'currency depreciation', 'external vulnerability', 'debt crisis']
+    },
+    'disaster management': {
+      fit: ['disaster management', 'natural disaster', 'cyclone', 'flood', 'drought', 'earthquake',
+        'ndma', 'national disaster management authority', 'disaster response', 'relief',
+        'rehabilitation', 'disaster preparedness', 'early warning'],
+      strain: ['damage', 'loss', 'casualties', 'destruction', 'vulnerability']
+    },
+    'biodiversity': {
+      fit: ['biodiversity', 'species diversity', 'ecosystem diversity', 'genetic diversity',
+        'biodiversity hotspot', 'endemic species', 'threatened species', 'conservation',
+        'biodiversity loss', 'extinction', 'protected area', 'wildlife sanctuary'],
+      strain: ['threat', 'endangered', 'habitat loss', 'poaching', 'invasive species']
+    },
+    'pollution': {
+      fit: ['pollution', 'air pollution', 'water pollution', 'soil pollution', 'noise pollution',
+        'industrial pollution', 'vehicle pollution', 'particulate matter', 'pm2.5', 'pm10',
+        'pollution control', 'environmental standards', 'emission norms'],
+      strain: ['health impact', 'environmental damage', 'air quality index', 'toxic']
+    },
+    'forest conservation': {
+      fit: ['forest', 'forestry', 'forest cover', 'deforestation', 'afforestation', 'reforestation',
+        'forest conservation', 'forest rights', 'forest act', 'joint forest management',
+        'biosphere reserve', 'national park', 'wildlife sanctuary'],
+      strain: ['deforestation', 'forest degradation', 'encroachment', 'loss', 'fragmentation']
+    },
+    'water resources': {
+      fit: ['water resources', 'river', 'water scarcity', 'water conservation', 'rainwater harvesting',
+        'groundwater', 'aquifer', 'water pollution', 'water management', 'interlinking rivers',
+        'dams', 'irrigation', 'water crisis'],
+      strain: ['scarcity', 'depletion', 'pollution', 'conflict', 'overexploitation']
+    },
+    'energy security': {
+      fit: ['energy', 'energy security', 'power sector', 'electricity', 'renewable energy',
+        'solar energy', 'wind energy', 'nuclear energy', 'thermal power', 'hydro power',
+        'energy mix', 'energy efficiency', 'power generation'],
+      strain: ['shortage', 'dependency', 'import', 'coal shortage', 'grid failure']
+    },
+    'infrastructure': {
+      fit: ['infrastructure', 'roads', 'highways', 'railways', 'ports', 'airports',
+        'transport', 'logistics', 'digital infrastructure', 'power infrastructure',
+        'urban infrastructure', 'rural infrastructure', 'public investment'],
+      strain: ['deficit', 'bottleneck', 'quality', 'maintenance', 'funding']
+    },
+    'make in india': {
+      fit: ['make in india', 'manufacturing', 'industrial policy', 'msme', 'micro small medium enterprises',
+        'industrial corridors', 'special economic zone', 'sez', 'industrial clusters',
+        'manufacturing sector', 'production linked incentive', 'pli'],
+      strain: ['challenge', 'competition', 'global value chain', 'logistics', 'skill']
+    },
+    'digital economy': {
+      fit: ['digital economy', 'digital india', 'e commerce', 'fintech', 'digital payments',
+        'upi', 'unified payments interface', 'digital literacy', 'internet', 'broadband',
+        'digital infrastructure', 'technology adoption', 'startup'],
+      strain: ['digital divide', 'cybersecurity', 'privacy', 'regulation', 'inclusion']
+    },
+    'agriculture': {
+      fit: ['agriculture', 'farming', 'crop', 'irrigation', 'green revolution', 'food security',
+        'farmer', 'agricultural policy', 'msp', 'minimum support price', 'subsidy',
+        'agricultural credit', 'crop insurance', 'soil health', 'fertilizer'],
+      strain: ['distress', 'suicide', 'debt', 'loss', 'drought', 'flood', 'climate']
+    },
+    'agricultural reforms': {
+      fit: ['agricultural reform', 'farm law', 'farmers bill', 'contract farming', 'emarketing',
+        'apmc', 'agricultural produce market committee', 'farmers protest', 'agricultural marketing',
+        'farming sector reform', 'agricultural liberalisation'],
+      strain: ['protest', 'opposition', 'implementation', 'resistance', 'controversy']
+    },
+    'education system': {
+      fit: ['education', 'school', 'college', 'university', 'literacy', 'learning',
+        'education policy', 'right to education', 'rte', 'neet', 'skill development',
+        'higher education', 'technical education', 'digital education', 'online learning'],
+      strain: ['inequality', 'access', 'quality', 'dropout', 'unemployment', 'skill gap']
+    },
+    'healthcare system': {
+      fit: ['health', 'healthcare', 'medical', 'hospital', 'public health', 'disease',
+        'epidemic', 'pandemic', 'vaccine', 'immunisation', 'immunization', 'health policy',
+        'ayushman bharat', 'primary health centre', 'phc', 'rural health'],
+      strain: ['shortage', 'inequality', 'access', 'affordability', 'outbreak', 'mortality']
+    },
+    'women empowerment': {
+      fit: ['women', 'gender', 'women empowerment', 'gender equality', 'feminism',
+        'women rights', 'women safety', 'workforce participation', 'political representation',
+        'women education', 'maternal health', 'domestic violence', 'sexual harassment'],
+      strain: ['discrimination', 'violence', 'harassment', 'pay gap', 'underrepresentation']
+    },
+    'child rights': {
+      fit: ['child', 'children', 'child rights', 'child labour', 'child marriage',
+        'child education', 'child health', 'child protection', 'juvenile justice',
+        'child abuse', 'malnutrition', 'child welfare'],
+      strain: ['exploitation', 'abuse', 'labour', 'marriage', 'neglect', 'mortality']
+    },
+    'tribal issues': {
+      fit: ['tribal', 'tribe', 'scheduled tribes', 'adivasi', 'tribal development',
+        'tribal welfare', 'forest rights', 'land rights', 'tribal displacement',
+        'tribal education', 'tribal health', 'pesa', 'fifth schedule', 'sixth schedule'],
+      strain: ['displacement', 'marginalisation', 'exploitation', 'land alienation', 'poverty']
+    },
+    'migration': {
+      fit: ['migration', 'internal migration', 'rural urban migration', 'labour migration',
+        'migrant worker', 'migration policy', 'migration causes', 'migration impact',
+        'interstate migration', 'seasonal migration', 'return migration'],
+      strain: ['distress', 'exploitation', 'urban slum', 'social dislocation', 'informal sector']
+    },
+    'urbanisation': {
+      fit: ['urbanisation', 'urbanization', 'urban area', 'urban population', 'city', 'metropolitan',
+        'urban growth', 'urban sprawl', 'smart city', 'urban planning', 'municipal corporation'],
+      strain: ['slum', 'congestion', 'pollution', 'infrastructure', 'housing', 'inequality']
+    },
+    'border security': {
+      fit: ['border', 'border security', 'border management', 'border dispute', 'india china border',
+        'india pakistan border', 'lac', 'line of actual control', 'loc', 'border fencing',
+        'infiltration', 'cross border terrorism'],
+      strain: ['dispute', 'conflict', 'incursion', 'tension', 'standoff', 'violation']
+    },
+    'internal security': {
+      fit: ['internal security', 'naxal', 'maoist', 'insurgency', 'terrorism', 'left wing extremism',
+        'lwe', 'militancy', 'kashmir', 'security forces', 'police reform', 'intelligence'],
+      strain: ['violence', 'attack', 'casualty', 'threat', 'insurgency', 'militancy']
+    },
+    'cyber security': {
+      fit: ['cyber security', 'cybercrime', 'cyber attack', 'data breach', 'information security',
+        'cyber warfare', 'hacking', 'phishing', 'ransomware', 'cyber law', 'cert in'],
+      strain: ['threat', 'attack', 'vulnerability', 'breach', 'crime', 'espionage']
+    },
+    'space programme': {
+      fit: ['space', 'isro', 'space programme', 'satellite', 'launch vehicle', 'rocket',
+        'space exploration', 'space research', 'communication satellite', 'navigation satellite',
+        'chandrayaan', 'mangalyaan', 'gaganyaan'],
+      strain: ['failure', 'delay', 'budget', 'technology transfer', 'dependence']
+    },
+    'nuclear programme': {
+      fit: ['nuclear', 'nuclear energy', 'nuclear power', 'nuclear programme', 'atomic energy',
+        'nuclear deal', 'nuclear doctrine', 'no first use', 'nuclear disarmament',
+        'nuclear non proliferation', 'npt', 'nuclear safety'],
+      strain: ['safety', 'waste', 'proliferation', 'accident', 'liability']
+    },
+    'defence procurement': {
+      fit: ['defence', 'military', 'armed forces', 'army', 'navy', 'air force',
+        'defence procurement', 'make in india defence', 'defence production', 'indigenisation',
+        'defence budget', 'military modernisation'],
+      strain: ['delay', 'corruption', 'dependence', 'shortage', 'capability gap']
     }
   };
 
@@ -828,9 +1172,64 @@
   function retrieve(idx, question, limit) {
     var a = analyse(question);
     limit = limit || 12;
-    var hits = bm25(idx, a.weights, a.boosts);
+    var prop = properNounRun(question);
+    var subject = subjectOf(question) || (prop ? widenSubject(question, prop) : '');
+    var route = routeFor(subject, question);
+    // When a concept route is found, boost its terms in the search
+    var weights = {};
+    Object.keys(a.weights).forEach(function (k) { weights[k] = a.weights[k]; });
+    var boosts = Array.isArray(a.boosts) ? a.boosts.slice() : [];
+    if (route) {
+      var conceptTerms = route.cfg.fit.concat(route.cfg.strain);
+      conceptTerms.forEach(function (t) {
+        if (!weights[t]) weights[t] = 0.8; // Boost concept terms
+      });
+    }
+    var hits = bm25(idx, weights, boosts);
     if (!hits.length) {
       return { analysis: a, candidates: [], evidence: [], coverage: 0, refused: true, reason: 'no term in the question appears anywhere in the index' };
+    }
+    // bm25 scores only the terms it can find, so a question whose distinctive
+    // term is absent is scored on its leftovers alone -- and the leftovers are
+    // always the generic ones. "anti-defection law" has no `defection` anywhere
+    // in the index, so it ranked on `anti` and `law` alone and answered with the
+    // definition of a coalition and a 1955 split in the Australian Labor Party,
+    // confidently, at full coverage. "indian federal framework" lost `federal`
+    // the same way and answered with .NET Framework.
+    //
+    // An absent term is not a weak signal, it is a fact about the corpus: it
+    // means the subject the question asks about is not in the index at all. The
+    // engine cannot answer that, so it says so. Only genuinely rare terms
+    // count, and only when most of the question's terms are missing -- a single
+    // stray term in an otherwise well-covered question must not cost an answer.
+    var contentTerms = a.terms.filter(function (t) { return STOP.indexOf(t) === -1; });
+    if (contentTerms.length) {
+      var missing = contentTerms.filter(function (t) { return !idx.df[t]; });
+      // A term the index has never seen cannot be scored, so whatever else the
+      // question matches, it cannot be answered *as asked*. The question is
+      // about that term; the terms that remain are only its scaffolding.
+      //
+      // The discriminator is whether the absent word is the question's subject
+      // word. "anti-defection law" is a question about defection, and the index
+      // has no `defection` -- so `law` (533 nodes) and `anti` (365) are the
+      // scaffolding and the subject is missing. Refuse. A question that merely
+      // mentions a rare unknown word alongside a well-covered subject is
+      // different, so a single absent term only counts when the terms that DO
+      // resolve are themselves common: they identify nothing, and a confident
+      // answer built from them is exactly the garbage this guard exists to stop.
+      var known = contentTerms.filter(function (t) { return idx.df[t]; });
+      var halfMissing = missing.length >= Math.ceil(contentTerms.length / 2);
+      var commonScaffold = known.length && known.every(function (t) {
+        return idx.df[t] > Math.max(50, Math.round(idx.N * 0.005));
+      });
+      if (missing.length && (halfMissing || commonScaffold)) {
+        return {
+          analysis: a, candidates: [], evidence: [], coverage: 0, refused: true,
+          reason: 'the corpus index does not contain ' + missing.join(' or ') +
+                  ', so it cannot answer this question',
+          corpusGap: missing
+        };
+      }
     }
     var top = hits.slice(0, 40);
     var ranked = expand(idx, top, limit * 3);
@@ -874,10 +1273,82 @@
     for (var si = 0; si < idx.nodes.length && !subjectTitled; si++) {
       if (titleMatchesSubject(norm(idx.nodes[si].node.name), subjVariants)) subjectTitled = true;
     }
+    // A subject can name a real entity and still be untitled as a phrase. "bhopal
+    // gas tragedy" is not any node's title, but `Bhopal` is a node in its own
+    // right, and it is what the question is about. subjectVariants() floors
+    // windows at 3 words so that bare "gas" or "law" can never become a subject
+    // (that floor is what stopped "world trade" matching 1 World Trade Center),
+    // which means a 3-word subject produces no shorter variant at all and both
+    // evidence tiers fall through to the refuse branch -- 12 correct candidates
+    // found, every one discarded, 0 evidence, for a corpus that plainly
+    // contains the topic.
+    //
+    // So: if the full phrase is untitled, fall back to the subject's rarest
+    // content word, the one that actually identifies the entity. Rarity is
+    // measured against the index (df), not by position, because the head is not
+    // reliably first -- "bhopal gas tragedy" is headed by "bhopal" but "gas
+    // tragedy bhopal" would not be. Only a genuinely rare word is eligible: a
+    // word that appears in a large share of nodes identifies nothing, and
+    // admitting one would reopen the generic-word gate this whole path exists
+    // to hold shut.
+    var headVariants = [];
+    if (subject && !subjectTitled) {
+      var subjWords = String(subject).trim().split(/\s+/).filter(function (w) {
+        return w && STOP.indexOf(norm(w)) === -1;
+      });
+      // The bar has to be genuinely rare, not merely uncommon. At 2% of the
+      // index "constitutional" (81 of 65,039 nodes) still qualified, the head
+      // became the bare word "constitutional", and every court and tribunal
+      // titled with it -- Indonesia, Korea, Myanmar -- answered a question
+      // about Indian constitutional morality. A head is allowed to stand in
+      // for the subject only when it names something specific.
+      var rareBar = Math.max(4, Math.round(idx.N * 0.001));
+      var rare = subjWords.filter(function (w) {
+        var d = idx.df[norm(w)] || 0;
+        return d > 0 && d <= rareBar;
+      });
+      // Rarest first, so the most identifying word leads. Length is the
+      // tiebreak only to keep the ordering stable and to prefer a two-word
+      // head over a single one when both are equally rare.
+      rare.sort(function (x, y) {
+        var dx = idx.df[norm(x)] || 0, dy = idx.df[norm(y)] || 0;
+        if (dx !== dy) return dx - dy;
+        return y.length - x.length;
+      });
+      headVariants = rare.slice(0, 2).map(function (w) { return norm(w); });
+    }
+    // A head may stand in for an untitled subject only when the subject is
+    // specific enough that no concept is on offer. "indian federal framework"
+    // routes to the concept tier by design -- `Federalism in India` is a node --
+    // but `framework` is rare (59 of 65,039) and so passed the head bar, the
+    // bare word became a title match, and the subject tier answered a question
+    // about Indian federalism with `.NET Framework` and `Griffon (framework)` at
+    // full coverage while the right node went unread.
+    //
+    // The concept router is the stronger signal precisely when it fires: it
+    // found a phrase that names the question's actual subject. Rarity alone only
+    // says the word is uncommon, not that it is the head -- "framework" is the
+    // rarest word of that subject and the least identifying of the three.
+    if (headVariants.length && conceptTerms.length) headVariants = [];
+    var headTitled = false;
+    if (headVariants.length) {
+      for (var hi = 0; hi < idx.nodes.length && !headTitled; hi++) {
+        if (titleMatchesSubject(norm(idx.nodes[hi].node.name), headVariants)) headTitled = true;
+      }
+      // The head is only an entity proxy, never a subject in its own right: its
+      // own questions ("who won the Bhopal state election") must not be routed
+      // here, and a head match must never satisfy coverage on its own.
+      if (headTitled) subjVariants = subjVariants.concat(headVariants);
+    }
+    var subjectEffective = subjectTitled || headTitled;
     // Which evidence tier produced the sentences. Declared out here rather than
     // inside the scoring loop because the coverage maths and the verdict below
     // both need it.
-    var conceptTier = !!(!subjectTitled && conceptTerms.length);
+    // A head match counts as an entity found. If it did, the subject tier must
+    // run and the concept tier must NOT: both tiers admitting sentences at once
+    // is how a head-proxied question picks up concept-phrase material from
+    // nodes that have nothing to do with the entity.
+    var conceptTier = !!(!subjectEffective && conceptTerms.length);
 
     var juris = jurisdictionMarkers(question);
     function sameJurisdiction(text) {
@@ -893,7 +1364,7 @@
     // them. So when the subject is untitled, run a second pass over the concept
     // phrases and merge those nodes in. They are scored separately and can
     // never outrank a genuine subject match.
-    if (!subjectTitled && conceptTerms.length) {
+    if (!subjectEffective && conceptTerms.length) {
       // bm25 is token-level, so a two-word concept phrase ("scheduled tribes")
       // would never match anything as a single key. Feed the words; the
       // containment test below still uses the full phrase, which is what
@@ -917,7 +1388,7 @@
       if (r.score < floor && !r.concept) return;
       var p = idx.nodes[r.i];
       if (!p) return;
-      if (subjVariants.length && subjectTitled) {
+      if (subjVariants.length && subjectEffective) {
         if (!titleMatchesSubject(norm(p.node.name), subjVariants)) return;
       } else if (conceptTerms.length) {
         // Fallback tier. Require the node's own text to carry a concept phrase,
