@@ -925,13 +925,72 @@
         'agricultural credit', 'crop insurance', 'soil health', 'fertilizer'],
       strain: ['distress', 'suicide', 'debt', 'loss', 'drought', 'flood', 'climate']
     },
+// The four routes below close gaps measured by diag-route-gaps.js, which drives
+    // the repo's own mains-questions.json through routeFor(). Two of the nine
+    // questions routed before this change; seven did not.
+    //
+    // The GS4 scenarios themselves are deliberately NOT routed here. A question
+    // about an officer pressuring a junior to sign a false report is a fictional
+    // situation, not a corpus topic, and matching it to a route would hand the
+    // retriever a framing that has nothing to retrieve. What is routable is the
+    // concept the scenario tests, which is what these entries carry.
+    'civil service values': {
+      fit: ['civil service', 'civil servant', 'civil services', 'officer', 'officers',
+        'bureaucracy', 'bureaucratic', 'administration', 'administrative', 'obedience',
+        'disobedience', 'accountability', 'integrity', 'impartiality', 'impartial',
+        'neutrality', 'whistle-blowing', 'whistleblowing', 'whistle blower',
+        'civil conduct', 'code of conduct', 'discipline', 'hierarch', 'subordination',
+        'public interest', 'conflict of interest', 'misconduct', 'transparency',
+        'lokayukta', 'central vigilance commission', 'cvc'],
+      strain: ['obedience', 'integrity', 'impartiality', 'conflict of interest',
+        'misconduct', 'corruption', 'whistle-blowing', 'accountability',
+        'insubordination', 'neutrality', 'bias', 'political loyalty']
+    },
+    'welfare delivery': {
+      fit: ['welfare', 'welfare legislation', 'welfare state', 'social welfare',
+        'welfare scheme', 'scheme', 'schemes', 'beneficiary', 'beneficiaries',
+        'last mile', 'delivery', 'implementation', 'targeting', 'universalisation',
+        'entitlement', 'subsidy', 'transfer', 'pension', 'scholarship', 'mid day meal',
+        'mid-day meal', 'pm kisan', 'ayushman bharat', 'nrega', 'mgnrega',
+        'rural employment', 'food security', 'public distribution system', 'pds',
+        'coverage', 'leakage', 'identification', 'social justice', 'empowerment',
+        'marginalised', 'disadvantaged', 'vulnerable'],
+      strain: ['delivery', 'last mile', 'implementation', 'leakage', 'exclusion',
+        'coverage', 'targeting', 'inequality', 'inequity', 'shortage', 'delay',
+        'ineffective', 'uneven', 'gap', 'disbursement']
+    },
+    'colonial institutions and continuities': {
+      fit: ['colonial', 'colonialism', 'colonial state', 'british', 'british raj',
+        'raj', 'east india company', 'company rule', 'princely state', 'princely states',
+        'crown rule', 'viceroy', 'legislative council', 'durbar', 'civil service',
+        'bureaucracy', 'zamindari', 'zamindar', 'landlord', 'tenancy',
+        'peasant', 'instability', 'national movement', 'independence', 'continuity',
+        'continuities', 'legacy', 'inheritance', 'architecture of the state',
+        'institutional legacy', 'transfer of power', 'partition'],
+      strain: ['continuity', 'continuities', 'legacy', 'inheritance', 'colonial',
+        'discontinuity', 'break', 'residue', 'carry-over', 'vestige']
+    },
+    'ethics and moral reasoning': {
+      fit: ['ethics', 'ethical', 'moral', 'morality', 'ethical dilemma', 'dilemma',
+        'moral reasoning', 'impartiality', 'impartial', 'competing claims',
+        'competing claims', 'discourse', 'deliberation', 'conscience', 'virtue',
+        'virtues', 'deontology', 'consequentialism', 'utilitarian', 'justice',
+        'fairness', 'right', 'wrong', 'duty', 'obligation', 'responsibility',
+        'moral reasoning', 'stakeholder', 'stakeholders', 'displacement',
+        'displaced', 'displacement', 'compensation', 'consent', 'informed consent',
+        'harm', 'harmful', 'beneficence', 'non-maleficence', 'respect for persons',
+        'tribal rights', 'forest rights', 'indigenous rights'],
+      strain: ['dilemma', 'conflict of interest', 'competing claims', 'harm', 'displacement',
+        'displaced', 'vulnerable', 'consent', 'impartiality', 'unfair', 'injustice',
+        'bias', 'moral', 'ethical', 'right', 'wrong']
+    },
     // "Scientific temper" is a corpus entity (`✓ Scientific temper`) but had no
     // route, so a mains question naming it produced routeFor() === null and only
     // the direct entity hit saved it. It also has no single home category: its 36
     // occurrences sit in thirteen source files across Environment & Ecology,
     // Science & Technology, Health & Medicine, Indian Music & Fine Arts and
-    // others, and the only category holding enough sentences to index it is the
-    // first of those -- which is why it looks misfiled. So the vocabulary is
+    // others, and the only category that held enough sentences to index it is the
+    // first of those -- which is why it looked misfiled. So the vocabulary is
     // listed here rather than pinned to one category, and retrieval decides
     // where the evidence lives.
     'scientific temper': {
@@ -1049,6 +1108,72 @@
     return { key: r.key, missing: g.missing };
   }
 
+  // Reverse index: vocabulary term -> the routes that list it.
+  //
+  // Without this, a route is reachable only when the subject contains the route's
+  // key verbatim. "Welfare legislation and last mile delivery" carries four terms
+  // from the "welfare delivery" vocabulary (welfare, last mile, delivery,
+  // welfare legislation) and still came back null, because key matching only
+  // looked for the phrase "welfare delivery" and the longest shared word run was
+  // "welfare" at 8 characters, under the 10-character floor. So the table could
+  // be written forever and each entry would stay unreachable unless a question
+  // happened to phrase the subject as the route's own name. Matching the
+  // vocabulary instead is what makes a route mean anything.
+  //
+  // Built lazily and cached, because CONCEPT_ROUTES is module-level and constant.
+  var VOCAB_INDEX = null;
+  var VOCAB_TERM_MIN = 6;
+
+  function vocabIndex() {
+    if (VOCAB_INDEX) return VOCAB_INDEX;
+    var ix = Object.create(null);
+    Object.keys(CONCEPT_ROUTES).forEach(function (k) {
+      var seen = Object.create(null);
+      var cfg = CONCEPT_ROUTES[k] || {};
+      // The key itself counts as vocabulary, so a subject phrased as the route
+      // name resolves here exactly as it did under key matching.
+      [k].concat(cfg.fit || [], cfg.strain || []).forEach(function (p) {
+        var t = norm(p);
+        // Short terms are too generic to score on: "rights", "law", "policy"
+        // appear across a dozen routes and would tie half the table to any one
+        // question. The floor is what keeps this from becoming a popularity
+        // contest between unrelated concepts.
+        if (!t || t.length < VOCAB_TERM_MIN) return;
+        if (STOP.indexOf(t.split(' ')[0]) !== -1 && t.indexOf(' ') === -1) return;
+        if (seen[t]) return;
+        seen[t] = 1;
+        (ix[t] || (ix[t] = [])).push(k);
+      });
+    });
+    VOCAB_INDEX = ix;
+    return ix;
+  }
+
+  // Score a route by how much of its vocabulary the text actually covers, with
+  // shared terms discounted: a term listed by eight routes is weak evidence for
+  // any one of them, and treating it as strong is what turns "rights" into an
+  // answer about constitutional rights for a question about forest rights.
+  function vocabScore(ix, key, q, routeKey) {
+    var cfg = CONCEPT_ROUTES[routeKey] || {};
+    var seen = Object.create(null), score = 0;
+    Object.keys(cfg).forEach(function (facet) {
+      (cfg[facet] || []).forEach(function (p) {
+        var t = norm(p);
+        if (!t || t.length < VOCAB_TERM_MIN || seen[t]) return;
+        var inKey = t.indexOf(' ') !== -1 ? key.indexOf(t) !== -1 : new RegExp('\\b' + t + '\\b').test(key);
+        if (!inKey) {
+          if (t.indexOf(' ') === -1) inKey = new RegExp('\\b' + t + '\\b').test(q);
+          else inKey = q.indexOf(t) !== -1;
+        }
+        if (!inKey) return;
+        seen[t] = 1;
+        var owners = ix[t].length;
+        score += t.length / Math.sqrt(owners);
+      });
+    });
+    return score;
+  }
+
   function routeFor(subject, question) {
     var key = norm(subject), q = norm(question);
     var best = null, bestScore = 0;
@@ -1081,7 +1206,32 @@
       }
       if (score > bestScore) { bestScore = score; best = k; }
     });
-    return best ? { key: best, cfg: CONCEPT_ROUTES[best] } : null;
+    if (best) return { key: best, cfg: CONCEPT_ROUTES[best] };
+
+    // Nothing matched by name. Fall back to vocabulary coverage, so a question
+    // about a concept the table covers but does not name resolves instead of
+    // arriving with no framing at all.
+    //
+    // Deliberately a fallback rather than a blend. Key matching encodes the
+    // hand-checked decisions about which concept a phrasing really means, and
+    // scoring vocabulary against those same decisions would silently overturn
+    // them -- "Displacement, tribal rights and conflict of interest" already
+    // routes to "economic development" by name, and letting vocabulary outscore
+    // that would change an answer that was checked by hand. The floor keeps a
+    // single shared word from routing anything: one 8-character term scores
+    // 8/sqrt(owners), and nothing reaches 12 unless at least two substantial
+    // terms agree, which is the point at which the concept is genuinely present
+    // in the text rather than guessed at.
+    var ix = vocabIndex();
+    var vBest = null, vBestScore = 0;
+    Object.keys(CONCEPT_ROUTES).forEach(function (k) {
+      var s = vocabScore(ix, key, q, k);
+      if (s > vBestScore) { vBestScore = s; vBest = k; }
+    });
+    if (vBest && vBestScore >= 12) {
+      return { key: vBest, cfg: CONCEPT_ROUTES[vBest], viaVocabulary: true };
+    }
+    return null;
   }
 
   // A question that names a country means the answer is about that country.
@@ -1489,6 +1639,37 @@
     // anchors; coverage defaults to 1 so a subject-present answer can pass.
     var termCov = nonSubj.length ? (totalIdf ? gotIdf / totalIdf : 0) : 1;
 
+    // Subject terms must also be evidenced, by their own rarity.
+    //
+    // Excluding subject terms from the score above is what stops a Bhopal
+    // question passing on facts that merely mention "Bhopal" -- but it removes
+    // the only terms that could have caught the inverse failure, and for a
+    // question that IS its own subject there is nothing left to score. "Analyse
+    // the role of micro, small and medium enterprises in India's economic
+    // development" reported 100% coverage while quoting nine sentences that
+    // contain none of micro, medium or enterprises, because "india" and
+    // "development" carried the whole score. Coverage cannot go below 100% when
+    // the terms that distinguish the subject are not part of it.
+    //
+    // So: a subject term that is rare in the corpus identifies the subject, and
+    // if no sentence contains enough of those rare terms, the evidence is not
+    // about the subject however well it scores elsewhere. Rare is measured by idf
+    // against the same index the rest of the scoring uses, so this is not a
+    // hand-tuned list -- "india" and "development" are too common to qualify and
+    // do not count against an answer, while "enterprises" (df 21) and "micro"
+    // (df 15) do.
+    var subjRare = anchors.filter(function (an) { return an.inSubject && an.idf >= 4.0; });
+    var subjRareGot = 0;
+    subjRare.forEach(function (an) {
+      if (uniq.some(function (e) { return tokenSet(norm(e.sentence))[an.t]; })) subjRareGot++;
+    });
+    // One rare term unaccounted for is tolerable in a long answer; most of them
+    // missing means the evidence is about something else. Requiring all of them
+    // would refuse questions whose subject is named in the node title rather than
+    // restated in every sentence.
+    var subjTermRatio = subjRare.length ? subjRareGot / subjRare.length : 1;
+    var subjTermSupported = !subjRare.length || subjTermRatio >= 0.5;
+
     // In the concept tier the evidence deliberately does NOT contain the
     // question's own words -- that is why the subject could not be titled -- so
     // scoring coverage over them reports ~30% no matter how good the answer is,
@@ -1596,6 +1777,21 @@
         : 'the subject of the question could not be identified in the corpus';
     } else if (coverage < MIN_COVERAGE) {
       reason = 'evidence accounts for ' + Math.round(coverage * 100) + '% of the question, below the ' + Math.round(MIN_COVERAGE * 100) + '% gate';
+    } else if (!subjTermSupported) {
+      // Before the generic coverage gate, because in the MSME case coverage was
+      // 100% and reporting "evidence accounts for 100% of the question" alongside
+      // a refusal would be nonsense. The subject's own distinguishing terms are
+      // the ones absent, so name them: that is what tells a reader whether the
+      // corpus lacks the topic or retrieval missed it.
+      var missed = subjRare.filter(function (an) {
+        return !uniq.some(function (e) { return tokenSet(norm(e.sentence))[an.t]; });
+      }).map(function (an) { return an.t; });
+      reason = 'only ' + subjRareGot + ' of the ' + subjRare.length +
+        ' terms that identify "' + subject + '" (' + missed.join(', ') +
+        ') appear in any of the ' + uniq.length + ' sentences retrieved, ' +
+        'below the half needed to treat them as evidence. The sentences found ' +
+        'share only common words with the question, which is topic similarity ' +
+        'rather than evidence';
     } else if (conceptTier && evalVerdict && hasFit && !hasStrain) {
       // Refuse the one-sided answer rather than present it as a judgement.
       reason = 'the corpus evidences how the framework accommodated diversity, but holds no quotable material on the limits of that accommodation, so it cannot support a "how far" verdict';

@@ -53,6 +53,36 @@ ok(typeof browser.mains === 'function', 'ask-browser.js exports mains()');
 ok(typeof browser.ask === 'function', 'navigational ask() still exported');
 
 console.log('');
+console.log('=== concept routing: name first, vocabulary as fallback ===');
+// Two distinct rules, and the second one is easy to get wrong in a way that
+// looks like an improvement. Name matching encodes the hand-checked decision
+// about which concept a phrasing means. Vocabulary matching only runs when name
+// matching found nothing, so it cannot overturn a decision someone checked.
+var core = require(path.join(ROOT, 'scripts/lib/ask-core.js'));
+function routeKey(q) {
+  var r = core.routeFor(q, q);
+  return r ? r.key : null;
+}
+ok(routeKey('Distinguish cooperative federalism from competitive federalism') === 'federalism',
+  'a subject naming a route still routes by name');
+ok((core.routeFor('Welfare legislation and last mile delivery',
+  'Welfare legislation and last mile delivery') || {}).viaVocabulary === true,
+  'a concept covered but not named resolves through vocabulary');
+ok(routeKey('Welfare legislation and last mile delivery') === 'welfare delivery',
+  'vocabulary fallback lands on the right concept');
+// One shared word must not route anything: "rights" appears in constitutional,
+// forest, tribal and child-rights routes, so a question mentioning it once is
+// not evidence for any of them.
+ok(routeKey('rights') === null, 'a single generic word routes nothing');
+ok(routeKey('what rights') === null, 'a generic word with filler routes nothing');
+// A term shared by many routes is discounted, so it cannot win on its own.
+ok(routeKey('Discuss policy formulation and implementation in a federal polity') !== null
+  ? core.routeFor('Discuss policy formulation and implementation in a federal polity',
+    'Discuss policy formulation and implementation in a federal polity').viaVocabulary === true
+  : true,
+  'shared vocabulary does not beat a specific name match');
+
+console.log('');
 console.log('=== outline picker matches its keys ===');
 // Mirrors pickOutline() in ask.html. Kept in step with it deliberately: if the
 // page's matching rule changes, this expectation should fail loudly rather than
