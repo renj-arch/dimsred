@@ -3477,6 +3477,75 @@ function selectBestSent(qs, nm, esc) {
 // own questions for a defining sentence ("X is/was/refers to …"), else the shortest
 // clean first sentence of a fact, else any readable sentence, and as a guaranteed
 // last resort a neutral line — so autoDescFor never leaves a node without a desc.
+// Verbatim evidence sentences for a topic, drawn from its own questions' fact text.
+//
+// The Ask index ships one sentence per node (desc), which is why an answer built
+// from it can name a topic but never say anything about it: the corpus averages
+// ~27 fact sentences per topic and every one after the first was being thrown
+// away here. This returns up to `cap` of them.
+//
+// Hard rule: these are QUOTES, never rewrites. Every string returned is a
+// substring of some q.fact after cleanTex whitespace normalisation, so nothing
+// generated or paraphrased can enter the corpus through this path. Selection is
+// deterministic: same input, same output, no model involved.
+//
+// Ranking favours sentences that (a) name the topic, (b) read as definitions,
+// (c) sit in a readable length band, and (d) are not pronoun-led fragments that
+// only make sense in their original context.
+var EVIDENCE_CAP = 8;
+function evidenceFor(name, qs, cap) {
+  cap = cap || EVIDENCE_CAP;
+  var nm = String(name || '').replace(/^[^a-z0-9]+/i, '').trim();
+  if (!nm || !qs || !qs.length) return [];
+  var bare = /^[a-z0-9](?:[a-z0-9\s&.-]*[a-z0-9])?$/i.test(nm) ? nm : null;
+  var nameRe = bare ? new RegExp('\\b' + bare.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b', 'i') : null;
+  var picked = [];
+  var seenText = {};
+  var seen = 0;
+  for (var qi = 0; qi < qs.length && picked.length < cap; qi++) {
+    if (++seen > 40) break;
+    var q = qs[qi];
+    var raw = cleanTex(q.fact || '').replace(/\s+/g, ' ').trim();
+    if (!raw) continue;
+    var sents = raw.split(/(?<=[.!?])\s+/);
+    for (var si = 0; si < sents.length && picked.length < cap; si++) {
+      var s = sents[si].trim();
+      // A quote has to stand alone: long enough to carry a claim, short enough
+      // to render as a blockquote, and not a stub left by a heading or list.
+      if (s.length < 45 || s.length > 420) continue;
+      if (!/\s/.test(s)) continue;
+      if (/^[-_=•*\d]{1,3}[.)]?\s/.test(s)) continue;
+      if (s.indexOf('\uFFFD') !== -1) continue;
+      // Strip trailing reference markers: "[12]", "[1][2]", "(see also ...)".
+      s = s.replace(/\s*(?:\[\d+\]){1,4}\s*$/, '').trim();
+      if (s.length < 45) continue;
+      var norm = s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      if (seenText[norm]) continue;
+      var score = 0;
+      if (nameRe && nameRe.test(s)) score += 4;
+      if (/\b(?:is|was|are|were|refers? to|means|denotes?|constitutes?|comprises?|known as|called)\b/i.test(s)) score += 2;
+      if (/\b\d{4}\b|\b(?:century|BC|AD|BCE|CE)\b/i.test(s)) score += 1;
+      if (/^\s*(?:it|its|he|she|they|his|her|their|this|that|these|those)\b/i.test(s)) score -= 4;
+      if (META_RE.test(s)) score -= 3;
+      // Scoring ORDERS candidates, it does not exclude them. An earlier version
+      // dropped anything scoring <= 0, which silently threw away the most useful
+      // quotes in the corpus: sentences like "the British government refused to
+      // help diversify the tribal economy" and "a powerful factor for the intense
+      // Naxalite insurgency in the Bastar division" are squarely on-topic and carry
+      // no topic-name match or copula to score. Everything reaching this point
+      // already came from this topic's own questions, so the only thing worth
+      // rejecting is a fragment that needs its original context to parse.
+      if (score <= -4) continue;
+      seenText[norm] = true;
+      picked.push({ s: s, score: score, qi: qi, si: si });
+    }
+  }
+  // Take the strongest candidates, then restore document order so a run of
+  // sentences from one fact still reads as prose instead of a shuffled collage.
+  picked.sort(function (a, b) { return b.score - a.score || a.qi - b.qi || a.si - b.si; });
+  return picked.slice(0, cap).sort(function (a, b) { return a.qi - b.qi || a.si - b.si; }).map(function (p) { return p.s; });
+}
+
 function descWithSource(name, qs) {
   var nm = String(name || '').replace(/^[^a-z0-9]+/i, '').trim();
   if (!nm) return null;
@@ -3676,7 +3745,12 @@ function main() {
         cats: [{ key: key, label: label, count: qs.length }],
         count: qs.length,
         desc: descObj ? descObj.desc : null,
-        evDesc: descObj ? descObj.src : null
+        evDesc: descObj ? descObj.src : null,
+        // Verbatim supporting quotes for this topic, stashed here only so the write
+        // phase can route them into the evidence shards. Replaced by a [shard,row]
+        // pointer before the node parts are serialised, so the multi-hundred-MB
+        // quote text never lands in timeline.nodes.*.json (map.html loads those).
+        _ev: evidenceFor(tnameClean, qs)
       };
       if (topicDeep) node.deepTime = topicDeep;
       seen[id] = node;
@@ -4619,7 +4693,87 @@ function main() {
   } catch (e) {
     console.error('desc preservation skipped (' + e.message + ')' + (e.stderr ? ': ' + e.stderr.toString() : ''));
   }
-  var nodeParts = [], curPart = [], curBytes = 0, nodeJson = '';
+// ── Verbatim evidence shards ───────────────────────────────────────────────
+// Scale check, because this is the constraint that decides everything: the
+// timeline keeps ~620k nodes and they average ~27 fact sentences each, so
+// carrying a full quote set for every node is roughly 650 MiB. That cannot live
+// in git — the node parts are already ~200 MiB and that alone is what makes
+// actions/checkout stall — so coverage has to be rationed explicitly rather
+// than discovered later as a broken build.
+//
+// Rationing rule, applied deterministically and with no curation: richest
+// topics first (most questions behind the topic), until EVIDENCE_BUDGET_MB is
+// spent. Richest-first is not a quality judgement about which topics matter —
+// a topic with 16 questions simply has 16 questions' worth of corpus behind it,
+// and that is measurable without anyone deciding what should be important.
+//
+// The budget is an env var and defaults to 0, i.e. off. Nothing consumes evRef
+// until build-ask-index.js copies it into its records and ask.html fetches the
+// shard, and an artifact nobody reads is pure repository weight — and repository
+// weight is already the thing slowing actions/checkout to a crawl. Flip
+// EVIDENCE_BUDGET_MB on when there is a reader for it.
+var EV_PART_BYTES = 2 * 1024 * 1024;
+var EV_BUDGET_MB = parseFloat(process.env.EVIDENCE_BUDGET_MB || '0');
+var evBudget = Math.max(0, EV_BUDGET_MB) * 1024 * 1024;
+// desc length is already carried by the node, so a quote set that merely repeats
+// it wastes budget: keep only sentences that add something.
+var evOrder = [];
+for (var eo = 0; eo < nodes.length; eo++) {
+  if (nodes[eo]._ev && nodes[eo]._ev.length) evOrder.push(eo);
+}
+evOrder.sort(function (a, b) {
+  var na = nodes[a], nb = nodes[b];
+  return (nb.count || 0) - (na.count || 0) || (a - b);
+});
+var evParts = [], evCur = [], evCurBytes = 0, evNodes = 0, evSents = 0, evSpent = 0, evSkipped = 0;
+for (var oi = 0; oi < evOrder.length; oi++) {
+  var nd = nodes[evOrder[oi]];
+  var sents = nd._ev;
+  delete nd._ev;
+  var rowStr = JSON.stringify([nd.id, sents]);
+  if (evSpent + rowStr.length > evBudget) { evSkipped++; continue; }
+  if (evCur.length && evCurBytes + rowStr.length > EV_PART_BYTES) {
+    evParts.push(evCur); evCur = []; evCurBytes = 0;
+  }
+  nd.evRef = [evParts.length, evCur.length];
+  evCur.push(JSON.parse(rowStr));
+  evCurBytes += rowStr.length;
+  evSpent += rowStr.length;
+  evNodes++;
+  evSents += sents.length;
+}
+for (var el = 0; el < nodes.length; el++) { if (nodes[el]._ev) delete nodes[el]._ev; }
+if (evCur.length) evParts.push(evCur);
+// A shrinking budget (or a shrinking node set) can leave MORE shards on disk than
+// this build wrote. build-ask-index.js reads these by index, so a stale shard from
+// a previous run would silently serve another topic's quotes.
+try {
+  fs.readdirSync(TIMELINE_DIR).forEach(function (f) {
+    if (/^timeline-evidence\.\d+\.json$/.test(f)) fs.unlinkSync(path.join(TIMELINE_DIR, f));
+  });
+} catch (e) { /* first build, or dir unreadable: nothing to clear */ }
+for (var ei = 0; ei < evParts.length; ei++) {
+  fs.writeFileSync(path.join(TIMELINE_DIR, 'timeline-evidence.' + ei + '.json'), JSON.stringify(evParts[ei]));
+}
+var evBytes = 0;
+for (var ej = 0; ej < evParts.length; ej++) {
+  evBytes += fs.statSync(path.join(TIMELINE_DIR, 'timeline-evidence.' + ej + '.json')).size;
+}
+console.log('evidence: ' + evNodes + ' nodes with quotes, ' + evSents + ' sentences, ' +
+  evParts.length + ' shards, ' + (evBytes / 1048576).toFixed(1) + ' MiB (budget ' + EV_BUDGET_MB + ' MiB)');
+if (evSkipped) {
+  if (EV_BUDGET_MB > 0) {
+    console.log('evidence: ' + evSkipped + ' topics had quotes but no budget left; they keep desc-only. ' +
+      'Full coverage needs the sentence-level artifact served from object storage, not git.');
+  } else {
+    console.log('evidence: off (EVIDENCE_BUDGET_MB=0); ' + evSkipped +
+      ' topics eligible. Set EVIDENCE_BUDGET_MB once Ask can fetch the shards.');
+  }
+}
+if (EV_BUDGET_MB > 0) {
+  console.log('evidence pointers stay on the nodes and reach Ask via build-ask-index.js');
+}
+var nodeParts = [], curPart = [], curBytes = 0, nodeJson = '';
   for (var nd of nodes) {
     nodeJson = JSON.stringify(nd);
     curBytes += nodeJson.length;
