@@ -3513,7 +3513,16 @@ function autoDescFor(name, qs) {
 // auto-desc, then fall back to a contextual "name — category" line (same shape
 // as seedFallback, used by curated seeds).
 var SUBTOPIC_DESCS = {
-  'Red Army': 'the Workers and Peasants Red Army; the Soviet Union\u2019s military force from 1918 until it was renamed the Soviet Army in 1946'
+  'Red Army': 'the Workers and Peasants Red Army; the Soviet Union\u2019s military force from 1918 until it was renamed the Soviet Army in 1946',
+  // Both lines are verbatim article leads, not paraphrase, because the auto-extractor
+  // cannot use these two topics: defRe requires the title to sit directly against a
+  // copula, and selectBestSent truncates at the first comma \u2014 so "The Bastar Rebellion,
+  // also known as the Bhumkal Movement, was\u2026" scored as the fragment "The Bastar
+  // Rebellion". Without a curated line both nodes shipped with useless descriptions.
+  // Source: Wikipedia, "Bastar rebellion" (rev. 1370430474, 21 Aug 2026).
+  'Bastar rebellion': 'The Bastar Rebellion, also known as the Bhumkal Movement, was an Adivasi rebellion in 1910 against the British Raj in the princely state of Bastar',
+  // Source: Wikipedia, "Forest Rights Act (India)" (rev. 1376803328, 26 Sep 2026).
+  'Forest Rights Act (India)': 'The Scheduled Tribes and Other Traditional Forest Dwellers (Recognition of Forest Rights) Act, 2006 is a key piece of forest legislation passed in India on 18 December 2006'
 };
 function topicDescFor(name, label, qs) {
   if (SUBTOPIC_DESCS[name]) return SUBTOPIC_DESCS[name];
