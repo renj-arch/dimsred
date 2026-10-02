@@ -121,6 +121,24 @@ var LEADING_FUNCTION = /^(The|A|An|This|That|These|Those|It|He|She|They|In|On|At
 // note on MAX_BUCKETS below.
 var HEAD_MIN = 2;
 
+// Which once-seen (df=1) phrases earn an index entry.
+//
+// Indexing all of them costs 2.1 GB of shards on top of the 2.0 GB of bucket
+// shards. Measured on the 2026-10-02 corpus: 25,800,810 df=1 phrases take the phrase
+// index from 395 MB to 2,173 MB. A word-count filter does NOT reduce this -- every
+// df=1 phrase is already 2+ words, because phrasesIn() drops single capitalised
+// words before they reach here, so a ">=2 words" cut discarded 0 of 25.8M.
+//
+// Off by default: it is a size-versus-reach tradeoff, not a correctness fix. With it
+// off, a term that occurs in exactly one sentence is not findable, which is how
+// "water mass" (one sentence in the corpus, the ostrich water-balance figure) came
+// back as a miss while the record sat in the archive. Turn it on once the shards can
+// be hosted somewhere with room for them.
+var INDEX_ONCE_SEEN = false;
+
+// Minimum words in a once-seen phrase, used only when INDEX_ONCE_SEEN is on.
+var ONCE_MIN_WORDS = 2;
+
 function phrasesIn(text) {
   var out = [];
   var words = String(text || '').match(WORD) || [];
@@ -312,6 +330,8 @@ function main() {
   var onceBuf = new Array(BUCKET_COUNT);
   for (var ob = 0; ob < BUCKET_COUNT; ob++) onceBuf[ob] = [];
   var onceCount = 0;
+  var onceSeen = 0;
+  var onceKept = 0;
 
   function flushOnce(k) {
     if (!onceBuf[k].length) return;
@@ -334,11 +354,15 @@ function main() {
           if (seenHere.has(key)) return;
           seenHere.add(key);
           if (!keep.has(key)) {
-            // Once-seen: record it now, while the owning row is in hand.
-            var ok2 = H.bucketOf(key, BUCKET_COUNT);
-            onceBuf[ok2].push(key + '\t' + bi + '\t' + entity);
-            onceCount++;
-            if (onceBuf[ok2].length >= SPILL_FLUSH) flushOnce(ok2);
+            onceSeen++;
+            if (INDEX_ONCE_SEEN) {
+              // Once-seen: record it now, while the owning row is in hand.
+              onceKept++;
+              var ok2 = H.bucketOf(key, BUCKET_COUNT);
+              onceBuf[ok2].push(key + '\t' + bi + '\t' + entity);
+              onceCount++;
+              if (onceBuf[ok2].length >= SPILL_FLUSH) flushOnce(ok2);
+            }
             return;
           }
           var e = hits.get(key);
@@ -365,7 +389,10 @@ function main() {
   });
 
   for (var o2 = 0; o2 < BUCKET_COUNT; o2++) flushOnce(o2);
-  console.log('once-seen phrases streamed : ' + onceCount.toLocaleString());
+  console.log('once-seen phrases seen    : ' + onceSeen.toLocaleString());
+  console.log('once-seen phrases kept    : ' + onceKept.toLocaleString() +
+    '  (dropped ' + (onceSeen - onceKept).toLocaleString() + ' under ' +
+    ONCE_MIN_WORDS + ' words)');
 
   var totalBytes = 0, nonEmpty = 0, droppedSpread = 0, truncated = 0;
   for (var k = 0; k < BUCKET_COUNT; k++) {
