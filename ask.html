@@ -199,6 +199,85 @@ function renderAnswer(res) {
   '</div></div>';
 }
 
+// States plainly when the engine answered from its concept vocabulary rather than
+// from the question's subject.
+//
+// The concept tier is a deliberate fallback: when a subject is not a titled node
+// the router matches a phrase that names what the question is *about*. For
+// "the environmental impact of the Bhopal gas tragedy" that produces twelve
+// lines about environmental impact and none about Bhopal, because Bhopal is not a
+// node in this index at all. Ranking that higher is not the fix -- the subject
+// genuinely has no node here -- so the honest move is to say which of the two
+// happened. Without this note those twelve lines read as an answer to the
+// question, which is the one thing this page must not do.
+function conceptGapNote(res) {
+  if (!res || !res.concept) return '';
+  var ev = res.evidence || [];
+  var named = {};
+  ev.forEach(function (e) {
+    if (e && e.node && e.node.name) named[String(e.node.name).toLowerCase()] = 1;
+  });
+  var subj = res.subject ? String(res.subject).toLowerCase() : '';
+  // Only complain when the subject did not actually reach the results. When it
+  // did, the concept route agreeing with it is a good outcome, not a gap.
+  if (!subj || named[subj]) return '';
+  var pct = Math.round((res.conceptCoverage || 0) * 100);
+  return '<div class="diag"><span>subject "' + esc(res.subject) +
+    '" is not a node in this index</span>' +
+    '<span>these lines are the concept route "' + esc(res.concept) +
+    '" at ' + pct + '% concept coverage</span></div>' +
+    '<div class="empty">The lines above are about the concept, not about ' +
+    esc(res.subject) + '. This index holds one sentence per node and has no node ' +
+    'with that name, so it cannot answer the question as asked. Sentences about ' +
+    esc(res.subject) + ' exist in the question bank, which is a separate index.</div>';
+}
+
+// The multi-heading answer, planned from the engine's ranking.
+//
+// A mains question names several things at once. Flattening its evidence into one
+// undifferentiated list makes a two-part question look like one part, so the
+// planner's node grouping is used to give each part its own heading with the
+// strongest sentence that node contributes. Nothing is composed here: every line
+// is a corpus sentence attributed to the node it came from.
+function renderPlanned(plan, res) {
+  var pct = Math.round((res.coverage || 0) * 100);
+  var col = covColor(pct);
+  var rows = plan.snippets.map(function (s) {
+    var direct = s.direct ? ' <span class="tag">direct</span>' : '';
+    return '<div class="ev">' +
+      '<div class="src"><a href="archive.html" target="_blank">' + esc(s.name) + '</a>' +
+      (s.cat ? ' &middot; ' + esc(s.cat) : '') + direct + '</div>' +
+      '<p>' + esc(s.snippet) + '</p>' +
+    '</div>';
+  }).join('');
+
+  var note = conceptGapNote(res);
+  // A refusal alongside real evidence is not a contradiction to hide. The engine
+  // declined to compose an answer because coverage is thin, and the sentences it
+  // did find are still corpus sentences worth showing.
+  var thin = res.refused
+    ? '<div class="empty">Coverage is too thin to compose an answer (' +
+      esc(res.reason || 'insufficient quotable material') +
+      '). These are the sentences the corpus does hold for the headings above.</div>'
+    : '';
+
+  var headings = plan.outline.map(function (o) { return esc(o[0]); }).join(' &middot; ');
+
+  return '<div class="result"><div class="answer">' +
+    '<h2>Answer</h2>' +
+    '<div class="cov-bar">' +
+      '<span class="label">Coverage</span>' +
+      '<div class="track"><div class="fill" style="width:' + pct + '%;background:' + col + '"></div></div>' +
+      '<span class="pct" style="color:' + col + '">' + pct + '%</span>' +
+    '</div>' +
+    rows +
+    '<div class="diag"><span>' + plan.retrieved + ' headings planned from the corpus</span>' +
+    (headings ? '<span>' + headings + '</span>' : '') + '</div>' +
+    note +
+    thin +
+  '</div></div>';
+}
+
 function render(res) {
   if (!res) { el('out').innerHTML = '<div class="empty">No result.</div>'; return; }
   if (res.refused) {
@@ -595,6 +674,23 @@ function renderTimeline(q) {
       });
       return;
     }
+    // Headings are planned from the same engine call, so the multi-heading path
+    // and the flat list can never disagree about what the corpus contains.
+    // This runs in the live timeline path, not only under ASK_MAINS_ENABLED,
+    // because this index is the one actually deployed: the question-bank shards
+    // are not, so gating the improvement behind that flag would have shipped
+    // nothing. If the planner finds no headings, the existing flat rendering
+    // and its refusals are untouched.
+    var plan = null;
+    try {
+      plan = planOutline(q, { evidence: 24, headings: 8 });
+    } catch (err) {
+      plan = null;
+    }
+    if (plan && plan.outline && plan.outline.length && plan.snippets && plan.snippets.length) {
+      el('out').innerHTML = renderPlanned(plan, res);
+      return;
+    }
     render(res);
   }, 30);
 }
@@ -618,12 +714,7 @@ function updateStatus() {
 }
 
 function boot(idx, meta) {
-IDX = idx;
-// The node text changed underneath the cache, so the lowercased haystacks have to
-// be rebuilt. Scoring a question against the pre-load index is how a query would
-// silently retrieve nothing while the index looked loaded.
-askHay = null;
-askHayFor = 0;
+  IDX = idx;
   var m = meta || {};
   var kept = m.nodesKept || idx.N || 0;
   var scanned = m.nodesScanned || '?';
