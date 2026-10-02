@@ -42,7 +42,19 @@ ok(browserAt !== -1, 'ask-browser.js is loaded');
 });
 ok(/var ASK_MAINS_ENABLED = false;/.test(html),
   'ASK_MAINS_ENABLED defaults to false');
-ok(/var ASK_MAINS_OUTLINES = \{/.test(html), 'outlines are declared in the page');
+// The authored outline table is gone. Headings are now planned from the engine's
+// own ranking, so the contract is that the planner exists, reads the engine rather
+// than duplicating retrieval, and cannot silently fall back to a table.
+ok(/function planOutline\(/.test(html), 'headings are planned in the page');
+ok(!/ASK_MAINS_OUTLINES/.test(html), 'the authored outline table is gone');
+ok(/VlymbooqAsk\.retrieve\(IDX, q/.test(html),
+  'the planner reads the engine ranking instead of running its own retrieval');
+ok(/function renderPlanMiss\(/.test(html),
+  'an unplanned question renders a report of what was searched');
+ok(/No headings could be planned/.test(html),
+  'the empty answer names the search rather than claiming the corpus is silent');
+ok(!/No entity named/.test(html) || /renderPlanMiss/.test(html),
+  'the misleading "no entity named" refusal is no longer the only empty answer');
 ok(/VlymbooqAskBrowser\.mains\(/.test(html), 'doAsk calls the mains() path');
 ok(/Not covered by this corpus/.test(html), 'absent headings render as a visible gap');
 
