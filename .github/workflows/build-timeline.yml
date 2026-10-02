@@ -47,6 +47,32 @@ jobs:
       - name: Rebuild timeline map from question data
         run: node scripts/build-timeline.js
 
+      # Rebuild the Ask engine's retrieval index from the timeline nodes the step
+      # above just produced. build-ask-index.js reads data/timeline.nodes.<i>.json
+      # and data/timeline.json, so it must run after build-timeline.js and never
+      # before it.
+      #
+      # This step was missing, and that made a timeline rebuild self-defeating: it
+      # committed brand-new nodes while data/ask-index.json stayed frozen, so ask.html
+      # served an index that could not retrieve anything the rebuild had just added.
+      # Content only became findable once an unrelated workflow happened to rerun the
+      # builder — daily-wiki-fill's finalize, build-ask-qb, or ask-audit — which could
+      # be up to a full nightly cycle later. Now every timeline rebuild ships Ask in
+      # step with the map it was built from.
+      #
+      # Deliberately NOT continue-on-error (unlike the same command in
+      # daily-wiki-fill's finalize): there, a failure still lets the harvested
+      # questions be committed, and the questions are the irreplaceable part. Here the
+      # inputs are already committed, so a silent skip would only re-introduce the
+      # stale-index bug this step exists to prevent.
+      #
+      # This is the TIMELINE index only (data/ask-index.json plus its
+      # data/ask-index-nodes.*.json shards, picked up by the `git add -A data/` below).
+      # It does NOT build the question-bank tables under data/ask-qb/, which are a
+      # separate artifact with their own builder and workflow.
+      - name: Rebuild Ask engine index
+        run: node scripts/build-ask-index.js
+
       - name: Rebuild mind-tree (topic-layers.json)
         run: node scripts/gen-topic-layers.js
 
