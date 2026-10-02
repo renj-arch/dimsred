@@ -42,14 +42,14 @@ var THIN_REASON = { SHORT: 1, NOT_QUOTABLE: 2, BOTH: 3 };
 // Column order for the array-encoded node rows. Changing this without changing
 // FIELDS below silently corrupts every retrieved sentence, so they are declared
 // once and asserted on read.
-var FIELDS = ['id', 'name', 'type', 'cat', 'desc'];
+var FIELDS = ['id', 'name', 'type', 'cat', 'desc', 'ev'];
 
 // Fills the shape ask-core expects from the compact array form. Kept here rather
 // than in ask-core so the browser bundle only carries the reader, not the
 // build-time encoding knowledge.
 function decodeNodes(payload) {
   return ((payload && payload.nodes) || []).map(function (r) {
-    return { id: r[0], name: r[1], type: r[2], cat: r[3], desc: r[4] };
+    return { id: r[0], name: r[1], type: r[2], cat: r[3], desc: r[4], ev: r[5] || null };
   });
 }
 
@@ -61,9 +61,18 @@ function main() {
   var byId = {};
   var seenDesc = {};
 
-  for (var i = 0; i < 10; i++) {
-    var file = path.join(ROOT, 'data', 'timeline.nodes.' + i + '.json');
-    if (!fs.existsSync(file)) continue;
+  // Shards are discovered, not counted. A hardcoded `i < 10` silently dropped
+  // everything in shard 10 from every Ask query (557 nodes), and the number was
+  // a countdown to the next silent loss: once the corpus produced an 11th full
+  // 20 MiB shard, Ask would have stopped seeing it with no error anywhere.
+  var nodeShards = fs.readdirSync(path.join(ROOT, 'data'))
+    .filter(function (f) { return /^timeline\.nodes\.\d+\.json$/.test(f); })
+    .sort(function (x, y) {
+      return parseInt(x.match(/(\d+)/)[1], 10) - parseInt(y.match(/(\d+)/)[1], 10);
+    });
+
+  nodeShards.forEach(function (shard) {
+    var file = path.join(ROOT, 'data', shard);
     var arr = JSON.parse(fs.readFileSync(file, 'utf8'));
     arr.forEach(function (nd) {
       stats.scanned++;
@@ -103,11 +112,15 @@ function main() {
       // is roughly 14 MB versus 7 MB on the wire, which decides whether this
       // page is usable on a phone. Order is fixed and documented in FIELDS;
       // ask-core reads the payload back through decodeNodes() below.
-      nodes.push([nd.id, nd.name, nd.type || '', (nd.cats && nd.cats[0] && nd.cats[0].key) || '', desc]);
+      // `ev` is the node's [shard,row] pointer into timeline-evidence.N.json, or 0 for
+// none. 0 rather than null because this row is replicated across every row of the
+// index: `null` costs 5 bytes on all ~214k nodes (~1.1 MB of download) to say
+// nothing, while 0 costs one byte and stays falsy for the checks that matter.
+nodes.push([nd.id, nd.name, nd.type || '', (nd.cats && nd.cats[0] && nd.cats[0].key) || '', desc, nd.evRef || 0]);
       stats.kept++;
     });
-    process.stderr.write('  read shard ' + i + ' (running total ' + nodes.length + ' kept)\n');
-  }
+    process.stderr.write('  read ' + shard + ' (running total ' + nodes.length + ' kept)\n');
+  });
 
   // ── pass 2: co-occurrence adjacency ───────────────────────────────────────
   // timeline.json links are {a,b,w}. Only links whose *both* endpoints survived
