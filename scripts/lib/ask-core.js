@@ -249,15 +249,79 @@
     var nodes = (payload && payload.nodes) || [];
     var adj = (payload && payload.links) || {};
     var df = {};
+    // titleDf counts how many node TITLES contain a word. It is the signal that
+    // tells an entity name from a common English word: `bhopal` titles 11 nodes,
+    // `modi` titles 5, but `cry` titles 19 songs and `gas` titles 86. Document
+    // frequency alone cannot separate them -- `cry` (df 34) is rarer than `modi`
+    // (df 35) -- so the head-proxy fallback consults titleDf before letting a
+    // bare word stand in for the subject. Without it, "far cry 3" matched every
+    // node with "cry" in its title and answered with doo-wop singles.
+    var titleDf = {};
     var prepared = nodes.map(function (n, idx) {
       var bag = tokens(n.name + ' ' + (n.aliases || []).join(' ') + ' ' + (n.desc || '') + ' ' + (n.type || '') + ' ' + (n.cat || ''));
       var tf = {};
       bag.forEach(function (t) { tf[t] = (tf[t] || 0) + 1; });
       Object.keys(tf).forEach(function (t) { df[t] = (df[t] || 0) + 1; });
+      var nameToks = {};
+      tokens(n.name || '').forEach(function (t) { nameToks[t] = 1; });
+      Object.keys(nameToks).forEach(function (t) { titleDf[t] = (titleDf[t] || 0) + 1; });
       return { i: idx, node: n, tf: tf, len: bag.length };
     });
     var avg = prepared.reduce(function (a, p) { return a + p.len; }, 0) / (prepared.length || 1);
-    return { nodes: prepared, adj: adj, df: df, avg: avg || 1, N: prepared.length };
+
+    // Nodes the quote gate dropped, keyed by lower-cased title.
+    //
+    // This exists so a refusal can tell the truth. Without it, a question about
+    // `Dadabhai Naoroji` refuses with "no term in the question appears anywhere in
+    // the index", while the node is present in the source shard and its title is
+    // right there -- its only sentence happens to be three words against a
+    // twelve-word floor, and the entity buckets hold 24 real sentences for it. The
+    // refusal is false as written and sends the reader away from a corpus that has
+    // the material. With this map the engine can say which of the two happened.
+    //
+    // Encoded by the builder as reason*1000 + wordCount (see build-ask-index.js),
+    // decoded here so callers never handle the packing.
+    var thin = null;
+    if (payload && payload.thin && payload.thin.length) {
+      thin = {};
+      payload.thin.forEach(function (title, i) {
+        var code = payload.thinWhy ? payload.thinWhy[i] : 0;
+        thin[title] = { reason: Math.floor(code / 1000), words: code % 1000 };
+      });
+    }
+
+    return {
+      nodes: prepared, adj: adj, df: df, titleDf: titleDf, avg: avg || 1, N: prepared.length,
+      thin: thin
+    };
+  }
+
+  // Is this phrase a node the corpus has but the quote gate excluded?
+  //
+  // Matches the whole phrase as a lower-cased title first, then any title that
+  // contains it as a whole word, so "dadabhai naoroji" and "Naoroji" both find the
+  // node while "naor" does not match everything beginning with those letters.
+  function thinNode(idx, phrase) {
+    if (!idx || !idx.thin) return null;
+    var p = norm(phrase);
+    if (!p) return null;
+    if (idx.thin[p]) return { title: p, info: idx.thin[p] };
+    var words = p.split(' ').filter(function (w) { return w.length >= 4; });
+    if (!words.length) return null;
+    // A single substring test per title, then a whole-word check only on the
+    // handful that pass. 311k tokenSet() calls would be 311k allocations on the
+    // refusal path; indexOf is one scan each and the whole pass stays cheap,
+    // which matters because this runs in the browser.
+    var keys = Object.keys(idx.thin);
+    var best = null;
+    for (var i = 0; i < keys.length; i++) {
+      if (keys[i].indexOf(p) === -1) continue;
+      if (norm(keys[i]) !== p && !new RegExp('\\b' + p.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\b').test(keys[i])) continue;
+      // Prefer the shortest matching title: the most specific node, not a
+      // category-sized name that happens to contain every word.
+      if (!best || keys[i].length < best.length) best = keys[i];
+    }
+    return best ? { title: best, info: idx.thin[best] } : null;
   }
 
   // BM25 over the real field set. The only non-standard part is that ontology
@@ -1472,9 +1536,18 @@
       // about Indian constitutional morality. A head is allowed to stand in
       // for the subject only when it names something specific.
       var rareBar = Math.max(4, Math.round(idx.N * 0.001));
+      // Rarity alone stops separating entities from common words as the corpus
+      // grows, because rareBar is a fraction of N: at 214k nodes it admits any
+      // word in <=214 nodes, and "cry" (34) sailed through, turning "far cry 3"
+      // into doo-wop singles. A real entity name also titles few nodes. `bhopal`
+      // titles 11, `modi` 5; `cry` titles 19 and `gas` 86. Capping titleDf at 12
+      // keeps the entities and both excludes the songs and hardens the old
+      // "framework"/"constitutional" case independently of the concept guard.
+      var HEAD_TITLE_DF = 12;
       var rare = subjWords.filter(function (w) {
-        var d = idx.df[norm(w)] || 0;
-        return d > 0 && d <= rareBar;
+        var t = norm(w);
+        var d = idx.df[t] || 0;
+        return d > 0 && d <= rareBar && (idx.titleDf[t] || 0) <= HEAD_TITLE_DF;
       });
       // Rarest first, so the most identifying word leads. Length is the
       // tiebreak only to keep the ordering stable and to prefer a two-word
@@ -1668,7 +1741,13 @@
     // would refuse questions whose subject is named in the node title rather than
     // restated in every sentence.
     var subjTermRatio = subjRare.length ? subjRareGot / subjRare.length : 1;
-    var subjTermSupported = !subjRare.length || subjTermRatio >= 0.5;
+    // A conceptual subject is exempt: its own words need not appear verbatim in
+    // the evidence. "indian federal framework" routes to the federalism concept,
+    // and a correct federalism answer cites Article 370 and reorganisation
+    // without ever saying "federal" or "framework" -- requiring them refused the
+    // right node while the generic gate let a worse one through. Concept coverage
+    // is the gate for this tier; the literal subject words are the gate elsewhere.
+    var subjTermSupported = !subjRare.length || subjTermRatio >= 0.5 || conceptTier;
 
     // In the concept tier the evidence deliberately does NOT contain the
     // question's own words -- that is why the subject could not be titled -- so
@@ -1724,9 +1803,18 @@
       // the rescue fired on three sentences that had nothing to do with the
       // subject. Concept coverage now has to clear the same bar as the main
       // gate. Federalism clears it at 85% and still answers, which is the
-      // intended behaviour; the anti-defection question now refuses.
+      // intended behaviour; the anti-defection question should refuse.
+      //
+      // Coverage alone stopped being enough once the index grew to 214k nodes:
+      // with more sentences to draw on, the generic fit terms ('party',
+      // 'coalition', 'speaker') covered 62.5% and the question answered with an
+      // anti-vivisection coalition. The decisive fact is that the corpus has a
+      // node for this subject and the quote gate dropped it -- `thinNode` says
+      // so. When the entity exists but is unquotable here, the honest verdict is
+      // a refusal that names it (the page then reaches the question bank), never
+      // a concept answer assembled from other entities' words.
       if (!subjectMatched && conceptTier && uniq.length >= MIN_EVIDENCE && conceptCov >= MIN_COVERAGE) {
-        subjectMatched = true;
+        if (!thinNode(idx, subject)) subjectMatched = true;
       }
     }
 
@@ -1761,20 +1849,42 @@
     //   not enough quoteable sentences | the subject is not in any node title
     //   | the question's rare terms are not accounted for.
     var refused = true, reason = '';
+    // A node the quote gate dropped is the most informative case and must be
+    // checked first: the corpus HAS the subject, it simply cannot quote it from
+    // this index. "No term in the question appears anywhere in the index" is
+    // false in that situation, and it is the sentence most likely to make a
+    // reader conclude the corpus is empty. Say what actually happened.
+    var thin = thinNode(idx, subject);
     if (uniq.length < MIN_EVIDENCE) {
       var gaps = gapFor(subject, question);
-      reason = gaps
-        ? 'the corpus holds no material on "' + gaps.key + '": auditing all ' + idx.nodes.length +
-          ' indexed nodes found no India-relevant node for ' + gaps.missing.join(', ') +
-          '. That is a gap in the corpus, not a retrieval failure'
-        : 'only ' + uniq.length + ' quoteable sentence(s) in the corpus bear on this question';
+      if (thin) {
+        reason = 'the corpus has a node titled "' + thin.title + '", but its only ' +
+          'quotable sentence is ' + thin.info.words + ' word' + (thin.info.words === 1 ? '' : 's') +
+          ' long, under the ' + MIN_DESC_WORDS + '-word floor this index applies' +
+          (thin.info.reason === 2 || thin.info.reason === 3
+            ? ', and what is there is not a complete sentence' : '') +
+          '. The material is in the question bank but this retrieval index cannot quote it.';
+      } else {
+        reason = gaps
+          ? 'the corpus holds no material on "' + gaps.key + '": auditing all ' + idx.nodes.length +
+            ' indexed nodes found no India-relevant node for ' + gaps.missing.join(', ') +
+            '. That is a gap in the corpus, not a retrieval failure'
+          : 'only ' + uniq.length + ' quoteable sentence(s) in the corpus bear on this question';
+      }
     } else if (clauseSubject) {
       reason = 'the question is phrased as a clause ("' + subject.slice(0, 80) +
         '…") rather than naming a topic, so the engine cannot tell which subject it should be held to';
     } else if (subjectMatched === false) {
-      reason = subjList.length
-        ? 'no quotable material in the corpus on "' + subject + '", the subject of this question'
-        : 'the subject of the question could not be identified in the corpus';
+      // Same correction as above, for the path where a few loose sentences were
+      // found but none titled the subject. The node may still exist and simply be
+      // too thin to quote, which is a different statement from "no material".
+      reason = thin
+        ? 'the corpus has a node titled "' + thin.title + '", but its only quotation is ' +
+          thin.info.words + ' word' + (thin.info.words === 1 ? '' : 's') + ' long, so this ' +
+          'index holds nothing it can quote for the subject'
+        : subjList.length
+          ? 'no quotable material in the corpus on "' + subject + '", the subject of this question'
+          : 'the subject of the question could not be identified in the corpus';
     } else if (coverage < MIN_COVERAGE) {
       reason = 'evidence accounts for ' + Math.round(coverage * 100) + '% of the question, below the ' + Math.round(MIN_COVERAGE * 100) + '% gate';
     } else if (!subjTermSupported) {
@@ -1814,6 +1924,10 @@
       conceptCoverage: conceptCov,
       corpusGap: gapFor(subject, question),
       facets: { accommodation: !!hasFit, strain: !!hasStrain },
+      // The dropped-node record for the subject, if this index had one. Surfaced
+      // so a caller can tell "the corpus lacks it" apart from "this index dropped
+      // it" and route the subject to the question bank's richer sentences.
+      thin: thin,
       refused: refused,
       reason: reason
     };
@@ -1908,6 +2022,7 @@
     jurisdictionMarkers: jurisdictionMarkers,
     analyse: analyse,
     buildIndex: buildIndex,
+    thinNode: thinNode,
     bm25: bm25,
     expand: expand,
     retrieve: retrieve,

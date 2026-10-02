@@ -294,51 +294,99 @@ var catList = Object.keys(needed);
 // The hash is computed from the attempt term, so an alternate spelling resolves to
 // the bucket that actually holds it, with no index to look up.
 if (state.buckets && opts.buckets !== false) {
-var seenBucket = {};
-resolved.forEach(function (r) {
-r.hits.forEach(function (h) {
-var bi = BUCKET.bucketOf(h.term, state.buckets.bucketCount);
-if (state.bucketById[bi]) seenBucket[bi] = 1;
-});
-});
-var bucketIds = Object.keys(seenBucket);
-if (!bucketIds.length) {
-// Every attempt term hashed to an empty bucket, which means the bucket manifest
-// does not cover these entities -- a stale deploy. Falling through to categories
-// is correct here, and reporting "absent" would blame the corpus for a
-// deployment gap.
-} else {
-var bBudget = opts.maxBytes || MAX_BYTES;
-var bMeta = bucketIds.map(function (id) { return state.bucketById[id]; })
-.filter(Boolean)
-.sort(function (a, b) { return (a.bytes || 0) - (b.bytes || 0); });
-var bChosen = [], bSkipped = 0, bSpent = 0;
-bMeta.forEach(function (m) {
-if (bSpent + (m.bytes || 0) > bBudget) { bSkipped++; return; }
-bSpent += m.bytes || 0;
-bChosen.push(m);
-});
-var bMissing = bSkipped;
-var bRows = [];
-var bJobs = bChosen.map(function (m) {
-return loadShard(m.file).then(function (out) {
-if (out.missing || !out.rows) { bMissing++; return; }
-bRows = bRows.concat(out.rows);
-});
-});
-return Promise.all(bJobs).then(function () {
-var bResult = ev.retrieve(bRows, question, points, state.entityDir, opts);
-var bComposed = state.compose.compose(question, outline, bResult, opts);
-bComposed.fetchedShards = bChosen.length;
-bComposed.missingShards = bMissing;
-bComposed.shardBytes = bChosen.reduce(function (n, m) { return n + (m.bytes || 0); }, 0);
-bComposed.scheme = 'buckets';
-return bComposed;
-});
-}
-}
+      var seenBucket = {};
+      resolved.forEach(function (r) {
+        r.hits.forEach(function (h) {
+          var bi = BUCKET.bucketOf(h.term, state.buckets.bucketCount);
+          if (state.bucketById[bi]) seenBucket[bi] = 1;
+        });
+      });
 
-if (!catList.length) {
+      // A term that resolves to no entity is not a term the corpus lacks.
+      //
+      // Entity buckets are partitioned by a hash of the ENTITY name, so
+      // entity-anchored retrieval can only ever see sentences the outline named an
+      // owner for. "water mass" is never an entity: it appears verbatim inside
+      // sentences about "Common ostrich", "Antarctic bottom water" and hundreds of
+      // other subjects, so it was reported absent while a plain archive search
+      // returned page after page of it. That is a retrieval limit dressed up as a
+      // corpus fact.
+      //
+      // The phrase index already maps a term to the buckets whose sentences
+      // contain it, which is exactly the reach entity lookup lacks. Fetching those
+      // buckets puts the sentences back in front of ev.retrieve, which scores every
+      // supplied row against the claim's own words -- so the claim is then answered
+      // on its evidence, with its owner cited, not asserted.
+      var noEntity = [];
+      resolved.forEach(function (r) {
+        r.terms.forEach(function (t) {
+          var hit = false;
+          r.hits.forEach(function (h) { if (h.term === t) hit = true; });
+          if (!hit && noEntity.indexOf(t) === -1) noEntity.push(t);
+        });
+      });
+
+      var phraseTerms = opts.phraseMaxTerms == null ? 32 : opts.phraseMaxTerms;
+
+      // A missing or stale phrase shard must not fail the question: the entity
+      // path is still a real answer, so the error is swallowed here and the
+      // entity-only result stands.
+      var phraseJobs = noEntity.slice(0, phraseTerms).map(function (t) {
+        return api.phraseLookup(t).then(
+          function (h) { return { t: t, h: h }; },
+          function () { return { t: t, h: null }; }
+        );
+      });
+
+      return Promise.all(phraseJobs).then(function (phs) {
+        // Each term is capped on its own. A pool capped only in aggregate lets one
+        // broad term ("water mass", which occurs in thousands of sentences across
+        // hundreds of buckets) crowd out every other heading, so a ten-heading
+        // outline pulled 25 buckets and 47 MB to answer two of them. Per-term caps
+        // keep each unresolved term's reach proportional to the term.
+        var perTerm = opts.phraseBucketsPerTerm == null ? 2 : opts.phraseBucketsPerTerm;
+        var phraseBytesMax = opts.phraseMaxBytes == null ? 12 * 1048576 : opts.phraseMaxBytes;
+        var ordered = [], seenCand = {};
+        phs.forEach(function (p) {
+          if (!p || !p.h || !p.h.buckets || !p.h.buckets.length) return;
+          var take = 0;
+          p.h.buckets.forEach(function (b) {
+            if (take >= perTerm) return;
+            take++;
+            if (seenCand[b] || seenBucket[b]) return;
+            seenCand[b] = 1;
+            ordered.push(b);
+          });
+        });
+
+        // The phrase path also gets its own byte ceiling, so widening reach for a
+        // non-entity term can never spend the budget the entity path earned.
+        var phraseBuckets = 0, phraseSpent = 0;
+        ordered.forEach(function (b) {
+          var meta = state.bucketById[b];
+          if (!meta) return;
+          var bytes = meta.bytes || 0;
+          if (phraseSpent + bytes > phraseBytesMax) return;
+          phraseSpent += bytes;
+          seenBucket[b] = 1;
+          phraseBuckets++;
+        });
+        return bucketPass(phraseBuckets);
+      }).then(function (out) {
+        // No entity and no phrase resolved: fall through to categories rather than
+        // reporting absence, because a manifest that does not cover these buckets is
+        // a stale deploy, not a fact about the corpus.
+        return out === null ? categoryPass() : out;
+      });
+    }
+
+return categoryPass();
+
+// Category shards, by ascending size. This is the wider but coarser path: it
+// downloads every category the outline's resolved entities live in, which is why
+// it is a fallback rather than the default. Returns a promise like bucketPass().
+function categoryPass() {
+    if (!catList.length) {
 // Nothing in the outline resolves, so there is nothing to fetch. Return a
 // complete, entirely-absent answer rather than an empty one.
 var empty = ev.retrieve([], question, points, state.entityDir, {});
@@ -391,6 +439,43 @@ composed.missingShards = missing;
 composed.shardBytes = chosen.reduce(function (n, m) { return n + (m.bytes || 0); }, 0);
 return composed;
 });
+}
+
+// The bucket half of retrieval, split out so the phrase lookup above can decide
+// the bucket set before anything is fetched. Returns null when no bucket is
+// available at all, which is the signal to fall through to categories.
+function bucketPass(phraseBuckets) {
+    var bucketIds = Object.keys(seenBucket);
+    if (!bucketIds.length) return null;
+    var bBudget = opts.maxBytes || MAX_BYTES;
+    var bMeta = bucketIds.map(function (id) { return state.bucketById[id]; })
+      .filter(Boolean)
+      .sort(function (a, b) { return (a.bytes || 0) - (b.bytes || 0); });
+    var bChosen = [], bSkipped = 0, bSpent = 0;
+    bMeta.forEach(function (m) {
+      if (bSpent + (m.bytes || 0) > bBudget) { bSkipped++; return; }
+      bSpent += m.bytes || 0;
+      bChosen.push(m);
+    });
+    var bMissing = bSkipped;
+    var bRows = [];
+    var bJobs = bChosen.map(function (m) {
+      return loadShard(m.file).then(function (out) {
+        if (out.missing || !out.rows) { bMissing++; return; }
+        bRows = bRows.concat(out.rows);
+      });
+    });
+    return Promise.all(bJobs).then(function () {
+      var bResult = ev.retrieve(bRows, question, points, state.entityDir, opts);
+      var bComposed = state.compose.compose(question, outline, bResult, opts);
+      bComposed.fetchedShards = bChosen.length;
+      bComposed.missingShards = bMissing;
+      bComposed.shardBytes = bChosen.reduce(function (n, m) { return n + (m.bytes || 0); }, 0);
+      bComposed.scheme = 'buckets';
+      bComposed.phraseBuckets = phraseBuckets || 0;
+      return bComposed;
+    });
+}
 }
 ,
 

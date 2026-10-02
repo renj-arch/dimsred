@@ -29,7 +29,22 @@ var OUTDIR = path.join(ROOT, 'data', 'ask-qb');
 // few sentences carry the definitional content, which is what answers a
 // question, so the tail is dropped.
 var MAX_SENTENCES_PER_RECORD = 4;
-var MAX_SENTENCES_PER_ENTITY = 24;
+// There is deliberately no per-entity ceiling.
+//
+// There was one, at 24 sentences, and it was the single reason Ask could say
+// "nothing found" about material the corpus plainly held. "Common ostrich" exists
+// in Animal Husbandry & Dairy with a paragraph long enough to state that water
+// mass is 68% of adult body weight -- and its row was cut at exactly 24
+// sentences, so the sentence that answers the question was not in the index. A
+// limit that is invisible at retrieval time reads as a fact about the corpus, which
+// is the one confusion this project keeps having to undo.
+//
+// Size is the cost, and it is paid honestly: the buckets grow toward the full
+// record count, which is why they are deployed from object storage rather than
+// committed. Deduplication below already removes the real waste -- the same
+// Wikipedia paragraph backing many fill-blank items -- so what remains is genuine
+// distinct content, not repetition.
+var MAX_SENTENCES_PER_ENTITY = Infinity;
 var MIN_SENTENCE_WORDS = 8;
 
 function readCatIndex() {

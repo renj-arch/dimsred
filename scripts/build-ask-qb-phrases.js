@@ -52,15 +52,44 @@ var MAX_BUCKETS = 96;
 
 // Per-phrase cap on the entity names recorded, so one ubiquitous phrase cannot
 // dominate a shard file.
-var MAX_ENTITIES = 24;
+//
+// The cap is applied while accumulating, not only at write time. Holding every
+// owning entity until the end is what made pass two's memory scale with the
+// corpus rather than with the survivors, and retrieval never reads this list: the
+// page uses the bucket list, and only the diagnostics print entity names. Eight is
+// enough to name the owners in a report.
+var MAX_ENTITIES = 8;
 
 // Pass two holds every surviving phrase in memory, so the number of survivors is a
 // hard budget rather than a preference. Measured, not guessed: pass one prints the
 // survivor count and the script exits rather than dying at the heap ceiling the way
 // the single-pass version did.
-var MAX_KEPT = 2500000;
+var MAX_KEPT = 4000000;
 
 var MAX_WORDS = 4;
+
+// ── content n-grams ──────────────────────────────────────────────────────────
+//
+// The capitalised-run rule above has a blind spot that matters more than it looks.
+// "Water mass accounts for 68% of body mass" starts one capitalised run, "Water
+// mass accounts for", and the run is only ever written as the whole thing plus its
+// last-capitalised-word head. That head is "Water", so `lastCap` is 0, the 2-word
+// key is skipped, and the phrase everyone would actually search for -- "water mass"
+// -- is not in the index. A term that exists in thousands of sentences was
+// unreachable because of capitalisation, not because the corpus lacked it.
+//
+// So every content n-gram is indexed too: the longest 2- and 3-word runs that
+// begin with a word carrying meaning. That is what makes a lowercase or mid-
+// sentence term like "water mass" or "body mass" resolvable, and it is the
+// difference between an index of proper nouns and an index of the corpus.
+var NGRAM_MIN = 2;
+var NGRAM_MAX = 3;
+
+// A term that starts with one of these is a function word followed by whatever
+// comes next, so its n-grams are noise: "of the", "in a", "that the". Dropping
+// them at the head is what keeps the n-gram count from exploding without
+// discarding anything anyone would search for.
+var NGRAM_STOP = /^(the|a|an|of|in|on|at|by|for|from|with|as|but|and|or|to|is|was|were|are|be|been|being|has|have|had|do|does|did|will|would|can|could|may|might|shall|should|must|not|no|nor|so|if|when|while|after|before|during|since|under|over|between|however|therefore|although|though|because|such|there|who|whom|what|which|where|how|why|than|then|thus|also|into|upon|about|against|through|above|below|up|down|out|off|again|further|once|more|most|other|some|only|own|same|too|very|just|now|here|all|any|both|each|few|many|much|one|two|it|he|she|they|we|you|i|his|her|its|their|our|my|your|our)$/i;
 
 // ── phrase extraction ────────────────────────────────────────────────────────
 
@@ -76,6 +105,21 @@ function sentencesOf(row) {
 // run to continue, which "Pacific" does allow -- but "The" is rejected explicitly
 // as a leading function word.
 var LEADING_FUNCTION = /^(The|A|An|This|That|These|Those|It|He|She|They|In|On|At|By|For|From|With|As|But|And|Or|So|If|When|While|After|Before|During|Since|Under|Over|Between|However|Therefore|Although|Though|Because|Such|There|His|Her|Its|Their|Our|My)$/;
+
+// The capitalised-run rule has a blind spot worth fixing on its own. "Water mass
+// accounts for 68% of body mass" starts one capitalised run, "Water mass accounts
+// for", and the run is only written as the whole thing plus its last-capitalised-
+// word head. That head is "Water", so lastCap is 0, the 2-word key is skipped, and
+// the phrase anyone would actually search for -- "water mass" -- never reaches the
+// index. A term present in thousands of sentences was unreachable because of
+// capitalisation, not because the corpus lacked it.
+//
+// Emitting the 2-word head when no word after the first is capitalised costs one
+// extra entry per run. Indexing EVERY content n-gram was tried and is not
+// affordable: it produces over 16.7M distinct keys and V8's Map refuses to hold
+// them ("Map maximum size exceeded"), and it is the wrong shape anyway -- see the
+// note on MAX_BUCKETS below.
+var HEAD_MIN = 2;
 
 function phrasesIn(text) {
   var out = [];
@@ -107,6 +151,7 @@ function phrasesIn(text) {
         if (/^[A-Z]/.test(run[c])) lastCap = c;
       }
       if (lastCap >= 1) out.push(run.slice(0, lastCap + 1).join(' '));
+      else if (run.length >= HEAD_MIN) out.push(run.slice(0, HEAD_MIN).join(' '));
       out.push(run.join(' '));
       // Skip past the run so "North Pacific population shifts" also yields
       // "Pacific population shifts", often the more useful resolution.
@@ -145,11 +190,36 @@ function main() {
   // objects. Bounding document frequency cannot rescue that, because the phrases
   // are already resident before any cut is applied.
   //
-  // Pass one holds only phrase -> integer. Pass two revisits the shards and
-  // accumulates detail only for phrases that cleared the cut. The df cut is the
-  // memory bound, so it is set from measurement rather than guessed: the counts
-  // are printed and the script stops if too many phrases survive.
-  var df = new Map();
+  // Pass one cannot hold every phrase in a Map, and raising MIN_DF does not help
+  // it: the phrases are all resident before any cut applies. With the per-entity
+  // cap removed the corpus reached 16.3M distinct phrases, and V8 refuses a Map
+  // past 2^24 entries -- "Map maximum size exceeded" -- so the counting step is the
+  // hard ceiling on the whole build, not a tuning problem.
+  //
+  // So pass one spills instead. Every phrase is appended to one of 512 spill files
+  // chosen by the same hash(phrase) that names its output shard, which means each
+  // spill file holds a disjoint slice of the phrase space and one slice's distinct
+  // count fits in memory many times over. The df pass then reads one spill at a
+  // time, decides what clears MIN_DF, and only the survivors (a small fraction) are
+  // ever resident together. Peak memory is one slice plus the keep set, instead of
+  // every distinct phrase in the corpus.
+  var SPILL_DIR = path.join(OUT_DIR, '.spill');
+  if (!fs.existsSync(SPILL_DIR)) fs.mkdirSync(SPILL_DIR, { recursive: true });
+  else fs.readdirSync(SPILL_DIR).forEach(function (f) {
+    fs.unlinkSync(path.join(SPILL_DIR, f));
+  });
+
+  var SPILL_FLUSH = 20000;
+  var spillBuf = new Array(BUCKET_COUNT);
+  for (var sb = 0; sb < BUCKET_COUNT; sb++) spillBuf[sb] = [];
+
+  function flushSpill(k) {
+    if (!spillBuf[k].length) return;
+    fs.appendFileSync(path.join(SPILL_DIR, 'spill.' + k + '.txt'),
+      spillBuf[k].join('\n') + '\n');
+    spillBuf[k] = [];
+  }
+
   var totalRows = 0, totalSentences = 0, totalOccurrences = 0;
 
   bucketFiles.forEach(function (f) {
@@ -167,22 +237,42 @@ function main() {
           // inside a sentence cannot make a phrase look established.
           if (seenHere.has(key)) return;
           seenHere.add(key);
-          df.set(key, (df.get(key) || 0) + 1);
+          var k = H.bucketOf(key, BUCKET_COUNT);
+          spillBuf[k].push(key);
+          if (spillBuf[k].length >= SPILL_FLUSH) flushSpill(k);
         });
       });
     });
   });
+  for (var sf = 0; sf < BUCKET_COUNT; sf++) flushSpill(sf);
 
   console.log('rows ' + totalRows.toLocaleString() +
     '   sentences ' + totalSentences.toLocaleString() +
     '   phrase occurrences ' + totalOccurrences.toLocaleString());
-  console.log('distinct phrases ' + df.size.toLocaleString());
 
-  var kept = 0, below = 0;
+  // Reduce each slice to its survivors, then release the slice's file. The keep set
+  // is the only structure that grows across the whole corpus, and it holds phrases
+  // that cleared MIN_DF rather than every phrase that exists.
+  var kept = 0, below = 0, distinct = 0;
   var keep = new Set();
-  df.forEach(function (n, phrase) {
-    if (n >= MIN_DF) { kept++; keep.add(phrase); } else { below++; }
-  });
+  for (var k2 = 0; k2 < BUCKET_COUNT; k2++) {
+    var spillFile = path.join(SPILL_DIR, 'spill.' + k2 + '.txt');
+    if (!fs.existsSync(spillFile)) continue;
+    var text = fs.readFileSync(spillFile, 'utf8');
+    var local = new Map();
+    text.split('\n').forEach(function (line) {
+      if (!line) return;
+      local.set(line, (local.get(line) || 0) + 1);
+    });
+    distinct += local.size;
+    local.forEach(function (n, phrase) {
+      if (n >= MIN_DF) { kept++; keep.add(phrase); } else { below++; }
+    });
+    fs.unlinkSync(spillFile);
+  }
+  fs.rmdirSync(SPILL_DIR);
+
+  console.log('distinct phrases ' + distinct.toLocaleString());
   console.log('surviving df>=' + MIN_DF + ': ' + kept.toLocaleString() +
     '   dropped ' + below.toLocaleString());
 
@@ -198,8 +288,37 @@ function main() {
   // Pass two: detail for survivors only. Shards are accumulated per output file,
   // so nothing is written until every bucket has been read, but only survivors are
   // resident.
+  //
+  // Phrases that failed MIN_DF are not discarded, they are streamed. Anything not in
+  // `keep` occurs in exactly one row, so its whole index entry is known on sight --
+  // one bucket, one owner -- and it can be written straight out instead of held.
+  //
+  // This is the difference between a term that exists being findable and being
+  // invisible. "water mass" occurs in exactly one sentence of the corpus (the
+  // ostrich water-balance figure), so MIN_DF=2 threw it away and a search for it
+  // returned nothing while the record sat in the archive. A once-seen term is the
+  // cheapest possible lookup -- one bucket, one fetch -- and it is exactly the term
+  // most likely to be someone asking a specific question. Holding these in memory is
+  // what does not fit: 25.8M of them is past the Map ceiling again, so they go to
+  // per-shard temp files and are merged in as each output shard is written.
   var acc = new Array(BUCKET_COUNT);
   for (var b = 0; b < BUCKET_COUNT; b++) acc[b] = new Map();
+
+  var ONCE_DIR = path.join(OUT_DIR, '.once');
+  if (!fs.existsSync(ONCE_DIR)) fs.mkdirSync(ONCE_DIR, { recursive: true });
+  else fs.readdirSync(ONCE_DIR).forEach(function (f) {
+    fs.unlinkSync(path.join(ONCE_DIR, f));
+  });
+  var onceBuf = new Array(BUCKET_COUNT);
+  for (var ob = 0; ob < BUCKET_COUNT; ob++) onceBuf[ob] = [];
+  var onceCount = 0;
+
+  function flushOnce(k) {
+    if (!onceBuf[k].length) return;
+    fs.appendFileSync(path.join(ONCE_DIR, 'once.' + k + '.tsv'),
+      onceBuf[k].join('\n') + '\n');
+    onceBuf[k] = [];
+  }
 
   bucketFiles.forEach(function (f) {
     var bi = parseInt(/\d+/.exec(f)[0], 10);
@@ -214,11 +333,18 @@ function main() {
           var key = p.toLowerCase();
           if (seenHere.has(key)) return;
           seenHere.add(key);
-          if (!keep.has(key)) return;
+          if (!keep.has(key)) {
+            // Once-seen: record it now, while the owning row is in hand.
+            var ok2 = H.bucketOf(key, BUCKET_COUNT);
+            onceBuf[ok2].push(key + '\t' + bi + '\t' + entity);
+            onceCount++;
+            if (onceBuf[ok2].length >= SPILL_FLUSH) flushOnce(ok2);
+            return;
+          }
           var e = hits.get(key);
           if (!e) { e = { b: [], e: [] }; hits.set(key, e); }
           e.b.push(bi);
-          if (e.e.indexOf(entity) === -1) e.e.push(entity);
+          if (e.e.length < MAX_ENTITIES && e.e.indexOf(entity) === -1) e.e.push(entity);
         });
       });
       hits.forEach(function (e, phrase) {
@@ -231,11 +357,15 @@ function main() {
         cur.d++;
         if (cur.b.indexOf(bi) === -1) cur.b.push(bi);
         for (var i = 0; i < e.e.length; i++) {
+          if (cur.e.length >= MAX_ENTITIES) break;
           if (cur.e.indexOf(e.e[i]) === -1) cur.e.push(e.e[i]);
         }
       });
     });
   });
+
+  for (var o2 = 0; o2 < BUCKET_COUNT; o2++) flushOnce(o2);
+  console.log('once-seen phrases streamed : ' + onceCount.toLocaleString());
 
   var totalBytes = 0, nonEmpty = 0, droppedSpread = 0, truncated = 0;
   for (var k = 0; k < BUCKET_COUNT; k++) {
@@ -248,6 +378,19 @@ function main() {
       if (entry.e.length > MAX_ENTITIES) truncated++;
       payload[phrase] = { d: entry.d, b: entry.b, e: names };
     });
+    // Merge this shard's once-seen phrases in, then release the temp file. A
+    // once-seen phrase has one bucket by construction, so it never trips the
+    // spread cut and needs no further checking.
+    var onceFile = path.join(ONCE_DIR, 'once.' + k + '.tsv');
+    if (fs.existsSync(onceFile)) {
+      fs.readFileSync(onceFile, 'utf8').split('\n').forEach(function (line) {
+        if (!line) return;
+        var parts = line.split('\t');
+        if (parts.length < 3) return;
+        payload[parts[0]] = { d: 1, b: [+parts[1]], e: [parts[2]] };
+      });
+      fs.unlinkSync(onceFile);
+    }
     var file = path.join(OUT_DIR, 'phrase.' + k + '.json');
     // Empty shards are written as `{}` so the page can fetch unconditionally
     // instead of probing for existence.
@@ -256,6 +399,7 @@ function main() {
     totalBytes += Buffer.byteLength(json);
     if (Object.keys(payload).length) nonEmpty++;
   }
+  fs.rmdirSync(ONCE_DIR);
 
   console.log('dropped spread>' + MAX_BUCKETS + ': ' + droppedSpread.toLocaleString() +
     '   entity lists truncated: ' + truncated.toLocaleString());

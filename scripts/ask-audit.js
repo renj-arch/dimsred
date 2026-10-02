@@ -15,7 +15,7 @@ var fs = require('fs');
 var path = require('path');
 var ask = require('./lib/ask-core.js');
 
-var payload = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'ask-index.json'), 'utf8'));
+var payload = require('./lib/ask-index-load.js').read(path.join(__dirname, '..'));
 // ask.html decodes the compact array rows before building the index; the raw
 // rows are not the node shape buildIndex expects. Mirroring the page here is
 // the point -- testing a different index shape than the browser uses has
@@ -23,7 +23,11 @@ var payload = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'ask
 var nodes = payload.nodes.map(function (r) {
   return { id: r[0], name: r[1], type: r[2], cat: r[3], desc: r[4] };
 });
-var idx = ask.buildIndex({ nodes: nodes, links: payload.links });
+// thin/thinWhy must be passed exactly as ask.html does: a refusal that names a
+// dropped node, and the concept-rescue guard that consults it, are only
+// reachable when the dropped-title table is present. An audit that omits it
+// tests a different engine than the one the site ships.
+var idx = ask.buildIndex({ nodes: nodes, links: payload.links, thin: payload.thin, thinWhy: payload.thinWhy });
 
 // expect: 'answer' must answer, 'refuse' must refuse, 'either' accepts both.
 // mustInclude: when the engine did answer, at least one of these words must
@@ -34,9 +38,17 @@ var idx = ask.buildIndex({ nodes: nodes, links: payload.links });
 var CASES = [
   { q: 'bhopal gas tragedy', expect: 'answer', mustInclude: ['bhopal'],
     why: 'subject is a 3-word phrase no node titles, but `Bhopal` is a node (df=14, 26 quoteable words). subjectVariants floors title windows at 3 words, so the head fallback must reach it instead of discarding all 12 candidates.' },
-  { q: 'what is the anti-defection law in India?', expect: 'refuse', gap: 'defection',
-    why: '`defection` has df=0 in the index, so bm25 scored it on `anti`+`law` alone and answered with the definition of a coalition and a 1955 Australian Labor Party split at full coverage.' },
-  { q: 'anti-defection law', expect: 'refuse', gap: 'defection',
+  // The 214k-node index (2026-10-01) has a quotable `Anti-defection law (India)`
+  // node's siblings; the `gap` assertion is retired because `defection` is no
+  // longer df=0 in the corpus. The refusal is now driven by the dropped-node
+  // guard (the timeline description of that entity is "Thus, political parties
+  // got recognition in the Constitution", a leading-fragment the gate rejects),
+  // and the reason names the dropped node -- which is a stronger honesty signal
+  // than the old "term absent from corpus". The page then reaches the question
+  // bank, which does have the material.
+  { q: 'what is the anti-defection law in India?', expect: 'refuse',
+    why: 'The subject is not quotable from the timeline index; the refusal must say so instead of answering with `coalition`/`party`/`speaker` matches from unrelated nodes.' },
+  { q: 'anti-defection law', expect: 'refuse',
     why: 'Same defect, bare form. A missing subject term is a fact about the corpus, not a weak signal.' },
   { q: 'indian federal framework', expect: 'answer', mustInclude: ['reorganis', 'article 370', 'autonomous', 'scheduled'],
     why: 'The concept tier was designed for this question and `Federalism in India` is a node. `framework` (df=59) passing the head-rarity bar made `.NET Framework` a title match, and the subject tier answered a federalism question with .NET and Griffon at full coverage.' },
@@ -48,10 +60,16 @@ var CASES = [
     why: 'Same guard, other direction. No node titles it and the concept tier has nothing, so refusing is correct.' },
   { q: 'sixth schedule of the constitution', expect: 'answer', mustInclude: ['sixth schedule'],
     why: 'The demand-noun cut must not destroy this one: it lost everything after `Schedule` when the lead held a demand noun.' },
-  { q: 'basic structure doctrine', expect: 'refuse',
-    why: 'Titles, but two sentences is below the evidence floor. Low coverage is not an answer.' },
-  { q: 'disaster management', expect: 'refuse',
-    why: 'Only one quotable sentence; a single departmental sentence is not a mains answer.' },
+  // These two flipped refuse -> answer when the index was rebuilt from the current
+  // timeline: the corpus now holds a quotable `Disaster management in India` node
+  // (the Disaster Management Act 2005 sentence) and a real `Basic structure
+  // doctrine` definition. The old expectations described the 65,039-node snapshot,
+  // where only one short departmental sentence was available. mustInclude is the
+  // real assertion: it fails an answer that is on the right topic only by luck.
+  { q: 'basic structure doctrine', expect: 'answer', mustInclude: ['basic structure'],
+    why: 'Was refuse (two sentences below the floor). Now a quotable definition exists; the guard is that the evidence is actually about the doctrine.' },
+  { q: 'disaster management', expect: 'answer', mustInclude: ['disaster management'],
+    why: 'Was refuse (one short departmental sentence). Now the Act 2005 sentence is quotable; the guard is that it mentions the subject.' },
   { q: 'who was dadabhai naoroji', expect: 'refuse',
     why: 'No term resolves anywhere in the index.' },
   { q: 'nakshi lake', expect: 'refuse', gap: 'nakshi',

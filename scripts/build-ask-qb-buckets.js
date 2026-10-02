@@ -81,11 +81,11 @@ function main() {
 
       // An entity present in several categories merges into one bucket row.
       // Sentences are deduped because the same Wikipedia paragraph backs
-      // fill-in-the-blank items across categories, and the cap has to be applied
-      // after merging or the merged entity would silently lose its tail.
+      // fill-blank items across categories, and no cap is applied, so the merged
+      // entity keeps its full tail.
       var cur = b.ents.get(ek);
       if (!cur) {
-        cur = { name: name, sents: [], meta: [], cats: {} };
+        cur = { name: name, sents: [], meta: [], cats: {}, seen: new Set() };
         b.ents.set(ek, cur);
       } else {
         stats.merged++;
@@ -93,14 +93,13 @@ function main() {
       (row[2] || []).forEach(function (c) { cur.cats[c] = 1; });
       var meta = row[3] || [];
       for (var k = 0; k < sents.length; k++) {
-        if (cur.sents.length >= 24) break;
         var s = String(sents[k]).trim();
         if (!s) continue;
-        var dup = false;
-        for (var j = 0; j < cur.sents.length; j++) {
-          if (cur.sents[j].slice(0, 160) === s.slice(0, 160)) { dup = true; break; }
-        }
-        if (dup) continue;
+        // Deduped through a Set rather than by scanning cur.sents. With the
+        // per-entity cap gone an entity can hold thousands of sentences, and the
+        // linear scan turned one entity into millions of string comparisons.
+        if (cur.seen.has(s)) continue;
+        cur.seen.add(s);
         cur.sents.push(s);
         var mv = meta[k] || {};
         cur.meta.push({ source: mv.source || '', pubDate: mv.pubDate || '' });
@@ -118,7 +117,13 @@ function main() {
     if (!bk.ents.size) continue;
     var list = [];
     bk.ents.forEach(function (v) {
-      var ns = v.sents.slice(0, 24);
+      // No cap here either. This slice(0, 24) was a second, independent copy of the
+      // per-entity ceiling removed from build-ask-qb.js, and it silently undid that
+      // fix: the category shards carried 10.6M sentences and the buckets came out
+      // with 5.8M. A limit duplicated across two build steps is a limit that will
+      // be half-removed again, so both call sites now keep every sentence and the
+      // only remaining bound is the deduplication above.
+      var ns = v.sents;
       // meta is sliced in step with sents so the parallel-array invariant that
       // ask-qb.js and ask-entity-evidence.js both rely on cannot drift.
       list.push([v.name, ns, Object.keys(v.cats), v.meta.slice(0, ns.length)]);

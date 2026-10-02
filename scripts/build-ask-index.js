@@ -35,6 +35,10 @@ var MAX_TARGET_LINKS = 6;
 
 var stats = { scanned: 0, kept: 0, droppedShort: 0, droppedFragment: 0, droppedDup: 0, noLinks: 0 };
 
+// Title -> [title, reason code, word count] for every node the quote gate drops.
+var thinSeen = {};
+var THIN_REASON = { SHORT: 1, NOT_QUOTABLE: 2, BOTH: 3 };
+
 // Column order for the array-encoded node rows. Changing this without changing
 // FIELDS below silently corrupts every retrieved sentence, so they are declared
 // once and asserted on read.
@@ -64,8 +68,29 @@ function main() {
     arr.forEach(function (nd) {
       stats.scanned++;
       var desc = String(nd.desc || '').trim();
-      if (ask.wordCount(desc) < ask.MIN_DESC_WORDS) { stats.droppedShort++; return; }
-      if (!ask.isQuoteable(desc)) { stats.droppedFragment++; return; }
+      // Drop reason captured here rather than in a second pass over 199 MB. The
+      // title goes into `thin` below so a refusal can say "this node exists but
+      // its only sentence is N words" instead of claiming the corpus is empty.
+      var tooShort = ask.wordCount(desc) < ask.MIN_DESC_WORDS;
+      var unquoteable = !ask.isQuoteable(desc);
+      if (tooShort || unquoteable) {
+        // Stored through ask.norm so the key is comparable to a normalised query
+        // phrase: norm turns "anti-defection law (India)" into
+        // "anti defection law (india)". The browser's thinNode() normalises the
+        // phrase it is given, so a lower-cased-but-not-normalised key here (the
+        // earlier form) never matched a hyphenated title -- which is why
+        // `anti-defection law` could not find its own dropped node.
+        var thinKey = ask.norm(nd.name);
+        if (thinKey) {
+          thinSeen[thinKey] = [
+            thinKey,
+            tooShort && unquoteable ? THIN_REASON.BOTH : (tooShort ? THIN_REASON.SHORT : THIN_REASON.NOT_QUOTABLE),
+            ask.wordCount(desc)
+          ];
+        }
+      }
+      if (tooShort) { stats.droppedShort++; return; }
+      if (unquoteable) { stats.droppedFragment++; return; }
       // The same Wikipedia sentence is indexed under several category shards.
       // Keeping every copy would let one fact occupy several evidence slots.
       var key = sentenceKey(desc);
@@ -118,6 +143,73 @@ function main() {
 
   var linkedNodes = Object.keys(adj).length;
 
+  // Every node that failed the quote gate, kept as a title and the reason.
+//
+// Without this, a refusal for one of the 326,097 dropped nodes says "no term in
+// the question appears anywhere in the index", which is false: `Dadabhai Naoroji`
+// is a real node in shard 8 whose whole description is "Indian political leader"
+// -- three words against a twelve-word floor. The archive search finds that name
+// 37 times in the 8.7 GB question bank, and the entity buckets hold 24 real
+// sentences for it, so the reader is told the corpus is empty when it is two
+// filters away from a good answer.
+//
+// Recording the title and the reason costs 6.3 MB raw and 2.1 MB gzipped, against
+// the 65,039 kept nodes' 7 MB, and it buys the difference between "your corpus
+// does not contain this" and "this exists, and here is why you cannot read it
+// yet". The second is actionable; the first sends people away from a corpus that
+// has the material.
+//
+// Stored as parallel arrays of lower-cased titles and reason codes rather than
+// objects: `["dadabhai naoroji",3]` is a quarter the bytes of
+// `{"n":"dadabhai naoroji","r":3}` over 311k entries, and the reader needs one
+// lookup, not a scan of keys.
+var thinTitles = [], thinReasons = [];
+
+// Sorted so the shipped file is byte-stable across builds, and de-duplicated by
+// title: the same Wikipedia entity appears under several categories, and a
+// duplicate would triple the size without adding information. `thinSeen` is
+// already a title-keyed object, so a title appearing under several categories
+// keeps only its first reason -- which is the one that decided the drop.
+Object.keys(thinSeen).sort().forEach(function (k) {
+  var t = thinSeen[k];
+  thinTitles.push(t[0]);
+  // Words are capped at 40 so a pathological description cannot inflate the file.
+  thinReasons.push(t[1] * 1000 + Math.min(40, t[2]));
+});
+
+  // ── node shards ───────────────────────────────────────────────────────────
+  // Cloudflare Pages rejects any single asset over 25 MiB (slim-live.yml deploys
+  // with `wrangler pages deploy`). 214,011 sentence rows are ~46 MB, so they
+  // ship as several files that the reader concatenates. The target is 8 MB,
+  // leaving room for JSON quoting overhead and growth before a shard crosses the
+  // hard limit. The counts live in meta.nodeShards; there is no manifest file to
+  // get out of step, because the count is the manifest.
+  var SHARD_TARGET = 8 * 1024 * 1024;
+  var SHARD_RE = /^ask-index-nodes\.\d+\.json$/;
+  var shards = [];
+  nodes.forEach(function (row) {
+    var s = JSON.stringify(row);
+    var cur = shards[shards.length - 1];
+    if (!cur || cur.bytes + s.length + 2 > SHARD_TARGET) {
+      cur = { rows: [], bytes: 2, file: path.join(ROOT, 'data', 'ask-index-nodes.' + shards.length + '.json') };
+      shards.push(cur);
+    }
+    cur.rows.push(row);
+    cur.bytes += s.length + 2;
+  });
+  // Drop shards left over from a previous, larger build so the deployed set
+  // matches meta.nodeShards and no stale sentence file is served.
+  fs.readdirSync(path.join(ROOT, 'data')).forEach(function (f) {
+    if (!SHARD_RE.test(f)) return;
+    if (+f.match(/\.(\d+)\.json$/)[1] >= shards.length) fs.unlinkSync(path.join(ROOT, 'data', f));
+  });
+  var shardBytes = 0;
+  shards.forEach(function (sh) {
+    fs.writeFileSync(sh.file, JSON.stringify(sh.rows));
+    shardBytes += fs.statSync(sh.file).size;
+    console.log('  wrote ' + path.relative(ROOT, sh.file) + ' (' + (fs.statSync(sh.file).size / 1048576).toFixed(2) + ' MB)');
+  });
+
   var out = {
     meta: {
       builtAt: new Date().toISOString(),
@@ -131,20 +223,37 @@ function main() {
       droppedDuplicateSentence: stats.droppedDup,
       nodesWithLinks: linkedNodes,
       minDescWords: ask.MIN_DESC_WORDS,
+      thinNodes: thinTitles.length,
+      nodeShards: shards.length,
+      nodeShardBytes: shardBytes,
+      thinNote: 'nodes excluded by the quote gate, as lower-cased titles. ' +
+        'reason = code*1000 + wordCount, where code is 1=too short, 2=not quotable, 3=both. ' +
+        'A refusal naming one of these is a build gap, not a corpus gap.',
       note: 'Retrieval index only. Every quoted sentence in an answer is verbatim corpus text with a map.html deep link. This index does not generate claims.'
     },
     byCat: byCat,
-    nodes: nodes,
-    links: adj
+    // The quotable sentence rows do NOT live in this file. They are 214,011
+    // sentences, ~46 MB raw, and Cloudflare Pages rejects any single asset over
+    // 25 MiB, so they ship as `data/ask-index-nodes.<i>.json` shards listed in
+    // `meta.nodeShards`. This file holds everything a refusal needs -- the
+    // dropped-title table (`thin`) so the engine can say "this exists but cannot
+    // be quoted" instead of "the corpus is empty" -- plus the category histogram
+    // and the co-occurrence links. Keep it small: it is on every page load.
+    links: adj,
+    // Parallel arrays, positionally aligned. See `thinNote` in meta.
+    thin: thinTitles,
+    thinWhy: thinReasons
   };
 
   fs.writeFileSync(OUT, JSON.stringify(out));
   var mb = fs.statSync(OUT).size / 1048576;
 
-  // Read the file straight back and prove the shipped artefact is queryable.
-  // A build that writes an index nothing can parse is worse than no build.
-  var back = JSON.parse(fs.readFileSync(OUT, 'utf8'));
-  var probe = ask.buildIndex({ nodes: decodeNodes(back), links: back.links });
+  // Read the shards and this file straight back and prove the shipped artefact
+  // is queryable. A build that writes an index nothing can parse is worse than
+  // no build.
+  var backNodes = [];
+  shards.forEach(function (s) { backNodes = backNodes.concat(s.rows); });
+  var probe = ask.buildIndex({ nodes: decodeNodes({ nodes: backNodes }), links: out.links, thin: out.thin, thinWhy: out.thinWhy });
   if (probe.N !== stats.kept) {
     console.error('FATAL: round-trip kept ' + probe.N + ' nodes, expected ' + stats.kept);
     process.exit(1);
@@ -161,7 +270,22 @@ function main() {
   console.log('dropped (duplicate sentence) : ' + stats.droppedDup);
   console.log('nodes with >=1 link   : ' + linkedNodes + '  (' + (100 * linkedNodes / Math.max(1, stats.kept)).toFixed(1) + '% of kept)');
   console.log('categories            : ' + Object.keys(byCat).length);
-  console.log('wrote ' + path.relative(ROOT, OUT) + ' (' + mb.toFixed(2) + ' MB)');
+  console.log('wrote ' + path.relative(ROOT, OUT) + ' (' + mb.toFixed(2) + ' MB, thin + links only)');
+  console.log('node shards           : ' + shards.length + ' (' + (shardBytes / 1048576).toFixed(2) + ' MB total)');
+
+  // The deploy target is Cloudflare Pages, which rejects any single asset over
+  // 25 MiB. A build that silently writes an undeployable file is the one failure
+  // this script must never have, so it is a hard error, not a warning.
+  var LIMIT = 25 * 1048576;
+  var over = [OUT].concat(shards.map(function (s) { return s.file; })).filter(function (f) {
+    return fs.statSync(f).size > LIMIT;
+  });
+  if (over.length) {
+    console.error('FATAL: ' + over.length + ' file(s) exceed the 25 MiB Pages limit: ' +
+      over.map(function (f) { return path.basename(f); }).join(', ') +
+      '. Lower SHARD_TARGET in this script.');
+    process.exit(1);
+  }
 
   if (linkedNodes / Math.max(1, stats.kept) < 0.25) {
     console.log('');
@@ -169,11 +293,6 @@ function main() {
     console.log('links in timeline.json connect mostly the short, unquotable nodes, so the');
     console.log('subgraph of nodes that can actually be quoted is almost edgeless. BM25');
     console.log('retrieval still works; related-node expansion contributes almost nothing.');
-  }
-  if (mb > 20) {
-    console.log('');
-    console.log('WARNING: index exceeds 20 MB. Browser load will be slow; raise MIN_DESC_WORDS');
-    console.log('or lower MAX_TARGET_LINKS in this script before shipping.');
   }
 }
 

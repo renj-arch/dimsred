@@ -9,9 +9,9 @@ var fs = require('fs');
 var path = require('path');
 var ask = require('../scripts/lib/ask-core.js');
 
-var payload = JSON.parse(fs.readFileSync(path.resolve(__dirname, '..', 'data', 'ask-index.json'), 'utf8'));
+var payload = require('./lib/ask-index-load.js').read(path.resolve(__dirname, '..'));
 var nodes = payload.nodes.map(function (r) { return { id: r[0], name: r[1], type: r[2], cat: r[3], desc: r[4] }; });
-var idx = ask.buildIndex({ nodes: nodes, links: payload.links });
+var idx = ask.buildIndex({ nodes: nodes, links: payload.links, thin: payload.thin, thinWhy: payload.thinWhy });
 
 var CASES = [
   {

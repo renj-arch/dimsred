@@ -19,11 +19,11 @@ var path = require('path');
 var ask = require('./lib/ask-core.js');
 var ROOT = path.join(__dirname, '..');
 
-var payload = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/ask-index.json'), 'utf8'));
+var payload = require('./lib/ask-index-load.js').read(ROOT);
 var nodes = payload.nodes.map(function (r) {
   return { id: r[0], name: r[1], type: r[2], cat: r[3], desc: r[4] };
 });
-var idx = ask.buildIndex({ nodes: nodes, links: payload.links });
+var idx = ask.buildIndex({ nodes: nodes, links: payload.links, thin: payload.thin, thinWhy: payload.thinWhy });
 
 var q = process.argv[2] ||
   "analyse the role of micro, small and medium enterprises in India's economic development";

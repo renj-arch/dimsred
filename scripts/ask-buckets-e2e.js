@@ -40,6 +40,15 @@ global.fetch = function (u) {
   if (f.indexOf('bucket/buckets.json') >= 0) {
     return tj(fs.readFileSync(path.join(QB, 'bucket', 'buckets.json'), 'utf8'));
   }
+  var pm = /phrase\.(.+?)\.json$/.exec(f);
+  if (pm) {
+    // The phrase shards are served, unlike the category shards. They are the only
+    // route to a term that is not an entity name ("water mass"), so 404ing them
+    // here would hide exactly the gap this test exists to catch.
+    var pf = path.join(QB, 'phrase', 'phrase.' + pm[1] + '.json');
+    if (!fs.existsSync(pf)) return Promise.resolve({ ok: false, status: 404 });
+    return tj(fs.readFileSync(pf, 'utf8'));
+  }
   var bm = /bucket\.(.+?)\.json$/.exec(f);
   if (bm) {
     served.push(+bm[1]);
@@ -107,8 +116,20 @@ browser.boot(answer, qb)
       'one request per reported bucket', served.length + ' vs ' + c.fetchedShards);
     // 10 entities, one per heading, so at most 10 distinct buckets.
     ok(served.length <= 10, 'at most one bucket per heading', String(served.length));
-    ok(c.shardBytes < 40 * 1048576,
-      'transfer is well under the 90 MB budget', (c.shardBytes / 1048576).toFixed(1) + ' MB');
+    // Measured against the page's own fetch budget, not a fixed byte count.
+    //
+    // This used to assert "< 40 MB", which was a proxy for "well under the 90 MB
+    // budget" written when a bucket averaged 2.3 MB. Lifting the per-entity sentence
+    // cap doubled the corpus the buckets hold (5.8M -> 10.6M sentences, 968 MB ->
+    // 2.07 GB), so the same ten headings legitimately cost 41 MB. Hardcoding the old
+    // number would have made the test fail for the corpus having grown rather than
+    // for retrieval misbehaving, and loosening it to a bigger constant would keep
+    // saying nothing. What the assertion is for is headroom under the real budget,
+    // so it now names that budget and requires a margin.
+    var PAGE_BUDGET = 90 * 1048576;
+    ok(c.shardBytes < PAGE_BUDGET * 0.75,
+      'transfer keeps a 25% margin under the 90 MB page budget',
+      (c.shardBytes / 1048576).toFixed(1) + ' MB of ' + (PAGE_BUDGET / 1048576) + ' MB');
     ok(c.counts.answered > 0, 'at least one heading answered', String(c.counts.answered));
     // An absent heading proves the entity table has no row of that name. It does NOT
     // prove the corpus lacks the term: "Water mass concept" resolved to nothing here,

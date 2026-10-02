@@ -48,8 +48,11 @@ data/questions/state-tracker.json
 !data/mains-questions.json
 # ask.html fetches this prebuilt retrieval index at runtime. Same reasoning as
 # mains-questions.json: slim-live builds from the git index, so without this the
-# Ask page would load with no data.
+# Ask page would load with no data. The sentence rows are sharded out of it
+# because Cloudflare Pages rejects assets over 25 MiB; the shards must be
+# allowlisted too or the page would answer with the refusal paths only.
 !data/ask-index.json
+!data/ask-index-nodes.*.json
 # Ask's question-bank routing tables. The browser needs these to decide which
 # corpus shards a question routes to: the manifest and directory are tiny, the
 # entity table is 10.4 MB, and the concept table is measured category evidence.

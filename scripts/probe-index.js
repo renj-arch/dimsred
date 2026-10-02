@@ -4,7 +4,7 @@
 var fs = require('fs');
 var path = require('path');
 var ROOT = path.join(__dirname, '..');
-var data = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/ask-index.json'), 'utf8'));
+var data = require('./lib/ask-index-load.js').read(ROOT);
 var pats = process.argv.slice(2);
 if (!pats.length) pats = ['subsid', 'world trade', 'agreement on agriculture', 'agriculture'];
 pats.forEach(function (p) {

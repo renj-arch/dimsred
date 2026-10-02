@@ -292,6 +292,7 @@ function renderRefusal(res) {
     if (res.subject) diag += '<span>subject: ' + esc(res.subject) + '</span>';
     if (res.anchors && res.anchors.length) diag += '<span>anchors: ' + res.anchors.map(esc).join(', ') + '</span>';
     if (a.ontologyHits && a.ontologyHits.length) diag += '<span>ontology: ' + a.ontologyHits.map(esc).join(', ') + '</span>';
+    if (res.thin) diag += '<span>dropped node: ' + esc(res.thin.title) + ' &middot; its only sentence is ' + res.thin.info.words + ' words</span>';
     diag += '</div>';
   }
   return '<div class="result"><div class="refusal">' +
@@ -525,12 +526,37 @@ return;
 function renderTimeline(q) {
   el('out').innerHTML = '<div class="load">Searching&hellip;</div>';
   setTimeout(function () {
+    var res;
     try {
-      var res = VlymbooqAsk.retrieve(IDX, q, 12);
-      render(res);
+      res = VlymbooqAsk.retrieve(IDX, q, 12);
     } catch (err) {
       el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+      return;
     }
+    // The timeline index holds one sentence per node and drops any node under a
+    // twelve-word floor, so it refuses subjects it actually knows. The question
+    // bank is the right reach for any such subject: its entity bucket holds every
+    // sentence the archive has for that name. This is the difference between
+    // "the corpus lacks it" and "this index could not quote it", and those must
+    // never be shown as the same thing. It is attempted on every refusal, not
+    // only when the dropped node was named, because a normalised phrase rarely
+    // equals a title anyway ("the anti-defection law in India" vs the node
+    // "Anti-defection law (India)"). If the bank cannot answer either, the
+    // honest refusal stands.
+    if (res.refused && res.subject && QB_READY) {
+      el('out').innerHTML = '<div class="load">Reading the question bank&hellip;</div>';
+      VlymbooqAskBrowser.mains(q, [[res.subject, res.subject, []]], {}).then(function (composed) {
+        if (composed && composed.counts && composed.counts.answered) {
+          el('out').innerHTML = renderMains(composed, res.subject);
+        } else {
+          el('out').innerHTML = renderRefusal(res);
+        }
+      }).catch(function () {
+        el('out').innerHTML = renderRefusal(res);
+      });
+      return;
+    }
+    render(res);
   }, 30);
 }
 
@@ -603,17 +629,35 @@ QB_ERROR = err;
 updateStatus();
 });
 
+// The index is two layers. `ask-index.json` is the small file: the dropped-title
+// table a refusal needs, the category histogram and the links. The quotable
+// sentence rows are ~46 MB, over the 25 MiB per-file limit the deploy target
+// enforces, so they ship as `ask-index-nodes.<i>.json` shards and are fetched
+// here and concatenated. A checkout that predates the split still works: when
+// meta.nodeShards is absent, the rows are inline in `data.nodes`.
 fetch('data/ask-index.json')
   .then(function (r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
   })
   .then(function (data) {
-    var nodes = data.nodes.map(function (arr) {
-      return { id: arr[0], name: arr[1], type: arr[2], cats: arr[3] ? [{ key: arr[3], label: arr[3] }] : [], desc: arr[4] };
+    var shards = (data.meta && data.meta.nodeShards) || 0;
+    var jobs = [];
+    for (var i = 0; i < shards; i++) {
+      jobs.push(fetch('data/ask-index-nodes.' + i + '.json').then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status + ' on a node shard');
+        return r.json();
+      }));
+    }
+    return Promise.all(jobs).then(function (parts) {
+      var rows = (shards ? [] : (data.nodes || []));
+      parts.forEach(function (p) { rows = rows.concat(p); });
+      var nodes = rows.map(function (arr) {
+        return { id: arr[0], name: arr[1], type: arr[2], cats: arr[3] ? [{ key: arr[3], label: arr[3] }] : [], desc: arr[4] };
+      });
+      var idx = VlymbooqAsk.buildIndex({ nodes: nodes, links: data.links || {}, thin: data.thin, thinWhy: data.thinWhy });
+      boot(idx, data.meta);
     });
-    var idx = VlymbooqAsk.buildIndex({ nodes: nodes, links: data.links || {} });
-    boot(idx, data.meta);
   })
   .catch(function (err) {
     if (QB_ERROR) {

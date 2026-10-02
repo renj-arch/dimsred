@@ -5,7 +5,7 @@ name: Ask Retrieval Audit
 # WHY A SEPARATE WORKFLOW, NOT A STEP IN build-ask-qb.yml:
 #   That workflow is a 330-minute, 9.4 GB disk job whose entire job is to
 #   regenerate the question-bank tables. The audit needs neither: it reads the
-#   65,039-node data/ask-index.json (a few MB) and runs in about a second. A
+#   node shards that ask-index.json points at and runs in about a second. A
 #   regression here is a code defect, and it should not wait hours behind a
 #   corpus rebuild to be discovered -- nor should a failing audit be able to
 #   stop the rebuild that keeps production honest.
@@ -28,7 +28,9 @@ on:
       - scripts/lib/ask-core.js
       - scripts/ask-audit.js
       - scripts/build-ask-index.js
+      - scripts/lib/ask-index-load.js
       - data/ask-index.json
+      - data/ask-index-nodes.*.json
   workflow_dispatch:
 
 concurrency:
@@ -51,7 +53,7 @@ jobs:
 
       - name: Report index size
         run: |
-          node -e "const p=require('./data/ask-index.json');console.log('nodes: '+p.nodes.length)"
+          node -e "const p=require('./scripts/lib/ask-index-load.js').read('.');console.log('nodes: '+p.nodes.length+' in '+p.meta.nodeShards+' shards')"
 
       # The audit exits nonzero on any unexpected verdict, so a regression
       # blocks the merge rather than being noticed later in a live answer.

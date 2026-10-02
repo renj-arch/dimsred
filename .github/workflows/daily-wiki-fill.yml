@@ -397,10 +397,12 @@ jobs:
       # frozen index while the corpus grew. Reads timeline.nodes.*.json, which
       # the step above just produced; if that was skipped/failed, so is this.
       #
-      # NOTE: this is the TIMELINE index (data/ask-index.json) only. It does NOT
-      # build the question-bank tables under data/ask-qb/ — those have their own
-      # builders and their own workflow (build-ask-qb.yml, self-dispatched below).
-      # Running this step alone leaves the question bank stale.
+      # NOTE: this is the TIMELINE index (data/ask-index.json plus its
+      # data/ask-index-nodes.*.json shards, which `git add -A` below stages) only.
+      # It does NOT build the question-bank tables under data/ask-qb/ — those have
+      # their own builders and their own workflow (build-ask-qb.yml,
+      # self-dispatched below). Running this step alone leaves the question bank
+      # stale.
       - name: Rebuild Ask engine index
         continue-on-error: true
         run: |
