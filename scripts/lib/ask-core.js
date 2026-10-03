@@ -1252,21 +1252,37 @@
       else {
         // Longest shared word run. "anti-defection law" against
         // "the anti-defection law in india" shares "anti defection law".
-        var kw = kn.split(' '), qw = key.split(' '), run = 0, bestRun = 0;
+        var kw = kn.split(' '), qw = key.split(' '), run = 0, runTok = 0, bestRun = 0, bestTok = 0;
         for (var a = 0; a < kw.length; a++) {
           for (var b = 0; b < qw.length; b++) {
             if (kw[a] && kw[a] === qw[b]) {
               run = kw[a].length;
+              runTok = 1;
               for (var c = 1; a + c < kw.length && b + c < qw.length; c++) {
-                if (kw[a + c] === qw[b + c]) run += kw[a + c].length;
+                if (kw[a + c] === qw[b + c]) { run += kw[a + c].length; runTok++; }
                 else break;
               }
             }
-            if (run > bestRun) bestRun = run;
-            run = 0;
+            if (run > bestRun || (run === bestRun && runTok > bestTok)) {
+              bestRun = run; bestTok = runTok;
+            }
+            run = 0; runTok = 0;
           }
         }
-        if (bestRun >= 10) score = bestRun;
+        // The run must cover the WHOLE key, not just one of its words.
+        //
+        // bestRun >= 10 on its own let any single 10+ character word decide the
+        // route. "traditional" is 11 characters, so a question about the factors
+        // behind the decline of traditional handicraft industries under colonial
+        // rule routed to "traditional medicine" -- whose vocabulary is ayurveda,
+        // siddha, yoga and charaka -- and was answered with Bikram Yoga and Aerial
+        // yoga. Any 10+ character shared adjective could hijack a route the same
+        // way.
+        //
+        // Requiring every token of the key keeps the fuzzy match doing its real
+        // job ("anti defection law" inside "the anti defection law in india")
+        // while making it impossible to reach a concept by one common word.
+        if (bestRun >= 10 && bestTok === kw.length) score = bestRun;
       }
       if (score > bestScore) { bestScore = score; best = k; }
     });
@@ -1904,7 +1920,24 @@
         'rather than evidence';
     } else if (conceptTier && evalVerdict && hasFit && !hasStrain) {
       // Refuse the one-sided answer rather than present it as a judgement.
-      reason = 'the corpus evidences how the framework accommodated diversity, but holds no quotable material on the limits of that accommodation, so it cannot support a "how far" verdict';
+      //
+      // The message must be derived from the route that actually fired. It used
+      // to be fixed prose about "how the framework accommodated diversity",
+      // written for the federal diversity concept and emitted verbatim for
+      // EVERY concept with one-sided evidence. A question about nuclear energy in
+      // India's future mix was therefore refused with a sentence about diversity
+      // and "how far" -- a debate the reader never raised -- which is worse than
+      // no explanation at all. Name the concept and name the missing side.
+      var oneRoute = routeFor(subject, question) || {};
+      var oneCfg = oneRoute.cfg || {};
+      var missingSide = (oneCfg.strain || []).filter(function (t) {
+        return !uniq.some(function (e) { return norm(e.sentence).indexOf(norm(t)) !== -1; });
+      });
+      reason = 'the corpus evidences one side of "' + (oneRoute.key || 'this concept') +
+        '" but holds no quotable material on the other side' +
+        (missingSide.length
+          ? ' (' + missingSide.slice(0, 6).join(', ') + ')' : '') +
+        ', so it cannot support a judgement on the trade-off the question asks for';
     } else {
       refused = false;
     }
