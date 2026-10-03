@@ -226,7 +226,10 @@ Object.keys(thinSeen).sort().forEach(function (k) {
   var out = {
     meta: {
       builtAt: new Date().toISOString(),
-      builtFrom: 'data/timeline.nodes.0-9.json + data/timeline.json',
+      // Derived from what was actually read, not a hardcoded range. The old literal
+// said "0-9" while the builder was reading shard 10, so the one field whose job
+// is to tell you what the index was built from was the field that was wrong.
+builtFrom: 'data/timeline.nodes.' + (nodeShards.length ? nodeShards[0].match(/(\d+)/)[1] + '-' + nodeShards[nodeShards.length - 1].match(/(\d+)/)[1] : 'none') + '.json (' + nodeShards.length + ' shards) + data/timeline.json',
       fields: FIELDS,
       encoding: 'array',
       nodesScanned: stats.scanned,
