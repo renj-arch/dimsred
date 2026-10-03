@@ -447,21 +447,30 @@ jobs:
             # -> live -> Cloudflare production) would silently skip after every bot
             # commit. Dispatch it explicitly to keep production fresh.
             gh workflow run slim-live.yml 2>/dev/null && echo "Self-dispatched Slim Live" || echo "Slim Live dispatch failed (non-fatal)"
-            # Daily question growth changes which topics need figures and where
-            # the flowcharts should point, so refresh both after each commit too.
-            # resolve-figures is network-bound (~126 topics) and runs standalone;
-            # build-timeline rebuilds the flowchart + geography packs. Both are
-            # non-fatal: a failed dispatch just means figures/flowcharts stay at
-            # the last successful rebuild.
-            gh workflow run resolve-figures.yml 2>/dev/null && echo "Self-dispatched Resolve Figures" || echo "Resolve Figures dispatch failed (non-fatal)"
+            # The Ask index and mind-tree DO depend on new questions, so the
+            # timeline rebuild stays chained here. build-timeline.yml no longer
+            # builds any figure packs.
             gh workflow run build-timeline.yml 2>/dev/null && echo "Self-dispatched Build Timeline" || echo "Build Timeline dispatch failed (non-fatal)"
-            # Verify the rebuilt geography pack's hotlinked images still resolve.
-            # build-timeline above regenerates geography-figures.html from the inline
-            # FIGURES list, and a newly auto-filled topic can point at a Commons file
-            # that has since been renamed, so checking only on a schedule would leave
-            # a window where a broken image ships. Cheap (40 HEAD-ish GETs) and
-            # non-fatal; it also has its own weekly schedule for nights with no data change.
-            gh workflow run figure-link-check.yml 2>/dev/null && echo "Self-dispatched Figure Link Check" || echo "Figure Link Check dispatch failed (non-fatal)"
+            # FIGURES ARE NO LONGER DISPATCHED FROM HERE.
+            #
+            # This block used to fan out to resolve-figures.yml,
+            # build-timeline.yml (which built the figure packs) and
+            # figure-link-check.yml. That put the entire figure pipeline behind
+            # the fill chain: it only ever started inside `if [ -f
+            # changes-committed ]`, so any night that mined nothing new, or any
+            # failure upstream, silently skipped figures for as long as the
+            # problem lasted. Figure discovery and question growth are unrelated
+            # -- a Commons file can be renamed on a day the corpus does not
+            # change, and then nothing would look at it.
+            #
+            # build-figures.yml now owns all of it, on `cron: '23 */6 * * *'`, in
+            # its own concurrency group that nothing else shares. So figures keep
+            # a fixed 4x-daily cadence regardless of what this workflow does, and
+            # a busy or failing fill can no longer delay, skip or cancel them.
+            #
+            # build-timeline.yml is still dispatched below, because the Ask index
+            # and the mind-tree genuinely do depend on new questions. Its figure
+            # steps were removed in the same change.
             # The Ask question-bank tables (data/ask-qb/) are a SEPARATE artifact
             # from the timeline index rebuilt in `finalize`, and nothing used to
             # rebuild them, so they went stale on every fill — run #560 left

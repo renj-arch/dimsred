@@ -90,39 +90,17 @@ jobs:
       - name: Rebuild mind-tree (topic-layers.json)
         run: node scripts/gen-topic-layers.js
 
-      # These three packs were one `run: |` block, so a nonzero exit from any of
-      # them failed the job and SKIPPED the commit below -- throwing away a
-      # timeline and Ask index that had already rebuilt successfully, purely
-      # because a figure script hit the network.
+      # Figure packs are NOT built here any more. They live in build-figures.yml,
+      # on their own 4x-daily schedule, because sharing this job meant figures
+      # waited behind a 12 GB timeline rebuild they do not need, were limited to
+      # one attempt a week, and shared a commit (and a `run: |` block) with the
+      # data rebuild -- so a Wikimedia 429 could skip the commit and discard a
+      # timeline and Ask index that had already built fine.
       #
-      # build-geography-figures.js is the risky one: its auto-fill calls the
-      # Wikimedia Commons API (autoFill -> commonsSearch/fileOK). Its requests
-      # are individually bounded (12s AbortController) and the whole fill has a
-      # FIGURES_MAX_MS wall-clock budget, but a 429 or a socket reset can still
-      # surface as a nonzero exit. A figure pack must never be able to block the
-      # data commit, so each runs as its own non-fatal step: one pack failing
-      # leaves the other two at their last good build instead of reverting
-      # everything.
-      - name: Rebuild geography diagrams
-        continue-on-error: true
-        run: node scripts/build-geography-diagrams.js
-
-      - name: Rebuild geography figures (auto-fills new topics)
-        continue-on-error: true
-        run: node scripts/build-geography-figures.js
-
-      # build-subject-figures.js refuses to write unless FIGURES_ALLOW_UNVERIFIED=1
-      # (see main() in that script). Without it this step printed the warning and
-      # returned without writing, so subject-figures-index.html and the 24
-      # *-figures.html packs in this repo were stale artifacts of a manual run.
-      # FIGURE_SOURCE=curated is the default and the safe one: topics come from
-      # data/figure-topics-curated.json (UPSC Paper-1 syllabus) rather than the
-      # A-Z Wikipedia question shards, which is what previously produced figures
-      # like the Democratic Party under Animal Husbandry. Set explicitly so a
-      # future default change cannot silently reintroduce the contaminated source.
-      - name: Rebuild subject figure packs
-        continue-on-error: true
-        run: FIGURES_ALLOW_UNVERIFIED=1 FIGURE_SOURCE=curated node scripts/build-subject-figures.js
+      # Note the ordering that remains load-bearing: build-timeline.js ->
+      # build-ask-index.js -> gen-topic-layers.js. build-ask-index.js reads the
+      # node parts the first step writes, and gen-topic-layers.js reads
+      # timeline.json. Do not reorder or parallelise these three.
 
       # The two suites that need data/ask-qb/entities.tsv live here, not in
       # ask-audit.yml. That workflow sparse-checks-out only the index, its node
@@ -150,7 +128,17 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null
-          git add -A data/ geography-diagrams.html geography-figures.html subject-figures-index.html *-figures.html
+          # Timeline/Ask artifacts ONLY. Figure paths belong to build-figures.yml and
+          # must not be staged here: two workflows committing the same files is
+          # how they end up fighting over pushes. `git add -A data/` is also
+          # deliberately narrowed to the specific index and tree files this job
+          # produces, so a stray working-tree change cannot ride along.
+          git add -A \
+            data/timeline.json \
+            'data/timeline.nodes.*.json' \
+            data/ask-index.json \
+            'data/ask-index-nodes.*.json' \
+            data/topic-layers.json
           if git diff --staged --quiet; then
             echo "No timeline changes to commit"
           else
