@@ -65,6 +65,29 @@ on:
         description: 'Topic source for subject figure packs: curated (UPSC syllabus) or shards (contaminated)'
         required: false
         default: 'curated'
+      # The three scripts below are reachable from here but never scheduled.
+      # They were fully orphaned: no workflow referenced them at all, so they
+      # looked like leftovers from an abandoned plan rather than deliberate
+      # manual tools. None of them is an idempotent builder, which is why none
+      # belongs on a 4x/day timer:
+      #   stamp-figure-dates.js  its own header calls it one-off/on-demand
+      #   import-figures.js      takes CLI arguments; writes data/figure-facts.json,
+      #                          which is gitignored and therefore not committed
+      #   add-svg-diagrams.js    mutates content JSON in place
+      # Exposing them as inputs keeps them discoverable and reviewable while
+      # making it impossible for a scheduled run to fire them by accident.
+      stamp_figure_dates:
+        description: 'Run stamp-figure-dates.js (ONE-OFF: stamps dates onto figure packs, not idempotent)'
+        required: false
+        default: 'false'
+      import_figures:
+        description: 'Run import-figures.js (MANUAL: writes data/figure-facts.json, needs its own CLI args)'
+        required: false
+        default: 'false'
+      add_svg_diagrams:
+        description: 'Run add-svg-diagrams.js (MANUAL: mutates content JSON in place, not idempotent)'
+        required: false
+        default: 'false'
 
 # `figure-build` is used by nothing else in the repo. That is the point: a
 # group shared with the fill chain would reintroduce exactly the queueing this
@@ -172,6 +195,27 @@ jobs:
         if: inputs.link_check == 'true'
         continue-on-error: true
         run: node scripts/check-figure-links.js
+
+      # Deliberately manual. All three are continue-on-error and none can run on
+      # a schedule, because none is idempotent -- a timed stamp run would rewrite
+      # dates forever, and a timed SVG mutation would edit content on every tick.
+      - name: Stamp figure dates (manual, one-off)
+        if: inputs.stamp_figure_dates == 'true'
+        continue-on-error: true
+        run: node scripts/stamp-figure-dates.js
+
+      # Not staged by the commit step below: data/figure-facts.json is untracked
+      # and ignored, and `git add` exits 1 on an ignored pathspec, which under
+      # `bash -e` would fail the whole commit step.
+      - name: Import figures (manual)
+        if: inputs.import_figures == 'true'
+        continue-on-error: true
+        run: node scripts/import-figures.js
+
+      - name: Add SVG diagrams (manual, content mutation)
+        if: inputs.add_svg_diagrams == 'true'
+        continue-on-error: true
+        run: node scripts/add-svg-diagrams.js
 
       - name: Commit + push regenerated figures
         # `inputs.commit` is only populated for workflow_dispatch. A schedule
