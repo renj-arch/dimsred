@@ -44,8 +44,14 @@ var JUNK_RE=/^(commons logo|wikidata|wikimedia|wiktionary|wikibooks|wikinews|wik
 // an SVG, so the SVG preference would otherwise crown Flag of India.svg as the
 // answer for "tiger reserves india", "ports map", "judicial hierarchy" alike.
 var SYMBOL_RE=/\b(flag|flags|emblem|logo|logos|coat of arms|arms of|seal of|anthem|insignia|wordmark|banner)\b/;
+// Interface chrome, not subject matter. These have been scoring as figures:
+// "Tornado Pinhead icon.svg" came back from the depicts tier at conf 0.97, and
+// an icon is a map-pin glyph, not a tornado. Bare "symbol" is deliberately NOT
+// here -- "chemical symbols diagram" is a real figure and must stay eligible --
+// so the Wikipedia template images are matched by their full names instead.
+var CHROME_RE=/\b(icon|icons|stub|ambox|disambiguation|padlock|navbox)\b|category class|portal class|commons-logo|question book|wiki letter|text document|wiki page|noun-theatre/;
 
-function isSymbol(f){ return SYMBOL_RE.test(contentTokens(f).join(' ')); }
+function isSymbol(f){ return SYMBOL_RE.test(contentTokens(f).join(' '))||CHROME_RE.test(norm(f)); }
 function isJunk(f){ return JUNK_RE.test(contentTokens(f).join(' ')); }
 
 function isDiagramish(title, desc){
@@ -525,6 +531,172 @@ async function resolve(topic,opts){
   return null;
 }
 
-module.exports={resolve:resolve,isDiagramish:isDiagramish,norm:norm,topicQids:topicQids,
+// ---- auto-discovery -------------------------------------------------------
+//
+// The curated topic lists are UPSC syllabus phrases, and a single search on
+// that phrase finds nothing: "gandhara and mathura school art" matches no
+// Wikidata label and no article title. Hand-mapping 121 topics fixed the
+// symptom but is not a mechanism -- at a thousand topics nobody maintains it,
+// which is what this layer exists to replace.
+//
+// The split that makes it work is that RECALL is aggressive and PRECISION is
+// strict. Queries are relaxed (filler stripped, conjuncts split apart, single
+// nouns tried) to find candidate entities, but nothing is accepted unless the
+// result demonstrably belongs to the topic that was asked about. Relaxing the
+// query without that check is what would put a photo of a Danish fort under
+// "colonial architecture india".
+
+// Words that describe the QUESTION rather than the SUBJECT. They must not
+// count as evidence that a figure matches, since almost every figure has them.
+var FILLER={map:1,maps:1,diagram:1,diagrams:1,chart:1,charts:1,graph:1,structure:1,layers:1,
+  types:1,type:1,features:1,feature:1,process:1,system:1,systems:1,india:1,indian:1,major:1,
+  population:1,timeline:1,evolution:1,sector:1,sectors:1,measures:1,form:1,forms:1,list:1,
+  mechanism:1,control:1,policy:1,policies:1,scheme:1,schemes:1,day:1,days:1,award:1,awards:1,
+  governance:1,industry:1,network:1,networks:1,technology:1,technologies:1,index:1,indices:1,
+  data:1,india:1,vital:1,role:1,issues:1,issue:1,overview:1,basics:1,facts:1,importance:1,
+  meaning:1,definition:1,history:1,geography:1,myth:1,society:1,culture:1};
+
+function meaningfulToks(s){
+  return contentTokens(s).filter(function(t){return !FILLER[t];});
+}
+
+// Candidate queries for a topic, most specific first.
+function discoveryCandidates(topic){
+  var out=[],seen={};
+  function push(q){
+    q=String(q||'').replace(/\s+/g,' ').trim();
+    if(q.length<4||seen[q])return;
+    // A candidate made only of filler words names nothing.
+    if(!meaningfulToks(q).length)return;
+    seen[q]=1;out.push(q);
+  }
+  push(topic);
+  push(conceptQuery(topic));
+  var bare=meaningfulToks(topic).join(' ');
+  push(bare);
+  // Compound syllabus topics name several entities at once ("gandhara AND
+  // mathura"). One figure cannot cover both, so each conjunct is offered
+  // separately and the verifier decides whether the answer is on-topic.
+  bare.split(/\s+(?:and|&|vs|versus)\s+/).forEach(push);
+  meaningfulToks(topic).forEach(push); // last resort: single nouns
+  return out;
+}
+
+// Does this result actually belong to the topic that was asked about?
+function belongsToOriginal(result,topic){
+  var want=meaningfulToks(topic);
+  if(!want.length)return false;
+  var src=contentTokens(stripExt(String((result&&result.file)||'')))
+    .concat(contentTokens(String((result&&result.article)||'')));
+  if(!src.length)return false;
+  return want.some(function(w){return stemMatch(w,src);});
+}
+
+// The entity a result was resolved FROM, which is not always result.article.
+// Tier 1 answers with a category or depicts claim and carries no article field
+// at all ("category:Gandhara"), so reading article alone left the single-noun
+// check comparing against an empty string and silently rejected every
+// single-noun discovery -- "gandhara" resolved fine at conf 0.9 and was
+// discarded anyway. A QID is not a name, so it does not count as one.
+function entityLabel(r){
+  if(r&&r.article)return norm(r.article);
+  var m=String((r&&r.method)||'');
+  var i=m.indexOf(':');
+  if(i>0&&!/^Q\d+$/i.test(m.slice(i+1)))return norm(m.slice(i+1));
+  return '';
+}
+
+// Discipline words and other general nouns are not entities. Left in the
+// single-noun candidate list they resolve to their own field's article, whose
+// lead image is a photo of a practitioner: "stupa architecture india" answered
+// with "Architect Dudok.jpg", because the article "Architecture" matches the
+// noun exactly and its pageimage happens to be a person. Compound candidates
+// are fine; only the lone noun is dangerous.
+var GENERIC={architecture:1,music:1,dance:1,ports:1,port:1,industry:1,society:1,culture:1,
+  geography:1,economy:1,politics:1,science:1,art:1,arts:1,education:1,history:1,
+  development:1,environment:1,ecology:1,constitution:1,law:1,courts:1,policy:1,
+  governance:1,technology:1,space:1,security:1,relations:1,aviation:1,shipping:1,
+  cinema:1,archaeology:1,engineering:1,commerce:1,trade:1,defence:1,finance:1,banking:1,
+  agriculture:1,handicrafts:1,coins:1,scripts:1,epigraphy:1};
+
+// Countries that appear as scope qualifiers in the topic lists. A topic scoped
+// to a country must not be answered from another country, and a plain name
+// check will not catch it: "mangrove forests india" was served "Mangrove
+// forests of Qeshm", which matches the mangrove words perfectly and is in Iran.
+var SCOPED={india:1,indian:1};
+
+// Only a figure that NAMES a different country is rejected. Requiring the
+// figure to positively say "India" would reject "Stupa 1, Sanchi 02.jpg" for
+// "stupa architecture india" even though Sanchi is in India and the file never
+// says so. Silence about the country is not evidence of the wrong country, so
+// it is allowed; only a positive contradiction is refused.
+var OTHER_COUNTRY={iran:1,iranian:1,china:1,chinese:1,japan:1,japanese:1,pakistan:1,
+  bangladesh:1,nepal:1,sri:1,lanka:1,bhutan:1,myanmar:1,burma:1,afghanistan:1,iraq:1,
+  egypt:1,greece:1,greek:1,italy:1,italian:1,france:1,french:1,germany:1,german:1,
+  britain:1,british:1,england:1,english:1,america:1,american:1,usa:1,canada:1,
+  australia:1,russia:1,russian:1,africa:1,kenya:1,nigeria:1,brazil:1,mexico:1};
+
+function respectsScope(result,topic){
+  var want=contentTokens(topic).filter(function(t){return SCOPED[t];});
+  if(!want.length)return true;
+  var src=contentTokens(stripExt(String((result&&result.file)||'')))
+    .concat(contentTokens(String((result&&result.article)||'')))
+    .concat(contentTokens(entityLabel(result)));
+  var foreign=src.filter(function(x){return OTHER_COUNTRY[x];});
+  if(!foreign.length)return true;
+  // The topic may legitimately name the figure's country too ("gandhara and
+  // mathura" is Indo-Greek); only refuse when the topic does not mention it.
+  return foreign.some(function(f){
+    var topicHas=contentTokens(topic).some(function(t){return tokMatch(f,t);});
+    return topicHas;
+  });
+}
+
+// A single-noun candidate is only trusted when the entity is exactly that
+// noun. Resolving the lone word "ports" otherwise lands on "Port of Colombo"
+// for a question about India's ports, and a stem match would wave that
+// through; requiring an exact label match rejects it. Real entity nouns pass
+// because "gandhara" resolves within category "Gandhara".
+function singleNounIsExact(result,cand){
+  var t=meaningfulToks(cand);
+  if(t.length!==1)return true;
+  if(GENERIC[t[0]])return false;
+  var a=entityLabel(result);
+  return !!a&&a===t[0];
+}
+
+// Per-topic candidate caps are not enough on their own. Discovery costs up to
+// DISCOVER_MAX_CANDIDATES times a full resolve, so a pack full of gaps turns
+// into thousands of API calls and the run stalls or is killed -- a control run
+// with 6 candidates per topic sat for 23 minutes and died before emitting a
+// single subject. This budget is spent across the whole process, so a run
+// always terminates with figures for the topics it did reach and an honest gap
+// for the rest, instead of dying with nothing written.
+var discoverBudget={left:parseInt(process.env.DISCOVER_MAX_TOTAL||'60',10)};
+
+async function autoDiscover(topic,opts){
+  opts=opts||{};
+  if(discoverBudget.left<=0)return null;
+  var cands=discoveryCandidates(topic);
+  var budget=Math.min(parseInt(process.env.DISCOVER_MAX_CANDIDATES||'6',10),discoverBudget.left);
+  var tried=0;
+  for(var i=0;i<cands.length&&tried<budget;i++){
+    var cand=cands[i];
+    if(norm(cand)===norm(topic)&&tried>0)continue;
+    tried++;discoverBudget.left--;
+    var hit=null;
+    try{ hit=await resolve(cand,Object.assign({},opts,{exclude:opts.exclude})); }
+    catch(e){ hit=null; }
+    if(!hit||Number(hit.conf)<0.85)continue;
+    if(!belongsToOriginal(hit,topic))continue;
+    if(!singleNounIsExact(hit,cand))continue;
+    if(!respectsScope(hit,topic))continue;
+    return Object.assign({},hit,{discovered:cand});
+  }
+  return null;
+}
+
+module.exports={resolve:resolve,autoDiscover:autoDiscover,discoveryCandidates:discoveryCandidates,
+  isDiagramish:isDiagramish,norm:norm,topicQids:topicQids,
   filesDepicting:filesDepicting,filesInCategory:filesInCategory,apiStats:apiStats,
   conceptQuery:conceptQuery,pickArticle:pickArticle,pickImage:pickImage};

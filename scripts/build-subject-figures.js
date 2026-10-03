@@ -489,9 +489,21 @@ async function main() {
           var ropts = { exclude: AUTO_EXCLUDE_IMG };
           if (hint) { if (hint.article) ropts.article = hint.article; if (hint.qid) ropts.qid = hint.qid; }
           try { hit = await RESOLVER.resolve(tname, ropts); } catch (e) { hit = null; }
+          // Auto-discovery, when there is no curated mapping. This is the
+          // scalable path: the '_entities' block is a shortcut for topics a
+          // human has already vetted, not the mechanism. Discovery relaxes the
+          // query (drops syllabus filler, splits "gandhara AND mathura" into
+          // separate entities, tries lone nouns last) but accepts a result only
+          // if it demonstrably belongs to the ORIGINAL topic, so it produces
+          // gaps rather than plausible-looking wrong figures.
+          var via = 'live';
+          if (!hit && !hint && RESOLVER.autoDiscover) {
+            try { hit = await RESOLVER.autoDiscover(tname, ropts); } catch (e) { hit = null; }
+            if (hit) via = 'auto-discovered';
+          }
           if (hit && Number(hit.conf) >= AUTO_MIN_CONF) {
             fname = hit.file;
-            source = hint ? 'curated' : 'live';
+            source = hint ? 'curated' : via;
             cache[key] = { file: fname, source: source };
           }
         }
