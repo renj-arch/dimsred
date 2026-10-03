@@ -3591,7 +3591,27 @@ var SUBTOPIC_DESCS = {
   // Source: Wikipedia, "Bastar rebellion" (rev. 1370430474, 21 Aug 2026).
   'Bastar rebellion': 'The Bastar Rebellion, also known as the Bhumkal Movement, was an Adivasi rebellion in 1910 against the British Raj in the princely state of Bastar',
   // Source: Wikipedia, "Forest Rights Act (India)" (rev. 1376803328, 26 Sep 2026).
-  'Forest Rights Act (India)': 'The Scheduled Tribes and Other Traditional Forest Dwellers (Recognition of Forest Rights) Act, 2006 is a key piece of forest legislation passed in India on 18 December 2006'
+  'Forest Rights Act (India)': 'The Scheduled Tribes and Other Traditional Forest Dwellers (Recognition of Forest Rights) Act, 2006 is a key piece of forest legislation passed in India on 18 December 2006',
+
+  // Source: Wikipedia, "De-industrialisation of India" (pageid 60850599). Every line
+  // below is a verbatim sentence from that article, quoted as-is.
+  //
+  // These eight topics need curated lines for a structural reason rather than a
+  // quality one: descWithSource() builds its text as
+  // [q.question, q.answer, q.fact, q.hint], so the cloze question is read BEFORE
+  // the fact. For fill_blank entries the question contains the blank, so the
+  // auto-extractor shipped "_____ within the Indian economy from 1757 to 1947" and
+  // the bare fragment "Internal Causes" as descriptions. desc is what Ask quotes
+  // for a node with no evidence shard, so a blank leaking into it is worse than
+  // having no description at all.
+  'De-industrialisation of India': 'The economic de-industrialisation of India refers to a period of studied reduction in industrial based activities within the Indian economy from 1757 to 1947',
+  'Decline of Indian handicrafts': 'The colonial rule under the British led to the decline of textile and handicrafts industries through their policies and introduction of machine made goods in to the Indian market',
+  'British tariff policy in India': 'Tariff policy opted by the British led to the decline of the handicraft industry, the British government started using preferential trade policies under which British goods were entering in India duty free or no nominal duty payment while Indian exporters had to pay high duty to export goods to British Mainland',
+  'East India Company trade monopoly': 'Between 1671 and 1813 the East India Company held a monopoly on English, and later British trade with the Indies, the Company being able to control what goods were traded into its territories, as well as exported',
+  'Calico Acts': 'In addition, between 1685 and 1774, the English and later British governments imposed tariffs, or prohibited the import of Indian textiles into Britain, through the Calico Acts',
+  'Decline of the Indian cotton industry': 'The fall of the Indian cotton industry is one of the important factors behind the decline of Indian GDP under British rule',
+  'Indian hand spinning industry': 'The fall in prices of cotton significantly reduced the production of Indian hand spinning industry which is considered to be the most important specimen of de-industrialisation in India',
+  'Colonial infrastructure in India': 'The colonial infrastructure created by the British government, including legal systems, railways and telegraphs were mobilized towards resource exploitation, leaving industrial growth static and agriculture unable to keep up with natural population growth'
 };
 function topicDescFor(name, label, qs) {
   if (SUBTOPIC_DESCS[name]) return SUBTOPIC_DESCS[name];
