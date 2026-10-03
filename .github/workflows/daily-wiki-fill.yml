@@ -455,6 +455,13 @@ jobs:
             # the last successful rebuild.
             gh workflow run resolve-figures.yml 2>/dev/null && echo "Self-dispatched Resolve Figures" || echo "Resolve Figures dispatch failed (non-fatal)"
             gh workflow run build-timeline.yml 2>/dev/null && echo "Self-dispatched Build Timeline" || echo "Build Timeline dispatch failed (non-fatal)"
+            # Verify the rebuilt geography pack's hotlinked images still resolve.
+            # build-timeline above regenerates geography-figures.html from the inline
+            # FIGURES list, and a newly auto-filled topic can point at a Commons file
+            # that has since been renamed, so checking only on a schedule would leave
+            # a window where a broken image ships. Cheap (40 HEAD-ish GETs) and
+            # non-fatal; it also has its own weekly schedule for nights with no data change.
+            gh workflow run figure-link-check.yml 2>/dev/null && echo "Self-dispatched Figure Link Check" || echo "Figure Link Check dispatch failed (non-fatal)"
             # The Ask question-bank tables (data/ask-qb/) are a SEPARATE artifact
             # from the timeline index rebuilt in `finalize`, and nothing used to
             # rebuild them, so they went stale on every fill — run #560 left

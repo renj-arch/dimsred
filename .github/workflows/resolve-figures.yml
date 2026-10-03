@@ -13,6 +13,22 @@ name: Resolve Figures
 # Topics come from data/figure-topics-curated.json (UPSC Paper-1 syllabus).
 
 on:
+  # Weekly, because a Commons file can be renamed, moved or deleted at any time
+  # and this resolver is the only thing that notices and repairs it.
+  #
+  # It used to be reachable ONLY through daily-wiki-fill.yml's finalize
+  # self-dispatch, which sits inside the `if changes-committed` branch: a night
+  # that mined nothing new ended the chain before figures were dispatched. That
+  # couples image rot to question growth, which are unrelated -- a URL can die on
+  # a day the corpus does not change, and then nothing would ever look at it.
+  # The dispatch is kept as well, since new topics are exactly when a resolve is
+  # most useful, but this schedule is what makes the repair reliable.
+  #
+  # Off the hour and off Sunday UTC to stay clear of the nightly Wiki Fill, which
+  # fans out 27 chunks with max-parallel 20 and is rate-limit sensitive.
+  schedule:
+    - cron: '37 4 * * 3'
+
   workflow_dispatch:
     inputs:
       delay_ms:

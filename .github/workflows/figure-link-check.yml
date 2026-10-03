@@ -1,0 +1,89 @@
+name: Figure Link Check
+
+# Verifies that every externally hosted figure image actually resolves.
+#
+# WHY A WORKFLOW:
+# geography-figures.html hotlinks all of its images (37 Wikimedia Commons, 3 NOAA)
+# and has no onerror fallback, so a file that is renamed or deleted upstream
+# renders as a broken image forever with nothing complaining. The subject-figure
+# pipeline has scripts/resolve-all-figures.js to repair it; the geography pack's
+# figure list is inline in scripts/build-geography-figures.js, so no existing
+# script ever checked those URLs. scripts/check-figure-links.js does, and this
+# runs it on a schedule so rot is noticed within days rather than at exam time.
+#
+# This is scheduled rather than only dispatched because upstream file moves do
+# not correlate with changes in this repo. daily-wiki-fill.yml also dispatches it
+# after a successful question-data commit, but that sits inside its
+# `if changes-committed` branch, so a night that mined nothing would skip it --
+# exactly when a quietly deleted image would otherwise go unnoticed.
+#
+# It fails ONLY on a confirmed 404/410. 403/429 (throttling, user-agent policy)
+# and network errors are reported in the summary but do not fail the job, so a
+# flaky connection or a Wikimedia rate limit cannot make this build flap red.
+
+on:
+  # Wednesday 05:11 UTC. resolve-figures.yml takes Wednesday 04:37, so this is
+  # offset rather than stacked on top of it -- both hammer the same API host and
+  # there is no reason to have them compete.
+  schedule:
+    - cron: '11 5 * * 3'
+
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: figure-link-check
+  cancel-in-progress: false
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Sparse on purpose. A default checkout of this repo pulls the 8.6 GB
+          # data/questions tree and the ~37 GB .git, which is what timed out in
+          # ask-audit.yml and made it look like a missing script. This job needs
+          # exactly two html files and one script, so it never fetches the corpus.
+          sparse-checkout: |
+            /geography-figures.html
+            /geography-diagrams.html
+            /scripts/check-figure-links.js
+          sparse-checkout-cone-mode: false
+          filter: blob:none
+          fetch-depth: 1
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Check external figure links
+        run: node scripts/check-figure-links.js --json "$RUNNER_TEMP/figure-link-report.json"
+
+      - name: Add summary
+        if: always()
+        run: |
+          if [ -f "$RUNNER_TEMP/figure-link-report.json" ]; then
+            {
+              echo "### Figure link check"
+              echo ""
+              echo '```json'
+              cat "$RUNNER_TEMP/figure-link-report.json"
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "Figure link check produced no report (the job failed before writing one)." >> "$GITHUB_STEP_SUMMARY"
+          fi
+
+      - name: Upload link report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: figure-link-report
+          path: ${{ runner.temp }}/figure-link-report.json
+          retention-days: 30
+          if-no-files-found: ignore

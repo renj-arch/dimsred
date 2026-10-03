@@ -1,6 +1,20 @@
 name: Timeline + Mind-tree + Geography Build
 
 on:
+  # Weekly safety net. This workflow is the thing that actually runs
+  # build-geography-figures.js, and therefore the thing that auto-discovers
+  # Commons figures for newly mined geography topics. It used to run ONLY when
+  # daily-wiki-fill.yml's finalize dispatched it, and that dispatch sits inside
+  # `if [ -f changes-committed ]` -- so if the fill chain stalled, failed, or
+  # mined nothing, figure auto-fill silently stopped for as long as the problem
+  # lasted. Auto-discovery should not inherit the fill chain's failure modes.
+  #
+  # Tuesday 06:40 UTC: clear of the nightly fill (00:00) and of the Wednesday
+  # resolve-figures (04:37) / figure-link-check (05:11) pair, so nothing competes
+  # for the Wikimedia API or for runner minutes.
+  schedule:
+    - cron: '40 6 * * 2'
+
   workflow_dispatch:
     inputs:
       commit:
@@ -76,23 +90,46 @@ jobs:
       - name: Rebuild mind-tree (topic-layers.json)
         run: node scripts/gen-topic-layers.js
 
-      - name: Rebuild geography diagram packs
-        run: |
-          node scripts/build-geography-diagrams.js
-          node scripts/build-geography-figures.js
-          # build-subject-figures.js refuses to write unless FIGURES_ALLOW_UNVERIFIED=1
-          # (see main() in that script). Without it this step printed the warning and
-          # returned without writing, so subject-figures-index.html and the 24
-          # *-figures.html packs in this repo were stale artifacts of a manual run.
-          # FIGURE_SOURCE=curated is the default and the safe one: topics come from
-          # data/figure-topics-curated.json (UPSC Paper-1 syllabus) rather than the
-          # A-Z Wikipedia question shards, which is what previously produced figures
-          # like the Democratic Party under Animal Husbandry. Set explicitly so a
-          # future default change cannot silently reintroduce the contaminated source.
-          FIGURES_ALLOW_UNVERIFIED=1 FIGURE_SOURCE=curated node scripts/build-subject-figures.js
+      # These three packs were one `run: |` block, so a nonzero exit from any of
+      # them failed the job and SKIPPED the commit below -- throwing away a
+      # timeline and Ask index that had already rebuilt successfully, purely
+      # because a figure script hit the network.
+      #
+      # build-geography-figures.js is the risky one: its auto-fill calls the
+      # Wikimedia Commons API (autoFill -> commonsSearch/fileOK). Its requests
+      # are individually bounded (12s AbortController) and the whole fill has a
+      # FIGURES_MAX_MS wall-clock budget, but a 429 or a socket reset can still
+      # surface as a nonzero exit. A figure pack must never be able to block the
+      # data commit, so each runs as its own non-fatal step: one pack failing
+      # leaves the other two at their last good build instead of reverting
+      # everything.
+      - name: Rebuild geography diagrams
+        continue-on-error: true
+        run: node scripts/build-geography-diagrams.js
+
+      - name: Rebuild geography figures (auto-fills new topics)
+        continue-on-error: true
+        run: node scripts/build-geography-figures.js
+
+      # build-subject-figures.js refuses to write unless FIGURES_ALLOW_UNVERIFIED=1
+      # (see main() in that script). Without it this step printed the warning and
+      # returned without writing, so subject-figures-index.html and the 24
+      # *-figures.html packs in this repo were stale artifacts of a manual run.
+      # FIGURE_SOURCE=curated is the default and the safe one: topics come from
+      # data/figure-topics-curated.json (UPSC Paper-1 syllabus) rather than the
+      # A-Z Wikipedia question shards, which is what previously produced figures
+      # like the Democratic Party under Animal Husbandry. Set explicitly so a
+      # future default change cannot silently reintroduce the contaminated source.
+      - name: Rebuild subject figure packs
+        continue-on-error: true
+        run: FIGURES_ALLOW_UNVERIFIED=1 FIGURE_SOURCE=curated node scripts/build-subject-figures.js
 
       - name: Commit + push regenerated timeline
-        if: inputs.commit == 'true'
+        # `inputs.commit` is only populated for workflow_dispatch. A schedule
+        # event has no inputs, so gating on it alone would make every scheduled
+        # run build the packs and then throw the result away -- silently killing
+        # the weekly figure auto-fill that this schedule exists to guarantee.
+        if: inputs.commit == 'true' || github.event_name == 'schedule'
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null

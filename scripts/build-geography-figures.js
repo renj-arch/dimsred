@@ -391,6 +391,20 @@ function marksHtml(marks) {
   return '<div class="marks"><b>Mark in exam:</b><ul>' + marks.map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('') + '</ul></div>';
 }
 
+function slugify(s) {
+  var out = norm(s).replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
+  return out || 'figure';
+}
+// Stable, collision-free anchor per figure so a single figure stays linkable and
+// searchable once the pack outgrows scrolling. Ids are derived from the title
+// alone, so they are identical between builds (a figure keeps its link across
+// rebuilds instead of the whole index churning).
+function figId(title, seen) {
+  var base = slugify(title), id = base, n = 2;
+  while (seen[id]) id = base + '-' + n++;
+  seen[id] = 1;
+  return id;
+}
 function pageFor(f) {
   var badge = f.auto ? '<div class="auto-badge">AUTO-SUGGESTED \u00b7 verify image &amp; labels before exam use</div>' : '';
   var imgs = '';
@@ -399,7 +413,9 @@ function pageFor(f) {
   } else {
     imgs = '<div class="fig-img"><img src="' + f.url + '" alt="' + esc(f.title) + '"></div>';
   }
-  return '<section class="page">' +
+  // data-title / data-sec let the search box match a figure without walking its
+  // text; data-auto drives the "auto-added only" filter.
+  return '<section class="page" id="fig-' + esc(f.__id) + '" data-fig="1" data-auto="' + (f.auto ? '1' : '0') + '" data-title="' + esc(f.title) + '" data-sec="' + esc(f.sec) + '">' +
     '<div class="num">' + esc(f.sec) + '</div>' +
     '<div class="fig-title">' + esc(f.title) + '</div>' +
     badge + imgs + marksHtml(f.marks) +
@@ -474,41 +490,61 @@ async function autoFill(unmatchedList) {
   if (fs.existsSync(AUTO_CACHE_FILE)) {
     try { cache = JSON.parse(fs.readFileSync(AUTO_CACHE_FILE, 'utf8')); } catch (e) { cache = {}; }
   }
+  // Seed the per-run image exclusion from the cache, so a topic being filled for
+  // the first time cannot claim an image that a cached topic already uses.
+  Object.keys(cache).forEach(function (k) { if (cache[k]) AUTO_EXCLUDE_IMG[cache[k]] = 1; });
+
   var resolved = [];
   var still = [];
-  var cap = Math.min(unmatchedList.length, 60); // bound build time; the rest wait for the next run
+
+  // Split already-resolved topics away from genuinely new ones.
+  //
+  // A resolved topic never leaves `unmatched`: the match at the top of this file
+  // only tests the curated FIGURES list, and an auto pick is never added to it
+  // (it lives in data/geo-auto-figures.json instead). It used to be re-verified
+  // with fileOK on every single run, costing one network call per cached topic,
+  // while the cap below only advanced through the front of a list whose order
+  // never changed. So once the corpus grew past the cap, every run spent its
+  // whole budget re-checking the same first entries and any topic past that
+  // position was never attempted again -- auto-addition silently stopped for
+  // good. Cached topics now need no request at all, which hands the entire
+  // budget to new ones and makes the pack grow monotonically.
+  var fresh = [], known = [];
+  unmatchedList.forEach(function (name) { (cache[norm(name)] ? known : fresh).push(name); });
+
+  known.forEach(function (name) {
+    resolved.push({ name: name, file: cache[norm(name)], via: 'cache' });
+  });
+
+  var cap = Math.min(fresh.length, 60); // bound network time; the rest wait for the next run
   var deadline = Date.now() + (parseInt(process.env.FIGURES_MAX_MS || '900000', 10)); // hard wall-clock budget
   for (var i = 0; i < cap; i++) {
     if (Date.now() > deadline) {
-      for (var rj = i; rj < cap; rj++) still.push(unmatchedList[rj]);
+      for (var rj = i; rj < cap; rj++) still.push(fresh[rj]);
       break;
     }
-    var key = norm(unmatchedList[i]);
+    var name = fresh[i];
+    var key = norm(name);
     var fname = null;
-    var via = 'cache';
-    if (cache[key] && (await fileOK(cache[key]))) {
-      fname = cache[key];
-    } else {
-      var hit = null;
-      try { hit = await resolveAuto(unmatchedList[i]); } catch (e) { hit = null; }
-      if (hit) { fname = hit.f; via = hit.q; }
-      await new Promise(function (res) { setTimeout(res, 200); });
-    }
+    var via = null;
+    var hit = null;
+    try { hit = await resolveAuto(name); } catch (e) { hit = null; }
+    if (hit) { fname = hit.f; via = hit.q; }
+    await new Promise(function (res) { setTimeout(res, 200); });
     if (fname) {
       AUTO_EXCLUDE_IMG[fname] = 1;
       cache[key] = fname;
-      resolved.push({ name: unmatchedList[i], file: fname, via: via });
+      resolved.push({ name: name, file: fname, via: via });
     } else {
-      still.push(unmatchedList[i]);
+      still.push(name);
     }
   }
-  for (var ti = cap; ti < unmatchedList.length; ti++) still.push(unmatchedList[ti]);
+  for (var ti = cap; ti < fresh.length; ti++) still.push(fresh[ti]);
   if (Object.keys(cache).length) fs.writeFileSync(AUTO_CACHE_FILE, JSON.stringify(cache, null, 2));
   return { resolved: resolved, still: still };
 }
 
 async function main() {
-  var curatedPages = FIGURES.map(pageFor);
   var fill = await autoFill(unmatched);
   var autoEntries = fill.resolved.map(function (x) {
     return {
@@ -521,7 +557,77 @@ async function main() {
       topics: [norm(x.name)]
     };
   });
-  var pages = curatedPages.concat(autoEntries.map(pageFor));
+  // ---- finder + index ----
+  // The pack used to be one flat run of A4 pages with no way in but scrolling.
+  // That is fine at 43 figures and useless at a few hundred, and auto-fill keeps
+  // adding pages on its own, so the cost of "just scroll" grows on every run.
+  // Three layers, cheapest first:
+  //   1. live search box (matches title / section / marks / source)
+  //   2. "auto-added only" filter, so the unreviewed picks are separable from
+  //      the curated ones
+  //   3. a grouped, anchored index at the top, so any figure is reachable in two
+  //      clicks and shareable via geography-figures.html#fig-<slug>
+  var seenIds = {};
+  var tocBySec = {};
+  // Ids go on the figure objects, not on curatedPages: pageFor() returns finished
+  // HTML, so a rendered page has no .title to slug and every curated figure
+  // would collapse onto the same "figure" anchor.
+  FIGURES.concat(autoEntries).forEach(function (f) {
+    f.__id = figId(f.title, seenIds);
+    (tocBySec[f.sec] = tocBySec[f.sec] || []).push(f);
+  });
+  var pages = FIGURES.map(pageFor).concat(autoEntries.map(pageFor));
+
+  var tocHtml = Object.keys(tocBySec).sort().map(function (sec) {
+    var list = tocBySec[sec];
+    return '<div class="toc-sec"><div class="toc-h">' + esc(sec) +
+      ' <span class="toc-n">' + list.length + '</span></div><ul>' +
+      list.map(function (f) {
+        // The index is grouped by section, so its DOM order does NOT match the
+        // figure order. Each entry carries its own haystack attributes and is
+        // filtered independently rather than by index.
+        return '<li data-t="' + esc(f.title + ' ' + f.sec + ' ' + (f.marks || []).join(' ')) + '" data-auto="' + (f.auto ? '1' : '0') + '">' +
+          '<a href="#fig-' + esc(f.__id) + '">' + esc(f.title) + '</a>' +
+          (f.auto ? ' <span class="toc-auto">auto</span>' : '') + '</li>';
+      }).join('') + '</ul></div>';
+  }).join('');
+
+  var finderHtml =
+    '<div class="finder">' +
+    '<input id="figq" type="search" placeholder="Search figures by title, topic, marks or source  (press /)" autocomplete="off" spellcheck="false">' +
+    '<label class="chk"><input type="checkbox" id="figauto"> auto-added only</label>' +
+    '<span id="figcount" class="figcount"></span>' +
+    '<a class="totop" href="#fig-top">top</a>' +
+    '</div>';
+
+  // Vanilla, no deps, no network: the file has to keep working offline from a
+  // USB stick for exam revision, which is the whole point of the pack.
+  var finderJs =
+    '<script>(function(){' +
+    'var q=document.getElementById("figq"),auto=document.getElementById("figauto"),out=document.getElementById("figcount");' +
+    'var secs=[].slice.call(document.querySelectorAll("section.page[data-fig]"));' +
+    'var links=[].slice.call(document.querySelectorAll(".toc-sec li"));' +
+    'function run(){' +
+    'var t=(q.value||"").toLowerCase().trim(),onlyAuto=auto.checked,n=0;' +
+    'secs.forEach(function(s){' +
+    'var hay=s.getAttribute("data-title")+" "+s.getAttribute("data-sec")+" "+s.textContent;' +
+    'var okT=!t||hay.toLowerCase().indexOf(t)>=0,okA=!onlyAuto||s.getAttribute("data-auto")==="1";' +
+    'var show=okT&&okA;s.style.display=show?"":"none";if(show)n++;' +
+    '});' +
+    'links.forEach(function(li){' +
+    'var hay=li.getAttribute("data-t")||"";' +
+    'var okT=!t||hay.toLowerCase().indexOf(t)>=0,okA=!onlyAuto||li.getAttribute("data-auto")==="1";' +
+    'li.style.display=(okT&&okA)?"":"none";' +
+    '});' +
+    'out.textContent="showing "+n+" of "+secs.length+" figures";' +
+    '}' +
+    'q.addEventListener("input",run);auto.addEventListener("change",run);' +
+    'document.addEventListener("keydown",function(e){' +
+    'if(e.key==="/"&&document.activeElement!==q){e.preventDefault();q.focus();}' +
+    'if(e.key==="Escape"&&document.activeElement===q){q.value="";run();q.blur();}' +
+    '});' +
+    'run();' +
+    '})();<\/script>';
 
   var missingNote = '';
   if (fill.still.length) {
@@ -546,11 +652,35 @@ async function main() {
     '.marks{background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;padding:10px 14px;margin-top:10px;font-size:11px;line-height:1.7}' +
     '.marks b{color:#166534}.marks ul{margin:4px 0 0;padding-left:16px}.marks li{margin:1px 0}' +
     '.missing{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:10px 14px;font-size:9.5px;color:#92400e;line-height:1.6;margin-bottom:8px}' +
+    // --- finder + index chrome ---
+    'a{color:#0e7490}' +
+    '.finder{position:sticky;top:0;z-index:5;display:flex;gap:10px;align-items:center;flex-wrap:wrap;' +
+    'background:#fff;border:1px solid #d1d5db;border-radius:8px;padding:8px 10px;margin:0 auto 14px;max-width:980px;box-shadow:0 1px 4px rgba(0,0,0,.12)}' +
+    '#figq{flex:1 1 320px;min-width:220px;padding:7px 10px;font-size:13px;border:1px solid #cbd5e1;border-radius:6px;font-family:inherit}' +
+    '.chk{font-size:11.5px;color:#374151;display:flex;align-items:center;gap:5px;white-space:nowrap;cursor:pointer}' +
+    '.figcount{font-size:11px;color:#6b7280;margin-left:auto;white-space:nowrap}' +
+    '.totop{font-size:11px;text-decoration:none;border:1px solid #cbd5e1;border-radius:6px;padding:4px 8px}' +
+    '.toc-sec{margin:0 0 12px}' +
+    '.toc-h{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:#0e7490;border-bottom:1px solid #e5e7eb;padding-bottom:3px;margin-bottom:5px}' +
+    '.toc-n{color:#6b7280;font-weight:400}' +
+    '.toc-sec ul{list-style:none;margin:0;padding:0;columns:2;column-gap:22px}' +
+    '.toc-sec li{font-size:11px;line-height:1.55;break-inside:avoid;padding:1px 0}' +
+    '.toc-sec a{text-decoration:none}.toc-sec a:hover{text-decoration:underline}' +
+    '.toc-auto{font-size:8.5px;color:#b91c1c;border:1px solid #fca5a5;border-radius:4px;padding:0 4px;vertical-align:1px}' +
+    // Navigation chrome is screen-only; the printed A4 pack stays one figure per
+    // page with the index as a normal contents page.
     '@page{size:A4;margin:10mm}' +
-    '@media print{body{background:#fff}section.page{box-shadow:none;margin:0;padding:0}.fig-img{break-inside:avoid}}</style>' +
-    '</head><body>' +
-    '<section class="page"><header><span class="num">GS Paper 1 \u00b7 Geography \u00b7 UPSC Mains</span><h1>Geography Figures \u2014 Real Labelled Outlines</h1><p class="meta">' + (FIGURES.length + autoEntries.length) + ' figures (' + FIGURES.length + ' curated + ' + autoEntries.length + ' auto) \u00b7 live images from Wikimedia Commons & NOAA (needs internet) \u00b7 print-ready A4 \u00b7 auto-built by scripts/build-geography-figures.js</p></header>' + missingNote + '</section>' +
+    '@media print{body{background:#fff}section.page{box-shadow:none;margin:0;padding:0}.fig-img{break-inside:avoid}' +
+    '.finder{display:none}.toc-sec ul{columns:2}}' +
+    '</style>' +
+    '</head><body id="fig-top">' +
+    '<section class="page"><header><span class="num">GS Paper 1 \u00b7 Geography \u00b7 UPSC Mains</span><h1>Geography Figures \u2014 Real Labelled Outlines</h1><p class="meta">' + (FIGURES.length + autoEntries.length) + ' figures (' + FIGURES.length + ' curated + ' + autoEntries.length + ' auto) \u00b7 live images from Wikimedia Commons & NOAA (needs internet) \u00b7 print-ready A4 \u00b7 auto-built by scripts/build-geography-figures.js</p></header>' + missingNote +
+    '<h2 class="toc-h">Index by section</h2>' + tocHtml + '</section>' +
+    // Placed after the cover so the cover prints as page 1, but before the
+    // figures so it is already stuck to the top when you start scrolling.
+    finderHtml +
     pages.join('') +
+    finderJs +
     '</body></html>';
 
   fs.writeFileSync(OUT_FILE, html);
