@@ -1,0 +1,277 @@
+name: Figures Build
+
+# Figures are built here and ONLY here.
+#
+# Why this file exists: the figure packs used to be steps inside
+# build-timeline.yml, and that workflow was itself dispatched by
+# daily-wiki-fill.yml's finalize step. So the figure chain was:
+#
+#   daily-feed-fill  \
+#                     >-- shared concurrency group `data-fill` (mutually exclusive)
+#   daily-wiki-fill  /
+#        -> gh workflow run build-timeline.yml   (group `timeline-build`)
+#             -> build-geography-diagrams.js
+#             -> build-geography-figures.js      <- the auto-fill
+#             -> build-subject-figures.js
+#
+# Every one of those hops is a place figures can be starved. `data-fill`
+# serialises three workflows against each other, so a single figure run could
+# sit queued behind a full nightly fill, and build-timeline's only other
+# trigger was `cron: '40 6 * * 2'` -- one attempt a week, behind a 12 GB
+# timeline rebuild that figures do not need. That is why the packs lagged.
+#
+# This workflow breaks every hop:
+#
+#   * its own schedule, 4x a day instead of weekly
+#   * its own concurrency group, `figure-build`, shared with nothing, so no
+#     other workflow can queue it or cancel it
+#   * no inbound dispatch from daily-wiki-fill.yml
+#   * it does NOT rebuild the timeline, the Ask index or the mind-tree, so it
+#     neither waits for them nor competes with them for runner minutes
+#
+# It is safe for the two to run at the same time: this workflow reads the
+# corpus to discover new topics but only ever writes figure artifacts, and its
+# push retries on rebase if the fill chain committed in the meantime.
+
+on:
+  # 00:23 / 06:23 / 12:23 / 18:23 UTC. Deliberately off the hour so it does not
+  # join the top-of-hour scheduling herd, and clear of the nightly fill (00:00)
+  # and build-timeline (06:40). build-geography-figures.js auto-fills through
+  # the Wikimedia Commons API, so running it more often is the whole point --
+  # but it stays polite because each script keeps its own delay and wall-clock
+  # budget.
+  schedule:
+    - cron: '23 */6 * * *'
+
+  workflow_dispatch:
+    inputs:
+      commit:
+        description: 'Commit + push regenerated figure packs (false = dry run for logs only)'
+        required: false
+        default: 'true'
+      seed_caches:
+        description: 'Run seed-figure-caches.js first (speeds up the builders, makes its own network calls)'
+        required: false
+        default: 'false'
+      resolve:
+        description: 'Also run the slow Commons resolver (resolve-all-figures.js, ~30+ min)'
+        required: false
+        default: 'false'
+      link_check:
+        description: 'Run check-figure-links.js after building (verifies every hotlinked image)'
+        required: false
+        default: 'true'
+      figures_source:
+        description: 'Topic source for subject figure packs: curated (UPSC syllabus) or shards (contaminated)'
+        required: false
+        default: 'curated'
+      # The three scripts below are reachable from here but never scheduled.
+      # They were fully orphaned: no workflow referenced them at all, so they
+      # looked like leftovers from an abandoned plan rather than deliberate
+      # manual tools. None of them is an idempotent builder, which is why none
+      # belongs on a 4x/day timer:
+      #   stamp-figure-dates.js  its own header calls it one-off/on-demand
+      #   import-figures.js      takes CLI arguments; writes data/figure-facts.json,
+      #                          which is gitignored and therefore not committed
+      #   add-svg-diagrams.js    mutates content JSON in place
+      # Exposing them as inputs keeps them discoverable and reviewable while
+      # making it impossible for a scheduled run to fire them by accident.
+      stamp_figure_dates:
+        description: 'Run stamp-figure-dates.js (ONE-OFF: stamps dates onto figure packs, not idempotent)'
+        required: false
+        default: 'false'
+      import_figures:
+        description: 'Run import-figures.js (MANUAL: writes data/figure-facts.json, needs its own CLI args)'
+        required: false
+        default: 'false'
+      add_svg_diagrams:
+        description: 'Run add-svg-diagrams.js (MANUAL: mutates content JSON in place, not idempotent)'
+        required: false
+        default: 'false'
+
+# `figure-build` is used by nothing else in the repo. That is the point: a
+# group shared with the fill chain would reintroduce exactly the queueing this
+# workflow exists to escape, and cancel-in-progress: true would let a new run
+# kill one mid-publish.
+concurrency:
+  group: figure-build
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+env:
+  NODE_OPTIONS: --max-old-space-size=8192
+  FIGURES_ALLOW_UNVERIFIED: '1'
+
+jobs:
+  figures:
+    runs-on: ubuntu-latest
+    steps:
+      # PAT, not GITHUB_TOKEN, for the same reason build-timeline.yml uses one:
+      # GitHub does not fire workflow triggers for a GITHUB_TOKEN push, so the
+      # rebuilt packs would never reach the live mirror.
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          filter: blob:none
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Every builder below is continue-on-error. Two independent reasons:
+      #
+      #   1. build-geography-figures.js and resolve-all-figures.js call the
+      #      Wikimedia API. A 429 or a socket reset must not cost us the packs
+      #      the offline scripts already rebuilt.
+      #   2. A missing figure is a gap; a missing TIMELINE is a broken site.
+      #      These scripts cannot affect the timeline, the Ask index or the
+      #      question bank, so they must never be able to block those.
+      #
+      # This is what the old combined job got wrong in the other direction:
+      # because the figure steps shared a `run: |` block with the data
+      # rebuild, one network hiccup skipped the commit and threw away a
+      # timeline and Ask index that had already built successfully.
+
+      - name: Seed figure caches (optional)
+        if: inputs.seed_caches == 'true'
+        continue-on-error: true
+        run: node scripts/seed-figure-caches.js
+
+      - name: Rebuild geography diagrams
+        continue-on-error: true
+        run: node scripts/build-geography-diagrams.js
+
+      # The auto-fill step: discovers geography topics and attaches a labelled
+      # Commons figure to each. This is the script whose weekly-only cadence
+      # was the main reason the packs lagged.
+      - name: Rebuild geography figures (auto-fills new topics)
+        continue-on-error: true
+        run: node scripts/build-geography-figures.js
+
+      # build-subject-figures.js refuses to write unless FIGURES_ALLOW_UNVERIFIED=1
+      # (see main() in that script), which is set once at the top of this file
+      # instead of being repeated per step.
+      #
+      # FIGURE_SOURCE=curated takes topics from data/figure-topics-curated.json
+      # (UPSC Paper-1 syllabus). The alternative is the A-Z Wikipedia question
+      # shards, which is what previously produced figures like the Democratic
+      # Party under Animal Husbandry. Default it here for the same reason
+      # build-timeline did: a future default change must not be able to
+      # silently reintroduce the contaminated source.
+      - name: Rebuild subject figure packs
+        continue-on-error: true
+        env:
+          FIGURE_SOURCE: ${{ inputs.figures_source || 'curated' }}
+        run: node scripts/build-subject-figures.js
+
+      # Not scheduled by default: this is the slow, network-bound resolver that
+      # already has its own home in resolve-figures.yml. Exposed here as an
+      # input so figures can be refreshed end-to-end from one place without
+      # duplicating its RESOLVE_DELAY_MS handling.
+      - name: Resolve Commons figures (optional, slow)
+        if: inputs.resolve == 'true'
+        continue-on-error: true
+        env:
+          RESOLVE_DELAY_MS: '400'
+          RESOLVE_REPORT: figure-resolution-report.txt
+        run: node scripts/resolve-all-figures.js
+
+      - name: Upload resolution report
+        if: inputs.resolve == 'true'
+        continue-on-error: true
+        uses: actions/upload-artifact@v4
+        with:
+          name: figure-resolution-report
+          path: figure-resolution-report.txt
+          retention-days: 30
+
+      # Runs in the same job that added the figures, so a URL that dies is
+      # noticed immediately rather than up to a week later by
+      # figure-link-check.yml (which stays as the independent weekly audit).
+      - name: Check figure links
+        if: inputs.link_check == 'true'
+        continue-on-error: true
+        run: node scripts/check-figure-links.js
+
+      # Deliberately manual. All three are continue-on-error and none can run on
+      # a schedule, because none is idempotent -- a timed stamp run would rewrite
+      # dates forever, and a timed SVG mutation would edit content on every tick.
+      - name: Stamp figure dates (manual, one-off)
+        if: inputs.stamp_figure_dates == 'true'
+        continue-on-error: true
+        run: node scripts/stamp-figure-dates.js
+
+      # Not staged by the commit step below: data/figure-facts.json is untracked
+      # and ignored, and `git add` exits 1 on an ignored pathspec, which under
+      # `bash -e` would fail the whole commit step.
+      - name: Import figures (manual)
+        if: inputs.import_figures == 'true'
+        continue-on-error: true
+        run: node scripts/import-figures.js
+
+      - name: Add SVG diagrams (manual, content mutation)
+        if: inputs.add_svg_diagrams == 'true'
+        continue-on-error: true
+        run: node scripts/add-svg-diagrams.js
+
+      - name: Commit + push regenerated figures
+        # `inputs.commit` is only populated for workflow_dispatch. A schedule
+        # event has no inputs, so gating on the input alone would make every
+        # scheduled run build four packs and then silently throw them away --
+        # which is exactly how the weekly auto-fill died unnoticed.
+        if: inputs.commit == 'true' || github.event_name == 'schedule'
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
+          rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null
+          # Figures ONLY. Not `git add -A data/`, which is what build-timeline
+          # uses: a blanket data/ add would let this workflow commit question
+          # or Ask-index changes it did not produce, and would collide with the
+          # fill chain over files it has no business touching. The two writers
+          # now own disjoint sets of paths.
+          #
+          # Every data/ path below is already tracked, which matters: .gitignore
+          # line 6 is `data/*`, so `git add` exits 1 on an ignored pathspec and
+          # under `bash -e` that fails the whole commit step. Verified by
+          # dry run -- do NOT add an untracked path here without checking it
+          # first. data/figure-facts.json is deliberately absent for this
+          # reason: it is untracked and ignored, and import-figures.js (its
+          # only producer) is a manual input, not a scheduled builder.
+          git add -A \
+            geography-diagrams.html \
+            geography-figures.html \
+            subject-figures-index.html \
+            '*-figures.html' \
+            data/figure-files-auto.json \
+            data/figure-files-curated.json \
+            data/figure-topics-curated.json \
+            data/figure-added-dates.json \
+            data/geo-auto-figures.json \
+            data/subject-figures-cache.json
+          if git diff --staged --quiet; then
+            echo "No figure changes to commit"
+          else
+            git commit -m "Figures rebuild $(date +'%Y-%m-%d %H:%M UTC')"
+            # The fill chain pushes to the same branch. Rebase onto it and
+            # retry rather than losing a completed figure build to a
+            # non-fast-forward, which is the other way this workflow used to be
+            # starved silently.
+            for attempt in 1 2 3; do
+              if git pull --rebase --autostash origin "$GITHUB_REF_NAME" 2>&1 | tail -3; then
+                if git push origin "HEAD:$GITHUB_REF_NAME"; then
+                  echo "Pushed figures rebuild (attempt $attempt)"
+                  exit 0
+                fi
+              fi
+              echo "Rebase/push attempt $attempt failed; retrying"
+              sleep 5
+            done
+            echo "::warning::could not push figures after 3 attempts; the build is preserved in this run's logs"
+            exit 0
+          fi

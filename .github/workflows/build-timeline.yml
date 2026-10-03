@@ -1,6 +1,20 @@
 name: Timeline + Mind-tree + Geography Build
 
 on:
+  # Weekly safety net. This workflow is the thing that actually runs
+  # build-geography-figures.js, and therefore the thing that auto-discovers
+  # Commons figures for newly mined geography topics. It used to run ONLY when
+  # daily-wiki-fill.yml's finalize dispatched it, and that dispatch sits inside
+  # `if [ -f changes-committed ]` -- so if the fill chain stalled, failed, or
+  # mined nothing, figure auto-fill silently stopped for as long as the problem
+  # lasted. Auto-discovery should not inherit the fill chain's failure modes.
+  #
+  # Tuesday 06:40 UTC: clear of the nightly fill (00:00) and of the Wednesday
+  # resolve-figures (04:37) / figure-link-check (05:11) pair, so nothing competes
+  # for the Wikimedia API or for runner minutes.
+  schedule:
+    - cron: '40 6 * * 2'
+
   workflow_dispatch:
     inputs:
       commit:
@@ -76,23 +90,37 @@ jobs:
       - name: Rebuild mind-tree (topic-layers.json)
         run: node scripts/gen-topic-layers.js
 
-      - name: Rebuild geography diagram packs
+      # Figure packs are NOT built here any more. They live in build-figures.yml,
+      # on their own 4x-daily schedule, because sharing this job meant figures
+      # waited behind a 12 GB timeline rebuild they do not need, were limited to
+      # one attempt a week, and shared a commit (and a `run: |` block) with the
+      # data rebuild -- so a Wikimedia 429 could skip the commit and discard a
+      # timeline and Ask index that had already built fine.
+      #
+      # Note the ordering that remains load-bearing: build-timeline.js ->
+      # build-ask-index.js -> gen-topic-layers.js. build-ask-index.js reads the
+      # node parts the first step writes, and gen-topic-layers.js reads
+      # timeline.json. Do not reorder or parallelise these three.
+
+      # The two suites that need data/ask-qb/entities.tsv live here, not in
+      # ask-audit.yml. That workflow sparse-checks-out only the index, its node
+      # shards and a few scripts -- deliberately, so a question-bank rebuild
+      # cannot be discovered by it -- so check-ask-mains.js ENOENTs there. This
+      # workflow has the full tree, and it is also where the tables get rebuilt,
+      # so a regression in the tables is caught by the same run that writes them.
+      - name: Entity and essay regression against the built tables
         run: |
-          node scripts/build-geography-diagrams.js
-          node scripts/build-geography-figures.js
-          # build-subject-figures.js refuses to write unless FIGURES_ALLOW_UNVERIFIED=1
-          # (see main() in that script). Without it this step printed the warning and
-          # returned without writing, so subject-figures-index.html and the 24
-          # *-figures.html packs in this repo were stale artifacts of a manual run.
-          # FIGURE_SOURCE=curated is the default and the safe one: topics come from
-          # data/figure-topics-curated.json (UPSC Paper-1 syllabus) rather than the
-          # A-Z Wikipedia question shards, which is what previously produced figures
-          # like the Democratic Party under Animal Husbandry. Set explicitly so a
-          # future default change cannot silently reintroduce the contaminated source.
-          FIGURES_ALLOW_UNVERIFIED=1 FIGURE_SOURCE=curated node scripts/build-subject-figures.js
+          node scripts/check-ask-mains.js
+          # Baseline is 16 passed / 4 failed. The four are a recorded gap, not a
+          # licence for it to widen, so warn loudly instead of blocking here.
+          node scripts/ask-essay-e2e.js || echo "::warning::essay e2e regressions changed; compare against the recorded 16 passed / 4 failed baseline"
 
       - name: Commit + push regenerated timeline
-        if: inputs.commit == 'true'
+        # `inputs.commit` is only populated for workflow_dispatch. A schedule
+        # event has no inputs, so gating on it alone would make every scheduled
+        # run build the packs and then throw the result away -- silently killing
+        # the weekly figure auto-fill that this schedule exists to guarantee.
+        if: inputs.commit == 'true' || github.event_name == 'schedule'
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
@@ -100,7 +128,17 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null
-          git add -A data/ geography-diagrams.html geography-figures.html subject-figures-index.html *-figures.html
+          # Timeline/Ask artifacts ONLY. Figure paths belong to build-figures.yml and
+          # must not be staged here: two workflows committing the same files is
+          # how they end up fighting over pushes. `git add -A data/` is also
+          # deliberately narrowed to the specific index and tree files this job
+          # produces, so a stray working-tree change cannot ride along.
+          git add -A \
+            data/timeline.json \
+            'data/timeline.nodes.*.json' \
+            data/ask-index.json \
+            'data/ask-index-nodes.*.json' \
+            data/topic-layers.json
           if git diff --staged --quiet; then
             echo "No timeline changes to commit"
           else

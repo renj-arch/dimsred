@@ -24,6 +24,13 @@ name: Ask Retrieval Audit
 
 on:
   push:
+    # Everything this workflow actually reads or executes. The list used to omit
+    # the test files and the workflow file itself, which meant a commit touching
+    # only those changed the audit's behaviour without ever running the audit:
+    # the fix in d725db94b, which moved check-ask-mains.js out of this workflow
+    # precisely because it cannot see data/ask-qb, was pushed and produced no run
+    # at all. A workflow that cannot test its own definition is a workflow whose
+    # breakage is invisible until something else breaks it.
     paths:
       - scripts/lib/ask-core.js
       - scripts/ask-audit.js
@@ -31,6 +38,12 @@ on:
       - scripts/lib/ask-index-load.js
       - data/ask-index.json
       - data/ask-index-nodes.*.json
+      # The suites this workflow runs, so editing one is verified by a run.
+      - scripts/test-ask-engine.js
+      - scripts/test-ask-strategic-dimensions.js
+      - scripts/check-ask-page-boot.js
+      # Its own definition.
+      - .github/workflows/ask-audit.yml
   workflow_dispatch:
 
 concurrency:
@@ -43,9 +56,31 @@ permissions:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Headroom for a cold runner now that checkout is sparse. The audit itself
+    # runs in about a second; this only guards against a slow first fetch.
+    timeout-minutes: 20
     steps:
+      # Sparse checkout is REQUIRED here, not an optimisation.
+      #
+      # The question-bank tables under data/questions are ~8.6 GB across 1255
+      # tracked files, so a full checkout cannot finish inside this job's
+      # timeout. The job gets cancelled mid-checkout, leaving an incomplete
+      # working tree, and the always() summary step then reports a bogus
+      # "Cannot find module scripts/ask-audit.js" -- which reads exactly like a
+      # missing script and sends you hunting for a file that is committed and
+      # present. That is what happened on run #7.
+      #
+      # The audit needs only the scripts and the 46 MB of Ask index shards, so
+      # fetch exactly those and the checkout finishes in seconds.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            ask.html
+            data/ask-index.json
+            data/ask-index-nodes.*.json
+          sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
         with:
@@ -59,6 +94,34 @@ jobs:
       # blocks the merge rather than being noticed later in a live answer.
       - name: Retrieval audit
         run: node scripts/ask-audit.js -v
+
+      # The retrieval engine can pass every assertion in ask-audit.js and still
+      # leave the page dead on arrival: boot() runs inline in ask.html and a
+      # ReferenceError there (the askHay incident) is invisible to a test that
+      # only requires the library. This check loads the seven libraries and
+      # executes the page's own inline script, which is what actually broke.
+      - name: Ask page boot
+        run: node scripts/check-ask-page-boot.js
+
+      # Only suites that need nothing but the index belong here. This workflow
+      # checks out data/ask-index.json plus the node shards and a handful of
+      # scripts (see `paths:` above) precisely so a question-bank rebuild cannot
+      # be discovered by it, so anything reading data/ask-qb/ cannot run here --
+      # an earlier version of this file ran check-ask-mains.js in this step and
+      # it died with ENOENT on data/ask-qb/entities.tsv, failing the job after
+      # the audit itself had already passed. check-ask-mains.js and
+      # ask-essay-e2e.js both need the entity table and run in build-timeline.yml,
+      # which has the full tree.
+      #
+      # test-ask-strategic-dimensions.js pins the retrieval defects measured on
+      # 2026-10-03: a shared noun passing as a subject, an evidence tier that
+      # could not fall through, and a coverage figure that could be pushed to
+      # 100% by shrinking a divisor. ask-audit.js checks verdicts; this checks
+      # which nodes were admitted, which is where the garbage came from.
+      - name: Retrieval unit and index-only regression
+        run: |
+          node scripts/test-ask-engine.js
+          node scripts/test-ask-strategic-dimensions.js
 
       - name: Summary
         if: always()

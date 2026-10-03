@@ -137,7 +137,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
 <div class="note" id="note"></div>
 <div class="rev" id="revpanel"></div>
 <div class="msg" id="msg">Loading knowledge graphâ€¦</div>
-<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a real relationship; dashed lines are co-mentions. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) Â· <b>double-click</b> to drill into it as the new centre Â· <b>Grow/Shrink</b> adds or removes a ring across the whole map Â· <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
+<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a verified relationship from data/relations.json or an authored mind-tree (data/topic-layers.json). Co-mention lines are gone: they were word co-occurrence over a trivia corpus, not knowledge, and they were deciding which cards appeared at all. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) Â· <b>double-click</b> to drill into it as the new centre Â· <b>Grow/Shrink</b> adds or removes a ring across the whole map Â· <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
 <!-- The graph resolver lives in one place and is shared with scripts/build-timeline.js,
      scripts/gen-topic-layers.js, map.html and revision.html. It used to be copied
      into this file under the comment "shared logic copied from flowchart.html (must
@@ -218,9 +218,10 @@ var NOISE_TYPES=GC.NOISE_TYPES;
 var canon=GC.canon;
 function hasVizNeighbours(n,need){
   var deg=0;
-  var a=ADJ[n.id]||{},la=LADJ[n.id]||{};
+  var a=ADJ[n.id]||{};
+  // Only verified relations count. Co-mentions are not evidence that a node
+  // belongs on the board -- see the LADJ note in buildIndexes().
   for(var k in a){var m=BY_ID[k];if(m&&!isJunk(m)&&!isHub(m)&&(m.level||0)<=3&&++deg>=need)return true;}
-  for(var k2 in la){var m2=BY_ID[k2];if(m2&&!isJunk(m2)&&!isHub(m2)&&(m2.level||0)<=3&&++deg>=need)return true;}
   return false;
 }
 // One resolver, shared with scripts/gen-topic-layers.js via scripts/lib/graph-core.js.
@@ -638,13 +639,24 @@ function buildIndexes(){
     if(!ADJ[e.a])ADJ[e.a]={};ADJ[e.a][e.b]=e.rel;
     if(!ADJ[e.b])ADJ[e.b]={};ADJ[e.b][e.a]=e.rel;
   }
-  for(var k=0;k<LINKS.length;k++){
-    var l=LINKS[k];
-    var la0=BY_ID[l.a],lb=BY_ID[l.b];
-    if(!la0||!lb||isJunk(la0)||isJunk(lb))continue;
-    if(!LADJ[l.a])LADJ[l.a]={};if(!LADJ[l.b])LADJ[l.b]={};
-    LADJ[l.a][l.b]=l.w;LADJ[l.b][l.a]=l.w;
-  }
+  // Co-mention adjacency is deliberately NOT built.
+  //
+  // LADJ used to be filled from timeline.json's `links` array: 282,498 pairs
+  // whose `w` is just "these two strings appeared in the same trivia bucket",
+  // counted over 15.9M records of which 93.9% are A-Z Wikipedia shards. Node
+  // ids in that array are shard-derived ("world-geography-69|France"), so the
+  // topology it produced was a co-occurrence hairball, not knowledge -- it put
+  // Paris under Indian Music & Fine Arts via co-mention with France.
+  //
+  // It was never a relationship: the renderer already dashed those edges and
+  // labelled them "not a relationship". The problem is that it was still
+  // STRUCTURE. LADJ fed hasVizNeighbours(), the growth fallback and the
+  // "Related:" list, so co-occurrence decided which cards existed at all.
+  //
+  // Structure now comes only from verified sources: typed relations
+  // (data/relations.json, via RELEDGE) and authored mind-trees
+  // (data/topic-layers.json). A topic with neither shows an honest empty
+  // state instead of a fabricated graph.
   var names=Object.keys(BY_NAME).sort(function(a,b){return (NAME_CNT[b]||0)-(NAME_CNT[a]||0);});
   var dl=document.getElementById('topiclist'),frag=document.createDocumentFragment();
   for(var m=0;m<names.length&&m<6000;m++){
@@ -843,10 +855,10 @@ function graphFor(id){
         }
       }
       for(var ob in fa)cand(ob,fa[ob],0,src,hp);
-      if(curated)continue; // no co-mention flood in curated mode
-      var la=LADJ[src.id]||{};
-      var lKeys=Object.keys(la).sort(function(a,b){return (la[b]||0)-(la[a]||0);});
-      for(var i=0;i<lKeys.length;i++)cand(lKeys[i],'related',la[lKeys[i]],src,hp);
+      // No co-mention fallback. A topic with no authored tree and no typed
+      // relation grows nothing rather than growing whatever strings co-occurred
+      // with it; that fallback is what flooded the ~15.4M-record topics outside
+      // the 557 curated ones.
     }
   }
   // curated trees always grow to ring 3 in one go: ring1 = branches,
@@ -931,27 +943,9 @@ function subEdges(idset){
   });
   return arr.slice(0,400);
 }
-function subLinks(idset){
-  var out={};
-  for(var a in idset){
-    var la=LADJ[a]||{};
-    for(var b in la){
-      if(b===a||!idset[b])continue;
-      if((la[b]||0)<coFloor())continue;
-      // a real relation already draws this pair, so don't spend the co-mention
-      // budget on a line that would be suppressed anyway
-      if(RELPAIRS[JSON.stringify([a,b].sort())])continue;
-      var key=a<b?JSON.stringify([a,b]):JSON.stringify([b,a]);
-      var pair=a<b?[a,b]:[b,a];
-      var w=la[b]||0;
-      if(!out[key]||w>out[key].w)out[key]={a:pair[0],b:pair[1],w:w};
-    }
-  }
-  var arr=[];
-  for(var k in out)arr.push(out[k]);
-  arr.sort(function(x,y){return y.w-x.w;});
-  return arr.slice(0,46);
-}
+// Verify no stray LADJ/co-mention reads remain. LADJ stays declared (reset in
+// buildIndexes) so shared graph-core code can reference it safely, but nothing
+// in this file may treat co-mention counts as structure.
 
 function layout(g){
   // Radial mind-map: the focus topic is the hub, and every hop of the expanded
@@ -1177,7 +1171,6 @@ function renderFlow(id){
   var gv={central:g.central,order:vorder,items:g.items,idset:g.idset};
   var geo=layout(gv);
   var edges=subEdges(g.idset);
-  var links=subLinks(g.idset);
   var laneColor={};
   gv.order.forEach(function(lk){
     laneColor[lk]=colorFor(lk);
@@ -1231,12 +1224,11 @@ function renderFlow(id){
        +'<text class="edge-lbl" x="'+mx+'" y="'+(my+2)+'" text-anchor="middle" fill="'+col+'">'+tx+'</text>';
     }
   });
-  links.forEach(function(l){
-    if(!POS[l.a]||!POS[l.b])return;
-    var pair=JSON.stringify(l.a<l.b?[l.a,l.b]:[l.b,l.a]);
-    if(drawn[pair])return;drawn[pair]=1;
-    body+='<path class="link-dash" data-a="'+esc(l.a)+'" data-b="'+esc(l.b)+'" d="'+edgePath(l.a,l.b)+'" fill="none"><title>co-mentioned Â· weight '+l.w+' (not a relationship)</title></path>';
-  });
+  // No raw co-mention pass here any more. Semantic relations above (RELEDGE,
+  // from data/relations.json) and authored topic-layers branches are the only
+  // things that draw a line. The old `links.forEach` block rendered every
+  // surviving pair from timeline.json's co-mention array, which is what made
+  // the board look like a topic map when it was a word-collision graph.
   edges.forEach(function(e){
     if(!POS[e.a]||!POS[e.b])return;
     var key=JSON.stringify(e.a<e.b?[e.a,e.b]:[e.b,e.a]);
@@ -1299,8 +1291,10 @@ function renderFlow(id){
   if(!g.items.length){
     var why=isJunk(hero)?'This name is a scraped fragment pulled from a sentence, not a real topic.'
       :((hero.level||4)>3?'This is a deep sub-topic (level '+(hero.level||4)+'); its connections appear only after a full data rebuild.'
-      :'No connected topics found for "'+hero.name+'".');
-    msg(why+' Try the chips above, Live photos, Grow, or the timeline map.');
+      :'No verified structure for "'+hero.name+'".');
+    // Do not suggest Grow: the co-mention fallback it relied on is gone, and
+    // sending the user to a button that can no longer help would be a lie.
+    msg(why+' It has no authored mind-tree (data/topic-layers.json) and no typed relation (data/relations.json), so there is nothing verified to draw. Try a chip above, or the timeline map for raw chronology. Co-mention lines were removed because they were word co-occurrence, not knowledge.');
   }
   // depth controls reflect the current ring count
   var bg=document.getElementById('bGrw'),bs=document.getElementById('bShr');
@@ -1584,7 +1578,7 @@ function home(){
   var samples=['Revolt of 1857','Indian National Congress','Mahatma Gandhi','Partition of Bengal','Ashoka','Quit India Movement','Battle of Plassey','Volcano'];
   msg('Start with a topic below, or search above.');
   var el=document.getElementById('msg');
-  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: <b>/</b> focuses search Â· <b>Random</b> explores Â· <b>Live photos</b> pulls Wikipedia portraits for people.</small><br><small>Dashed lines are related topics (weight = co-mention strength); arrow edges are typed relationships. Every lane is one node type (Person, Event, Concept, Volcano, Org, Scheme, Diseaseâ€¦) â€” hover any link to trace how it connects the two cards.</small>';
+  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: <b>/</b> focuses search Â· <b>Random</b> explores Â· <b>Live photos</b> pulls Wikipedia portraits for people.</small><br><small>Every line on the board is a verified relationship (data/relations.json) or an authored mind-tree branch (data/topic-layers.json). Co-mention lines were removed as contamination. Every lane is one node type (Person, Event, Concept, Volcano, Org, Scheme, Diseaseâ€¦) â€” hover any line to see the relation and its evidence.</small>';
 }
 function pick(s){var n=findByName(s);if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}else{msg('No topic "'+s+'" in this dataset. Curated volcano topics appear after re-running the timeline build.');}}
 function msg(t){document.getElementById('msg').textContent=t;}
@@ -1623,9 +1617,7 @@ function relatedChipsHTML(id){
   }else{
     var fa=ADJ[id]||{};
     for(var o in fa){if(o===self)continue;var n=BY_ID[o];if(!n||isJunk(n)||isHub(n)||seen[o])continue;seen[o]=1;pool.push({id:o,w:8,rel:fa[o]});}
-    var la=LADJ[id]||{};
-    var keys=Object.keys(la).sort(function(a,b){return la[b]-la[a];});
-    for(var j=0;j<keys.length;j++){var b=keys[j];if(b===self)continue;var m=BY_ID[b];if(!m||isJunk(m)||isHub(m)||seen[b])continue;if((la[b]||0)<2)continue;if(NOISE_TYPES[nt(m)])continue;seen[b]=1;pool.push({id:b,w:la[b],rel:'related'});}
+    // No LADJ branch: "Related" lists verified relations only.
   }
   pool.sort(function(x,y){return y.w-x.w;});
   pool=pool.slice(0,16);
@@ -1838,7 +1830,12 @@ window.addEventListener('popstate',function(){
 window.addEventListener('hashchange',function(){route();});
 
 loadData().then(function(t){
-  NODES=t.nodes||[];EDGES=t.edges||[];LINKS=t.links||[];
+  NODES=t.nodes||[];EDGES=t.edges||[];
+// timeline.json's `links` (co-mention counts) is intentionally not read.
+// See the LADJ note in buildIndexes(): it is word co-occurrence over a trivia
+// corpus, not topology. Typed edges (t.edges) and relations.json are the
+// verified structure and both still load.
+LINKS=[];
   buildIndexes();
   return fetchJson('data/topic-layers.json').catch(function(){return {};});
 }).then(function(layers){

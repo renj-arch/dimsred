@@ -32,6 +32,11 @@ data/questions/state-tracker.json
 # fresh clone and every rebuild silently re-rolled all ~123 unverified figures.
 !data/geo-auto-figures.json
 !data/subject-figures-cache.json
+# Per-figure "Added <date>" stamps, produced by scripts/stamp-figure-dates.js from
+# git blame. Must be tracked: the dates are read from history, so a fresh CI clone
+# has no way to recompute them, and without this file every figure silently loses
+# its date on the next rebuild.
+!data/figure-added-dates.json
 # Curated figure inputs. The question shards are contaminated (each subject's set
 # is a near-complete A-Z Wikipedia sweep), so figure topics are curated from the
 # UPSC syllabus by hand in these two files. They must be tracked: the build and

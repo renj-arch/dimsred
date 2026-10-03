@@ -115,10 +115,71 @@
       .trim();
   }
 
+  // Derivational folding, applied on BOTH the index and the query side (tokens()
+  // builds the df table, so folding here keeps the two consistent).
+  //
+  // Why this is needed and not a nicety: the engine matched only exact word
+  // forms, so a question about "independent regulatory institutions in a
+  // market-oriented economy" had no way to reach the nodes that answer it.
+  // Those nodes are titled "Regulatory economics", "Regulated market",
+  // "Forward Markets Commission", "Regulatory agency" -- "markets" never matched
+  // "market", "regulatory" never matched "regulator". Retrieval found the right
+  // nodes anyway (they were in the candidate list) but the evidence gate then
+  // threw all of them away, because with no titled subject and no concept route
+  // every sentence failed to be anchored, and the engine refused with "0
+  // quoteable sentences" while sitting on fifteen good ones.
+  //
+  // Two layers, deliberately conservative:
+  //   1. a general plural fold, which is safe because it only ever removes a
+  //      trailing "s" from words that cannot be plurals ("gas", "business");
+  //   2. a fixed family map for the derivational pairs English spells
+  //      inconsistently. This is a lexicon, not a per-question patch: it applies
+  //      to the whole corpus and to every future question, which is the point --
+  //      the alternative was hand-authoring a shard per question.
+  var FAMILY = {
+    regulatory: 'regulat', regulator: 'regulat', regulate: 'regulat', regulation: 'regulat',
+    regulations: 'regulat', deregulation: 'regulat', regulatorily: 'regulat',
+    economy: 'econom', economic: 'econom', economics: 'econom',
+    institution: 'institut', institutions: 'institut', institutional: 'institut',
+    competition: 'competit', competitive: 'competit',competitiveness: 'competit',
+    market: 'market', markets: 'market', marketing: 'market',
+    policy: 'policy', policies: 'policy', political: 'polit', politics: 'polit',
+    industry: 'industr', industries: 'industri', industrial: 'industri',
+    liberalisation: 'liberal', liberalization: 'liberal', liberalisation: 'liberal',
+    independence: 'independ', independent: 'independ', independently: 'independ',
+    significance: 'signific', significant: 'signific',
+    transparency: 'transparen', transparent: 'transparen',
+    accountability: 'account', accountable: 'account',
+    environment: 'environ', environmental: 'environ',
+    development: 'develop', developing: 'develop', developed: 'develop',
+    government: 'govern', governmental: 'govern',
+    securities: 'securit', security: 'securit',
+    insurance: 'insur', insurer: 'insur',
+    investment: 'invest', investor: 'invest', investments: 'invest',
+    management: 'manage', manager: 'manage', managing: 'manage',
+    taxation: 'tax', taxes: 'tax',
+    monopoly: 'monopol', monopolies: 'monopol', monopolistic: 'monopol',
+    productivity: 'product', productive: 'product',
+    distribution: 'distribut', distributive: 'distribut',
+    infrastructure: 'infrastructur',
+    modernisation: 'modern', modernization: 'modern', modernise: 'modern', modernize: 'modern',
+    privatisation: 'privatis', privatization: 'privatis',
+    financial: 'financi', finance: 'financi', fiscal: 'fiscal'
+  };
+  function fold(w) {
+    if (FAMILY[w]) return FAMILY[w];
+    // Plurals: "ies" -> "y" (policies -> policy), then a bare trailing "s" only
+    // where the word cannot already end in s. Length floor keeps short words
+    // such as "gas" and "bus" intact.
+    if (w.length > 4 && /ies$/.test(w)) return w.slice(0, -3) + 'y';
+    if (w.length > 3 && /[^su]s$/.test(w) && !/(ss|us|is)$/.test(w)) return w.slice(0, -1);
+    return w;
+  }
+
   function tokens(s) {
     var n = norm(s).split(' '), out = [];
     for (var i = 0; i < n.length; i++) {
-      if (n[i].length > 1 && STOP.indexOf(n[i]) === -1) out.push(n[i]);
+      if (n[i].length > 1 && STOP.indexOf(n[i]) === -1) out.push(fold(n[i]));
     }
     return out;
   }
@@ -151,7 +212,24 @@
     { key: 'case', re: /\b(case|cases|judgement|judgment|court|supreme)\b/i, label: 'case law' },
     { key: 'constitution', re: /\b(constitution\w*|article|schedule|amendment|provision|office)\b/i, label: 'constitutional basis' },
     { key: 'problem', re: /\b(vulnerab\w*|problem|issue|concern|partisan|bias|criticism|weakness)\b/i, label: 'the problem' },
-    { key: 'evidence', re: /\b(example|instance|evidence|data|recent|since)\b/i, label: 'evidence' }
+    { key: 'evidence', re: /\b(example|instance|evidence|data|recent|since)\b/i, label: 'evidence' },
+
+    // Analytical demands: the question asks for a judgement or a named
+    // dimension. These are kept as SEPARATE entries rather than one combined
+    // pattern so partial coverage is measurable -- "aims and outcomes" against
+    // evidence that only discusses outcomes scores 0.5, not a flat 1.
+    //
+    // This vocabulary already existed in DEMAND_NOUN, which is used for subject
+    // detection. DEMAND never saw it, so the most analytical questions in the
+    // suite ("what were the aims and outcomes of the Indian National
+    // Congress?") were scored demand=0, handed dimCov=1, and passed the
+    // coverage gate on the freebie alone.
+    { key: 'aims', re: /\b(aims?|aimed|objectives?|goals?|purposes?|mission)\b/i, label: 'aims' },
+    { key: 'outcomes', re: /\b(outcomes?|consequences?|impacts?|effects?|results?)\b/i, label: 'outcomes' },
+    { key: 'causes', re: /\b(causes?|caused|reasons?|factors?|drivers?)\b/i, label: 'causes' },
+    { key: 'significance', re: /\b(significance|importance|relevance|utility|why (it|they) matter\w*)\b/i, label: 'significance' },
+    { key: 'evaluation', re: /\b(merits?|demerits?|advantages?|disadvantages?|prospects?|viability|limitations?|shortcomings?)\b/i, label: 'evaluation' },
+    { key: 'lessons', re: /\b(lessons?|implications?|takeaways?)\b/i, label: 'lessons' }
   ];
 
   // The instruction words that tell the candidate *what to do* rather than what
@@ -387,7 +465,7 @@
 
   function tokenSet(s) {
     var m = {}, t = String(s || '').split(' ');
-    for (var i = 0; i < t.length; i++) if (t[i]) m[t[i]] = 1;
+    for (var i = 0; i < t.length; i++) if (t[i]) m[fold(String(t[i]).toLowerCase())] = 1;
     return m;
   }
 
@@ -406,7 +484,19 @@
   var ASK_VERB = /\b(what|why|how|when|where|who|which|explain|examine|discuss|analyse|analyze|evaluate|assess|appraise|describe|outline|elaborate|illustrate|comment)\b/i;
   var ASK_OBJECT = /\b(what are|what is|what was|why (is|are|was|were|do|does|did)|how (is|are|was|were|do|does|did|can|should)|when (is|was|did)|who (is|was|are|were))\b/i;
   // Demand nouns: these are what the answer must cover, not what it is about.
-  var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|roles?|status|positions?|recommendations?|suggestions?|provisions?|findings?|observations?|merits|terms?)\b/i;
+  //
+  // This list is load-bearing for subjectOf(). When a demand noun introduces an
+  // "of X", X is the subject -- and that is the only path that pulls a real
+  // head noun out of a long analytical question.
+  //
+  // It used to lack `applications`, so "the potential applications of digital
+  // twins in infrastructure planning" never triggered the cut: the whole clause
+  // stayed the subject, head extraction fell through to the nearest generic
+  // noun ("infrastructure"), and the title gate then admitted every node with
+  // "infrastructure" in the title -- Western Cape, DIKSHA, a Bangladesh
+  // highways department. Adding the missing abstract nouns is what makes the
+  // subject "digital twins" and the gate mean something.
+  var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|roles?|status|positions?|recommendations?|suggestions?|provisions?|findings?|observations?|applications?|uses?|relevance?|utility?|scope|potential|prospects?|viability|adaptability|suitability|limitations|challenges posed)\b/i;
   // Qualifier nouns like "nature", "role", "process" sit in front of a named
   // subject ("the changing nature of caste") and must trigger the same head-noun
   // cut: "of caste" is what the question is about, not "the changing nature".
@@ -536,7 +626,7 @@
         leftover = leftover.replace(/^(?:critically|comment|describe|outline|elaborate|illustrate|examine|discuss|analyse|analyze|evaluate|assess|appraise|compare|distinguish|differentiate|explain)\b/i, '').trim();
         return leftover.length >= 4 ? ' ' + leftover + ' ' : ' ';
       });
-    t = t.replace(/\b(?:aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|role|impact|effect)\b/gi, ' ');
+    t = t.replace(/\b(?:aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|role|impact|effect|applications?|uses?|relevance?|utility?|scope|potential|prospects?|viability|adaptability|suitability|limitations)\b/gi, ' ');
     t = t.replace(/^\s*(?:of|for|in|on|about)\s+/i, ' ');
     return t.replace(/[?.!,;:]+$/, '').replace(/\s+/g, ' ').trim();
   }
@@ -1252,21 +1342,37 @@
       else {
         // Longest shared word run. "anti-defection law" against
         // "the anti-defection law in india" shares "anti defection law".
-        var kw = kn.split(' '), qw = key.split(' '), run = 0, bestRun = 0;
+        var kw = kn.split(' '), qw = key.split(' '), run = 0, runTok = 0, bestRun = 0, bestTok = 0;
         for (var a = 0; a < kw.length; a++) {
           for (var b = 0; b < qw.length; b++) {
             if (kw[a] && kw[a] === qw[b]) {
               run = kw[a].length;
+              runTok = 1;
               for (var c = 1; a + c < kw.length && b + c < qw.length; c++) {
-                if (kw[a + c] === qw[b + c]) run += kw[a + c].length;
+                if (kw[a + c] === qw[b + c]) { run += kw[a + c].length; runTok++; }
                 else break;
               }
             }
-            if (run > bestRun) bestRun = run;
-            run = 0;
+            if (run > bestRun || (run === bestRun && runTok > bestTok)) {
+              bestRun = run; bestTok = runTok;
+            }
+            run = 0; runTok = 0;
           }
         }
-        if (bestRun >= 10) score = bestRun;
+        // The run must cover the WHOLE key, not just one of its words.
+        //
+        // bestRun >= 10 on its own let any single 10+ character word decide the
+        // route. "traditional" is 11 characters, so a question about the factors
+        // behind the decline of traditional handicraft industries under colonial
+        // rule routed to "traditional medicine" -- whose vocabulary is ayurveda,
+        // siddha, yoga and charaka -- and was answered with Bikram Yoga and Aerial
+        // yoga. Any 10+ character shared adjective could hijack a route the same
+        // way.
+        //
+        // Requiring every token of the key keeps the fuzzy match doing its real
+        // job ("anti defection law" inside "the anti defection law in india")
+        // while making it impossible to reach a concept by one common word.
+        if (bestRun >= 10 && bestTok === kw.length) score = bestRun;
       }
       if (score > bestScore) { bestScore = score; best = k; }
     });
@@ -1346,6 +1452,36 @@
   // must appear contiguous in the title, a single-word subject must be a whole
   // token. Checked in longest-first order so an exact title match wins before
   // any shorter window can.
+  // The subject's own content words, as a lookup set.
+  //
+  // Tier 2's bar was "the node mentions any concept phrase", and that is one
+  // condition too few. A route carries a dozen-odd phrases, so their union is
+  // broad, and a node that satisfies any one of them is admitted regardless of
+  // whether it has anything to do with what was asked. Measured on "digital
+  // twins in infrastructure planning and governance", which routes to
+  // infrastructure investment, that admitted Western Cape (its description
+  // mentions "infrastructure"), Civil engineer, Brookfield Infrastructure
+  // Partners and a Bangladesh highways department -- all real nodes, all
+  // answering a different question.
+  //
+  // So tier 2 now needs both halves: a concept phrase AND a word of the
+  // resolved subject. Western Cape fails the second test and is rejected;
+  // "Digital Infrastructure for Knowledge Sharing" passes it and stays. This is
+  // the general form of the rule -- an incidental shared noun is not a subject.
+  //
+  // Note that "infrastructure" is only in 193 of 214,696 nodes, so a
+  // frequency-based "is this word too generic" test cannot work here: there is
+  // no large enough bar that excludes it. Tying the match to the subject is
+  // what actually discriminates.
+  function subjectTokensOf(subject) {
+    var set = tokenSet(norm(subject));
+    var out = [];
+    for (var k in set) if (Object.prototype.hasOwnProperty.call(set, k)) {
+      if (STOP.indexOf(k) === -1) out.push(k);
+    }
+    return out;
+  }
+
   function titleMatchesSubject(nameNorm, variants) {
     var title = foldSZ(nameNorm);
     for (var i = 0; i < variants.length; i++) {
@@ -1583,6 +1719,13 @@
       if (headTitled) subjVariants = subjVariants.concat(headVariants);
     }
     var subjectEffective = subjectTitled || headTitled;
+if (process.env.ASK_DEBUG) {
+  console.error('[ask] subject=' + JSON.stringify(subject) +
+  ' subjVariants=' + JSON.stringify(subjVariants) +
+  ' headVariants=' + JSON.stringify(headVariants) +
+  ' subjectTitled=' + subjectTitled + ' headTitled=' + headTitled +
+  ' conceptTerms=' + JSON.stringify(conceptTerms));
+  }
     // Which evidence tier produced the sentences. Declared out here rather than
     // inside the scoring loop because the coverage maths and the verdict below
     // both need it.
@@ -1591,6 +1734,24 @@
     // is how a head-proxied question picks up concept-phrase material from
     // nodes that have nothing to do with the entity.
     var conceptTier = !!(!subjectEffective && conceptTerms.length);
+    var subjContentTokens = subjectTokensOf(subject);
+    // Which of the route's own phrases the question actually used.
+    //
+    // A route carries vocabulary for the whole concept -- its mechanisms, its
+    // strains, its neighbouring actors. Matching a node against ALL of it lets
+    // tangential route words admit nodes the question never raised: the Andaman
+    // question says "maritime", but the route also lists "piracy", "security",
+    // "competition" and "chinese navy", so the Andaman Police, the territorial
+    // emblem and a national park all qualified while the one node actually
+    // about maritime strategy was just another row in the pile.
+    //
+    // When the question does name a route phrase, that phrase is the part the
+    // asker meant, so it is what a node has to carry. When it names none -- the
+    // question says "federal framework" and the route says "federalism" -- there
+    // is nothing to anchor on and the route's full vocabulary still applies, so
+    // this changes nothing for those questions.
+    var qNorm = norm(question);
+    var qAnchoredConcepts = conceptTerms.filter(function (c) { return qNorm.indexOf(norm(c)) !== -1; });
 
     var juris = jurisdictionMarkers(question);
     function sameJurisdiction(text) {
@@ -1625,12 +1786,36 @@
       });
     }
 
+    // Does ANY ranked node actually carry the subject in its own title?
+    //
+    // This decides which evidence tier is used, and getting it wrong was the
+    // single reason two very different questions produced nothing.
+    //
+    // subjectOf() returns a subject for almost any noun phrase, including ones
+    // that are not a topic at all -- "loneliness", "independent regulatory
+    // institutions". Tier 1 then demanded that a node be *titled* with that
+    // subject, found none, and because the tiers were an if/else-if chain it
+    // never tried anything else. The engine reported "0 quoteable sentences"
+    // while holding fifteen correct candidates.
+    //
+    // So: if no node is titled with the subject, the subject tier is simply not
+    // available, and the title-composition tier below gets its turn instead of
+    // the answer being thrown away.
+    var anyTitleMatch = false;
+    if (subjVariants.length && subjectEffective) {
+      for (var tm = 0; tm < ranked.length; tm++) {
+        var tnode = idx.nodes[ranked[tm].i];
+        if (tnode && titleMatchesSubject(norm(tnode.node.name), subjVariants)) { anyTitleMatch = true; break; }
+      }
+    }
+
+    var titleTier = false;
     var evidence = [];
     ranked.forEach(function (r) {
       if (r.score < floor && !r.concept) return;
       var p = idx.nodes[r.i];
       if (!p) return;
-      if (subjVariants.length && subjectEffective) {
+      if (subjVariants.length && subjectEffective && anyTitleMatch) {
         if (!titleMatchesSubject(norm(p.node.name), subjVariants)) return;
       } else if (conceptTerms.length) {
         // Fallback tier. Require the node's own text to carry a concept phrase,
@@ -1638,12 +1823,50 @@
         var nodeText = norm(p.node.name + ' ' + p.node.desc);
         var hitConcept = conceptTerms.some(function (c) { return nodeText.indexOf(c) !== -1; });
         if (!hitConcept) return;
+        // ...and, when the question named one of the route's own phrases, that
+        // phrase specifically -- see qAnchoredConcepts.
+        if (qAnchoredConcepts.length) {
+          var hitAnchored = qAnchoredConcepts.some(function (c) { return nodeText.indexOf(c) !== -1; });
+          if (!hitAnchored) return;
+        }
+        // ...and a word of the subject itself. A concept phrase alone is one
+        // condition too few: the route's phrases are a broad union, and any one
+        // of them used to be enough to admit a node that had nothing to do with
+        // the question. See subjectTokensOf().
+        if (subjContentTokens.length) {
+          var hitSubject = subjContentTokens.some(function (t) { return nodeText.indexOf(t) !== -1; });
+          if (!hitSubject) return;
+        }
         // ...and, when the question names a country, that it is the same country.
         if (!sameJurisdiction(nodeText)) return;
       } else {
-        // Neither tier applies: no subject, no concept. Refusing is the honest
-        // outcome -- loose keyword matching is what produced the garbage answer.
-        return;
+        // Third tier, added because refusing here was costing real answers.
+        //
+        // With no titled subject and no concept route this used to `return`
+        // unconditionally, so the engine refused with "0 quoteable sentences"
+        // while holding fifteen correct candidates -- Regulatory economics,
+        // Regulatory agency, Forward Markets Commission, Market economy. The
+        // question named a topic in the only way analytical questions do: as a
+        // combination of common nouns ("significance of independent regulatory
+        // institutions in a market-oriented economy"), none of which is a node
+        // title on its own.
+        //
+        // The bar is deliberately stricter than loose keyword matching, which is
+        // what produced the garbage answers this path was written to prevent.
+        // EVERY content word of the node's own title must be one of the
+        // question's words, so the node is literally named after what was asked
+        // ("Regulatory economics" from regulatory + economy; "Regulated market"
+        // from regulated + market). A node that shares only one common word is
+        // still rejected, and the sentence-level rarity test below still has to
+        // pass on top of this.
+        var qSet = {};
+        a.terms.forEach(function (t) { qSet[t] = 1; });
+        var titleToks = tokens(p.node.name).filter(function (t) { return STOP.indexOf(t) === -1; });
+        if (!titleToks.length) return;
+        for (var ti = 0; ti < titleToks.length; ti++) {
+          if (!qSet[titleToks[ti]]) return;
+        }
+        titleTier = true;
       }
       // Only the question's *distinctive* terms may qualify a sentence as
       // evidence. Anchoring on any query word let "law" and "india" carry
@@ -1757,13 +1980,27 @@
     // the question the reader is really asking.
     var conceptCov = 0, hasFit = false, hasStrain = false;
     if (conceptTier && conceptTerms.length) {
+      // Score against what was asked, not against the route's whole vocabulary.
+      //
+      // The comment above is right that coverage should reflect the question the
+      // reader is asking -- but the divisor was still the full concept list. For
+      // the Andaman question that list holds "operation atalanta", "sagar",
+      // "chinese navy", "exclusive economic zone" and more, none of which the
+      // question raised. Good evidence about maritime strategy covered maybe two
+      // of them, scored under a quarter, and was thrown away while the engine held
+      // Operation Ocean Shield and the Indian Maritime Security Strategy.
+      //
+      // When the question named route phrases, those are the concepts it is
+      // about, so they are what coverage measures. When it named none, the full
+      // list is still the only available definition of the concept.
+      var covConcepts = qAnchoredConcepts.length ? qAnchoredConcepts : conceptTerms;
       var seenConcept = {};
       uniq.forEach(function (e) {
         var sN = norm(e.sentence);
-        conceptTerms.forEach(function (c) { if (sN.indexOf(c) !== -1) seenConcept[c] = 1; });
+        covConcepts.forEach(function (c) { if (sN.indexOf(c) !== -1) seenConcept[c] = 1; });
         if (e.facet === 'strain') hasStrain = true; else hasFit = true;
       });
-      conceptCov = Object.keys(seenConcept).length / conceptTerms.length;
+      conceptCov = Object.keys(seenConcept).length / covConcepts.length;
     }
 
     // The subject must be matched by an actual node title, not merely appear in
@@ -1813,7 +2050,8 @@
       // so. When the entity exists but is unquotable here, the honest verdict is
       // a refusal that names it (the page then reaches the question bank), never
       // a concept answer assembled from other entities' words.
-      if (!subjectMatched && conceptTier && uniq.length >= MIN_EVIDENCE && conceptCov >= MIN_COVERAGE) {
+      if (!subjectMatched && uniq.length >= MIN_EVIDENCE &&
+        ((conceptTier && conceptCov >= MIN_COVERAGE) || (titleTier && termCov >= MIN_COVERAGE))) {
         if (!thinNode(idx, subject)) subjectMatched = true;
       }
     }
@@ -1829,11 +2067,26 @@
     var clauseSubject = /^(?:whether|if|how|why|that|which|when|where)\b/i.test(subjNorm) ||
       /\b(?:has|have|had|is|are|was|were)\s+(?:been\s+)?(?:become|became|required|needed|possible|vulnerable|affected|able)\b/i.test(subjNorm);
 
-    var dimCov = a.demand.length ? a.demand.filter(function (d) {
-      return uniq.some(function (e) { return e.sentence.search(d.re) !== -1; });
-    }).length / a.demand.length : 1;
+// A question that asks for no analytical dimension has nothing to cover, and
+  // that is NOT full marks. dimCov used to be 1 for an empty demand list, which
+  // handed every such question a free 0.30 on top of termCov:
+  //
+  //   "far cry 3"                      termCov 0.000  ->  coverage 0.300
+  //   "aims and outcomes of the INC"   termCov 0.000  ->  coverage 0.300
+  //   "aims and outcomes of the INC"   termCov 0.000  ->  ANSWER(3)
+  //
+  // 0.300 clears MIN_COVERAGE (0.25) on its own, so the gate could not reject on
+  // relevance at all. With no demand the dimension term is dropped and the score
+  // is termCov alone; dimCov is reported as null so callers can say "n/a"
+  // instead of printing a confident 100%.
+  var hasDemand = !!(a.demand && a.demand.length);
+  var dimCov = hasDemand ? a.demand.filter(function (d) {
+    return uniq.some(function (e) { return e.sentence.search(d.re) !== -1; });
+  }).length / a.demand.length : null;
 
-    var coverage = Math.max(0, Math.min(1, 0.70 * termCov + 0.30 * dimCov));
+  var coverage = Math.max(0, Math.min(1, hasDemand
+    ? 0.70 * termCov + 0.30 * dimCov
+    : termCov));
     // A question that asks "how far", "evaluate" or "critically examine" is
     // asking for a judgement, and a judgement needs both sides. A pile of
     // success mechanisms with nothing on the other side is a press release, not
@@ -1841,7 +2094,20 @@
     // facets and records which sides were actually evidenced.
     var evalVerdict = /\b(how far|evaluate|assess|critically|examine|success|successful|extent|justify|appraise|comment on|discuss)\b/i.test(String(question || ''));
     if (conceptTier) {
-      coverage = Math.max(coverage, Math.min(1, conceptCov));
+      // conceptCov deliberately does NOT raise the reported coverage.
+      //
+      // It used to: `coverage = Math.max(coverage, conceptCov)`, added so that a
+      // good concept answer would not be scored down by term coverage. But
+      // conceptCov's denominator is the concept list, and once that list is the
+      // subset the question itself named, a two-phrase denominator reaches 1.0
+      // as soon as both appear -- so the engine began reporting "Coverage 100%"
+      // for a question it could barely answer, quoting two irrelevant sentences
+      // about DIKSHA. A headline number that can be manufactured by shrinking a
+      // denominator is worse than no number.
+      //
+      // conceptCov still decides whether to refuse (below), which is the use that
+      // actually needs it. The reported figure stays the term/dimension blend,
+      // which is measured against the whole question.
     }
 
     // The gate. Three independent ways to fail, because any one of them means
@@ -1904,13 +2170,43 @@
         'rather than evidence';
     } else if (conceptTier && evalVerdict && hasFit && !hasStrain) {
       // Refuse the one-sided answer rather than present it as a judgement.
-      reason = 'the corpus evidences how the framework accommodated diversity, but holds no quotable material on the limits of that accommodation, so it cannot support a "how far" verdict';
+      //
+      // The message must be derived from the route that actually fired. It used
+      // to be fixed prose about "how the framework accommodated diversity",
+      // written for the federal diversity concept and emitted verbatim for
+      // EVERY concept with one-sided evidence. A question about nuclear energy in
+      // India's future mix was therefore refused with a sentence about diversity
+      // and "how far" -- a debate the reader never raised -- which is worse than
+      // no explanation at all. Name the concept and name the missing side.
+      var oneRoute = routeFor(subject, question) || {};
+      var oneCfg = oneRoute.cfg || {};
+      var missingSide = (oneCfg.strain || []).filter(function (t) {
+        return !uniq.some(function (e) { return norm(e.sentence).indexOf(norm(t)) !== -1; });
+      });
+      reason = 'the corpus evidences one side of "' + (oneRoute.key || 'this concept') +
+        '" but holds no quotable material on the other side' +
+        (missingSide.length
+          ? ' (' + missingSide.slice(0, 6).join(', ') + ')' : '') +
+        ', so it cannot support a judgement on the trade-off the question asks for';
     } else {
       refused = false;
     }
 
-    return {
-      analysis: a,
+// Coverage internals, so the scoring maths can be measured rather than argued
+  // about. Placed after the computation: dimCov/termCov/coverage are `var`s
+  // declared below, so logging them earlier would print undefined.
+  if (process.env.ASK_DEBUG) {
+  console.error('[ask] demand=' + (a.demand ? a.demand.length : 0) +
+  ' [' + (a.demand || []).map(function (d) { return d.key; }).join(',') + ']' +
+  ' termCov=' + termCov.toFixed(3) +
+  ' dimCov=' + (dimCov === null ? 'n/a' : dimCov.toFixed(3)) +
+  ' conceptCov=' + conceptCov.toFixed(3) +
+  ' coverage=' + coverage.toFixed(3) +
+  ' tier=' + (conceptTier ? 'concept' : titleTier ? 'title' : 'none'));
+  }
+
+  return {
+  analysis: a,
       candidates: ranked.slice(0, limit).map(function (r) { return idx.nodes[r.i].node; }),
       evidence: uniq.slice(0, 12),
       coverage: coverage,

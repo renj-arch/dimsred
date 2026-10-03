@@ -78,10 +78,20 @@ var CASES = [
     why: 'Titles exactly, but one quotable sentence is below the evidence floor. Refusing is correct; this is not a mains topic.' },
   { q: '.net framework', expect: 'refuse',
     why: 'Titles exactly, one sentence, refuses. The old bug answered a federalism question with this node.' },
-  { q: 'what were the aims and outcomes of the Indian National Congress at its founding in 1885?', expect: 'either', known: true,
-    why: 'Answers with `The 1885 Open Championship` (golf). The subject variants title-match but point at an unrelated 1885 node. Closing this needs the title gate to require that a matched title be about the question non-subject terms.' },
-  { q: 'monsoon in india', expect: 'either', known: true,
-    why: 'Answers with `Monsoon Raaga`, a Kannada film. Same class: a common head word means no head is chosen, so a wrong title variant matches instead.' }
+  // Both of these were `expect: 'either', known: true` and used to answer with
+  // `The 1885 Open Championship` (golf) and `Monsoon Raaga` (a Kannada film).
+  // They now refuse, so the expectations are tightened to `refuse` and the
+  // `known` flags are gone. What closed them was not better title gating: it was
+  // removing the empty-demand freebie in ask-core.js. Both questions asked for
+  // no analytical dimension, so dimCov was 1, which added a hardcoded 0.30 on top
+  // of termCov = 0.000 -- and 0.300 clears MIN_COVERAGE (0.25) by itself. The
+  // gate could not reject them on relevance no matter how bad the node was.
+  // The INC case additionally now detects demand = [aims, outcomes].
+  // If either starts answering again, the freebie is back.
+  { q: 'what were the aims and outcomes of the Indian National Congress at its founding in 1885?', expect: 'refuse',
+    why: 'Refuses: the evidence did not cover the question. Previously answered with `The 1885 Open Championship` (golf) on a 0.300 freebie over termCov 0.000.' },
+  { q: 'monsoon in india', expect: 'refuse',
+    why: 'Refuses: termCov 0.000, no evidence matched. Previously answered with `Monsoon Raaga`, a Kannada film, on the same freebie. Note this is a genuine corpus/retrieval gap for a real UPSC topic, not a correct answer.' }
 ];
 
 function run(q) {

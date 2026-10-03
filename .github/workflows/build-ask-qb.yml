@@ -31,10 +31,26 @@ on:
         description: 'Commit + push regenerated data/ask-qb tables (false = build for log/stats only)'
         required: false
         default: 'true'
-  # Backstop. Wiki Fill self-dispatch is non-fatal, so a failed dispatch leaves
-  # the tables stale until something else runs. This cron self-heals that.
-  schedule:
-    - cron: '30 4 * * *'
+  # Backstop DISABLED 2026-10-03.
+  #
+  # This cron was a self-heal for the case where Wiki Fill's own dispatch
+  # (daily-wiki-fill.yml, "Self-dispatched Ask Question-Bank Build") failed to
+  # fire. That dispatch is the primary trigger and is still active, so the
+  # question bank still rebuilds after every Wiki Fill commit and nothing is
+  # lost by removing the nightly duplicate.
+  #
+  # What it did cost: the workflow runs ~55 minutes, needs a runner with ~9.4 GB
+  # free, and rebuilds 828 MB of gitignored shards. Running it twice a day for
+  # the same input produced a nightly failure that was a DATA problem, not a
+  # scheduling one -- see "Ask question-bank rebuild" run #6, which failed at
+  # the freshness gate because archive-cat-index.json accounted for 15,901,975
+  # records while the builder scanned 15,901,991. That 16-record drift is fixed
+  # at source in scripts/build-archive-single.js, but a nightly duplicate
+  # rebuild is not a useful place to discover it.
+  #
+  # Re-enable by uncommenting the cron below. Manual dispatch is unaffected.
+  # schedule:
+  #   - cron: '30 4 * * *'
 
 concurrency:
   group: ask-qb-build

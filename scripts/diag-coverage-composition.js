@@ -34,9 +34,13 @@ var evidence = r.evidence || [];
 var blob = evidence.map(function (e) { return ' ' + String(e.sentence).toLowerCase(); }).join('');
 
 console.log('Q: ' + q);
+// dimensionCoverage is null when the question asked for no analytical
+// dimension. Printing that as 0% reads as "failed to cover" when the honest
+// answer is "not applicable", so say n/a.
+var dimTxt = r.dimensionCoverage === null || r.dimensionCoverage === undefined
+  ? 'n/a' : Math.round(r.dimensionCoverage * 100) + '%';
 console.log('coverage ' + Math.round(r.coverage * 100) + '%   termCov ' +
-  Math.round((r.termCoverage || 0) * 100) + '%   dimCov ' +
-  Math.round((r.dimensionCoverage || 0) * 100) + '%');
+  Math.round((r.termCoverage || 0) * 100) + '%   dimCov ' + dimTxt);
 console.log('');
 
 var analysis = r.analysis || {};
