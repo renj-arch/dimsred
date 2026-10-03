@@ -20,6 +20,9 @@ var FAS = require('./lib/figure-auto-score.js');
 
 var DATA = path.join(__dirname, '..', 'data');
 var LAYERS_FILE = path.join(DATA, 'topic-layers.json');
+// Written by scripts/stamp-figure-dates.js from git blame; keyed by normalised
+// title, with a parallel map for auto-discovered picks keyed by normalised topic.
+var FIG_DATES_FILE = path.join(DATA, 'figure-added-dates.json');
 var OUT_FILE = path.join(__dirname, '..', 'geography-figures.html');
 
 function norm(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim(); }
@@ -413,14 +416,101 @@ function pageFor(f) {
   } else {
     imgs = '<div class="fig-img"><img src="' + f.url + '" alt="' + esc(f.title) + '"></div>';
   }
+  var added = addedFor(f);
+  var addedHtml = added ? '<div class="added">Added ' + esc(added.date) + (added.estimated ? ' <span class="est">(approx)</span>' : '') + '</div>' : '';
+  var brief = descFor(f);
+  var briefHtml = brief ? '<div class="brief"><b>What it shows:</b> ' + esc(brief) + '</div>' : '';
   // data-title / data-sec let the search box match a figure without walking its
   // text; data-auto drives the "auto-added only" filter.
   return '<section class="page" id="fig-' + esc(f.__id) + '" data-fig="1" data-auto="' + (f.auto ? '1' : '0') + '" data-title="' + esc(f.title) + '" data-sec="' + esc(f.sec) + '">' +
     '<div class="num">' + esc(f.sec) + '</div>' +
     '<div class="fig-title">' + esc(f.title) + '</div>' +
-    badge + imgs + marksHtml(f.marks) +
+    badge + addedHtml + imgs + briefHtml + marksHtml(f.marks) +
     '<div class="fig-src">' + esc(f.src) + '</div>' +
     '</section>';
+}
+
+// ---- per-figure added date + verbatim description ----
+// Both are looked up rather than authored, for two different reasons.
+//
+// DATE: "when was this added" has to mean when the figure entered the pack, not
+// when this script last ran, so the value comes from git blame via
+// stamp-figure-dates.js. A build-time date would make the file differ on every
+// run, which breaks the byte-identical rebuild and commits a new blob nightly
+// for no reason.
+//
+// DESCRIPTION: taken verbatim from the question corpus, which is already the
+// project's sourcing contract (every fact traceable to a Wikipedia sentence).
+// Fetching fresh text per figure would add ~45 network calls to the build, which
+// is the exact timeout/flake risk this pack was just hardened against.
+var figDates = { figures: {}, auto: {} };
+if (fs.existsSync(FIG_DATES_FILE)) {
+  try { figDates = JSON.parse(fs.readFileSync(FIG_DATES_FILE, 'utf8')); } catch (e) { figDates = { figures: {}, auto: {} }; }
+}
+figDates.figures = figDates.figures || {};
+figDates.auto = figDates.auto || {};
+
+function addedFor(f) {
+  if (f.auto) {
+    var a = figDates.auto[norm(f.name || '')];
+    return a ? { date: a.added, estimated: !!a.estimated } : null;
+  }
+  var c = figDates.figures[norm(f.title || '')];
+  return c ? { date: c.added, estimated: !!c.estimated } : null;
+}
+
+// Exact normalised name -> verbatim description, built from the Ask index shards
+// (column-oriented: [id, name, type, cat, desc, ev]).
+//
+// Matching is EXACT NAME ONLY, deliberately. A substring or token match looks
+// reasonable and is worthless here: "river" finds "Designated driver", "coral"
+// finds "Coral Ridge Mall". A wrong description on an exam figure is worse than
+// no description, so anything short of a real name match is left off.
+var descByName = null;
+function loadDescs() {
+  if (descByName) return descByName;
+  descByName = {};
+  var shards = [];
+  try { shards = fs.readdirSync(DATA).filter(function (f) { return /^ask-index-nodes\.\d+\.json$/.test(f); }); } catch (e) { return descByName; }
+  for (var s = 0; s < shards.length; s++) {
+    var rows;
+    try { rows = JSON.parse(fs.readFileSync(path.join(DATA, shards[s]), 'utf8')); } catch (e) { continue; }
+    if (!Array.isArray(rows)) continue;
+    for (var i = 0; i < rows.length; i++) {
+      var r = rows[i];
+      if (!Array.isArray(r)) continue;
+      var name = r[1], desc = r[4];
+      if (!name || !desc || desc.length < 60) continue;
+      if (/_{3,}/.test(desc)) continue; // never surface a cloze blank to a reader
+      var k = norm(name);
+      if (!(k in descByName)) descByName[k] = desc;
+    }
+  }
+  return descByName;
+}
+// Trim to whole sentences. Cutting mid-sentence would turn a verbatim quote into
+// a fabricated one.
+function firstSentences(text, maxChars) {
+  var out = '';
+  var re = /[^.!?]+[.!?]+(\s|$)/g, m;
+  while ((m = re.exec(text)) !== null) {
+    if ((out + m[0]).length > maxChars) break;
+    out += m[0];
+    if (out.length >= maxChars * 0.5) break;
+  }
+  return (out || text).trim();
+}
+function descFor(f) {
+  var byName = loadDescs();
+  if (!Object.keys(byName).length) return null;
+  var keys = [];
+  if (f.topics) keys = keys.concat(f.topics);
+  if (f.name) keys.push(norm(f.name));
+  for (var i = 0; i < keys.length; i++) {
+    var d = byName[norm(keys[i])];
+    if (d) return firstSentences(d, 320);
+  }
+  return null;
 }
 
 // ---- AUTO figure fill: discover a Commons figure for topics still unmatched ----
@@ -552,6 +642,9 @@ async function main() {
       auto: true,
       sec: 'World \u00b7 Auto',
       title: x.name + ' \u2014 Suggested Figure',
+      // `name` is what addedFor()/descFor() key off for auto picks, so it has to
+      // be here and not only inside the title string.
+      name: x.name,
       marks: ['locate / label this feature plus its surrounding countries & water bodies', 'state co-ordinates, hemisphere and climatic belt', 'verify the image really is the feature (auto-suggested)'],
       src: 'Source: auto-suggested from Wikimedia Commons \u00b7 CC BY-SA \u2014 verify before exam',
       topics: [norm(x.name)]
@@ -645,6 +738,9 @@ async function main() {
     '.num{font-size:10px;letter-spacing:.14em;color:#0e7490;font-weight:700;text-transform:uppercase}' +
     '.fig-title{font-size:15px;font-weight:700;margin:2px 0 6px}' +
     '.fig-src{font-size:9.5px;color:#6b7280;margin:6px 0 0}' +
+    '.added{font-size:9.5px;color:#6b7280;margin:0 0 2px}.added .est{color:#b45309}' +
+    '.brief{background:#f8fafc;border:1px solid #e2e8f0;border-left:3px solid #94a3b8;border-radius:6px;padding:7px 10px;margin:8px 0 0;font-size:11.5px;line-height:1.65;color:#1f2937}' +
+    '.brief b{color:#334155}' +
     '.fig-img{display:flex;justify-content:center;align-items:center;background:#fafafa;border:1px solid #e5e7eb;border-radius:8px;padding:14px;margin:8px 0}' +
     '.fig-img img{max-width:100%;height:auto}' +
     '.fig-img.img-em{flex-direction:column;gap:6px}' +
