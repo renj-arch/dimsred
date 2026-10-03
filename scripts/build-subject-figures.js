@@ -201,6 +201,16 @@ function curatedSubjects() {
       Object.keys(au).forEach(function (s) { if (s.charAt(0) !== '_') auto[s] = au[s]; });
     }
   } catch (e) { auto = {}; }
+  // Curated entity mappings: subject slug -> topic -> {article} or {qid}.
+  //
+  // The topic lists are UPSC syllabus phrases, not entity names, so the search
+  // has nothing to match on: "gandhara and mathura school art" and "indo-islamic
+  // architecture features" are not Wikipedia articles and no amount of retrying
+  // turns them into one. Each entry below names the article the phrase is about,
+  // which is the one piece of knowledge a search cannot supply. It is stored
+  // under an underscore key so it is skipped as a subject by the loop below.
+  var entities = {};
+  try { entities = raw._entities || {}; } catch (e) { entities = {}; }
   var out = {};
   Object.keys(raw).forEach(function (slug) {
     if (slug.charAt(0) === '_') return;
@@ -213,7 +223,8 @@ function curatedSubjects() {
       if (goodTopic(t)) topics[t] = list.length - i;
     });
     out[slug] = { total: list.length, topics: topics, exact: exact[slug] || {},
-                  auto: auto[slug] || {}, display: DISPLAY_NAME[slug] || slug };
+                  auto: auto[slug] || {}, entities: entities[slug] || {},
+                  display: DISPLAY_NAME[slug] || slug };
   });
   return out;
 }
@@ -467,8 +478,22 @@ async function main() {
           try { hit = await resolveAuto(tname); } catch (e) { hit = null; }
           if (hit) { fname = hit.f; source = 'legacy'; cache[key] = { file: fname, source: 'legacy' }; }
         } else {
-          try { hit = await RESOLVER.resolve(tname); } catch (e) { hit = null; }
-          if (hit && Number(hit.conf) >= AUTO_MIN_CONF) { fname = hit.file; source = 'live'; cache[key] = { file: fname, source: 'live' }; }
+          // A curated entity mapping, when one exists for this topic, replaces
+          // the search outright rather than being tried after it. Searching
+          // first would spend the request and then be discarded, and the search
+          // is what fails on these phrases anyway.
+          var hint = (subjects[sname].entities || {})[tname] || null;
+          // exclude is the run-wide set of files already used, so one image
+          // cannot serve two topics. Without it two topics mapped to the same
+          // article both got that article's picture.
+          var ropts = { exclude: AUTO_EXCLUDE_IMG };
+          if (hint) { if (hint.article) ropts.article = hint.article; if (hint.qid) ropts.qid = hint.qid; }
+          try { hit = await RESOLVER.resolve(tname, ropts); } catch (e) { hit = null; }
+          if (hit && Number(hit.conf) >= AUTO_MIN_CONF) {
+            fname = hit.file;
+            source = hint ? 'curated' : 'live';
+            cache[key] = { file: fname, source: source };
+          }
         }
         if (!fname) unmatched.push(tname);
         budget--;

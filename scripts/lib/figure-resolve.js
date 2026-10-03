@@ -231,7 +231,14 @@ function pickImage(imgs, articleTitle, concept, opts){
   var atoks=contentTokens(articleTitle);
   var needName=ctoks.length>=3?2:1;
   var best=null,bestScore=-1;
+  // Skip figures this run has already used. The builder marks each accepted
+  // file so the same image cannot serve two topics, but that set was only ever
+  // consulted by fileOK() in the caller -- pickImage never saw it, so two topics
+  // mapped to the same article both received the identical picture
+  // ("India film clapperboard (variant).svg" under two different cinema topics).
+  var excl=opts.exclude||{};
   imgs.forEach(function(f){
+    if(excl[f])return;
     if(isJunk(f))return;
     if(NON_IMAGE_RE.test(f))return;
     if(isSymbol(f))return;
@@ -251,7 +258,17 @@ function pickImage(imgs, articleTitle, concept, opts){
     // No concept word in the filename at all -> never acceptable, however
     // complete the article title is. This is what rejected "PD-icon.svg" for
     // "writs types", where the one-word article title alone read as full cover.
-    if(!nameHit.length)return;
+    //
+    // A curated article is the one exception: when the mapping names the
+    // article outright, the lead image represents that article by construction,
+    // so requiring its filename to repeat the concept rejects correct figures.
+    // "Taj_Mahal.jpg" carries neither "indo" nor "islamic" nor "architecture"
+    // yet is the canonical image for Indo-Islamic architecture. Only the lead
+    // image is exempt, and only for curated mappings -- isJunk, NON_IMAGE_RE,
+    // isSymbol and wantsDiagram all still apply to it, and every non-lead image
+    // is judged exactly as before.
+    var curatedLead=!!opts.curated&&isLead;
+    if(!nameHit.length&&!curatedLead)return;
     if(!isLead){
       if(!diagram&&!nameHit.length)return;
       if(!diagram&&ncov<0.66)return;
@@ -269,8 +286,8 @@ function pickImage(imgs, articleTitle, concept, opts){
     var allTok=atoks.concat(ftoks);
     var covered=ctoks.filter(function(c){return stemMatch(c,allTok);}).length;
     var cov=covered/ctoks.length;
-    if(cov<0.66)return;
-    if(isLead&&cov<1)return;
+    if(cov<0.66&&!curatedLead)return;
+    if(isLead&&cov<1&&!curatedLead)return;
     var svg=/\.svg$/i.test(f);
     var photo=PHOTO_RE.test(norm(f))&&!svg&&!diagram;
     var score=cov*2+(nameHit.length/ctoks.length)+(svg?0.5:0)-(photo?0.7:0)
@@ -385,7 +402,14 @@ async function resolve(topic,opts){
   // "1 Om.svg" (depicts) and "laser types" to Corona charging.svg (category
   // Laser printers) passed because membership alone was treated as proof.
   var ctoks1 = contentTokens(concept);
-  var qids=await topicQids(topic);
+  // A curated qid skips the search entirely. topicQids() has to guess an entity
+  // from the topic string, and the UPSC syllabus phrases that reach this file
+  // are not entity names: "indo-islamic architecture features" and "gandhara
+  // and mathura school art" match no Wikidata label, so the search returned
+  // nothing and the topic stayed unmatched forever. A qid names the concept
+  // outright. Every gate below still runs -- this replaces the lookup, not the
+  // verification.
+  var qids=opts.qid?[{qid:String(opts.qid)}]:await topicQids(topic);
   for(var i=0;i<Math.min(qids.length,3);i++){
     var q=qids[i];
     var dep=(await filesDepicting(q.qid)).filter(function(f){
@@ -417,7 +441,7 @@ async function resolve(topic,opts){
         var lead=ft[li];
         return !!lead&&gToks.some(function(c){return tokMatch(c,lead);});
       });
-      var cpick=pickImage(cf,concept,concept,{wantsDiagram:wantsDiagram});
+      var cpick=pickImage(cf,concept,concept,{wantsDiagram:wantsDiagram,exclude:opts.exclude});
       if(cpick){
         var v2=await verifyFiles([cpick]);
         if(v2.length)return {file:v2[0],tier:1,conf:0.9,method:'category:'+cat,qid:q.qid};
@@ -426,13 +450,25 @@ async function resolve(topic,opts){
   }
 
   // Tier 2: the figure the Wikipedia article about this concept actually carries.
-  var titles=await searchArticles(concept);
-  var article=pickArticle(titles,concept);
+  // opts.article pins the article instead of searching for it. A curated
+  // mapping is authoritative about WHICH article, so the search and its
+  // coverage-driven retry are skipped -- but the image gates are not skipped:
+  // pickImage() still rejects non-diagrams and symbols, and still requires the
+  // filename to cover the concept.
+  //
+  // Coverage is judged against the article's own tokens rather than the topic.
+  // That distinction is the whole point: the topic is a syllabus phrase that
+  // can never cover an article title ("temple architecture map south india" vs
+  // "Hindu temple architecture"), so judging coverage on the topic would
+  // reject every correct mapping handed in here.
+  var forced=opts.article||null;
+  var titles=forced?[]:await searchArticles(concept);
+  var article=forced||pickArticle(titles,concept);
   // If no result names the whole concept, search again without the filler words
   // ("india major cattle breeds" -> "india cattle breeds"), which is what
   // surfaces "Indigenous cattle breeds of India" instead of the article about
   // cattle-slaughter law that ranks for the original phrasing.
-  if(!article||articleCoverage(article,concept)<1){
+  if(!forced&&(!article||articleCoverage(article,concept)<1)){
     var alt=await searchArticles(contentTokens(concept).join(' '));
     var merged=titles.slice();
     alt.forEach(function(t){if(merged.indexOf(t)<0)merged.push(t);});
@@ -447,14 +483,23 @@ async function resolve(topic,opts){
     // If figure-word stripping left a thin concept ("block diagram of cpu" ->
     // "of cpu"), coverage is judged against the full topic instead, or a
     // one-word concept would score every article as a perfect match.
-    var coverToks=contentTokens(concept);
-    var pick=pickImage(imgs,article,concept,{wantsDiagram:wantsDiagram,lead:lead,
-      titleCoversAll:articleCoverage(article,coverToks.length>=2?concept:topic)>=1});
+    var coverToks=forced?contentTokens(article):contentTokens(concept);
+    var pick=pickImage(imgs,article,forced?article:concept,{wantsDiagram:wantsDiagram,lead:lead,curated:!!forced,exclude:opts.exclude,
+      titleCoversAll:forced?true:articleCoverage(article,coverToks.length>=2?concept:topic)>=1});
     if(pick){
       var v3=await verifyFiles([pick]);
       if(v3.length){
         var svg=/\.svg$/i.test(v3[0]);
-        return {file:v3[0],tier:svg?2:3,conf:svg?0.9:0.8,method:'article:'+article,article:article};
+        // A search-derived pick scores 0.8 for a photo because nothing pinned
+        // the subject -- the article was guessed from the topic string. A
+        // curated mapping pins it, so a photo is worth the same 0.9 as an SVG
+        // here. Without this every curated PHOTO match is silently discarded
+        // downstream: AUTO_MIN_CONF is 0.85, so "Stupa 1, Sanchi 02.jpg" and
+        // "GandharaFrieze.JPG" were both correct and both rejected, while only
+        // the SVG picks could ever land. This does not weaken the gate for
+        // uncurated topics, which keep 0.8/0.9 exactly as before.
+        var c=forced?0.9:(svg?0.9:0.8);
+        return {file:v3[0],tier:svg?2:3,conf:c,method:(forced?'curated:':'article:')+article,article:article,curated:!!forced};
       }
     }
   }
