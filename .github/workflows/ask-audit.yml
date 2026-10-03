@@ -24,6 +24,13 @@ name: Ask Retrieval Audit
 
 on:
   push:
+    # Everything this workflow actually reads or executes. The list used to omit
+    # the test files and the workflow file itself, which meant a commit touching
+    # only those changed the audit's behaviour without ever running the audit:
+    # the fix in d725db94b, which moved check-ask-mains.js out of this workflow
+    # precisely because it cannot see data/ask-qb, was pushed and produced no run
+    # at all. A workflow that cannot test its own definition is a workflow whose
+    # breakage is invisible until something else breaks it.
     paths:
       - scripts/lib/ask-core.js
       - scripts/ask-audit.js
@@ -31,6 +38,12 @@ on:
       - scripts/lib/ask-index-load.js
       - data/ask-index.json
       - data/ask-index-nodes.*.json
+      # The suites this workflow runs, so editing one is verified by a run.
+      - scripts/test-ask-engine.js
+      - scripts/test-ask-strategic-dimensions.js
+      - scripts/check-ask-page-boot.js
+      # Its own definition.
+      - .github/workflows/ask-audit.yml
   workflow_dispatch:
 
 concurrency:
