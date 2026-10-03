@@ -43,9 +43,31 @@ permissions:
 jobs:
   audit:
     runs-on: ubuntu-latest
-    timeout-minutes: 10
+    # Headroom for a cold runner now that checkout is sparse. The audit itself
+    # runs in about a second; this only guards against a slow first fetch.
+    timeout-minutes: 20
     steps:
+      # Sparse checkout is REQUIRED here, not an optimisation.
+      #
+      # The question-bank tables under data/questions are ~8.6 GB across 1255
+      # tracked files, so a full checkout cannot finish inside this job's
+      # timeout. The job gets cancelled mid-checkout, leaving an incomplete
+      # working tree, and the always() summary step then reports a bogus
+      # "Cannot find module scripts/ask-audit.js" -- which reads exactly like a
+      # missing script and sends you hunting for a file that is committed and
+      # present. That is what happened on run #7.
+      #
+      # The audit needs only the scripts and the 46 MB of Ask index shards, so
+      # fetch exactly those and the checkout finishes in seconds.
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            ask.html
+            data/ask-index.json
+            data/ask-index-nodes.*.json
+          sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
         with:
@@ -59,6 +81,14 @@ jobs:
       # blocks the merge rather than being noticed later in a live answer.
       - name: Retrieval audit
         run: node scripts/ask-audit.js -v
+
+      # The retrieval engine can pass every assertion in ask-audit.js and still
+      # leave the page dead on arrival: boot() runs inline in ask.html and a
+      # ReferenceError there (the askHay incident) is invisible to a test that
+      # only requires the library. This check loads the seven libraries and
+      # executes the page's own inline script, which is what actually broke.
+      - name: Ask page boot
+        run: node scripts/check-ask-page-boot.js
 
       - name: Summary
         if: always()

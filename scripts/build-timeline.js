@@ -3611,7 +3611,24 @@ var SUBTOPIC_DESCS = {
   'Calico Acts': 'In addition, between 1685 and 1774, the English and later British governments imposed tariffs, or prohibited the import of Indian textiles into Britain, through the Calico Acts',
   'Decline of the Indian cotton industry': 'The fall of the Indian cotton industry is one of the important factors behind the decline of Indian GDP under British rule',
   'Indian hand spinning industry': 'The fall in prices of cotton significantly reduced the production of Indian hand spinning industry which is considered to be the most important specimen of de-industrialisation in India',
-  'Colonial infrastructure in India': 'The colonial infrastructure created by the British government, including legal systems, railways and telegraphs were mobilized towards resource exploitation, leaving industrial growth static and agriculture unable to keep up with natural population growth'
+  'Colonial infrastructure in India': 'The colonial infrastructure created by the British government, including legal systems, railways and telegraphs were mobilized towards resource exploitation, leaving industrial growth static and agriculture unable to keep up with natural population growth',
+  // Nuclear energy in India. Sources: Wikipedia, "Nuclear power in India"
+  // (pageid 12902516), "Advanced Heavy-water reactor" (4028565),
+  // "Pressurized heavy-water reactor" (33087778), "Nuclear fuel cycle" (194031).
+  // Curated for the same reason as the de-industrialisation block above: the
+  // first entry in each of these topics is a fill_blank, so descWithSource()
+  // would otherwise publish "_____ in operation in 7 nuclear power plants" as
+  // the description Ask quotes.
+  //
+  // The umbrella topic is "Nuclear energy in India", NOT the article title
+  // "Nuclear power in India", because the latter is already a SEED entity. A
+  // seed node takes its description from the curated seed map above and
+  // short-circuits the question path, so entries filed under a seed topic add
+  // no evidence and no description at all.
+  'Nuclear energy in India': 'Nuclear power is the fifth-largest source of electricity in India after coal, hydro, solar and wind',
+  'Advanced Heavy-water reactor': 'The Advanced Heavy-Water Reactor (AHWR) or AHWR-300 is an Indian Generation III+ reactor design developed by the Bhabha Atomic Research Centre and intended to use thorium and plutonium as fuel',
+  'Pressurized heavy-water reactor': 'A pressurized heavy-water reactor (PHWR) is a nuclear reactor that uses heavy water (deuterium oxide D2O) as its coolant and neutron moderator',
+  'Nuclear fuel cycle': 'The nuclear fuel cycle, also known as the nuclear fuel chain, is the series of stages that nuclear fuel undergoes during its production, use, and recycling or disposal'
 };
 function topicDescFor(name, label, qs) {
   if (SUBTOPIC_DESCS[name]) return SUBTOPIC_DESCS[name];
