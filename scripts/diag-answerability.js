@@ -43,7 +43,9 @@ console.log('  refused        ' + r.refused);
 console.log('  reason         ' + (r.reason || '(answered)'));
 console.log('  coverage       ' + Math.round(r.coverage * 100) + '%');
 console.log('  termCoverage   ' + Math.round((r.termCoverage || 0) * 100) + '%');
-console.log('  dimCoverage    ' + Math.round((r.dimensionCoverage || 0) * 100) + '%');
+// null = the question asked for no analytical dimension (not 0% coverage).
+  console.log('  dimCoverage    ' + (r.dimensionCoverage === null || r.dimensionCoverage === undefined
+    ? 'n/a (no analytical demand)' : Math.round(r.dimensionCoverage * 100) + '%'));
 console.log('  subjectMatched ' + r.subjectMatched);
 console.log('  evidence       ' + r.evidence.length + ' sentence(s)');
 console.log('');

@@ -102,5 +102,41 @@ console.log('\n=== honesty: a genuine corpus gap must still refuse ===');
   ok(names.length < 5, 'does not pad the refusal with unrelated nodes (' + names.length + ')');
 }
 
+console.log('\n=== coverage maths: no analytical demand must not be full marks ===');
+{
+  // The freebie this pins: dimCov was 1 whenever `demand` was empty, adding a
+  // hardcoded 0.30 on top of termCov. MIN_COVERAGE is 0.25, so 0.300 cleared the
+  // gate by itself and the score could not reject a node on relevance at all.
+  // Measured consequences, both of which used to answer:
+  //   "what were the aims and outcomes of the Indian National Congress?"
+  //       termCov 0.000  dimCov 1.000  coverage 0.300  -> ANSWER(3) with
+  //       `The 1885 Open Championship` (golf) and `Monsoon Raaga` (a film)
+  //   "far cry 3"   termCov 0.000  dimCov 1.000  coverage 0.300
+  const inc = run('what were the aims and outcomes of the Indian National Congress?');
+  ok(inc.r.analysis.demand.length >= 2,
+    'detects the aims and outcomes demands (' + inc.r.analysis.demand.map(d => d.key).join(',') + ')');
+  // demand was detected and no evidence covered it, so this is a real 0 -- not
+  // the null that a question with no demand gets.
+  ok(inc.r.dimensionCoverage === 0,
+    'a detected-but-uncovered dimension scores 0, not null and not 1');
+  ok(inc.r.coverage < 0.25, 'does not clear the gate on a freebie (' + inc.r.coverage.toFixed(3) + ')');
+
+  // A factual question has no demand, and asking for none must not score 100%.
+  // The early-refusal path returns before the score is computed, so
+  // dimensionCoverage is undefined there and null on the scored path; both are
+  // acceptable. The one thing that must never come back is 1.
+  const factual = run('nakshi lake');
+  ok(factual.r.dimensionCoverage !== 1,
+    'a factual question never reports dimension coverage of 1 (' +
+    JSON.stringify(factual.r.dimensionCoverage) + ')');
+
+  // And with no demand the score must be termCov alone -- never termCov+0.30.
+  const fc = run('monsoon in india');
+  ok(Math.abs(fc.r.coverage - fc.r.termCoverage) < 1e-9,
+    'coverage equals termCoverage exactly when there is no demand (' +
+    fc.r.coverage.toFixed(3) + ' vs ' + fc.r.termCoverage.toFixed(3) + ')');
+  ok(fc.r.refused === true, 'monsoon in india refuses rather than answering on a freebie');
+}
+
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

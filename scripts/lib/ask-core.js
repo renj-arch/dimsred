@@ -212,7 +212,24 @@
     { key: 'case', re: /\b(case|cases|judgement|judgment|court|supreme)\b/i, label: 'case law' },
     { key: 'constitution', re: /\b(constitution\w*|article|schedule|amendment|provision|office)\b/i, label: 'constitutional basis' },
     { key: 'problem', re: /\b(vulnerab\w*|problem|issue|concern|partisan|bias|criticism|weakness)\b/i, label: 'the problem' },
-    { key: 'evidence', re: /\b(example|instance|evidence|data|recent|since)\b/i, label: 'evidence' }
+    { key: 'evidence', re: /\b(example|instance|evidence|data|recent|since)\b/i, label: 'evidence' },
+
+    // Analytical demands: the question asks for a judgement or a named
+    // dimension. These are kept as SEPARATE entries rather than one combined
+    // pattern so partial coverage is measurable -- "aims and outcomes" against
+    // evidence that only discusses outcomes scores 0.5, not a flat 1.
+    //
+    // This vocabulary already existed in DEMAND_NOUN, which is used for subject
+    // detection. DEMAND never saw it, so the most analytical questions in the
+    // suite ("what were the aims and outcomes of the Indian National
+    // Congress?") were scored demand=0, handed dimCov=1, and passed the
+    // coverage gate on the freebie alone.
+    { key: 'aims', re: /\b(aims?|aimed|objectives?|goals?|purposes?|mission)\b/i, label: 'aims' },
+    { key: 'outcomes', re: /\b(outcomes?|consequences?|impacts?|effects?|results?)\b/i, label: 'outcomes' },
+    { key: 'causes', re: /\b(causes?|caused|reasons?|factors?|drivers?)\b/i, label: 'causes' },
+    { key: 'significance', re: /\b(significance|importance|relevance|utility|why (it|they) matter\w*)\b/i, label: 'significance' },
+    { key: 'evaluation', re: /\b(merits?|demerits?|advantages?|disadvantages?|prospects?|viability|limitations?|shortcomings?)\b/i, label: 'evaluation' },
+    { key: 'lessons', re: /\b(lessons?|implications?|takeaways?)\b/i, label: 'lessons' }
   ];
 
   // The instruction words that tell the candidate *what to do* rather than what
@@ -1702,13 +1719,13 @@
       if (headTitled) subjVariants = subjVariants.concat(headVariants);
     }
     var subjectEffective = subjectTitled || headTitled;
-    if (process.env.ASK_DEBUG) {
-      console.error('[ask] subject=' + JSON.stringify(subject) +
-        ' subjVariants=' + JSON.stringify(subjVariants) +
-        ' headVariants=' + JSON.stringify(headVariants) +
-        ' subjectTitled=' + subjectTitled + ' headTitled=' + headTitled +
-        ' conceptTerms=' + JSON.stringify(conceptTerms));
-    }
+if (process.env.ASK_DEBUG) {
+  console.error('[ask] subject=' + JSON.stringify(subject) +
+  ' subjVariants=' + JSON.stringify(subjVariants) +
+  ' headVariants=' + JSON.stringify(headVariants) +
+  ' subjectTitled=' + subjectTitled + ' headTitled=' + headTitled +
+  ' conceptTerms=' + JSON.stringify(conceptTerms));
+  }
     // Which evidence tier produced the sentences. Declared out here rather than
     // inside the scoring loop because the coverage maths and the verdict below
     // both need it.
@@ -2050,11 +2067,26 @@
     var clauseSubject = /^(?:whether|if|how|why|that|which|when|where)\b/i.test(subjNorm) ||
       /\b(?:has|have|had|is|are|was|were)\s+(?:been\s+)?(?:become|became|required|needed|possible|vulnerable|affected|able)\b/i.test(subjNorm);
 
-    var dimCov = a.demand.length ? a.demand.filter(function (d) {
-      return uniq.some(function (e) { return e.sentence.search(d.re) !== -1; });
-    }).length / a.demand.length : 1;
+// A question that asks for no analytical dimension has nothing to cover, and
+  // that is NOT full marks. dimCov used to be 1 for an empty demand list, which
+  // handed every such question a free 0.30 on top of termCov:
+  //
+  //   "far cry 3"                      termCov 0.000  ->  coverage 0.300
+  //   "aims and outcomes of the INC"   termCov 0.000  ->  coverage 0.300
+  //   "aims and outcomes of the INC"   termCov 0.000  ->  ANSWER(3)
+  //
+  // 0.300 clears MIN_COVERAGE (0.25) on its own, so the gate could not reject on
+  // relevance at all. With no demand the dimension term is dropped and the score
+  // is termCov alone; dimCov is reported as null so callers can say "n/a"
+  // instead of printing a confident 100%.
+  var hasDemand = !!(a.demand && a.demand.length);
+  var dimCov = hasDemand ? a.demand.filter(function (d) {
+    return uniq.some(function (e) { return e.sentence.search(d.re) !== -1; });
+  }).length / a.demand.length : null;
 
-    var coverage = Math.max(0, Math.min(1, 0.70 * termCov + 0.30 * dimCov));
+  var coverage = Math.max(0, Math.min(1, hasDemand
+    ? 0.70 * termCov + 0.30 * dimCov
+    : termCov));
     // A question that asks "how far", "evaluate" or "critically examine" is
     // asking for a judgement, and a judgement needs both sides. A pile of
     // success mechanisms with nothing on the other side is a press release, not
@@ -2160,8 +2192,21 @@
       refused = false;
     }
 
-    return {
-      analysis: a,
+// Coverage internals, so the scoring maths can be measured rather than argued
+  // about. Placed after the computation: dimCov/termCov/coverage are `var`s
+  // declared below, so logging them earlier would print undefined.
+  if (process.env.ASK_DEBUG) {
+  console.error('[ask] demand=' + (a.demand ? a.demand.length : 0) +
+  ' [' + (a.demand || []).map(function (d) { return d.key; }).join(',') + ']' +
+  ' termCov=' + termCov.toFixed(3) +
+  ' dimCov=' + (dimCov === null ? 'n/a' : dimCov.toFixed(3)) +
+  ' conceptCov=' + conceptCov.toFixed(3) +
+  ' coverage=' + coverage.toFixed(3) +
+  ' tier=' + (conceptTier ? 'concept' : titleTier ? 'title' : 'none'));
+  }
+
+  return {
+  analysis: a,
       candidates: ranked.slice(0, limit).map(function (r) { return idx.nodes[r.i].node; }),
       evidence: uniq.slice(0, 12),
       coverage: coverage,
