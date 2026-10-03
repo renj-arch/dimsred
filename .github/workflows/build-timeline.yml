@@ -124,6 +124,19 @@ jobs:
         continue-on-error: true
         run: FIGURES_ALLOW_UNVERIFIED=1 FIGURE_SOURCE=curated node scripts/build-subject-figures.js
 
+      # The two suites that need data/ask-qb/entities.tsv live here, not in
+      # ask-audit.yml. That workflow sparse-checks-out only the index, its node
+      # shards and a few scripts -- deliberately, so a question-bank rebuild
+      # cannot be discovered by it -- so check-ask-mains.js ENOENTs there. This
+      # workflow has the full tree, and it is also where the tables get rebuilt,
+      # so a regression in the tables is caught by the same run that writes them.
+      - name: Entity and essay regression against the built tables
+        run: |
+          node scripts/check-ask-mains.js
+          # Baseline is 16 passed / 4 failed. The four are a recorded gap, not a
+          # licence for it to widen, so warn loudly instead of blocking here.
+          node scripts/ask-essay-e2e.js || echo "::warning::essay e2e regressions changed; compare against the recorded 16 passed / 4 failed baseline"
+
       - name: Commit + push regenerated timeline
         # `inputs.commit` is only populated for workflow_dispatch. A schedule
         # event has no inputs, so gating on it alone would make every scheduled

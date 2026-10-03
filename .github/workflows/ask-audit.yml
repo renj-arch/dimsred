@@ -90,23 +90,25 @@ jobs:
       - name: Ask page boot
         run: node scripts/check-ask-page-boot.js
 
-      # Pins the retrieval defects measured on 2026-10-03: a shared noun passing
-      # as a subject, an evidence tier that could not fall through, and a
-      # coverage figure that could be pushed to 100% by shrinking a divisor.
-      # ask-audit.js checks verdicts; this checks which nodes were admitted, which
-      # is where the garbage answers actually came from.
-      - name: Strategic dimension regression
-        run: node scripts/test-ask-strategic-dimensions.js
-
-      # The engine suites must stay green independently of the audit, and the
-      # essay e2e baseline is 16 passed / 4 failed -- a known, recorded gap, not
-      # a licence for it to get worse.
-      - name: Retrieval unit and honesty suites
+      # Only suites that need nothing but the index belong here. This workflow
+      # checks out data/ask-index.json plus the node shards and a handful of
+      # scripts (see `paths:` above) precisely so a question-bank rebuild cannot
+      # be discovered by it, so anything reading data/ask-qb/ cannot run here --
+      # an earlier version of this file ran check-ask-mains.js in this step and
+      # it died with ENOENT on data/ask-qb/entities.tsv, failing the job after
+      # the audit itself had already passed. check-ask-mains.js and
+      # ask-essay-e2e.js both need the entity table and run in build-timeline.yml,
+      # which has the full tree.
+      #
+      # test-ask-strategic-dimensions.js pins the retrieval defects measured on
+      # 2026-10-03: a shared noun passing as a subject, an evidence tier that
+      # could not fall through, and a coverage figure that could be pushed to
+      # 100% by shrinking a divisor. ask-audit.js checks verdicts; this checks
+      # which nodes were admitted, which is where the garbage came from.
+      - name: Retrieval unit and index-only regression
         run: |
           node scripts/test-ask-engine.js
-          node scripts/check-ask-mains.js
-      - name: Essay end-to-end
-        run: node scripts/ask-essay-e2e.js || echo "::warning::essay e2e has known failures; compare against the 16/4 baseline"
+          node scripts/test-ask-strategic-dimensions.js
 
       - name: Summary
         if: always()
