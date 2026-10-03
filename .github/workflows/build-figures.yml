@@ -191,6 +191,14 @@ jobs:
           # or Ask-index changes it did not produce, and would collide with the
           # fill chain over files it has no business touching. The two writers
           # now own disjoint sets of paths.
+          #
+          # Every data/ path below is already tracked, which matters: .gitignore
+          # line 6 is `data/*`, so `git add` exits 1 on an ignored pathspec and
+          # under `bash -e` that fails the whole commit step. Verified by
+          # dry run -- do NOT add an untracked path here without checking it
+          # first. data/figure-facts.json is deliberately absent for this
+          # reason: it is untracked and ignored, and import-figures.js (its
+          # only producer) is a manual input, not a scheduled builder.
           git add -A \
             geography-diagrams.html \
             geography-figures.html \
@@ -200,7 +208,6 @@ jobs:
             data/figure-files-curated.json \
             data/figure-topics-curated.json \
             data/figure-added-dates.json \
-            data/figure-facts.json \
             data/geo-auto-figures.json \
             data/subject-figures-cache.json
           if git diff --staged --quiet; then
