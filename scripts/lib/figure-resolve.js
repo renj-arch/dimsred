@@ -654,7 +654,15 @@ var OTHER_COUNTRY={iran:1,iranian:1,china:1,chinese:1,japan:1,japanese:1,pakista
   hungary:1,czech:1,kazakhstan:1,uzbekistan:1,indonesia:1,malaysian:1,vietnam:1,
   thailand:1,philippines:1,cuba:1,cuban:1,chile:1,peru:1,peruvian:1,argentina:1,
   colombia:1,colombian:1,venezuela:1,bolivia:1,ecuador:1,uruguay:1,paraguay:1,
-  madagascar:1,malagasy:1,sri:1,ceylon:1,burma:1,formosa:1,java:1,sumatra:1,
+  madagascar:1,malagasy:1,indonesia:1,indonesian:1,bali:1,sumatra:1,java:1,
+  cuba:1,cuban:1,
+  // Names that carry a country without saying so, harvested from Commons
+  // category titles. "Fort Worth Stockyards" is Texas and "East Ayrshire" is
+  // Scotland; neither contains a country word, so they are listed directly.
+  texas:1,fort:1,worth:1,ayrshire:1,holstein:1,hereford:1,jersey:1,brahman:1,
+  // Dairy and beef breeds are named after their home region, so a breed name
+  // is a country claim that the generic country table can never see.
+  guernsey:1,angus:1,limousin:1,charolais:1,shorthorn:1,simmental:1,galloway:1,sri:1,ceylon:1,burma:1,formosa:1,java:1,sumatra:1,
   // Sub-continent neighbours that are not India, so a topic scoped to India
   // cannot be answered from them either.
   bangladesh:1,kashmir:1,hyderabad:1,karachi:1,lahore:1,colombo:1,kathmandu:1,
@@ -746,5 +754,6 @@ async function autoDiscover(topic,opts){
 module.exports={resolve:resolve,autoDiscover:autoDiscover,discoveryCandidates:discoveryCandidates,
   isDiagramish:isDiagramish,norm:norm,topicQids:topicQids,respectsScope:respectsScope,
   plausibleFigureType:plausibleFigureType,belongsToOriginal:belongsToOriginal,
+  apiGet:jget,UA:UA,p373:p373,
   filesDepicting:filesDepicting,filesInCategory:filesInCategory,apiStats:apiStats,
   conceptQuery:conceptQuery,pickArticle:pickArticle,pickImage:pickImage};

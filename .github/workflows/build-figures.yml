@@ -88,6 +88,37 @@ on:
         description: 'Run add-svg-diagrams.js (MANUAL: mutates content JSON in place, not idempotent)'
         required: false
         default: 'false'
+      # Bulk harvest answers a different question from the resolver above. The
+      # resolver asks "the single best file for this topic", which caps the
+      # whole site near one figure per topic. This asks "every file plausibly
+      # about this topic" by walking Commons category trees, which is
+      # API-rate-bound and cannot finish in one run -- hence resumable, with a
+      # call budget so a run always ends with a partial result rather than
+      # dying with nothing written.
+      bulk_harvest:
+        description: 'Walk Commons category trees to harvest figure candidates (resumable, slow)'
+        required: false
+        default: 'false'
+      bulk_calls:
+        description: 'API call budget for one harvest run (raise to harvest more per run)'
+        required: false
+        default: '900'
+      bulk_cats:
+        description: 'Max categories walked per topic'
+        required: false
+        default: '18'
+      bulk_depth:
+        description: 'How deep to recurse into subcategories'
+        required: false
+        default: '2'
+      bulk_publish:
+        description: 'Publish paginated figure pages from the candidate pool'
+        required: false
+        default: 'false'
+      publish_per_topic:
+        description: 'Max figures published per topic'
+        required: false
+        default: '40'
 
 # `figure-build` is used by nothing else in the repo. That is the point: a
 # group shared with the fill chain would reintroduce exactly the queueing this
@@ -196,6 +227,27 @@ jobs:
         continue-on-error: true
         run: node scripts/check-figure-links.js
 
+      - name: Harvest figure candidates (bulk, resumable)
+        if: inputs.bulk_harvest == 'true'
+        continue-on-error: true
+        env:
+          BULK_MAX_CALLS: ${{ inputs.bulk_calls }}
+          BULK_MAX_CATS: ${{ inputs.bulk_cats }}
+          BULK_DEPTH: ${{ inputs.bulk_depth }}
+        run: node scripts/lib/figure-bulk.js
+
+      # Publishes from the candidate pool only. Every candidate must clear the
+      # topic-word, country and people-photo guards, and a file already claimed
+      # by an earlier topic is never published twice -- so the published count is
+      # distinct images, not the same photograph repeated across categories.
+      - name: Publish paginated figure pages
+        if: inputs.bulk_publish == 'true'
+        continue-on-error: true
+        env:
+          PUBLISH_PER_TOPIC: ${{ inputs.publish_per_topic }}
+          PUBLISH_PER_PAGE: '200'
+        run: node scripts/build-figure-pages.js
+
       # Deliberately manual. All three are continue-on-error and none can run on
       # a schedule, because none is idempotent -- a timed stamp run would rewrite
       # dates forever, and a timed SVG mutation would edit content on every tick.
@@ -248,6 +300,9 @@ jobs:
             geography-figures.html \
             subject-figures-index.html \
             '*-figures.html' \
+            figures/ \
+            data/figure-candidates.json \
+            data/figure-published.json \
             data/figure-files-auto.json \
             data/figure-files-curated.json \
             data/figure-topics-curated.json \

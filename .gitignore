@@ -98,3 +98,10 @@ push_trace.log
 root_tree_fixed.txt
 sub_*.txt
 upsc_sorted_topics.csv
+# Bulk figure harvest pool and the published-figure ledger produced by
+# scripts/lib/figure-bulk.js and scripts/build-figure-pages.js. Without these
+# two, a fresh clone has no candidates and no memory of which file was already
+# published, so every rebuild re-publishes the same photographs on other topics'
+# pages and the figure count never grows past one run's harvest.
+!data/figure-candidates.json
+!data/figure-published.json
