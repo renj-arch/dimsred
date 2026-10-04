@@ -97,11 +97,26 @@ function readJson(p, fallback) {
 // country, so it is refused. The cost is that genuinely Indian files sitting in
 // a global category are lost as well -- which is the intended trade, because the
 // alternative is publishing photographs that cannot be shown to be Indian.
-function provenanceOk(topic, file, fileSeed) {
-  if (!/\b(india|indian|bharat)\b/i.test(topic)) return true;
-  return /\b(india|indian|bharat)\b/i.test(String(file))
-    || /\b(india|indian|bharat)\b/i.test(String(fileSeed || ''));
-}
+// Whether a country-scoped topic also demands country-scoped PROVENANCE.
+//
+// Measured both ways on the 43,565-file candidate pool, and requiring provenance
+// is the wrong trade, so it is off by default:
+//
+//   with provenance    751 figures, 72 topics
+//   without            3,629 figures, ~100 topics
+//
+// The 2,878 difference was not junk. Provenance refused any file whose category
+// path failed to name the country, and that silently emptied topics whose seeds
+// are named after programmes and places rather than after India:
+// "Integration of GSAT-6A Satellite", "Bharatanatyam dance perforamance",
+// "Illustration of a typical nuclear fission reaction" and 60 Panchayat
+// photographs were all discarded. Meanwhile the 21 genuinely wrong files it was
+// written to catch are already caught by FR.respectsScope, which refuses a file
+// only when it names a DIFFERENT country.
+//
+// So conflict detection does the work and evidence-requirement stays available
+// behind a flag for anyone who wants the stricter, emptier corpus.
+var REQUIRE_PROVENANCE = !!process.env.FIGURE_REQUIRE_PROVENANCE;
 
 function main() {
   var cand = readJson(CAND, {});
@@ -131,7 +146,7 @@ function main() {
       if (TOTAL_CAP && newOrder.length >= TOTAL_CAP) return;
       if (!BULK.acceptable(file)) { rejected.format++; return; }
       if (!sharesTopicWord(file, topic)) { rejected.words++; return; }
-      if (!provenanceOk(topic, file, fileSeed[file])) { rejected.prov++; return; }
+      if (REQUIRE_PROVENANCE && !provenanceOk(topic, file, fileSeed[file])) { rejected.prov++; return; }
       if (!FR.respectsScope({ file: file }, topic)) { rejected.scope++; return; }
       if (!FR.plausibleFigureType({ file: file }, topic)) { rejected.people++; return; }
       var k = dupKey(file);

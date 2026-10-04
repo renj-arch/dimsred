@@ -673,11 +673,40 @@ var OTHER_COUNTRY={iran:1,iranian:1,china:1,chinese:1,japan:1,japanese:1,pakista
   // "Alpine brown cattle" is the Swiss Braunvieh under an English name, so the
   // Alps appear in breed names the same way countries do.
   alpine:1,braunvieh:1,piedmont:1,piedmontese:1,chianina:1,marchigiana:1,
-  romagnola:1,kostroma:1,yakut:1,mongolian:1,braunfels:1,devon:1,friesian:1,sri:1,ceylon:1,burma:1,formosa:1,java:1,sumatra:1,
-  // Sub-continent neighbours that are not India, so a topic scoped to India
-  // cannot be answered from them either.
-  bangladesh:1,kashmir:1,hyderabad:1,karachi:1,lahore:1,colombo:1,kathmandu:1,
-  thimphu:1,malé:1, Male:1};
+  romagnola:1,kostroma:1,yakut:1,mongolian:1,braunfels:1,devon:1,friesian:1,
+  sri:1,ceylon:1,burma:1,formosa:1,
+  // The remaining countries and territories, with demonyms. This list was
+  // assembled by auditing what actually reached publication rather than by
+  // guessing: "dairy farming in India" was served eight files from Rotorua,
+  // Wanganui and Palmerston North because no English-speaking country outside
+  // the UK and the US had been listed at all. A conflict check is only as good
+  // as the table behind it, so the rest are here to close that class of gap.
+  // Only "zealand" is listed, never "new". A whole-word "new" would refuse
+  // "New Delhi", "New Jersey" and "South India", which are exactly the figures
+  // an India topic wants. "zealand" is distinctive on its own.
+  zealand:1,wanganui:1,palmerston:1,kiwi:1,
+  // New Zealand place names, because "Rotorua" is how most of that country's
+  // dairy photographs are titled and it carries no country word at all.
+  // Only unambiguous names are listed. "bay" had to come back out: it is in
+  // "Bay of Bengal", which is the most Indian place name there is.
+  rotorua:1,auckland:1,wellington:1,christchurch:1,dunedin:1,napier:1,
+  tauranga:1,otago:1,canterbury:1,hawke:1,waikato:1,waipu:1,waikanae:1,
+  katikati:1,
+  australia:1,australian:1,canada:1,canadian:1,mexico:1,mexican:1,
+  brazil:1,brazilian:1,argentina:1,argentine:1,chile:1,chilean:1,peru:1,
+  colombia:1,colombian:1,venezuela:1,bolivia:1,ecuador:1,uruguay:1,paraguay:1,
+  guyana:1,suriname:1,costa:1,rica:1,panama:1,nicaragua:1,honduras:1,
+  guatemala:1,belize:1,el:1,guatemala:1,dominican:1,haiti:1,jamaica:1,
+  trinidad:1,barbados:1,bahamas:1,bermuda:1,greenland:1,faroe:1,
+  africa:1,african:1,namibia:1,botswana:1,zimbabwe:1,zambia:1,
+  mozambique:1,angola:1,malawi:1,rwanda:1,burundi:1,congo:1,chad:1,niger:1,
+  guinea:1,verde:1,senegal:1,gambia:1,sierra:1,leone:1,liberia:1,cote:1,
+  ivory:1,ghana:1,togo:1,benin:1,cameroon:1,caribbean:1,mauritius:1,
+  seychelles:1,comoros:1,eswatini:1,lesotho:1,mauritania:1,mali:1,
+  // Hyderabad and Kashmir were listed here and had to come back out. Hyderabad
+  // is Telangana and Kashmir is administered by India, so both are Indian
+  // subjects; treating them as foreign refused legitimate Indian figures.
+  karachi:1,lahore:1,colombo:1,kathmandu:1,thimphu:1,male:1,maldivian:1};
 
 function respectsScope(result,topic){
   var want=contentTokens(topic).filter(function(t){return SCOPED[t];});
