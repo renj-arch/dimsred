@@ -366,13 +366,33 @@ async function main() {
     try { store = JSON.parse(fs.readFileSync(OUT, 'utf8')); } catch (e) { store = {}; }
   }
 
-  var total = 0, doneTopics = 0, harvested = 0;
+  var total = 0, doneTopics = 0, harvested = 0, revisited = 0;
+
+  // A finished topic is skipped only while its result is still fresh. Without
+  // this the schedule would be a no-op forever: all 125 topics finished on the
+  // first big run, so every later run found every topic `done`, walked nothing,
+  // and no file added to Commons afterwards could ever be noticed.
+  //
+  // Staleness is what makes the schedule genuine auto-discovery rather than a
+  // one-off. Each run re-walks the topics whose last walk is older than
+  // BULK_REFRESH_HOURS, in topic order, and the shared call budget decides how
+  // far it gets before the run ends. So the corpus keeps absorbing new uploads,
+  // and a topic that has gone quiet costs little, because a walk that finds
+  // nothing new spends almost nothing.
+  var REFRESH_MS = Math.max(0, parseInt(process.env.BULK_REFRESH_HOURS || '24', 10)) * 3600e3;
+  function isStale(entry) {
+    if (!entry || !entry.done) return true;
+    if (process.env.BULK_RESUME === '0') return true;
+    if (!REFRESH_MS) return false;
+    if (!entry.at) return true;
+    return (Date.now() - entry.at) >= REFRESH_MS;
+  }
   console.log('bulk harvest: ' + names.length + ' topics, depth ' + DEPTH
     + ', ' + MAX_CATS + ' cats/topic, ' + callBudget.left + ' API calls');
 
   for (var i = 0; i < names.length; i++) {
     var name = names[i];
-    if (store[name] && store[name].done && process.env.BULK_RESUME !== '0') {
+    if (!isStale(store[name])) {
       doneTopics++; total += (store[name].files || []).length;
       continue;
     }
@@ -380,19 +400,45 @@ async function main() {
       console.log('  call budget exhausted after ' + i + ' topics; rerun to resume');
       break;
     }
+    revisited++;
     process.stdout.write('  [' + (i + 1) + '/' + names.length + '] ' + name + ' ... ');
     var res;
     try { res = await harvestTopic(name); }
     catch (e) { res = { files: [], cats: 0, seeds: [], done: false }; }
-    store[name] = { files: res.files, fileSeed: res.fileSeed, cats: res.cats, seeds: res.seeds, done: !!res.done };
+
+    // A re-walk must not silently shrink the pool. Commons categories gain and
+    // lose files, and a subtree that is momentarily empty would otherwise drop
+    // candidates that were harvested and vetted yesterday. So the fresh walk is
+    // merged over the previous one, and the publisher still deduplicates
+    // globally, so a file carried forward cannot be published twice.
+    var files = res.files.slice();
+    var prevFiles = (store[name] && store[name].files) || [];
+    var prevSeed = (store[name] && store[name].fileSeed) || {};
+    var freshSeed = res.fileSeed || {};
+    var seed = {};
+    files.forEach(function (f) { seed[f] = freshSeed[f] || ''; });
+    prevFiles.forEach(function (f) {
+      if (files.indexOf(f) === -1) { files.push(f); seed[f] = prevSeed[f] || ''; }
+    });
+
+    store[name] = {
+      files: files,
+      fileSeed: seed,
+      cats: res.cats,
+      seeds: res.seeds,
+      done: !!res.done,
+      at: Date.now(),
+    };
     harvested += res.files.length;
-    total += res.files.length;
+    total += files.length;
     doneTopics++;
     console.log(res.files.length + ' candidates from ' + res.cats + ' categories');
     fs.writeFileSync(OUT, JSON.stringify(store, null, 1));
   }
 
   console.log('');
+  console.log('topics walked this run: ' + revisited + ' of ' + names.length
+    + ' (refresh window ' + (REFRESH_MS / 3600e3) + 'h)');
   console.log('topics with candidates: ' + doneTopics + '/' + names.length);
   console.log('candidate files total:  ' + total + '  (' + harvested + ' new this run)');
   console.log('API calls used:        ' + calls);

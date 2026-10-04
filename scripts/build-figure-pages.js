@@ -214,7 +214,7 @@ function main() {
     + '<meta name="viewport" content="width=device-width,initial-scale=1">'
     + '<title>UPSC Figures Index</title><style>' + css + '</style></head><body><div class="wrap">'
     + '<h1>UPSC Figures Index</h1>'
-    + '<p class="meta">' + newOrder.length + ' distinct figures across ' + pages.length
+    + '<p class="meta">' + newOrder.length.toLocaleString('en-US') + ' distinct figures across ' + pages.length
     + ' pages &#183; ' + topicList.length + ' topics &#183; from Wikimedia Commons</p>'
     + '<div class="nav">';
   pages.forEach(function (_, pi) {
@@ -223,7 +223,7 @@ function main() {
   idx += '</div><h2 style="font-size:16px;margin:24px 0 10px">Topics</h2><div class="grid">';
   topicList.forEach(function (t) {
     idx += '<div class="card" id="' + esc(t.replace(/\W+/g, '-')) + '"><div class="cap">'
-      + '<b>' + esc(t) + '</b><br>' + byTopic[t] + ' figures</div></div>';
+      + '<b>' + esc(t) + '</b><br>' + byTopic[t].toLocaleString('en-US') + ' figures</div></div>';
   });
   idx += '</div></div></body></html>';
   fs.writeFileSync(path.join(OUTDIR, 'index.html'), idx);

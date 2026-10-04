@@ -227,24 +227,48 @@ jobs:
         continue-on-error: true
         run: node scripts/check-figure-links.js
 
+      # Harvest and publish now run on the schedule, not only on manual dispatch.
+      #
+      # A schedule event supplies no `inputs` at all, so before this both steps
+      # were skipped on every timed run and the bulk listing could only ever grow
+      # when a human dispatched the workflow. That is why 3,510 figures sat
+      # frozen while the geography packs kept self-updating four times a day.
+      #
+      # The budgets are the conservative input defaults. The harvester is
+      # resumable and writes its state to data/figure-candidates.json, so the
+      # small per-run budget is not a ceiling on the corpus -- it is a slice of
+      # work that accumulates across runs, which is also what keeps four daily
+      # crawls polite to the Wikimedia API.
+      #
+      # The `||` fallbacks matter: `inputs.bulk_calls` is an empty string on a
+      # schedule, and `BULK_MAX_CALLS=''` would reach parseInt as NaN rather than
+      # falling through to the script's own default.
       - name: Harvest figure candidates (bulk, resumable)
-        if: inputs.bulk_harvest == 'true'
+        if: inputs.bulk_harvest == 'true' || github.event_name == 'schedule'
         continue-on-error: true
         env:
-          BULK_MAX_CALLS: ${{ inputs.bulk_calls }}
-          BULK_MAX_CATS: ${{ inputs.bulk_cats }}
-          BULK_DEPTH: ${{ inputs.bulk_depth }}
+          BULK_MAX_CALLS: ${{ inputs.bulk_calls || '900' }}
+          BULK_MAX_CATS: ${{ inputs.bulk_cats || '18' }}
+          BULK_DEPTH: ${{ inputs.bulk_depth || '2' }}
         run: node scripts/lib/figure-bulk.js
 
       # Publishes from the candidate pool only. Every candidate must clear the
       # topic-word, country and people-photo guards, and a file already claimed
       # by an earlier topic is never published twice -- so the published count is
       # distinct images, not the same photograph repeated across categories.
+      #
+      # This appends. The ledger in data/figure-published.json is never rewritten
+      # from scratch, so a scheduled run can only add figures it has not seen,
+      # which is what makes running it repeatedly safe.
       - name: Publish paginated figure pages
-        if: inputs.bulk_publish == 'true'
+        if: inputs.bulk_publish == 'true' || github.event_name == 'schedule'
         continue-on-error: true
         env:
-          PUBLISH_PER_TOPIC: ${{ inputs.publish_per_topic }}
+          # The fallback must match what the manual runs used, not the script's own
+      # default. Leaving it at the script default of 12 meant the first scheduled
+      # run would quietly stop topping every topic up at 60 and the listing would
+      # appear to shrink its per-topic counts relative to what is already live.
+          PUBLISH_PER_TOPIC: ${{ inputs.publish_per_topic || '60' }}
           PUBLISH_PER_PAGE: '200'
         run: node scripts/build-figure-pages.js
 
