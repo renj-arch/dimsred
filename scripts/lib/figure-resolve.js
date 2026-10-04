@@ -634,7 +634,31 @@ var OTHER_COUNTRY={iran:1,iranian:1,china:1,chinese:1,japan:1,japanese:1,pakista
   bangladesh:1,nepal:1,sri:1,lanka:1,bhutan:1,myanmar:1,burma:1,afghanistan:1,iraq:1,
   egypt:1,greece:1,greek:1,italy:1,italian:1,france:1,french:1,germany:1,german:1,
   britain:1,british:1,england:1,english:1,america:1,american:1,usa:1,canada:1,
-  australia:1,russia:1,russian:1,africa:1,kenya:1,nigeria:1,brazil:1,mexico:1};
+  australia:1,russia:1,russian:1,africa:1,kenya:1,nigeria:1,brazil:1,mexico:1,
+  // Lusophone Africa and the rest of the Lusophone world. "colonial
+  // architecture india" was served "Architecture coloniale a Neves (Sao Tome)
+  // .jpg": every content word matched, and because neither "sao" nor "tome" was
+  // listed here the scope check saw no foreign country and waved it through.
+  // The image is colonial architecture in Sao Tome, an island nation 8,000km
+  // from India. Accents are stripped before tokenising, so the unaccented
+  // spellings are the ones that actually reach this table.
+  sao:1,tome:1,principe:1,principality:1,angola:1,mozambique:1,guinea:1,verde:1,
+  // The remaining gaps that let a same-shaped place name through: a country
+  // qualifier in these topics is only meaningful if the table is broad enough
+  // to notice the figure coming from somewhere else.
+  togo:1,benin:1,ghana:1,tanzania:1,uganda:1,ethiopia:1,zimbabwe:1,zambia:1,
+  senegal:1,mali:1,sudan:1,somalia:1,libya:1,syria:1,lebanon:1,jordan:1,israel:1,
+  turkey:1,turkish:1,portugal:1,portuguese:1,spain:1,spanish:1,ireland:1,scotland:1,
+  wales:1,poland:1,polish:1,sweden:1,norway:1,denmark:1,finland:1,iceland:1,
+  austria:1,switzerland:1,belgium:1,netherlands:1,dutch:1,ukraine:1,romania:1,
+  hungary:1,czech:1,kazakhstan:1,uzbekistan:1,indonesia:1,malaysian:1,vietnam:1,
+  thailand:1,philippines:1,cuba:1,cuban:1,chile:1,peru:1,peruvian:1,argentina:1,
+  colombia:1,colombian:1,venezuela:1,bolivia:1,ecuador:1,uruguay:1,paraguay:1,
+  madagascar:1,malagasy:1,sri:1,ceylon:1,burma:1,formosa:1,java:1,sumatra:1,
+  // Sub-continent neighbours that are not India, so a topic scoped to India
+  // cannot be answered from them either.
+  bangladesh:1,kashmir:1,hyderabad:1,karachi:1,lahore:1,colombo:1,kathmandu:1,
+  thimphu:1,malé:1, Male:1};
 
 function respectsScope(result,topic){
   var want=contentTokens(topic).filter(function(t){return SCOPED[t];});
@@ -650,6 +674,28 @@ function respectsScope(result,topic){
     var topicHas=contentTokens(topic).some(function(t){return tokMatch(f,t);});
     return topicHas;
   });
+}
+
+// A photograph of identifiable people is not a study figure unless the topic is
+// actually about people. "national science day india" was served "National
+// Science Board Members, July 1951.jpg": every content word matched, no country
+// was contradicted, and the file is on Commons, so scope, lexical and symbol
+// checks all passed. The defect was type, not topic -- the pack wants an
+// observance, not a photograph of the board that happens to run it.
+//
+// This is deliberately narrow. A leadership or personality topic names its own
+// role and so still passes, and "members" is only read as a person gathering
+// when it is the head noun, so "Member States of the European Union" is not
+// mistaken for a photograph of diplomats.
+var PERSON_PHOTO=/\b(members?|delegates?|delegation|participants?|portrait|portraits|posing)\b/;
+var PERSON_TOPIC=/\b(leader\w*|president\w*|minister\w*|ministry|persons?|people|personalit\w+|politic\w+|author\w*|writer\w*|poet\w*|artist\w*|player\w*|cricketer\w*|athlete\w*|coach\w*|missionar\w+)\b/;
+
+function plausibleFigureType(result,topic){
+  var src=contentTokens(stripExt(String((result&&result.file)||'')))
+    .concat(contentTokens(String((result&&result.article)||'')))
+    .concat(contentTokens(entityLabel(result))).join(' ');
+  if(!PERSON_PHOTO.test(src))return true;
+  return PERSON_TOPIC.test(contentTokens(topic).join(' '));
 }
 
 // A single-noun candidate is only trusted when the entity is exactly that
@@ -691,12 +737,14 @@ async function autoDiscover(topic,opts){
     if(!belongsToOriginal(hit,topic))continue;
     if(!singleNounIsExact(hit,cand))continue;
     if(!respectsScope(hit,topic))continue;
+    if(!plausibleFigureType(hit,topic))continue;
     return Object.assign({},hit,{discovered:cand});
   }
   return null;
 }
 
 module.exports={resolve:resolve,autoDiscover:autoDiscover,discoveryCandidates:discoveryCandidates,
-  isDiagramish:isDiagramish,norm:norm,topicQids:topicQids,
+  isDiagramish:isDiagramish,norm:norm,topicQids:topicQids,respectsScope:respectsScope,
+  plausibleFigureType:plausibleFigureType,belongsToOriginal:belongsToOriginal,
   filesDepicting:filesDepicting,filesInCategory:filesInCategory,apiStats:apiStats,
   conceptQuery:conceptQuery,pickArticle:pickArticle,pickImage:pickImage};
