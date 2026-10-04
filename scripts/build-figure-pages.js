@@ -221,6 +221,34 @@ function main() {
     fs.writeFileSync(path.join(OUTDIR, 'page-' + String(pi + 1).padStart(3, '0') + '.html'), html);
   });
 
+  // ---- prune pages that no longer exist ----
+  // The index only ever links the pages just written, so any page-*.html left
+  // over from a run that produced MORE pages is unreachable but still sitting
+  // in the directory being deployed. That is how a listing ends up with stale
+  // duplicates: the count in the header says 50 while page-051.html is still
+  // being served and shows figures that were since re-topiced or removed.
+  //
+  // CI checks out a clean tree each run, which hides this, but any local rebuild
+  // keeps them, and a run that publishes fewer figures than the last one would
+  // leave them behind permanently. So the page count is made to match the index
+  // exactly, every run.
+  // Keys must be zero-padded to match the filename capture. The regex yields
+  // "001", so an unpadded "1" key matches nothing and the prune deletes every
+  // page including the ones just written.
+  var kept = {};
+  pages.forEach(function (_, pi) { kept[String(pi + 1).padStart(3, '0')] = 1; });
+  var pruned = [];
+  fs.readdirSync(OUTDIR).forEach(function (f) {
+    var m = f.match(/^page-(\d+)\.html$/);
+    if (!m) return;
+    if (kept[m[1]]) return;
+    fs.unlinkSync(path.join(OUTDIR, f));
+    pruned.push(f);
+  });
+  if (pruned.length) {
+    console.log('pruned stale pages: ' + pruned.join(', '));
+  }
+
   // ---- index ----
   var byTopic = {};
   newOrder.forEach(function (k) {
