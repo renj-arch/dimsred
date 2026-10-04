@@ -53,17 +53,25 @@ var calls = 0;
 
 function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
-// A candidate must be an image Commons will actually serve, and must not be
-// one of the things that dominate a category walk without illustrating
-// anything. Flags, coats of arms, logos and bare locator maps are exactly that:
-// numerous, technically relevant to the category, and useless to a student.
-// isDiagramish already rejects interface chrome (icons, amboxes,
-// disambiguation pads), so between the two a walk keeps subject matter.
+// A candidate must be an image Commons will actually serve, must not be one of
+// the things that dominate a category walk without illustrating anything, and
+// must not be a photograph of a building.
+//
+// Flags, coats of arms, logos and bare locator maps are numerous, technically
+// relevant to their category, and useless to a student. Institutional
+// photography is the same failure in a different costume: "rocket propulsion"
+// seeded on propulsion-related categories and returned photographs of the Jet
+// Propulsion Laboratory's buildings, because those files genuinely sit in
+// propulsion categories. A study site wants the test-stand diagram, not the
+// facility. Matched on the filename because that is all a candidate has before
+// it is worth an API call to describe.
+var REJECT_NAME = /(^|\W)(map|maps|flag|flags|coat of arms|logo|logos|icon|icons|laborator(y|ies)|facilit(y|ies)|building|buildings|hangar|headquarters|aerial view|office|offices|campus|facade|rooftop|parking)\b/i;
+
 function acceptable(file) {
   var f = String(file || '');
   if (!f) return false;
   if (!/\.(svg|png|jpe?g|gif|webp)$/i.test(f)) return false;
-  if (/(^|\W)(map|maps|flag|flags|coat of arms|logo|logos|icon|icons)\b/i.test(f)) return false;
+  if (REJECT_NAME.test(f)) return false;
   return true;
 }
 
@@ -90,7 +98,7 @@ async function categoryPage(cat, cont) {
 // Depth-first over subcategories, breadth-capped by `caps`. Returns every file
 // seen. `caps` is decremented per category so a single sprawling branch cannot
 // eat the whole topic's allowance.
-async function walk(cat, depth, caps, seenCat, out) {
+async function walk(cat, depth, caps, seenCat, out, topic, catPath) {
   if (depth < 0 || caps.left <= 0) return;
   var key = cat.toLowerCase();
   if (seenCat[key]) return;
@@ -101,18 +109,28 @@ async function walk(cat, depth, caps, seenCat, out) {
   do {
     var page = await categoryPage(cat, cont);
     if (!page) return;
-    page.files.forEach(function (f) { if (acceptable(f)) out.files[f] = 1; });
+    page.files.forEach(function (f) { if (acceptable(f)) out.files[f] = catPath; });
     out.cats++;
     cont = page.cont;
     if (callBudget.left <= 0) return;
   } while (cont);
 
-  if (depth === 0) return;
+if (depth === 0) return;
   // Subcategory order from the API is alphabetical, which is arbitrary. The
   // walk is capped anyway, so accept that breadth is decided by category name
   // rather than pretending it is chosen for relevance.
+  //
+  // Every subcategory is held to the same test as a seed. Without this the
+  // filter only guarded the top of the tree and the walk walked straight into
+  // the wrong subject one level down: "Cattle breeds" is a legitimate seed for
+  // "india major cattle breeds", and its subcategory "Cattle breeds
+  // originating in Cuba" matched nothing and was walked anyway, which is how
+  // photographs of Cuban cattle ended up published under an Indian heading.
+  // The country guard could not catch them, because a photograph of Cuban
+  // cattle is not in Cuba.
   for (var i = 0; i < page.subs.length && caps.left > 0 && callBudget.left > 0; i++) {
-    await walk(page.subs[i], depth - 1, caps, seenCat, out);
+    if (!seedMatchesTopic(page.subs[i], topic)) continue;
+    await walk(page.subs[i], depth - 1, caps, seenCat, out, topic, catPath + ' / ' + page.subs[i]);
   }
 }
 
@@ -141,6 +159,19 @@ async function searchCategories(query) {
   return ((j && j.query && j.query.search) || [])
     .map(function (s) { return String(s.title).replace(/^Category:/, ''); });
 }
+
+// Generic category words: legitimate topic words, far too broad to seed a walk
+// on their own. Each one was a measured seed before this list existed.
+// "Cattle breeds" really does hold cattle from every country, and "White" holds
+// every white thing; seeding on them produced Bali and Amsterdam Island cattle
+// under an Indian heading, and 1,409 video-game screenshots under white
+// revolution.
+var GENERIC_SEED = {white:1,black:1,red:1,blue:1,green:1,yellow:1,brown:1,
+  cattle:1,breed:1,milk:1,production:1,revolution:1,national:1,ancient:1,
+  modern:1,forest:1,art:1,music:1,dance:1,film:1,food:1,sport:1,game:1,
+  industry:1,society:1,culture:1,economy:1,education:1,history:1,science:1,
+  technology:1,politics:1,sports:1,bird:1,fish:1,tree:1,flower:1,fruit:1,
+  agriculture:1,trade:1,commerce:1,finance:1,banking:1};
 
 // A seed must share TWO distinctive topic words with the topic.
 //
@@ -178,15 +209,30 @@ function seedMatchesTopic(cat, topic) {
   var catT = toks(cat), topicT = toks(topic);
   if (!topicT.length) return false;
 
-  var matched = 0;
+  var matched = 0, singleHit = '';
   for (var i = 0; i < topicT.length; i++) {
     var t = topicT[i];
     for (var j = 0; j < catT.length; j++) {
       var c = catT[j];
-      if (c === t || (c.length > 4 && t.length > 4 && (c.indexOf(t) === 0 || t.indexOf(c) === 0))) { matched++; break; }
+      if (c === t || (c.length > 4 && t.length > 4 && (c.indexOf(t) === 0 || t.indexOf(c) === 0))) { matched++; if (!singleHit) singleHit = t; break; }
     }
   }
-  if (matched < 2) return false;
+  // Two matching topic words is the normal case.
+  //
+  // The single-word clause exists for one measured topic: "Monsoon" is the most
+  // valuable seed for "monsoon mechanism india" and matches only one topic
+  // word, so requiring two left that topic with nothing. It is allowed only when
+  // the seed is the single word and that word is long and not generic.
+  //
+  // GENERIC_SEED is what stops this clause reopening the hole that two words
+  // closed. "White", "Milk", "Production", "Cattle" and "Revolution" are all
+  // real topic words and all enormous categories; seeding on them harvested
+  // 1,409 video-game screenshots for the white revolution topic. They are short
+  // or listed, so they are refused.
+  var twoWords = matched >= 2;
+  var oneSpecificWord = matched === 1 && catT.length === 1
+    && singleHit.length >= 6 && !GENERIC_SEED[singleHit];
+  if (!(twoWords || oneSpecificWord)) return false;
 
   // A seed scoped to another country is the wrong subject, whatever else it
   // matches. "Cattle breeds originating in Cuba" matches two words perfectly.
@@ -217,6 +263,35 @@ function seedQueries(topic) {
   return qs.filter(function (v, i, a) { return v && a.indexOf(v) === i; });
 }
 
+// Whether a name carries the topic's country. Used for provenance, not
+// rejection: "Kalagarh Tiger Reserve" says nothing about India, but it was
+// reached through "Tiger reserves of India", which says everything.
+function namesIndia(text) {
+  return /\b(india|indian|bharat|desi)\b/i.test(String(text || ''));
+}
+
+function topicIsCountryScoped(topic) {
+  return namesIndia(topic);
+}
+
+// A file reached through a category that never mentions the topic's country
+// cannot be shown to be about that country. Matching a broad global category to
+// a country-scoped topic is the one case the harvest cannot rescue: after the
+// subcat guard, "india major cattle breeds" still returned "Cattles Grazing 6"
+// and "Glamorgan Cattle", and "dairy farming in India" returned "Dairy cows,
+// Rotorua, New Zealand". Those files are genuinely in a category that matched
+// the topic; they are simply not Indian, and no filename rule can tell.
+//
+// So provenance is recorded and required. The seed each file was reached
+// through is kept, and a country-scoped topic only accepts a file when either
+// the file or that seed names the country. "Cattle breeds" names no country, so
+// the topic yields nothing rather than publishing unverifiable photographs --
+// which is the correct outcome under publish-strict, and the honest signal that
+// this topic needs the curated resolver instead.
+//
+// "Tiger reserves of India" and "Mangroves in India" name the country, so
+// everything reached through them is kept, including files whose own names say
+// nothing about India.
 async function harvestTopic(topic) {
   var out = { files: {}, cats: 0 };
   var seenCat = {};
@@ -249,13 +324,16 @@ if (!seeds.length) {
     }
   }
 
-  for (var s = 0; s < seeds.length && caps.left > 0 && callBudget.left > 0; s++) {
-    await walk(seeds[s], DEPTH, caps, seenCat, out);
+for (var s = 0; s < seeds.length && caps.left > 0 && callBudget.left > 0; s++) {
+    await walk(seeds[s], DEPTH, caps, seenCat, out, topic, seeds[s]);
   }
 
   var files = Object.keys(out.files);
+  var fileSeed = {};
+  files.forEach(function (f) { fileSeed[f] = out.files[f]; });
   return {
     files: files,
+    fileSeed: fileSeed,
     cats: out.cats,
     seeds: seeds,
     done: callBudget.left > 0,
@@ -306,7 +384,7 @@ async function main() {
     var res;
     try { res = await harvestTopic(name); }
     catch (e) { res = { files: [], cats: 0, seeds: [], done: false }; }
-    store[name] = { files: res.files, cats: res.cats, seeds: res.seeds, done: !!res.done };
+    store[name] = { files: res.files, fileSeed: res.fileSeed, cats: res.cats, seeds: res.seeds, done: !!res.done };
     harvested += res.files.length;
     total += res.files.length;
     doneTopics++;

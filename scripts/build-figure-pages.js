@@ -84,6 +84,25 @@ function readJson(p, fallback) {
   try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { return fallback; }
 }
 
+// A country-scoped topic needs country-scoped provenance. Matching a broad
+// global category to a country-scoped topic is the one thing the harvest cannot
+// rescue: after every other guard, "india major cattle breeds" still produced
+// "Cattles Grazing 6" and "Glamorgan Cattle", and "dairy farming in India"
+// produced "Dairy cows, Rotorua, New Zealand". Those files really are in a
+// category that matched the topic, and no filename rule can tell.
+//
+// The seed a file was reached through is therefore checked too. "Kalagarh Tiger
+// Reserve" says nothing about India but came via "Tiger reserves of India", so
+// it is kept; "Glamorgan Cattle" came via "Cattle breeds", which names no
+// country, so it is refused. The cost is that genuinely Indian files sitting in
+// a global category are lost as well -- which is the intended trade, because the
+// alternative is publishing photographs that cannot be shown to be Indian.
+function provenanceOk(topic, file, fileSeed) {
+  if (!/\b(india|indian|bharat)\b/i.test(topic)) return true;
+  return /\b(india|indian|bharat)\b/i.test(String(file))
+    || /\b(india|indian|bharat)\b/i.test(String(fileSeed || ''));
+}
+
 function main() {
   var cand = readJson(CAND, {});
   var topics = Object.keys(cand);
@@ -99,18 +118,20 @@ function main() {
   var claimed = {};
   (state.order || []).forEach(function (k) { claimed[k] = 1; });
 
-  var added = 0, rejected = { dup: 0, scope: 0, people: 0, words: 0, format: 0 };
+  var added = 0, rejected = { dup: 0, scope: 0, people: 0, words: 0, format: 0, prov: 0 };
   var newOrder = (state.order || []).slice();
 
   topics.forEach(function (topic) {
     var entry = cand[topic];
     if (!entry || !entry.files) return;
+    var fileSeed = entry.fileSeed || {};
     var taken = 0;
     entry.files.forEach(function (file) {
       if (taken >= PER_TOPIC) return;
       if (TOTAL_CAP && newOrder.length >= TOTAL_CAP) return;
       if (!BULK.acceptable(file)) { rejected.format++; return; }
       if (!sharesTopicWord(file, topic)) { rejected.words++; return; }
+      if (!provenanceOk(topic, file, fileSeed[file])) { rejected.prov++; return; }
       if (!FR.respectsScope({ file: file }, topic)) { rejected.scope++; return; }
       if (!FR.plausibleFigureType({ file: file }, topic)) { rejected.people++; return; }
       var k = dupKey(file);

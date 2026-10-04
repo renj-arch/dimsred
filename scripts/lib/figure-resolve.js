@@ -662,7 +662,18 @@ var OTHER_COUNTRY={iran:1,iranian:1,china:1,chinese:1,japan:1,japanese:1,pakista
   texas:1,fort:1,worth:1,ayrshire:1,holstein:1,hereford:1,jersey:1,brahman:1,
   // Dairy and beef breeds are named after their home region, so a breed name
   // is a country claim that the generic country table can never see.
-  guernsey:1,angus:1,limousin:1,charolais:1,shorthorn:1,simmental:1,galloway:1,sri:1,ceylon:1,burma:1,formosa:1,java:1,sumatra:1,
+  guernsey:1,angus:1,limousin:1,charolais:1,shorthorn:1,simmental:1,galloway:1,
+  // Published under "india major cattle breeds" before the walk was taught to
+  // filter subcategories: "Amsterdam Island Cattle" and "Red Belarusian cattle"
+  // are real files in "Category:Cattle breeds", and the subcat country guard
+  // could not reach them because they sit at the top of the tree.
+  amsterdam:1,dutch:1,holland:1,belarusian:1,belarus:1,estonia:1,estonian:1,
+  latvia:1,latvian:1,lithuania:1,lithuanian:1,poland:1,danish:1,swedish:1,
+  finnish:1,norwegian:1,swiss:1,austrian:1,czech:1,slovak:1,romanian:1,
+  // "Alpine brown cattle" is the Swiss Braunvieh under an English name, so the
+  // Alps appear in breed names the same way countries do.
+  alpine:1,braunvieh:1,piedmont:1,piedmontese:1,chianina:1,marchigiana:1,
+  romagnola:1,kostroma:1,yakut:1,mongolian:1,braunfels:1,devon:1,friesian:1,sri:1,ceylon:1,burma:1,formosa:1,java:1,sumatra:1,
   // Sub-continent neighbours that are not India, so a topic scoped to India
   // cannot be answered from them either.
   bangladesh:1,kashmir:1,hyderabad:1,karachi:1,lahore:1,colombo:1,kathmandu:1,
