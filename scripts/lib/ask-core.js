@@ -40,7 +40,28 @@
   if (typeof module === 'object' && module.exports) module.exports = factory();
   else root.VlymbooqAsk = factory();
 }(typeof self !== 'undefined' ? self : this, function () {
-  'use strict';
+    'use strict';
+
+    // This file is loaded two ways: as a CommonJS module under Node (the test
+    // suites and the build scripts) and as a plain <script> in ask.html, where
+    // `process` does not exist at all. Reading process.env.ASK_DEBUG directly
+    // therefore threw "process is not defined" in the browser, which is a
+    // ReferenceError rather than a falsy value: it escaped every guard and
+    // killed the page instead of just skipping the debug logging. That is the
+    // reported symptom -- a question typed into the Ask box returns
+    // "Error: process is not defined" instead of an answer.
+    //
+    // typeof on an undeclared identifier is the one test that is safe here, so
+    // the flag resolves to false in a browser and still honours ASK_DEBUG under
+    // Node. Declared once rather than at each use site so a future debug log
+    // cannot reintroduce the crash.
+    var ASK_DEBUG = (function () {
+      try {
+        return !!(typeof process !== 'undefined' && process.env && process.env.ASK_DEBUG);
+      } catch (e) {
+        return false;
+      }
+    }());
 
   // ── thresholds ────────────────────────────────────────────────────────────
   // MIN_DESC_WORDS is the single most important number in this file. It is the
@@ -1719,7 +1740,7 @@
       if (headTitled) subjVariants = subjVariants.concat(headVariants);
     }
     var subjectEffective = subjectTitled || headTitled;
-if (process.env.ASK_DEBUG) {
+if (ASK_DEBUG) {
   console.error('[ask] subject=' + JSON.stringify(subject) +
   ' subjVariants=' + JSON.stringify(subjVariants) +
   ' headVariants=' + JSON.stringify(headVariants) +
@@ -2195,7 +2216,7 @@ if (process.env.ASK_DEBUG) {
 // Coverage internals, so the scoring maths can be measured rather than argued
   // about. Placed after the computation: dimCov/termCov/coverage are `var`s
   // declared below, so logging them earlier would print undefined.
-  if (process.env.ASK_DEBUG) {
+  if (ASK_DEBUG) {
   console.error('[ask] demand=' + (a.demand ? a.demand.length : 0) +
   ' [' + (a.demand || []).map(function (d) { return d.key; }).join(',') + ']' +
   ' termCov=' + termCov.toFixed(3) +
