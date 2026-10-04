@@ -271,12 +271,44 @@ function main() {
     idx += '<div class="card" id="' + esc(t.replace(/\W+/g, '-')) + '"><div class="cap">'
       + '<b>' + esc(t) + '</b><br>' + byTopic[t].toLocaleString('en-US') + ' figures</div></div>';
   });
-  idx += '</div></div></body></html>';
+  // The curated per-subject packs live at the repo root as <subject>-figures.html
+  // and are built by scripts/build-subject-figures.js, a different pipeline from
+  // this one. Nothing linked to them: all 23 were reachable only by typing a URL,
+  // and the nav had no tab for figures at all, so the entire figure surface of
+  // the site was unreachable by navigation.
+  //
+  // The directory is scanned rather than hardcoded so a pack added or removed by
+  // the other workflow appears or disappears here without anyone editing this
+  // file. Paths are relative with a "../" prefix because this index is written
+  // into figures/ while the packs sit beside it.
+  // Two shapes to match: the packs themselves, "<subject>-figures.html", and
+  // their hub, "subject-figures-index.html". Filtering on "-figures.html" alone
+  // silently dropped the hub and left the 22nd pack unreachable from this page.
+  var PACK_RE = /-figures(-index)?\.html$/;
+  var packs = [];
+  try {
+    packs = fs.readdirSync(ROOT).filter(function (f) { return PACK_RE.test(f); }).sort();
+  } catch (e) { packs = []; }
+
+  if (packs.length) {
+    idx += '<h2 style="font-size:16px;margin:28px 0 10px">Curated packs</h2>'
+      + '<p class="meta" style="margin-bottom:12px">One hand-picked figure per topic, '
+      + 'built by a separate pipeline. Links go up one level, out of <code>figures/</code>.</p><div class="grid">';
+    packs.forEach(function (f) {
+      var label = f.replace(/-figures\.html$/, '').replace(/-/g, ' ');
+      idx += '<div class="card"><div class="cap"><a href="../' + encodeURIComponent(f) + '">'
+        + esc(label) + '</a><br><span style="color:#9aa0a6">curated pack</span></div></div>';
+    });
+    idx += '</div>';
+  }
+
+  idx += '</div></body></html>';
   fs.writeFileSync(path.join(OUTDIR, 'index.html'), idx);
 
   console.log('published ' + newOrder.length + ' distinct figures'
     + ' (' + added + ' new this run) across ' + pages.length + ' pages of ' + PER_PAGE);
   console.log('topics with figures: ' + topicList.length);
+  console.log('curated packs linked: ' + packs.length);
   console.log('rejected: ' + JSON.stringify(rejected));
   console.log('written: figures/index.html, figures/page-001.html ...');
 }
