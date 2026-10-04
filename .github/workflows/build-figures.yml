@@ -119,6 +119,10 @@ on:
         description: 'Max figures published per topic'
         required: false
         default: '40'
+      bulk_refresh_hours:
+        description: 'Re-walk a topic once its last walk is this many hours old'
+        required: false
+        default: '24'
 
 # `figure-build` is used by nothing else in the repo. That is the point: a
 # group shared with the fill chain would reintroduce exactly the queueing this
@@ -275,6 +279,19 @@ jobs:
       # Deliberately manual. All three are continue-on-error and none can run on
       # a schedule, because none is idempotent -- a timed stamp run would rewrite
       # dates forever, and a timed SVG mutation would edit content on every tick.
+      # No network calls -- this reads only what the harvest and publish steps
+      # already recorded -- so it is safe to run last and costs nothing. It is
+      # what makes coverage answerable: which topics have no figures, and
+      # whether that is because Commons has no image, because the seed rules
+      # found nothing, or because every candidate was rejected.
+      - name: Audit figure coverage
+        if: inputs.commit == 'true' || github.event_name == 'schedule'
+        continue-on-error: true
+        env:
+          PUBLISH_PER_TOPIC: ${{ inputs.publish_per_topic || '60' }}
+          BULK_REFRESH_HOURS: ${{ inputs.bulk_refresh_hours || '24' }}
+        run: node scripts/build-figure-coverage.js
+
       - name: Stamp figure dates (manual, one-off)
         if: inputs.stamp_figure_dates == 'true'
         continue-on-error: true

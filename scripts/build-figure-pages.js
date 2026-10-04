@@ -136,28 +136,46 @@ function main() {
   var added = 0, rejected = { dup: 0, scope: 0, people: 0, words: 0, format: 0, prov: 0 };
   var newOrder = (state.order || []).slice();
 
+  // Per-topic accounting, so the coverage audit can say WHY a topic has no
+  // figures instead of only that it has none. A topic that was never attempted,
+  // one whose seeds found nothing, one that harvested files but had every one of
+  // them rejected, and one that is simply full all look identical from the
+  // outside, and they call for four different decisions.
+  var REASONS = ['dup', 'scope', 'people', 'words', 'format', 'prov'];
+  var stats = state.topicStats || {};
+
   topics.forEach(function (topic) {
     var entry = cand[topic];
     if (!entry || !entry.files) return;
     var fileSeed = entry.fileSeed || {};
     var taken = 0;
+
+    // A topic's figures are counted across every run, not just this one, so the
+    // audit reports the corpus as it stands rather than the latest delta.
+    var st = stats[topic] || (stats[topic] = { candidates: 0, added: 0, rejected: {} });
+    REASONS.forEach(function (r) { if (st.rejected[r] === undefined) st.rejected[r] = 0; });
+    st.candidates += entry.files.length;
+
     entry.files.forEach(function (file) {
+      // The per-topic cap counts figures added by this run, so a saturated topic
+      // is not re-examined forever and the cap stays meaningful across reruns.
       if (taken >= PER_TOPIC) return;
       if (TOTAL_CAP && newOrder.length >= TOTAL_CAP) return;
-      if (!BULK.acceptable(file)) { rejected.format++; return; }
-      if (!sharesTopicWord(file, topic)) { rejected.words++; return; }
-      if (REQUIRE_PROVENANCE && !provenanceOk(topic, file, fileSeed[file])) { rejected.prov++; return; }
-      if (!FR.respectsScope({ file: file }, topic)) { rejected.scope++; return; }
-      if (!FR.plausibleFigureType({ file: file }, topic)) { rejected.people++; return; }
+      if (!BULK.acceptable(file)) { rejected.format++; st.rejected.format++; return; }
+      if (!sharesTopicWord(file, topic)) { rejected.words++; st.rejected.words++; return; }
+      if (REQUIRE_PROVENANCE && !provenanceOk(topic, file, fileSeed[file])) { rejected.prov++; st.rejected.prov++; return; }
+      if (!FR.respectsScope({ file: file }, topic)) { rejected.scope++; st.rejected.scope++; return; }
+      if (!FR.plausibleFigureType({ file: file }, topic)) { rejected.people++; st.rejected.people++; return; }
       var k = dupKey(file);
-      if (claimed[k]) { rejected.dup++; return; }
+      if (claimed[k]) { rejected.dup++; st.rejected.dup++; return; }
       claimed[k] = 1;
       state.files[k] = { file: file, topic: topic };
       newOrder.push(k);
-      taken++; added++;
+      taken++; added++; st.added++;
     });
   });
 
+  state.topicStats = stats;
   state.order = newOrder;
   fs.writeFileSync(PUBLISHED, JSON.stringify(state, null, 1));
 
