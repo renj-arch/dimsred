@@ -40,6 +40,16 @@ var PER_TOPIC = parseInt(process.env.PUBLISH_PER_TOPIC || '12', 10);
 var PER_PAGE = parseInt(process.env.PUBLISH_PER_PAGE || '200', 10);
 var TOTAL_CAP = parseInt(process.env.PUBLISH_TOTAL_CAP || '0', 10); // 0 = no cap
 
+// One slug function for the id, the href and the filename. These were previously
+// built with an inline `replace(/\W+/g, '-')` in three places, which is how they
+// drifted apart. It also left leading and trailing hyphens on topics that start or
+// end with punctuation, and it left case intact, so "India major cattle breeds"
+// and "india major cattle breeds" would have produced two different files for the
+// same topic.
+function topicSlug(topic) {
+  return String(topic).toLowerCase().replace(/\W+/g, '-').replace(/^-+|-+$/g, '');
+}
+
 // Distinctive-word test, matching the seed test in figure-bulk so a file that
 // could not have been reached through a relevant seed is not published either.
 function sharesTopicWord(file, topic) {
@@ -191,8 +201,10 @@ function main() {
     + '.card{background:#1a1d23;border:1px solid #2a2e37;border-radius:10px;overflow:hidden;display:flex;flex-direction:column}'
     + '.card img{width:100%;height:150px;object-fit:contain;background:#0b0d10;display:block}'
     + '.cap{padding:8px 10px;font-size:12px;line-height:1.35;color:#c8ccd2;word-break:break-word}'
-    + '.topic{color:#8ab4f8;font-size:11px;margin-top:5px;display:block;text-decoration:none}'
-    + '.nav{margin:22px 0;display:flex;gap:10px;flex-wrap:wrap}a{color:#8ab4f8}';
++ '.topic{color:#8ab4f8;font-size:11px;margin-top:5px;display:block;text-decoration:none}'
+      + '.tcard{text-decoration:none;color:inherit;display:flex}'
+      + '.tcard:hover{border-color:#3f6ea8;background:#1e232b}'
+      + '.nav{margin:22px 0;display:flex;gap:10px;flex-wrap:wrap}a{color:#8ab4f8}';
 
   pages.forEach(function (keys, pi) {
     var cards = keys.map(function (k) {
@@ -201,7 +213,7 @@ function main() {
         + '<a href="https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(e.file) + '">'
         + '<img loading="lazy" src="' + esc(thumbUrl(e.file)) + '" alt="' + esc(e.file) + '"></a>'
         + '<figcaption class="cap">' + esc(e.file.replace(/\.[a-z]+$/i, '').replace(/_/g, ' '))
-        + '<a class="topic" href="index.html#' + encodeURIComponent(e.topic.replace(/\W+/g, '-')) + '">'
+        + '<a class="topic" href="topic-' + topicSlug(e.topic) + '.html">'
         + esc(e.topic) + '</a></figcaption></figure>';
     }).join('\n');
 
@@ -249,6 +261,76 @@ function main() {
     console.log('pruned stale pages: ' + pruned.join(', '));
   }
 
+  // ---- one page per topic ----
+  // The index listed 121 topics as plain <div class="card"> with an id and a
+  // count, and no href anywhere. A topic could not be opened at all: the only way
+  // to see its figures was to page through the whole listing hunting for them,
+  // and the per-figure topic link pointed at index.html#<slug>, which scrolled to
+  // a card showing a number rather than to anything you could look at.
+  //
+  // Each topic now gets its own page holding all of its figures, and both the
+  // index card and every per-figure topic link point at it.
+  var byTopicKeys = {};
+  newOrder.forEach(function (k) {
+    var t = state.files[k].topic;
+    (byTopicKeys[t] = byTopicKeys[t] || []).push(k);
+  });
+
+  // Two topics that slug identically would silently overwrite each other's page
+  // and leave one of them unopenable, so refuse rather than publish a partial map.
+  var slugOwner = {};
+  var slugClash = [];
+  Object.keys(byTopicKeys).forEach(function (t) {
+    var s = topicSlug(t);
+    if (slugOwner[s] && slugOwner[s] !== t) slugClash.push(s + ' <- ' + slugOwner[s] + ' | ' + t);
+    slugOwner[s] = t;
+  });
+  if (slugClash.length) {
+    throw new Error('topic slugs collide, refusing to publish: ' + slugClash.join('; '));
+  }
+
+  var topicPages = Object.keys(byTopicKeys).sort(function (a, b) {
+    return byTopicKeys[b].length - byTopicKeys[a].length;
+  });
+
+  topicPages.forEach(function (t) {
+    var keys = byTopicKeys[t];
+    var cards = keys.map(function (k) {
+      var e = state.files[k];
+      return '<figure class="card">'
+        + '<a href="https://commons.wikimedia.org/wiki/File:' + encodeURIComponent(e.file) + '">'
+        + '<img loading="lazy" src="' + esc(thumbUrl(e.file)) + '" alt="' + esc(e.file) + '"></a>'
+        + '<figcaption class="cap">' + esc(e.file.replace(/\.[a-z]+$/i, '').replace(/_/g, ' ')) + '</figcaption></figure>';
+    }).join('\n');
+
+    var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
+      + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+      + '<title>' + esc(t) + ' figures</title><style>' + css + '</style></head><body><div class="wrap">'
+      + '<h1>' + esc(t) + '</h1>'
+      + '<p class="meta">' + keys.length.toLocaleString('en-US') + ' figures &#183; distinct images from Wikimedia Commons</p>'
+      + '<div class="nav"><a href="index.html">&#8592; all topics</a></div>'
+      + '<div class="grid">' + cards + '</div></div></body></html>';
+
+    fs.writeFileSync(path.join(OUTDIR, 'topic-' + topicSlug(t) + '.html'), html);
+  });
+
+  // Same reasoning as the page-*.html prune above, applied to topic pages: a
+  // topic that loses all its figures would otherwise leave a file behind that the
+  // index no longer links.
+  var keptTopics = {};
+  topicPages.forEach(function (t) { keptTopics[topicSlug(t)] = 1; });
+  var prunedTopics = [];
+  fs.readdirSync(OUTDIR).forEach(function (f) {
+    var m = f.match(/^topic-(.+)\.html$/);
+    if (!m) return;
+    if (keptTopics[m[1]]) return;
+    fs.unlinkSync(path.join(OUTDIR, f));
+    prunedTopics.push(f);
+  });
+  if (prunedTopics.length) {
+    console.log('pruned stale topic pages: ' + prunedTopics.join(', '));
+  }
+
   // ---- index ----
   var byTopic = {};
   newOrder.forEach(function (k) {
@@ -268,8 +350,8 @@ function main() {
   });
   idx += '</div><h2 style="font-size:16px;margin:24px 0 10px">Topics</h2><div class="grid">';
   topicList.forEach(function (t) {
-    idx += '<div class="card" id="' + esc(t.replace(/\W+/g, '-')) + '"><div class="cap">'
-      + '<b>' + esc(t) + '</b><br>' + byTopic[t].toLocaleString('en-US') + ' figures</div></div>';
+    idx += '<a class="card tcard" id="' + topicSlug(t) + '" href="topic-' + topicSlug(t) + '.html">'
+      + '<div class="cap"><b>' + esc(t) + '</b><br>' + byTopic[t].toLocaleString('en-US') + ' figures</div></a>';
   });
   // The curated per-subject packs live at the repo root as <subject>-figures.html
   // and are built by scripts/build-subject-figures.js, a different pipeline from
