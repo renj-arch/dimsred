@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Chemistry Derivations Session 3 — NEET Chemistry | vlymbooq</title>
+    <meta name="description" content="NEET Chemistry derivations: Inductive/Mesomeric Effects, SN1/SN2, E1/E2, Markownikoff's Rule, Aromaticity, VSEPR, Crystal Field Theory, MO Theory. Beginner-friendly step-by-step.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/neet/course/chemistry/lesson-derivations-chemistry-3.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px;align-items:flex-start}
+        .side{width:220px;flex-shrink:0}
+        .sidebar-nav{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:10px;display:flex;flex-direction:column;gap:2px;font-size:.85em}
+        .sidebar-nav a{display:block;padding:8px 10px;border-radius:8px;color:var(--text-sec);transition:all .15s}
+        .sidebar-nav a:hover{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav a.active{background:rgba(52,211,153,.1);color:var(--emerald);font-weight:600}
+        .sidebar-nav .section-head{font-size:.7em;text-transform:uppercase;color:var(--text-muted);padding:8px 10px 2px;letter-spacing:.5px}
+        .main{flex:1;min-width:0}
+        .main h1{font-size:1.5em;font-weight:900;margin-bottom:4px}
+        .main h2{font-size:1.25em;font-weight:700;margin:28px 0 12px;color:var(--emerald);line-height:1.5}
+        .main h3{font-size:1.05em;font-weight:600;margin:20px 0 8px;color:var(--emerald)}
+        .main h4{font-size:.95em;font-weight:600;margin:16px 0 8px;color:#fbbf24}
+        .main p{color:var(--text-sec);line-height:1.7;margin-bottom:10px;font-size:.92em}
+        .deriv-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:12px 0}
+        .step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+        .step:last-child{margin-bottom:0}
+        .step-num{background:rgba(52,211,153,.1);color:var(--emerald);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700;flex-shrink:0;margin-top:2px}
+        .step-text{font-size:.88em;line-height:1.65;color:var(--text-sec);flex:1}
+        .step-text strong{color:var(--text)}
+        .step-text .math{color:#fbbf24;font-style:italic}
+        .formula-box{background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:var(--radius);padding:12px 16px;margin:10px 0;font-size:.9em;color:#60a5fa;text-align:center;font-weight:600}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin:14px 0}
+        .diagram-box svg{display:block;margin:0 auto;max-width:100%;height:auto}
+        .diagram-caption{text-align:center;font-size:.75em;color:var(--text-muted);margin-top:6px}
+        .tip-box,.neet-box,.example-box{border-radius:var(--radius);padding:12px 16px;margin:12px 0}
+        .tip-box{background:rgba(248,113,113,.06);border-left:3px solid #f87171}
+        .tip-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:#f87171}
+        .tip-text,.neet-text,.ex-text{font-size:.85em;line-height:1.6;color:var(--text-sec)}
+        .neet-box{background:rgba(167,139,250,.06);border-left:3px solid #a78bfa}
+        .neet-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:#a78bfa}
+        .example-box{background:rgba(52,211,153,.06);border-left:3px solid var(--emerald)}
+        .ex-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:var(--emerald)}
+        .ex-soln{font-size:.82em;line-height:1.5;color:var(--text-sec);margin-top:4px;padding-top:4px;border-top:1px solid var(--border)}
+        .math{color:#fbbf24}
+        .speaker-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:600;border:1px solid rgba(52,211,153,.2);cursor:pointer;background:rgba(52,211,153,.06);color:var(--emerald);transition:all .2s;vertical-align:middle;margin-left:8px}
+        .speaker-btn:hover{background:rgba(52,211,153,.15)}
+        .speaker-btn.speaking{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171;animation:pulse 1s ease-in-out infinite}
+        @media(max-width:800px){.flex-row{flex-direction:column}.side{width:100%}}
+        @media print{.nav,.sidebar-nav,.download-btn,.speaker-btn{display:none!important}.container{padding:0}.deriv-box{break-inside:avoid}.diagram-box{break-inside:avoid}}
+        @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+        @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+    </style>
+    <script>
+        const LECT={
+            inductive:`Welcome to Electronic Effects in Organic Chemistry. The inductive effect is the polarization of a sigma bond caused by the electronegativity difference between atoms. Electron withdrawing groups pull electron density away from a carbon chain through sigma bonds. Electron donating groups push electron density toward the chain. The inductive effect decreases with distance and is significant only up to three or four carbon atoms. The mesomeric effect or resonance effect involves the delocalization of pi electrons through conjugated systems.`,
+            sn:`Welcome to SN1 and SN2 Mechanisms. SN2 is a bimolecular nucleophilic substitution that occurs in one step. The nucleophile attacks from the back side while the leaving group departs. This causes inversion of configuration. SN2 is favored by primary substrates, strong nucleophiles, and aprotic solvents. SN1 is a unimolecular substitution that occurs in two steps. First the leaving group departs forming a carbocation. Then the nucleophile attacks. SN1 is favored by tertiary substrates, weak nucleophiles, and protic solvents.`,
+            e:`Welcome to E1 and E2 Elimination Mechanisms. E2 is a bimolecular elimination that occurs in one concerted step. A base abstracts a proton while the leaving group departs simultaneously forming a double bond. E2 requires strong base and anti periplanar geometry. E1 is a unimolecular elimination that occurs in two steps. First the leaving group leaves forming a carbocation. Then a base abstracts a proton to form the double bond. E1 is favored by tertiary substrates and weak bases.`,
+            markov:`Welcome to Markownikoff's Rule and Electrophilic Addition. When an unsymmetrical reagent adds to an unsymmetrical alkene, the electropositive part adds to the carbon with more hydrogen atoms. This is Markownikoff's rule. It is explained by the stability of the intermediate carbocation. The more substituted carbocation is more stable due to hyperconjugation and inductive effects. Anti Markownikoff addition or peroxide effect occurs in the presence of peroxides and follows a free radical mechanism.`,
+            aromatic:`Welcome to Aromaticity and Huckel's Rule. A compound is aromatic if it is cyclic, planar, fully conjugated, and follows Huckel's rule: 4n plus 2 pi electrons. Benzene has 6 pi electrons, which is 4n plus 2 with n equals 1. Anti aromatic compounds have 4n pi electrons and are highly unstable. Non aromatic compounds lack full conjugation or planarity. Huckel's rule applies to monocyclic planar compounds.`,
+            vsepr:`Welcome to VSEPR Theory. Valence Shell Electron Pair Repulsion theory predicts molecular shapes based on the idea that electron pairs around a central atom repel each other and arrange to minimize repulsion. Lone pair lone pair repulsion is greater than lone pair bonding pair repulsion which is greater than bonding pair bonding pair repulsion. This explains deviations from ideal bond angles.`,
+            cft:`Welcome to Crystal Field Theory. Crystal field theory explains the bonding and properties of coordination compounds. In an octahedral complex, the five d orbitals split into two sets: the t2g set at lower energy and the eg set at higher energy. The energy difference between these sets is called crystal field splitting energy delta. The magnitude depends on the nature of the ligand and the metal ion. Strong field ligands cause large splitting and form low spin complexes. Weak field ligands cause small splitting and form high spin complexes.`,
+            mo:`Welcome to Molecular Orbital Theory. Molecular orbital theory describes bonding in terms of atomic orbital combinations. When atomic orbitals combine, they form bonding orbitals which are lower in energy and antibonding orbitals which are higher in energy. For homonuclear diatomic molecules, the order of orbital filling depends on the energy levels. For B2 C2 and N2 the pi2p orbitals are lower than sigma2p. For O2 F2 and Ne2 the sigma2p is lower than pi2p. Bond order equals half of bonding electrons minus antibonding electrons.`
+        };
+        let synth = window.speechSynthesis;
+        let currentUtter = null;
+        function speakText(btn, id) {
+            if (!synth || !LECT[id]) return;
+            if (currentUtter) { synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; return; }
+            let u = new SpeechSynthesisUtterance(LECT[id]);
+            u.rate = 0.88; u.pitch = 1; u.volume = 1;
+            u.onend = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            u.onerror = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            currentUtter = u; btn.classList.add('speaking');
+            synth.speak(u);
+        }
+        function stopSpeech() { if (synth) synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; }
+        document.addEventListener('click', function(e) { if (!e.target.closest('.speaker-btn')) stopSpeech(); });
+    </script>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../../index.html" class="brand"><img src="../../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../../index.html">Home</a><a href="../../../dashboard.html">Dashboard</a><a href="../../index.html">NEET</a><a href="../index.html">Course</a><a href="index.html" class="active">Chemistry</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="section-head">Chemistry</div>
+                    <a href="lesson-physical-chemistry.html">Physical Chemistry</a>
+                    <a href="lesson-organic-chemistry.html">Organic Chemistry</a>
+                    <a href="lesson-inorganic-chemistry.html">Inorganic Chemistry</a>
+                    <a href="lesson-environmental-chemistry.html">Environmental Chemistry</a>
+                    <div class="section-head" style="margin-top:8px">Derivations</div>
+                    <a href="lesson-derivations-chemistry.html">Session 1</a>
+                    <a href="lesson-derivations-chemistry-2.html">Session 2</a>
+                    <a href="lesson-derivations-chemistry-3.html" class="active">Session 3</a>
+                    <a href="lesson-derivations-chemistry-4.html">Session 4</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Chemistry Derivations — Session 3</div>
+                    <h1>Organic & Inorganic Mechanisms</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Electronic effects, substitution and elimination mechanisms, electrophilic addition, aromaticity, VSEPR, crystal field theory, and molecular orbital theory for NEET.</div>
+                </div>
+
+                <!-- 1. INDUCTIVE & MESOMERIC EFFECTS -->
+                <h2 id="inductive">1. Inductive Effect & Mesomeric Effect <button class="speaker-btn" onclick="speakText(this,'inductive')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Why is acetic acid (CH₃COOH) a weak acid while trichloroacetic acid (CCl₃COOH) is much stronger? Why is phenol more acidic than ethanol? Why is aniline less basic than ammonia? The answer lies in <strong>electronic effects</strong> — the inductive and mesomeric effects that govern how electron density moves through molecules. Understanding these effects is essential for predicting reactivity, acidity, basicity, and stability in organic chemistry.</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="160" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="22" text-anchor="middle" fill="#a1a1aa" font-size="11">Inductive Effect — Electron withdrawal along sigma bonds</text>
+                        <text x="80" y="50" text-anchor="middle" fill="#f87171" font-size="10" font-weight="600">CCl₃ — COOH</text>
+                        <text x="80" y="65" text-anchor="middle" fill="#f87171" font-size="8">Strong —I effect → stronger acid</text>
+                        <text x="330" y="50" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="600">CH₃ — COOH</text>
+                        <text x="330" y="65" text-anchor="middle" fill="#60a5fa" font-size="8">+I effect → weaker acid</text>
+                        <text x="80" y="110" text-anchor="middle" fill="#fbbf24" font-size="10" font-weight="600">Benzene resonance</text>
+                        <circle cx="140" cy="130" r="8" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                        <circle cx="165" cy="115" r="8" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                        <circle cx="165" cy="145" r="8" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                        <circle cx="190" cy="130" r="8" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                        <circle cx="220" cy="145" r="8" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                        <circle cx="220" cy="115" r="8" fill="none" stroke="#fbbf24" stroke-width="2"/>
+                        <circle cx="145" cy="130" r="3" fill="#fbbf24" opacity="0.5"/>
+                        <circle cx="190" cy="115" r="3" fill="#fbbf24" opacity="0.5"/>
+                        <circle cx="215" cy="130" r="3" fill="#fbbf24" opacity="0.5"/>
+                        <circle cx="190" cy="145" r="3" fill="#fbbf24" opacity="0.5"/>
+                        <text x="80" y="165" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="9">Resonance in benzene — delocalized π electrons</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 1.1: Inductive effect (left) — CCl₃ group pulls electron density. Mesomeric effect (right) — delocalized π electrons in benzene.</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>Inductive effect (I-effect)</strong>: The polarization of σ-bonds due to electronegativity differences. It's a permanent effect that decreases with distance. Electron-withdrawing groups (−I: Cl, F, NO₂, CN, COOH) pull electron density. Electron-donating groups (+I: CH₃, C₂H₅, other alkyl groups) push electron density.</p>
+                <p><strong>Mesomeric effect (M-effect) or Resonance effect</strong>: The delocalization of π-electrons through conjugated systems. It's stronger than the inductive effect but requires the system to be planar with overlapping p-orbitals. −M groups withdraw electrons via resonance (NO₂, CN, COOH). +M groups donate via resonance (OH, NH₂, OR).</p>
+
+                <h4>🔍 Step-by-Step: Comparing Inductive and Mesomeric Effects</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Inductive effect operates through σ-bonds.</strong> It is distance-dependent and falls off rapidly after 3-4 bonds. The magnitude: <span class="math">F > Cl > Br > I</span> (halogen electronegativity order). Alkyl groups show +I effect: <span class="math">(CH₃)₃C− > (CH₃)₂CH− > CH₃CH₂− > CH₃−</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Mesomeric effect operates through π-bonds and resonance.</strong> It requires parallel p-orbitals. The −M groups (electron withdrawing by resonance): <span class="math">NO₂ > CN > COOH > CHO > COCH₃</span>. The +M groups (electron donating by resonance): <span class="math">OH > NH₂ > OCH₃ > Halogens</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Relative strength: M-effect dominates over I-effect.</strong> For example, in phenol, the +M effect of OH (donating electrons into the ring) outweighs its −I effect (withdrawing through σ bond). This makes phenol more reactive than benzene toward electrophilic substitution.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">−I groups: NO₂, CN, F, Cl, COOH, Br, I, OH &nbsp; +I groups: (CH₃)₃C−, (CH₃)₂CH−, CH₃CH₂−, CH₃−<br>−M groups: NO₂, CN, COOH, CHO, COCH₃ &nbsp; +M groups: OH, NH₂, OCH₃, Halogens</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Halogen Dual Behavior</div>
+                    <div class="tip-text">Halogens have both −I (strong) and +M (weak) effects. The −I effect dominates in inductive withdrawal, but the +M effect also operates. In electrophilic aromatic substitution, halogens are <strong>deactivating but ortho/para-directing</strong> — the +M effect directs to ortho/para, but net electron withdrawal deactivates the ring.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Electronic Effects</div>
+                    <div class="neet-text">
+                        • "Arrange in increasing acidity: CH₃COOH, ClCH₂COOH, Cl₃CCOOH" → CH₃COOH < ClCH₂COOH < Cl₃CCOOH (more Cl = more −I = stronger acid).<br>
+                        • "Which is more basic: aniline or ammonia?" → Ammonia (NH₃) is more basic because the lone pair on N in aniline is delocalized into the benzene ring (+M effect).<br>
+                        • "Why is phenol more acidic than ethanol?" → Phenoxide ion is stabilized by resonance (delocalization of negative charge into the ring).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 1: Inductive Effect on Acidity</div>
+                    <div class="ex-text">Arrange in order of increasing acid strength: CH₃COOH, ClCH₂COOH, FCH₂COOH, BrCH₂COOH.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Electronegativity: F > Cl > Br. So −I effect: F > Cl > Br. Acid strength: FCH₂COOH > ClCH₂COOH > BrCH₂COOH > CH₃COOH. <strong>Key insight:</strong> More electronegative substituent stabilizes the conjugate base more → stronger acid.</div>
+                </div>
+
+                <!-- 2. SN1 & SN2 -->
+                <h2 id="sn">2. SN1 & SN2 Mechanisms <button class="speaker-btn" onclick="speakText(this,'sn')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Nucleophilic substitution reactions are among the most important in organic chemistry. They're used to synthesize pharmaceuticals, pesticides, and polymers. Understanding whether a reaction follows SN1 or SN2 determines the product's stereochemistry, which can be critical for drug activity — one enantiomer may be therapeutic while the other is toxic.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>SN2</strong>: Bimolecular nucleophilic substitution. It's a <strong>concerted</strong> process where the nucleophile attacks from the back side as the leaving group departs. This causes <strong>inversion of configuration</strong> (Walden inversion). Favored by primary substrates, strong nucleophiles, and aprotic solvents. Rate = k[Nu][R-X].</p>
+                <p><strong>SN1</strong>: Unimolecular nucleophilic substitution. It's a <strong>two-step</strong> process. First, the leaving group departs, forming a carbocation. Then, the nucleophile attacks the planar carbocation from either side, giving <strong>racemization</strong>. Favored by tertiary substrates, weak nucleophiles, and protic solvents. Rate = k[R-X].</p>
+
+                <h4>🔍 Step-by-Step: SN2 Mechanism</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>One-step concerted process.</strong> The nucleophile (Nu⁻) approaches the electrophilic carbon from the back side (opposite to the leaving group). As the Nu-C bond forms, the C-LG bond breaks simultaneously. <span class="math">Nu:⁻ + R₃C−LG → [Nu⋯C⋯LG]‡ → R₃C−Nu + :LG⁻</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Stereochemistry: complete inversion.</strong> The transition state has a trigonal bipyramidal geometry. The nucleophile and leaving group are at 180°. The other three groups are in a plane. After the reaction, the configuration is inverted.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Factors favoring SN2.</strong> Primary alkyl halide > secondary ≫ tertiary (steric hindrance blocks backside attack). Strong nucleophile (OH⁻, CN⁻, CH₃O⁻). Aprotic solvent (DMSO, acetone, DMF) because protic solvents solvate the nucleophile and slow it down.</div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: SN1 Mechanism</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Step 1 — Slow (rate-determining): Carbocation formation.</strong> The C-LG bond breaks heterolytically. The leaving group departs with its bonding electrons: <span class="math">R₃C−LG → R₃C⁺ + :LG⁻</span>. Rate = k[R-X]. This is the slow step.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Step 2 — Fast: Nucleophilic attack.</strong> The nucleophile attacks the planar carbocation. Since the carbocation is sp² hybridized and planar, the nucleophile can attack from either face with equal probability → <span class="math">racemic mixture</span> (50:50 enantiomers).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Factors favoring SN1.</strong> Tertiary alkyl halide > secondary ≫ primary (stability of carbocation: 3° > 2° > 1° > methyl). Weak nucleophile (H₂O, ROH). Protic solvent (H₂O, CH₃OH) stabilizes the carbocation and leaving group through solvation.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">SN2: Rate = k[Nu][R-X], inversion, 1° > 2° ≫ 3° &nbsp; SN1: Rate = k[R-X], racemization, 3° > 2° ≫ 1°</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — SN2 at Tertiary Carbon</div>
+                    <div class="tip-text">SN2 at a tertiary carbon is essentially impossible due to steric hindrance — the three alkyl groups block backside attack. Conversely, SN1 at a primary carbon is very slow because the primary carbocation is highly unstable. For secondary substrates, both pathways can compete depending on conditions.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — SN1 vs SN2</div>
+                    <div class="neet-text">
+                        • "What is the product when (R)-2-bromobutane reacts with NaOH in aqueous ethanol?" → SN1 (aq. EtOH is protic) → racemic mixture.<br>
+                        • "Which alkyl halide reacts fastest with CN⁻ in DMSO?" → 1-bromobutane (primary, SN2, strong Nu, aprotic solvent).<br>
+                        • "What is the stereochemistry of product when CH₃CH₂CHBrCH₃ reacts with CH₃O⁻ in DMSO?" → SN2 → inversion.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 2: SN2 Reaction</div>
+                    <div class="ex-text">Predict the product and stereochemistry when (R)-2-bromooctane reacts with NaOH in DMSO.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> DMSO is aprotic, OH⁻ is a strong nucleophile, and the substrate is secondary. SN2 is favored. The product is (S)-2-octanol (inversion of configuration). <strong>Key insight:</strong> The solvent choice (aprotic vs protic) often determines SN1 vs SN2 pathway.</div>
+                </div>
+
+                <!-- 3. E1 & E2 -->
+                <h2 id="e">3. E1 & E2 Elimination Mechanisms <button class="speaker-btn" onclick="speakText(this,'e')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Elimination reactions are used to synthesize alkenes, which are building blocks for polymers, plastics, and many industrial chemicals. The competition between substitution (SN1/SN2) and elimination (E1/E2) is a classic challenge in organic synthesis that depends on reaction conditions.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>E2</strong>: Bimolecular elimination. Concerted one-step process where a base abstracts a β-hydrogen while the leaving group departs, forming a double bond. Requires <strong>anti-periplanar geometry</strong>. Favored by strong bases (OH⁻, RO⁻, NH₂⁻) and gives the more substituted alkene (Zaitsev's rule) unless a bulky base is used (Hofmann product). Rate = k[base][R-X].</p>
+                <p><strong>E1</strong>: Unimolecular elimination. Two-step process. First, the leaving group departs forming a carbocation. Then, a base abstracts a β-proton to form the double bond. Favored by tertiary substrates and weak bases. Rate = k[R-X]. Always gives the more substituted alkene (Zaitsev).</p>
+
+                <h4>🔍 Step-by-Step: E2 Mechanism</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Concerted anti-periplanar elimination.</strong> The base abstracts a β-hydrogen while the leaving group departs from the opposite side. The C-H and C-LG bonds must be in the same plane and anti to each other. <span class="math">B:⁻ + R₂CH−CR₂−LG → R₂C=CR₂ + BH + LG⁻</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Zaitsev's rule (thermodynamic control).</strong> The more substituted alkene (more alkyl groups on the double bond) is the major product. This is because alkyl groups stabilize the double bond through hyperconjugation. <span class="math">R₂C=CR₂ (tetrasubstituted) > R₂C=CHR (trisubstituted) > RHC=CHR (disubstituted)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Hofmann product with bulky bases.</strong> When using bulky bases like potassium tert-butoxide (t-BuOK), the less substituted alkene (Hofmann product) is favored due to steric hindrance preventing access to the more substituted β-hydrogen.</div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: E1 Mechanism</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Step 1 — Carbocation formation (rate-determining).</strong> Same as SN1: <span class="math">R₃C−LG → R₃C⁺ + LG⁻</span>. The rate depends only on substrate concentration.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Step 2 — β-Hydrogen abstraction by base.</strong> A weak base (often the solvent: H₂O, ROH) abstracts a β-proton. The more substituted alkene (Zaitsev) is formed because the transition state resembles the more stable alkene.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">E2: Rate = k[base][R-X], Zaitsev product (or Hofmann with bulky base) &nbsp; E1: Rate = k[R-X], Zaitsev only</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — E2 vs SN2 Competition</div>
+                    <div class="tip-text">Strong nucleophiles that are also strong bases (OH⁻, RO⁻) can promote both SN2 and E2. Higher temperature favors elimination (E2) over substitution. Primary substrates favor SN2. Tertiary substrates favor E2 (since SN2 is blocked by steric hindrance). Also: E2 requires a β-hydrogen — if no β-H exists, elimination cannot occur.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Elimination</div>
+                    <div class="neet-text">
+                        • "What is the major product when 2-bromo-2-methylbutane reacts with KOH in ethanol?" → E2 (strong base) → 2-methyl-2-butene (Zaitsev, more substituted).<br>
+                        • "Which base gives Hofmann product?" → t-BuOK (bulky base).<br>
+                        • "What happens when 2-chloro-2-methylbutane is heated in water?" → E1 (weak base, heat) → 2-methyl-2-butene + rearranged products.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 3: E2 Elimination</div>
+                    <div class="ex-text">Predict the major product when 2-bromopentane reacts with sodium ethoxide in ethanol.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Strong base (EtO⁻) → E2. Possible products: 1-pentene (less substituted) and 2-pentene (more substituted, Zaitsev). Zaitsev product (2-pentene) is major. <strong>Key insight:</strong> 2-pentene can be cis or trans, with trans being more stable and major.</div>
+                </div>
+
+                <!-- 4. MARKOWNIKOFF'S RULE -->
+                <h2 id="markov">4. Markownikoff's Rule & Electrophilic Addition <button class="speaker-btn" onclick="speakText(this,'markov')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Electrophilic addition to alkenes is how many important industrial chemicals are made, including ethanol (from ethylene), isopropanol, and ethylene glycol (antifreeze). Markownikoff's rule predictably guides which product forms when an unsymmetrical reagent adds to an unsymmetrical alkene.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>Markownikoff's rule</strong>: When HX adds to an unsymmetrical alkene, the hydrogen attaches to the carbon with more hydrogen atoms already (the less substituted carbon), and the halogen attaches to the carbon with fewer hydrogens (the more substituted carbon). This is explained by carbocation stability — the reaction proceeds through the more stable (more substituted) carbocation intermediate.</p>
+                <p><strong>Anti-Markownikoff addition</strong> occurs in the presence of peroxides (ROOR) for HBr addition. It follows a free radical mechanism where the bromine radical attacks the less substituted carbon, giving the opposite regioselectivity.</p>
+
+                <h4>🔍 Step-by-Step: Markownikoff's Rule</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Electrophilic addition proceeds via carbocation intermediate.</strong> For CH₃−CH=CH₂ + H⁺: The proton adds to either C1 or C2. If C1 gets H⁺: CH₃−C⁺H−CH₃ (2° carbocation). If C2 gets H⁺: CH₃−CH₂−C⁺H₂ (1° carbocation). The 2° carbocation is more stable.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Carbocation stability determines the pathway.</strong> Stability: 3° > 2° > 1° > CH₃⁺. The reaction follows the more stable carbocation path. This means H⁺ adds to the carbon that gives the more stable carbocation — which is the carbon with more alkyl substituents (more hydrogens originally).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>The halide ion then attacks the carbocation.</strong> <span class="math">R₃C⁺ + X⁻ → R₃C−X</span>. The overall result: H adds to the less substituted C, X adds to the more substituted C. For propene: <span class="math">CH₃−CH=CH₂ + HBr → CH₃−CHBr−CH₃</span> (2-bromopropane, Markovnikov product).</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Markownikoff: H adds to C with more H's &nbsp; Anti-Markownikoff: H adds to C with fewer H's (HBr + peroxide only)</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Peroxide Effect Only for HBr</div>
+                    <div class="tip-text">The anti-Markownikoff (peroxide) effect works only with <strong>HBr</strong>. HCl and HI do not show the peroxide effect. For HCl, the H-Cl bond is too strong for radical initiation. For HI, the I radical is too stable and tends to recombine. Also: in the absence of peroxides, HBr also follows Markownikoff's rule.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Markownikoff</div>
+                    <div class="neet-text">
+                        • "Product of CH₃−CH=CH₂ + HCl?" → CH₃−CHCl−CH₃ (Markownikoff).<br>
+                        • "Product of CH₃−CH=CH₂ + HBr in presence of peroxide?" → CH₃−CH₂−CH₂Br (anti-Markownikoff).<br>
+                        • "Which alkene gives only one product with HBr?" → Symmetrical alkene like CH₃−CH=CH−CH₃ (either way gives same product).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 4: Markownikoff's Rule</div>
+                    <div class="ex-text">Predict the major product when 2-methyl-2-butene reacts with HBr (no peroxides).</div>
+                    <div class="ex-soln"><strong>Solution:</strong> 2-methyl-2-butene: CH₃−C(CH₃)=CH−CH₃. H⁺ adds to C3 (CH=, more H's) → forms 3° carbocation at C2: (CH₃)₂C⁺−CH₂−CH₃. Br⁻ attacks → 2-bromo-2-methylbutane. <strong>Key insight:</strong> The 3° carbocation intermediate is highly stable.</div>
+                </div>
+
+                <!-- 5. AROMATICITY -->
+                <h2 id="aromatic">5. Aromaticity & Hückel's Rule <button class="speaker-btn" onclick="speakText(this,'aromatic')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Aromatic compounds are everywhere — from the benzene in gasoline to the DNA bases in your cells (purines and pyrimidines are aromatic). Many drugs, dyes, and plastics contain aromatic rings. Aromaticity explains why benzene is unusually stable and undergoes substitution rather than addition reactions.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>A compound is aromatic if it satisfies four conditions: (1) <strong>cyclic</strong>, (2) <strong>planar</strong>, (3) <strong>fully conjugated</strong> (every atom in the ring has a p-orbital), and (4) follows <strong>Hückel's rule</strong>: 4n+2 π electrons (n = 0, 1, 2, ...). Benzene (C₆H₆) with 6 π electrons is the classic example. Anti-aromatic compounds have 4n π electrons and are destabilized. Non-aromatic compounds lack full conjugation or planarity.</p>
+
+                <h4>🔍 Step-by-Step: Hückel's Rule</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Benzene: the paradigm of aromaticity.</strong> 6-membered carbon ring, sp² hybridized, planar. Each carbon contributes one p-orbital with one electron. Total: 6 π electrons (4n+2, n=1). The π electrons are completely delocalized, giving benzene exceptional stability (150 kJ/mol resonance energy).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Other aromatic compounds.</strong> Pyridine (6 π e⁻, N replaces one CH), pyrrole (6 π e⁻, N contributes 2 e⁻), furan (6 π e⁻, O contributes 2 e⁻), thiophene (6 π e⁻). Cyclopentadienyl anion (C₅H₅⁻) is aromatic (6 π e⁻). Cycloheptatrienyl cation (C₇H₇⁺, tropylium) is aromatic (6 π e⁻).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Anti-aromatic compounds.</strong> Cyclobutadiene (4 π e⁻, 4n with n=1) is anti-aromatic and highly unstable. Cyclooctatetraene is non-aromatic because it adopts a tub shape (not planar) to avoid anti-aromaticity. Planar cyclooctatetraene would have 8 π e⁻ (4n, n=2) and be anti-aromatic.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Aromatic: 4n+2 π e⁻, cyclic, planar, fully conjugated &nbsp; Anti-aromatic: 4n π e⁻ + same conditions</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Counting π Electrons</div>
+                    <div class="tip-text">Only count π electrons in the conjugated system. For heterocycles: N in pyridine contributes 1 π e⁻ (its lone pair is in sp², not in p-orbital). N in pyrrole contributes 2 π e⁻ (its lone pair is in p-orbital). Also: ions can be aromatic — the cyclopentadienyl anion becomes aromatic by gaining one electron.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Aromaticity</div>
+                    <div class="neet-text">
+                        • "Which of the following is aromatic: cyclopropenyl cation, cyclopropenyl anion?" → Cation: 2 π e⁻ (4n+2, n=0) → aromatic. Anion: 4 π e⁻ → anti-aromatic.<br>
+                        • "Is pyridine aromatic?" → Yes, 6 π e⁻, planar, cyclic, conjugated. The N lone pair is in sp² (not part of π system).<br>
+                        • "Which has higher resonance energy: benzene or naphthalene?" → Naphthalene (2 fused benzene rings, ~255 kJ/mol vs 150 kJ/mol).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 5: Aromaticity</div>
+                    <div class="ex-text">Determine whether the following are aromatic, anti-aromatic, or non-aromatic: (a) cyclopentadiene, (b) cyclopentadienyl anion, (c) cyclopentadienyl cation.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> (a) Cyclopentadiene: not fully conjugated (one sp³ C) → non-aromatic. (b) Cyclopentadienyl anion: 6 π e⁻, planar, cyclic, conjugated → aromatic. (c) Cyclopentadienyl cation: 4 π e⁻ → anti-aromatic. <strong>Key insight:</strong> Losing or gaining a proton at the sp³ carbon makes cyclopentadiene aromatic.</div>
+                </div>
+
+                <!-- 6. VSEPR THEORY -->
+                <h2 id="vsepr">6. VSEPR Theory — Molecular Shapes <button class="speaker-btn" onclick="speakText(this,'vsepr')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>The shape of a molecule determines its properties — whether it's polar or nonpolar, how it interacts with other molecules, and its biological activity. The bent shape of water gives it its unique solvent properties essential for life. The tetrahedral geometry of carbon is the basis of organic chemistry.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>VSEPR (Valence Shell Electron Pair Repulsion) theory states that electron pairs around a central atom repel each other and arrange to minimize repulsion. Lone pairs repel more strongly than bonding pairs. The steric number (number of atoms bonded + number of lone pairs) determines the electron domain geometry.</p>
+
+                <h4>🔍 Step-by-Step: VSEPR Classification</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Steric number = 2: Linear.</strong> 2 electron domains, 180° angle. Example: <span class="math">CO₂, BeCl₂, C₂H₂</span>. No lone pairs on central atom.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Steric number = 3: Trigonal planar.</strong> 3 domains, 120° angle. With 0 lone pairs (AX₃): BF₃, SO₃. With 1 lone pair (AX₂E): SO₂, O₃ (bent, <120°).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Steric number = 4: Tetrahedral.</strong> 4 domains, 109.5° angle. AX₄: CH₄, NH₄⁺. AX₃E: NH₃ (trigonal pyramidal, 107°). AX₂E₂: H₂O (bent, 104.5°). Lone pair repulsion reduces bond angles.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">4</span>
+                        <div class="step-text"><strong>Steric number = 5: Trigonal bipyramidal.</strong> 5 domains, 90° and 120° angles. AX₅: PCl₅. AX₄E: see-saw (SF₄). AX₃E₂: T-shaped (ClF₃). AX₂E₃: linear (XeF₂).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">5</span>
+                        <div class="step-text"><strong>Steric number = 6: Octahedral.</strong> 6 domains, 90° angles. AX₆: SF₆. AX₅E: square pyramidal (BrF₅). AX₄E₂: square planar (XeF₄).</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Repulsion order: LP-LP > LP-BP > BP-BP &nbsp; | &nbsp; SN=2 linear &nbsp; SN=3 trigonal planar &nbsp; SN=4 tetrahedral &nbsp; SN=5 trigonal bipyramidal &nbsp; SN=6 octahedral</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Molecular Shape vs Electron Domain</div>
+                    <div class="tip-text">The shape (molecular geometry) considers only atoms, not lone pairs. The electron domain geometry considers both. For NH₃: electron domain = tetrahedral (4 domains), molecular shape = trigonal pyramidal (3 atoms + 1 lone pair).</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — VSEPR</div>
+                    <div class="neet-text">
+                        • "Shape of SF₄?" → See-saw (AX₄E, SN = 5).<br>
+                        • "Shape of XeF₂?" → Linear (AX₂E₃, SN = 5, lone pairs occupy equatorial positions).<br>
+                        • "Which has maximum bond angle: H₂O, NH₃, CH₄?" → CH₄ (109.5°) > NH₃ (107°) > H₂O (104.5°) — fewer lone pairs → less repulsion → larger angle.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 6: VSEPR</div>
+                    <div class="ex-text">Predict the shape and bond angles of ClF₃.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Cl has 7 valence e⁻. 3 F atoms use 3 e⁻ for bonding, leaving 4 e⁻ (2 lone pairs). Steric number = 5 (3 bonds + 2 LPs). Electron domain: trigonal bipyramidal. LP-LP repulsion places them in equatorial positions. Molecular shape: T-shaped (AX₃E₂). <strong>Key insight:</strong> Lone pairs occupy equatorial positions to minimize 90° LP-LP repulsions.</div>
+                </div>
+
+                <!-- 7. CRYSTAL FIELD THEORY -->
+                <h2 id="cft">7. Crystal Field Theory — d-Orbital Splitting <button class="speaker-btn" onclick="speakText(this,'cft')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Crystal field theory explains the colors of gemstones and transition metal complexes. Ruby is red because Cr³⁺ in Al₂O₃ absorbs specific wavelengths. The blue color of CuSO₄ solution, the green of NiCl₂, and the purple of [Ti(H₂O)₆]³⁺ are all explained by d-orbital splitting. CFT also explains magnetic properties (paramagnetism vs diamagnetism) of coordination compounds.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>In a transition metal ion, the five d-orbitals are degenerate (same energy) in free space. When ligands approach, the d-orbitals split into different energy levels. In octahedral complexes, the <strong>d_xy, d_yz, d_zx</strong> orbitals (t₂g set) are lower in energy, and the <strong>d_x²−y², d_z²</strong> orbitals (e_g set) are higher. The splitting energy Δ₀ depends on the ligand: <strong>spectrochemical series</strong> orders ligands by their field strength.</p>
+
+                <h4>🔍 Step-by-Step: Octahedral Splitting</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Ligands approach along the x, y, and z axes in an octahedral complex.</strong> The d_x²−y² and d_z² orbitals have electron density along these axes → experience strong repulsion → higher energy (e_g set). The d_xy, d_yz, d_zx orbitals have electron density between the axes → less repulsion → lower energy (t₂g set).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>The energy difference Δ₀ = 10 Dq.</strong> The t₂g set is stabilized by 4 Dq (0.4Δ₀) and the e_g set is destabilized by 6 Dq (0.6Δ₀). The total energy change is zero (barycenter is conserved).</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Spectrochemical series (increasing Δ₀).</strong> I⁻ < Br⁻ < S²⁻ < SCN⁻ < Cl⁻ < NO₃⁻ < F⁻ < OH⁻ < oxalate < H₂O < NCS⁻ < CH₃CN < NH₃ < en < bipy < phen < NO₂⁻ < CO, CN⁻. Strong field ligands (CN⁻, CO) cause large splitting → <strong>low spin</strong>. Weak field ligands (I⁻, Br⁻) → <strong>high spin</strong>.</div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: High Spin vs Low Spin</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>For d⁴, d⁵, d⁶, d⁷ configurations, two arrangements are possible.</strong> If Δ₀ > pairing energy (P): electrons pair in t₂g first → <strong>low spin</strong>. If Δ₀ < P: electrons occupy t₂g and e_g following Hund's rule → <strong>high spin</strong>.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Example: [Fe(CN)₆]⁴⁻ vs [Fe(H₂O)₆]²⁺.</strong> Fe²⁺ is d⁶. CN⁻ is strong field → low spin: t₂g⁶ e_g⁰ (all paired, diamagnetic). H₂O is weak field → high spin: t₂g⁴ e_g² (4 unpaired, paramagnetic).</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Octahedral: t₂g (lower, 3 orbitals) &nbsp; e_g (higher, 2 orbitals) &nbsp; Δ₀ = 10 Dq<br>Weak field → high spin &nbsp; Strong field → low spin &nbsp; CFSE = (−0.4n_t₂g + 0.6n_e_g)Δ₀</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Tetrahedral vs Octahedral</div>
+                    <div class="tip-text">In tetrahedral complexes, the splitting is reversed and smaller: e set (lower, d_x²−y², d_z²) and t₂ set (higher, d_xy, d_yz, d_zx). Also, Δ_t ≈ (4/9)Δ₀, so tetrahedral complexes are always high spin (Δ_t < P).</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — CFT</div>
+                    <div class="neet-text">
+                        • "Which complex is paramagnetic: [Co(NH₃)₆]³⁺ or [CoF₆]³⁻?" → Co³⁺ is d⁶. NH₃ strong → low spin → diamagnetic. F⁻ weak → high spin → paramagnetic (4 unpaired).<br>
+                        • "Color of [Ti(H₂O)₆]³⁺?" → Ti³⁺ is d¹. One electron in t₂g. Absorbs green light → transmits purple (complementary).<br>
+                        • "Which has higher CFSE: [Co(en)₃]³⁺ or [Co(NH₃)₆]³⁺?" → en > NH₃ in spectrochemical series → higher Δ₀ → higher CFSE.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 7: Crystal Field Theory</div>
+                    <div class="ex-text">Calculate the CFSE for [Fe(H₂O)₆]²⁺ (high spin d⁶) and [Fe(CN)₆]⁴⁻ (low spin d⁶) in terms of Δ₀.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> High spin: t₂g⁴ e_g². CFSE = 4×(−0.4) + 2×(0.6) = −1.6 + 1.2 = −0.4Δ₀. Low spin: t₂g⁶ e_g⁰. CFSE = 6×(−0.4) = −2.4Δ₀. <strong>Key insight:</strong> Low spin configuration has much higher CFSE, which is why strong field ligands favor low spin.</div>
+                </div>
+
+                <!-- 8. MOLECULAR ORBITAL THEORY -->
+                <h2 id="mo">8. Molecular Orbital Theory <button class="speaker-btn" onclick="speakText(this,'mo')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>MO theory explains why O₂ is paramagnetic (has unpaired electrons) — something that VBT cannot explain. It also explains bond order, bond length, and magnetic properties of diatomic molecules. The concept of bonding and antibonding orbitals is fundamental to understanding chemical bonding.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>When atomic orbitals combine, they form <strong>molecular orbitals</strong> that extend over the entire molecule. Bonding MOs are lower in energy, antibonding MOs are higher. The number of MOs equals the number of atomic orbitals combined. <strong>Bond order</strong> = (bonding e⁻ − antibonding e⁻)/2. A higher bond order means a stronger, shorter bond.</p>
+
+                <h4>🔍 Step-by-Step: MO Diagram for Homonuclear Diatomics</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>For elements Li₂ to N₂ (Z ≤ 7):</strong> The order of MOs is: <span class="math">σ1s &lt; σ*1s &lt; σ2s &lt; σ*2s &lt; π2p_x = π2p_y &lt; σ2p_z &lt; π*2p_x = π*2p_y &lt; σ*2p_z</span>. The π2p orbitals are lower than σ2p due to s-p mixing.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>For O₂, F₂, Ne₂ (Z &gt; 7):</strong> No significant s-p mixing. Order: <span class="math">σ1s &lt; σ*1s &lt; σ2s &lt; σ*2s &lt; σ2p_z &lt; π2p_x = π2p_y &lt; π*2p_x = π*2p_y &lt; σ*2p_z</span>. The σ2p is lower than π2p.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>O₂ is paramagnetic.</strong> O₂ has 12 valence e⁻. Filling MOs: σ2s² σ*2s² σ2p_z² π2p_x² π2p_y² π*2p_x¹ π*2p_y¹. Two unpaired e⁻ in π* orbitals → paramagnetic. Bond order = (10 − 6)/2 = 2.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Bond order = (Bonding e⁻ − Antibonding e⁻)/2 &nbsp; | &nbsp; O₂: BO = 2, paramagnetic &nbsp; N₂: BO = 3, diamagnetic</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — S-p Mixing</div>
+                    <div class="tip-text">Students use the O₂/F₂ MO order for all molecules. For B₂, C₂, N₂, the π2p orbitals are <strong>lower</strong> than σ2p. This changes the electron configuration. For C₂: (σ2s)²(σ*2s)²(π2p)⁴ — bond order = 2, and all electrons paired.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — MO Theory</div>
+                    <div class="neet-text">
+                        • "Bond order of N₂?" → 10 valence e⁻: σ2s² σ*2s² π2p⁴ σ2p_z². BO = (10 − 4)/2 = 3 (triple bond).<br>
+                        • "Which has higher bond order: O₂, O₂⁺, O₂⁻, O₂²⁻?" → O₂⁺ (BO = 2.5) > O₂ (2) > O₂⁻ (1.5) > O₂²⁻ (1).<br>
+                        • "Is B₂ paramagnetic?" → B₂: 6 valence e⁻, configuration: σ2s² σ*2s² π2p_x¹ π2p_y¹ → 2 unpaired → paramagnetic.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 8: MO Theory</div>
+                    <div class="ex-text">Calculate the bond order of N₂⁺ and determine if it's paramagnetic or diamagnetic.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> N₂ has 10 e⁻. N₂⁺ removes one from σ2p_z highest orbital. Configuration: σ2s² σ*2s² π2p⁴ σ2p_z¹. BO = (9 − 4)/2 = 2.5. One unpaired e⁻ → paramagnetic. <strong>Key insight:</strong> N₂⁺ has higher bond order than N₂²⁺ but lower than N₂.</div>
+                </div>
+
+                <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.82em">
+                    End of Session 3 — Organic & Inorganic Mechanisms. Continue to <a href="lesson-derivations-chemistry-4.html" style="color:var(--emerald)">Session 4 (Electrochemistry &amp; Kinetics Deep-Dive)</a>.
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/theme.js"></script>
+</body>
+</html>

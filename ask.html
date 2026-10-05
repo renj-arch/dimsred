@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Ask Vlymbooq â€” Zero-AI Retrieval</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--rose:#fb7185;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+header.hd{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+.num{font-size:11px;letter-spacing:.14em;color:var(--text-sec);text-transform:uppercase}
+h1{font-size:24px;margin:6px 0 8px}
+.disc{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--text-sec);line-height:1.6}
+.disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px;color:var(--purple)}
+.meta{font-size:12.5px;color:var(--text-sec);margin-top:10px}
+.ask-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin:14px 0}
+.ask-box label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-sec);display:block;margin-bottom:8px}
+.ask-row{display:flex;gap:10px}
+.ask-row textarea{flex:1;border:1px solid var(--border);border-radius:8px;padding:12px 14px;font-size:14px;font-family:inherit;resize:vertical;min-height:80px;background:var(--bg);color:var(--text);outline:none}
+.ask-row textarea:focus{border-color:var(--purple)}
+.btn{border:1px solid var(--purple);background:var(--purple);color:#fff;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#8b7cf7}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.result{margin:16px 0}
+.refusal{background:var(--card);border:1px solid rgba(245,158,11,.4);border-radius:14px;padding:18px 20px}
+.refusal h2{font-size:15px;margin:0 0 8px;color:var(--amber)}
+.refusal p{margin:0;font-size:13.5px;color:var(--text-sec)}
+.refusal .reason{font-size:12.5px;color:var(--amber);margin-top:10px;font-style:italic}
+.answer{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px}
+.answer h2{font-size:15px;margin:0 0 12px}
+.cov-bar{display:flex;align-items:center;gap:10px;margin:10px 0 14px}
+.cov-bar .label{font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-sec);min-width:70px}
+.cov-bar .track{flex:1;height:8px;background:var(--border);border-radius:4px;overflow:hidden}
+.cov-bar .fill{height:100%;border-radius:4px}
+.cov-bar .pct{font-size:12px;font-weight:700;min-width:36px;text-align:right}
+.ev{border-left:3px solid var(--purple);padding:10px 14px;margin:10px 0;background:var(--bg);border-radius:0 10px 10px 0}
+.ev .src{font-size:11px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--purple);margin-bottom:4px}
+.ev .src a{color:var(--purple);text-decoration:none}
+.ev .src a:hover{text-decoration:underline}
+.ev p{margin:0;font-size:13.5px;line-height:1.65;color:var(--text)}
+.ev .cat{font-size:10.5px;color:var(--text-muted);margin-top:4px}
+.diag{font-size:11.5px;color:var(--text-sec);margin-top:14px;padding-top:10px;border-top:1px solid var(--border)}
+.diag span{display:inline-block;background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px;margin:2px 3px 2px 0}
+.empty{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
+.load{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
+.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--rose);margin:14px 0}
+.samples{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.samples button{border:1px solid var(--border);background:var(--bg);border-radius:100px;padding:5px 12px;font-size:11.5px;cursor:pointer;color:var(--text-sec);white-space:nowrap}
+.samples button:hover{border-color:var(--purple);color:var(--purple)}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a href="archive.html">Archive</a><a href="map.html">Map</a>
+                <a href="figures/index.html">Figures</a><a class="active" href="ask.html">Ask</a><a href="about.html">About</a></div></div></nav>
+<div class="wrap">
+  <header class="hd">
+    <div class="num">Vlymbooq &middot; Zero-AI Retrieval &middot; UPSC</div>
+    <h1>Ask Vlymbooq</h1>
+    <div class="disc">
+      <b>How this works</b>
+      This engine answers UPSC questions <em>only</em> from material in this site's own corpus. It retrieves verbatim sentences with source links. It never generates text, never uses an AI model, and never guesses. If the corpus doesn't cover your question, it says so.
+    </div>
+    <div class="meta" id="meta"></div>
+  </header>
+
+  <div class="ask-box">
+    <label for="q">Your UPSC question</label>
+    <div class="ask-row">
+      <textarea id="q" placeholder="e.g. What is the anti-defection law in India?"></textarea>
+      <button class="btn" id="ask">Ask</button>
+    </div>
+    <div class="samples" id="samples"></div>
+  </div>
+
+  <div id="out"><div class="load">Loading index&hellip;</div></div>
+</div>
+
+<script src="scripts/lib/ask-core.js"></script>
+<script src="scripts/lib/ask-qb.js"></script>
+<script src="scripts/lib/ask-answer.js"></script>
+<script src="scripts/lib/ask-entity-evidence.js"></script>
+<script src="scripts/lib/ask-compose.js"></script>
+<script src="scripts/lib/build-ask-qb-buckets-hash.js"></script>
+<script src="scripts/lib/ask-browser.js"></script>
+<script>
+'use strict';
+// The question-bank path is OFF by default and must be turned on deliberately.
+//
+// Measured over 52 exam-style questions (see scripts/check-ask-qb-fresh.js for
+// the staleness guard and the builders for the data), it answered 14 and refused
+// 38. Of the 14, about half were on target: a question about the Comptroller and
+// Auditor General, public interest litigation, judicial independence, the GST,
+// parliamentary opposition and demographic transition all returned the right
+// corpus entries. The rest were confident misses, because the admission gate
+// accepted an entity that merely overlapped the subject's tokens: a question
+// about biodiversity conservation and development was answered with Google and
+// Wikipedia, one about misinformation with a 1462 treaty, and one about
+// infrastructure investment with a United States act.
+//
+// For a study tool a confident wrong answer is worse than a refusal, because an
+// aspirant cannot tell one from a finding. Until the admission gate is
+// tightened, the timeline engine below answers instead.
+var ASK_QB_ENABLED = false;
+
+// Structured mains answering. Kept off until the evidence shards are deployed:
+// with them absent every heading resolves but nothing can be quoted, and a page
+// that renders nine "not quotable" headings is worse than one that says the
+// feature is unavailable. The flag is separate from ASK_QB_ENABLED because the
+// navigational path works off shards while this path additionally needs the
+// entity table, and they should be able to ship on different days.
+var ASK_MAINS_ENABLED = false;
+
+var IDX = null;
+var QB_READY = false;
+var QB_ERROR = null;
+var STATE = { question: '' };
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+function el(id) { return document.getElementById(id); }
+
+var SAMPLES = [
+  'What is the anti-defection law in India?',
+  'Discuss the environmental impact of the Bhopal gas tragedy.',
+  'What were the aims and outcomes of the Indian National Congress at its founding in 1885?',
+  'Examine whether the constitutional office of the Lok Sabha Speaker has become vulnerable to partisan politics under the current anti-defection regime.'
+];
+
+function covColor(pct) {
+  if (pct >= 60) return '#059669';
+  if (pct >= 34) return '#d97706';
+  return '#dc2626';
+}
+
+function renderRefusal(res) {
+  var a = res.analysis || {};
+  var diag = '';
+  if (res.subject || (res.anchors && res.anchors.length)) {
+    diag = '<div class="diag">';
+    if (res.subject) diag += '<span>subject: ' + esc(res.subject) + '</span>';
+    if (res.anchors && res.anchors.length) diag += '<span>anchors: ' + res.anchors.map(esc).join(', ') + '</span>';
+    if (a.ontologyHits && a.ontologyHits.length) diag += '<span>ontology: ' + a.ontologyHits.map(esc).join(', ') + '</span>';
+    if (res.thin) diag += '<span>dropped node: ' + esc(res.thin.title) + ' &middot; its only sentence is ' + res.thin.info.words + ' words</span>';
+    diag += '</div>';
+  }
+  return '<div class="result"><div class="refusal">' +
+    '<h2>Cannot answer from corpus</h2>' +
+    '<p>The Vlymbooq corpus does not contain enough quotable material to answer this question reliably.</p>' +
+    '<p class="reason">' + esc(res.reason || '') + '</p>' +
+    diag +
+  '</div></div>';
+}
+
+function renderAnswer(res) {
+  var a = res.analysis || {};
+  var pct = Math.round((res.coverage || 0) * 100);
+  var col = covColor(pct);
+  var ev = (res.evidence || []).map(function (e) {
+    var src = e.node && e.node.id
+      ? '<a href="map.html#id=' + encodeURIComponent(e.node.id) + '" target="_blank">' + esc(e.node.name) + '</a>'
+      : esc(e.node ? e.node.name : '');
+    var cat = e.node && e.node.cats && e.node.cats[0] ? ' &middot; ' + esc(e.node.cats[0].label) : '';
+    return '<div class="ev">' +
+      '<div class="src">' + src + cat + '</div>' +
+      '<p>' + esc(e.sentence) + '</p>' +
+    '</div>';
+  }).join('');
+
+  var diag = '';
+  if (res.subject || (res.anchors && res.anchors.length)) {
+    diag = '<div class="diag">';
+    if (res.subject) diag += '<span>subject: ' + esc(res.subject) + '</span>';
+    if (res.anchors && res.anchors.length) diag += '<span>anchors: ' + res.anchors.map(esc).join(', ') + '</span>';
+    if (a.ontologyHits && a.ontologyHits.length) diag += '<span>ontology: ' + a.ontologyHits.map(esc).join(', ') + '</span>';
+    diag += '</div>';
+  }
+
+  return '<div class="result"><div class="answer">' +
+    '<h2>Answer</h2>' +
+    '<div class="cov-bar">' +
+      '<span class="label">Coverage</span>' +
+      '<div class="track"><div class="fill" style="width:' + pct + '%;background:' + col + '"></div></div>' +
+      '<span class="pct" style="color:' + col + '">' + pct + '%</span>' +
+    '</div>' +
+    ev +
+    diag +
+  '</div></div>';
+}
+
+// States plainly when the engine answered from its concept vocabulary rather than
+// from the question's subject.
+//
+// The concept tier is a deliberate fallback: when a subject is not a titled node
+// the router matches a phrase that names what the question is *about*. For
+// "the environmental impact of the Bhopal gas tragedy" that produces twelve
+// lines about environmental impact and none about Bhopal, because Bhopal is not a
+// node in this index at all. Ranking that higher is not the fix -- the subject
+// genuinely has no node here -- so the honest move is to say which of the two
+// happened. Without this note those twelve lines read as an answer to the
+// question, which is the one thing this page must not do.
+function conceptGapNote(res) {
+  if (!res || !res.concept) return '';
+  var ev = res.evidence || [];
+  var named = {};
+  ev.forEach(function (e) {
+    if (e && e.node && e.node.name) named[String(e.node.name).toLowerCase()] = 1;
+  });
+  var subj = res.subject ? String(res.subject).toLowerCase() : '';
+  // Only complain when the subject did not actually reach the results. When it
+  // did, the concept route agreeing with it is a good outcome, not a gap.
+  if (!subj || named[subj]) return '';
+  var pct = Math.round((res.conceptCoverage || 0) * 100);
+  return '<div class="diag"><span>subject "' + esc(res.subject) +
+    '" is not a node in this index</span>' +
+    '<span>these lines are the concept route "' + esc(res.concept) +
+    '" at ' + pct + '% concept coverage</span></div>' +
+    '<div class="empty">The lines above are about the concept, not about ' +
+    esc(res.subject) + '. This index holds one sentence per node and has no node ' +
+    'with that name, so it cannot answer the question as asked. Sentences about ' +
+    esc(res.subject) + ' exist in the question bank, which is a separate index.</div>';
+}
+
+// The multi-heading answer, planned from the engine's ranking.
+//
+// A mains question names several things at once. Flattening its evidence into one
+// undifferentiated list makes a two-part question look like one part, so the
+// planner's node grouping is used to give each part its own heading with the
+// strongest sentence that node contributes. Nothing is composed here: every line
+// is a corpus sentence attributed to the node it came from.
+function renderPlanned(plan, res) {
+  var pct = Math.round((res.coverage || 0) * 100);
+  var col = covColor(pct);
+  var rows = plan.snippets.map(function (s) {
+    var direct = s.direct ? ' <span class="tag">direct</span>' : '';
+    return '<div class="ev">' +
+      '<div class="src"><a href="archive.html" target="_blank">' + esc(s.name) + '</a>' +
+      (s.cat ? ' &middot; ' + esc(s.cat) : '') + direct + '</div>' +
+      '<p>' + esc(s.snippet) + '</p>' +
+    '</div>';
+  }).join('');
+
+  var note = conceptGapNote(res);
+  // A refusal alongside real evidence is not a contradiction to hide. The engine
+  // declined to compose an answer because coverage is thin, and the sentences it
+  // did find are still corpus sentences worth showing.
+  var thin = res.refused
+    ? '<div class="empty">Coverage is too thin to compose an answer (' +
+      esc(res.reason || 'insufficient quotable material') +
+      '). These are the sentences the corpus does hold for the headings above.</div>'
+    : '';
+
+  var headings = plan.outline.map(function (o) { return esc(o[0]); }).join(' &middot; ');
+
+  return '<div class="result"><div class="answer">' +
+    '<h2>Answer</h2>' +
+    '<div class="cov-bar">' +
+      '<span class="label">Coverage</span>' +
+      '<div class="track"><div class="fill" style="width:' + pct + '%;background:' + col + '"></div></div>' +
+      '<span class="pct" style="color:' + col + '">' + pct + '%</span>' +
+    '</div>' +
+    rows +
+    '<div class="diag"><span>' + plan.retrieved + ' headings planned from the corpus</span>' +
+    (headings ? '<span>' + headings + '</span>' : '') + '</div>' +
+    note +
+    thin +
+  '</div></div>';
+}
+
+function render(res) {
+  if (!res) { el('out').innerHTML = '<div class="empty">No result.</div>'; return; }
+  if (res.refused) {
+    el('out').innerHTML = refusalOrMiss(res);
+  } else {
+    STATE.planMiss = null;
+    el('out').innerHTML = renderAnswer(res);
+  }
+}
+
+// Evidence from the question bank. These are verbatim corpus sentences attributed
+// to the entity whose entry they came from, so the citation is the entity name
+// and its archive category. There is no per-sentence anchor: the derived shards
+// deliberately do not carry record ids, because that is most of the 828 MB.
+function renderQbEvidence(items) {
+  return items.map(function (e) {
+    var cats = (e.cats || []).map(function (c) {
+      return c.label || c.key || c;
+    });
+    var cat = cats.length ? ' &middot; ' + esc(cats[0]) : '';
+    return '<div class="ev">' +
+      '<div class="src"><a href="archive.html" target="_blank">' + esc(e.entity) + '</a>' + cat + '</div>' +
+      '<p>' + esc(e.sentence) + '</p>' +
+    '</div>';
+  }).join('');
+}
+
+function renderQb(result) {
+  var r = result.route || {};
+  var diag = '<div class="diag">';
+  if (r.subject) diag += '<span>subject: ' + esc(r.subject) + '</span>';
+  if (r.concept) diag += '<span>concept: ' + esc(r.concept) + '</span>';
+  if (r.matchedEntity) diag += '<span>entity: ' + esc(r.matchedEntity) + '</span>';
+  diag += '<span>' + esc(r.conceptTier ? 'concept route' : 'entity route') + '</span>';
+  if (result.missing) {
+    diag += '<span>' + result.missing + ' shard(s) not deployed</span>';
+  }
+  diag += '</div>';
+
+  if (!result.evidence.length) {
+    return '<div class="result"><div class="refusal">' +
+      '<h2>Cannot answer from corpus</h2>' +
+      '<p>No quotable corpus sentence carried enough of the subject to answer this question reliably.</p>' +
+      diag +
+    '</div></div>';
+  }
+
+  return '<div class="result"><div class="answer">' +
+    '<h2>Answer</h2>' +
+    '<p class="reason">' + result.evidence.length + ' verbatim corpus sentence(s) &middot; no AI, no generation</p>' +
+    renderQbEvidence(result.evidence) +
+    diag +
+  '</div></div>';
+}
+
+// Heading planning by retrieval, not by a table of remembered question shapes.
+//
+// The authored outline table could only ever answer the fourteen shapes somebody
+// had already written down. "Analyse the role of women in India's freedom
+// struggle" matched the nearest key on one word out of three and fell through to
+// a lookup of the bare noun "women", which is not an entity, so the page answered
+// nothing and then claimed the term was absent from the corpus. It was not absent
+// -- it was never looked for.
+//
+// So the structure is now discovered from the corpus. The question's own content
+// terms are matched against every quotable node already loaded in IDX, the nodes
+// that carry the most of those terms win, and the winners become the headings.
+// A term in a node's title counts double, because a node called "Salt March" is a
+// better answer to a question about the Salt March than a passing mention is.
+//
+// The retrieved node names are real corpus entities, so the existing
+// entity-anchored path in ask-browser then fetches their bucket sentences and
+// attaches provenance exactly as it did for the authored outlines. Nothing about
+// the retrieval or the evidence layer changed; only how the headings are chosen.
+
+// Question scaffolding and ordinary words carry no retrieval signal, and scoring on
+// them is what made a stopword match look like a topical one.
+// Question words carry no retrieval signal, but they are reported when a search
+// finds nothing, so a reader can see what was actually looked for.
+var ASK_STOPWORDS = ('a an the of in on at by for from with as but and or to is was were are be been ' +
+'being has have had do does did will would can could may might shall should must not no nor so if when ' +
+'while after before during since under over between however therefore although though because such there ' +
+'who whom what which where how why than then thus also into upon about against through above below up ' +
+'down out off again further once more most other some only own same too very just now here all any both ' +
+'each few many much one two it he she they we you i his her its their our my your our this that these ' +
+'those analyse analyze examine discuss explain describe role roles importance significance contribution ' +
+'contributions impact impacts india indian give account detail details briefly question answer mains gs ' +
+'paper gs1 gs2 gs3 gs4 write note regard context light').split(/\s+/);
+
+var ASK_MIN_TERM = 3;
+
+function askTerms(q) {
+  var seen = {}, out = [];
+  var words = String(q).toLowerCase().split(/[^a-z]+/).filter(function (w) {
+    return w.length >= ASK_MIN_TERM && ASK_STOPWORDS.indexOf(w) === -1;
+  });
+  words.forEach(function (w) {
+    if (seen[w]) return;
+    seen[w] = 1;
+    out.push(w);
+  });
+  // Adjacent content words are phrases the corpus often stores whole -- "freedom
+  // struggle", "national movement" -- so they are searched as one term too.
+  for (var i = 0; i + 1 < words.length; i++) {
+    var bg = words[i] + ' ' + words[i + 1];
+    if (!seen[bg]) { seen[bg] = 1; out.push(bg); }
+  }
+  return out;
+}
+
+// Heading planning reads the engine's own ranking instead of running a second
+// retrieval pass.
+//
+// The engine in ask-core.js already does BM25 over document frequency, title
+// frequency and aliases, and it is tuned against this corpus. Measured on
+// 2026-10-02: a plain substring scan over the same index returned three
+// irrelevant headings for "the Bhopal gas tragedy" where the engine returns
+// twelve ranked results, and seven near-random headings for the freedom-struggle
+// question where the engine returns the two nodes that actually answer it.
+// Duplicating retrieval would have been slower, larger and worse, so the planner
+// consumes the engine instead of competing with it.
+//
+// Evidence is grouped by node, because one node matching three times is one
+// heading and not three. The node names are real corpus entities, so the
+// entity-anchored path in ask-browser then fetches their bucket sentences and
+// attaches provenance exactly as it did for the authored outlines.
+function planOutline(q, opts) {
+  opts = opts || {};
+  var terms = askTerms(q);
+  var report = { terms: terms, scanned: (typeof IDX !== 'undefined' && IDX && IDX.N) || 0, hits: [] };
+  if (typeof IDX === 'undefined' || !IDX || !IDX.N) {
+    return { key: null, outline: null, searched: report, retrieved: 0 };
+  }
+  var res;
+  try {
+    res = VlymbooqAsk.retrieve(IDX, q, opts.evidence || 30);
+  } catch (err) {
+    return { key: null, outline: null, searched: report, retrieved: 0, error: err.message };
+  }
+  var ev = (res && res.evidence) || [];
+  if (!ev.length) {
+    return { key: null, outline: null, searched: report, retrieved: 0, nearMisses: [] };
+  }
+
+  var byName = {}, order = [];
+  ev.forEach(function (e) {
+    var n = e && e.node;
+    if (!n || !n.name) return;
+    var k = String(n.name).toLowerCase();
+    if (!byName[k]) {
+      byName[k] = {
+        name: String(n.name), cat: String(n.cat || ''),
+        score: 0, hits: 0, direct: false, snippet: String(e.sentence || '')
+      };
+      order.push(k);
+    }
+    byName[k].hits++;
+    byName[k].score += (e.score || 0);
+    if (e.direct) byName[k].direct = true;
+  });
+
+  var picked = order.map(function (k) { return byName[k]; }).sort(function (a, b) {
+    if (b.direct !== a.direct) return b.direct ? 1 : -1;
+    return b.score - a.score;
+  }).slice(0, opts.headings || 7);
+
+  if (!picked.length) {
+    return { key: null, outline: null, searched: report, retrieved: 0, nearMisses: [] };
+  }
+
+  // Alternates are the other nodes the engine ranked for this same question. They
+  // are what lets a heading survive a naming difference between the timeline and
+  // the entity directory, which is the failure the authored tables used to patch by
+  // hand, one question at a time.
+  var all = order.map(function (k) { return byName[k]; });
+  var altsFor = {};
+  picked.forEach(function (p) {
+    var mine = p.name.toLowerCase();
+    altsFor[mine] = all.filter(function (o) {
+      return o.name.toLowerCase() !== mine && (!p.cat || o.cat === p.cat);
+    }).slice(0, 3).map(function (o) { return o.name; });
+  });
+
+  var outline = picked.map(function (p, i) {
+    return [(i + 1) + '. ' + p.name, p.name, altsFor[p.name.toLowerCase()] || []];
+  });
+  report.hits = picked;
+  return {
+    key: picked.map(function (p) { return p.name; }).join(' / '),
+    outline: outline,
+    searched: report,
+    retrieved: picked.length,
+    snippets: picked
+  };
+}
+
+// The honest empty answer.
+//
+// The old failure was a message that lied about the cause: it said no entity named
+// "women" exists in this corpus, when the truth was that the router looked up one
+// word of the question and never searched the other two. A refusal that misreports
+// why is worse than no refusal, because it teaches the reader that the material is
+// missing when it may simply be unreachable.
+//
+// So this reports the search itself: the terms that were looked for, how many nodes
+// were scanned, how far short the best match fell, and what the nearest nodes
+// actually were. A reader can then judge whether the corpus covers the topic.
+function renderPlanMiss(planned) {
+var s = planned.searched || { terms: [], scanned: 0, hits: [] };
+var h = '<div class="result"><div class="answer">';
+h += '<h2>No headings could be planned</h2>';
+h += '<p class="reason">This is a statement about the search, not about the corpus.</p>';
+h += '<p>The question was reduced to ' + (s.terms.length || 0) + ' content term' +
+  (s.terms.length === 1 ? '' : 's') + ' and matched against ' +
+  (s.scanned || 0).toLocaleString() + ' quotable timeline nodes. ';
+if (!s.terms.length) {
+  h += 'No content terms survived, so nothing was searched. A question made only of ' +
+    'question words and proper nouns the index does not hold cannot be planned from.</p>';
+} else {
+  h += 'No node carried enough of them to stand as a heading.</p>';
+  h += '<p class="reason">Searched for: <code>' + esc(s.terms.join('</code>, <code>')) + '</code></p>';
+}
+var near = planned.nearMisses || s.hits || [];
+if (near.length) {
+  h += '<p class="reason">Closest nodes, none of which matched enough terms to answer:</p><ul>';
+  near.slice(0, 6).forEach(function (n) {
+    h += '<li><strong>' + esc(n.name) + '</strong> &middot; matched ' +
+      esc((n.terms || []).join(', ') || 'nothing') +
+      (n.snippet ? '<br><span class="reason">' + esc(n.snippet.slice(0, 190)) + '</span>' : '') +
+      '</li>';
+  });
+  h += '</ul>';
+}
+h += '<p class="reason">The next step is source material, not another pass at the index: ' +
+  'if the topic is not in these nodes, no amount of re-planning will surface it.</p>';
+h += '</div></div>';
+return h;
+}
+
+// A plan miss is a better explanation than the generic refusal when there was one,
+// because it names the terms and the shortfall instead of asserting the corpus is
+// silent. When the timeline answered anyway, the miss is irrelevant and dropped.
+function refusalOrMiss(res) {
+if (STATE.planMiss) return renderPlanMiss(STATE.planMiss);
+return renderRefusal(res);
+}
+
+// A structured answer: authored headings, the corpus's own sentences under each,
+// provenance on every line, and an explicit note wherever the corpus is silent.
+function renderMains(composed, key) {
+var h = '<div class="result"><div class="answer">' +
+'<h2>Evidence dossier</h2>' +
+'<div class="diag"><span>structure: ' + esc(key) + '</span>' +
+'<span>' + composed.counts.answered + '/' + composed.total + ' headings answered</span>';
+if (composed.missingShards) h += '<span>' + composed.missingShards + ' shard(s) not deployed</span>';
+h += '<span>' + composed.fetchedShards + ' shard(s) fetched</span></div>';
+
+composed.sections.forEach(function (s) {
+h += '<h3>' + esc(s.label) + '</h3>';
+if (s.status === 'answered') {
+s.lines.forEach(function (l) {
+var t = l.trust || {};
+h += '<div class="ev"><div class="src">' +
+'<a href="archive.html" target="_blank">' + esc(l.entity) + '</a>' +
+' &middot; ' + esc(t.source || 'no source') +
+' &middot; ' + esc(String(t.pubDate || 'undated').slice(0, 10)) +
+' &middot; ' + esc(t.state) + '</div><p>' + esc(l.text) + '</p></div>';
+});
+} else if (s.status === 'unquoted') {
+h += '<div class="gap"><p>' + esc(s.gaps[0] ? s.gaps[0].text : 'No quotable sentence.') + '</p></div>';
+} else {
+h += '<div class="gap"><p><strong>Not covered by this corpus.</strong></p>';
+s.gaps.forEach(function (g) { h += '<p>' + esc(g.text) + '</p>'; });
+h += '</div>';
+}
+});
+
+h += '<h3>Way forward</h3>' +
+'<div class="gap"><p>Not retrieved. Recommendations and a conclusion are ' +
+'judgement rather than corpus content, and this system does not generate them.</p></div>';
+h += '<div class="diag"><span>' + composed.quoted + ' verbatim sentence(s)</span>' +
+'<span>' + composed.entities.length + ' entities</span>' +
+'<span>provenance ok/flagged/unverified ' +
+composed.provenance.ok + '/' + composed.provenance.flagged + '/' +
+composed.provenance.unverified + '</span></div>';
+h += '<p class="reason">' + esc(composed.argumentNote) + '</p>';
+h += '</div></div>';
+return h;
+}
+
+function doAsk() {
+var q = el('q').value.trim();
+if (!q) { el('out').innerHTML = '<div class="empty">Type a question first.</div>'; return; }
+STATE.question = q;
+// Cleared per question so a previous plan miss cannot be reported against a
+// question that was never searched.
+STATE.planMiss = null;
+el('ask').disabled = true;
+
+// Structured mains answering is tried first when enabled, because it is the only
+// path that can return an answer for a multi-entity question. It falls through
+// to the navigational question-bank path and then to the timeline when it has no
+// outline or quotes nothing.
+if (ASK_MAINS_ENABLED && QB_READY) {
+// Headings are planned from the corpus, not remembered from a table. When the
+// question's terms match nothing, that is recorded so the refusal can say what was
+// actually searched instead of blaming the corpus for a routing miss.
+var planned = planOutline(q, {});
+STATE.planMiss = planned.outline ? null : planned;
+if (planned.outline) {
+el('out').innerHTML = '<div class="load">Gathering corpus evidence&hellip;</div>';
+VlymbooqAskBrowser.mains(q, planned.outline, {}).then(function (composed) {
+if (!composed.counts.answered && ASK_QB_ENABLED) {
+el('out').innerHTML = '<div class="load">Searching the question bank&hellip;</div>';
+VlymbooqAskBrowser.ask(q, { limit: 8 }).then(function (result) {
+el('out').innerHTML = (result.evidence.length || !(result.missing && IDX))
+? renderQb(result) : renderTimeline(q);
+}).catch(function (err) {
+if (IDX) renderTimeline(q);
+else el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+});
+return;
+}
+el('out').innerHTML = renderMains(composed, planned.key);
+}).catch(function (err) {
+el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+}).then(function () { el('ask').disabled = false; });
+return;
+}
+}
+
+  // The question bank is the primary source: it is the whole corpus, not the
+  // timeline subset. The timeline engine stays as a fallback so the page still
+  // answers if the routing tables or the evidence shards are not deployed.
+  if (ASK_QB_ENABLED && QB_READY) {
+    el('out').innerHTML = '<div class="load">Searching the question bank&hellip;</div>';
+    VlymbooqAskBrowser.ask(q, { limit: 8 }).then(function (result) {
+      // A shard that is missing is a signal, not an answer. The adapter reports
+      // it as `missing` precisely so the caller can fall back, and without this
+      // the page rendered a refusal while the timeline index was sitting right
+      // there with an answer.
+      if (!result.evidence.length && result.missing && IDX) {
+        renderTimeline(q);
+        return;
+      }
+      el('out').innerHTML = renderQb(result);
+    }).catch(function (err) {
+      if (IDX) renderTimeline(q);
+      else el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+    }).then(function () {
+      el('ask').disabled = false;
+    });
+    return;
+  }
+
+  if (!IDX) {
+    el('out').innerHTML = '<div class="load">Loading&hellip;</div>';
+    return;
+  }
+  renderTimeline(q);
+  el('ask').disabled = false;
+}
+
+function renderTimeline(q) {
+  el('out').innerHTML = '<div class="load">Searching&hellip;</div>';
+  setTimeout(function () {
+    var res;
+    try {
+      res = VlymbooqAsk.retrieve(IDX, q, 12);
+    } catch (err) {
+      el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+      return;
+    }
+    // The timeline index holds one sentence per node and drops any node under a
+    // twelve-word floor, so it refuses subjects it actually knows. The question
+    // bank is the right reach for any such subject: its entity bucket holds every
+    // sentence the archive has for that name. This is the difference between
+    // "the corpus lacks it" and "this index could not quote it", and those must
+    // never be shown as the same thing. It is attempted on every refusal, not
+    // only when the dropped node was named, because a normalised phrase rarely
+    // equals a title anyway ("the anti-defection law in India" vs the node
+    // "Anti-defection law (India)"). If the bank cannot answer either, the
+    // honest refusal stands.
+    if (res.refused && res.subject && QB_READY) {
+      el('out').innerHTML = '<div class="load">Reading the question bank&hellip;</div>';
+      VlymbooqAskBrowser.mains(q, [[res.subject, res.subject, []]], {}).then(function (composed) {
+        if (composed && composed.counts && composed.counts.answered) {
+          el('out').innerHTML = renderMains(composed, res.subject);
+        } else {
+          el('out').innerHTML = refusalOrMiss(res);
+        }
+      }).catch(function () {
+        el('out').innerHTML = refusalOrMiss(res);
+      });
+      return;
+    }
+    // Headings are planned from the same engine call, so the multi-heading path
+    // and the flat list can never disagree about what the corpus contains.
+    // This runs in the live timeline path, not only under ASK_MAINS_ENABLED,
+    // because this index is the one actually deployed: the question-bank shards
+    // are not, so gating the improvement behind that flag would have shipped
+    // nothing. If the planner finds no headings, the existing flat rendering
+    // and its refusals are untouched.
+    var plan = null;
+    try {
+      plan = planOutline(q, { evidence: 24, headings: 8 });
+    } catch (err) {
+      plan = null;
+    }
+    if (plan && plan.outline && plan.outline.length && plan.snippets && plan.snippets.length) {
+      el('out').innerHTML = renderPlanned(plan, res);
+      return;
+    }
+    render(res);
+  }, 30);
+}
+
+// One status line for both indexes, because either can finish loading first and
+// neither should overwrite the other.
+var TIMELINE_META = null;
+function updateStatus() {
+  var bits = [];
+  if (TIMELINE_META) bits.push(TIMELINE_META);
+  if (QB_READY) {
+    var s = VlymbooqAskBrowser.stats() || {};
+    bits.push('Question bank: ' + (s.records || 0).toLocaleString() + ' records, ' +
+      (s.keptSentences || 0).toLocaleString() + ' sentences, snapshot ' +
+      (s.builtAt ? s.builtAt.slice(0, 10) : '?'));
+  } else if (QB_ERROR) {
+    bits.push('Question bank unavailable: ' + QB_ERROR.message);
+  }
+  bits.push('zero AI, zero generation');
+  el('meta').textContent = bits.join(' &middot; ');
+}
+
+function boot(idx, meta) {
+  IDX = idx;
+  var m = meta || {};
+  var kept = m.nodesKept || idx.N || 0;
+  var scanned = m.nodesScanned || '?';
+  TIMELINE_META = 'Timeline: ' + kept.toLocaleString() + ' quotable nodes (from ' +
+    scanned.toLocaleString() + ' scanned), built ' + (m.builtAt || '?').slice(0, 10);
+  updateStatus();
+  el('samples').innerHTML = SAMPLES.map(function (s) {
+    return '<button data-q="' + esc(s) + '">' + esc(s.length > 60 ? s.slice(0, 57) + 'â€¦' : s) + '</button>';
+  }).join('');
+  el('out').innerHTML = '<div class="empty">Ask a question above. The engine will either return verbatim corpus sentences with source links, or tell you it cannot answer.</div>';
+}
+
+// The question-bank index is a snapshot of the archive, and the archive keeps
+// growing: a new record reaches Ask only after `npm run build-ask-qb`. Showing
+// the snapshot date makes a stale index visible instead of looking like a
+// missing topic. `npm run check-ask-qb-fresh` fails if the two counts diverge.
+if (QB_READY) updateStatus();
+
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('#ask');
+  if (btn) { doAsk(); return; }
+  var samp = e.target.closest('[data-q]');
+  if (samp) {
+    el('q').value = samp.getAttribute('data-q');
+    doAsk();
+  }
+});
+
+el('q').addEventListener('keydown', function (e) {
+  if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) doAsk();
+});
+
+// The question-bank routing tables (~10.5 MB, nearly all the entity table) load
+// in the background. The page is usable before they arrive, because the timeline
+// index is enough to answer, and because a missing table only means the question
+// bank is unavailable for now.
+VlymbooqAskBrowser.boot(VlymbooqAskAnswer, VlymbooqAskQb).then(function () {
+return VlymbooqAskBrowser.loadBuckets().catch(function (e) {
+console.warn('bucket manifest not available, falling back to categories:', e);
+});
+}).then(function () {
+QB_READY = true;
+QB_ERROR = null;
+updateStatus();
+}).catch(function (err) {
+QB_ERROR = err;
+updateStatus();
+});
+
+// The index is two layers. `ask-index.json` is the small file: the dropped-title
+// table a refusal needs, the category histogram and the links. The quotable
+// sentence rows are ~46 MB, over the 25 MiB per-file limit the deploy target
+// enforces, so they ship as `ask-index-nodes.<i>.json` shards and are fetched
+// here and concatenated. A checkout that predates the split still works: when
+// meta.nodeShards is absent, the rows are inline in `data.nodes`.
+fetch('data/ask-index.json')
+  .then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  })
+  .then(function (data) {
+    var shards = (data.meta && data.meta.nodeShards) || 0;
+    var jobs = [];
+    for (var i = 0; i < shards; i++) {
+      jobs.push(fetch('data/ask-index-nodes.' + i + '.json').then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status + ' on a node shard');
+        return r.json();
+      }));
+    }
+    return Promise.all(jobs).then(function (parts) {
+      var rows = (shards ? [] : (data.nodes || []));
+      parts.forEach(function (p) { rows = rows.concat(p); });
+      var nodes = rows.map(function (arr) {
+        return { id: arr[0], name: arr[1], type: arr[2], cats: arr[3] ? [{ key: arr[3], label: arr[3] }] : [], desc: arr[4] };
+      });
+      var idx = VlymbooqAsk.buildIndex({ nodes: nodes, links: data.links || {}, thin: data.thin, thinWhy: data.thinWhy });
+      boot(idx, data.meta);
+    });
+  })
+  .catch(function (err) {
+    if (QB_ERROR) {
+      el('out').innerHTML = '<div class="err">Could not load the retrieval data (' +
+        esc(QB_ERROR.message) + ').<br><br>This page reads its data over HTTP. If you opened the file ' +
+        'directly, run <code>python -m http.server 8123</code> in the project folder and visit ' +
+        '<code>http://127.0.0.1:8123/ask.html</code>.</div>';
+      return;
+    }
+    el('out').innerHTML = '<div class="err">Could not load <code>data/ask-index.json</code> (' + esc(err.message) + ').' +
+      '<br><br>This page reads its data over HTTP. If you opened the file directly, run ' +
+      '<code>python -m http.server 8123</code> in the project folder and visit ' +
+      '<code>http://127.0.0.1:8123/ask.html</code>.</div>';
+  });
+</script>
+</body>
+</html>

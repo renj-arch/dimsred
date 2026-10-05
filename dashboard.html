@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='css/style.css'>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Study Dashboard — Daily Quiz, Current Affairs, Mock Tests | vlymbooq</title>
+        <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"Study Dashboard — Daily Quiz, Current Affairs, Mock Tests","description":"Daily quiz, current affairs, weekly mock countdown, progress tracking for competitive exam preparation.","url":"https://vlymbooq.qzz.io/dashboard.html","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="favicon.svg">
+    <link rel="icon" type="image/png" href="logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/dashboard.html">
+
+    <meta name="description" content="Daily quiz, current affairs, weekly mock tests, and progress tracking for SSC CGL, NEET, JEE, UPSC & more. Build your study streak!">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--red:#ef4444;--amber:#f59e0b;--radius:12px}
+        html{scroll-behavior:smooth}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--text);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1100px;margin:0 auto;padding:24px;position:relative}
+
+        .greeting{font-size:1.5em;font-weight:800;margin-bottom:4px}
+        .greeting-sub{color:var(--text-muted);font-size:.9em;margin-bottom:24px}
+
+        .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+        .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+        .grid-4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+        @media(max-width:768px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+        .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;transition:border-color .2s}
+        .card:hover{border-color:rgba(255,255,255,.1)}
+        .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;gap:8px}
+        .card-title{font-size:.95em;font-weight:700;display:flex;align-items:center;gap:8px}
+        .card-title .icon{font-size:1.2em}
+        .card-badge{font-size:.7em;padding:3px 8px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple);font-weight:600}
+        .card-badge.green{background:rgba(52,211,153,.12);color:var(--emerald)}
+        .card-badge.amber{background:rgba(245,158,11,.12);color:var(--amber)}
+
+        .streak-bar{display:flex;gap:6px;margin:12px 0}
+        .streak-day{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:.7em;font-weight:700;background:rgba(255,255,255,.04);color:var(--text-muted)}
+        .streak-day.done{background:rgba(52,211,153,.15);color:var(--emerald)}
+        .streak-day.today{background:rgba(167,139,250,.15);color:var(--purple);border:1px solid var(--purple)}
+        .streak-count{font-size:1.8em;font-weight:900;color:var(--emerald);line-height:1}
+        .streak-label{font-size:.75em;color:var(--text-muted)}
+
+        .daily-q{padding:16px;background:rgba(167,139,250,.04);border:1px solid rgba(167,139,250,.1);border-radius:10px;margin-bottom:0}
+        .daily-q .q-meta{font-size:.75em;color:var(--text-muted);margin-bottom:6px}
+        .daily-q .q-text{font-size:.95em;margin-bottom:12px;line-height:1.6}
+        .daily-q .q-opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+        @media(max-width:480px){.daily-q .q-opts{grid-template-columns:1fr}}
+        .daily-q .q-opt{padding:8px 12px;border-radius:8px;border:1px solid rgba(255,255,255,.06);cursor:pointer;font-size:.85em;transition:all .15s}
+        .daily-q .q-opt:hover{border-color:rgba(255,255,255,.15)}
+        .daily-q .q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.1)}
+        .daily-q .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1)}
+        .daily-q .q-soln{display:none;margin-top:10px;padding:10px;background:rgba(139,92,246,.06);border-radius:8px;font-size:.85em;color:var(--text-sec)}
+        .daily-q .q-soln.show{display:block}
+
+        .mock-countdown{text-align:center;padding:10px}
+        .mock-countdown .days{font-size:2.5em;font-weight:900;color:var(--purple);line-height:1}
+        .mock-countdown .label{font-size:.8em;color:var(--text-muted)}
+
+        .social-links{display:flex;gap:8px;flex-wrap:wrap}
+        .social-btn{display:flex;align-items:center;gap:8px;padding:10px 18px;border-radius:100px;font-size:.82em;font-weight:600;border:none;cursor:pointer;transition:all .2s;text-decoration:none}
+        .social-btn.telegram{background:#1d93d2;color:#fff}
+        .social-btn.whatsapp{background:#25d366;color:#fff}
+        .social-btn.instagram{background:linear-gradient(135deg,#833ab4,#fd1d1d,#fcb045);color:#fff}
+        .social-btn.youtube{background:#ff0000;color:#fff}
+        .social-btn:hover{transform:translateY(-2px);opacity:.9}
+
+        .stat-circle{text-align:center;padding:12px}
+        .stat-circle .num{font-size:1.6em;font-weight:800}
+        .stat-circle .num.purple{color:var(--purple)}
+        .stat-circle .num.emerald{color:var(--emerald)}
+        .stat-circle .num.amber{color:var(--amber)}
+        .stat-circle .label{font-size:.75em;color:var(--text-muted);margin-top:2px}
+
+        .ca-item{padding:12px;border-bottom:1px solid var(--border);font-size:.85em}
+        .ca-item:last-child{border-bottom:none}
+        .ca-item .date{font-size:.75em;color:var(--text-muted);margin-bottom:2px}
+        .ca-item .headline{color:var(--text);line-height:1.5}
+
+        .caq-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:12px}
+        .caq-card:last-child{margin-bottom:0}
+        .caq-q{font-size:.92em;font-weight:500;line-height:1.5;margin-bottom:10px}
+        .caq-opts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+        .caq-opt{padding:6px 14px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.82em;cursor:pointer;transition:all .2s;color:var(--text-sec)}
+        .caq-opt:hover{background:rgba(255,255,255,.08);color:var(--text);border-color:rgba(255,255,255,.12)}
+        .caq-opt.correct{background:rgba(52,211,153,.12);border-color:var(--emerald);color:var(--emerald)}
+        .caq-opt.wrong{background:rgba(239,68,68,.12);border-color:var(--red);color:var(--red)}
+        .caq-true{display:flex;gap:8px;margin-top:8px}
+        .caq-true span{padding:6px 18px;border-radius:6px;border:1px solid var(--border);cursor:pointer;font-size:.82em;transition:all .2s;color:var(--text-sec)}
+        .caq-true span:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.12)}
+        .caq-true span.correct{background:rgba(52,211,153,.12);border-color:var(--emerald);color:var(--emerald)}
+        .caq-true span.wrong{background:rgba(239,68,68,.12);border-color:var(--red);color:var(--red)}
+        .caq-fill{margin-top:8px;display:flex;gap:8px;align-items:center}
+        .caq-fill input{padding:6px 12px;border-radius:6px;background:rgba(255,255,255,.04);border:1px solid var(--border);font-size:.85em;color:var(--text);font-family:'Inter',sans-serif;width:180px;max-width:100%;outline:none}
+        .caq-fill input:focus{border-color:var(--purple)}
+        .caq-fill button{padding:6px 14px;border-radius:6px;border:none;background:var(--purple);color:#fff;font-size:.82em;cursor:pointer;font-weight:600}
+        .caq-fill .check-result{font-size:.82em;font-weight:600}
+
+        .caq-controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between;margin-bottom:14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:12px 16px}
+        .caq-presets{display:flex;gap:6px;flex-wrap:wrap}
+        .caq-preset{padding:5px 14px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.78em;cursor:pointer;transition:all .2s;font-family:inherit;font-weight:500}
+        .caq-preset:hover{border-color:rgba(167,139,250,.3);color:var(--text)}
+        .caq-preset.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .caq-custom{display:flex;gap:6px;align-items:center}
+        .caq-date{padding:5px 10px;border-radius:6px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.78em;font-family:inherit;outline:none}
+        .caq-date:focus{border-color:var(--purple)}
+        .caq-go{padding:5px 16px;border-radius:6px;border:none;background:var(--purple);color:#fff;font-size:.78em;cursor:pointer;font-family:inherit;font-weight:600}
+
+        .caq-subjects{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+        .caq-subject{padding:4px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.78em;cursor:pointer;transition:all .2s;font-family:inherit;font-weight:500}
+        .caq-subject:hover{border-color:rgba(167,139,250,.3);color:var(--text)}
+        .caq-subject.active{background:rgba(167,139,250,.12);border-color:var(--purple);color:var(--purple)}
+        .caq-subject.all-btn{border-style:dashed;border-color:rgba(255,255,255,.12)}
+
+        .exam-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-top:8px}
+        .exam-chip{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.03);border:1px solid var(--border);font-size:.82em;font-weight:500;transition:all .15s}
+        .exam-chip:hover{background:rgba(255,255,255,.06);border-color:rgba(255,255,255,.12)}
+        .exam-chip .dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+
+        .progress-bar{height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;margin:8px 0}
+        .progress-bar .fill{height:100%;border-radius:100px;background:linear-gradient(90deg,var(--purple),var(--emerald));transition:width .5s}
+
+        .empty-state{text-align:center;padding:40px 20px;color:var(--text-muted)}
+        .empty-state .icon{font-size:2.5em;margin-bottom:8px}
+
+        .quiz-result{display:none;margin-top:8px;padding:10px;border-radius:8px;font-size:.85em;font-weight:600}
+        .quiz-result.show{display:block}
+        .quiz-result.correct{background:rgba(52,211,153,.1);color:var(--emerald)}
+        .quiz-result.wrong{background:rgba(239,68,68,.1);color:var(--red)}
+
+        .badge-dot{display:inline-flex;width:8px;height:8px;border-radius:50%;margin-right:4px}
+        .badge-dot.green{background:var(--emerald)}
+        .badge-dot.purple{background:var(--purple)}
+        .badge-dot.amber{background:var(--amber)}
+
+        .sec-title{font-size:1.1em;font-weight:700;margin:20px 0 12px;display:flex;align-items:center;gap:8px}
+        .sec-line{flex:1;height:1px;background:var(--border)}
+
+        @media(max-width:480px){.nav-inner{flex-wrap:wrap;justify-content:center}.container{padding:16px}}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html" class="active">Dashboard</a>
+                <a href="micro-test.html">Drill</a>
+                <a href="mental.html">Mental</a>
+                <a href="science.html">🔬 Science</a>
+                <a href="polytechnic.html">🏫 Polytechnic</a>
+                <a href="guides/index.html">Guides</a>
+                <a href="dashboard.html">Community</a>
+                <a href="cgl/index.html">CGL</a>
+                <a href="neet/index.html">NEET</a>
+                <a href="jee/index.html">JEE</a>
+                <a href="upsc/index.html">UPSC</a>
+                <a href="gate/index.html">GATE</a>
+                <a href="rbi/index.html">RBI</a>
+                <a class="auth-btn" href="#" data-return="/dashboard.html">🚀 Sign in</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container" id="app">
+        <div class="greeting" id="greeting">Good Morning, Student</div>
+        <div class="greeting-sub" id="today-date"></div>
+
+        <div class="grid-4" style="margin-bottom:16px">
+            <div class="card">
+                <div class="stat-circle">
+                    <div class="num emerald" id="streak-num">0</div>
+                    <div class="label">Day Streak</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-circle">
+                    <div class="num purple" id="solved-num">0</div>
+                    <div class="label">Questions Solved</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-circle">
+                    <div class="num amber" id="accuracy-num">0%</div>
+                    <div class="label">Accuracy</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="stat-circle">
+                    <div class="num" style="color:var(--emerald)" id="mocks-num">0</div>
+                    <div class="label">Mocks Taken</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">&#x1f9d0;</span> Daily Quiz</div>
+                    <span class="card-badge green">Today</span>
+                </div>
+                <div id="daily-quiz"><div class="empty-state"><div class="icon">&#x1f4ac;</div><p>Loading today's question...</p></div></div>
+                <div class="quiz-result" id="quiz-result"></div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">&#x1f4f0;</span> Daily Current Affairs</div>
+                    <span class="card-badge amber">New</span>
+                </div>
+                <div id="current-affairs"><div class="ca-loading">Loading...</div></div>
+                <script>
+                (function() {
+                    var container = document.getElementById('current-affairs');
+                    var months = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+                    function render(items) {
+                        if (!items || items.length === 0) {
+                            container.innerHTML = '<div class="ca-item"><div class="headline" style="color:#a1a1aa">No recent current affairs.</div></div>';
+                            return;
+                        }
+                        container.innerHTML = '';
+                        for (var i = 0; i < items.length; i++) {
+                            var item = items[i];
+                            var d = new Date(item.pubDate);
+                            var el = document.createElement('div');
+                            el.className = 'ca-item';
+                            var cat = item.category && item.category !== 'PIB Press Releases' ? item.category : '';
+                            var catTag = cat ? '<span style="display:inline-block;font-size:.65em;padding:1px 7px;border-radius:4px;background:rgba(167,139,250,.15);color:var(--purple);margin-bottom:4px">' + cat.replace(/&/g,'&amp;') + '</span>' : '';
+                            el.innerHTML = '<div class="date">' + d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear() + '</div><div class="headline">' + catTag + item.title.replace(/</g,'&lt;') + '</div>';
+                            container.appendChild(el);
+                        }
+                    }
+                    fetch('data/pib-feed.json').then(function(r) {
+                        if (!r.ok) throw new Error('Not found');
+                        return r.json();
+                    }).then(function(data) {
+                        var all = (data.items || []);
+                        var main = [], seen = {};
+                        var caps = { PIB:3, RBI:2, ISRO:1, MEA:1, SEBI:1, SC:1 };
+                        for (var i = 0; i < all.length && main.length < 8; i++) {
+                            var it = all[i];
+                            if (!it || !it.title) continue;
+                            if (it.source === 'SEBI' && it.title.indexOf('Recovery') >= 0) continue;
+                            var s = it.source || '';
+                            if (!caps[s] || caps[s] <= 0) continue;
+                            var k = s + it.title.slice(0, 50);
+                            if (seen[k]) continue;
+                            seen[k] = 1; caps[s]--;
+                            main.push(it);
+                        }
+                        render(main.length ? main : all.slice(0, 5));
+                    }).catch(function() {
+                        container.innerHTML = '<div class="ca-item"><div class="headline" style="color:#a1a1aa">Could not load current affairs.</div></div>';
+                    });
+                })();
+                </script>
+            </div>
+        </div>
+
+        <div class="grid-2" style="margin-top:16px">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">&#x1f3c6;</span> Weekly Mock Test</div>
+                    <span class="card-badge">Prep</span>
+                </div>
+                <div class="mock-countdown">
+                    <div class="days" id="mock-countdown">--</div>
+                    <div class="label">days until next weekly mock</div>
+                    <div style="margin-top:14px">
+                        <a href="micro-test.html" class="social-btn" style="display:inline-flex;background:rgba(167,139,250,.12);color:var(--purple);padding:8px 20px;font-size:.82em">Start Latest Mock</a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-title"><span class="icon">&#x1f517;</span> Study Streak</div>
+                    <span class="card-badge green">Keep going!</span>
+                </div>
+                <div class="streak-bar" id="streak-bar"></div>
+                <div style="display:flex;gap:16px;margin-top:8px">
+                    <div><div class="streak-count" id="streak-count">0</div><div class="streak-label">day streak</div></div>
+                    <div><div class="streak-count" style="color:var(--purple)" id="best-streak">0</div><div class="streak-label">best streak</div></div>
+                </div>
+                <div style="margin-top:12px;font-size:.8em;color:var(--text-muted)">Solve the daily quiz to keep your streak alive!</div>
+            </div>
+        </div>
+
+        <div class="sec-title"><span>&#x1f3eb;</span> Quick Practice<span class="sec-line"></span></div>
+        <div class="exam-grid" id="exam-grid">
+            <a href="cgl/index.html" class="exam-chip"><span class="dot" style="background:#a78bfa"></span>SSC CGL</a>
+            <a href="neet/index.html" class="exam-chip"><span class="dot" style="background:#34d399"></span>NEET UG</a>
+            <a href="jee/index.html" class="exam-chip"><span class="dot" style="background:#6366f1"></span>JEE Main</a>
+            <a href="upsc/index.html" class="exam-chip"><span class="dot" style="background:#f59e0b"></span>UPSC CSE</a>
+            <a href="gate/index.html" class="exam-chip"><span class="dot" style="background:#ef4444"></span>GATE</a>
+            <a href="rbi/index.html" class="exam-chip"><span class="dot" style="background:#06b6d4"></span>RBI Grade B</a>
+            <a href="agniveer/index.html" class="exam-chip"><span class="dot" style="background:#a855f7"></span>Agniveer</a>
+            <a href="ibps-po/index.html" class="exam-chip"><span class="dot" style="background:#ec4899"></span>IBPS PO</a>
+            <a href="sbi-clerk/index.html" class="exam-chip"><span class="dot" style="background:#14b8a6"></span>SBI Clerk</a>
+            <a href="ssc-gd/index.html" class="exam-chip"><span class="dot" style="background:#f97316"></span>SSC GD</a>
+            <a href="ldc/index.html" class="exam-chip"><span class="dot" style="background:#a855f7"></span>LDC</a>
+            <a href="ctet/index.html" class="exam-chip"><span class="dot" style="background:#eab308"></span>CTET</a>
+        </div>
+
+        <div class="sec-title" style="margin-top:24px"><span>&#x1f4dd;</span> Current Affairs Quiz<span class="sec-line"></span></div>
+        <div class="caq-controls" id="caq-controls">
+            <div class="caq-presets" id="caq-presets">
+                <button class="caq-preset active" data-days="0" onclick="caqSetRange(0)">Today</button>
+                <button class="caq-preset" data-days="7" onclick="caqSetRange(7)">7 Days</button>
+                <button class="caq-preset" data-days="30" onclick="caqSetRange(30)">30 Days</button>
+                <button class="caq-preset" data-days="90" onclick="caqSetRange(90)">90 Days</button>
+            </div>
+            <div class="caq-custom">
+                <input type="date" id="caq-start" class="caq-date">
+                <span style="color:var(--text-muted);font-size:.8em">to</span>
+                <input type="date" id="caq-end" class="caq-date">
+                <button class="caq-go" onclick="caqGoCustom()">Go</button>
+            </div>
+        </div>
+        <div class="caq-subjects" id="caq-subjects"></div>
+        <div id="ca-quiz-container"></div>
+        <div style="text-align:center;margin-top:12px">
+            <a href="current-affairs.html" class="social-btn" style="display:inline-flex;background:rgba(245,158,11,.12);color:var(--amber);padding:8px 20px;font-size:.82em">Read Today's Current Affairs</a>
+        </div>
+
+        <div class="sec-title" style="margin-top:24px"><span>&#x1f91d;</span> Join the Community<span class="sec-line"></span></div>
+        <div class="card">
+            <div class="social-links">
+                <a href="https://t.me/vlymbooq" target="_blank" rel="noopener" class="social-btn telegram">&#x1f4e2; Telegram</a>
+                <a href="https://whatsapp.com/channel/0029VbDMGFY8PgsQkn2IN62D" target="_blank" rel="noopener" class="social-btn whatsapp">&#x1f4ac; WhatsApp</a>
+                <a href="https://instagram.com/vlymbooq" target="_blank" rel="noopener" class="social-btn instagram">&#x1f4f7; Instagram</a>
+                <a href="https://youtube.com/@vlymbooq" target="_blank" rel="noopener" class="social-btn youtube">&#x25b6;&#xfe0f; YouTube</a>
+                
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ---- Progress tracking with localStorage ----
+    var STORAGE_KEY = 'vlymbooq_progress';
+
+    function getProgress() {
+        try {
+            var d = JSON.parse(localStorage.getItem(STORAGE_KEY));
+            if (d) return d;
+        } catch(e) {}
+        return { streak:0, bestStreak:0, solved:0, correct:0, mocks:0, lastActive:null, history:[] };
+    }
+
+    function saveProgress(p) {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(p));
+    }
+
+    function getDateStr(d) {
+        return d.toISOString().split('T')[0];
+    }
+
+    function updateStreak() {
+        var p = getProgress();
+        var today = getDateStr(new Date());
+        var yesterday = getDateStr(new Date(Date.now() - 86400000));
+
+        if (p.lastActive === today) {
+            // Already active today
+        } else if (p.lastActive === yesterday) {
+            p.streak++;
+        } else if (p.lastActive !== today) {
+            p.streak = 1;
+        }
+        p.lastActive = today;
+        if (p.streak > p.bestStreak) p.bestStreak = p.streak;
+        saveProgress(p);
+        return p;
+    }
+
+    function renderStreak(p) {
+        var bar = document.getElementById('streak-bar');
+        bar.innerHTML = '';
+        var days = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+        var today = new Date().getDay();
+        var pStreak = p.streak || 0;
+        for (var i = 6; i >= 0; i--) {
+            var dayIdx = (today - i + 7) % 7;
+            var el = document.createElement('div');
+            el.className = 'streak-day';
+            el.textContent = days[dayIdx].slice(0,2);
+            if (i === 0) el.className += ' today';
+            else if (i < pStreak) el.className += ' done';
+            bar.appendChild(el);
+        }
+        document.getElementById('streak-num').textContent = pStreak || 0;
+        document.getElementById('streak-count').textContent = pStreak || 0;
+        document.getElementById('best-streak').textContent = p.bestStreak || 0;
+        document.getElementById('solved-num').textContent = p.solved || 0;
+        var acc = p.solved > 0 ? Math.round(p.correct / p.solved * 100) : 0;
+        document.getElementById('accuracy-num').textContent = acc + '%';
+        document.getElementById('mocks-num').textContent = p.mocks || 0;
+    }
+
+    // ---- Greeting & Date ----
+    var h = new Date().getHours();
+    var g = 'Good ' + (h < 12 ? 'Morning' : h < 17 ? 'Afternoon' : 'Evening') + ', Student';
+    document.getElementById('greeting').textContent = g;
+    var now = new Date();
+    var opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+    document.getElementById('today-date').textContent = now.toLocaleDateString('en-IN', opts);
+
+    // ---- Daily Quiz ----
+    var ALL_QUESTIONS = [];
+    var currentDailyQ = null;
+
+    function fetchAllQuestions() {
+        var questionFiles = [
+            'question-bank/neet.json',
+            'question-bank/cgl.json',
+            'question-bank/jee.json',
+            'question-bank/gate.json',
+            'question-bank/upsc.json',
+            'question-bank/agniveer.json'
+        ];
+        var promises = questionFiles.map(function(url) {
+            return fetch(url).then(function(r) { return r.json(); }).then(function(data) {
+                if (data && data.questions) {
+                    ALL_QUESTIONS = ALL_QUESTIONS.concat(data.questions.map(function(q) {
+                        q.exam = data.exam || data.folder || 'Unknown';
+                        return q;
+                    }));
+                }
+            }).catch(function() {});
+        });
+        Promise.all(promises).then(function() {
+            loadDailyQuiz();
+        }).catch(function() {
+            loadDailyQuiz();
+        });
+    }
+
+    function loadDailyQuiz() {
+        if (ALL_QUESTIONS.length === 0) {
+            // Fallback questions
+            ALL_QUESTIONS = [
+                { id:1, section:'Physics', text:'What is the SI unit of electric current?', options:[{label:'A',text:'Volt',correct:false},{label:'B',text:'Ampere',correct:true},{label:'C',text:'Ohm',correct:false},{label:'D',text:'Watt',correct:false}], exam:'NEET UG' },
+                { id:2, section:'Maths', text:'If x + 1/x = 3, find x² + 1/x².', options:[{label:'A',text:'5',correct:false},{label:'B',text:'7',correct:true},{label:'C',text:'9',correct:false},{label:'D',text:'11',correct:false}], exam:'SSC CGL' },
+                { id:3, section:'Chemistry', text:'Which element has the highest electronegativity?', options:[{label:'A',text:'Oxygen',correct:false},{label:'B',text:'Chlorine',correct:false},{label:'C',text:'Fluorine',correct:true},{label:'D',text:'Nitrogen',correct:false}], exam:'JEE Main' },
+                { id:4, section:'Biology', text:'Which organelle is known as the "powerhouse of the cell"?', options:[{label:'A',text:'Nucleus',correct:false},{label:'B',text:'Ribosome',correct:false},{label:'C',text:'Mitochondria',correct:true},{label:'D',text:'Golgi body',correct:false}], exam:'NEET UG' },
+                { id:5, section:'Reasoning', text:'What comes next in the series: 2, 6, 12, 20, ?', options:[{label:'A',text:'28',correct:false},{label:'B',text:'30',correct:true},{label:'C',text:'32',correct:false},{label:'D',text:'36',correct:false}], exam:'SSC CGL' },
+                { id:6, section:'General Awareness', text:'Who is known as the "Father of the Indian Constitution"?', options:[{label:'A',text:'Mahatma Gandhi',correct:false},{label:'B',text:'Jawaharlal Nehru',correct:false},{label:'C',text:'B.R. Ambedkar',correct:true},{label:'D',text:'Sardar Patel',correct:false}], exam:'UPSC CSE' }
+            ];
+        }
+
+        // Pick question based on today's date
+        var dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+        var idx = dayOfYear % ALL_QUESTIONS.length;
+        currentDailyQ = ALL_QUESTIONS[idx];
+        renderDailyQuiz(currentDailyQ);
+    }
+
+    function renderDailyQuiz(q) {
+        var el = document.getElementById('daily-quiz');
+        var optsHtml = '';
+        for (var i = 0; i < q.options.length; i++) {
+            optsHtml += '<div class="q-opt" data-idx="' + i + '" onclick="selectDailyOpt(' + i + ')">' + q.options[i].label + '. ' + q.options[i].text + '</div>';
+        }
+        el.innerHTML = '<div class="daily-q"><div class="q-meta">' + (q.exam || 'Practice') + ' &middot; ' + (q.section || 'General') + '</div><div class="q-text">' + q.text + '</div><div class="q-opts">' + optsHtml + '</div><div class="q-soln" id="daily-soln"><strong>Correct Answer:</strong> ' + q.options.filter(function(o){return o.correct})[0].label + '<br><span style="color:#a1a1aa">Daily quiz resets in 24 hours. Come back tomorrow!</span></div></div>';
+    }
+
+    function selectDailyOpt(idx) {
+        var q = currentDailyQ;
+        if (!q) return;
+        var opts = document.querySelectorAll('.daily-q .q-opt');
+        for (var i = 0; i < opts.length; i++) opts[i].style.pointerEvents = 'none';
+        var isCorrect = q.options[idx].correct;
+        opts[idx].className += isCorrect ? ' correct' : ' wrong';
+        if (!isCorrect) {
+            for (var i = 0; i < q.options.length; i++) {
+                if (q.options[i].correct) opts[i].className += ' correct';
+            }
+        }
+        document.getElementById('daily-soln').className = 'q-soln show';
+        var resultEl = document.getElementById('quiz-result');
+        if (isCorrect) {
+            resultEl.textContent = ' Correct! +1 point';
+            resultEl.className = 'quiz-result show correct';
+        } else {
+            resultEl.textContent = ' Incorrect. Keep practicing!';
+            resultEl.className = 'quiz-result show wrong';
+        }
+
+        // Update progress
+        var p = getProgress();
+        p.solved = (p.solved || 0) + 1;
+        if (isCorrect) p.correct = (p.correct || 0) + 1;
+        if (p.history) {
+            var today = getDateStr(new Date());
+            var found = false;
+            for (var i = 0; i < p.history.length; i++) {
+                if (p.history[i].date === today) { found = true; break; }
+            }
+            if (!found) p.history.push({date:today, solved:1, correct:isCorrect?1:0});
+        }
+        p.streak = updateStreak().streak;
+        saveProgress(p);
+        renderStreak(p);
+    }
+
+    // ---- Weekly Mock Countdown ----
+    function calcNextSaturday() {
+        var now = new Date();
+        var day = now.getDay();
+        var daysUntilSaturday = (6 - day + 7) % 7;
+        if (daysUntilSaturday === 0) daysUntilSaturday = 7;
+        var nextSat = new Date(now);
+        nextSat.setDate(now.getDate() + daysUntilSaturday);
+        nextSat.setHours(10,0,0,0);
+        return nextSat;
+    }
+
+    function updateCountdown() {
+        var target = calcNextSaturday();
+        var diff = target - new Date();
+        var days = Math.ceil(diff / 86400000);
+        document.getElementById('mock-countdown').textContent = days + 'd';
+    }
+
+    // ---- Init ----
+    updateStreak();
+    renderStreak(getProgress());
+    updateCountdown();
+    setInterval(updateCountdown, 3600000);
+    fetchAllQuestions();
+
+    // ---- Current Affairs Quiz from quiz.json ----
+    (function() {
+        var container = document.getElementById('ca-quiz-container');
+        var controls = document.getElementById('caq-controls');
+        if (!container) return;
+        var quizState = {};
+        var allQuestions = [];
+        var currentSubject = 'All';
+        var currentStart = '';
+        var currentEnd = '';
+        var todayStr = new Date().toISOString().slice(0, 10);
+
+        // Set date inputs to today
+        document.getElementById('caq-start').value = todayStr;
+        document.getElementById('caq-end').value = todayStr;
+
+        function getRangeEnd(days) {
+            var d = new Date();
+            d.setDate(d.getDate() - days);
+            return d.toISOString().slice(0, 10);
+        }
+
+        window.caqSetRange = function(days) {
+            document.querySelectorAll('.caq-preset').forEach(function(b) { b.classList.remove('active'); });
+            var btn = document.querySelector('.caq-preset[data-days="' + days + '"]');
+            if (btn) btn.classList.add('active');
+            var start = days === 0 ? todayStr : getRangeEnd(days);
+            var end = todayStr;
+            document.getElementById('caq-start').value = start;
+            document.getElementById('caq-end').value = end;
+            currentStart = start; currentEnd = end;
+            if (days === 0) currentSubject = 'All';
+            filterAndRender(start, end);
+        };
+
+        window.caqGoCustom = function() {
+            document.querySelectorAll('.caq-preset').forEach(function(b) { b.classList.remove('active'); });
+            var start = document.getElementById('caq-start').value;
+            var end = document.getElementById('caq-end').value;
+            if (!start || !end) return;
+            currentStart = start; currentEnd = end;
+            filterAndRender(start, end);
+        };
+
+        function filterAndRender(startDate, endDate) {
+            if (startDate > endDate) { var t = startDate; startDate = endDate; endDate = t; }
+            var filtered = allQuestions.filter(function(q) {
+                var pd = q.pubDate ? q.pubDate.slice(0, 10) : '';
+                return pd >= startDate && pd <= endDate;
+            });
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="empty-state" style="margin-top:0"><div class="icon">&#x1f4da;</div><p>No quiz questions for ' + startDate + ' to ' + endDate + '.<br>Try a wider range.</p></div>';
+                document.getElementById('caq-subjects').innerHTML = '';
+                return;
+            }
+            // Build subject chips from date-filtered set
+            renderSubjectChips(filtered);
+
+            // Further filter by selected subject
+            if (currentSubject !== 'All') {
+                filtered = filtered.filter(function(q) { return q.subject === currentSubject; });
+                if (filtered.length === 0) {
+                    container.innerHTML = '<div class="empty-state" style="margin-top:0"><div class="icon">&#x1f50d;</div><p>No ' + currentSubject + ' questions in this date range.<br>Try another subject or wider range.</p></div>';
+                    return;
+                }
+            }
+            // Pick 5 (or fewer if not enough) - deterministic by seeded shuffle
+            var count = Math.min(5, filtered.length);
+            var dayOffset = Math.floor((Date.now() - new Date(new Date().getFullYear(),0,0)) / 86400000);
+            var indices = filtered.map(function(_, i) { return i; });
+            // Seeded shuffle using dayOffset
+            for (var i = indices.length - 1; i > 0; i--) {
+                var j = (dayOffset + i * 7) % (i + 1);
+                var tmp = indices[i]; indices[i] = indices[j]; indices[j] = tmp;
+            }
+            var selected = indices.slice(0, count).map(function(idx) { return filtered[idx]; });
+            renderQuiz(selected);
+        }
+
+        function renderSubjectChips(filteredQuestions) {
+        var chipsEl = document.getElementById('caq-subjects');
+        var SUBJECT_CATEGORY_MAP = {'Constitution':'constitution','Govt Schemes':'schemes','Sports':'sports','Books & Authors':'books','ISRO & Space':'space','Defence':'defence','National Parks & Wildlife':'national_parks','Dance Forms':'dance','International':'orgs','Awards & Honours':'awards','Dams & Rivers':'dams','Important Days':'important_days','Indian History':'history','Geography':'geography','Indian Economy':'economy','General Science':'science','Environment & Ecology':'environment','Art & Culture':'culture','World Geography':'world_geo','Computer & IT':'computers','Polity':'polity','State GK':'state_gk','Famous Personalities':'personalities','International Relations':'ir','Indian Society':'society','Ethics & Integrity':'ethics'};
+        var sorted = Object.keys(subjects).sort(function(a,b) { return subjects[b].count - subjects[a].count; });
+        var html = '<button class="caq-subject all-btn' + (currentSubject === 'All' ? ' active' : '') + '" onclick="caqSetSubject(\'All\')">All (' + filteredQuestions.length + ')</button>';
+        sorted.forEach(function(key) {
+            var s = subjects[key];
+            var isActive = currentSubject === key;
+            var catId = SUBJECT_CATEGORY_MAP[key] || '';
+            var studyLink = catId ? ' <a href="/current-affairs.html?topic=' + encodeURIComponent(key) + '" style="font-size:.75em;text-decoration:none;opacity:.5" title="Study notes">&#x1f4d6;</a>' : '';
+            html += '<button class="caq-subject' + (isActive ? ' active' : '') + '" onclick="caqSetSubject(\'' + key.replace(/'/g,"\\'") + '\')">' + s.emoji + ' ' + s.name + ' (' + s.count + ')' + studyLink + '</button>';
+        });
+            var sorted = Object.keys(subjects).sort(function(a,b) { return subjects[b].count - subjects[a].count; });
+            var html = '<button class="caq-subject all-btn' + (currentSubject === 'All' ? ' active' : '') + '" onclick="caqSetSubject(\'All\')">All (' + filteredQuestions.length + ')</button>';
+            sorted.forEach(function(key) {
+                var s = subjects[key];
+                var isActive = currentSubject === key;
+                html += '<button class="caq-subject' + (isActive ? ' active' : '') + '" onclick="caqSetSubject(\'' + key.replace(/'/g,"\\'") + '\')">' + s.emoji + ' ' + s.name + ' (' + s.count + ')</button>';
+            });
+            chipsEl.innerHTML = html;
+        }
+
+        window.caqSetSubject = function(subject) {
+            currentSubject = subject;
+            filterAndRender(currentStart || todayStr, currentEnd || todayStr);
+        };
+
+        function loadQuiz() {
+            fetch('/api/quiz-json').then(function(r) {
+                if (!r.ok) throw new Error('Not found');
+                return r.json();
+            }).then(function(data) {
+                allQuestions = data && data.questions ? data.questions : [];
+                if (allQuestions.length === 0) {
+                    container.innerHTML = '<div class="empty-state" style="margin-top:0"><div class="icon">&#x1f4ac;</div><p>No quiz questions available yet.</p></div>';
+                    if (controls) controls.style.display = 'none';
+                    return;
+                }
+                currentStart = todayStr; currentEnd = todayStr;
+                // Default: Today
+                caqSetRange(0);
+            }).catch(function() {
+                container.innerHTML = '<div class="empty-state" style="margin-top:0"><div class="icon">&#x26a0;</div><p>Could not load quiz.</p></div>';
+                if (controls) controls.style.display = 'none';
+            });
+        }
+
+        function renderQuiz(questions) {
+            var scoreEl = '<div class="caq-score" id="caq-score"><span>&#x1f3af;</span> <strong>Score:</strong> <span id="caq-correct">0</span>/<span id="caq-total">' + questions.length + '</span> <span style="color:var(--text-muted);margin-left:4px">&#x2022; Click options to answer</span></div>';
+            var html = scoreEl;
+            for (var i = 0; i < questions.length; i++) {
+                var q = questions[i];
+                var qid = 'caq-' + i;
+                quizState[qid] = { answered: false, correct: false, q: q };
+                var subjectTag = q.subject && q.emoji ? '<span style="display:inline-block;font-size:.7em;padding:1px 8px;border-radius:4px;background:rgba(167,139,250,.1);color:var(--purple);margin-bottom:5px">' + q.emoji + ' ' + q.subject.replace(/</g,'&lt;') + '</span>' : '';
+                var yr = (q.pubDate || q._pubDate) ? ' (' + ((q.pubDate || q._pubDate)).slice(0,4) + ')' : '';
+html += '<div class="caq-card" id="' + qid + '"><div class="caq-q">' + subjectTag + 'Q' + (i+1) + '. ' + q.question.replace(/</g,'&lt;') + yr + '</div>';
+
+                if (q.type === 'true_false') {
+                    html += '<div class="caq-true"><span data-qid="' + qid + '" data-val="True" onclick="caqAnswer(this)">True</span><span data-qid="' + qid + '" data-val="False" onclick="caqAnswer(this)">False</span></div>';
+                } else if (q.type === 'fill_blank') {
+                    html += '<div class="caq-fill"><input type="text" data-qid="' + qid + '" placeholder="Type your answer..." onkeydown="if(event.key===\'Enter\')caqCheckFill(this)"><button onclick="caqCheckFill(this.previousElementSibling)">Check</button><span class="check-result" id="' + qid + '-result"></span></div>';
+                } else {
+                    // Multiple choice
+                    html += '<div class="caq-opts">';
+                    var opts = q.options || [];
+                    for (var j = 0; j < opts.length; j++) {
+                        var opt = opts[j];
+                        html += '<span class="caq-opt" data-qid="' + qid + '" data-val="' + opt.replace(/"/g,'&quot;') + '" onclick="caqAnswer(this)">' + opt.replace(/</g,'&lt;') + '</span>';
+                    }
+                    html += '</div>';
+                }
+                html += '</div>';
+            }
+            container.innerHTML = html;
+        }
+
+        window.caqAnswer = function(el) {
+            var qid = el.getAttribute('data-qid');
+            var val = el.getAttribute('data-val');
+            var state = quizState[qid];
+            if (!state || state.answered) return;
+            var q = state.q;
+            var isCorrect = (val === q.answer);
+            state.answered = true;
+            state.correct = isCorrect;
+
+            var card = document.getElementById(qid);
+            var allOpts = card.querySelectorAll('.caq-opt, .caq-true span');
+            for (var i = 0; i < allOpts.length; i++) {
+                allOpts[i].style.pointerEvents = 'none';
+                var av = allOpts[i].getAttribute('data-val');
+                if (av === q.answer) allOpts[i].className = 'correct';
+                else if (av === val && !isCorrect) allOpts[i].className = 'wrong';
+            }
+
+            updateCAQScore();
+        };
+
+        window.caqCheckFill = function(input) {
+            var qid = input.getAttribute('data-qid');
+            var state = quizState[qid];
+            if (!state || state.answered) return;
+            var q = state.q;
+            var userAnswer = input.value.trim().toLowerCase();
+            var correctAnswer = q.answer.trim().toLowerCase();
+            var resultEl = document.getElementById(qid + '-result');
+            var isCorrect = userAnswer === correctAnswer;
+            state.answered = true;
+            state.correct = isCorrect;
+
+            input.disabled = true;
+            input.style.borderColor = isCorrect ? 'var(--emerald)' : 'var(--red)';
+            resultEl.textContent = isCorrect ? 'Correct!' : 'Answer: ' + q.answer;
+            resultEl.style.color = isCorrect ? 'var(--emerald)' : 'var(--amber)';
+
+            updateCAQScore();
+        };
+
+        function updateCAQScore() {
+            var correct = 0, total = 0;
+            for (var k in quizState) {
+                if (quizState[k].answered) { total++; if (quizState[k].correct) correct++; }
+            }
+            var el = document.getElementById('caq-correct');
+            if (el) el.textContent = correct;
+        }
+
+        loadQuiz();
+    })();
+</script>
+<script src="js/supabase.js?v=20260811a"></script>
+<script src="js/bundles/core.js"></script>
+    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
+</body>
+</html>
+
+

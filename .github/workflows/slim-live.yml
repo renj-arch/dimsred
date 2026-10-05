@@ -1,0 +1,123 @@
+name: Slim live mirror
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: slim-live
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+env:
+  CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+  CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # Replaces actions/checkout on purpose. The action cannot be told to skip a
+      # single directory: its sparse-checkout input is applied with --cone, which
+      # rejects `/*` and `!dir/` and wants bare directory names instead, so there
+      # is no way to say "everything except data/questions" without hardcoding a
+      # list of every top-level directory. Such a list goes stale silently the
+      # day a new one is added, and the site loses that directory with no failure.
+      #
+      # Measured cost of doing it the old way: 21m51s, of which 21 minutes was
+      # git downloading 8.8 GB of data/questions blobs, only for the next step to
+      # delete them again. Fetching trees only and building the slim tree from
+      # the index avoids the download entirely.
+      - name: Fetch main without downloading blobs
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          AUTH=$(printf 'x-access-token:%s' '${{ secrets.GITHUB_TOKEN }}' | base64 -w0)
+          git config http.https://github.com/.extraheader "AUTHORIZATION: basic $AUTH"
+          git fetch -q --depth=1 --filter=blob:none origin main
+          # `/*` picks up any directory added later, so a new top-level path is
+          # deployed without editing this workflow. data/questions is the only
+          # exclusion: it is tracked in main, needed by other workflows, and never
+          # served here.
+          git sparse-checkout init --no-cone
+          git sparse-checkout set --no-cone '/*' '!/data/questions/'
+          git checkout -q FETCH_HEAD
+          echo "checked out $(git ls-files | wc -l) paths"
+
+      - name: Rebuild slim live tree (orphan root)
+        run: |
+          set -euo pipefail
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+
+          # One `git rm` per pathspec, each with --ignore-unmatch, because
+          # `git rm a b` is atomic: one untracked pathspec fails the whole
+          # command and leaves BOTH in the tree. upsc_sorted_topics.csv does not
+          # exist, so the old combined call always failed and topics.txt, 9.3 MB
+          # of it, was still being deployed on every run.
+          #
+          # --sparse is required now that the checkout is sparse; without it git
+          # refuses to touch skip-worktree entries at all.
+          git rm -r -q --cached --sparse --ignore-unmatch data/questions
+          git rm -q --cached --sparse --ignore-unmatch upsc_sorted_topics.csv
+          git rm -q --cached --sparse --ignore-unmatch topics.txt
+
+          TREE=$(git write-tree)
+          ROOT=$(git commit-tree "$TREE" -m "slim live $(date -u +'%Y-%m-%d %H:%M UTC')")
+          # Deliberately not pushed yet. The push is force, so a wrong tree
+          # replaces a working site rather than merely failing, and nothing after
+          # this point can put it back. It happens only once the tree is verified.
+          echo "staged live tree -> $ROOT"
+          echo "LIVE_TREE=$ROOT" >> "$GITHUB_ENV"
+
+      # Nothing below this line can repair a bad tree, and the live branch is
+      # force-pushed, so a missing file here replaces a working site with a broken
+      # one. Everything the browser actually fetches is asserted before the push
+      # rather than discovered by a user afterwards.
+      - name: Verify slim tree before deploying
+        run: |
+          set -euo pipefail
+          fail=0
+          for p in index.html ask.html mains.html revision.html CNAME _redirects _headers \
+                   robots.txt sitemap.xml sw.js figures/index.html js css upsc/index.html \
+                   data/ask-qb/manifest.json data/ask-qb/dir.json data/ask-qb/entities.tsv \
+                   data/ask-qb/concepts.json data/ask-qb/bucket/buckets.json; do
+            git cat-file -e "$LIVE_TREE:$p" 2>/dev/null || { echo "MISSING required: $p"; fail=1; }
+          done
+          for p in data/questions topics.txt upsc_sorted_topics.csv; do
+            git cat-file -e "$LIVE_TREE:$p" 2>/dev/null && { echo "UNEXPECTED present: $p"; fail=1; }
+          done
+          n=$(git ls-tree -r --name-only "$LIVE_TREE" | wc -l)
+          echo "files in slim tree: $n"
+          # 2092 as of the last good run. Catches a sparse pattern that silently
+          # excluded far more than intended, which no per-file assertion would see.
+          [ "$n" -ge 2000 ] || { echo "slim tree looks truncated: $n files"; fail=1; }
+          [ "$fail" -eq 0 ] || { echo "REFUSING to deploy an unverified tree"; exit 1; }
+          echo "slim tree verified"
+
+      - name: Publish live branch
+        run: |
+          set -euo pipefail
+          git push --force origin "$LIVE_TREE:refs/heads/live"
+          echo "live -> $LIVE_TREE"
+
+      - name: Stage slim site for direct upload
+        run: |
+          set -euo pipefail
+          mkdir -p live-dist
+          git archive "$LIVE_TREE" | tar -x -C live-dist
+          echo "size: $(du -sh live-dist | cut -f1)"
+          echo "files: $(find live-dist -type f | wc -l)"
+
+      - name: Deploy slim site to Cloudflare Pages (direct upload)
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
+        run: |
+          npx --yes wrangler@3 pages deploy live-dist \
+            --project-name=studypro \
+            --branch=main \
+            --account-id="$CLOUDFLARE_ACCOUNT_ID"
