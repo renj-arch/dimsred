@@ -517,7 +517,7 @@
   // "infrastructure" in the title -- Western Cape, DIKSHA, a Bangladesh
   // highways department. Adding the missing abstract nouns is what makes the
   // subject "digital twins" and the gate mean something.
-  var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|roles?|status|positions?|recommendations?|suggestions?|provisions?|findings?|observations?|applications?|uses?|relevance?|utility?|scope|potential|prospects?|viability|adaptability|suitability|limitations|challenges posed)\b/i;
+  var DEMAND_NOUN = /\b(aims?|objectives?|goals?|outcomes?|consequences?|impacts?|effects?|causes?|reasons?|measures?|remedies?|reforms?|institutional changes?|challenges?|problems?|issues?|significance|importance|merits?|demerits?|advantages?|disadvantages?|lessons?|implications?|dimensions?|factors?|instruments?|mechanisms?|roles?|status|positions?|recommendations?|suggestions?|provisions?|findings?|observations?|applications?|uses?|relevance?|utility?|scope|potential|prospects?|viability|adaptability|suitability|limitations|challenges posed|persistence)\b/i;
   // Qualifier nouns like "nature", "role", "process" sit in front of a named
   // subject ("the changing nature of caste") and must trigger the same head-noun
   // cut: "of caste" is what the question is about, not "the changing nature".
@@ -557,6 +557,17 @@
     // answered the question with the second-ranking office instead of refusing.
     // A subject ends where the first sentence does.
     t = t.split(/\s*[.?!]\s/)[0];
+    // A concession clause states the thing the question is set against, and is
+    // never what it is about: "the persistence of social exclusion despite
+    // economic development" is a question about social exclusion. Keeping the
+    // clause made the subject a span no node can be titled with, so the title
+    // gate admitted only vocabulary-overlap neighbours, and the sentences that do
+    // bear on social exclusion -- sitting in the bucket store under that entity --
+    // were unreachable: the planner offered poverty and infrastructure instead.
+    // A leading concession is stripped too, but only up to a comma, since without
+    // one `[^,]*` would run to the end of the line and delete the subject.
+    t = t.replace(/^\s*(?:despite|although|though|even\s+though|whereas|while|in\s+spite\s+of|notwithstanding|given\s+that)\b[^,]*,\s*/i, ' ');
+    t = t.replace(/\s+(?:despite|although|though|even\s+though|whereas|while|in\s+spite\s+of|notwithstanding|given\s+that)\b.*$/i, ' ');
     // "the impact of urbanisation on social and economic development in India" is
     // a question about urbanisation, not about "impact" or "development". When a
     // demand noun introduces an "of X", the subject is X; and when X runs up

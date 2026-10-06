@@ -48,7 +48,10 @@ var STOP = {};
   'this that these those it its their his her they them we you i not no than then so such which ' +
   'who whom what when where how why into over under about between among during each other some ' +
   'any all more most less least very can could may might must shall should will would do does ' +
-  'did done there here also').split(' ').forEach(function (w) { STOP[w] = 1; });
+  'did done there here also discuss discussed discussing examine examined examines examining ' +
+  'analyse analyzed analyses analyse analyze analyzed analyses assess assessed assesses ' +
+  'evaluate evaluated evaluates evaluation elaborate elaborated explains explained describing ' +
+  'described describe critically').split(' ').forEach(function (w) { STOP[w] = 1; });
 
 function contentTokens(s) {
   return qb.tokens(s).filter(function (t) { return !STOP[t]; });
@@ -92,6 +95,28 @@ function trust(meta, opts) {
   return { state: state, flags: flags, source: m.source || null, pubDate: m.pubDate || null };
 }
 
+// A harvested record's `fact` field can pack several source sections into one
+// string, bounded by "=== Section name ===" markers. That is why the "Caste
+// system" row reads "Colin Mackenzie ... 18th-century India. === During British
+// rule (1857 to 1947) === Although the varnas..." -- a block, not a sentence.
+// One such block rides a deep entity's IDF to the top on a word buried in its
+// tail ("developments" inside the British-rule section), and the block itself
+// prints its "===" markers verbatim as prose. Split at the markers so ranking
+// and display both see the value sentences individually; the section headers
+// are navigation, not content, so they are consumed by the split, not shown.
+var SECTION_MARKER = /\s*===\s*[^=]{1,300}\s*===\s*/g;
+function splitSectionBlocks(text) {
+  return String(text || '')
+    .split(SECTION_MARKER)
+    .map(function (p) {
+      // A malformed source block can leave a dangling section opener with no
+      // closing marker: "... India. === Contemporary" -- strip that too.
+      p = p.replace(/\s*===\s*[A-Za-z0-9'’\- ]*\s*$/g, '');
+      return p.replace(/[=\s]+$/g, '').trim();
+    })
+    .filter(function (p) { return p.length >= 15; });
+}
+
 // Rows are [entity, sentences, categories, meta?] as built by
 // scripts/build-ask-qb.js. Grouped by normalised entity name for O(1) lookup.
 function indexRows(rows) {
@@ -105,7 +130,9 @@ function indexRows(rows) {
     var meta = row[3] || null;
     row[1].forEach(function (s, i) {
       var m = Array.isArray(meta) ? (meta[i] || {}) : (meta || {});
-      byName[key].push({ entity: row[0], sentence: s, cats: row[2] || [], meta: m });
+      splitSectionBlocks(s).forEach(function (frag) {
+        byName[key].push({ entity: row[0], sentence: frag, cats: row[2] || [], meta: m });
+      });
     });
   });
   return { byName: byName, order: order };
@@ -189,7 +216,7 @@ var DEFAULTS = {
 // A claim is `supported` only when its term resolves to a corpus entity AND that
 // entity contributes enough distinct sentences. Everything else is a gap, with
 // the reason attached.
-function claimEvidence(term, idx, entityDir, opts) {
+function claimEvidence(term, idx, entityDir, opts, question) {
   var res = resolveEntity(term, idx, entityDir);
   if (!res) {
     return {
@@ -202,22 +229,65 @@ function claimEvidence(term, idx, entityDir, opts) {
       near: nearMisses(term, entityDir, 5)
     };
   }
-  // Distinct sentences only: the builder dedupes, but the same paragraph can
-  // still back several rows under one entity.
+  // A corpus entity's own sentences are about the entity, but they are not all
+  // about the question. "Social exclusion" holds the EU definition next to a
+  // sentence on fathers' roles and one on 2024 Olympic opening ceremonies: all
+  // three are verbatim corpus, and all three are on the entity, so a belief that
+  // entity == relevance quotes the junk into an exam answer. The question's
+  // content tokens are the discriminator -- a sentence carrying them, or a stem
+  // of them, is the continuation the question can actually use.
+  var qToks = contentTokens(question || '').filter(function (w) { return w.length >= 4; });
   var seen = {};
-  var picked = [];
-  for (var i = 0; i < res.rows.length && picked.length < opts.perPoint; i++) {
+  var scoredBatch = [];
+  for (var i = 0; i < res.rows.length; i++) {
     var r = res.rows[i];
     var key = r.sentence.slice(0, 160);
     if (seen[key]) continue;
     var t = trust(r.meta, opts);
     if (opts.requireTrusted && t.state === 'unverified') continue;
     seen[key] = 1;
+    scoredBatch.push({ r: r, t: t });
+  }
+  // Relevance first, corpus order among equals (Array#sort is stable in the
+  // engines this runs on), so an on-topic continuation outranks an off-topic
+  // row that happened to be harvested earlier in the record.
+  //
+  // Raw counts flatten on a deep entity: "Caste system in India" holds 462
+  // sentences and nearly every one contains "caste" or "india", so a count of
+  // question-token hits rates "a social historian of Indian religions" above a
+  // sentence on affirmative action for scheduled castes. The question tokens
+  // are instead weighted inside this entity's own corpus: a token that appears
+  // in every sentence ("india") discriminates nothing, one that appears in a
+  // few ("exclusion") is exactly the value continuation asked for. Weight uses
+  // the inside-corpus document frequency, not the entity frequency cap the
+  // name index ran into, because this table is already a resolved entity and
+  // needs no ranking across names at all.
+  var df = {};
+  var distinct = [];
+  scoredBatch.forEach(function (s) { distinct.push(contentTokens(s.r.sentence)); });
+  qToks.forEach(function (q) {
+    var n = 0;
+    distinct.forEach(function (st) { if (qb.hasStemLoose(st, q)) n++; });
+    df[q] = n;
+  });
+  var nRows = Math.max(1, distinct.length);
+  scoredBatch.forEach(function (s) {
+    var st = contentTokens(s.r.sentence);
+    var score = 0;
+    qToks.forEach(function (q) {
+      if (qb.hasStemLoose(st, q)) score += Math.log(nRows / (1 + df[q]));
+    });
+    s.score = score;
+  });
+  scoredBatch.sort(function (a, b) { return b.score - a.score; });
+  var picked = [];
+  for (var j = 0; j < scoredBatch.length && picked.length < opts.perPoint; j++) {
+    var s = scoredBatch[j];
     picked.push({
-      sentence: r.sentence,
+      sentence: s.r.sentence,
       entity: res.name,
-      cats: r.cats,
-      trust: t,
+      cats: s.r.cats,
+      trust: s.t,
       how: res.how
     });
   }
@@ -277,7 +347,7 @@ function retrieve(rows, question, points, entityDir, options) {
     var attempts = [];
     var winner = null;
     for (var i = 0; i < terms.length && !winner; i++) {
-      var got = claimEvidence(terms[i], idx, entityDir, opts);
+      var got = claimEvidence(terms[i], idx, entityDir, opts, question);
       attempts.push(got);
       if (got.supported) winner = got;
     }
