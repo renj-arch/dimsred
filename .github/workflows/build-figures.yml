@@ -292,6 +292,16 @@ jobs:
           BULK_REFRESH_HOURS: ${{ inputs.bulk_refresh_hours || '24' }}
         run: node scripts/build-figure-coverage.js
 
+      # Mirrors the coverage audit for the curated UPSC subject packs: which
+      # syllabus topic still has no figure (no hand-pick, no auto pick from the
+      # structured-data resolver, no builder-cache entry). These are the topics
+      # that read "still needing a figure" on the pack, and are the place a
+      # human hand-picks into data/figure-files-curated.json.
+      - name: Report subject pack figure gaps
+        if: inputs.commit == 'true' || github.event_name == 'schedule'
+        continue-on-error: true
+        run: node scripts/report-figure-gaps.js
+
       - name: Stamp figure dates (manual, one-off)
         if: inputs.stamp_figure_dates == 'true'
         continue-on-error: true
@@ -349,7 +359,8 @@ jobs:
             data/figure-topics-curated.json \
             data/figure-added-dates.json \
             data/geo-auto-figures.json \
-            data/subject-figures-cache.json
+            data/subject-figures-cache.json \
+            data/figure-gaps.json
           if git diff --staged --quiet; then
             echo "No figure changes to commit"
           else
