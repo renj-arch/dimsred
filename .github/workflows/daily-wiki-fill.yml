@@ -244,26 +244,41 @@ jobs:
           rm -rf baseline
           df -h / || true
 
-      - name: Merge chunks incrementally (download, merge, free — repeat)
+      - name: Merge chunks incrementally (download, collect, free — repeat, then finalize once)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x scripts/download-run-artifacts.sh
           mkdir -p chunks
+          # Collect-only per chunk: merge-chunks.js collect appends the chunk's
+          # delta (new questions, carry keys, link-pool additions, dedup keys) to
+          # chunks/.merge-state and deletes the chunk, so each chunk costs one
+          # chunk read instead of a full quiz.json pass. The single finalize
+          # below then rebuilds quiz.json exactly once. Missing numbers are
+          # tolerated — chunks run with fail-fast: false and some may be absent.
           for i in $(seq 1 40); do
             if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" "^chunk-${i}$" chunks; then
-              node scripts/merge-chunks.js || echo "WARNING: merge errored for chunk $i (continuing)"
+              node scripts/merge-chunks.js collect || echo "WARNING: collect errored for chunk $i (continuing)"
             else
               echo "chunk-$i not produced this run — skipping"
             fi
             find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
             df -h / | tail -1
           done
+          # Final sweep for anything the numbered pass missed (renamed or
+          # previously failed artifacts); .ok markers prevent re-downloads.
           if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" '^chunk-[0-9]+$' chunks; then
-            node scripts/merge-chunks.js || true
+            node scripts/merge-chunks.js collect || true
           fi
           find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
+          # Single full rebuild of quiz.json from the accumulated state. This is
+          # the one pass that actually materializes the run's data, so its
+          # failure must fail the job — continuing would commit the un-merged
+          # baseline as if it were a completed fill.
+          node scripts/merge-chunks.js finalize
+          rc=$?
           df -h / || true
+          exit $rc
 
       - run: node scripts/split-quiz-to-categories.js
 
