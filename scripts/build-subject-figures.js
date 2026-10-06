@@ -37,8 +37,8 @@ var AUTO_FILE = path.join(__dirname, '..', 'data', 'figure-files-auto.json');
 // "resolved", and the topic reads as a gap to be curated by hand.
 var AUTO_MIN_CONF = parseFloat(process.env.FIGURE_MIN_CONF || '0.85');
 var ROOT = path.join(__dirname, '..');
-var TOPICS_PER_SUBJECT = process.env.TOPICS_PER_SUBJECT ? parseInt(process.env.TOPICS_PER_SUBJECT, 10) : 6;
-var GLOBAL_LIMIT = process.env.GLOBAL_LIMIT ? parseInt(process.env.GLOBAL_LIMIT, 10) : 150;
+var TOPICS_PER_SUBJECT = process.env.TOPICS_PER_SUBJECT ? parseInt(process.env.TOPICS_PER_SUBJECT, 10) : 16;
+var GLOBAL_LIMIT = process.env.GLOBAL_LIMIT ? parseInt(process.env.GLOBAL_LIMIT, 10) : 450;
 var GEO_SKIP = /geograph/i;
 
 // Every figure this script produces is an unverified auto-suggestion. The

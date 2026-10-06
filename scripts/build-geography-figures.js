@@ -11,6 +11,9 @@
 // Then it scans data/topic-layers.json for geography topics; names that have a
 // matching figure render a page, names WITHOUT a figure are printed to the
 // console + listed in the pack footer so future topics are visible for mapping.
+// A curated GS1 syllabus feed (GEO_CURRICULUM below) is merged into that topic
+// pool, so every run auto-fills up to 60 syllabus topics the Commons API has a
+// decent map for; picks are cached in data/geo-auto-figures.json and badged.
 //
 // Usage: node scripts/build-geography-figures.js
 
@@ -346,6 +349,69 @@ var TOPIC_GEO_REGEX = /canal|glacier|volcan|river|plateau|desert|sea\b|\blake\b|
 var GEO_CORE = { 'siachen glacier': 1, 'mcmahon line': 1, 'line of actual control': 1, 'line of control': 1, 'doklam': 1, 'suez canal': 1, 'panama canal': 1, 'gir': 1, 'volcano': 1, 'mauna loa': 1, 'barren island': 1, 'el ni\u00f1o': 1, 'la ni\u00f1a': 1 };
 var GEO_EXCLUDE = { 'operation flood': 1, 'battle of lake poyang': 1, 'pulakeshin ii': 1, 'basavanna': 1, 'helicopter': 1 };
 
+// Curated UPSC Geography (GS1) topic feed for auto-fill.
+//
+// The mind-tree (topic-layers.json) only surfaces ~36 geography-shaped topics,
+// so once those are matched and cached the auto-fill goes quiet no matter how
+// many syllabus topics are still unfigured. This list is the syllabus itself
+// (Indian + world physical geography): every name here is offered to the
+// auto-fill below. It is additive and monotonic -- each run tries up to 60 new
+// ones within its wall-clock budget, successful picks land in
+// data/geo-auto-figures.json (git-tracked), and cached topics cost zero
+// requests on later runs -- so the pack grows until the whole syllabus map.
+// A topic here that matches a curated FIGURES key is skipped (already covered).
+var GEO_CURRICULUM = [
+  // India rivers
+  'Ganges river', 'Yamuna river', 'Brahmaputra river', 'Godavari river', 'Krishna river',
+  'Kaveri river', 'Narmada river', 'Tapti river', 'Mahanadi river', 'Indus river',
+  'Sutlej river', 'Beas river', 'Ravi river', 'Chenab river', 'Ghaghara river', 'Kosi river',
+  // India ranges & plateaus
+  'Western Ghats', 'Eastern Ghats', 'Aravalli Range', 'Vindhya Range', 'Satpura Range',
+  'Nilgiri Mountains', 'Karakoram Range', 'Pir Panjal Range', 'Zanskar Range', 'Shivalik Range',
+  'Deccan Plateau', 'Chota Nagpur Plateau', 'Marwar Plateau', 'Ladakh Plateau',
+  // India deserts & coasts
+  'Thar Desert', 'Konkan Coast', 'Malabar Coast', 'Coromandel Coast', 'Kanara Coast',
+  // India lakes, deltas & wetlands
+  'Chilika Lake', 'Pulicat Lake', 'Wular Lake', 'Loktak Lake', 'Dal Lake',
+  'Ganges Delta', 'Kaveri Delta', 'Godavari Delta', 'Sundarbans',
+  // India straits, gulfs & seas
+  'Palk Strait', 'Eight Degree Channel', 'Ten Degree Channel', 'Gulf of Khambhat',
+  'Gulf of Kutch', 'Gulf of Mannar', 'Kutch Peninsula', 'Kathiawar Peninsula',
+  // India passes, glaciers & islands
+  'Nathu La', 'Zoji La', 'Shipki La', 'Bomdi La', 'Gangotri Glacier', 'Siachen Glacier area',
+  'Andaman Islands', 'Nicobar Islands', 'Lakshadweep', 'Barren Island volcano',
+  // World rivers
+  'Nile river', 'Amazon river basin', 'Yangtze river', 'Congo river', 'Danube river',
+  'Rhine river', 'Volga river', 'Mississippi river delta',
+  // World mountains & ranges
+  'Andes', 'Rocky Mountains', 'Ural Mountains', 'Alps', 'Himalayas', 'Mount Everest',
+  'K2', 'Kilimanjaro', 'Atlas Mountains', 'Appalachian Mountains',
+  // World plateaus & deserts
+  'Tibetan Plateau', 'Iranian Plateau', 'Anatolian Plateau', 'Colorado Plateau',
+  'Sahara Desert', 'Gobi Desert', 'Arabian Desert', 'Kalahari Desert', 'Atacama Desert',
+  'Namib Desert', 'Great Victoria Desert',
+  // World seas, gulfs & straits
+  'Mediterranean Sea basin', 'Red Sea', 'Black Sea', 'North Sea', 'Baltic Sea region',
+  'Persian Gulf', 'Gulf of Mexico region', 'Caribbean Sea', 'Strait of Hormuz',
+  'Strait of Malacca', 'Strait of Gibraltar', 'Bering Strait', 'Bosphorus', 'Suez Canal route',
+  'Panama Canal route', 'Arctic Ocean', 'Atlantic Ocean region', 'Indian Ocean region',
+  'Pacific Ocean region', 'Southern Ocean region',
+  // World lakes & wetlands
+  'Lake Baikal', 'Lake Victoria', 'Lake Tanganyika', 'Lake Titicaca', 'Dead Sea',
+  'Great Lakes region', 'Pantanal', 'Okavango Delta',
+  // Climate & globe concepts
+  'Equator', 'Tropic of Cancer', 'Tropic of Capricorn', 'Arctic Circle', 'Antarctic Circle',
+  'Northern Hemisphere', 'Southern Hemisphere', 'Indian monsoon', 'Jet stream',
+  'Tropical cyclone', 'Tornado', 'El Nino', 'La Nina', 'Coriolis effect', 'ITCZ',
+  // Tectonics & geomorphology
+  'Mid-Atlantic Ridge', 'Pacific Ring of Fire', 'Plate boundary types', 'Fold mountain',
+  'Block mountain', 'Rift valley', 'Alluvial plain', 'River delta formation', 'Glacial landforms',
+  'Karst topography', 'Loess plateau', 'Cirque and arete', 'Mangrove forest',
+  // World physical landmarks
+  'Great Barrier Reef', 'Galapagos Islands', 'Maldives', 'Hawaiian Islands', 'Canary Islands',
+  'Mauna Loa', 'Krakatoa', 'Mount Vesuvius', 'Mount Fuji', 'Mount Etna'
+];
+
 var layerTopics = [];
 var layers = fs.existsSync(LAYERS_FILE) ? JSON.parse(fs.readFileSync(LAYERS_FILE, 'utf8')) : {};
 Object.keys(layers).forEach(function (k) {
@@ -367,6 +433,19 @@ Object.keys(layers).forEach(function (k) {
       });
     });
   }
+});
+
+// ---- merge the curated curriculum into the topic pool ----
+// Add each syllabus topic unless the mind-tree already carries the exact same
+// normalised name (the dedup keeps the auto-fill from re-querying a topic twice
+// in one run). GEO_EXCLUDE filtering still applies so no exclusion regresses.
+var seenLayer = {};
+layerTopics.forEach(function (t) { seenLayer[t.n] = 1; });
+GEO_CURRICULUM.forEach(function (name) {
+  var n = norm(name);
+  if (!n || seenLayer[n] || GEO_EXCLUDE[n]) return;
+  seenLayer[n] = 1;
+  layerTopics.push({ name: name, n: n });
 });
 
 // ---- match topics -> figures ----
@@ -581,13 +660,14 @@ async function autoFill(unmatchedList) {
     try { cache = JSON.parse(fs.readFileSync(AUTO_CACHE_FILE, 'utf8')); } catch (e) { cache = {}; }
   }
   // Seed the per-run image exclusion from the cache, so a topic being filled for
-  // the first time cannot claim an image that a cached topic already uses.
-  Object.keys(cache).forEach(function (k) { if (cache[k]) AUTO_EXCLUDE_IMG[cache[k]] = 1; });
+  // the first time cannot claim an image that a cached topic already uses. Only
+  // real file strings count; a { tried } marker (below) is not an image.
+  Object.keys(cache).forEach(function (k) { if (typeof cache[k] === 'string' && cache[k]) AUTO_EXCLUDE_IMG[cache[k]] = 1; });
 
   var resolved = [];
   var still = [];
 
-  // Split already-resolved topics away from genuinely new ones.
+  // Split topics into three buckets by cache state.
   //
   // A resolved topic never leaves `unmatched`: the match at the top of this file
   // only tests the curated FIGURES list, and an auto pick is never added to it
@@ -597,10 +677,29 @@ async function autoFill(unmatchedList) {
   // never changed. So once the corpus grew past the cap, every run spent its
   // whole budget re-checking the same first entries and any topic past that
   // position was never attempted again -- auto-addition silently stopped for
-  // good. Cached topics now need no request at all, which hands the entire
+  // good. Resolved topics now need no request at all, which hands the entire
   // budget to new ones and makes the pack grow monotonically.
-  var fresh = [], known = [];
-  unmatchedList.forEach(function (name) { (cache[norm(name)] ? known : fresh).push(name); });
+  //
+  // Two further buckets keep that monotonic gain honest instead of letting it
+  // rot. With a naive resolved-vs-fresh split, a topic that was tried and
+  // failed would stay `fresh` at the same list position, and once a run
+  // resolved nothing, those same failures would hold the front positions and
+  // starve every topic behind them -- the pack would stall with topics still
+  // remaining, which is exactly the failure mode this curriculum feed is
+  // trying to end. So failed topics are persisted as { tried: <epoch ms> } in
+  // the cache file (never as a file string, so they can be told apart from a
+  // resolution), and the run order becomes: never-attempted topics first, and
+  // tried-only topics once the never-attempted queue drains. Every curriculum
+  // topic therefore gets its shot as fast as the per-run budget allows, and an
+  // unresolved topic is re-tried only after the rest of the queue has had one.
+  var never = [], tried = [], known = [];
+  unmatchedList.forEach(function (name) {
+    var v = cache[norm(name)];
+    if (typeof v === 'string') known.push(name);
+    else if (v && v.tried) tried.push(name);
+    else never.push(name);
+  });
+  var fresh = never.concat(tried);
 
   known.forEach(function (name) {
     resolved.push({ name: name, file: cache[norm(name)], via: 'cache' });
@@ -626,6 +725,10 @@ async function autoFill(unmatchedList) {
       cache[key] = fname;
       resolved.push({ name: name, file: fname, via: via });
     } else {
+      // Record the failed attempt so the next run tries never-attempted topics
+      // before re-trying this one (see the bucket split above). Overwriting the
+      // real cache value here would be wrong; nothing was resolved.
+      cache[key] = { tried: Date.now() };
       still.push(name);
     }
   }

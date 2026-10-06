@@ -136,19 +136,22 @@ jobs:
           rm -rf baseline
           df -h / || true
 
-      - name: Merge chunks incrementally (download, merge, free — repeat)
+      - name: Merge chunks incrementally (download, collect, free — repeat, then finalize once)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           chmod +x scripts/download-run-artifacts.sh
           mkdir -p chunks
-          # One chunk resident at a time: merge-chunks.js consumes (and now
-          # deletes) every quiz-chunk-* it ingests, so each round starts from
-          # a near-empty workspace. Missing numbers are tolerated — chunks
-          # run with fail-fast: false and some may legitimately be absent.
+          # One chunk resident at a time: merge-chunks.js collect appends the
+          # chunk's delta to chunks/.merge-state and deletes the chunk, so each
+          # round works from a near-empty workspace. Missing numbers are
+          # tolerated — chunk jobs run with fail-fast: false and some may
+          # legitimately be absent. The single finalize below rebuilds
+          # quiz.json exactly once instead of one full corpus pass per chunk
+          # (keeps the merge job clear of the 360-minute runner cap).
           for i in $(seq 1 40); do
             if bash scripts/download-run-artifacts.sh "${{ steps.resolve.outputs.run-id }}" "^chunk-${i}$" chunks; then
-              node scripts/merge-chunks.js || echo "WARNING: merge errored for chunk $i (continuing)"
+              node scripts/merge-chunks.js collect || echo "WARNING: collect errored for chunk $i (continuing)"
             else
               echo "chunk-$i not present — skipping"
             fi
@@ -158,10 +161,17 @@ jobs:
           # Final sweep for anything the numbered pass missed (renamed or
           # previously failed artifacts); .ok markers prevent re-downloads.
           if bash scripts/download-run-artifacts.sh "${{ steps.resolve.outputs.run-id }}" '^(quiz-)?chunk-[0-9]+$' chunks; then
-            node scripts/merge-chunks.js || true
+            node scripts/merge-chunks.js collect || true
           fi
           find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
+          # Single full rebuild of quiz.json from the accumulated state. This is
+          # the one pass that actually materializes the run's data, so its
+          # failure must fail the job — continuing would commit the un-merged
+          # baseline as if it were a completed recovery.
+          node scripts/merge-chunks.js finalize
+          rc=$?
           df -h / || true
+          exit $rc
 
       # Save checkpoint after merge in case subsequent steps fail
       - run: |

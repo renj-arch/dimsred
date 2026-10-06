@@ -77,7 +77,14 @@ function main() {
 
       var bi = bucketOf(name, BUCKETS);
       var b = buckets[bi];
-      var ek = name.toLowerCase();
+      // The merge key must be the SAME normaliser bucketOf() uses. toLowerCase()
+      // left the classify-global triage marker attached, so "✓ Chera dynasty" and
+      // "Chera dynasty" hashed into one bucket under two different keys and never
+      // merged: measured 16,638 such duplicated keys across the 512 shards, with
+      // ~8% of sentences in them present twice because the dedupe Set below is
+      // per-merged-entity and these two rows each owned their own. Keying on
+      // hash.norm makes "one row per entity per bucket" true by construction.
+      var ek = hash.norm(name);
 
       // An entity present in several categories merges into one bucket row.
       // Sentences are deduped because the same Wikipedia paragraph backs
@@ -85,7 +92,13 @@ function main() {
       // entity keeps its full tail.
       var cur = b.ents.get(ek);
       if (!cur) {
-        cur = { name: name, sents: [], meta: [], cats: {}, seen: new Set() };
+        // The marker is meaningful in data/questions, where it records that the
+        // sub-topic was triaged, but it is noise in a sentence the reader is
+        // shown as the source of a quote. Strip it here, as build-timeline.js
+        // does when it mines the same names.
+        var MARK = /^\s*[\u2713\u2714\u2715\u2716\u2717\u25a1\u25a0\u2022\u25cf\u00b7*o\u25cb]\s*|\s*[\u2713\u2714\u25a1\u25a0\u2022\u25cf\u00b7*o\u25cb]\s*$/g;
+        cur = { name: name.replace(MARK, '').trim(),
+          sents: [], meta: [], cats: {}, seen: new Set() };
         b.ents.set(ek, cur);
       } else {
         stats.merged++;
