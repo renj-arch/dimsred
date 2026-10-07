@@ -4,9 +4,22 @@ on:
   schedule:
     - cron: '15 0 * * *'
   workflow_dispatch:
+  workflow_run:
+    # Chained from the Wiki Fill finalize so it runs with the freshest data
+    # instead of waiting for the 00:15 cron on a maybe-empty night.
+    workflows: ['Wiki Fill']
+    types:
+      - completed
 
 concurrency:
-  group: data-fill
+  # Its OWN group. It used to share `data-fill` with Wiki Fill, which
+  # self-dispatches its next run at the end of every finalize; GitHub cancels
+  # the previously-pending run in a group when a newer one enters, so the
+  # scheduled Feed Fill waited all day behind the running Wiki Fill and was
+  # then cancelled by Wiki Fill's self-dispatch — it never ran. Every Feed Fill
+  # schedule run since 2026-08-11 shows "cancelled". (Same starvation bug the
+  # figures workflow escaped by leaving `data-fill`.)
+  group: feed-fill
 
 permissions:
   contents: write
@@ -19,6 +32,9 @@ jobs:
   # ── Feed shards: 8 parallel runners, each fetches its own subset ──
   feeds:
     runs-on: ubuntu-latest
+    # Only chain off a SUCCESSFUL Wiki Fill; a failed/partial one must not
+    # trigger a merge race that then masks the failure.
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
     continue-on-error: true
     strategy:
       matrix:
