@@ -3031,6 +3031,67 @@ const CATEGORIES = [
     'Sustainable Development Goal 8','Sustainable Development Goal 9','Sustainable Development Goal 10','Sustainable Development Goal 11','Sustainable Development Goal 12','Sustainable Development Goal 13','Sustainable Development Goal 14','Sustainable Development Goal 15',
     'Sustainable Development Goal 16','Sustainable Development Goal 17','List of Sustainable Development Goal targets and indicators','High-level Political Forum on Sustainable Development','Digital public goods','Sustainability','Inclusive wealth','Global Goals Week'
   ]},
+  // ══UPSC batch 3══ Current-affairs-linked categories (rolling news content) ══
+  { name:"2026 in India", wikiCat:"2026_in_India", keywords:[
+    'bill','act','summit','election','protest','missile','mission','gaganyaan','spacecraft','satellite','draupadi','18th brics','demonetisation','scheme','policy','committee'
+  ], topics:[
+    '18th BRICS summit','2026 Anti-CEC protests','2026 in India','Gaganyaan-1','Gaganyaan-2','Gaganyaan-3','GSAT-32','Micro, Small and Medium Enterprises Development (Amendment) Bill, 2026','Test Vehicle Abort Mission-2'
+  ]},
+  { name:"Elections by year", wikiCat:"2026_elections", keywords:[
+    'election','electoral','secretary-general','ballot','vote','constituenc','calendar','runoff','seat'
+  ], topics:[
+    '2026 International Criminal Court judges election','2026 supranational electoral calendar','2026 local electoral calendar','2026 national electoral calendar','2026 United Nations Secretary-General selection'
+  ]},
+  { name:"World Trade Organization", wikiCat:"World_Trade_Organization", keywords:[
+    'world trade','wto','appellate','round','doha','tariff','trade','barrier','accession','dispute settlement','goods','services','most-favoured','mfn','quota'
+  ], topics:[
+    'World Trade Organization','Advisory Centre on World Trade Organization Law','Afghanistan accession to World Trade Organization','Annecy Round','Appellate Body','Bancor','China and the World Trade Organization','China shock','Criticism of the World Trade Organization','Doha Development Round','General Agreement on Tariffs and Trade','Dispute Settlement Body','Most favoured nation','Safeguard','Trade Facilitation Agreement','World Trade Organization Ministerial Conference of 2022'
+  ]},
+  { name:"BRICS", wikiCat:"BRICS", keywords:[
+    'brics','new development bank','contingent reserve','member states of brics','brics pay','unit (currency)','summit','dilma rousseff','south africa','brazil','russia','india','china'
+  ], topics:[
+    'BRICS','BRIC (economics term)','BRICS Cable','BRICS Contingent Reserve Arrangement','BRICS Games','BRICS Pay','New Development Bank','Member states of BRICS','Dilma Rousseff','Unit (currency)','BRICS Universities League','BRICS+ International Olympiad in Mathematics'
+  ]},
+  { name:"G20", wikiCat:"G20", keywords:[
+    'g20','group of twenty','summit','international monetary','developed','developing nations','g20 developing','ministerial','act accel','global'
+  ], topics:[
+    'G20','G20 developing nations','Access to COVID-19 Tools Accelerator','Cyberattack during the Paris G20 Summit','G33 (developing countries)','International monetary system','2006 G20 ministerial meeting','Model G20','2009 G20 London summit protests','Young European Leadership'
+  ]},
+  { name:"India-US relations", wikiCat:"India–United_States_relations", keywords:[
+    'india','united states','bilateral','defence','dialogue','cooperation','visa','trade','military','nuclear','agreement','ministerial'
+  ], topics:[
+    'India–United States relations','History of India–United States relations','2+2 Ministerial Dialogue','2025 India–United States diplomatic and trade crisis','American Library (New Delhi)','Bureau of South and Central Asian Affairs','United States–India Strategic Partnership Forum','Pakal Dul Dam','India–United States civilian nuclear agreement','Malabar (naval exercise)','C-130J Super Hercules in India'
+  ]},
+  { name:"Renewable energy in India", wikiCat:"Renewable_energy_in_India", keywords:[
+    'renewable','solar','wind','green energy','energy agency','non-conventional','power project','hydrogen','giga','solar power','kerala solar'
+  ], topics:[
+    'Renewable energy in India','2013 Kerala solar panel scam','Oommen Chandy','Dhirubhai Ambani Green Energy Giga Complex','Indian Akshay Urja Day','Ladakh Renewable Energy Development Agency','Maharashtra Energy Development Agency','Ministry of Energy, New and Renewable Energy Maharashtra','National hydrogen energy road map','Neyveli Solar Power Project','Phalodi Solar Power Plant','Saatvik Green Energy','Tamil Nadu Energy Development Agency','Ultra Mega Solar Power Projects'
+  ]},
+  { name:"Free trade agreements of India", wikiCat:"Free_trade_agreements_of_India", keywords:[
+    'free trade','trade agreement','cepa','ceca','fta','comprehensive economic','tariff','preferential trade','asia-pacific trade','india'
+  ], topics:[
+    'Free trade agreements of India','ASEAN–India Free Trade Area','Asia-Pacific Trade Agreement','Canada–India Free Trade Agreement','India–Singapore Comprehensive Economic Cooperation Agreement','Economic and Technology Cooperation Agreement','Australia–India Comprehensive Economic Cooperation Agreement','India–EFTA Trade and Economic Partnership Agreement','India–European Union Free Trade Agreement','India–Malaysia Comprehensive Economic Cooperation Agreement','India–South Korea Comprehensive Economic Partnership Agreement','New Zealand–India Free Trade Agreement','South Asian Free Trade Area','India–United Kingdom Comprehensive Economic and Trade Agreement'
+  ]},
+  { name:"Nuclear power in India", wikiCat:"Nuclear_power_in_India", keywords:[
+    'nuclear','atomic','atomic energy','reactor','fast breeder','uranium','radioactive','department of atomic','nuclear damage','radiation'
+  ], topics:[
+    'Nuclear power in India','Atomic Energy Commission of India','Atomic Energy Regulatory Board','Bharat Small Modular Reactor','Department of Atomic Energy','FBR-600','Heavy Water Board','IPHWR','People\'s Movement Against Nuclear Energy','Prototype Fast Breeder Reactor','The Civil Liability for Nuclear Damage Act, 2010','India\'s three-stage nuclear power programme'
+  ]},
+  { name:"Cybercrime in India", wikiCat:"Cybercrime_in_India", keywords:[
+    'cyber','hack','data breach','botnet','malware','fraud','cybercrime','phishing','attack','virus','worm','indian bank','cryptocurrency'
+  ], topics:[
+    '2016 Indian bank data breach','2018 Karbi Anglong lynching','2021 Air India cyberattack','2024 WazirX hack','Appin (company)','Bangladesh Black Hat Hackers','Amit Bhardwaj','Bitconnect','BlackCat','Bredolab botnet','BrickerBot','Brontok','Bulli Bai case','Code Red (computer worm)','Code Shikara'
+  ]},
+  { name:"Mental health in India", wikiCat:"Mental_health_in_India", keywords:[
+    'mental health','psych','psychiatr','asylum','mental healthcare','depression','therapy','counselling','suicide','anxiety'
+  ], topics:[
+    'Mental health in India','Bombay Psychiatric Society','Erwadi fire incident','Government Mental Health Centre, Kozhikode','Indian Journal of Psychiatry','Mental Health Act, 1987','Mental Healthcare Act, 2017','Psych-Ed','Psychologs'
+  ]},
+  { name:"Plug-in electric vehicles in India", wikiCat:"Electric_vehicles_in_India", keywords:[
+    'electric vehicle','ev','plug-in','battery','charging','fame','e-mobility','electric bus','electric car','scooter'
+  ], topics:[
+    'Plug-in electric vehicles in India'
+  ]},
 
 ];
 
