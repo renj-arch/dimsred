@@ -265,8 +265,34 @@ var terms = [p[1]].concat(p[2]).filter(Boolean);
 var hits = [];
 terms.forEach(function (t) {
 var ids = state.entityDir.lookup(t);
-if (!ids) return;
+if (ids) {
 hits.push({ term: t, cats: ids });
+return;
+}
+// A subject often wraps the real entity rather than being it: "equitable
+// access to justice" wraps "Access to justice", and "Bhopal gas tragedy"
+// wraps "Bhopal disaster". Exact lookup alone would report the former
+// absent even though the corpus has the sentence -- entity-anchored
+// resolution is exactly the layer that must unwrap it. Longest-window
+// matching, the same rule candidates() applies elsewhere, resolves only
+// when a name in the table actually contains the subject window, so it
+// cannot admit a term the corpus lacks.
+//
+// Only a window carried PAST the subject's own first token is unwrapped:
+// "equitable access to justice" has a modifier in front of "Access to
+// justice". A window at the head is a truncation, not a wrapper, and is
+// left unresolved -- "Fazl Ali Commission" starts with "Fazl Ali" the
+// person, but resolving it so would route a Commission question to the
+// wrong entity's bucket.
+var termN = (BUCKET && BUCKET.norm ? BUCKET.norm(t) :
+  String(t).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim());
+var cand = state.entityDir.candidates(t);
+for (var c = 0; c < cand.length; c++) {
+if (!cand[c].strong) break;
+if (termN.indexOf(cand[c].name) <= 0) continue;
+hits.push({ term: t, cats: cand[c].cats, resolveTo: cand[c].name });
+break;
+}
 });
 var cats = {};
 hits.forEach(function (h) {
@@ -297,7 +323,7 @@ if (state.buckets && opts.buckets !== false) {
       var seenBucket = {};
       resolved.forEach(function (r) {
         r.hits.forEach(function (h) {
-          var bi = BUCKET.bucketOf(h.term, state.buckets.bucketCount);
+          var bi = BUCKET.bucketOf(h.resolveTo || h.term, state.buckets.bucketCount);
           if (state.bucketById[bi]) seenBucket[bi] = 1;
         });
       });

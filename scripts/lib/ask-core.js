@@ -619,6 +619,19 @@
     if (perf) return perf[1].replace(/[?.!,;:]+$/, '').trim();
     t = t.replace(/\b(?:has|have|had|is|are|was|were|been)\s+[a-z\s]{0,40}?\b(?:been\s+)?(?:successful|effective|successful in|able to|successful at)\b.*$/i, ' ');
     t = t.replace(/\s*\b(?:been\s+)?(?:successful|effective|successful in|successful at|accommodating|accommodate|accommodated)\b.*$/i, ' ');
+    // "the challenges involved in ensuring X", "the challenges faced in
+    // ensuring X", "the challenges in ensuring X": the question is about X, not
+    // about the demand noun or the participle stranded beside it. An earlier
+    // pass stripped the demand noun and kept the leftover word ("involved",
+    // "faced"), so "examine the challenges involved in ensuring equitable
+    // access to justice" reduced to a subject of "involved" -- and a subject
+    // that is a participle matches no entity and refuses a question the corpus
+    // does have material for. X is the noun that comes after the gerund, so
+    // the frame must CAPTURE it rather than cut around it.
+    var ensureCap = t.match(/^\s*(?:the\s+)?(?:challenges?|problems?|issues?|difficulties?|obstacles?|hurdles?|constraints?|barriers?|concerns?|impediments?)\s+(?:(?:involved|faced|encountered|being\s+faced|arising|associated|posed|entailed|linked|encountered)\s+)?(?:in|of|for|with)\s+(?:(?:ensuring|achieving|securing|delivering|providing|implementing|realising|realizing|upholding|safeguarding|protecting|promoting|fostering|guaranteeing|preserving|strengthening|expanding|extending|improving|addressing|tackling|overcoming|solving|reducing|eliminating|minimising|mitigating|countering|curbing|checking)\s+)+([A-Za-z][A-Za-z0-9'’\- ]+)$/i);
+    if (ensureCap) {
+      return ensureCap[1].replace(/[?.!,;:]+$/, '').replace(/\s+/g, ' ').trim();
+    }
     // Demand phrases: "... the aims and outcomes of X", "... the environmental
     // impact of X". Cut back to the head noun on the far side of the last
     // preposition, which is where the named subject sits.

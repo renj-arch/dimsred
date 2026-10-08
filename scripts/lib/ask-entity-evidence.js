@@ -161,17 +161,45 @@ function resolveEntity(term, idx, entityDir) {
 
   if (entityDir) {
     var ids = entityDir.lookup(term);
-    // The table knows exactly what exists. A miss here is a real gap, so no
-    // prefix guess is attempted: "SAGAR" and "maritime domain awareness" are
-    // absent from the corpus and pretending otherwise would be the whole bug.
-    if (!ids) return null;
-    var rows = idx.byName[norm] || [];
-    return {
-      name: rows.length ? rows[0].entity : norm,
-      rows: rows,
-      how: 'exact',
-      cats: ids
-    };
+    if (ids) {
+      var rows = idx.byName[norm] || [];
+      return {
+        name: rows.length ? rows[0].entity : norm,
+        rows: rows,
+        how: 'exact',
+        cats: ids
+      };
+    }
+    // A subject often wraps the real entity rather than being it: "equitable
+    // access to justice" wraps "Access to justice". Exact lookup fails on the
+    // wrapper even though the corpus holds the sentence, so unwind to the
+    // entity the subject's own window names.
+    //
+    // The unwrap is deliberately narrow so it cannot reproduce the prefix
+    // defect this module exists to prevent. A subject that STARTS with the
+    // entity is a truncation, not a wrapper: "Fazl Ali Commission" is not the
+    // person "Fazl Ali", and treating it as one is how a Commission question
+    // came to exclude the States Reorganisation material that actually answers
+    // it. A name the subject carries further along, with its own leading
+    // tokens before it, is the wrapper case -- "equitable" in "equitable
+    // access to justice" does not rename "Access to justice", it modifies it.
+    var cands = entityDir.candidates(term);
+    for (var ci = 0; ci < cands.length; ci++) {
+      var cand = cands[ci];
+      if (!cand.strong) break;
+      var cn = qb.norm(cand.name);
+      var at = norm.indexOf(cn);
+      if (at <= 0) break;                // prefix or exact -- not a wrapper
+      var crow = idx.byName[cn] || [];
+      return {
+        name: crow.length ? crow[0].entity : cand.name,
+        rows: crow,
+        how: 'exact',
+        cats: cand.cats,
+        near: null
+      };
+    }
+    return null;
   }
 
   // No table: fall back to the slice, exact match only.
