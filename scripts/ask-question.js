@@ -111,7 +111,20 @@ api.boot(answerStub, {}).then(function () {
   if (!empty) return null;
   console.log('');
   console.log('--- entity path empty: synthesis retrieval ---');
-  return api.synthesize(question, { subject: subject, perHeading: 6 })
+  // The full-text index is built only when this path is actually taken: it costs
+  // about 29 seconds and 45 MB of node shards, which is not a price worth paying
+  // for a question the entity path already answered. The callback form keeps
+  // ask-browser ignorant of where the index came from -- the page hands over the
+  // one it built at load, the harness fetches and builds its own through the
+  // fs-backed global.fetch above.
+  var FT = require(path.join(ROOT, 'scripts/lib/ask-fulltext.js'));
+  return FT.index().then(function (idx) {
+    console.log('full-text index: ' + idx.N + ' nodes loaded');
+    return api.synthesize(question, {
+      subject: subject, perHeading: 6,
+      fulltext: function (q) { return FT.fromIndex(idx, q, 60); }
+    });
+  })
     .then(function (syn) {
       if (!syn) { console.log('no synthesis document (phrase index unavailable)'); return; }
       var facts = syn.facts || [];

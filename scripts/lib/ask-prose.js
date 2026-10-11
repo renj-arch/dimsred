@@ -101,13 +101,83 @@ function stem(t) {
   return t;
 }
 
+// Equivalence classes for the noun/adjective pairs the suffix rules never
+// reach. "himalayan", "himalaya" and "himalayas" share no suffix, so a question
+// about India's Himalayan region and a sentence saying "the Himalayas" scored
+// zero against each other; "India" never matched "Indian", nor "europe"
+// "european". On the target question that mismatch alone rejected every scope
+// sentence in the corpus while a hundred generic ones sailed through.
+//
+// Each word gets a small set built from the two regular formations English
+// uses for these pairs -- add the adjectival n/an, or strip it -- guarded by
+// length on both sides so short words cannot collide. The sets are checked in
+// both directions when comparing, because only one direction is regular:
+// "europe" + an = "european" and stripping "an" from "european" gives back
+// "europe", while "himalayan" needs its "n" stripped to reach "himalaya" and
+// nothing real comes from adding "an" to "himalaya". The stray members that
+// result ("regio" from "region") are harmless: they match no token in the
+// corpus, and the sets are memoized so the cost is one small array per word.
+// null-prototype, because a corpus word can be "constructor" and a plain
+// object would hand back Object's own property as though it were a cache hit.
+var VARIANT_CACHE = Object.create(null);
+
+function stemVariants(t) {
+  if (VARIANT_CACHE[t]) return VARIANT_CACHE[t];
+  var out = [t];
+  if (t.length >= 5) {
+    var add = function (x) { if (x.length >= 5 && out.indexOf(x) === -1) out.push(x); };
+    add(t + 'n');
+    add(t + 'an');
+    if (/n$/.test(t)) add(t.replace(/n$/, ''));
+    if (/an$/.test(t)) add(t.replace(/an$/, ''));
+  }
+  VARIANT_CACHE[t] = out;
+  return out;
+}
+
+// Whether two stems name the same thing under those sets.
+function stemEq(a, b) {
+  if (a === b) return true;
+  var i, va = stemVariants(a);
+  for (i = 0; i < va.length; i++) if (va[i] === b) return true;
+  var vb = stemVariants(b);
+  for (i = 0; i < vb.length; i++) if (vb[i] === a) return true;
+  return false;
+}
+
+// Whether a stem set holds a stem or any of its variants. The set is the side
+// already reduced to stems (a sentence's), so only the query side expands.
+function hasStem(set, t) {
+  if (set[t]) return true;
+  var vs = stemVariants(t);
+  for (var i = 0; i < vs.length; i++) if (set[vs[i]]) return true;
+  return false;
+}
+
 function contentTokens(s) {
   return tokens(s).filter(function (t) { return !STOP[t] && t.length > 2; });
 }
 
+// Stemming is called on the same sentence many times over -- the pairwise
+// dedupe re-reads both sides of every comparison -- and each call tokenizes
+// and regexes a string. The cache is bounded and periodically cleared rather
+// than LRU'd: a clear costs one recompute for sentences still in play, keeps
+// memory flat across a half-million-sentence pass, and no accounting is needed
+// on the hot path.
+var STEM_CACHE = Object.create(null);
+var STEM_CACHE_N = 0;
+var STEM_CACHE_MAX = 60000;
+
 function stems(s) {
+  var hit = STEM_CACHE[s];
+  if (hit) return hit;
   var out = [];
   contentTokens(s).forEach(function (t) { out.push(stem(t)); });
+  if (STEM_CACHE_N > STEM_CACHE_MAX) {
+    STEM_CACHE = Object.create(null);
+    STEM_CACHE_N = 0;
+  }
+  if (s != null) { STEM_CACHE[s] = out; STEM_CACHE_N++; }
   return out;
 }
 
@@ -133,31 +203,82 @@ function entityTerms(entity) {
   return out;
 }
 
+// The sentence with a leading mention of its own entity name removed, which is
+// the body the claim has to be proved in.
+//
+// Corpus sentences open with their subject by construction -- "Jawaharlal Nehru
+// Technological University, Hyderabad ... is a collegiate public state
+// university" -- and a question word that occurs only inside that name is the
+// entity's name, not the sentence's claim: it admitted universities and
+// institutes whose TEXT says nothing about the question, ranked above
+// "Digital India is an initiative ... digital government services", where the
+// same kind of word appears in the body. Only a leading mention is stripped; a
+// name mid-sentence is prose the sentence chose to write.
+function stripName(sentence, entity) {
+  var s = String(sentence || '');
+  var e = String(entity || '').trim();
+  if (!e || e.length < 4) return s;
+  var low = s.toLowerCase(), le = e.toLowerCase();
+  var lead = /^[\s"'“”]+/;
+  var at = low.indexOf(le);
+  if (at === 0) {
+    return s.slice(e.length).replace(lead, '').replace(/^[\s,:;()\[\]\u2013\u2014-]+/, '');
+  }
+  var withThe = low.indexOf('the ' + le);
+  if (withThe === 0) {
+    return s.slice(4 + e.length).replace(lead, '').replace(/^[\s,:;()\[\]\u2013\u2014-]+/, '');
+  }
+  return s;
+}
+
 // How strongly a sentence bears on the claim.
 //
 // Headline: coverage of the heading's vocabulary, which is the claim.
 // A small bonus for naming the entity, because a sentence that names its subject
 // is easier for a reader to place, but a bonus rather than a requirement.
-function relevance(sentence, terms, entityWords) {
-  var toks = stems(sentence);
-  if (!toks.length) return 0;
+//
+// `weight` optionally carries rarity weights: {map, total, fallback}. Coverage
+// then becomes the share of total WEIGHT the sentence covers rather than the
+// share of words -- so on "sustainable development in India's Himalayan
+// region" a sentence holding `himalayan` (which almost nothing in the pool
+// holds) outweighs one holding `sustainable` and `development` (which nearly
+// everything does). Unweighted, the two coverages were comparable and the
+// generic one won on entity name and phrase position, which is how a hundred
+// SDG facts beat every sentence about the actual scope. `total` is supplied
+// rather than summed locally so the subject's coverage is measured over the
+// same denominator as the claim's: normalised over its own keys, a subject
+// every generic sentence repeats scores 1.0 and drowns the scope again.
+//
+// `body`, when given, is the sentence minus its own leading entity name (see
+// stripName) and is what claim coverage is judged on; the name bonus is still
+// measured against the whole sentence, because naming IS the bonus.
+function relevance(sentence, terms, entityWords, weight, body) {
+  var toks = stems(body != null ? body : sentence);
   var set = {};
   toks.forEach(function (t) { set[t] = 1; });
 
   var keys = Object.keys(terms);
-  var hits = 0, distinct = 0;
+  var hits = 0, distinct = 0, whits = 0;
+  var wmap = weight && weight.map;
+  var fallback = weight && weight.fallback != null ? weight.fallback : 1;
   keys.forEach(function (t) {
-    if (set[t]) { hits++; distinct++; }
+    // Variant-aware on the claim side: a claim saying "India" counts a
+    // sentence saying "Indian", and one saying "Himalayan" counts "Himalayas".
+    var h = hasStem(set, t);
+    var w = wmap && wmap[t] != null ? wmap[t] : fallback;
+    if (h) { hits++; distinct++; whits += w; }
   });
   if (!keys.length) return 0;
   var termCount = keys.length;
-  var coverage = distinct / termCount;
+  var coverage = weight && weight.total != null ? whits / weight.total : distinct / termCount;
   // Repetition is weak evidence of discussion rather than a passing mention.
   var density = (hits - distinct) * 0.06;
 
+  var nameSet = {};
+  stems(sentence).forEach(function (t) { nameSet[t] = 1; });
   var eKeys = Object.keys(entityWords || {});
   var named = 0;
-  eKeys.forEach(function (t) { if (set[t]) named++; });
+  eKeys.forEach(function (t) { if (hasStem(nameSet, t)) named++; });
   var nameBonus = eKeys.length ? (named / eKeys.length) * 0.12 : 0;
 
   return coverage + density + nameBonus;
@@ -511,9 +632,13 @@ var PROSE = {
   domainAllows: domainAllows,
   claimTerms: claimTerms,
   entityTerms: entityTerms,
+  stripName: stripName,
   contentTokens: contentTokens,
   stems: stems,
   stem: stem,
+  stemVariants: stemVariants,
+  stemEq: stemEq,
+  hasStem: hasStem,
   selectFor: selectFor,
   COMPOSE_VERSION: COMPOSE_VERSION
 };

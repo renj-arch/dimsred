@@ -22,7 +22,7 @@ const ROOT = path.join(__dirname, '..');
 const LIBS = [
   'ask-core', 'ask-qb', 'ask-answer', 'ask-entity-evidence',
   'ask-compose', 'build-ask-qb-buckets-hash',
-  'ask-prose', 'ask-synthesize', 'ask-browser', 'ask-llm'
+  'ask-prose', 'ask-synthesize', 'ask-browser', 'ask-llm', 'ask-fulltext'
 ];
 
 const store = {};
@@ -110,6 +110,10 @@ ok(typeof sandbox.VlymbooqAskSynthesize === 'object' && sandbox.VlymbooqAskSynth
 ok(typeof sandbox.VlymbooqAskLLM === 'object' && sandbox.VlymbooqAskLLM !== null &&
    typeof sandbox.VlymbooqAskLLM.synthesize === 'function',
   'ask-llm attached with synthesize()');
+ok(typeof sandbox.VlymbooqAskFulltext === 'object' && sandbox.VlymbooqAskFulltext !== null &&
+   typeof sandbox.VlymbooqAskFulltext.fromIndex === 'function' &&
+   typeof sandbox.VlymbooqAskFulltext.candidates === 'function',
+  'ask-fulltext attached with fromIndex() and candidates()');
 
 const html = fs.readFileSync(path.join(ROOT, 'ask.html'), 'utf8');
 const m = html.match(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/);
@@ -141,3 +145,4 @@ ok(typeof sandbox.IDX === 'object' && sandbox.IDX !== null, 'boot() installed th
 console.log('');
 console.log(failures === 0 ? '=== all checks passed ===' : '=== ' + failures + ' FAILURE(S) ===');
 process.exit(failures === 0 ? 0 : 1);
+

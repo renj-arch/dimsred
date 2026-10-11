@@ -31,7 +31,14 @@ if (typeof module === 'object' && module.exports) {
 // instruction following is reliable at this size, which matters more than raw
 // breadth for a fixed answer template.
 var MODEL_ID = 'Qwen/Qwen2.5-1.5B-Instruct-q4f16_1-MLC';
-var LIB_URL = 'https://esm.run/@mlc-ai/web-llm';
+// The library is vendored with the page (scripts/vendor/webllm, pinned to the
+// version this code was written against) so the only network dependency is the
+// model weights themselves. The CDN is a fallback for pages opened straight
+// from disk, where a relative module import is refused: file:// cannot serve
+// modules, but an https module URL still can. Both routes return the same
+// ES module; there is no UMD build to fall back to as of 0.2.8x.
+var VENDOR_URL = 'scripts/vendor/webllm/index.min.js';
+var CDN_URL = 'https://esm.run/@mlc-ai/web-llm@0.2.86';
 
 var engine = null;
 var loading = null;
@@ -43,20 +50,12 @@ function loadLibrary() {
   if (typeof window !== 'undefined' && window.webllm) {
     return Promise.resolve(window.webllm);
   }
-  return import(LIB_URL).then(function (mod) {
-    if (typeof window !== 'undefined') window.webllm;
-    return mod;
+  return import(VENDOR_URL).catch(function () {
+    return import(CDN_URL);
   }).catch(function () {
-    // The CDN import can be blocked where the page itself is served from disk.
-    // Falling back to a classic script tag keeps the feature alive as long as
-    // any network is reachable at all.
-    return new Promise(function (resolve, reject) {
-      var s = document.createElement('script');
-      s.src = 'https://unpkg.com/@mlc-ai/web-llm@0.2.79/dist/webllm.js';
-      s.onload = function () { resolve(window.webllm); };
-      s.onerror = function () { reject(new Error('WebLLM library could not be loaded')); };
-      document.head.appendChild(s);
-    });
+    throw new Error(
+      'The writing model library could not be loaded. It is vendored at ' +
+      VENDOR_URL + ' and mirrored at ' + CDN_URL + '.');
   });
 }
 
@@ -190,6 +189,148 @@ function buildPrompt(question, facts) {
   ].join('\n');
 }
 
+// ── plan, then write ────────────────────────────────────────────────────────
+//
+// One pass asked the model to plan the answer AND write it in a single breath,
+// and at 1.5B parameters the plan lost: sections arrived unsorted, the same
+// dimension repeated under two names, and facts the retrieval layer ranked in
+// the top ten sat unused at the bottom of the prompt. Splitting the job fixes
+// it the way a person would -- decide WHAT goes where first, then write each
+// part knowing what it is for. The plan is a few dozen tokens, costs one extra
+// call, and is the thing the second call is then held to.
+
+// Plan prompt: facts are truncated here because the planner only needs enough
+// of each sentence to judge relevance; the writer still receives them whole.
+function buildPlanPrompt(question, facts) {
+  var lines = [];
+  facts.forEach(function (f, i) {
+    var s = String(f.sentence || '');
+    if (s.length > 220) s = s.slice(0, 217) + '...';
+    lines.push('[' + (i + 1) + '] (' + (f.entity || 'corpus') + ') ' + s);
+  });
+  return [
+    'Plan a UPSC mains answer using ONLY the numbered facts below.',
+    'Question: ' + question,
+    '',
+    'FACTS:',
+    lines.join('\n'),
+    '',
+    'Reply in EXACTLY this format, one line per entry, nothing else:',
+    'INTRO [fact,numbers] <one short line>',
+    'POINT <dimension name, 1-3 words> [fact,numbers] <one short line>',
+    'POINT ... (four to six points, each a different dimension)',
+    'FORWARD <one short line> [fact,numbers]',
+    'FORWARD ... (two to four lines)',
+    '',
+    'Rules:',
+    '- Cite a fact number only if that fact supports the line.',
+    '- Cover the question\'s own scope and demand, not just its topic words.',
+    '- Never invent a fact, number, name or event.'
+  ].join('\n');
+}
+
+// Parse the planner's reply. Line-shaped input: the format is fixed, so this
+// is tokenising rather than interpretation -- and anything unparseable yields
+// a null plan, which is what makes the writer fall back to the single-pass
+// prompt above instead of failing the answer.
+function parsePlan(text) {
+  var plan = { intro: null, points: [], forward: [] };
+  String(text || '').split(/\r?\n/).forEach(function (raw) {
+    var line = raw.trim();
+    if (!line) return;
+    var m = /^(INTRO|POINT|FORWARD)\b\s*(.*)$/i.exec(line);
+    if (!m) return;
+    var kind = m[1].toUpperCase();
+    var rest = m[2].trim();
+    var nums = [];
+    var nm = /^\[([0-9,\s]+)\]\s*(.*)$/.exec(rest);
+    if (nm) {
+      nums = nm[1].split(/[,\s]+/).map(Number).filter(function (n) {
+        return n >= 1 && Math.floor(n) === n;
+      });
+      rest = nm[2].trim();
+    }
+    if (kind === 'INTRO') plan.intro = { nums: nums, line: rest };
+    else if (kind === 'FORWARD') plan.forward.push({ nums: nums, line: rest });
+    else {
+      // POINT carries its dimension in the prose before the bracket list or
+      // after it; when the bracket list came first, the dimension is simply
+      // the opening word(s) of what is left -- and the whole remainder still
+      // has to reach the writer as the line.
+      var pm = /^(\S+(?:\s+\S+){0,2}?)\s+\[([0-9,\s]+)\]\s*(.*)$/.exec(rest);
+      if (pm) {
+        plan.points.push({
+          title: pm[1].trim(),
+          nums: pm[2].split(/[,\s]+/).map(Number).filter(function (n) {
+            return n >= 1 && Math.floor(n) === n;
+          }),
+          line: pm[3].trim()
+        });
+      } else {
+        var words = rest.split(/\s+/);
+        plan.points.push({
+          title: words.shift() || rest,
+          nums: nums,
+          line: words.join(' ')
+        });
+      }
+    }
+  });
+  if (!plan.intro && !plan.points.length && !plan.forward.length) return null;
+  return plan;
+}
+
+// The writer's prompt, when a plan exists. The plan is the skeleton and the
+// facts are still listed in full underneath it, so the model writes each
+// planned line with the verbatim sentence in front of it rather than from the
+// planner's paraphrase.
+function buildWritePrompt(question, facts, plan) {
+  var lines = [];
+  facts.forEach(function (f, i) {
+    lines.push('[' + (i + 1) + '] (' + (f.entity || 'corpus') + ') ' + f.sentence);
+  });
+
+  var skeleton = [];
+  var intro = plan.intro || { nums: [], line: 'Frame the issue.' };
+  skeleton.push('## Introduction');
+  skeleton.push('- ' + (intro.line || 'Frame the issue.') +
+    (intro.nums.length ? ' (facts [' + intro.nums.join(', ') + '])' : ''));
+  skeleton.push('');
+  skeleton.push('## Challenges');
+  (plan.points || []).forEach(function (p) {
+    skeleton.push('- ' + (p.title || 'Dimension') +
+      (p.line ? ': ' + p.line : '') +
+      (p.nums.length ? ' (facts [' + p.nums.join(', ') + '])' : ''));
+  });
+  skeleton.push('');
+  skeleton.push('## Way forward');
+  (plan.forward || []).forEach(function (p) {
+    skeleton.push('- ' + (p.line || 'Recommendation.') +
+      (p.nums.length ? ' (facts [' + p.nums.join(', ') + '])' : ''));
+  });
+
+  return [
+    'You are answering a UPSC mains question using ONLY the numbered facts below.',
+    'Question: ' + question,
+    '',
+    'FACTS:',
+    lines.join('\n'),
+    '',
+    'This plan was already decided. Follow it: same sections, same order,',
+    'same points. Expand each planned line into clear exam prose, citing its',
+    'fact numbers in brackets like [2]. Do not add new points, do not drop',
+    'planned ones, and do not invent anything the facts do not support.',
+    '',
+    'PLAN:',
+    skeleton.join('\n'),
+    '',
+    'Rules:',
+    '- Use only facts from the list. Never invent a number, name, or event.',
+    '- Keep every fact\'s citation number.',
+    '- Write in clear prose for an exam, not bullet fragments.'
+  ].join('\n');
+}
+
 // Parse the model's reply into the sections the page already renders. The
 // structure is requested in the prompt, so this only needs to recognise the
 // headings; anything the model returns outside them still lands in a body line
@@ -213,9 +354,10 @@ function parse(text) {
   return sections;
 }
 
-// The one call the page makes. Loads the model on first use, sends the question
-// and facts, and returns parsed sections plus the raw text so the caller can
-// show either.
+// The one call the page makes. Loads the model on first use, plans the answer
+// from the facts, writes it to the plan, and returns parsed sections plus the
+// raw text so the caller can show either. A plan the parser could not read
+// falls back to the single-pass prompt: a worse answer beats a failed one.
 function synthesize(question, facts, opts) {
   opts = opts || {};
   var onProgress = opts.onProgress || function () {};
@@ -224,18 +366,83 @@ function synthesize(question, facts, opts) {
   }
 
   return ensureEngine(onProgress).then(function (eng) {
-    onProgress('composing the answer…');
-    return eng.chat.completions.create({
-      messages: [{ role: 'user', content: buildPrompt(question, facts) }],
-      temperature: opts.temperature == null ? 0.3 : opts.temperature,
-      max_tokens: opts.maxTokens || 900,
-      stream: false
+    // 900 tokens stopped a full Introduction/Challenges/Way-forward answer
+    // mid-sentence -- the caller never saw finish_reason, so the page rendered
+    // a paragraph that simply ended. 1600 covers the shape the prompts ask
+    // for, and the continuation below catches whatever still does not fit.
+    var cap = opts.maxTokens || 1600;
+    var temp = opts.temperature == null ? 0.3 : opts.temperature;
+
+    function generate(prompt, tokens, t) {
+      var messages = [{ role: 'user', content: prompt }];
+      return eng.chat.completions.create({
+        messages: messages,
+        temperature: t,
+        max_tokens: tokens,
+        stream: false
+      }).then(function (res) {
+        var raw = res && res.choices && res.choices[0] && res.choices[0].message
+          ? res.choices[0].message.content : '';
+        var finish = res && res.choices && res.choices[0]
+          ? res.choices[0].finish_reason : null;
+        if (finish !== 'length' || !raw) return raw;
+        // The model stopped on the token budget, not on an ending. Hand it its
+        // own partial text and ask for the rest; the transcript keeps the
+        // prompt so the continuation is still grounded in the same facts, and
+        // one round is bounded so a model that cannot stop talking cannot loop.
+        onProgress('finishing the answer…');
+        return eng.chat.completions.create({
+          messages: messages.concat([
+            { role: 'assistant', content: raw },
+            { role: 'user', content: 'Continue the answer exactly from where it ' +
+              'stopped. Do not repeat anything you already wrote, do not restart ' +
+              'any section, do not add a preamble.' }
+          ]),
+          temperature: t,
+          max_tokens: 800,
+          stream: false
+        }).then(function (res2) {
+          var more = res2 && res2.choices && res2.choices[0] && res2.choices[0].message
+            ? res2.choices[0].message.content : '';
+          if (!more) return raw;
+          return raw + (/\s$/.test(raw) ? '' : ' ') + more;
+        });
+      });
+    }
+
+    var planned = Promise.resolve(null);
+    if (opts.plan !== false) {
+      onProgress('planning the answer…');
+      planned = eng.chat.completions.create({
+        messages: [{ role: 'user', content: buildPlanPrompt(question, facts) }],
+        temperature: 0.2,
+        max_tokens: 400,
+        stream: false
+      }).then(function (res) {
+        var txt = res && res.choices && res.choices[0] && res.choices[0].message
+          ? res.choices[0].message.content : '';
+        return parsePlan(txt);
+      }).catch(function () { return null; });
+    }
+
+    return planned.then(function (plan) {
+      // One point is not a plan; two sections' worth of decisions is. Below
+      // that the skeleton would just restate the single-pass template.
+      var usePlan = !!(plan && plan.points && plan.points.length >= 2);
+      onProgress('composing the answer…');
+      var prompt = usePlan
+        ? buildWritePrompt(question, facts, plan)
+        : buildPrompt(question, facts);
+      return generate(prompt, cap, temp).then(function (raw) {
+        onProgress('ready');
+        return {
+          sections: parse(raw),
+          raw: raw,
+          method: 'llm',
+          plan: usePlan ? plan : null
+        };
+      });
     });
-  }).then(function (res) {
-    var raw = res && res.choices && res.choices[0] && res.choices[0].message
-      ? res.choices[0].message.content : '';
-    onProgress('ready');
-    return { sections: parse(raw), raw: raw, method: 'llm' };
   });
 }
 
@@ -244,6 +451,9 @@ return {
   expand: expand,
   ensureEngine: ensureEngine,
   buildPrompt: buildPrompt,
+  buildPlanPrompt: buildPlanPrompt,
+  buildWritePrompt: buildWritePrompt,
+  parsePlan: parsePlan,
   parse: parse,
   MODEL_ID: MODEL_ID
 };

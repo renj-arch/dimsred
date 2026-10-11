@@ -88,6 +88,45 @@ var QB = 'data/ask-qb/';
     });
   }
 
+  // Repair a sentence whose source paragraph was truncated: it has no terminal
+  // punctuation, and quoted in an answer it reads broken mid-clause. The
+  // continuation exists in the same row -- an entity's fill-blank records carry
+  // overlapping text of different lengths, and all of one entity's sentences sit
+  // in one bucket row -- so the full form of a cut sentence is a sibling that
+  // opens with the same words and says more. The longest such sibling wins.
+  //
+  // Only cut sentences are looked at (the punctuation test is one regex over
+  // every candidate; 0.10% of the corpus fails it), so the word-splitting below
+  // runs a thousand times per bucket at most, never on the common path.
+  function stitchCut(list) {
+    var out = null;
+    for (var i = 0; i < list.length; i++) {
+      var s = String(list[i]);
+      if (/[.!?\u2026"'\)\]]$/.test(s)) continue;
+      var words = s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ');
+      if (words.length < 4) continue;
+      var head = words.slice(0, Math.min(6, words.length));
+      var best = null;
+      for (var j = 0; j < list.length; j++) {
+        if (j === i) continue;
+        var t = String(list[j]);
+        if (t.length <= s.length) continue;
+        var tw = t.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ');
+        if (tw.length <= words.length) continue;
+        var open = true;
+        for (var k = 0; k < head.length; k++) {
+          if (tw[k] !== head[k]) { open = false; break; }
+        }
+        if (open && (!best || t.length > best.length)) best = t;
+      }
+      if (best) {
+        if (!out) out = list.slice();
+        out[i] = best;
+      }
+    }
+    return out || list;
+  }
+
   // Named rather than returned inline, because essay() needs to call mains() and
   // phraseLookup() on this same object.
   var api = {
@@ -750,9 +789,29 @@ var allTerms = terms.slice();
 });
 
 // One phrase-index shard per term, deduped by shard so a term and an alternate
-// naming the same shard do not fetch it twice.
+// naming the same shard do not fetch it twice. Source is kept because the two
+// groups compete for the bucket budget differently: ranking by document
+// frequency puts the question's own topic bucket -- "nature-based solutions",
+// df 2 -- behind every expansion bucket with rarer-than-thou rivals like
+// "aravalli range" at df 29, and the cap then dropped the very subject of the
+// question. A term the question wrote is not a nomination; it is the topic, and
+// the topic always keeps its buckets.
 var seen = {}, jobs = [];
-allTerms.forEach(function (t) {
+terms.forEach(function (t) {
+var bi = BUCKET.bucketOf(t, state.buckets.bucketCount || 512);
+if (seen[bi]) return;
+seen[bi] = 1;
+jobs.push(api.phraseLookup(t).then(function (h) {
+  if (!h) return h;
+  var copy = {};
+  Object.keys(h).forEach(function (k) { copy[k] = h[k]; });
+  copy.topic = true;
+  return copy;
+}));
+});
+(opts.expandTerms || []).forEach(function (t) {
+t = String(t || '').trim();
+if (!t) return;
 var bi = BUCKET.bucketOf(t, state.buckets.bucketCount || 512);
 if (seen[bi]) return;
 seen[bi] = 1;
@@ -786,11 +845,28 @@ if (state.entityDir) {
 }
 
 return Promise.all(jobs).then(function (hits) {
-var packed = [];
-hits.forEach(function (h, i) { if (h) packed.push({ term: h.term, hit: h }); });
+var topicPacked = [], expandPacked = [];
+hits.forEach(function (h) {
+  if (!h) return;
+  (h.topic ? topicPacked : expandPacked).push({ term: h.term, hit: h });
+});
 
+// The cap is a budget, and it is spent in this order: buckets the question's
+// own terms found, then buckets the model's nominations found. Ranking the two
+// together by document frequency let a nomination at df 29 evict the topic at
+// df 2, so the answer stopped containing its own subject.
 var cap = opts.maxBuckets == null ? 24 : opts.maxBuckets;
-var ranked = packed.length ? SYNTH.rankBuckets(packed, cap) : [];
+var ranked = topicPacked.length ? SYNTH.rankBuckets(topicPacked, cap) : [];
+if (expandPacked.length && ranked.length < cap) {
+  var seenB = {};
+  ranked.forEach(function (r) { seenB[String(r.bucket)] = 1; });
+  SYNTH.rankBuckets(expandPacked, cap).forEach(function (r) {
+    if (ranked.length >= cap) return;
+    if (seenB[String(r.bucket)]) return;
+    seenB[String(r.bucket)] = 1;
+    ranked.push(r);
+  });
+}
 
 // Entity buckets come from resolution, not from document frequency, so they
 // cannot be ranked by the phrase index. They are appended after the cap: a
@@ -800,7 +876,10 @@ Object.keys(entBuckets).forEach(function (b) {
   var already = ranked.some(function (r) { return String(r.bucket) === String(b); });
   if (!already) ranked.push({ bucket: b, score: 0, terms: [entBuckets[b]] });
 });
-if (!ranked.length) return null;
+// Nothing matched by phrase. That is not the end of the road when full-text
+// retrieval is on offer -- it is the case the fallback exists for -- but with no
+// callback there is nothing left to try, so return the null the caller expects.
+if (!ranked.length && typeof opts.fulltext !== 'function') return null;
 
 var foundTerms = {};
 ranked.forEach(function (r) {
@@ -822,12 +901,45 @@ var meta = state.bucketById[p.bucket];
 bytes += meta ? (meta.bytes || 0) : 0;
 p.rows.forEach(function (row) {
 if (!row || !row[0] || !row[1]) return;
-row[1].forEach(function (s) {
+stitchCut(row[1]).forEach(function (s) {
 candidates.push({ entity: row[0], sentence: s, cats: row[2] || [],
   bucket: p.bucket, terms: p.terms });
 });
 });
 });
+
+// Full-text candidates join the pool before the single write pass, not as a
+// fallback after it. Every earlier version of this fetched them conditionally
+// -- when the phrase material scored thin or left a facet unfound -- and every
+// condition was semantically blind: "technological concentration" exists in no
+// phrase row, yet a bucket of near-misses ("Antoine Armand", "Anglo-Russian
+// Convention") scored thirteen facts and skipped the trigger, while the answers
+// that needed concentration risk, digital india and Darjeeling never saw them.
+// A second write pass over half a million candidates also doubled synthesis
+// cost, so the fix that reached every question was the one that cost nothing
+// extra: fetch BM25 once, dedupe against the phrase candidates, and let the
+// scorer rank them together under the relaxed gate reserved for flagged
+// candidates.
+var extra = [];
+if (typeof opts.fulltext === 'function') {
+try {
+extra = opts.fulltext(question) || [];
+} catch (e) { extra = []; }
+}
+var ftFetched = extra.length, added = 0;
+if (extra.length) {
+var seenS = {};
+candidates.forEach(function (c) { seenS[c.entity + '\u0000' + c.sentence] = 1; });
+extra.forEach(function (c) {
+if (!c || !c.sentence) return;
+var key = c.entity + '\u0000' + c.sentence;
+if (seenS[key]) return;
+seenS[key] = 1;
+c.fulltext = true;
+candidates.push(c);
+added++;
+});
+}
 
 var doc = SYNTH.write(question, candidates, {
 subject: subject,
@@ -838,6 +950,8 @@ maxPerSection: opts.perHeading || 4,
 // passed on accumulated words.
 expandPhrases: opts.expandTerms
 });
+doc.fulltextCandidates = ftFetched;
+doc.fulltextAdded = added;
 doc.bucketsFetched = buckets;
 doc.bytes = bytes;
 doc.terms = allTerms;
