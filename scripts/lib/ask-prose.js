@@ -496,7 +496,13 @@ function toText(doc) {
 
 function opts_min(opts) { return (opts && opts.minRelevance != null) ? opts.minRelevance : 0.34; }
 
-module.exports = {
+// Exported as a UMD value rather than a bare `module.exports`, because ask.html
+// now loads this file with a plain <script src> for the synthesis layer. A bare
+// `module.exports =` throws `module is not defined` in a browser, which would
+// kill every later script tag on the page; the guard keeps the CommonJS path
+// byte-identical for the offline tests while publishing the same object as a
+// global for the page.
+var PROSE = {
   paragraph: paragraph,
   write: write,
   toText: toText,
@@ -511,3 +517,9 @@ module.exports = {
   selectFor: selectFor,
   COMPOSE_VERSION: COMPOSE_VERSION
 };
+
+if (typeof module === 'object' && module.exports) {
+  module.exports = PROSE;
+} else if (typeof self !== 'undefined') {
+  self.VlymbooqAskProse = PROSE;
+}

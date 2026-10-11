@@ -91,7 +91,10 @@ h1{font-size:24px;margin:6px 0 8px}
 <script src="scripts/lib/ask-entity-evidence.js"></script>
 <script src="scripts/lib/ask-compose.js"></script>
 <script src="scripts/lib/build-ask-qb-buckets-hash.js"></script>
+<script src="scripts/lib/ask-prose.js"></script>
+<script src="scripts/lib/ask-synthesize.js"></script>
 <script src="scripts/lib/ask-browser.js"></script>
+<script src="scripts/lib/ask-llm.js"></script>
 <script>
 'use strict';
 // The question-bank path is OFF by default and must be turned on deliberately.
@@ -119,6 +122,15 @@ var ASK_QB_ENABLED = false;
 // navigational path works off shards while this path additionally needs the
 // entity table, and they should be able to ship on different days.
 var ASK_MAINS_ENABLED = false;
+
+// Local answer composition. The retrieval layer gathers every corpus sentence
+// that touches the question, and a small language model running in this browser
+// writes the answer from them. It is a separate flag from the two above because
+// it changes what the page claims: the other paths only ever quote, while this
+// one produces prose. Nothing is sent anywhere -- WebLLM compiles the weights on
+// the visitor's own GPU, and the first visit downloads them once from a public
+// CDN where the browser caches them.
+var ASK_LLM_ENABLED = true;
 
 var IDX = null;
 var QB_READY = false;
@@ -569,6 +581,48 @@ h += '</div></div>';
 return h;
 }
 
+// A composed answer. Unlike renderMains, the prose under each heading was
+// written by the model rather than quoted wholesale, so the renderer's job is
+// the opposite: keep the generated text readable while making the facts it
+// rests on one click away. Every numbered fact the model was given is listed
+// under the answer with its source entity, so a reader can check a claim
+// against the sentence it came from instead of trusting it.
+function renderLLM(out, facts, doc) {
+var h = '<div class="result"><div class="answer">' +
+'<h2>Answer</h2>' +
+'<div class="diag"><span>composed locally from ' + facts.length +
+' corpus fact(s)</span><span>' + (doc.bucketsFetched || 0) + ' shard(s) searched</span>' +
+'<span>no data leaves this browser</span></div>';
+
+// The search terms the model chose are shown because they explain the answer's
+// reach: a reader can see that "artificial intelligence act" was looked up even
+// though the question never said it, which is what made that fact available.
+if (out.expanded && out.expanded.terms && out.expanded.terms.length) {
+h += '<div class="diag"><span>looked up: ' +
+esc(out.expanded.terms.join(', ')) + '</span></div>';
+}
+
+out.sections.forEach(function (s) {
+h += '<h3>' + esc(s.heading) + '</h3>';
+s.lines.forEach(function (line) {
+h += '<p>' + esc(line) + '</p>';
+});
+});
+
+h += '<h3>Sources</h3>';
+facts.forEach(function (f, i) {
+h += '<div class="ev"><div class="src">' +
+'<a href="archive.html" target="_blank">' + esc(f.entity || 'corpus') + '</a>' +
+' &middot; fact ' + (i + 1) + '</div><p>' + esc(f.sentence) + '</p></div>';
+});
+
+h += '<p class="reason">The prose above was written by a small model running in ' +
+'this browser from the facts listed. Check any claim against its source before ' +
+'using it.</p>';
+h += '</div></div>';
+return h;
+}
+
 function doAsk() {
 var q = el('q').value.trim();
 if (!q) { el('out').innerHTML = '<div class="empty">Type a question first.</div>'; return; }
@@ -578,11 +632,87 @@ STATE.question = q;
 STATE.planMiss = null;
 el('ask').disabled = true;
 
-// Structured mains answering is tried first when enabled, because it is the only
-// path that can return an answer for a multi-entity question. It falls through
-// to the navigational question-bank path and then to the timeline when it has no
-// outline or quotes nothing.
-if (ASK_MAINS_ENABLED && QB_READY) {
+// Local answer composition runs first when enabled. Retrieval gathers every
+// corpus sentence that touches the question -- through the entity path when the
+// question names an entity, through the phrase index when it does not -- and the
+// model writes one structured answer from them. Each of the two lower paths is
+// still the fallback, so a question the corpus genuinely cannot reach, or a
+// machine with no WebGPU, still lands on the plain quoted evidence below
+// rather than on an error.
+if (ASK_LLM_ENABLED && QB_READY && typeof VlymbooqAskLLM !== 'undefined') {
+el('out').innerHTML = '<div class="load">Gathering corpus facts&hellip;</div>';
+askLLMAnswer(q).then(function (res) {
+if (res) { el('out').innerHTML = res; return; }
+// No facts, or the model could not start: fall through to the paths below.
+runLegacyAsk(q);
+}).catch(function (err) {
+el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+el('ask').disabled = false;
+});
+return;
+}
+
+runLegacyAsk(q);
+}
+
+// Gather facts and compose them. Returns the rendered HTML, or null when there
+// is nothing to compose over, so the caller falls back to a path that quotes
+// instead of generating.
+//
+// The order is the one a knowledgeable person follows: first decide what the
+// question is really about, then look, then write. Retrieving on the literal
+// words alone finds sentences repeating the question, never the law named in
+// the answer, because the corpus files that law under an entity the question
+// never spells out. Asking the model what to search for first is what reaches
+// it -- the same two-call shape as a search assistant.
+function askLLMAnswer(q) {
+var subject = (typeof VlymbooqAskCore !== 'undefined' && VlymbooqAskCore.subjectOf)
+  ? VlymbooqAskCore.subjectOf(q) : '';
+
+var expanded = null;
+el('out').innerHTML = '<div class="load">Deciding what to look up&hellip;</div>';
+
+// Expansion is an enhancement, not a dependency: with no WebGPU its promise
+// rejects and retrieval runs on the question's own terms, so the page still
+// answers on hardware the model cannot run on. The rejection is caught here
+// rather than by the caller because the caller's catch renders an error, and
+// a question that merely could not be expanded is not an error.
+return VlymbooqAskLLM.expand(q, {
+  onProgress: function (msg) { el('out').innerHTML = '<div class="load">' + esc(msg) + '</div>'; }
+}).catch(function () { return null; }).then(function (e) {
+  expanded = e;
+  var hint = expanded ? expanded.terms.slice(0, 4).join(', ') : '';
+  el('out').innerHTML = '<div class="load">Gathering corpus facts' +
+    (hint ? '&hellip; ' + esc(hint) : '&hellip;') + '</div>';
+  return VlymbooqAskBrowser.synthesize(q, {
+    subject: subject || q,
+    perHeading: 6,
+    expandTerms: expanded ? expanded.terms : null
+  });
+  }).then(function (doc) {
+  // `facts` is the scored material the composer needs; `candidates` is only
+  // how many raw sentences were considered. A thin corpus means there is
+  // nothing worth generating from, so the caller quotes instead.
+  var facts = (doc && doc.facts) || [];
+  if (facts.length < 6) return null;
+  facts = facts.slice(0, 40);
+  el('out').innerHTML = '<div class="load">Writing the answer in your browser&hellip;</div>';
+  return VlymbooqAskLLM.synthesize(q, facts, {
+    onProgress: function (msg) {
+      el('out').innerHTML = '<div class="load">' + esc(msg) + '</div>';
+    }
+  }).then(function (out) {
+    if (!out || !out.sections || !out.sections.length) return null;
+    out.expanded = expanded;
+    return renderLLM(out, facts, doc);
+  });
+});
+}
+
+// The paths that predate local composition: structured mains, the question bank,
+// then the timeline. Split out so the model path can hand back to them without
+// duplicating their fallback order.
+function runLegacyAsk(q) {
 // Headings are planned from the corpus, not remembered from a table. When the
 // question's terms match nothing, that is recorded so the refusal can say what was
 // actually searched instead of blaming the corpus for a routing miss.
@@ -607,7 +737,6 @@ el('out').innerHTML = renderMains(composed, planned.key);
 el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
 }).then(function () { el('ask').disabled = false; });
 return;
-}
 }
 
   // The question bank is the primary source: it is the whole corpus, not the

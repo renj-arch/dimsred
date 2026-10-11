@@ -16,15 +16,17 @@ module.exports = factory({
     entityEvidence: require('./ask-entity-evidence.js'),
     compose: require('./ask-compose.js'),
     bucketHash: require('./build-ask-qb-buckets-hash.js'),
-    prose: require('./ask-prose.js')
+    prose: require('./ask-prose.js'),
+    synthesize: require('./ask-synthesize.js')
 });
 } else {
   root.VlymbooqAskBrowser = factory({
     entityEvidence: root.VlymbooqAskEntityEvidence,
     compose: root.VlymbooqAskCompose,
     bucketHash: root.VlymbooqAskBucketHash,
-    prose: root.VlymbooqAskProse
-});
+    prose: root.VlymbooqAskProse,
+    synthesize: root.VlymbooqAskSynthesize
+  });
 }
 }(typeof self !== 'undefined' ? self : this, function (deps) {
 'use strict';
@@ -47,6 +49,12 @@ var BUCKET = deps && deps.bucketHash;
 // `essay()` needs it and must refuse cleanly when it is absent, while the
 // navigational `ask()` path keeps working regardless.
 var PROSE = deps && deps.prose;
+
+// The synthesis layer. Injected for the same reason as the others: it answers the
+// questions that name no entity, by reaching through the phrase index instead of
+// the entity table. Absent it, only the entity path is available and the module
+// returns null so the caller can fall back rather than fail.
+var SYNTH = deps && deps.synthesize;
 
 var QB = 'data/ask-qb/';
 
@@ -702,6 +710,141 @@ return finish({ rows: rows, bytes: bytes, buckets: ranked.length });
 return finish(null, err);
 });
 
+});
+},
+
+// Answer a question that names no entity, by reaching through the phrase index.
+//
+// The entity path resolves a heading to a row of the entity table and quotes that
+// row. It cannot answer "discuss the challenges of regulating emerging
+// technologies", because no row is called that: the facts live under dozens of
+// unrelated entities and no single lookup reaches them.
+//
+// This path reaches them by term. Every content term of the question is looked up
+// in the phrase index, which reports which buckets hold sentences containing it;
+// the buckets holding the most matching text are fetched, and every sentence in
+// them is scored against the question. What survives is grouped into the shape a
+// mains answer takes -- introduction, the hard parts by dimension, way forward --
+// with each sentence still carrying its source entity.
+//
+// Returns null when the phrase index is not deployed, so a caller falls back to
+// the entity path instead of reporting an empty corpus it never searched.
+synthesize: function (question, opts) {
+opts = opts || {};
+if (!state.ready) return Promise.reject(new Error('engine not booted'));
+if (!SYNTH || !state.buckets || !BUCKET) return Promise.resolve(null);
+
+var subject = opts.subject || question;
+var terms = SYNTH.terms(question);
+if (!terms.length && !(opts.expandTerms || []).length) return Promise.resolve(null);
+
+// Terms to search: the question's own, plus any the model named when it decided
+// what the question is really about. The two sources are merged here rather than
+// by the caller because both need the same two lookups below -- a term is only
+// useful if some shard holding it is fetched, and how a term got suggested does
+// not change that.
+var allTerms = terms.slice();
+(opts.expandTerms || []).forEach(function (t) {
+  t = String(t || '').trim();
+  if (t && allTerms.indexOf(t) === -1) allTerms.push(t);
+});
+
+// One phrase-index shard per term, deduped by shard so a term and an alternate
+// naming the same shard do not fetch it twice.
+var seen = {}, jobs = [];
+allTerms.forEach(function (t) {
+var bi = BUCKET.bucketOf(t, state.buckets.bucketCount || 512);
+if (seen[bi]) return;
+seen[bi] = 1;
+jobs.push(api.phraseLookup(t));
+});
+
+// An expanded term is often an entity name the question never wrote --
+// "artificial intelligence act" names a law whose sentences are filed under
+// that entity, and no phrase probe reaches them. Resolving expanded terms
+// against the entity table is what closes that gap: exact match first, then the
+// same wrapper-aware candidates() the entity path uses, so a term that names a
+// real entity contributes its bucket as well.
+var entBuckets = {};
+if (state.entityDir) {
+(opts.expandTerms || []).forEach(function (t) {
+  t = String(t || '').trim();
+  if (!t) return;
+  var ids = state.entityDir.lookup(t);
+  if (ids) {
+    var bi = BUCKET.bucketOf(t, state.buckets.bucketCount || 512);
+    if (state.bucketById[bi]) entBuckets[bi] = t;
+    return;
+  }
+  var cand = state.entityDir.candidates(t);
+  for (var c = 0; c < cand.length; c++) {
+    if (!cand[c].strong) break;
+    var bi2 = BUCKET.bucketOf(cand[c].name, state.buckets.bucketCount || 512);
+    if (state.bucketById[bi2]) { entBuckets[bi2] = cand[c].name; break; }
+  }
+});
+}
+
+return Promise.all(jobs).then(function (hits) {
+var packed = [];
+hits.forEach(function (h, i) { if (h) packed.push({ term: h.term, hit: h }); });
+
+var cap = opts.maxBuckets == null ? 24 : opts.maxBuckets;
+var ranked = packed.length ? SYNTH.rankBuckets(packed, cap) : [];
+
+// Entity buckets come from resolution, not from document frequency, so they
+// cannot be ranked by the phrase index. They are appended after the cap: a
+// term the model nominated is a deliberate choice, and truncating it to fit a
+// budget sized for incidental matches would defeat the expansion.
+Object.keys(entBuckets).forEach(function (b) {
+  var already = ranked.some(function (r) { return String(r.bucket) === String(b); });
+  if (!already) ranked.push({ bucket: b, score: 0, terms: [entBuckets[b]] });
+});
+if (!ranked.length) return null;
+
+var foundTerms = {};
+ranked.forEach(function (r) {
+(r.terms || []).forEach(function (t) { foundTerms[t] = 1; });
+});
+
+return Promise.all(ranked.map(function (r) {
+var meta = state.bucketById[r.bucket];
+var file = meta && meta.file ? meta.file : QB + 'bucket/bucket.' + r.bucket + '.json';
+return loadShard(file).then(function (out) {
+return { rows: out.rows || [], bucket: r.bucket, terms: r.terms || [] };
+}, function () { return { rows: [], bucket: r.bucket, terms: r.terms || [] }; });
+})).then(function (parts) {
+var candidates = [], bytes = 0, buckets = 0;
+parts.forEach(function (p) {
+if (!p.rows.length) return;
+buckets++;
+var meta = state.bucketById[p.bucket];
+bytes += meta ? (meta.bytes || 0) : 0;
+p.rows.forEach(function (row) {
+if (!row || !row[0] || !row[1]) return;
+row[1].forEach(function (s) {
+candidates.push({ entity: row[0], sentence: s, cats: row[2] || [],
+  bucket: p.bucket, terms: p.terms });
+});
+});
+});
+
+var doc = SYNTH.write(question, candidates, {
+subject: subject,
+minRelevance: opts.minRelevance,
+maxPerSection: opts.perHeading || 4,
+// The model's own terms rank as topic phrases: it named them because it judged
+// them central, and a sentence holding one is better evidence than one that
+// passed on accumulated words.
+expandPhrases: opts.expandTerms
+});
+doc.bucketsFetched = buckets;
+doc.bytes = bytes;
+doc.terms = allTerms;
+doc.foundTerms = Object.keys(foundTerms);
+doc.entityBuckets = Object.keys(entBuckets).length;
+return doc;
+});
 });
 }
 };
