@@ -579,17 +579,34 @@ async function fetchWikiCurrentEvents() {
   }
 }
 
-// Hard content filter: never surface kill/violence/death/disaster news from
-// the Wikipedia listeners. Events that only involve death, war, crime or
-// disaster are excluded from the feed entirely.
+// Hard content filter: never surface kill/violence/death/disaster news.
+// Events that only involve death, war, crime or disaster are excluded from
+// the feed entirely. Applied to EVERY source (PIB English/RSS/regional, RBI,
+// SEBI, Supreme Court, ISRO, MEA, Wikipedia listeners) and re-applied to
+// existing stored items, so one district murder or accident never reaches
+// the current-affairs feed or the quizzes generated from it.
 var HARM_PATTERNS = [
-  /(?:killed?|kills|killing|death|deaths|died|dies|dead|fatal(?:ity|ities)?|victim|slaughter|massacre|murder|homicid(?:e|es)?|suicide?|behead|explos|bomb|blast|shoot(?:ing|ings|er|ers)?|gun(?:man|fire|shot)?|stab(?:bed|bing)?|assassin|\battack(?:ed|ing|s)?\b|ambush|lynch|kidnap|abduct|rap(?:e|ed|ist)|genocide|ethnic\s+cleansing|war\s+crimes|crash(?:ed|es|ing)?|injured|injury|wounded|bodies|funeral|cremat)/i,
+  /(?:killed?|kills|killing|death|deaths|died|dies|dead|fatal(?:ity|ities)?|victim|slaughter|massacre|murder|homicid(?:e|es)?|suicide?|behead|explosion|exploded|bomb|blast|shoot(?:ing|ings|er|ers)?|gun(?:man|fire|shot)?|stab(?:bed|bing|bings)?\b|assassin|\battack(?:ed|ing|s)?\b|ambush|lynch|kidnap|abduct|rap(?:e|ed|ist)|genocide|ethnic\s+cleansing|war\s+crimes|crash(?:ed|es|ing)?|injured|injury|wounded|bodies|funeral|cremat)/i,
   /earthquake|tsunami|avalanche|landslide|flood(?:ing|ed|s)?|cyclone|hurricane|typhoon|wildfire|volcanic?\s+eruption|eruptions?|mudslide/i,
   /mass\s+(?:grave|killings?)|body\s+count|reported\s+missing|civilian\s+casualti|\bgang\b|arrests?\s+\d+\s+suspected/i
 ];
 
+// Words that collide with the harm patterns but are core UPSC material.
+// Checked FIRST: if a keep pattern matches, the item is retained even when a
+// harm word is present ("market crash" is economy news, "death rate" is
+// demography, "cyber attack" is security policy).
+var KEEP_PATTERNS = [
+  /\b(?:sensex|nifty|market|markets|rupee|rupees|stocks?|shares?|forex|indices|index|portfolio)\b[^.]{0,80}\b(?:crash|crashes|crashed|collaps|slump|tumble|plunge)/i,
+  /\b(?:crash|crashes|crashed|collaps\w*|slump|tumble|plunge)\b[^.]{0,80}\b(?:sensex|nifty|market|rupee|stocks?|shares?|economy|economic|gdp|inflation)\b/i,
+  /\b(?:birth|death|infant|mortality|maternal|crude)\s+(?:rate|rates|ratio|ratios|registration|decline|declined)/i,
+  /\bcyber\s*(?:attack|attacks|threat|threats|fraud)/i
+];
+
 function hasHarmText(text) {
   var t = ' ' + (text || '') + ' ';
+  for (var i = 0; i < KEEP_PATTERNS.length; i++) {
+    if (KEEP_PATTERNS[i].test(t)) return false;
+  }
   for (var i = 0; i < HARM_PATTERNS.length; i++) {
     if (HARM_PATTERNS[i].test(t)) return true;
   }
@@ -683,6 +700,17 @@ async function fetchAll() {
     return item.title && isEnglishText(item.title);
   });
 
+  // Hard content filter over EVERY source: district murders, accidents,
+  // disasters and crime-only stories are not current affairs. keep-list
+  // exceptions (market crash, death rate, cyber attack) protect stories
+  // that share harm words but are core UPSC material.
+  var harmDropped = 0;
+  merged = merged.filter(function(item) {
+    if (hasHarmText(item.title + ' ' + (item.description || ''))) { harmDropped++; return false; }
+    return true;
+  });
+  if (harmDropped) timeLog('Harm filter dropped ' + harmDropped + ' new items');
+
   // Strip all links — this site shows content only, no external navigation
   merged = merged.map(function(item) { item.link = ''; return item; });
 
@@ -715,6 +743,7 @@ async function fetchAll() {
   existing = existing.filter(function(item) {
     if (!item.title) return false;
     if (!isEnglishText(item.title)) return false;
+    if (hasHarmText(item.title + ' ' + (item.description || ''))) return false;
     item.link = '';
     item.category = categorizeItem(item.title, item.description || '');
     item.region = extractRegion(item.title, item.description || '');

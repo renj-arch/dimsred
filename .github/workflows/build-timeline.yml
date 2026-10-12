@@ -35,6 +35,11 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Observed 2h18m–3h32m end-to-end (timeline ~3h + index + mind-tree +
+    # checks + commit). Explicit cap below GitHub's 360-minute default so a
+    # corpus growth spurt can never land this job on the hard 6h kill; the
+    # weekly cron and daily-wiki-fill's self-dispatch both retry cheaply.
+    timeout-minutes: 350
     steps:
       # PAT, not GITHUB_TOKEN: GitHub suppresses workflow triggers for
       # GITHUB_TOKEN pushes, so the rebuild commit would never reach

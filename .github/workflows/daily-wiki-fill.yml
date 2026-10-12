@@ -374,10 +374,21 @@ jobs:
     # whole cancellation window. Chunk failures still reach finalize via archive.
     if: ${{ !cancelled() && needs.archive.result == 'success' }}
     runs-on: ubuntu-latest
+    # Explicit cap below GitHub's 360-minute default so a runaway never lands
+    # on the hard 6h kill. The 6h-cap guard on the timeline step (below) keeps
+    # normal runs far under this: timeline only starts when it can FINISH, and
+    # build-timeline.yml is self-dispatched at the end as the continuation path.
+    timeout-minutes: 350
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Deadline clock for the 6h-cap guard: everything below measures elapsed
+      # time against this stamp so the 3-hour timeline rebuild is only STARTED
+      # when there is enough budget left to finish it and still commit data.
+      - name: Start finalize deadline clock
+        run: echo "FINALIZE_START=$(date +%s)" >> "$GITHUB_ENV"
 
       - uses: actions/setup-node@v4
         with:
@@ -402,10 +413,29 @@ jobs:
       - name: Validate Mains answer bank
         run: node scripts/validate-mains.js
 
+      # 6h-cap guard: the timeline rebuild takes ~3h. Only start it when
+      # 3h20m + a 10m commit/dispatch tail still remains before the job's
+      # 350-minute cap; otherwise DEFER it — finalize still commits the
+      # harvested questions below, and the build-timeline.yml run that is
+      # always self-dispatched at the end of this job rebuilds timeline +
+      # Ask index + mind-tree on a fresh clock. This is the difference between
+      # "deferred and continued" and GitHub killing the job at 6h with nothing
+      # committed.
       - name: Rebuild timeline map from question data
         continue-on-error: true
         run: |
-          NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+          NOW=$(date +%s)
+          ELAPSED=$(( NOW - FINALIZE_START ))
+          REMAINING=$(( 350*60 - ELAPSED ))
+          NEEDED=$(( 3*3600 + 1200 + 600 ))
+          if [ "$REMAINING" -ge "$NEEDED" ]; then
+            echo "Timeline guard: ${REMAINING}s remain >= ${NEEDED}s needed — running"
+            echo "TIMELINE_DEFERRED=" >> "$GITHUB_ENV"
+            NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+          else
+            echo "Timeline guard: only ${REMAINING}s remain < ${NEEDED}s needed — DEFERRED to self-dispatched build-timeline.yml"
+            echo "TIMELINE_DEFERRED=1" >> "$GITHUB_ENV"
+          fi
 
       # Rebuild the Ask engine's retrieval index from the fresh timeline nodes.
       # It was generated exactly once and never rebuilt, so ask.html served a
@@ -418,10 +448,23 @@ jobs:
       # their own builders and their own workflow (build-ask-qb.yml,
       # self-dispatched below). Running this step alone leaves the question bank
       # stale.
+      # Skipped when the timeline guard deferred: this index reads the node
+      # parts the step above produces, so rebuilding it against old nodes
+      # would just hide the staleness. build-timeline.yml runs both steps
+      # unconditionally on its fresh clock, so nothing stays stale either way.
       - name: Rebuild Ask engine index
+        if: ${{ env.TIMELINE_DEFERRED != '1' }}
         continue-on-error: true
         run: |
           NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-ask-index.js || echo "ask index rebuild skipped/failed — questions still committed"
+
+      # Per-category low-count coverage report. Runs AFTER classify (merged
+      # data is already routed into the right categories) and BEFORE commit
+      # so data/wiki-coverage.json is staged by `git add -A` below and lands
+      # on main after every run. Never blocks: the script exits 0 even when
+      # it fails; thresholds come from COVERAGE_LOW_MIN/COVERAGE_CRITICAL_MIN.
+      - name: Category coverage report
+        run: node scripts/wiki-coverage-report.js
 
       - run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
