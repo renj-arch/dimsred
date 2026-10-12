@@ -178,7 +178,13 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git checkout --orphan corpus-tmp 2>/dev/null || git checkout --orphan corpus-tmp-$$
           git reset
-          git add data/ask-qb/bucket data/ask-qb/phrase
+          # -f is REQUIRED: .gitignore lines data/ask-qb/bucket/* and
+          # data/ask-qb/phrase/* keep these artefacts off main, and a plain
+          # `git add` of an ignored directory silently adds nothing (only the
+          # un-ignored buckets.json manifest ever landed -- run #19's "corpus"
+          # branch was 200 KB, not 2 GB). The ignore rules protect main; this
+          # orphan branch is exactly where the shards belong.
+          git add -f data/ask-qb/bucket data/ask-qb/phrase
           git commit -m "Ask corpus $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
           git branch -f corpus HEAD
           git push --force origin corpus && echo "Pushed corpus branch" || echo "Corpus push failed"
