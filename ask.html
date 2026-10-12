@@ -71,6 +71,7 @@ h1{font-size:24px;margin:6px 0 8px}
       This engine answers UPSC questions <em>only</em> from material in this site's own corpus. It retrieves verbatim sentences with source links. It never generates text, never uses an AI model, and never guesses. If the corpus doesn't cover your question, it says so.
     </div>
     <div class="meta" id="meta"></div>
+    <a id="export-data" style="display:none;cursor:pointer" title="Download every answer composed in this browser as JSONL, ready to fine-tune a model on"></a>
   </header>
 
   <div class="ask-box">
@@ -78,6 +79,10 @@ h1{font-size:24px;margin:6px 0 8px}
     <div class="ask-row">
       <textarea id="q" placeholder="e.g. What is the anti-defection law in India?"></textarea>
       <button class="btn" id="ask">Ask</button>
+      <select id="model" title="Writing model">
+        <option value="fast">Fast (1.5B)</option>
+        <option value="quality">Quality (3B)</option>
+      </select>
     </div>
     <div class="samples" id="samples"></div>
   </div>
@@ -95,6 +100,7 @@ h1{font-size:24px;margin:6px 0 8px}
 <script src="scripts/lib/ask-synthesize.js"></script>
 <script src="scripts/lib/ask-browser.js"></script>
 <script src="scripts/lib/ask-llm.js"></script>
+<script src="scripts/lib/ask-dataset.js"></script>
 <script src="scripts/lib/ask-fulltext.js"></script>
 <script>
 'use strict';
@@ -717,6 +723,22 @@ return VlymbooqAskLLM.expand(q, {
   }).then(function (out) {
     if (!out || !out.sections || !out.sections.length) return null;
     out.expanded = expanded;
+    // A good answer is also a training example: keep the question, the terms
+    // that were looked up, the facts the model saw, and its prose, so the
+    // exported JSONL can be fine-tuned on without re-running retrieval.
+    if (window.VlymbooqAskDataset) {
+      VlymbooqAskDataset.record({
+        q: q,
+        subject: subject,
+        terms: expanded ? expanded.terms : [],
+        facts: facts,
+        plan: out.plan,
+        sections: out.sections,
+        answer: out.raw,
+        model: VlymbooqAskLLM.modelId ? VlymbooqAskLLM.modelId() : ''
+      });
+      updateExportLink();
+    }
     return renderLLM(out, facts, doc);
   }).catch(function () {
     // The engine failed after the facts were already gathered: no WebGPU, a
@@ -859,8 +881,28 @@ function updateStatus() {
     bits.push('Question bank unavailable: ' + QB_ERROR.message);
   }
   bits.push('zero AI, zero generation');
-  el('meta').textContent = bits.join(' &middot; ');
+  el('meta').textContent = bits.join(' · ');
+  updateExportLink();
 }
+
+// The training-data link only appears once there is something to export, and
+// carries its own count so a user can see examples accumulating.
+function updateExportLink() {
+  var link = document.getElementById('export-data');
+  if (!link || !window.VlymbooqAskDataset) return;
+  var n = VlymbooqAskDataset.count();
+  if (n > 0) {
+    link.style.display = '';
+    link.textContent = 'Export training data (' + n + ' answer' + (n === 1 ? '' : 's') + ')';
+  } else {
+    link.style.display = 'none';
+  }
+}
+document.addEventListener('click', function (e) {
+  if (e.target && e.target.id === 'export-data' && window.VlymbooqAskDataset) {
+    VlymbooqAskDataset.download();
+  }
+});
 
 function boot(idx, meta) {
   IDX = idx;
@@ -895,6 +937,16 @@ document.addEventListener('click', function (e) {
 el('q').addEventListener('keydown', function (e) {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) doAsk();
 });
+
+// Writing-model choice. Stored so the next visit compiles the same size; the
+// engine unloads and recompiles on the next question if the choice changed.
+if (window.VlymbooqAskLLM) {
+  var modelSel = el('model');
+  modelSel.value = VlymbooqAskLLM.currentModelKey();
+  modelSel.addEventListener('change', function () {
+    try { localStorage.setItem('askModel', modelSel.value); } catch (err) {}
+  });
+}
 
 // The question-bank routing tables (~10.5 MB, nearly all the entity table) load
 // in the background. The page is usable before they arrive, because the timeline

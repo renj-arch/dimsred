@@ -30,7 +30,27 @@ if (typeof module === 'object' && module.exports) {
 // and runs on hardware without a discrete GPU. Qwen is chosen because its
 // instruction following is reliable at this size, which matters more than raw
 // breadth for a fixed answer template.
-var MODEL_ID = 'Qwen/Qwen2.5-1.5B-Instruct-q4f16_1-MLC';
+//
+// Two sizes are offered: the 1.5B that anyone's GPU can drive, and a 3B that
+// writes somewhat better prose at roughly twice the wait. The org prefix is
+// `mlc-ai/` -- the WebLLM 0.2.86 catalog no longer serves the older `Qwen/`
+// prefix, and asking for a record the catalog does not hold fails with a
+// ModelNotFoundError before a single weight is fetched.
+var MODELS = {
+  fast:    { id: 'mlc-ai/Qwen2.5-1.5B-Instruct-q4f16_1-MLC', label: 'Fast (1.5B)' },
+  quality: { id: 'mlc-ai/Qwen2.5-3B-Instruct-q4f16_1-MLC',   label: 'Quality (3B, slower)' }
+};
+var DEFAULT_MODEL = 'fast';
+
+function currentModelKey() {
+  try {
+    var k = typeof localStorage !== 'undefined' && localStorage.getItem('askModel');
+    if (k && MODELS[k]) return k;
+  } catch (e) { /* private mode etc. -- fall back */ }
+  return DEFAULT_MODEL;
+}
+
+function modelId() { return MODELS[currentModelKey()].id; }
 // The library is vendored with the page (scripts/vendor/webllm, pinned to the
 // version this code was written against) so the only network dependency is the
 // model weights themselves. The CDN is a fallback for pages opened straight
@@ -43,8 +63,61 @@ var VENDOR_URL = 'scripts/vendor/webllm/index.min.js';
 var CDN_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.86/lib/index.min.js';
 
 var engine = null;
+var engineKey = null;
 var loading = null;
 var engineError = null;
+
+// --- pluggable writer ------------------------------------------------------
+// The three prompts below (expand / plan / write) are the whole instruction
+// set. They are plain strings -- no model knowledge is baked into them -- so
+// the engine behind them can be swapped without touching retrieval, scoring,
+// or the page. Two ways to plug a different model in, both independent of any
+// CDN:
+//
+//   1. A function: VlymbooqAskLLM.setBackend(function (prompt, opts) {
+//        return fetch('http://localhost:8080/v1/completions', ...);  // -> string
+//      });
+//   2. An OpenAI-compatible engine object (anything shaped like
+//      { chat: { completions: { create: ... } } } -- WebLLM's own shape) --
+//      set it directly, or define window.AskWriterBackend before loading
+//      this file and it is picked up automatically.
+//
+// Either way the page never fetches a model from a CDN and never needs
+// WebGPU; the WebLLM path below is only the default backend.
+var customBackend = null;
+if (typeof window !== 'undefined' && window.AskWriterBackend) {
+  customBackend = window.AskWriterBackend;
+}
+
+function setBackend(impl) {
+  customBackend = impl || null;
+  engine = null;
+  engineKey = null;
+  loading = null;
+  engineError = null;
+}
+
+// Normalize whatever was set into the one shape generate() calls.
+function backendEngine() {
+  if (!customBackend) return null;
+  if (typeof customBackend === 'function') {
+    var fn = customBackend;
+    return {
+      chat: { completions: { create: function (req) {
+        var msgs = (req && req.messages) || [];
+        var last = msgs[msgs.length - 1] || {};
+        return Promise.resolve(fn(String(last.content || ''), {
+          messages: msgs,
+          temperature: req && req.temperature,
+          max_tokens: req && req.max_tokens
+        })).then(function (text) {
+          return { choices: [{ message: { content: String(text == null ? '' : text) } }] };
+        });
+      } } }
+    };
+  }
+  return customBackend;
+}
 
 // Progress is reported through a callback because compiling a model takes long
 // enough that a silent page looks broken. The caller paints each stage.
@@ -62,29 +135,48 @@ function loadLibrary() {
 }
 
 // Boot the engine once. Subsequent calls share the same promise, so mashing the
-// ask button cannot start three compiles at once.
+// ask button cannot start three compiles at once. If the visitor switches
+// models mid-session, the old engine is unloaded and the new size compiles.
 function ensureEngine(onProgress) {
-  if (engine) return Promise.resolve(engine);
-  if (engineError) return Promise.reject(engineError);
-  if (loading) return loading;
+  // A plugged-in backend replaces WebLLM entirely: no WebGPU, no CDN weights.
+  var custom = backendEngine();
+  if (custom) return Promise.resolve(custom);
+
+  var key = currentModelKey();
+  if (engine && engineKey === key) return Promise.resolve(engine);
+  if (loading && engineKey === key) return loading;
+  if (engineError && engineKey === key) return Promise.reject(engineError);
 
   if (typeof navigator !== 'undefined' && !navigator.gpu) {
     engineError = new Error(
       'This browser has no WebGPU, so the answer writer cannot run. ' +
       'Use a recent Chrome or Edge, or set chrome://flags/#enable-unsafe-webgpu.');
+    engineKey = key;
     return Promise.reject(engineError);
   }
 
+  // Switching sizes: drop the compiled engine before compiling the new one,
+  // or two models sit in VRAM at once.
+  var prev = engine;
+  engine = null;
+  engineError = null;
+  engineKey = key;
+
   var report = onProgress || function () {};
   loading = loadLibrary().then(function (webllm) {
-    report('downloading the writing model (about 1 GB, once)…');
-    return webllm.CreateMLCEngine(MODEL_ID, {
-      initProgressCallback: function (p) {
-        var pct = p.progress == null ? 0 : Math.round(p.progress * 100);
-        report(pct < 100
-          ? 'preparing the writing model… ' + pct + '%'
-          : 'ready');
-      }
+    var drop = (prev && typeof prev.unload === 'function')
+      ? Promise.resolve(prev.unload()).catch(function () {})
+      : Promise.resolve();
+    return drop.then(function () {
+      report('downloading the writing model (' + MODELS[key].label + ')…');
+      return webllm.CreateMLCEngine(MODELS[key].id, {
+        initProgressCallback: function (p) {
+          var pct = p.progress == null ? 0 : Math.round(p.progress * 100);
+          report(pct < 100
+            ? 'preparing the writing model… ' + pct + '%'
+            : 'ready');
+        }
+      });
     });
   }).then(function (eng) {
     engine = eng;
@@ -452,11 +544,15 @@ return {
   synthesize: synthesize,
   expand: expand,
   ensureEngine: ensureEngine,
+  setBackend: setBackend,
+  backendEngine: backendEngine,
   buildPrompt: buildPrompt,
   buildPlanPrompt: buildPlanPrompt,
   buildWritePrompt: buildWritePrompt,
   parsePlan: parsePlan,
   parse: parse,
-  MODEL_ID: MODEL_ID
+  MODELS: MODELS,
+  currentModelKey: currentModelKey,
+  modelId: modelId
 };
 }));
