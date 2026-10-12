@@ -121,26 +121,6 @@ jobs:
       - name: Build phrase index
         run: node --max-old-space-size=12288 scripts/build-ask-qb-phrases.js
 
-      # Ship the corpus on its own force-replaced branch, never on main.
-      # 2 GB of build artefact cannot live in a 10 MB-a-day history, and the
-      # slim deploy already reads from branches (see `live` in slim-live.yml).
-      # A force-push keeps exactly one commit, so the branch never grows and
-      # no clone of main ever sees the blobs. slim-live.yml fetches this
-      # branch into the deploy tree; if it is absent the site ships without
-      # the corpus, which is the graceful degradation Ask already handles.
-      - name: Push corpus branch
-        if: inputs.commit != 'false'
-        run: |
-          rm -f .git/config.lock .git/index.lock
-          git config user.name "dimsred-bot"
-          git config user.email "bot@vlymbooq.qzz.io"
-          git checkout --orphan corpus-tmp 2>/dev/null || git checkout --orphan corpus-tmp-$$
-          git reset
-          git add data/ask-qb/bucket data/ask-qb/phrase
-          git commit -m "Ask corpus $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
-          git branch -f corpus HEAD
-          git push --force origin corpus && echo "Pushed corpus branch" || echo "Corpus push failed"
-
       # Free ~838 MB before the git ops. Nothing tracked is lost: the shards are
       # gitignored and the four tables were derived from them above.
       - name: Drop evidence shards
@@ -152,6 +132,11 @@ jobs:
       # workflow_dispatch, so on the cron backstop `inputs.commit` is empty and an
       # `== 'true'` test would build the tables and then silently skip the commit,
       # making the cron backstop useless. This commits unless explicitly opted out.
+      #
+      # MUST run before "Push corpus branch": that step checks out an orphan
+      # branch, and committing tables on an orphan then rebasing onto main is
+      # refused by git as unrelated histories (run #19 died exactly there).
+      # On main the pull --rebase is the same dance runs #1-#18 did.
       - name: Commit + push regenerated tables
         if: inputs.commit != 'false'
         run: |
@@ -168,9 +153,35 @@ jobs:
             echo "No question-bank table changes to commit"
           else
             git commit -m "Ask question-bank rebuild $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
-            git pull --rebase 2>/dev/null || { echo "Rebase conflict — aborting and merging"; git rebase --abort 2>/dev/null; git fetch origin main 2>/dev/null; git merge --no-edit origin/main 2>/dev/null || true; }
+            # Each fallback is || true: under bash -e a failing rebase --abort
+            # inside the group used to kill the whole step (exit 128) before
+            # the push was ever reached.
+            git pull --rebase 2>/dev/null || { echo "Rebase conflict — aborting and merging"; git rebase --abort 2>/dev/null || true; git fetch origin main 2>/dev/null || true; git merge --no-edit origin/main 2>/dev/null || true; }
             git push && echo "Pushed question-bank rebuild" || echo "Push failed"
           fi
+
+      # Ship the corpus on its own force-replaced branch, never on main.
+      # 2 GB of build artefact cannot live in a 10 MB-a-day history, and the
+      # slim deploy already reads from branches (see `live` in slim-live.yml).
+      # A force-push keeps exactly one commit, so the branch never grows and
+      # no clone of main ever sees the blobs. slim-live.yml fetches this
+      # branch into the deploy tree; if it is absent the site ships without
+      # the corpus, which is the graceful degradation Ask already handles.
+      #
+      # LAST on purpose: it leaves HEAD on an orphan branch, so nothing that
+      # must land on main may run after it.
+      - name: Push corpus branch
+        if: inputs.commit != 'false'
+        run: |
+          rm -f .git/config.lock .git/index.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git checkout --orphan corpus-tmp 2>/dev/null || git checkout --orphan corpus-tmp-$$
+          git reset
+          git add data/ask-qb/bucket data/ask-qb/phrase
+          git commit -m "Ask corpus $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+          git branch -f corpus HEAD
+          git push --force origin corpus && echo "Pushed corpus branch" || echo "Corpus push failed"
 
       - name: Summary
         if: always()
