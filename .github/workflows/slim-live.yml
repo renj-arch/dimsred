@@ -114,6 +114,32 @@ jobs:
           echo "size: $(du -sh live-dist | cut -f1)"
           echo "files: $(find live-dist -type f | wc -l)"
 
+      # Overlay the retrieval corpus built by build-ask-qb.yml onto the deploy
+      # tree. buckets.json (the manifest) is committed, but the 512 bucket files
+      # and 512 phrase shards it points at are gitignored -- 2 GB of artefact
+      # that cannot live in main's history -- so without this step production
+      # serves a manifest naming files that 404, and every bucket and phrase
+      # lookup falls back. The corpus rides its own force-replaced branch for
+      # the same reason `live` does: one commit, never cloned with main.
+      #
+      # A missing branch must NOT fail the deploy. It means the corpus has not
+      # been built yet, and shipping the site without it is the graceful
+      # degradation Ask already handles -- the question is answered from the
+      # 217k timeline nodes instead of the full corpus, never with an error.
+      - name: Overlay retrieval corpus from the corpus branch
+        run: |
+          set -euo pipefail
+          if git fetch --depth=1 origin corpus 2>/dev/null; then
+            mkdir -p live-dist/data/ask-qb
+            git archive FETCH_HEAD data/ask-qb/bucket data/ask-qb/phrase 2>/dev/null \
+              | tar -x -C live-dist || echo "corpus branch lacks bucket/phrase trees"
+          else
+            echo "no corpus branch yet -- deploying site only (retrieval degrades gracefully)"
+          fi
+          echo "buckets: $(find live-dist/data/ask-qb/bucket -type f 2>/dev/null | wc -l)"
+          echo "phrases: $(find live-dist/data/ask-qb/phrase -type f 2>/dev/null | wc -l)"
+          echo "size: $(du -sh live-dist | cut -f1)"
+
       - name: Deploy slim site to Cloudflare Pages (direct upload)
         if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
         run: |
