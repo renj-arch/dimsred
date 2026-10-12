@@ -7,10 +7,10 @@ const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
 // Cache of Category:XXX member lists discovered by past chunk jobs. All 27 chunk
 // jobs run in parallel and previously each independently re-fetched the members
-// of all 126 categories over the network, which both wasted the API budget and
-// burned the per-run discovery deadline sequentially. Persisting the member list
-// per category lets the first job that discovers a category seed this cache and
-// every other job read it instantly instead of re-fetching.
+// of every category in CATEGORIES over the network, which both wasted the API
+// budget and burned the per-run discovery deadline sequentially. Persisting the
+// member list per category lets the first job that discovers a category seed
+// this cache and every other job read it instantly instead of re-fetching.
 const CAT_MEMBER_CACHE_PATH = process.env.WIKI_CAT_MEMBER_CACHE_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-category-members.json');
 
 // Wall-clock deadline shared by every fetch/processing loop so a chunk can never
@@ -3091,6 +3091,70 @@ const CATEGORIES = [
     'electric vehicle','ev','plug-in','battery','charging','fame','e-mobility','electric bus','electric car','scooter'
   ], topics:[
     'Plug-in electric vehicles in India'
+  ]},
+  // 🗐UPSC batch 4🗐 — syllabus gaps with the highest fresh-material yield.
+  // Every wikiCat below was verified against the live categorymembers API
+  // before adding (a dead Category: URL silently yields zero discovery).
+  { name:"Ramsar Wetlands & Wetland Conservation", wikiCat:"Ramsar_sites_in_India", topics:[
+    'Ramsar Convention','List of Ramsar sites in India','Chilika Lake','Wular Lake','Loktak Lake',
+    'Kolleru Lake','Pulicat Lake','Sambhar Lake','Nalsarovar Bird Sanctuary','Great Rann of Kutch',
+    'Keoladeo National Park','Tso Moriri','Deepor Beel','Harike Wetland','Kanjli Wetland',
+    'Vembanad Kol Wetland','Point Calimere Wildlife Sanctuary'
+  ]},
+  { name:"Marine Systems & Ocean Geopolitics", wikiCat:"Indian_Ocean", topics:[
+    'Indian Ocean','Bay of Bengal','Arabian Sea','Exclusive economic zone','Andaman and Nicobar Islands',
+    'Lakshadweep','Strait of Malacca','Strait of Hormuz','Indian Ocean Rim Association','Suez Canal',
+    'Sea lines of communication','Blue economy','Deep-sea mining','International Seabed Authority',
+    'United Nations Convention on the Law of the Sea','Coral reef','Sea surface temperature',
+    'Indian Ocean Dipole','Tsunami'
+  ]},
+  { name:"Pollution Control & Waste Management", wikiCat:"Waste_management_in_India", topics:[
+    'Central Pollution Control Board','National Clean Air Programme','Air Quality Index',
+    'Electronic waste','Plastic waste','Solid waste management','Sewage treatment','Ganga Action Plan',
+    'Namami Gange','Hazardous waste','Biomedical waste','Extended producer responsibility',
+    'National Green Tribunal','Water (Prevention and Control of Pollution) Act, 1974',
+    'Air (Prevention and Control of Pollution) Act, 1981'
+  ]},
+  { name:"Missiles & Strategic Systems", wikiCat:"Missiles_of_India", topics:[
+    'Agni missile','Agni-V','Prithvi missile','BrahMos','Akash missile system',
+    'Integrated Guided Missile Development Programme','Defence Research and Development Organisation',
+    'Bharat Dynamics Limited','Missile Technology Control Regime','Submarine-launched ballistic missile',
+    'Surface-to-air missile','Cruise missile','Intercontinental ballistic missile'
+  ]},
+  { name:"IMF, World Bank & Global Finance", wikiCat:"International_Monetary_Fund", topics:[
+    'International Monetary Fund','World Bank','International Bank for Reconstruction and Development',
+    'Special Drawing Rights','Bretton Woods system','Asian Development Bank',
+    'Asian Infrastructure Investment Bank','New Development Bank','Basel III',
+    'Financial Action Task Force','Organisation for Economic Co-operation and Development'
+  ]},
+  { name:"United Nations System", wikiCat:"United_Nations", topics:[
+    'United Nations','United Nations Security Council','General Assembly of the United Nations',
+    'Economic and Social Council','International Court of Justice','UNESCO','World Health Organization',
+    'UNICEF','Food and Agriculture Organization','International Labour Organization',
+    'United Nations Development Programme','United Nations peacekeeping'
+  ]},
+  { name:"Astronomy & Space Science", wikiCat:"Astronomy", topics:[
+    'James Webb Space Telescope','Hubble Space Telescope','Gravitational wave','LIGO',
+    'Event Horizon Telescope','Dark matter','Dark energy','Exoplanet','Black hole','Pulsar',
+    'Cosmic microwave background','Aditya-L1','Chandrayaan-3','Mangalyaan','Voyager 1'
+  ]},
+  { name:"Indian Textiles & Handloom", wikiCat:"Textiles_of_India", topics:[
+    'Handloom','Khadi','Banarasi silk','Kanchipuram silk','Chikankari','Bandhani','Pashmina',
+    'Tussar silk','Jute','Muslin','Geographical indication','Handicrafts'
+  ]},
+  { name:"Solar System & Celestial Events", wikiCat:"Solar_System", topics:[
+    'Sun','Mercury (planet)','Venus','Earth','Mars','Jupiter','Saturn','Uranus','Neptune',
+    'Dwarf planet','Asteroid','Comet','Kuiper belt','Oort cloud','Solar eclipse','Lunar eclipse',
+    'Tides','Solstice','Equinox'
+  ]},
+  { name:"Biodiversity & Conservation", wikiCat:"Biodiversity_in_India", topics:[
+    'Biodiversity','Biosphere reserve','Wildlife Protection Act, 1972','Convention on Biological Diversity',
+    'Nagoya Protocol','Western Ghats','Eastern Himalayas','In-situ conservation','Ex-situ conservation',
+    'National Biodiversity Authority','Biological Diversity Act, 2002','Endemism','IUCN Red List'
+  ]},
+  { name:"Intellectual Property & GI Tags", wikiCat:"Geographical_indications", topics:[
+    'Geographical indication','Patent','Trademark','Copyright','World Intellectual Property Organization',
+    'TRIPS Agreement','Plant Variety Protection','Trade secrets'
   ]},
 
 ];
