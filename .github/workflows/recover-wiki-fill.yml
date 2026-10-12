@@ -73,6 +73,7 @@ jobs:
       # lands, keeping the 14 GB runner out of disk trouble (run #441).
       # Added debug step to list actual artifact names in case of pattern mismatch.
       - name: List available chunk artifacts (debug)
+        id: list
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -88,6 +89,7 @@ jobs:
           echo "--- artifact list raw response (first 400 chars) ---"
           printf '%s' "$resp" | cut -c1-400
           echo "----------------------------------------------------"
+          rc=0
           printf '%s' "$resp" | node -e '
             const d = JSON.parse(require("fs").readFileSync(0, "utf8"));
             if (d.message && !Array.isArray(d.artifacts)) {
@@ -98,17 +100,32 @@ jobs:
             arts.forEach(a => {
               console.log("Found artifact:", a.name, "expired:", a.expired);
             });
-            // Artifact NAMES are 'chunk-N' as uploaded by daily-wiki-fill
+            // Artifact NAMES are "chunk-N" as uploaded by daily-wiki-fill
             // (the quiz-chunk-N.json names are files INSIDE each artifact).
-            // Accept both spellings defensively. Wrong '^quiz-chunk-N' pattern
+            // Accept both spellings defensively. Wrong "^quiz-chunk-N" pattern
             // is why recoveries #18/#20 matched nothing.
             const chunks = arts.filter(a => /^(quiz-)?chunk-[0-9]+$/.test(a.name) && a.expired !== true);
             console.log("Usable quiz-chunk-N artifacts:", chunks.length, "/", arts.length, "total (total_count:", d.total_count, ")");
             if (chunks.length === 0) {
-              console.error("::error::No non-expired quiz-chunk-N artifacts in this run — nothing to recover (expired or wrong run-id?).");
-              process.exit(1);
+              console.error("::warning::No non-expired quiz-chunk-N artifacts in this run (expired, wrong run-id, or cancelled before upload).");
+              process.exit(2);
             }
-          '
+          ' || rc=$?
+          # rc=2: zero usable chunks. On the workflow_run trigger that is the
+          # common "cancelled before uploading anything" case — not a fault, so
+          # the job ends cleanly and the merge steps below skip. A manual
+          # dispatch still gets the hard error it expects.
+          if [ "$rc" = "2" ]; then
+            if [ "${{ github.event_name }}" = "workflow_run" ]; then
+              echo "::notice::auto-recovery: this run has no usable chunk artifacts - nothing to merge; the next scheduled Wiki Fill continues the work."
+              echo "recoverable=false" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            echo "::error::No usable chunk artifacts - dispatch with a run that has chunk-N artifacts."
+            exit 1
+          fi
+          if [ "$rc" != "0" ]; then exit "$rc"; fi
+          echo "recoverable=true" >> "$GITHUB_OUTPUT"
 
       # ── Baseline FIRST, then chunks ONE AT A TIME ──
       # Run #458 died with "No space left on device": all 27 unzipped chunks
@@ -116,6 +133,7 @@ jobs:
       # baseline while the disk is still empty, then downloading → merging →
       # freeing each chunk in turn caps peak usage at roughly one chunk (~1 GB).
       - name: Download baseline data from run
+        if: steps.list.outputs.recoverable == 'true'
         continue-on-error: true
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -138,6 +156,7 @@ jobs:
           done
 
       - name: Restore baseline data (early, while disk has headroom)
+        if: steps.list.outputs.recoverable == 'true'
         run: |
           if [ -d baseline/data ]; then
             rm -rf data && cp -r baseline/data data && echo "restored from baseline/data"
@@ -150,6 +169,7 @@ jobs:
           df -h / || true
 
       - name: Merge chunks incrementally (download, collect, free — repeat, then finalize once)
+        if: steps.list.outputs.recoverable == 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -239,6 +259,7 @@ jobs:
           NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
 
       - name: Commit and push recovered wiki data
+        if: steps.list.outputs.recoverable == 'true'
         run: |
           if [ "${{ inputs.dry-run || 'false' }}" = "true" ]; then
             echo "DRY RUN — would have committed and pushed. Showing pending changes:"
