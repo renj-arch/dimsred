@@ -23,13 +23,13 @@
       }
     },
     {
-      "title": "Map lineage completeness: mine corpus kin facts into the lineage tab",
-      "detail": "The map's lineage tab reads mined family edges, but timeline node shards currently carry none (0 kin edges found), while the corpus is full of son-of / succeeded-by / dynasty facts. Mine them with the existing FAMILY_RE relation set and show the evidence sentence for each edge.",
+      "title": "Map lineage yield: more kin sentences, more family edges",
+      "detail": "CORRECTED 2026-10-13: the earlier belief that lineage data was missing was wrong. build-timeline.js already mines explicit kin constructions (F1-F4), timeline.json ships typed edges (son/father/wife/... ~1.9k), 66k+ kin person nodes exist, and map.html consumes edges into the lineage tab with junk/era sanity filters. What is real is sparsity: only ~3% of kin persons have an explicit kin sentence mined into an edge. Remaining work is yield — loosen safe capture patterns and keep sentence evidence per edge for auditing.",
       "action": {
-        "target": "map.html — lineage tab",
-        "current": "Lineage shows 'No family-lineage links yet' for every person.",
-        "issue": "Corpus sentences state family and succession relations that the map never shows, and wrong ones cannot be spotted.",
-        "fix": "Extend the timeline builder's kin miner (FAMILY_RE relations) so lineage edges land in the node shards, with sentence evidence kept for auditing."
+        "target": "scripts/build-timeline.js — kin miner yield",
+        "current": "Explicit F1-F4 kin constructions only; ~1,918 typed edges over 66,128 kin persons (~3% coverage).",
+        "issue": "Most family relations the corpus states in looser wording never become lineage edges, so the lineage tab looks emptier than the corpus supports.",
+        "fix": "Add safe additional capture patterns to the kin scanner (keeping the F1-F4 precision rules), store the evidence sentence per edge, and re-run the timeline build; verify yield with scripts/audit-map-lineage.js."
       }
     },
     {

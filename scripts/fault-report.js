@@ -238,7 +238,12 @@ try {
         (lin.totalCorpusEdges ? ' · corpus edges: ' + lin.totalCorpusEdges : ''), null);
     }
     if (!bad.length && !miss.length && (lin.totalCorpusEdges || 0) > 0) {
-      add('info', 'map', 'Map lineage matches the corpus', lin.totalCorpusEdges + ' relation(s) checked · ' + String(lin.generated || '').slice(0, 10));
+      const extra = (lin.familyEdges != null ? lin.familyEdges + ' family' : '') +
+        (lin.coveragePctOfKinNodes != null ? ' · coverage ' + lin.coveragePctOfKinNodes + '% of kin nodes' : '') +
+        (lin.resolutionPct != null ? ' · endpoints resolve ' + lin.resolutionPct + '%' : '');
+      add('info', 'map', 'Map lineage wired and mined',
+        lin.totalCorpusEdges + ' typed edge(s)' + (extra ? ' · ' + extra : '') +
+        ' · ' + String(lin.generated || '').slice(0, 10));
     }
   } catch (e) { /* audit runs with wiki-fill; absent until its first run */ }
 

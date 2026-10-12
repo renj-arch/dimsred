@@ -471,6 +471,13 @@ jobs:
       # improve.html, with prefilled correction actions. GITHUB_TOKEN lets the
       # report attach pipeline status (latest run per workflow). Reporting
       # only: the script always exits 0.
+      # Lineage coverage audit: cheap shard/edge census (no miner re-run).
+      # Replaced the old "missing lineage" theory — wiring is confirmed
+      # (miner -> timeline edges -> map lineage tab); this tracks yield.
+      - name: Lineage coverage audit
+        continue-on-error: true
+        run: node scripts/audit-map-lineage.js
+
       - name: Aggregate detected faults for improve.html
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
