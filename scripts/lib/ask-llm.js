@@ -35,10 +35,12 @@ var MODEL_ID = 'Qwen/Qwen2.5-1.5B-Instruct-q4f16_1-MLC';
 // version this code was written against) so the only network dependency is the
 // model weights themselves. The CDN is a fallback for pages opened straight
 // from disk, where a relative module import is refused: file:// cannot serve
-// modules, but an https module URL still can. Both routes return the same
-// ES module; there is no UMD build to fall back to as of 0.2.8x.
+// modules, but an https module URL still can. Both routes return the same ES
+// module -- the CDN copy is the same file byte for byte (verified by hash) --
+// and the raw npm path is used rather than a CDN transform like esm.run,
+// whose rewritten bundle failed to resolve this model id.
 var VENDOR_URL = 'scripts/vendor/webllm/index.min.js';
-var CDN_URL = 'https://esm.run/@mlc-ai/web-llm@0.2.86';
+var CDN_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.86/lib/index.min.js';
 
 var engine = null;
 var loading = null;
