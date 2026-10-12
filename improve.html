@@ -53,12 +53,13 @@ h1{font-size:24px;margin:6px 0 8px}
     <h1>Improve figures &amp; pages</h1>
     <div class="disc">
       <b>How this works</b>
-      Found a wrong flowchart step, a stale figure caption, a broken explanation on any page? Record the correction here: what the page says now, what is wrong, and how it should read. Each correction joins the same training stream as Ask answers. When <b>15 more records</b> (answers + corrections together) have accumulated, the Train Writer Model workflow retrains <b>your own model</b> automatically &mdash; no schedule, no buttons. Corrections stay on this machine until auto-sync is enabled.
+      Found a wrong flowchart step, a stale figure caption, a broken explanation on any page? Record the correction here: what the page says now, what is wrong, and how it should read. Each correction joins the same training stream as Ask answers. When <b>15 more records</b> (answers + corrections together) have accumulated, the Train Writer Model workflow retrains <b>your own model</b> automatically &mdash; no schedule, no buttons. Corrections stay on this machine until auto-sync is enabled. <b>Privacy:</b> this page is public and its board shows operational status only (never credentials); a PAT, if you add one, stays in this browser, is scoped to this single repo, and is sent only to api.github.com &mdash; remove it anytime with &ldquo;Forget PAT&rdquo;.
     </div>
     <div class="meta" id="meta"></div>
     <a id="export-data" style="display:none;cursor:pointer" title="Download every recorded correction and answer as JSONL"></a>
     <a id="sync-data" style="display:none;cursor:pointer;margin-left:12px" title="Push the recorded corrections to the repo so the Train Writer Model workflow can train on them. Uses a fine-grained PAT stored only in this browser."></a>
     <span id="sync-status" style="display:none;margin-left:8px;opacity:.75"></span>
+    <span id="forget-token" style="display:none;cursor:pointer;margin-left:8px;color:var(--text-muted);font-size:12px;text-decoration:underline" title="Remove the GitHub PAT stored in this browser (use on shared computers)"></span>
   </header>
 
   <!-- Auto-detected faults, published nightly by the wiki-fill coverage step
@@ -272,6 +273,11 @@ function updateSyncLink() {
   var hasToken = !!VlymbooqAskDataset.getToken();
   link.style.display = '';
   link.textContent = hasToken ? 'Sync now' : 'Enable auto-sync (trains your model)';
+  var forget = el('forget-token');
+  if (forget) {
+    forget.style.display = hasToken ? '' : 'none';
+    forget.textContent = 'Forget PAT';
+  }
   var s = VlymbooqAskDataset.syncStatus();
   status.style.display = s ? '' : 'none';
   if (s) {
@@ -320,6 +326,12 @@ document.addEventListener('click', function (e) {
   if (!e.target || !window.VlymbooqAskDataset) return;
   if (e.target.id === 'export-data') {
     VlymbooqAskDataset.download();
+    return;
+  }
+  if (e.target.id === 'forget-token') {
+    VlymbooqAskDataset.setToken('');
+    updateSyncLink();
+    show('ok', 'Stored PAT removed from this browser. Auto-sync is off until you enable it again.');
     return;
   }
   if (e.target.id !== 'sync-data') return;
