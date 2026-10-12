@@ -476,6 +476,19 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/fault-report.js
 
+      # Self-train bootstrap: sample fresh corpus Q/A as Ask-style records on
+      # the training-data branch. Blank questions are rewritten into proper
+      # WH-questions (never trained as blanks). PAT, not GITHUB_TOKEN: a
+      # GITHUB_TOKEN push would not trigger train-writer's on.push, so the
+      # model would never see the batch. The +15 delta gate then retrains the
+      # writer model automatically — the site teaches itself from its own
+      # corpus while the owner's answers/improve records steer quality.
+      - name: Self-train bootstrap (corpus -> training-data)
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+        run: node scripts/self-train-sample.js
+
       - run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
