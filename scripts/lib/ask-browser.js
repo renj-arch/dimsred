@@ -58,6 +58,17 @@ var SYNTH = deps && deps.synthesize;
 
 var QB = 'data/ask-qb/';
 
+  // The 512 bucket files and 512 phrase shards are gitignored build artefacts
+  // (2 GB cannot ride in main's history) that live only on the `corpus` branch,
+  // so a deploy of `main` serves 404 for them while the committed tables
+  // (manifest, dir, entities, concepts, buckets.json) are always present.
+  // raw.githubusercontent.com serves the corpus branch with CORS `*`, so every
+  // bucket/phrase fetch that 404s same-origin retries there. Retrieval then
+  // works identically whether the site was published by Cloudflare's GitHub
+  // integration (main only) or by the slim-live wrangler upload (main +
+  // corpus overlay).
+  var CORPUS_RAW = 'https://raw.githubusercontent.com/renj-arch/dimsred/corpus/';
+
   // Only the top few shards are fetched per question. Each is a few MB, and the
   // router already orders them by measured relevance, so the tail adds cost
   // without changing the answer.
@@ -66,10 +77,22 @@ var QB = 'data/ask-qb/';
 
   var state = { ready: false, error: null, dir: null, entityDir: null, concepts: null };
 
+  function isCorpusShard(url) {
+    var u = String(url);
+    return u.indexOf('ask-qb/bucket/bucket.') !== -1 ||
+           u.indexOf('ask-qb/phrase/phrase.') !== -1;
+  }
+
   function get(url) {
     return fetch(url).then(function (r) {
-      if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url);
-      return r.text();
+      if (r.ok) return r.text();
+      if (r.status === 404 && isCorpusShard(url)) {
+        return fetch(CORPUS_RAW + url).then(function (r2) {
+          if (r2.ok) return r2.text();
+          throw new Error('HTTP ' + r2.status + ' for ' + url + ' (corpus fallback too)');
+        });
+      }
+      throw new Error('HTTP ' + r.status + ' for ' + url);
     });
   }
 
@@ -81,10 +104,16 @@ var QB = 'data/ask-qb/';
   // are deployed this is the normal case, and the page falls back to the
   // timeline engine rather than showing an error.
   function loadShard(file) {
-    return fetch(file).then(function (r) {
+    function parse(r) {
       if (r.status === 404) return { rows: null, missing: true };
       if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + file);
       return r.json().then(function (rows) { return { rows: rows, missing: false }; });
+    }
+    return fetch(file).then(function (r) {
+      if (r.status === 404 && isCorpusShard(file)) {
+        return fetch(CORPUS_RAW + file).then(parse);
+      }
+      return parse(r);
     });
   }
 
