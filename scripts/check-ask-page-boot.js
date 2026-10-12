@@ -16,9 +16,13 @@ const path = require('path');
 const vm = require('vm');
 
 const ROOT = path.join(__dirname, '..');
+// The order matches ask.html's script tags exactly: the synthesis layer needs
+// ask-prose at load time, and ask-browser needs the synthesis layer to already
+// be a global when its factory runs.
 const LIBS = [
   'ask-core', 'ask-qb', 'ask-answer', 'ask-entity-evidence',
-  'ask-compose', 'build-ask-qb-buckets-hash', 'ask-browser'
+  'ask-compose', 'build-ask-qb-buckets-hash',
+  'ask-prose', 'ask-synthesize', 'ask-browser', 'ask-llm', 'ask-fulltext'
 ];
 
 const store = {};
@@ -92,7 +96,24 @@ for (const lib of LIBS) {
   const e = load(wrapped, lib + '.js');
   if (e) { failures++; console.log('  FAIL  ' + lib + '.js threw on load -- ' + e.message); break; }
 }
-ok(failures === 0, 'all seven ask libraries load and attach their globals');
+ok(failures === 0, 'all ten ask libraries load and attach their globals');
+
+// The synthesis path is three globals cooperating: prose scores, synthesize
+// retrieves, the model composes. If any failed to attach, ask.html's LLM path
+// would silently fall back to quoting and the page would look like the feature
+// was never built, so each is asserted rather than assumed from "no throw".
+ok(typeof sandbox.VlymbooqAskProse === 'object' && sandbox.VlymbooqAskProse !== null,
+  'ask-prose attached as a browser global');
+ok(typeof sandbox.VlymbooqAskSynthesize === 'object' && sandbox.VlymbooqAskSynthesize !== null &&
+   typeof sandbox.VlymbooqAskSynthesize.write === 'function',
+  'ask-synthesize attached with write()');
+ok(typeof sandbox.VlymbooqAskLLM === 'object' && sandbox.VlymbooqAskLLM !== null &&
+   typeof sandbox.VlymbooqAskLLM.synthesize === 'function',
+  'ask-llm attached with synthesize()');
+ok(typeof sandbox.VlymbooqAskFulltext === 'object' && sandbox.VlymbooqAskFulltext !== null &&
+   typeof sandbox.VlymbooqAskFulltext.fromIndex === 'function' &&
+   typeof sandbox.VlymbooqAskFulltext.candidates === 'function',
+  'ask-fulltext attached with fromIndex() and candidates()');
 
 const html = fs.readFileSync(path.join(ROOT, 'ask.html'), 'utf8');
 const m = html.match(/<script(?![^>]*\bsrc=)[^>]*>([\s\S]*?)<\/script>/);
@@ -124,3 +145,4 @@ ok(typeof sandbox.IDX === 'object' && sandbox.IDX !== null, 'boot() installed th
 console.log('');
 console.log(failures === 0 ? '=== all checks passed ===' : '=== ' + failures + ' FAILURE(S) ===');
 process.exit(failures === 0 ? 0 : 1);
+

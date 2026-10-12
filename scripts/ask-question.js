@@ -98,6 +98,55 @@ api.boot(answerStub, {}).then(function () {
   });
   console.log('');
   console.log('shards fetched: ' + fetched.length);
+
+  // When the entity path comes back absent or empty, the question names no row
+  // in the entity table -- "regulating emerging technologies" is not an entity,
+  // so lookup cannot reach the facts about it. The synthesis layer answers by
+  // term instead: every content term is resolved in the phrase index, the
+  // buckets holding the most matching text are fetched, and the sentences in
+  // them are scored against the question. This is the material the browser's
+  // local model composes from, so the harness prints it here; generation itself
+  // runs only in the browser, where WebGPU exists.
+  var empty = !doc.counts.written || doc.counts.empty;
+  if (!empty) return null;
+  console.log('');
+  console.log('--- entity path empty: synthesis retrieval ---');
+  // The full-text index is built only when this path is actually taken: it costs
+  // about 29 seconds and 45 MB of node shards, which is not a price worth paying
+  // for a question the entity path already answered. The callback form keeps
+  // ask-browser ignorant of where the index came from -- the page hands over the
+  // one it built at load, the harness fetches and builds its own through the
+  // fs-backed global.fetch above.
+  var FT = require(path.join(ROOT, 'scripts/lib/ask-fulltext.js'));
+  return FT.index().then(function (idx) {
+    console.log('full-text index: ' + idx.N + ' nodes loaded');
+    return api.synthesize(question, {
+      subject: subject, perHeading: 6,
+      fulltext: function (q) { return FT.fromIndex(idx, q, 60); }
+    });
+  })
+    .then(function (syn) {
+      if (!syn) { console.log('no synthesis document (phrase index unavailable)'); return; }
+      var facts = syn.facts || [];
+      console.log('candidates: ' + syn.candidates + '   scored: ' + syn.scored +
+        '   buckets: ' + (syn.bucketsFetched || 0) +
+        '   bytes: ' + ((syn.bytes || 0) / 1048576).toFixed(1) + ' MB');
+      console.log('facts carried to the model: ' + facts.length);
+      console.log('');
+      facts.slice(0, 12).forEach(function (f, i) {
+        console.log('  [' + (i + 1) + '] ' + f.entity + '  (rel ' + f.rel.toFixed(2) + ')');
+        console.log('      ' + String(f.sentence).slice(0, 160));
+      });
+      if (facts.length > 12) console.log('  ... and ' + (facts.length - 12) + ' more');
+      console.log('');
+      var LLM = require(path.join(ROOT, 'scripts/lib/ask-llm.js'));
+      var prompt = LLM.buildPrompt(question, facts.slice(0, 40));
+      console.log('--- prompt the local model receives (' + prompt.length + ' chars) ---');
+      console.log(prompt.slice(0, 700) + (prompt.length > 700 ? '\n...' : ''));
+      console.log('');
+      console.log('facts.length >= 6: ' + (facts.length >= 6) +
+        '  -> browser composes, harness quotes');
+    });
 }).catch(function (err) {
   console.log('ERROR: ' + (err && err.stack || err));
   process.exit(1);

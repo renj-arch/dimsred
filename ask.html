@@ -68,9 +68,12 @@ h1{font-size:24px;margin:6px 0 8px}
     <h1>Ask Vlymbooq</h1>
     <div class="disc">
       <b>How this works</b>
-      This engine answers UPSC questions <em>only</em> from material in this site's own corpus. It retrieves verbatim sentences with source links. It never generates text, never uses an AI model, and never guesses. If the corpus doesn't cover your question, it says so.
+      This engine answers UPSC questions from material in this site's own corpus. It retrieves verbatim sentences with source links, then composes the answer in your browser with a small open-weight model running locally (WebLLM/WebGPU &mdash; no API key, nothing leaves your machine). Every cited fact stays checkable against the corpus. As answers accumulate, the same pipeline trains <b>your own model</b> from them, which then appears in the model picker as &ldquo;Mine&rdquo;.
     </div>
     <div class="meta" id="meta"></div>
+    <a id="export-data" style="display:none;cursor:pointer" title="Download every answer composed in this browser as JSONL, ready to fine-tune a model on"></a>
+    <a id="sync-data" style="display:none;cursor:pointer;margin-left:12px" title="Push the captured answers to the repo so the Train Writer Model workflow can fine-tune your model. Uses a fine-grained PAT stored only in this browser."></a>
+    <span id="sync-status" style="display:none;margin-left:8px;opacity:.75"></span>
   </header>
 
   <div class="ask-box">
@@ -78,6 +81,7 @@ h1{font-size:24px;margin:6px 0 8px}
     <div class="ask-row">
       <textarea id="q" placeholder="e.g. What is the anti-defection law in India?"></textarea>
       <button class="btn" id="ask">Ask</button>
+      <select id="model" title="Writing model"></select>
     </div>
     <div class="samples" id="samples"></div>
   </div>
@@ -91,7 +95,12 @@ h1{font-size:24px;margin:6px 0 8px}
 <script src="scripts/lib/ask-entity-evidence.js"></script>
 <script src="scripts/lib/ask-compose.js"></script>
 <script src="scripts/lib/build-ask-qb-buckets-hash.js"></script>
+<script src="scripts/lib/ask-prose.js"></script>
+<script src="scripts/lib/ask-synthesize.js"></script>
 <script src="scripts/lib/ask-browser.js"></script>
+<script src="scripts/lib/ask-llm.js"></script>
+<script src="scripts/lib/ask-dataset.js"></script>
+<script src="scripts/lib/ask-fulltext.js"></script>
 <script>
 'use strict';
 // The question-bank path is OFF by default and must be turned on deliberately.
@@ -119,6 +128,15 @@ var ASK_QB_ENABLED = false;
 // navigational path works off shards while this path additionally needs the
 // entity table, and they should be able to ship on different days.
 var ASK_MAINS_ENABLED = false;
+
+// Local answer composition. The retrieval layer gathers every corpus sentence
+// that touches the question, and a small language model running in this browser
+// writes the answer from them. It is a separate flag from the two above because
+// it changes what the page claims: the other paths only ever quote, while this
+// one produces prose. Nothing is sent anywhere -- WebLLM compiles the weights on
+// the visitor's own GPU, and the first visit downloads them once from a public
+// CDN where the browser caches them.
+var ASK_LLM_ENABLED = true;
 
 var IDX = null;
 var QB_READY = false;
@@ -569,6 +587,48 @@ h += '</div></div>';
 return h;
 }
 
+// A composed answer. Unlike renderMains, the prose under each heading was
+// written by the model rather than quoted wholesale, so the renderer's job is
+// the opposite: keep the generated text readable while making the facts it
+// rests on one click away. Every numbered fact the model was given is listed
+// under the answer with its source entity, so a reader can check a claim
+// against the sentence it came from instead of trusting it.
+function renderLLM(out, facts, doc) {
+var h = '<div class="result"><div class="answer">' +
+'<h2>Answer</h2>' +
+'<div class="diag"><span>composed locally from ' + facts.length +
+' corpus fact(s)</span><span>' + (doc.bucketsFetched || 0) + ' shard(s) searched</span>' +
+'<span>no data leaves this browser</span></div>';
+
+// The search terms the model chose are shown because they explain the answer's
+// reach: a reader can see that "artificial intelligence act" was looked up even
+// though the question never said it, which is what made that fact available.
+if (out.expanded && out.expanded.terms && out.expanded.terms.length) {
+h += '<div class="diag"><span>looked up: ' +
+esc(out.expanded.terms.join(', ')) + '</span></div>';
+}
+
+out.sections.forEach(function (s) {
+h += '<h3>' + esc(s.heading) + '</h3>';
+s.lines.forEach(function (line) {
+h += '<p>' + esc(line) + '</p>';
+});
+});
+
+h += '<h3>Sources</h3>';
+facts.forEach(function (f, i) {
+h += '<div class="ev"><div class="src">' +
+'<a href="archive.html" target="_blank">' + esc(f.entity || 'corpus') + '</a>' +
+' &middot; fact ' + (i + 1) + '</div><p>' + esc(f.sentence) + '</p></div>';
+});
+
+h += '<p class="reason">The prose above was written by a small model running in ' +
+'this browser from the facts listed. Check any claim against its source before ' +
+'using it.</p>';
+h += '</div></div>';
+return h;
+}
+
 function doAsk() {
 var q = el('q').value.trim();
 if (!q) { el('out').innerHTML = '<div class="empty">Type a question first.</div>'; return; }
@@ -578,11 +638,121 @@ STATE.question = q;
 STATE.planMiss = null;
 el('ask').disabled = true;
 
-// Structured mains answering is tried first when enabled, because it is the only
-// path that can return an answer for a multi-entity question. It falls through
-// to the navigational question-bank path and then to the timeline when it has no
-// outline or quotes nothing.
-if (ASK_MAINS_ENABLED && QB_READY) {
+// Local answer composition runs first when enabled. Retrieval gathers every
+// corpus sentence that touches the question -- through the entity path when the
+// question names an entity, through the phrase index when it does not -- and the
+// model writes one structured answer from them. Each of the two lower paths is
+// still the fallback, so a question the corpus genuinely cannot reach, or a
+// machine with no WebGPU, still lands on the plain quoted evidence below
+// rather than on an error.
+if (ASK_LLM_ENABLED && QB_READY && typeof VlymbooqAskLLM !== 'undefined') {
+el('out').innerHTML = '<div class="load">Gathering corpus facts&hellip;</div>';
+askLLMAnswer(q).then(function (res) {
+if (res) { el('out').innerHTML = res; return; }
+// No facts, or the model could not start: fall through to the paths below.
+runLegacyAsk(q);
+}).catch(function (err) {
+el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
+el('ask').disabled = false;
+});
+return;
+}
+
+runLegacyAsk(q);
+}
+
+// Gather facts and compose them. Returns the rendered HTML, or null when there
+// is nothing to compose over, so the caller falls back to a path that quotes
+// instead of generating.
+//
+// The order is the one a knowledgeable person follows: first decide what the
+// question is really about, then look, then write. Retrieving on the literal
+// words alone finds sentences repeating the question, never the law named in
+// the answer, because the corpus files that law under an entity the question
+// never spells out. Asking the model what to search for first is what reaches
+// it -- the same two-call shape as a search assistant.
+function askLLMAnswer(q) {
+// `VlymbooqAskCore` was never a global -- ask-core.js installs `VlymbooqAsk` --
+// so subject extraction silently returned null on every question and the whole
+// question string stood in as the subject.
+var subject = (typeof VlymbooqAsk !== 'undefined' && VlymbooqAsk.subjectOf)
+  ? VlymbooqAsk.subjectOf(q) : '';
+
+var expanded = null;
+el('out').innerHTML = '<div class="load">Deciding what to look up&hellip;</div>';
+
+// Expansion is an enhancement, not a dependency: with no WebGPU its promise
+// rejects and retrieval runs on the question's own terms, so the page still
+// answers on hardware the model cannot run on. The rejection is caught here
+// rather than by the caller because the caller's catch renders an error, and
+// a question that merely could not be expanded is not an error.
+return VlymbooqAskLLM.expand(q, {
+  onProgress: function (msg) { el('out').innerHTML = '<div class="load">' + esc(msg) + '</div>'; }
+}).catch(function () { return null; }).then(function (e) {
+  expanded = e;
+  var hint = expanded ? expanded.terms.slice(0, 4).join(', ') : '';
+  el('out').innerHTML = '<div class="load">Gathering corpus facts' +
+    (hint ? '&hellip; ' + esc(hint) : '&hellip;') + '</div>';
+  return VlymbooqAskBrowser.synthesize(q, {
+    subject: subject || q,
+    perHeading: 6,
+    expandTerms: expanded ? expanded.terms : null,
+    // The full-text index is built once at page load for the timeline engine;
+    // this hands the same index to synthesis so a question the phrase index
+    // cannot answer is answered from the corpus by meaning instead of not at
+    // all. Supplied as a callback because ask-browser does not own the index.
+    fulltext: (typeof VlymbooqAskFulltext !== 'undefined' && typeof IDX !== 'undefined' && IDX)
+      ? function (question) {
+          return VlymbooqAskFulltext.fromIndex(IDX, question, 60);
+        }
+      : null
+  });
+  }).then(function (doc) {
+  // `facts` is the scored material the composer needs; `candidates` is only
+  // how many raw sentences were considered. A thin corpus means there is
+  // nothing worth generating from, so the caller quotes instead.
+  var facts = (doc && doc.facts) || [];
+  if (facts.length < 6) return null;
+  facts = facts.slice(0, 40);
+  el('out').innerHTML = '<div class="load">Writing the answer in your browser&hellip;</div>';
+  return VlymbooqAskLLM.synthesize(q, facts, {
+    onProgress: function (msg) {
+      el('out').innerHTML = '<div class="load">' + esc(msg) + '</div>';
+    }
+  }).then(function (out) {
+    if (!out || !out.sections || !out.sections.length) return null;
+    out.expanded = expanded;
+    // A good answer is also a training example: keep the question, the terms
+    // that were looked up, the facts the model saw, and its prose, so the
+    // exported JSONL can be fine-tuned on without re-running retrieval.
+    if (window.VlymbooqAskDataset) {
+      VlymbooqAskDataset.record({
+        q: q,
+        subject: subject,
+        terms: expanded ? expanded.terms : [],
+        facts: facts,
+        plan: out.plan,
+        sections: out.sections,
+        answer: out.raw,
+        model: VlymbooqAskLLM.modelId ? VlymbooqAskLLM.modelId() : ''
+      });
+      updateExportLink();
+    }
+    return renderLLM(out, facts, doc);
+  }).catch(function () {
+    // The engine failed after the facts were already gathered: no WebGPU, a
+    // cancelled download, an out-of-memory compile. The facts are good; the
+    // writer is what is unavailable, so hand back to the quoting paths rather
+    // than showing an error for a corpus that answered fine.
+    return null;
+  });
+});
+}
+
+// The paths that predate local composition: structured mains, the question bank,
+// then the timeline. Split out so the model path can hand back to them without
+// duplicating their fallback order.
+function runLegacyAsk(q) {
 // Headings are planned from the corpus, not remembered from a table. When the
 // question's terms match nothing, that is recorded so the refusal can say what was
 // actually searched instead of blaming the corpus for a routing miss.
@@ -607,7 +777,6 @@ el('out').innerHTML = renderMains(composed, planned.key);
 el('out').innerHTML = '<div class="err">Error: ' + esc(err.message) + '</div>';
 }).then(function () { el('ask').disabled = false; });
 return;
-}
 }
 
   // The question bank is the primary source: it is the whole corpus, not the
@@ -710,8 +879,73 @@ function updateStatus() {
   } else if (QB_ERROR) {
     bits.push('Question bank unavailable: ' + QB_ERROR.message);
   }
-  bits.push('zero AI, zero generation');
-  el('meta').textContent = bits.join(' &middot; ');
+  bits.push('local composition · facts verbatim from corpus');
+  el('meta').textContent = bits.join(' · ');
+  updateExportLink();
+}
+
+// The training-data link only appears once there is something to export, and
+// carries its own count so a user can see examples accumulating. Auto-sync
+// (once a PAT is pasted) pushes the same records to the training-data branch;
+// its state is shown next to the export link so a failed push is visible.
+function updateExportLink() {
+  var link = document.getElementById('export-data');
+  if (!link || !window.VlymbooqAskDataset) return;
+  var n = VlymbooqAskDataset.count();
+  if (n > 0) {
+    link.style.display = '';
+    link.textContent = 'Export training data (' + n + ' answer' + (n === 1 ? '' : 's') + ')';
+  } else {
+    link.style.display = 'none';
+  }
+  updateSyncLink();
+}
+function updateSyncLink() {
+  var link = document.getElementById('sync-data');
+  var status = document.getElementById('sync-status');
+  if (!link || !status || !window.VlymbooqAskDataset) return;
+  var n = VlymbooqAskDataset.count();
+  if (!n) {
+    link.style.display = 'none';
+    status.style.display = 'none';
+    return;
+  }
+  var hasToken = !!VlymbooqAskDataset.getToken();
+  link.style.display = '';
+  link.textContent = hasToken ? 'Sync now' : 'Enable auto-sync (trains your model)';
+  var s = VlymbooqAskDataset.syncStatus();
+  status.style.display = s ? '' : 'none';
+  if (s) {
+    status.textContent = s.ok
+      ? 'synced ' + (s.records || n) + ' records ✓'
+      : (s.reason === 'no-token' ? '' : 'sync failed: ' + s.reason);
+    if (!s.ok && s.reason === 'no-token') status.style.display = 'none';
+  }
+}
+document.addEventListener('click', function (e) {
+  if (!e.target || !window.VlymbooqAskDataset) return;
+  if (e.target.id === 'export-data') {
+    VlymbooqAskDataset.download();
+    return;
+  }
+  if (e.target.id !== 'sync-data') return;
+  if (!VlymbooqAskDataset.getToken()) {
+    // One-time setup, deliberately manual: a fine-grained PAT for this repo
+    // only (Contents: Read and write). It is stored in this browser's
+    // localStorage and sent only to api.github.com.
+    var tok = window.prompt(
+      'Paste a fine-grained GitHub PAT for renj-arch/dimsred\n' +
+      '(repository access: this repo only, permission: Contents read & write).\n' +
+      'It stays in this browser and is sent only to api.github.com.');
+    if (!tok) return;
+    VlymbooqAskDataset.setToken(tok);
+  }
+  var st = document.getElementById('sync-status');
+  if (st) { st.style.display = ''; st.textContent = 'syncing…'; }
+  VlymbooqAskDataset.syncNow().then(function () { updateSyncLink(); });
+});
+if (window.VlymbooqAskDataset && VlymbooqAskDataset.setSyncHook) {
+  VlymbooqAskDataset.setSyncHook(function () { updateSyncLink(); });
 }
 
 function boot(idx, meta) {
@@ -747,6 +981,29 @@ document.addEventListener('click', function (e) {
 el('q').addEventListener('keydown', function (e) {
   if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) doAsk();
 });
+
+// Writing-model choice. Stored so the next visit compiles the same size; the
+// engine unloads and recompiles on the next question if the choice changed.
+// The picker is filled from MODELS, which grows a "Mine" entry when the probe
+// finds a trained model on the writer-model branch -- so the retrained model
+// appears here with no page change, just a reload after the workflow finishes.
+if (window.VlymbooqAskLLM) {
+  var modelSel = el('model');
+  function fillModelOptions() {
+    modelSel.innerHTML = VlymbooqAskLLM.modelsList().map(function (m) {
+      return '<option value="' + esc(m.key) + '">' + esc(m.label) + '</option>';
+    }).join('');
+    modelSel.value = VlymbooqAskLLM.currentModelKey();
+  }
+  fillModelOptions();
+  modelSel.addEventListener('change', function () {
+    try { localStorage.setItem('askModel', modelSel.value); } catch (err) {}
+  });
+  // Probe for the fine-tuned model; on a hit the picker refills and a stored
+  // choice of "mine" becomes selectable. A miss (no model trained yet) is the
+  // normal state and changes nothing.
+  VlymbooqAskLLM.ensureMine().then(function (meta) { if (meta) fillModelOptions(); });
+}
 
 // The question-bank routing tables (~10.5 MB, nearly all the entity table) load
 // in the background. The page is usable before they arrive, because the timeline

@@ -16,15 +16,17 @@ module.exports = factory({
     entityEvidence: require('./ask-entity-evidence.js'),
     compose: require('./ask-compose.js'),
     bucketHash: require('./build-ask-qb-buckets-hash.js'),
-    prose: require('./ask-prose.js')
+    prose: require('./ask-prose.js'),
+    synthesize: require('./ask-synthesize.js')
 });
 } else {
   root.VlymbooqAskBrowser = factory({
     entityEvidence: root.VlymbooqAskEntityEvidence,
     compose: root.VlymbooqAskCompose,
     bucketHash: root.VlymbooqAskBucketHash,
-    prose: root.VlymbooqAskProse
-});
+    prose: root.VlymbooqAskProse,
+    synthesize: root.VlymbooqAskSynthesize
+  });
 }
 }(typeof self !== 'undefined' ? self : this, function (deps) {
 'use strict';
@@ -47,6 +49,12 @@ var BUCKET = deps && deps.bucketHash;
 // `essay()` needs it and must refuse cleanly when it is absent, while the
 // navigational `ask()` path keeps working regardless.
 var PROSE = deps && deps.prose;
+
+// The synthesis layer. Injected for the same reason as the others: it answers the
+// questions that name no entity, by reaching through the phrase index instead of
+// the entity table. Absent it, only the entity path is available and the module
+// returns null so the caller can fall back rather than fail.
+var SYNTH = deps && deps.synthesize;
 
 var QB = 'data/ask-qb/';
 
@@ -78,6 +86,45 @@ var QB = 'data/ask-qb/';
       if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + file);
       return r.json().then(function (rows) { return { rows: rows, missing: false }; });
     });
+  }
+
+  // Repair a sentence whose source paragraph was truncated: it has no terminal
+  // punctuation, and quoted in an answer it reads broken mid-clause. The
+  // continuation exists in the same row -- an entity's fill-blank records carry
+  // overlapping text of different lengths, and all of one entity's sentences sit
+  // in one bucket row -- so the full form of a cut sentence is a sibling that
+  // opens with the same words and says more. The longest such sibling wins.
+  //
+  // Only cut sentences are looked at (the punctuation test is one regex over
+  // every candidate; 0.10% of the corpus fails it), so the word-splitting below
+  // runs a thousand times per bucket at most, never on the common path.
+  function stitchCut(list) {
+    var out = null;
+    for (var i = 0; i < list.length; i++) {
+      var s = String(list[i]);
+      if (/[.!?\u2026"'\)\]]$/.test(s)) continue;
+      var words = s.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ');
+      if (words.length < 4) continue;
+      var head = words.slice(0, Math.min(6, words.length));
+      var best = null;
+      for (var j = 0; j < list.length; j++) {
+        if (j === i) continue;
+        var t = String(list[j]);
+        if (t.length <= s.length) continue;
+        var tw = t.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ');
+        if (tw.length <= words.length) continue;
+        var open = true;
+        for (var k = 0; k < head.length; k++) {
+          if (tw[k] !== head[k]) { open = false; break; }
+        }
+        if (open && (!best || t.length > best.length)) best = t;
+      }
+      if (best) {
+        if (!out) out = list.slice();
+        out[i] = best;
+      }
+    }
+    return out || list;
   }
 
   // Named rather than returned inline, because essay() needs to call mains() and
@@ -702,6 +749,216 @@ return finish({ rows: rows, bytes: bytes, buckets: ranked.length });
 return finish(null, err);
 });
 
+});
+},
+
+// Answer a question that names no entity, by reaching through the phrase index.
+//
+// The entity path resolves a heading to a row of the entity table and quotes that
+// row. It cannot answer "discuss the challenges of regulating emerging
+// technologies", because no row is called that: the facts live under dozens of
+// unrelated entities and no single lookup reaches them.
+//
+// This path reaches them by term. Every content term of the question is looked up
+// in the phrase index, which reports which buckets hold sentences containing it;
+// the buckets holding the most matching text are fetched, and every sentence in
+// them is scored against the question. What survives is grouped into the shape a
+// mains answer takes -- introduction, the hard parts by dimension, way forward --
+// with each sentence still carrying its source entity.
+//
+// Returns null when the phrase index is not deployed, so a caller falls back to
+// the entity path instead of reporting an empty corpus it never searched.
+synthesize: function (question, opts) {
+opts = opts || {};
+if (!state.ready) return Promise.reject(new Error('engine not booted'));
+if (!SYNTH || !state.buckets || !BUCKET) return Promise.resolve(null);
+
+var subject = opts.subject || question;
+var terms = SYNTH.terms(question);
+if (!terms.length && !(opts.expandTerms || []).length) return Promise.resolve(null);
+
+// Terms to search: the question's own, plus any the model named when it decided
+// what the question is really about. The two sources are merged here rather than
+// by the caller because both need the same two lookups below -- a term is only
+// useful if some shard holding it is fetched, and how a term got suggested does
+// not change that.
+var allTerms = terms.slice();
+(opts.expandTerms || []).forEach(function (t) {
+  t = String(t || '').trim();
+  if (t && allTerms.indexOf(t) === -1) allTerms.push(t);
+});
+
+// One phrase-index shard per term, deduped by shard so a term and an alternate
+// naming the same shard do not fetch it twice. Source is kept because the two
+// groups compete for the bucket budget differently: ranking by document
+// frequency puts the question's own topic bucket -- "nature-based solutions",
+// df 2 -- behind every expansion bucket with rarer-than-thou rivals like
+// "aravalli range" at df 29, and the cap then dropped the very subject of the
+// question. A term the question wrote is not a nomination; it is the topic, and
+// the topic always keeps its buckets.
+var seen = {}, jobs = [];
+terms.forEach(function (t) {
+var bi = BUCKET.bucketOf(t, state.buckets.bucketCount || 512);
+if (seen[bi]) return;
+seen[bi] = 1;
+jobs.push(api.phraseLookup(t).then(function (h) {
+  if (!h) return h;
+  var copy = {};
+  Object.keys(h).forEach(function (k) { copy[k] = h[k]; });
+  copy.topic = true;
+  return copy;
+}));
+});
+(opts.expandTerms || []).forEach(function (t) {
+t = String(t || '').trim();
+if (!t) return;
+var bi = BUCKET.bucketOf(t, state.buckets.bucketCount || 512);
+if (seen[bi]) return;
+seen[bi] = 1;
+jobs.push(api.phraseLookup(t));
+});
+
+// An expanded term is often an entity name the question never wrote --
+// "artificial intelligence act" names a law whose sentences are filed under
+// that entity, and no phrase probe reaches them. Resolving expanded terms
+// against the entity table is what closes that gap: exact match first, then the
+// same wrapper-aware candidates() the entity path uses, so a term that names a
+// real entity contributes its bucket as well.
+var entBuckets = {};
+if (state.entityDir) {
+(opts.expandTerms || []).forEach(function (t) {
+  t = String(t || '').trim();
+  if (!t) return;
+  var ids = state.entityDir.lookup(t);
+  if (ids) {
+    var bi = BUCKET.bucketOf(t, state.buckets.bucketCount || 512);
+    if (state.bucketById[bi]) entBuckets[bi] = t;
+    return;
+  }
+  var cand = state.entityDir.candidates(t);
+  for (var c = 0; c < cand.length; c++) {
+    if (!cand[c].strong) break;
+    var bi2 = BUCKET.bucketOf(cand[c].name, state.buckets.bucketCount || 512);
+    if (state.bucketById[bi2]) { entBuckets[bi2] = cand[c].name; break; }
+  }
+});
+}
+
+return Promise.all(jobs).then(function (hits) {
+var topicPacked = [], expandPacked = [];
+hits.forEach(function (h) {
+  if (!h) return;
+  (h.topic ? topicPacked : expandPacked).push({ term: h.term, hit: h });
+});
+
+// The cap is a budget, and it is spent in this order: buckets the question's
+// own terms found, then buckets the model's nominations found. Ranking the two
+// together by document frequency let a nomination at df 29 evict the topic at
+// df 2, so the answer stopped containing its own subject.
+var cap = opts.maxBuckets == null ? 24 : opts.maxBuckets;
+var ranked = topicPacked.length ? SYNTH.rankBuckets(topicPacked, cap) : [];
+if (expandPacked.length && ranked.length < cap) {
+  var seenB = {};
+  ranked.forEach(function (r) { seenB[String(r.bucket)] = 1; });
+  SYNTH.rankBuckets(expandPacked, cap).forEach(function (r) {
+    if (ranked.length >= cap) return;
+    if (seenB[String(r.bucket)]) return;
+    seenB[String(r.bucket)] = 1;
+    ranked.push(r);
+  });
+}
+
+// Entity buckets come from resolution, not from document frequency, so they
+// cannot be ranked by the phrase index. They are appended after the cap: a
+// term the model nominated is a deliberate choice, and truncating it to fit a
+// budget sized for incidental matches would defeat the expansion.
+Object.keys(entBuckets).forEach(function (b) {
+  var already = ranked.some(function (r) { return String(r.bucket) === String(b); });
+  if (!already) ranked.push({ bucket: b, score: 0, terms: [entBuckets[b]] });
+});
+// Nothing matched by phrase. That is not the end of the road when full-text
+// retrieval is on offer -- it is the case the fallback exists for -- but with no
+// callback there is nothing left to try, so return the null the caller expects.
+if (!ranked.length && typeof opts.fulltext !== 'function') return null;
+
+var foundTerms = {};
+ranked.forEach(function (r) {
+(r.terms || []).forEach(function (t) { foundTerms[t] = 1; });
+});
+
+return Promise.all(ranked.map(function (r) {
+var meta = state.bucketById[r.bucket];
+var file = meta && meta.file ? meta.file : QB + 'bucket/bucket.' + r.bucket + '.json';
+return loadShard(file).then(function (out) {
+return { rows: out.rows || [], bucket: r.bucket, terms: r.terms || [] };
+}, function () { return { rows: [], bucket: r.bucket, terms: r.terms || [] }; });
+})).then(function (parts) {
+var candidates = [], bytes = 0, buckets = 0;
+parts.forEach(function (p) {
+if (!p.rows.length) return;
+buckets++;
+var meta = state.bucketById[p.bucket];
+bytes += meta ? (meta.bytes || 0) : 0;
+p.rows.forEach(function (row) {
+if (!row || !row[0] || !row[1]) return;
+stitchCut(row[1]).forEach(function (s) {
+candidates.push({ entity: row[0], sentence: s, cats: row[2] || [],
+  bucket: p.bucket, terms: p.terms });
+});
+});
+});
+
+// Full-text candidates join the pool before the single write pass, not as a
+// fallback after it. Every earlier version of this fetched them conditionally
+// -- when the phrase material scored thin or left a facet unfound -- and every
+// condition was semantically blind: "technological concentration" exists in no
+// phrase row, yet a bucket of near-misses ("Antoine Armand", "Anglo-Russian
+// Convention") scored thirteen facts and skipped the trigger, while the answers
+// that needed concentration risk, digital india and Darjeeling never saw them.
+// A second write pass over half a million candidates also doubled synthesis
+// cost, so the fix that reached every question was the one that cost nothing
+// extra: fetch BM25 once, dedupe against the phrase candidates, and let the
+// scorer rank them together under the relaxed gate reserved for flagged
+// candidates.
+var extra = [];
+if (typeof opts.fulltext === 'function') {
+try {
+extra = opts.fulltext(question) || [];
+} catch (e) { extra = []; }
+}
+var ftFetched = extra.length, added = 0;
+if (extra.length) {
+var seenS = {};
+candidates.forEach(function (c) { seenS[c.entity + '\u0000' + c.sentence] = 1; });
+extra.forEach(function (c) {
+if (!c || !c.sentence) return;
+var key = c.entity + '\u0000' + c.sentence;
+if (seenS[key]) return;
+seenS[key] = 1;
+c.fulltext = true;
+candidates.push(c);
+added++;
+});
+}
+
+var doc = SYNTH.write(question, candidates, {
+subject: subject,
+minRelevance: opts.minRelevance,
+maxPerSection: opts.perHeading || 4,
+// The model's own terms rank as topic phrases: it named them because it judged
+// them central, and a sentence holding one is better evidence than one that
+// passed on accumulated words.
+expandPhrases: opts.expandTerms
+});
+doc.fulltextCandidates = ftFetched;
+doc.fulltextAdded = added;
+doc.bucketsFetched = buckets;
+doc.bytes = bytes;
+doc.terms = allTerms;
+doc.foundTerms = Object.keys(foundTerms);
+doc.entityBuckets = Object.keys(entBuckets).length;
+return doc;
+});
 });
 }
 };
