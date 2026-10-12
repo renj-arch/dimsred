@@ -33,4 +33,16 @@ function bucketOf(name, n) {
   return h % count;
 }
 
-module.exports = { bucketOf: bucketOf, norm: norm, BUCKETS: BUCKETS };
+var BUCKET_HASH = { bucketOf: bucketOf, norm: norm, BUCKETS: BUCKETS };
+
+// The builder requires this file; the page loads it with a plain script tag.
+// A bare `module.exports =` throws `module is not defined` in the browser,
+// which killed the script before the global existed -- and ask-browser, which
+// looks for `root.VlymbooqAskBucketHash`, then had no bucket hash at all, so
+// every question on the page took the no-bucket fallback. The guard keeps the
+// CommonJS path byte-identical while publishing the same object as a global.
+if (typeof module === 'object' && module.exports) {
+  module.exports = BUCKET_HASH;
+} else {
+  (typeof self !== 'undefined' ? self : this).VlymbooqAskBucketHash = BUCKET_HASH;
+}

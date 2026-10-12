@@ -718,6 +718,12 @@ return VlymbooqAskLLM.expand(q, {
     if (!out || !out.sections || !out.sections.length) return null;
     out.expanded = expanded;
     return renderLLM(out, facts, doc);
+  }).catch(function () {
+    // The engine failed after the facts were already gathered: no WebGPU, a
+    // cancelled download, an out-of-memory compile. The facts are good; the
+    // writer is what is unavailable, so hand back to the quoting paths rather
+    // than showing an error for a corpus that answered fine.
+    return null;
   });
 });
 }
