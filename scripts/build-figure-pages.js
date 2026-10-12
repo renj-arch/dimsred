@@ -221,6 +221,7 @@ function main() {
     if (pi > 0) nav += '<a href="page-' + String(pi).padStart(3, '0') + '.html">&#8592; previous</a>';
     nav += '<a href="index.html">index</a>';
     if (pi < pages.length - 1) nav += '<a href="page-' + String(pi + 2).padStart(3, '0') + '.html">next &#8594;</a>';
+    nav += '<a href="../improve.html" title="Record a correction for any figure or page — it retrains your own model">improve</a>';
     nav += '</div>';
 
     var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
@@ -308,7 +309,8 @@ function main() {
       + '<title>' + esc(t) + ' figures</title><style>' + css + '</style></head><body><div class="wrap">'
       + '<h1>' + esc(t) + '</h1>'
       + '<p class="meta">' + keys.length.toLocaleString('en-US') + ' figures &#183; distinct images from Wikimedia Commons</p>'
-      + '<div class="nav"><a href="index.html">&#8592; all topics</a></div>'
+      + '<div class="nav"><a href="index.html">&#8592; all topics</a>'
+      + '<a href="../improve.html" title="Record a correction — it retrains your own model">improve</a></div>'
       + '<div class="grid">' + cards + '</div></div></body></html>';
 
     fs.writeFileSync(path.join(OUTDIR, 'topic-' + topicSlug(t) + '.html'), html);
@@ -383,6 +385,10 @@ function main() {
     });
     idx += '</div>';
   }
+
+  idx += '<p class="meta" style="margin-top:28px">Found a wrong caption, a stale figure, a broken '
+    + 'flowchart step on any page? <a href="../improve.html">Record the correction</a> — corrections '
+    + 'retrain your own model automatically, every 15 records.</p>';
 
   idx += '</div></body></html>';
   fs.writeFileSync(path.join(OUTDIR, 'index.html'), idx);
