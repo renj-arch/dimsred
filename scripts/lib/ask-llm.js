@@ -36,15 +36,79 @@ if (typeof module === 'object' && module.exports) {
 // `mlc-ai/` -- the WebLLM 0.2.86 catalog no longer serves the older `Qwen/`
 // prefix, and asking for a record the catalog does not hold fails with a
 // ModelNotFoundError before a single weight is fetched.
+//
+// A third entry appears when it exists: `mine`, the model fine-tuned on this
+// page's own answers by the Train Writer Model workflow. Its weights live on
+// the repo's `writer-model` branch; probeMine() checks for them and, on a hit,
+// adds the option. Until the first training run finishes, only the two stock
+// sizes show -- nothing breaks, the option is simply absent.
 var MODELS = {
   fast:    { id: 'mlc-ai/Qwen2.5-1.5B-Instruct-q4f16_1-MLC', label: 'Fast (1.5B)' },
   quality: { id: 'mlc-ai/Qwen2.5-3B-Instruct-q4f16_1-MLC',   label: 'Quality (3B, slower)' }
 };
 var DEFAULT_MODEL = 'fast';
 
+// The fine-tuned model's home. WebLLM's GitHub-URL resolver appends
+// `resolve/main/` to any raw.githubusercontent URL that does not already
+// contain one, so the branch carries a literal `resolve/main/` directory and
+// this base URL is the prefix that resolves to it. version.json (at the branch
+// root, fetched directly, no resolver) is the small manifest the page reads to
+// discover whether a model exists and how many records trained it.
+//
+// The compiled kernel is the STOCK 0.5B wasm from the WebLLM binary catalog:
+// fine-tuning changes weights, not architecture, so the prebuilt kernel runs
+// the fine-tuned shards as-is -- CI never has to compile wasm.
+var MINE_BASE = 'https://raw.githubusercontent.com/renj-arch/dimsred/writer-model/';
+var MINE_VERSION = MINE_BASE + 'version.json';
+var MINE_LIB = 'https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/web-llm-models/v0_2_86/base/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm';
+var mineMeta = null;
+var mineProbe = null;
+
+function mineInfo() { return mineMeta; }
+
+// Probe once per page load (no-store: a newly published model should appear
+// without a hard refresh). A 404 or network miss is normal -- the branch does
+// not exist until the first training run -- and resolves to null, never
+// rejects, so callers can treat "no mine model" as a routine state.
+function ensureMine() {
+  if (mineProbe) return mineProbe;
+  if (typeof fetch !== 'function') return Promise.resolve(null);
+  mineProbe = fetch(MINE_VERSION + '?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    })
+    .then(function (meta) {
+      if (!meta || !meta.records) return null;
+      mineMeta = meta;
+      MODELS.mine = {
+        id: 'mine',
+        label: 'Mine (' + meta.records + ' answers)',
+        model: MINE_BASE,
+        model_id: 'mine',
+        model_lib: MINE_LIB,
+        low_resource_required: true,
+        vram_required_MB: meta.vram_required_MB || 944.62,
+        overrides: { context_window_size: meta.context_window_size || 4096 }
+      };
+      return meta;
+    })
+    .catch(function () { return null; });
+  return mineProbe;
+}
+
+function modelsList() {
+  return Object.keys(MODELS).map(function (key) {
+    return { key: key, label: MODELS[key].label };
+  });
+}
+
 function currentModelKey() {
   try {
     var k = typeof localStorage !== 'undefined' && localStorage.getItem('askModel');
+    // A stored 'mine' only counts once the probe has confirmed the model
+    // exists; otherwise fall back to the default rather than compile a record
+    // the branch does not hold yet.
     if (k && MODELS[k]) return k;
   } catch (e) { /* private mode etc. -- fall back */ }
   return DEFAULT_MODEL;
@@ -169,14 +233,23 @@ function ensureEngine(onProgress) {
       : Promise.resolve();
     return drop.then(function () {
       report('downloading the writing model (' + MODELS[key].label + ')…');
-      return webllm.CreateMLCEngine(MODELS[key].id, {
+      var opts = {
         initProgressCallback: function (p) {
           var pct = p.progress == null ? 0 : Math.round(p.progress * 100);
           report(pct < 100
             ? 'preparing the writing model… ' + pct + '%'
             : 'ready');
         }
-      });
+      };
+      if (key === 'mine') {
+        // Passing appConfig REPLACES the default catalog list (the engine does
+        // appConfig || prebuilt), so the stock entries ride along only if we
+        // put them there -- which is fine, `mine` is the id being compiled.
+        var list = (webllm.prebuiltAppConfig && webllm.prebuiltAppConfig.model_list) || [];
+        opts.appConfig = { model_list: list.concat([MODELS.mine]) };
+        return webllm.CreateMLCEngine('mine', opts);
+      }
+      return webllm.CreateMLCEngine(MODELS[key].id, opts);
     });
   }).then(function (eng) {
     engine = eng;
@@ -544,6 +617,9 @@ return {
   synthesize: synthesize,
   expand: expand,
   ensureEngine: ensureEngine,
+  ensureMine: ensureMine,
+  mineInfo: mineInfo,
+  modelsList: modelsList,
   setBackend: setBackend,
   backendEngine: backendEngine,
   buildPrompt: buildPrompt,

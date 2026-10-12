@@ -94,21 +94,23 @@ var MAX_WORDS = 4;
 var NGRAM_MIN = 2;
 var NGRAM_MAX = 3;
 
-// Content n-grams share the capitalised phrases' document-frequency floor. The
-// two families used to be counted separately (capitalised at MIN_DF, n-grams at
-// a higher NGRAM_MIN_DF) because n-grams were assumed to be two orders of
-// magnitude more numerous. Measured on the 10.5M-sentence corpus they are not:
-// the whole n-gram family at df>=2 is 131,472 survivors against 2,956,725
-// capitalised, so the total (3.09M) sits under the 4M MAX_KEPT budget with room
-// to spare. One floor is therefore simpler and strictly better -- it keeps the
-// twice-occurring tail that is exactly the rare-but-real term class a phrase
-// index exists to resolve. Re-measure with `--measure` before lowering it
-// further or widening NGRAM_MAX.
-var NGRAM_MIN_DF = MIN_DF;
-
-// Bars the --measure histogram reports, so the constant above is chosen from
-// data rather than hope.
-var MEASURE_BARS = [2, 3, 4, 5, 6, 8, 10, 15, 20];
+// Content n-grams get their own document-frequency floor, and it is CHOSEN FROM
+// THE CORPUS at build time rather than hardcoded. An earlier revision used one
+// shared floor (MIN_DF for both families) because a measurement on the 2026-10-02
+// corpus showed the n-gram family at df>=2 was only 131,472 survivors -- tiny
+// against the 2,956,725 capitalised, so the total sat under MAX_KEPT with room to
+// spare. That measurement does not survive contact with the CI-built corpus:
+// the 2026-10-12 build (11.1M sentences) produced 8,439,047 n-gram survivors at
+// df>=2 and 1,875,009 capitalised, blowing through the 4M ceiling. The n-gram
+// family's tail is corpus-shaped, not constant -- hardcoding any floor either
+// wastes budget when the corpus shrinks or fails when it grows.
+//
+// So pass A tallies the exact per-df distribution of the n-gram-only phrases
+// (those the capitalised floor would not already keep), and the floor is set to
+// the smallest value whose survivors fit MAX_KEPT alongside the capitalised
+// family. --measure prints the curve; the normal build picks and prints the
+// floor automatically.
+var MEASURE_BARS = [2, 3, 4, 5, 6, 8, 10, 15, 20, 30, 50];
 
 // A term that starts with one of these is a function word followed by whatever
 // comes next, so its n-grams are noise: "of the", "in a", "that the". Dropping
@@ -341,20 +343,18 @@ function main() {
   // that cleared their family's document-frequency floor rather than every phrase
   // that exists.
   var MEASURE = process.argv.indexOf('--measure') !== -1;
-  var kept = 0, below = 0, distinct = 0;
-  // The histogram counts per-shard, not per-phrase: a global phrase->df map is
-  // the single-pass builder's OOM coming back through the side door. Bars are
-  // tallied while each shard is local and then discarded.
-  var hist = {};
-  MEASURE_BARS.forEach(function (bar) { hist[bar] = 0; });
-  var keptCap = 0, keptNgram = 0;
-  var keep = new Set();
-  for (var k2 = 0; k2 < BUCKET_COUNT; k2++) {
-    var spillFile = path.join(SPILL_DIR, 'spill.' + k2 + '.txt');
-    if (!fs.existsSync(spillFile)) continue;
-    var text = fs.readFileSync(spillFile, 'utf8');
+
+  // Pass A: per-family document-frequency tallies, one spill slice at a time.
+  // No keep set yet -- the n-gram floor is chosen from the tallies first, so the
+  // keep set is built once, at the right threshold, rather than patched.
+  //
+  // A phrase that clears the capitalised floor (e.c >= MIN_DF) is kept whatever
+  // its n-gram count; only the n-gram-only phrases need the tuned floor. Their
+  // exact per-df counts let the floor be minimal for the budget -- no guessing,
+  // no wasted tail, no separate measure run to re-dispatch by hand.
+  function readSpill(file) {
     var local = new Map();
-    text.split('\n').forEach(function (line) {
+    fs.readFileSync(file, 'utf8').split('\n').forEach(function (line) {
       if (!line) return;
       // "c phrase" or "n phrase": family marker, one space, then the phrase.
       var fam = line.charAt(0);
@@ -363,53 +363,100 @@ function main() {
       if (!e) { e = { c: 0, n: 0 }; local.set(phrase, e); }
       if (fam === 'n') e.n++; else e.c++;
     });
-    distinct += local.size;
-    local.forEach(function (e, phrase) {
-      if (MEASURE && e.n > 0) {
-        MEASURE_BARS.forEach(function (bar) { if (e.n >= bar) hist[bar]++; });
-      }
-      // max(), not sum(): one sentence that contains "El Nino" as a capitalised
-      // run AND as a content n-gram is ONE document, not two. Summing the
-      // families would give every single-occurrence proper name a fake df=2
-      // and quietly defeat the floor.
-      var df = Math.max(e.c, e.n);
-      if (df >= NGRAM_MIN_DF) {
-        kept++;
-        if (e.n === 0) keptCap++; else keptNgram++;
-        keep.add(phrase);
-      } else { below++; }
-    });
-    fs.unlinkSync(spillFile);
+    return local;
   }
-  fs.rmdirSync(SPILL_DIR);
 
-  console.log('distinct phrases ' + distinct.toLocaleString());
-  console.log('surviving: ' + kept.toLocaleString() + '  (capitalised ' +
-    keptCap.toLocaleString() + ', n-gram ' + keptNgram.toLocaleString() + ')   dropped ' +
-    below.toLocaleString());
+  var distinct = 0, alwaysKept = 0;
+  var ngramOnlyAtDf = {};   // df -> phrases with e.c < MIN_DF and e.n === df
+  for (var k2 = 0; k2 < BUCKET_COUNT; k2++) {
+    var spillFileA = path.join(SPILL_DIR, 'spill.' + k2 + '.txt');
+    if (!fs.existsSync(spillFileA)) continue;
+    var localA = readSpill(spillFileA);
+    distinct += localA.size;
+    localA.forEach(function (e) {
+      if (e.c >= MIN_DF) { alwaysKept++; return; }
+      if (e.n > 0) ngramOnlyAtDf[e.n] = (ngramOnlyAtDf[e.n] || 0) + 1;
+    });
+  }
+
+  var ngramOnlyTotal = 0;
+  for (var dn in ngramOnlyAtDf) ngramOnlyTotal += ngramOnlyAtDf[dn];
+  console.log('distinct phrases ' + distinct.toLocaleString() +
+    '   capitalised at df>=' + MIN_DF + ': ' + alwaysKept.toLocaleString() +
+    '   n-gram-only ' + ngramOnlyTotal.toLocaleString());
+
+  // Minimal n-gram floor whose survivors fit alongside the capitalised family.
+  // Walk the exact per-df distribution from the top down, lowering the floor
+  // while the combined keep set fits MAX_KEPT. Kept (capitalised) phrases are
+  // one per phrase no matter how many families claim them -- max(), not sum(),
+  // on the per-sentence dedup is what makes the tally exact.
+  if (alwaysKept > MAX_KEPT) {
+    console.error('');
+    console.error('STOP: ' + alwaysKept.toLocaleString() + ' capitalised phrases alone ' +
+      'exceed the ' + MAX_KEPT.toLocaleString() + ' ceiling. Raise MIN_DF.');
+    process.exit(2);
+  }
+  var dfs = Object.keys(ngramOnlyAtDf).map(Number).sort(function (a, b) { return a - b; });
+  var ngramFloor = dfs.length ? dfs[dfs.length - 1] + 1 : MIN_DF;
+  var ngramKept = 0, suffix = 0;
+  for (var di = dfs.length - 1; di >= 0; di--) {
+    suffix += ngramOnlyAtDf[dfs[di]];
+    if (alwaysKept + suffix <= MAX_KEPT) { ngramFloor = dfs[di]; ngramKept = suffix; }
+    else break;
+  }
+
+  function keptAt(floor) {
+    var s = alwaysKept;
+    for (var d in ngramOnlyAtDf) { if (+d >= floor) s += ngramOnlyAtDf[d]; }
+    return s;
+  }
 
   if (MEASURE) {
     console.log('');
-    console.log('n-gram survivor curve (df floor -> distinct n-grams kept):');
+    console.log('kept total by n-gram floor (capitalised + n-grams):');
     MEASURE_BARS.forEach(function (bar) {
-      console.log('  df>=' + String(bar).padStart(2) + ':  ' + hist[bar].toLocaleString());
+      console.log('  df>=' + String(bar).padStart(2) + ':  ' + keptAt(bar).toLocaleString());
     });
     console.log('');
-    console.log('MAX_KEPT budget: ' + MAX_KEPT.toLocaleString() + '. Pick the');
-    console.log('smallest NGRAM_MIN_DF whose capitalised+total stays under it.');
+    console.log('MAX_KEPT budget: ' + MAX_KEPT.toLocaleString() + '. The normal build');
+    console.log('auto-picks the smallest floor that fits; with this corpus that is df>=' +
+      ngramFloor + '.');
     console.log('');
-    console.log('--measure: stopping after pass one, no shards written.');
+    console.log('--measure: stopping after the tally pass, no shards written.');
     process.exit(0);
   }
 
-  if (kept > MAX_KEPT) {
-    console.error('');
-    console.error('STOP: ' + kept.toLocaleString() + ' phrases would have to be held ' +
-      'in memory in pass two, above the ' + MAX_KEPT.toLocaleString() + ' ceiling.');
-    console.error('This is the failure mode of the single-pass version, not a tuning');
-    console.error('problem. Raise MIN_DF, or shard the accumulation across processes.');
-    process.exit(2);
+  if (ngramKept === 0 && dfs.length) {
+    console.error('WARNING: no n-gram terms fit the budget even at df>=' + ngramFloor +
+      '; the index will contain only capitalised phrases.');
   }
+  console.log('n-gram floor auto-tuned to df>=' + ngramFloor + ' (' +
+    ngramKept.toLocaleString() + ' n-gram terms kept; total keep set ' +
+    (alwaysKept + ngramKept).toLocaleString() + ' of ' + MAX_KEPT.toLocaleString() + ')');
+
+  // Pass B: build the keep set at the chosen floor, then release the spill files.
+  var kept = 0, below = 0, keptCap = 0, keptNgram = 0;
+  var keep = new Set();
+  for (var k3 = 0; k3 < BUCKET_COUNT; k3++) {
+    var spillFileB = path.join(SPILL_DIR, 'spill.' + k3 + '.txt');
+    if (!fs.existsSync(spillFileB)) continue;
+    var localB = readSpill(spillFileB);
+    localB.forEach(function (e, phrase) {
+      var capHit = e.c >= MIN_DF;
+      var ngramHit = e.n >= ngramFloor;
+      if (capHit || ngramHit) {
+        kept++;
+        if (ngramHit && !capHit) keptNgram++; else keptCap++;
+        keep.add(phrase);
+      } else { below++; }
+    });
+    fs.unlinkSync(spillFileB);
+  }
+  fs.rmdirSync(SPILL_DIR);
+
+  console.log('surviving: ' + kept.toLocaleString() + '  (capitalised ' +
+    keptCap.toLocaleString() + ', n-gram ' + keptNgram.toLocaleString() + ')   dropped ' +
+    below.toLocaleString());
 
   // Pass two: detail for survivors only. Shards are accumulated per output file,
   // so nothing is written until every bucket has been read, but only survivors are
@@ -563,6 +610,5 @@ module.exports = {
   phrasesIn: phrasesIn,
   ngramsIn: ngramsIn,
   MIN_DF: MIN_DF,
-  NGRAM_MIN_DF: NGRAM_MIN_DF,
   MAX_BUCKETS: MAX_BUCKETS
 };
