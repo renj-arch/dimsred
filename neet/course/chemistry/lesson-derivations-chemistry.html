@@ -1,0 +1,946 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Chemistry Derivations — NEET Chemistry | vlymbooq</title>
+    <meta name="description" content="NEET Chemistry derivations: Ideal Gas, Nernst, Rate Laws, Buffer, Arrhenius, Raoult's Law. Beginner-friendly step-by-step.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/neet/course/chemistry/lesson-derivations-chemistry.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px;align-items:flex-start}
+        .side{width:220px;flex-shrink:0}
+        .sidebar-nav{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:10px;display:flex;flex-direction:column;gap:2px;font-size:.85em}
+        .sidebar-nav a{display:block;padding:8px 10px;border-radius:8px;color:var(--text-sec);transition:all .15s}
+        .sidebar-nav a:hover{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav a.active{background:rgba(52,211,153,.1);color:var(--emerald);font-weight:600}
+        .sidebar-nav .section-head{font-size:.7em;text-transform:uppercase;color:var(--text-muted);padding:8px 10px 2px;letter-spacing:.5px}
+        .main{flex:1;min-width:0}
+        .main h1{font-size:1.5em;font-weight:900;margin-bottom:4px}
+        .main h2{font-size:1.25em;font-weight:700;margin:28px 0 12px;color:var(--emerald);line-height:1.5}
+        .main h3{font-size:1.05em;font-weight:600;margin:20px 0 8px;color:var(--emerald)}
+        .main h4{font-size:.95em;font-weight:600;margin:16px 0 8px;color:#fbbf24}
+        .main p{color:var(--text-sec);line-height:1.7;margin-bottom:10px;font-size:.92em}
+        .deriv-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:12px 0}
+        .step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+        .step:last-child{margin-bottom:0}
+        .step-num{background:rgba(52,211,153,.1);color:var(--emerald);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700;flex-shrink:0;margin-top:2px}
+        .step-text{font-size:.88em;line-height:1.65;color:var(--text-sec);flex:1}
+        .step-text strong{color:var(--text)}
+        .step-text .math{color:#fbbf24;font-style:italic}
+        .formula-box{background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:var(--radius);padding:12px 16px;margin:10px 0;font-size:.9em;color:#60a5fa;text-align:center;font-weight:600}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin:14px 0}
+        .diagram-box svg{display:block;margin:0 auto;max-width:100%;height:auto}
+        .diagram-caption{text-align:center;font-size:.75em;color:var(--text-muted);margin-top:6px}
+        .tip-box,.neet-box,.example-box{border-radius:var(--radius);padding:12px 16px;margin:12px 0}
+        .tip-box{background:rgba(248,113,113,.06);border-left:3px solid #f87171}
+        .tip-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:#f87171}
+        .tip-text,.neet-text,.ex-text{font-size:.85em;line-height:1.6;color:var(--text-sec)}
+        .neet-box{background:rgba(167,139,250,.06);border-left:3px solid #a78bfa}
+        .neet-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:#a78bfa}
+        .example-box{background:rgba(52,211,153,.06);border-left:3px solid var(--emerald)}
+        .ex-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:var(--emerald)}
+        .ex-soln{font-size:.82em;line-height:1.5;color:var(--text-sec);margin-top:4px;padding-top:4px;border-top:1px solid var(--border)}
+        .math{color:#fbbf24}
+        .speaker-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:600;border:1px solid rgba(52,211,153,.2);cursor:pointer;background:rgba(52,211,153,.06);color:var(--emerald);transition:all .2s;vertical-align:middle;margin-left:8px}
+        .speaker-btn:hover{background:rgba(52,211,153,.15)}
+        .speaker-btn.speaking{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171;animation:pulse 1s ease-in-out infinite}
+        @media(max-width:800px){.flex-row{flex-direction:column}.side{width:100%}}
+        @media print{.nav,.sidebar-nav,.download-btn,.speaker-btn{display:none!important}.container{padding:0}.deriv-box{break-inside:avoid}.diagram-box{break-inside:avoid}}
+        @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+        @keyframes glow{0%,100%{filter:drop-shadow(0 0 2px rgba(52,211,153,0))}50%{filter:drop-shadow(0 0 8px rgba(52,211,153,.6))}}
+        @keyframes moveRight{0%{transform:translateX(0)}100%{transform:translateX(120px)}}
+        @keyframes stretch{0%{transform:scaleY(1)}50%{transform:scaleY(1.06)}100%{transform:scaleY(1)}}
+        .anim-fade{animation:fadeIn 2s ease-out}
+        .anim-glow{animation:glow 2s ease-in-out infinite}
+        .anim-pulse{animation:pulse 2s ease-in-out infinite}
+        .anim-bounce{animation:bounce 1.5s ease-in-out infinite}
+        .anim-move-right{animation:moveRight 3s ease-in-out infinite alternate}
+        .anim-stretch{transform-origin:center top;animation:stretch 1.8s ease-in-out infinite}
+    </style>
+    <script>
+        const LECT={
+            idealgas:`Welcome to the Ideal Gas Equation. The ideal gas law PV equals n R T relates pressure volume amount and temperature of an ideal gas. It combines Boyle's law which says P is inversely proportional to V at constant T. Charles law which says V is proportional to T at constant P. Avogadro's law which says V is proportional to n at constant P and T. Combining these gives V proportional to n T over P. Introducing R the universal gas constant gives V equals n R T over P or PV equals n R T. R is 8 point 3 1 4 Joules per mole Kelvin. This equation is the foundation of all gas law problems in NEET. Remember to use SI units pressure in Pascals volume in cubic meters.`,
+            nernst:`Welcome to the Nernst Equation. The Nernst equation relates the cell potential of an electrochemical cell to the concentrations of the ions involved. For a cell reaction a A plus b B gives c C plus d D, the cell potential E is given by E equals E naught minus R T over n F times natural log of Q. Q is the reaction quotient. At 298 Kelvin, using base 10 log, this simplifies to E equals E naught minus 0 point 0 5 9 1 over n times log Q. The derivation starts from the relationship between Gibbs free energy and cell potential. Delta G equals minus n F E. And Delta G equals Delta G naught plus R T ln Q. Combining these gives minus n F E equals minus n F E naught plus R T ln Q. Solving for E gives the Nernst equation.`,
+            ratelaws:`Welcome to Integrated Rate Equations. The rate of a chemical reaction depends on the concentration of reactants. For a zero order reaction, rate equals k. The integrated form is A equals A naught minus k t. The half life is A naught over 2 k. For a first order reaction, rate equals k times A. The integrated form is ln A equals ln A naught minus k t, or A equals A naught e to the minus k t. The half life is 0 point 6 9 3 over k. For a second order reaction with one reactant, rate equals k A squared. The integrated form is 1 over A equals 1 over A naught plus k t. The half life is 1 over k A naught. Each order has a characteristic half life relationship. First order half life is constant independent of concentration.`,
+            buffer:`Welcome to the Henderson Hasselbalch Equation. A buffer solution resists changes in pH when small amounts of acid or base are added. The equation is pH equals p K a plus log of conjugate base concentration over acid concentration. It is derived from the acid dissociation equilibrium H A gives H plus plus A minus. The equilibrium constant K a equals H plus times A minus over H A. Taking negative log of both sides gives minus log K a equals minus log H plus minus log of A minus over H A. This gives p H equals p K a plus log A minus over H A. For a basic buffer, p O H equals p K b plus log conjugate acid over base. The buffer capacity is maximum when the ratio of conjugate base to acid is 1, which means pH equals p K a.`,
+            arrhenius:`Welcome to the Arrhenius Equation. The Arrhenius equation describes how the rate constant k depends on temperature. The equation is k equals A e to the minus E a over R T. Here A is the pre exponential factor or frequency factor. E a is the activation energy. R is the gas constant 8 point 3 1 4 Joules per mole Kelvin. T is temperature in Kelvin. Taking natural log of both sides gives ln k equals ln A minus E a over R T. This is in the form y equals m x plus c where ln k is y and 1 over T is x. The slope is minus E a over R. The logarithmic form allows us to calculate activation energy from rate constants at two temperatures using ln k2 over k1 equals E a over R times 1 over T1 minus 1 over T2.`,
+            raoult:`Welcome to Raoult's Law. Raoult's law states that the partial pressure of a component in a solution is equal to the vapor pressure of the pure component multiplied by its mole fraction in the solution. For a solvent A, P A equals P A naught times X A. For a non volatile solute, the total vapor pressure of the solution equals the vapor pressure of the solvent. The lowering of vapor pressure delta P equals P naught minus P equals P naught times X B. Henry's law is similar but applies to gases dissolved in liquids. It says the partial pressure of a gas above a liquid is proportional to its mole fraction in the liquid. P equals K H times X. K H is Henry's constant. Both laws are special cases of the same thermodynamic principle.`
+        };
+        let synth = window.speechSynthesis;
+        let currentUtter = null;
+        function speakText(btn, id) {
+            if (!synth || !LECT[id]) return;
+            if (currentUtter) { synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; return; }
+            let u = new SpeechSynthesisUtterance(LECT[id]);
+            u.rate = 0.88; u.pitch = 1; u.volume = 1;
+            u.onend = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            u.onerror = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            currentUtter = u; btn.classList.add('speaking');
+            synth.speak(u);
+        }
+        function stopSpeech() { if (synth) synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; }
+        document.addEventListener('click', function(e) { if (!e.target.closest('.speaker-btn')) stopSpeech(); });
+    </script>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../../index.html" class="brand"><img src="../../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../../index.html">Home</a><a href="../../../dashboard.html">Dashboard</a><a href="../../index.html">NEET</a><a href="../index.html">Course</a><a href="index.html" class="active">Chemistry</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="section-head">Chemistry</div>
+                    <a href="lesson-physical-chemistry.html">Physical Chemistry</a>
+                    <a href="lesson-organic-chemistry.html">Organic Chemistry</a>
+                    <a href="lesson-inorganic-chemistry.html">Inorganic Chemistry</a>
+                    <a href="lesson-environmental-chemistry.html">Environmental Chemistry</a>
+                    <div class="section-head" style="margin-top:8px">Derivations</div>
+                    <a href="lesson-derivations-chemistry.html" class="active">Session 1</a>
+                    <a href="lesson-derivations-chemistry-2.html">Session 2</a>
+                    <a href="lesson-derivations-chemistry-3.html">Session 3</a>
+                    <a href="lesson-derivations-chemistry-4.html">Session 4</a>
+                    <div class="section-head" style="margin-top:8px">Reference</div>
+                    <a href="#periodic-table">Periodic Table & Trends</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Chemistry Derivations</div>
+                    <h1>Session 1 — Key Chemical Equations</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Beginner-friendly step-by-step derivations for NEET. Each starts with real-life context, then builds the formula from first principles.</div>
+                </div>
+
+                <!-- 1. IDEAL GAS EQUATION -->
+                <h2 id="ideal-gas">1. Ideal Gas Equation — PV = nRT <button class="speaker-btn" onclick="speakText(this,'idealgas')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Why does a balloon expand when heated? Why does a tyre feel firm when you pump air into it? The <strong>ideal gas equation</strong> PV = nRT connects pressure, volume, temperature, and amount of gas. It explains how car engines work (compressing gas heats it), how weather balloons behave (expanding as they rise), and even how your lungs function. Every NEET chemistry section has at least one gas law problem.</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="200" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Ideal Gas — Molecular motion &amp; pressure</text>
+                        <!-- Container with piston -->
+                        <rect x="50" y="45" width="260" height="100" rx="4" fill="rgba(96,165,250,.03)" stroke="#60a5fa" stroke-width="1.5"/>
+                        <!-- Piston -->
+                        <rect x="310" y="45" width="12" height="100" rx="2" fill="#a78bfa" stroke="#8b5cf6" stroke-width="1">
+                            <animate attributeName="x" values="310;290;310;330;310" dur="6s" repeatCount="indefinite"/>
+                        </rect>
+                        <text x="316" y="105" text-anchor="middle" fill="#a78bfa" font-size="7" transform="rotate(90,316,105)">Piston</text>
+                        <!-- Pressure gauge -->
+                        <rect x="340" y="55" width="55" height="50" rx="4" fill="rgba(251,191,36,.05)" stroke="#fbbf24" stroke-width="1"/>
+                        <text x="367" y="68" text-anchor="middle" fill="#fbbf24" font-size="7">Pressure</text>
+                        <rect x="348" y="75" width="40" height="22" rx="2" fill="rgba(251,191,36,.1)"/>
+                        <rect x="348" y="75" width="40" height="22" rx="2" fill="#fbbf24" opacity="0.3">
+                            <animate attributeName="height" values="22;30;18;26;22" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="y" values="75;67;79;71;75" dur="2s" repeatCount="indefinite"/>
+                        </rect>
+                        <text x="368" y="91" text-anchor="middle" fill="#000" font-size="8" font-weight="700">P</text>
+                        <!-- Wall collision indicators -->
+                        <circle cx="55" cy="70" r="6" fill="#f87171" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0.8;0;0" dur="0.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="55" cy="110" r="6" fill="#f87171" opacity="0">
+                            <animate attributeName="opacity" values="0;0;0.8;0;0" dur="1.2s" repeatCount="indefinite" begin="0.3s"/>
+                        </circle>
+                        <!-- Molecules - size and color variation -->
+                        <circle cx="80" cy="70" r="6" fill="#f87171" opacity="0.85">
+                            <animate attributeName="cx" values="80;140;200;120;80" dur="1.8s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="70;55;100;120;70" dur="1.8s" repeatCount="indefinite"/>
+                            <animate attributeName="r" values="6;5;7;5;6" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="160" cy="90" r="4" fill="#fbbf24" opacity="0.9">
+                            <animate attributeName="cx" values="160;220;170;250;160" dur="2.2s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="90;70;110;60;90" dur="2.2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="240" cy="130" r="5" fill="#34d399" opacity="0.8">
+                            <animate attributeName="cx" values="240;280;200;260;240" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="130;110;60;90;130" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="280" cy="65" r="4.5" fill="#60a5fa" opacity="0.85">
+                            <animate attributeName="cx" values="280;220;290;240;280" dur="2.8s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="65;90;120;55;65" dur="2.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="120" cy="110" r="5.5" fill="#c084fc" opacity="0.75">
+                            <animate attributeName="cx" values="120;170;130;200;120" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="110;130;65;85;110" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="200" cy="55" r="3.5" fill="#f472b6" opacity="0.9">
+                            <animate attributeName="cx" values="200;260;190;230;200" dur="1.6s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="55;80;120;70;55" dur="1.6s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="260" cy="100" r="5" fill="#fb923c" opacity="0.8">
+                            <animate attributeName="cx" values="260;180;240;160;260" dur="2.4s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="100;60;85;130;100" dur="2.4s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="100" cy="135" r="3" fill="#67e8f9" opacity="0.85">
+                            <animate attributeName="cx" values="100;150;110;180;100" dur="1.4s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="135;110;75;100;135" dur="1.4s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Motion trail effect -->
+                        <circle cx="80" cy="70" r="3" fill="#f87171" opacity="0.2">
+                            <animate attributeName="cx" values="80;140;200;120;80" dur="1.8s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="70;55;100;120;70" dur="1.8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.2;0;0.15;0;0.2" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Temperature indicator -->
+                        <text x="180" y="165" text-anchor="middle" fill="#fbbf24" font-size="9">T = 298 K</text>
+                        <text x="180" y="180" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="10">PV = nRT &nbsp;&nbsp; R = 8.314 J/mol·K</text>
+                        <!-- Collision count -->
+                        <text x="367" y="120" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="7">Collisions/s</text>
+                        <text x="367" y="133" text-anchor="middle" fill="#fbbf24" font-size="10">142</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 1.1: Gas molecules (8 types) move randomly inside a container with piston. Wall collisions (red flashes) create pressure. Piston moves to show volume change.</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>The ideal gas law combines three simpler gas laws: <strong>Boyle's law</strong> (P ∝ 1/V at constant T, n), <strong>Charles's law</strong> (V ∝ T at constant P, n), and <strong>Avogadro's law</strong> (V ∝ n at constant P, T). The unified equation is PV = nRT. R is the universal gas constant, 8.314 J/(mol·K). This equation works well for real gases at low pressure and high temperature.</p>
+
+                <h4>🔍 Step-by-Step: Deriving PV = nRT</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Boyle's law: At constant temperature and amount, pressure is inversely proportional to volume.</strong> <span class="math">P ∝ 1/V</span> (at constant T, n). Robert Boyle discovered this in 1662: if you double the pressure, the volume halves.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Charles's law: At constant pressure and amount, volume is proportional to absolute temperature.</strong> <span class="math">V ∝ T</span> (at constant P, n). Jacques Charles found that all gases expand by the same fraction when heated at constant pressure.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Avogadro's law: At constant pressure and temperature, volume is proportional to number of moles.</strong> <span class="math">V ∝ n</span> (at constant P, T). Equal volumes of gases at same T and P contain equal numbers of molecules.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">4</span>
+                        <div class="step-text"><strong>Combine all three proportionalities.</strong> Since V ∝ n, V ∝ T, and V ∝ 1/P, we get: <span class="math">V ∝ nT/P → V = R·nT/P</span>. Rearranging: <span class="math">PV = nRT</span>. R is the constant that makes the units work.</div>
+                    </div>
+                </div>
+                <div class="formula-box">PV = nRT &nbsp;&nbsp; where R = 8.314 J/(mol·K) = 0.0821 L·atm/(mol·K)</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Units</div>
+                    <div class="tip-text">Students forget to convert temperature to <strong>Kelvin</strong> (K = °C + 273) and to use consistent units. If P is in atm, V in L, use R = 0.0821. If P in Pa, V in m³, use R = 8.314. Also: "ideal gas" assumes no intermolecular forces — real gases deviate at high pressure and low temperature.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Ideal Gas</div>
+                    <div class="neet-text">
+                        • "At constant T, P is halved. What happens to V?" → V doubles (Boyle's).<br>
+                        • "At STP, 1 mole occupies 22.4 L" comes from PV = nRT: V = (1×0.0821×273)/1 = 22.4 L.<br>
+                        • A common question gives P, V, T for two conditions and asks for the unknown using PV = nRT or P₁V₁/T₁ = P₂V₂/T₂.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 1: Ideal Gas</div>
+                    <div class="ex-text">2 moles of an ideal gas at 27°C occupy 49.2 L. Find the pressure. (R = 0.0821 L·atm/mol·K)</div>
+                    <div class="ex-soln"><strong>Solution:</strong> T = 27 + 273 = 300 K. PV = nRT → P = nRT/V = (2 × 0.0821 × 300) / 49.2 = 49.26 / 49.2 = 1.0 atm. <strong>Key insight:</strong> Always convert °C to K first.</div>
+                </div>
+
+                <!-- 2. NERNST EQUATION -->
+                <h2 id="nernst">2. Nernst Equation — E = E° − (RT/nF) ln Q <button class="speaker-btn" onclick="speakText(this,'nernst')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Batteries and electrochemical cells produce electricity from chemical reactions. The <strong>Nernst equation</strong> tells us the voltage of a cell under non-standard conditions, which is almost always the case in real life. It explains how concentration affects battery voltage — why a dying battery has lower voltage. It's also used in pH meters, which measure the voltage of a special electrode to determine acidity.</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="160" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Electrochemical cell — Nernst equation describes voltage</text>
+                        <rect x="50" y="55" width="100" height="70" rx="4" fill="rgba(248,113,113,.06)" stroke="#f87171" stroke-width="1.5"/>
+                        <text x="100" y="95" text-anchor="middle" fill="#f87171" font-size="11">Anode</text>
+                        <text x="100" y="110" text-anchor="middle" fill="rgba(248,113,113,.5)" font-size="8">[Red]</text>
+                        <rect x="270" y="55" width="100" height="70" rx="4" fill="rgba(96,165,250,.06)" stroke="#60a5fa" stroke-width="1.5"/>
+                        <text x="320" y="95" text-anchor="middle" fill="#60a5fa" font-size="11">Cathode</text>
+                        <text x="320" y="110" text-anchor="middle" fill="rgba(96,165,250,.5)" font-size="8">[Ox]</text>
+                        <!-- Salt bridge -->
+                        <rect x="170" y="75" width="80" height="20" rx="3" fill="rgba(251,191,36,.1)" stroke="#fbbf24" stroke-width="1"/>
+                        <text x="210" y="89" text-anchor="middle" fill="#fbbf24" font-size="7">Salt bridge</text>
+                        <!-- Electron flow -->
+                        <path d="M 100 55 L 100 40 L 320 40 L 320 55" fill="none" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#neArr)">
+                            <animate attributeName="stroke-dashoffset" from="-50" to="50" dur="2s" repeatCount="indefinite"/>
+                        </path>
+                        <text x="210" y="35" text-anchor="middle" fill="#fbbf24" font-size="8">e⁻ flow</text>
+                        <text x="210" y="145" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="9">E = E° − (RT/nF) ln Q</text>
+                        <defs><marker id="neArr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#fbbf24"/></marker></defs>
+                    </svg>
+                    <div class="diagram-caption">Fig 2.1: Electrochemical cell with anode, cathode, and salt bridge. Electrons flow through the external circuit.</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>The Nernst equation relates cell potential (voltage) to ion concentrations. For a general cell reaction: <strong>aA + bB → cC + dD</strong>, the equation is <strong>E = E° − (RT/nF) ln Q</strong>, where Q = [C]ᶜ[D]ᵈ/[A]ᵃ[B]ᵇ. At 298 K, using log₁₀: <strong>E = E° − (0.0591/n) log Q</strong>. E° is the standard cell potential when all concentrations are 1 M.</p>
+
+                <h4>🔍 Step-by-Step: Deriving the Nernst Equation</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Start with Gibbs free energy and cell potential.</strong> The maximum electrical work from a cell equals −nFE, where n = number of electrons transferred, F = Faraday constant (96485 C/mol). Gibbs free energy: <span class="math">ΔG = −nFE</span>. Under standard conditions: <span class="math">ΔG° = −nFE°</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Use the thermodynamic relationship for ΔG.</strong> For a reaction aA + bB → cC + dD: <span class="math">ΔG = ΔG° + RT·ln(Q)</span> where Q = [C]ᶜ[D]ᵈ/[A]ᵃ[B]ᵇ</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Substitute ΔG = −nFE and ΔG° = −nFE°.</strong> <span class="math">−nFE = −nFE° + RT·ln(Q)</span> Multiply both sides by −1: <span class="math">nFE = nFE° − RT·ln(Q)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">4</span>
+                        <div class="step-text"><strong>Divide both sides by nF to get the Nernst equation.</strong> <span class="math">E = E° − (RT/nF)·ln(Q)</span>. At 298 K, converting ln to log₁₀ (ln = 2.303·log₁₀): <span class="math">E = E° − (0.0591/n)·log(Q)</span></div>
+                    </div>
+                </div>
+                <div class="formula-box">E = E° − (RT/nF)·ln Q &nbsp;&nbsp; At 298 K: E = E° − (0.0591/n)·log Q</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Q vs K</div>
+                    <div class="tip-text">Students confuse Q (reaction quotient, for current conditions) with K (equilibrium constant). At equilibrium, Q = K and E = 0. Also: the Nernst equation uses <strong>activities</strong> for precise work, but NEET uses concentrations. Solids and pure liquids have activity = 1, so they don't appear in Q.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Nernst Equation</div>
+                    <div class="neet-text">
+                        • Typically given E°, concentrations, and asked to find E, or vice versa.<br>
+                        • "Calculate the emf of the cell: Zn|Zn²⁺(0.1M)||Cu²⁺(0.01M)|Cu" → Apply Nernst with n = 2.<br>
+                        • For Daniel cell: E° = 1.1 V. If [Zn²⁺] = [Cu²⁺] = 0.1 M, E = E° because Q = 1, so E = E°.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 2: Nernst Equation</div>
+                    <div class="ex-text">For the cell Zn|Zn²⁺(0.01M)||Cu²⁺(1M)|Cu, E° = 1.1 V. Find E at 298 K. (n = 2)</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Q = [Zn²⁺]/[Cu²⁺] = 0.01/1 = 0.01. E = 1.1 − (0.0591/2)·log(0.01) = 1.1 − 0.02955 × (−2) = 1.1 + 0.0591 = 1.159 V. <strong>Key insight:</strong> Lower [Zn²⁺] makes E slightly higher than E°.</div>
+                </div>
+
+                <!-- 3. RATE LAWS -->
+                <h2 id="rate-laws">3. Integrated Rate Equations <button class="speaker-btn" onclick="speakText(this,'ratelaws')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>How long does a drug remain active in your body? How long until a radioactive substance becomes safe? These questions are answered by <strong>integrated rate equations</strong>. The order of a reaction tells us how the concentration changes with time. Half-life is a key concept: for first-order reactions (like radioactive decay), the half-life is constant — every 5730 years, half the carbon-14 in a sample decays.</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="200" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="22" text-anchor="middle" fill="#a1a1aa" font-size="11">Arrhenius — Activation Energy &amp; Molecular Collisions</text>
+                        <!-- Energy diagram -->
+                        <path d="M 40 145 Q 120 35 200 65 Q 280 95 380 45" fill="none" stroke="#60a5fa" stroke-width="2.5"/>
+                        <!-- Animated scanning line (reactant → product energy) -->
+                        <path d="M 40 145 Q 120 35 200 65" fill="none" stroke="#f87171" stroke-width="3" stroke-dasharray="8 5">
+                            <animate attributeName="stroke-dashoffset" from="-60" to="60" dur="2.5s" repeatCount="indefinite"/>
+                        </path>
+                        <!-- Ea label -->
+                        <line x1="200" y1="65" x2="200" y2="150" stroke="rgba(255,255,255,.12)" stroke-width="1" stroke-dasharray="4 3"/>
+                        <line x1="40" y1="145" x2="200" y2="65" stroke="#f87171" stroke-width="1" stroke-dasharray="3 2" opacity="0.4"/>
+                        <text x="205" y="115" fill="#f87171" font-size="9" font-weight="600">Eₐ</text>
+                        <text x="40" y="160" fill="#60a5fa" font-size="9">Reactants</text>
+                        <text x="380" y="40" fill="#60a5fa" font-size="9">Products</text>
+                        <!-- ΔH label -->
+                        <line x1="40" y1="145" x2="380" y2="45" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 2" opacity="0.3"/>
+                        <text x="360" y="100" fill="#fbbf24" font-size="7" opacity="0.6">ΔH</text>
+                        <!-- Molecular collision animation -->
+                        <circle cx="95" cy="170" r="8" fill="#f87171" opacity="0.8">
+                            <animate attributeName="cx" values="95;125;155" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="175" cy="170" r="7" fill="#60a5fa" opacity="0.8">
+                            <animate attributeName="cx" values="175;155;125" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Collision flash -->
+                        <circle cx="135" cy="170" r="5" fill="#fbbf24" opacity="0">
+                            <animate attributeName="r" values="0;15;25" dur="2.5s" repeatCount="indefinite" begin="1.6s"/>
+                            <animate attributeName="opacity" values="0;0.8;0" dur="2.5s" repeatCount="indefinite" begin="1.6s"/>
+                        </circle>
+                        <!-- Post-collision products -->
+                        <circle cx="155" cy="170" r="8" fill="#f87171" opacity="0">
+                            <animate attributeName="cx" values="155;185;220" dur="2.5s" repeatCount="indefinite" begin="2s"/>
+                            <animate attributeName="opacity" values="0;0.8;0.4" dur="2.5s" repeatCount="indefinite" begin="2s"/>
+                        </circle>
+                        <circle cx="125" cy="170" r="7" fill="#60a5fa" opacity="0">
+                            <animate attributeName="cx" values="125;90;60" dur="2.5s" repeatCount="indefinite" begin="2s"/>
+                            <animate attributeName="opacity" values="0;0.8;0.4" dur="2.5s" repeatCount="indefinite" begin="2s"/>
+                        </circle>
+                        <!-- Maxwell-Boltzmann distribution -->
+                        <path d="M 260 180 Q 280 100 320 95 Q 350 110 380 180" fill="none" stroke="rgba(167,139,250,.4)" stroke-width="1.5"/>
+                        <text x="320" y="145" text-anchor="middle" fill="rgba(167,139,250,.5)" font-size="7">Energy distribution</text>
+                        <!-- Shaded region (E > Ea) -->
+                        <path d="M 340 105 Q 355 120 380 180 L 340 180 Z" fill="rgba(167,139,250,.1)"/>
+                        <!-- Higher T curve -->
+                        <path d="M 260 180 Q 285 85 330 85 Q 360 100 380 180" fill="none" stroke="rgba(251,191,36,.3)" stroke-width="1" stroke-dasharray="3 2"/>
+                        <text x="295" y="95" text-anchor="middle" fill="rgba(251,191,36,.4)" font-size="6">Higher T</text>
+                        <text x="210" y="200" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="9">k = A·e^{−Eₐ/RT} &nbsp; ln k = ln A − Eₐ/RT</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 5.1: Energy barrier (top) with animated molecular collision (bottom left) and Maxwell-Boltzmann energy distribution (bottom right). Higher temperature increases the fraction of molecules with E > Eₐ.</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>The <strong>order</strong> of a reaction tells us how the rate depends on concentration. For zero order: rate is constant (rate = k). For first order: rate ∝ [A] (rate = k[A]). For second order: rate ∝ [A]² (rate = k[A]²). Integrating these rate laws gives equations for [A] as a function of time. Each order has a characteristic half-life behaviour.</p>
+
+                <h4>🔍 Step-by-Step: Zero Order</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Rate law: </strong><span class="math">Rate = −d[A]/dt = k</span>. The rate is constant, independent of concentration.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Integrate: </strong><span class="math">∫d[A] = −k∫dt → [A] = −kt + C</span>. At t = 0, [A] = [A]₀, so C = [A]₀. Thus: <span class="math">[A] = [A]₀ − kt</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Half-life: </strong>When [A] = [A]₀/2: <span class="math">[A]₀/2 = [A]₀ − kt_½ → t_½ = [A]₀/(2k)</span>. Half-life depends on initial concentration.</div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: First Order</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Rate law: </strong><span class="math">Rate = −d[A]/dt = k[A]</span>. The rate depends linearly on concentration.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Integrate: </strong><span class="math">∫d[A]/[A] = −k∫dt → ln[A] = −kt + C</span>. At t = 0, [A] = [A]₀, so C = ln[A]₀. Thus: <span class="math">ln[A] = ln[A]₀ − kt</span> or <span class="math">[A] = [A]₀e^{−kt}</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Half-life: </strong>When [A] = [A]₀/2: <span class="math">ln([A]₀/2) = ln[A]₀ − kt_½ → ln(½) = −kt_½ → t_½ = ln2/k = 0.693/k</span>. Half-life is <strong>constant</strong> — independent of concentration.</div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: Second Order</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Rate law: </strong><span class="math">Rate = −d[A]/dt = k[A]²</span>. The rate depends on the square of concentration.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Integrate: </strong><span class="math">∫d[A]/[A]² = −k∫dt → −1/[A] = −kt + C</span>. At t = 0, [A] = [A]₀, so C = −1/[A]₀. Thus: <span class="math">1/[A] = 1/[A]₀ + kt</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Half-life: </strong>When [A] = [A]₀/2: <span class="math">2/[A]₀ = 1/[A]₀ + kt_½ → t_½ = 1/(k[A]₀)</span>. Half-life depends on initial concentration.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Zero: [A] = [A]₀ − kt &nbsp; t_½ = [A]₀/(2k) &nbsp;&nbsp;|&nbsp;&nbsp; First: [A] = [A]₀e^{−kt} &nbsp; t_½ = 0.693/k &nbsp;&nbsp;|&nbsp;&nbsp; Second: 1/[A] = 1/[A]₀ + kt &nbsp; t_½ = 1/(k[A]₀)</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Units of k</div>
+                    <div class="tip-text">The units of rate constant k depend on the order. Zero order: mol·L⁻¹·s⁻¹. First order: s⁻¹. Second order: L·mol⁻¹·s⁻¹. Also: for a first-order reaction, you can use any units of concentration since ln([A]₀/[A]) has no units.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Rate Laws</div>
+                    <div class="neet-text">
+                        • "A first-order reaction has t_½ = 10 min. How much remains after 30 min?" → 3 half-lives → 1/8 remains.<br>
+                        • "The half-life of a reaction is independent of [A]₀. What is the order?" → First order.<br>
+                        • "A zero-order reaction has [A]₀ = 1 M and k = 0.1 M/s. Time for 80% completion?" → [A] = 0.2 M, t = (1 − 0.2)/0.1 = 8 s.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 3: First-Order Kinetics</div>
+                    <div class="ex-text">A first-order reaction has half-life 20 minutes. What percentage remains after 60 minutes?</div>
+                    <div class="ex-soln"><strong>Solution:</strong> 60 min = 3 half-lives. After 1st: 50% remains. After 2nd: 25%. After 3rd: 12.5%. <strong>Key insight:</strong> For 1st order, each half-life halves the remaining concentration.</div>
+                </div>
+
+                <!-- 4. BUFFER / HENDERSON-HASSELBALCH -->
+                <h2 id="buffer">4. Henderson–Hasselbalch Equation <button class="speaker-btn" onclick="speakText(this,'buffer')">🔊 Listen</button></h2>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="160" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="24" text-anchor="middle" fill="#a1a1aa" font-size="11">Buffer Action — Resisting pH Change</text>
+                        <rect x="80" y="60" width="120" height="90" rx="4" fill="rgba(96,165,250,.04)" stroke="#60a5fa" stroke-width="1.5"/>
+                        <text x="140" y="135" text-anchor="middle" fill="#60a5fa" font-size="8">Buffer solution</text>
+                        <circle cx="110" cy="95" r="6" fill="#f87171" opacity="0.7"/>
+                        <text x="110" y="98" text-anchor="middle" fill="#fff" font-size="6">HA</text>
+                        <circle cx="155" cy="85" r="6" fill="#f87171" opacity="0.7"/>
+                        <text x="155" y="88" text-anchor="middle" fill="#fff" font-size="6">HA</text>
+                        <circle cx="130" cy="110" r="6" fill="#34d399" opacity="0.7"/>
+                        <text x="130" y="113" text-anchor="middle" fill="#fff" font-size="6">A⁻</text>
+                        <circle cx="170" cy="100" r="6" fill="#34d399" opacity="0.7"/>
+                        <text x="170" y="103" text-anchor="middle" fill="#fff" font-size="6">A⁻</text>
+                        <circle cx="100" cy="70" r="4" fill="#fbbf24" opacity="0">
+                            <animate attributeName="cy" values="70;90;110;130" dur="4s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0;1;0.8;0" dur="4s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="100" y="60" text-anchor="middle" fill="#fbbf24" font-size="7">H⁺</text>
+                        <circle cx="130" cy="110" r="6" fill="#fbbf24" opacity="0">
+                            <animate attributeName="r" values="6;8;6" dur="4s" repeatCount="indefinite" begin="1.5s"/>
+                            <animate attributeName="opacity" values="0;0.6;0" dur="4s" repeatCount="indefinite" begin="1.5s"/>
+                        </circle>
+                        <rect x="240" y="60" width="60" height="30" rx="4" fill="rgba(251,191,36,.05)" stroke="#fbbf24" stroke-width="1"/>
+                        <text x="270" y="75" text-anchor="middle" fill="#fbbf24" font-size="8" font-weight="700">pH 7.40</text>
+                        <text x="270" y="87" text-anchor="middle" fill="rgba(251,191,36,.5)" font-size="6">stable</text>
+                        <rect x="250" y="130" width="40" height="20" rx="3" fill="rgba(248,113,113,.1)" stroke="#f87171" stroke-width="1"/>
+                        <text x="270" y="143" text-anchor="middle" fill="#f87171" font-size="7">+ HCl</text>
+                        <text x="270" y="165" text-anchor="middle" fill="#34d399" font-size="8">pH 7.38 → barely changed!</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 4.1: Buffer action — added H⁺ is neutralized by A⁻ (conjugate base), keeping pH nearly constant.</div>
+                </div>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Your blood maintains a nearly constant pH of 7.4. This is thanks to <strong>buffer solutions</strong> — mixtures of weak acids and their conjugate bases. The <strong>Henderson-Hasselbalch equation</strong> lets us calculate the pH of a buffer. It's essential for understanding how your body resists pH changes, how medicines are formulated, and how biological systems maintain homeostasis.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>For a weak acid HA dissociating as HA ⇌ H⁺ + A⁻, the equilibrium constant is Kₐ = [H⁺][A⁻]/[HA]. Taking negative logs: pH = pKₐ + log([A⁻]/[HA]). This is the <strong>Henderson-Hasselbalch equation</strong>. It shows that pH depends on the <strong>ratio</strong> of conjugate base to acid. When [A⁻] = [HA], pH = pKₐ. The buffer is most effective near its pKₐ.</p>
+
+                <h4>🔍 Step-by-Step: Deriving pH = pKₐ + log([A⁻]/[HA])</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Write the acid dissociation equilibrium.</strong> For a weak acid HA: <span class="math">HA ⇌ H⁺ + A⁻</span>. The equilibrium constant: <span class="math">Kₐ = [H⁺][A⁻]/[HA]</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Take the negative logarithm (base 10) of both sides.</strong> <span class="math">−log Kₐ = −log([H⁺][A⁻]/[HA])</span>. By log rules: <span class="math">pKₐ = pH − log([A⁻]/[HA])</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Rearrange to get the Henderson-Hasselbalch equation.</strong> <span class="math">pH = pKₐ + log([A⁻]/[HA])</span>. For a basic buffer (weak base B + conjugate acid BH⁺): <span class="math">pOH = pK_b + log([BH⁺]/[B])</span></div>
+                    </div>
+                </div>
+                <div class="formula-box">pH = pKₐ + log([conjugate base]/[acid]) &nbsp;&nbsp; Maximum buffer capacity when pH = pKₐ</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Which Ratio?</div>
+                    <div class="tip-text">Students often invert the ratio. The log term is <strong>log([base]/[acid])</strong> — base on top, acid on bottom. For basic buffers, remember pOH = pK_b + log([conjugate acid]/[base]), then pH = 14 − pOH.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Buffers</div>
+                    <div class="neet-text">
+                        • "A buffer has [CH₃COOH] = [CH₃COONa] = 0.1 M. pKₐ = 4.74. Find pH." → pH = 4.74 + log(0.1/0.1) = 4.74.<br>
+                        • "How does pH change when 0.01 M HCl is added to the buffer?" → Ratio changes slightly → pH changes slightly. This is the buffer's job!<br>
+                        • "Which buffer has greater capacity: [acid]=1M, [base]=1M or [acid]=0.1M, [base]=0.1M?" → The 1 M buffer (higher total concentration means more capacity).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 4: Buffer pH</div>
+                    <div class="ex-text">A buffer contains 0.2 M CH₃COOH and 0.4 M CH₃COONa. pKₐ = 4.74. Find pH.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> pH = 4.74 + log(0.4/0.2) = 4.74 + log(2) = 4.74 + 0.30 = 5.04. <strong>Key insight:</strong> Since [base] > [acid], pH > pKₐ.</div>
+                </div>
+
+                <!-- 5. ARRHENIUS EQUATION -->
+                <h2 id="arrhenius">5. Arrhenius Equation — k = A·e^{−Eₐ/RT} <button class="speaker-btn" onclick="speakText(this,'arrhenius')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Why does food spoil faster in summer? Why does a chemical reaction speed up when you heat it? The <strong>Arrhenius equation</strong> quantifies how temperature affects reaction rates. It tells us the <strong>activation energy</strong> — the minimum energy needed for a reaction to occur. Every 10°C rise roughly doubles the rate of many reactions (the rule of thumb for food storage).</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 220" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <marker id="neArr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="4" markerHeight="4" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#fbbf24"/></marker>
+                            <marker id="ionArr" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3" markerHeight="3" orient="auto"><path d="M 0 0 L 10 5 L 0 10 Z" fill="#a78bfa"/></marker>
+                        </defs>
+                        <rect x="10" y="10" width="400" height="200" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="26" text-anchor="middle" fill="#a1a1aa" font-size="11">Electrochemical Cell — Nernst Equation in action</text>
+                        <!-- Anode half-cell -->
+                        <rect x="35" y="50" width="110" height="80" rx="4" fill="rgba(248,113,113,.06)" stroke="#f87171" stroke-width="1.5"/>
+                        <text x="90" y="75" text-anchor="middle" fill="#f87171" font-size="10" font-weight="700">Anode</text>
+                        <text x="90" y="90" text-anchor="middle" fill="rgba(248,113,113,.7)" font-size="8">Zn → Zn²⁺ + 2e⁻</text>
+                        <!-- Electrode -->
+                        <rect x="55" y="95" width="8" height="30" rx="1" fill="#f87171" opacity="0.4"/>
+                        <!-- Animated ions in anode -->
+                        <circle cx="80" cy="105" r="4" fill="#f87171" opacity="0">
+                            <animate attributeName="cy" values="105;90;105" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="95" cy="105" r="4" fill="#f87171" opacity="0">
+                            <animate attributeName="cy" values="105;85;105" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+                            <animate attributeName="opacity" values="0;0.8;0" dur="2.5s" repeatCount="indefinite" begin="0.5s"/>
+                        </circle>
+                        <text x="90" y="122" text-anchor="middle" fill="#f87171" font-size="7">Zn²⁺ ions</text>
+                        <!-- Cathode half-cell -->
+                        <rect x="275" y="50" width="110" height="80" rx="4" fill="rgba(96,165,250,.06)" stroke="#60a5fa" stroke-width="1.5"/>
+                        <text x="330" y="75" text-anchor="middle" fill="#60a5fa" font-size="10" font-weight="700">Cathode</text>
+                        <text x="330" y="90" text-anchor="middle" fill="rgba(96,165,250,.7)" font-size="8">Cu²⁺ + 2e⁻ → Cu</text>
+                        <!-- Electrode -->
+                        <rect x="357" y="95" width="8" height="30" rx="1" fill="#f87171" opacity="0.4"/>
+                        <!-- Cu deposition animation -->
+                        <circle cx="340" cy="100" r="4" fill="#fbbf24" opacity="0">
+                            <animate attributeName="cy" values="80;100;80" dur="2s" repeatCount="indefinite" begin="1s"/>
+                            <animate attributeName="opacity" values="0;0.8;0" dur="2s" repeatCount="indefinite" begin="1s"/>
+                        </circle>
+                        <text x="330" y="122" text-anchor="middle" fill="#60a5fa" font-size="7">Cu²⁺ → Cu</text>
+                        <!-- Salt bridge -->
+                        <rect x="155" y="75" width="90" height="24" rx="3" fill="rgba(251,191,36,.08)" stroke="#fbbf24" stroke-width="1"/>
+                        <text x="200" y="91" text-anchor="middle" fill="#fbbf24" font-size="7">Salt bridge</text>
+                        <!-- Ion migration through salt bridge -->
+                        <circle cx="165" cy="87" r="3" fill="#a78bfa" opacity="0">
+                            <animate attributeName="cx" values="165;180;195;210;225;240" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0;0.8;1;1;0.8;0" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="240" cy="87" r="3" fill="#f472b6" opacity="0">
+                            <animate attributeName="cx" values="240;225;210;195;180;165" dur="3.5s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0;0.8;1;1;0.8;0" dur="3.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <!-- Electron flow through wire -->
+                        <path d="M 90 50 L 90 35 L 330 35 L 330 50" fill="none" stroke="#fbbf24" stroke-width="2" marker-end="url(#neArr)">
+                            <animate attributeName="stroke-dashoffset" from="-60" to="60" dur="1.5s" repeatCount="indefinite"/>
+                        </path>
+                        <!-- Electron dots along wire -->
+                        <circle cx="90" cy="35" r="3" fill="#fbbf24" opacity="0">
+                            <animate attributeName="cx" values="90;140;200;280;330" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0;1;1;1;0" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="90" cy="35" r="3" fill="#fbbf24" opacity="0">
+                            <animate attributeName="cx" values="90;140;200;280;330" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+                            <animate attributeName="opacity" values="0;1;1;1;0" dur="1.5s" repeatCount="indefinite" begin="0.5s"/>
+                        </circle>
+                        <text x="210" y="30" text-anchor="middle" fill="#fbbf24" font-size="8">e⁻ flow →</text>
+                        <!-- Voltmeter -->
+                        <circle cx="210" cy="155" r="18" fill="rgba(255,255,255,.03)" stroke="rgba(255,255,255,.15)" stroke-width="1"/>
+                        <text x="210" y="153" text-anchor="middle" fill="rgba(255,255,255,.5)" font-size="6">1.10</text>
+                        <text x="210" y="162" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="6">V</text>
+                        <!-- Voltmeter needle -->
+                        <line x1="210" y1="155" x2="222" y2="147" stroke="#fbbf24" stroke-width="1.2">
+                            <animate attributeName="x2" values="222;218;224;220;222" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="y2" values="147;150;145;148;147" dur="3s" repeatCount="indefinite"/>
+                        </line>
+                        <text x="210" y="190" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="9">E = E° − (RT/nF) ln Q</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 2.1: Electrochemical cell with Zn anode (oxidation) and Cu cathode (reduction). Ion migration through salt bridge, electron flow through wire, and voltmeter reading.</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>The Arrhenius equation <strong>k = A·e^{−Eₐ/RT}</strong> has three key parts: k is the rate constant, A is the frequency factor (how often molecules collide with correct orientation), and e^{−Eₐ/RT} is the fraction of molecules with enough energy to react. Taking natural logs: <strong>ln k = ln A − Eₐ/RT</strong>. This is a straight line: ln k vs 1/T gives slope = −Eₐ/R.</p>
+
+                <h4>🔍 Step-by-Step: Deriving the Logarithmic Form</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Start with the Arrhenius equation.</strong> <span class="math">k = A·e^{−Eₐ/RT}</span>. A is the pre-exponential factor, Eₐ is activation energy, R is gas constant, T is temperature in Kelvin.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Take natural log of both sides.</strong> <span class="math">ln k = ln(A·e^{−Eₐ/RT}) = ln A + ln(e^{−Eₐ/RT}) = ln A − Eₐ/RT</span> This is the linear form: <span class="math">ln k = ln A − (Eₐ/R)·(1/T)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>For two different temperatures T₁ and T₂:</strong> Subtract the equations: <span class="math">ln(k₂/k₁) = −(Eₐ/R)(1/T₂ − 1/T₁) = (Eₐ/R)(1/T₁ − 1/T₂)</span>. This is used to find Eₐ from rate constants at two temperatures.</div>
+                    </div>
+                </div>
+                <div class="formula-box">ln(k₂/k₁) = (Eₐ/R)(1/T₁ − 1/T₂)</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Temperature Units</div>
+                    <div class="tip-text">Temperature must always be in <strong>Kelvin</strong>. Also: Eₐ and R must have consistent energy units (both in J/mol or both in kJ/mol). R = 8.314 J/(mol·K), so if Eₐ is in kJ/mol, multiply by 1000 first.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Arrhenius</div>
+                    <div class="neet-text">
+                        • "Rate doubles when T increases from 300 to 310 K. Find Eₐ." → Use ln(2) = (Eₐ/R)(1/300 − 1/310).<br>
+                        • "A plot of ln k vs 1/T gives slope = −5000 K. Find Eₐ." → Eₐ = −slope × R = 5000 × 8.314 = 41570 J/mol.<br>
+                        • "Which has higher Eₐ: fast reaction or slow reaction?" → Slow reaction has higher Eₐ (larger energy barrier).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 5: Arrhenius</div>
+                    <div class="ex-text">The rate constant at 300 K is 0.02 s⁻¹ and at 310 K is 0.04 s⁻¹. Find activation energy. (R = 8.314 J/mol·K)</div>
+                    <div class="ex-soln"><strong>Solution:</strong> ln(0.04/0.02) = ln(2) = 0.693. Eₐ = 0.693 × 8.314 / (1/300 − 1/310) = 0.693 × 8.314 / 0.0001075 = 53600 J/mol ≈ 53.6 kJ/mol. <strong>Key insight:</strong> A 10 K rise doubled k — that's a typical Eₐ.</div>
+                </div>
+
+                <!-- 6. RAOULT'S LAW / HENRY'S LAW -->
+                <h2 id="raoult">6. Raoult's Law & Henry's Law <button class="speaker-btn" onclick="speakText(this,'raoult')">🔊 Listen</button></h2>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="160" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="24" text-anchor="middle" fill="#a1a1aa" font-size="11">Raoult's Law &amp; Henry's Law — Vapor Pressure</text>
+                        <rect x="30" y="45" width="100" height="80" rx="4" fill="rgba(52,211,153,.04)" stroke="#34d399" stroke-width="1.5"/>
+                        <text x="80" y="70" text-anchor="middle" fill="#34d399" font-size="9" font-weight="600">Pure solvent</text>
+                        <text x="80" y="110" text-anchor="middle" fill="rgba(52,211,153,.6)" font-size="7">P°ₐ</text>
+                        <circle cx="55" cy="95" r="3" fill="#34d399" opacity="0.6">
+                            <animate attributeName="cy" values="95;60;95" dur="1.5s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;0;0.6" dur="1.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="80" cy="95" r="3" fill="#34d399" opacity="0.6">
+                            <animate attributeName="cy" values="95;55;95" dur="1.8s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;0;0.6" dur="1.8s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="105" cy="95" r="3" fill="#34d399" opacity="0.6">
+                            <animate attributeName="cy" values="95;65;95" dur="2s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.6;0;0.6" dur="2s" repeatCount="indefinite"/>
+                        </circle>
+                        <text x="80" y="35" text-anchor="middle" fill="rgba(52,211,153,.3)" font-size="8">High vapor pressure</text>
+                        <rect x="190" y="45" width="100" height="80" rx="4" fill="rgba(248,113,113,.04)" stroke="#f87171" stroke-width="1.5"/>
+                        <text x="240" y="70" text-anchor="middle" fill="#f87171" font-size="9" font-weight="600">Solution</text>
+                        <text x="240" y="110" text-anchor="middle" fill="rgba(248,113,113,.6)" font-size="7">Pₐ = P°ₐ·Xₐ</text>
+                        <circle cx="215" cy="95" r="3" fill="#f87171" opacity="0.4">
+                            <animate attributeName="cy" values="95;70;95" dur="2.2s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.4;0;0.4" dur="2.2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="240" cy="95" r="3" fill="#f87171" opacity="0.4">
+                            <animate attributeName="cy" values="95;65;95" dur="2.5s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0.4;0;0.4" dur="2.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="225" cy="88" r="4" fill="#fbbf24" opacity="0.6"/>
+                        <text x="225" y="91" text-anchor="middle" fill="#fff" font-size="5">Sl</text>
+                        <circle cx="255" cy="85" r="4" fill="#fbbf24" opacity="0.6"/>
+                        <text x="255" y="88" text-anchor="middle" fill="#fff" font-size="5">Sl</text>
+                        <text x="240" y="35" text-anchor="middle" fill="rgba(248,113,113,.3)" font-size="8">Lower vapor pressure</text>
+                        <text x="160" y="85" text-anchor="middle" fill="rgba(255,255,255,.2)" font-size="12">→</text>
+                        <text x="160" y="120" text-anchor="middle" fill="rgba(255,255,255,.1)" font-size="7">ΔP = P°ₐ·X_B</text>
+                        <rect x="340" y="55" width="60" height="70" rx="4" fill="rgba(167,139,250,.04)" stroke="#a78bfa" stroke-width="1"/>
+                        <text x="370" y="75" text-anchor="middle" fill="#a78bfa" font-size="9" font-weight="600">Henry</text>
+                        <text x="370" y="92" text-anchor="middle" fill="#a78bfa" font-size="7">P = K_H·X</text>
+                        <circle cx="360" cy="108" r="2" fill="#a78bfa" opacity="0.7">
+                            <animate attributeName="cy" values="108;85;108" dur="1.2s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="375" cy="108" r="2" fill="#a78bfa" opacity="0.7">
+                            <animate attributeName="cy" values="108;90;108" dur="1.5s" repeatCount="indefinite" begin="0.3s"/>
+                        </circle>
+                        <text x="370" y="140" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="9">Pₐ = P°ₐ·Xₐ &amp; ΔP = P°ₐ·X_B</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 6.1: Pure solvent (left) has high vapor pressure. Solute molecules (yellow) block surface → fewer solvent molecules escape → lower vapor pressure.</div>
+                </div>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p><strong>Raoult's law</strong> explains why adding salt to water raises its boiling point (used in cooking pasta). <strong>Henry's law</strong> explains why soda fizzes when you open it (CO₂ dissolved under pressure escapes when pressure is released). Both are essential for understanding solutions and are frequently tested in NEET.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>Raoult's law:</strong> The partial vapor pressure of a solvent above a solution equals the vapor pressure of pure solvent times its mole fraction. Pₐ = P°ₐ·Xₐ. For a non-volatile solute, the vapor pressure decreases because the solute molecules occupy space at the surface, reducing the number of solvent molecules that can escape.</p>
+                <p><strong>Henry's law:</strong> The partial pressure of a gas above a liquid is proportional to its mole fraction in the liquid. P = K_H·X. K_H is Henry's constant. Gases with low K_H are more soluble (like CO₂ in water).</p>
+
+                <h4>🔍 Step-by-Step: Deriving Raoult's Law</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Consider a solution with solvent A and non-volatile solute B.</strong> The vapor pressure above the solution comes only from solvent molecules. At equilibrium, the rate of evaporation equals the rate of condensation.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>The rate of evaporation depends on the fraction of surface occupied by solvent molecules.</strong> This is proportional to the mole fraction of solvent: <span class="math">Pₐ ∝ Xₐ → Pₐ = P°ₐ·Xₐ</span>. When Xₐ = 1 (pure solvent), Pₐ = P°ₐ.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>The lowering of vapor pressure is ΔP = P°ₐ − Pₐ = P°ₐ(1 − Xₐ) = P°ₐ·X_B</strong>. Relative lowering: <span class="math">ΔP/P°ₐ = X_B</span>. For dilute solutions, X_B ≈ n_B/nₐ, which gives colligative properties.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Raoult: Pₐ = P°ₐ·Xₐ &nbsp; ΔP = P°ₐ·X_B &nbsp;&nbsp; Henry: P = K_H·X</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Raoult vs Henry</div>
+                    <div class="tip-text">Raoult's law applies to the <strong>solvent</strong> in a solution. Henry's law applies to a <strong>gas dissolved in a liquid</strong>. Both are mathematically similar (P ∝ X) but the constant is different. Also: Raoult's law is for ideal solutions — real solutions deviate positively or negatively.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Solutions</div>
+                    <div class="neet-text">
+                        • "Vapor pressure of pure water at 25°C is 23.8 mm Hg. Find vapor pressure above a solution with X_solute = 0.1." → P = 23.8 × 0.9 = 21.42 mm Hg.<br>
+                        • "Henry's constant for CO₂ in water is 1.67×10⁸ Pa at 25°C. Find concentration when P_CO₂ = 0.1 atm." → Convert units, apply P = K_H·X.<br>
+                        • "Which has higher boiling point: 0.1 M NaCl or 0.1 M glucose?" → NaCl (i = 2, more particles).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 6: Raoult's Law</div>
+                    <div class="ex-text">Pure water has vapor pressure 23.8 mm Hg at 25°C. A solution contains 10 g glucose (M = 180 g/mol) in 100 g water (M = 18 g/mol). Find the vapor pressure.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> n_glucose = 10/180 = 0.0556 mol. n_water = 100/18 = 5.556 mol. X_water = 5.556/(5.556 + 0.0556) = 0.99. P = 23.8 × 0.99 = 23.56 mm Hg. <strong>Key insight:</strong> The lowering is tiny because glucose has much higher molar mass.</div>
+                </div>
+
+                <!-- ============== PERIODIC TABLE REFERENCE ============== -->
+                <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border)">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Reference</div>
+                    <h1>Periodic Table — Complete Reference</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Structure, trends, block characteristics, and mnemonics for NEET.</div>
+
+                    <h2 id="periodic-table">1. Modern Periodic Table Structure</h2>
+
+                    <h3>Blocks, Groups, Periods</h3>
+                    <p>The modern periodic table has <strong>118 elements</strong> arranged by increasing atomic number. <strong>18 groups</strong> (columns) and <strong>7 periods</strong> (rows). Elements are classified into four blocks based on the subshell receiving the last electron:</p>
+
+                    <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Block</th><th>Groups</th><th>Subshell</th><th>Elements</th><th>Examples</th></tr></thead>
+                        <tbody>
+                            <tr><td>s-block</td><td>1, 2</td><td>ns¹⁻²</td><td>14</td><td>Li, Na, K, Be, Mg, Ca</td></tr>
+                            <tr><td>p-block</td><td>13–18</td><td>np¹⁻⁶</td><td>36</td><td>C, N, O, Cl, Ar, Si</td></tr>
+                            <tr><td>d-block</td><td>3–12</td><td>(n−1)d¹⁻¹⁰ ns¹⁻²</td><td>40</td><td>Fe, Cu, Zn, Cr, Mn, Ni</td></tr>
+                            <tr><td>f-block</td><td>—</td><td>(n−2)f¹⁻¹⁴</td><td>28 (14+14)</td><td>Ce, Eu, Gd (Lanthanoids); U, Pu (Actinoids)</td></tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <div class="formula-box">Period number = highest n (principal quantum number) &nbsp;|&nbsp; Group number = (ns + np) valence electrons for p-block, ns for s-block</div>
+
+                    <h3>Position of Hydrogen</h3>
+                    <p>Hydrogen (1s¹) resembles both Group 1 (forms H⁺) and Group 17 (forms H⁻). It has <strong>unique placement</strong> — ionization enthalpy 1312 kJ/mol is much higher than alkali metals. It is often placed separately at the top of the table.</p>
+
+                    <h3>Position of d-block (Transition Elements)</h3>
+                    <p>Elements with partially filled d-orbitals in their ground state or common oxidation state. All are <strong>metals</strong>, form coloured ions, show variable oxidation states, paramagnetism, and catalytic activity. Examples: Fe²⁺/Fe³⁺, Cu⁺/Cu²⁺, Mn²⁺/Mn⁷⁺.</p>
+
+                    <h3>Position of f-block (Inner Transition)</h3>
+                    <p>Two rows placed below: <strong>Lanthanoids</strong> (Ce 58 to Lu 71, 4f series) and <strong>Actinoids</strong> (Th 90 to Lr 103, 5f series). All are metals. Lanthanoids show lanthanoid contraction (steady decrease in atomic radius across the series due to poor shielding of 4f electrons).</p>
+
+                    <h2 id="trends">2. Periodic Trends — Detailed Analysis</h2>
+
+                    <h3>2.1 Atomic Radius</h3>
+                    <p><strong>Trend:</strong> Decreases across a period (Z_eff increases), increases down a group (new shells added).</p>
+                    <p><strong>Types:</strong> Covalent radius (bonded atoms), Metallic radius (metal lattice), van der Waals radius (non-bonded, largest).</p>
+
+                    <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Period 3</th><th>Na</th><th>Mg</th><th>Al</th><th>Si</th><th>P</th><th>S</th><th>Cl</th><th>Ar</th></tr></thead>
+                        <tbody><tr><td>Radius (pm)</td><td>186</td><td>160</td><td>143</td><td>117</td><td>110</td><td>104</td><td>99</td><td>71*</td></tr></tbody>
+                    </table>
+                    </div>
+
+                    <div class="tip-box"><div class="tip-title">Exception</div><div class="tip-text">Ga (135 pm) has <strong>smaller</strong> radius than Al (143 pm) due to d-block contraction — poor shielding by 3d¹⁰ electrons increases Z_eff. Same applies to Ge vs Si.</div></div>
+
+                    <h3>2.2 Ionization Enthalpy (IE)</h3>
+                    <p>Energy required to remove the most loosely bound electron from a gaseous atom. <strong>Trend:</strong> Increases across period, decreases down group.</p>
+
+                    <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Period 3</th><th>Na</th><th>Mg</th><th>Al</th><th>Si</th><th>P</th><th>S</th><th>Cl</th><th>Ar</th></tr></thead>
+                        <tbody><tr><td>IE₁ (kJ/mol)</td><td>496</td><td>738</td><td>578</td><td>787</td><td>1012</td><td>1000</td><td>1251</td><td>1521</td></tr></tbody>
+                    </table>
+                    </div>
+
+                    <div class="neet-box">
+                        <div class="neet-title">Key Exceptions for NEET</div>
+                        <div class="neet-text">
+                            <strong>Mg (738) > Al (578):</strong> Mg has 3s² (filled subshell, stable). Al is 3s²3p¹ — removing one p-electron is easier.<br>
+                            <strong>P (1012) > S (1000):</strong> P has 3p³ (half-filled, extra stable). S is 3p⁴ — the 4th p-electron is paired, causing repulsion, easier to remove.
+                        </div>
+                    </div>
+
+                    <div class="deriv-box">
+                        <div class="step"><span class="step-num">1</span><div class="step-text"><strong>Z_eff = Z − S</strong> (Slater's rules). Across a period, Z increases faster than S (shielding), so Z_eff increases → stronger attraction → electrons harder to remove → IE increases.</div></div>
+                        <div class="step"><span class="step-num">2</span><div class="step-text"><strong>Down a group:</strong> New shells are added, distance from nucleus increases, shielding effect of inner electrons increases → Z_eff decreases → IE decreases.</div></div>
+                        <div class="step"><span class="step-num">3</span><div class="step-text"><strong>Successive IEs:</strong> IE₁ < IE₂ < IE₃ because removing an electron from a positive ion requires more energy. Sharp jump after removing all valence electrons (e.g., Na: IE₁=496, IE₂=4562 — core electron removal).</div></div>
+                    </div>
+
+                    <h3>2.3 Electronegativity (EN)</h3>
+                    <p>Tendency of an atom to attract shared electrons in a chemical bond. <strong>Trend:</strong> Increases across period, decreases down group. F (4.0) is the most electronegative.</p>
+
+                    <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Pauling Scale</th><th>H</th><th>Li</th><th>Be</th><th>B</th><th>C</th><th>N</th><th>O</th><th>F</th></tr></thead>
+                        <tbody><tr><td>EN</td><td>2.1</td><td>1.0</td><td>1.5</td><td>2.0</td><td>2.5</td><td>3.0</td><td>3.5</td><td>4.0</td></tr></tbody>
+                    </table>
+                    </div>
+
+                    <div class="tip-box"><div class="tip-title">Order for NEET</div><div class="tip-text">EN order: F > O > N ≈ Cl > Br > I > S ≈ C. Most electronegative elements: F, O, N, Cl. Bond polarity: ΔEN > 1.7 = ionic; 0.4–1.7 = polar covalent; < 0.4 = non-polar covalent.</div></div>
+
+                    <h3>2.4 Electron Affinity (EA)</h3>
+                    <p>Energy released when an electron is added to a neutral gaseous atom. <strong>Trend:</strong> Generally becomes more negative across a period, less negative down a group. Most negative (highest magnitude) at <strong>Cl</strong> not F.</p>
+
+                    <div class="neet-box">
+                        <div class="neet-title">EA Values (kJ/mol)</div>
+                        <div class="neet-text">
+                            Cl = −349, F = −328, Br = −325, I = −295, O = −141, S = −200, N ≈ +7 (endothermic)<br>
+                            <strong>Why Cl > F?</strong> F's 2p orbitals are very compact → added electron experiences repulsion → less energy released. Cl has larger 3p orbitals → less repulsion → more negative EA.
+                        </div>
+                    </div>
+
+                    <h2 id="blocks">3. Block Characteristics & Mnemonics</h2>
+
+                    <h3>s-Block (Groups 1 & 2)</h3>
+                    <p><strong>Group 1 — Alkali metals:</strong> ns¹, highly reactive, low IE, form +1 ions, never found free in nature. React violently with water (vigour increases down group).</p>
+                    <p><strong>Group 2 — Alkaline earth metals:</strong> ns², harder than alkali metals, higher melting points, form +2 ions.</p>
+                    <p class="formula-box">Group 1: H, Li, Na, K, Rb, Cs, Fr → <strong>"Hi LiNa K Rb Cs Fr"</strong> &nbsp;|&nbsp; Group 2: Be, Mg, Ca, Sr, Ba, Ra → <strong>"Be Mg Ca Sr Ba Ra"</strong></p>
+
+                    <h3>p-Block (Groups 13–18)</h3>
+                    <p>Includes <strong>metals, metalloids, and non-metals</strong>. Variable oxidation states. Inert-pair effect in heavier elements (Tl⁺ stable, Pb²⁺ stable, Bi³⁺ stable).</p>
+                    <p class="formula-box">Gr 13: B, Al, Ga, In, Tl → <strong>"B Al Ga In Tl"</strong> &nbsp;|&nbsp; Gr 14: C, Si, Ge, Sn, Pb → <strong>"C Si Ge Sn Pb"</strong> (Carbon family)<br>
+                    Gr 15: N, P, As, Sb, Bi → <strong>"N P As Sb Bi"</strong> (Pnicogens) &nbsp;|&nbsp; Gr 16: O, S, Se, Te, Po → <strong>"O S Se Te Po"</strong> (Chalcogens)<br>
+                    Gr 17: F, Cl, Br, I, At → <strong>"F Cl Br I At"</strong> (Halogens — salt-formers) &nbsp;|&nbsp; Gr 18: He, Ne, Ar, Kr, Xe, Rn → <strong>"He Ne Ar Kr Xe Rn"</strong> (Noble gases)</p>
+
+                    <h3>d-Block (Transition Metals)</h3>
+                    <p>Groups 3–12, (n−1)d¹⁻¹⁰ ns¹⁻². Key properties: variable oxidation states, coloured ions, paramagnetism (unpaired e⁻), catalytic activity, formation of complexes, high melting/boiling points.</p>
+                    <p class="formula-box">3d series: Sc, Ti, V, Cr, Mn, Fe, Co, Ni, Cu, Zn → <strong>"Sc Ti V Cr Mn Fe Co Ni Cu Zn"</strong><br>
+                    4d series: Y, Zr, Nb, Mo, Tc, Ru, Rh, Pd, Ag, Cd<br>
+                    5d series: La, Hf, Ta, W, Re, Os, Ir, Pt, Au, Hg</p>
+
+                    <h3>f-Block (Inner Transition)</h3>
+                    <p><strong>Lanthanoids:</strong> Ce–Lu (4f¹⁻¹⁴). Common ox. state +3. Lanthanoid contraction: steady decrease in ionic radius across series due to poor shielding of 4f electrons.</p>
+                    <p><strong>Actinoids:</strong> Th–Lr (5f¹⁻¹⁴). Radioactive, show multiple oxidation states (+3 to +6).</p>
+
+                    <h2 id="key-facts">4. Key Facts & Anomalies for NEET</h2>
+
+                    <div class="table-wrap">
+                    <table>
+                        <thead><tr><th>Property</th><th>Trend</th><th>Exceptions / Key Points</th></tr></thead>
+                        <tbody>
+                            <tr><td>Atomic radius</td><td>↓ across, ↑ down</td><td>Ga < Al, Ge < Si (d-block contraction)</td></tr>
+                            <tr><td>Ionization Enthalpy</td><td>↑ across, ↓ down</td><td>Gr 2 > Gr 13 (filled s²), Gr 15 > Gr 16 (half-filled p³)</td></tr>
+                            <tr><td>Electronegativity</td><td>↑ across, ↓ down</td><td>F (4.0) highest. O > Cl? Yes! O=3.5, Cl=3.0</td></tr>
+                            <tr><td>Electron Affinity</td><td>↑ across, ↓ down</td><td>Cl > F (size+repulsion). N has +ve EA (stable half-filled)</td></tr>
+                            <tr><td>Metallic character</td><td>↓ across, ↑ down</td><td>Most metallic: Fr. Most non-metallic: F</td></tr>
+                            <tr><td>Oxidising power</td><td>↑ across, ↓ down</td><td>F₂ strongest oxidising agent. Down group: decreases</td></tr>
+                            <tr><td>Reducing power</td><td>↓ across, ↑ down</td><td>Li strongest reducing agent (high hydration enthalpy)</td></tr>
+                        </tbody>
+                    </table>
+                    </div>
+
+                    <h3>Diagonal Relationship</h3>
+                    <p>Li–Mg, Be–Al, B–Si. Due to similar charge-to-size ratio. Similar properties: both form nitrides (Li₃N, Mg₃N₂), carbonates decompose on heating, hydroxides are weak bases.</p>
+
+                    <h3>Anomalous Behaviour of Second Period</h3>
+                    <p>Li to F show anomalous behaviour compared to rest of their groups due to: <strong>small size, high EN, no d-orbitals, maximum covalency of 4</strong>. Examples: Li resembles Mg more than Na; Be forms covalent compounds unlike Mg; B is electron-deficient (BF₃ is Lewis acid).</p>
+
+                    <div class="example-box">
+                        <div class="ex-title">NEET Example: Periodic Trends</div>
+                        <div class="ex-text">Arrange in order of increasing IE: Na, Mg, Al, Si, P, S, Cl, Ar.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> Na < Al < Mg < Si < S < P < Cl < Ar. Mg (3s² filled) > Al (3s²3p¹); P (3p³ half-filled) > S (3p⁴).</div>
+                    </div>
+
+                    <div class="example-box">
+                        <div class="ex-title">NEET Example: Blocks</div>
+                        <div class="ex-text">An element has configuration [Kr]4d⁵5s¹. Which block does it belong to? Name the element.</div>
+                        <div class="ex-soln"><strong>Solution:</strong> d-block (last electron in d-subshell, (n−1)d⁵). Element is Mo (Molybdenum, Z=42). Cr and Mo are exceptions with d⁵s¹ configuration (half-filled stability).</div>
+                    </div>
+
+                    <div class="formula-box" style="margin-top:24px">📌 For NEET: Know the 4 blocks, 18 groups, anomalies (Mg>Al, P>S, Cl>F EA), and diagonal relationship (Li–Mg, Be–Al, B–Si). Practice identifying block from electronic configuration.</div>
+                </div>
+                <!-- ============== END PERIODIC TABLE ============== -->
+
+            </div>
+        </div>
+    </div>
+</body>
+</html>

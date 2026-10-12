@@ -1,0 +1,1075 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='css/style.css'>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Quant Reflex & Reasoning Reflex — vlymbooq</title>
+    <meta name="description" content="Train Quant (Number Sense, Percentage, Arithmetic, Algebra, Geometry, Mensuration, P&L, Pipes, Boats, Alligation, Surds, BD, Stocks, Odd Man), Reasoning (Puzzles, Coding, Syllogism, Direction, Blood Relation, Non-Verbal) and Verbal Ability (Synonyms, Antonyms, Grammar, Voice, Comprehension) — Instinct & Exam layers.">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/mental.html">
+    <script src="js/mental-training.js?v=20260707a" defer></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap');
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#08080f;--bg-card:rgba(18,18,28,.6);--bg-card-solid:#12121c;--border:rgba(255,255,255,.06);--border-glow:rgba(167,139,250,.15);--text:#f1f1f7;--text-sec:#9898b0;--text-muted:#55556b;--purple:#a78bfa;--purple-dim:rgba(167,139,250,.12);--emerald:#34d399;--emerald-dim:rgba(52,211,153,.1);--red:#f87171;--amber:#fbbf24;--radius:14px;--glass-bg:rgba(18,18,28,.5);--glass-border:rgba(255,255,255,.06);--shadow:0 8px 32px rgba(0,0,0,.4)}
+        body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh;overflow-x:hidden}
+        body::before{content:'';position:fixed;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(ellipse at 30% 20%,rgba(167,139,250,.04) 0%,transparent 50%),radial-gradient(ellipse at 70% 80%,rgba(52,211,153,.03) 0%,transparent 50%);pointer-events:none;z-index:0}
+        a{color:var(--text);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(8,8,15,.85);-webkit-backdrop-filter:blur(20px);backdrop-filter:blur(20px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:10px}
+        .brand-icon{width:28px;height:28px;border-radius:8px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:-.02em}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .container{max-width:720px;margin:0 auto;padding:24px;position:relative;z-index:1}
+        @media(max-width:480px){.container{padding:16px}.results-card{padding:20px 16px}.topic-grid{grid-template-columns:1fr!important}}
+
+        .glass-card{background:var(--glass-bg);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:var(--radius);box-shadow:var(--shadow)}
+
+        .rank-bar{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 18px;background:var(--glass-bg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:var(--radius);margin-bottom:20px;box-shadow:var(--shadow)}
+        .rank-bar .rank-info{display:flex;align-items:center;gap:10px}
+        .rank-bar .rank-icon{font-size:1.6em;filter:drop-shadow(0 0 8px rgba(167,139,250,.2))}
+        .rank-bar .rank-name{font-weight:700;font-size:.9em}
+        .rank-bar .rank-pts{font-size:.75em;color:var(--text-muted)}
+        .rank-bar .rank-next{font-size:.72em;color:var(--text-sec)}
+        .rank-bar .streak{display:flex;align-items:center;gap:4px;font-size:.82em;color:var(--amber)}
+        .rank-bar .streak.fire{animation:pulse 1s infinite}
+        @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+        .section-label{display:flex;align-items:center;gap:8px;margin:18px 0 10px 0;position:relative}
+        .section-label::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,var(--border),transparent)}
+        .section-label .sl-icon{font-size:1.1em}
+        .section-label .sl-text{font-weight:700;font-size:.8em;color:var(--text-sec);text-transform:uppercase;letter-spacing:.08em}
+
+        .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
+        @media(max-width:480px){.mode-grid{grid-template-columns:1fr}}
+        .mode-card{padding:20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--glass-bg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);text-align:center;position:relative;overflow:hidden}
+        .mode-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:var(--radius);opacity:0;transition:opacity .3s;background:linear-gradient(135deg,var(--purple-dim),var(--emerald-dim))}
+        .mode-card:hover::before{opacity:1}
+        .mode-card:hover{border-color:var(--border-glow);transform:translateY(-3px);box-shadow:0 8px 30px rgba(167,139,250,.08)}
+        .mode-card .icon{font-size:2em;margin-bottom:6px;position:relative}
+        .mode-card .name{font-weight:700;font-size:.9em;margin-bottom:2px;position:relative}
+        .mode-card .desc{font-size:.75em;color:var(--text-muted);position:relative}
+        .mode-card .stat{font-size:.7em;color:var(--purple);margin-top:6px;position:relative}
+
+        .category-card{display:flex;align-items:center;gap:12px;padding:16px 18px;background:var(--glass-bg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:1px solid var(--glass-border);border-radius:var(--radius);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);box-shadow:var(--shadow)}
+        .category-card:hover{border-color:var(--border-glow);transform:translateY(-2px);box-shadow:0 8px 30px rgba(167,139,250,.06)}
+        .topic-card{padding:10px 14px;border-radius:10px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:8px}
+        .topic-card:hover{border-color:rgba(167,139,250,.2);background:var(--purple-dim);transform:translateY(-1px)}
+
+        .layer-btn{padding:6px 16px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-sec);font-size:.78em;font-weight:600;cursor:pointer;transition:all .2s}
+        .layer-btn.active{border-color:var(--purple);background:var(--purple-dim);color:var(--purple);box-shadow:0 0 20px rgba(167,139,250,.1)}
+        .layer-btn:hover:not(.active){border-color:rgba(255,255,255,.12)}
+
+        .arena{display:none}
+        .arena.active{display:block;animation:arenaIn .4s cubic-bezier(.4,0,.2,1)}
+        @keyframes arenaIn{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+
+        .question-card{padding:36px 28px 28px;border-radius:var(--radius);border:1px solid var(--glass-border);background:var(--glass-bg);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);margin-bottom:16px;text-align:center;box-shadow:var(--shadow)}
+        .question-card .q-num{font-size:.72em;color:var(--text-muted);margin-bottom:4px;font-weight:500}
+        .question-card .q-progress{height:4px;background:rgba(255,255,255,.06);border-radius:100px;margin-bottom:20px;overflow:hidden}
+        .question-card .q-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+        .question-card .q-text{font-size:clamp(1.1rem,2.5vw,1.4rem);font-weight:700;line-height:1.7;margin-bottom:16px;font-family:'JetBrains Mono',monospace;letter-spacing:.01em}
+        .question-card .q-hint{font-size:.78em;color:var(--text-muted);margin-bottom:16px;cursor:pointer;user-select:none;transition:color .2s}
+        .question-card .q-hint:hover{color:var(--text-sec)}
+        .question-card .q-hint .hint-text{display:none;margin-top:6px;color:var(--purple);font-size:.92em;padding:8px 12px;border-radius:8px;background:var(--purple-dim)}
+        .question-card .q-hint .hint-text.show{display:block}
+
+        .timer-circle{width:76px;height:76px;border-radius:50%;border:3px solid rgba(255,255,255,.08);display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-family:'JetBrains Mono',monospace;font-size:1.5em;font-weight:700;transition:all .3s;background:rgba(255,255,255,.02);box-shadow:inset 0 0 20px rgba(0,0,0,.3)}
+        .timer-circle.urgent{border-color:var(--red);color:var(--red);box-shadow:inset 0 0 20px rgba(0,0,0,.3),0 0 20px rgba(248,113,113,.1)}
+        .timer-circle.warning{border-color:var(--amber);color:var(--amber);box-shadow:inset 0 0 20px rgba(0,0,0,.3),0 0 20px rgba(251,191,36,.08)}
+
+        .opt-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;max-width:520px;margin:0 auto}
+        @media(max-width:400px){.opt-grid{grid-template-columns:1fr}}
+        .opt-btn{padding:16px 18px;border-radius:12px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;font-size:.95em;font-weight:600;transition:all .2s cubic-bezier(.4,0,.2,1);text-align:center;font-family:'JetBrains Mono',monospace;position:relative;overflow:hidden}
+        .opt-btn::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:12px;opacity:0;transition:opacity .2s;background:linear-gradient(135deg,rgba(167,139,250,.06),rgba(52,211,153,.04))}
+        .opt-btn:hover::before{opacity:1}
+        .opt-btn:hover{border-color:rgba(255,255,255,.12);transform:translateY(-1px)}
+        .opt-btn.selected{border-color:var(--purple);background:var(--purple-dim);color:var(--purple);box-shadow:0 0 20px rgba(167,139,250,.08)}
+        .opt-btn.correct{border-color:var(--emerald);background:var(--emerald-dim);color:var(--emerald);box-shadow:0 0 20px rgba(52,211,153,.08)}
+        .opt-btn.wrong{border-color:var(--red);background:rgba(248,113,113,.08);color:var(--red);box-shadow:0 0 20px rgba(248,113,113,.06)}
+        .opt-btn:disabled{cursor:default;opacity:.7}
+
+        .result-flash{padding:16px 20px;border-radius:12px;text-align:center;margin-bottom:12px;font-weight:700;font-size:1em;display:none;animation:flashIn .3s}
+        .result-flash.show{display:block}
+        .result-flash.correct{background:var(--emerald-dim);border:1px solid rgba(52,211,153,.2);color:var(--emerald)}
+        .result-flash.wrong{background:rgba(248,113,113,.08);border:1px solid rgba(248,113,113,.15);color:var(--red)}
+        @keyframes flashIn{from{opacity:0;transform:scale(.95)}to{opacity:1;transform:scale(1)}}
+
+        .action-btn{display:block;width:100%;padding:15px;border-radius:100px;border:none;font-weight:700;font-size:.95em;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);text-align:center;margin-top:12px}
+        .action-btn.primary{background:linear-gradient(135deg,var(--purple),var(--emerald));color:#fff;box-shadow:0 4px 20px rgba(167,139,250,.15)}
+        .action-btn.primary:hover{opacity:.95;transform:translateY(-2px);box-shadow:0 8px 30px rgba(167,139,250,.2)}
+        .action-btn.secondary{background:rgba(255,255,255,.04);color:var(--text);border:1px solid var(--border)}
+        .action-btn.secondary:hover{background:rgba(255,255,255,.08);border-color:rgba(255,255,255,.1)}
+
+        .results-overlay{position:fixed;top:0;left:0;right:0;bottom:0;z-index:1000;background:rgba(8,8,15,.92);-webkit-backdrop-filter:blur(24px);backdrop-filter:blur(24px);display:none;align-items:center;justify-content:center;padding:24px;animation:overlayIn .3s}
+        .results-overlay.show{display:flex}
+        @keyframes overlayIn{from{opacity:0}to{opacity:1}}
+        .results-card{background:var(--glass-bg);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border:1px solid var(--glass-border);border-radius:var(--radius);padding:36px 32px;max-width:420px;width:100%;text-align:center;box-shadow:0 16px 48px rgba(0,0,0,.5);animation:cardPop .35s cubic-bezier(.4,0,.2,1)}
+        @keyframes cardPop{from{opacity:0;transform:scale(.92) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+        .results-card .big-num{font-size:3.5em;font-weight:900;margin:8px 0;letter-spacing:-.03em}
+        .results-card .big-num.good{color:var(--emerald);text-shadow:0 0 40px rgba(52,211,153,.15)}
+        .results-card .big-num.ok{color:var(--amber);text-shadow:0 0 40px rgba(251,191,36,.1)}
+        .results-card .big-num.bad{color:var(--red);text-shadow:0 0 40px rgba(248,113,113,.1)}
+        .results-card .label{font-size:.82em;color:var(--text-muted);font-weight:500}
+        .results-card .detail-row{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border);font-size:.85em}
+        .results-card .detail-row:last-child{border-bottom:none}
+        .results-card .rank-up{font-size:3.5em;margin:8px 0;animation:bounce .6s}
+        @keyframes bounce{0%,100%{transform:scale(1)}50%{transform:scale(1.15)}}
+
+        .session-log{margin-top:16px}
+        .session-log .title{font-size:.82em;font-weight:700;margin-bottom:8px;color:var(--text-sec)}
+        .session-item{display:flex;justify-content:space-between;padding:10px 14px;border-radius:10px;background:rgba(255,255,255,.02);margin-bottom:4px;font-size:.78em;transition:background .2s}
+        .session-item:hover{background:rgba(255,255,255,.04)}
+        .session-item .s-mode{color:var(--purple);font-weight:600}
+        .session-item .s-acc.good{color:var(--emerald)}
+        .session-item .s-acc.ok{color:var(--amber)}
+        .session-item .s-acc.bad{color:var(--red)}
+
+        .tech-flash{padding:28px 20px;text-align:center;display:none;animation:fadeIn .35s}
+        .tech-flash.show{display:block}
+        .tech-flash .tf-line1{font-size:1.7em;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:8px}
+        .tech-flash .tf-line2{font-size:.85em;color:var(--text-sec);line-height:1.5}
+        @keyframes fadeIn{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+
+        .speed-tip{font-size:.72em;color:var(--text-sec);margin-top:6px;padding:8px 12px;border-radius:8px;background:var(--purple-dim);display:none}
+        .speed-tip.show{display:block}
+        .speed-tip .st-label{color:var(--purple);font-weight:700}
+
+        .solution-box{font-size:.74em;color:var(--text-sec);margin-top:6px;padding:10px 14px;border-radius:10px;background:var(--emerald-dim);border:1px solid rgba(52,211,153,.12);display:none;line-height:1.6;text-align:left}
+        .solution-box.show{display:block}
+        .intuition-box{font-size:.8em;color:var(--amber);margin-top:6px;padding:12px 14px;border-radius:10px;background:rgba(251,191,36,.05);border:1px solid rgba(251,191,36,.12);display:none;line-height:1.6;text-align:left}
+        .intuition-box.show{display:block}
+        .intuition-box .ib-label{font-weight:700;color:var(--amber);display:block;margin-bottom:4px}
+
+        .hidden{display:none!important}
+
+        .mastery-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:.74em}
+        .mastery-row .m-label{width:80px;flex-shrink:0;font-weight:600}
+        .mastery-row .m-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden}
+        .mastery-row .m-bar .m-fill{height:100%;border-radius:100px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+        .mastery-row .m-pct{width:32px;text-align:right;flex-shrink:0;font-weight:700}
+        .speed-row{display:flex;align-items:center;gap:8px;padding:5px 0;font-size:.74em}
+        .speed-row .s-label{width:80px;flex-shrink:0;font-weight:600}
+        .speed-row .s-bar{flex:1;height:6px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden;position:relative}
+        .speed-row .s-bar .s-fill{height:100%;border-radius:100px;transition:width .4s}
+        .speed-row .s-bar .s-marker{position:absolute;top:-2px;width:2px;height:10px;background:var(--emerald);border-radius:2px}
+        .speed-row .s-time{width:44px;text-align:right;flex-shrink:0;font-weight:700;font-family:'JetBrains Mono',monospace}
+        .speed-grade{display:inline-block;width:20px;height:20px;line-height:20px;text-align:center;border-radius:50%;font-size:.7em;font-weight:800;flex-shrink:0}
+        .speed-grade.A{background:var(--emerald-dim);color:var(--emerald)}
+        .speed-grade.B{background:rgba(251,191,36,.12);color:var(--amber)}
+        .speed-grade.C{background:rgba(251,191,36,.08);color:var(--amber)}
+        .speed-grade.D{background:rgba(248,113,113,.1);color:var(--red)}
+
+        .hard-toggle{display:flex;align-items:center;gap:8px;cursor:pointer;user-select:none;padding:6px 10px;border-radius:100px;border:1px solid var(--border);transition:all .2s}
+        .hard-toggle:hover{border-color:rgba(255,255,255,.1)}
+        .hard-toggle input{display:none}
+        .toggle-slider{width:36px;height:20px;background:rgba(255,255,255,.08);border-radius:100px;position:relative;transition:background .2s;flex-shrink:0}
+        .toggle-slider::after{content:'';position:absolute;top:2px;left:2px;width:16px;height:16px;border-radius:50%;background:#55556b;transition:all .25s cubic-bezier(.4,0,.2,1)}
+        .hard-toggle input:checked + .toggle-slider{background:rgba(248,113,113,.25)}
+        .hard-toggle input:checked + .toggle-slider::after{background:var(--red);transform:translateX(16px);box-shadow:0 0 12px rgba(248,113,113,.2)}
+    </style>
+</head>
+<body>
+    <nav class="nav">
+        <div class="nav-inner">
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="dashboard.html">Dashboard</a>
+                <a href="micro-test.html">Drill</a>
+                <a href="guides/index.html">Guides</a>
+                <a href="current-affairs.html">📰 GK</a>
+                <a href="mental.html" class="active" style="color:var(--text);background:rgba(255,255,255,.06)">Mental</a>
+                <a href="science.html" style="color:var(--text-sec)">🔬 Science</a>
+                <a href="polytechnic.html" style="color:var(--text-sec)">🏫 Polytechnic</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- RANK BAR -->
+        <div class="rank-bar" id="rankBar">
+            <div class="rank-info">
+                <span class="rank-icon" id="rankIcon">🥉</span>
+                <div><div class="rank-name" id="rankName">Bronze Brains</div><div class="rank-pts" id="rankPts">0 pts</div></div>
+            </div>
+            <div style="text-align:right">
+                <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span></div>
+                <div class="rank-next" id="rankNext">Next: 50 pts</div>
+                <div id="hardCount" style="font-size:.68em;color:var(--red);margin-top:2px;display:none"></div>
+                <div id="mistakeCount" style="font-size:.68em;color:var(--amber);margin-top:2px;display:none">📁 <span id="mistakeNum">0</span> mistakes to retry</div>
+            </div>
+        </div>
+
+        <!-- MODE SELECTION -->
+        <div id="modeSelect">
+
+
+
+            <!-- 🔢 QUANT REFLEX CATEGORY -->
+            <div class="category-card" onclick="toggleCategory('quant')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s">
+                <span style="font-size:1.4em">🔢</span>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">35 topics — Number Sense, Algebra, Geometry, CI, DI, P&L, Stocks & more</div></div>
+                <span class="cat-arrow" id="catArrowQuant" style="color:var(--text-muted);font-size:.8em">▶</span>
+                <div class="stat" id="stat-quant" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
+            </div>
+            <div id="quantTopics" class="topic-grid" style="display:none;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0 12px 0"></div>
+
+            <!-- 🧠 REASONING REFLEX CATEGORY -->
+            <div class="category-card" onclick="toggleCategory('reasoning')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
+                <span style="font-size:1.4em">🧠</span>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">50 topics — Puzzles, Coding, Syllogism, Clock, Cal, Direction, Non-Verbal & more</div></div>
+                <span class="cat-arrow" id="catArrowReasoning" style="color:var(--text-muted);font-size:.8em">▶</span>
+                <div class="stat" id="stat-reasoning" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
+            </div>
+            <div id="reasoningTopics" class="topic-grid" style="display:none;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0 12px 0"></div>
+
+            <!-- 📖 VERBAL ABILITY CATEGORY -->
+            <div class="category-card" onclick="toggleCategory('verbal')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
+                <span style="font-size:1.4em">📖</span>
+                <div style="flex:1"><div style="font-weight:800;font-size:.95em">Verbal Ability</div><div style="font-size:.72em;color:var(--text-muted)">24 topics — Synonyms, Antonyms, Grammar, Voice, Comprehension & more</div></div>
+                <span class="cat-arrow" id="catArrowVerbal" style="color:var(--text-muted);font-size:.8em">▶</span>
+                <div class="stat" id="stat-verbal" style="font-size:.7em;color:var(--purple);white-space:nowrap">0 solved</div>
+            </div>
+            <div id="verbalTopics" class="topic-grid" style="display:none;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0 12px 0"></div>
+
+
+
+            <!-- MASTERY PROGRESS -->
+            <div id="masterySection" style="margin-top:12px;display:none">
+                <div style="font-size:.78em;font-weight:700;color:var(--text-sec);margin-bottom:6px;display:flex;justify-content:space-between">
+                    <span>🎯 Mastery Progress</span>
+                    <span id="masteryOverall" style="color:var(--purple)">0%</span>
+                </div>
+                <div id="masteryGrid"></div>
+            </div>
+
+            <!-- SPEED BENCHMARKS -->
+            <div id="speedSection" style="margin-top:12px;display:none">
+                <div style="font-size:.78em;font-weight:700;color:var(--text-sec);margin-bottom:6px;display:flex;justify-content:space-between">
+                    <span>⚡ Speed Benchmarks</span>
+                    <span id="speedOverall" style="color:var(--amber)">—</span>
+                </div>
+                <div id="speedGrid"></div>
+            </div>
+
+            <!-- GRAND SLAM -->
+            <div class="mode-card" onclick="startTraining('grandslam')" style="margin-top:12px;padding:24px;border:2px solid rgba(167,139,250,.25);background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(52,211,153,.08))">
+                <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px">
+                    <span style="font-size:2em">🏆</span>
+                    <span style="font-size:1.3em;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Grand Slam</span>
+                </div>
+                <div style="font-size:.82em;color:var(--text-sec);text-align:center">Quant + Reasoning + Verbal — unlimited mixed practice</div>
+                <div style="display:flex;justify-content:center;gap:16px;margin-top:8px;font-size:.7em;color:var(--text-muted)">
+                    <span>🔢 Quant</span>
+                    <span>🧠 Reasoning</span>
+                    <span>📖 Verbal</span>
+                </div>
+                <div class="stat" id="stat-grandslam" style="margin-top:8px;font-size:.78em">0 solved</div>
+            </div>
+
+            <div style="display:flex;gap:8px;margin-top:12px;align-items:center;flex-wrap:wrap">
+                <button class="action-btn secondary" onclick="showTechSheet()" style="flex:1;padding:10px;font-size:.85em">📖 All Techniques</button>
+                <label class="hard-toggle" title="No technique flash, 45% less time, 2x points">
+                    <input type="checkbox" id="hardModeToggle">
+                    <span class="toggle-slider"></span>
+                    <span style="font-size:.78em;color:var(--text-sec);white-space:nowrap">🔥 Hard Mode</span>
+                </label>
+            </div>
+            <div id="sessionHistory"></div>
+        </div>
+
+        <!-- TECHNIQUE CHEAT SHEET OVERLAY -->
+        <div class="results-overlay" id="techSheet">
+            <div class="results-card" style="max-width:600px;max-height:80vh;overflow-y:auto;text-align:left">
+                <div style="font-size:1.1em;font-weight:800;margin-bottom:12px;text-align:center">📖 Speed Technique Reference</div>
+                <div id="techSheetGrid"></div>
+                <button class="action-btn primary" onclick="closeTechSheet()" style="margin-top:12px">Got it</button>
+            </div>
+        </div>
+
+        <!-- TRAINING ARENA -->
+        <div class="arena" id="arena">
+            <div class="question-card" id="questionCard">
+                <div class="q-num" id="qNum">Q 1 / 10</div>
+                <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
+
+                <div class="timer-circle" id="timerCircle">10</div>
+
+                <div class="tech-flash" id="techFlash">
+                    <div class="tf-line1" id="tfLine1"></div>
+                    <div class="tf-line2" id="tfLine2"></div>
+                </div>
+
+                <div class="q-text" id="qText" style="display:none">Loading...</div>
+
+                <div class="q-hint" id="qHint" onclick="toggleHint()">💡 Show hint
+                    <div class="hint-text" id="hintText"></div>
+                </div>
+
+                <div class="opt-grid" id="optGrid"></div>
+            </div>
+
+            <div class="result-flash" id="resultFlash"></div>
+            <div class="speed-tip" id="speedTip"><span class="st-label">⚡ Speed Tip</span> <span id="speedTipText"></span></div>
+            <div class="intuition-box" id="intuitionDisplay"><span class="ib-label">⚡ Intuition Method</span> <span id="intuitionText"></span></div>
+            <div class="solution-box" id="solutionDisplay"></div>
+
+            <button class="action-btn primary hidden" id="nextBtn" onclick="nextQuestion()">Next →</button>
+            <button class="action-btn secondary" id="quitBtn" onclick="endTraining()">✕ End Session</button>
+        </div>
+
+        <!-- RESULTS OVERLAY -->
+        <div class="results-overlay" id="resultsOverlay">
+            <div class="results-card">
+                <div id="resultsContent"></div>
+                <button class="action-btn primary" onclick="closeResults()" style="margin-top:16px">Train Again</button>
+                <button class="action-btn secondary" onclick="backToMenu()">Back to Menu</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    var session = null;
+    var currentQuestion = null;
+    var timerInterval = null;
+    var answered = false;
+    var hasHint = false;
+    var questionLoadTime = 0;
+    var activeLayer = 'instinct'; // 'instinct' or 'exam'
+
+    // ====== TOPIC DEFINITIONS ======
+    var QUANT_TOPICS = [
+        { key:'number_sense', icon:'🔢', name:'Number Sense', desc:'Squares, Cubes, Roots, Divisibility, LCM/HCF' },
+        { key:'percentage', icon:'%', name:'Percentage Lab', desc:'%, Fraction↔%, Profit & Loss, SI/CI' },
+        { key:'arithmetic', icon:'📊', name:'Arithmetic Sprint', desc:'Average, Ratio, Mixture, Ages' },
+        { key:'motion', icon:'🚄', name:'Motion Math', desc:'TSD, Trains, Boats, Relative Speed' },
+        { key:'work', icon:'⚙️', name:'Work Logic', desc:'Time & Work, Pipes, Efficiency' },
+        { key:'algebra', icon:'✏️', name:'Algebra Flash', desc:'Equations, Identities, Simplification' },
+        { key:'geometry', icon:'△', name:'Geometry Vision', desc:'Angles, Triangles, Circles, Coord' },
+        { key:'mensuration', icon:'📐', name:'Mensuration Snap', desc:'2D, 3D, Surface Area, Volume' },
+        { key:'counting', icon:'🎲', name:'Counting Lab', desc:'Permutation, Combination, Probability' },
+        { key:'data', icon:'📋', name:'Data Master', desc:'Tables, Charts, Graphs, Sufficiency' },
+        { key:'number_system', icon:'#️⃣', name:'Number System', desc:'Remainder, Cyclicity, Unit Digit, Surds' },
+        { key:'simplification', icon:'🧮', name:'Simplification', desc:'BODMAS, Approximation, Indices' },
+        { key:'quadratic', icon:'📈', name:'Quadratic Eq', desc:'Roots, Discriminant, Nature of Roots' },
+        { key:'partnership', icon:'🤝', name:'Partnership', desc:'Profit Ratio, Investment, Time' },
+        { key:'compound_interest', icon:'💰', name:'Compound Interest', desc:'CI, CI-SI Diff, Installments' },
+        { key:'discount', icon:'🏷️', name:'Discount', desc:'Single, Successive, MP-SP-CP' },
+        { key:'races', icon:'🏃', name:'Races & Games', desc:'Linear Races, Circular Tracks' },
+        { key:'data_interpretation', icon:'📊', name:'Data Interp.', desc:'Tables, Bar & Pie Charts' },
+        { key:'profit_loss', icon:'💵', name:'Profit & Loss', desc:'CP, SP, Profit%, Loss%, Discount, MP' },
+        { key:'pipes_cisterns', icon:'🔧', name:'Pipes & Cisterns', desc:'Fill, Empty, Leakage, Net Time' },
+        { key:'boats_streams', icon:'⛵', name:'Boats & Streams', desc:'Upstream, Downstream, Still Water' },
+        { key:'alligation', icon:'🧪', name:'Alligation/Mixture', desc:'Mixing Ratio, Average Price, Milk-Water' },
+        { key:'surds_indices', icon:'🔢', name:'Surds & Indices', desc:'Exponents, Roots, Simplification' },
+        { key:'bankers_discount', icon:'🏦', name:"Banker's Discount", desc:'BD, TD, BG, Present Worth' },
+        { key:'stocks_shares', icon:'📈', name:'Stocks & Shares', desc:'Dividend, Yield, Market Price, Investment' },
+        { key:'odd_man_out', icon:'🔍', name:'Odd Man Out', desc:'Find the number that breaks the pattern' },
+        { key:'height_distance', icon:'📐', name:'Height & Distance', desc:'Shadows, Elevation Angles, Trigonometry' },
+        { key:'caselet_di', icon:'📜', name:'Caselet DI', desc:'Passage-based Data Interpretation' },
+        { key:'trigonometry', icon:'🧮', name:'Trigonometry', desc:'Identities, Standard Angles, Values' },
+        { key:'number_series', icon:'📊', name:'Number Series', desc:'Find next term / wrong term in pattern' },
+        { key:'quantity_comparison', icon:'⚖️', name:'Quantity Comparison', desc:'Compare Quantity I vs Quantity II' },
+        { key:'decimal_fraction', icon:'#️⃣', name:'Decimal Fraction', desc:'Fraction↔Decimal, Comparison' },
+        { key:'chain_rule', icon:'⛓️', name:'Chain Rule', desc:'Direct/Inverse Proportion, Men-Days-Work' },
+        { key:'logarithm', icon:'📊', name:'Logarithm', desc:'Log Properties, Simplification' },
+        { key:'instalments', icon:'💳', name:'Instalments', desc:'Equal payments, Loan Repayment (SI)' }
+    ];
+    var REASONING_TOPICS = [
+        { key:'pattern_flash', icon:'🔢', name:'Pattern Flash', desc:'Number/Letter Series, Odd One Out' },
+        { key:'coding_flash', icon:'🔐', name:'Coding Flash', desc:'Coding-Decoding, Symbol Logic' },
+        { key:'logic_snap', icon:'🧮', name:'Logic Snap', desc:'Syllogism, Inequality, Arguments' },
+        { key:'direction_sense', icon:'🧭', name:'Direction Sense', desc:'Direction, Distance, Orientation' },
+        { key:'blood_relations', icon:'👨‍👩‍👧', name:'Blood Relations', desc:'Family Tree, Generation Logic' },
+        { key:'ranking_grid', icon:'🏅', name:'Ranking Grid', desc:'Rank, Order, Comparison' },
+        { key:'floor_puzzle', icon:'🏢', name:'Floor Puzzle', desc:'Floor & Building Arrangements' },
+        { key:'linear_seating', icon:'🪑', name:'Linear Seating', desc:'Single & Double Row Arrangements' },
+        { key:'circular_seating', icon:'🔄', name:'Circular Seating', desc:'Circle, Square, Polygon' },
+        { key:'box_distribution', icon:'📦', name:'Box & Distribution', desc:'Box Puzzles & Distribution' },
+        { key:'scheduling', icon:'📅', name:'Scheduling', desc:'Day, Month, Date, Timetable' },
+        { key:'input_output', icon:'⏩', name:'Input-Output', desc:'Banking Pattern Machine' },
+        { key:'mirror_image', icon:'🪞', name:'Mirror & Water', desc:'Mirror Images, Embedded Figures, Paper Folding' },
+        { key:'dice_cube', icon:'🎲', name:'Dice & Cube', desc:'Dice Counting, Cube Painting, Unfolded Dice' },
+        { key:'calendar', icon:'📅', name:'Calendar', desc:'Day Finder, Dates, Leap Years' },
+        { key:'clock', icon:'🕐', name:'Clock', desc:'Angle, Reflection, Hands Overlap' },
+        { key:'alphabet_arrange', icon:'🔤', name:'Word & Alphabet', desc:'Word Formation, Dictionary, Letter Arrangement' },
+        { key:'critical_reasoning', icon:'⚖️', name:'Critical Reason', desc:'Assumptions, Courses of Action, Cause-Effect' },
+        { key:'decision_making', icon:'✅', name:'Decision Making', desc:'Eligibility, Condition-Based' },
+        { key:'venn_diagram', icon:'🔄', name:'Venn Diagram', desc:'Set Theory, Overlapping Groups' },
+        { key:'letter_symbol_series', icon:'🔤', name:'Letter Symbol Series', desc:'Letter Patterns, Position Logic' },
+        { key:'artificial_language', icon:'🌐', name:'Artificial Language', desc:'Decode alien words from translations' },
+        { key:'matching_definitions', icon:'🎯', name:'Matching Definitions', desc:'Which scenario matches the definition?' },
+        { key:'cause_effect', icon:'⚡', name:'Cause & Effect', desc:'Identify cause, effect relationships' },
+        { key:'essential_part', icon:'🧩', name:'Essential Part', desc:'Without which part can it still function?' },
+        { key:'theme_detection', icon:'📖', name:'Theme Detection', desc:'Find the central idea of a passage' },
+        { key:'statement_argument', icon:'💬', name:'Statement Argument', desc:'Identify strong vs weak arguments' },
+        { key:'statement_assumption', icon:'🤔', name:'Statement Assumption', desc:'What is implicit in the statement?' },
+        { key:'statement_conclusion', icon:'✅', name:'Statement Conclusion', desc:'What logically follows?' },
+        { key:'embedded_images', icon:'🔍', name:'Embedded Images', desc:'Find a figure hidden inside another' },
+        { key:'figure_matrix', icon:'🧮', name:'Figure Matrix', desc:'Complete the 3×3 pattern matrix' },
+        { key:'paper_folding', icon:'📄', name:'Paper Folding', desc:'Predict holes after folding & cutting' },
+        { key:'paper_cutting', icon:'✂️', name:'Paper Cutting', desc:'Symmetrical cut patterns' },
+        { key:'rule_detection', icon:'📏', name:'Rule Detection', desc:'Which figure violates the rule?' },
+        { key:'grouping_images', icon:'🗂️', name:'Grouping Images', desc:'Classify items by common properties' },
+        { key:'image_analysis', icon:'👁️', name:'Image Analysis', desc:'Count elements in a described figure' },
+        { key:'water_images', icon:'🌊', name:'Water Images', desc:'Vertical mirror/reflection of shapes' },
+        { key:'dot_situation', icon:'🔵', name:'Dot Situation', desc:'Dot position in overlapping regions' },
+        { key:'making_judgments', icon:'⚖️', name:'Making Judgments', desc:'Choose best course of action' },
+        { key:'logical_problems', icon:'🧩', name:'Logical Problems', desc:'Grid puzzles, deduction scenarios' },
+        { key:'logical_games', icon:'🎮', name:'Logical Games', desc:'Coin puzzles, weighing, Nim' },
+        { key:'analyzing_arguments', icon:'🔍', name:'Analyzing Arguments', desc:'Identify logical fallacies' },
+        { key:'logical_deduction', icon:'✅', name:'Logical Deduction', desc:'If-then, All/Some/No reasoning' },
+        { key:'character_puzzles', icon:'🔤', name:'Character Puzzles', desc:'Alphanumeric grid patterns' },
+        { key:'verification_truth', icon:'🔎', name:'Verification of Truth', desc:'Truth-teller/liar puzzles' },
+        { key:'analytical_reasoning', icon:'📐', name:'Analytical Reasoning', desc:'Count triangles/squares in figures' },
+        { key:'pattern_completion', icon:'🔄', name:'Pattern Completion', desc:'Complete the missing element' },
+        { key:'shape_construction', icon:'⬜', name:'Shape Construction', desc:'Which pieces form the shape?' },
+        { key:'verbal_analogy', icon:'🔤', name:'Verbal Analogy', desc:'Word analogies — A:B :: C:?' },
+        { key:'number_coding', icon:'🔢', name:'Number Coding', desc:'Letter → number position codes' }
+    ];
+
+    var VERBAL_TOPICS = [
+        { key:'synonym', icon:'📖', name:'Synonyms', desc:'Same meaning words' },
+        { key:'antonym', icon:'🔄', name:'Antonyms', desc:'Opposite meaning words' },
+        { key:'sentence_completion', icon:'✍️', name:'Sentence Completion', desc:'Fill in the blank meaningfully' },
+        { key:'word_ordering', icon:'🔤', name:'Word Ordering', desc:'Rearrange words into a sentence' },
+        { key:'sentence_ordering', icon:'📄', name:'Sentence Ordering', desc:'Arrange sentences in sequence' },
+        { key:'paragraph_formation', icon:'📃', name:'Paragraph Formation', desc:'Form a coherent paragraph' },
+        { key:'spotting_errors', icon:'⚠️', name:'Spotting Errors', desc:'Find grammatical mistakes' },
+        { key:'spellings', icon:'📝', name:'Spellings', desc:'Identify correct spelling' },
+        { key:'sentence_correction', icon:'✏️', name:'Sentence Correction', desc:'Correct grammar errors' },
+        { key:'sentence_improvement', icon:'⬆️', name:'Sentence Improvement', desc:'Improve sentence phrasing' },
+        { key:'closet_test', icon:'📖', name:'Closet Test', desc:'Fill blanks in a passage' },
+        { key:'one_word_subs', icon:'📚', name:'One Word Subs', desc:'Phrase → single word' },
+        { key:'idioms_phrases', icon:'💬', name:'Idioms & Phrases', desc:'Meaning of common idioms' },
+        { key:'change_voice', icon:'🔄', name:'Change of Voice', desc:'Active ↔ Passive voice' },
+        { key:'change_speech', icon:'🗣️', name:'Change of Speech', desc:'Direct ↔ Indirect speech' },
+        { key:'comprehension', icon:'📖', name:'Comprehension', desc:'Read passage, answer questions' },
+        { key:'sentence_connectors', icon:'🔗', name:'Sentence Connectors', desc:'Choose connector: because, although, however' },
+        { key:'double_fillers', icon:'✍️', name:'Double Fillers', desc:'Two blanks — pick the correct word pair' },
+        { key:'paragraph_completion', icon:'📄', name:'Paragraph Completion', desc:'Choose the best concluding sentence' },
+        { key:'tenses', icon:'🕒', name:'Tenses', desc:'Present, Past, Future — verb forms' },
+        { key:'prepositions', icon:'📍', name:'Prepositions', desc:'in, on, at, since, for, among & more' },
+        { key:'articles', icon:'🔤', name:'Articles', desc:'a, an, the, no article' },
+        { key:'confusing_words', icon:'🤔', name:'Confusing Words', desc:'affect/effect, advice/advise & more' },
+        { key:'homophones', icon:'👂', name:'Homophones', desc:'Sound-alike words with different meanings' }
+    ];
+
+    // ====== CATEGORY TOGGLE ======
+    var categoryOpen = {};
+    function toggleCategory(cat) {
+        var el = document.getElementById(cat + 'Topics');
+        var arrow = document.getElementById('catArrow' + cat.charAt(0).toUpperCase() + cat.slice(1));
+        if (!el) return;
+        var isOpen = el.style.display !== 'none';
+        el.style.display = isOpen ? 'none' : 'grid';
+        if (arrow) arrow.textContent = isOpen ? '▶' : '▼';
+        categoryOpen[cat] = !isOpen;
+        if (!isOpen && el.children.length === 0) buildTopicGrid(cat);
+    }
+
+    function buildTopicGrid(cat) {
+        var el = document.getElementById(cat + 'Topics');
+        var topics = cat === 'quant' ? QUANT_TOPICS : (cat === 'verbal' ? VERBAL_TOPICS : REASONING_TOPICS);
+        el.innerHTML = '';
+        topics.forEach(function(t){
+            var statId = 'stat-' + cat + '-' + t.key;
+            el.innerHTML += '<div class="topic-card" onclick="startTraining(\'' + cat + '\', \'' + t.key + '\')" style="padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px">'
+                + '<span style="font-size:1.1em">' + t.icon + '</span>'
+                + '<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:.78em">' + t.name + '</div><div style="font-size:.65em;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t.desc + '</div></div>'
+                + '<div class="stat" id="' + statId + '" style="font-size:.65em;color:var(--purple);white-space:nowrap">0</div>'
+                + '</div>';
+        });
+    }
+
+    // ====== LAYER SWITCHING ======
+    function setLayer(layer) {
+        activeLayer = layer;
+        if (window.setActiveLayer) window.setActiveLayer(layer);
+        document.getElementById('layerInstinct').className = 'layer-btn' + (layer === 'instinct' ? ' active' : '');
+        document.getElementById('layerExam').className = 'layer-btn' + (layer === 'exam' ? ' active' : '');
+        document.getElementById('layerInstinct').style.background = layer === 'instinct' ? 'rgba(167,139,250,.15)' : 'transparent';
+        document.getElementById('layerInstinct').style.color = layer === 'instinct' ? 'var(--purple)' : 'var(--text-sec)';
+        document.getElementById('layerExam').style.background = layer === 'exam' ? 'rgba(167,139,250,.15)' : 'transparent';
+        document.getElementById('layerExam').style.color = layer === 'exam' ? 'var(--purple)' : 'var(--text-sec)';
+    }
+
+    // ====== RANK & STATS UPDATE ======
+    function updateUI() {
+        var stats = window.getMentalStats();
+        if (!stats) return;
+        document.getElementById('rankIcon').textContent = stats.rank.icon;
+        document.getElementById('rankName').textContent = stats.rank.name;
+        document.getElementById('rankPts').textContent = stats.points + ' pts';
+        document.getElementById('streakNum').textContent = stats.streak;
+
+        var next = RANKS.find(function(r){ return r.minPoints > stats.points; });
+        document.getElementById('rankNext').textContent = next ? 'Next: ' + next.minPoints + ' pts' : 'Max Rank!';
+
+        var sd = document.getElementById('streakDisplay');
+        if (stats.streak >= 3) sd.className = 'streak fire'; else sd.className = 'streak';
+
+        for (var m in stats.stats) {
+            var el = document.getElementById('stat-' + m);
+            if (el) {
+                var s = stats.stats[m];
+                el.textContent = s.attempts + ' solved' + (s.attempts > 0 ? ' (' + Math.round(s.correct / s.attempts * 100) + '%)' : '');
+            }
+        }
+        // Quant/reasoning sub-topic stats
+        if (stats.subTopicStats) {
+            for (var st in stats.subTopicStats) {
+                var el2 = document.getElementById('stat-quant-' + st) || document.getElementById('stat-reasoning-' + st) || document.getElementById('stat-verbal-' + st);
+                if (el2) {
+                    var ss = stats.subTopicStats[st];
+                    el2.textContent = ss.attempts > 0 ? Math.round(ss.correct / ss.attempts * 100) + '%' : '0';
+                }
+            }
+        }
+
+        // Show weak-spot suggestion on pattern card
+        var patStatEl = document.getElementById('stat-pattern');
+        if (stats.patternStats) {
+            var weakType = null, weakAcc = 101;
+            for (var t2 in stats.patternStats) {
+                var s2 = stats.patternStats[t2];
+                if (s2.attempts >= 3) {
+                    var a2 = Math.round(s2.correct / s2.attempts * 100);
+                    if (a2 < weakAcc) { weakAcc = a2; weakType = t2; }
+                }
+            }
+            if (weakType && weakAcc < 60 && patStatEl) {
+                patStatEl.textContent = '🎯 Focus: ' + weakType + ' (' + weakAcc + '%)';
+                patStatEl.style.color = 'var(--red)';
+            }
+        }
+
+        var hc = document.getElementById('hardCount');
+        if (stats.hardSessions > 0) { hc.textContent = '🔥 ' + stats.hardSessions + ' hard sessions'; hc.style.display = 'block'; }
+        else { hc.style.display = 'none'; }
+
+        // Mistake bank count
+        var mc = document.getElementById('mistakeCount');
+        if (window.getMistakeCount) {
+            var mCount = window.getMistakeCount();
+            if (mCount > 0) {
+                document.getElementById('mistakeNum').textContent = mCount;
+                mc.style.display = 'block';
+            } else { mc.style.display = 'none'; }
+        }
+
+        var sh = document.getElementById('sessionHistory');
+        if (stats.sessions.length > 0) {
+            var h = '<div class="session-log"><div class="title">Recent Sessions</div>';
+            stats.sessions.slice(0, 5).forEach(function(s){
+                var accClass = s.accuracy >= 70 ? 'good' : (s.accuracy >= 40 ? 'ok' : 'bad');
+                var hm = s.hardMode ? '<span style="color:var(--red);font-size:.7em;font-weight:700;margin-left:2px">🔥</span>' : '';
+                var subLabel = s.subMode ? ' <span style="color:var(--text-muted);font-size:.85em">| ' + s.subMode.replace(/_/g,' ') + '</span>' : '';
+                h += '<div class="session-item"><span class="s-mode">' + (s.mode.charAt(0).toUpperCase() + s.mode.slice(1)) + subLabel + hm + '</span><span>' + s.correct + '/' + s.total + '</span><span class="s-acc ' + accClass + '">' + s.accuracy + '%</span><span style="color:var(--text-muted)">' + s.time + 's</span></div>';
+            });
+            h += '</div>';
+            sh.innerHTML = h;
+        } else {
+            sh.innerHTML = '';
+        }
+
+        // Mastery progress
+        var ms = document.getElementById('masterySection');
+        var mg = document.getElementById('masteryGrid');
+        if (stats.patternStats) {
+            var totalAcc = 0, countAcc = 0;
+            mg.innerHTML = '';
+            var types = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation','Puzzle','Data Sufficiency'];
+            types.forEach(function(t){
+                var s = stats.patternStats[t];
+                if (!s || s.attempts === 0) return;
+                var a = Math.round(s.correct / s.attempts * 100);
+                var c = a >= 90 ? 'var(--emerald)' : a >= 60 ? 'var(--amber)' : 'var(--red)';
+                totalAcc += a; countAcc++;
+                mg.innerHTML += '<div class="mastery-row">'
+                    + '<span class="m-label">' + t + '</span>'
+                    + '<div class="m-bar"><div class="m-fill" style="width:' + a + '%;background:' + c + '"></div></div>'
+                    + '<span class="m-pct" style="color:' + c + '">' + a + '%</span>'
+                    + '</div>';
+            });
+            if (countAcc > 0) {
+                var avg = Math.round(totalAcc / countAcc);
+                document.getElementById('masteryOverall').textContent = avg + '%';
+                ms.style.display = 'block';
+            } else {
+                ms.style.display = 'none';
+            }
+        } else {
+            ms.style.display = 'none';
+        }
+
+        // Speed benchmarks
+        var ss = document.getElementById('speedSection');
+        var sg = document.getElementById('speedGrid');
+        if (window.getSpeedGrades && window.SPEED_TARGETS) {
+            var grades = window.getSpeedGrades();
+            sg.innerHTML = '';
+            var count = 0, totalGrade = 0, gradeCount = 0, gradesMap = { A: 4, B: 3, C: 2, D: 1 };
+            var types = ['Analogy','Classification','Series','Coding','Syllogism','Inequality','Direction','Blood Relation','Puzzle','Data Sufficiency'];
+            types.forEach(function(t){
+                var g = grades[t];
+                if (!g) return;
+                count++;
+                var pct = g.topper > 0 ? Math.round(g.avg / g.topper * 100) : 100;
+                var color = g.grade === 'A' ? 'var(--emerald)' : (g.grade === 'B' ? 'var(--amber)' : (g.grade === 'C' ? 'var(--amber)' : 'var(--red)'));
+                var targetLabel = g.grade === 'A' ? 'Topper' : (g.avg <= g.good ? 'Good' : 'Needs work');
+                totalGrade += gradesMap[g.grade] || 0;
+                gradeCount++;
+                sg.innerHTML += '<div class="speed-row">'
+                    + '<span class="s-label">' + t + '</span>'
+                    + '<div class="s-bar">'
+                    + '<div class="s-fill" style="width:' + Math.min(100, pct) + '%;background:' + color + '"></div>'
+                    + '<div class="s-marker" style="left:100%" title="Topper: ' + g.topper + 's"></div>'
+                    + '</div>'
+                    + '<span class="speed-grade ' + g.grade + '">' + g.grade + '</span>'
+                    + '<span class="speed-time" style="color:' + color + '">' + g.avg + 's</span>'
+                    + '</div>';
+            });
+            if (count > 0) {
+                var avgGrade = gradeCount > 0 ? Math.round(totalGrade / gradeCount) : 0;
+                var avgLabel = avgGrade >= 4 ? 'A' : (avgGrade >= 3 ? 'B' : (avgGrade >= 2 ? 'C' : 'D'));
+                document.getElementById('speedOverall').textContent = 'Avg: ' + avgLabel + ' (' + count + ' types)';
+                ss.style.display = 'block';
+            } else {
+                ss.style.display = 'none';
+            }
+        } else {
+            ss.style.display = 'none';
+        }
+    }
+
+    var RANKS = [
+        { name:'Bronze Brains', minPoints:0, icon:'🥉' },
+        { name:'Silver Thinker', minPoints:50, icon:'🥈' },
+        { name:'Gold Mind', minPoints:150, icon:'🥇' },
+        { name:'Platinum Processor', minPoints:300, icon:'💎' },
+        { name:'Diamond Calculator', minPoints:500, icon:'🔷' },
+        { name:'Master Genius', minPoints:800, icon:'🏆' }
+    ];
+
+    // ====== TRAINING FLOW ======
+    function startTraining(mode, subTopic) {
+        var hardMode = document.getElementById('hardModeToggle').checked;
+        session = window.startMentalSession(mode, { hardMode: hardMode, subMode: subTopic || null, layer: activeLayer });
+        document.getElementById('modeSelect').style.display = 'none';
+        document.getElementById('arena').classList.add('active');
+        answered = false;
+        hasHint = false;
+        inPuzzleCluePhase = false;
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        if (!session || !session.active) { endTraining(); return; }
+        var q = window.getMentalQuestion(session);
+        if (!q) { endTraining(); return; }
+        currentQuestion = q;
+
+        document.getElementById('qNum').textContent = 'Q ' + (q.index + 1) + ' / ' + q.total;
+        document.getElementById('qProgress').style.width = q.progress + '%';
+        document.getElementById('hintText').textContent = q.hint || '';
+        document.getElementById('hintText').classList.remove('show');
+        hasHint = false;
+
+        // Hide question area, show technique flash
+        document.getElementById('qText').style.display = 'none';
+        document.getElementById('optGrid').innerHTML = '';
+        document.getElementById('timerCircle').textContent = '--';
+        document.getElementById('timerCircle').className = 'timer-circle';
+        document.getElementById('nextBtn').classList.add('hidden');
+        document.getElementById('resultFlash').className = 'result-flash';
+        document.getElementById('speedTip').className = 'speed-tip';
+        document.getElementById('solutionDisplay').className = 'solution-box';
+
+        // Skip technique flash in hard mode
+        if (session.hardMode || !q.drillLine1) {
+            document.getElementById('techFlash').className = 'tech-flash';
+            showQuestion(q);
+            return;
+        }
+
+        document.getElementById('tfLine1').textContent = q.drillLine1;
+        document.getElementById('tfLine2').textContent = q.drillLine2 || '';
+        document.getElementById('techFlash').className = 'tech-flash show';
+
+        // Show question after 1.5s technique flash
+        setTimeout(function(){
+            showQuestion(q);
+        }, 1500);
+    }
+
+    function showQuestion(q) {
+        document.getElementById('techFlash').className = 'tech-flash';
+        var pd = q.pubDate || q._pubDate;
+        var yr = pd ? ' (' + pd.slice(0,4) + ')' : '';
+        document.getElementById('qText').innerHTML = q.question + yr;
+        document.getElementById('qText').style.display = 'block';
+
+        var og = document.getElementById('optGrid');
+        og.innerHTML = '';
+        (q.options || []).forEach(function(o, i){
+            if (o == null || o === undefined) return;
+            var b = document.createElement('div');
+            b.className = 'opt-btn';
+            b.textContent = o;
+            b.onclick = function(){ selectOption(i); };
+            og.appendChild(b);
+        });
+
+        // Reset feedback panels
+        document.getElementById('resultFlash').className = 'result-flash';
+        document.getElementById('speedTip').className = 'speed-tip';
+        document.getElementById('intuitionDisplay').className = 'intuition-box';
+        document.getElementById('solutionDisplay').className = 'solution-box';
+
+        answered = false;
+        var tc = document.getElementById('timerCircle');
+        tc.textContent = q.timeLimit;
+        tc.className = 'timer-circle';
+        questionLoadTime = Date.now();
+        startTimer(q.timeLimit);
+    }
+
+    function startTimer(sec) {
+        var left = sec;
+        clearInterval(timerInterval);
+        var tc = document.getElementById('timerCircle');
+        timerInterval = setInterval(function(){
+            left--;
+            tc.textContent = left;
+            if (left <= 3) tc.className = 'timer-circle urgent';
+            else if (left <= 5) tc.className = 'timer-circle warning';
+            if (left <= 0) {
+                clearInterval(timerInterval);
+                if (!answered) selectOption(-1);
+            }
+        }, 1000);
+    }
+
+    function selectOption(idx) {
+        if (answered) return;
+        answered = true;
+        clearInterval(timerInterval);
+
+        var tc = document.getElementById('timerCircle');
+        var timeLeft = parseInt(tc.textContent);
+        var q = currentQuestion;
+        if (!q) return;
+
+        var reactionMs = Date.now() - questionLoadTime;
+        var reactionSec = (reactionMs / 1000).toFixed(1);
+
+        var btns = document.querySelectorAll('.opt-btn');
+        btns.forEach(function(b, i){ b.style.pointerEvents = 'none'; });
+        if (idx >= 0) btns[idx].classList.add('selected');
+
+        var selectedVal = idx >= 0 ? q.options[idx] : null;
+        var result = window.submitMentalAnswer(session, q, selectedVal, timeLeft);
+        if (!result) return;
+
+        var correctIdx = q.options.findIndex(function(o){ return String(o) === String(q.answer); });
+        if (correctIdx >= 0 && correctIdx < btns.length) btns[correctIdx].classList.add('correct');
+        if (idx >= 0 && !result.correct && idx !== correctIdx) btns[idx].classList.add('wrong');
+
+        var rf = document.getElementById('resultFlash');
+        var keyDisplay = correctIdx >= 0 ? ' (Key ' + (correctIdx + 1) + ')' : '';
+        if (result.correct) {
+            rf.textContent = '✓ Correct!' + keyDisplay + ' +' + result.points + ' pts' + (result.bonus > 0 ? ' (speed bonus: +' + result.bonus + ')' : '') + ' | ⏱ ' + reactionSec + 's';
+            rf.className = 'result-flash show correct';
+        } else {
+            rf.textContent = '✕ Wrong. Answer: ' + q.answer + keyDisplay + ' | ⏱ ' + reactionSec + 's';
+            rf.className = 'result-flash show wrong';
+        }
+
+        // Show speed tip
+        var st = document.getElementById('speedTip');
+        if (q.techniqueLabel) {
+            document.getElementById('speedTipText').textContent = q.techniqueLabel;
+            st.className = 'speed-tip show';
+        } else {
+            st.className = 'speed-tip';
+        }
+
+        // Show intuition method
+        var intuEl = document.getElementById('intuitionDisplay');
+        var intuText = document.getElementById('intuitionText');
+        if (q.intuition) {
+            intuText.textContent = q.intuition;
+            intuEl.className = 'intuition-box show';
+        } else {
+            intuEl.className = 'intuition-box';
+        }
+
+        // Show solution explanation
+        var solEl = document.getElementById('solutionDisplay');
+        if (q.solution) {
+            solEl.innerHTML = '📖 ' + q.solution;
+            solEl.className = 'solution-box show';
+        } else {
+            solEl.className = 'solution-box';
+        }
+
+        if (result.isComplete) {
+            setTimeout(showResults, 800);
+        } else {
+            document.getElementById('nextBtn').classList.remove('hidden');
+        }
+        updateUI();
+    }
+
+    function nextQuestion() {
+        loadQuestion();
+    }
+
+    function endTraining() {
+        if (session) session.active = false;
+        clearInterval(timerInterval);
+        document.getElementById('arena').classList.remove('active');
+        document.getElementById('modeSelect').style.display = 'block';
+        session = null;
+        updateUI();
+    }
+
+    function showResults() {
+        var r = document.getElementById('resultsContent');
+        var stats = window.getMentalStats();
+        var lastSession = stats.sessions[0];
+        if (!lastSession) { backToMenu(); return; }
+        var accClass = lastSession.accuracy >= 70 ? 'good' : (lastSession.accuracy >= 40 ? 'ok' : 'bad');
+
+        var h = '';
+        h += '<div class="big-num ' + accClass + '">' + lastSession.accuracy + '%</div>';
+        h += '<div class="label">Accuracy</div>';
+        if (lastSession.correct >= 8) h += '<div style="font-size:1.2em;margin:4px 0">🔥 Great session!</div>';
+        else if (lastSession.correct >= 5) h += '<div style="font-size:1em;margin:4px 0">Keep going!</div>';
+        else h += '<div style="font-size:1em;margin:4px 0">More practice needed</div>';
+
+        h += '<div style="margin:12px 0">';
+        h += '<div class="detail-row"><span>Correct</span><span style="color:var(--emerald)">' + lastSession.correct + '/' + lastSession.total + '</span></div>';
+        h += '<div class="detail-row"><span>Time</span><span>' + lastSession.time + 's</span></div>';
+        // Average time per question
+        var avgTime = 0;
+        if (session && session.review && session.review.length > 0) {
+            var totalTime = session.review.reduce(function(s, r){ return s + (r.timeTaken || 0); }, 0);
+            avgTime = Math.round(totalTime / session.review.length);
+        }
+        h += '<div class="detail-row"><span>Avg/Q</span><span style="color:var(--amber)">' + (avgTime > 0 ? avgTime + 's' : '—') + '</span></div>';
+        h += '<div class="detail-row"><span>Mode</span><span style="color:var(--purple)">' + lastSession.mode.charAt(0).toUpperCase() + lastSession.mode.slice(1) + '</span></div>';
+        if (lastSession.hardMode) h += '<div class="detail-row"><span>Difficulty</span><span style="color:var(--red);font-weight:700">🔥 Hard</span></div>';
+        h += '<div class="detail-row"><span>Total Points</span><span style="color:var(--amber)">' + stats.points + '</span></div>';
+        h += '<div class="detail-row"><span>Streak</span><span style="color:var(--amber)">' + stats.streak + '🔥</span></div>';
+        h += '</div>';
+
+        // Pattern mode: show per-type breakdown
+        // Per-type breakdown for pattern mode; per-sub-topic for quant/reasoning
+        var ps = stats.patternStats;
+        var ss = stats.subTopicStats;
+        var hasBreakdown = false;
+        var breakdownHtml = '';
+        var weakest = null, weakestAcc = 101;
+
+        if (lastSession.mode === 'pattern') {
+            for (var t in ps) {
+                if (ps[t].attempts > 0) {
+                    hasBreakdown = true;
+                    var a = Math.round(ps[t].correct / ps[t].attempts * 100);
+                    var c = a >= 70 ? 'var(--emerald)' : a >= 40 ? 'var(--amber)' : 'var(--red)';
+                    breakdownHtml += '<div class="detail-row"><span>' + t + '</span><span style="color:' + c + '">' + a + '%</span></div>';
+                    if (a < weakestAcc) { weakestAcc = a; weakest = t; }
+                }
+            }
+        } else if ((lastSession.mode === 'quant' || lastSession.mode === 'reasoning' || lastSession.mode === 'verbal') && lastSession.subMode) {
+            var key = lastSession.subMode;
+            if (ss && ss[key] && ss[key].attempts > 0) {
+                hasBreakdown = true;
+                var a = Math.round(ss[key].correct / ss[key].attempts * 100);
+                var c = a >= 70 ? 'var(--emerald)' : a >= 40 ? 'var(--amber)' : 'var(--red)';
+                var label = key.replace(/_/g, ' ').replace(/\b\w/g, function(l){ return l.toUpperCase(); });
+                breakdownHtml += '<div class="detail-row"><span>' + label + '</span><span style="color:' + c + '">' + a + '% (' + ss[key].correct + '/' + ss[key].attempts + ')</span></div>';
+                if (a < weakestAcc) { weakestAcc = a; weakest = key; }
+            }
+        }
+
+        if (hasBreakdown) {
+            h += '<div style="margin:8px 0;font-size:.78em;text-align:left">';
+            h += '<div style="font-weight:700;margin-bottom:4px;color:var(--text-sec);text-align:center">' + (lastSession.mode === 'pattern' ? 'Per-Type' : 'Topic') + ' Breakdown</div>';
+            h += breakdownHtml;
+            h += '</div>';
+            if (weakest && weakestAcc < 70) {
+                var focusType = lastSession.mode === 'pattern' ? weakest : '';
+                h += '<button class="action-btn primary" onclick="startFocus(\'' + focusType + '\', ' + (lastSession.hardMode ? 'true' : 'false') + ')" style="font-size:.85em;padding:10px;margin-top:4px">🎯 Focus: ' + (lastSession.mode === 'pattern' ? weakest + ' (' + weakestAcc + '%)' : 'Improve ' + weakestAcc + '%') + '</button>';
+            }
+        }
+
+        // Session review
+        if (session && session.review && session.review.length > 0) {
+            var wrongs = session.review.filter(function(r){ return !r.isCorrect; });
+            if (wrongs.length > 0) {
+                h += '<div style="margin:10px 0;text-align:left;font-size:.75em">';
+                h += '<div style="font-weight:700;margin-bottom:6px;color:var(--red);text-align:center">✕ ' + wrongs.length + ' Mistakes — Learn & Improve</div>';
+                wrongs.forEach(function(r, i){
+                    var timeStr = r.timeTaken !== undefined ? ' | ⏱ ' + r.timeTaken + 's' : '';
+                    h += '<div style="padding:8px 10px;background:rgba(239,68,68,.05);border:1px solid rgba(239,68,68,.1);border-radius:6px;margin-bottom:4px">'
+                        + '<div style="display:flex;justify-content:space-between;font-weight:600;margin-bottom:2px">'
+                        + '<span>Q' + (i+1) + '</span>'
+                        + '<span style="font-weight:400;color:var(--text-muted);font-size:.9em">' + timeStr + '</span>'
+                        + '</div>'
+                        + '<div style="line-height:1.4;margin-bottom:2px">' + r.question.substring(0, 80) + (r.question.length > 80 ? '...' : '') + '</div>'
+                        + '<div style="color:var(--red)">✕ You: ' + String(r.yourAnswer || '—') + '</div>'
+                        + '<div style="color:var(--emerald)">✓ Answer: ' + r.correctAnswer + '</div>'
+                        + (r.techniqueLabel ? '<div style="color:var(--purple);margin-top:2px">⚡ ' + r.techniqueLabel.substring(0, 70) + '</div>' : '')
+                        + (r.solution ? '<div style="color:var(--text-sec);margin-top:3px;font-size:.9em">📖 ' + r.solution + '</div>' : '')
+                        + '</div>';
+                });
+                h += '</div>';
+            }
+        }
+
+        if (stats.rank.icon === 'Bronze Brains' && stats.points >= 50) {
+            h += '<div class="rank-up">🥈</div><div style="color:var(--emerald);font-weight:700">Rank Up! Silver Thinker!</div>';
+        } else if (stats.rank.icon === 'Silver Thinker' && stats.points >= 150) {
+            h += '<div class="rank-up">🥇</div><div style="color:var(--emerald);font-weight:700">Rank Up! Gold Mind!</div>';
+        }
+
+        r.innerHTML = h;
+        document.getElementById('resultsOverlay').classList.add('show');
+    }
+
+    function closeResults() {
+        document.getElementById('resultsOverlay').classList.remove('show');
+        if (session) session.active = false;
+        clearInterval(timerInterval);
+        document.getElementById('arena').classList.remove('active');
+        document.getElementById('modeSelect').style.display = 'block';
+        session = null;
+        updateUI();
+    }
+
+    function backToMenu() {
+        document.getElementById('resultsOverlay').classList.remove('show');
+        endTraining();
+    }
+
+    function toggleHint() {
+        var ht = document.getElementById('hintText');
+        if (hasHint) { ht.classList.remove('show'); hasHint = false; }
+        else { ht.classList.add('show'); hasHint = true; }
+    }
+
+    // ====== FOCUS DRILL ======
+    function startFocus(type, hard) {
+        document.getElementById('resultsOverlay').classList.remove('show');
+        if (session) session.active = false;
+        clearInterval(timerInterval);
+        document.getElementById('hardModeToggle').checked = hard;
+        session = window.startMentalSession('pattern', { hardMode: hard, focusType: type });
+        document.getElementById('modeSelect').style.display = 'none';
+        document.getElementById('arena').classList.add('active');
+        document.getElementById('qNum').textContent = '🎯 ' + type;
+        answered = false;
+        hasHint = false;
+        loadQuestion();
+    }
+
+    // ====== TECHNIQUE CHEAT SHEET ======
+    function showTechSheet() {
+        var grid = document.getElementById('techSheetGrid');
+        grid.innerHTML = '';
+        // Show Quant topics first
+        grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:8px 0 4px;color:var(--cyan)">🔢 Quant Reflex</div>';
+        var quantTopics = ['number_sense','percentage','arithmetic','motion','work','algebra','geometry','mensuration','counting','data','number_system','simplification','quadratic','partnership','compound_interest','discount','races','data_interpretation','caselet_di','trigonometry','instalments'];
+        quantTopics.forEach(function(t){
+            var label = t.replace(/_/g,' ');
+            var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
+            var tech = window.SPEED_TECHNIQUES[t] || '';
+            grid.innerHTML += '<div style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;text-align:left">'
+                + '<div style="font-weight:700;font-size:.82em;margin-bottom:1px">' + label + '</div>'
+                + '<div style="font-size:.72em;color:var(--purple);font-weight:600">' + drill.line1 + '</div>'
+                + '<div style="font-size:.68em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
+                + '</div>';
+        });
+        // Show Verbal Ability topics
+        grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--emerald)">📖 Verbal Ability</div>';
+        var verbalTopics = ['synonym','antonym','sentence_completion','word_ordering','sentence_ordering','paragraph_formation','comprehension','spotting_errors','spellings','sentence_correction','sentence_improvement','closet_test','one_word_subs','idioms_phrases','change_voice','change_speech','tenses','prepositions','articles','confusing_words','homophones'];
+        verbalTopics.forEach(function(t){
+            var label = t.replace(/_/g,' ');
+            var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
+            var tech = window.SPEED_TECHNIQUES[t] || '';
+            grid.innerHTML += '<div style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;text-align:left">'
+                + '<div style="font-weight:700;font-size:.82em;margin-bottom:1px">' + label + '</div>'
+                + '<div style="font-size:.72em;color:var(--purple);font-weight:600">' + drill.line1 + '</div>'
+                + '<div style="font-size:.68em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
+                + '</div>';
+        });
+        // Show Reasoning topics
+        grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--violet)">🧠 Reasoning Reflex</div>';
+        var reasTopics = ['pattern_flash','coding_flash','logic_snap','direction_sense','blood_relations','ranking_grid','floor_puzzle','linear_seating','circular_seating','box_distribution','scheduling','input_output','mirror_image','dice_cube','calendar','clock','alphabet_arrange','critical_reasoning','decision_making','venn_diagram','verbal_analogy','number_coding'];
+        reasTopics.forEach(function(t){
+            var label = t.replace(/_/g,' ');
+            var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
+            var tech = window.SPEED_TECHNIQUES[t] || '';
+            grid.innerHTML += '<div style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;text-align:left">'
+                + '<div style="font-weight:700;font-size:.82em;margin-bottom:1px">' + label + '</div>'
+                + '<div style="font-size:.72em;color:var(--purple);font-weight:600">' + drill.line1 + '</div>'
+                + '<div style="font-size:.68em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
+                + '</div>';
+        });
+        // Show old pattern types (still used by Pattern/Recognize modes)
+        grid.innerHTML += '<div style="font-size:.9em;font-weight:700;margin:10px 0 4px;color:var(--amber)">⚡ Pattern Puzzles</div>';
+        var patternTypes = ['Syllogism','Inequality','Direction','Blood Relation','Analogy','Classification','Series','Coding','Puzzle','Data Sufficiency'];
+        patternTypes.forEach(function(t){
+            var drill = window.TECHNIQUE_DRILLS[t] || { line1:'—', line2:'' };
+            var tech = window.SPEED_TECHNIQUES[t] || '';
+            grid.innerHTML += '<div style="padding:8px 12px;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;text-align:left">'
+                + '<div style="font-weight:700;font-size:.82em;margin-bottom:1px">' + t + '</div>'
+                + '<div style="font-size:.72em;color:var(--purple);font-weight:600">' + drill.line1 + '</div>'
+                + '<div style="font-size:.68em;color:var(--text-sec);line-height:1.4">' + drill.line2 + '</div>'
+                + '</div>';
+        });
+        document.getElementById('techSheet').classList.add('show');
+    }
+    function closeTechSheet() {
+        document.getElementById('techSheet').classList.remove('show');
+    }
+
+    // ====== KEYBOARD SHORTCUTS ======
+    document.addEventListener('keydown', function(e){
+        if (session && session.active && !answered) {
+            if (e.key >= '1' && e.key <= '4') {
+                var idx = parseInt(e.key) - 1;
+                var btns = document.querySelectorAll('.opt-btn');
+                if (btns[idx]) btns[idx].click();
+            }
+            if (e.key === 'h' || e.key === 'H') toggleHint();
+        }
+        if (e.key === 'Enter' && !document.getElementById('nextBtn').classList.contains('hidden')) {
+            nextQuestion();
+        }
+        if (e.key === 'Escape') {
+            if (document.getElementById('resultsOverlay').classList.contains('show')) backToMenu();
+            else if (session && session.active) endTraining();
+        }
+    });
+
+    // ====== INIT ======
+    setTimeout(function init(){
+        if (typeof window.getMentalStats !== 'function') { setTimeout(init, 300); return; }
+        updateUI();
+    }, 500);
+    </script>
+<script src="js/bundles/core.js"></script>
+    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
+</body>
+</html>
+
+

@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel='stylesheet' href='../../../css/style.css'>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Chemistry Derivations Session 2 — NEET Chemistry | vlymbooq</title>
+    <meta name="description" content="NEET Chemistry derivations: Colligative Properties, Gibbs Free Energy, Equilibrium Constants, Bohr Model, de Broglie, Quantum Numbers. Beginner-friendly step-by-step.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../../favicon.svg">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/neet/course/chemistry/lesson-derivations-chemistry-2.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:#a78bfa;text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .flex-row{display:flex;gap:24px;align-items:flex-start}
+        .side{width:220px;flex-shrink:0}
+        .sidebar-nav{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:10px;display:flex;flex-direction:column;gap:2px;font-size:.85em}
+        .sidebar-nav a{display:block;padding:8px 10px;border-radius:8px;color:var(--text-sec);transition:all .15s}
+        .sidebar-nav a:hover{background:rgba(255,255,255,.04);color:var(--text)}
+        .sidebar-nav a.active{background:rgba(52,211,153,.1);color:var(--emerald);font-weight:600}
+        .sidebar-nav .section-head{font-size:.7em;text-transform:uppercase;color:var(--text-muted);padding:8px 10px 2px;letter-spacing:.5px}
+        .main{flex:1;min-width:0}
+        .main h1{font-size:1.5em;font-weight:900;margin-bottom:4px}
+        .main h2{font-size:1.25em;font-weight:700;margin:28px 0 12px;color:var(--emerald);line-height:1.5}
+        .main h3{font-size:1.05em;font-weight:600;margin:20px 0 8px;color:var(--emerald)}
+        .main h4{font-size:.95em;font-weight:600;margin:16px 0 8px;color:#fbbf24}
+        .main p{color:var(--text-sec);line-height:1.7;margin-bottom:10px;font-size:.92em}
+        .deriv-box{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:12px 0}
+        .step{display:flex;gap:12px;margin-bottom:10px;align-items:flex-start}
+        .step:last-child{margin-bottom:0}
+        .step-num{background:rgba(52,211,153,.1);color:var(--emerald);width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8em;font-weight:700;flex-shrink:0;margin-top:2px}
+        .step-text{font-size:.88em;line-height:1.65;color:var(--text-sec);flex:1}
+        .step-text strong{color:var(--text)}
+        .step-text .math{color:#fbbf24;font-style:italic}
+        .formula-box{background:rgba(96,165,250,.06);border:1px solid rgba(96,165,250,.15);border-radius:var(--radius);padding:12px 16px;margin:10px 0;font-size:.9em;color:#60a5fa;text-align:center;font-weight:600}
+        .diagram-box{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:10px;margin:14px 0}
+        .diagram-box svg{display:block;margin:0 auto;max-width:100%;height:auto}
+        .diagram-caption{text-align:center;font-size:.75em;color:var(--text-muted);margin-top:6px}
+        .tip-box,.neet-box,.example-box{border-radius:var(--radius);padding:12px 16px;margin:12px 0}
+        .tip-box{background:rgba(248,113,113,.06);border-left:3px solid #f87171}
+        .tip-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:#f87171}
+        .tip-text,.neet-text,.ex-text{font-size:.85em;line-height:1.6;color:var(--text-sec)}
+        .neet-box{background:rgba(167,139,250,.06);border-left:3px solid #a78bfa}
+        .neet-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:#a78bfa}
+        .example-box{background:rgba(52,211,153,.06);border-left:3px solid var(--emerald)}
+        .ex-title{font-weight:700;font-size:.85em;margin-bottom:4px;color:var(--emerald)}
+        .ex-soln{font-size:.82em;line-height:1.5;color:var(--text-sec);margin-top:4px;padding-top:4px;border-top:1px solid var(--border)}
+        .math{color:#fbbf24}
+        .speaker-btn{display:inline-flex;align-items:center;gap:4px;padding:4px 12px;border-radius:100px;font-size:.75em;font-weight:600;border:1px solid rgba(52,211,153,.2);cursor:pointer;background:rgba(52,211,153,.06);color:var(--emerald);transition:all .2s;vertical-align:middle;margin-left:8px}
+        .speaker-btn:hover{background:rgba(52,211,153,.15)}
+        .speaker-btn.speaking{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3);color:#f87171;animation:pulse 1s ease-in-out infinite}
+        @media(max-width:800px){.flex-row{flex-direction:column}.side{width:100%}}
+        @media print{.nav,.sidebar-nav,.download-btn,.speaker-btn{display:none!important}.container{padding:0}.deriv-box{break-inside:avoid}.diagram-box{break-inside:avoid}}
+        @keyframes pulse{0%,100%{opacity:.4}50%{opacity:1}}
+        @keyframes bounce{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+        @keyframes fadeIn{0%{opacity:0}100%{opacity:1}}
+        @keyframes glow{0%,100%{filter:drop-shadow(0 0 2px rgba(52,211,153,0))}50%{filter:drop-shadow(0 0 8px rgba(52,211,153,.6))}}
+        .anim-fade{animation:fadeIn 2s ease-out}
+        .anim-glow{animation:glow 2s ease-in-out infinite}
+        .anim-pulse{animation:pulse 2s ease-in-out infinite}
+        .anim-bounce{animation:bounce 1.5s ease-in-out infinite}
+    </style>
+    <script>
+        const LECT={
+            colligative:`Welcome to Colligative Properties. Colligative properties depend on the number of solute particles not their identity. The four main colligative properties are relative lowering of vapor pressure, boiling point elevation, freezing point depression, and osmotic pressure. Each can be derived from Raoult's law. For boiling point elevation, delta Tb equals Kb times m where Kb is the ebullioscopic constant and m is molality. For freezing point depression, delta Tf equals Kf times m where Kf is the cryoscopic constant. For osmotic pressure, pi equals i C R T where i is the van't Hoff factor.`,
+            gibbs:`Welcome to Gibbs Free Energy. Gibbs free energy G equals H minus T S. The change in Gibbs free energy delta G equals delta H minus T delta S. For a spontaneous process delta G must be negative. At equilibrium delta G equals zero. The relationship between delta G and equilibrium constant is delta G naught equals minus R T ln K. This connects thermodynamics to equilibrium.`,
+            equilibrium:`Welcome to the Relationship Between Kp and Kc. For a gaseous reaction, Kp is the equilibrium constant in terms of partial pressures and Kc is in terms of concentrations. The relationship is Kp equals Kc times R T to the power delta n where delta n is the change in number of moles of gas. This is derived from the ideal gas equation PV equals n R T which gives P equals C R T.`,
+            bohr:`Welcome to the Bohr Model of the Atom. Bohr proposed that electrons travel in fixed orbits around the nucleus with quantized angular momentum. The key derivations are the radius of the nth orbit rn equals n squared h squared epsilon naught divided by pi m e squared Z. The energy of the nth orbit En equals minus 13 point 6 Z squared over n squared electron volts. The Rydberg formula for spectral lines is 1 over lambda equals R Z squared times 1 over n1 squared minus 1 over n2 squared.`,
+            debroglie:`Welcome to de Broglie Wavelength and Heisenberg Uncertainty Principle. de Broglie proposed that all matter has wave-like properties. The wavelength lambda equals h over p equals h over m v. This is the de Broglie wavelength. Heisenberg's uncertainty principle states that delta x times delta p is greater than or equal to h over 4 pi. This means we cannot simultaneously know both position and momentum with perfect accuracy.`,
+            quantum:`Welcome to Quantum Numbers and Atomic Spectra. There are four quantum numbers that describe an electron in an atom. The principal quantum number n describes the energy level and size. The azimuthal quantum number l describes the shape and ranges from 0 to n minus 1. The magnetic quantum number ml ranges from minus l to plus l and describes orientation. The spin quantum number ms is plus or minus one half. The Rydberg formula 1 over lambda equals R times 1 over n1 squared minus 1 over n2 squared gives the wavelength of spectral lines.`
+        };
+        let synth = window.speechSynthesis;
+        let currentUtter = null;
+        function speakText(btn, id) {
+            if (!synth || !LECT[id]) return;
+            if (currentUtter) { synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; return; }
+            let u = new SpeechSynthesisUtterance(LECT[id]);
+            u.rate = 0.88; u.pitch = 1; u.volume = 1;
+            u.onend = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            u.onerror = () => { btn.classList.remove('speaking'); currentUtter = null; };
+            currentUtter = u; btn.classList.add('speaking');
+            synth.speak(u);
+        }
+        function stopSpeech() { if (synth) synth.cancel(); document.querySelectorAll('.speaker-btn').forEach(b => b.classList.remove('speaking')); currentUtter = null; }
+        document.addEventListener('click', function(e) { if (!e.target.closest('.speaker-btn')) stopSpeech(); });
+    </script>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../../index.html" class="brand"><img src="../../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../../index.html">Home</a><a href="../../../dashboard.html">Dashboard</a><a href="../../index.html">NEET</a><a href="../index.html">Course</a><a href="index.html" class="active">Chemistry</a></div></div></nav>
+    <div class="container">
+        <div class="flex-row">
+            <div class="side">
+                <div class="sidebar-nav">
+                    <div class="section-head">Chemistry</div>
+                    <a href="lesson-physical-chemistry.html">Physical Chemistry</a>
+                    <a href="lesson-organic-chemistry.html">Organic Chemistry</a>
+                    <a href="lesson-inorganic-chemistry.html">Inorganic Chemistry</a>
+                    <a href="lesson-environmental-chemistry.html">Environmental Chemistry</a>
+                    <div class="section-head" style="margin-top:8px">Derivations</div>
+                    <a href="lesson-derivations-chemistry.html">Session 1</a>
+                    <a href="lesson-derivations-chemistry-2.html" class="active">Session 2</a>
+                    <a href="lesson-derivations-chemistry-3.html">Session 3</a>
+                    <a href="lesson-derivations-chemistry-4.html">Session 4</a>
+                </div>
+            </div>
+            <div class="main">
+                <div style="margin-bottom:16px">
+                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Chemistry Derivations — Session 2</div>
+                    <h1>Physical Chemistry Deep-Dive</h1>
+                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Colligative properties, Gibbs free energy, equilibrium constants, Bohr model, and quantum theory derivations for NEET.</div>
+                </div>
+
+                <!-- 1. COLLIGATIVE PROPERTIES -->
+                <h2 id="colligative">1. Colligative Properties — ΔTb, ΔTf, π <button class="speaker-btn" onclick="speakText(this,'colligative')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Why does adding salt to water make it boil at a higher temperature? Why is antifreeze added to car radiators in winter? Why do intravenous drips use saline at a specific concentration? These everyday phenomena are explained by <strong>colligative properties</strong> — properties that depend only on the number of solute particles, not their identity. There are four key colligative properties: relative lowering of vapor pressure, boiling point elevation, freezing point depression, and osmotic pressure.</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="180" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="24" text-anchor="middle" fill="#a1a1aa" font-size="11">Osmosis — Solvent flows from dilute to concentrated across semipermeable membrane</text>
+                        <rect x="40" y="45" width="140" height="120" rx="4" fill="rgba(96,165,250,.04)" stroke="#60a5fa" stroke-width="1.5"/>
+                        <rect x="240" y="45" width="140" height="120" rx="4" fill="rgba(248,113,113,.04)" stroke="#f87171" stroke-width="1.5"/>
+                        <text x="110" y="65" text-anchor="middle" fill="#60a5fa" font-size="9" font-weight="600">Pure solvent</text>
+                        <text x="310" y="65" text-anchor="middle" fill="#f87171" font-size="9" font-weight="600">Solution</text>
+                        <circle cx="80" cy="100" r="4" fill="#60a5fa" opacity="0.5">
+                            <animate attributeName="cx" values="80;100;130;160;190;220" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="100" cy="120" r="4" fill="#60a5fa" opacity="0.5">
+                            <animate attributeName="cx" values="100;130;170;210;240;270" dur="3.5s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="130" cy="90" r="4" fill="#60a5fa" opacity="0.5">
+                            <animate attributeName="cx" values="130;155;185;215;245;275" dur="4s" repeatCount="indefinite"/>
+                        </circle>
+                        <circle cx="310" cy="100" r="4" fill="#f87171" opacity="0.5"/>
+                        <circle cx="290" cy="115" r="4" fill="#f87171" opacity="0.5"/>
+                        <circle cx="340" cy="105" r="4" fill="#f87171" opacity="0.5"/>
+                        <line x1="180" y1="45" x2="180" y2="165" stroke="#a78bfa" stroke-width="2" stroke-dasharray="6 3"/>
+                        <text x="215" y="185" text-anchor="middle" fill="#a78bfa" font-size="8">Semipermeable membrane</text>
+                        <text x="110" y="150" text-anchor="middle" fill="rgba(96,165,250,.5)" font-size="7">Water level drops</text>
+                        <text x="310" y="150" text-anchor="middle" fill="rgba(248,113,113,.5)" font-size="7">Water level rises</text>
+                        <path d="M 110 40 L 110 145" stroke="#60a5fa" stroke-width="1" stroke-dasharray="2 2"/>
+                        <path d="M 310 40 L 310 125" stroke="#f87171" stroke-width="1" stroke-dasharray="2 2"/>
+                    </svg>
+                    <div class="diagram-caption">Fig 1.1: Osmosis — solvent molecules (blue) flow through the semipermeable membrane from pure solvent to solution, equalizing concentrations.</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>Colligative properties arise because solute particles <strong>reduce the number of solvent molecules at the surface</strong>, lowering the solvent's tendency to escape into the vapor phase or freeze. All four properties can be derived from Raoult's law: Pₐ = P°ₐ·Xₐ. The key is that the <strong>relative lowering of vapor pressure</strong> ΔP/P°ₐ = X_B (mole fraction of solute). For dilute solutions, this leads to ΔT_b = K_b·m, ΔT_f = K_f·m, and π = iCRT.</p>
+
+                <h4>🔍 Step-by-Step: Boiling Point Elevation</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Start from Raoult's law for a non-volatile solute.</strong> Vapor pressure of solution: <span class="math">P = P°·X_A = P°(1 − X_B)</span>. The lowering: <span class="math">ΔP = P° − P = P°·X_B</span>. Relative lowering: <span class="math">ΔP/P° = X_B</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>For dilute solutions, X_B ≈ n_B/n_A.</strong> Since n_A = W_A/M_A and n_B = W_B/M_B: <span class="math">X_B = (W_B/M_B) / (W_A/M_A) = (W_B·M_A)/(M_B·W_A)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>The boiling point elevation ΔT_b is proportional to the lowering of vapor pressure.</strong> From the Clausius-Clapeyron equation: <span class="math">ΔT_b = (RT_b²/ΔH_vap)·X_B</span>. Since X_B ∝ molality (m), we get: <span class="math">ΔT_b = K_b·m</span> where <span class="math">K_b = RT_b²M_A/(1000·ΔH_vap)</span></div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: Freezing Point Depression</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>At the freezing point, solid and liquid solvent coexist in equilibrium.</strong> The presence of solute lowers the freezing point. The derivation is analogous to boiling point elevation: <span class="math">ΔT_f = K_f·m</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>K_f depends on the solvent properties.</strong> <span class="math">K_f = RT_f²M_A/(1000·ΔH_fus)</span>. For water: K_f = 1.86 K·kg/mol. The negative sign indicates freezing point decreases: <span class="math">T_f(solution) = T_f(pure) − ΔT_f</span></div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: Osmotic Pressure</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Osmotic pressure (π) is the pressure needed to prevent solvent flow across a semipermeable membrane.</strong> At equilibrium, the chemical potential of solvent is equal on both sides.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>For dilute solutions, van't Hoff derived:</strong> <span class="math">π = CRT</span>. This is analogous to the ideal gas law! C is the molar concentration of solute. For electrolytes: <span class="math">π = iCRT</span> where i = van't Hoff factor (number of particles per formula unit).</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">ΔT_b = K_b·m &nbsp; ΔT_f = K_f·m &nbsp; π = iCRT &nbsp; ΔP/P° = X_B</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Molality vs Molarity</div>
+                    <div class="tip-text">ΔT_b and ΔT_f use <strong>molality (m)</strong> — moles of solute per kg of solvent. Osmotic pressure uses <strong>molarity (C)</strong> — moles per liter of solution. Also: for electrolytes like NaCl (i = 2) or CaCl₂ (i = 3), the effect is multiplied by i. Always check whether the solute dissociates or associates.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Colligative Properties</div>
+                    <div class="neet-text">
+                        • "K_f for water is 1.86 K·kg/mol. Find FP of 0.1 m NaCl solution." → ΔT_f = i·K_f·m = 2 × 1.86 × 0.1 = 0.372 K. T_f = −0.372°C.<br>
+                        • "Which has highest boiling point: 0.1 M glucose, 0.1 M NaCl, or 0.1 M CaCl₂?" → CaCl₂ (i = 3, greatest number of particles).<br>
+                        • "Osmotic pressure of 0.01 M glucose at 27°C?" → π = CRT = 0.01 × 0.0821 × 300 = 0.246 atm.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 1: Boiling Point Elevation</div>
+                    <div class="ex-text">K_b for water = 0.512 K·kg/mol. A solution contains 18 g glucose (M = 180 g/mol) in 500 g water. Find ΔT_b.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Molality = (18/180) / (500/1000) = 0.1/0.5 = 0.2 m. ΔT_b = 0.512 × 0.2 = 0.1024°C. Boiling point = 100.102°C. <strong>Key insight:</strong> Glucose doesn't dissociate (i = 1), so ΔT_b is small.</div>
+                </div>
+
+                <!-- 2. GIBBS FREE ENERGY -->
+                <h2 id="gibbs">2. Gibbs Free Energy — ΔG = ΔH − TΔS <button class="speaker-btn" onclick="speakText(this,'gibbs')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Why do some chemical reactions happen spontaneously while others don't? Why does ice melt above 0°C? Why do batteries produce electricity? The answer lies in <strong>Gibbs free energy</strong>. It combines enthalpy (heat content) and entropy (disorder) to predict whether a process is spontaneous. Every living system operates under the principles of Gibbs free energy — your body uses ATP precisely because its hydrolysis has a favorable ΔG.</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 180" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="160" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="24" text-anchor="middle" fill="#a1a1aa" font-size="11">Gibbs Free Energy — Spontaneity depends on ΔG</text>
+                        <path d="M 50 130 L 370 130" stroke="rgba(255,255,255,.1)" stroke-width="1"/>
+                        <path d="M 50 130 L 50 30 L 370 30 L 370 130" fill="none" stroke="#60a5fa" stroke-width="2"/>
+                        <path d="M 50 130 L 50 90 L 370 90 L 370 130" fill="none" stroke="#f87171" stroke-width="2" stroke-dasharray="4 2"/>
+                        <rect x="60" y="40" width="80" height="40" rx="4" fill="rgba(96,165,250,.06)" stroke="#60a5fa" stroke-width="1"/>
+                        <text x="100" y="63" text-anchor="middle" fill="#60a5fa" font-size="9" font-weight="600">ΔH</text>
+                        <rect x="60" y="95" width="80" height="28" rx="4" fill="rgba(248,113,113,.06)" stroke="#f87171" stroke-width="1"/>
+                        <text x="100" y="114" text-anchor="middle" fill="#f87171" font-size="8">TΔS</text>
+                        <text x="210" y="63" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="12">−</text>
+                        <text x="210" y="114" text-anchor="middle" fill="rgba(255,255,255,.3)" font-size="12">=</text>
+                        <rect x="240" y="40" width="100" height="82" rx="4" fill="rgba(52,211,153,.06)" stroke="#34d399" stroke-width="1.5"/>
+                        <text x="290" y="88" text-anchor="middle" fill="#34d399" font-size="12" font-weight="700">ΔG</text>
+                        <text x="290" y="108" text-anchor="middle" fill="rgba(52,211,153,.5)" font-size="7">Spontaneity</text>
+                        <text x="210" y="155" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="9">ΔG = ΔH − TΔS &nbsp; Spontaneous if ΔG &lt; 0</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 2.1: ΔG combines ΔH (enthalpy) and TΔS (entropy). When ΔG is negative, the process is spontaneous.</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>Gibbs free energy</strong> (G) tells us whether a reaction will happen on its own. The change ΔG = ΔH − TΔS determines spontaneity. If ΔG is negative, the reaction is spontaneous (thermodynamically favorable). If ΔG is zero, the system is at equilibrium. If ΔG is positive, the reaction is non-spontaneous and needs external energy. The equation ΔG° = −RT ln K connects thermodynamics with equilibrium — a large K means ΔG° is strongly negative.</p>
+
+                <h4>🔍 Step-by-Step: Deriving ΔG = ΔH − TΔS</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Define Gibbs free energy.</strong> <span class="math">G = H − TS</span>. H is enthalpy, T is temperature (K), S is entropy. For a change at constant temperature: <span class="math">ΔG = ΔH − TΔS</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Spontaneity condition.</strong> At constant T and P, a process is spontaneous when ΔG < 0. Three cases: (a) ΔH negative, ΔS positive → ΔG always negative (always spontaneous). (b) ΔH positive, ΔS negative → ΔG always positive (never spontaneous). (c) Both same sign → temperature determines spontaneity.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>At equilibrium, ΔG = 0.</strong> Setting ΔG = 0: <span class="math">0 = ΔH − TΔS → T = ΔH/ΔS</span>. This is the temperature at which the system transitions between spontaneous and non-spontaneous behavior.</div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: Deriving ΔG° = −RT ln K</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Start with the relationship between ΔG and reaction quotient Q.</strong> For a reaction aA + bB ⇌ cC + dD: <span class="math">ΔG = ΔG° + RT ln Q</span>. At equilibrium, ΔG = 0 and Q = K.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Substitute equilibrium conditions.</strong> <span class="math">0 = ΔG° + RT ln K → ΔG° = −RT ln K</span>. In base 10: <span class="math">ΔG° = −2.303RT log K</span>. At 298 K: ΔG° = −5.71 log K kJ/mol.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">ΔG = ΔH − TΔS &nbsp; ΔG° = −RT ln K &nbsp; Spontaneous when ΔG < 0</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — ΔG vs ΔG°</div>
+                    <div class="tip-text">ΔG° (standard Gibbs free energy change) refers to standard conditions (1 M, 1 atm, 298 K). ΔG (actual) depends on current concentrations. A reaction with positive ΔG° can still proceed if concentrations are far from standard (ΔG becomes negative due to the RT ln Q term).</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Gibbs Free Energy</div>
+                    <div class="neet-text">
+                        • "For a reaction, ΔH = −100 kJ, ΔS = −200 J/K. Is it spontaneous at 300 K?" → ΔG = −100 − 0.3×(−200) = −100 + 60 = −40 kJ. Yes, spontaneous.<br>
+                        • "ΔG° = 5.71 kJ/mol at 298 K. Find K." → 5.71 = −5.71 log K → log K = −1 → K = 0.1.<br>
+                        • "At what T does ΔG = 0 if ΔH = 40 kJ and ΔS = 100 J/K?" → T = 40000/100 = 400 K.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 2: Gibbs Free Energy</div>
+                    <div class="ex-text">For the reaction N₂(g) + 3H₂(g) ⇌ 2NH₃(g), ΔH = −92.4 kJ and ΔS = −198 J/K at 298 K. Is it spontaneous?</div>
+                    <div class="ex-soln"><strong>Solution:</strong> ΔG = −92400 − 298×(−198) = −92400 + 59004 = −33396 J = −33.4 kJ. ΔG < 0, so the reaction is spontaneous at 298 K. <strong>Key insight:</strong> At higher temperature, −TΔS becomes large positive, making ΔG positive — that's why NH₃ synthesis is run at moderate temperatures.</div>
+                </div>
+
+                <!-- 3. Kp AND Kc RELATIONSHIP -->
+                <h2 id="equilibrium">3. Kp = Kc(RT)^Δn <button class="speaker-btn" onclick="speakText(this,'equilibrium')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Chemical equilibrium constants can be expressed in terms of concentrations (Kc) or partial pressures (Kp). The relationship between them is essential because NEET questions often give one and ask for the other. Understanding this relationship is crucial for predicting how changing pressure or volume affects equilibrium in gaseous reactions.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>For a gaseous reaction aA + bB ⇌ cC + dD, the equilibrium constants are Kc = [C]ᶜ[D]ᵈ/[A]ᵃ[B]ᵇ and Kp = P_Cᶜ·P_Dᵈ/P_Aᵃ·P_Bᵇ. Since PV = nRT, we have P = (n/V)RT = CRT. Substituting this relationship gives Kp = Kc(RT)^Δn, where Δn = (c + d) − (a + b) is the change in the number of moles of gas.</p>
+
+                <h4>🔍 Step-by-Step: Deriving Kp = Kc(RT)^Δn</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Write the expression for Kp.</strong> For aA + bB ⇌ cC + dD: <span class="math">Kp = P_Cᶜ·P_Dᵈ / P_Aᵃ·P_Bᵇ</span>. Each P is the partial pressure at equilibrium.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Use the ideal gas relation P = CRT.</strong> Where C = n/V = concentration. Substitute: <span class="math">Kp = ([C]RT)ᶜ·([D]RT)ᵈ / ([A]RT)ᵃ·([B]RT)ᵇ</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Factor out RT terms.</strong> <span class="math">Kp = [C]ᶜ[D]ᵈ/[A]ᵃ[B]ᵇ × (RT)^{(c+d)−(a+b)} = Kc × (RT)^{Δn}</span>. Where Δn = moles of gaseous products − moles of gaseous reactants.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">Kp = Kc·(RT)^{Δn} &nbsp; Δn = (gaseous products) − (gaseous reactants) &nbsp; R = 0.0821 L·atm/(mol·K)</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Units of R</div>
+                    <div class="tip-text">When using Kp = Kc(RT)^Δn, R must be <strong>0.0821 L·atm/(mol·K)</strong> (not 8.314 J/(mol·K)). This is because Kc uses mol/L and Kp uses atm. If Δn = 0, Kp = Kc. Also: only include gaseous species — solids and liquids don't appear in either Kp or Kc.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Kp and Kc</div>
+                    <div class="neet-text">
+                        • "For N₂ + 3H₂ ⇌ 2NH₃, Kc = 4.0 at 400 K. Find Kp. (R = 0.0821)" → Δn = 2 − 4 = −2. Kp = 4.0 × (0.0821×400)^(−2) = 4.0 / (32.84)².<br>
+                        • "For H₂ + I₂ ⇌ 2HI, Δn = 0, so Kp = Kc." — a common direct answer.<br>
+                        • "For which reaction does Kp > Kc?" → When Δn > 0 (more product moles than reactant moles).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 3: Kp and Kc</div>
+                    <div class="ex-text">For 2SO₂(g) + O₂(g) ⇌ 2SO₃(g), Kc = 280 at 1000 K. Find Kp. (R = 0.0821 L·atm/mol·K)</div>
+                    <div class="ex-soln"><strong>Solution:</strong> Δn = 2 − (2+1) = −1. Kp = 280 × (0.0821 × 1000)^(−1) = 280/(82.1) = 3.41. <strong>Key insight:</strong> Kp is smaller than Kc because the reaction reduces the number of gas molecules.</div>
+                </div>
+
+                <!-- 4. BOHR MODEL -->
+                <h2 id="bohr">4. Bohr Model — Radius & Energy of Orbits <button class="speaker-btn" onclick="speakText(this,'bohr')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>The Bohr model, despite being superseded by quantum mechanics, remains the simplest way to understand atomic spectra. It explains why hydrogen emits specific colors of light (like the red 656 nm line in the Balmer series). NEET frequently asks about the radius, energy, and velocity of electrons in Bohr orbits.</p>
+
+                <div class="diagram-box">
+                    <svg viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+                        <rect x="10" y="10" width="400" height="180" rx="8" fill="none" stroke="rgba(255,255,255,.08)" stroke-width="1"/>
+                        <text x="210" y="22" text-anchor="middle" fill="#a1a1aa" font-size="11">Bohr Model — Electron orbits and spectral transitions</text>
+                        <circle cx="210" cy="110" r="12" fill="#f87171" opacity="0.8"/>
+                        <text x="210" y="114" text-anchor="middle" fill="#fff" font-size="7">nucleus</text>
+                        <ellipse cx="210" cy="110" rx="40" ry="25" fill="none" stroke="#60a5fa" stroke-width="1.5" stroke-dasharray="3 2"/>
+                        <text x="248" y="92" text-anchor="middle" fill="#60a5fa" font-size="7">n=1</text>
+                        <ellipse cx="210" cy="110" rx="70" ry="45" fill="none" stroke="#34d399" stroke-width="1.5" stroke-dasharray="3 2"/>
+                        <text x="278" y="70" text-anchor="middle" fill="#34d399" font-size="7">n=2</text>
+                        <ellipse cx="210" cy="110" rx="110" ry="70" fill="none" stroke="#fbbf24" stroke-width="1.5" stroke-dasharray="3 2"/>
+                        <text x="318" y="48" text-anchor="middle" fill="#fbbf24" font-size="7">n=3</text>
+                        <circle cx="248" cy="95" r="4" fill="#60a5fa" opacity="0">
+                            <animate attributeName="cx" values="248;248;278;278" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="cy" values="95;95;70;70" dur="3s" repeatCount="indefinite"/>
+                            <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/>
+                        </circle>
+                        <line x1="248" y1="95" x2="278" y2="70" stroke="#fbbf24" stroke-width="1" stroke-dasharray="3 2" opacity="0">
+                            <animate attributeName="opacity" values="0;0.6;0.6;0" dur="3s" repeatCount="indefinite"/>
+                        </line>
+                        <text x="260" y="75" text-anchor="middle" fill="#fbbf24" font-size="7" opacity="0">hν</text>
+                        <text x="210" y="175" text-anchor="middle" fill="rgba(255,255,255,.15)" font-size="9">E_n = −13.6/n² eV &nbsp; r_n = 0.529·n²/Z Å</text>
+                    </svg>
+                    <div class="diagram-caption">Fig 4.1: Bohr orbits for hydrogen (n = 1, 2, 3). Electron transition from n = 3 to n = 2 emits a photon of red light (656 nm).</div>
+                </div>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>Bohr proposed that electrons move in fixed circular orbits around the nucleus. The key idea is <strong>quantization of angular momentum</strong>: mvr = nh/2π. This leads to discrete energy levels for the electron. The radius increases as n², and the energy becomes less negative (higher) as n increases. When an electron jumps from a higher to a lower orbit, it emits a photon of energy hν = ΔE.</p>
+
+                <h4>🔍 Step-by-Step: Deriving the Radius of nth Orbit</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Coulomb force provides the centripetal force.</strong> For an electron orbiting a nucleus of charge Ze: <span class="math">mv²/r = (1/4πε₀)·(Ze·e)/r²</span>. This gives: <span class="math">mv² = Ze²/(4πε₀r)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Bohr's quantization condition.</strong> Angular momentum is quantized: <span class="math">mvr = nh/2π</span>. So: <span class="math">v = nh/(2πmr)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Substitute v into the force equation.</strong> <span class="math">m(nh/2πmr)² = Ze²/(4πε₀r)</span>. Solve for r: <span class="math">r_n = (n²h²ε₀)/(πmZe²)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">4</span>
+                        <div class="step-text"><strong>For hydrogen (Z = 1).</strong> Substituting constants: <span class="math">r_n = 0.529 × n² Å</span>. The first Bohr radius r₁ = 0.529 Å. This is the most probable distance of the electron from the nucleus.</div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: Deriving the Energy of nth Orbit</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Total energy = KE + PE.</strong> Kinetic energy: <span class="math">KE = ½mv²</span>. Potential energy: <span class="math">PE = −Ze²/(4πε₀r)</span>. From force equation: <span class="math">mv² = Ze²/(4πε₀r)</span>, so <span class="math">KE = Ze²/(8πε₀r)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Total energy E = KE + PE.</strong> <span class="math">E = Ze²/(8πε₀r) − Ze²/(4πε₀r) = −Ze²/(8πε₀r)</span>. The negative sign means the electron is bound to the nucleus.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Substitute r_n.</strong> <span class="math">E_n = −(mZ²e⁴)/(8ε₀²h²)·(1/n²)</span>. For hydrogen: <span class="math">E_n = −13.6/n² eV</span>. Ground state (n = 1): −13.6 eV. First excited (n = 2): −3.4 eV.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">r_n = 0.529·n²/Z Å &nbsp; E_n = −13.6·Z²/n² eV &nbsp; ΔE = hν = hc/λ</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — Energy Sign Convention</div>
+                    <div class="tip-text">Energy of an electron in an orbit is <strong>negative</strong>. This is because energy is measured relative to the free electron (E = 0 when n = ∞). The more negative the energy, the more stable the electron. Also: when an electron absorbs energy, it jumps to a higher (less negative) n — this is excitation.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Bohr Model</div>
+                    <div class="neet-text">
+                        • "Radius of 2nd orbit of He⁺?" → r₂ = 0.529 × 4/2 = 1.058 Å.<br>
+                        • "Energy of 1st orbit of Li²⁺?" → E₁ = −13.6 × 9 = −122.4 eV.<br>
+                        • "Wavelength emitted when electron drops from n = 3 to n = 2 in H?" → 1/λ = R(1/4 − 1/9) = R×5/36 → λ = 656 nm (red, Balmer series).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 4: Bohr Model</div>
+                    <div class="ex-text">Calculate the radius of the 3rd Bohr orbit of hydrogen and the velocity of the electron in it.</div>
+                    <div class="ex-soln"><strong>Solution:</strong> r₃ = 0.529 × 9 = 4.761 Å. v = nh/(2πmr) = 3 × 6.626×10⁻³⁴ / (2π × 9.1×10⁻³¹ × 4.761×10⁻¹⁰) = 7.29×10⁵ m/s. <strong>Key insight:</strong> Velocity decreases as n increases (v ∝ 1/n).</div>
+                </div>
+
+                <!-- 5. DE BROGLIE & HEISENBERG -->
+                <h2 id="debroglie">5. de Broglie Wavelength & Uncertainty Principle <button class="speaker-btn" onclick="speakText(this,'debroglie')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Electron microscopes use the wave nature of electrons to see objects as small as atoms — much smaller than visible light can resolve. The <strong>de Broglie wavelength</strong> explains why particles like electrons exhibit wave-like behavior. The <strong>Heisenberg uncertainty principle</strong> sets a fundamental limit on measurement accuracy, which is why we can't pin down exactly where an electron is at any moment.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p><strong>de Broglie</strong> proposed that every moving particle has a wavelength: λ = h/p = h/mv. For macroscopic objects, this wavelength is tiny and undetectable. For electrons (mass 9.1×10⁻³¹ kg), the wavelength is comparable to atomic spacings, so electron diffraction is observable. <strong>Heisenberg's uncertainty principle</strong> states: Δx·Δp ≥ h/4π. You cannot simultaneously know both position and momentum with perfect accuracy.</p>
+
+                <h4>🔍 Step-by-Step: De Broglie Wavelength Derivation from Bohr Model</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Bohr's quantization condition mvr = nh/2π can be reinterpreted.</strong> Rewrite as: <span class="math">2πr = nh/mv = nλ</span>. This means the circumference of the orbit must contain an integer number of de Broglie wavelengths.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>This is the standing wave condition.</strong> An electron wave in an orbit forms a standing wave only if the circumference is an integer multiple of the wavelength: <span class="math">2πr = nλ → λ = 2πr/n</span>. This naturally leads to the quantization of angular momentum.</div>
+                    </div>
+                </div>
+
+                <h4>🔍 Step-by-Step: Heisenberg's Uncertainty Principle</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>The uncertainty principle is a fundamental quantum mechanical result.</strong> <span class="math">Δx·Δp ≥ h/4π</span>. Δx is the uncertainty in position, Δp is the uncertainty in momentum. The product cannot be less than h/4π ≈ 5.27×10⁻³⁵ J·s.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Physical implication.</strong> If we know position very precisely (Δx small), then Δp must be large, meaning we can't know momentum (and thus velocity) accurately. Conversely, if we know momentum precisely, position becomes uncertain. This is not a limitation of instruments — it's a fundamental property of nature.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">λ = h/mv &nbsp; Δx·Δp ≥ h/4π &nbsp; h = 6.626×10⁻³⁴ J·s</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — de Broglie for Macroscopic Objects</div>
+                    <div class="tip-text">Students apply de Broglie's equation to macroscopic objects without checking the magnitude. For a cricket ball (m = 0.16 kg) moving at 30 m/s: λ = 6.63×10⁻³⁴/(0.16×30) ≈ 1.38×10⁻³⁴ m — far too small to detect. The wave nature is only observable for microscopic particles.</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — de Broglie & Uncertainty</div>
+                    <div class="neet-text">
+                        • "de Broglie wavelength of an electron accelerated through 100 V?" → λ = h/√(2meV) = 12.27/√V Å = 1.227 Å.<br>
+                        • "If uncertainty in position is 1 Å, find minimum uncertainty in momentum." → Δp ≥ h/(4πΔx) = 5.27×10⁻²⁵ kg·m/s.<br>
+                        • "Which has longer λ: electron or proton at same speed?" → Electron (smaller mass → larger wavelength).
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 5: de Broglie Wavelength</div>
+                    <div class="ex-text">An electron has a de Broglie wavelength of 1 Å. Find its velocity. (m_e = 9.1×10⁻³¹ kg, h = 6.626×10⁻³⁴ J·s)</div>
+                    <div class="ex-soln"><strong>Solution:</strong> v = h/(mλ) = 6.626×10⁻³⁴/(9.1×10⁻³¹ × 10⁻¹⁰) = 7.28×10⁶ m/s. <strong>Key insight:</strong> This velocity is about 2.4% of the speed of light — relativistic effects are small but not negligible at this speed.</div>
+                </div>
+
+                <!-- 6. QUANTUM NUMBERS & ATOMIC SPECTRA -->
+                <h2 id="quantum">6. Quantum Numbers & Rydberg Formula <button class="speaker-btn" onclick="speakText(this,'quantum')">🔊 Listen</button></h2>
+
+                <h3>💡 Why this matters in real life</h3>
+                <p>Atomic spectra are like fingerprints for elements — each element has a unique set of spectral lines. This is used in astronomy to determine the composition of stars, in forensic science to identify substances, and in neon signs where different gases produce different colors. Quantum numbers describe the exact state of every electron in an atom.</p>
+
+                <h3>🧠 The Big Idea — In Plain Words</h3>
+                <p>Four quantum numbers completely describe an electron in an atom: <strong>n</strong> (principal — energy level), <strong>l</strong> (azimuthal — shape of orbital), <strong>m_l</strong> (magnetic — orientation of orbital), and <strong>m_s</strong> (spin — +½ or −½). The Pauli exclusion principle states that no two electrons can have the same set of four quantum numbers. The Rydberg formula 1/λ = R(1/n₁² − 1/n₂²) predicts the wavelengths of spectral lines for hydrogen-like atoms.</p>
+
+                <h4>🔍 Step-by-Step: Deriving the Rydberg Formula</h4>
+                <div class="deriv-box">
+                    <div class="step">
+                        <span class="step-num">1</span>
+                        <div class="step-text"><strong>Energy of an electron in the nth orbit of hydrogen.</strong> <span class="math">E_n = −13.6/n² eV = −(2π²me⁴)/(h²)·(1/n²)</span> in SI units.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">2</span>
+                        <div class="step-text"><strong>Energy of photon emitted during transition.</strong> When electron drops from n₂ to n₁ (n₂ > n₁): <span class="math">ΔE = E_{n₂} − E_{n₁} = hν = hc/λ</span>. This gives: <span class="math">ΔE = −13.6(1/n₂² − 1/n₁²) = 13.6(1/n₁² − 1/n₂²)</span></div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">3</span>
+                        <div class="step-text"><strong>Express in terms of wavelength.</strong> <span class="math">1/λ = ΔE/(hc) = (13.6 eV)/(hc)·(1/n₁² − 1/n₂²) = R(1/n₁² − 1/n₂²)</span>. The Rydberg constant R = 1.097×10⁷ m⁻¹.</div>
+                    </div>
+                    <div class="step">
+                        <span class="step-num">4</span>
+                        <div class="step-text"><strong>Spectral series.</strong> For hydrogen: Lyman (n₁ = 1, UV), Balmer (n₁ = 2, visible), Paschen (n₁ = 3, IR), Brackett (n₁ = 4, IR), Pfund (n₁ = 5, IR). NEET frequently asks Balmer series questions because it's in the visible range.</div>
+                    </div>
+                </div>
+
+                <div class="formula-box">1/λ = R(1/n₁² − 1/n₂²) &nbsp; R = 1.097×10⁷ m⁻¹ &nbsp; n₂ > n₁</div>
+
+                <h3>🔍 Common Mistake</h3>
+                <div class="tip-box">
+                    <div class="tip-title">Common Mistake — n₁ vs n₂</div>
+                    <div class="tip-text">Students often reverse n₁ and n₂. <strong>n₁ is the lower energy level</strong> (where the electron ends up), and <strong>n₂ is the higher energy level</strong> (where it started). Also: for hydrogen-like ions (He⁺, Li²⁺), the Rydberg formula becomes 1/λ = RZ²(1/n₁² − 1/n₂²).</div>
+                </div>
+
+                <h3>🎯 NEET Pattern</h3>
+                <div class="neet-box">
+                    <div class="neet-title">🎯 NEET Pattern — Atomic Spectra</div>
+                    <div class="neet-text">
+                        • "Which series of hydrogen spectrum lies in the visible region?" → Balmer series (n₁ = 2).<br>
+                        • "Shortest wavelength of Lyman series?" → n₂ = ∞: 1/λ = R(1/1² − 0) = R → λ = 1/R ≈ 911.6 Å.<br>
+                        • "Number of spectral lines when electron drops from n = 5 to n = 1?" → Number = n(n−1)/2 = 5×4/2 = 10 lines.
+                    </div>
+                </div>
+
+                <h3>✍️ Worked Example</h3>
+                <div class="example-box">
+                    <div class="ex-title">Example 6: Rydberg Formula</div>
+                    <div class="ex-text">Calculate the wavelength of the first line of the Balmer series for hydrogen. (R = 1.097×10⁷ m⁻¹)</div>
+                    <div class="ex-soln"><strong>Solution:</strong> First Balmer line: n₁ = 2, n₂ = 3. 1/λ = 1.097×10⁷(1/4 − 1/9) = 1.097×10⁷ × 5/36 = 1.524×10⁶ m⁻¹. λ = 656 nm (red light). <strong>Key insight:</strong> This is the famous H-α line, used to identify hydrogen in stars and nebulae.</div>
+                </div>
+
+                <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);text-align:center;color:var(--text-muted);font-size:.82em">
+                    End of Session 2 — Physical Chemistry Deep-Dive. Continue to <a href="lesson-derivations-chemistry-3.html" style="color:var(--emerald)">Session 3 (Organic &amp; Inorganic Mechanisms)</a>.
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <script src="../../../js/theme.js"></script>
+</body>
+</html>
