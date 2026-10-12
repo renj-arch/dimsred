@@ -344,6 +344,9 @@ function subjectPage(subj) {
     '<h1>' + esc(subj.name) + ' \u2014 Suggested Figures</h1>' +
     '<p class="meta">' + counts + ' \u00b7 topics from UPSC syllabus \u00b7 from Wikimedia Commons (needs internet) \u00b7 print-ready A4 \u00b7 built by scripts/build-subject-figures.js</p></header>' + missing + '</section>' +
     pages.map(pageFor).join('') +
+    '<p class="meta" style="margin-top:24px">Wrong figure, wrong label, broken flowchart step? '
+    + '<a href="improve.html">Record the correction</a> — every correction retrains your own '
+    + 'model automatically, at 15 records.</p>' +
     '</body></html>';
 }
 function indexPage(all) {
@@ -376,6 +379,8 @@ function indexPage(all) {
     'shards are deliberately NOT used here: each subject\u2019s shard set is a near-complete A\u2013Z Wikipedia ' +
     'sweep, which is what previously produced figures like the Democratic Party under Animal Husbandry.</p></header></section>' +
     '<ul class="idx"><li><a href="geography-figures.html">Geography</a> \u2014 curated figure pack</li>' + items + '</ul>' +
+    '<p class="meta" style="margin-top:24px">Found a wrong figure, caption or flowchart step anywhere? '
+    + '<a href="improve.html">Record the correction</a> — it retrains your own model automatically.</p>' +
     '</body></html>';
 }
 

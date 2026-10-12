@@ -49,11 +49,15 @@ function save(list) {
 
 // One usable training example. `answer` is the model's own prose; `facts` are
 // the verbatim sentences it was allowed to use, kept verbatim here so the
-// training prompt can reproduce what the model actually saw.
+// training prompt can reproduce what the model actually saw. `kind` tags the
+// domain -- 'answer' (default) for composed UPSC answers, 'improve' for
+// figure/flowchart/HTML correction records from improve.html -- and travels
+// with the JSONL so one training run learns both jobs from one file.
 function record(entry) {
   if (!entry || !entry.q || !entry.answer) return false;
   var list = load();
   list.push({
+    kind: String(entry.kind || 'answer'),
     q: String(entry.q),
     subject: String(entry.subject || ''),
     terms: (entry.terms || []).map(String),
@@ -74,6 +78,10 @@ function record(entry) {
 }
 
 function count() { return load().length; }
+
+// A copy of every captured record. Callers get a slice, never the stored
+// array itself, so nothing outside this module can corrupt what trains.
+function all() { return load().slice(); }
 
 function clear() {
   try {
@@ -279,6 +287,7 @@ function syncNow() {
 return {
   record: record,
   count: count,
+  all: all,
   clear: clear,
   exportJSONL: exportJSONL,
   download: download,

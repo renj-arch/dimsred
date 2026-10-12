@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Improve Vlymbooq — Figures, Flowcharts, Pages</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--rose:#fb7185;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+header.hd{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+.num{font-size:11px;letter-spacing:.14em;color:var(--text-sec);text-transform:uppercase}
+h1{font-size:24px;margin:6px 0 8px}
+.disc{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--text-sec);line-height:1.6}
+.disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px;color:var(--purple)}
+.meta{font-size:12.5px;color:var(--text-sec);margin-top:10px}
+.form-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin:14px 0}
+.field{margin-bottom:14px}
+.field label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-sec);display:block;margin-bottom:6px}
+.field label small{font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);margin-left:6px}
+.field input,.field textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;background:var(--bg);color:var(--text);outline:none}
+.field textarea{resize:vertical;min-height:70px}
+.field input:focus,.field textarea:focus{border-color:var(--purple)}
+.btn{border:1px solid var(--purple);background:var(--purple);color:#fff;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#8b7cf7}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.ok{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.4);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--emerald);margin:14px 0}
+.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--rose);margin:14px 0}
+.list-head{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-sec);margin:26px 0 8px}
+.records{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.records p{margin:0 0 8px;font-size:12.5px;color:var(--text-sec);line-height:1.55}
+.records .empty{color:var(--text-muted);margin:0}
+.records a{color:var(--purple);text-decoration:none;font-weight:600}
+.records a:hover{text-decoration:underline}
+.foot{font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.6}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a href="archive.html">Archive</a><a href="map.html">Map</a>
+                <a href="figures/index.html">Figures</a><a href="ask.html">Ask</a><a class="active" href="improve.html">Improve</a><a href="about.html">About</a></div></div></nav>
+<div class="wrap">
+  <header class="hd">
+    <div class="num">Vlymbooq &middot; Zero-AI Retrieval &middot; UPSC</div>
+    <h1>Improve figures &amp; pages</h1>
+    <div class="disc">
+      <b>How this works</b>
+      Found a wrong flowchart step, a stale figure caption, a broken explanation on any page? Record the correction here: what the page says now, what is wrong, and how it should read. Each correction joins the same training stream as Ask answers. When <b>15 more records</b> (answers + corrections together) have accumulated, the Train Writer Model workflow retrains <b>your own model</b> automatically &mdash; no schedule, no buttons. Corrections stay on this machine until auto-sync is enabled.
+    </div>
+    <div class="meta" id="meta"></div>
+    <a id="export-data" style="display:none;cursor:pointer" title="Download every recorded correction and answer as JSONL"></a>
+    <a id="sync-data" style="display:none;cursor:pointer;margin-left:12px" title="Push the recorded corrections to the repo so the Train Writer Model workflow can train on them. Uses a fine-grained PAT stored only in this browser."></a>
+    <span id="sync-status" style="display:none;margin-left:8px;opacity:.75"></span>
+  </header>
+
+  <div class="form-box">
+    <div class="field">
+      <label for="target">Page or figure <small>filename, URL path, or a short name</small></label>
+      <input id="target" type="text" placeholder="e.g. figures/dpi-flow.html — Flowchart: DPDP enforcement">
+    </div>
+    <div class="field">
+      <label for="current">What the page says now <small>paste the current caption, step text, or paragraph — kept verbatim as the source fact</small></label>
+      <textarea id="current" placeholder="e.g. Step 3: Data Protection Board fines the data fiduciary."></textarea>
+    </div>
+    <div class="field">
+      <label for="issue">What is wrong</label>
+      <textarea id="issue" placeholder="e.g. The Board cannot impose fines under the DPDP Act; adjudication rests with the Data Protection Board only after the 2023 amendments, and this step conflates the two."></textarea>
+    </div>
+    <div class="field">
+      <label for="fix">How it should read <small>the corrected text — this is what your model learns to write</small></label>
+      <textarea id="fix" placeholder="e.g. Step 3: The Data Protection Board of India adjudicates complaints and may impose penalties as prescribed by the DPDP Act, 2023."></textarea>
+    </div>
+    <button class="btn" id="record">Record correction</button>
+  </div>
+
+  <div id="out"></div>
+
+  <div class="list-head">Local capture</div>
+  <div class="records">
+    <p id="counts"></p>
+    <p class="foot">Corrections are stored in this browser only (localStorage) until you enable auto-sync above. They travel with your Ask answers in one JSONL file — one model, trained on both jobs. <a href="ask.html">Ask questions on the Ask page &rarr;</a></p>
+  </div>
+</div>
+
+<script src="scripts/lib/ask-dataset.js"></script>
+<script>
+'use strict';
+
+function el(id) { return document.getElementById(id); }
+
+function show(kind, msg) {
+  var out = el('out');
+  out.innerHTML = '';
+  var div = document.createElement('div');
+  div.className = kind;
+  div.textContent = msg;
+  out.appendChild(div);
+}
+
+function counts() {
+  if (!window.VlymbooqAskDataset) return;
+  var all = VlymbooqAskDataset.all ? VlymbooqAskDataset.all() : [];
+  var nImp = 0, nAns = 0;
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].kind === 'improve') nImp++; else nAns++;
+  }
+  el('counts').textContent = 'In this browser: ' + nImp + ' correction' + (nImp === 1 ? '' : 's') +
+    ' &middot; ' + nAns + ' answer' + (nAns === 1 ? '' : 's') +
+    ' &middot; the model retrains itself after 15 new records in total.';
+  updateExportLink();
+}
+
+// Same wiring as ask.html: the link appears only once there is something to
+// export, carries its count, and the sync control is driven by the dataset's
+// debounced push state.
+function updateExportLink() {
+  var link = el('export-data');
+  if (!link || !window.VlymbooqAskDataset) return;
+  var n = VlymbooqAskDataset.count();
+  if (n > 0) {
+    link.style.display = '';
+    link.textContent = 'Export training data (' + n + ' record' + (n === 1 ? '' : 's') + ')';
+  } else {
+    link.style.display = 'none';
+  }
+  updateSyncLink();
+}
+function updateSyncLink() {
+  var link = el('sync-data');
+  var status = el('sync-status');
+  if (!link || !status || !window.VlymbooqAskDataset) return;
+  var n = VlymbooqAskDataset.count();
+  if (!n) {
+    link.style.display = 'none';
+    status.style.display = 'none';
+    return;
+  }
+  var hasToken = !!VlymbooqAskDataset.getToken();
+  link.style.display = '';
+  link.textContent = hasToken ? 'Sync now' : 'Enable auto-sync (trains your model)';
+  var s = VlymbooqAskDataset.syncStatus();
+  status.style.display = s ? '' : 'none';
+  if (s) {
+    status.textContent = s.ok
+      ? 'synced ' + (s.records || n) + ' records ✓'
+      : (s.reason === 'no-token' ? '' : 'sync failed: ' + s.reason);
+    if (!s.ok && s.reason === 'no-token') status.style.display = 'none';
+  }
+}
+
+el('record').addEventListener('click', function () {
+  var target = el('target').value.trim();
+  var current = el('current').value.trim();
+  var issue = el('issue').value.trim();
+  var fix = el('fix').value.trim();
+  if (!target || !current || !issue || !fix) {
+    show('err', 'All four fields are needed — the current text becomes the source fact and the correction becomes the trained answer, so both must be present.');
+    return;
+  }
+  if (fix.length < 20) {
+    show('err', 'The correction is too short to teach anything. Write the full corrected text.');
+    return;
+  }
+  if (!window.VlymbooqAskDataset) {
+    show('err', 'Storage module failed to load. Reload the page.');
+    return;
+  }
+  var ok = VlymbooqAskDataset.record({
+    kind: 'improve',
+    q: 'Fix "' + target + '": ' + issue,
+    subject: target,
+    facts: [{ sentence: current, entity: target }],
+    sections: [],
+    answer: fix,
+    model: 'human'
+  });
+  if (!ok) {
+    show('err', 'Could not record the correction.');
+    return;
+  }
+  show('ok', 'Recorded. Your model retrains itself once 15 new records (answers + corrections) have accumulated — nothing else to do.');
+  counts();
+});
+
+document.addEventListener('click', function (e) {
+  if (!e.target || !window.VlymbooqAskDataset) return;
+  if (e.target.id === 'export-data') {
+    VlymbooqAskDataset.download();
+    return;
+  }
+  if (e.target.id !== 'sync-data') return;
+  if (!VlymbooqAskDataset.getToken()) {
+    // One-time setup, deliberately manual: a fine-grained PAT for this repo
+    // only (Contents: Read and write). It is stored in this browser's
+    // localStorage and sent only to api.github.com.
+    var tok = window.prompt(
+      'Paste a fine-grained GitHub PAT for renj-arch/dimsred\n' +
+      '(repository access: this repo only, permission: Contents read & write).\n' +
+      'It stays in this browser and is sent only to api.github.com.');
+    if (!tok) return;
+    VlymbooqAskDataset.setToken(tok);
+  }
+  var st = el('sync-status');
+  if (st) { st.style.display = ''; st.textContent = 'syncing…'; }
+  VlymbooqAskDataset.syncNow().then(function () { updateSyncLink(); });
+});
+if (window.VlymbooqAskDataset && VlymbooqAskDataset.setSyncHook) {
+  VlymbooqAskDataset.setSyncHook(function () { updateSyncLink(); });
+}
+
+counts();
+</script>
+</body>
+</html>

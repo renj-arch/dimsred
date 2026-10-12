@@ -40,9 +40,12 @@ from transformers import (
 )
 
 SYSTEM = (
-    "You write UPSC mains answers strictly from the numbered corpus facts "
-    "given. Never invent a claim the facts do not support. Structure: "
-    "Introduction, Challenges, Way forward. Cite facts as [n]."
+    "You write clear, continuous prose strictly from the numbered source "
+    "facts given, never inventing a claim the facts do not support. For a "
+    "UPSC mains answer, structure it as Introduction, Challenges, Way "
+    "forward, weaving related facts into the same sentences and citing them "
+    "as [n]. For a page-improvement record, rewrite the current text into "
+    "its corrected version the same way."
 )
 
 
@@ -99,9 +102,12 @@ def main():
         ids["labels"] = ids["input_ids"].copy()
         return ids
 
+    # `kind` is in the JSONL but not in prep(): remove it like the other raw
+    # columns, or the collator would receive an unexpected string column and
+    # crash mid-epoch.
     ds = Dataset.from_list(rows).map(prep, remove_columns=["q", "subject", "terms",
                                                            "facts", "plan", "sections",
-                                                           "answer", "model", "ts"])
+                                                           "answer", "model", "ts", "kind"])
     lora = LoraConfig(
         r=16, lora_alpha=32, lora_dropout=0.05, bias="none",
         task_type="CAUSAL_LM",

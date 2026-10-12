@@ -337,21 +337,30 @@ function buildPrompt(question, facts) {
     'Write the answer in this exact structure:',
     '',
     '## Introduction',
-    'Two or three sentences framing the issue.',
+    'Two or three sentences framing the issue, ending on the core tension.',
     '',
     '## Challenges',
     'Group the facts into dimensions (institutional, technical, risk/rights,',
     'economic, social, cross-border as they apply). Each point must rest on a',
-    'fact. Cite the fact number in brackets after the sentence, like [2].',
+    'fact. Cite the fact number in brackets after the clause it supports,',
+    'like [2] or [2][5].',
     '',
     '## Way forward',
     'Recommendations that follow from the facts. If the facts do not support a',
     'recommendation, say so plainly instead of inventing one.',
     '',
+    'Style -- this is prose for an exam, not a list:',
+    '- Write CONTINUOUS prose. Each section is one flowing paragraph (challenges',
+    '  may be two or three short paragraphs, one per cluster of dimensions).',
+    '- Weave related facts into the SAME sentence: combine [2] and [5] when they',
+    '  say related things. Never write one sentence per fact.',
+    '- Vary sentence length; connect ideas with therefore, however, moreover',
+    '  where the logic warrants it.',
+    '- No bullet fragments, no numbered lists, no headings inside sections.',
+    '',
     'Rules:',
     '- Use only facts from the list. Never invent a number, name, or event.',
     '- Keep every fact\'s citation number.',
-    '- Write in clear prose for an exam, not bullet fragments.',
     '- If the facts are too thin to answer, say exactly what is missing.'
   ].join('\n');
 }
@@ -391,6 +400,9 @@ function buildPlanPrompt(question, facts) {
     '',
     'Rules:',
     '- Cite a fact number only if that fact supports the line.',
+    '- Group RELATED facts under one POINT -- a point citing [2][5][9] beats',
+    '  three points citing [2], [5], [9] separately; the writer merges them',
+    '  into one flowing passage.',
     '- Cover the question\'s own scope and demand, not just its topic words.',
     '- Never invent a fact, number, name or event.'
   ].join('\n');
@@ -484,9 +496,14 @@ function buildWritePrompt(question, facts, plan) {
     lines.join('\n'),
     '',
     'This plan was already decided. Follow it: same sections, same order,',
-    'same points. Expand each planned line into clear exam prose, citing its',
-    'fact numbers in brackets like [2]. Do not add new points, do not drop',
-    'planned ones, and do not invent anything the facts do not support.',
+    'same points. Write CONTINUOUS exam prose -- each section is one flowing',
+    'paragraph (challenges may be two or three short paragraphs, one per',
+    'cluster). Weave each point\'s facts into the SAME sentences: combine [2]',
+    'and [5] rather than writing one sentence per fact. Vary sentence length;',
+    'connect ideas with therefore, however, moreover where the logic warrants',
+    'it. Cite fact numbers in brackets after the clause they support, like [2]',
+    'or [2][5]. Do not add new points, do not drop planned ones, and do not',
+    'invent anything the facts do not support.',
     '',
     'PLAN:',
     skeleton.join('\n'),
@@ -494,7 +511,7 @@ function buildWritePrompt(question, facts, plan) {
     'Rules:',
     '- Use only facts from the list. Never invent a number, name, or event.',
     '- Keep every fact\'s citation number.',
-    '- Write in clear prose for an exam, not bullet fragments.'
+    '- No bullet fragments, no numbered lists, no headings inside sections.'
   ].join('\n');
 }
 

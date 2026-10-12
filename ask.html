@@ -68,7 +68,7 @@ h1{font-size:24px;margin:6px 0 8px}
     <h1>Ask Vlymbooq</h1>
     <div class="disc">
       <b>How this works</b>
-      This engine answers UPSC questions from material in this site's own corpus. It retrieves verbatim sentences with source links, then composes the answer in your browser with a small open-weight model running locally (WebLLM/WebGPU &mdash; no API key, nothing leaves your machine). Every cited fact stays checkable against the corpus. As answers accumulate, the same pipeline trains <b>your own model</b> from them, which then appears in the model picker as &ldquo;Mine&rdquo;.
+      This engine answers UPSC questions from material in this site's own corpus. It retrieves verbatim sentences with source links, then composes the answer in your browser with a small open-weight model running locally (WebLLM/WebGPU &mdash; no API key, nothing leaves your machine). Every cited fact stays checkable against the corpus. As answers accumulate, the same pipeline trains <b>your own model</b> from them, which then appears in the model picker as &ldquo;Mine&rdquo;. Found a wrong figure or flowchart step anywhere on the site? <a href="improve.html" style="color:var(--purple)">Record the correction</a> &mdash; corrections retrain the same model.
     </div>
     <div class="meta" id="meta"></div>
     <a id="export-data" style="display:none;cursor:pointer" title="Download every answer composed in this browser as JSONL, ready to fine-tune a model on"></a>
@@ -725,7 +725,13 @@ return VlymbooqAskLLM.expand(q, {
     // A good answer is also a training example: keep the question, the terms
     // that were looked up, the facts the model saw, and its prose, so the
     // exported JSONL can be fine-tuned on without re-running retrieval.
-    if (window.VlymbooqAskDataset) {
+    // The gate is deliberate: a thin or refusal answer recorded here teaches
+    // the next training run to write thin answers, so only answers that look
+    // like real three-part prose with live citations are kept.
+    var looksComplete = out.sections.length >= 3;
+    var looksSubstantial = out.raw.length >= 500;
+    var hasCitation = /\[\d+\]/.test(out.raw);
+    if (window.VlymbooqAskDataset && looksComplete && looksSubstantial && hasCitation) {
       VlymbooqAskDataset.record({
         q: q,
         subject: subject,
