@@ -32,9 +32,23 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      # Sparse + shallow on purpose: the default checkout pulls the whole
+      # ~8.5 GB corpus, which twice blew the 10-minute job budget on a
+      # congested runner. The board only reads report files + the script; the
+      # 50-commit history feeds the "what the system did recently" section.
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          fetch-depth: 50
+          sparse-checkout: |
+            scripts
+            data/wiki-coverage.json
+            data/train-audit.json
+            data/figure-coverage.json
+            data/figure-gaps.json
+            data/map-lineage-audit.json
+            data/ideas.json
+            data/faults.json
+          sparse-checkout-cone: false
           token: ${{ secrets.PAT }}
 
       - uses: actions/setup-node@v4

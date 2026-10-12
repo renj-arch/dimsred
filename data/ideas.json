@@ -1,0 +1,41 @@
+{
+  "generatedAt": "2026-10-12",
+  "note": "Improvement proposals for the site. Seeded by the site owner; new ones can be appended by scripts or by hand. improve.html lists each with an Adopt button that prefills the correction form.",
+  "ideas": [
+    {
+      "title": "Exam-style pencil-outline figures inside Ask answers",
+      "detail": "When an Ask answer is diagram-worthy (a flow, cycle, map, comparison), render a hand-drawn-style pencil-outline SVG line diagram inline — the kind one sketches in the exam hall — strictly from corpus facts, no external images. Relevant to the question, monochrome, reproducible offline.",
+      "action": {
+        "target": "ask.html — answer renderer",
+        "current": "Ask answers are text + citation only.",
+        "issue": "Diagram-worthy UPSC answers (flows, cycles, maps) lose marks in exams without a sketch; the page cannot show one.",
+        "fix": "Add a pencil-outline SVG renderer: detect diagram-worthy answers (flow/cycle/map keywords + section structure), draw simple hand-style line diagrams from the answer's own steps, monochrome, inline after the relevant section."
+      }
+    },
+    {
+      "title": "Radial mind-tree: center topic, related things as leaves, click for the key fact",
+      "detail": "A mind-tree view with the main topic at the center and everything related forming a tree of leaves around it; clicking a leaf shows the key thing about the main center as seen through that leaf (the strongest corpus fact linking them).",
+      "action": {
+        "target": "map.html / timeline — mind-tree view",
+        "current": "Timeline shows linear spans and connection chips; no center-out tree.",
+        "issue": "Studying one hub topic needs its whole web of relations visible at once, with the linking fact one click away.",
+        "fix": "Add a radial mind-tree: hub at center, mined relations as leaves; clicking a leaf opens the strongest corpus sentence(s) linking leaf to hub."
+      }
+    },
+    {
+      "title": "Map lineage completeness: mine corpus kin facts into the lineage tab",
+      "detail": "The map's lineage tab reads mined family edges, but timeline node shards currently carry none (0 kin edges found), while the corpus is full of son-of / succeeded-by / dynasty facts. Mine them with the existing FAMILY_RE relation set and show the evidence sentence for each edge.",
+      "action": {
+        "target": "map.html — lineage tab",
+        "current": "Lineage shows 'No family-lineage links yet' for every person.",
+        "issue": "Corpus sentences state family and succession relations that the map never shows, and wrong ones cannot be spotted.",
+        "fix": "Extend the timeline builder's kin miner (FAMILY_RE relations) so lineage edges land in the node shards, with sentence evidence kept for auditing."
+      }
+    },
+    {
+      "title": "UPSC optional & essay coverage in Ask",
+      "detail": "Extend Ask mining to optional subjects and essay-theme groupings the corpus already contains (ethics case-study vocabulary, essay themes) so practice beyond GS is served by the same zero-AI retrieval.",
+      "action": null
+    }
+  ]
+}

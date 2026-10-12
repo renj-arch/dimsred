@@ -124,6 +124,7 @@ function renderFaults() {
   }).then(function (data) {
     var actionable = [];
     var faults = data.faults || [];
+    var ideas = data.ideas || [];
 
     function stamp(t) {
       return t ? esc(String(t).slice(0, 16).replace('T', ' ')) + 'Z' : 'unknown time';
@@ -138,7 +139,8 @@ function renderFaults() {
     }
     function faultRow(x, badge) {
       var color = x.severity === 'critical' ? 'var(--rose)'
-        : x.severity === 'warn' ? 'var(--amber)' : 'var(--cyan)';
+        : x.severity === 'warn' ? 'var(--amber)'
+        : x.severity === 'idea' ? 'var(--purple)' : 'var(--cyan)';
       var s = '<div style="border-left:3px solid ' + color + ';padding:8px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0">' +
         '<b style="color:' + color + ';font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">' +
         esc(x.severity) + ' &middot; ' + esc(x.kind) + (badge || '') + '</b>' +
@@ -202,6 +204,24 @@ function renderFaults() {
     if (data.runs && data.runs.length) {
       html += '<div class="list-head" style="margin-top:18px">Pipelines</div>' +
         data.runs.map(runRow).join('');
+    }
+
+    // 4. Automatic work the system did on its own (bot/data commits).
+    if (data.actions && data.actions.length) {
+      html += '<div class="list-head" style="margin-top:18px">What the system did recently</div>' +
+        data.actions.map(function (a) {
+          var url = 'https://github.com/renj-arch/dimsred/commit/' + encodeURIComponent(a.sha || '');
+          return '<div style="font-size:12.5px;padding:4px 12px;color:var(--text-sec)">' +
+            '<span style="color:var(--text-muted)">' + esc(a.at || '') + '</span> &middot; ' +
+            '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(String(a.subject || '').slice(0, 120)) + '</a></div>';
+        }).join('');
+    }
+
+    // 5. Improvement ideas — curated proposals plus auto-generated figure
+    // suggestions; each with an Adopt button that prefills the form.
+    if (ideas.length) {
+      html += '<div class="list-head" style="margin-top:18px">Ideas <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; adopt one into the form below</span></div>' +
+        ideas.map(function (x) { return faultRow(x, ''); }).join('');
     }
 
     box.innerHTML = html;

@@ -64,6 +64,28 @@ function collectRuns() {
   }
 }
 
+// "What the system did recently": the last bot/data commits, so improve.html
+// can list its own automatic work (dedup, classification, recoveries, rebuilds)
+// without anyone reading workflow logs. Needs git history (fetch-depth >= 50);
+// with a depth-1 checkout this yields [] and the panel hides the section.
+function collectActions() {
+  try {
+    const execFileSync = require('child_process').execFileSync;
+    const out = execFileSync('git', ['log', '--pretty=format:%h|%ad|%an|%s',
+      '--date=short', '-n', '40'], { encoding: 'utf8', timeout: 15000 });
+    const bot = /dimsred-bot|github-actions|\[bot\]/i;
+    const work = /dedup|classif|recover|coverage|cleanup|rebuild|inject|merge|fault|audit|wiki fill|pib|figures|timeline|question-bank|corpus|improve board|feed update/i;
+    return out.split('\n').map(function (l) {
+      const p = l.split('|');
+      return { sha: p[0], at: p[1], who: p[2], subject: p.slice(3).join('|') };
+    }).filter(function (c) {
+      return c.subject && (bot.test(c.who || '') || work.test(c.subject));
+    }).slice(0, 12);
+  } catch (e) {
+    return [];
+  }
+}
+
 // Diff the assembled faults against the previous report so improve.html can
 // lead with "what changed" instead of repeating the same list forever.
 function diffAgainstPrevious(current) {
@@ -146,8 +168,111 @@ try {
       'train-writer.yml writes data/train-audit.json once answers start syncing from the Ask page.');
   }
 
+  // ── figures: published coverage + syllabus gaps (the weekly link check and
+  // the 6 h harvester own repair; this only reports what still looks wrong) ──
+  try {
+    const fcov = JSON.parse(fs.readFileSync('data/figure-coverage.json', 'utf8'));
+    const t = fcov.totals || {};
+    const st = fcov.states || {};
+    add('info', 'figures',
+      (t.totalFigures || 0).toLocaleString('en-US') + ' figures across ' + (t.publishedTopics || 0) + ' published topics',
+      'Corpus coverage ' + (t.coveragePctOfCorpus != null ? Number(t.coveragePctOfCorpus).toFixed(3) : '?') + '% of ' +
+      (t.corpusTopics || 0).toLocaleString('en-US') + ' topics · untouched: ' + (t.untouchedCorpusTopics || 0).toLocaleString('en-US') +
+      ' · pending refresh: ' + (st['pending-refresh'] || 0));
+    if (st['all-rejected']) {
+      add('warn', 'figures', st['all-rejected'] + ' topic(s) with ALL candidates rejected',
+        'Every harvested figure failed review for these topics — seeds or resolver likely wrong.', null);
+    }
+    if (st['no-seeds']) {
+      add('warn', 'figures', st['no-seeds'] + ' topic(s) have no seeds to harvest from',
+        'Add canonical names/aliases as seeds so the harvester can find figures for them.', null);
+    }
+  } catch (e) {
+    add('info', 'figures', 'Figure coverage report not available',
+      e.code === 'ENOENT' ? 'data/figure-coverage.json is written by build-figures.yml.' : String(e.message || e));
+  }
+  var gapWorst = [];
+  var gapBySubject = {};
+  try {
+    const gaps = JSON.parse(fs.readFileSync('data/figure-gaps.json', 'utf8'));
+    gapBySubject = gaps.bySubject || {};
+    gapWorst = Object.keys(gapBySubject).map(function (s) { return [s, (gapBySubject[s] || []).length]; })
+      .filter(function (p) { return p[1] > 0; })
+      .sort(function (a, b) { return b[1] - a[1]; });
+    const totalGaps = gaps.totalGaps != null ? gaps.totalGaps : gapWorst.reduce(function (a, p) { return a + p[1]; }, 0);
+    if (totalGaps > 0) {
+      add('warn', 'figures', totalGaps + ' syllabus topic(s) still missing a figure',
+        gapWorst.slice(0, 6).map(function (p) { return p[0] + ' (' + p[1] + ')'; }).join(', ') +
+        ' · report ' + String(gaps.generated || '').slice(0, 10),
+        gapWorst.length ? {
+          target: 'figures/',
+          current: gapWorst.slice(0, 4).map(function (p) {
+            return p[0] + ': ' + (gapBySubject[p[0]] || []).slice(0, 3).join('; ');
+          }).join(' | '),
+          issue: 'These UPSC syllabus topics have no figure, so figure-based study skips them.',
+          fix: 'Harvest or draw a figure for the first topic here, or confirm the topic name matches the corpus.'
+        } : null);
+    }
+  } catch (e) { /* gaps optional */ }
+
+  // ── map lineage (audit-map-lineage.js, run in wiki-fill finalize) ──
+  try {
+    const lin = JSON.parse(fs.readFileSync('data/map-lineage-audit.json', 'utf8'));
+    const miss = lin.missing || [];
+    const bad = lin.incorrect || [];
+    if (bad.length) {
+      add('critical', 'map', bad.length + ' lineage relation(s) on the map CONTRADICT the corpus',
+        bad.slice(0, 4).map(function (x) { return x.a + ' —' + x.rel + '→ ' + x.b; }).join(' · '),
+        {
+          target: 'map.html / timeline lineage',
+          current: bad.slice(0, 4).map(function (x) {
+            return x.a + ' —' + x.rel + '→ ' + x.b + ' (corpus says: ' + (x.corpusRel || 'conflict') + ')';
+          }).join(' | '),
+          issue: 'The map shows a family relation the corpus contradicts — wrong lineage on a study page.',
+          fix: 'Keep the corpus-backed relation and drop the conflicting edge; verify the sentence evidence first.'
+        });
+    }
+    if (miss.length) {
+      add('warn', 'map', miss.length + ' lineage relation(s) in the corpus are missing from the map',
+        miss.slice(0, 5).map(function (x) { return x.a + ' —' + x.rel + '→ ' + x.b; }).join(' · ') +
+        (lin.totalCorpusEdges ? ' · corpus edges: ' + lin.totalCorpusEdges : ''), null);
+    }
+    if (!bad.length && !miss.length && (lin.totalCorpusEdges || 0) > 0) {
+      add('info', 'map', 'Map lineage matches the corpus', lin.totalCorpusEdges + ' relation(s) checked · ' + String(lin.generated || '').slice(0, 10));
+    }
+  } catch (e) { /* audit runs with wiki-fill; absent until its first run */ }
+
+  // ── improvement ideas: curated proposals (data/ideas.json) ──
+  const ideas = [];
+  try {
+    const ideaFile = JSON.parse(fs.readFileSync('data/ideas.json', 'utf8'));
+    (ideaFile.ideas || []).forEach(function (idea) {
+      if (!idea || !idea.title) return;
+      ideas.push({
+        severity: 'idea',
+        kind: 'idea',
+        title: idea.title,
+        detail: idea.detail || '',
+        action: idea.action || null
+      });
+    });
+  } catch (e) { /* ideas optional */ }
+  // Auto-ideas from the worst figure gaps: each missing syllabus topic is a
+  // concrete, corpus-backed proposal the reader can adopt into the form.
+  gapWorst.slice(0, 4).forEach(function (p) {
+    (gapBySubject[p[0]] || []).slice(0, 2).forEach(function (topic) {
+      ideas.push({
+        severity: 'idea', kind: 'idea',
+        title: 'Figure idea: ' + topic,
+        detail: 'Subject "' + p[0] + '" has no figure for this syllabus topic — harvest or draw one.',
+        action: null
+      });
+    });
+  });
+
   const changes = diffAgainstPrevious(faults);
   const runs = collectRuns();
+  const actions = collectActions();
 
   const counts = { critical: 0, warn: 0, info: 0 };
   faults.forEach(function (f) { counts[f.severity] = (counts[f.severity] || 0) + 1; });
@@ -157,12 +282,15 @@ try {
     counts: counts,
     changes: changes,
     runs: runs,
+    actions: actions,
+    ideas: ideas,
     faults: faults
   }, null, 1) + '\n');
   console.log('fault-report: ' + faults.length + ' fault(s) (' +
     counts.critical + ' critical, ' + counts.warn + ' warn, ' + counts.info + ' info) · ' +
     changes.new.length + ' new · ' + changes.resolved.length + ' resolved · ' +
-    runs.length + ' workflow(s) -> ' + OUT);
+    runs.length + ' workflow(s) · ' + actions.length + ' recent action(s) · ' +
+    ideas.length + ' idea(s) -> ' + OUT);
   faults.forEach(function (f) {
     if (f.severity !== 'info') console.log('  [' + f.severity.toUpperCase() + '] ' + f.title);
   });
