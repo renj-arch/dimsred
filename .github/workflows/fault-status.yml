@@ -1,0 +1,64 @@
+name: Fault status for improve.html
+
+# Refreshes data/faults.json — the "Detected faults / Changes / Pipelines"
+# board on improve.html — every 6 hours, independent of the nightly wiki-fill
+# job. Two reasons this is its own workflow:
+#   - the pipelines section (latest run of every workflow) goes stale in hours,
+#     not days: a failed build must show on the page before tomorrow;
+#   - improve.html should keep its reader informed without anyone opening
+#     GitHub, so the page regenerates even when wiki-fill has nothing to commit.
+#
+# It commits with the PAT (not GITHUB_TOKEN): GitHub suppresses workflow runs
+# for GITHUB_TOKEN pushes, and Cloudflare's Pages integration — which is what
+# actually deploys the site — must see this push.
+#
+# wiki-coverage.json and train-audit.json are read from main (both are tracked);
+# if either is missing the report says so instead of failing.
+
+on:
+  schedule:
+    - cron: '25 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: fault-status
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  report:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build fault report (incl. pipeline status)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/fault-report.js
+
+      - name: Publish board to improve.html
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/faults.json 2>/dev/null || { echo "::error::data/faults.json missing or ignored"; exit 1; }
+          if git diff --staged --quiet; then
+            echo "Board unchanged"
+          else
+            git commit -m "Improve board refresh $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+            for i in 1 2 3; do
+              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Board pushed"; break; } || echo "push attempt $i failed, retrying..."
+              sleep 5
+            done || echo "::warning::board push failed after 3 attempts"
+          fi

@@ -156,8 +156,24 @@ jobs:
             # Each fallback is || true: under bash -e a failing rebase --abort
             # inside the group used to kill the whole step (exit 128) before
             # the push was ever reached.
-            git pull --rebase 2>/dev/null || { echo "Rebase conflict — aborting and merging"; git rebase --abort 2>/dev/null || true; git fetch origin main 2>/dev/null || true; git merge --no-edit origin/main 2>/dev/null || true; }
-            git push && echo "Pushed question-bank rebuild" || echo "Push failed"
+            # Retry loop, three attempts, each starting from a clean state.
+            # The former single `pull --rebase || merge || true` left a
+            # conflicted merge behind (the union resolver can fail too), which
+            # both hid a failed push behind a green step and poisoned the
+            # orphan checkout in the next step ("needs merge" / "you need to
+            # resolve your current index first"). `-X ours` keeps the tables
+            # THIS run just rebuilt when both sides regenerated the same JSON.
+            pushed=0
+            for i in 1 2 3; do
+              git merge --abort 2>/dev/null || true
+              git rebase --abort 2>/dev/null || true
+              git fetch origin main 2>/dev/null || true
+              git merge -X ours --no-edit origin/main 2>/dev/null || { echo "merge attempt failed - cleaning state"; git merge --abort 2>/dev/null || true; }
+              if git push 2>/dev/null; then pushed=1; echo "Pushed question-bank rebuild"; break; fi
+              echo "push attempt $i failed, retrying..."
+              sleep 5
+            done
+            [ "$pushed" = "1" ] || echo "::warning::question-bank table push failed after 3 attempts - the next Wiki Fill dispatch rebuilds them"
           fi
 
       # Ship the corpus on its own force-replaced branch, never on main.
@@ -176,6 +192,15 @@ jobs:
           rm -f .git/config.lock .git/index.lock
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
+          # Self-heal: the commit step above resolves conflicts with `|| true`
+          # and can leave a conflicted merge behind. An orphan checkout cannot
+          # be created from an unmerged index — `git reset` then refuses with
+          # "you need to resolve your current index first" (run #579's exact
+          # death). Clear every such state before touching the branch.
+          git merge --abort 2>/dev/null || true
+          git rebase --abort 2>/dev/null || true
+          rm -f .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/AUTO_MERGE .git/CHERRY_PICK_HEAD .git/REVERT_HEAD 2>/dev/null || true
+          git reset --hard 2>/dev/null || git reset 2>/dev/null || true
           git checkout --orphan corpus-tmp 2>/dev/null || git checkout --orphan corpus-tmp-$$
           git reset
           # -f is REQUIRED: .gitignore lines data/ask-qb/bucket/* and
@@ -187,7 +212,13 @@ jobs:
           git add -f data/ask-qb/bucket data/ask-qb/phrase
           git commit -m "Ask corpus $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
           git branch -f corpus HEAD
-          git push --force origin corpus && echo "Pushed corpus branch" || echo "Corpus push failed"
+          pushed=0
+          for i in 1 2 3; do
+            if git push --force origin corpus 2>/dev/null; then pushed=1; echo "Pushed corpus branch"; break; fi
+            echo "corpus push attempt $i failed, retrying..."
+            sleep 5
+          done
+          [ "$pushed" = "1" ] || echo "::warning::corpus push failed after 3 attempts - the previous corpus stays served until the next build"
 
       - name: Summary
         if: always()

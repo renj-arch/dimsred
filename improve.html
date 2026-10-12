@@ -109,42 +109,104 @@ function esc(s) {
     .replace(/"/g, '&quot;');
 }
 
-// The fault panel: fetches data/faults.json (written by scripts/fault-report.js
-// in the nightly wiki-fill finalize, plus train-audit results) and renders each
-// entry with a Prefill button that drops its action into the form. Absence of
-// the file is normal before the first nightly run, so it degrades to a note
-// instead of an error.
+// The board: fetches data/faults.json (written by scripts/fault-report.js in
+// the nightly wiki-fill finalize and every 6 h by fault-status.yml) and
+// renders three sections — what changed since the previous check, the full
+// fault list, and the latest run of every pipeline. Each fault with an action
+// gets a Prefill button that drops it into the form below. Absence of the file
+// is normal before the first run, so it degrades to a note, not an error.
 function renderFaults() {
   var box = el('faults');
   fetch('data/faults.json').then(function (r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
   }).then(function (data) {
-    var list = data.faults || [];
-    if (!list.length) {
-      box.innerHTML = '<p class="empty">No faults detected in the last check (' +
-        esc(String(data.generatedAt || '').slice(0, 10)) + ').</p>';
-      return;
+    var actionable = [];
+    var faults = data.faults || [];
+
+    function stamp(t) {
+      return t ? esc(String(t).slice(0, 16).replace('T', ' ')) + 'Z' : 'unknown time';
     }
-    var head = '<p>' + esc(String(data.generatedAt || '').slice(0, 16).replace('T', ' ')) +
-      'Z &middot; <b style="color:var(--rose)">' + ((data.counts && data.counts.critical) || 0) + ' critical</b>' +
-      ' &middot; <b style="color:var(--amber)">' + ((data.counts && data.counts.warn) || 0) + ' warning</b>' +
-      ' &middot; ' + ((data.counts && data.counts.info) || 0) + ' info</p>';
-    var rows = list.map(function (x, i) {
+    function rel(t) {
+      var d = (Date.now() - new Date(t).getTime()) / 1000;
+      if (!isFinite(d) || d < 0) return '';
+      if (d < 120) return 'just now';
+      if (d < 3600) return Math.round(d / 60) + 'm ago';
+      if (d < 86400) return Math.round(d / 3600) + 'h ago';
+      return Math.round(d / 86400) + 'd ago';
+    }
+    function faultRow(x, badge) {
       var color = x.severity === 'critical' ? 'var(--rose)'
         : x.severity === 'warn' ? 'var(--amber)' : 'var(--cyan)';
       var s = '<div style="border-left:3px solid ' + color + ';padding:8px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0">' +
         '<b style="color:' + color + ';font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">' +
-        esc(x.severity) + ' &middot; ' + esc(x.kind) + '</b>' +
+        esc(x.severity) + ' &middot; ' + esc(x.kind) + (badge || '') + '</b>' +
         '<div style="font-size:13px;margin-top:3px">' + esc(x.title) + '</div>';
       if (x.detail) s += '<div style="font-size:12px;color:var(--text-sec);margin-top:2px">' + esc(x.detail) + '</div>';
-      if (x.action) s += '<button class="btn" style="margin-top:8px;font-size:11.5px;padding:5px 14px" data-fault="' + i + '">Prefill correction</button>';
+      if (x.action) {
+        actionable.push(x.action);
+        s += '<button class="btn" style="margin-top:8px;font-size:11.5px;padding:5px 14px" data-act="' + (actionable.length - 1) + '">Prefill correction</button>';
+      }
       return s + '</div>';
-    }).join('');
-    box.innerHTML = head + rows;
-    Array.prototype.forEach.call(box.querySelectorAll('[data-fault]'), function (btn) {
+    }
+    function runRow(r) {
+      var running = r.status !== 'completed';
+      var color = running ? 'var(--cyan)'
+        : r.conclusion === 'success' ? 'var(--emerald)'
+        : r.conclusion === 'failure' ? 'var(--rose)'
+        : r.conclusion === 'cancelled' || r.conclusion === 'skipped' ? 'var(--text-muted)'
+        : 'var(--amber)';
+      var state = running ? r.status : (r.conclusion || r.status);
+      var name = r.url
+        ? '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.workflow) + '</a>'
+        : esc(r.workflow);
+      return '<div style="border-left:3px solid ' + color + ';padding:6px 12px;margin:6px 0;background:var(--bg);border-radius:0 8px 8px 0;font-size:12.5px">' +
+        '<span style="color:' + color + ';font-weight:700">' + esc(state) + '</span> &middot; ' + name +
+        (r.at ? ' <span style="color:var(--text-muted)">' + rel(r.at) + '</span>' : '') + '</div>';
+    }
+
+    var html = '';
+
+    // 1. What changed since the previous report.
+    var ch = data.changes || {};
+    html += '<div class="list-head" style="margin-top:4px">Changes since last check</div>';
+    if (ch.firstReport) {
+      html += '<p style="font-size:12.5px;color:var(--text-muted)">First report (' + stamp(data.generatedAt) +
+        ') &mdash; everything below is current.</p>';
+    } else {
+      if (ch.resolved && ch.resolved.length) {
+        html += ch.resolved.map(function (r) {
+          return '<div style="border-left:3px solid var(--emerald);padding:6px 12px;margin:6px 0;background:var(--bg);border-radius:0 8px 8px 0;font-size:12.5px;color:var(--emerald)">&check; resolved &middot; ' + esc(r.title) + '</div>';
+        }).join('');
+      }
+      if (ch.new && ch.new.length) {
+        html += ch.new.map(function (x) { return faultRow(x, ' &middot; <span style="color:var(--rose)">NEW</span>'); }).join('');
+      } else if (!(ch.resolved && ch.resolved.length)) {
+        html += '<p style="font-size:12.5px;color:var(--text-muted)">No new faults since the last check' +
+          (ch.unchanged ? ' (' + ch.unchanged + ' unchanged)' : '') + '.</p>';
+      }
+    }
+
+    // 2. The full fault list.
+    html += '<div class="list-head" style="margin-top:18px">All current faults</div>';
+    html += '<p>' + stamp(data.generatedAt) +
+      ' &middot; <b style="color:var(--rose)">' + ((data.counts && data.counts.critical) || 0) + ' critical</b>' +
+      ' &middot; <b style="color:var(--amber)">' + ((data.counts && data.counts.warn) || 0) + ' warning</b>' +
+      ' &middot; ' + ((data.counts && data.counts.info) || 0) + ' info</p>';
+    html += faults.length
+      ? faults.map(function (x) { return faultRow(x, ''); }).join('')
+      : '<p class="empty">No faults detected.</p>';
+
+    // 3. Pipeline health — latest run of every workflow.
+    if (data.runs && data.runs.length) {
+      html += '<div class="list-head" style="margin-top:18px">Pipelines</div>' +
+        data.runs.map(runRow).join('');
+    }
+
+    box.innerHTML = html;
+    Array.prototype.forEach.call(box.querySelectorAll('[data-act]'), function (btn) {
       btn.addEventListener('click', function () {
-        var a = list[+btn.getAttribute('data-fault')].action;
+        var a = actionable[+btn.getAttribute('data-act')];
         if (!a) return;
         el('target').value = a.target || '';
         el('current').value = a.current || '';
@@ -156,7 +218,7 @@ function renderFaults() {
       });
     });
   }).catch(function () {
-    box.innerHTML = '<p class="empty">No fault report published yet — the nightly wiki-fill run writes one after its coverage check.</p>';
+    box.innerHTML = '<p class="empty">No fault report published yet &mdash; the nightly wiki-fill run writes one after its coverage check, and fault-status.yml refreshes it every 6 hours.</p>';
   });
 }
 

@@ -468,9 +468,12 @@ jobs:
 
       # Fold the coverage report (and any training-audit results already on
       # main) into data/faults.json — the "Detected faults" panel on
-      # improve.html, with prefilled correction actions. Reporting only: the
-      # script always exits 0.
+      # improve.html, with prefilled correction actions. GITHUB_TOKEN lets the
+      # report attach pipeline status (latest run per workflow). Reporting
+      # only: the script always exits 0.
       - name: Aggregate detected faults for improve.html
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/fault-report.js
 
       - run: |

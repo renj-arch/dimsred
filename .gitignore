@@ -114,6 +114,14 @@ upsc_sorted_topics.csv
 # reason as figure-coverage.json: progress on the UPSC subject packs is only
 # reviewable when the remaining topics are diffable between runs.
 !data/figure-gaps.json
+# improve.html's live board. fault-report.js writes faults.json (coverage +
+# audit + pipeline status, refreshed by fault-status.yml every 6 h) and
+# train-audit.json is the audit summary train-writer.yml publishes. Without
+# these un-ignores the blanket `data/*` rule above would drop them silently:
+# `git add -A` skips ignored files and an explicit `git add` errors, so the
+# board would simply never reach the site.
+!data/faults.json
+!data/train-audit.json
 
 # Python bytecode from local train/finetune.py checks
 __pycache__/

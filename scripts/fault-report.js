@@ -1,24 +1,29 @@
-// Aggregate every nightly check into data/faults.json — the list improve.html
-// shows under "Detected faults". The philosophy: anything a script can fix
-// safely is already fixed automatically (sub-topic re-filing, dedup, cleanup);
-// everything that still needs a human decision is written here with a prefilled
-// correction action, so the faults find the reader instead of the reader
-// hunting through workflow logs.
+// Aggregate every nightly check into data/faults.json — the live board on
+// improve.html. The philosophy: anything a script can fix safely is already
+// fixed automatically (sub-topic re-filing, dedup, cleanup); everything that
+// still needs a human decision is written here with a prefilled correction
+// action, so the faults find the reader instead of the reader hunting through
+// workflow logs.
+//
+// The report also carries:
+//   changes — diffed against the previous data/faults.json, so improve.html
+//             can say what appeared and what got resolved since last check
+//             (first run reports everything as new).
+//   runs    — the latest run of every workflow (via gh, when a token is
+//             available), so the page shows pipeline health without anyone
+//             opening GitHub.
 //
 // Sources (each optional — a missing source is itself reported as info):
-//   data/wiki-coverage.json  — low/critical category counts (written minutes
-//                              earlier by wiki-coverage-report.js in the same
-//                              finalize job).
-//   data/train-audit.js      — contamination audit results (committed to main
-//                              by train-writer.yml whenever a dataset exists).
+//   data/wiki-coverage.json  — low/critical category counts (written by
+//                              wiki-coverage-report.js, tracked on main).
+//   data/train-audit.json    — contamination audit (published to main by
+//                              train-writer.yml whenever a dataset exists).
 //
-// Output: data/faults.json { generatedAt, counts:{critical,warn,info}, faults:[{severity,
-//   kind, title, detail, action:{target,current,issue}}] } — action is what the
-//   improve.html "Prefill correction" button drops into the form.
-//
+// Output: data/faults.json { generatedAt, counts, changes, runs, faults }.
 // Always exits 0: this is reporting, never a gate.
 //
 // Usage: node scripts/fault-report.js
+// CI:    GITHUB_TOKEN=<token> node scripts/fault-report.js   (enables runs)
 
 const fs = require('fs');
 
@@ -27,6 +32,61 @@ const faults = [];
 
 function add(severity, kind, title, detail, action) {
   faults.push({ severity: severity, kind: kind, title: title, detail: detail || '', action: action || null });
+}
+
+// Latest run per workflow. gh is preinstalled on GitHub runners; without a
+// token (locally, or a workflow that did not pass one) this silently yields
+// an empty list and the panel hides the section.
+function collectRuns() {
+  if (!process.env.GITHUB_TOKEN && !process.env.GH_TOKEN) return [];
+  try {
+    const execFileSync = require('child_process').execFileSync;
+    const out = execFileSync('gh', ['run', 'list', '--limit', '30',
+      '--json', 'workflowName,status,conclusion,url,updatedAt'],
+      { encoding: 'utf8', timeout: 30000 });
+    const seen = {};
+    const runs = [];
+    JSON.parse(out).forEach(function (r) {
+      if (!r.workflowName || seen[r.workflowName]) return;
+      seen[r.workflowName] = 1;
+      runs.push({
+        workflow: r.workflowName,
+        status: r.status,
+        conclusion: r.conclusion || '',
+        url: r.url || '',
+        at: r.updatedAt || ''
+      });
+    });
+    return runs;
+  } catch (e) {
+    console.error('fault-report: pipeline status unavailable — ' + (e.message || e));
+    return [];
+  }
+}
+
+// Diff the assembled faults against the previous report so improve.html can
+// lead with "what changed" instead of repeating the same list forever.
+function diffAgainstPrevious(current) {
+  let prev = null;
+  try { prev = JSON.parse(fs.readFileSync(OUT, 'utf8')); } catch (e) { /* first run */ }
+  if (!prev) {
+    return { firstReport: true, new: current.slice(), resolved: [], unchanged: 0 };
+  }
+  const prevTitles = {};
+  (prev.faults || []).forEach(function (f) { prevTitles[f.title] = 1; });
+  const curTitles = {};
+  current.forEach(function (f) { curTitles[f.title] = 1; });
+  const added = current.filter(function (f) { return !prevTitles[f.title]; });
+  const resolved = (prev.faults || [])
+    .filter(function (f) { return !curTitles[f.title]; })
+    .map(function (f) { return { severity: f.severity, kind: f.kind, title: f.title }; });
+  return {
+    firstReport: false,
+    previousGeneratedAt: prev.generatedAt || '',
+    new: added,
+    resolved: resolved,
+    unchanged: current.length - added.length
+  };
 }
 
 try {
@@ -86,16 +146,23 @@ try {
       'train-writer.yml writes data/train-audit.json once answers start syncing from the Ask page.');
   }
 
+  const changes = diffAgainstPrevious(faults);
+  const runs = collectRuns();
+
   const counts = { critical: 0, warn: 0, info: 0 };
   faults.forEach(function (f) { counts[f.severity] = (counts[f.severity] || 0) + 1; });
   fs.mkdirSync('data', { recursive: true });
   fs.writeFileSync(OUT, JSON.stringify({
     generatedAt: new Date().toISOString(),
     counts: counts,
+    changes: changes,
+    runs: runs,
     faults: faults
   }, null, 1) + '\n');
   console.log('fault-report: ' + faults.length + ' fault(s) (' +
-    counts.critical + ' critical, ' + counts.warn + ' warn, ' + counts.info + ' info) -> ' + OUT);
+    counts.critical + ' critical, ' + counts.warn + ' warn, ' + counts.info + ' info) · ' +
+    changes.new.length + ' new · ' + changes.resolved.length + ' resolved · ' +
+    runs.length + ' workflow(s) -> ' + OUT);
   faults.forEach(function (f) {
     if (f.severity !== 'info') console.log('  [' + f.severity.toUpperCase() + '] ' + f.title);
   });

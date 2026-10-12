@@ -1,6 +1,14 @@
 name: Wiki Fill Recovery
 
 on:
+  # Auto-recovery: when Wiki Fill dies (the 6 h cap, disk, network) its chunk
+  # artifacts remain downloadable, but until now someone had to notice the
+  # failure and hand the run ID to workflow_dispatch below. The failure now
+  # triggers the recovery itself — cancelled runs included, because that is
+  # exactly what the 6 h cap looks like: chunks uploaded, finalize never ran.
+  workflow_run:
+    workflows: ["Wiki Fill"]
+    types: [completed]
   workflow_dispatch:
     inputs:
       run-id:
@@ -25,6 +33,10 @@ env:
 
 jobs:
   recover:
+    # Manual dispatch always runs; the workflow_run trigger only when the Wiki
+    # Fill run actually failed or was cancelled (a successful run has nothing
+    # to recover, and re-merging it would duplicate work).
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -43,7 +55,8 @@ jobs:
       - name: Resolve target run id (must be given explicitly)
         id: resolve
         run: |
-          RUN_ID="${{ inputs.run-id }}"
+          # dispatch: the explicit input; workflow_run: the failed run itself.
+          RUN_ID="${{ inputs.run-id || github.event.workflow_run.id }}"
           if [ -z "$RUN_ID" ]; then
             echo "::error::'run-id' input is required."
             echo "::error::Dispatch this workflow WITH the run ID of the Wiki Fill run whose chunk artifacts should be merged"
@@ -227,7 +240,7 @@ jobs:
 
       - name: Commit and push recovered wiki data
         run: |
-          if [ "${{ inputs.dry-run }}" = "true" ]; then
+          if [ "${{ inputs.dry-run || 'false' }}" = "true" ]; then
             echo "DRY RUN — would have committed and pushed. Showing pending changes:"
             git add -A ':!chunks' ':!chunk-src' ':!baseline'
             git diff --cached --stat | tail -20
