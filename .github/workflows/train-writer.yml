@@ -58,10 +58,15 @@ jobs:
       # must never be checked out here. Dataset and version manifest are fetched
       # by raw URL instead of checking out those branches (training-data may
       # inherit the full main tree; writer-model's tree is ~400 MB of weights).
+      # PAT, not GITHUB_TOKEN: the audit summary is committed to main below, and
+      # a GITHUB_TOKEN push would not reach Cloudflare's Pages integration (the
+      # thing that actually deploys the site), so improve.html's fault panel
+      # would go stale silently.
       - uses: actions/checkout@v4
         with:
           sparse-checkout: train
           fetch-depth: 1
+          token: ${{ secrets.PAT }}
 
       - name: Fetch training data and gate the run
         id: gate
@@ -74,8 +79,10 @@ jobs:
               -o ask-training.jsonl; then
             echo "No dataset on $DATA_BRANCH yet."
             echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "hasData=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
+          echo "hasData=true" >> "$GITHUB_OUTPUT"
           RECORDS=$(wc -l < ask-training.jsonl | tr -d ' ')
           PREV=$(curl -fsSL "$RAW/$MODEL_BRANCH/version.json?t=$(date +%s)" 2>/dev/null \
             | python3 -c "import sys,json; print(json.load(sys.stdin).get('records',0))" \
@@ -91,6 +98,46 @@ jobs:
           echo "gate: $REASON (run=$RUN)"
           echo "run=$RUN" >> "$GITHUB_OUTPUT"
           echo "records=$RECORDS" >> "$GITHUB_OUTPUT"
+
+      # Contamination gate before any CPU-hour is spent: identical repeats and
+      # time-split eval leakage FAIL the run (a poisoned dataset must never
+      # reach the model); thin answers and conflicting re-asks only warn. Runs
+      # whenever the dataset exists, even when the delta gate skips training,
+      # so problems surface on the weekly cron too. continue-on-error so the
+      # summary still reaches main below; the Fail-if step re-raises after.
+      - name: Audit training data for contamination
+        id: audit
+        if: steps.gate.outputs.hasData == 'true'
+        continue-on-error: true
+        run: node train/audit.js ask-training.jsonl
+
+      # Commit the machine-readable audit summary to main so improve.html's
+      # fault panel shows training faults alongside coverage faults. Best-effort
+      # push (retried), never a job failure: the audit's own verdict is raised
+      # by the step after this one.
+      - name: Publish audit summary to main
+        if: steps.gate.outputs.hasData == 'true'
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/train-audit.json 2>/dev/null || echo "no audit summary file (audit crashed before writing)"
+          if git diff --staged --quiet; then
+            echo "Audit summary unchanged"
+          else
+            git commit -m "Training data audit $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+            for i in 1 2 3; do
+              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "summary pushed"; break; } || echo "push attempt $i failed, retrying..."
+              sleep 5
+            done || echo "summary push failed (non-fatal)"
+          fi
+
+      - name: Fail if the audit failed
+        if: steps.audit.outcome == 'failure'
+        run: |
+          echo "Training data audit FAILED — see the summary above and improve.html's fault panel."
+          exit 1
 
       - name: Set up Python
         if: steps.gate.outputs.run == 'true'

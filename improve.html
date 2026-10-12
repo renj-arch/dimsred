@@ -61,6 +61,13 @@ h1{font-size:24px;margin:6px 0 8px}
     <span id="sync-status" style="display:none;margin-left:8px;opacity:.75"></span>
   </header>
 
+  <!-- Auto-detected faults, published nightly by the wiki-fill coverage step
+       and by the training audit. Anything a script can fix without a human is
+       already fixed silently (sub-topic re-filing, dedup, cleanup); what is
+       listed here still needs a decision — each entry prefills the form below. -->
+  <div class="list-head">Detected faults <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; checked nightly &middot; auto-fixed where safe</span></div>
+  <div class="records" id="faults"><p class="empty">Checking the latest fault report&hellip;</p></div>
+
   <div class="form-box">
     <div class="field">
       <label for="target">Page or figure <small>filename, URL path, or a short name</small></label>
@@ -95,6 +102,63 @@ h1{font-size:24px;margin:6px 0 8px}
 'use strict';
 
 function el(id) { return document.getElementById(id); }
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// The fault panel: fetches data/faults.json (written by scripts/fault-report.js
+// in the nightly wiki-fill finalize, plus train-audit results) and renders each
+// entry with a Prefill button that drops its action into the form. Absence of
+// the file is normal before the first nightly run, so it degrades to a note
+// instead of an error.
+function renderFaults() {
+  var box = el('faults');
+  fetch('data/faults.json').then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function (data) {
+    var list = data.faults || [];
+    if (!list.length) {
+      box.innerHTML = '<p class="empty">No faults detected in the last check (' +
+        esc(String(data.generatedAt || '').slice(0, 10)) + ').</p>';
+      return;
+    }
+    var head = '<p>' + esc(String(data.generatedAt || '').slice(0, 16).replace('T', ' ')) +
+      'Z &middot; <b style="color:var(--rose)">' + ((data.counts && data.counts.critical) || 0) + ' critical</b>' +
+      ' &middot; <b style="color:var(--amber)">' + ((data.counts && data.counts.warn) || 0) + ' warning</b>' +
+      ' &middot; ' + ((data.counts && data.counts.info) || 0) + ' info</p>';
+    var rows = list.map(function (x, i) {
+      var color = x.severity === 'critical' ? 'var(--rose)'
+        : x.severity === 'warn' ? 'var(--amber)' : 'var(--cyan)';
+      var s = '<div style="border-left:3px solid ' + color + ';padding:8px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0">' +
+        '<b style="color:' + color + ';font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">' +
+        esc(x.severity) + ' &middot; ' + esc(x.kind) + '</b>' +
+        '<div style="font-size:13px;margin-top:3px">' + esc(x.title) + '</div>';
+      if (x.detail) s += '<div style="font-size:12px;color:var(--text-sec);margin-top:2px">' + esc(x.detail) + '</div>';
+      if (x.action) s += '<button class="btn" style="margin-top:8px;font-size:11.5px;padding:5px 14px" data-fault="' + i + '">Prefill correction</button>';
+      return s + '</div>';
+    }).join('');
+    box.innerHTML = head + rows;
+    Array.prototype.forEach.call(box.querySelectorAll('[data-fault]'), function (btn) {
+      btn.addEventListener('click', function () {
+        var a = list[+btn.getAttribute('data-fault')].action;
+        if (!a) return;
+        el('target').value = a.target || '';
+        el('current').value = a.current || '';
+        el('issue').value = a.issue || '';
+        el('fix').value = a.fix || '';
+        var fb = document.querySelector('.form-box');
+        if (fb) fb.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el('fix').focus();
+      });
+    });
+  }).catch(function () {
+    box.innerHTML = '<p class="empty">No fault report published yet — the nightly wiki-fill run writes one after its coverage check.</p>';
+  });
+}
 
 function show(kind, msg) {
   var out = el('out');
@@ -217,6 +281,7 @@ if (window.VlymbooqAskDataset && VlymbooqAskDataset.setSyncHook) {
 }
 
 counts();
+renderFaults();
 </script>
 </body>
 </html>
