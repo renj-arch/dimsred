@@ -7996,9 +7996,10 @@ function prevQuestion() {
                     var gq = state.questions[gi];
                     if (gq && _isUpscTopic(gq)) kept.push(gq);
                 }
-                state.questions = kept;
+                state.questions = _upscOrder(kept);
+            } else {
+                shuffleArray(state.questions);
             }
-            shuffleArray(state.questions);
         }
         
 
@@ -8274,7 +8275,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                 for (var j = 0; j < questions.length; j++) {
                     if (subjSet[questions[j].subject]) filtered.push(questions[j]);
                 }
-                shuffleArray(filtered);
+                if (_upscOnlyActive()) _upscOrder(filtered); else shuffleArray(filtered);
                 state.questions = filtered;
                 _updateArchiveProgress();
                 if (filtered.length === 0) {
@@ -8330,7 +8331,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                 for (var i = 0; i < questions.length; i++) {
                     if (questions[i].subject === subject) filtered.push(questions[i]);
                 }
-                shuffleArray(filtered);
+                if (_upscOnlyActive()) _upscOrder(filtered); else shuffleArray(filtered);
                 state.questions = filtered;
                 _updateArchiveProgress();
                 if (filtered.length === 0) {
@@ -8945,6 +8946,23 @@ var fact = q.fact || q.solution || q.explanation || '';
             if (UPSC_SUBJECTS[s] === 1) return true;
             return false;
         }
+        // Relevance tiers for the UPSC-only tab: core GS subjects first (the
+        // heart of Prelims GS-I), then strong GS areas, then moderate, then
+        // edge topics (regional literature, State GK). Stable sort keeps the
+        // caller's variety arrangement within each tier.
+        var UPSC_TIER0 = {"Indian Polity & Constitution":1,"Constitution":1,"Polity":1,"Polity & Governance":1,"Indian History":1,"Ancient India":1,"Medieval & Modern India":1,"Indian Economy":1,"Indian Economy & Development":1,"Business & Economy":1,"Geography":1,"Indian Geography":1,"Indian Physical Geography":1,"World & Indian Physical Geography":1,"Environment & Ecology":1,"General Science":1,"Science & Technology":1,"Tech & Science":1,"Space & Astronomy":1,"ISRO & Space":1,"India & International Relations":1,"International Relations":1,"Ethics":1,"Ethics & Integrity":1,"Society":1};
+        var UPSC_TIER1 = {"Defence & Security":1,"Defence & Strategic Affairs":1,"Defence":1,"Govt Schemes":1,"PIB Releases":1,"RBI Press Releases":1,"Commissions Committees & Bodies":1,"Public Administration & Governance":1,"Indian Judiciary":1,"Elections & Political Parties":1,"Indian Tribes":1,"Indian Religions":1,"Buddhism & Jainism":1,"Hinduism & Mythology":1,"Sikhism & Other Faiths":1,"Indian Art & Architecture":1,"Art & Culture":1,"Indian Music Dance & Theatre":1,"Indian Theatre & Cinema":1,"Energy & Power":1,"Nuclear Energy & Technology":1,"ICT Digital & Cyber":1,"Disaster Management":1,"Education in India":1,"Current Affairs":1,"Indian Languages - National & Regional":1};
+        var UPSC_TIER3 = {"State GK":1,"Kannada Literature":1,"Malayalam Literature":1,"Telugu Literature":1,"Punjabi & Other Regional Literature":1};
+        function _upscTier(subject) {
+            var s = (subject || '').trim();
+            if (UPSC_TIER0[s] === 1) return 0;
+            if (UPSC_TIER1[s] === 1) return 1;
+            if (UPSC_TIER3[s] === 1) return 3;
+            return 2;
+        }
+        function _upscOrder(list) {
+            return list.slice().sort(function(a, b) { return _upscTier(a.subject) - _upscTier(b.subject); });
+        }
         function _upscOnlyActive() {
             var b = document.getElementById('upscToggle');
             return b && b.classList.contains('active');
@@ -8956,7 +8974,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                 for (var i = 0; i < list.length; i++) {
                     if (_isUpscTopic(list[i])) out.push(list[i]);
                 }
-                return out;
+                return _upscOrder(out);
             } catch (e) { return list; }
         }
         function toggleUpscOnly() {
@@ -8967,6 +8985,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             b.style.borderColor = on ? 'rgba(245,158,11,.4)' : 'var(--border)';
             b.style.background = on ? 'rgba(245,158,11,.12)' : 'transparent';
             b.style.color = on ? 'var(--amber)' : 'var(--text-muted)';
+            try { localStorage.setItem('ca_upsc_only', on ? '1' : '0'); } catch (e) {}
             var note = document.getElementById('upscOnlyNote');
             if (on) {
                 _loadUpscTopics();
@@ -8987,6 +9006,21 @@ var fact = q.fact || q.solution || q.explanation || '';
             if (state.restartFn && state.questions && state.questions.length > 0) state.restartFn();
             if (on && note) setTimeout(function() { var n = document.getElementById('upscOnlyNote'); if (n && n.style.display !== 'none') n.remove(); }, 6000);
         }
+        // Restore the UPSC-only tab across reloads (same persistence idea as the
+        // archive cursor): the choice survives a refresh, and so does quiz
+        // progress via the normal session save/offerResumeFor machinery.
+        (function _restoreUpscToggle() {
+            try {
+                if (localStorage.getItem('ca_upsc_only') !== '1') return;
+                var b = document.getElementById('upscToggle');
+                if (!b || b.classList.contains('active')) return;
+                b.classList.add('active');
+                b.style.borderColor = 'rgba(245,158,11,.4)';
+                b.style.background = 'rgba(245,158,11,.12)';
+                b.style.color = 'var(--amber)';
+                _loadUpscTopics();
+            } catch (e) {}
+        })();
         var _upscTopics = null;
         var _upscTopicsLoading = false;
         function _loadUpscTopics() {

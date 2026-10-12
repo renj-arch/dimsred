@@ -177,9 +177,38 @@ async function main() {
     if (e.blank) blanks++;
     fresh.push(rec);
   }
+  // Improve records: teach the model to PROPOSE site improvements, not just
+  // answer questions. Curated ideas (data/ideas.json) become kind:'improve'
+  // records in the same training-data file, so the owner's own model learns
+  // the improvement skill too. The improve.html form records already flow
+  // here the same way when a visitor submits a correction with a PAT.
+  let improveN = 0;
+  try {
+    const ideasDoc = JSON.parse(fs.readFileSync('data/ideas.json', 'utf8'));
+    (ideasDoc.ideas || []).forEach(function (idea) {
+      if (!idea || !idea.title) return;
+      const rec = {
+        kind: 'improve',
+        q: String(idea.title),
+        subject: 'Site improvement',
+        terms: ['improve', 'site'].concat(String(idea.title).split(/\s+/).slice(0, 4)).map(String),
+        facts: [],
+        plan: null,
+        sections: [{ heading: 'Proposal', lines: [String(idea.detail || '')] }],
+        answer: String(idea.detail || '') +
+          (idea.action && idea.action.fix ? ' Action: ' + idea.action.fix : ''),
+        model: 'corpus-auto',
+        ts: new Date().toISOString()
+      };
+      if (existing.has(rec.q + ' ' + rec.answer)) return;
+      existing.add(rec.q + ' ' + rec.answer);
+      fresh.push(rec);
+      improveN++;
+    });
+  } catch (e) { console.log('self-train: ideas.json unreadable — skipping improve records'); }
   console.log('self-train: ' + fresh.length + ' fresh record(s) this run (' +
-    blanks + ' rewritten from blanks)' +
-    (fresh.length >= MAX_RECORDS ? ', capped at MAX_RECORDS' : ''));
+    blanks + ' rewritten from blanks, ' + improveN + ' improve)' +
+    (fresh.length >= MAX_RECORDS ? ', corpus capped at MAX_RECORDS' : ''));
 
   if (fresh.length) {
     console.log('self-train: sample -> ' + JSON.stringify(fresh[0]).slice(0, 300));
