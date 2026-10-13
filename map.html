@@ -420,7 +420,7 @@ function render() {
   _gpb[0] = 0; _gpb[1] = 0;
 
   for (var s3 of secs) {
-    html += '<div role="button" tabindex="0" class="era" style="top:' + s3._labelTop + 'px;height:' + (LABEL_H + s3._bodyH) + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + s3.id + '\')"><span class="era-label">' + esc(s3.label) + '</span></div>';
+    html += '<div role="button" tabindex="0" role="button" tabindex="0" class="era" style="top:' + s3._labelTop + 'px;height:' + (LABEL_H + s3._bodyH) + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + s3.id + '\')"><span class="era-label">' + esc(s3.label) + '</span></div>';
   }
 
   count = 0;
@@ -450,7 +450,7 @@ function render() {
     var horiz = col === 0
       ? 'left:14px;width:calc(50% - 18px)'
       : 'left:calc(50% + 4px);width:calc(50% - 18px)';
-    html += '<div role="button" tabindex="0" class="node" style="top:' + y + 'px;height:' + NODE_H + 'px;' + horiz + ';border-left:2px solid ' + color + '"'
+    html += '<div role="button" tabindex="0" role="button" tabindex="0" class="node" style="top:' + y + 'px;height:' + NODE_H + 'px;' + horiz + ';border-left:2px solid ' + color + '"'
       + tip
       + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
       + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
@@ -634,7 +634,7 @@ function openProfile(id) {
       if (c.count != null && c.count <= 0) return '';
       var catKey = esc(c.key).replace(/'/g, "\\'");
       var catLabel = esc(c.label).replace(/'/g, "\\'");
-      return '<div role="button" tabindex="0" class="cat-row" data-key="' + catKey + '" data-label="' + catLabel + '" onclick="toggleDrill(this,\'' + catKey + '\',\'' + catLabel + '\')"><span class="n">' + esc(c.label) + '</span> <span class="c">' + (c.count || 0) + '</span></div>'
+      return '<div role="button" tabindex="0" role="button" tabindex="0" class="cat-row" data-key="' + catKey + '" data-label="' + catLabel + '" onclick="toggleDrill(this,\'' + catKey + '\',\'' + catLabel + '\')"><span class="n">' + esc(c.label) + '</span> <span class="c">' + (c.count || 0) + '</span></div>'
         + '<div class="drill-body" style="display:none"></div>';
     }).join('');
   document.getElementById('profile').classList.add('open');
@@ -675,7 +675,7 @@ function renderProfileExtras(n) {
     story.innerHTML = items.length
       ? storyShown.map(function (it) {
         return '<div class="story-row"><span class="story-y">' + it.min + '</span><span class="story-n" style="border-left:3px solid ' + it.color + ';padding-left:8px"><span class="story-line">' + esc(it.label) + '</span>' + (it.desc ? '<span class="story-desc">' + esc(it.desc) + '</span>' : '') + '</span></div>';
-      }).join('') + (items.length > _storyCap ? '<div role="button" tabindex="0" class="loading story-more" onclick="expandStory()">… +' + (items.length - _storyCap) + ' more</div>' : '')
+      }).join('') + (items.length > _storyCap ? '<div role="button" tabindex="0" role="button" tabindex="0" class="loading story-more" onclick="expandStory()">… +' + (items.length - _storyCap) + ' more</div>' : '')
       : '<div class="loading">No story neighbours yet — more links land as the spine grows.</div>';
   }
   renderLineage(n);

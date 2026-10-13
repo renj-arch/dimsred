@@ -144,11 +144,11 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
      into this file under the comment "shared logic copied from flowchart.html (must
      stay in sync)", and a differential audit (scripts/audit-shared-logic.js) found 9
      of 20 symbols had silently diverged between the copies. -->
-<script src="scripts/lib/graph-core.js"></script>
-<script src="scripts/lib/graph-type-overrides.js"></script>
-<script src="scripts/lib/entity-gazetteer.js"></script>
-<script src="scripts/lib/type-authority.js"></script>
-<script src="scripts/lib/graph-edge-curation.js"></script>
+<script src="scripts/lib/graph-core.js" defer></script>
+<script src="scripts/lib/graph-type-overrides.js" defer></script>
+<script src="scripts/lib/entity-gazetteer.js" defer></script>
+<script src="scripts/lib/type-authority.js" defer></script>
+<script src="scripts/lib/graph-edge-curation.js" defer></script>
 <script>
 var GC = window.GC;
 if (!GC) { document.getElementById('msg').textContent = 'Failed to load scripts/lib/graph-core.js — the graph resolver is required.'; throw new Error('graph-core.js missing'); }

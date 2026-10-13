@@ -179,26 +179,26 @@
 <body>
     <nav class="nav">
         <div class="nav-inner">
-            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon" loading="lazy"><span class="brand-text">vlymbooq</span></a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 
                 <a href="dashboard.html">Community</a>
-                <a href="cgl/index.html">CGL</a>
-                <a href="rbi/index.html">RBI</a>
-                <a href="jee/index.html">JEE</a>
-                <a href="neet/index.html">NEET</a>
-                <a href="gate/index.html">GATE</a>
-                <a href="agniveer/index.html">Agniveer</a>
-                <a href="upsc/index.html">UPSC</a>
-                <a href="ibps-po/index.html">IBPS PO</a>
-                <a href="sbi-clerk/index.html">SBI Clerk</a>
-                <a href="ssc-gd/index.html">SSC GD</a>
-                <a href="ldc/index.html">LDC</a>
-                <a href="ctet/index.html">CTET</a>
-                <a href="nda/index.html">NDA</a>
-                <a href="cds/index.html">CDS</a>
-                <a href="clat/index.html">CLAT</a>
+                <a href="#">CGL</a>
+                <a href="#">RBI</a>
+                <a href="#">JEE</a>
+                <a href="#">NEET</a>
+                <a href="#">GATE</a>
+                <a href="#">Agniveer</a>
+                <a href="#">UPSC</a>
+                <a href="#">IBPS PO</a>
+                <a href="#">SBI Clerk</a>
+                <a href="#">SSC GD</a>
+                <a href="#">LDC</a>
+                <a href="#">CTET</a>
+                <a href="#">NDA</a>
+                <a href="#">CDS</a>
+                <a href="#">CLAT</a>
                 <a href="micro-test.html">🎯 Drill</a>
                 <a href="mental.html"><i data-lucide="brain" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Mental</a>
                 <a href="science.html"><i data-lucide="flask-conical" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Science</a>
@@ -266,7 +266,7 @@
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
                 <button id="restartBtn" onclick="if(state.restartFn)state.restartFn()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">↻ Restart</button>
             </div>
-            <div role="button" tabindex="0" class="q-card" onclick="if(!event.target.closest('button,a,.q-hint,.action-btn,#jumpRow,#jumpInput'))toggleAutoPlay()">
+            <div role="button" tabindex="0" role="button" tabindex="0" class="q-card" onclick="if(!event.target.closest('button,a,.q-hint,.action-btn,#jumpRow,#jumpInput'))toggleAutoPlay()">
                 <div class="q-num" id="qNum"></div>
                 <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
                 <div id="jumpRow" style="display:none;align-items:center;justify-content:center;gap:6px;margin-bottom:8px">
@@ -279,7 +279,7 @@
                 <div class="q-cat-tag" id="catTag"></div>
                 <div id="qImgWrap" style="display:none;text-align:center"></div>
                 <div class="q-text" id="qText">Loading...</div>
-                <div role="button" tabindex="0" class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
+                <div role="button" tabindex="0" role="button" tabindex="0" class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
                 <div class="q-opt-grid" id="optGrid"></div>
                 <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint"><kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> advance · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">⏸</kbd> pause</span> <span class="swipe-hint" style="display:none">swipe ← / swipe → · hold →⚡ rapid</span></div>
             </div>
@@ -6330,7 +6330,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             var wrap = document.getElementById('qImgWrap');
             if (!wrap || !url) return false;
             wrap.style.display = 'block';
-            wrap.innerHTML = '<img src="' + url + '" alt="" onerror="this.parentNode.style.display=\'none\';this.parentNode.innerHTML=\'\'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin:0 auto 10px;display:block;box-shadow:0 4px 16px rgba(0,0,0,.35)">';
+            wrap.innerHTML = '<img src="' + url + '" alt="" onerror="this.parentNode.style.display=\'none\';this.parentNode.innerHTML=\'\'" style="width:96px;height:96px;border-radius:50%;object-fit:cover;border:2px solid var(--border);margin:0 auto 10px;display:block;box-shadow:0 4px 16px rgba(0,0,0,.35)" loading="lazy">';
             return true;
         }
         function _attachPersonImage(q) {
@@ -7007,7 +7007,7 @@ function prevQuestion() {
                 sec.className = 'study-sec';
                 sec.id = 'sec_' + s.id;
                 sec.innerHTML =
-                    '<div role="button" tabindex="0" class="study-sec-h" onclick="_toggleSec(this)">'
+                    '<div role="button" tabindex="0" role="button" tabindex="0" class="study-sec-h" onclick="_toggleSec(this)">'
                     + '<span class="arrow">▶</span>'
                     + '<span class="st">' + s.title + '</span>'
                     + '<span class="chk' + (prog[s.id] ? ' d' : '') + '" id="chk_' + s.id + '" onclick="event.stopPropagation();_toggleChk(\'' + s.id + '\')">✓</span>'
@@ -7097,7 +7097,7 @@ function prevQuestion() {
             }
             area.innerHTML =
                 '<div class="fc-area">'
-                + '<div role="button" tabindex="0" class="fc-card" onclick="_revealFC()">'
+                + '<div role="button" tabindex="0" role="button" tabindex="0" class="fc-card" onclick="_revealFC()">'
                 + '<div class="q" id="fcQ"></div>'
                 + '<div class="a" id="fcA"></div>'
                 + '<div class="tap" id="fcTap">👆 Tap to reveal answer</div>'
@@ -7209,13 +7209,13 @@ function prevQuestion() {
                 '<div class="sr-box">'
                 + '<div class="sr-title">🔍 ' + results.length + ' result' + (results.length > 1 ? 's' : '') + ' for "' + q + '"</div>'
                 + results.map(function(r){
-                    return '<div role="button" tabindex="0" class="sr-item" onclick="closeSearch();showStudy(\'' + r.catId + '\',\'' + r.catName.replace(/'/g,"\\'") + '\',\'' + (r.icon || '📖') + '\')">'
+                    return '<div role="button" tabindex="0" role="button" tabindex="0" class="sr-item" onclick="closeSearch();showStudy(\'' + r.catId + '\',\'' + r.catName.replace(/'/g,"\\'") + '\',\'' + (r.icon || '📖') + '\')">'
                     + '<div class="cat">' + r.catName + '</div>'
                     + '<div class="snippet">' + r.snippet + '</div>'
                     + '</div>';
                 }).join('')
                 + '</div>'
-                + '<div role="button" tabindex="0" class="sr-close" onclick="closeSearch()">✕</div>';
+                + '<div role="button" tabindex="0" role="button" tabindex="0" class="sr-close" onclick="closeSearch()">✕</div>';
             overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });
             document.body.appendChild(overlay);
         }
@@ -7234,13 +7234,13 @@ function prevQuestion() {
         try { WIKI.prefetch(); } catch(e) {}
     
 </script>
-    <script src="https://unpkg.com/lucide@0.468.0"></script>
+    <script src="https://unpkg.com/lucide@0.468.0" defer></script>
     <script>lucide.createIcons();</script>
-<script src="js/supabase.js?v=20260811a"></script>
-<script src="js/bundles/core.js"></script>
-    <script src="js/gk-data.js"></script>
-    <script src="js/gk-generators.js"></script>
-    <script src="js/gk-wiki.js?t=20260626"></script>
+<script src="js/supabase.js?v=20260811a" defer></script>
+<script src="js/bundles/core.js" defer></script>
+    <script src="js/gk-data.js" defer></script>
+    <script src="js/gk-generators.js" defer></script>
+    <script src="js/gk-wiki.js?t=20260626" defer></script>
     <script>
         // Prefetch live Wikipedia facts for Quick Fact display
         if (typeof WIKI !== 'undefined') {

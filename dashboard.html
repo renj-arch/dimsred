@@ -157,7 +157,7 @@
 <a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
     <nav class="nav">
         <div class="nav-inner">
-            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon" loading="lazy"><span class="brand-text">vlymbooq</span></a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="dashboard.html" class="active">Dashboard</a>
@@ -165,14 +165,14 @@
                 <a href="mental.html">Mental</a>
                 <a href="science.html">🔬 Science</a>
                 <a href="polytechnic.html">🏫 Polytechnic</a>
-                <a href="guides/index.html">Guides</a>
+                <a href="#">Guides</a>
                 <a href="dashboard.html">Community</a>
-                <a href="cgl/index.html">CGL</a>
-                <a href="neet/index.html">NEET</a>
-                <a href="jee/index.html">JEE</a>
-                <a href="upsc/index.html">UPSC</a>
-                <a href="gate/index.html">GATE</a>
-                <a href="rbi/index.html">RBI</a>
+                <a href="#">CGL</a>
+                <a href="#">NEET</a>
+                <a href="#">JEE</a>
+                <a href="#">UPSC</a>
+                <a href="#">GATE</a>
+                <a href="#">RBI</a>
                 <a class="auth-btn" href="#" data-return="/dashboard.html">🚀 Sign in</a>
             </div>
         </div>
@@ -304,18 +304,18 @@
 
         <div class="sec-title"><span>&#x1f3eb;</span> Quick Practice<span class="sec-line"></span></div>
         <div class="exam-grid" id="exam-grid">
-            <a href="cgl/index.html" class="exam-chip"><span class="dot" style="background:#a78bfa"></span>SSC CGL</a>
-            <a href="neet/index.html" class="exam-chip"><span class="dot" style="background:#34d399"></span>NEET UG</a>
-            <a href="jee/index.html" class="exam-chip"><span class="dot" style="background:#6366f1"></span>JEE Main</a>
-            <a href="upsc/index.html" class="exam-chip"><span class="dot" style="background:#f59e0b"></span>UPSC CSE</a>
-            <a href="gate/index.html" class="exam-chip"><span class="dot" style="background:#ef4444"></span>GATE</a>
-            <a href="rbi/index.html" class="exam-chip"><span class="dot" style="background:#06b6d4"></span>RBI Grade B</a>
-            <a href="agniveer/index.html" class="exam-chip"><span class="dot" style="background:#a855f7"></span>Agniveer</a>
-            <a href="ibps-po/index.html" class="exam-chip"><span class="dot" style="background:#ec4899"></span>IBPS PO</a>
-            <a href="sbi-clerk/index.html" class="exam-chip"><span class="dot" style="background:#14b8a6"></span>SBI Clerk</a>
-            <a href="ssc-gd/index.html" class="exam-chip"><span class="dot" style="background:#f97316"></span>SSC GD</a>
-            <a href="ldc/index.html" class="exam-chip"><span class="dot" style="background:#a855f7"></span>LDC</a>
-            <a href="ctet/index.html" class="exam-chip"><span class="dot" style="background:#eab308"></span>CTET</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#a78bfa"></span>SSC CGL</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#34d399"></span>NEET UG</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#6366f1"></span>JEE Main</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#f59e0b"></span>UPSC CSE</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#ef4444"></span>GATE</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#06b6d4"></span>RBI Grade B</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#a855f7"></span>Agniveer</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#ec4899"></span>IBPS PO</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#14b8a6"></span>SBI Clerk</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#f97316"></span>SSC GD</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#a855f7"></span>LDC</a>
+            <a href="#" class="exam-chip"><span class="dot" style="background:#eab308"></span>CTET</a>
         </div>
 
         <div class="sec-title" style="margin-top:24px"><span>&#x1f4dd;</span> Current Affairs Quiz<span class="sec-line"></span></div>
@@ -475,7 +475,7 @@
         var el = document.getElementById('daily-quiz');
         var optsHtml = '';
         for (var i = 0; i < q.options.length; i++) {
-            optsHtml += '<div role="button" tabindex="0" class="q-opt" data-idx="' + i + '" onclick="selectDailyOpt(' + i + ')">' + q.options[i].label + '. ' + q.options[i].text + '</div>';
+            optsHtml += '<div role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-idx="' + i + '" onclick="selectDailyOpt(' + i + ')">' + q.options[i].label + '. ' + q.options[i].text + '</div>';
         }
         el.innerHTML = '<div class="daily-q"><div class="q-meta">' + (q.exam || 'Practice') + ' &middot; ' + (q.section || 'General') + '</div><div class="q-text">' + q.text + '</div><div class="q-opts">' + optsHtml + '</div><div class="q-soln" id="daily-soln"><strong>Correct Answer:</strong> ' + q.options.filter(function(o){return o.correct})[0].label + '<br><span style="color:#a1a1aa">Daily quiz resets in 24 hours. Come back tomorrow!</span></div></div>';
     }

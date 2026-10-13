@@ -157,18 +157,18 @@
                     <a href="lesson-category-theory.html">Category Theory <span class="s-tag">🔬</span></a>
                     <a href="lesson-set-theory.html">Set Theory &amp; Logic <span class="s-tag">🔬</span></a>
                     <a href="lesson-functional-analysis.html">Functional Analysis <span class="s-tag">🔬</span></a>
-                    <a href="jee/course/maths/lesson-algebra.html">Algebra</a>
-                    <a href="jee/course/maths/lesson-calculus.html">Calculus</a>
-                    <a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geometry</a>
-                    <a href="jee/course/maths/lesson-trigonometry.html">Trigonometry</a>
-                    <a href="jee/course/maths/lesson-inverse-trigonometry.html">Inverse Trigonometry</a>
-                    <a href="jee/course/maths/lesson-application-derivatives.html">App of Derivatives</a>
+                    <a href="#">Algebra</a>
+                    <a href="#">Calculus</a>
+                    <a href="#">Coordinate Geometry</a>
+                    <a href="#">Trigonometry</a>
+                    <a href="#">Inverse Trigonometry</a>
+                    <a href="#">App of Derivatives</a>
                     <a href="jee/course/maths/lesson-integration.html">Integration</a>
-                    <a href="jee/course/maths/lesson-differential-equations.html">Diff Equations</a>
+                    <a href="#">Diff Equations</a>
                     <a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D</a>
-                    <a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats</a>
-                    <a href="jee/course/maths/lesson-sets-relations-functions.html">Sets, Relations &amp; Functions</a>
-                    <a href="jee/course/maths/lesson-mathematical-reasoning.html">Mathematical Reasoning</a>
+                    <a href="#">Probability &amp; Stats</a>
+                    <a href="#">Sets, Relations &amp; Functions</a>
+                    <a href="#">Mathematical Reasoning</a>
                 </div>
             </div>
             <div class="main">
@@ -239,7 +239,7 @@
                 </div>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">1</div>
                         <span style="font-size:.88em;font-weight:600">Two complementary angles differ by 20°. Find the larger angle.</span>
                         <span class="arrow">▶</span>
@@ -321,7 +321,7 @@
                 </div>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">2</div>
                         <span style="font-size:.88em;font-weight:600">Find the height of an equilateral triangle of side 12 cm.</span>
                         <span class="arrow">▶</span>
@@ -395,7 +395,7 @@
                 </div>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">3</div>
                         <span style="font-size:.88em;font-weight:600">Two circles of radii 8 cm and 6 cm touch externally. Find distance between their centers.</span>
                         <span class="arrow">▶</span>
@@ -462,7 +462,7 @@
                 </div>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">4</div>
                         <span style="font-size:.88em;font-weight:600">Find the area of a triangle with sides 13 cm, 14 cm, 15 cm.</span>
                         <span class="arrow">▶</span>
@@ -488,7 +488,7 @@
                     <button class="btn btn-primary" onclick="resetPractice()">🔄 Reset All</button>
                     <a href="math.html" class="btn btn-success">← Back to Math Map</a>
                     <a href="lesson-arithmetic.html" class="btn btn-primary">← Arithmetic</a>
-                    <a href="jee/course/maths/lesson-algebra.html" class="btn btn-primary">Algebra →</a>
+                    <a href="#" class="btn btn-primary">Algebra →</a>
                 </div>
 
                 </div>
@@ -654,7 +654,7 @@
             for (var i = 0; i < practiceQs.length; i++) {
                 var q = practiceQs[i], o = '';
                 for (var j = 0; j < q.opts.length; j++) {
-                    o += '<div role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                    o += '<div role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
                 }
                 h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
             }

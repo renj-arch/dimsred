@@ -142,14 +142,14 @@
 <a href="lesson-category-theory.html">Category Theory <span class="s-tag">🔬</span></a>
 <a href="lesson-set-theory.html">Set Theory &amp; Logic <span class="s-tag">🔬</span></a>
 <a href="lesson-functional-analysis.html" class="active" style="color:var(--text);font-weight:600">Functional Analysis <span class="s-tag">🔬</span></a>
-<a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
-<a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
-<a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
-<a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
-<a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
-<a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
-<a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
-<a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+<a href="#">Algebra <span class="s-tag">📖</span></a>
+<a href="#">Calculus <span class="s-tag">📖</span></a>
+<a href="#">Trigonometry <span class="s-tag">📖</span></a>
+<a href="#">Probability &amp; Stats <span class="s-tag">📖</span></a>
+<a href="#">Coordinate Geo <span class="s-tag">🎯</span></a>
+<a href="#">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+<a href="#">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+<a href="#">Reasoning <span class="s-tag">🎯</span></a>
 </div></div>
 <div class="main"><div class="lesson-body">
 
@@ -198,7 +198,7 @@
 <div class="insight-box"><div class="insight-label">Parseval's Identity</div><div class="insight-text">‖f‖² = Σ |⟨f, eₙ⟩|²</div><div class="insight-sub">The energy of a signal equals the sum of the squares of its Fourier coefficients — a perfect energy conservation law.</div></div>
 
 <div class="step-reveal">
-<div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)"><div class="step-number">✨</div><span style="font-size:.88em;font-weight:600">The Orthogonal Projection Theorem</span><span class="arrow">▶</span></div>
+<div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)"><div class="step-number">✨</div><span style="font-size:.88em;font-weight:600">The Orthogonal Projection Theorem</span><span class="arrow">▶</span></div>
 <div class="step-content">
 Let M be a closed subspace of a Hilbert space H. For any x ∈ H, there's a unique m ∈ M such that x − m ⟂ M (orthogonal to every vector in M). This m is the <strong>best approximation</strong> to x in M — the unique minimizer of ‖x − y‖ for y ∈ M.<br><br>
 <strong>Example:</strong> In L²([0,1]), let M be the space of linear functions (a + bt). The orthogonal projection of a function f onto M gives the best linear approximation in the L² sense — which is exactly the linear regression line!<br><br>
@@ -277,7 +277,7 @@ var practiceQs = [
 {id:21012,text:"📏 The dual space of Lᵖ (1&lt;p&lt;∞) is:",opts:[{l:"A",t:"Lᵖ itself",c:false},{l:"B",t:"L^q where 1/p+1/q=1",c:true},{l:"C",t:"ℓ^∞",c:false},{l:"D",t:"The space of bounded operators",c:false}],sol:"For 1 &lt; p &lt; ∞, the dual of Lᵖ is <strong>L^q</strong> where 1/p + 1/q = 1 (Hölder conjugate). This is a key result of the Riesz representation theorem."}
 ];
 var answered={},correctCount=0;
-function renderPractice(){var c=document.getElementById('practice-qs'),h='';for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o='';for(var j=0;j<q.opts.length;j++){o+='<div role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';}
+function renderPractice(){var c=document.getElementById('practice-qs'),h='';for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o='';for(var j=0;j<q.opts.length;j++){o+='<div role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';}
 h+='<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';}
 c.innerHTML=h;updateScore();}
 function getCorrectLabel(q){for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)return q.opts[i].l+'. '+q.opts[i].t;}return '';}

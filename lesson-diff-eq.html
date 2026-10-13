@@ -44,14 +44,14 @@ body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(-
 <a href="lesson-functional-analysis.html">Functional Analysis <span class="s-tag">🔬</span></a>
 <a href="lesson-algebraic-topology.html">Algebraic Topology <span class="s-tag">🔬</span></a>
 <a href="lesson-diff-eq.html" class="active" style="color:var(--text);font-weight:600">Diff Equations <span class="s-tag">🔬</span></a>
-<a href="jee/course/maths/lesson-algebra.html">Algebra <span class="s-tag">📖</span></a>
-<a href="jee/course/maths/lesson-calculus.html">Calculus <span class="s-tag">📖</span></a>
-<a href="jee/course/maths/lesson-trigonometry.html">Trigonometry <span class="s-tag">📖</span></a>
-<a href="jee/course/maths/lesson-probability-statistics.html">Probability &amp; Stats <span class="s-tag">📖</span></a>
-<a href="jee/course/maths/lesson-coordinate-geometry.html">Coordinate Geo <span class="s-tag">🎯</span></a>
-<a href="jee/course/maths/lesson-vector-3d.html">Vector &amp; 3D <span class="s-tag">🎯</span></a>
-<a href="jee/course/maths/lesson-sets-relations-functions.html">Sets &amp; Relations <span class="s-tag">🎯</span></a>
-<a href="jee/course/maths/lesson-mathematical-reasoning.html">Reasoning <span class="s-tag">🎯</span></a>
+<a href="#">Algebra <span class="s-tag">📖</span></a>
+<a href="#">Calculus <span class="s-tag">📖</span></a>
+<a href="#">Trigonometry <span class="s-tag">📖</span></a>
+<a href="#">Probability &amp; Stats <span class="s-tag">📖</span></a>
+<a href="#">Coordinate Geo <span class="s-tag">🎯</span></a>
+<a href="#">Vector &amp; 3D <span class="s-tag">🎯</span></a>
+<a href="#">Sets &amp; Relations <span class="s-tag">🎯</span></a>
+<a href="#">Reasoning <span class="s-tag">🎯</span></a>
 </div></div>
 <div class="main"><div class="lesson-body">
 <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px"><span style="padding:2px 10px;border-radius:4px;background:rgba(244,114,182,.15);color:#f9a8d4;font-size:.7em;font-weight:700">🔬 Scientist</span><span style="font-size:.78em;color:var(--text-muted)">Pure mathematics — no exam syllabus</span></div>
@@ -118,7 +118,7 @@ var practiceQs=[
 {id:23012,text:"⚡ The Euler-Lagrange equation comes from:",opts:[{l:"A",t:"The method of characteristics",c:false},{l:"B",t:"Variational calculus",c:true},{l:"C",t:"Fourier series",c:false},{l:"D",t:"Lyapunov's method",c:false}],sol:"The <strong>Euler-Lagrange equation</strong> is the necessary condition for a functional to have a critical point — it's the foundation of <strong>variational calculus</strong>."}
 ];
 var answered={},correctCount=0;
-function renderPractice(){var c=document.getElementById('practice-qs'),h='';for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o='';for(var j=0;j<q.opts.length;j++){o+='<div role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';}h+='<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';}c.innerHTML=h;updateScore();}
+function renderPractice(){var c=document.getElementById('practice-qs'),h='';for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o='';for(var j=0;j<q.opts.length;j++){o+='<div role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';}h+='<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';}c.innerHTML=h;updateScore();}
 function getCorrectLabel(q){for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)return q.opts[i].l+'. '+q.opts[i].t;}return '';}
 function selectOpt(qId,idx){if(answered[qId])return;answered[qId]=true;var q=practiceQs.filter(function(x){return x.id===qId})[0];var opts=document.querySelectorAll('#q-'+qId+' .q-opt');var isCorrect=q.opts[idx].c;for(var i=0;i<opts.length;i++)opts[i].classList.add('disabled');if(isCorrect){opts[idx].classList.add('correct');document.getElementById('result-'+qId).textContent='✅ Correct!';document.getElementById('result-'+qId).className='q-result correct';correctCount++;}else{opts[idx].classList.add('wrong');document.getElementById('result-'+qId).textContent='❌ Not quite. Read the solution!';document.getElementById('result-'+qId).className='q-result wrong';for(var i=0;i<q.opts.length;i++){if(q.opts[i].c)opts[i].classList.add('correct');}}document.getElementById('soln-'+qId).classList.add('show');updateScore();}
 function updateScore(){var t=Object.keys(answered).length;var el=document.getElementById('score-display');if(!el){el=document.createElement('div');el.id='score-display';el.style.cssText='font-size:.85em;color:var(--text-sec);margin-bottom:10px;padding:10px 14px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius)';document.getElementById('practice-qs').before(el);}el.innerHTML='<span style="font-weight:700">📊 Progress:</span> Attempted: '+t+'/'+practiceQs.length+' | ✅ Correct: '+correctCount+' | 🎯 Accuracy: '+(t>0?Math.round(correctCount/t*100):0)+'%';}

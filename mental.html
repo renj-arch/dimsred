@@ -176,12 +176,12 @@
 <body>
     <nav class="nav">
         <div class="nav-inner">
-            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
+            <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon" loading="lazy"><span class="brand-text">vlymbooq</span></a>
             <div class="nav-links">
                 <a href="index.html">Home</a>
                 <a href="dashboard.html">Dashboard</a>
                 <a href="micro-test.html">Drill</a>
-                <a href="guides/index.html">Guides</a>
+                <a href="#">Guides</a>
                 <a href="current-affairs.html">📰 GK</a>
                 <a href="mental.html" class="active" style="color:var(--text);background:rgba(255,255,255,.06)">Mental</a>
                 <a href="science.html" style="color:var(--text-sec)">🔬 Science</a>
@@ -211,7 +211,7 @@
 
 
             <!-- 🔢 QUANT REFLEX CATEGORY -->
-            <div role="button" tabindex="0" class="category-card" onclick="toggleCategory('quant')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s">
+            <div role="button" tabindex="0" role="button" tabindex="0" class="category-card" onclick="toggleCategory('quant')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s">
                 <span style="font-size:1.4em">🔢</span>
                 <div style="flex:1"><div style="font-weight:800;font-size:.95em">Quant Reflex</div><div style="font-size:.72em;color:var(--text-muted)">35 topics — Number Sense, Algebra, Geometry, CI, DI, P&L, Stocks & more</div></div>
                 <span class="cat-arrow" id="catArrowQuant" style="color:var(--text-muted);font-size:.8em">▶</span>
@@ -220,7 +220,7 @@
             <div id="quantTopics" class="topic-grid" style="display:none;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0 12px 0"></div>
 
             <!-- 🧠 REASONING REFLEX CATEGORY -->
-            <div role="button" tabindex="0" class="category-card" onclick="toggleCategory('reasoning')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
+            <div role="button" tabindex="0" role="button" tabindex="0" class="category-card" onclick="toggleCategory('reasoning')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
                 <span style="font-size:1.4em">🧠</span>
                 <div style="flex:1"><div style="font-weight:800;font-size:.95em">Reasoning Reflex</div><div style="font-size:.72em;color:var(--text-muted)">50 topics — Puzzles, Coding, Syllogism, Clock, Cal, Direction, Non-Verbal & more</div></div>
                 <span class="cat-arrow" id="catArrowReasoning" style="color:var(--text-muted);font-size:.8em">▶</span>
@@ -229,7 +229,7 @@
             <div id="reasoningTopics" class="topic-grid" style="display:none;grid-template-columns:1fr 1fr;gap:6px;padding:8px 0 12px 0"></div>
 
             <!-- 📖 VERBAL ABILITY CATEGORY -->
-            <div role="button" tabindex="0" class="category-card" onclick="toggleCategory('verbal')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
+            <div role="button" tabindex="0" role="button" tabindex="0" class="category-card" onclick="toggleCategory('verbal')" style="display:flex;align-items:center;gap:10px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);cursor:pointer;margin-bottom:0;transition:all .2s;margin-top:6px">
                 <span style="font-size:1.4em">📖</span>
                 <div style="flex:1"><div style="font-weight:800;font-size:.95em">Verbal Ability</div><div style="font-size:.72em;color:var(--text-muted)">24 topics — Synonyms, Antonyms, Grammar, Voice, Comprehension & more</div></div>
                 <span class="cat-arrow" id="catArrowVerbal" style="color:var(--text-muted);font-size:.8em">▶</span>
@@ -258,7 +258,7 @@
             </div>
 
             <!-- GRAND SLAM -->
-            <div role="button" tabindex="0" class="mode-card" onclick="startTraining('grandslam')" style="margin-top:12px;padding:24px;border:2px solid rgba(167,139,250,.25);background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(52,211,153,.08))">
+            <div role="button" tabindex="0" role="button" tabindex="0" class="mode-card" onclick="startTraining('grandslam')" style="margin-top:12px;padding:24px;border:2px solid rgba(167,139,250,.25);background:linear-gradient(135deg,rgba(167,139,250,.08),rgba(52,211,153,.08))">
                 <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:4px">
                     <span style="font-size:2em">🏆</span>
                     <span style="font-size:1.3em;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent">Grand Slam</span>
@@ -307,7 +307,7 @@
 
                 <div class="q-text" id="qText" style="display:none">Loading...</div>
 
-                <div role="button" tabindex="0" class="q-hint" id="qHint" onclick="toggleHint()">💡 Show hint
+                <div role="button" tabindex="0" role="button" tabindex="0" class="q-hint" id="qHint" onclick="toggleHint()">💡 Show hint
                     <div class="hint-text" id="hintText"></div>
                 </div>
 
@@ -479,7 +479,7 @@
         el.innerHTML = '';
         topics.forEach(function(t){
             var statId = 'stat-' + cat + '-' + t.key;
-            el.innerHTML += '<div role="button" tabindex="0" class="topic-card" onclick="startTraining(\'' + cat + '\', \'' + t.key + '\')" style="padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px">'
+            el.innerHTML += '<div role="button" tabindex="0" role="button" tabindex="0" class="topic-card" onclick="startTraining(\'' + cat + '\', \'' + t.key + '\')" style="padding:10px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);cursor:pointer;transition:all .15s;display:flex;align-items:center;gap:8px">'
                 + '<span style="font-size:1.1em">' + t.icon + '</span>'
                 + '<div style="flex:1;min-width:0"><div style="font-weight:700;font-size:.78em">' + t.name + '</div><div style="font-size:.65em;color:var(--text-muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + t.desc + '</div></div>'
                 + '<div class="stat" id="' + statId + '" style="font-size:.65em;color:var(--purple);white-space:nowrap">0</div>'
@@ -1067,7 +1067,7 @@
         updateUI();
     }, 500);
     </script>
-<script src="js/bundles/core.js"></script>
+<script src="js/bundles/core.js" defer></script>
     <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
   <script src="scripts/lib/ask-llm.js" defer></script>
   <script src="js/exam-tutor.js" defer></script>
