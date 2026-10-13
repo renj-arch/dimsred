@@ -1,14 +1,14 @@
 name: LLM Auto-fix
 
 # The model fixes its own weak content: reads the fault board, asks a
-# local Qwen3.5-4B (Ollama on the runner's CPU) to generate questions
-# for thin categories, draw SVG figures for missing syllabus topics, and
-# rewrite broken captions. Results land in data/autofix-log.json and show
-# on improve.html as "what the model fixed".
+# local Qwen3.5-9B (Ollama on the runner's CPU + swap) to generate
+# questions for thin categories, draw SVG figures for missing syllabus
+# topics, and rewrite broken captions. Results land in data/autofix-log.json
+# and show on improve.html as "what the model fixed".
 #
 # Fully free forever: Ollama runs the model locally on GitHub's runner.
-# No API keys, no rate limits, no paid services. The model is downloaded
-# once (~3GB) and cached for the job duration.
+# No API keys, no rate limits, no paid services. 8GB swap is created so
+# the 9B model (~6GB) fits in the 7GB RAM runner without OOM.
 
 on:
   schedule:
@@ -25,7 +25,7 @@ permissions:
 jobs:
   autofix:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,20 +43,39 @@ jobs:
         with:
           node-version: 22
 
+      # Create 8GB swap so the 9B model (~6GB) fits without OOM.
+      # The runner has 14GB free disk; 8GB swap leaves plenty of headroom.
+      - name: Create swap (8GB)
+        run: |
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       # Install Ollama — free, open-source, runs models on CPU.
       - name: Install Ollama
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
 
-      - name: Pull Qwen3.5-4B (latest gen, ~3GB)
+      # Pull Qwen3.5-9B — the strongest model that fits with swap.
+      # Falls back to 4B if 9B pull fails for any reason.
+      - name: Pull Qwen3.5-9B (strongest, ~6GB)
         run: |
-          ollama pull qwen3.5:4b
+          if ollama pull qwen3.5:9b; then
+            echo "MODEL=qwen3.5:9b" >> $GITHUB_ENV
+            echo "Using 9B model"
+          else
+            echo "9B pull failed, falling back to 4B"
+            ollama pull qwen3.5:4b
+            echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
+          fi
           ollama list
 
-      - name: Run auto-fixer (Qwen3.5-4B local, zero API keys)
+      - name: Run auto-fixer (Qwen3.5 local, zero API keys)
         env:
-          OLLAMA_MODEL: qwen3.5:4b
+          OLLAMA_MODEL: ${{ env.MODEL }}
         run: node scripts/llm-autofix.js
 
       - name: Publish fixes
@@ -69,7 +88,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No fixes to publish"
           else
-            git commit -m "auto-fix: Qwen3.5-4B fixed weak content (run #${{ github.run_number }})"
+            git commit -m "auto-fix: ${{ env.MODEL }} fixed weak content (run #${{ github.run_number }})"
             for i in 1 2 3; do
               git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Fixes pushed"; break; } || echo "push attempt $i failed, retrying..."
               sleep 5
