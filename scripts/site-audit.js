@@ -56,20 +56,31 @@ function auditPage(file) {
     faults.push('placeholder marker in source');
   }
 
-  // Strip <script> bodies (keep the tags themselves for src= scanning) so
-  // string literals inside JS don't get mistaken for real asset refs.
+  // Asset refs. Two sparse-checkout guards:
+  //   1. Absolute site routes (/cgl/, /rbi/) are not filesystem paths — skip.
+  //   2. If a ref's top-level directory is missing entirely (css/, js/ not in
+  //      the sparse set), we cannot verify assets — degrade to partial mode
+  //      instead of reporting every external-looking local ref as broken.
   const bare = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (block) {
     return block.replace(/>([\s\S]*)</, '><');
   });
   const refs = bare.match(/(?:src|href)=["']([^"']+)["']/gi) || [];
   const missing = [];
+  let skippedSparse = 0;
   refs.forEach(function (r) {
     const m = /(?:src|href)=["']([^"']+)["']/i.exec(r);
     if (!m) return;
     let u = m[1];
     if (/^(https?:|\/\/|#|mailto:|data:)/i.test(u)) return;
+    if (u[0] === '/') return; // absolute site route, not a file path
     u = u.replace(/^\.\//, '').split(/[?#]/)[0];
-    if (!u || /\$\d/.test(u)) return; // skip template back-references
+    if (!u || /\$\d/.test(u)) return;
+    const top = u.split('/')[0];
+    const topExists = fs.existsSync(path.join(ROOT, top));
+    if (!topExists && (top === 'css' || top === 'js' || top === 'guides' || top === 'figures')) {
+      skippedSparse++;
+      return;
+    }
     if (!fs.existsSync(path.join(ROOT, u))) missing.push(u);
   });
   if (missing.length) faults.push('missing local asset(s): ' + missing.slice(0, 4).join(', ') +
@@ -81,6 +92,7 @@ function auditPage(file) {
     title: (/<title[^>]*>([^<]*)/i.exec(html) || [, ''])[1].trim().slice(0, 80),
     scriptCount: (html.match(/<script[^>]+src=/gi) || []).length,
     selfContained: !hasExtJs && !hasExtCss,
+    skippedSparse: skippedSparse,
     faults: faults
   };
 }
