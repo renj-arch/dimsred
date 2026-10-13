@@ -233,28 +233,82 @@ async function agentCode() {
   const fixes = [];
   const pages = listPages();
   const existingFiles = new Set(pages);
-  // Also include directories that exist
   try {
     fs.readdirSync('.', { withFileTypes: true }).forEach(d => {
       if (d.isDirectory()) existingFiles.add(d.name + '/');
     });
   } catch (e) { /* ignore */ }
 
+  // Known page mapping for dead links — link to real pages instead of #
+  const LINK_MAP = {
+    'upsc.html': 'papers.html', 'cgl.html': 'ssc-je.html', 'rrb.html': 'ssc-je.html',
+    'ibps.html': 'ssc-je.html', 'bank.html': 'ssc-je.html', 'neet.html': 'science.html',
+    'jee.html': 'science.html', 'gate.html': 'polytechnic.html', 'nda.html': 'ssc-je.html',
+    'cds.html': 'ssc-je.html', 'clat.html': 'papers.html', 'ctet.html': 'ssc-je.html',
+    'ldc.html': 'ssc-je.html', 'aginveer.html': 'ssc-je.html', 'aginveer': 'ssc-je.html',
+    'rbi.html': 'ssc-je.html', 'sbi.html': 'ssc-je.html', 'ssc-gd.html': 'ssc-je.html',
+    'kerala-psc.html': 'ssc-je.html', 'police.html': 'ssc-je.html', ' army.html': 'ssc-je.html'
+  };
+
   for (const page of pages) {
     let html = fs.readFileSync(page, 'utf8');
     let changed = false;
 
-    // Fix links to non-existent local .html files
-    const linkRegex = /href=["'](?!http|https|mailto|#|\/\/|data:)([^"']+\.html[^"']*)["']/gi;
+    // Fix dead links — map to real pages, DON'T use #
+    const linkRegex = /href=["'](?!http|https|mailto|\/\/|data:)([^"']+\.html?)["']/gi;
     let match;
     while ((match = linkRegex.exec(html)) !== null) {
       const target = match[1].split('#')[0].split('?')[0];
-      if (target && !existingFiles.has(target) && !fs.existsSync(target)) {
-        // Remove the dead link but keep the text
-        html = html.replace(match[0], 'href="#"');
+      if (!target || existingFiles.has(target) || fs.existsSync(target)) continue;
+      const basename = target.split('/').pop().toLowerCase();
+      const mapped = LINK_MAP[basename];
+      if (mapped && fs.existsSync(mapped)) {
+        html = html.replace(match[0], 'href="' + mapped + '"');
         changed = true;
-        fixes.push({ page: page, fix: 'Fixed dead link: ' + target });
+        fixes.push({ page: page, fix: 'Redirected dead link ' + target + ' → ' + mapped });
+      } else {
+        // Convert <a> to <span> — keep text, remove broken navigation
+        html = html.replace(
+          new RegExp('<a\\s+href=["\']' + match[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '["\'][^>]*>([^<]*)</a>', 'gi'),
+          '<span style="cursor:default">$1</span>'
+        );
+        changed = true;
+        fixes.push({ page: page, fix: 'Converted dead link to text: ' + target });
       }
+    }
+
+    // Detect placeholder href="#" on clickable exam cards — link to real exam pages
+    if (page === 'index.html') {
+      // Replace placeholder exam card links with real destinations
+      const cardFixes = [
+        { pattern: /<a href="#" class="exam-card purple tilt-card">/g, replace: '<a href="papers.html" class="exam-card purple tilt-card">', label: 'UPSC' },
+        { pattern: /<a href="#" class="exam-card emerald tilt-card">/g, replace: '<a href="ssc-je.html" class="exam-card emerald tilt-card">', label: 'SSC' },
+        { pattern: /<a href="#" class="exam-card blue tilt-card">/g, replace: '<a href="ssc-je.html" class="exam-card blue tilt-card">', label: 'Railway' },
+        { pattern: /<a href="#" class="exam-card amber tilt-card">/g, replace: '<a href="ssc-je.html" class="exam-card amber tilt-card">', label: 'Banking' },
+        { pattern: /<a href="#" class="exam-card rose tilt-card">/g, replace: '<a href="science.html" class="exam-card rose tilt-card">', label: 'Defence' }
+      ];
+      for (const cf of cardFixes) {
+        if (cf.pattern.test(html)) {
+          html = html.replace(cf.pattern, cf.replace);
+          changed = true;
+          fixes.push({ page: page, fix: 'Linked ' + cf.label + ' exam card to real page' });
+        }
+      }
+      // Generic: replace any remaining # href on exam-cards with mega-test
+      html = html.replace(/<a href="#" (class="exam-card[^"]*")>/g, '<a href="mega-test.html" $1>');
+      // Fix nav placeholder links
+      html = html.replace(/<a href="#">(UPSC|SSC GD|CGL|RBI|JEE|NEET|GATE|Agniveer|IBPS PO|SBI Clerk|LDC|CTET|Kerala PSC|NDA|CDS|CLAT)<\/a>/g,
+        function(m, label) {
+          const map = { 'UPSC': 'papers.html', 'SSC GD': 'ssc-je.html', 'CGL': 'ssc-je.html',
+            'RBI': 'ssc-je.html', 'JEE': 'science.html', 'NEET': 'science.html', 'GATE': 'polytechnic.html',
+            'Agniveer': 'ssc-je.html', 'IBPS PO': 'ssc-je.html', 'SBI Clerk': 'ssc-je.html',
+            'LDC': 'ssc-je.html', 'CTET': 'ssc-je.html', 'Kerala PSC': 'ssc-je.html',
+            'NDA': 'ssc-je.html', 'CDS': 'ssc-je.html', 'CLAT': 'papers.html' };
+          var dest = map[label] || 'mega-test.html';
+          changed = true;
+          fixes.push({ page: page, fix: 'Linked nav "' + label + '" → ' + dest });
+          return '<a href="' + dest + '">' + label + '</a>';
+        });
     }
 
     // Remove deprecated align attribute
@@ -262,6 +316,18 @@ async function agentCode() {
       html = html.replace(/\salign=["'](left|right|center|justify)["']/gi, '');
       changed = true;
       fixes.push({ page: page, fix: 'Removed deprecated align attribute' });
+    }
+
+    // Check for missing alt on images
+    const imgNoAlt = html.match(/<img(?![^>]*\balt=)[^>]*>/gi);
+    if (imgNoAlt && imgNoAlt.length > 0) {
+      for (const img of imgNoAlt) {
+        const srcMatch = img.match(/src=["']([^"']+)["']/i);
+        const alt = srcMatch ? srcMatch[1].split('/').pop().replace(/\.\w+$/, '').replace(/[-_]/g, ' ') : 'image';
+        html = html.replace(img, img.replace('<img', '<img alt="' + alt + '"'));
+      }
+      changed = true;
+      fixes.push({ page: page, fix: 'Added alt to ' + imgNoAlt.length + ' images' });
     }
 
     if (changed) fs.writeFileSync(page, html);
