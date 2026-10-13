@@ -19,9 +19,82 @@ const fs = require('fs');
 const path = require('path');
 
 const LOG = 'data/autofix-log.json';
-const MAX_FIXES_PER_RUN = 3; // 27B on CPU is slow — keep runs within timeout
+const MAX_FIXES_PER_RUN = 3; // large models on CPU are slow — keep runs within timeout
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
-const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:4b';
+
+// ── Self-upgrading model selector ──
+// Ranked by LiveCodeBench v6 / coding ability. When a better model appears
+// on Ollama, add it here and the next run picks it automatically. The
+// selector probes what's actually pullable and what fits in memory, then
+// picks the best available.
+//
+// To upgrade: just add a new entry at the right position. No code changes
+// needed elsewhere. Example: when Qwen4-30B releases and hits 95%+, insert
+// it above Qwen3.8-27B and the next run uses it.
+const MODEL_RANKING = [
+  // { ollama: 'tag', ramGB: approx RAM needed, score: LiveCodeBench %, note }
+  { ollama: 'qwen3.8:27b',        ramGB: 18, score: 90.3, note: 'Qwen3.8-27B' },
+  { ollama: 'nvidia/nemotron-nano-9b-v2', ramGB: 6, score: 71.1, note: 'Nemotron 9B v2' },
+  { ollama: 'qwen3.5:9b',         ramGB: 6, score: 65,   note: 'Qwen3.5-9B' },
+  { ollama: 'qwen3.5:4b',         ramGB: 3.5, score: 55, note: 'Qwen3.5-4B' },
+  { ollama: 'qwen3.5:2b',         ramGB: 2, score: 45,   note: 'Qwen3.5-2B' },
+  { ollama: 'qwen3.5:0.8b',       ramGB: 1, score: 30,   note: 'Qwen3.5-0.8B' }
+];
+
+function availableRAM() {
+  try {
+    const os = require('os');
+    const totalGB = os.totalmem() / (1024 * 1024 * 1024);
+    const freeGB = os.freemem() / (1024 * 1024 * 1024);
+    return { totalGB: totalGB, freeGB: freeGB };
+  } catch (e) {
+    return { totalGB: 7, freeGB: 5 }; // safe default for GitHub runners
+  }
+}
+
+async function pickBestModel() {
+  const env = process.env.OLLAMA_MODEL;
+  if (env) {
+    console.log('autofix: using OLLAMA_MODEL env override: ' + env);
+    return env;
+  }
+
+  const ram = availableRAM();
+  console.log('autofix: system RAM ' + ram.totalGB.toFixed(1) + 'GB total, ' + ram.freeGB.toFixed(1) + 'GB free');
+
+  // Check which models are already pulled (no network needed).
+  let pulled = [];
+  try {
+    const res = await fetch(OLLAMA_HOST + '/api/tags');
+    if (res.ok) {
+      const j = await res.json();
+      pulled = (j.models || []).map(function (m) { return m.name; });
+      console.log('autofix: ' + pulled.length + ' model(s) already pulled: ' + pulled.join(', '));
+    }
+  } catch (e) { /* Ollama not up yet */ }
+
+  // Pick the best model that (a) is already pulled, or (b) fits in total RAM.
+  // Prefer already-pulled to avoid a slow download.
+  for (const entry of MODEL_RANKING) {
+    const isPulled = pulled.some(function (n) {
+      return n === entry.ollama || n.startsWith(entry.ollama.split(':')[0]);
+    });
+    const fitsRAM = ram.totalGB >= entry.ramGB + 1; // +1GB headroom for OS
+
+    if (isPulled) {
+      console.log('autofix: selected ' + entry.note + ' (already pulled, ' + entry.score + '% LiveCodeBench)');
+      return entry.ollama;
+    }
+    if (fitsRAM) {
+      console.log('autofix: selected ' + entry.note + ' (' + entry.score + '% LiveCodeBench, fits in ' + ram.totalGB.toFixed(0) + 'GB RAM)');
+      return entry.ollama;
+    }
+  }
+
+  // Nothing fits — use the smallest.
+  console.log('autofix: no model fits, using smallest');
+  return MODEL_RANKING[MODEL_RANKING.length - 1].ollama;
+}
 
 function loadJson(p, fallback) {
   try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { return fallback; }
@@ -264,12 +337,16 @@ async function fixBrokenCaption(fault) {
 
 // ── Main ──
 async function main() {
-  const log = loadJson(LOG, { fixes: [], lastRun: null });
+  const log = loadJson(LOG, { fixes: [], lastRun: null, model: null });
   const faults = loadJson('data/faults.json', null);
   if (!faults || !faults.faults) {
     console.log('autofix: no fault board found — nothing to fix');
     return;
   }
+
+  // Self-upgrade: pick the best available model automatically.
+  const model = await pickBestModel();
+  log.model = model;
 
   // Collect actionable fixes from the board
   const thinCats = faults.faults.filter(f => f.severity === 'critical' && f.kind === 'coverage' && f.action);
