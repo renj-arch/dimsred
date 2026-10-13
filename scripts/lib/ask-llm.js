@@ -31,20 +31,26 @@ if (typeof module === 'object' && module.exports) {
 // instruction following is reliable at this size, which matters more than raw
 // breadth for a fixed answer template.
 //
-// Two sizes are offered: the 1.5B that anyone's GPU can drive, and a 3B that
-// writes somewhat better prose at roughly twice the wait. The org prefix is
-// `mlc-ai/` -- the WebLLM 0.2.86 catalog no longer serves the older `Qwen/`
-// prefix, and asking for a record the catalog does not hold fails with a
-// ModelNotFoundError before a single weight is fetched.
+// Three sizes from the Qwen3 generation (2025+), which scores far above the
+// older Qwen2.5 at the same parameter count — Qwen3.5-2B reaches ~88.8% MMLU-
+// Redux, rivaling models many times its size. The org prefix is `mlc-ai/` --
+// the WebLLM 0.2.86 catalog no longer serves the older `Qwen/` prefix, and
+// asking for a record the catalog does not hold fails with a ModelNotFoundError
+// before a single weight is fetched.
 //
-// A third entry appears when it exists: `mine`, the model fine-tuned on this
+//   fast     — Qwen3-1.7B: ~2.0 GB VRAM, anyone's GPU drives it
+//   quality  — Qwen3.5-2B: ~2.2 GB VRAM, newest generation, much better prose
+//   best     — Qwen3-4B:   ~3.4 GB VRAM, near-cloud quality on a laptop GPU
+//
+// A fourth entry appears when it exists: `mine`, the model fine-tuned on this
 // page's own answers by the Train Writer Model workflow. Its weights live on
 // the repo's `writer-model` branch; probeMine() checks for them and, on a hit,
-// adds the option. Until the first training run finishes, only the two stock
+// adds the option. Until the first training run finishes, only the three stock
 // sizes show -- nothing breaks, the option is simply absent.
 var MODELS = {
-  fast:    { id: 'mlc-ai/Qwen2.5-1.5B-Instruct-q4f16_1-MLC', label: 'Fast (1.5B)' },
-  quality: { id: 'mlc-ai/Qwen2.5-3B-Instruct-q4f16_1-MLC',   label: 'Quality (3B, slower)' }
+  fast:    { id: 'mlc-ai/Qwen3-1.7B-q4f16_1-MLC',          label: 'Fast (1.7B)' },
+  quality: { id: 'mlc-ai/Qwen3.5-2B-q4f16_1-MLC',          label: 'Quality (2B, newest)' },
+  best:    { id: 'mlc-ai/Qwen3-4B-q4f16_1-MLC',            label: 'Best (4B, slower)' }
 };
 var DEFAULT_MODEL = 'fast';
 
