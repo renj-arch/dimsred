@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papers — Previous Year Questions with AI Answers</title>
+<meta name="description" content="Official UPSC previous year papers with one-click AI-powered answers using the Ask engine. Real questions, real answers, real explanations.">
+<meta name="robots" content="index, follow">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--card:#111113;--border:#1e1e22;--hover:#1a1a1e;--text:#e5e5e5;--muted:#737373;--purple:#8b5cf6;--emerald:#34d399;--blue:#60a5fa;--red:#ef4444;--radius:12px}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;line-height:1.6;min-height:100vh}
+a{color:var(--purple);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:900px;margin:0 auto;padding:0 20px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--purple);color:#fff;padding:8px 16px;z-index:100}
+.skip:focus{left:8px;top:8px}
+header{padding:24px 0;border-bottom:1px solid var(--border)}
+header a{color:var(--text);text-decoration:none;display:flex;align-items:center;gap:8px;font-weight:700}
+header a:hover{text-decoration:none;opacity:.8}
+.back{font-size:.9em;color:var(--muted);margin-bottom:8px;display:inline-block}
+.back:hover{color:var(--text)}
+.hero{padding:40px 0 24px}
+.hero h1{font-size:2em;font-weight:800;margin-bottom:8px}
+.hero p{color:var(--muted);font-size:.95em}
+.stats{display:flex;gap:20px;margin:20px 0;flex-wrap:wrap}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;flex:1;min-width:140px}
+.stat-val{font-size:1.8em;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.8em;color:var(--muted);margin-top:2px}
+.paper-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:16px 0;transition:all .3s}
+.paper-card:hover{border-color:var(--purple)}
+.paper-header{display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px;margin-bottom:16px}
+.paper-title{font-size:1.2em;font-weight:700}
+.paper-meta{color:var(--muted);font-size:.85em;margin-top:4px}
+.badges{display:flex;gap:6px;flex-wrap:wrap}
+.badge{background:rgba(139,92,246,.12);color:var(--purple);padding:3px 10px;border-radius:20px;font-size:.75em;font-weight:600}
+.badge.green{background:rgba(52,211,153,.12);color:var(--emerald)}
+.badge.blue{background:rgba(96,165,250,.12);color:var(--blue)}
+.cutoff-row{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0}
+.cutoff{background:var(--hover);padding:4px 10px;border-radius:8px;font-size:.78em}
+.cutoff span{color:var(--muted)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:10px 20px;border-radius:var(--radius);border:none;cursor:pointer;font-size:.88em;font-weight:600;transition:all .2s;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--purple),#6d28d9);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(139,92,246,.3)}
+.btn-secondary{background:var(--hover);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--purple)}
+.btn:disabled{opacity:.5;cursor:not-allowed;transform:none!important;box-shadow:none!important}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.progress-bar{width:100%;height:4px;background:var(--border);border-radius:2px;margin:16px 0;overflow:hidden;display:none}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:2px;transition:width .5s;width:0%}
+.questions-section{margin:32px 0;display:none}
+.section-title{font-size:1.3em;font-weight:700;margin-bottom:4px}
+.section-sub{color:var(--muted);font-size:.88em;margin-bottom:16px}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin:12px 0;transition:all .3s}
+.q-card.answered{border-color:rgba(52,211,153,.3)}
+.q-num{font-weight:700;color:var(--purple);font-size:.9em}
+.q-text{margin:8px 0;font-size:.92em;line-height:1.7}
+.q-subject{display:inline-block;background:var(--hover);padding:2px 8px;border-radius:6px;font-size:.72em;color:var(--muted);margin-top:6px}
+.q-options{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0}
+.q-opt{padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:.85em;background:var(--bg)}
+.q-opt.correct{border-color:var(--emerald);background:rgba(52,211,153,.08);color:var(--emerald);font-weight:600}
+.q-answer{margin-top:10px;padding:12px;background:rgba(52,211,153,.05);border:1px solid rgba(52,211,153,.2);border-radius:8px;font-size:.88em;display:none}
+.q-answer.show{display:block}
+.q-answer-label{font-weight:700;color:var(--emerald);margin-bottom:4px}
+.q-explain{color:var(--text);line-height:1.7;margin-top:6px}
+.q-solve-btn{margin-top:8px}
+.q-loader{display:none;margin-top:8px;color:var(--muted);font-size:.82em}
+.q-loader.show{display:block}
+.filter-bar{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid var(--border);background:var(--card);color:var(--muted);cursor:pointer;font-size:.8em;font-family:inherit;transition:all .2s}
+.filter-btn:hover,.filter-btn.active{border-color:var(--purple);color:var(--purple);background:rgba(139,92,246,.08)}
+.footer{text-align:center;padding:40px 0;color:var(--muted);font-size:.82em;border-top:1px solid var(--border);margin-top:40px}
+@media(max-width:640px){.q-options{grid-template-columns:1fr}.hero h1{font-size:1.5em}.btn{padding:8px 14px;font-size:.82em}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+<header><div class="container"><a href="index.html">📚 studypro</a></div></header>
+<main id="main">
+<div class="container">
+  <div class="hero">
+    <a href="index.html" class="back">← Back to home</a>
+    <h1>📜 Previous Year Papers</h1>
+    <p>Official UPSC questions with one-click AI-powered explanations. Every answer is verified against the official UPSC answer key.</p>
+  </div>
+
+  <div class="stats" id="stats"></div>
+
+  <div id="paperList"></div>
+
+  <div class="progress-bar" id="progressBar"><div class="progress-fill" id="progressFill"></div></div>
+  <div id="progressText" style="color:var(--muted);font-size:.85em;margin:8px 0;display:none"></div>
+
+  <section class="questions-section" id="questionsSection">
+    <div class="section-title" id="sectionTitle"></div>
+    <div class="section-sub" id="sectionSub"></div>
+    <div class="filter-bar" id="filterBar"></div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="answerAllBtn" onclick="answerAll()">⚡ Answer All Questions</button>
+      <button class="btn btn-secondary" id="resetBtn" onclick="resetAll()">↻ Reset</button>
+      <a href="ask.html" class="btn btn-secondary">💬 Open Ask Engine</a>
+    </div>
+    <div id="questionsContainer"></div>
+  </section>
+
+  <div class="footer">
+    <p>Official question papers from <a href="https://upsc.gov.in" target="_blank" rel="noopener">upsc.gov.in</a> · Answers verified against UPSC official answer key</p>
+    <p>AI explanations powered by the Ask engine (local, free, no API keys)</p>
+  </div>
+</div>
+</main>
+
+<script>
+var PAPERS = null, currentPaper = null, answering = false;
+
+function loadPapers() {
+  fetch('data/papers.json').then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(data) {
+    PAPERS = data.papers || [];
+    renderStats();
+    renderPapers();
+  }).catch(function(e) {
+    document.getElementById('paperList').innerHTML =
+      '<div class="paper-card"><p style="color:var(--red)">Failed to load papers: ' + e.message + '</p></div>';
+  });
+}
+
+function renderStats() {
+  var totalQ = 0, totalPapers = PAPERS.length;
+  PAPERS.forEach(function(p) { totalQ += p.questions.length; });
+  document.getElementById('stats').innerHTML =
+    '<div class="stat"><div class="stat-val">' + totalPapers + '</div><div class="stat-label">Papers</div></div>' +
+    '<div class="stat"><div class="stat-val">' + totalQ + '</div><div class="stat-label">Questions</div></div>' +
+    '<div class="stat"><div class="stat-val">100%</div><div class="stat-label">Official Answers</div></div>';
+}
+
+function renderPapers() {
+  var html = '';
+  PAPERS.forEach(function(p, i) {
+    var cutoff = '';
+    if (p.cutoff) {
+      cutoff = '<div class="cutoff-row">';
+      Object.keys(p.cutoff).forEach(function(cat) {
+        cutoff += '<div class="cutoff"><span>' + cat.toUpperCase() + ':</span> ' + p.cutoff[cat] + '</div>';
+      });
+      cutoff += '</div>';
+    }
+    html += '<div class="paper-card">' +
+      '<div class="paper-header"><div>' +
+        '<div class="paper-title">' + p.exam + ' ' + p.year + ' — ' + p.paper + '</div>' +
+        '<div class="paper-meta">' + p.totalQuestions + ' questions · ' + p.duration + ' · ' + p.marks + ' marks</div>' +
+      '</div><div class="badges">' +
+        '<span class="badge">Official</span><span class="badge green">Answer Key Verified</span>' +
+        (p.officialPdf ? '<span class="badge blue"><a href="' + p.officialPdf + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">📄 PDF</a></span>' : '') +
+      '</div></div>' + cutoff +
+      '<div class="btn-row">' +
+        '<button class="btn btn-primary" onclick="openPaper(' + i + ')">📖 View Questions</button>' +
+        '<button class="btn btn-secondary" onclick="openPaper(' + i + ');setTimeout(answerAll,500)">⚡ Answer All</button>' +
+      '</div></div>';
+  });
+  document.getElementById('paperList').innerHTML = html;
+}
+
+function openPaper(idx) {
+  currentPaper = PAPERS[idx];
+  var sec = document.getElementById('questionsSection');
+  sec.style.display = 'block';
+  document.getElementById('sectionTitle').textContent =
+    currentPaper.exam + ' ' + currentPaper.year + ' — ' + currentPaper.paper;
+  document.getElementById('sectionSub').textContent =
+    currentPaper.questions.length + ' questions · Official answers · AI explanations available';
+  renderFilters();
+  renderQuestions();
+  sec.scrollIntoView({ behavior: 'smooth' });
+}
+
+function renderFilters() {
+  var subjects = {};
+  currentPaper.questions.forEach(function(q) { subjects[q.subject] = (subjects[q.subject] || 0) + 1; });
+  var html = '<button class="filter-btn active" onclick="filterQuestions(\'all\',this)">All (' + currentPaper.questions.length + ')</button>';
+  Object.keys(subjects).sort().forEach(function(s) {
+    var label = s.replace(/-/g, ' ').replace(/\b\w/g, function(c) { return c.toUpperCase(); });
+    html += '<button class="filter-btn" onclick="filterQuestions(\'' + s + '\',this)">' + label + ' (' + subjects[s] + ')</button>';
+  });
+  document.getElementById('filterBar').innerHTML = html;
+}
+
+var currentFilter = 'all';
+function filterQuestions(subj, btn) {
+  currentFilter = subj;
+  document.querySelectorAll('.filter-btn').forEach(function(b) { b.classList.remove('active'); });
+  if (btn) btn.classList.add('active');
+  renderQuestions();
+}
+
+function renderQuestions() {
+  var qs = currentPaper.questions;
+  if (currentFilter !== 'all') qs = qs.filter(function(q) { return q.subject === currentFilter; });
+  var html = '';
+  qs.forEach(function(q) {
+    var optsHtml = '';
+    if (q.options && q.options.length) {
+      optsHtml = '<div class="q-options">';
+      q.options.forEach(function(opt, oi) {
+        var letter = String.fromCharCode(97 + oi);
+        var isCorrect = letter.toUpperCase() === q.answer;
+        optsHtml += '<div class="q-opt' + (isCorrect ? ' correct' : '') + '">' +
+          '<strong>' + letter.toUpperCase() + '.</strong> ' + opt + (isCorrect ? ' ✓' : '') + '</div>';
+      });
+      optsHtml += '</div>';
+    }
+    html += '<div class="q-card" id="qcard-' + q.n + '">' +
+      '<div class="q-num">Q' + q.n + ' · Answer: <span style="color:var(--emerald)">' + q.answer + '</span></div>' +
+      '<div class="q-text">' + q.q + '</div>' +
+      optsHtml +
+      '<span class="q-subject">' + q.subject.replace(/-/g, ' ') + '</span>' +
+      '<div class="q-answer" id="ans-' + q.n + '"></div>' +
+      '<div class="q-loader" id="loader-' + q.n + '">⏳ Thinking...</div>' +
+      '<button class="btn btn-secondary q-solve-btn" onclick="answerOne(' + q.n + ')" id="btn-' + q.n + '">💡 Explain Answer</button>' +
+      '</div>';
+  });
+  document.getElementById('questionsContainer').innerHTML = html;
+}
+
+function answerOne(num) {
+  var q = currentPaper.questions.find(function(x) { return x.n === num; });
+  if (!q) return;
+  var ansDiv = document.getElementById('ans-' + num);
+  var loader = document.getElementById('loader-' + num);
+  var btn = document.getElementById('btn-' + num);
+  btn.disabled = true;
+  loader.classList.add('show');
+
+  var qText = q.q + (q.options ? '\nOptions: ' + q.options.map(function(o, i) {
+    return String.fromCharCode(65 + i) + ') ' + o;
+  }).join(' ') : '') + '\nCorrect answer: ' + q.answer;
+
+  tryExplain(qText, q.answer).then(function(explanation) {
+    loader.classList.remove('show');
+    ansDiv.innerHTML = '<div class="q-answer-label">💡 Explanation</div><div class="q-explain">' + explanation + '</div>';
+    ansDiv.classList.add('show');
+    document.getElementById('qcard-' + num).classList.add('answered');
+    btn.textContent = '✓ Explained';
+  }).catch(function(e) {
+    loader.classList.remove('show');
+    ansDiv.innerHTML = '<div class="q-answer-label">Official Answer: ' + q.answer + '</div>' +
+      '<div class="q-explain">Could not generate explanation: ' + e.message + '. The official answer is <strong>' + q.answer + '</strong>.</div>';
+    ansDiv.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = '💡 Retry';
+  });
+}
+
+function tryExplain(qText, officialAnswer) {
+  return new Promise(function(resolve, reject) {
+    if (typeof AskCore !== 'undefined' && typeof AskCore.retrieve === 'function' && typeof AskCore.compose === 'function') {
+      try {
+        var idx = getAskIndex();
+        if (idx) {
+          var res = AskCore.retrieve(idx, qText, 5);
+          if (res && res.hits && res.hits.length) {
+            var composed = AskCore.compose(qText, res);
+            if (composed && composed.text) { resolve(composed.text); return; }
+          }
+        }
+      } catch (e) { /* fall through */ }
+    }
+    if (typeof askLLMAnswer === 'function') {
+      try {
+        askLLMAnswer(qText).then(function(ans) {
+          if (ans && ans.text) resolve(ans.text);
+          else resolve('Official answer: ' + officialAnswer);
+        }).catch(function() { resolve('Official answer: ' + officialAnswer); });
+        return;
+      } catch (e) { /* fall through */ }
+    }
+    resolve('Official answer: <strong>' + officialAnswer + '</strong>. For a detailed explanation, open the Ask engine and paste this question.');
+  });
+}
+
+var _askIdx = null;
+function getAskIndex() {
+  if (_askIdx) return _askIdx;
+  try {
+    if (typeof window.__askIdx !== 'undefined') { _askIdx = window.__askIdx; return _askIdx; }
+  } catch (e) {}
+  return null;
+}
+
+function answerAll() {
+  if (answering) return;
+  answering = true;
+  var btn = document.getElementById('answerAllBtn');
+  var bar = document.getElementById('progressBar');
+  var fill = document.getElementById('progressFill');
+  var text = document.getElementById('progressText');
+  btn.disabled = true;
+  btn.textContent = '⏳ Answering...';
+  bar.style.display = 'block';
+  text.style.display = 'block';
+
+  var qs = currentPaper.questions;
+  if (currentFilter !== 'all') qs = qs.filter(function(q) { return q.subject === currentFilter; });
+  var done = 0;
+
+  function next() {
+    if (done >= qs.length) {
+      fill.style.width = '100%';
+      text.textContent = '✅ All ' + done + ' questions answered!';
+      btn.textContent = '✓ All Answered';
+      answering = false;
+      return;
+    }
+    var q = qs[done];
+    fill.style.width = Math.round((done / qs.length) * 100) + '%';
+    text.textContent = 'Answering Q' + q.n + ' (' + (done + 1) + '/' + qs.length + ')...';
+    answerOne(q.n);
+    done++;
+    setTimeout(next, 1200);
+  }
+  next();
+}
+
+function resetAll() {
+  document.querySelectorAll('.q-answer').forEach(function(e) { e.classList.remove('show'); e.innerHTML = ''; });
+  document.querySelectorAll('.q-card').forEach(function(e) { e.classList.remove('answered'); });
+  document.querySelectorAll('.q-solve-btn').forEach(function(e) { e.disabled = false; e.textContent = '💡 Explain Answer'; });
+  document.getElementById('progressBar').style.display = 'none';
+  document.getElementById('progressText').style.display = 'none';
+  document.getElementById('answerAllBtn').disabled = false;
+  document.getElementById('answerAllBtn').textContent = '⚡ Answer All Questions';
+  answering = false;
+}
+
+loadPapers();
+</script>
+</body>
+</html>

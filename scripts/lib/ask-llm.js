@@ -298,16 +298,24 @@ function expand(question, opts) {
           'It can only find text that literally contains the terms you give it.',
           'Question: ' + question,
           '',
-          'Name up to ' + (opts.max || 8) + ' specific topics, entities, laws,',
+          'First, identify the CORE DEMAND: what is this question actually asking?',
+          'Is it asking for causes? effects? solutions? a comparison? an evaluation?',
+          'A description? A critical analysis?',
+          '',
+          'Then name up to ' + (opts.max || 8) + ' specific topics, entities, laws,',
           'institutions or technologies this question is really about -- the',
           'things a knowledgeable person would look up to answer it.',
           'Prefer names the corpus would actually use: laws, acts, agencies,',
           'technologies, agreements.',
           '',
+          'CRITICAL: Every term MUST be directly relevant to answering THIS',
+          'specific question. Do not include terms that merely share a topic',
+          'word but would lead to off-topic facts.',
+          '',
           'Reply with the terms only, one per line, no numbering, no prose.'
         ].join('\n')
       }],
-      temperature: 0.2,
+      temperature: 0.1, // lower = more focused, less random
       max_tokens: 200,
       stream: false
     });

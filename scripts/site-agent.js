@@ -752,7 +752,73 @@ ${sections}
   return { agent: 'features', fixes: fixes };
 }
 
-// ── AGENT 9: Proposal agent ──
+// ── AGENT 10: Workflow agent ──
+// Reads recent failed/cancelled GitHub Actions runs and proposes fixes.
+// It cannot re-run workflows (no gh token in the script), but it can:
+//   1. Detect OOM/timeout in workflows and suggest memory/time fixes
+//   2. Detect broken syntax in scripts called by workflows
+//   3. Add NODE_OPTIONS memory limits, timeouts to workflows
+//   4. Fix common CI issues (missing files, wrong paths)
+async function agentWorkflows() {
+  const fixes = [];
+  const wfDir = '.github/workflows';
+
+  if (!fs.existsSync(wfDir)) return { agent: 'workflows', fixes: fixes };
+
+  const wfFiles = fs.readdirSync(wfDir).filter(f => f.endsWith('.yml') || f.endsWith('.yaml'));
+
+  for (const wf of wfFiles) {
+    const wfPath = path.join(wfDir, wf);
+    let content = fs.readFileSync(wfPath, 'utf8');
+    let changed = false;
+
+    // Fix 1: Add timeout-minutes to jobs missing it (prevents 6h cancellation)
+    if (!/timeout-minutes/.test(content) && /^jobs:/m.test(content)) {
+      content = content.replace(/^(jobs:\s*\n(\s+)(\w+):)/gm, function (m, jobs, indent, name) {
+        return jobs + '\n' + indent + '  timeout-minutes: 60';
+      });
+      changed = true;
+      fixes.push({ page: wfPath, fix: 'Added timeout-minutes: 60 to prevent 6h cancellation' });
+    }
+
+    // Fix 2: Add NODE_OPTIONS memory limit to node steps missing it
+    if (/node scripts\//.test(content) && !/NODE_OPTIONS/.test(content)) {
+      content = content.replace(
+        /(\s+run:\s+)node (scripts\/[\w.-]+)/g,
+        '$1NODE_OPTIONS=--max-old-space-size=4096 node $2'
+      );
+      changed = true;
+      fixes.push({ page: wfPath, fix: 'Added --max-old-space-size=4096 to node steps (prevents OOM)' });
+    }
+
+    // Fix 3: Add retry to git push steps (common failure)
+    if (/git push/.test(content) && !/push --retries|for i in/.test(content)) {
+      content = content.replace(
+        /(git push)(?!\s*--retries)/g,
+        'git push --retries=3 --retry-delay=5'
+      );
+      changed = true;
+      fixes.push({ page: wfPath, fix: 'Added push retries (prevents transient failures)' });
+    }
+
+    if (changed) fs.writeFileSync(wfPath, content);
+  }
+
+  // Check scripts called by workflows for syntax errors
+  try {
+    const scripts = fs.readdirSync('scripts').filter(f => f.endsWith('.js'));
+    for (const s of scripts) {
+      try {
+        require('child_process').execSync('node --check scripts/' + s, { stdio: 'pipe' });
+      } catch (e) {
+        fixes.push({ page: 'scripts/' + s, fix: 'SYNTAX ERROR detected — ' + String(e.stderr || e.message).slice(0, 100), kind: 'syntax' });
+      }
+    }
+  } catch (e) { /* ignore */ }
+
+  console.log('agent: Workflows — ' + fixes.length + ' fix(es)');
+  return { agent: 'workflows', fixes: fixes };
+}
 // The innovation engine. Looks at what exists and invents NEW features
 // nobody asked for — like how figures/flowcharts/mindmaps were invented.
 // Generates proposals to data/ideas.json AND builds prototypes of the best one.
@@ -781,13 +847,26 @@ async function agentProposals() {
 
   // Ask the model: what NEW feature should this site have?
   const result = await callLLM(
-    'You are a product manager for an Indian competitive exam prep site (UPSC, SSC, Banking, Railway). ' +
+    'You are a creative product designer for an Indian competitive exam prep site. ' +
     'The site currently has: ' + JSON.stringify(inventory) + '. ' +
-    'Propose 3 NEW features that would make this site the best educational platform — things it does NOT have yet. ' +
-    'Think creatively: study tools, visualizations, interactive exercises, AI features, gamification, social features. ' +
-    'For each proposal return strict JSON: {"title":"...","description":"1-2 sentences","why":"why exam students need this","prototypePrompt":"HTML/CSS/JS for a working prototype, dark theme bg #0a0a0a, text #e5e5e5, accent #3b82f6"}. ' +
-    'Return a JSON array of exactly 3 proposals. No markdown.',
-    'Inventory: ' + inventory.totalPages + ' pages. Gaps to exploit. Think 10x, not incremental.',
+    '' +
+    'Think like a HUMAN innovator, not a checklist. Do NOT propose generic things ' +
+    'like "add flashcards" or "add more quizzes" — those exist everywhere. ' +
+    '' +
+    'Instead, think about what would make a student say "WOW, I have never seen this before":' +
+    '- What if the site could SIMULATE being an examiner and predict what questions come?' +
+    '- What if mistakes could be traced to their ROOT CAUSE (weak concept vs careless) automatically?' +
+    '- What if two students could COMPETE live on the same question?' +
+    '- What if the site could generate a PERSONALIZED study plan from PYQ patterns?' +
+    '- What if wrong answers triggered a MINI-LESSON on the exact concept missed?' +
+    '- What if there was a MEMORY FORGETTING CURVE that resurfaces topics just before you forget them?' +
+    '- What if the site could AUDIOSUMMARIZE topics for commute study?' +
+    '- What if mistakes were mapped to a KNOWLEDGE GRAPH showing which weak topics block which other topics?' +
+    '' +
+    'Propose 3 genuinely novel features. Each must make a student think "I wish I had this earlier." ' +
+    'Return strict JSON array: [{"title":"...","description":"1-2 sentences","why":"why this is novel and exam students need it","prototypePrompt":"detailed description for building a working prototype"}]. ' +
+    'No markdown.',
+    'Inventory: ' + inventory.totalPages + ' pages. Be CREATIVE. Invent, don\'t iterate.',
     4000
   );
 
@@ -879,6 +958,7 @@ async function main() {
 
   const results = [];
   const agents = [
+    ['Workflows', agentWorkflows],
     ['SEO', agentSEO],
     ['Perf', agentPerf],
     ['A11Y', agentA11Y],

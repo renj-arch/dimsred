@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mega Test Lab — Non-Stop Quiz Across All Subjects</title>
+<meta name="description" content="Non-stop quiz covering all subjects — history, geography, polity, economy, science, and more. AI-powered explanations after every answer.">
+<meta name="robots" content="index, follow">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#0a0a0a;--card:#111113;--border:#1e1e22;--hover:#1a1a1e;--text:#e5e5e5;--muted:#737373;--purple:#8b5cf6;--emerald:#34d399;--blue:#60a5fa;--red:#ef4444;--amber:#f59e0b;--radius:12px}
+body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;line-height:1.6;min-height:100vh}
+a{color:var(--purple);text-decoration:none}
+a:hover{text-decoration:underline}
+.container{max-width:800px;margin:0 auto;padding:0 20px}
+.skip{position:absolute;left:-9999px;top:0;background:var(--purple);color:#fff;padding:8px 16px;z-index:100}
+.skip:focus{left:8px;top:8px}
+header{padding:20px 0;border-bottom:1px solid var(--border)}
+header a{color:var(--text);font-weight:700}
+.back{font-size:.9em;color:var(--muted);margin-bottom:12px;display:inline-block}
+.hero{padding:32px 0 20px;text-align:center}
+.hero h1{font-size:1.8em;font-weight:800;margin-bottom:8px}
+.hero p{color:var(--muted);font-size:.92em;max-width:500px;margin:0 auto}
+.stats-row{display:flex;gap:12px;margin:20px 0;flex-wrap:wrap;justify-content:center}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;text-align:center;min-width:100px}
+.stat-val{font-size:1.6em;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.72em;color:var(--muted);margin-top:2px}
+.setup{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:20px 0}
+.setup h2{font-size:1.1em;font-weight:700;margin-bottom:16px}
+.setup-row{margin:12px 0}
+.setup-row label{display:block;font-size:.85em;color:var(--muted);margin-bottom:6px}
+select,input[type=text],input[type=number]{width:100%;padding:10px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);color:var(--text);font-size:.9em;font-family:inherit}
+select:focus,input:focus{outline:none;border-color:var(--purple)}
+.btn{display:inline-flex;align-items:center;gap:6px;padding:12px 24px;border-radius:var(--radius);border:none;cursor:pointer;font-size:.92em;font-weight:600;transition:all .2s;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--purple),#6d28d9);color:#fff}
+.btn-primary:hover{transform:translateY(-1px);box-shadow:0 4px 16px rgba(139,92,246,.3)}
+.btn-secondary{background:var(--hover);color:var(--text);border:1px solid var(--border)}
+.btn-secondary:hover{border-color:var(--purple)}
+.btn-success{background:linear-gradient(135deg,var(--emerald),#059669);color:#fff}
+.btn-danger{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.btn-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:16px}
+.quiz{display:none;margin:20px 0}
+.quiz.active{display:block}
+.q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px}
+.q-counter{font-size:.85em;color:var(--muted)}
+.q-streak{font-size:.85em;color:var(--amber);font-weight:600}
+.q-progress{width:100%;height:3px;background:var(--border);border-radius:2px;margin-bottom:16px;overflow:hidden}
+.q-progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:2px;transition:width .3s}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin:12px 0}
+.q-subject-tag{display:inline-block;padding:2px 10px;border-radius:20px;font-size:.72em;font-weight:600;margin-bottom:10px;background:rgba(139,92,246,.12);color:var(--purple)}
+.q-text{font-size:1.05em;line-height:1.8;margin-bottom:16px;font-weight:500}
+.q-type{font-size:.72em;color:var(--muted);margin-bottom:12px}
+.answer-input{width:100%;padding:12px 16px;border-radius:8px;border:2px solid var(--border);background:var(--bg);color:var(--text);font-size:1em;font-family:inherit;transition:border-color .2s}
+.answer-input:focus{outline:none;border-color:var(--purple)}
+.answer-input.correct{border-color:var(--emerald);background:rgba(52,211,153,.05)}
+.answer-input.wrong{border-color:var(--red);background:rgba(239,68,68,.05)}
+.result-box{padding:16px;border-radius:8px;margin:12px 0;display:none}
+.result-box.show{display:block}
+.result-box.correct{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.3)}
+.result-box.wrong{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.3)}
+.result-label{font-weight:700;font-size:1.05em;margin-bottom:6px}
+.result-box.correct .result-label{color:var(--emerald)}
+.result-box.wrong .result-label{color:var(--red)}
+.result-answer{font-size:.92em;color:var(--muted)}
+.result-answer strong{color:var(--text)}
+.explain-box{padding:12px;background:rgba(139,92,246,.05);border:1px solid rgba(139,92,246,.2);border-radius:8px;margin-top:10px;font-size:.88em;line-height:1.7;display:none}
+.explain-box.show{display:block}
+.explain-label{font-weight:700;color:var(--purple);margin-bottom:4px}
+.scoreboard{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0}
+.score-item{text-align:center;padding:16px;background:var(--card);border:1px solid var(--border);border-radius:var(--radius)}
+.score-num{font-size:2em;font-weight:800}
+.score-num.green{color:var(--emerald)}
+.score-num.red{color:var(--red)}
+.score-num.blue{color:var(--blue)}
+.score-label{font-size:.75em;color:var(--muted)}
+.timer{font-size:.9em;color:var(--muted);font-variant-numeric:tabular-nums}
+.timer.warn{color:var(--amber)}
+.footer{text-align:center;padding:32px 0;color:var(--muted);font-size:.8em;border-top:1px solid var(--border);margin-top:40px}
+.loading{text-align:center;padding:40px;color:var(--muted)}
+@media(max-width:640px){.scoreboard{grid-template-columns:1fr}.hero h1{font-size:1.4em}.q-card{padding:18px}}
+</style>
+</head>
+<body>
+<a href="#main" class="skip">Skip to content</a>
+<header><div class="container"><a href="index.html">📚 studypro</a></div></header>
+<main id="main">
+<div class="container">
+  <div class="hero">
+    <a href="index.html" class="back">← Back to home</a>
+    <h1>🧪 Mega Test Lab</h1>
+    <p>Non-stop quiz across ALL subjects. Every answer gets an AI explanation. No timer pressure — learn at your pace.</p>
+  </div>
+
+  <div class="stats-row" id="statsRow">
+    <div class="stat"><div class="stat-val" id="totalQ">—</div><div class="stat-label">Questions</div></div>
+    <div class="stat"><div class="stat-val" id="totalSubj">—</div><div class="stat-label">Subjects</div></div>
+    <div class="stat"><div class="stat-val" id="totalFiles">—</div><div class="stat-label">Sources</div></div>
+  </div>
+
+  <!-- Setup -->
+  <div class="setup" id="setupPanel">
+    <h2>⚙️ Configure Your Test</h2>
+    <div class="setup-row">
+      <label for="subjectSel">Subject (leave blank for all)</label>
+      <select id="subjectSel"><option value="">All Subjects</option></select>
+    </div>
+    <div class="setup-row">
+      <label for="numQ">Number of Questions</label>
+      <select id="numQ">
+        <option value="10">10 — Quick warm-up</option>
+        <option value="25" selected>25 — Standard set</option>
+        <option value="50">50 — Deep practice</option>
+        <option value="100">100 — Marathon</option>
+        <option value="-1">∞ — Non-stop (keep going until you stop)</option>
+      </select>
+    </div>
+    <div class="setup-row">
+      <label for="explainMode">After each answer</label>
+      <select id="explainMode">
+        <option value="instant">Show explanation immediately</option>
+        <option value="manual">Show only when I click "Explain"</option>
+      </select>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn-primary" id="startBtn" onclick="startQuiz()">🚀 Start Test</button>
+      <a href="papers.html" class="btn btn-secondary">📜 PYQ Papers</a>
+      <a href="ask.html" class="btn btn-secondary">💬 Ask Anything</a>
+    </div>
+  </div>
+
+  <!-- Quiz -->
+  <div class="quiz" id="quizPanel">
+    <div class="q-header">
+      <span class="q-counter" id="qCounter"></span>
+      <span class="q-streak" id="qStreak"></span>
+      <span class="timer" id="qTimer">00:00</span>
+    </div>
+    <div class="q-progress"><div class="q-progress-fill" id="qProgressFill"></div></div>
+    <div class="scoreboard" id="scoreboard" style="display:none">
+      <div class="score-item"><div class="score-num green" id="scoreCorrect">0</div><div class="score-label">Correct</div></div>
+      <div class="score-item"><div class="score-num red" id="scoreWrong">0</div><div class="score-label">Wrong</div></div>
+      <div class="score-item"><div class="score-num blue" id="scorePct">0%</div><div class="score-label">Accuracy</div></div>
+    </div>
+    <div class="q-card">
+      <div class="q-subject-tag" id="qSubject"></div>
+      <div class="q-text" id="qText"></div>
+      <div class="q-type" id="qType"></div>
+      <input type="text" class="answer-input" id="answerInput" placeholder="Type your answer..." autocomplete="off" spellcheck="false">
+      <div class="result-box" id="resultBox">
+        <div class="result-label" id="resultLabel"></div>
+        <div class="result-answer" id="resultAnswer"></div>
+        <div class="explain-box" id="explainBox">
+          <div class="explain-label">💡 AI Explanation</div>
+          <div id="explainText"></div>
+        </div>
+      </div>
+      <div class="btn-row">
+        <button class="btn btn-primary" id="submitBtn" onclick="submitAnswer()">Submit</button>
+        <button class="btn btn-secondary" id="explainBtn" onclick="showExplanation()" style="display:none">💡 Explain</button>
+        <button class="btn btn-success" id="nextBtn" onclick="nextQuestion()" style="display:none">Next →</button>
+        <button class="btn btn-secondary" id="skipBtn" onclick="skipQuestion()">Skip</button>
+        <button class="btn btn-danger" id="stopBtn" onclick="stopQuiz()">Stop</button>
+      </div>
+    </div>
+    <div id="askLink" style="margin-top:8px;font-size:.85em;color:var(--muted)">
+      Don't know? <a href="#" onclick="openInAsk();return false">Ask the AI engine about this →</a>
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Questions from the studypro question bank · Explanations by the Ask engine</p>
+  </div>
+</div>
+</main>
+
+<script>
+var QUESTIONS = [], queue = [], idx = 0, score = 0, wrong = 0, streak = 0;
+var timerSec = 0, timerInt = null, currentQ = null, started = false;
+var megaData = null;
+
+function loadData() {
+  fetch('data/mega-quiz.json').then(function(r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function(data) {
+    megaData = data;
+    QUESTIONS = data.questions || [];
+    document.getElementById('totalQ').textContent = data.totalQuestions || QUESTIONS.length;
+    document.getElementById('totalSubj').textContent = Object.keys(data.subjects || {}).length;
+    document.getElementById('totalFiles').textContent = Object.keys(data.subjects || {}).length;
+    var sel = document.getElementById('subjectSel');
+    Object.keys(data.subjects || {}).sort().forEach(function(s) {
+      var opt = document.createElement('option');
+      opt.value = s; opt.textContent = s + ' (' + data.subjects[s] + ')';
+      sel.appendChild(opt);
+    });
+  }).catch(function(e) {
+    document.getElementById('setupPanel').innerHTML =
+      '<p style="color:var(--red)">Failed to load questions: ' + e.message + '</p>' +
+      '<p style="color:var(--muted);font-size:.85em;margin-top:8px">Run <code>node scripts/build-mega-quiz.js</code> to generate the question bank.</p>';
+  });
+}
+
+function startQuiz() {
+  var subj = document.getElementById('subjectSel').value;
+  var num = parseInt(document.getElementById('numQ').value);
+  var pool = QUESTIONS;
+  if (subj) pool = pool.filter(function(q) { return q.subject === subj; });
+  if (!pool.length) { alert('No questions found for this subject.'); return; }
+
+  // Shuffle
+  for (var i = pool.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    [pool[i], pool[j]] = [pool[j], pool[i]];
+  }
+  queue = num === -1 ? pool : pool.slice(0, Math.min(num, pool.length));
+  idx = 0; score = 0; wrong = 0; streak = 0;
+  timerSec = 0;
+  started = true;
+
+  document.getElementById('setupPanel').style.display = 'none';
+  document.getElementById('quizPanel').classList.add('active');
+  document.getElementById('scoreboard').style.display = 'grid';
+  updateScore();
+  startTimer();
+  showQuestion();
+}
+
+function startTimer() {
+  if (timerInt) clearInterval(timerInt);
+  timerInt = setInterval(function() {
+    timerSec++;
+    var m = Math.floor(timerSec / 60), s = timerSec % 60;
+    var el = document.getElementById('qTimer');
+    el.textContent = (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+    el.className = 'timer' + (timerSec > 300 ? ' warn' : '');
+  }, 1000);
+}
+
+function showQuestion() {
+  if (idx >= queue.length) { finishQuiz(); return; }
+  currentQ = queue[idx];
+  document.getElementById('qCounter').textContent = 'Q' + (idx + 1) + (queue.length < Infinity ? ' / ' + queue.length : '');
+  document.getElementById('qStreak').textContent = streak > 1 ? '🔥 ' + streak + ' streak' : '';
+  document.getElementById('qProgressFill').style.width = Math.round((idx / queue.length) * 100) + '%';
+  document.getElementById('qSubject').textContent = currentQ.sub || currentQ.subject || 'General';
+  document.getElementById('qText').textContent = currentQ.q;
+  document.getElementById('qType').textContent = currentQ.type === 'fill_blank' ? 'Fill in the blank' : '';
+  var inp = document.getElementById('answerInput');
+  inp.value = ''; inp.className = 'answer-input'; inp.disabled = false; inp.focus();
+  document.getElementById('resultBox').className = 'result-box';
+  document.getElementById('explainBox').className = 'explain-box';
+  document.getElementById('submitBtn').style.display = 'inline-flex';
+  document.getElementById('submitBtn').disabled = false;
+  document.getElementById('explainBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'none';
+  document.getElementById('skipBtn').style.display = 'inline-flex';
+}
+
+function normalize(s) {
+  return String(s).toLowerCase().trim()
+    .replace(/[.,;:!?'"()-]/g, '')
+    .replace(/\s+/g, ' ')
+    .replace(/^\d+\.\s*/, '')
+    .replace(/^(a|b|c|d|e)\)\s*/, '');
+}
+
+function submitAnswer() {
+  var inp = document.getElementById('answerInput');
+  var userAns = normalize(inp.value);
+  var correctAns = normalize(currentQ.a);
+  var isCorrect = userAns === correctAns ||
+    (correctAns.length > 3 && userAns.indexOf(correctAns) !== -1) ||
+    (userAns.length > 3 && correctAns.indexOf(userAns) !== -1);
+
+  inp.disabled = true;
+  inp.className = 'answer-input ' + (isCorrect ? 'correct' : 'wrong');
+
+  var box = document.getElementById('resultBox');
+  var label = document.getElementById('resultLabel');
+  var ansEl = document.getElementById('resultAnswer');
+
+  box.className = 'result-box show ' + (isCorrect ? 'correct' : 'wrong');
+  label.textContent = isCorrect ? '✅ Correct!' : '❌ Wrong';
+  ansEl.innerHTML = 'Answer: <strong>' + currentQ.a + '</strong>';
+
+  if (isCorrect) { score++; streak++; } else { wrong++; streak = 0; }
+  updateScore();
+
+  var mode = document.getElementById('explainMode').value;
+  if (mode === 'instant') {
+    showExplanation();
+  } else {
+    document.getElementById('explainBtn').style.display = 'inline-flex';
+  }
+
+  document.getElementById('submitBtn').style.display = 'none';
+  document.getElementById('nextBtn').style.display = 'inline-flex';
+  document.getElementById('skipBtn').style.display = 'none';
+}
+
+function showExplanation() {
+  var box = document.getElementById('explainBox');
+  var txt = document.getElementById('explainText');
+  document.getElementById('explainBtn').style.display = 'none';
+
+  var fact = currentQ.fact || '';
+  var hint = currentQ.hint || '';
+  var base = fact || hint || '';
+
+  if (base) {
+    txt.innerHTML = base;
+    box.className = 'explain-box show';
+    return;
+  }
+
+  // Use Ask engine if available
+  txt.innerHTML = '⏳ Generating explanation...';
+  box.className = 'explain-box show';
+
+  var qText = currentQ.q + '\nCorrect answer: ' + currentQ.a;
+  tryExplain(qText).then(function(explanation) {
+    txt.innerHTML = explanation;
+  }).catch(function() {
+    txt.innerHTML = 'Official answer: <strong>' + currentQ.a + '</strong>. Open the Ask engine for a detailed explanation.';
+  });
+}
+
+function tryExplain(qText) {
+  return new Promise(function(resolve, reject) {
+    if (typeof askLLMAnswer === 'function') {
+      try {
+        askLLMAnswer(qText).then(function(ans) {
+          resolve(ans && ans.text ? ans.text : 'Answer: see above.');
+        }).catch(function() { reject(new Error('LLM unavailable')); });
+        return;
+      } catch (e) { /* fall through */ }
+    }
+    if (typeof AskCore !== 'undefined' && AskCore.retrieve && AskCore.compose) {
+      try {
+        var res = AskCore.retrieve(null, qText, 3);
+        if (res && res.hits && res.hits.length) {
+          var composed = AskCore.compose(qText, res);
+          if (composed && composed.text) { resolve(composed.text); return; }
+        }
+      } catch (e) { /* fall through */ }
+    }
+    reject(new Error('No explanation source'));
+  });
+}
+
+function nextQuestion() {
+  idx++;
+  showQuestion();
+}
+
+function skipQuestion() {
+  wrong++; streak = 0;
+  updateScore();
+  idx++;
+  showQuestion();
+}
+
+function updateScore() {
+  document.getElementById('scoreCorrect').textContent = score;
+  document.getElementById('scoreWrong').textContent = wrong;
+  var total = score + wrong;
+  document.getElementById('scorePct').textContent = total ? Math.round((score / total) * 100) + '%' : '0%';
+}
+
+function finishQuiz() {
+  clearInterval(timerInt);
+  var m = Math.floor(timerSec / 60), s = timerSec % 60;
+  var total = score + wrong;
+  var pct = total ? Math.round((score / total) * 100) : 0;
+  document.getElementById('quizPanel').innerHTML =
+    '<div class="q-card" style="text-align:center">' +
+    '<h2 style="font-size:1.5em;margin-bottom:16px">🏁 Test Complete!</h2>' +
+    '<div class="scoreboard" style="grid-template-columns:repeat(4,1fr)">' +
+    '<div class="score-item"><div class="score-num green">' + score + '</div><div class="score-label">Correct</div></div>' +
+    '<div class="score-item"><div class="score-num red">' + wrong + '</div><div class="score-label">Wrong</div></div>' +
+    '<div class="score-item"><div class="score-num blue">' + pct + '%</div><div class="score-label">Accuracy</div></div>' +
+    '<div class="score-item"><div class="score-num" style="color:var(--amber)">' + m + ':' + (s < 10 ? '0' : '') + s + '</div><div class="score-label">Time</div></div>' +
+    '</div>' +
+    '<div class="btn-row" style="justify-content:center;margin-top:20px">' +
+    '<button class="btn btn-primary" onclick="location.reload()">🔄 New Test</button>' +
+    '<a href="papers.html" class="btn btn-secondary">📜 PYQ Papers</a>' +
+    '<a href="ask.html" class="btn btn-secondary">💬 Ask Engine</a>' +
+    '</div></div>';
+}
+
+function stopQuiz() {
+  if (!confirm('Stop the test? Your score will be lost.')) return;
+  clearInterval(timerInt);
+  location.reload();
+}
+
+function openInAsk() {
+  if (currentQ) {
+    sessionStorage.setItem('ask_prefill', currentQ.q);
+    window.location.href = 'ask.html';
+  }
+}
+
+// Enter key submits
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Enter' && document.getElementById('answerInput') === document.activeElement) {
+    if (!document.getElementById('submitBtn').disabled && document.getElementById('submitBtn').style.display !== 'none') {
+      submitAnswer();
+    } else if (document.getElementById('nextBtn').style.display !== 'none') {
+      nextQuestion();
+    }
+  }
+});
+
+loadData();
+</script>
+</body>
+</html>
