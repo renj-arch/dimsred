@@ -901,16 +901,20 @@ async function main() {
     }
   }
 
-  // Log everything
+  // Log everything — store full fix details so improve.html can show them
   const totalFixes = results.reduce((sum, r) => sum + (r.fixes ? r.fixes.length : 0), 0);
   log.lastRun = new Date().toISOString();
   log.runs.push({
     at: log.lastRun,
     model: model,
     totalFixes: totalFixes,
-    byAgent: results.map(r => ({ agent: r.agent, count: (r.fixes || []).length }))
+    byAgent: results.map(r => ({ agent: r.agent, count: (r.fixes || []).length })),
+    details: results.filter(r => r.fixes && r.fixes.length).map(r => ({
+      agent: r.agent,
+      fixes: r.fixes.slice(0, 10) // cap at 10 per agent to keep log small
+    }))
   });
-  if (log.runs.length > 30) log.runs = log.runs.slice(-30);
+  if (log.runs.length > 15) log.runs = log.runs.slice(-15); // keep last 15 runs
   saveJson(LOG, log);
 
   console.log('agent: total ' + totalFixes + ' fix(es) this run');

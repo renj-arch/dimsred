@@ -298,22 +298,43 @@ function renderFaults() {
     }).catch(function () { /* autofix log not yet published */ });
 
     // 5b. Site Agent (site-agent.js → data/agent-log.json).
-    // Full-autonomy maintainer: SEO, A11Y, code fixes, content, features.
+    // Full-autonomy maintainer: SEO, A11Y, code, content, features,
+    // figures, flowcharts, mindmaps, proposals, prototypes.
     fetch('data/agent-log.json').then(function (r) {
       if (!r.ok) return null;
       return r.json();
     }).then(function (ag) {
       if (!ag || !ag.runs || !ag.runs.length) return;
       var last = ag.runs[ag.runs.length - 1];
-      var section = '<div class="list-head" style="margin-top:18px">Site Agent <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; full autonomy: SEO, A11Y, code, content, features</span></div>';
-      section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(last.at) + ' &middot; ' + last.totalFixes + ' fix(es) &middot; model: ' + esc(last.model || 'auto') + ' &middot; runs every 6h</p>';
-      var colors = { seo: 'var(--blue)', a11y: 'var(--purple)', code: 'var(--amber)', content: 'var(--emerald)', features: 'var(--cyan)' };
+      var section = '<div class="list-head" style="margin-top:18px">Site Agent <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; full autonomy: SEO, A11Y, code, content, figures, proposals</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(last.at) + ' &middot; ' + last.totalFixes + ' action(s) &middot; model: ' + esc(last.model || 'auto') + ' &middot; runs every 6h</p>';
+
+      var colors = { seo: 'var(--blue)', perf: 'var(--amber)', a11y: 'var(--purple)', code: 'var(--amber)', content: 'var(--emerald)', figures: 'var(--purple)', flowcharts: 'var(--cyan)', mindmaps: 'var(--emerald)', features: 'var(--cyan)', proposals: 'var(--amber)' };
+
+      // Count badges
       if (last.byAgent && last.byAgent.length) {
         section += last.byAgent.filter(function (a) { return a.count > 0; }).map(function (a) {
           var c = colors[a.agent] || 'var(--text-muted)';
           return '<span style="display:inline-block;margin:2px 6px;padding:2px 8px;background:var(--bg);border:1px solid ' + c + ';border-radius:10px;font-size:11px;color:' + c + '">' + esc(a.agent) + ': ' + a.count + '</span>';
         }).join('');
       }
+
+      // Full details: individual fixes, proposals, prototypes
+      if (last.details && last.details.length) {
+        last.details.forEach(function (group) {
+          var gc = colors[group.agent] || 'var(--text-muted)';
+          section += '<div style="margin-top:10px;padding:8px 12px;background:var(--bg);border-left:3px solid ' + gc + ';border-radius:0 8px 8px 0">';
+          section += '<b style="color:' + gc + ';font-size:11px;text-transform:uppercase;letter-spacing:.05em">' + esc(group.agent) + '</b>';
+          section += group.fixes.map(function (f) {
+            var icon = f.kind === 'proposal' ? '💡' : f.kind === 'prototype' ? '🛠' : f.kind === 'figure' ? '📊' : f.kind === 'flowchart' ? '📈' : f.kind === 'mindmap' ? '🧠' : f.kind === 'revision' ? '📝' : f.kind === 'comparison' ? '⚖' : f.kind === 'mnemonics' ? '🔤' : f.kind === 'study' ? '📖' : '✅';
+            return '<div style="margin:3px 0;font-size:12px;color:var(--text-sec)">' + icon + ' ' + esc(f.fix || '') +
+              (f.page ? ' <span style="color:var(--text-muted);font-size:10px">(' + esc(f.page) + ')</span>' : '') +
+              (f.detail ? '<div style="color:var(--text-muted);font-size:11px;margin-left:18px">' + esc(f.detail) + '</div>' : '') + '</div>';
+          }).join('');
+          section += '</div>';
+        });
+      }
+
       box.innerHTML += section;
     }).catch(function () { /* agent log not yet published */ });
 
