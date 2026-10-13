@@ -828,8 +828,16 @@ ${sections}
 async function agentWorkflows() {
   const fixes = [];
   const wfDir = '.github/workflows';
-
   if (!fs.existsSync(wfDir)) return { agent: 'workflows', fixes: fixes };
+
+  // Read recent failed workflow runs via gh CLI
+  let recentFailures = '';
+  try {
+    recentFailures = require('child_process').execSync(
+      'gh run list --limit 15 --json name,status,conclusion,displayTitle,databaseId --jq "."',
+      { encoding: 'utf8', timeout: 15000, stdio: ['pipe', 'pipe', 'pipe'] }
+    );
+  } catch (e) { /* gh not available */ }
 
   const wfFiles = fs.readdirSync(wfDir).filter(f => f.endsWith('.yml') || f.endsWith('.yaml'));
 
@@ -838,46 +846,53 @@ async function agentWorkflows() {
     let content = fs.readFileSync(wfPath, 'utf8');
     let changed = false;
 
-    // Fix 1: Add timeout-minutes to jobs missing it (prevents 6h cancellation)
+    // Add timeout-minutes to jobs missing it
     if (!/timeout-minutes/.test(content) && /^jobs:/m.test(content)) {
       content = content.replace(/^(jobs:\s*\n(\s+)(\w+):)/gm, function (m, jobs, indent, name) {
         return jobs + '\n' + indent + '  timeout-minutes: 60';
       });
       changed = true;
-      fixes.push({ page: wfPath, fix: 'Added timeout-minutes: 60 to prevent 6h cancellation' });
+      fixes.push({ page: wfPath, fix: 'Added timeout-minutes: 60' });
     }
 
-    // Fix 2: Add NODE_OPTIONS memory limit to node steps missing it
+    // Add NODE_OPTIONS memory limit to node steps
     if (/node scripts\//.test(content) && !/NODE_OPTIONS/.test(content)) {
       content = content.replace(
         /(\s+run:\s+)node (scripts\/[\w.-]+)/g,
         '$1NODE_OPTIONS=--max-old-space-size=4096 node $2'
       );
       changed = true;
-      fixes.push({ page: wfPath, fix: 'Added --max-old-space-size=4096 to node steps (prevents OOM)' });
+      fixes.push({ page: wfPath, fix: 'Added memory limit to node steps' });
     }
 
-    // Fix 3: Add retry to git push steps (common failure)
+    // Add retry to git push steps
     if (/git push/.test(content) && !/push --retries|for i in/.test(content)) {
+      content = content.replace(/(git push)(?!\s*--retries)/g, 'git push --retries=3 --retry-delay=5');
+      changed = true;
+      fixes.push({ page: wfPath, fix: 'Added push retries' });
+    }
+
+    // If a workflow uses ollama but has no server start step, add it
+    if (/ollama/.test(content) && !/Start Ollama|ollama serve/.test(content)) {
       content = content.replace(
-        /(git push)(?!\s*--retries)/g,
-        'git push --retries=3 --retry-delay=5'
+        /(\s+- name: )(Install Ollama|Pull model)/,
+        '$1Start Ollama server\n        run: |\n          nohup ollama serve > /tmp/ollama.log 2>&1 &\n          for i in $(seq 1 30); do curl -s http://localhost:11434/api/tags > /dev/null 2>&1 && break; sleep 1; done\n          echo "Ollama server ready"\n\n$1$2'
       );
       changed = true;
-      fixes.push({ page: wfPath, fix: 'Added push retries (prevents transient failures)' });
+      fixes.push({ page: wfPath, fix: 'Added Ollama server start step' });
     }
 
     if (changed) fs.writeFileSync(wfPath, content);
   }
 
-  // Check scripts called by workflows for syntax errors
+  // Check scripts for syntax errors
   try {
     const scripts = fs.readdirSync('scripts').filter(f => f.endsWith('.js'));
     for (const s of scripts) {
       try {
         require('child_process').execSync('node --check scripts/' + s, { stdio: 'pipe' });
       } catch (e) {
-        fixes.push({ page: 'scripts/' + s, fix: 'SYNTAX ERROR detected — ' + String(e.stderr || e.message).slice(0, 100), kind: 'syntax' });
+        fixes.push({ page: 'scripts/' + s, fix: 'SYNTAX ERROR: ' + String(e.stderr || e.message).slice(0, 100), kind: 'syntax' });
       }
     }
   } catch (e) { /* ignore */ }
@@ -1001,6 +1016,58 @@ async function agentProposals() {
 }
 
 // ── Main ──
+async function agentSelfCheck() {
+  const fixes = [];
+  const pages = listPages();
+
+  const criticalFiles = [
+    'index.html', 'ask.html', 'papers.html', 'mega-test.html',
+    'improve.html', 'science.html', 'polytechnic.html', 'mental.html', 'ssc-je.html',
+    'js/mental-training.js', 'scripts/lib/ask-core.js', 'scripts/lib/ask-llm.js',
+    'data/papers.json', 'data/ask-index.json'
+  ];
+  for (const f of criticalFiles) {
+    if (!fs.existsSync(f)) {
+      fixes.push({ page: f, fix: 'CRITICAL FILE MISSING', kind: 'critical' });
+    }
+  }
+
+  for (const page of pages) {
+    let html = fs.readFileSync(page, 'utf8');
+    let changed = false;
+
+    if (page === 'index.html') {
+      const placeholders = (html.match(/<a href="#" class="exam-card/g) || []).length;
+      if (placeholders > 0) {
+        html = html.replace(/<a href="#" (class="exam-card[^"]*"[^>]*)>/g, '<a href="mega-test.html" $1>');
+        changed = true;
+        fixes.push({ page: page, fix: 'Fixed ' + placeholders + ' placeholder exam card links' });
+      }
+      const navPlaceholders = (html.match(/<a href="#">/g) || []).length;
+      if (navPlaceholders > 0) {
+        html = html.replace(/<a href="#">([A-Za-z\s]+)<\/a>/g, '<a href="mega-test.html">$1</a>');
+        changed = true;
+        fixes.push({ page: page, fix: 'Fixed ' + navPlaceholders + ' placeholder nav links' });
+      }
+    }
+
+    const scriptRefs = html.match(/src=["'](js\/[^"']+\.js)["']/gi) || [];
+    for (const ref of scriptRefs) {
+      const file = ref.match(/src=["']([^"']+)["']/i)[1];
+      if (!fs.existsSync(file)) {
+        html = html.replace(ref, '');
+        changed = true;
+        fixes.push({ page: page, fix: 'Removed broken script ref ' + file });
+      }
+    }
+
+    if (changed) fs.writeFileSync(page, html);
+  }
+
+  console.log('agent: SelfCheck — ' + fixes.length + ' issue(s)');
+  return { agent: 'selfcheck', fixes: fixes };
+}
+
 async function main() {
   const log = loadJson(LOG, { runs: [], lastRun: null, model: null });
   const model = await pickBestModel();
@@ -1025,6 +1092,7 @@ async function main() {
   const results = [];
   const agents = [
     ['Workflows', agentWorkflows],
+    ['SelfCheck', agentSelfCheck],
     ['SEO', agentSEO],
     ['Perf', agentPerf],
     ['A11Y', agentA11Y],
