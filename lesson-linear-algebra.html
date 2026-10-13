@@ -205,7 +205,7 @@
                 <p>The <strong>span</strong> of a set of vectors is all vectors you can reach by linear combinations (adding and scaling). A <strong>basis</strong> is a minimal set that spans the space — no redundancies. The number of vectors in a basis is the <strong>dimension</strong>.</p>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">Intuition: Why 3D Needs 3 Basis Vectors</span>
                         <span class="arrow">▶</span>
@@ -254,7 +254,7 @@
                 <p>Linear algebra was born to solve systems like: 2x + 3y = 7, 4x − y = 1. In matrix form: A x = b, where A = [2 3; 4 -1], x = (x, y), b = (7, 1). The solution is x = A⁻¹b, found via Gaussian elimination — systematically eliminating variables.</p>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">Gaussian Elimination — The Workhorse Algorithm</span>
                         <span class="arrow">▶</span>
@@ -306,7 +306,7 @@
                 <p>If a matrix has enough eigenvectors, you can write A = PDP⁻¹, where D is a diagonal matrix of eigenvalues and P contains the eigenvectors. This is like changing to a coordinate system where the transformation is just scaling along each axis — the simplest possible description.</p>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">Why Diagonalization Matters</span>
                         <span class="arrow">▶</span>
@@ -364,7 +364,7 @@
                 <p>When you have more equations than unknowns (overdetermined system), there's usually no exact solution. The <strong>least squares</strong> method finds the x that minimizes ||Ax − b||². The solution is x = (AᵀA)⁻¹Aᵀb — the <strong>normal equations</strong>. This is the math behind every regression line, every curve fit, every machine learning model that minimizes squared error.</p>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">The Geometry of Least Squares</span>
                         <span class="arrow">▶</span>
@@ -548,7 +548,7 @@
             for (var i = 0; i < practiceQs.length; i++) {
                 var q = practiceQs[i], o = '';
                 for (var j = 0; j < q.opts.length; j++) {
-                    o += '<div role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                    o += '<div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
                 }
                 h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
             }

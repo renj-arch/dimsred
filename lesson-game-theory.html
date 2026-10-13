@@ -199,7 +199,7 @@
                 </div>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">Solving a 2×2 Coordination Game</span>
                         <span class="arrow">▶</span>
@@ -240,7 +240,7 @@
                 </div>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">Computing Mixed Equilibrium in Matching Pennies</span>
                         <span class="arrow">▶</span>
@@ -315,7 +315,7 @@
                 <p>In <strong>mechanism design</strong>, you design the rules of the game to achieve a desired outcome, assuming players will act strategically. The <strong>revelation principle</strong> says any outcome achievable by some mechanism can also be achieved by a <strong>direct revelation mechanism</strong> where players truthfully report their private information. The <strong>Vickrey-Clarke-Groves (VCG) mechanism</strong> generalizes the Vickrey auction to any social choice problem — it makes truthful reporting a dominant strategy and achieves efficient outcomes. VCG mechanisms are used in spectrum auctions, keyword advertising auctions (Google AdWords), and even kidney exchange programs. The challenge: VCG can run deficits, and designing budget-balanced mechanisms that are also strategy-proof is the subject of active research.</p>
 
                 <div class="step-reveal">
-                    <div role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">Nash's Nobel — A Life of Genius and Struggle</span>
                         <span class="arrow">▶</span>
@@ -493,7 +493,7 @@
             for (var i = 0; i < practiceQs.length; i++) {
                 var q = practiceQs[i], o = '';
                 for (var j = 0; j < q.opts.length; j++) {
-                    o += '<div role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                    o += '<div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
                 }
                 h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
             }

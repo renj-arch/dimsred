@@ -475,7 +475,7 @@
         var el = document.getElementById('daily-quiz');
         var optsHtml = '';
         for (var i = 0; i < q.options.length; i++) {
-            optsHtml += '<div role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-idx="' + i + '" onclick="selectDailyOpt(' + i + ')">' + q.options[i].label + '. ' + q.options[i].text + '</div>';
+            optsHtml += '<div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="q-opt" data-idx="' + i + '" onclick="selectDailyOpt(' + i + ')">' + q.options[i].label + '. ' + q.options[i].text + '</div>';
         }
         el.innerHTML = '<div class="daily-q"><div class="q-meta">' + (q.exam || 'Practice') + ' &middot; ' + (q.section || 'General') + '</div><div class="q-text">' + q.text + '</div><div class="q-opts">' + optsHtml + '</div><div class="q-soln" id="daily-soln"><strong>Correct Answer:</strong> ' + q.options.filter(function(o){return o.correct})[0].label + '<br><span style="color:#a1a1aa">Daily quiz resets in 24 hours. Come back tomorrow!</span></div></div>';
     }
