@@ -120,10 +120,18 @@ upsc_sorted_topics.csv
 # these un-ignores the blanket `data/*` rule above would drop them silently:
 # `git add -A` skips ignored files and an explicit `git add` errors, so the
 # board would simply never reach the site.
-!data/faults.json
+  !data/faults.json
 !data/train-audit.json
 !data/ideas.json
 !data/map-lineage-audit.json
+# Syllabus-vs-CATEGORIES gap report from scripts/gap-finder.js. Tracked so
+# the board on improve.html can show remaining blind spots and so coverage
+# between runs is diffable in history (same reasoning as figure-gaps.json).
+!data/topic-gaps.json
+# PYQ pattern analysis (scripts/pyq-analyze.js): top topics + paper structure
+# per exam, consumed at runtime by js/exam-tutor.js for "Most asked in past
+# papers" chips and generator prompt bias. Tracked so the deploy has it.
+!data/pyq-patterns.json
 
 # Python bytecode from local train/finetune.py checks
 __pycache__/

@@ -17,6 +17,8 @@
   var SUBJ_MAP = {};        // subj key -> pretty name (page-specific)
   var HIST_KEY = '';        // localStorage history key for this page
   var WEAK_KEY = '';        // localStorage weak-questions key
+  var PYQ = null;           // data/pyq-patterns.json entry for this page (or null)
+  var PYQ_KEY = '';         // which exams.* key matched
 
   // SSC-JE subject map (kept here so one file serves all pages)
   var SSC_SUBJ_MAP = {
@@ -34,6 +36,68 @@
 
   function pretty(slug) {
     return String(slug || '').replace(/[_-]+/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+
+  // Which PYQ weightage entry matches this page. Polytechnic has no published
+  // multi-year analysis in pyq-weightage.json, so it stays null (chips hidden).
+  function pyqKeyForPage() {
+    if (PAGE === 'ssc') return 'ssc-je-mech';
+    if (PAGE === 'science') return 'neet-biology';
+    if (PAGE === 'mental') return 'ssc-cgl-tier1';
+    if (PAGE === 'physics' || PAGE === 'math' || PAGE === 'chemistry') return 'jee-physics';
+    return 'upsc-prelims';
+  }
+
+  // Fetch data/pyq-patterns.json (written by scripts/pyq-analyze.js). A 404
+  // (not yet deployed) or parse error just leaves PYQ null — chips and prompt
+  // bias are progressive enhancement, never a hard dependency.
+  function loadPyq() {
+    if (PYQ !== null) return Promise.resolve(PYQ);
+    if (typeof fetch !== 'function') return Promise.resolve(null);
+    PYQ_KEY = pyqKeyForPage();
+    return fetch('data/pyq-patterns.json').then(function (r) {
+      if (!r.ok) throw new Error('status ' + r.status);
+      return r.json();
+    }).then(function (data) {
+      PYQ = (data && data.exams && data.exams[PYQ_KEY]) || null;
+      return PYQ;
+    }).catch(function () {
+      PYQ = false; // attempted, unavailable — don't re-fetch
+      return null;
+    });
+  }
+
+  function pyqTopics(n) {
+    if (!PYQ || !Array.isArray(PYQ.topTopics)) return [];
+    return PYQ.topTopics.slice(0, n || 8);
+  }
+
+  function pyqChipRow() {
+    var topics = pyqTopics(6);
+    if (!topics.length) return '';
+    var chips = topics.map(function (t) {
+      return '<button class="pyq-chip" data-t="' + String(t.topic).replace(/"/g, '&quot;') + '" ' +
+        'style="padding:4px 10px;border-radius:100px;border:1px solid rgba(251,191,36,.35);' +
+        'background:rgba(251,191,36,.08);color:#fbbf24;cursor:pointer;font-size:11px" ' +
+        'title="' + String(t.detail || '').replace(/"/g, '&quot;') + '">' + t.topic + '</button>';
+    }).join('');
+    return '<div style="padding:6px 12px;border-bottom:1px solid rgba(255,255,255,.06)">' +
+      '<div style="font-size:10.5px;color:#71717a;margin-bottom:4px">Most asked in past papers \u00B7 ' +
+      (PYQ.name || PYQ_KEY) + '</div>' +
+      '<div style="display:flex;flex-wrap:wrap;gap:4px">' + chips + '</div></div>';
+  }
+
+  function wireChips() {
+    if (!panel) return;
+    panel.querySelectorAll('.pyq-chip').forEach(function (btn) {
+      btn.onclick = function () {
+        var input = panel.querySelector('input');
+        if (input) {
+          input.value = btn.dataset.t;
+          input.focus();
+        }
+      };
+    });
   }
 
   function detectPage() {
@@ -269,6 +333,16 @@
     statusEl.style.cssText = 'padding:6px 14px;font-size:11.5px;color:#71717a;min-height:22px';
     panel.appendChild(statusEl);
 
+    // PYQ chips row (progressive: filled async once pyq-patterns.json loads)
+    var chipHost = document.createElement('div');
+    chipHost.id = 'ssc-pyq-chips';
+    panel.appendChild(chipHost);
+    loadPyq().then(function () {
+      if (!chipHost || !panel || !document.body.contains(chipHost)) return;
+      chipHost.outerHTML = pyqChipRow() || '';
+      wireChips();
+    });
+
     outputEl = document.createElement('div');
     outputEl.style.cssText = 'padding:12px 16px;overflow-y:auto;flex:1;font-size:13px;line-height:1.6;color:#d4d4d8';
     outputEl.innerHTML = '<div style="color:#52525b;font-size:12px">Ask a question, or hit \u2728 Generate to have the model write a fresh practice set on your weak topics. First use downloads the AI model (~1GB, cached).</div>';
@@ -391,13 +465,22 @@
   // ---- generator: WebLLM writes new practice questions ----
   function genPrompt(subjName, seedQs, count) {
     var seeds = (seedQs || []).slice(0, 8).map(function (q) { return '- ' + q; }).join('\n');
+    var bias = pyqTopics(6);
+    var biasLines = bias.length
+      ? ['',
+        'MOST-ASKED TOPICS in real ' + (PYQ.name || PAGE_NAME) + ' past papers',
+        '(bias your questions toward these; mix them with ' + subjName + ' itself):',
+        bias.map(function (t) { return '- ' + t.topic + ' (' + (t.detail || '') + ')'; }).join('\n')]
+      : [];
     return [
       'You are a ' + PAGE_NAME + ' exam question setter.',
       'Generate ' + count + ' NEW practice questions on: ' + subjName + '.',
       '',
       'STYLE: exam-pattern mix of definition, numerical, and',
       '"which of the following" conceptual questions. Do NOT copy the',
-      'seed questions below \u2014 use them only to gauge depth and avoid duplicates.',
+      'seed questions below — use them only to gauge depth and avoid duplicates.',
+      ''
+    ].concat(biasLines, [
       '',
       'Existing questions on this topic (DO NOT DUPLICATE):',
       seeds || '(none provided)',
@@ -414,7 +497,7 @@
       '- Use only standard syllabus content; no made-up facts.',
       '',
       'Return ONLY the JSON array.'
-    ].join('\n');
+    ]).join('\n');
   }
 
   function generatePractice(subjKey, count) {
@@ -647,6 +730,7 @@
     document.addEventListener('DOMContentLoaded', function () {
       detectPage();
       buildCorpus();
+      loadPyq();
       addToggleButton();
       injectCardButton();
     });

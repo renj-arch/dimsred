@@ -247,6 +247,54 @@ try {
     }
   } catch (e) { /* audit runs with wiki-fill; absent until its first run */ }
 
+  // ── syllabus coverage gaps (gap-finder.js, runs in fault-status before this) ──
+  try {
+    const tg = JSON.parse(fs.readFileSync('data/topic-gaps.json', 'utf8'));
+    const totalGaps = tg.totalGaps || 0;
+    const exams = tg.exams || {};
+    if (totalGaps > 0) {
+      const worst = (tg.gaps || []).slice(0, 5).map(function (g) {
+        return g.exam + ': ' + g.unit + ' (w' + g.weight + ')';
+      }).join(' · ');
+      add('warn', 'syllabus', totalGaps + ' exam syllabus unit(s) with no covering wiki category',
+        worst + ' · categories covering: ' + (tg.categoriesCovering || '?') + ' · ' + String(tg.generated || '').slice(0, 10),
+        {
+          target: 'scripts/wiki-fill-all.cjs CATEGORIES',
+          current: worst,
+          issue: 'Ask and the tutor cannot ground these units, and the fine-tune loop never sees them.',
+          fix: 'Add a CATEGORIES entry (name + wikiCat + topics) for the first gap here, then rerun gap-finder.'
+        });
+    } else {
+      const summary = Object.keys(exams).map(function (k) {
+        return k + ' ' + (exams[k] ? exams[k].coveragePct : '?') + '%';
+      }).join(' · ');
+      add('info', 'syllabus', 'All exam syllabi covered by wiki categories (' + (tg.categoriesCovering || '?') + ' cats)',
+        summary + ' · ' + String(tg.generated || '').slice(0, 10));
+    }
+  } catch (e) {
+    add('info', 'syllabus', 'Topic-gap report not available',
+      e.code === 'ENOENT' ? 'data/topic-gaps.json is written by gap-finder.js (fault-status step before fault-report).' : String(e.message || e));
+  }
+
+  // ── PYQ pattern analysis (pyq-analyze.js → data/pyq-patterns.json) ──
+  try {
+    const pp = JSON.parse(fs.readFileSync('data/pyq-patterns.json', 'utf8'));
+    const exams = pp.exams || {};
+    const n = Object.keys(exams).length;
+    if (n > 0) {
+      const summary = Object.keys(exams).map(function (k) {
+        const top = (exams[k].topTopics || [])[0];
+        return k + (top ? ' top: ' + top.topic : '');
+      }).join(' · ');
+      add('info', 'pyq', n + ' exam PYQ pattern(s) analyzed',
+        summary + ' · ' + String(pp.generated || '').slice(0, 10) +
+        ' · consumed by exam-tutor "Most asked" chips');
+    }
+  } catch (e) {
+    add('info', 'pyq', 'PYQ pattern report not available',
+      e.code === 'ENOENT' ? 'data/pyq-patterns.json is written by pyq-analyze.js.' : String(e.message || e));
+  }
+
   // ── improvement ideas: curated proposals (data/ideas.json) ──
   const ideas = [];
   try {
