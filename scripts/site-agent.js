@@ -61,7 +61,7 @@ async function callLLM(system, user, maxTokens) {
         stream: false,
         options: { temperature: 0.3, num_predict: maxTokens || 1024 }
       }),
-      signal: AbortSignal.timeout(120000) // 2 min max per call
+      signal: AbortSignal.timeout(300000) // 5 min: first call loads model into RAM
     });
     if (res.ok) {
       const j = await res.json();
@@ -758,6 +758,21 @@ async function main() {
   const model = await pickBestModel();
   log.model = model;
   console.log('agent: using model ' + model);
+
+  // Warm up: load model into RAM so the first real call isn't slow.
+  console.log('agent: warming up model (loading into RAM)...');
+  try {
+    const warm = await fetch(OLLAMA_HOST + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { num_predict: 5 } }),
+      signal: AbortSignal.timeout(300000)
+    });
+    if (warm.ok) console.log('agent: model loaded and ready');
+    else console.log('agent: warmup returned ' + warm.status);
+  } catch (e) {
+    console.log('agent: warmup failed — ' + e.message);
+  }
 
   const results = [];
   const agents = [
