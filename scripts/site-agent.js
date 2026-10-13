@@ -130,6 +130,61 @@ async function agentSEO() {
   return { agent: 'seo', fixes: fixes };
 }
 
+// ── AGENT 1b: Performance ──
+// Detects slow-loading pages: huge JS files, missing defer/async, no lazy loading.
+async function agentPerf() {
+  const fixes = [];
+  const pages = listPages();
+
+  for (const page of pages) {
+    let html = fs.readFileSync(page, 'utf8');
+    let changed = false;
+
+    // Add defer to <script src> tags missing it (except JSON-LD and modules)
+    if (/<script[^>]+src=["'][^"']+["'](?!.*defer)(?!.*async)(?!.*type=["']module)/i.test(html) && !/type=["']application\/ld\+json/i.test(html)) {
+      html = html.replace(/<script([^>]+src=["'][^"']+["'])([^>]*)>/gi, function (match, src, rest) {
+        if (/defer|async|type=["']module/i.test(match)) return match;
+        return '<script' + src + rest + ' defer>';
+      });
+      changed = true;
+      fixes.push({ page: page, fix: 'Added defer to script tags' });
+    }
+
+    // Add loading="lazy" to images missing it
+    if (/<img(?![^>]+loading=)[^>]*>/i.test(html)) {
+      html = html.replace(/<img((?:(?!loading=)[^>])*?)>/gi, '<img$1 loading="lazy">');
+      changed = true;
+      fixes.push({ page: page, fix: 'Added lazy loading to images' });
+    }
+
+    // Detect huge inline JS (>50KB) and note it
+    const inlineScripts = html.match(/<script(?![^>]+src)[^>]*>([\s\S]*?)<\/script>/gi) || [];
+    let hugeInline = 0;
+    inlineScripts.forEach(s => { if (s.length > 50000) hugeInline++; });
+    if (hugeInline > 0) {
+      fixes.push({ page: page, fix: 'WARNING: ' + hugeInline + ' inline script(s) >50KB — consider extracting to external file', kind: 'perf-warn' });
+    }
+
+    if (changed) fs.writeFileSync(page, html);
+  }
+
+  // Check JS file sizes
+  try {
+    const jsDir = 'js';
+    if (fs.existsSync(jsDir)) {
+      fs.readdirSync(jsDir).filter(f => f.endsWith('.js')).forEach(f => {
+        const size = fs.statSync(path.join(jsDir, f)).size;
+        if (size > 200000) {
+          fixes.push({ page: 'js/' + f, fix: 'WARNING: ' + f + ' is ' + (size / 1024).toFixed(0) + 'KB — consider code-splitting', kind: 'perf-warn' });
+        }
+      });
+    }
+  } catch (e) { /* ignore */ }
+
+  console.log('agent: Perf — ' + fixes.length + ' fix(es)/warning(s)');
+  return { agent: 'perf', fixes: fixes };
+}
+
 // ── AGENT 2: Accessibility (A11Y) ──
 // Ensures: alt text on images, ARIA labels on interactive elements,
 // proper heading hierarchy, color contrast hints.
@@ -283,55 +338,413 @@ async function agentContent() {
   return { agent: 'content', fixes: fixes };
 }
 
-// ── AGENT 5: Feature generator ──
-// Creates new study tool pages from proven templates.
+// ── AGENT 5: Figure generator ──
+// Generates SVG figures for topics missing them (reads data/figure-gaps.json).
+async function agentFigures() {
+  const fixes = [];
+  const gaps = loadJson('data/figure-gaps.json', null);
+  if (!gaps) return { agent: 'figures', fixes: fixes };
+
+  // Flatten gaps: [{subject, topics: []}]
+  const flatGaps = [];
+  if (Array.isArray(gaps)) {
+    gaps.forEach(g => (g.topics || []).forEach(t => flatGaps.push({ subject: g.subject, topic: t })));
+  } else if (gaps.subjects) {
+    Object.entries(gaps.subjects).forEach(([subj, data]) => {
+      (data.topics || data.missing || []).forEach(t => flatGaps.push({ subject: subj, topic: t }));
+    });
+  }
+
+  // Generate up to 2 figures per run
+  for (const gap of flatGaps.slice(0, 2)) {
+    const slug = gap.topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+    const figFile = 'figures/' + slug + '.html';
+    if (fs.existsSync(figFile)) continue;
+
+    const result = await callLLM(
+      'Generate a monochrome SVG diagram for the topic "' + gap.topic + '" (subject: ' + gap.subject + '). ' +
+      'Return strict JSON: {"title":"...","svg":"<svg xmlns=...>...</svg>","caption":"2-3 sentence explanation"}. ' +
+      'The SVG must be self-contained, viewBox="0 0 800 600", use only black/gray/white, and show clear labels.',
+      'Topic: ' + gap.topic + '. Make it educational and exam-relevant for UPSC.',
+      2000
+    );
+    if (!result) continue;
+
+    try {
+      const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const parsed = JSON.parse(clean);
+      if (!parsed.svg || !parsed.svg.includes('<svg')) continue;
+
+      // Build figure page matching existing figure HTML structure
+      const page = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(parsed.title || gap.topic)} — ${esc(gap.subject)} Figure</title>
+<meta name="description" content="${esc(parsed.caption || gap.topic)} — ${esc(gap.subject)} diagram on Vlymbooq.">
+<style>
+body{background:#0a0a0a;color:#e5e5e5;font-family:system-ui,sans-serif;margin:0;padding:20px;max-width:900px;margin:0 auto}
+.fig{background:#111;border:1px solid #333;border-radius:12px;padding:24px;margin:20px 0}
+.fig svg{max-width:100%;height:auto}
+.cap{color:#a1a1aa;font-size:14px;line-height:1.6;margin-top:12px}
+h1{font-size:22px;margin-bottom:8px}
+.crumb{color:#71717a;font-size:12px;margin-bottom:16px}
+.crumb a{color:#60a5fa;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="crumb"><a href="index.html">Home</a> / <a href="subject-figures-index.html">Figures</a> / ${esc(gap.subject)}</div>
+<h1>${esc(parsed.title || gap.topic)}</h1>
+<div class="fig">${parsed.svg}</div>
+<div class="cap">${esc(parsed.caption || '')}</div>
+<div style="margin-top:20px;padding:12px;background:#111;border-radius:8px;font-size:12px;color:#71717a">
+Generated by Site Agent · Subject: ${esc(gap.subject)} · Topic: ${esc(gap.topic)}
+</div>
+</body>
+</html>`;
+      fs.mkdirSync('figures', { recursive: true });
+      fs.writeFileSync(figFile, page);
+      fixes.push({ page: figFile, kind: 'figure', fix: 'Created figure: ' + gap.topic, model: result.model });
+      console.log('agent: created figure ' + figFile);
+    } catch (e) { /* parse failed */ }
+  }
+
+  console.log('agent: Figures — ' + fixes.length + ' new figure(s)');
+  return { agent: 'figures', fixes: fixes };
+}
+
+// ── AGENT 6: Flowchart generator ──
+// Generates process flowcharts for syllabus topics (e.g. "How a Bill becomes Law").
+async function agentFlowcharts() {
+  const fixes = [];
+  const gaps = loadJson('data/figure-gaps.json', null);
+  if (!gaps) return { agent: 'flowcharts', fixes: fixes };
+
+  // Look for process/procedure topics that suit flowcharts
+  const processKeywords = /procedure|process|how|steps|formation|structure|system|mechanism|cycle|chain/i;
+  const flatGaps = [];
+  if (Array.isArray(gaps)) {
+    gaps.forEach(g => (g.topics || []).forEach(t => flatGaps.push({ subject: g.subject, topic: t })));
+  }
+
+  const processTopics = flatGaps.filter(g => processKeywords.test(g.topic)).slice(0, 2);
+
+  for (const gap of processTopics) {
+    const slug = gap.topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+    const fcFile = 'figures/' + slug + '-flowchart.html';
+    if (fs.existsSync(fcFile)) continue;
+
+    const result = await callLLM(
+      'Generate a vertical flowchart SVG for the process: "' + gap.topic + '". ' +
+      'Return strict JSON: {"title":"...","steps":["step1","step2",...],"svg":"<svg...>...</svg>","caption":"..."}. ' +
+      'The SVG must show connected boxes with arrows, viewBox="0 0 600 800", monochrome.',
+      'Topic: ' + gap.topic + ' (' + gap.subject + '). UPSC-relevant process.',
+      2000
+    );
+    if (!result) continue;
+
+    try {
+      const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const parsed = JSON.parse(clean);
+      if (!parsed.svg || !parsed.svg.includes('<svg')) continue;
+
+      const page = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(parsed.title || gap.topic)} — Flowchart</title>
+<meta name="description" content="Flowchart: ${esc(parsed.title || gap.topic)} on Vlymbooq.">
+<style>
+body{background:#0a0a0a;color:#e5e5e5;font-family:system-ui,sans-serif;padding:20px;max-width:900px;margin:0 auto}
+.fig{background:#111;border:1px solid #333;border-radius:12px;padding:24px;margin:20px 0}
+.fig svg{max-width:100%;height:auto}
+.steps{margin-top:16px;padding:16px;background:#111;border-radius:8px}
+.steps li{margin:6px 0;color:#a1a1aa;font-size:13px}
+h1{font-size:22px}
+.crumb{color:#71717a;font-size:12px;margin-bottom:16px}
+.crumb a{color:#60a5fa;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="crumb"><a href="index.html">Home</a> / <a href="subject-figures-index.html">Figures</a> / Flowcharts</div>
+<h1>${esc(parsed.title || gap.topic)}</h1>
+<div class="fig">${parsed.svg}</div>
+${parsed.steps && parsed.steps.length ? '<div class="steps"><b>Steps:</b><ol>' + parsed.steps.map(s => '<li>' + esc(s) + '</li>').join('') + '</ol></div>' : ''}
+<div style="margin-top:16px;font-size:12px;color:#71717a">Generated by Site Agent · Flowchart · ${esc(gap.subject)}</div>
+</body>
+</html>`;
+      fs.mkdirSync('figures', { recursive: true });
+      fs.writeFileSync(fcFile, page);
+      fixes.push({ page: fcFile, kind: 'flowchart', fix: 'Created flowchart: ' + gap.topic, model: result.model });
+      console.log('agent: created flowchart ' + fcFile);
+    } catch (e) { /* parse failed */ }
+  }
+
+  console.log('agent: Flowcharts — ' + fixes.length + ' new flowchart(s)');
+  return { agent: 'flowcharts', fixes: fixes };
+}
+
+// ── AGENT 7: Mind map generator ──
+// Generates radial mind maps for subject topics (tree diagram).
+async function agentMindmaps() {
+  const fixes = [];
+  const gaps = loadJson('data/figure-gaps.json', null);
+  if (!gaps) return { agent: 'mindmaps', fixes: fixes };
+
+  const flatGaps = [];
+  if (Array.isArray(gaps)) {
+    gaps.forEach(g => (g.topics || []).forEach(t => flatGaps.push({ subject: g.subject, topic: t })));
+  }
+
+  // Pick 2 topics per run
+  for (const gap of flatGaps.slice(0, 2)) {
+    const slug = gap.topic.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 60);
+    const mmFile = 'figures/' + slug + '-mindmap.html';
+    if (fs.existsSync(mmFile)) continue;
+
+    const result = await callLLM(
+      'Generate a mind map SVG for "' + gap.topic + '" with the topic in the center and 5-7 branches radiating outward. ' +
+      'Return strict JSON: {"title":"...","branches":["branch1","branch2",...],"svg":"<svg...>...</svg>","caption":"..."}. ' +
+      'The SVG must be a radial/tree diagram, viewBox="0 0 900 700", monochrome.',
+      'Topic: ' + gap.topic + ' (' + gap.subject + '). Branches = key subtopics for UPSC.',
+      2000
+    );
+    if (!result) continue;
+
+    try {
+      const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const parsed = JSON.parse(clean);
+      if (!parsed.svg || !parsed.svg.includes('<svg')) continue;
+
+      const page = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(parsed.title || gap.topic)} — Mind Map</title>
+<meta name="description" content="Mind map: ${esc(parsed.title || gap.topic)} on Vlymbooq.">
+<style>
+body{background:#0a0a0a;color:#e5e5e5;font-family:system-ui,sans-serif;padding:20px;max-width:900px;margin:0 auto}
+.fig{background:#111;border:1px solid #333;border-radius:12px;padding:24px;margin:20px 0}
+.fig svg{max-width:100%;height:auto}
+h1{font-size:22px}
+.crumb{color:#71717a;font-size:12px;margin-bottom:16px}
+.crumb a{color:#60a5fa;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="crumb"><a href="index.html">Home</a> / <a href="subject-figures-index.html">Figures</a> / Mind Maps</div>
+<h1>${esc(parsed.title || gap.topic)}</h1>
+<div class="fig">${parsed.svg}</div>
+${parsed.branches && parsed.branches.length ? '<div style="margin-top:12px;font-size:13px;color:#a1a1aa"><b>Branches:</b> ' + parsed.branches.map(b => '<span style="display:inline-block;margin:2px 6px;padding:2px 8px;background:#1a1a2e;border-radius:8px;font-size:11px">' + esc(b) + '</span>').join('') + '</div>' : ''}
+<div style="margin-top:16px;font-size:12px;color:#71717a">Generated by Site Agent · Mind Map · ${esc(gap.subject)}</div>
+</body>
+</html>`;
+      fs.mkdirSync('figures', { recursive: true });
+      fs.writeFileSync(mmFile, page);
+      fixes.push({ page: mmFile, kind: 'mindmap', fix: 'Created mind map: ' + gap.topic, model: result.model });
+      console.log('agent: created mindmap ' + mmFile);
+    } catch (e) { /* parse failed */ }
+  }
+
+  console.log('agent: Mindmaps — ' + fixes.length + ' new mindmap(s)');
+  return { agent: 'mindmaps', fixes: fixes };
+}
+
+// ── AGENT 8: Feature generator ──
+// Generates EVERYTHING: study pages, comparison tables, timelines,
+// revision sheets, mnemonics, cheat sheets, topic deep-dives.
 async function agentFeatures() {
   const fixes = [];
-  const gaps = loadJson('data/topic-gaps.json', null);
 
-  // Generate flashcard pages for subjects that have questions but no flashcards
-  const subjects = new Set();
+  // Read existing topics to find gaps
+  const existingPages = new Set(listPages());
+  const gaps = loadJson('data/topic-gaps.json', null);
+  const qDir = 'data/questions';
+
+  // Gather subjects from question bank that lack a study page
+  const subjects = [];
   try {
-    const qDir = 'data/questions';
     if (fs.existsSync(qDir)) {
-      fs.readdirSync(qDir).filter(f => f.endsWith('.json')).slice(0, 5).forEach(f => {
+      fs.readdirSync(qDir).filter(f => f.endsWith('.json')).slice(0, 10).forEach(f => {
         const cat = loadJson(path.join(qDir, f), null);
         if (cat) {
           const name = Object.keys(cat)[0];
           const slug = f.replace('.json', '');
-          // Check if flashcard page already exists
-          if (!fs.existsSync(slug + '-flashcards.html') && !fs.existsSync(slug + '.html')) {
-            subjects.add({ name: name, slug: slug });
+          if (!existingPages.has(slug + '.html') && !existingPages.has(slug + '-revision.html')) {
+            subjects.push({ name: name, slug: slug });
           }
         }
       });
     }
   } catch (e) { /* ignore */ }
 
-  // For each new subject, generate a minimal study page
-  for (const subj of Array.from(subjects).slice(0, 1)) {
+  // ── Type 1: Topic study page ──
+  for (const subj of subjects.slice(0, 1)) {
     const result = await callLLM(
-      'Create a minimal HTML study page for the exam subject "' + subj.name + '". ' +
-      'Include: title, brief intro paragraph, 3 key topics as a list, and a "Start Quiz" button that links to quiz.html. ' +
-      'Use inline CSS (dark theme: bg #0a0a0a, text #e5e5e5, accent #3b82f6). ' +
+      'Create a complete HTML study page for UPSC subject "' + subj.name + '". ' +
+      'Include: title, intro paragraph, 5 key topics with brief explanations, ' +
+      'a "Key Facts" box, and a "Start Quiz" button linking to quiz.html. ' +
+      'Use inline CSS (dark theme: bg #0a0a0a, text #e5e5e5, accent #3b82f6, cards #111). ' +
       'Return ONLY the HTML starting with <!DOCTYPE html>.',
-      'Subject: ' + subj.name + '\nMake it clean, minimal, exam-focused.',
-      2000
+      'Subject: ' + subj.name,
+      2500
+    );
+    if (result) {
+      let html = result.text.replace(/```html\n?/g, '').replace(/```\n?/g, '').trim();
+      if (!html.startsWith('<!DOCTYPE')) {
+        const m = html.match(/<!DOCTYPE[\s\S]*<\/html>/i);
+        if (m) html = m[0];
+      }
+      if (html.startsWith('<!DOCTYPE') && !fs.existsSync(subj.slug + '.html')) {
+        fs.writeFileSync(subj.slug + '.html', html);
+        fixes.push({ page: subj.slug + '.html', kind: 'study', fix: 'Created study page: ' + subj.name, model: result.model });
+        console.log('agent: created ' + subj.slug + '.html');
+      }
+    }
+  }
+
+  // ── Type 2: Comparison table page ──
+  const compareTopics = [
+    { title: 'Article 32 vs Article 226', a: 'Article 32 (Right to Constitutional Remedies)', b: 'Article 226 (High Court writ jurisdiction)' },
+    { title: 'Lok Sabha vs Rajya Sabha', a: 'Lok Sabha (House of the People)', b: 'Rajya Sabha (Council of States)' },
+    { title: 'Fundamental Rights vs Directive Principles', a: 'Fundamental Rights (Part III)', b: 'Directive Principles (Part IV)' }
+  ];
+  for (const cmp of compareTopics) {
+    const slug = cmp.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    if (existingPages.has(slug + '.html') || fs.existsSync(slug + '.html')) continue;
+
+    const result = await callLLM(
+      'Create an HTML comparison table page for: "' + cmp.title + '". ' +
+      'Return strict JSON: {"title":"...","intro":"...","rows":[{"feature":"...","a":"...","b":"..."},...6 rows],"conclusion":"..."}. ' +
+      'Make it exam-focused with specific details.',
+      'Compare: ' + cmp.a + ' vs ' + cmp.b, 2000
     );
     if (!result) continue;
+    try {
+      const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const d = JSON.parse(clean);
+      if (!d.rows || !d.rows.length) continue;
+      const rows = d.rows.map(r =>
+        '<tr><td style="padding:10px;border-bottom:1px solid #333;color:#a1a1aa">' + esc(r.feature) + '</td>' +
+        '<td style="padding:10px;border-bottom:1px solid #333">' + esc(r.a) + '</td>' +
+        '<td style="padding:10px;border-bottom:1px solid #333">' + esc(r.b) + '</td></tr>'
+      ).join('');
+      const page = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(d.title || cmp.title)} — Comparison</title>
+<meta name="description" content="${esc(d.title || cmp.title)} comparison for UPSC on Vlymbooq.">
+<style>body{background:#0a0a0a;color:#e5e5e5;font-family:system-ui,sans-serif;padding:20px;max-width:900px;margin:0 auto}table{width:100%;border-collapse:collapse;background:#111;border-radius:12px;overflow:hidden;margin:16px 0}th{background:#1a1a2e;padding:12px;text-align:left;font-size:13px;color:#60a5fa}h1{font-size:22px}.intro{color:#a1a1aa;line-height:1.6}.conclusion{margin-top:16px;padding:16px;background:#111;border-left:3px solid #3b82f6;border-radius:0 8px 8px 0;font-size:13px}.crumb{color:#71717a;font-size:12px;margin-bottom:16px}.crumb a{color:#60a5fa;text-decoration:none}</style>
+</head>
+<body>
+<div class="crumb"><a href="index.html">Home</a> / Comparisons</div>
+<h1>${esc(d.title || cmp.title)}</h1>
+<div class="intro">${esc(d.intro || '')}</div>
+<table><tr><th>Feature</th><th>${esc(cmp.a)}</th><th>${esc(cmp.b)}</th></tr>${rows}</table>
+${d.conclusion ? '<div class="conclusion"><b>Key takeaway:</b> ' + esc(d.conclusion) + '</div>' : ''}
+<div style="margin-top:16px;font-size:12px;color:#71717a">Generated by Site Agent · Comparison Table</div>
+</body></html>`;
+      fs.writeFileSync(slug + '.html', page);
+      fixes.push({ page: slug + '.html', kind: 'comparison', fix: 'Created comparison: ' + cmp.title, model: result.model });
+      console.log('agent: created comparison ' + slug + '.html');
+    } catch (e) { /* skip */ }
+  }
 
-    let html = result.text.replace(/```html\n?/g, '').replace(/```\n?/g, '').trim();
-    if (!html.startsWith('<!DOCTYPE')) {
-      const m = html.match(/<!DOCTYPE[\s\S]*<\/html>/i);
-      if (m) html = m[0]; else continue;
+  // ── Type 3: Quick revision sheet ──
+  const revisionTopics = [
+    { title: 'Polity Quick Revision', subject: 'Indian Polity' },
+    { title: 'Modern History Timeline', subject: 'Modern History' },
+    { title: 'Economics Formulas & Concepts', subject: 'Economics' }
+  ];
+  for (const rev of revisionTopics) {
+    const slug = rev.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+    if (existingPages.has(slug + '.html') || fs.existsSync(slug + '.html')) continue;
+
+    const result = await callLLM(
+      'Create a quick revision sheet HTML page for "' + rev.title + '". ' +
+      'Return strict JSON: {"title":"...","sections":[{"heading":"...","points":["...","...",...5]}...4 sections]}. ' +
+      'Points must be concise, factual, exam-relevant one-liners.',
+      'Subject: ' + rev.subject, 2500
+    );
+    if (!result) continue;
+    try {
+      const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const d = JSON.parse(clean);
+      if (!d.sections || !d.sections.length) continue;
+      const sections = d.sections.map(s =>
+        '<div style="background:#111;border-radius:12px;padding:16px;margin:12px 0">' +
+        '<h2 style="font-size:16px;color:#60a5fa;margin:0 0 8px">' + esc(s.heading) + '</h2>' +
+        '<ul style="margin:0;padding-left:20px">' + (s.points || []).map(p => '<li style="margin:4px 0;color:#d4d4d8;font-size:13px;line-height:1.5">' + esc(p) + '</li>').join('') + '</ul></div>'
+      ).join('');
+      const page = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(d.title || rev.title)}</title>
+<meta name="description" content="Quick revision: ${esc(d.title || rev.title)} on Vlymbooq.">
+<style>body{background:#0a0a0a;color:#e5e5e5;font-family:system-ui,sans-serif;padding:20px;max-width:900px;margin:0 auto}h1{font-size:22px}.crumb{color:#71717a;font-size:12px;margin-bottom:16px}.crumb a{color:#60a5fa;text-decoration:none}</style>
+</head>
+<body>
+<div class="crumb"><a href="index.html">Home</a> / <a href="revision.html">Revision</a></div>
+<h1>${esc(d.title || rev.title)}</h1>
+<p style="color:#a1a1aa;font-size:13px">Quick one-liners for last-minute revision</p>
+${sections}
+<div style="margin-top:16px;font-size:12px;color:#71717a">Generated by Site Agent · Revision Sheet</div>
+</body></html>`;
+      fs.writeFileSync(slug + '.html', page);
+      fixes.push({ page: slug + '.html', kind: 'revision', fix: 'Created revision sheet: ' + rev.title, model: result.model });
+      console.log('agent: created revision ' + slug + '.html');
+    } catch (e) { /* skip */ }
+  }
+
+  // ── Type 4: Mnemonic / abbreviation page ──
+  if (!existingPages.has('mnemonics.html') && !fs.existsSync('mnemonics.html')) {
+    const result = await callLLM(
+      'Create an HTML mnemonics page for UPSC/SSC exams. ' +
+      'Return strict JSON: {"title":"...","sections":[{"heading":"...","items":[{"abbr":"...","meaning":"...","mnemonic":"..."}...5]}...3 sections]}. ' +
+      'Include: acronyms (IAS, IPS, IFS...), constitutional articles, and geography mnemonics.',
+      'Make it exam-focused with memory tricks.', 2500
+    );
+    if (result) {
+      try {
+        const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+        const d = JSON.parse(clean);
+        if (d.sections && d.sections.length) {
+          const sections = d.sections.map(s =>
+            '<div style="background:#111;border-radius:12px;padding:16px;margin:12px 0">' +
+            '<h2 style="font-size:16px;color:#a78bfa;margin:0 0 8px">' + esc(s.heading) + '</h2>' +
+            '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:8px">' +
+            (s.items || []).map(i =>
+              '<div style="background:#1a1a2e;padding:10px;border-radius:8px">' +
+              '<b style="color:#60a5fa">' + esc(i.abbr) + '</b>: ' + esc(i.meaning) +
+              '<div style="color:#a78bfa;font-size:11px;margin-top:4px">💡 ' + esc(i.mnemonic) + '</div></div>'
+            ).join('') + '</div></div>'
+          ).join('');
+          const page = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>${esc(d.title || 'UPSC Mnemonics & Memory Tricks')}</title>
+<meta name="description" content="Mnemonics and memory tricks for UPSC/SSC exams on Vlymbooq.">
+<style>body{background:#0a0a0a;color:#e5e5e5;font-family:system-ui,sans-serif;padding:20px;max-width:900px;margin:0 auto}h1{font-size:22px}.crumb{color:#71717a;font-size:12px;margin-bottom:16px}.crumb a{color:#60a5fa;text-decoration:none}</style>
+</head>
+<body>
+<div class="crumb"><a href="index.html">Home</a> / Mnemonics</div>
+<h1>${esc(d.title || 'UPSC Mnemonics & Memory Tricks')}</h1>
+<p style="color:#a1a1aa;font-size:13px">Memory tricks to remember facts faster</p>
+${sections}
+<div style="margin-top:16px;font-size:12px;color:#71717a">Generated by Site Agent · Mnemonics</div>
+</body></html>`;
+          fs.writeFileSync('mnemonics.html', page);
+          fixes.push({ page: 'mnemonics.html', kind: 'mnemonics', fix: 'Created mnemonics page', model: result.model });
+          console.log('agent: created mnemonics.html');
+        }
+      } catch (e) { /* skip */ }
     }
-
-    const pageFile = subj.slug + '.html';
-    if (fs.existsSync(pageFile)) continue; // don't overwrite
-
-    fs.writeFileSync(pageFile, html);
-    fixes.push({ page: pageFile, fix: 'Created study page for "' + subj.name + '"', model: result.model });
-    console.log('agent: created ' + pageFile);
   }
 
   console.log('agent: Features — ' + fixes.length + ' new page(s)');
@@ -348,9 +761,13 @@ async function main() {
   const results = [];
   const agents = [
     ['SEO', agentSEO],
+    ['Perf', agentPerf],
     ['A11Y', agentA11Y],
     ['Code', agentCode],
     ['Content', agentContent],
+    ['Figures', agentFigures],
+    ['Flowcharts', agentFlowcharts],
+    ['Mindmaps', agentMindmaps],
     ['Features', agentFeatures]
   ];
 
