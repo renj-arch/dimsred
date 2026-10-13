@@ -29,10 +29,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 1
           sparse-checkout: |
             scripts
-            data
+            data/faults.json
+            data/figure-gaps.json
+            data/topic-gaps.json
+            data/agent-log.json
+            data/autofix-log.json
+            data/pyq-patterns.json
+            data/site-audit.json
             figures
           sparse-checkout-cone: false
           token: ${{ secrets.PAT }}
@@ -67,15 +73,18 @@ jobs:
           done
           curl -sf http://localhost:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
+      # Pull the strongest model that actually works on this runner.
+      # 27B thrashes with 16GB swap on 7GB RAM. Nemotron 9B is the
+      # practical sweet spot: 71.1% LiveCodeBench, fits in RAM+swap.
       - name: Pull best model
         run: |
-          if ollama pull qwen3.8:27b; then
-            echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
-          elif ollama pull nvidia/nemotron-nano-9b-v2; then
+          if ollama pull nvidia/nemotron-nano-9b-v2; then
             echo "MODEL=nvidia/nemotron-nano-9b-v2" >> $GITHUB_ENV
+            echo "Using Nemotron Nano 9B v2 (71.1% LiveCodeBench)"
           else
             ollama pull qwen3.5:4b
             echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
+            echo "Using Qwen3.5-4B fallback"
           fi
           ollama list
 

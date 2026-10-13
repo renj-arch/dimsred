@@ -60,7 +60,8 @@ async function callLLM(system, user, maxTokens) {
         ],
         stream: false,
         options: { temperature: 0.3, num_predict: maxTokens || 1024 }
-      })
+      }),
+      signal: AbortSignal.timeout(120000) // 2 min max per call
     });
     if (res.ok) {
       const j = await res.json();
