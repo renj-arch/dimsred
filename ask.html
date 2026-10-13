@@ -615,16 +615,58 @@ h += '<p>' + esc(line) + '</p>';
 });
 });
 
-h += '<h3>Sources</h3>';
-facts.forEach(function (f, i) {
-h += '<div class="ev"><div class="src">' +
-'<a href="archive.html" target="_blank">' + esc(f.entity || 'corpus') + '</a>' +
-' &middot; fact ' + (i + 1) + '</div><p>' + esc(f.sentence) + '</p></div>';
-});
+// Which references did the model actually use? Every [n] citation in the prose
+// points at a numbered fact; collect them in order of first appearance so the
+// reader sees exactly the sources behind the answer, not the whole retrieval
+// dump. Facts the model retrieved but never cited are still available, folded
+// away, because they explain the answer's reach without crowding the ones it
+// leaned on.
+var cited = [];
+var seen = {};
+var re = /\[(\d+)\]/g;
+var mCite;
+var rawText = out.raw || out.sections.map(function (s) { return s.lines.join(' '); }).join(' ');
+while ((mCite = re.exec(rawText)) !== null) {
+var n = parseInt(mCite[1], 10);
+if (n >= 1 && n <= facts.length && !seen[n]) { seen[n] = true; cited.push(n); }
+}
 
+function factCard(idx, used) {
+var f = facts[idx - 1] || {};
+var cats = Array.isArray(f.cats) ? f.cats.join(', ') : (f.cats || '');
+return '<div class="ev"><div class="src">' +
+'<a href="archive.html" target="_blank">' + esc(f.entity || 'corpus') + '</a>' +
+' &middot; fact ' + idx +
+(cats ? ' &middot; ' + esc(cats) : '') +
+(used ? '' : ' &middot; retrieved, not cited') +
+'</div><p>' + esc(f.sentence || '') + '</p></div>';
+}
+
+if (cited.length) {
+h += '<h3>References used (' + cited.length + ')</h3>';
+cited.forEach(function (n) { h += factCard(n, true); });
+var rest = [];
+for (var fi = 1; fi <= facts.length; fi++) { if (!seen[fi]) rest.push(fi); }
+if (rest.length) {
+h += '<details><summary style="cursor:pointer;color:#71717a;font-size:12px;margin:8px 0">' +
+rest.length + ' more fact(s) retrieved but not cited</summary>';
+rest.forEach(function (n) { h += factCard(n, false); });
+h += '</details>';
+}
+} else {
+// No parseable citations (older answers, or the model omitted them): show
+// everything rather than nothing.
+h += '<h3>Sources</h3>';
+facts.forEach(function (f, i) { h += factCard(i + 1, true); });
+}
+
+var hasBackground = /\(background\)/i.test(rawText);
 h += '<p class="reason">The prose above was written by a small model running in ' +
-'this browser from the facts listed. Check any claim against its source before ' +
-'using it.</p>';
+'this browser: it analysed the retrieved corpus facts and wrote in its own ' +
+'words, citing each fact it used as [n].' +
+(hasBackground ? ' Sentences marked (background) are the model\'s own general ' +
+'knowledge, not from the corpus. ' : ' ') +
+'Check every claim against its reference before using it.</p>';
 h += '</div></div>';
 return h;
 }
