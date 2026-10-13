@@ -313,6 +313,28 @@ try {
       e.code === 'ENOENT' ? 'data/site-audit.json is written by site-audit.js.' : String(e.message || e));
   }
 
+  // ── auto-fixes: what the LLM fixed this cycle (llm-autofix.js) ──
+  try {
+    const af = JSON.parse(fs.readFileSync('data/autofix-log.json', 'utf8'));
+    const recent = (af.fixes || []).slice(-10).reverse();
+    if (recent.length) {
+      const byKind = {};
+      recent.forEach(function (f) { byKind[f.kind] = (byKind[f.kind] || 0) + 1; });
+      const summary = Object.keys(byKind).map(function (k) { return byKind[k] + ' ' + k; }).join(' · ');
+      add('info', 'autofix', 'Auto-fixed ' + recent.length + ' item(s) by Llama 4 Maverick',
+        summary + ' · last run ' + String(af.lastRun || '').slice(0, 16) + 'Z');
+      recent.slice(0, 4).forEach(function (f) {
+        add('info', 'autofix', '  ↳ ' + (f.detail || f.kind), f.model || '', null);
+      });
+    } else {
+      add('info', 'autofix', 'No auto-fixes yet',
+        'llm-autofix.yml runs every 6h — the model fixes weak content automatically once faults appear.');
+    }
+  } catch (e) {
+    add('info', 'autofix', 'Auto-fixer not run yet',
+      'llm-autofix.yml writes data/autofix-log.json on its first run.');
+  }
+
   // ── improvement ideas: curated proposals (data/ideas.json) ──
   const ideas = [];
   try {

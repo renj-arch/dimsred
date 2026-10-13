@@ -273,8 +273,28 @@ function renderFaults() {
         }).join('');
     }
 
-    // 5. Improvement ideas — curated proposals plus auto-generated figure
-    // suggestions; each with an Adopt button that prefills the form.
+    // 5. Auto-fixes by Llama 4 Maverick (llm-autofix.js → data/autofix-log.json).
+    // The model reads the fault board and fixes weak content on its own.
+    fetch('data/autofix-log.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (af) {
+      if (!af || !af.fixes || !af.fixes.length) return;
+      var recent = af.fixes.slice(-8).reverse();
+      var section = '<div class="list-head" style="margin-top:18px">What the model fixed <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; Llama 4 Maverick auto-fixer</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(af.lastRun) + ' &middot; ' + af.fixes.length + ' total fix(es) &middot; runs every 6h</p>';
+      section += recent.map(function (f) {
+        var kindColor = f.kind === 'figure' ? 'var(--purple)'
+          : f.kind === 'questions' ? 'var(--emerald)'
+          : f.kind === 'caption' ? 'var(--cyan)' : 'var(--amber)';
+        return '<div style="border-left:3px solid ' + kindColor + ';padding:6px 12px;margin:6px 0;background:var(--bg);border-radius:0 8px 8px 0;font-size:12.5px">' +
+          '<b style="color:' + kindColor + ';font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">' + esc(f.kind) + '</b>' +
+          '<div style="margin-top:2px">' + esc(f.detail || '') + '</div>' +
+          (f.model ? '<span style="color:var(--text-muted);font-size:11px">by ' + esc(f.model) + '</span>' : '') +
+          '</div>';
+      }).join('');
+      box.innerHTML += section;
+    }).catch(function () { /* autofix log not yet published */ });
     if (ideas.length) {
       html += '<div class="list-head" style="margin-top:18px">Ideas <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; adopt one into the form below</span></div>' +
         ideas.map(function (x) { return faultRow(x, ''); }).join('');
