@@ -37,6 +37,7 @@ jobs:
             data/topic-gaps.json
             data/agent-log.json
             data/autofix-log.json
+            data/ideas.json
             data/pyq-patterns.json
             data/site-audit.json
             figures
@@ -99,9 +100,9 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/agent-log.json data/autofix-log.json 2>/dev/null || true
+          git add data/agent-log.json data/autofix-log.json data/ideas.json 2>/dev/null || true
           git add figures/ data/questions/ 2>/dev/null || true
-          git add -- *.html 2>/dev/null || true
+          git add -- *.html prototype-*.html 2>/dev/null || true
           # New pages created by the agent (not in sparse-checkout list)
           git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add 2>/dev/null || true
           if git diff --staged --quiet; then

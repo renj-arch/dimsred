@@ -752,6 +752,109 @@ ${sections}
   return { agent: 'features', fixes: fixes };
 }
 
+// ── AGENT 9: Proposal agent ──
+// The innovation engine. Looks at what exists and invents NEW features
+// nobody asked for — like how figures/flowcharts/mindmaps were invented.
+// Generates proposals to data/ideas.json AND builds prototypes of the best one.
+async function agentProposals() {
+  const fixes = [];
+  const pages = listPages();
+
+  // Build a compact inventory of what exists
+  const inventory = {
+    totalPages: pages.length,
+    categories: pages.filter(p => !p.startsWith('lesson-') && !p.includes('figure')).slice(0, 40),
+    hasQuiz: pages.some(p => /quiz|exam|test/i.test(p)),
+    hasFlashcards: pages.some(p => /flashcard/i.test(p)),
+    hasMindmaps: pages.some(p => /mindmap/i.test(p)),
+    hasFlowcharts: pages.some(p => /flowchart/i.test(p)),
+    hasFigures: pages.some(p => /figure/i.test(p)),
+    hasGlobe: pages.some(p => /globe|map/i.test(p)),
+    hasLeaderboard: pages.some(p => /leaderboard/i.test(p)),
+    hasMnemonics: pages.some(p => /mnemonic/i.test(p)),
+    hasTimelines: pages.some(p => /timeline/i.test(p)),
+    hasComparisons: pages.some(p => /comparison|vs-/i.test(p)),
+    hasRevision: pages.some(p => /revision/i.test(p)),
+    hasMains: pages.some(p => /mains/i.test(p)),
+    hasPYQ: pages.some(p => /pyq|previous-year/i.test(p))
+  };
+
+  // Ask the model: what NEW feature should this site have?
+  const result = await callLLM(
+    'You are a product manager for an Indian competitive exam prep site (UPSC, SSC, Banking, Railway). ' +
+    'The site currently has: ' + JSON.stringify(inventory) + '. ' +
+    'Propose 3 NEW features that would make this site the best educational platform — things it does NOT have yet. ' +
+    'Think creatively: study tools, visualizations, interactive exercises, AI features, gamification, social features. ' +
+    'For each proposal return strict JSON: {"title":"...","description":"1-2 sentences","why":"why exam students need this","prototypePrompt":"HTML/CSS/JS for a working prototype, dark theme bg #0a0a0a, text #e5e5e5, accent #3b82f6"}. ' +
+    'Return a JSON array of exactly 3 proposals. No markdown.',
+    'Inventory: ' + inventory.totalPages + ' pages. Gaps to exploit. Think 10x, not incremental.',
+    4000
+  );
+
+  if (!result) return { agent: 'proposals', fixes: fixes };
+
+  try {
+    const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+    const proposals = JSON.parse(clean);
+    if (!Array.isArray(proposals) || !proposals.length) return { agent: 'proposals', fixes: fixes };
+
+    // Load existing ideas
+    const ideasFile = 'data/ideas.json';
+    const ideas = loadJson(ideasFile, { ideas: [] });
+
+    proposals.forEach(p => {
+      if (!p.title) return;
+      // Skip if already proposed
+      if (ideas.ideas.some(existing => existing.title === p.title)) return;
+      ideas.ideas.push({
+        title: p.title,
+        description: p.description || '',
+        why: p.why || '',
+        source: 'Site Agent (innovation)',
+        createdAt: new Date().toISOString(),
+        status: 'proposed'
+      });
+      fixes.push({ kind: 'proposal', fix: 'Proposed: ' + p.title, detail: p.why || p.description, model: result.model });
+    });
+
+    saveJson(ideasFile, ideas);
+
+    // Build a prototype of the FIRST proposal
+    const best = proposals[0];
+    if (best && best.prototypePrompt) {
+      const proto = await callLLM(
+        'Create a working HTML prototype for: "' + best.title + '". ' + best.prototypePrompt + '. ' +
+        'Use inline CSS. Dark theme: bg #0a0a0a, text #e5e5e5, accent #3b82f6, cards #111. ' +
+        'Make it interactive if possible (buttons, inputs, animations). Return ONLY HTML starting with <!DOCTYPE html>.',
+        'Feature: ' + best.title + '. Make it look polished and exam-focused.',
+        3000
+      );
+      if (proto) {
+        let html = proto.text.replace(/```html\n?/g, '').replace(/```\n?/g, '').trim();
+        if (!html.startsWith('<!DOCTYPE')) {
+          const m = html.match(/<!DOCTYPE[\s\S]*<\/html>/i);
+          if (m) html = m[0];
+        }
+        if (html.startsWith('<!DOCTYPE')) {
+          const slug = best.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 50);
+          const protoFile = 'prototype-' + slug + '.html';
+          if (!fs.existsSync(protoFile)) {
+            fs.writeFileSync(protoFile, html);
+            fixes.push({ kind: 'prototype', fix: 'Built prototype: ' + best.title, page: protoFile, model: proto.model });
+            console.log('agent: created prototype ' + protoFile);
+          }
+        }
+      }
+    }
+
+    console.log('agent: Proposals — ' + fixes.length + ' idea(s)/prototype(s)');
+  } catch (e) {
+    console.log('agent: Proposals parse failed: ' + e.message);
+  }
+
+  return { agent: 'proposals', fixes: fixes };
+}
+
 // ── Main ──
 async function main() {
   const log = loadJson(LOG, { runs: [], lastRun: null, model: null });
@@ -784,7 +887,8 @@ async function main() {
     ['Figures', agentFigures],
     ['Flowcharts', agentFlowcharts],
     ['Mindmaps', agentMindmaps],
-    ['Features', agentFeatures]
+    ['Features', agentFeatures],
+    ['Proposals', agentProposals]
   ];
 
   for (const [name, fn] of agents) {
