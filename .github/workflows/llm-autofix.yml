@@ -59,6 +59,22 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
 
+      # Start Ollama server in background and wait until it responds.
+      # `ollama pull` above briefly starts the server, but it shuts down
+      # when the step ends — the fixer then sees "Ollama not reachable".
+      - name: Start Ollama server
+        run: |
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://localhost:11434/api/tags && echo " OK" || echo " FAILED"
+
       # Pull the strongest coding model. Qwen3.8-27B scores 90.3% on
       # LiveCodeBench — near the top of the entire leaderboard. Falls back
       # through smaller models if the 27B doesn't fit.
@@ -76,6 +92,7 @@ jobs:
             echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
           fi
           ollama list
+          curl -sf http://localhost:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
 
       - name: Run auto-fixer (Qwen3.5 local, zero API keys)
         env:

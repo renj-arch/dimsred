@@ -54,6 +54,19 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
 
+      - name: Start Ollama server
+        run: |
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://localhost:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+
       - name: Pull best model
         run: |
           if ollama pull qwen3.8:27b; then
