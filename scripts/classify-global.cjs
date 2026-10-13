@@ -35,6 +35,15 @@ const lib = require('./classify_lib.js');
 const { classify, TICK, slugFor } = lib;
 const DIR = process.env.CLASSIFY_DIR || lib.DIR;
 
+// Soft wall-clock budget. Classification is best-effort: if the regex pass
+// hasn't finished within this window we exit 0 and let the wiki-fill merge
+// commit what it already has. Prevents one pathological sub-topic name (the
+// dirty-scan rules use nested lookaheads that backtrack exponentially on
+// long strings) from parking the merge job for hours.
+const DEADLINE_MS = parseInt(process.env.CLASSIFY_BUDGET_MS || '', 10) || 15 * 60 * 1000;
+const started = Date.now();
+function outOfBudget() { return Date.now() - started > DEADLINE_MS; }
+
 const files = fs.readdirSync(DIR).filter(f => f.endsWith('.json') && f !== 'catalog.json' && f !== 'manifest.json' && f !== 'archive-cat-index.json');
 
 function parse(file) {
@@ -49,7 +58,15 @@ function parse(file) {
 // Phase 1: scan every file sequentially; the parse is dropped each iteration.
 // name -> { dest, homes: [file], n }  (dest = classify() routing, bare names only)
 const plan = new Map();
+let scanned = 0;
+let budgetExhausted = false;
 for (const file of files) {
+  if (outOfBudget()) {
+    budgetExhausted = true;
+    console.log('classify-global: budget hit after ' + scanned + '/' + files.length +
+      ' files (' + Math.round((Date.now() - started) / 1000) + 's) — stopping scan early.');
+    break;
+  }
   let p;
   try {
     p = parse(file);
@@ -57,17 +74,32 @@ for (const file of files) {
     console.log('classify-global: skipping unreadable ' + file + ' (' + (err && err.message || err) + ')');
     continue;
   }
+  scanned++;
   for (const [name, arr] of Object.entries(p.ss)) {
     if (name.startsWith(TICK)) continue; // already moved in — never re-move
     const n = Array.isArray(arr) ? arr.length : 0;
     if (n === 0) continue;
-    const r = classify(name);
+    // Guard the expensive regex pass: very long names are almost always
+    // disambiguation/list pages the rules would reject anyway, and they're
+    // the ones that trigger catastrophic backtracking.
+    if (name.length > 200) continue;
+    let r;
+    try {
+      r = classify(name);
+    } catch (err) {
+      continue; // a single bad name must not kill the whole pass
+    }
     if (!r || !r.dest) continue;
     if (r.dest === p.k) continue; // already at home
     if (!plan.has(name)) plan.set(name, { dest: r.dest, homes: [], n: 0 });
     const m = plan.get(name);
     m.homes.push(file);
     m.n += n;
+  }
+  if (scanned % 100 === 0) {
+    console.log('classify-global: scanned ' + scanned + '/' + files.length +
+      ' files, ' + plan.size + ' planned moves, ' +
+      Math.round((Date.now() - started) / 1000) + 's elapsed');
   }
 }
 
@@ -99,8 +131,15 @@ function classifyMain() {
   const touched = new Set();
   let movedQ = 0;
   const byDest = {};
+  let applyStopped = false;
 
   for (const [home, moves] of byHome) {
+    if (outOfBudget()) {
+      applyStopped = true;
+      console.log('classify-global: budget hit during apply — ' + touched.size +
+        ' files already rewritten, remaining homes skipped.');
+      break;
+    }
     const hp = parse(home);
     let homeDirty = false;
 
@@ -159,7 +198,9 @@ function classifyMain() {
 
   // Summary by destination.
   summary('classify-global: moved ' + plan.size + ' sub-topics / ' + movedQ + ' questions across ' +
-    destCount + ' destinations, ' + touched.size + ' files rewritten.', plan.size, movedQ, byDest, touched);
+    Object.keys(byDest).length + ' destinations, ' + touched.size + ' files rewritten' +
+    (applyStopped || budgetExhausted ? ' (PARTIAL — budget hit, rerun to finish)' : '.') ,
+    plan.size, movedQ, byDest, touched);
 }
 
 function summary(line, subtopics, movedQ, byDest, touched) {
