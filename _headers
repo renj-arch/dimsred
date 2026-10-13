@@ -1,18 +1,29 @@
+# Cloudflare Pages response headers — baseline hardening for the whole site.
+# The real access lock for improve.html is Cloudflare Access (owner email);
+# these headers limit sniffing, framing, and caching of private board data.
+
 /*
   X-Content-Type-Options: nosniff
-  X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
-  Content-Security-Policy: frame-ancestors 'self'
-  Cache-Control: public, max-age=0, must-revalidate
+  X-Frame-Options: SAMEORIGIN
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
 
-/css/*
-  Cache-Control: public, max-age=31536000, immutable
+/improve.html
+  X-Robots-Tag: noindex, nofollow, noarchive
+  Cache-Control: no-store
 
-/js/*
-  Cache-Control: public, max-age=31536000, immutable
+/data/faults.json
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
 
-/sw.js
-  Cache-Control: public, max-age=0, must-revalidate
+/data/ideas.json
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
 
-/data/questions/*
-  Cache-Control: public, max-age=300, must-revalidate
+/data/train-audit.json
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+/data/map-lineage-audit.json
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store

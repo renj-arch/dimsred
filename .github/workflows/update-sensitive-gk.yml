@@ -6,6 +6,11 @@ on:
     - cron: '0 0 * * 0'
   workflow_dispatch:
 
+# Explicit write for this workflow's own data commit only; the repo default
+# for every other workflow stays least-privilege read.
+permissions:
+  contents: write
+
 jobs:
   update:
     runs-on: ubuntu-latest
