@@ -1,0 +1,93 @@
+name: Site Agent
+
+# The complete autonomous maintainer. Runs every 6 hours, handles:
+#   SEO — meta tags, descriptions, viewport, lang attributes
+#   A11Y — alt text, ARIA labels, skip links, keyboard nav
+#   Code — dead links, deprecated HTML, missing closing tags
+#   Content — generates MCQ questions for thin categories
+#   Features — creates new study pages from templates
+#
+# Self-upgrading: picks the best model that fits in RAM.
+# Fully free: Ollama runs locally on the runner, zero API keys.
+
+on:
+  schedule:
+    - cron: '55 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: site-agent
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          sparse-checkout: |
+            scripts
+            data
+            figures
+          sparse-checkout-cone: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create swap (16GB)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+
+      - name: Pull best model
+        run: |
+          if ollama pull qwen3.8:27b; then
+            echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
+          elif ollama pull nvidia/nemotron-nano-9b-v2; then
+            echo "MODEL=nvidia/nemotron-nano-9b-v2" >> $GITHUB_ENV
+          else
+            ollama pull qwen3.5:4b
+            echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
+          fi
+          ollama list
+
+      - name: Run site agent
+        env:
+          OLLAMA_MODEL: ${{ env.MODEL }}
+        run: node scripts/site-agent.js
+
+      - name: Publish agent work
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/agent-log.json data/autofix-log.json 2>/dev/null || true
+          git add figures/ data/questions/ 2>/dev/null || true
+          git add -- *.html 2>/dev/null || true
+          # New pages created by the agent (not in sparse-checkout list)
+          git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No agent work to publish"
+          else
+            git commit -m "site-agent: ${{ env.MODEL }} maintained the site (run #${{ github.run_number }})"
+            for i in 1 2 3; do
+              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed..."
+              sleep 5
+            done || echo "::warning::push failed"
+          fi

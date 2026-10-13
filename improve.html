@@ -273,7 +273,7 @@ function renderFaults() {
         }).join('');
     }
 
-    // 5. Auto-fixes by Llama 4 Maverick (llm-autofix.js → data/autofix-log.json).
+    // 5. Auto-fixes by the local model (llm-autofix.js → data/autofix-log.json).
     // The model reads the fault board and fixes weak content on its own.
     fetch('data/autofix-log.json').then(function (r) {
       if (!r.ok) return null;
@@ -281,8 +281,8 @@ function renderFaults() {
     }).then(function (af) {
       if (!af || !af.fixes || !af.fixes.length) return;
       var recent = af.fixes.slice(-8).reverse();
-      var section = '<div class="list-head" style="margin-top:18px">What the model fixed <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; Llama 4 Maverick auto-fixer</span></div>';
-      section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(af.lastRun) + ' &middot; ' + af.fixes.length + ' total fix(es) &middot; runs every 6h</p>';
+      var section = '<div class="list-head" style="margin-top:18px">What the model fixed <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; local LLM auto-fixer</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(af.lastRun) + ' &middot; ' + af.fixes.length + ' total fix(es) &middot; model: ' + esc(af.model || 'auto') + ' &middot; runs every 6h</p>';
       section += recent.map(function (f) {
         var kindColor = f.kind === 'figure' ? 'var(--purple)'
           : f.kind === 'questions' ? 'var(--emerald)'
@@ -295,6 +295,27 @@ function renderFaults() {
       }).join('');
       box.innerHTML += section;
     }).catch(function () { /* autofix log not yet published */ });
+
+    // 5b. Site Agent (site-agent.js → data/agent-log.json).
+    // Full-autonomy maintainer: SEO, A11Y, code fixes, content, features.
+    fetch('data/agent-log.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (ag) {
+      if (!ag || !ag.runs || !ag.runs.length) return;
+      var last = ag.runs[ag.runs.length - 1];
+      var section = '<div class="list-head" style="margin-top:18px">Site Agent <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; full autonomy: SEO, A11Y, code, content, features</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(last.at) + ' &middot; ' + last.totalFixes + ' fix(es) &middot; model: ' + esc(last.model || 'auto') + ' &middot; runs every 6h</p>';
+      var colors = { seo: 'var(--blue)', a11y: 'var(--purple)', code: 'var(--amber)', content: 'var(--emerald)', features: 'var(--cyan)' };
+      if (last.byAgent && last.byAgent.length) {
+        section += last.byAgent.filter(function (a) { return a.count > 0; }).map(function (a) {
+          var c = colors[a.agent] || 'var(--text-muted)';
+          return '<span style="display:inline-block;margin:2px 6px;padding:2px 8px;background:var(--bg);border:1px solid ' + c + ';border-radius:10px;font-size:11px;color:' + c + '">' + esc(a.agent) + ': ' + a.count + '</span>';
+        }).join('');
+      }
+      box.innerHTML += section;
+    }).catch(function () { /* agent log not yet published */ });
+
     if (ideas.length) {
       html += '<div class="list-head" style="margin-top:18px">Ideas <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; adopt one into the form below</span></div>' +
         ideas.map(function (x) { return faultRow(x, ''); }).join('');

@@ -321,7 +321,7 @@ try {
       const byKind = {};
       recent.forEach(function (f) { byKind[f.kind] = (byKind[f.kind] || 0) + 1; });
       const summary = Object.keys(byKind).map(function (k) { return byKind[k] + ' ' + k; }).join(' · ');
-      add('info', 'autofix', 'Auto-fixed ' + recent.length + ' item(s) by Llama 4 Maverick',
+      add('info', 'autofix', 'Auto-fixed ' + recent.length + ' item(s) by ' + (af.model || 'local model'),
         summary + ' · last run ' + String(af.lastRun || '').slice(0, 16) + 'Z');
       recent.slice(0, 4).forEach(function (f) {
         add('info', 'autofix', '  ↳ ' + (f.detail || f.kind), f.model || '', null);
@@ -333,6 +333,25 @@ try {
   } catch (e) {
     add('info', 'autofix', 'Auto-fixer not run yet',
       'llm-autofix.yml writes data/autofix-log.json on its first run.');
+  }
+
+  // ── site agent: full-autonomy maintainer (site-agent.js) ──
+  try {
+    const ag = JSON.parse(fs.readFileSync('data/agent-log.json', 'utf8'));
+    const runs = ag.runs || [];
+    if (runs.length) {
+      const last = runs[runs.length - 1];
+      const byAgent = (last.byAgent || []).filter(function (a) { return a.count > 0; })
+        .map(function (a) { return a.agent + ': ' + a.count; }).join(' · ');
+      add('info', 'agent', 'Site Agent ran ' + runs.length + ' time(s), last: ' + last.totalFixes + ' fix(es)',
+        'model: ' + (last.model || 'auto') + (byAgent ? ' · ' + byAgent : '') + ' · ' + String(last.at || '').slice(0, 16) + 'Z');
+    } else {
+      add('info', 'agent', 'Site Agent has no runs yet',
+        'site-agent.yml runs every 6h — SEO, A11Y, code fixes, content, and new pages.');
+    }
+  } catch (e) {
+    add('info', 'agent', 'Site Agent not run yet',
+      'site-agent.yml writes data/agent-log.json on its first run.');
   }
 
   // ── improvement ideas: curated proposals (data/ideas.json) ──
