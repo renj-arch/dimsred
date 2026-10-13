@@ -50,6 +50,7 @@ jobs:
             data/faults.json
             data/topic-gaps.json
             data/pyq-patterns.json
+            data/site-audit.json
           sparse-checkout-cone: false
           token: ${{ secrets.PAT }}
 
@@ -65,6 +66,9 @@ jobs:
       - name: Analyze PYQ patterns
         run: node scripts/pyq-analyze.js
 
+      - name: Audit site pages
+        run: node scripts/site-audit.js
+
       - name: Build fault report (incl. pipeline status)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -76,7 +80,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/faults.json data/topic-gaps.json data/pyq-patterns.json 2>/dev/null || { echo "::error::data/faults.json missing or ignored"; exit 1; }
+          git add data/faults.json data/topic-gaps.json data/pyq-patterns.json data/site-audit.json 2>/dev/null || { echo "::error::data/faults.json missing or ignored"; exit 1; }
           if git diff --staged --quiet; then
             echo "Board unchanged"
           else

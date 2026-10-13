@@ -295,6 +295,24 @@ try {
       e.code === 'ENOENT' ? 'data/pyq-patterns.json is written by pyq-analyze.js.' : String(e.message || e));
   }
 
+  // ── site-wide page audit (site-audit.js) ──
+  try {
+    const sa = JSON.parse(fs.readFileSync('data/site-audit.json', 'utf8'));
+    const bad = sa.faults || [];
+    if (bad.length) {
+      bad.slice(0, 5).forEach(function (f) {
+        add('warn', 'site', 'Page "' + f.page + '" has audit fault(s)',
+          (f.faults || []).join('; ') + ' · ' + String(sa.generated || '').slice(0, 10), null);
+      });
+    } else {
+      add('info', 'site', sa.pagesChecked + ' page(s) audited, all clean',
+        String(sa.generated || '').slice(0, 16) + 'Z');
+    }
+  } catch (e) {
+    add('info', 'site', 'Site audit not available',
+      e.code === 'ENOENT' ? 'data/site-audit.json is written by site-audit.js.' : String(e.message || e));
+  }
+
   // ── improvement ideas: curated proposals (data/ideas.json) ──
   const ideas = [];
   try {
