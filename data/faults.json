@@ -1,98 +1,189 @@
 {
- "generatedAt": "2026-10-13T10:07:04.367Z",
+ "generatedAt": "2026-10-13T14:27:46.797Z",
  "counts": {
   "critical": 0,
   "warn": 3,
-  "info": 8
+  "info": 13
  },
  "changes": {
   "firstReport": false,
-  "previousGeneratedAt": "2026-10-13T09:27:07.194Z",
+  "previousGeneratedAt": "2026-10-13T10:07:04.367Z",
   "new": [
    {
     "severity": "info",
     "kind": "autofix",
-    "title": "Auto-fixer not run yet",
-    "detail": "llm-autofix.yml writes data/autofix-log.json on its first run.",
+    "title": "Auto-fixed 4 item(s) by local model",
+    "detail": "4 figure · last run 2026-10-13T11:57Z",
+    "action": null
+   },
+   {
+    "severity": "info",
+    "kind": "autofix",
+    "title": "  ↳ Figure page created for \"traditional chinese medicine meridians\" (ayurveda-traditional-medicine)",
+    "detail": "gpt-oss-120b",
+    "action": null
+   },
+   {
+    "severity": "info",
+    "kind": "autofix",
+    "title": "  ↳ Figure page created for \"panchakarma\" (ayurveda-traditional-medicine)",
+    "detail": "gpt-oss-120b",
+    "action": null
+   },
+   {
+    "severity": "info",
+    "kind": "autofix",
+    "title": "  ↳ Figure page created for \"cattle and buffalo breeds of India map\" (animal-husbandry-dairy)",
+    "detail": "gpt-oss-120b",
+    "action": null
+   },
+   {
+    "severity": "info",
+    "kind": "autofix",
+    "title": "  ↳ Figure page created for \"white revolution India milk production\" (animal-husbandry-dairy)",
+    "detail": "gpt-oss-120b",
+    "action": null
+   },
+   {
+    "severity": "info",
+    "kind": "agent",
+    "title": "Site Agent not run yet",
+    "detail": "site-agent.yml writes data/agent-log.json on its first run.",
     "action": null
    }
   ],
-  "resolved": [],
+  "resolved": [
+   {
+    "severity": "info",
+    "kind": "autofix",
+    "title": "Auto-fixer not run yet"
+   }
+  ],
   "unchanged": 10
  },
- "runs": [],
+ "runs": [
+  {
+   "workflow": "Fault status for improve.html",
+   "status": "in_progress",
+   "conclusion": "",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38413388919",
+   "at": "2026-10-13T14:26:41Z"
+  },
+  {
+   "workflow": "Figures Build",
+   "status": "in_progress",
+   "conclusion": "",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38412838699",
+   "at": "2026-10-13T14:22:56Z"
+  },
+  {
+   "workflow": "Site Agent",
+   "status": "completed",
+   "conclusion": "cancelled",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38404103856",
+   "at": "2026-10-13T14:20:41Z"
+  },
+  {
+   "workflow": "Globe Fill",
+   "status": "in_progress",
+   "conclusion": "",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38403520316",
+   "at": "2026-10-13T13:26:57Z"
+  },
+  {
+   "workflow": "Daily Paper Generation",
+   "status": "completed",
+   "conclusion": "success",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38400670934",
+   "at": "2026-10-13T13:20:12Z"
+  },
+  {
+   "workflow": "Slim live mirror",
+   "status": "completed",
+   "conclusion": "success",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38397599238",
+   "at": "2026-10-13T12:30:43Z"
+  },
+  {
+   "workflow": "LLM Auto-fix",
+   "status": "completed",
+   "conclusion": "success",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38390600674",
+   "at": "2026-10-13T11:58:12Z"
+  }
+ ],
  "actions": [
   {
-   "sha": "29f4a6d11",
+   "sha": "063f855",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "classify-global: 15-min wall-clock budget + long-name guard (merge was hanging)"
+   "subject": "agent: add Performance agent (defer scripts, lazy images, huge-file warnings)"
   },
   {
-   "sha": "0c59a3d43",
+   "sha": "2d05000",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "Improve board refresh 2026-10-13 09:27 UTC — run #7"
+   "subject": "fix: start Ollama server before running fixer/agent (was shutting down after pull)"
   },
   {
-   "sha": "0e9a5c8d9",
+   "sha": "9842a07",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "site-audit: only verify assets under existing top-level dirs (sparse CI safe)"
+   "subject": "auto-fix: qwen3.8:27b fixed weak content (run #5)"
   },
   {
-   "sha": "d88e9573c",
+   "sha": "2025a99",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "Improve board refresh 2026-10-13 09:17 UTC — run #6"
+   "subject": "site-agent: 495 fixes across 259 pages (SEO meta/viewport/lang, A11Y alt/skip-links/roles, dead links)"
   },
   {
-   "sha": "9cf2cb35f",
+   "sha": "d119d6f",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "site-audit: skip absolute site routes + sparse-checkout asset dirs"
+   "subject": "feat: Site Agent — full-autonomy maintainer (SEO, A11Y, code, content, features) with self-upgrading model selector"
   },
   {
-   "sha": "42cc40b6a",
+   "sha": "eefd526",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "Improve board refresh 2026-10-13 09:05 UTC — run #5"
+   "subject": "autofix: self-upgrading model selector — auto-picks best available model"
   },
   {
-   "sha": "8cce9ea9c",
+   "sha": "48b7772",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "site-audit: 260-page static audit wired into improve board; fix dead links"
+   "subject": "auto-fix: Qwen3.8-27B (90.3% LiveCodeBench) with 16GB swap — strongest free coding model"
   },
   {
-   "sha": "c65e4df87",
-   "at": "2026-10-13",
-   "who": "vlymbooq-bot",
-   "subject": "Daily PIB feed update 2026-10-13"
-  },
-  {
-   "sha": "89f1fd4ba",
+   "sha": "bb3ce49",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "Close all syllabus gaps + PYQ pattern analysis wired into tutor and board"
+   "subject": "auto-fix: Nemotron Nano 9B v2 (71.1% LiveCodeBench — best 9B coding model)"
   },
   {
-   "sha": "4f8b17a2c",
+   "sha": "04f9482",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "ask.html + ask-llm.js: model analyses and writes in its own words, with visible references"
+   "subject": "autofix: dd instead of fallocate for swap (runner rejects fallocate)"
   },
   {
-   "sha": "e919a7459",
+   "sha": "60b99b3",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "exam-tutor: AI tutor + practice-set generator across ALL exam pages"
+   "subject": "auto-fix: 8GB swap + Qwen3.5-9B (strongest free model that fits), fallback to 4B"
   },
   {
-   "sha": "527130ffe",
+   "sha": "d22cb65",
    "at": "2026-10-13",
    "who": "dimsred-bot",
-   "subject": "ssc-je.html: AI tutor wired via WebLLM (zero-API, runs on visitor GPU)"
+   "subject": "Fully free forever: auto-fixer runs Qwen3.5-4B locally via Ollama (zero API keys) + browser Best slot upgraded to Qwen3.5-4B"
+  },
+  {
+   "sha": "e51c56f",
+   "at": "2026-10-13",
+   "who": "dimsred-bot",
+   "subject": "WebLLM upgrade: Qwen2.5 → Qwen3/3.5 generation (1.7B fast, 2B quality, 4B best) — free forever, no keys"
   }
  ],
  "ideas": [
@@ -269,14 +360,49 @@
    "severity": "info",
    "kind": "site",
    "title": "260 page(s) audited, all clean",
-   "detail": "2026-10-13T09:27Z",
+   "detail": "2026-10-13T14:27Z",
    "action": null
   },
   {
    "severity": "info",
    "kind": "autofix",
-   "title": "Auto-fixer not run yet",
-   "detail": "llm-autofix.yml writes data/autofix-log.json on its first run.",
+   "title": "Auto-fixed 4 item(s) by local model",
+   "detail": "4 figure · last run 2026-10-13T11:57Z",
+   "action": null
+  },
+  {
+   "severity": "info",
+   "kind": "autofix",
+   "title": "  ↳ Figure page created for \"traditional chinese medicine meridians\" (ayurveda-traditional-medicine)",
+   "detail": "gpt-oss-120b",
+   "action": null
+  },
+  {
+   "severity": "info",
+   "kind": "autofix",
+   "title": "  ↳ Figure page created for \"panchakarma\" (ayurveda-traditional-medicine)",
+   "detail": "gpt-oss-120b",
+   "action": null
+  },
+  {
+   "severity": "info",
+   "kind": "autofix",
+   "title": "  ↳ Figure page created for \"cattle and buffalo breeds of India map\" (animal-husbandry-dairy)",
+   "detail": "gpt-oss-120b",
+   "action": null
+  },
+  {
+   "severity": "info",
+   "kind": "autofix",
+   "title": "  ↳ Figure page created for \"white revolution India milk production\" (animal-husbandry-dairy)",
+   "detail": "gpt-oss-120b",
+   "action": null
+  },
+  {
+   "severity": "info",
+   "kind": "agent",
+   "title": "Site Agent not run yet",
+   "detail": "site-agent.yml writes data/agent-log.json on its first run.",
    "action": null
   }
  ]
