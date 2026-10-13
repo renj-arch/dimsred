@@ -11160,6 +11160,7 @@
   window.initScienceTraining = initScienceTraining;
   window.startScienceTraining = startTraining;
   window.getScienceGenerators = function () { return GENERATORS; };
+  window.SCI_POLY_BANK = { easy: POLY_Q, hard: POLY_HARD, generators: POLY_GENERATORS };
   window.getScienceTopics = function () { return SCI_TOPICS; };
   window.getScienceState = loadState;
   window.getScienceMistakes = loadMistakes;
