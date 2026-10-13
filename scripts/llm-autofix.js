@@ -19,7 +19,7 @@ const fs = require('fs');
 const path = require('path');
 
 const LOG = 'data/autofix-log.json';
-const MAX_FIXES_PER_RUN = 6;
+const MAX_FIXES_PER_RUN = 3; // 27B on CPU is slow — keep runs within timeout
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:4b';
 

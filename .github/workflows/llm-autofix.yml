@@ -25,7 +25,7 @@ permissions:
 jobs:
   autofix:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -43,13 +43,11 @@ jobs:
         with:
           node-version: 22
 
-      # Create 8GB swap so the 9B model (~6GB) fits without OOM.
-      # The runner has 14GB free disk; 8GB swap leaves plenty of headroom.
-      # dd instead of fallocate: some runners reject fallocate with
-      # "Text file busy" on /swapfile.
-      - name: Create swap (8GB)
+      # Create 16GB swap so Qwen3.8-27B (~18GB) fits: 7GB RAM + 16GB swap
+      # = 23GB total. CPU inference is slow but free.
+      - name: Create swap (16GB)
         run: |
-          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=8192 status=progress
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
           sudo chmod 600 /tmp/swapfile
           sudo mkswap /tmp/swapfile
           sudo swapon /tmp/swapfile
@@ -61,19 +59,19 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
 
-      # Pull the strongest coding model that fits with swap.
-      # Nemotron Nano 9B v2 scores 71.1% on LiveCodeBench v6 — best 9B
-      # coding model. Falls back through smaller options if pull fails.
+      # Pull the strongest coding model. Qwen3.8-27B scores 90.3% on
+      # LiveCodeBench — near the top of the entire leaderboard. Falls back
+      # through smaller models if the 27B doesn't fit.
       - name: Pull best coding model
         run: |
-          if ollama pull nvidia/nemotron-nano-9b-v2; then
+          if ollama pull qwen3.8:27b; then
+            echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
+            echo "Using Qwen3.8-27B (90.3% LiveCodeBench)"
+          elif ollama pull nvidia/nemotron-nano-9b-v2; then
             echo "MODEL=nvidia/nemotron-nano-9b-v2" >> $GITHUB_ENV
             echo "Using Nemotron Nano 9B v2 (71.1% LiveCodeBench)"
-          elif ollama pull qwen3.5:9b; then
-            echo "MODEL=qwen3.5:9b" >> $GITHUB_ENV
-            echo "Using Qwen3.5-9B"
           else
-            echo "9B models failed, using 4B"
+            echo "Large models failed, using 4B"
             ollama pull qwen3.5:4b
             echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
           fi
