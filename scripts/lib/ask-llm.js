@@ -50,7 +50,7 @@ if (typeof module === 'object' && module.exports) {
 var MODELS = {
   fast:    { id: 'mlc-ai/Qwen3-1.7B-q4f16_1-MLC',          label: 'Fast (1.7B)' },
   quality: { id: 'mlc-ai/Qwen3.5-2B-q4f16_1-MLC',          label: 'Quality (2B, newest)' },
-  best:    { id: 'mlc-ai/Qwen3-4B-q4f16_1-MLC',            label: 'Best (4B, slower)' }
+  best:    { id: 'mlc-ai/Qwen3.5-4B-q4f16_1-MLC',          label: 'Best (4B, newest gen)' }
 };
 var DEFAULT_MODEL = 'fast';
 

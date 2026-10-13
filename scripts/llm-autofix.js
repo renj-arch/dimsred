@@ -1,32 +1,27 @@
-// LLM auto-fixer: reads the fault board + coverage reports, asks Llama 4
-// Maverick (via Groq free tier) to fix what it safely can, and writes the
-// results back. What it fixes:
-//   1. Thin categories — generates new fill_blank questions for low-count cats
+// LLM auto-fixer: reads the fault board + coverage reports, asks a local
+// LLM (Ollama on the runner's CPU — free forever, no API keys) to fix what
+// it safely can, and writes the results back. What it fixes:
+//   1. Thin categories — generates new MCQ questions for low-count cats
 //   2. Missing figures — generates monochrome SVG figure pages for syllabus gaps
 //   3. Broken captions — rewrites stale/wrong figure text from fault details
 //
 // Everything is logged to data/autofix-log.json so improve.html can show
 // "what the model fixed" with before/after evidence.
 //
-// Requires GROQ_API_KEY. Falls back to Gemini if Groq fails.
+// Primary: Ollama at OLLAMA_HOST (default http://localhost:11434) — the
+// workflow installs Ollama and pulls Qwen2.5-1.5B (~1GB, runs on CPU in
+// ~30-60s per call). Zero cost, zero keys, works offline.
+// Optional fallbacks: Groq → Gemini, only if OLLAMA_MODEL env is unset and
+// API keys happen to be present.
 // Never blocks: any fatal error logs and exits 0.
 
 const fs = require('fs');
 const path = require('path');
 
 const LOG = 'data/autofix-log.json';
-const MAX_FIXES_PER_RUN = 8; // stay well within free-tier rate limits
-const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-// Cascade: strongest free models first, fall through on 404/403/rate-limit.
-// Maverick (400B MoE) → Scout → Kimi K2 → Llama 3.3 70B → GPT-OSS 120B.
-const GROQ_MODELS = [
-  'meta-llama/llama-4-maverick-17b-128e-instruct',
-  'meta-llama/llama-4-scout-17b-16e-instruct',
-  'moonshotai/kimi-k2-instruct-0905',
-  'llama-3.3-70b-versatile',
-  'openai/gpt-oss-120b'
-];
-const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
+const MAX_FIXES_PER_RUN = 6;
+const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+const OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:4b';
 
 function loadJson(p, fallback) {
   try { return JSON.parse(fs.readFileSync(p, 'utf8')); } catch (e) { return fallback; }
@@ -37,81 +32,58 @@ function saveJson(p, data) {
   fs.writeFileSync(p, JSON.stringify(data, null, 1) + '\n');
 }
 
-// ── LLM call (Groq cascade → Gemini fallback) ──
+// ── LLM call: Ollama (local, free forever) → optional API fallbacks ──
 async function callLLM(system, user, maxTokens) {
-  const groqKey = process.env.GROQ_API_KEY;
-  const geminiKey = process.env.GEMINI_API_KEY;
-
-  if (groqKey) {
-    // One-time diagnostic: list what models this key can see.
-    try {
-      const lr = await fetch('https://api.groq.com/openai/v1/models', {
-        headers: { 'Authorization': 'Bearer ' + groqKey }
-      });
-      if (lr.ok) {
-        const lj = await lr.json();
-        const ids = (lj.data || []).map(function (m) { return m.id; });
-        console.log('autofix: Groq key sees ' + ids.length + ' models: ' + ids.slice(0, 20).join(', '));
-      } else {
-        console.log('autofix: Groq model list → ' + lr.status);
-      }
-    } catch (e) { console.log('autofix: Groq model list failed: ' + e.message); }
-
-    for (const model of GROQ_MODELS) {
-      try {
-        const res = await fetch(GROQ_URL, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + groqKey },
-          body: JSON.stringify({
-            model: model,
-            messages: [
-              { role: 'system', content: system },
-              { role: 'user', content: user }
-            ],
-            max_tokens: maxTokens || 2048,
-            temperature: 0.3
-          })
-        });
-        if (res.ok) {
-          const j = await res.json();
-          const text = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
-          if (text.trim()) return { text: text.trim(), model: model.split('/').pop() };
-        }
-        const status = res.status;
-        const body = await res.text().catch(function () { return ''; });
-        console.log('autofix: Groq ' + model + ' → ' + status + ' ' + body.slice(0, 200));
-        if (status === 401 || status === 403) break; // bad key — skip remaining models
-        // 404/429 → try next model
-      } catch (e) {
-        console.log('autofix: Groq ' + model + ' failed: ' + (e.message || e));
-      }
+  // Primary: local Ollama — no keys, no rate limits, runs on runner CPU.
+  try {
+    const res = await fetch(OLLAMA_HOST + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: OLLAMA_MODEL,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user }
+        ],
+        stream: false,
+        options: { temperature: 0.3, num_predict: maxTokens || 1024 }
+      })
+    });
+    if (res.ok) {
+      const j = await res.json();
+      const text = (j.message && j.message.content) || '';
+      if (text.trim()) return { text: text.trim(), model: OLLAMA_MODEL + ' (local)' };
+    } else {
+      const body = await res.text().catch(function () { return ''; });
+      console.log('autofix: Ollama ' + OLLAMA_MODEL + ' → ' + res.status + ' ' + body.slice(0, 200));
     }
-    console.log('autofix: all Groq models exhausted — trying Gemini');
+  } catch (e) {
+    console.log('autofix: Ollama not reachable: ' + (e.message || e));
   }
 
-  if (geminiKey) {
+  // Optional fallbacks — only used if API keys happen to be set.
+  const groqKey = process.env.GROQ_API_KEY;
+  if (groqKey) {
     try {
-      const res = await fetch(GEMINI_URL + '?key=' + geminiKey, {
+      const res = await fetch('https://api.groq.com/openai/v1/chat/completions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + groqKey },
         body: JSON.stringify({
-          contents: [{ parts: [{ text: system + '\n\n' + user }] }],
-          generationConfig: { maxOutputTokens: maxTokens || 2048, temperature: 0.3 }
+          model: 'llama-3.3-70b-versatile',
+          messages: [
+            { role: 'system', content: system },
+            { role: 'user', content: user }
+          ],
+          max_tokens: maxTokens || 1024,
+          temperature: 0.3
         })
       });
       if (res.ok) {
         const j = await res.json();
-        const text = (j.candidates && j.candidates[0] && j.candidates[0].content &&
-          j.candidates[0].content.parts && j.candidates[0].content.parts[0] &&
-          j.candidates[0].content.parts[0].text) || '';
-        if (text.trim()) return { text: text.trim(), model: 'gemini-flash' };
-      } else {
-        const body = await res.text().catch(function () { return ''; });
-        console.log('autofix: Gemini → ' + res.status + ' ' + body.slice(0, 200));
+        const text = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+        if (text.trim()) return { text: text.trim(), model: 'llama-3.3-70b (groq)' };
       }
-    } catch (e) {
-      console.log('autofix: Gemini failed: ' + (e.message || e));
-    }
+    } catch (e) { /* continue */ }
   }
 
   return null;

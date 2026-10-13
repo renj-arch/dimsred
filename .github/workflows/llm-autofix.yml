@@ -1,12 +1,14 @@
 name: LLM Auto-fix
 
-# The model fixes its own weak content: reads the fault board, asks
-# Llama 4 Maverick (Groq free tier) to generate questions for thin
-# categories, draw SVG figures for missing syllabus topics, and rewrite
-# broken captions. Results land in data/autofix-log.json and show on
-# improve.html as "what the model fixed".
+# The model fixes its own weak content: reads the fault board, asks a
+# local Qwen3.5-4B (Ollama on the runner's CPU) to generate questions
+# for thin categories, draw SVG figures for missing syllabus topics, and
+# rewrite broken captions. Results land in data/autofix-log.json and show
+# on improve.html as "what the model fixed".
 #
-# Free-tier friendly: max 8 fixes per run, ~15 min between runs.
+# Fully free forever: Ollama runs the model locally on GitHub's runner.
+# No API keys, no rate limits, no paid services. The model is downloaded
+# once (~3GB) and cached for the job duration.
 
 on:
   schedule:
@@ -23,7 +25,7 @@ permissions:
 jobs:
   autofix:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
         with:
@@ -41,10 +43,20 @@ jobs:
         with:
           node-version: 22
 
-      - name: Run auto-fixer (Llama 4 Maverick via Groq)
+      # Install Ollama — free, open-source, runs models on CPU.
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+
+      - name: Pull Qwen3.5-4B (latest gen, ~3GB)
+        run: |
+          ollama pull qwen3.5:4b
+          ollama list
+
+      - name: Run auto-fixer (Qwen3.5-4B local, zero API keys)
         env:
-          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          OLLAMA_MODEL: qwen3.5:4b
         run: node scripts/llm-autofix.js
 
       - name: Publish fixes
@@ -57,7 +69,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "No fixes to publish"
           else
-            git commit -m "auto-fix: Llama 4 Maverick fixed weak content (run #${{ github.run_number }})"
+            git commit -m "auto-fix: Qwen3.5-4B fixed weak content (run #${{ github.run_number }})"
             for i in 1 2 3; do
               git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Fixes pushed"; break; } || echo "push attempt $i failed, retrying..."
               sleep 5
