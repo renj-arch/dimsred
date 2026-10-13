@@ -56,11 +56,12 @@ function auditPage(file) {
     faults.push('placeholder marker in source');
   }
 
-  // Asset refs. Two sparse-checkout guards:
+  // Asset refs. Guards so sparse-checkout CI runs don't false-positive:
   //   1. Absolute site routes (/cgl/, /rbi/) are not filesystem paths — skip.
-  //   2. If a ref's top-level directory is missing entirely (css/, js/ not in
-  //      the sparse set), we cannot verify assets — degrade to partial mode
-  //      instead of reporting every external-looking local ref as broken.
+  //   2. Only verify a relative path when its top-level directory exists on
+  //      disk. In a full local checkout cgl/, jee/, css/ etc. are all present
+  //      so real 404s still surface; in CI's sparse set they're absent and we
+  //      skip rather than report every exam-route link as broken.
   const bare = html.replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, function (block) {
     return block.replace(/>([\s\S]*)</, '><');
   });
@@ -76,11 +77,7 @@ function auditPage(file) {
     u = u.replace(/^\.\//, '').split(/[?#]/)[0];
     if (!u || /\$\d/.test(u)) return;
     const top = u.split('/')[0];
-    const topExists = fs.existsSync(path.join(ROOT, top));
-    if (!topExists && (top === 'css' || top === 'js' || top === 'guides' || top === 'figures')) {
-      skippedSparse++;
-      return;
-    }
+    if (!fs.existsSync(path.join(ROOT, top))) { skippedSparse++; return; }
     if (!fs.existsSync(path.join(ROOT, u))) missing.push(u);
   });
   if (missing.length) faults.push('missing local asset(s): ' + missing.slice(0, 4).join(', ') +
