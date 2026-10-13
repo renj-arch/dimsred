@@ -114,6 +114,7 @@
     </style>
 </head>
 <body>
+<a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
     <nav class="nav">
         <div class="nav-inner">
             <a href="index.html" class="brand">
@@ -220,7 +221,7 @@
                 </div>
 
                 <div class="step-reveal">
-                    <div class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">The Continuum Hypothesis — The First Hilbert Problem</span>
                         <span class="arrow">▶</span>
@@ -282,7 +283,7 @@
                 <p>Gödel's theorems establish that <strong>truth</strong> and <strong>provability</strong> are different concepts. In a given formal system, provable statements are a subset of true statements — but the converse fails. The <strong>Löb theorem</strong> says that if "if P is provable then P" is provable, then P is provable — a technical result about provability logic. The <strong>Halting problem</strong> (Turing, 1936) is the computability-theoretic version of incompleteness: there is no algorithm that determines whether a given program halts. Gödel's and Turing's results together define the limits of computation and proof — boundaries that no amount of cleverness can cross.</p>
 
                 <div class="step-reveal">
-                    <div class="step-header" onclick="toggleStep(this)">
+                    <div role="button" tabindex="0" class="step-header" onclick="toggleStep(this)">
                         <div class="step-number">✨</div>
                         <span style="font-size:.88em;font-weight:600">The Liar Paradox vs Gödel's Sentence</span>
                         <span class="arrow">▶</span>
@@ -459,7 +460,7 @@
             for (var i = 0; i < practiceQs.length; i++) {
                 var q = practiceQs[i], o = '';
                 for (var j = 0; j < q.opts.length; j++) {
-                    o += '<div class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
+                    o += '<div role="button" tabindex="0" class="q-opt" data-qid="'+q.id+'" data-idx="'+j+'" onclick="selectOpt('+q.id+','+j+')">'+q.opts[j].l+'. '+q.opts[j].t+'</div>';
                 }
                 h += '<div class="q-card" id="q-'+q.id+'"><div class="q-num" style="font-size:.78em;color:var(--text-muted);margin-bottom:6px"><span>Question '+(i+1)+' of '+practiceQs.length+'</span></div><div class="q-text">'+q.text+'</div><div class="q-opts">'+o+'</div><div class="q-soln" id="soln-'+q.id+'"><strong>Answer: '+getCorrectLabel(q)+'</strong><br>'+q.sol+'</div><div class="q-result" id="result-'+q.id+'"></div></div>';
             }

@@ -154,6 +154,7 @@
     </style>
 </head>
 <body>
+<a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
     <nav class="nav">
         <div class="nav-inner">
             <a href="index.html" class="brand"><img src="logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a>
@@ -474,7 +475,7 @@
         var el = document.getElementById('daily-quiz');
         var optsHtml = '';
         for (var i = 0; i < q.options.length; i++) {
-            optsHtml += '<div class="q-opt" data-idx="' + i + '" onclick="selectDailyOpt(' + i + ')">' + q.options[i].label + '. ' + q.options[i].text + '</div>';
+            optsHtml += '<div role="button" tabindex="0" class="q-opt" data-idx="' + i + '" onclick="selectDailyOpt(' + i + ')">' + q.options[i].label + '. ' + q.options[i].text + '</div>';
         }
         el.innerHTML = '<div class="daily-q"><div class="q-meta">' + (q.exam || 'Practice') + ' &middot; ' + (q.section || 'General') + '</div><div class="q-text">' + q.text + '</div><div class="q-opts">' + optsHtml + '</div><div class="q-soln" id="daily-soln"><strong>Correct Answer:</strong> ' + q.options.filter(function(o){return o.correct})[0].label + '<br><span style="color:#a1a1aa">Daily quiz resets in 24 hours. Come back tomorrow!</span></div></div>';
     }
@@ -632,7 +633,7 @@
             var s = subjects[key];
             var isActive = currentSubject === key;
             var catId = SUBJECT_CATEGORY_MAP[key] || '';
-            var studyLink = catId ? ' <a href="/current-affairs.html?topic=' + encodeURIComponent(key) + '" style="font-size:.75em;text-decoration:none;opacity:.5" title="Study notes">&#x1f4d6;</a>' : '';
+            var studyLink = catId ? ' <a href="#" + encodeURIComponent(key) + '" style="font-size:.75em;text-decoration:none;opacity:.5" title="Study notes">&#x1f4d6;</a>' : '';
             html += '<button class="caq-subject' + (isActive ? ' active' : '') + '" onclick="caqSetSubject(\'' + key.replace(/'/g,"\\'") + '\')">' + s.emoji + ' ' + s.name + ' (' + s.count + ')' + studyLink + '</button>';
         });
             var sorted = Object.keys(subjects).sort(function(a,b) { return subjects[b].count - subjects[a].count; });
