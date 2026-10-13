@@ -17,7 +17,15 @@ const path = require('path');
 const LOG = 'data/autofix-log.json';
 const MAX_FIXES_PER_RUN = 8; // stay well within free-tier rate limits
 const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
-const GROQ_MODEL = 'meta-llama/llama-4-maverick-17b-128e-instruct';
+// Cascade: strongest free models first, fall through on 404/403/rate-limit.
+// Maverick (400B MoE) → Scout → Kimi K2 → Llama 3.3 70B → GPT-OSS 120B.
+const GROQ_MODELS = [
+  'meta-llama/llama-4-maverick-17b-128e-instruct',
+  'meta-llama/llama-4-scout-17b-16e-instruct',
+  'moonshotai/kimi-k2-instruct-0905',
+  'llama-3.3-70b-versatile',
+  'openai/gpt-oss-120b'
+];
 const GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent';
 
 function loadJson(p, fallback) {
@@ -29,36 +37,56 @@ function saveJson(p, data) {
   fs.writeFileSync(p, JSON.stringify(data, null, 1) + '\n');
 }
 
-// ── LLM call (Groq primary, Gemini fallback) ──
+// ── LLM call (Groq cascade → Gemini fallback) ──
 async function callLLM(system, user, maxTokens) {
   const groqKey = process.env.GROQ_API_KEY;
   const geminiKey = process.env.GEMINI_API_KEY;
-  const body = JSON.stringify({
-    model: GROQ_MODEL,
-    messages: [
-      { role: 'system', content: system },
-      { role: 'user', content: user }
-    ],
-    max_tokens: maxTokens || 2048,
-    temperature: 0.3
-  });
 
   if (groqKey) {
+    // One-time diagnostic: list what models this key can see.
     try {
-      const res = await fetch(GROQ_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + groqKey },
-        body: body
+      const lr = await fetch('https://api.groq.com/openai/v1/models', {
+        headers: { 'Authorization': 'Bearer ' + groqKey }
       });
-      if (res.ok) {
-        const j = await res.json();
-        const text = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
-        if (text.trim()) return { text: text.trim(), model: 'llama-4-maverick' };
+      if (lr.ok) {
+        const lj = await lr.json();
+        const ids = (lj.data || []).map(function (m) { return m.id; });
+        console.log('autofix: Groq key sees ' + ids.length + ' models: ' + ids.slice(0, 20).join(', '));
+      } else {
+        console.log('autofix: Groq model list → ' + lr.status);
       }
-      console.log('autofix: Groq returned ' + res.status + ' — trying Gemini fallback');
-    } catch (e) {
-      console.log('autofix: Groq failed (' + (e.message || e) + ') — trying Gemini fallback');
+    } catch (e) { console.log('autofix: Groq model list failed: ' + e.message); }
+
+    for (const model of GROQ_MODELS) {
+      try {
+        const res = await fetch(GROQ_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer ' + groqKey },
+          body: JSON.stringify({
+            model: model,
+            messages: [
+              { role: 'system', content: system },
+              { role: 'user', content: user }
+            ],
+            max_tokens: maxTokens || 2048,
+            temperature: 0.3
+          })
+        });
+        if (res.ok) {
+          const j = await res.json();
+          const text = (j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content) || '';
+          if (text.trim()) return { text: text.trim(), model: model.split('/').pop() };
+        }
+        const status = res.status;
+        const body = await res.text().catch(function () { return ''; });
+        console.log('autofix: Groq ' + model + ' → ' + status + ' ' + body.slice(0, 200));
+        if (status === 401 || status === 403) break; // bad key — skip remaining models
+        // 404/429 → try next model
+      } catch (e) {
+        console.log('autofix: Groq ' + model + ' failed: ' + (e.message || e));
+      }
     }
+    console.log('autofix: all Groq models exhausted — trying Gemini');
   }
 
   if (geminiKey) {
@@ -77,8 +105,13 @@ async function callLLM(system, user, maxTokens) {
           j.candidates[0].content.parts && j.candidates[0].content.parts[0] &&
           j.candidates[0].content.parts[0].text) || '';
         if (text.trim()) return { text: text.trim(), model: 'gemini-flash' };
+      } else {
+        const body = await res.text().catch(function () { return ''; });
+        console.log('autofix: Gemini → ' + res.status + ' ' + body.slice(0, 200));
       }
-    } catch (e) { /* both failed */ }
+    } catch (e) {
+      console.log('autofix: Gemini failed: ' + (e.message || e));
+    }
   }
 
   return null;
@@ -117,13 +150,15 @@ async function fixThinCategory(fault) {
     'You are an expert UPSC/SSC exam question writer. Generate accurate, exam-relevant MCQs. Return strict JSON only.',
     prompt, 2048
   );
-  if (!result) return null;
+  if (!result) { console.log('autofix: thin-cat ' + catName + ' — no LLM response'); return null; }
+  console.log('autofix: thin-cat ' + catName + ' — got ' + result.text.length + ' chars from ' + result.model);
 
   let parsed;
   try {
     const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
     parsed = JSON.parse(clean);
   } catch (e) {
+    console.log('autofix: thin-cat ' + catName + ' — JSON parse failed: ' + e.message + ' | snippet: ' + result.text.slice(0, 150));
     return null;
   }
   if (!Array.isArray(parsed) || !parsed.length) return null;
