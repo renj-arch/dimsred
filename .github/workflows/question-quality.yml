@@ -36,13 +36,13 @@ jobs:
         with:
           node-version: 22
 
-      - name: Create swap (24GB — 27B needs it)
+      # EXACT same swap as proven llm-autofix (16GB works with 27B there).
+      - name: Create swap (16GB — same as proven llm-autofix)
         run: |
-          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=24576 status=progress
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
           sudo chmod 600 /tmp/swapfile
           sudo mkswap /tmp/swapfile
           sudo swapon /tmp/swapfile
-          sudo sysctl vm.swappiness=90
           free -h
 
       - name: Install Ollama
@@ -50,36 +50,44 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
 
+      # EXACT same start as llm-autofix: no env vars, no flash-attn, no q8.
       - name: Start Ollama server
         run: |
-          export OLLAMA_MAX_LOADED_MODELS=1
-          export OLLAMA_KEEP_ALIVE=60m
-          export OLLAMA_NUM_PARALLEL=1
-          export OLLAMA_FLASH_ATTENTION=1
-          export OLLAMA_KV_CACHE_TYPE=q8_0
           nohup ollama serve > /tmp/ollama.log 2>&1 &
-          for i in $(seq 1 60); do
-            curl -sf http://localhost:11434/api/tags > /dev/null 2>&1 && break
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
             sleep 1
           done
-          curl -sf http://localhost:11434/api/tags > /dev/null && echo "Ollama ready" || echo "Ollama FAILED"
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
       - name: Pull qwen3.8:27b
         run: |
           ollama pull qwen3.8:27b
           echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
-          free -h
-          df -h
+          ollama list
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
 
-      - name: Free memory
+      - name: Ensure Ollama is up before agent
         run: |
-          sync
-          sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches' || true
-          free -h
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            nohup ollama serve > /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
 
       - name: Run question-quality agent
         env:
           OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_HOST: http://127.0.0.1:11434
           NODE_OPTIONS: '--max-old-space-size=2048'
           # Signals site-agent.js to run ONLY the Questions+Content agents
           AGENT_ONLY: questions

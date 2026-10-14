@@ -74,34 +74,43 @@ jobs:
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           echo $! > /tmp/ollama.pid
           for i in $(seq 1 30); do
-            if curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
               echo "Ollama server ready after ${i}s"
               break
             fi
             sleep 1
           done
-          curl -sf http://localhost:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
+      # llm-autofix has NO proof call here — its script's first callLLM IS
+      # the proof. The ollama-run proof we added in #56 succeeded via CLI
+      # (IPv4) but the agent's Node fetch failed in the next step. The CLI
+      # proof may also OOM the server on exit after loading 17GB. Do what
+      # llm-autofix does: just pull, warn if down, and let the script's
+      # cold-start ping (via Node fetch) be the real proof.
       - name: Pull qwen3.8:27b
         run: |
           ollama pull qwen3.8:27b
           echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
           echo "Using Qwen3.8-27B (score 90.3 — BEST free model)"
           ollama list
-          # Pull can leave the server down. Restart if needed and PROVE
-          # generation works before the agent starts — same as llm-autofix
-          # which succeeds because it generates immediately on a live server.
-          if ! curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
-            echo "Server down after pull — restarting"
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+
+      # Safety net: re-verify the server accepts a connection on IPv4 right
+      # before the agent runs. Restart if the pull left it dead. This uses
+      # curl (IPv4) — same path the agent will use after the 127.0.0.1 fix.
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
             nohup ollama serve > /tmp/ollama.log 2>&1 &
-            for i in $(seq 1 30); do
-              curl -sf http://localhost:11434/api/tags > /dev/null 2>&1 && break
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
               sleep 1
             done
           fi
-          echo "Proving generation works (cold start, same as llm-autofix first call)..."
-          ollama run qwen3.8:27b "Reply with exactly: OK" --verbose 2>&1 | tail -20
-          echo "Generation proof done"
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
 
       # No browser test before the model. Playwright + serve fragment memory
       # and disk right before the 18GB model load; llm-autofix has none and
@@ -109,6 +118,11 @@ jobs:
       - name: Run site agent (single pass — same shape as llm-autofix)
         env:
           OLLAMA_MODEL: qwen3.8:27b
+          # 127.0.0.1 NOT localhost: Node fetch on this runner resolves
+          # localhost to ::1 (IPv6) and Ollama listens IPv4-only → instant
+          # "fetch failed" while curl/ollama-CLI (IPv4) work. Run #56:
+          # CLI proof succeeded, Node fetch failed in <1s.
+          OLLAMA_HOST: http://127.0.0.1:11434
           # Single pass, not --loop: llm-autofix runs once and succeeds.
           # The 6-cycle loop burned memory and LLM retry budget on cycle 1.
           AGENT_MAX_CYCLES: '1'

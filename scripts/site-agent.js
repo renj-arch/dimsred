@@ -30,7 +30,11 @@ memory.addRule('Add timeout-minutes to all GitHub Actions jobs', 'Jobs were canc
 memory.addRule('Use NODE_OPTIONS=--max-old-space-size=4096 for node scripts processing large data', 'Prevents OOM on 7GB runner');
 
 const LOG = 'data/agent-log.json';
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+// Use 127.0.0.1 NOT localhost: Node's fetch resolves localhost to ::1 (IPv6)
+// first on GitHub runners; Ollama listens on IPv4 only → instant "fetch failed"
+// while curl/ollama CLI (IPv4) work fine. Observed in run #56: CLI generation
+// proof succeeded, then every Node fetch failed in <1s.
+const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 
 // ── LLM: EXACT copy of llm-autofix.js callLLM — the only free-27B path
 // proven to work on this runner. Do NOT add warmups, restarts, health-check
