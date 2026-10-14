@@ -98,21 +98,26 @@ jobs:
           done
           curl -sf http://localhost:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
-      # Try models from best to smallest. 27B may thrash but we try it first.
-      # Falls back to smaller models if pull or load fails.
+      # Try models from best to smallest. Use 16GB swap for large models.
       - name: Pull best model
         run: |
-          # Try Nemotron 9B first (best practical model for 7GB runner)
-          if ollama pull nvidia/nemotron-nano-9b-v2 2>/dev/null; then
+          # Try Nemotron 9B (best practical model, 71.1% LiveCodeBench)
+          if ollama pull nvidia/nemotron-nano-9b-v2; then
             echo "MODEL=nvidia/nemotron-nano-9b-v2" >> $GITHUB_ENV
-            echo "Using Nemotron Nano 9B v2 (71.1% LiveCodeBench)"
+            echo "Using Nemotron Nano 9B v2 (score 71.1)"
+          # Try Qwen 9B (score 65)
+          elif ollama pull qwen3.5:9b; then
+            echo "MODEL=qwen3.5:9b" >> $GITHUB_ENV
+            echo "Using Qwen3.5-9B (score 65)"
+          # Try Qwen 4B (score 55)
           elif ollama pull qwen3.5:4b; then
             echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
-            echo "Using Qwen3.5-4B"
+            echo "Using Qwen3.5-4B (score 55)"
+          # Fallback smallest
           else
             ollama pull qwen3.5:2b
             echo "MODEL=qwen3.5:2b" >> $GITHUB_ENV
-            echo "Using Qwen3.5-2B (smallest fallback)"
+            echo "Using Qwen3.5-2B (score 45, fallback)"
           fi
           ollama list
 

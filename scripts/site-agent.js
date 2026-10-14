@@ -51,7 +51,10 @@ function availableRAM() {
 }
 
 async function pickBestModel() {
-  if (process.env.OLLAMA_MODEL) return process.env.OLLAMA_MODEL;
+  if (process.env.OLLAMA_MODEL) {
+    console.log('agent: using model ' + process.env.OLLAMA_MODEL + ' (from env)');
+    return process.env.OLLAMA_MODEL;
+  }
   const ram = availableRAM();
 
   // Check which models are actually available (pulled)
@@ -66,10 +69,12 @@ async function pickBestModel() {
 
   // Pick highest-scoring model that fits RAM AND is pulled
   for (const entry of MODEL_RANKING) {
-    if (ram.totalGB >= entry.ramGB) {
+    // Allow model if RAM is sufficient OR if swap exists (16GB swap on runner)
+    const effectiveRAM = ram.totalGB + 16; // account for 16GB swap
+    if (effectiveRAM >= entry.ramGB) {
       const isAvailable = available.some(a => a.startsWith(entry.ollama) || a.includes(entry.ollama));
       if (isAvailable || available.length === 0) {
-        console.log('agent: selected model ' + entry.ollama + ' (score ' + entry.score + ', RAM ' + ram.totalGB.toFixed(1) + 'GB)');
+        console.log('agent: selected model ' + entry.ollama + ' (score ' + entry.score + ', RAM ' + ram.totalGB.toFixed(1) + 'GB + 16GB swap)');
         return entry.ollama;
       }
     }
@@ -118,7 +123,15 @@ async function callLLM(system, user, maxTokens) {
             { role: 'user', content: user }
           ],
           stream: false,
-          options: { temperature: 0.3, num_predict: maxTokens || 1024, num_ctx: 2048 }
+          options: {
+            temperature: 0.3,
+            num_predict: maxTokens || 1024,
+            num_ctx: 2048,
+            num_thread: 2,
+            num_batch: 256,
+            use_mmap: true,
+            num_gpu: 0
+          }
         }),
         signal: AbortSignal.timeout(300000)
       });
