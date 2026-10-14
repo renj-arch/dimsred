@@ -32,7 +32,9 @@ memory.addRule('Use NODE_OPTIONS=--max-old-space-size=4096 for node scripts proc
 const LOG = 'data/agent-log.json';
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 let _llmFailCount = 0;
+let _llmCallCount = 0;
 const LLM_MAX_FAILS = 3;
+const LLM_BEST_CALLS = 2; // First 2 calls use 27B, rest use 4B
 
 // ── Self-upgrading model selector ──
 const MODEL_RANKING = [
@@ -91,13 +93,14 @@ async function callLLM(system, user, maxTokens, priority) {
     console.log('agent: LLM skipped (failed ' + _llmFailCount + ' times this cycle)');
     return null;
   }
-  // Use best model for high-priority tasks, smaller for routine
+  // Use best model for first 2 high-priority calls, smaller for the rest
   let model;
-  if (priority === 'high') {
-    model = await pickBestModel(); // 27B or best available
+  if (priority === 'high' && _llmCallCount < LLM_BEST_CALLS) {
+    model = await pickBestModel(); // 27B for first 2 calls (best quality)
   } else {
-    model = process.env.OLLAMA_MODEL || 'qwen3.5:4b'; // faster for routine
+    model = process.env.OLLAMA_MODEL || 'qwen3.5:4b'; // faster for rest
   }
+  _llmCallCount++;
   const lessons = memory.getLessonsPrompt();
   const fullSystem = lessons ? system + '\n\n' + lessons : system;
 
