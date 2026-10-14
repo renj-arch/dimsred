@@ -113,6 +113,8 @@ async function callLLM(system, user, maxTokens) {
         }
       }
 
+      const is27b = model.includes('27b');
+      const is9b = model.includes('9b');
       const res = await fetch(OLLAMA_HOST + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -125,15 +127,15 @@ async function callLLM(system, user, maxTokens) {
           stream: false,
           options: {
             temperature: 0.3,
-            num_predict: maxTokens || 1024,
-            num_ctx: 2048,
+            num_predict: is27b ? Math.min(maxTokens || 512, 512) : (maxTokens || 1024),
+            num_ctx: is27b ? 1024 : (is9b ? 1536 : 2048),
             num_thread: 2,
-            num_batch: 128,
+            num_batch: is27b ? 64 : 128,
             use_mmap: true,
             num_gpu: 0,
-            // For large models, reduce context and tokens to avoid timeout
-            ...(model.includes('27b') ? { num_ctx: 1024, num_predict: Math.min(maxTokens || 512, 512) } : {}),
-            ...(model.includes('9b') ? { num_ctx: 1536 } : {})
+            repeat_penalty: 1.1,
+            top_k: is27b ? 20 : 40,
+            top_p: 0.9
           }
         }),
         signal: AbortSignal.timeout(300000)

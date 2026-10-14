@@ -78,6 +78,9 @@ jobs:
           sudo chmod 600 /tmp/swapfile
           sudo mkswap /tmp/swapfile
           sudo swapon /tmp/swapfile
+          # Increase swappiness for model loading
+          sudo sysctl vm.swappiness=80
+          sudo sysctl vm.vfs_cache_pressure=50
           free -h
 
       - name: Install Ollama
@@ -87,6 +90,12 @@ jobs:
 
       - name: Start Ollama server
         run: |
+          # Optimize for CPU inference with large models
+          export OLLAMA_MAX_LOADED_MODELS=1
+          export OLLAMA_KEEP_ALIVE=10m
+          export OLLAMA_NUM_PARALLEL=1
+          export OLLAMA_FLASH_ATTENTION=1
+          export OLLAMA_KV_CACHE_TYPE=q8_0
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           echo $! > /tmp/ollama.pid
           for i in $(seq 1 30); do
