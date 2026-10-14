@@ -124,6 +124,9 @@ async function callLLM(system, user, maxTokens, priority) {
 
       const is27b = model.includes('27b');
       const is9b = model.includes('9b');
+      // All timeouts 10 min — swap-heavy loading is slow
+      const timeoutMs = 600000;
+      console.log('agent: calling ' + model + ' (timeout ' + (timeoutMs/60000) + 'min, ctx ' + (is27b?1024:(is9b?1024:512)) + ')');
       const res = await fetch(OLLAMA_HOST + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -136,8 +139,8 @@ async function callLLM(system, user, maxTokens, priority) {
           stream: false,
           options: {
             temperature: 0.3,
-            num_predict: is27b ? Math.min(maxTokens || 512, 512) : (maxTokens || 1024),
-            num_ctx: is27b ? 1024 : (is9b ? 1536 : 2048),
+            num_predict: is27b ? 512 : (is9b ? 768 : 1024),
+            num_ctx: is27b ? 1024 : (is9b ? 1024 : 512),
             num_thread: 2,
             num_batch: is27b ? 64 : 128,
             use_mmap: true,
@@ -147,7 +150,7 @@ async function callLLM(system, user, maxTokens, priority) {
             top_p: 0.9
           }
         }),
-        signal: AbortSignal.timeout(300000)
+        signal: AbortSignal.timeout(timeoutMs)
       });
       if (res.ok) {
         const j = await res.json();
