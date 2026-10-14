@@ -338,6 +338,41 @@ function renderFaults() {
       box.innerHTML += section;
     }).catch(function () { /* agent log not yet published */ });
 
+    // 5c. Browser Test results (browser-test.js → data/browser-test.json)
+    fetch('data/browser-test.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (bt) {
+      if (!bt || !bt.summary) return;
+      var s = bt.summary;
+      var section = '<div class="list-head" style="margin-top:18px">Browser Test <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; Playwright clicks every button, checks every link</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Tested: ' + stamp(bt.testedAt) + ' &middot; ' + s.total + ' pages &middot; ' +
+        '<span style="color:' + (s.passed === s.total ? 'var(--emerald)' : 'var(--red)') + '">' + s.passed + ' passed</span> &middot; ' +
+        '<span style="color:' + (s.failed > 0 ? 'var(--red)' : 'var(--emerald)') + '">' + s.failed + ' failed</span></p>';
+      if (s.consoleErrors > 0 || s.brokenLinks > 0 || s.brokenButtons > 0) {
+        section += '<div style="margin:8px 0;padding:8px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;font-size:12px">';
+        section += '⚠️ Found: ' + s.consoleErrors + ' console errors, ' + s.brokenLinks + ' broken links, ' + s.brokenButtons + ' broken buttons';
+        section += '</div>';
+      }
+      // Show issues grouped by type
+      var byType = {};
+      (bt.issues || []).forEach(function (i) { byType[i.type] = (byType[i.type] || 0) + 1; });
+      var typeIcons = { 'placeholder-link': '🔗', 'broken-link': '❌', 'console-error': '🐛', 'js-error': '💥', 'broken-tab': '📑', 'http-error': '📡', 'load-error': '⛔', 'broken-request': '📦', 'disabled-button': '🔘' };
+      section += Object.keys(byType).map(function (t) {
+        return '<span style="display:inline-block;margin:2px 6px;padding:2px 8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;font-size:11px">' +
+          (typeIcons[t] || '•') + ' ' + esc(t) + ': ' + byType[t] + '</span>';
+      }).join('');
+      // Show first 10 issues
+      var topIssues = (bt.issues || []).slice(0, 10);
+      if (topIssues.length) {
+        section += '<div style="margin-top:8px">' + topIssues.map(function (i) {
+          return '<div style="margin:2px 0;font-size:11px;color:var(--text-muted)">' + (typeIcons[i.type] || '•') + ' ' +
+            '<b>' + esc(i.page || '') + '</b>: ' + esc(i.msg || '').substring(0, 120) + '</div>';
+        }).join('') + '</div>';
+      }
+      box.innerHTML += section;
+    }).catch(function () { /* browser test not yet published */ });
+
     if (ideas.length) {
       html += '<div class="list-head" style="margin-top:18px">Ideas <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; adopt one into the form below</span></div>' +
         ideas.map(function (x) { return faultRow(x, ''); }).join('');

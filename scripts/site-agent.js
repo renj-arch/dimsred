@@ -1032,6 +1032,60 @@ async function agentSelfCheck() {
     }
   }
 
+  // Read browser test results and fix issues found
+  const btPath = 'data/browser-test.json';
+  if (fs.existsSync(btPath)) {
+    try {
+      const bt = JSON.parse(fs.readFileSync(btPath, 'utf8'));
+      for (const issue of (bt.issues || [])) {
+        if (issue.type === 'placeholder-link' && issue.page) {
+          const pf = issue.page.split('/').pop() || issue.page;
+          if (fs.existsSync(pf)) {
+            let html = fs.readFileSync(pf, 'utf8');
+            if (issue.detail && issue.detail.indexOf('"') !== -1) {
+              const linkText = issue.detail.match(/"([^"]+)"/);
+              if (linkText) {
+                // Map link text to a real page
+                const text = linkText[1].toLowerCase();
+                let dest = 'mega-test.html';
+                if (text.includes('upsc') || text.includes('paper')) dest = 'papers.html';
+                else if (text.includes('ssc') || text.includes('je') || text.includes('cgl')) dest = 'ssc-je.html';
+                else if (text.includes('science') || text.includes('jee') || text.includes('neet')) dest = 'science.html';
+                else if (text.includes('poly') || text.includes('gate')) dest = 'polytechnic.html';
+                // Find and fix the placeholder link with this text
+                html = html.replace(
+                  new RegExp('<a href="#"[^>]*>' + linkText[1].replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '</a>', 'gi'),
+                  '<a href="' + dest + '">' + linkText[1] + '</a>'
+                );
+                fs.writeFileSync(pf, html);
+                fixes.push({ page: pf, fix: 'Browser-test: linked "' + linkText[1] + '" → ' + dest });
+              }
+            }
+          }
+        }
+        if (issue.type === 'broken-link' && issue.page) {
+          const pf = issue.page.split('/').pop() || issue.page;
+          if (fs.existsSync(pf)) {
+            let html = fs.readFileSync(pf, 'utf8');
+            const target = issue.detail.replace(/^→\s+/, '').split(' ')[0];
+            if (target && !fs.existsSync(target)) {
+              // Remove the broken link
+              html = html.replace(
+                new RegExp('<a href="' + target.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"[^>]*>([^<]*)</a>', 'gi'),
+                '<span>$1</span>'
+              );
+              fs.writeFileSync(pf, html);
+              fixes.push({ page: pf, fix: 'Browser-test: removed broken link → ' + target });
+            }
+          }
+        }
+        if (issue.type === 'js-error' || issue.type === 'console-error') {
+          fixes.push({ page: issue.page || 'unknown', fix: 'Runtime: ' + issue.msg.substring(0, 100), kind: 'runtime' });
+        }
+      }
+    } catch (e) { /* ignore */ }
+  }
+
   for (const page of pages) {
     let html = fs.readFileSync(page, 'utf8');
     let changed = false;

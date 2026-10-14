@@ -56,6 +56,20 @@ jobs:
         with:
           node-version: 22
 
+      - name: Browser Test (Playwright)
+        run: |
+          npm install playwright --no-save 2>/dev/null || true
+          npx playwright install chromium --with-deps 2>/dev/null || npx playwright install chromium 2>/dev/null || true
+          npx playwright install-deps chromium 2>/dev/null || true
+          # Start local server
+          npx -y serve -l 8080 -s . > /tmp/serve.log 2>&1 &
+          SERVER_PID=$!
+          for i in $(seq 1 15); do curl -sf http://localhost:8080/index.html > /dev/null 2>&1 && break; sleep 1; done
+          # Run browser tests
+          SITE_URL=http://localhost:8080 node scripts/browser-test.js 2>&1 || echo "browser-test failed but continuing"
+          kill $SERVER_PID 2>/dev/null || true
+          echo "Browser test complete"
+
       - name: Create swap (16GB)
         run: |
           sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
