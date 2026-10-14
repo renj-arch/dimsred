@@ -31,14 +31,16 @@ memory.addRule('Use NODE_OPTIONS=--max-old-space-size=4096 for node scripts proc
 
 const LOG = 'data/agent-log.json';
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+let _llmFailCount = 0;
+const LLM_MAX_FAILS = 3;
 
 // ── Self-upgrading model selector ──
 const MODEL_RANKING = [
-  { ollama: 'qwen3.8:27b',        ramGB: 18, score: 90.3 },
-  { ollama: 'nvidia/nemotron-nano-9b-v2', ramGB: 6, score: 71.1 },
-  { ollama: 'qwen3.5:9b',         ramGB: 6, score: 65 },
-  { ollama: 'qwen3.5:4b',         ramGB: 3.5, score: 55 },
-  { ollama: 'qwen3.5:2b',         ramGB: 2, score: 45 }
+  { ollama: 'qwen3.8:27b',              ramGB: 18, score: 90.3 },
+  { ollama: 'nvidia/nemotron-nano-9b-v2', ramGB: 6,  score: 71.1 },
+  { ollama: 'qwen3.5:9b',               ramGB: 6,  score: 65 },
+  { ollama: 'qwen3.5:4b',               ramGB: 3.5, score: 55 },
+  { ollama: 'qwen3.5:2b',               ramGB: 2,  score: 45 }
 ];
 
 function availableRAM() {
@@ -51,18 +53,61 @@ function availableRAM() {
 async function pickBestModel() {
   if (process.env.OLLAMA_MODEL) return process.env.OLLAMA_MODEL;
   const ram = availableRAM();
+
+  // Check which models are actually available (pulled)
+  let available = [];
+  try {
+    const tagsRes = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(10000) });
+    if (tagsRes.ok) {
+      const tags = await tagsRes.json();
+      available = (tags.models || []).map(m => m.name);
+    }
+  } catch (e) { /* server down */ }
+
+  // Pick highest-scoring model that fits RAM AND is pulled
   for (const entry of MODEL_RANKING) {
-    if (ram.totalGB >= entry.ramGB + 1) return entry.ollama;
+    if (ram.totalGB >= entry.ramGB) {
+      const isAvailable = available.some(a => a.startsWith(entry.ollama) || a.includes(entry.ollama));
+      if (isAvailable || available.length === 0) {
+        console.log('agent: selected model ' + entry.ollama + ' (score ' + entry.score + ', RAM ' + ram.totalGB.toFixed(1) + 'GB)');
+        return entry.ollama;
+      }
+    }
   }
-  return MODEL_RANKING[MODEL_RANKING.length - 1].ollama;
+  // Fallback: smallest model
+  const fallback = MODEL_RANKING[MODEL_RANKING.length - 1];
+  console.log('agent: fallback to ' + fallback.ollama);
+  return fallback.ollama;
 }
 
 async function callLLM(system, user, maxTokens) {
+  // Skip if LLM has failed too many times this cycle
+  if (_llmFailCount >= LLM_MAX_FAILS) {
+    console.log('agent: LLM skipped (failed ' + _llmFailCount + ' times this cycle)');
+    return null;
+  }
   const model = await pickBestModel();
   const lessons = memory.getLessonsPrompt();
   const fullSystem = lessons ? system + '\n\n' + lessons : system;
+
+  // Health check: ensure Ollama is alive before each call
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
+      // Check server health
+      const health = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(10000) }).catch(() => null);
+      if (!health || !health.ok) {
+        console.log('agent: Ollama dead, restarting...');
+        try { execSync('pkill -f "ollama serve" || true', { timeout: 5000 }); } catch (e) {}
+        try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
+        await new Promise(r => setTimeout(r, 15000));
+        // Wait for server
+        for (let w = 0; w < 30; w++) {
+          const h2 = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(5000) }).catch(() => null);
+          if (h2 && h2.ok) break;
+          await new Promise(r => setTimeout(r, 1000));
+        }
+      }
+
       const res = await fetch(OLLAMA_HOST + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -73,18 +118,31 @@ async function callLLM(system, user, maxTokens) {
             { role: 'user', content: user }
           ],
           stream: false,
-          options: { temperature: 0.3, num_predict: maxTokens || 1024, num_ctx: 4096 }
+          options: { temperature: 0.3, num_predict: maxTokens || 1024, num_ctx: 2048 }
         }),
-        signal: AbortSignal.timeout(600000)
+        signal: AbortSignal.timeout(300000)
       });
       if (res.ok) {
         const j = await res.json();
         const text = (j.message && j.message.content) || '';
-        if (text.trim()) return { text: text.trim(), model: model };
+        if (text.trim()) { _llmFailCount = 0; return { text: text.trim(), model: model }; }
+      } else {
+        console.log('agent: LLM returned ' + res.status);
       }
     } catch (e) {
+      _llmFailCount++;
       console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message);
-      if (attempt < 3) await new Promise(r => setTimeout(r, 10000));
+      if (attempt < 3) {
+        // Kill and restart Ollama
+        try { execSync('pkill -f "ollama serve" || true', { timeout: 5000 }); } catch (e2) {}
+        try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e2) {}
+        await new Promise(r => setTimeout(r, 20000));
+        for (let w = 0; w < 30; w++) {
+          const h2 = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(5000) }).catch(() => null);
+          if (h2 && h2.ok) break;
+          await new Promise(r => setTimeout(r, 1000));
+        }
+      }
     }
   }
   return null;
@@ -1301,13 +1359,13 @@ async function main() {
     const warm = await fetch(OLLAMA_HOST + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { num_predict: 5 } }),
-      signal: AbortSignal.timeout(300000)
+      body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { num_predict: 5, num_ctx: 256 } }),
+      signal: AbortSignal.timeout(120000)
     });
     if (warm.ok) console.log('agent: model loaded and ready');
     else console.log('agent: warmup returned ' + warm.status);
   } catch (e) {
-    console.log('agent: warmup failed — ' + e.message);
+    console.log('agent: warmup failed — ' + e.message + ' (LLM agents will skip)');
   }
 
   const results = [];
