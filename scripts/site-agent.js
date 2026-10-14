@@ -33,8 +33,8 @@ const LOG = 'data/agent-log.json';
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
 let _llmFailCount = 0;
 let _llmCallCount = 0;
-const LLM_MAX_FAILS = 3;
-const LLM_BEST_CALLS = 2; // First 2 calls use 27B, rest use 4B
+const LLM_MAX_FAILS = 6; // More retries for 27B
+const LLM_BEST_CALLS = 99; // Always use best model
 
 async function restartOllama() {
   try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
@@ -107,13 +107,8 @@ async function callLLM(system, user, maxTokens, priority) {
     console.log('agent: LLM skipped (failed ' + _llmFailCount + ' times this cycle)');
     return null;
   }
-  // Use best model for first 2 high-priority calls, smaller for the rest
-  let model;
-  if (priority === 'high' && _llmCallCount < LLM_BEST_CALLS) {
-    model = await pickBestModel(); // 27B for first 2 calls (best quality)
-  } else {
-    model = process.env.OLLAMA_MODEL || 'qwen3.5:4b'; // faster for rest
-  }
+  // Use 27B always — no fallback
+  let model = await pickBestModel();
   _llmCallCount++;
   const lessons = memory.getLessonsPrompt();
   const fullSystem = lessons ? system + '\n\n' + lessons : system;
@@ -173,16 +168,15 @@ async function callLLM(system, user, maxTokens, priority) {
       }
     } catch (e) {
       _llmFailCount++;
-      console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message);
+      console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message + ' (model: ' + model + ')');
       if (attempt < 3) {
-        // Fallback to smaller model on timeout
-        if (e.message.includes('timeout') || e.message.includes('aborted') || e.message.includes('fetch failed')) {
-          if (model.includes('27b')) { model = 'qwen3.5:9b'; console.log('agent: falling back to 9B'); }
-          else if (model.includes('9b')) { model = 'qwen3.5:4b'; console.log('agent: falling back to 4B'); }
-          else if (model.includes('4b')) { model = 'qwen3.5:2b'; console.log('agent: falling back to 2B'); }
-        }
-        // Restart Ollama cleanly
+        // Always restart Ollama and retry SAME model (27B)
+        console.log('agent: restarting Ollama and retrying ' + model + '...');
         await restartOllama();
+        // Give extra time for 27B to load
+        if (model.includes('27b')) {
+          await new Promise(r => setTimeout(r, 30000));
+        }
       }
     }
   }
@@ -1675,25 +1669,33 @@ async function main() {
   log.model = model;
   console.log('agent: using model ' + model);
 
-  // Warm up: load model into RAM so the first real call isn't slow.
-  // 27B model needs 5-10 min to load from disk into RAM via swap.
-  console.log('agent: warming up ' + model + ' (loading into RAM, up to 10 min)...');
-  const warmStart = Date.now();
-  try {
-    const warm = await fetch(OLLAMA_HOST + '/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { num_predict: 5, num_ctx: 256, num_thread: 2, use_mmap: true } }),
-      signal: AbortSignal.timeout(600000)
-    });
-    const warmSecs = Math.round((Date.now() - warmStart) / 1000);
-    if (warm.ok) console.log('agent: model loaded and ready in ' + warmSecs + 's');
-    else console.log('agent: warmup returned ' + warm.status + ' after ' + warmSecs + 's');
-  } catch (e) {
-    const warmSecs = Math.round((Date.now() - warmStart) / 1000);
-    console.log('agent: warmup failed after ' + warmSecs + 's — ' + e.message);
-    console.log('agent: model may still load on first real call, continuing anyway');
+  // Warm up: load model into RAM. Retry until 27B loads (needs 5-10 min from swap).
+  console.log('agent: warming up ' + model + ' (loading into RAM, retrying until ready)...');
+  let warmed = false;
+  for (let w = 1; w <= 3 && !warmed; w++) {
+    const warmStart = Date.now();
+    try {
+      const warm = await fetch(OLLAMA_HOST + '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { num_predict: 5, num_ctx: 256, num_thread: 2, use_mmap: true } }),
+        signal: AbortSignal.timeout(600000)
+      });
+      const warmSecs = Math.round((Date.now() - warmStart) / 1000);
+      if (warm.ok) {
+        console.log('agent: model loaded and ready in ' + warmSecs + 's (attempt ' + w + ')');
+        warmed = true;
+      } else {
+        console.log('agent: warmup returned ' + warm.status + ' after ' + warmSecs + 's (attempt ' + w + ')');
+        await restartOllama();
+      }
+    } catch (e) {
+      const warmSecs = Math.round((Date.now() - warmStart) / 1000);
+      console.log('agent: warmup failed after ' + warmSecs + 's (attempt ' + w + '): ' + e.message);
+      if (w < 3) await restartOllama();
+    }
   }
+  if (!warmed) console.log('agent: warmup incomplete — will load on first real call');
 
   const results = [];
   const agents = [
