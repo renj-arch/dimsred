@@ -32,15 +32,15 @@ if (typeof module === 'object' && module.exports) {
 // breadth for a fixed answer template.
 //
 // Three sizes from the Qwen3 generation (2025+), which scores far above the
-// older Qwen2.5 at the same parameter count — Qwen3.5-2B reaches ~88.8% MMLU-
-// Redux, rivaling models many times its size. The org prefix is `mlc-ai/` --
+// older Qwen2.5 at the same parameter count — Qwen2.5-0.5B-Instruct reaches ~88.8% MMLU-
+// Redux, rivaling models many times its size. The org prefix is `` --
 // the WebLLM 0.2.86 catalog no longer serves the older `Qwen/` prefix, and
 // asking for a record the catalog does not hold fails with a ModelNotFoundError
 // before a single weight is fetched.
 //
-//   fast     — Qwen3-1.7B: ~2.0 GB VRAM, anyone's GPU drives it
-//   quality  — Qwen3.5-2B: ~2.2 GB VRAM, newest generation, much better prose
-//   best     — Qwen3-4B:   ~3.4 GB VRAM, near-cloud quality on a laptop GPU
+//   fast     — Qwen2.5-0.5B-Instruct: ~2.0 GB VRAM, anyone's GPU drives it
+//   quality  — Qwen2.5-0.5B-Instruct: ~2.2 GB VRAM, newest generation, much better prose
+//   best     — Qwen2.5-1.5B-Instruct:   ~3.4 GB VRAM, near-cloud quality on a laptop GPU
 //
 // A fourth entry appears when it exists: `mine`, the model fine-tuned on this
 // page's own answers by the Train Writer Model workflow. Its weights live on
@@ -48,7 +48,7 @@ if (typeof module === 'object' && module.exports) {
 // adds the option. Until the first training run finishes, only the three stock
 // sizes show -- nothing breaks, the option is simply absent.
 var MODELS = {
-  fast:    { id: 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC',          label: 'Fast (1.7B)' },
+  fast:    { id: 'Qwen2.5-0.5B-Instruct',          label: 'Fast (1.7B)' },
   quality: { id: 'Qwen2.5-0.5B-Instruct',          label: 'Quality (2B, newest)' },
   best:    { id: 'Qwen2.5-1.5B-Instruct',          label: 'Best (4B, newest gen)' }
 };
@@ -66,7 +66,7 @@ var DEFAULT_MODEL = 'fast';
 // the fine-tuned shards as-is -- CI never has to compile wasm.
 var MINE_BASE = 'https://raw.githubusercontent.com/renj-arch/dimsred/writer-model/';
 var MINE_VERSION = MINE_BASE + 'version.json';
-var MINE_LIB = 'https://raw.githubusercontent.com/mlc-ai/binary-mlc-llm-libs/main/web-llm-models/v0_2_86/base/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm';
+var MINE_LIB = 'https://raw.githubusercontent.com/binary-mlc-llm-libs/main/web-llm-models/v0_2_86/base/Qwen2-0.5B-Instruct-q4f16_1_cs1k-webgpu.wasm';
 var mineMeta = null;
 var mineProbe = null;
 
@@ -130,7 +130,7 @@ function modelId() { return MODELS[currentModelKey()].id; }
 // and the raw npm path is used rather than a CDN transform like esm.run,
 // whose rewritten bundle failed to resolve this model id.
 var VENDOR_URL = 'scripts/vendor/webllm/index.min.js';
-var CDN_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@0.2.86/lib/index.min.js';
+var CDN_URL = 'https://cdn.jsdelivr.net/npm/@web-llm@0.2.86/lib/index.min.js';
 
 var engine = null;
 var engineKey = null;

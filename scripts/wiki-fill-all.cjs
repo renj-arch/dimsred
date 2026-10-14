@@ -750,19 +750,46 @@ function paraphrase(text, answer) {
 }
 
 function makeDescriptionQuestion(desc, title) {
-  // Strip leading articles/verbs so the description reduces to a noun phrase.
-  const trimmed = desc
-    .replace(/^(the|a|an)\s+/i, '')
-    .replace(/^(was|is|were|are|has been|had been)\s+/i, '')
-    .replace(/^(the|a|an)\s+/i, '')
-    .replace(/\s*[.!?]+$/, '')
-    .trim();
-  // A "what/who is X?" question gets deleted by cleanup, and a trailing blank
-  // also fails cleanup, so blank the title mid-sentence instead.
-  const q = (!trimmed || trimmed.length < 8)
-    ? 'The term ' + title + ' refers to ' + desc + '.'
-    : 'The ' + title + ' was ' + trimmed + '.';
-  return q.replace(title, '_____');
+  // Produce a proper Q&A pair, NOT a fill-in-the-blank.
+  // Question tests understanding; answer is the fact; explanation preserves meaning.
+  if (!desc || desc.length < 10 || !title || title.length < 2) return null;
+
+  const cleanDesc = desc.replace(/\s+/g, ' ').replace(/\s*[.!?]+$/, '').trim();
+  if (cleanDesc.length < 10) return null;
+
+  // Skip descriptions that are just location/category noise
+  if (/^(city|town|village|district|state|country|region|island|province)\s+(in|of)\s+/i.test(cleanDesc) && cleanDesc.length < 40) return null;
+  if (/^list of/i.test(title)) return null;
+  if (/^glossary of/i.test(title)) return null;
+
+  // Build question based on what the description actually says
+  let question, answer;
+
+  if (/^(was|is|were|are)\s+(a|an|the)\s+/i.test(cleanDesc)) {
+    // "was a X" → "What is X?" pattern
+    const noun = cleanDesc.replace(/^(was|is|were|are)\s+(a|an|the)\s+/i, '');
+    question = 'What is ' + title + '?';
+    answer = title + ' is ' + (noun.startsWith('a ') || noun.startsWith('an ') || noun.startsWith('the ') ? noun : 'a ' + noun);
+  } else if (/^(was|is)\s+located/i.test(cleanDesc) || /located in/i.test(cleanDesc)) {
+    question = 'Where is ' + title + ' located?';
+    answer = title + ' is located in ' + cleanDesc.replace(/^(was|is)\s+(located\s+)?in\s+/i, '').replace(/^(was|is)\s+located\s+/i, '');
+  } else if (/^(was|is)\s+known for/i.test(cleanDesc)) {
+    question = 'What is ' + title + ' known for?';
+    answer = title + ' is known for ' + cleanDesc.replace(/^(was|is)\s+known for\s+/i, '');
+  } else if (/^(was|is)\s+(built|constructed|founded|established|created|invented|discovered)/i.test(cleanDesc)) {
+    question = 'What is the history of ' + title + '?';
+    answer = title + ' ' + cleanDesc;
+  } else {
+    // General: use the description as the answer
+    question = 'What do you know about ' + title + '?';
+    answer = title + ' — ' + cleanDesc;
+  }
+
+  // Ensure answer ends with period
+  if (!/[.!?]$/.test(answer)) answer += '.';
+  if (answer.length > 500) answer = answer.substring(0, 497) + '...';
+
+  return { q: question, a: answer, fact: title + ': ' + cleanDesc };
 }
 
 const CATEGORIES = [
@@ -4173,13 +4200,13 @@ async function main() {
       let articleAdded = 0;
             // Description-based (1 per article)
       if (desc && desc.length > 5 && desc.length < 200) {
-        const q = makeDescriptionQuestion(desc, title);
-        if (q.length > 15 && q.length < 200 && pushQ({
+        const qResult = makeDescriptionQuestion(desc, title);
+        if (qResult && qResult.q && qResult.a && pushQ({
           id: cat.name.substring(0,3).toLowerCase() + added,
-          type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+          type: 'qa', category: cat.name, region: '', source: 'Wiki',
           pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-          question: q, answer: title, hint: '',
-          fact: paraphrase(getContext(allSentences, title, 3), title),
+          question: qResult.q, answer: qResult.a, hint: '',
+          fact: qResult.fact || paraphrase(getContext(allSentences, title, 3), title),
         })) { added++; articleAdded++; }
       }
 
@@ -4426,13 +4453,13 @@ async function main() {
         const allSentences = splitSentences(body).filter(s => s.trim().length > 20 && !isBadSentence(s));
         const sentences = allSentences.filter(s => s.trim().length > 25 && !isBadSentence(s));
         if (desc && desc.length > 5 && desc.length < 200) {
-          const q = makeDescriptionQuestion(desc, title);
-          if (q.length > 15 && q.length < 200 && pushQ({
+          const qResult = makeDescriptionQuestion(desc, title);
+          if (qResult && qResult.q && qResult.a && pushQ({
             id: cat.name.substring(0,3).toLowerCase() + added + 'l',
-            type: 'fill_blank', category: cat.name, region: '', source: 'Wiki',
+            type: 'qa', category: cat.name, region: '', source: 'Wiki',
             pubDate: new Date().toISOString(), subject: cat.name, subSubject: title, emoji: '',
-            question: q, answer: title, hint: '',
-            fact: paraphrase(getContext(allSentences, title, 3), title),
+            question: qResult.q, answer: qResult.a, hint: '',
+            fact: qResult.fact || paraphrase(getContext(allSentences, title, 3), title),
           })) added++;
         }
         const LINK_PER_ARTICLE = parseInt(process.env.WIKI_FILL_LINK_PER_ARTICLE || '200', 10);
