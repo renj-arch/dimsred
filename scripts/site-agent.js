@@ -1549,11 +1549,23 @@ async function agentSelfCheck() {
 
 async function main() {
   const log = loadJson(LOG, { runs: [], lastRun: null, model: null });
-  // Model comes from the workflow env — same as llm-autofix. No warmup, no
-  // restarts: llm-autofix calls the API cold and generation works.
   const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
   log.model = model;
   console.log('agent: using model ' + model);
+
+  // FIRST action: one real generation call, identical to llm-autofix's first
+  // callLLM. Proves the server can load+generate before any filesystem work.
+  // If this fails, skip the whole LLM half of the agent — the server is dead.
+  const ping = await callLLM(
+    'Reply with exactly: OK',
+    'Ping the model to confirm generation works.',
+    10
+  );
+  if (!ping) {
+    console.log('agent: LLM cold-start FAILED — server cannot generate. Running rule-based fixers only.');
+  } else {
+    console.log('agent: LLM cold-start OK (' + ping.model + '): ' + ping.text.slice(0, 40));
+  }
 
   const results = [];
   // LLM agents first (Foresight/Questions/Content), then the 262-page fixers.

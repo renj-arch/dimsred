@@ -88,7 +88,20 @@ jobs:
           echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
           echo "Using Qwen3.8-27B (score 90.3 — BEST free model)"
           ollama list
-          curl -sf http://localhost:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Pull can leave the server down. Restart if needed and PROVE
+          # generation works before the agent starts — same as llm-autofix
+          # which succeeds because it generates immediately on a live server.
+          if ! curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down after pull — restarting"
+            nohup ollama serve > /tmp/ollama.log 2>&1 &
+            for i in $(seq 1 30); do
+              curl -sf http://localhost:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          echo "Proving generation works (cold start, same as llm-autofix first call)..."
+          ollama run qwen3.8:27b "Reply with exactly: OK" --verbose 2>&1 | tail -20
+          echo "Generation proof done"
 
       # No browser test before the model. Playwright + serve fragment memory
       # and disk right before the 18GB model load; llm-autofix has none and
