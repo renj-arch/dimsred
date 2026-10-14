@@ -7,11 +7,6 @@ const { iterQuizQuestions, createStreamingShardWriter } = require('./lib/quiz-st
 const CHUNKS_DIR = path.join(__dirname, '..', 'chunks');
 const QUIZ_PATH = path.join(__dirname, '..', 'data', 'quiz.json');
 const LINK_POOL_PATH = path.join(__dirname, '..', 'data', 'wiki-link-pool.json');
-// Per-run merge state (built by `collect`, drained by one `finalize`). Keeping
-// the dedup set and the accumulated new questions here lets each collect work
-// in O(chunk) instead of re-reading and re-writing the whole quiz.json per
-// chunk — the legacy one-shot merge did ~27 full passes, which is why the
-// merge job approached GitHub's 360-minute runner cap.
 const STATE_DIR = path.join(CHUNKS_DIR, '.merge-state');
 const NEW_QUESTIONS_PATH = path.join(STATE_DIR, 'new.jsonl');
 const CARRY_PATH = path.join(STATE_DIR, 'carry.txt');
@@ -23,9 +18,63 @@ function norm(s) {
 }
 
 // Compact hash for dedup: SHA-256 truncated to 16 bytes (base64 = 22 chars).
-// 6M keys x 22 bytes ~ 132 MB vs ~1.5 GB for full normalized strings.
 function compactKey(s) {
   return crypto.createHash('sha256').update(s).digest('base64').slice(0, 22);
+}
+
+// ── Bloom filter: replaces Set to avoid V8 "Set maximum size exceeded" ──
+// 64MB bit array + 7 hash functions → holds 30M+ keys with <0.1% false positives.
+// Fixed memory regardless of key count. Has same add()/has() interface as Set.
+class BloomFilter {
+  constructor(bits) {
+    this.bits = bits || (64 * 1024 * 1024 * 8); // 64MB = 536M bits
+    this.arr = new Uint8Array(Math.ceil(this.bits / 8));
+    this.k = 7; // number of hash functions
+    this.count = 0;
+  }
+  _hashes(key) {
+    const h1 = crypto.createHash('sha256').update(key).digest();
+    const h2 = crypto.createHash('sha256').update(h1).digest();
+    const a = h1.readUInt32LE(0), b = h1.readUInt32LE(4);
+    const c = h2.readUInt32LE(0), d = h2.readUInt32LE(4);
+    const out = [];
+    for (let i = 0; i < this.k; i++) {
+      out.push(((a + i * b + i * c * 31) >>> 0) % this.bits);
+    }
+    return out;
+  }
+  add(key) {
+    for (const pos of this._hashes(key)) {
+      this.arr[pos >> 3] |= (1 << (pos & 7));
+    }
+    this.count++;
+  }
+  has(key) {
+    for (const pos of this._hashes(key)) {
+      if (!(this.arr[pos >> 3] & (1 << (pos & 7)))) return false;
+    }
+    return true;
+  }
+  get size() { return this.count; }
+  // Save bit array to disk
+  save(filePath) {
+    fs.writeFileSync(filePath, this.arr);
+  }
+  // Load bit array from disk
+  static load(filePath) {
+    const bf = new BloomFilter();
+    if (fs.existsSync(filePath)) {
+      const data = fs.readFileSync(filePath);
+      bf.arr.set(data);
+      bf.count = data.length; // approximate
+    }
+    return bf;
+  }
+  // Iterate keys (needed by saveSeen compatibility) — not supported for Bloom
+  [Symbol.iterator]() {
+    // Yield nothing — callers should use save() instead
+    return [][Symbol.iterator]();
+  }
 }
 
 function listChunkFiles() {
@@ -36,39 +85,61 @@ function listChunkFiles() {
 // Load the dedup-key set for a `collect` run. The first collect builds it from
 // the baseline quiz.json (one full pass) and persists it; later collects (each
 // a fresh process) just reload it, so no per-chunk full corpus pass is needed.
+// Save/load dedup using BloomFilter (avoids Set size limit with 16M+ keys)
 function saveSeen(seen) {
   return new Promise((resolve, reject) => {
-    fs.mkdirSync(STATE_DIR, { recursive: true });
-    const ws = fs.createWriteStream(SEEN_PATH);
-    ws.on('finish', resolve);
-    ws.on('error', reject);
-    let buf = '';
-    for (const k of seen) {
-      buf += k + '\n';
-      if (buf.length >= 8 * 1024 * 1024) { ws.write(buf); buf = ''; }
-    }
-    if (buf) ws.write(buf);
-    ws.end();
+    try {
+      fs.mkdirSync(STATE_DIR, { recursive: true });
+      if (seen instanceof BloomFilter) {
+        seen.save(SEEN_PATH);
+        console.log('Saved BloomFilter dedup: ' + seen.size + ' keys');
+        resolve();
+      } else {
+        // Fallback: original Set-based save
+        const ws = fs.createWriteStream(SEEN_PATH);
+        ws.on('finish', resolve);
+        ws.on('error', reject);
+        let buf = '';
+        for (const k of seen) {
+          buf += k + '\n';
+          if (buf.length >= 8 * 1024 * 1024) { ws.write(buf); buf = ''; }
+        }
+        if (buf) ws.write(buf);
+        ws.end();
+      }
+    } catch (e) { reject(e); }
   });
 }
 
 function loadSeen() {
+  const BLOOM_PATH = SEEN_PATH + '.bloom';
+  if (fs.existsSync(BLOOM_PATH)) {
+    const bf = BloomFilter.load(BLOOM_PATH);
+    console.log('Loaded BloomFilter dedup: ~' + bf.size + ' keys (' + Math.round(bf.arr.length / 1024 / 1024) + 'MB)');
+    return Promise.resolve(bf);
+  }
+  // Legacy: text file of keys
   if (fs.existsSync(SEEN_PATH)) {
-    const seen = new Set();
+    const bf = new BloomFilter();
     return new Promise((resolve) => {
       const rl = readline.createInterface({ input: fs.createReadStream(SEEN_PATH), crlfDelay: Infinity });
-      rl.on('line', (l) => { if (l) seen.add(l); });
-      rl.on('close', () => { console.log('Loaded dedup set: ' + seen.size + ' keys'); resolve(seen); });
+      let n = 0;
+      rl.on('line', (l) => { if (l) { bf.add(l); n++; } });
+      rl.on('close', () => {
+        console.log('Migrated ' + n + ' keys to BloomFilter');
+        bf.save(BLOOM_PATH);
+        resolve(bf);
+      });
     });
   }
   return (async () => {
-    const seen = new Set();
+    const bf = new BloomFilter();
     if (fs.existsSync(QUIZ_PATH)) {
-      iterQuizQuestions(QUIZ_PATH, (q) => { seen.add(compactKey(norm(q.question))); });
+      iterQuizQuestions(QUIZ_PATH, (q) => { bf.add(compactKey(norm(q.question))); });
     }
-    await saveSeen(seen);
-    console.log('Built dedup set from quiz.json: ' + seen.size + ' questions');
-    return seen;
+    bf.save(BLOOM_PATH);
+    console.log('Built BloomFilter from quiz.json: ~' + bf.size + ' questions');
+    return bf;
   })();
 }
 

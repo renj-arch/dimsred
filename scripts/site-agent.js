@@ -1135,6 +1135,123 @@ async function agentProposals() {
   return { agent: 'proposals', fixes: fixes };
 }
 
+// ── AGENT: Foresight (predict & prevent problems before they happen) ──
+// The agent thinks ahead: checks data quality, disk, memory, workflow health,
+// and fixes issues BEFORE they cause failures.
+async function agentForesight() {
+  const fixes = [];
+
+  // 1. Check data file sizes — prevent disk overflow
+  const dataDir = 'data';
+  if (fs.existsSync(dataDir)) {
+    const bigFiles = [];
+    let totalSize = 0;
+    for (const f of fs.readdirSync(dataDir)) {
+      const fp = path.join(dataDir, f);
+      try {
+        const stat = fs.statSync(fp);
+        if (stat.isFile()) {
+          totalSize += stat.size;
+          if (stat.size > 50 * 1024 * 1024) bigFiles.push(f + ' (' + Math.round(stat.size / 1024 / 1024) + 'MB)');
+        }
+      } catch (e) {}
+    }
+    if (bigFiles.length > 0) {
+      fixes.push({ page: 'data/', fix: 'Large files detected: ' + bigFiles.join(', ') });
+    }
+  }
+
+  // 2. Check timeline nodes for garbage descriptions
+  const timelineFiles = fs.readdirSync('.').filter(f => f.startsWith('timeline.nodes.') && f.endsWith('.json'));
+  let garbaged = 0;
+  for (const tf of timelineFiles.slice(0, 3)) { // check first 3 to save time
+    try {
+      const nodes = JSON.parse(fs.readFileSync(tf, 'utf8'));
+      if (!Array.isArray(nodes)) continue;
+      let changed = false;
+      for (const n of nodes) {
+        if (!n.desc) continue;
+        // Garbage: desc is raw question text (starts with "What", "Which", ends with "?")
+        // or is just a sentence fragment from a question
+        const desc = n.desc.trim();
+        if (/^(what|which|who|when|where|why|how|the\s+\w+\s+is)\s/i.test(desc) && desc.endsWith('?')) {
+          // Convert question to statement
+          n.desc = desc.replace(/\?$/, '.').replace(/^(what|which|who|when|where|why|how)\s/i, '');
+          n.desc = n.desc[0].toUpperCase() + n.desc.slice(1);
+          changed = true;
+          garbaged++;
+        }
+        // Garbage: desc is just an answer fragment (too short, no context)
+        if (desc.length < 15 && !/\d{4}/.test(desc)) {
+          delete n.desc;
+          changed = true;
+          garbaged++;
+        }
+        // Garbage: desc contains "_____" or "fill blank"
+        if (/_{3,}|fill.?blank/i.test(desc)) {
+          delete n.desc;
+          changed = true;
+          garbaged++;
+        }
+      }
+      if (changed) {
+        fs.writeFileSync(tf, JSON.stringify(nodes));
+        fixes.push({ page: tf, fix: 'Cleaned ' + garbaged + ' garbage timeline descriptions' });
+      }
+    } catch (e) {}
+  }
+
+  // 3. Check for broken workflow references
+  const wfDir = '.github/workflows';
+  if (fs.existsSync(wfDir)) {
+    for (const wf of fs.readdirSync(wfDir)) {
+      if (!wf.endsWith('.yml')) continue;
+      try {
+        const content = fs.readFileSync(path.join(wfDir, wf), 'utf8');
+        // Check for scripts referenced that don't exist
+        const scriptRefs = content.match(/node scripts\/[\w-]+\.js/g) || [];
+        for (const ref of scriptRefs) {
+          const scriptPath = ref.replace('node ', '');
+          if (!fs.existsSync(scriptPath)) {
+            fixes.push({ page: wf, fix: 'References missing script: ' + scriptPath });
+          }
+        }
+      } catch (e) {}
+    }
+  }
+
+  // 4. Check memory pressure — if data/questions is huge, warn
+  try {
+    const qDir = 'data/questions';
+    if (fs.existsSync(qDir)) {
+      const qFiles = fs.readdirSync(qDir).filter(f => f.endsWith('.json'));
+      if (qFiles.length > 2000) {
+        fixes.push({ page: 'data/questions', fix: 'Warning: ' + qFiles.length + ' question files — consider archiving old ones' });
+      }
+    }
+  } catch (e) {}
+
+  // 5. Check for duplicate page titles (SEO issue)
+  const pages = listPages();
+  const titles = new Map();
+  for (const p of pages) {
+    try {
+      const html = fs.readFileSync(p, 'utf8');
+      const m = html.match(/<title>([^<]+)<\/title>/i);
+      if (m) {
+        const t = m[1].trim().toLowerCase();
+        if (titles.has(t)) {
+          fixes.push({ page: p, fix: 'Duplicate title "' + m[1] + '" (same as ' + titles.get(t) + ')' });
+        }
+        titles.set(t, p);
+      }
+    } catch (e) {}
+  }
+
+  if (fixes.length > 0) console.log('agent: Foresight — ' + fixes.length + ' issue(s) predicted/prevented');
+  return { agent: 'foresight', fixes };
+}
+
 // ── AGENT: Question Quality (rule-based, no LLM needed) ──
 // Arranges subtopics into correct categories, creates new ones if needed,
 // and fixes poor questions (fill-in-the-blank) into proper Q&A.
@@ -1578,6 +1695,7 @@ async function main() {
 
   const results = [];
   const agents = [
+    ['Foresight', agentForesight],
     ['Workflows', agentWorkflows],
     ['SelfCheck', agentSelfCheck],
     ['SEO', agentSEO],
