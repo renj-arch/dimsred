@@ -128,9 +128,12 @@ async function callLLM(system, user, maxTokens) {
             num_predict: maxTokens || 1024,
             num_ctx: 2048,
             num_thread: 2,
-            num_batch: 256,
+            num_batch: 128,
             use_mmap: true,
-            num_gpu: 0
+            num_gpu: 0,
+            // For large models, reduce context and tokens to avoid timeout
+            ...(model.includes('27b') ? { num_ctx: 1024, num_predict: Math.min(maxTokens || 512, 512) } : {}),
+            ...(model.includes('9b') ? { num_ctx: 1536 } : {})
           }
         }),
         signal: AbortSignal.timeout(300000)

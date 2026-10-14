@@ -98,11 +98,16 @@ jobs:
           done
           curl -sf http://localhost:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
-      # Try models from best to smallest. Use 16GB swap for large models.
+      # Try models from best (90.3%) to smallest.
+      # 27B is slow on CPU but we try it with limited tokens.
       - name: Pull best model
         run: |
-          # Try Nemotron 9B (best practical model, 71.1% LiveCodeBench)
-          if ollama pull nvidia/nemotron-nano-9b-v2; then
+          # Try Qwen 27B (score 90.3) — best quality
+          if ollama pull qwen3.8:27b; then
+            echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
+            echo "Using Qwen3.8-27B (score 90.3 — BEST)"
+          # Try Nemotron 9B (score 71.1)
+          elif ollama pull nvidia/nemotron-nano-9b-v2; then
             echo "MODEL=nvidia/nemotron-nano-9b-v2" >> $GITHUB_ENV
             echo "Using Nemotron Nano 9B v2 (score 71.1)"
           # Try Qwen 9B (score 65)
