@@ -107,32 +107,12 @@ jobs:
           done
           curl -sf http://localhost:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
-      # Try models from best (90.3%) to smallest.
-      # 27B is slow on CPU but we try it with limited tokens.
-      - name: Pull best model
+      # Pull the proven working model. 27B is too slow on 2-core CPU.
+      - name: Pull model
         run: |
-          # Try Qwen 27B (score 90.3) — best quality
-          if ollama pull qwen3.8:27b; then
-            echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
-            echo "Using Qwen3.8-27B (score 90.3 — BEST)"
-          # Try Nemotron 9B (score 71.1)
-          elif ollama pull nvidia/nemotron-nano-9b-v2; then
-            echo "MODEL=nvidia/nemotron-nano-9b-v2" >> $GITHUB_ENV
-            echo "Using Nemotron Nano 9B v2 (score 71.1)"
-          # Try Qwen 9B (score 65)
-          elif ollama pull qwen3.5:9b; then
-            echo "MODEL=qwen3.5:9b" >> $GITHUB_ENV
-            echo "Using Qwen3.5-9B (score 65)"
-          # Try Qwen 4B (score 55)
-          elif ollama pull qwen3.5:4b; then
-            echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
-            echo "Using Qwen3.5-4B (score 55)"
-          # Fallback smallest
-          else
-            ollama pull qwen3.5:2b
-            echo "MODEL=qwen3.5:2b" >> $GITHUB_ENV
-            echo "Using Qwen3.5-2B (score 45, fallback)"
-          fi
+          ollama pull qwen3.5:4b
+          echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
+          echo "Using Qwen3.5-4B"
           ollama list
 
       - name: Run site agent (continuous)

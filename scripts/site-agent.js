@@ -111,7 +111,9 @@ async function callLLM(system, user, maxTokens, priority) {
       const health = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(10000) }).catch(() => null);
       if (!health || !health.ok) {
         console.log('agent: Ollama dead, restarting...');
-        try { execSync('pkill -f "ollama serve" || true', { timeout: 5000 }); } catch (e) {}
+        // Try to kill via API first, then restart
+        try { await fetch(OLLAMA_HOST + '/api/generate', { method: 'DELETE', signal: AbortSignal.timeout(5000) }).catch(() => {}); } catch (e) {}
+        try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
         try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
         await new Promise(r => setTimeout(r, 15000));
         // Wait for server
@@ -163,8 +165,15 @@ async function callLLM(system, user, maxTokens, priority) {
       _llmFailCount++;
       console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message);
       if (attempt < 3) {
-        // Kill and restart Ollama
-        try { execSync('pkill -f "ollama serve" || true', { timeout: 5000 }); } catch (e2) {}
+        // Fallback to smaller model on timeout
+        if (e.message.includes('timeout') || e.message.includes('aborted')) {
+          if (model.includes('27b')) { model = 'qwen3.5:9b'; console.log('agent: falling back to 9B'); }
+          else if (model.includes('9b')) { model = 'qwen3.5:4b'; console.log('agent: falling back to 4B'); }
+          else if (model.includes('4b')) { model = 'qwen3.5:2b'; console.log('agent: falling back to 2B'); }
+        }
+        // Restart Ollama
+        try { await fetch(OLLAMA_HOST + '/api/generate', { method: 'DELETE', signal: AbortSignal.timeout(5000) }).catch(() => {}); } catch (e2) {}
+        try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e2) {}
         try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e2) {}
         await new Promise(r => setTimeout(r, 20000));
         for (let w = 0; w < 30; w++) {
