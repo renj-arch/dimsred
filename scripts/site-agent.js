@@ -54,15 +54,6 @@ function dropPageCache() {
   try { execSync('sync; sudo sh -c "echo 3 > /proc/sys/vm/drop_caches" 2>/dev/null || true', { timeout: 10000, shell: '/bin/bash' }); } catch (e) {}
 }
 
-async function ollamaLoadedModels() {
-  try {
-    const r = await fetch(OLLAMA_HOST + '/api/ps', { signal: AbortSignal.timeout(5000) });
-    if (!r.ok) return null;
-    const j = await r.json();
-    return (j.models || []).map(m => m.name);
-  } catch (e) { return null; }
-}
-
 async function restartOllama() {
   dropPageCache();
   try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
@@ -145,34 +136,22 @@ async function callLLM(system, user, maxTokens, priority) {
   const lessons = memory.getLessonsPrompt();
   const fullSystem = lessons ? system + '\n\n' + lessons : system;
 
-  // Health check: ensure Ollama is alive before each call
+  // EXACTLY the llm-autofix request shape — the only free-27B path proven to
+  // work on this runner. Extra options (num_ctx/num_thread/num_batch/use_mmap/
+  // top_k/top_p) change the KV-cache layout after warmup and the server dies
+  // with "fetch failed" on every real call (run #53: warmup 218s OK, then all
+  // generation attempts = instant fetch failed).
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      // Check server health + restart cleanly before each call
+      // Server dead? restart with the same env the workflow uses.
       const health = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(10000) }).catch(() => null);
       if (!health || !health.ok) {
         console.log('agent: Ollama dead, restarting...');
         await restartOllama();
       }
 
-      // Keep the warm model loaded if it is already the one we need — a DELETE
-      // forces a ~4 min reload and was OOM-killing generation under page-cache
-      // pressure from the 262-page fixers. Only unload a *different* model.
-      if (model.includes('27b')) {
-        const loaded = await ollamaLoadedModels();
-        if (loaded && loaded.length && !loaded.some(n => n.includes('27b'))) {
-          try { await fetch(OLLAMA_HOST + '/api/generate', { method: 'DELETE', body: JSON.stringify({ model: model }), signal: AbortSignal.timeout(5000) }); } catch (e) {}
-          await new Promise(r => setTimeout(r, 3000));
-        }
-      }
-
-      const is27b = model.includes('27b');
-      const is9b = model.includes('9b');
-      // 27B on CPU with swap needs 15 min per call
-      const timeoutMs = is27b ? 900000 : (is9b ? 600000 : 300000);
-      const ctx = is27b ? 512 : (is9b ? 1024 : 512);
-      const predict = is27b ? 256 : (is9b ? 768 : 1024);
-      console.log('agent: calling ' + model + ' (timeout ' + Math.round(timeoutMs/60000) + 'min, ctx ' + ctx + ')');
+      const timeoutMs = model.includes('27b') ? 900000 : 300000;
+      console.log('agent: calling ' + model + ' (timeout ' + Math.round(timeoutMs / 60000) + 'min, minimal opts)');
       const res = await fetch(OLLAMA_HOST + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -183,18 +162,8 @@ async function callLLM(system, user, maxTokens, priority) {
             { role: 'user', content: user }
           ],
           stream: false,
-          options: {
-            temperature: 0.3,
-            num_predict: predict,
-            num_ctx: ctx,
-            num_thread: 2,
-            num_batch: is27b ? 32 : 128,
-            use_mmap: true,
-            num_gpu: 0,
-            repeat_penalty: 1.1,
-            top_k: is27b ? 20 : 40,
-            top_p: 0.9
-          }
+          // Proven shape from llm-autofix.js — do NOT add options.
+          options: { temperature: 0.3, num_predict: maxTokens || 1024 }
         }),
         signal: AbortSignal.timeout(timeoutMs)
       });
@@ -202,19 +171,27 @@ async function callLLM(system, user, maxTokens, priority) {
         const j = await res.json();
         const text = (j.message && j.message.content) || '';
         if (text.trim()) { _llmFailCount = 0; return { text: text.trim(), model: model }; }
+        console.log('agent: LLM returned empty text');
       } else {
-        console.log('agent: LLM returned ' + res.status);
+        const body = await res.text().catch(() => '');
+        console.log('agent: LLM returned ' + res.status + ' ' + body.slice(0, 200));
       }
     } catch (e) {
       _llmFailCount++;
-      console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message + ' (model: ' + model + ')');
+      const cause = e && e.cause ? (' cause=' + (e.cause.message || e.cause.code || e.cause)) : '';
+      console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message + cause + ' (model: ' + model + ')');
+      // Tail ollama.log — "fetch failed" usually means the server was OOM-killed
+      try {
+        const tail = execSync('tail -20 /tmp/ollama.log 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }).toString();
+        if (tail.trim()) console.log('agent: ollama.log tail:\n' + tail.trim());
+      } catch (e2) {}
       if (attempt < 3) {
-        // Always restart Ollama and retry SAME model (27B)
         console.log('agent: restarting Ollama and retrying ' + model + '...');
         await restartOllama();
-        // Give extra time for 27B to load
         if (model.includes('27b')) {
-          await new Promise(r => setTimeout(r, 30000));
+          // Full load takes ~90-250s; wait before the next request so the
+          // server is not asked to load+generate under a cold start race.
+          await new Promise(r => setTimeout(r, 60000));
         }
       }
     }
@@ -1717,7 +1694,7 @@ async function main() {
       const warm = await fetch(OLLAMA_HOST + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { num_predict: 5, num_ctx: 256, num_thread: 2, use_mmap: true } }),
+        body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { temperature: 0.3, num_predict: 5 } }),
         signal: AbortSignal.timeout(600000)
       });
       const warmSecs = Math.round((Date.now() - warmStart) / 1000);
