@@ -1192,9 +1192,38 @@ async function main() {
       r.fixes.slice(0, 3).forEach(f => console.log('    → ' + f.fix + (f.page ? ' (' + f.page + ')' : '')));
     }
   });
+
+  return totalFixes;
 }
 
-main().then(() => process.exit(0)).catch(e => {
-  console.error('agent: FATAL — ' + (e.message || e));
-  process.exit(0);
-});
+// ── Continuous loop mode ──
+const MAX_CYCLES = parseInt(process.env.AGENT_MAX_CYCLES || '6', 10);
+const CYCLE_WAIT = parseInt(process.env.AGENT_CYCLE_WAIT || '300', 10);
+
+async function runLoop() {
+  console.log('agent: continuous loop — max ' + MAX_CYCLES + ' cycles, ' + CYCLE_WAIT + 's between');
+  let totalAll = 0, idle = 0;
+
+  for (let cycle = 1; cycle <= MAX_CYCLES; cycle++) {
+    if (fs.existsSync('.agent-stop')) { console.log('agent: stop flag found'); break; }
+    console.log('\n===== CYCLE ' + cycle + '/' + MAX_CYCLES + ' =====');
+    const fixes = await main();
+    totalAll += fixes;
+    if (fixes === 0) { idle++; if (idle >= 3) { console.log('agent: 3 idle cycles — site clean, stopping'); break; } }
+    else idle = 0;
+    if (cycle < MAX_CYCLES) {
+      console.log('agent: waiting ' + CYCLE_WAIT + 's...');
+      await new Promise(r => setTimeout(r, CYCLE_WAIT * 1000));
+    }
+  }
+  console.log('\nagent: loop complete — ' + totalAll + ' total fixes');
+}
+
+if (process.argv.includes('--loop')) {
+  runLoop().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(0); });
+} else {
+  main().then(() => process.exit(0)).catch(e => {
+    console.error('agent: FATAL — ' + (e.message || e));
+    process.exit(0);
+  });
+}

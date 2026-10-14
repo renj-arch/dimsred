@@ -24,7 +24,7 @@ on:
 
 concurrency:
   group: site-agent
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -32,7 +32,7 @@ permissions:
 jobs:
   agent:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    timeout-minutes: 300
     steps:
       - uses: actions/checkout@v4
         with:
@@ -113,10 +113,12 @@ jobs:
           fi
           ollama list
 
-      - name: Run site agent
+      - name: Run site agent (continuous)
         env:
           OLLAMA_MODEL: ${{ env.MODEL }}
-        run: node scripts/site-agent.js
+          AGENT_MAX_CYCLES: '6'
+          AGENT_CYCLE_WAIT: '300'
+        run: node scripts/site-agent.js --loop
 
       - name: Publish agent work
         run: |
