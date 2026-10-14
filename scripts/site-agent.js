@@ -1175,6 +1175,11 @@ async function agentQuestionQuality() {
     'Seed Science & Technology': 'Agriculture',
     'Soil & Watershed': 'Agriculture',
     'Spices & Plantation Crops': 'Agriculture',
+    // Misplaced folk/practice topics under Classical Languages
+    'Odiyan': 'Indian Folk Traditions',
+    'Adhyatma Ramayana': 'Indian Philosophy',
+    'Hitopadesha': 'Indian Literature',
+    'Panchatantra': 'Indian Literature',
   };
 
   // Content-based recategorization rules
@@ -1279,9 +1284,161 @@ async function agentQuestionQuality() {
     } catch (e) { /* skip unreadable */ }
   }
 
+  // ── Self-audit: detect thin/empty subtopics for LLM generation ──
+  const thinSubtopics = [];
+  const emptySubtopics = [];
+  const misplaced = [];
+
+  // Misplaced topic detection
+  const MISPLACED = [
+    { re: /\bodi?yan\b/i, correct: 'Indian Folk Traditions', wrong: /classical.*language/i },
+    { re: /\b(hitopadesha|panchatantra|jataka)\b/i, correct: 'Indian Literature', wrong: /classical.*language/i },
+    { re: /\b(adhyatma|yoga|vedanta|sankhya)\b/i, correct: 'Indian Philosophy', wrong: /classical.*language/i },
+  ];
+
+  for (const file of files) {
+    const fp = path.join(DIR, file);
+    try {
+      const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
+      for (const sk of Object.keys(data)) {
+        const subs = data[sk].subSubjects || {};
+        for (const sub of Object.keys(subs)) {
+          const qs = subs[sub] || [];
+          // Check for misplaced
+          for (const mp of MISPLACED) {
+            if (mp.re.test(sub) && mp.wrong.test(sk)) {
+              misplaced.push(file + ': "' + sub + '" belongs in "' + mp.correct + '"');
+            }
+          }
+          // Detect thin/empty
+          if (qs.length === 0 && sub.length > 3) {
+            emptySubtopics.push({ file, subject: sk, sub });
+          } else if (qs.length < 15 && sub.length > 3) {
+            thinSubtopics.push({ file, subject: sk, sub, count: qs.length });
+          }
+        }
+      }
+    } catch (e) { /* skip */ }
+  }
+
+  thinSubtopics.sort((a, b) => a.count - b.count);
+
+  // Report problems found
+  if (thinSubtopics.length > 0) fixes.push({ page: 'data/questions', fix: 'Found ' + thinSubtopics.length + ' thin subtopics (< 15 questions)' });
+  if (emptySubtopics.length > 0) fixes.push({ page: 'data/questions', fix: 'Found ' + emptySubtopics.length + ' empty subtopics' });
+  if (misplaced.length > 0) fixes.push({ page: 'data/questions', fix: 'Misplaced: ' + misplaced.slice(0, 3).join('; ') });
+
+  // Save report
+  fs.writeFileSync('data/questions-report.json', JSON.stringify({
+    generated: new Date().toISOString(),
+    thinCount: thinSubtopics.length,
+    emptyCount: emptySubtopics.length,
+    misplaced: misplaced.slice(0, 20),
+    thinSubtopics: thinSubtopics.slice(0, 50),
+    emptySubtopics: emptySubtopics.slice(0, 50),
+  }, null, 2));
+
+  // ── Generate content for top 3 thin subtopics via LLM ──
+  let generated = 0;
+  const targets = [...emptySubtopics.slice(0, 1), ...thinSubtopics.slice(0, 2)];
+
+  for (const target of targets) {
+    try {
+      const fp = path.join(DIR, target.file);
+      const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
+      const existingQs = (data[target.subject] && data[target.subject].subSubjects && data[target.subject].subSubjects[target.sub]) || [];
+
+      // Collect covered topics for duplicate avoidance
+      const allCovered = [];
+      for (const sk2 of Object.keys(data)) {
+        const s2 = data[sk2].subSubjects || {};
+        for (const sk3 of Object.keys(s2)) {
+          for (const q of (s2[sk3] || []).slice(0, 15)) {
+            allCovered.push((q.question || '').substring(0, 80));
+          }
+        }
+      }
+
+      const result = await callLLM(
+        'You are an UPSC/SSC exam content writer. Generate exam-relevant questions.\n' +
+        'STRICT RULES:\n' +
+        '1. Each question tests a DIFFERENT fact — no duplicates even if worded differently\n' +
+        '2. Do NOT rephrase existing questions — cover NEW facts only\n' +
+        '3. Include detailed explanations with facts, dates, numbers, names\n' +
+        '4. Mix difficulty: easy (30%), medium (50%), hard (20%)\n' +
+        '5. Questions must be specific and factual, not vague\n' +
+        '6. Return strict JSON: [{"question":"...","answer":"...","explanation":"...","difficulty":"easy|medium|hard"}]',
+        'Topic: ' + target.sub + ' (subject: ' + target.subject + ')\n' +
+        'Existing questions (' + existingQs.length + '):\n' +
+        existingQs.slice(0, 10).map(q => '- ' + (q.question || '').substring(0, 80)).join('\n') + '\n\n' +
+        'Other topics in this file (DO NOT DUPLICATE):\n' +
+        allCovered.slice(0, 20).join('\n') + '\n\n' +
+        'Generate 10 NEW exam questions covering DIFFERENT facts.',
+        2500,
+        'high'
+      );
+
+      if (!result) continue;
+      const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+      const newQs = JSON.parse(clean);
+      if (!Array.isArray(newQs) || newQs.length === 0) continue;
+
+      // Final duplicate check
+      const existingTexts = new Set();
+      for (const sk2 of Object.keys(data)) {
+        const s2 = data[sk2].subSubjects || {};
+        for (const sk3 of Object.keys(s2)) {
+          for (const q of (s2[sk3] || [])) {
+            existingTexts.add((q.question || '').toLowerCase().substring(0, 80));
+          }
+        }
+      }
+
+      const added = [];
+      for (const nq of newQs) {
+        if (!nq.question || !nq.answer) continue;
+        const nqKey = nq.question.toLowerCase().substring(0, 80);
+        if (existingTexts.has(nqKey)) continue;
+
+        // Near-duplicate: shared 70% key words
+        const nqWords = new Set(nqKey.match(/\b[a-z]{4,}\b/g) || []);
+        let isDupe = false;
+        for (const et of existingTexts) {
+          const etWords = new Set(et.match(/\b[a-z]{4,}\b/g) || []);
+          let overlap = 0;
+          for (const w of nqWords) { if (etWords.has(w)) overlap++; }
+          if (overlap / Math.max(nqWords.size, 1) > 0.7) { isDupe = true; break; }
+        }
+        if (isDupe) continue;
+
+        added.push({
+          question: nq.question,
+          answer: nq.answer,
+          explanation: nq.explanation || nq.answer,
+          type: 'qa',
+          difficulty: nq.difficulty || 'medium',
+          subSubject: target.sub,
+          source: 'agent-generated'
+        });
+      }
+
+      if (added.length > 0) {
+        if (!data[target.subject]) data[target.subject] = { subSubjects: {} };
+        if (!data[target.subject].subSubjects[target.sub]) data[target.subject].subSubjects[target.sub] = [];
+        data[target.subject].subSubjects[target.sub].push(...added);
+        fs.writeFileSync(fp, JSON.stringify(data), 'utf8');
+        generated += added.length;
+        fixes.push({ page: target.file, fix: 'Generated ' + added.length + ' questions for "' + target.sub + '" (' + existingQs.length + ' → ' + (existingQs.length + added.length) + ')' });
+      }
+    } catch (e) {
+      console.log('agent: generation failed for ' + target.sub + ': ' + e.message);
+    }
+  }
+
   if (mergedCount > 0) fixes.push({ page: 'data/questions', fix: 'Merged ' + mergedCount + ' overlapping subtopics into correct categories' });
   if (fixedQuestions > 0) fixes.push({ page: 'data/questions', fix: 'Converted ' + fixedQuestions + ' fill-in-blank questions to proper Q&A' });
   if (processedFiles > 0) fixes.push({ page: 'data/questions', fix: 'Updated ' + processedFiles + ' question files' });
+  if (generated > 0) fixes.push({ page: 'data/questions', fix: 'Generated ' + generated + ' new exam questions via LLM' });
 
   return { agent: 'questions', fixes };
 }
