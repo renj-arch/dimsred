@@ -698,35 +698,41 @@ var GENERATORS = {
 
 function generateMathQuestion(diff) {
   var types = [
-    // Exam-style word problems (SSC/CGL/Banking pattern)
-    function area(){ var l=rand(10,50), b=rand(5,30); return { q:'Find the area of a rectangle with length '+l+'m and breadth '+b+'m', a:l*b, hint:'Area = length × breadth = '+l+' × '+b }; },
-    function perimeter(){ var l=rand(10,50), b=rand(5,30); return { q:'Find the perimeter of a rectangle with length '+l+'m and breadth '+b+'m', a:2*(l+b), hint:'Perimeter = 2×(length + breadth) = 2×('+l+' + '+b+')' }; },
-    function profitLoss(){ var cp=rand(50,500), p=rand(5,30); var sp=Math.round(cp*(100+p)/100); return { q:'An item costing Rs.'+cp+' is sold for Rs.'+sp+'. Find the profit percentage.', a:p, hint:'Profit % = ((SP-CP)/CP)×100 = (('+sp+'-'+cp+')/'+cp+')×100' }; },
-    function loss(){ var cp=rand(100,500), l=rand(5,25); var sp=Math.round(cp*(100-l)/100); return { q:'An item costing Rs.'+cp+' is sold for Rs.'+sp+'. Find the loss percentage.', a:l, hint:'Loss % = ((CP-SP)/CP)×100 = (('+cp+'-'+sp+')/'+cp+')×100' }; },
-    function timeWork(){ var a=rand(6,20), b=rand(6,20); var lcm=a*b/gcd(a,b); return { q:'A can do a work in '+a+' days and B in '+b+' days. How long will they take together?', a:Math.round(lcm/(lcm/a+lcm/b)*100)/100, hint:'Together = (A×B)/(A+B) = ('+a+'×'+b+')/('+a+'+'+b+')' }; },
-    function simpleInterest(){ var p=rand(1000,10000), r=rand(4,12), t=rand(2,8); return { q:'Find the simple interest on Rs.'+p+' at '+r+'% per annum for '+t+' years.', a:Math.round(p*r*t/100), hint:'SI = (P×R×T)/100 = ('+p+'×'+r+'×'+t+')/100' }; },
-    function compoundInterest(){ var p=rand(1000,5000), r=rand(5,10), t=rand(2,4); var amount=Math.round(p*Math.pow(1+r/100,t)); return { q:'Find the compound interest on Rs.'+p+' at '+r+'% per annum for '+t+' years (annual compounding).', a:amount-p, hint:'CI = P(1+R/100)^T - P = '+p+'(1+'+r+'/100)^'+t+' - '+p }; },
-    function average(){ var n=rand(3,6), nums=[]; for(var i=0;i<n;i++) nums.push(rand(10,100)); var sum=nums.reduce(function(a,b){return a+b},0); return { q:'Find the average of: '+nums.join(', '), a:Math.round(sum/n*100)/100, hint:'Average = Sum/Count = '+sum+'/'+n }; },
-    function ratio(){ var a=rand(1,9), b=rand(1,9), mult=rand(2,10); return { q:'If two numbers are in the ratio '+a+':'+b+' and their sum is '+(a+b)*mult+', find the larger number.', a:b*mult, hint:'Numbers = '+a+'×'+mult+' and '+b+'×'+mult+'. Larger = '+b+'×'+mult }; },
-    function ages(){ var f=rand(25,45), s=rand(3,15); return { q:'A father is '+f+' years old. His son is '+s+' years younger. After how many years will the father be twice as old as the son?', a:f-3*s, hint:'Let after x years. ('+(f)+'+x) = 2×('+(f-s)+'+x). Solve: x = '+ (f-3*s) }; },
-    function boat(){ var b=rand(5,15), s=rand(3,10); return { q:'A boat goes '+ (b+s) +' km downstream in 1 hour and '+ (b-s) +' km upstream in 1 hour. Find the speed of the boat in still water.', a:b, hint:'Speed downstream = b+s, upstream = b-s. Still water = (down+up)/2' }; },
-    function alligation(){ var c1=rand(10,50), c2=rand(60,150), avg=rand(c1+5,c2-5); var ratio1=c2-avg, ratio2=avg-c1; var g=gcd(ratio1,ratio2); return { q:'In what ratio must wheat at Rs.'+c1+'/kg be mixed with wheat at Rs.'+c2+'/kg to get a mixture worth Rs.'+avg+'/kg?', a:(ratio1/g)+':'+(ratio2/g), hint:'Rule of alligation: (C2-Avg):(Avg-C1) = '+(c2-avg)+':'+(avg-c1) }; },
-    // Reflex speed drills (kept for instinct layer)
-    function square(){ var n = rand(10, 30 + diff * 5); return { q: 'What is ' + n + '\u00B2?', a: n * n, hint: 'Break ' + n + ' as (' + (Math.floor(n/10)*10) + '+' + (n%10) + ')\u00B2' }; },
-    function percent(){ var p = [10,15,20,25,30,33,40,50][rand(0, diff > 2 ? 7 : 3)]; var n = rand(2, 9) * (diff > 1 ? 10 : 1); return { q: 'What is ' + p + '% of ' + n + '?', a: Math.round(n * p / 100), hint: p + '% = ' + p + '/100, so multiply by 0.' + p }; },
-    function multiply(){ var a = rand(10, 20 + diff * 5); var b = rand(2, 5 + diff); return { q: 'What is ' + a + ' \u00D7 ' + b + '?', a: a * b, hint: 'Break ' + a + ' = ' + (Math.floor(a/10)*10) + ' + ' + (a%10) }; },
-    function fraction(){ var a = rand(1, 9); var b = rand(2, 9); return { q: 'Convert ' + a + '/' + b + ' to percentage', a: Math.round(a / b * 100), hint: 'Multiply by 100 and divide by ' + b }; },
-    function add3(){ var a = rand(10, 90); var b = rand(10, 90); var c = rand(10, 90); return { q: 'What is ' + a + ' + ' + b + ' + ' + c + '?', a: a + b + c, hint: 'Add first two, then add third' }; },
-    function diffSq(){ var a = rand(10, 20 + diff * 3); var b = rand(5, 10); return { q: 'What is ' + a + '\u00B2 - ' + b + '\u00B2?', a: (a*a) - (b*b), hint: 'Use identity: a\u00B2 - b\u00B2 = (a-b)(a+b) = ('+a+'-'+b+')('+a+'+'+b+')' }; }
+    // ── SSC CGL Tier-1 level word problems ──
+    function ratioAge(){ var r1=rand(2,5), r2=r1+rand(1,3), mult=rand(3,8), years=rand(4,12); var a=r1*mult, b=r2*mult; var futureA=a+years, futureB=b+years; var newR1=futureA, newR2=futureB; var g=gcd(newR1,newR2); var correct=Math.round(newR1/g); return { q:'The ratio of ages of A and B is '+r1+':'+r2+'. After '+years+' years the ratio becomes '+correct+':'+Math.round(newR2/g)+'. Find the present age of A.', a:a, hint:'Let ages be '+r1+'x and '+r2+'x. Then ('+r1+'x+'+years+')/('+r2+'x+'+years+') = '+correct+':'+Math.round(newR2/g)+'. Solve for x='+mult }; },
+    function markedPrice(){ var cp=rand(200,800), mkP=rand(20,50), disc=rand(10,25); var sp=Math.round(cp*(100+mkP)/100*(100-disc)/100); var profitPct=Math.round((sp-cp)/cp*100); return { q:'A shopkeeper marks an article '+mkP+'% above cost price of Rs.'+cp+' and allows '+disc+'% discount. Find his profit percentage.', a:profitPct, hint:'MP = '+cp+'×'+(100+mkP)+'/100 = Rs.'+Math.round(cp*(100+mkP)/100)+'. SP = MP×(100-'+disc+')/100 = Rs.'+sp+'. Profit% = '+(sp-cp)+'/'+cp+'×100' }; },
+    function oddAverage(){ var n=rand(3,7), start=rand(5,30)*2+1; var nums=[]; for(var i=0;i<n;i++) nums.push(start+i*2); var avg=nums.reduce(function(a,b){return a+b},0)/n; return { q:'The average of '+n+' consecutive odd numbers is '+avg+'. Find the largest number.', a:nums[n-1], hint:'Numbers: '+nums.join(', ')+'. Average of consecutive odds = middle number. Largest = avg + (n-1)' }; },
+    function workDays(){ var m1=rand(8,20), d1=rand(10,30), m2=rand(m1+2,m1+15); var totalWork=m1*d1; var d2=Math.round(totalWork/m2); return { q:m1+' men can complete a work in '+d1+' days. How many days will '+m2+' men take to complete the same work?', a:d2, hint:'Total work = '+m1+'×'+d1+' = '+totalWork+' man-days. Days = '+totalWork+'/'+m2+' = '+d2+' days' }; },
+    function trainSpeed(){ var len=rand(100,400), time=rand(10,40); var speedMs=Math.round(len/time*100)/100; var speedKmh=Math.round(len/time*3.6*100)/100; return { q:'A train '+len+'m long crosses a pole in '+time+' seconds. Find its speed in km/h.', a:speedKmh, hint:'Speed = '+len+'/'+time+' m/s = '+speedMs+' m/s. Convert: ×18/5 = '+speedKmh+' km/h' }; },
+    function successiveDiscount(){ var d1=rand(10,30), d2=rand(10,30); var net=Math.round((100-d1)*(100-d2)/100); var effective=100-net; return { q:'Two successive discounts of '+d1+'% and '+d2+'% are equivalent to a single discount of how many percent?', a:effective, hint:'Single discount = 100 - [(100-'+d1+')(100-'+d2+')/100] = 100 - '+net+' = '+effective+'%' }; },
+    function siDifference(){ var p=rand(2000,10000), r1=rand(4,8), r2=r1+rand(2,6), t=rand(2,5); var siDiff=Math.round(p*(r2-r1)*t/100); return { q:'The difference between SI on Rs.'+p+' at '+r2+'% and '+r1+'% for '+t+' years is Rs.?', a:siDiff, hint:'Diff = P×(R2-R1)×T/100 = '+p+'×'+(r2-r1)+'×'+t+'/100' }; },
+    function ciAmount(){ var p=rand(2000,8000), r=rand(5,12), t=rand(2,3); var amount=Math.round(p*Math.pow(1+r/100,t)*100)/100; return { q:'Find the compound amount on Rs.'+p+' at '+r+'% per annum for '+t+' years (annual compounding).', a:amount, hint:'A = P(1+R/100)^T = '+p+'(1+'+r+'/100)^'+t+' = Rs.'+amount }; },
+    function partnership(){ var inv1=rand(2000,10000), inv2=rand(2000,10000), months=rand(6,18), profit=rand(5000,20000); var share1=Math.round(profit*inv1*months/(inv1*months+inv2*months)); return { q:'A invests Rs.'+inv1+' and B invests Rs.'+inv2+' in a business. After '+months+' months, profit of Rs.'+profit+' is earned. Find A\'s share.', a:share1, hint:'Ratio = '+inv1+':'+inv2+' (same time). A\'s share = '+profit+'×'+inv1+'/('+inv1+'+'+inv2+') = Rs.'+share1 }; },
+    function boatStream(){ var b=rand(8,20), s=rand(3,10); var down=b+s, up=b-s; var dist=rand(30,80); var time=Math.round(dist/up*60); return { q:'A boat goes '+down+' km downstream and '+up+' km upstream in equal time. If speed of stream is '+s+' km/h, find speed of boat in still water.', a:b, hint:'Speed downstream = b+s = '+down+', upstream = b-s = '+up+'. So b = ('+down+'+'+up+')/2 = '+b+' km/h' }; },
+    function mixtureAlligation(){ var c1=rand(15,40), c2=rand(50,120), avg=rand(c1+10,c2-10); var r1=c2-avg, r2=avg-c1; var g=gcd(r1,r2); return { q:'In what ratio must wheat at Rs.'+c1+'/kg be mixed with wheat at Rs.'+c2+'/kg to get a mixture worth Rs.'+avg+'/kg?', a:(r1/g)+':'+(r2/g), hint:'Alligation: dearer('+c2+') - mean('+avg+') = '+r1+', mean('+avg+') - cheaper('+c1+') = '+r2+'. Ratio = '+r1+':'+r2+' = '+(r1/g)+':'+(r2/g) }; },
+    function pipeProblem(){ var a=rand(6,20), b=rand(6,20); var lcm=a*b/gcd(a,b); var together=Math.round(lcm/(lcm/a+lcm/b)*100)/100; return { q:'Two pipes can fill a tank in '+a+' hours and '+b+' hours respectively. If both are opened together, how long will they take to fill the tank?', a:together, hint:'Together = 1/'+a+' + 1/'+b+' = 1/'+together+'. So time = '+together+' hours' }; },
+    function successiveProfit(){ var cp=rand(100,500), p1=rand(10,30), p2=rand(10,30); var sp1=Math.round(cp*(100+p1)/100); var sp2=Math.round(sp1*(100+p2)/100); var totalPct=Math.round((sp2-cp)/cp*100); return { q:'An article is sold at '+p1+'% profit. If sold for Rs.'+Math.round(cp*(100+p1+p2)/100)+' more, profit would be '+p2+'%. Find cost price.', a:cp, hint:'Let CP = x. SP1 = x×'+(100+p1)+'/100, SP2 = SP1 + more. Equate and solve: CP = Rs.'+cp }; },
+    // ── Reflex speed drills ──
+    function square(){ var n = rand(15, 50 + diff * 5); return { q: 'What is ' + n + '\u00B2?', a: n * n, hint: 'Break as (' + (Math.floor(n/10)*10) + '+' + (n%10) + ')\u00B2 = ' + (Math.floor(n/10)*10)**2 + ' + 2×' + (Math.floor(n/10)*10) + '×' + (n%10) + ' + ' + (n%10)**2 }; },
+    function percent(){ var p = [12,15,17,20,22,25,28,30,32,35,37,40][rand(0, 11)]; var n = rand(2, 15) * (diff > 1 ? 10 : 1); return { q: 'What is ' + p + '% of ' + n + '?', a: Math.round(n * p / 100), hint: 'Find 10% = ' + (n/10) + ', 1% = ' + (n/100) + '. Combine for ' + p + '%' }; },
+    function multiply(){ var a = rand(15, 40 + diff * 5); var b = rand(3, 15 + diff); return { q: 'What is ' + a + ' \u00D7 ' + b + '?', a: a * b, hint: 'Break: ' + a + '×' + b + ' = ' + (Math.floor(a/10)*10) + '×' + b + ' + ' + (a%10) + '×' + b }; },
+    function fraction(){ var a = rand(2, 12); var b = rand(3, 15); return { q: 'Convert ' + a + '/' + b + ' to percentage (nearest integer)', a: Math.round(a / b * 100), hint: a + '÷' + b + ' = ' + (a/b).toFixed(3) + '. Multiply by 100' }; },
+    function add3(){ var a = rand(100, 999); var b = rand(100, 999); var c = rand(100, 999); return { q: 'What is ' + a + ' + ' + b + ' + ' + c + '?', a: a + b + c, hint: 'Add units, tens, hundreds separately' }; },
+    function diffSq(){ var a = rand(15, 50 + diff * 3); var b = rand(5, 20); return { q: 'What is ' + a + '\u00B2 - ' + b + '\u00B2?', a: (a*a) - (b*b), hint: '(a-b)(a+b) = ('+a+'-'+b+')('+a+'+'+b+') = '+(a-b)+'×'+(a+b) }; }
   ];
-  // Weight: 60% exam word problems, 40% reflex drills
-  var examCount = Math.floor(types.length * 0.6);
-  var typeIdx = rand(0, 99) < 60 ? rand(0, examCount - 1) : rand(examCount, types.length - 1);
+  // Weight: 70% exam word problems, 30% reflex drills
+  var examCount = 12;
+  var typeIdx = rand(0, 99) < 70 ? rand(0, examCount - 1) : rand(examCount, types.length - 1);
   var data = types[typeIdx]();
   var opts = [data.a];
-  for (var _g=0; _g<50 && opts.length<4; _g++) { var d = rand(-5, 5) + data.a; if (opts.indexOf(d) < 0 && d > 0) opts.push(d); }
+  for (var _g=0; _g<80 && opts.length<4; _g++) {
+    var delta = Math.max(1, Math.round(Math.abs(data.a) * 0.05));
+    var d = data.a + (rand(0,1) ? 1 : -1) * rand(delta, delta * 5);
+    if (opts.indexOf(d) < 0 && d > 0) opts.push(d);
+  }
   shuffle(opts);
-  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10), type: 'math', techniqueLabel: 'Read the question carefully. Identify the formula. Plug in values. Check units.' };
+  var timeLimits = { math: diff <= 1 ? 30 : (diff <= 3 ? 25 : 20) };
+  return { question: data.q, answer: data.a, options: opts, hint: data.hint, timeLimit: timeLimits.math, type: 'math', techniqueLabel: 'Read carefully → Identify formula → Plug values → Verify answer is reasonable' };
 }
 
 function generateChainQuestion(diff) {
