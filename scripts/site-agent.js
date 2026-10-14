@@ -61,28 +61,31 @@ async function callLLM(system, user, maxTokens) {
   const model = await pickBestModel();
   const lessons = memory.getLessonsPrompt();
   const fullSystem = lessons ? system + '\n\n' + lessons : system;
-  try {
-    const res = await fetch(OLLAMA_HOST + '/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: model,
-        messages: [
-          { role: 'system', content: fullSystem },
-          { role: 'user', content: user }
-        ],
-        stream: false,
-        options: { temperature: 0.3, num_predict: maxTokens || 1024 }
-      }),
-      signal: AbortSignal.timeout(300000)
-    });
-    if (res.ok) {
-      const j = await res.json();
-      const text = (j.message && j.message.content) || '';
-      if (text.trim()) return { text: text.trim(), model: model };
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(OLLAMA_HOST + '/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: model,
+          messages: [
+            { role: 'system', content: fullSystem },
+            { role: 'user', content: user }
+          ],
+          stream: false,
+          options: { temperature: 0.3, num_predict: maxTokens || 1024, num_ctx: 4096 }
+        }),
+        signal: AbortSignal.timeout(600000)
+      });
+      if (res.ok) {
+        const j = await res.json();
+        const text = (j.message && j.message.content) || '';
+        if (text.trim()) return { text: text.trim(), model: model };
+      }
+    } catch (e) {
+      console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message);
+      if (attempt < 3) await new Promise(r => setTimeout(r, 10000));
     }
-  } catch (e) {
-    console.log('agent: LLM failed: ' + e.message);
   }
   return null;
 }
@@ -1028,6 +1031,157 @@ async function agentProposals() {
   return { agent: 'proposals', fixes: fixes };
 }
 
+// ── AGENT: Question Quality (rule-based, no LLM needed) ──
+// Arranges subtopics into correct categories, creates new ones if needed,
+// and fixes poor questions (fill-in-the-blank) into proper Q&A.
+async function agentQuestionQuality() {
+  const fixes = [];
+  const DIR = 'data/questions';
+  if (!fs.existsSync(DIR)) return { agent: 'questions', fixes };
+
+  // Category merge map — overlapping categories get consolidated
+  const MERGE = {
+    'Awards': 'Awards & Honours',
+    'Defence': 'Defence & Security',
+    'Ethics': 'Ethics & Integrity',
+    'Polity': 'Polity & Governance',
+    'Society': 'Indian Society',
+    'Tech & Science': 'Science & Technology',
+    'General': 'General Science',
+    'Ancient India': 'Indian History',
+    'Medieval & Modern India': 'Indian History',
+    'Geography': 'Indian Geography',
+    'PIB': 'PIB Releases',
+    'Agricultural Engineering': 'Agriculture',
+    'Agricultural Entomology': 'Agriculture',
+    'Agricultural Extension & Marketing': 'Agriculture',
+    'Agronomy & Crop Production': 'Agriculture',
+    'Animal Husbandry & Dairy': 'Agriculture',
+    'Farm Machinery': 'Agriculture',
+    'Farm Machinery & Power': 'Agriculture',
+    'Fisheries & Aquaculture': 'Agriculture',
+    'Floriculture & Landscaping': 'Agriculture',
+    'Food Processing': 'Agriculture',
+    'Horticulture': 'Agriculture',
+    'Horticulture - Fruit & Vegetable Production': 'Agriculture',
+    'Hydrology & Soil Conservation': 'Agriculture',
+    'Plant Breeding & Genetics': 'Agriculture',
+    'Plant Pathology & Crop Protection': 'Agriculture',
+    'Plant Physiology & Nutrition': 'Agriculture',
+    'Seed Science & Technology': 'Agriculture',
+    'Soil & Watershed': 'Agriculture',
+    'Spices & Plantation Crops': 'Agriculture',
+  };
+
+  // Content-based recategorization rules
+  const RULES = [
+    { cat: 'Health', re: /health|hospital|medical|doctor|patient|disease|ayushman|medicine|vaccine|pharma|drug|nutrition|wellness|healthcare|ayush|dengue|malaria|tuberculosis|covid|ayurveda/i },
+    { cat: 'Defence & Security', re: /defence|defense|army|navy|air force|drdo|military|soldier|border|missile|submarine|warship|terrorism|insurgency|coast guard|paramilitary|rafale|tejas/i },
+    { cat: 'Education', re: /education|school|college|university|student|teacher|exam|scholarship|fellowship|ncert|nep|skill development|vocational|iit|iim|aiims/i },
+    { cat: 'Agriculture', re: /agriculture|farmer|kisan|crop|food grain|wheat|rice|paddy|fertiliser|irrigation|soil health|msp|horticulture|dairy|fisher|animal husbandry/i },
+    { cat: 'Energy', re: /energy|electricity|coal|oil|petroleum|natural gas|solar|wind|renewable|hydrogen|biofuel|ethanol|power project|power plant/i },
+    { cat: 'Environment & Ecology', re: /environment|climate|forest|wildlife|pollution|ecology|emission|carbon|biodiversity|conservation|wetland|ganga|swachh/i },
+    { cat: 'Indian Economy', re: /economy|economic|gdp|inflation|fiscal|monetary|budget|tax|gst|import|export|trade|investment|financial|banking|rbi|sebi/i },
+    { cat: 'Infrastructure', re: /infrastructure|road|highway|railway|airport|port|metro|smart city|housing|urban|construction|bridge|tunnel/i },
+    { cat: 'Science & Technology', re: /technology|digital|software|artificial intelligence|cyber|space|isro|satellite|rocket|semiconductor|electronics|science|research|nuclear|biotech|quantum/i },
+    { cat: 'Polity & Governance', re: /law|justice|court|judicial|legal|constitution|supreme court|high court|legislation|parliament|lok sabha|rajya sabha/i },
+    { cat: 'International Relations', re: /foreign|diplomatic|embassy|bilateral|multilateral|summit|united nations|un |nato|brics|g20/i },
+    { cat: 'Sports', re: /sports|olympic|cricket|football|hockey|athlete|tournament|championship|medal|commonwealth/i },
+    { cat: 'Art & Culture', re: /culture|heritage|monument|museum|festival|art|dance|music|literature|language|tourism/i },
+    { cat: 'Indian History', re: /history|empire|dynasty|king|queen|battle|war|independence|freedom struggle|mahatma|gandhi|akbar|shah jahan|mughal|vedic/i },
+    { cat: 'Indian Geography', re: /river|mountain|state|district|city|plateau|plain|coast|island|region|climate of india/i },
+  ];
+
+  // Poor question patterns to fix
+  const POOR_PATTERNS = [
+    /^Fill (in the )?blank/i,
+    /^Fill blank/i,
+    /^Fill in:/i,
+    /^Fill:/i,
+    /^The _____ was/i,
+    /^_____ is a _____/i,
+    / deals with _____/,
+    / is the study of _____/,
+  ];
+
+  const files = fs.readdirSync(DIR).filter(f => f.endsWith('.json'));
+  let mergedCount = 0, fixedQuestions = 0, processedFiles = 0;
+
+  for (const file of files) {
+    const fp = path.join(DIR, file);
+    try {
+      const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
+      let fileChanged = false;
+
+      for (const sk of Object.keys(data)) {
+        if (!data[sk] || !data[sk].subSubjects) continue;
+        const subs = data[sk].subSubjects;
+        const newSubs = {};
+
+        for (const sub of Object.keys(subs)) {
+          let questions = subs[sub] || [];
+
+          // Step 1: Merge overlapping categories
+          let targetSub = MERGE[sub] || sub;
+
+          // Step 2: Content-based recategorization if subtopic name is generic
+          if (/^Announcements$|^General$|^Current Affairs$|^Misc/.test(sub)) {
+            for (const rule of RULES) {
+              const sample = questions.slice(0, 5).map(q => (q.question || '') + ' ' + (q.fact || '')).join(' ');
+              if (rule.re.test(sample)) { targetSub = rule.cat; break; }
+            }
+          }
+
+          // Step 3: Fix poor questions — convert fill-in-blank to proper Q&A
+          for (const q of questions) {
+            if (!q.question) continue;
+            const isPoor = POOR_PATTERNS.some(p => p.test(q.question));
+            if (isPoor && q.fact) {
+              // Extract the fact as the proper Q&A
+              const factClean = q.fact.replace(/\s+/g, ' ').trim();
+              if (factClean.length > 30) {
+                // Formulate a proper question from the fact
+                const qMatch = factClean.match(/^(.+?)\s+(?:is|was|are|were)\s+(.+)$/);
+                if (qMatch) {
+                  q.question = 'What do you know about ' + qMatch[1].substring(0, 80) + '?';
+                  q.answer = qMatch[2].substring(0, 120);
+                } else {
+                  q.question = 'Key facts: ' + factClean.substring(0, 100);
+                  q.answer = factClean.substring(0, 150);
+                }
+                q.type = 'qa';
+                delete q.options;
+                fixedQuestions++;
+                fileChanged = true;
+              }
+            }
+            // Update subSubject field
+            q.subSubject = targetSub;
+          }
+
+          if (!newSubs[targetSub]) newSubs[targetSub] = [];
+          newSubs[targetSub] = newSubs[targetSub].concat(questions);
+
+          if (targetSub !== sub) mergedCount++;
+        }
+
+        data[sk].subSubjects = newSubs;
+      }
+
+      if (fileChanged) {
+        fs.writeFileSync(fp, JSON.stringify(data), 'utf8');
+        processedFiles++;
+      }
+    } catch (e) { /* skip unreadable */ }
+  }
+
+  if (mergedCount > 0) fixes.push({ page: 'data/questions', fix: 'Merged ' + mergedCount + ' overlapping subtopics into correct categories' });
+  if (fixedQuestions > 0) fixes.push({ page: 'data/questions', fix: 'Converted ' + fixedQuestions + ' fill-in-blank questions to proper Q&A' });
+  if (processedFiles > 0) fixes.push({ page: 'data/questions', fix: 'Updated ' + processedFiles + ' question files' });
+
+  return { agent: 'questions', fixes };
+}
+
 // ── Main ──
 async function agentSelfCheck() {
   const fixes = [];
@@ -1164,6 +1318,7 @@ async function main() {
     ['Perf', agentPerf],
     ['A11Y', agentA11Y],
     ['Code', agentCode],
+    ['Questions', agentQuestionQuality],
     ['Content', agentContent],
     ['Figures', agentFigures],
     ['Flowcharts', agentFlowcharts],
