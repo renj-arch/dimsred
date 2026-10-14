@@ -36,9 +36,24 @@ let _llmCallCount = 0;
 const LLM_MAX_FAILS = 6; // More retries for 27B
 const LLM_BEST_CALLS = 99; // Always use best model
 
+function dropPageCache() {
+  try { execSync('sync; echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true', { timeout: 10000, shell: '/bin/bash' }); } catch (e) {}
+}
+
+async function ollamaLoadedModels() {
+  try {
+    const r = await fetch(OLLAMA_HOST + '/api/ps', { signal: AbortSignal.timeout(5000) });
+    if (!r.ok) return null;
+    const j = await r.json();
+    return (j.models || []).map(m => m.name);
+  } catch (e) { return null; }
+}
+
 async function restartOllama() {
+  dropPageCache();
   try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
   await new Promise(r => setTimeout(r, 3000));
+  dropPageCache();
   try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
   await new Promise(r => setTimeout(r, 10000));
   for (let w = 0; w < 30; w++) {
@@ -123,17 +138,24 @@ async function callLLM(system, user, maxTokens, priority) {
         await restartOllama();
       }
 
-      // For 27B: preemptively unload any model to free memory before loading
+      // Keep the warm model loaded if it is already the one we need — a DELETE
+      // forces a ~4 min reload and was OOM-killing generation under page-cache
+      // pressure from the 262-page fixers. Only unload a *different* model.
       if (model.includes('27b')) {
-        try { await fetch(OLLAMA_HOST + '/api/generate', { method: 'DELETE', body: JSON.stringify({}), signal: AbortSignal.timeout(5000) }); } catch (e) {}
-        await new Promise(r => setTimeout(r, 3000));
+        const loaded = await ollamaLoadedModels();
+        if (loaded && loaded.length && !loaded.some(n => n.includes('27b'))) {
+          try { await fetch(OLLAMA_HOST + '/api/generate', { method: 'DELETE', body: JSON.stringify({ model: model }), signal: AbortSignal.timeout(5000) }); } catch (e) {}
+          await new Promise(r => setTimeout(r, 3000));
+        }
       }
 
       const is27b = model.includes('27b');
       const is9b = model.includes('9b');
       // 27B on CPU with swap needs 15 min per call
       const timeoutMs = is27b ? 900000 : (is9b ? 600000 : 300000);
-      console.log('agent: calling ' + model + ' (timeout ' + Math.round(timeoutMs/60000) + 'min, ctx ' + (is27b?1024:(is9b?1024:512)) + ')');
+      const ctx = is27b ? 512 : (is9b ? 1024 : 512);
+      const predict = is27b ? 256 : (is9b ? 768 : 1024);
+      console.log('agent: calling ' + model + ' (timeout ' + Math.round(timeoutMs/60000) + 'min, ctx ' + ctx + ')');
       const res = await fetch(OLLAMA_HOST + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -146,10 +168,10 @@ async function callLLM(system, user, maxTokens, priority) {
           stream: false,
           options: {
             temperature: 0.3,
-            num_predict: is27b ? 512 : (is9b ? 768 : 1024),
-            num_ctx: is27b ? 1024 : (is9b ? 1024 : 512),
+            num_predict: predict,
+            num_ctx: ctx,
             num_thread: 2,
-            num_batch: is27b ? 64 : 128,
+            num_batch: is27b ? 32 : 128,
             use_mmap: true,
             num_gpu: 0,
             repeat_penalty: 1.1,
@@ -1698,21 +1720,26 @@ async function main() {
   if (!warmed) console.log('agent: warmup incomplete — will load on first real call');
 
   const results = [];
+  // LLM-dependent agents FIRST while RAM/disk are clean (right after warmup).
+  // SEO/A11Y/Code/Perf process 262 pages and fill page cache + Node heap; if
+  // they run before generation, the 27B model gets OOM-killed under that
+  // pressure (observed: warmup loads in 251s, then every generate = fetch failed).
   const agents = [
     ['Foresight', agentForesight],
-    ['Workflows', agentWorkflows],
-    ['SelfCheck', agentSelfCheck],
-    ['SEO', agentSEO],
-    ['Perf', agentPerf],
-    ['A11Y', agentA11Y],
-    ['Code', agentCode],
     ['Questions', agentQuestionQuality],
     ['Content', agentContent],
     ['Figures', agentFigures],
     ['Flowcharts', agentFlowcharts],
     ['Mindmaps', agentMindmaps],
     ['Features', agentFeatures],
-    ['Proposals', agentProposals]
+    ['Proposals', agentProposals],
+    // Non-LLM fixers last — safe to run even if LLM already gave up.
+    ['Workflows', agentWorkflows],
+    ['SelfCheck', agentSelfCheck],
+    ['SEO', agentSEO],
+    ['Perf', agentPerf],
+    ['A11Y', agentA11Y],
+    ['Code', agentCode]
   ];
 
   for (const [name, fn] of agents) {

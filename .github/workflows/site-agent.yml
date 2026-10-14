@@ -70,10 +70,17 @@ jobs:
           # Run browser tests
           SITE_URL=http://localhost:8080 node scripts/browser-test.js 2>&1 || echo "browser-test failed but continuing"
           kill $SERVER_PID 2>/dev/null || true
+          # Free ~500MB of browser binaries before the 27B model needs the disk
+          rm -rf ~/.cache/ms-playwright node_modules 2>/dev/null || true
           echo "Browser test complete"
 
       - name: Create swap (24GB — 27B model needs it)
         run: |
+          # Proven layout: /tmp swap + default OLLAMA_MODELS both fit and worked
+          # in run #44 (swap created, model pulled). The failure was OOM during
+          # generation after the 262-page fixers filled RAM — fixed in the agent
+          # by running LLM agents first and capping the Node heap.
+          df -h
           sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=24576 status=progress
           sudo chmod 600 /tmp/swapfile
           sudo mkswap /tmp/swapfile
@@ -129,6 +136,10 @@ jobs:
           OLLAMA_MODEL: ${{ env.MODEL }}
           AGENT_MAX_CYCLES: '6'
           AGENT_CYCLE_WAIT: '300'
+          # Cap Node heap so the agent never competes with the 27B model for RAM.
+          # The fixers process 262 pages; without a cap the heap grows until the
+          # OOM killer takes Ollama mid-generation ("fetch failed").
+          NODE_OPTIONS: '--max-old-space-size=2048'
         run: node scripts/site-agent.js --loop
 
       - name: Publish agent work
