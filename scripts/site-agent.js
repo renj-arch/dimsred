@@ -36,8 +36,22 @@ let _llmCallCount = 0;
 const LLM_MAX_FAILS = 6; // More retries for 27B
 const LLM_BEST_CALLS = 99; // Always use best model
 
+// Restart must use the SAME env as the workflow's initial `ollama serve`.
+// Without these, every restart loses flash-attention + q8 KV cache and the 27B
+// model OOMs on the very next generation ("fetch failed" after a healthy
+// warmup — exactly what run #48 showed).
+const OLLAMA_SERVE_ENV = [
+  'OLLAMA_MAX_LOADED_MODELS=1',
+  'OLLAMA_KEEP_ALIVE=60m',
+  'OLLAMA_NUM_PARALLEL=1',
+  'OLLAMA_FLASH_ATTENTION=1',
+  'OLLAMA_KV_CACHE_TYPE=q8_0'
+].join(' ');
+
 function dropPageCache() {
-  try { execSync('sync; echo 3 > /proc/sys/vm/drop_caches 2>/dev/null || true', { timeout: 10000, shell: '/bin/bash' }); } catch (e) {}
+  // Passwordless sudo on GitHub runners; without it the redirect to
+  // /proc/sys/vm/drop_caches just prints "Permission denied" (run #48 log).
+  try { execSync('sync; sudo sh -c "echo 3 > /proc/sys/vm/drop_caches" 2>/dev/null || true', { timeout: 10000, shell: '/bin/bash' }); } catch (e) {}
 }
 
 async function ollamaLoadedModels() {
@@ -54,11 +68,14 @@ async function restartOllama() {
   try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
   await new Promise(r => setTimeout(r, 3000));
   dropPageCache();
-  try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
+  try {
+    execSync('nohup env ' + OLLAMA_SERVE_ENV + ' ollama serve > /tmp/ollama.log 2>&1 &',
+      { timeout: 5000, shell: '/bin/bash' });
+  } catch (e) {}
   await new Promise(r => setTimeout(r, 10000));
   for (let w = 0; w < 30; w++) {
     const h = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(5000) }).catch(() => null);
-    if (h && h.ok) { console.log('agent: Ollama restarted'); return true; }
+    if (h && h.ok) { console.log('agent: Ollama restarted (flash-attn + q8 KV)'); return true; }
     await new Promise(r => setTimeout(r, 1000));
   }
   console.log('agent: Ollama restart FAILED');
