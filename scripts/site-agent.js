@@ -126,9 +126,9 @@ async function callLLM(system, user, maxTokens, priority) {
 
       const is27b = model.includes('27b');
       const is9b = model.includes('9b');
-      // All timeouts 10 min — swap-heavy loading is slow
-      const timeoutMs = 600000;
-      console.log('agent: calling ' + model + ' (timeout ' + (timeoutMs/60000) + 'min, ctx ' + (is27b?1024:(is9b?1024:512)) + ')');
+      // 27B on CPU with swap needs 15 min per call
+      const timeoutMs = is27b ? 900000 : (is9b ? 600000 : 300000);
+      console.log('agent: calling ' + model + ' (timeout ' + Math.round(timeoutMs/60000) + 'min, ctx ' + (is27b?1024:(is9b?1024:512)) + ')');
       const res = await fetch(OLLAMA_HOST + '/api/chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -1400,18 +1400,23 @@ async function main() {
   console.log('agent: using model ' + model);
 
   // Warm up: load model into RAM so the first real call isn't slow.
-  console.log('agent: warming up model (loading into RAM)...');
+  // 27B model needs 5-10 min to load from disk into RAM via swap.
+  console.log('agent: warming up ' + model + ' (loading into RAM, up to 10 min)...');
+  const warmStart = Date.now();
   try {
     const warm = await fetch(OLLAMA_HOST + '/api/chat', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { num_predict: 5, num_ctx: 256 } }),
-      signal: AbortSignal.timeout(120000)
+      body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { num_predict: 5, num_ctx: 256, num_thread: 2, use_mmap: true } }),
+      signal: AbortSignal.timeout(600000)
     });
-    if (warm.ok) console.log('agent: model loaded and ready');
-    else console.log('agent: warmup returned ' + warm.status);
+    const warmSecs = Math.round((Date.now() - warmStart) / 1000);
+    if (warm.ok) console.log('agent: model loaded and ready in ' + warmSecs + 's');
+    else console.log('agent: warmup returned ' + warm.status + ' after ' + warmSecs + 's');
   } catch (e) {
-    console.log('agent: warmup failed — ' + e.message + ' (LLM agents will skip)');
+    const warmSecs = Math.round((Date.now() - warmStart) / 1000);
+    console.log('agent: warmup failed after ' + warmSecs + 's — ' + e.message);
+    console.log('agent: model may still load on first real call, continuing anyway');
   }
 
   const results = [];

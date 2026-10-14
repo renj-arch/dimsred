@@ -32,7 +32,7 @@ permissions:
 jobs:
   agent:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 360
     steps:
       - uses: actions/checkout@v4
         with:
@@ -72,14 +72,13 @@ jobs:
           kill $SERVER_PID 2>/dev/null || true
           echo "Browser test complete"
 
-      - name: Create swap (16GB)
+      - name: Create swap (24GB — 27B model needs it)
         run: |
-          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=24576 status=progress
           sudo chmod 600 /tmp/swapfile
           sudo mkswap /tmp/swapfile
           sudo swapon /tmp/swapfile
-          # Increase swappiness for model loading
-          sudo sysctl vm.swappiness=80
+          sudo sysctl vm.swappiness=90
           sudo sysctl vm.vfs_cache_pressure=50
           free -h
 
@@ -90,15 +89,15 @@ jobs:
 
       - name: Start Ollama server
         run: |
-          # Optimize for CPU inference with large models
+          # Optimize for 27B CPU inference
           export OLLAMA_MAX_LOADED_MODELS=1
-          export OLLAMA_KEEP_ALIVE=10m
+          export OLLAMA_KEEP_ALIVE=60m
           export OLLAMA_NUM_PARALLEL=1
           export OLLAMA_FLASH_ATTENTION=1
           export OLLAMA_KV_CACHE_TYPE=q8_0
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           echo $! > /tmp/ollama.pid
-          for i in $(seq 1 30); do
+          for i in $(seq 1 60); do
             if curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
               echo "Ollama server ready after ${i}s"
               break
@@ -107,12 +106,13 @@ jobs:
           done
           curl -sf http://localhost:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
-      # Pull the proven working model. 27B is too slow on 2-core CPU.
+      # qwen3.8:27b is the best free model (90.3% LiveCodeBench).
+      # 24GB swap handles the 18GB RAM requirement.
       - name: Pull model
         run: |
-          ollama pull qwen3.5:4b
-          echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
-          echo "Using Qwen3.5-4B"
+          ollama pull qwen3.8:27b
+          echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
+          echo "Using Qwen3.8-27B (score 90.3 — BEST free model)"
           ollama list
 
       - name: Run site agent (continuous)
