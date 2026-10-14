@@ -1,26 +1,22 @@
 name: Site Agent
 
-# The complete autonomous maintainer. Runs every 6 hours, handles:
-#   SEO — meta tags, descriptions, viewport, lang attributes
-#   A11Y — alt text, ARIA labels, skip links, keyboard nav
-#   Code — dead links, deprecated HTML, missing closing tags
-#   Content — generates MCQ questions for thin categories
-#   Features — creates new study pages from templates
+# Infrastructure is an EXACT clone of llm-autofix.yml — the only workflow
+# proven to run qwen3.8:27b successfully on this runner (run #10, #12).
+# Do NOT add flash-attn, q8 KV, browser tests, warmups, or self-restarts:
+# every one of those "improvements" caused "fetch failed" on generation
+# (runs #44–#54: warmup loads, then every real call dies).
 #
-# Self-upgrading: picks the best model that fits in RAM.
-# Fully free: Ollama runs locally on the runner, zero API keys.
+# Fully free: Ollama on the runner CPU, zero API keys.
 
 on:
   schedule:
     - cron: '55 */2 * * *'
-  # NO push trigger: the agent commits html/data changes, which used to
-  # re-trigger this workflow, queueing 6h runs behind each other all day.
+  # NO push trigger: the agent commits changes which used to re-trigger
+  # this workflow, queueing doomed runs behind each other all day.
   workflow_dispatch:
 
 concurrency:
   group: site-agent
-  # Cancel stale runs so a fix pushed mid-run takes effect immediately
-  # instead of waiting hours behind a doomed cycle.
   cancel-in-progress: true
 
 permissions:
@@ -29,15 +25,14 @@ permissions:
 jobs:
   agent:
     runs-on: ubuntu-latest
-    timeout-minutes: 360
+    timeout-minutes: 120
     steps:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
-          # data/questions (~9GB) is EXCLUDED on purpose: it caused 33-min
-          # checkouts that die with "early EOF", filled the disk, and OOM'd
-          # Ollama during generation. Question-quality work runs in the
-          # dedicated question-quality workflow that checks out questions only.
+          # data/questions (~9GB) is EXCLUDED — it caused 33-min checkouts
+          # that died with "early EOF" and OOM'd generation. Question work
+          # runs in question-quality.yml which checks out questions only.
           sparse-checkout: |
             scripts
             .github/workflows
@@ -58,35 +53,14 @@ jobs:
         with:
           node-version: 22
 
-      - name: Browser Test (Playwright)
+      # EXACT same swap as llm-autofix (16GB works with 27B there).
+      # 24GB filled more disk and made paging worse, not better.
+      - name: Create swap (16GB — same as proven llm-autofix)
         run: |
-          npm install playwright --no-save 2>/dev/null || true
-          npx playwright install chromium --with-deps 2>/dev/null || npx playwright install chromium 2>/dev/null || true
-          npx playwright install-deps chromium 2>/dev/null || true
-          # Start local server
-          npx -y serve -l 8080 -s . > /tmp/serve.log 2>&1 &
-          SERVER_PID=$!
-          for i in $(seq 1 15); do curl -sf http://localhost:8080/index.html > /dev/null 2>&1 && break; sleep 1; done
-          # Run browser tests
-          SITE_URL=http://localhost:8080 node scripts/browser-test.js 2>&1 || echo "browser-test failed but continuing"
-          kill $SERVER_PID 2>/dev/null || true
-          # Free ~500MB of browser binaries before the 27B model needs the disk
-          rm -rf ~/.cache/ms-playwright node_modules 2>/dev/null || true
-          echo "Browser test complete"
-
-      - name: Create swap (24GB — 27B model needs it)
-        run: |
-          # Proven layout: /tmp swap + default OLLAMA_MODELS both fit and worked
-          # in run #44 (swap created, model pulled). The failure was OOM during
-          # generation after the 262-page fixers filled RAM — fixed in the agent
-          # by running LLM agents first and capping the Node heap.
-          df -h
-          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=24576 status=progress
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
           sudo chmod 600 /tmp/swapfile
           sudo mkswap /tmp/swapfile
           sudo swapon /tmp/swapfile
-          sudo sysctl vm.swappiness=90
-          sudo sysctl vm.vfs_cache_pressure=50
           free -h
 
       - name: Install Ollama
@@ -94,17 +68,12 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
 
+      # EXACT same start as llm-autofix: no env vars, no flash-attn, no q8.
       - name: Start Ollama server
         run: |
-          # Optimize for 27B CPU inference
-          export OLLAMA_MAX_LOADED_MODELS=1
-          export OLLAMA_KEEP_ALIVE=60m
-          export OLLAMA_NUM_PARALLEL=1
-          export OLLAMA_FLASH_ATTENTION=1
-          export OLLAMA_KV_CACHE_TYPE=q8_0
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           echo $! > /tmp/ollama.pid
-          for i in $(seq 1 60); do
+          for i in $(seq 1 30); do
             if curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
               echo "Ollama server ready after ${i}s"
               break
@@ -113,34 +82,25 @@ jobs:
           done
           curl -sf http://localhost:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
-      # qwen3.8:27b is the best free model (90.3% LiveCodeBench).
-      # 24GB swap handles the 18GB RAM requirement.
-      - name: Pull model
+      - name: Pull qwen3.8:27b
         run: |
           ollama pull qwen3.8:27b
           echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
           echo "Using Qwen3.8-27B (score 90.3 — BEST free model)"
           ollama list
+          curl -sf http://localhost:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
 
-      # Free memory before agent runs: drop page cache, clean temp
-      - name: Free memory
-        run: |
-          sync
-          sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches' || true
-          sudo apt-get clean || true
-          rm -rf /tmp/*.log 2>/dev/null || true
-          free -h
-
-      - name: Run site agent (continuous)
+      # No browser test before the model. Playwright + serve fragment memory
+      # and disk right before the 18GB model load; llm-autofix has none and
+      # generation works. Browser tests can run in their own workflow.
+      - name: Run site agent (single pass — same shape as llm-autofix)
         env:
-          OLLAMA_MODEL: ${{ env.MODEL }}
-          AGENT_MAX_CYCLES: '6'
-          AGENT_CYCLE_WAIT: '300'
-          # Cap Node heap so the agent never competes with the 27B model for RAM.
-          # The fixers process 262 pages; without a cap the heap grows until the
-          # OOM killer takes Ollama mid-generation ("fetch failed").
+          OLLAMA_MODEL: qwen3.8:27b
+          # Single pass, not --loop: llm-autofix runs once and succeeds.
+          # The 6-cycle loop burned memory and LLM retry budget on cycle 1.
+          AGENT_MAX_CYCLES: '1'
           NODE_OPTIONS: '--max-old-space-size=2048'
-        run: node scripts/site-agent.js --loop
+        run: node scripts/site-agent.js
 
       - name: Publish agent work
         run: |
@@ -151,7 +111,6 @@ jobs:
           git add data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json 2>/dev/null || true
           git add figures/ 2>/dev/null || true
           git add -- *.html prototype-*.html 2>/dev/null || true
-          # New pages created by the agent (not in sparse-checkout list)
           git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No agent work to publish"

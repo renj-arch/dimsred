@@ -31,170 +31,38 @@ memory.addRule('Use NODE_OPTIONS=--max-old-space-size=4096 for node scripts proc
 
 const LOG = 'data/agent-log.json';
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
-let _llmFailCount = 0;
-let _llmCallCount = 0;
-const LLM_MAX_FAILS = 6; // More retries for 27B
-const LLM_BEST_CALLS = 99; // Always use best model
 
-// Restart must use the SAME env as the workflow's initial `ollama serve`.
-// Without these, every restart loses flash-attention + q8 KV cache and the 27B
-// model OOMs on the very next generation ("fetch failed" after a healthy
-// warmup — exactly what run #48 showed).
-const OLLAMA_SERVE_ENV = [
-  'OLLAMA_MAX_LOADED_MODELS=1',
-  'OLLAMA_KEEP_ALIVE=60m',
-  'OLLAMA_NUM_PARALLEL=1',
-  'OLLAMA_FLASH_ATTENTION=1',
-  'OLLAMA_KV_CACHE_TYPE=q8_0'
-].join(' ');
-
-function dropPageCache() {
-  // Passwordless sudo on GitHub runners; without it the redirect to
-  // /proc/sys/vm/drop_caches just prints "Permission denied" (run #48 log).
-  try { execSync('sync; sudo sh -c "echo 3 > /proc/sys/vm/drop_caches" 2>/dev/null || true', { timeout: 10000, shell: '/bin/bash' }); } catch (e) {}
-}
-
-async function restartOllama() {
-  dropPageCache();
-  try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
-  await new Promise(r => setTimeout(r, 3000));
-  dropPageCache();
+// ── LLM: EXACT copy of llm-autofix.js callLLM — the only free-27B path
+// proven to work on this runner. Do NOT add warmups, restarts, health-check
+// loops, num_ctx/num_thread/num_batch/use_mmap options, or flash-attn env:
+// every one of those "improvements" made generation fail with "fetch failed"
+// after a healthy warmup (runs #44–#54).
+async function callLLM(system, user, maxTokens) {
+  const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
   try {
-    execSync('nohup env ' + OLLAMA_SERVE_ENV + ' ollama serve > /tmp/ollama.log 2>&1 &',
-      { timeout: 5000, shell: '/bin/bash' });
-  } catch (e) {}
-  await new Promise(r => setTimeout(r, 10000));
-  for (let w = 0; w < 30; w++) {
-    const h = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(5000) }).catch(() => null);
-    if (h && h.ok) { console.log('agent: Ollama restarted (flash-attn + q8 KV)'); return true; }
-    await new Promise(r => setTimeout(r, 1000));
-  }
-  console.log('agent: Ollama restart FAILED');
-  return false;
-}
-
-// ── Self-upgrading model selector ──
-const MODEL_RANKING = [
-  { ollama: 'qwen3.8:27b',              ramGB: 18, score: 90.3 },
-  { ollama: 'nvidia/nemotron-nano-9b-v2', ramGB: 6,  score: 71.1 },
-  { ollama: 'qwen3.5:9b',               ramGB: 6,  score: 65 },
-  { ollama: 'qwen3.5:4b',               ramGB: 3.5, score: 55 },
-  { ollama: 'qwen3.5:2b',               ramGB: 2,  score: 45 }
-];
-
-function availableRAM() {
-  try {
-    const os = require('os');
-    return { totalGB: os.totalmem() / (1024 ** 3), freeGB: os.freemem() / (1024 ** 3) };
-  } catch (e) { return { totalGB: 7, freeGB: 5 }; }
-}
-
-async function pickBestModel() {
-  if (process.env.OLLAMA_MODEL) {
-    console.log('agent: using model ' + process.env.OLLAMA_MODEL + ' (from env)');
-    return process.env.OLLAMA_MODEL;
-  }
-  const ram = availableRAM();
-
-  // Check which models are actually available (pulled)
-  let available = [];
-  try {
-    const tagsRes = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(10000) });
-    if (tagsRes.ok) {
-      const tags = await tagsRes.json();
-      available = (tags.models || []).map(m => m.name);
+    const res = await fetch(OLLAMA_HOST + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: model,
+        messages: [
+          { role: 'system', content: system },
+          { role: 'user', content: user }
+        ],
+        stream: false,
+        options: { temperature: 0.3, num_predict: maxTokens || 1024 }
+      })
+    });
+    if (res.ok) {
+      const j = await res.json();
+      const text = (j.message && j.message.content) || '';
+      if (text.trim()) return { text: text.trim(), model: model + ' (local)' };
+    } else {
+      const body = await res.text().catch(function () { return ''; });
+      console.log('agent: Ollama ' + model + ' → ' + res.status + ' ' + body.slice(0, 200));
     }
-  } catch (e) { /* server down */ }
-
-  // Pick highest-scoring model that fits RAM AND is pulled
-  for (const entry of MODEL_RANKING) {
-    // Allow model if RAM is sufficient OR if swap exists (16GB swap on runner)
-    const effectiveRAM = ram.totalGB + 16; // account for 16GB swap
-    if (effectiveRAM >= entry.ramGB) {
-      const isAvailable = available.some(a => a.startsWith(entry.ollama) || a.includes(entry.ollama));
-      if (isAvailable || available.length === 0) {
-        console.log('agent: selected model ' + entry.ollama + ' (score ' + entry.score + ', RAM ' + ram.totalGB.toFixed(1) + 'GB + 16GB swap)');
-        return entry.ollama;
-      }
-    }
-  }
-  // Fallback: smallest model
-  const fallback = MODEL_RANKING[MODEL_RANKING.length - 1];
-  console.log('agent: fallback to ' + fallback.ollama);
-  return fallback.ollama;
-}
-
-async function callLLM(system, user, maxTokens, priority) {
-  // Skip if LLM has failed too many times this cycle
-  if (_llmFailCount >= LLM_MAX_FAILS) {
-    console.log('agent: LLM skipped (failed ' + _llmFailCount + ' times this cycle)');
-    return null;
-  }
-  // Use 27B always — no fallback
-  let model = await pickBestModel();
-  _llmCallCount++;
-  const lessons = memory.getLessonsPrompt();
-  const fullSystem = lessons ? system + '\n\n' + lessons : system;
-
-  // EXACTLY the llm-autofix request shape — the only free-27B path proven to
-  // work on this runner. Extra options (num_ctx/num_thread/num_batch/use_mmap/
-  // top_k/top_p) change the KV-cache layout after warmup and the server dies
-  // with "fetch failed" on every real call (run #53: warmup 218s OK, then all
-  // generation attempts = instant fetch failed).
-  for (let attempt = 1; attempt <= 3; attempt++) {
-    try {
-      // Server dead? restart with the same env the workflow uses.
-      const health = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(10000) }).catch(() => null);
-      if (!health || !health.ok) {
-        console.log('agent: Ollama dead, restarting...');
-        await restartOllama();
-      }
-
-      const timeoutMs = model.includes('27b') ? 900000 : 300000;
-      console.log('agent: calling ' + model + ' (timeout ' + Math.round(timeoutMs / 60000) + 'min, minimal opts)');
-      const res = await fetch(OLLAMA_HOST + '/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: model,
-          messages: [
-            { role: 'system', content: fullSystem },
-            { role: 'user', content: user }
-          ],
-          stream: false,
-          // Proven shape from llm-autofix.js — do NOT add options.
-          options: { temperature: 0.3, num_predict: maxTokens || 1024 }
-        }),
-        signal: AbortSignal.timeout(timeoutMs)
-      });
-      if (res.ok) {
-        const j = await res.json();
-        const text = (j.message && j.message.content) || '';
-        if (text.trim()) { _llmFailCount = 0; return { text: text.trim(), model: model }; }
-        console.log('agent: LLM returned empty text');
-      } else {
-        const body = await res.text().catch(() => '');
-        console.log('agent: LLM returned ' + res.status + ' ' + body.slice(0, 200));
-      }
-    } catch (e) {
-      _llmFailCount++;
-      const cause = e && e.cause ? (' cause=' + (e.cause.message || e.cause.code || e.cause)) : '';
-      console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message + cause + ' (model: ' + model + ')');
-      // Tail ollama.log — "fetch failed" usually means the server was OOM-killed
-      try {
-        const tail = execSync('tail -20 /tmp/ollama.log 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }).toString();
-        if (tail.trim()) console.log('agent: ollama.log tail:\n' + tail.trim());
-      } catch (e2) {}
-      if (attempt < 3) {
-        console.log('agent: restarting Ollama and retrying ' + model + '...');
-        await restartOllama();
-        if (model.includes('27b')) {
-          // Full load takes ~90-250s; wait before the next request so the
-          // server is not asked to load+generate under a cold start race.
-          await new Promise(r => setTimeout(r, 60000));
-        }
-      }
-    }
+  } catch (e) {
+    console.log('agent: Ollama not reachable: ' + (e.message || e));
   }
   return null;
 }
@@ -1681,43 +1549,14 @@ async function agentSelfCheck() {
 
 async function main() {
   const log = loadJson(LOG, { runs: [], lastRun: null, model: null });
-  const model = await pickBestModel();
+  // Model comes from the workflow env — same as llm-autofix. No warmup, no
+  // restarts: llm-autofix calls the API cold and generation works.
+  const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
   log.model = model;
   console.log('agent: using model ' + model);
 
-  // Warm up: load model into RAM. Retry until 27B loads (needs 5-10 min from swap).
-  console.log('agent: warming up ' + model + ' (loading into RAM, retrying until ready)...');
-  let warmed = false;
-  for (let w = 1; w <= 3 && !warmed; w++) {
-    const warmStart = Date.now();
-    try {
-      const warm = await fetch(OLLAMA_HOST + '/api/chat', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ model: model, messages: [{ role: 'user', content: 'Say OK' }], stream: false, options: { temperature: 0.3, num_predict: 5 } }),
-        signal: AbortSignal.timeout(600000)
-      });
-      const warmSecs = Math.round((Date.now() - warmStart) / 1000);
-      if (warm.ok) {
-        console.log('agent: model loaded and ready in ' + warmSecs + 's (attempt ' + w + ')');
-        warmed = true;
-      } else {
-        console.log('agent: warmup returned ' + warm.status + ' after ' + warmSecs + 's (attempt ' + w + ')');
-        await restartOllama();
-      }
-    } catch (e) {
-      const warmSecs = Math.round((Date.now() - warmStart) / 1000);
-      console.log('agent: warmup failed after ' + warmSecs + 's (attempt ' + w + '): ' + e.message);
-      if (w < 3) await restartOllama();
-    }
-  }
-  if (!warmed) console.log('agent: warmup incomplete — will load on first real call');
-
   const results = [];
-  // LLM-dependent agents FIRST while RAM/disk are clean (right after warmup).
-  // SEO/A11Y/Code/Perf process 262 pages and fill page cache + Node heap; if
-  // they run before generation, the 27B model gets OOM-killed under that
-  // pressure (observed: warmup loads in 251s, then every generate = fetch failed).
+  // LLM agents first (Foresight/Questions/Content), then the 262-page fixers.
   let agents = [
     ['Foresight', agentForesight],
     ['Questions', agentQuestionQuality],
@@ -1727,7 +1566,6 @@ async function main() {
     ['Mindmaps', agentMindmaps],
     ['Features', agentFeatures],
     ['Proposals', agentProposals],
-    // Non-LLM fixers last — safe to run even if LLM already gave up.
     ['Workflows', agentWorkflows],
     ['SelfCheck', agentSelfCheck],
     ['SEO', agentSEO],
