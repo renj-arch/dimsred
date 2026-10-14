@@ -85,13 +85,19 @@ async function pickBestModel() {
   return fallback.ollama;
 }
 
-async function callLLM(system, user, maxTokens) {
+async function callLLM(system, user, maxTokens, priority) {
   // Skip if LLM has failed too many times this cycle
   if (_llmFailCount >= LLM_MAX_FAILS) {
     console.log('agent: LLM skipped (failed ' + _llmFailCount + ' times this cycle)');
     return null;
   }
-  const model = await pickBestModel();
+  // Use best model for high-priority tasks, smaller for routine
+  let model;
+  if (priority === 'high') {
+    model = await pickBestModel(); // 27B or best available
+  } else {
+    model = process.env.OLLAMA_MODEL || 'qwen3.5:4b'; // faster for routine
+  }
   const lessons = memory.getLessonsPrompt();
   const fullSystem = lessons ? system + '\n\n' + lessons : system;
 
@@ -460,7 +466,8 @@ async function agentContent() {
     const result = await callLLM(
       'Generate 5 MCQ questions for UPSC/SSC category "' + catName + '". Return strict JSON array: [{"question":"...","options":["a","b","c","d"],"answer":0,"explanation":"..."}]. No markdown.',
       'Match this style:\n' + sampleQ.slice(0, 2).map(q => '- ' + q.question).join('\n'),
-      1500
+      1500,
+      'high'
     );
     if (!result) continue;
 
@@ -525,7 +532,8 @@ async function agentFigures() {
       'Return strict JSON: {"title":"...","svg":"<svg xmlns=...>...</svg>","caption":"2-3 sentence explanation"}. ' +
       'The SVG must be self-contained, viewBox="0 0 800 600", use only black/gray/white, and show clear labels.',
       'Topic: ' + gap.topic + '. Make it educational and exam-relevant for UPSC.',
-      2000
+      2000,
+      'high'
     );
     if (!result) continue;
 
@@ -599,7 +607,8 @@ async function agentFlowcharts() {
       'Return strict JSON: {"title":"...","steps":["step1","step2",...],"svg":"<svg...>...</svg>","caption":"..."}. ' +
       'The SVG must show connected boxes with arrows, viewBox="0 0 600 800", monochrome.',
       'Topic: ' + gap.topic + ' (' + gap.subject + '). UPSC-relevant process.',
-      2000
+      2000,
+      'high'
     );
     if (!result) continue;
 
@@ -668,7 +677,8 @@ async function agentMindmaps() {
       'Return strict JSON: {"title":"...","branches":["branch1","branch2",...],"svg":"<svg...>...</svg>","caption":"..."}. ' +
       'The SVG must be a radial/tree diagram, viewBox="0 0 900 700", monochrome.',
       'Topic: ' + gap.topic + ' (' + gap.subject + '). Branches = key subtopics for UPSC.',
-      2000
+      2000,
+      'high'
     );
     if (!result) continue;
 
@@ -749,7 +759,8 @@ async function agentFeatures() {
       'Use inline CSS (dark theme: bg #0a0a0a, text #e5e5e5, accent #3b82f6, cards #111). ' +
       'Return ONLY the HTML starting with <!DOCTYPE html>.',
       'Subject: ' + subj.name,
-      2500
+      2500,
+      'high'
     );
     if (result) {
       let html = result.text.replace(/```html\n?/g, '').replace(/```\n?/g, '').trim();
@@ -779,7 +790,7 @@ async function agentFeatures() {
       'Create an HTML comparison table page for: "' + cmp.title + '". ' +
       'Return strict JSON: {"title":"...","intro":"...","rows":[{"feature":"...","a":"...","b":"..."},...6 rows],"conclusion":"..."}. ' +
       'Make it exam-focused with specific details.',
-      'Compare: ' + cmp.a + ' vs ' + cmp.b, 2000
+      'Compare: ' + cmp.a + ' vs ' + cmp.b, 2000, 'high'
     );
     if (!result) continue;
     try {
@@ -827,7 +838,7 @@ ${d.conclusion ? '<div class="conclusion"><b>Key takeaway:</b> ' + esc(d.conclus
       'Create a quick revision sheet HTML page for "' + rev.title + '". ' +
       'Return strict JSON: {"title":"...","sections":[{"heading":"...","points":["...","...",...5]}...4 sections]}. ' +
       'Points must be concise, factual, exam-relevant one-liners.',
-      'Subject: ' + rev.subject, 2500
+      'Subject: ' + rev.subject, 2500, 'high'
     );
     if (!result) continue;
     try {
@@ -866,7 +877,7 @@ ${sections}
       'Create an HTML mnemonics page for UPSC/SSC exams. ' +
       'Return strict JSON: {"title":"...","sections":[{"heading":"...","items":[{"abbr":"...","meaning":"...","mnemonic":"..."}...5]}...3 sections]}. ' +
       'Include: acronyms (IAS, IPS, IFS...), constitutional articles, and geography mnemonics.',
-      'Make it exam-focused with memory tricks.', 2500
+      'Make it exam-focused with memory tricks.', 2500, 'high'
     );
     if (result) {
       try {
@@ -1040,7 +1051,8 @@ async function agentProposals() {
     'Return strict JSON array: [{"title":"...","description":"1-2 sentences","why":"why this is novel and exam students need it","prototypePrompt":"detailed description for building a working prototype"}]. ' +
     'No markdown.',
     'Inventory: ' + inventory.totalPages + ' pages. Be CREATIVE. Invent, don\'t iterate.',
-    4000
+    4000,
+    'high'
   );
 
   if (!result) return { agent: 'proposals', fixes: fixes };
@@ -1079,7 +1091,8 @@ async function agentProposals() {
         'Use inline CSS. Dark theme: bg #0a0a0a, text #e5e5e5, accent #3b82f6, cards #111. ' +
         'Make it interactive if possible (buttons, inputs, animations). Return ONLY HTML starting with <!DOCTYPE html>.',
         'Feature: ' + best.title + '. Make it look polished and exam-focused.',
-        3000
+        3000,
+        'high'
       );
       if (proto) {
         let html = proto.text.replace(/```html\n?/g, '').replace(/```\n?/g, '').trim();
