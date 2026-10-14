@@ -193,11 +193,31 @@ function setupTabs() {
   });
 }
 
+function deriveType(p) {
+  var id = String(p.id || '').toLowerCase() + ' ' + String(p.paper || '').toLowerCase();
+  if (/prelim|tier 1|cbt 1/.test(id)) return 'Prelims';
+  if (/mains|tier 2|cbt 2/.test(id)) return 'Mains';
+  if (/interview|personality/.test(id)) return 'Interview';
+  if (/sectional/.test(id)) return 'Sectional';
+  return 'Prelims';
+}
+
 function loadPapers() {
   fetch('data/papers.json')
     .then(function(r) { return r.json(); })
     .then(function(data) {
-      ALL_PAPERS = data;
+      var list = Array.isArray(data) ? data : (data.papers || []);
+      ALL_PAPERS = {};
+      list.forEach(function(p) {
+        if (!p || !p.id) return;
+        var rec = Object.assign({}, p);
+        if (!rec.type) rec.type = deriveType(rec);
+        if (rec.cutoff && typeof rec.cutoff === 'object') {
+          rec.cutoff = rec.cutoff.general != null ? rec.cutoff.general : null;
+        }
+        if (!rec.subject && rec.paper) rec.subject = rec.paper;
+        ALL_PAPERS[p.id] = rec;
+      });
       document.getElementById('loadingState').style.display = 'none';
       renderYearPills();
       renderPaperGrid();
