@@ -36,6 +36,20 @@ let _llmCallCount = 0;
 const LLM_MAX_FAILS = 3;
 const LLM_BEST_CALLS = 2; // First 2 calls use 27B, rest use 4B
 
+async function restartOllama() {
+  try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
+  await new Promise(r => setTimeout(r, 3000));
+  try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
+  await new Promise(r => setTimeout(r, 10000));
+  for (let w = 0; w < 30; w++) {
+    const h = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(5000) }).catch(() => null);
+    if (h && h.ok) { console.log('agent: Ollama restarted'); return true; }
+    await new Promise(r => setTimeout(r, 1000));
+  }
+  console.log('agent: Ollama restart FAILED');
+  return false;
+}
+
 // ── Self-upgrading model selector ──
 const MODEL_RANKING = [
   { ollama: 'qwen3.8:27b',              ramGB: 18, score: 90.3 },
@@ -107,21 +121,17 @@ async function callLLM(system, user, maxTokens, priority) {
   // Health check: ensure Ollama is alive before each call
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
-      // Check server health
+      // Check server health + restart cleanly before each call
       const health = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(10000) }).catch(() => null);
       if (!health || !health.ok) {
         console.log('agent: Ollama dead, restarting...');
-        // Try to kill via API first, then restart
-        try { await fetch(OLLAMA_HOST + '/api/generate', { method: 'DELETE', signal: AbortSignal.timeout(5000) }).catch(() => {}); } catch (e) {}
-        try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
-        try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e) {}
-        await new Promise(r => setTimeout(r, 15000));
-        // Wait for server
-        for (let w = 0; w < 30; w++) {
-          const h2 = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(5000) }).catch(() => null);
-          if (h2 && h2.ok) break;
-          await new Promise(r => setTimeout(r, 1000));
-        }
+        await restartOllama();
+      }
+
+      // For 27B: preemptively unload any model to free memory before loading
+      if (model.includes('27b')) {
+        try { await fetch(OLLAMA_HOST + '/api/generate', { method: 'DELETE', body: JSON.stringify({}), signal: AbortSignal.timeout(5000) }); } catch (e) {}
+        await new Promise(r => setTimeout(r, 3000));
       }
 
       const is27b = model.includes('27b');
@@ -166,21 +176,13 @@ async function callLLM(system, user, maxTokens, priority) {
       console.log('agent: LLM attempt ' + attempt + ' failed: ' + e.message);
       if (attempt < 3) {
         // Fallback to smaller model on timeout
-        if (e.message.includes('timeout') || e.message.includes('aborted')) {
+        if (e.message.includes('timeout') || e.message.includes('aborted') || e.message.includes('fetch failed')) {
           if (model.includes('27b')) { model = 'qwen3.5:9b'; console.log('agent: falling back to 9B'); }
           else if (model.includes('9b')) { model = 'qwen3.5:4b'; console.log('agent: falling back to 4B'); }
           else if (model.includes('4b')) { model = 'qwen3.5:2b'; console.log('agent: falling back to 2B'); }
         }
-        // Restart Ollama
-        try { await fetch(OLLAMA_HOST + '/api/generate', { method: 'DELETE', signal: AbortSignal.timeout(5000) }).catch(() => {}); } catch (e2) {}
-        try { execSync('kill $(pgrep -f "ollama serve") 2>/dev/null || true', { timeout: 5000, shell: '/bin/bash' }); } catch (e2) {}
-        try { execSync('nohup ollama serve > /tmp/ollama.log 2>&1 &', { timeout: 5000, shell: '/bin/bash' }); } catch (e2) {}
-        await new Promise(r => setTimeout(r, 20000));
-        for (let w = 0; w < 30; w++) {
-          const h2 = await fetch(OLLAMA_HOST + '/api/tags', { signal: AbortSignal.timeout(5000) }).catch(() => null);
-          if (h2 && h2.ok) break;
-          await new Promise(r => setTimeout(r, 1000));
-        }
+        // Restart Ollama cleanly
+        await restartOllama();
       }
     }
   }

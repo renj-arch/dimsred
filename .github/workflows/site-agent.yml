@@ -115,6 +115,15 @@ jobs:
           echo "Using Qwen3.8-27B (score 90.3 — BEST free model)"
           ollama list
 
+      # Free memory before agent runs: drop page cache, clean temp
+      - name: Free memory
+        run: |
+          sync
+          sudo sh -c 'echo 3 > /proc/sys/vm/drop_caches' || true
+          sudo apt-get clean || true
+          rm -rf /tmp/*.log 2>/dev/null || true
+          free -h
+
       - name: Run site agent (continuous)
         env:
           OLLAMA_MODEL: ${{ env.MODEL }}
