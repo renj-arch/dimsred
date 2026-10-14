@@ -41,6 +41,8 @@ jobs:
             scripts
             .github/workflows
             data/faults.json
+            data/browser-test.json
+            data/agent-log.json
             data/figure-gaps.json
             data/topic-gaps.json
             data/agent-log.json
@@ -122,7 +124,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/agent-log.json data/autofix-log.json data/ideas.json 2>/dev/null || true
+          git add data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json 2>/dev/null || true
           git add figures/ data/questions/ 2>/dev/null || true
           git add -- *.html prototype-*.html 2>/dev/null || true
           # New pages created by the agent (not in sparse-checkout list)
