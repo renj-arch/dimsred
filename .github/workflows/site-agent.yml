@@ -37,6 +37,10 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          # data/questions (~9GB) is EXCLUDED on purpose: it caused 33-min
+          # checkouts that die with "early EOF", filled the disk, and OOM'd
+          # Ollama during generation. Question-quality work runs in the
+          # dedicated question-quality workflow that checks out questions only.
           sparse-checkout: |
             scripts
             .github/workflows
@@ -49,7 +53,6 @@ jobs:
             data/ideas.json
             data/pyq-patterns.json
             data/site-audit.json
-            data/questions
             figures
           sparse-checkout-cone: false
           token: ${{ secrets.PAT }}
@@ -149,7 +152,7 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
           git add data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json 2>/dev/null || true
-          git add figures/ data/questions/ 2>/dev/null || true
+          git add figures/ 2>/dev/null || true
           git add -- *.html prototype-*.html 2>/dev/null || true
           # New pages created by the agent (not in sparse-checkout list)
           git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add 2>/dev/null || true

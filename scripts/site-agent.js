@@ -1724,7 +1724,7 @@ async function main() {
   // SEO/A11Y/Code/Perf process 262 pages and fill page cache + Node heap; if
   // they run before generation, the 27B model gets OOM-killed under that
   // pressure (observed: warmup loads in 251s, then every generate = fetch failed).
-  const agents = [
+  let agents = [
     ['Foresight', agentForesight],
     ['Questions', agentQuestionQuality],
     ['Content', agentContent],
@@ -1741,6 +1741,11 @@ async function main() {
     ['A11Y', agentA11Y],
     ['Code', agentCode]
   ];
+  // AGENT_ONLY=questions: dedicated question-quality workflow (questions data
+  // checked out, site pages are not). Run only the agents that touch questions.
+  if (process.env.AGENT_ONLY === 'questions') {
+    agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content');
+  }
 
   for (const [name, fn] of agents) {
     try {
