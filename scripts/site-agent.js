@@ -17,6 +17,17 @@
 const fs = require('fs');
 const path = require('path');
 const { execSync } = require('child_process');
+const memory = require('./agent-memory');
+
+// Seed initial rules from hard-won experience
+memory.addRule('NEVER replace a dead link with href="#" — link to a real page or convert to plain text', 'Replacing with # broke the homepage navigation');
+memory.addRule('Always check if a file exists before deleting or replacing references to it', 'Agent once removed working script references');
+memory.addRule('When modifying exam card links, map to the correct exam page (UPSC→papers, SSC→ssc-je, science→science.html)', 'Agent linked all cards to the same page');
+memory.addRule('NEVER load all 9GB of data/questions into memory — process files one at a time', 'Caused OOM crashes');
+memory.addRule('When adding alt text to images, derive it from the filename, not random words', 'Agent once added gibberish alt text like "vlymbooq"');
+memory.addRule('Check that Ollama server is running before calling it — start it if not', 'Agent calls failed because server was dead');
+memory.addRule('Add timeout-minutes to all GitHub Actions jobs', 'Jobs were cancelled after 6h without timeout');
+memory.addRule('Use NODE_OPTIONS=--max-old-space-size=4096 for node scripts processing large data', 'Prevents OOM on 7GB runner');
 
 const LOG = 'data/agent-log.json';
 const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
@@ -48,6 +59,8 @@ async function pickBestModel() {
 
 async function callLLM(system, user, maxTokens) {
   const model = await pickBestModel();
+  const lessons = memory.getLessonsPrompt();
+  const fullSystem = lessons ? system + '\n\n' + lessons : system;
   try {
     const res = await fetch(OLLAMA_HOST + '/api/chat', {
       method: 'POST',
@@ -55,13 +68,13 @@ async function callLLM(system, user, maxTokens) {
       body: JSON.stringify({
         model: model,
         messages: [
-          { role: 'system', content: system },
+          { role: 'system', content: fullSystem },
           { role: 'user', content: user }
         ],
         stream: false,
         options: { temperature: 0.3, num_predict: maxTokens || 1024 }
       }),
-      signal: AbortSignal.timeout(300000) // 5 min: first call loads model into RAM
+      signal: AbortSignal.timeout(300000)
     });
     if (res.ok) {
       const j = await res.json();
@@ -1184,6 +1197,26 @@ async function main() {
   });
   if (log.runs.length > 15) log.runs = log.runs.slice(-15); // keep last 15 runs
   saveJson(LOG, log);
+
+  // Update agent memory
+  memory.updateStats(totalFixes);
+  if (totalFixes > 0) {
+    memory.addWin('Cycle fixed ' + totalFixes + ' issues across ' + results.filter(r => r.fixes && r.fixes.length).length + ' agents', 'high');
+  }
+
+  // Record specific lessons from this run
+  for (const r of results) {
+    if (!r.fixes) continue;
+    for (const f of r.fixes) {
+      if (f.kind === 'critical') {
+        memory.addLesson(f.page || 'unknown', f.fix, 'critical');
+      }
+      // Learn from successful link fixes
+      if (f.fix && f.fix.includes('Linked') && f.fix.includes('→')) {
+        memory.addLesson('dead-link:' + (f.page || ''), 'When a link is dead, map it to the correct destination page', 'info');
+      }
+    }
+  }
 
   console.log('agent: total ' + totalFixes + ' fix(es) this run');
   results.forEach(r => {

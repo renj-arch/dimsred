@@ -1007,7 +1007,7 @@ function boot(idx, meta) {
     scanned.toLocaleString() + ' scanned), built ' + (m.builtAt || '?').slice(0, 10);
   updateStatus();
   el('samples').innerHTML = SAMPLES.map(function (s) {
-    return '<button data-q="' + esc(s) + '">' + esc(s.length > 60 ? s.slice(0, 57) + 'â€¦' : s) + '</button>';
+    return '<button data-q="' + esc(s) + '">' + esc(s.length > 60 ? s.slice(0, 57) + '…' : s) + '</button>';
   }).join('');
   el('out').innerHTML = '<div class="empty">Ask a question above. The engine will either return verbatim corpus sentences with source links, or tell you it cannot answer.</div>';
 }

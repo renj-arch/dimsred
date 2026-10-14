@@ -117,7 +117,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
   <h1><b>&#9673;</b> UPSC Flowchart</h1>
   <button class="btn" id="bBack" title="Back">&#8592;</button>
   <button class="btn" id="bFwd" title="Forward">&#8594;</button>
-  <input class="searchbar" id="q" type="text" list="topiclist" placeholder="Search any topic: Revolt of 1857, Gandhi, Constitution, Earthquakeâ€¦" autocomplete="off">
+  <input class="searchbar" id="q" type="text" list="topiclist" placeholder="Search any topic: Revolt of 1857, Gandhi, Constitution, Earthquake…" autocomplete="off">
   <datalist id="topiclist"></datalist>
   <button class="btn" id="bGo">Go</button>
   <button class="btn" id="bTimeline" title="Open this topic's full timeline profile on the map" disabled>Open in timeline map</button>
@@ -137,7 +137,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
 <div id="chartwrap"><svg id="chart" xmlns="http://www.w3.org/2000/svg"></svg></div>
 <div class="note" id="note"></div>
 <div class="rev" id="revpanel"></div>
-<div class="msg" id="msg">Loading knowledge graphâ€¦</div>
+<div class="msg" id="msg">Loading knowledge graph…</div>
 <footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a verified relationship from data/relations.json or an authored mind-tree (data/topic-layers.json). Co-mention lines are gone: they were word co-occurrence over a trivia corpus, not knowledge, and they were deciding which cards appeared at all. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) Â· <b>double-click</b> to drill into it as the new centre Â· <b>Grow/Shrink</b> adds or removes a ring across the whole map Â· <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
 <!-- The graph resolver lives in one place and is shared with scripts/build-timeline.js,
      scripts/gen-topic-layers.js, map.html and revision.html. It used to be copied
@@ -413,7 +413,7 @@ function fetchJson(url){return fetch(url).then(function(r){if(!r.ok)throw new Er
 var LAYERS={},WT={};
 // Curated edges live in CADJ, not ADJ: authored tree is only visible when you
 // open that topic itself, so another topic that just happens to co-mention the
-// central (Ashoka â€”relatedâ†’ Gandhi) can never drag the whole Gandhi tree in.
+// central (Ashoka â€”related→ Gandhi) can never drag the whole Gandhi tree in.
 function cadj(a,b,rel){
   if(!CADJ[a])CADJ[a]={};if(!CADJ[b])CADJ[b]={};
   CADJ[a][b]=rel;CADJ[b][a]=rel;
@@ -428,7 +428,7 @@ function bornAfter(x,y){
   return x.span.min>y.span.max;
 }
 // Author-order sequence for curated sections, so the tree renders the branches
-// in the human-written order (Personal Life â†’ â€¦ â†’ Legacy) instead of by type
+// in the human-written order (Personal Life → … → Legacy) instead of by type
 // priority. Assigned during curate() and read by graphFor() when ordering lanes.
 var LAYER_SO=0;
 var NOTES={};
@@ -487,7 +487,7 @@ function curate(layers){
         }
       });
       // nested branches become their own section lanes, still in author order,
-      // so a sub-tree like "Indian Freedom Struggle â†’ Non-Cooperation Movement"
+      // so a sub-tree like "Indian Freedom Struggle → Non-Cooperation Movement"
       // renders as sibling lanes directly after the parent branch
       (br.branches||[]).forEach(function(sub,sj){addBranch(bid,sub,sj,path+'.'+sj);});
       return bid;
@@ -673,7 +673,7 @@ function buildIndexes(){
 // Single-token names that are never personal names: clause/discourse fragments
 // ("Tim", "Damage", "Subsequently") and abstract common nouns ("Red", "Straw",
 // "Light") that the kin miner absorbs when a paragraph-lead noun slips into a
-// "â€¦was the son|founder ofâ€¦" pattern. Same words the builder's KIN_BAN_WORDS
+// "…was the son|founder of…" pattern. Same words the builder's KIN_BAN_WORDS
 // refuses; enforced here so already-shipped data stays just as clean. Seeded
 // topics are exempt â€” a curated name wins even if it collides.
 // Kin-relation junk names ("Tim", "Crown", "Population") and the junk/hub gates
@@ -728,7 +728,7 @@ function graphFor(id){
   var hopOf={};
   var levels=[[central]];
   seen[id]=1;hopOf[id]=0;
-  // A topic with an authored mind-tree (a neighbour whose id is crt|â€¦) is drawn
+  // A topic with an authored mind-tree (a neighbour whose id is crt|…) is drawn
   // as that tree: the authored branches ARE the relevance map, so the broad
   // co-mention flood (COVID-19 Â· Malaria Â· Fisheries Â· MGNREGA next to Gandhi)
   // is dropped entirely and never upstages the curated spine.
@@ -781,16 +781,16 @@ function graphFor(id){
     if(rel==='related'&&!curated&&bornAfter(n,central)&&
        !(nt(n)==='person'&&(w||0)>=8&&/^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$/.test(n.name)))return;
     // deeper hops need stronger co-mentions, else off-topic chains flood the outer
-    // rings. In non-curated flows a second-hop co-mention (Everest â€”coâ†’ WWII â€”
-    // coâ†’ Korean War w379 / Great Depression / COVID) is just a mega-topic clique
+    // rings. In non-curated flows a second-hop co-mention (Everest â€”co→ WWII â€”
+    // co→ Korean War w379 / Great Depression / COVID) is just a mega-topic clique
     // shared by every UPSC paper, so co-mention hops are limited to the central's
     // own ring; deeper rings ride typed edges only.
     if(rel==='related'&&hp>=2)return;
     // chained co-mentions far from the topic's own era are paragraph noise
-    // (Ashoka â€”relatedâ€¦â†’ French Revolution â€”relatedâ€¦â†’ COVID-19), and an hp-2
+    // (Ashoka â€”related…→ French Revolution â€”related…→ COVID-19), and an hp-2
     // typed edge dragged in through a middle person is usually that person's own
-    // genealogy, not the topic's (Ashoka â†’ Kanishka â†’ his great-grandfather, or
-    // â†’ Maratha Empire 'preceded'). Same era rule as the map-side Story strip;
+    // genealogy, not the topic's (Ashoka → Kanishka → his great-grandfather, or
+    // → Maratha Empire 'preceded'). Same era rule as the map-side Story strip;
     // direct hop-1 facts are left alone and undated targets ride through.
     if(hp>=2&&!curated){
       var mt=midYear(n),m0=midYear(central);
@@ -814,9 +814,9 @@ function graphFor(id){
     // relates to a scheme dictionary term (Gandhiâ€”COVID-19, WWIIâ€”MGNREGA noise)
     if(rel==='related'&&src&&((nt(src)==='person'&&NOISE_TYPES[nt(n)])||(nt(src)==='event'&&nt(n)==='scheme')))return;
     // Kinship is only meaningful between two humans: a "wife of Nehru" line inside
-    // a Tuberculosis topic must never surface "Tuberculosis â€”wifeâ†’ Nehru".
+    // a Tuberculosis topic must never surface "Tuberculosis â€”wife→ Nehru".
     if(rel!=='related'&&!fromSection&&inList(rel,KIN_RELS)&&!(src&&nt(src)==='person'&&nt(n)==='person'))return;
-    // A mega-hub (Constantine, Alexander, Muhammad, â€¦) linked by a kin relation to a
+    // A mega-hub (Constantine, Alexander, Muhammad, …) linked by a kin relation to a
     // small/undated person is overwhelmingly a name-ambiguity misfire. Hubs stay
     // as related/event cards, but never as kin inside the person lane.
     if(rel!=='related'&&!fromSection&&inList(rel,KIN_RELS)&&nt(n)==='person'&&isHub(n))return;
@@ -848,9 +848,9 @@ function graphFor(id){
         var ck=CUR_KEY[id];
         for(var k2 in c0){
           // CADJ is symmetric on real ids: other topics' branches that merely
-          // LIST the central as an item (cidâ€”coversâ†’ battle-of-talikota's Key
+          // LIST the central as an item (cidâ€”covers→ battle-of-talikota's Key
           // Events) would graft that whole foreign tree onto this map. Only our
-          // own authored branches ('crt|<key>|B|â€¦') may attach to the central.
+          // own authored branches ('crt|<key>|B|…') may attach to the central.
           if(src.id===id&&!(c0[k2]==='covers'&&String(k2).indexOf('crt|'+ck+'|B|')===0))continue;
           fa[k2]=c0[k2];
         }
@@ -1213,7 +1213,7 @@ function renderFlow(id){
     if(drawn[pair])return;drawn[pair]=1;relDrawn++;
     var col=(RELFAM[r.fam]&&RELFAM[r.fam].color)||'#a78bfa';
     var an=BY_ID[r.a]?BY_ID[r.a].name:'?',bn=BY_ID[r.b]?BY_ID[r.b].name:'?';
-    var fwd=an+' â€”'+r.rel+'â†’ '+bn;
+    var fwd=an+' â€”'+r.rel+'→ '+bn;
     var title=r.ev?(fwd+'\n\n'+r.ev):fwd;
     if(r.more&&r.more.length)title+='\n\nalso: '+r.more.join(', ');
     body+='<path class="rel" data-a="'+esc(r.a)+'" data-b="'+esc(r.b)+'" d="'+edgePath(r.a,r.b)+'" fill="none" stroke="'+col+'" stroke-width="1.8" marker-end="url(#arw'+col.replace('#','')+')"><title>'+esc(title)+'</title></path>';
@@ -1249,7 +1249,7 @@ function renderFlow(id){
     }
     var tp=POS[e.b]&&laneColor[POS[e.b].lane]?laneColor[POS[e.b].lane]:'#9aa4b8';
     var path=edgePath(e.a,e.b);
-    body+='<path class="edge" data-a="'+esc(e.a)+'" data-b="'+esc(e.b)+'" d="'+path+'" fill="none" stroke="'+tp+'" stroke-width="1.4" marker-end="url(#arw'+tp.replace('#','')+')"><title>'+esc((BY_ID[e.a]?BY_ID[e.a].name:'?')+' â€”'+esc(e.rel)+'â†’ '+(BY_ID[e.b]?BY_ID[e.b].name:'?'))+'</title></path>';
+    body+='<path class="edge" data-a="'+esc(e.a)+'" data-b="'+esc(e.b)+'" d="'+path+'" fill="none" stroke="'+tp+'" stroke-width="1.4" marker-end="url(#arw'+tp.replace('#','')+')"><title>'+esc((BY_ID[e.a]?BY_ID[e.a].name:'?')+' â€”'+esc(e.rel)+'→ '+(BY_ID[e.b]?BY_ID[e.b].name:'?'))+'</title></path>';
     var A=anchors(e.a,e.b);
     var mx=(A.a.x+A.b.x)/2,my=(A.a.y+A.b.y)/2;
     var tx=esc(trunc(e.rel,28)),tw=tx.replace(/&amp;/g,'&').length*5.6+8;
@@ -1551,7 +1551,7 @@ function paintCrumb(){
   el.innerHTML='Paths: '+TRAIL.map(function(id,i){
     var n=BY_ID[id];
     if(!n)return '';
-    return '<a onclick="jump('+i+')" title="'+esc((nt(n)||'')+' â€¢ '+esc(spanLabel(n)))+'">'+esc(trunc(n.name,28))+'</a>';
+    return '<a onclick="jump('+i+')" title="'+esc((nt(n)||'')+' • '+esc(spanLabel(n)))+'">'+esc(trunc(n.name,28))+'</a>';
   }).join(' â€º ');
 }
 function jump(i){
@@ -1579,7 +1579,7 @@ function home(){
   var samples=['Revolt of 1857','Indian National Congress','Mahatma Gandhi','Partition of Bengal','Ashoka','Quit India Movement','Battle of Plassey','Volcano'];
   msg('Start with a topic below, or search above.');
   var el=document.getElementById('msg');
-  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: <b>/</b> focuses search Â· <b>Random</b> explores Â· <b>Live photos</b> pulls Wikipedia portraits for people.</small><br><small>Every line on the board is a verified relationship (data/relations.json) or an authored mind-tree branch (data/topic-layers.json). Co-mention lines were removed as contamination. Every lane is one node type (Person, Event, Concept, Volcano, Org, Scheme, Diseaseâ€¦) â€” hover any line to see the relation and its evidence.</small>';
+  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: <b>/</b> focuses search Â· <b>Random</b> explores Â· <b>Live photos</b> pulls Wikipedia portraits for people.</small><br><small>Every line on the board is a verified relationship (data/relations.json) or an authored mind-tree branch (data/topic-layers.json). Co-mention lines were removed as contamination. Every lane is one node type (Person, Event, Concept, Volcano, Org, Scheme, Disease…) â€” hover any line to see the relation and its evidence.</small>';
 }
 function pick(s){var n=findByName(s);if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}else{msg('No topic "'+s+'" in this dataset. Curated volcano topics appear after re-running the timeline build.');}}
 function msg(t){document.getElementById('msg').textContent=t;}
@@ -1669,7 +1669,7 @@ function loadLivePhotos(){
   var todo=CARDS.filter(function(c){var nn=c&&BY_ID[c.id];return nn&&nt(nn)==='person'&&!IMGS[canon(nn.name)];});
   todo.forEach(function(c){queue.push(c);});
   var B=document.getElementById('bPhotos');
-  B.textContent='Loading photosâ€¦';
+  B.textContent='Loading photos…';
   B.disabled=true;
   function pump(){
     while(photoBusy<6&&queue.length){

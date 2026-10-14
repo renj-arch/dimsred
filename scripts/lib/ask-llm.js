@@ -48,9 +48,9 @@ if (typeof module === 'object' && module.exports) {
 // adds the option. Until the first training run finishes, only the three stock
 // sizes show -- nothing breaks, the option is simply absent.
 var MODELS = {
-  fast:    { id: 'mlc-ai/Qwen3-1.7B-q4f16_1-MLC',          label: 'Fast (1.7B)' },
-  quality: { id: 'mlc-ai/Qwen3.5-2B-q4f16_1-MLC',          label: 'Quality (2B, newest)' },
-  best:    { id: 'mlc-ai/Qwen3.5-4B-q4f16_1-MLC',          label: 'Best (4B, newest gen)' }
+  fast:    { id: 'Qwen2.5-0.5B-Instruct-q4f16_1-MLC',          label: 'Fast (1.7B)' },
+  quality: { id: 'Qwen2.5-0.5B-Instruct',          label: 'Quality (2B, newest)' },
+  best:    { id: 'Qwen2.5-1.5B-Instruct',          label: 'Best (4B, newest gen)' }
 };
 var DEFAULT_MODEL = 'fast';
 

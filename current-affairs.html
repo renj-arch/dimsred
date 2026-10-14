@@ -6197,7 +6197,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('jumpInput').max = (state.baseIdx || 0) + state.questions.length;
             var q = state.questions[state.idx];
             _markSeen(q);
-            var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static';
+            var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static' || q.type === 'qa' || (!q.options && q.a && q.fact);
             if (isLearning) {
                 state.answered = true; // skip answer interaction
                 document.getElementById('qNum').textContent = (state.baseIdx || 0) + state.idx + 1;

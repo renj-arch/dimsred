@@ -361,7 +361,7 @@ function generateQuestion(item, idx) {
 
   var q = {
     id: 'pib-' + idx,
-    type: 'mcq',
+    type: 'qa',
     category: 'PIB',
     region: '',
     source: 'PIB',
@@ -372,165 +372,105 @@ function generateQuestion(item, idx) {
     _feedId: item.id
   };
 
-  // 1. Try number fill-in-blank
-  var ne = extractNumber(t);
-  if (ne && ne.num && ne.num.length > 1) {
-    var displayNum = ne.num + (ne.unit ? ' ' + ne.unit : '');
-    var blankText = t.replace(new RegExp(ne.num.replace(',', '\\,'), ''), '_____');
-    if (blankText !== t && blankText.length > 20) {
-      var numVal = parseFloat(ne.num.replace(/,/g, ''));
-      var distractors = [];
-      for (var delta = 1; distractors.length < 3; delta++) {
-        var vals = [numVal + delta, numVal - delta, numVal + delta * 2, numVal - delta * 2];
-        for (var vi = 0; vi < vals.length && distractors.length < 3; vi++) {
-          if (vals[vi] > 0) {
-            var v = vals[vi].toString() + (ne.unit ? ' ' + ne.unit : '');
-            if (distractors.indexOf(v) === -1 && v !== displayNum) distractors.push(v);
-          }
-        }
-      }
-      while (distractors.length < 3) distractors.push('None');
-      q.question = blankText.length > 120 ? blankText.substring(0, 117) + '...' : blankText;
-      q.answer = displayNum;
-      q.options = shuffle([displayNum].concat(distractors.slice(0, 3)));
-      q.type = 'fill_blank';
-      q.hint = 'PIB: ' + cat + ' - Number';
-      q.fact = fact;
-      return q;
-    }
+  // Skip titles too short or too generic to make a meaningful question
+  if (!t || t.length < 20) return null;
+  if (/^(press release|pib|daily|update|news)\b/i.test(t)) return null;
+
+  var cleanTitle = t.replace(/['\u2018\u2019\u201C\u201D]/g, '').replace(/\s+/g, ' ').trim();
+  if (!cleanTitle || cleanTitle.length < 20) return null;
+
+  // Build explanation from fact (prefer fact, fall back to title + description)
+  var explanation = fact || cleanTitle;
+  if (d && d.length > 50 && explanation.length < 100) {
+    explanation = cleanTitle + '. ' + d.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().substring(0, 300);
   }
 
-  // 2. Try named entity fill-in-blank — entity MUST literally appear in title
-  var named = extractNamedEntity(t);
-  if (named && findEntityInTitle(t, named.value)) {
-    var answer = named.value;
-    var perPool = ['Prime Minister', 'President of India', 'Home Minister', 'Finance Minister', 'Defence Minister', 'Raksha Mantri', 'Vice President', 'Cabinet Secretary', 'Dr. Jitendra Singh'];
-    var schPool = ['Pradhan Mantri Awas Yojana', 'Ayushman Bharat', 'PM-KISAN', 'Jal Jeevan Mission', 'Digital India', 'Make in India', 'Skill India', 'Swachh Bharat Mission'];
-    var minPool = ['Ministry of Finance', 'Ministry of Defence', 'Ministry of Home Affairs', 'Ministry of Health', 'Ministry of Education', 'Ministry of Agriculture', 'Ministry of External Affairs', 'Ministry of Power', 'Ministry of Environment', 'Ministry of Jal Shakti'];
-    var pool = named.type === 'ministry' ? minPool : named.type === 'scheme' ? schPool : perPool;
-    var dist = shuffle(pool.filter(function(v) { return v.toLowerCase() !== answer.toLowerCase(); }));
-    var blankQ = makeBlankQuestion(t, answer, answer, cat, item, idx, dist, fact);
-    if (blankQ) {
-      blankQ.type = 'fill_blank';
-      blankQ.hint = 'PIB: ' + cat;
-      return blankQ;
-    }
+  // Pattern 1: Ministry/Department + action + object → "Which ministry did X?"
+  var minMatch = cleanTitle.match(/(?:The\s+)?(?:Union\s+)?(?:Ministry of|Department of|Office of)\s+([A-Z][A-Za-z\s&]+?)\s+(?:has\s+|today\s+)?(announced|launched|approved|sanctioned|released|inaugurated|notified|introduced|signed|flagged|organised|organized|inaugurated|reviewed|unveiled|concluded|began|commenced)\s+(.+)/i);
+  if (minMatch) {
+    var minName = 'Ministry of ' + minMatch[1].trim();
+    var action = minMatch[2].toLowerCase();
+    var object = minMatch[3].trim();
+    q.question = 'What has the ' + minName + ' ' + action + ' recently?';
+    q.answer = object.length > 120 ? object.substring(0, 117) + '...' : object;
+    q.hint = 'PIB: ' + cat;
+    q.fact = explanation;
+    return q;
   }
 
-  // 3. Try acronym fill-in-blank (e.g. (PLFS), (MPMS))
-  var acro = extractAcronym(t);
-  if (acro && findEntityInTitle(t, acro.value)) {
-    var dist = shuffle(['RBI', 'SEBI', 'ISRO', 'DRDO', 'CSIR', 'BHEL', 'ONGC', 'NDDB', 'TRAI', 'CCI']);
-    var acroQ = makeBlankQuestion(t, acro.value, acro.value, cat, item, idx, dist, fact);
-    if (acroQ) {
-      acroQ.type = 'fill_blank';
-      acroQ.hint = 'PIB: ' + cat + ' - Acronym';
-      return acroQ;
-    }
+  // Pattern 2: Person + action → "Who did X?"
+  var personMatch = cleanTitle.match(/(?:The\s+)?(?:President of India|Prime Minister|Vice President|Vice-President|Union Home Minister|Union Finance Minister|Union Defence Minister|Raksha Mantri|Chief Minister|Governor|Chief Justice|Lok Sabha Speaker)\s*,?\s*(?:Shri|Smt|Dr)\.?\s+([A-Z][A-Za-z\s.]+?)\s*,?\s*(?:has\s+|today\s+)?(inaugurated|launched|approved|addressed|flagged|released|inaugurated|reviewed|visited|congratulated|chaired|announced|sanctioned|unveiled|signed)\s+(.+)/i);
+  if (personMatch) {
+    var title = cleanTitle.match(/(President of India|Prime Minister|Vice President|Vice-President|Union Home Minister|Union Finance Minister|Union Defence Minister|Raksha Mantri|Chief Minister|Governor|Chief Justice|Lok Sabha Speaker)/i);
+    var person = title ? title[1] : 'A senior government official';
+    var act = personMatch[2];
+    var what = personMatch[3].trim();
+    q.question = 'Who ' + act + ' ' + (what.length > 80 ? what.substring(0, 77) + '...' : what) + '?';
+    q.answer = person + ' ' + personMatch[1].trim();
+    q.hint = 'PIB: ' + cat;
+    q.fact = explanation;
+    return q;
   }
 
-  // 4. Try "Who" or "Which country" etc: look for person/title + action pattern
-  var titleMatch = t.replace(/['\u2018\u2019\u201C\u201D]/g, '').trim();
-  var actionMatch = titleMatch.match(/^((?:(?:Union\s+)?(?:Minister|Home Minister|Finance Minister|Defence Minister|Health Minister|Education Minister|Commerce Secretary|Cabinet Secretary|President|Vice President|Vice-President|PM|Prime Minister|Raksha Mantri|Lok Sabha Speaker|Railway Minister|Chief Labour Commissioner|Union Minister of State)(?:\s+(?:of|for)\s+[\w\s&]+?)?(?:\s+(?:Shri|Smt|Dr|Shri\.|Smt\.|Dr\.)\s*[A-Z][\w\s.]+)?)|(?:President of India|Prime Minister Narendra Modi|Vice President|Lok Sabha Speaker|Raksha Mantri|Home Minister))(?:\s*[,:]?\s*)?\s+(inaugurates|addresses|launches|reviews|flags|unveils|releases|chairs|announces|approves|sanctions|congratulates|visits|orders|defines|begins|concludes|explores|strengthens|forge|accelerates|promotes|inaugurated|addressed|launched|reviewed|flagged|unveiled|released|chaired|announced|approved|sanctioned|congratulated|visited|ordered|defined|began|concluded|explored)\s/i);
-  if (actionMatch) {
-    var who = actionMatch[1].trim();
-    if (who.length > 5 && who.length < 100) {
-      var blankQ = titleMatch.replace(who, '_____');
-      if (blankQ !== titleMatch && blankQ.length > 25) {
-        var whoPool = ['Prime Minister Narendra Modi', 'President Droupadi Murmu', 'Home Minister Amit Shah', 'Finance Minister Nirmala Sitharaman', 'Defence Minister Rajnath Singh', 'Vice President Jagdeep Dhankhar', 'Raksha Mantri Rajnath Singh', 'Union Minister', 'Lok Sabha Speaker', 'President of India'];
-        var dist = shuffle(whoPool.filter(function(v) { return v.toLowerCase() !== who.toLowerCase(); }));
-        q.question = (blankQ.length > 120 ? blankQ.substring(0, 117) + '...' : blankQ);
-        q.answer = who;
-        q.options = shuffle([who].concat(dist.slice(0, 3)).concat(['None']));
-        q.type = 'fill_blank';
-        q.hint = 'PIB: ' + cat;
-        q.fact = fact;
-        return q;
-      }
-    }
+  // Pattern 3: Scheme/project + what/why → "What is X about?"
+  var schemeMatch = cleanTitle.match(/(?:inaugurated|launched|approved|released|announced)\s+['"'\u2018\u2019\u201C\u201D]?([A-Z][A-Za-z\s\-]+?(?:Yojana|Mission|Scheme|Project|Programme|Program|Plan|Abhiyan|Parv|Utsav|Divas|Diwas))['"'\u2018\u2019\u201C\u201D]?/i);
+  if (schemeMatch) {
+    var schemeName = schemeMatch[1].trim();
+    q.question = 'What is ' + schemeName + ' and what is its purpose?';
+    q.answer = schemeName;
+    q.hint = 'PIB: ' + cat;
+    q.fact = explanation;
+    return q;
   }
 
-  // 5. True/false fallback — only if title is informative enough
-  var text = t.substring(0, 150).replace(/\.$/, '');
-  if (text.length < 30) return null;
-
-  var swapped = null;
-  var ne2 = extractNumber(t);
-  if (ne2 && ne2.num && ne2.num.length > 1) {
-    var wrongNum = (parseInt(ne2.num.replace(/,/g, '')) + Math.floor(Math.random() * 5) + 1).toString();
-    swapped = t.replace(new RegExp(ne2.num.replace(',', '\\,'), ''), wrongNum);
-  } else if (/approved|launched|sanctioned/i.test(t)) {
-    swapped = t.replace(/approved|launched|sanctioned/i, 'delayed');
-  } else if (/inaugurated|commissioned|opened/i.test(t)) {
-    swapped = t.replace(/inaugurated|commissioned|opened/i, 'postponed');
-  } else {
-    // Try with auxiliary verb first
-    var auxSwap = t.replace(new RegExp('\\b(will|has|is|was|are|were)\\s+(announced|approved|launched|sanctioned|released|inaugurated|notified|introduced|partners|facilitates|reviews|commissions|disburses|chairs|holds|organises|signs|flags|marks|invites|addresses|inaugurates|releases|holds|addresses|launches|defines|orders|begins|visits|unveils|concludes|explores|strengthens|forge|accelerates|promotes|resolve|congratulates|aims)\\b', 'i'), '$1 NOT $2');
-    if (auxSwap !== t) {
-      swapped = auxSwap;
-    } else {
-      // No auxiliary: try bare verb negation
-      swapped = t.replace(new RegExp('\\b(announced|approved|launched|sanctioned|released|inaugurated|notified|introduced|partners|facilitates|reviews|commissions|disburses|chairs|holds|organises|signs|flags|marks|invites|addresses|inaugurates|releases|holds|addresses|launches|defines|orders|begins|visits|unveils|concludes|explores|strengthens|forge|accelerates|promotes|resolve|congratulates|aims|declares|defined|began|concluded|explored|ordered|visited|released|chairs)\\b', 'i'), 'NOT $1');
-    }
+  // Pattern 4: Number + context → "How many/much X?"
+  var numMatch = cleanTitle.match(/(?:of|for|covering|across|to)\s+(\d[\d,]*)\s*(lakh|crore|million|billion|thousand|districts?|states?|villages?|houses?|beneficiaries?|units?|projects?|institutions?|schools?|colleges?|students?|farmers?|post offices?|roads?|km|MW|GW|tonnes?|hectares?)\b/i);
+  if (numMatch) {
+    var num = numMatch[1];
+    var unit = numMatch[2];
+    var context = cleanTitle.match(new RegExp('.{0,60}' + num.replace(',', '\\,') + '\\s*' + unit, 'i'));
+    var ctx = context ? context[0].trim() : cleanTitle.substring(0, 80);
+    q.question = 'How many ' + unit + ' ' + (ctx.length > 60 ? '' : '') + 'are covered under this recent government initiative?';
+    q.answer = num + ' ' + unit;
+    q.hint = 'PIB: ' + cat;
+    q.fact = explanation;
+    return q;
   }
-  if (!swapped || swapped === t) {
-    // 6. Ultimate fallback: MCQ based on category or entity mention
-    var subjMatch = t.match(/(?:Ministry of|Department of)\s+([A-Z][A-Za-z\s&]+?)(?:\s+(?:announces|launches|releases|signs|approves|flags|organises|partners|holds|inaugurates|begins|visits|unveils|concludes|strengthens|promotes|releases|addresses|chairs))/i);
-    if (subjMatch) {
-      var entity = subjMatch[1].trim();
-      var pool = ['Ministry of Finance', 'Ministry of Defence', 'Ministry of Home Affairs', 'Ministry of Health and Family Welfare', 'Ministry of Education', 'Ministry of Agriculture', 'Ministry of External Affairs', 'Ministry of Power', 'Ministry of Environment', 'Ministry of Jal Shakti', 'Ministry of Railways', 'Ministry of Commerce', 'Ministry of Law and Justice', 'Ministry of Labour', 'Ministry of Rural Development', 'Ministry of Housing and Urban Affairs'];
-      var dist = shuffle(pool.filter(function(v) { return v.toLowerCase() !== entity.toLowerCase(); }));
-      var blankQ = t.replace(entity, '_____');
-      if (blankQ !== t && blankQ.length > 25) {
-        q.question = blankQ.length > 200 ? blankQ.substring(0, 197) + '...' : blankQ;
-        q.answer = entity;
-        q.options = shuffle([entity].concat(dist.slice(0, 3)).concat(['None']));
-        q.type = 'fill_blank';
-        q.hint = 'PIB: ' + cat + ' - Ministry';
-        q.fact = fact;
-        return q;
-      }
-    }
-    // 7. True/false fallback for any title with 20+ chars — swap a key word
-    if (text.length >= 20) {
-      var falseQ = text
-        .replace(/\b(launched|inaugurated|commissioned|opened|approved|sanctioned|released|introduced)\b/i, 'postponed')
-        .replace(/\b(signed|announced|notified|flagged|unveiled|concluded)\b/i, 'cancelled')
-        .replace(/\b(launches|inaugurates|commissions|opens|approves|sanctions|releases|introduces)\b/i, 'postpones')
-        .replace(/\b(successfully|completed|finished|achieved|reached)\b/i, 'unsuccessfully');
-      if (falseQ === text) {
-        var numM = text.match(/(\d[\d,]*)\s*(lakh|crore|million|billion|thousand|GW|MW|KW|KV|%)?/i);
-        if (numM) falseQ = text.replace(numM[0], (parseInt(numM[1].replace(/,/g,''))*2)+'');
-      }
-      if (falseQ === text) falseQ = text.replace(/\b(India|Indian|PM|Prime Minister)\b/i, 'Bangladesh');
-      // If nothing could be swapped, this is a static headline, not a true/false
-      // question — skip it instead of emitting a random answer.
-      if (falseQ === text) return null;
-      if (Math.random() > 0.5) {
-        q.question = text + '.';
-        q.answer = 'True';
-      } else {
-        q.question = falseQ + '.';
-        q.answer = 'False';
-      }
-      q.options = ['True', 'False'];
-      q.type = 'true_false';
+
+  // Pattern 5: General "What happened?" — use title as answer, formulate question from action
+  var actionVerb = cleanTitle.match(/\b(inaugurated|launched|approved|sanctioned|released|announced|notified|flagged|signed|inaugurated|reviewed|unveiled|concluded|commenced|organised|organized|addressed|visited|congratulated|chaired)\b/i);
+  if (actionVerb) {
+    var action = actionVerb[1].toLowerCase();
+    // Extract the object of the action
+    var afterAction = cleanTitle.substring(cleanTitle.indexOf(actionVerb[0]) + actionVerb[0].length).trim();
+    var obj = afterAction.replace(/^(?:today\s+|yesterday\s+|by\s+)/i, '').trim();
+    if (obj.length > 10) {
+      q.question = 'What was ' + action + ' recently by the Government of India?';
+      q.answer = obj.length > 150 ? obj.substring(0, 147) + '...' : obj;
       q.hint = 'PIB: ' + cat;
-      q.fact = fact;
+      q.fact = explanation;
       return q;
     }
-    return null;
   }
 
-  q.question = 'True or False: ' + text + '.';
-  q.answer = Math.random() > 0.5 ? 'True' : 'False';
-  if (q.answer === 'False') {
-    q.question = 'True or False: ' + swapped.substring(0, 150).replace(/\.$/, '') + '.';
+  // Pattern 6: "Which state/country/sector" based on content
+  var stateMatch = cleanTitle.match(/(?:in|across|from|for|of)\s+(Andhra Pradesh|Arunachal Pradesh|Assam|Bihar|Chhattisgarh|Goa|Gujarat|Haryana|Himachal Pradesh|Jharkhand|Karnataka|Kerala|Madhya Pradesh|Maharashtra|Manipur|Meghalaya|Mizoram|Nagaland|Odisha|Punjab|Rajasthan|Sikkim|Tamil Nadu|Telangana|Tripura|Uttar Pradesh|Uttarakhand|West Bengal|Delhi|Jammu and Kashmir|Ladakh|Puducherry|Chandigarh)/i);
+  if (stateMatch) {
+    var state = stateMatch[1];
+    q.question = 'Which state/UT is in the news for this government initiative?';
+    q.answer = state;
+    q.hint = 'PIB: ' + cat;
+    q.fact = explanation;
+    return q;
   }
-  q.options = ['True', 'False'];
-  q.type = 'true_false';
+
+  // Fallback: Use the title as a meaningful Q&A pair
+  // Formulate: "What is the key announcement regarding [topic]?"
+  var topic = cleanTitle.substring(0, 100);
+  q.question = 'What is the key government announcement: "' + topic + (cleanTitle.length > 100 ? '...' : '') + '"';
+  q.answer = cleanTitle.length > 200 ? cleanTitle.substring(0, 197) + '...' : cleanTitle;
   q.hint = 'PIB: ' + cat;
-  q.fact = fact;
+  q.fact = explanation;
   return q;
 }
 
