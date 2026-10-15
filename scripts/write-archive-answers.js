@@ -23,7 +23,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { callLLM, loadJson, saveJson } = require('./site-agent.js');
+const { callLLM, loadJson, saveJson, EXAMINER_STYLE } = require('./site-agent.js');
 
 const QDIR = 'data/questions';
 const SIDECAR = 'data/archive-answers.json';
@@ -71,7 +71,8 @@ function collectCandidates(sidecar) {
 async function writeOne(q) {
   const isDesc = DESCRIPTIVE_RES.test(q.type || '');
   const sys = 'You are an expert UPSC/SSC exam coach writing archive study material. ' +
-    'Return STRICT JSON only: {"modelAnswer": "...", "keyFacts": ["...", "..."]}. No markdown fences, no commentary.';
+    'Return STRICT JSON only: {"modelAnswer": "...", "keyFacts": ["...", "..."]}. No markdown fences, no commentary. ' +
+    EXAMINER_STYLE;
   const user = (isDesc
     ? 'Write a complete mains-style model answer (150-250 words, structured with a brief intro, 3-4 analytical points, and a one-line way forward) for:\n'
     : 'Write a crisp exam explanation (60-120 words: why the answer is correct, plus 1-2 memorable facts a student should retain) for this question:\n') +

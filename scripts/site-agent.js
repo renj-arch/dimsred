@@ -1902,6 +1902,154 @@ async function agentQuestionQuality() {
   return { agent: 'questions', fixes };
 }
 
+// ── Shared voice for ALL 27B study-content generation ──
+// Creative + intelligent + engaging is not a vibe, it is a structure: every
+// explanation teaches the fact, defuses each trap, and leaves a memory hook.
+// Used by the papers agent and the archive writer alike.
+const EXAMINER_STYLE = 'Voice: a beloved examiner coaching a serious aspirant — sharp, warm, precise. ' +
+  'Structure every explanation in 4 short parts: 1) VERDICT (the answer, plainly), 2) WHY (the core fact/principle), ' +
+  '3) TRAPS (why each wrong option fails — name the specific error), 4) HOOK (one vivid memory hook + one exam-day trap alert). ' +
+  'Plain text only. Stay consistent with the given answer; invent no dates, numbers, or names.';
+
+// ── AGENT: Papers — real govt-exam papers with detailed 27B explanations ──
+// Standing goal (pursued every rotation without being asked): papers.json
+// covers the major govt exams with COMPLETE papers. papers.json held 1 paper
+// (UPSC 2023, 39/100) while the nav promises 16 exams — this agent closes that
+// gap progressively: complete partial papers first, then the next missing
+// exam slot, enriching up to 8 explanations per run.
+//
+// HONESTY RULES (hard): assembled papers are labeled source:corpus-assembled
+// + official:false with officialPdf/cutoff null (the page renders those as
+// absent). Never invent official PDFs, cutoffs, or "real" questions the corpus
+// cannot verify — only add questions WITH corpus answers, and explain
+// consistently with them. A partial honest paper beats a complete fake one.
+const PAPERS_WANT = [
+  { id: 'upsc-prelims-2023-gs1', exam: 'UPSC', year: 2023, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200, match: ['polity', 'history', 'geography', 'economy', 'environment', 'science'] },
+  { id: 'upsc-prelims-2024-gs1', exam: 'UPSC', year: 2024, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200, match: ['polity', 'history', 'geography', 'economy', 'environment', 'science'] },
+  { id: 'ssc-cgl-2024-tier1', exam: 'SSC CGL', year: 2024, paper: 'Tier 1', target: 100, duration: 60, marks: 200, match: ['quant', 'reasoning', 'english', 'general awareness', 'mathematics'] },
+  { id: 'ssc-chsl-2024', exam: 'SSC CHSL', year: 2024, paper: 'Tier 1', target: 100, duration: 60, marks: 200, match: ['quant', 'reasoning', 'english', 'general awareness'] },
+  { id: 'ssc-gd-2024', exam: 'SSC GD', year: 2024, paper: 'Constable', target: 80, duration: 60, marks: 160, match: ['quant', 'reasoning', 'english', 'hindi', 'general'] },
+  { id: 'ibps-po-2024-prelims', exam: 'IBPS PO', year: 2024, paper: 'Prelims', target: 100, duration: 60, marks: 100, match: ['quant', 'reasoning', 'english', 'banking'] },
+  { id: 'sbi-clerk-2024-prelims', exam: 'SBI Clerk', year: 2024, paper: 'Prelims', target: 100, duration: 60, marks: 100, match: ['quant', 'reasoning', 'english', 'banking'] },
+  { id: 'rbi-grade-b-2024', exam: 'RBI Grade B', year: 2024, paper: 'Phase 1', target: 200, duration: 120, marks: 200, match: ['economy', 'finance', 'banking', 'general awareness', 'reasoning', 'english', 'quant'] },
+  { id: 'rrb-ntpc-2024', exam: 'RRB NTPC', year: 2024, paper: 'CBT 1', target: 100, duration: 90, marks: 100, match: ['quant', 'reasoning', 'general awareness'] },
+  { id: 'nda-2024-gat', exam: 'NDA', year: 2024, paper: 'GAT', target: 150, duration: 150, marks: 600, match: ['history', 'geography', 'polity', 'economy', 'science', 'english', 'general'] },
+  { id: 'ctet-2024-paper1', exam: 'CTET', year: 2024, paper: 'Paper 1', target: 150, duration: 150, marks: 150, match: ['pedagogy', 'child development', 'english', 'hindi', 'mathematics', 'environment'] },
+  { id: 'cds-2024-gs', exam: 'CDS', year: 2024, paper: 'GS', target: 120, duration: 120, marks: 100, match: ['history', 'geography', 'polity', 'economy', 'science', 'english', 'defence'] }
+];
+function paperOverlap(a, b) {
+  const wa = String(a || '').toLowerCase().split(/\s+/).filter(w => w.length > 3);
+  if (!wa.length) return 0;
+  const sb = new Set(String(b || '').toLowerCase().split(/\s+/));
+  return wa.filter(w => sb.has(w)).length / wa.length;
+}
+async function agentPapers() {
+  const fixes = [];
+  if (!fs.existsSync('data/questions')) return { agent: 'papers', fixes: fixes };
+  const papers = loadJson('data/papers.json', { papers: [] });
+  if (!Array.isArray(papers.papers)) papers.papers = [];
+  const haveIds = new Set();
+  for (const p of papers.papers) for (const q of (p.questions || [])) if (q && q.id) haveIds.add(q.id);
+
+  // Target: first incomplete known paper, else first missing WANT slot.
+  let target = papers.papers.find(p => (p.questions || []).length < (p.totalQuestions || p.target || 100));
+  let isNew = false;
+  if (!target) {
+    const havePapers = new Set(papers.papers.map(p => p.id));
+    const slot = PAPERS_WANT.find(s => !havePapers.has(s.id));
+    if (!slot) { console.log('agent: Papers — all ' + PAPERS_WANT.length + ' wanted slots filled'); return { agent: 'papers', fixes: fixes }; }
+    target = {
+      id: slot.id, exam: slot.exam, year: slot.year, paper: slot.paper,
+      totalQuestions: slot.target, duration: slot.duration, marks: slot.marks,
+      cutoff: null, officialPdf: null, source: 'corpus-assembled', official: false,
+      questions: []
+    };
+    papers.papers.push(target);
+    isNew = true;
+  }
+  const slot = PAPERS_WANT.find(s => s.id === target.id) || { match: [], target: target.totalQuestions || 100 };
+  const need = (target.totalQuestions || slot.target || 100) - target.questions.length;
+  console.log('agent: Papers — target ' + target.id + ' (' + target.questions.length + '/' + (target.totalQuestions || slot.target) + ')' + (isNew ? ' [new slot]' : ''));
+
+  // Mine candidates: rotating file offset, subject match, pyq first.
+  const files = fs.readdirSync('data/questions').filter(f => f.endsWith('.json') && f !== '00-27b-archive.json');
+  const startAt = files.length ? Math.floor(Date.now() / 3600000) % files.length : 0;
+  const matchers = (slot.match || []).map(m => m.toLowerCase());
+  const cands = [], seenText = (target.questions || []).map(q => q.q || q.question || '');
+  const t0 = Date.now();
+  let added = 0;
+  for (let i = 0; i < files.length && added < 12 && Date.now() - t0 < 90000; i++) {
+    const f = files[(startAt + i) % files.length];
+    let d;
+    try { d = JSON.parse(fs.readFileSync('data/questions/' + f, 'utf8')); } catch (e) { continue; }
+    for (const top of Object.values(d)) {
+      const subs = (top && top.subSubjects) || {};
+      for (const arr of Object.values(subs)) {
+        if (!Array.isArray(arr)) continue;
+        for (const q of arr) {
+          if (!q || !q.id || !q.question || !q.answer || haveIds.has(q.id)) continue;
+          const cat = ((q.category || '') + ' ' + (q.subject || '')).toLowerCase();
+          if (matchers.length && !matchers.some(m => cat.indexOf(m) !== -1)) continue;
+          const raw = JSON.stringify(q).toLowerCase();
+          const pyq = raw.indexOf('pyq') !== -1 || raw.indexOf('previous year') !== -1;
+          if (seenText.some(t => paperOverlap(q.question, t) > 0.7)) continue;
+          cands.push({ q: q, pyq: pyq });
+        }
+      }
+    }
+  }
+  cands.sort((a, b) => (b.pyq ? 1 : 0) - (a.pyq ? 1 : 0));
+  for (const c of cands.slice(0, Math.min(12, Math.max(0, need)))) {
+    const q = c.q;
+    // Re-check overlap here (not just at collect time): two candidates from
+    // the same batch can near-duplicate each other.
+    if (seenText.some(t => paperOverlap(q.question, t) > 0.7)) continue;
+    if (haveIds.has(q.id)) continue;
+    target.questions.push({
+      n: target.questions.length + 1,
+      id: q.id,
+      q: q.question,
+      options: q.options || null,
+      subject: q.subject || q.category || '',
+      answer: q.answer,
+      explain: (q.explain && q.explain.length >= 150) ? q.explain : null
+    });
+    haveIds.add(q.id);
+    seenText.push(q.question);
+    added++;
+  }
+  if (added) fixes.push({ page: 'data/papers.json', fix: (isNew ? 'Started paper ' : 'Extended paper ') + target.id + ' (+' + added + ' questions, now ' + target.questions.length + '/' + (target.totalQuestions || slot.target) + ')' });
+
+  // Enrich: detailed 27B explanations for questions lacking them (cap 8/run).
+  let enriched = 0;
+  for (const q of target.questions) {
+    if (enriched >= 8) break;
+    if (q.explain && q.explain.length >= 150) continue;
+    const sys = 'You are an expert govt-exam coach. Return STRICT JSON only: {"explain": "..."}. No markdown fences.';
+    const user = EXAMINER_STYLE + '\nQuestion: ' + (q.q || '') + '\nAnswer: ' + (q.answer || '') + '\n' +
+      (q.options ? 'Options: ' + JSON.stringify(q.options) + '\n' : '') +
+      'Subject: ' + (q.subject || '') + ' | Exam: ' + (target.exam || '') + '\n' +
+      'Keep the explanation 120-500 chars. Stay consistent with the given answer.';
+    let done = false;
+    for (let attempt = 1; attempt <= 2 && !done; attempt++) {
+      const r = await callLLM(sys, user, 1024);
+      if (!r || !r.text) continue;
+      const txt = r.text.replace(/```[a-z]*|```/gi, '').trim();
+      const s = txt.indexOf('{'), e = txt.lastIndexOf('}');
+      if (s < 0 || e <= s) continue;
+      try {
+        const j = JSON.parse(txt.slice(s, e + 1));
+        const ex = String(j.explain || '').trim();
+        if (ex.length >= 100 && ex.length <= 1200) { q.explain = ex; enriched++; done = true; }
+      } catch (e) { /* retry */ }
+    }
+  }
+  if (enriched) fixes.push({ page: 'data/papers.json', fix: 'Wrote ' + enriched + ' detailed 27B explanation(s) in ' + target.id });
+  saveJson('data/papers.json', papers);
+  console.log('agent: Papers — +' + added + ' questions, +' + enriched + ' explanations in ' + target.id);
+  return { agent: 'papers', fixes: fixes };
+}
+
 // ── Main ──
 async function agentSelfCheck() {
   const fixes = [];
@@ -2122,6 +2270,7 @@ async function main() {
     ['Mindmaps', agentMindmaps],
     ['Features', agentFeatures],
     ['Proposals', agentProposals],
+    ['Papers', agentPapers],
     ['MetaLearn', agentMetaLearn]
   ];
   const alwaysAgents = [
@@ -2136,7 +2285,7 @@ async function main() {
   // AGENT_ONLY=questions: dedicated question-quality workflow (questions data
   // checked out, site pages are not). Run only the agents that touch questions.
   if (process.env.AGENT_ONLY === 'questions') {
-    agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content');
+    agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content' || name === 'Papers');
   }
 
   // ── Work intake: LOOK before acting (the "intelligent" part) ──
@@ -2313,4 +2462,4 @@ if (require.main === module) {
 // Shared LLM transport (proven: curl, IPv4, 30-min ceiling, thinking-model
 // aware). Required by writer scripts (archive answers, …) so transport fixes
 // propagate instead of being duplicated per script.
-module.exports = { callLLM: callLLM, loadJson: loadJson, saveJson: saveJson, OLLAMA_URL: OLLAMA_URL };
+module.exports = { callLLM: callLLM, loadJson: loadJson, saveJson: saveJson, OLLAMA_URL: OLLAMA_URL, EXAMINER_STYLE: EXAMINER_STYLE };

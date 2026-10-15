@@ -29,6 +29,7 @@ jobs:
           sparse-checkout: |
             scripts
             data/questions
+            data/papers.json
             data/archive-answers.json
             data/agent-log.json
             data/questions-report.json
@@ -118,7 +119,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No question fixes to publish"
           else
