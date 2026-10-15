@@ -153,6 +153,100 @@ var QB_READY = false;
 var QB_ERROR = null;
 var STATE = { question: '' };
 
+// ── Infinite questions: suggested follow-ups after every answer ──
+// After any answer renders (archive hit, WebLLM composition, or legacy
+// quoting), offer "ask next" chips derived from the question and the
+// answer's own entities. Clicking one asks it — answers beget questions,
+// endlessly. Rule-based (deterministic, instant, no model call): entities
+// from the rendered answer's headings + evidence names + question nouns,
+// shaped into proven follow-up templates.
+function _suggestEntities() {
+  var found = [];
+  function add(s) {
+    s = String(s || '').replace(/\s+/g, ' ').trim();
+    if (s.length < 4 || s.length > 60) return;
+    if (/^(what|why|how|when|where|which|who|the|and|for|with|from|that|this)\b/i.test(s)) return;
+    for (var i = 0; i < found.length; i++) {
+      if (found[i].toLowerCase() === s.toLowerCase()) return;
+    }
+    if (found.length < 6) found.push(s);
+  }
+  try {
+    var out = el('out');
+    if (out) {
+      var heads = out.querySelectorAll('h2, h3, .arch-q');
+      for (var h = 0; h < heads.length && found.length < 6; h++) {
+        var t = heads[h].textContent || '';
+        add(t.split(/[:–—]/)[0].trim());
+      }
+      var evs = out.querySelectorAll('.ev .src a, .src a');
+      for (var e = 0; e < evs.length && found.length < 6; e++) add(evs[e].textContent);
+    }
+  } catch (err) { /* DOM scraping is best-effort */ }
+  // Nouns from the question itself as fallback.
+  var words = String(STATE.question || '').replace(/[^A-Za-z\s]/g, ' ').split(/\s+/);
+  for (var i = 0; i < words.length && found.length < 6; i++) {
+    var w = words[i];
+    if (w.length >= 6 && /^[A-Z]/.test(w)) add(w);
+  }
+  for (var j = 0; j < words.length && found.length < 6; j++) {
+    var w2 = words[j];
+    if (w2.length >= 7) add(w2.charAt(0).toUpperCase() + w2.slice(1));
+  }
+  return found.slice(0, 3);
+}
+function _suggestQuestions() {
+  var ents = _suggestEntities();
+  var out = [];
+  if (ents[0]) {
+    out.push('Tell me more about ' + ents[0]);
+    out.push('Why is ' + ents[0] + ' important for UPSC?');
+  }
+  if (ents[1]) out.push(ents[0] + ' vs ' + ents[1] + ': key differences');
+  else if (ents[0]) out.push('Previous year questions on ' + ents[0]);
+  // Never suggest the question just asked.
+  var asked = String(STATE.question || '').toLowerCase().trim();
+  return out.filter(function (s) { return s.toLowerCase().trim() !== asked; }).slice(0, 4);
+}
+function _maybeSuggest() {
+  try {
+    var q = STATE.question;
+    var out = el('out');
+    if (!q || !out || out.querySelector('.suggest-row')) return;
+    // Only on real answers — never on loaders, errors, empties, refusals.
+    if (out.querySelector('.load') || out.querySelector('.err') || out.querySelector('.empty')) return;
+    var html = out.innerHTML || '';
+    if (html.length < 400) return;
+    if (out.querySelector('.refusal')) return;
+    var chips = _suggestQuestions();
+    if (!chips.length) return;
+    var row = document.createElement('div');
+    row.className = 'samples suggest-row';
+    row.style.marginTop = '14px';
+    var label = document.createElement('div');
+    label.style.cssText = 'width:100%;font-size:11.5px;color:var(--text-sec);margin-bottom:4px';
+    label.textContent = 'Ask next ↓';
+    row.appendChild(label);
+    chips.forEach(function (c) {
+      var b = document.createElement('button');
+      b.textContent = c;
+      b.onclick = function () { el('q').value = c; doAsk(); };
+      row.appendChild(b);
+    });
+    out.appendChild(row);
+  } catch (err) { /* suggestions must never break answers */ }
+}
+if (typeof MutationObserver !== 'undefined') {
+  var _suggestTimer = null;
+  var _outEl = document.getElementById('out');
+  if (_outEl) {
+    new MutationObserver(function () {
+      if (_suggestTimer) clearTimeout(_suggestTimer);
+      _suggestTimer = setTimeout(_maybeSuggest, 400);
+    }).observe(_outEl, { childList: true, subtree: true });
+  }
+}
+
 function esc(s) {
   return String(s == null ? '' : s)
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')

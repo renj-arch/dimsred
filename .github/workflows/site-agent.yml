@@ -47,6 +47,7 @@ jobs:
             data/ideas.json
             data/pyq-patterns.json
             data/site-audit.json
+            data/practice-sets
             figures
           sparse-checkout-cone-mode: false
           token: ${{ secrets.PAT }}
@@ -152,7 +153,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json 2>/dev/null || true
+          git add data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/practice-sets/ 2>/dev/null || true
           git add figures/ 2>/dev/null || true
           git add -- *.html prototype-*.html 2>/dev/null || true
           git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add 2>/dev/null || true

@@ -2380,6 +2380,105 @@ async function agentWikiSyllabus() {
   return { agent: 'wikisyllabus', fixes: fixes };
 }
 
+// ── AGENT: PracticeSets — fresh 27B exam sets, single-click served ──
+// Exam tabs (hubs) get single-click practice: mega-test.html?exam=<slug>
+// serves data/practice-sets/<slug>.json instantly — pre-generated here, no
+// live generation, no quality compromise. Standing goal: every exam hub has
+// a set fresher than 7 days. One set per run (10 items, 1 LLM call).
+// Exam slugs discovered dynamically (hub dirs with index.html) + RRB (asked
+// for, no hub dir yet) so new hubs are covered without code changes.
+const PRACTICE_DIR = 'data/practice-sets';
+const PRACTICE_EXTRA_SLUGS = ['rrb'];
+const PRACTICE_EXAM_NAMES = {
+  cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE', neet: 'NEET', gate: 'GATE',
+  agniveer: 'Agniveer', upsc: 'UPSC', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk',
+  'ssc-gd': 'SSC GD', ctet: 'CTET', nda: 'NDA', cds: 'CDS', clat: 'CLAT',
+  ldc: 'LDC', 'kerala-psc': 'Kerala PSC', rrb: 'RRB NTPC', 'ssc-je': 'SSC JE'
+};
+function practiceSlugs() {
+  const slugs = [];
+  try {
+    for (const e of fs.readdirSync('.', { withFileTypes: true })) {
+      if (!e.isDirectory() || e.name[0] === '.' || e.name === 'node_modules' || e.name === 'data' || e.name === 'figures') continue;
+      try {
+        if (fs.existsSync(e.name + '/index.html')) slugs.push(e.name);
+      } catch (err) { /* ignore */ }
+    }
+  } catch (e) { /* ignore */ }
+  for (const s of PRACTICE_EXTRA_SLUGS) if (slugs.indexOf(s) === -1) slugs.push(s);
+  // Only exam-like hubs (skip tooling dirs that happen to have index.html).
+  return slugs.filter(s => PRACTICE_EXAM_NAMES[s] || /^(cgl|rbi|jee|neet|gate|upsc|nda|cds|ctet|clat|ldc)/.test(s));
+}
+async function agentPracticeSets() {
+  const fixes = [];
+  const slugs = practiceSlugs();
+  if (!slugs.length) return { agent: 'practicesets', fixes: fixes };
+  // Stalest first: missing file = stalest; else by updatedAt age.
+  const scored = [];
+  for (const slug of slugs) {
+    const fp = PRACTICE_DIR + '/' + slug + '.json';
+    let age = Infinity;
+    try {
+      const d = loadJson(fp, null);
+      if (d && d.updatedAt) age = Date.now() - new Date(d.updatedAt).getTime();
+      else if (d && Array.isArray(d.questions) && d.questions.length >= 8) age = 8 * 86400000; // legacy set, refresh
+      else if (fs.existsSync(fp)) age = 8 * 86400000;
+    } catch (e) { /* treat as missing */ }
+    scored.push({ slug: slug, age: age });
+  }
+  scored.sort((a, b) => b.age - a.age);
+  const target = scored[0];
+  if (target.age < 7 * 86400000) {
+    console.log('agent: PracticeSets — all sets fresh (stalest ' + Math.round(target.age / 86400000) + 'd)');
+    return { agent: 'practicesets', fixes: fixes };
+  }
+  const examName = PRACTICE_EXAM_NAMES[target.slug] || target.slug.toUpperCase();
+  console.log('agent: PracticeSets — writing fresh set for ' + examName + ' (age ' + (target.age === Infinity ? 'missing' : Math.round(target.age / 86400000) + 'd') + ')');
+  const sys = 'You are an expert govt-exam setter writing a rapid-fire practice set. ' +
+    'Return STRICT JSON only: {"questions": [{"q": "...", "a": "...", "sub": "...", "fact": "...", "hint": "..."}]}. No markdown. ' +
+    'FORMAT: short exact-answer items for a type-the-answer quiz (q = crisp question under 140 chars, a = exact short answer under 40 chars, ' +
+    'sub = subject area, fact = 2-3 sentence solution with the working/shortcut, hint = one-line trap alert or speed tip). ' +
+    EXAMINER_STYLE;
+  const user = 'Write 10 exam-real practice items for ' + examName + ' (real paper difficulty: multi-step where apt, ' +
+    'realistic numbers, standard exam patterns — SSC CGL Tier-1 / Banking / NDA style as applicable). ' +
+    'Mix subjects across the exam syllabus. Every answer exact and checkable. Stay factual; invent no dates/numbers/names.';
+  const r = await callLLM(sys, user, 2048);
+  if (!r || !r.text) return { agent: 'practicesets', fixes: fixes };
+  let items = [];
+  try {
+    const txt = r.text.replace(/```[a-z]*|```/gi, '').trim();
+    const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+    items = Array.isArray(j.questions) ? j.questions : [];
+  } catch (e) { console.log('agent: PracticeSets — unparseable response'); return { agent: 'practicesets', fixes: fixes }; }
+  const clean = [];
+  const seenQ = [];
+  for (const it of items) {
+    const q = String((it && it.q) || '').trim(), a = String((it && it.a) || '').trim();
+    const fact = String((it && it.fact) || '').trim();
+    if (q.length < 15 || q.length > 220 || !a || a.length > 60 || fact.length < 40) continue;
+    if (seenQ.concat(loadJson(PRACTICE_DIR + '/' + target.slug + '.json', { questions: [] }).questions.map(x => x.q)).some(t => paperOverlap(q, t) > 0.7)) continue;
+    seenQ.push(q);
+    clean.push({
+      q: q, a: a, sub: String((it && it.sub) || 'General').slice(0, 60),
+      fact: fact.slice(0, 600), hint: String((it && it.hint) || '').slice(0, 160),
+      autoGen: true, writtenBy: 'qwen3.8:27b'
+    });
+    if (clean.length >= 10) break;
+  }
+  if (clean.length < 5) { console.log('agent: PracticeSets — only ' + clean.length + ' valid items, discarding set'); return { agent: 'practicesets', fixes: fixes }; }
+  try { fs.mkdirSync(PRACTICE_DIR, { recursive: true }); } catch (e) { /* ignore */ }
+  saveJson(PRACTICE_DIR + '/' + target.slug + '.json', {
+    exam: examName, slug: target.slug, updatedAt: new Date().toISOString(),
+    writtenBy: 'qwen3.8:27b', questions: clean
+  });
+  fixes.push({
+    page: PRACTICE_DIR + '/' + target.slug + '.json',
+    fix: 'Fresh 27B practice set for ' + examName + ' (' + clean.length + ' exam-real items)',
+    text: clean.slice(0, 3).map(c => 'Q: ' + c.q.slice(0, 100) + ' | A: ' + c.a).join('\n')
+  });
+  return { agent: 'practicesets', fixes: fixes };
+}
+
 // ── Main ──
 async function agentSelfCheck() {
   const fixes = [];
@@ -2478,6 +2577,31 @@ async function agentSelfCheck() {
       changed = true;
       for (const f of navFix.fixes) fixes.push(f);
     }
+
+    // ── Fresh practice-set button on exam hub indexes ──
+    // Each exam hub gets single-click access to its 27B-written set via
+    // mega-test.html?exam=<slug> (served instantly, no live generation).
+    // Guarded: hub index only, skip when any such link exists, anchor on the
+    // page's first </h1> (universal on hub indexes), skip silently otherwise.
+    // Never touches existing content — one additive block.
+    (function () {
+      const m = /^([A-Za-z0-9][A-Za-z0-9\-]*)\/index\.html$/i.exec(page);
+      if (!m) return;
+      const slug = m[1].toLowerCase();
+      if (!PRACTICE_EXAM_NAMES[slug] && ['rrb'].indexOf(slug) === -1) return;
+      if (/mega-test\.html\?exam=/i.test(html)) return;
+      const h1 = /<\/h1\s*>/i.exec(html);
+      if (!h1) return;
+      const btn =
+        '<div class="fresh-practice" style="margin:14px 0;padding:12px 16px;border:1px solid rgba(52,211,153,.35);border-radius:12px;background:rgba(52,211,153,.06)">\n' +
+        '<a class="btn" href="../mega-test.html?exam=' + slug + '" style="display:inline-block;padding:9px 20px;border-radius:100px;background:rgba(52,211,153,.15);color:#34d399;font-weight:700;text-decoration:none">⚡ Fresh Practice Set — 27B exam-real questions</a>\n' +
+        '<div style="font-size:.75em;color:#8a8a93;margin-top:6px">Single click → instant quiz. New set written weekly.</div>\n' +
+        '</div>';
+      const at = h1.index + h1[0].length;
+      html = html.slice(0, at) + '\n' + btn + html.slice(at);
+      changed = true;
+      fixes.push({ page: page, fix: 'Added Fresh Practice Set button (mega-test.html?exam=' + slug + ')' });
+    })();
 
     if (page === 'index.html') {
       const placeholders = (html.match(/<a href="#" class="exam-card/g) || []).length;
@@ -2698,6 +2822,7 @@ async function main() {
     ['Proposals', agentProposals],
     ['Papers', agentPapers],
     ['WikiSyllabus', agentWikiSyllabus],
+    ['PracticeSets', agentPracticeSets],
     ['MetaLearn', agentMetaLearn]
   ];
   const alwaysAgents = [

@@ -180,7 +180,40 @@ var timerSec = 0, timerInt = null, currentQ = null, started = false;
 var megaData = null;
 
 function loadData() {
-  fetch('data/mega-quiz.json').then(function(r) {
+  // Exam practice sets (?exam=cgl): 27B-written fresh sets in CI
+  // (data/practice-sets/<slug>.json), served instantly on single click —
+  // no live generation, no quality compromise. Falls back to the generic
+  // bank when no set exists (or the param is absent), so every existing
+  // mega-test.html?exam=X link keeps working and upgrades automatically
+  // once its set is generated.
+  var examParam = null;
+  try {
+    var m = /[?&]exam=([^&]+)/.exec(location.search || '');
+    if (m) examParam = decodeURIComponent(m[1].replace(/\+/g, ' ')).toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '');
+  } catch (e) { examParam = null; }
+  function showExamSet(data, slug) {
+    QUESTIONS = data.questions || [];
+    var subjCounts = {};
+    QUESTIONS.forEach(function (q) { var s = q.sub || q.subject || 'General'; subjCounts[s] = (subjCounts[s] || 0) + 1; });
+    document.getElementById('totalQ').textContent = QUESTIONS.length;
+    document.getElementById('totalSubj').textContent = Object.keys(subjCounts).length;
+    document.getElementById('totalFiles').textContent = Object.keys(subjCounts).length;
+    var sel = document.getElementById('subjectSel');
+    Object.keys(subjCounts).sort().forEach(function (s) {
+      var opt = document.createElement('option');
+      opt.value = s; opt.textContent = s + ' (' + subjCounts[s] + ')';
+      sel.appendChild(opt);
+    });
+    var when = '';
+    try { when = data.updatedAt ? new Date(data.updatedAt).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' }) : ''; } catch (e) {}
+    var panel = document.getElementById('setupPanel');
+    var banner = document.createElement('div');
+    banner.style.cssText = 'padding:10px 14px;border:1px solid rgba(52,211,153,.35);border-radius:10px;margin-bottom:12px;font-size:.85em;color:#34d399';
+    banner.textContent = '⚡ Fresh practice set for ' + (data.exam || slug) + (when ? ' · ' + when : '') + ' · written by 27B, exam-real difficulty';
+    panel.insertBefore(banner, panel.firstChild);
+  }
+  function loadMega() {
+    fetch('data/mega-quiz.json').then(function(r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
   }).then(function(data) {
@@ -200,6 +233,20 @@ function loadData() {
       '<p style="color:var(--red)">Failed to load questions: ' + e.message + '</p>' +
       '<p style="color:var(--muted);font-size:.85em;margin-top:8px">Run <code>node scripts/build-mega-quiz.js</code> to generate the question bank.</p>';
   });
+  }
+  // Normalize: exam-set items carry `sub`; the engine filters on `subject`.
+  function normalizeQs(list) {
+    (list || []).forEach(function (q) { if (q && !q.subject) q.subject = q.sub || 'General'; });
+    return list || [];
+  }
+  if (!examParam) { loadMega(); return; }
+  fetch('data/practice-sets/' + examParam + '.json').then(function (r) {
+    if (!r.ok) throw new Error('no set');
+    return r.json();
+  }).then(function (data) {
+    data.questions = normalizeQs(data.questions);
+    showExamSet(data, examParam);
+  }).catch(function () { loadMega(); });
 }
 
 function startQuiz() {
