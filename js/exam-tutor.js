@@ -505,6 +505,78 @@
     buildCorpus();
     var seedQs = CORPUS.filter(function (c) { return c.subj === subjKey; }).map(function (c) { return c.q; });
     var status = statusEl;
+    // Prefer 27B-written practice sets (data/practice-sets/index.json):
+    // exam-real difficulty, instant, no 1GB model download. WebLLM generates
+    // only when no set covers this subject.
+    return trySetQuestions(subjKey, subjName, count).then(function (setQs) {
+      if (setQs && setQs.length >= 3) {
+        if (status) status.textContent = '';
+        setQs._fromSet = true;
+        return setQs;
+      }
+      return generatePracticeLLM(subjKey, subjName, seedQs, count, status);
+    });
+  }
+
+  var _setIndex = null, _setIndexLoading = null;
+  function setIndex() {
+    if (_setIndex) return Promise.resolve(_setIndex);
+    if (_setIndexLoading) return _setIndexLoading;
+    _setIndexLoading = fetch('data/practice-sets/index.json').then(function (r) {
+      if (!r.ok) throw new Error('no index');
+      return r.json();
+    }).then(function (d) {
+      _setIndex = d || { sets: {} };
+      return _setIndex;
+    }).catch(function () { _setIndex = { sets: {} }; return _setIndex; });
+    return _setIndexLoading;
+  }
+  function subjMatchesSetSubject(need, have) {
+    need = String(need || '').toLowerCase(); have = String(have || '').toLowerCase();
+    if (!need || !have) return false;
+    if (have.indexOf(need) !== -1 || need.indexOf(have) !== -1) return true;
+    var wn = need.split(/[^a-z]+/), wh = have.split(/[^a-z]+/);
+    for (var i = 0; i < wn.length; i++) {
+      if (wn[i].length < 4) continue;
+      for (var j = 0; j < wh.length; j++) {
+        if (wh[j] === wn[i] || (wh[j].length >= 5 && wn[i].length >= 5 && (wh[j].indexOf(wn[i]) === 0 || wn[i].indexOf(wh[j]) === 0))) return true;
+      }
+    }
+    return false;
+  }
+  function trySetQuestions(subjKey, subjName, count) {
+    return setIndex().then(function (idx) {
+      var sets = (idx && idx.sets) || {};
+      var slugs = Object.keys(sets);
+      if (!slugs.length) return null;
+      // Rank sets by subject overlap with what was asked.
+      var ranked = slugs.map(function (slug) {
+        var subs = (sets[slug] && sets[slug].subjects) || [];
+        var score = 0;
+        subs.forEach(function (s) { if (subjMatchesSetSubject(subjName, s) || subjMatchesSetSubject(subjKey, s)) score++; });
+        return { slug: slug, score: score };
+      }).filter(function (r) { return r.score > 0; }).sort(function (a, b) { return b.score - a.score; });
+      if (!ranked.length) return null;
+      return fetch('data/practice-sets/' + ranked[0].slug + '.json').then(function (r) {
+        if (!r.ok) throw new Error('no set');
+        return r.json();
+      }).then(function (d) {
+        var items = ((d && d.questions) || []).filter(function (q) {
+          return q && q.q && q.a && subjMatchesSetSubject(subjName, q.sub) ;
+        });
+        if (items.length < 3) return null;
+        // Shuffle, take count, shape like generator output.
+        for (var i = items.length - 1; i > 0; i--) {
+          var j = Math.floor(Math.random() * (i + 1));
+          var t = items[i]; items[i] = items[j]; items[j] = t;
+        }
+        return items.slice(0, Math.max(count, 3)).map(function (q) {
+          return { q: q.q, a: q.a, h: q.hint || '', s: q.sub || '' };
+        });
+      }).catch(function () { return null; });
+    }).catch(function () { return null; });
+  }
+  function generatePracticeLLM(subjKey, subjName, seedQs, count, status) {
     if (status) status.textContent = 'Generating ' + count + ' new ' + subjName + ' questions\u2026 (first use downloads model ~1GB)';
     var llm = window.VlymbooqAskLLM;
     if (!llm || typeof llm.ensureEngine !== 'function') {
@@ -538,9 +610,11 @@
     var idx = 0, score = 0;
     function renderCard() {
       if (idx >= questions.length) {
+        var srcLabel = questions._fromSet ? '27B-written set' : 'generated';
         outputEl.innerHTML = '<div style="text-align:center;padding:20px">' +
           '<div style="font-size:20px;font-weight:800;color:#a78bfa">' + score + ' / ' + questions.length + '</div>' +
-          '<div style="color:#71717a;font-size:12px;margin-top:4px">generated ' + subjName + ' set complete</div>' +
+          '<div style="color:#71717a;font-size:12px;margin-top:4px">' + srcLabel + ' ' + subjName + ' set complete' +
+          (questions._fromSet ? ' · <span style="color:#34d399">exam-real difficulty</span>' : '') + '</div>' +
           '<button id="pp-again" style="margin-top:12px;padding:8px 16px;border-radius:8px;border:1px solid rgba(167,139,250,.4);background:rgba(167,139,250,.1);color:#a78bfa;cursor:pointer;font-size:12px">Generate another set</button>' +
           '</div>';
         var again = document.getElementById('pp-again');

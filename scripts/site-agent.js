@@ -2388,7 +2388,7 @@ async function agentWikiSyllabus() {
 // Exam slugs discovered dynamically (hub dirs with index.html) + RRB (asked
 // for, no hub dir yet) so new hubs are covered without code changes.
 const PRACTICE_DIR = 'data/practice-sets';
-const PRACTICE_EXTRA_SLUGS = ['rrb'];
+const PRACTICE_EXTRA_SLUGS = ['rrb', 'ssc-je'];
 const PRACTICE_EXAM_NAMES = {
   cgl: 'SSC CGL', rbi: 'RBI Grade B', jee: 'JEE', neet: 'NEET', gate: 'GATE',
   agniveer: 'Agniveer', upsc: 'UPSC', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk',
@@ -2471,6 +2471,21 @@ async function agentPracticeSets() {
     exam: examName, slug: target.slug, updatedAt: new Date().toISOString(),
     writtenBy: 'qwen3.8:27b', questions: clean
   });
+  // Registry index: the on-page tutor reads this (one tiny fetch) to find
+  // which 27B sets cover a subject, instead of probing every exam file.
+  try {
+    const idxPath = PRACTICE_DIR + '/index.json';
+    const idx = loadJson(idxPath, { updatedAt: null, sets: {} });
+    if (!idx.sets) idx.sets = {};
+    const subjects = {};
+    clean.forEach(c => { subjects[c.sub || 'General'] = (subjects[c.sub || 'General'] || 0) + 1; });
+    idx.sets[target.slug] = {
+      exam: examName, updatedAt: new Date().toISOString(),
+      count: clean.length, subjects: Object.keys(subjects)
+    };
+    idx.updatedAt = new Date().toISOString();
+    saveJson(idxPath, idx);
+  } catch (e) { /* registry best-effort */ }
   fixes.push({
     page: PRACTICE_DIR + '/' + target.slug + '.json',
     fix: 'Fresh 27B practice set for ' + examName + ' (' + clean.length + ' exam-real items)',
