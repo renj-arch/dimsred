@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-10-14T21:51:46.098Z",
+ "generatedAt": "2026-10-15T04:57:26.625Z",
  "counts": {
   "critical": 0,
   "warn": 3,
@@ -7,63 +7,145 @@
  },
  "changes": {
   "firstReport": false,
-  "previousGeneratedAt": "2026-10-14T17:26:17.629Z",
-  "new": [],
-  "resolved": [],
-  "unchanged": 16
+  "previousGeneratedAt": "2026-10-14T21:51:46.098Z",
+  "new": [
+   {
+    "severity": "info",
+    "kind": "agent",
+    "title": "Site Agent ran 3 time(s), last: 6 fix(es)",
+    "detail": "model: qwen3.8:27b · foresight: 2 · questions: 4 · 2026-10-14T22:33Z",
+    "action": null
+   }
+  ],
+  "resolved": [
+   {
+    "severity": "info",
+    "kind": "agent",
+    "title": "Site Agent ran 2 time(s), last: 236 fix(es)"
+   }
+  ],
+  "unchanged": 15
  },
  "runs": [
   {
    "workflow": "Fault status for improve.html",
    "status": "in_progress",
    "conclusion": "",
-   "url": "https://github.com/renj-arch/dimsred/actions/runs/38643305752",
-   "at": "2026-10-14T21:50:28Z"
-  },
-  {
-   "workflow": "Figures Build",
-   "status": "in_progress",
-   "conclusion": "",
-   "url": "https://github.com/renj-arch/dimsred/actions/runs/38643000705",
-   "at": "2026-10-14T21:48:00Z"
-  },
-  {
-   "workflow": "Question Quality",
-   "status": "in_progress",
-   "conclusion": "",
-   "url": "https://github.com/renj-arch/dimsred/actions/runs/38642221687",
-   "at": "2026-10-14T21:41:52Z"
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38684084685",
+   "at": "2026-10-15T04:56:14Z"
   },
   {
    "workflow": "Site Agent",
    "status": "in_progress",
    "conclusion": "",
-   "url": "https://github.com/renj-arch/dimsred/actions/runs/38640729758",
-   "at": "2026-10-14T21:31:29Z"
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38683885664",
+   "at": "2026-10-15T04:54:04Z"
   },
   {
    "workflow": "Slim live mirror",
    "status": "completed",
    "conclusion": "success",
-   "url": "https://github.com/renj-arch/dimsred/actions/runs/38640632989",
-   "at": "2026-10-14T21:31:20Z"
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38683826775",
+   "at": "2026-10-15T04:55:33Z"
+  },
+  {
+   "workflow": "Wiki Fill Recovery",
+   "status": "completed",
+   "conclusion": "cancelled",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38683700540",
+   "at": "2026-10-15T04:52:20Z"
+  },
+  {
+   "workflow": "Feed Fill",
+   "status": "completed",
+   "conclusion": "skipped",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38683700518",
+   "at": "2026-10-15T04:52:01Z"
+  },
+  {
+   "workflow": "Figures Build",
+   "status": "completed",
+   "conclusion": "cancelled",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38683684269",
+   "at": "2026-10-15T04:52:25Z"
+  },
+  {
+   "workflow": "Question Quality",
+   "status": "completed",
+   "conclusion": "cancelled",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38682189152",
+   "at": "2026-10-15T04:50:08Z"
+  },
+  {
+   "workflow": "Wiki Fill",
+   "status": "completed",
+   "conclusion": "cancelled",
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38676562333",
+   "at": "2026-10-15T04:51:51Z"
   },
   {
    "workflow": "LLM Auto-fix",
    "status": "completed",
    "conclusion": "success",
-   "url": "https://github.com/renj-arch/dimsred/actions/runs/38607618013",
-   "at": "2026-10-14T17:39:44Z"
-  },
-  {
-   "workflow": "Globe Fill",
-   "status": "completed",
-   "conclusion": "cancelled",
-   "url": "https://github.com/renj-arch/dimsred/actions/runs/38604587743",
-   "at": "2026-10-14T20:50:09Z"
+   "url": "https://github.com/renj-arch/dimsred/actions/runs/38643835710",
+   "at": "2026-10-14T22:00:27Z"
   }
  ],
  "actions": [
+  {
+   "sha": "623729a",
+   "at": "2026-10-15",
+   "who": "dimsred-bot",
+   "subject": "curl diagnostics: log HTTP code + curl exit code + stderr so late-run failures are identifiable; restart ollama once on connection-refused"
+  },
+  {
+   "sha": "f21bc65",
+   "at": "2026-10-15",
+   "who": "dimsred-bot",
+   "subject": "AGENT_LIMIT=3: run Foresight+Questions+Content only per run for speed; schedule covers rest"
+  },
+  {
+   "sha": "da5ce87",
+   "at": "2026-10-15",
+   "who": "dimsred-bot",
+   "subject": "PERF: keep model loaded 60m (no reload between agents), per-agent START/DONE progress logging, AGENT_LIMIT env to cap agents per run — public runners now 4 vCPU/16GB so 27B nearly fits RAM"
+  },
+  {
+   "sha": "b1063b3",
+   "at": "2026-10-15",
+   "who": "dimsred-bot",
+   "subject": "qwen3.8:27b is a thinking model: fall back to message.thinking when content empty; raise ping budget 10→600 and default 1024→2048 (thinking eats tokens — run #60 got content:\" \\)"
+  },
+  {
+   "sha": "fb9a198",
+   "at": "2026-10-15",
+   "who": "dimsred-bot",
+   "subject": "callLLM via curl not Node fetch: undici 300s timeout kills 27B cold-load (run #57 hung exactly 300s); llm-autofix.js was never working either (undefined OLLAMA_MODEL var, 0 fixes every run)"
+  },
+  {
+   "sha": "ea09d4d",
+   "at": "2026-10-14",
+   "who": "dimsred-bot",
+   "subject": "question-quality: qwen3.8:27b improved questions (run #1)"
+  },
+  {
+   "sha": "52bacb5",
+   "at": "2026-10-14",
+   "who": "dimsred-bot",
+   "subject": "Figures rebuild 2026-10-14 22:28 UTC"
+  },
+  {
+   "sha": "47af210",
+   "at": "2026-10-14",
+   "who": "dimsred-bot",
+   "subject": "auto-fix: qwen3.8:27b fixed weak content (run #11)"
+  },
+  {
+   "sha": "978bd31",
+   "at": "2026-10-14",
+   "who": "dimsred-bot",
+   "subject": "Improve board refresh 2026-10-14 21:51 UTC — run #13"
+  },
   {
    "sha": "72f43f8",
    "at": "2026-10-15",
@@ -81,60 +163,6 @@
    "at": "2026-10-15",
    "who": "dimsred-bot",
    "subject": "clone llm-autofix proven path: 16GB swap, plain ollama, no warmup/restart/browser-test, single pass"
-  },
-  {
-   "sha": "32fb514",
-   "at": "2026-10-15",
-   "who": "dimsred-bot",
-   "subject": "fix 27B: use EXACT llm-autofix request shape (no ctx/thread/batch/mmap opts that crash generation)"
-  },
-  {
-   "sha": "35cc1d6",
-   "at": "2026-10-15",
-   "who": "dimsred-bot",
-   "subject": "fix 27B permanently: restart with flash-attn+q8 env, sudo drop_caches, no push-trigger cascade"
-  },
-  {
-   "sha": "5985feb",
-   "at": "2026-10-14",
-   "who": "dimsred-bot",
-   "subject": "fix 27B checkout OOM: drop 9GB questions from site-agent, add AGENT_ONLY=questions workflow"
-  },
-  {
-   "sha": "52b3ecb",
-   "at": "2026-10-14",
-   "who": "dimsred-bot",
-   "subject": "Figures rebuild 2026-10-14 17:55 UTC"
-  },
-  {
-   "sha": "35c1806",
-   "at": "2026-10-14",
-   "who": "dimsred-bot",
-   "subject": "auto-fix: qwen3.8:27b fixed weak content (run #10)"
-  },
-  {
-   "sha": "54c03a1",
-   "at": "2026-10-14",
-   "who": "dimsred-bot",
-   "subject": "Improve board refresh 2026-10-14 17:26 UTC — run #12"
-  },
-  {
-   "sha": "be987af",
-   "at": "2026-10-14",
-   "who": "dimsred-bot",
-   "subject": "fix 27B OOM: LLM agents first, keep warm model, ctx 512, cap Node heap 2GB"
-  },
-  {
-   "sha": "508839c",
-   "at": "2026-10-14",
-   "who": "dimsred-bot",
-   "subject": "fix dead sign-in links: point href=# to login.html?redirect= (4 pages)"
-  },
-  {
-   "sha": "51d73f4",
-   "at": "2026-10-14",
-   "who": "dimsred-bot",
-   "subject": "fix papers.html: normalize papers.json array wrapper, derive missing type/cutoff/subject"
   }
  ],
  "ideas": [
@@ -297,28 +325,28 @@
    "severity": "info",
    "kind": "syllabus",
    "title": "All exam syllabi covered by wiki categories (177 cats)",
-   "detail": "ssc-je-mech 100% · neet-bio 100% · neet-pc 100% · jee-pcm 100% · polytechnic-diploma 100% · cgl-ga 100% · 2026-10-14",
+   "detail": "ssc-je-mech 100% · neet-bio 100% · neet-pc 100% · jee-pcm 100% · polytechnic-diploma 100% · cgl-ga 100% · 2026-10-15",
    "action": null
   },
   {
    "severity": "info",
    "kind": "pyq",
    "title": "5 exam PYQ pattern(s) analyzed",
-   "detail": "upsc-prelims top: Environment · ssc-je-mech top: Fluid Mechanics · ssc-cgl-tier1 top: Static GK · neet-biology top: Plant Kingdom · jee-physics top: Kinematics · 2026-10-14 · consumed by exam-tutor \"Most asked\" chips",
+   "detail": "upsc-prelims top: Environment · ssc-je-mech top: Fluid Mechanics · ssc-cgl-tier1 top: Static GK · neet-biology top: Plant Kingdom · jee-physics top: Kinematics · 2026-10-15 · consumed by exam-tutor \"Most asked\" chips",
    "action": null
   },
   {
    "severity": "info",
    "kind": "site",
    "title": "262 page(s) audited, all clean",
-   "detail": "2026-10-14T21:51Z",
+   "detail": "2026-10-15T04:57Z",
    "action": null
   },
   {
    "severity": "info",
    "kind": "autofix",
    "title": "Auto-fixed 4 item(s) by qwen3.8:27b",
-   "detail": "4 figure · last run 2026-10-14T17:39Z",
+   "detail": "4 figure · last run 2026-10-14T22:00Z",
    "action": null
   },
   {
@@ -352,8 +380,8 @@
   {
    "severity": "info",
    "kind": "agent",
-   "title": "Site Agent ran 2 time(s), last: 236 fix(es)",
-   "detail": "model: qwen3.5:4b · perf: 6 · a11y: 208 · code: 22 · 2026-10-13T15:37Z",
+   "title": "Site Agent ran 3 time(s), last: 6 fix(es)",
+   "detail": "model: qwen3.8:27b · foresight: 2 · questions: 4 · 2026-10-14T22:33Z",
    "action": null
   }
  ]
