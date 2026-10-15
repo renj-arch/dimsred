@@ -121,6 +121,16 @@ jobs:
           MAX_WRITE: '5'
         run: node scripts/write-archive-answers.js
 
+      # 27B converts fill-blank fragments into proper MCQs for the quiz
+      # (current-affairs serves these first). Same warm model, budget 10/run.
+      - name: Convert proper quiz MCQs (27B)
+        env:
+          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          MAX_CONVERT: '10'
+        run: node scripts/convert-quiz-proper.js
+
       - name: Publish question fixes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -129,5 +139,5 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json data/quiz-proper.json 2>/dev/null || true
           bash scripts/ci-push.sh "question-quality: qwen3.8:27b improved questions (run #${{ github.run_number }})"

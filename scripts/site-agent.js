@@ -2300,11 +2300,14 @@ async function agentWikiSyllabus() {
 
   let added = 0, checked = 0;
   const pendingBlocks = [];
+  // Cap 5/run: group blocks are just text (the heavy mining happens in the
+  // nightly fill, not here), so 15 optionals complete in ~3 runs (~1 day).
+  const CAP = 5;
   for (const e of plan.entries) {
     if (e.status === 'added') continue;
     checked++;
     if (isCovered(e)) { e.status = 'added'; e.addedAt = e.addedAt || 'pre-existing'; continue; }
-    if (pendingBlocks.length >= 2) continue;
+    if (pendingBlocks.length >= CAP) continue;
     // Format a group block matching the file's style.
     const topics = (Array.isArray(e.topics) ? e.topics : []).filter(t => t && t.length > 1);
     if (!topics.length) continue;
