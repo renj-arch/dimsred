@@ -51,7 +51,6 @@ jobs:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
-        with:
           # fetch-depth 0 (full history) cost 35 of this job's 36 minutes on a
           # repo whose partial clone pack is ~23 GB. Committing one file only
           # needs the tip.
