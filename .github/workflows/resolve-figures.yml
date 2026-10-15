@@ -46,8 +46,11 @@ concurrency:
 jobs:
   resolve:
     runs-on: ubuntu-latest
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
         with:
           # fetch-depth 0 (full history) cost 35 of this job's 36 minutes on a
           # repo whose partial clone pack is ~23 GB. Committing one file only
@@ -79,7 +82,11 @@ jobs:
             echo "No change in figure-files-auto.json — nothing to commit."
           else
             git commit -m "Resolve Commons figures for all curated UPSC topics"
-            git push
+            for i in 1 2 3; do
+              git pull --rebase --autostash 2>/dev/null || true
+              git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+              sleep 5
+            done
           fi
 
       - name: Upload resolution report

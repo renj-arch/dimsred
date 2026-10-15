@@ -8,11 +8,20 @@ on:
 permissions:
   contents: write
 
+# Prevent pile-ups: periodic content jobs must not queue behind each
+# other — the newest run wins.
+concurrency:
+  group: pib-feed
+  cancel-in-progress: true
+
 jobs:
   fetch:
     runs-on: ubuntu-latest
+    timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
         with:
           fetch-depth: 0
 
@@ -43,7 +52,11 @@ jobs:
           git add -A
           if ! git diff --staged --quiet; then
             git commit -m "Daily PIB feed update $(date +'%Y-%m-%d')"
-            git push
+            for i in 1 2 3; do
+              git pull --rebase --autostash 2>/dev/null || true
+              git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+              sleep 5
+            done
           else
             echo "No new PIB items to commit"
           fi

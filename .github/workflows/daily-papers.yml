@@ -27,12 +27,20 @@ on:
 permissions:
   contents: write
 
+# Prevent pile-ups: periodic content jobs must not queue behind each
+# other — the newest run wins.
+concurrency:
+  group: daily-papers
+  cancel-in-progress: true
+
 jobs:
   generate:
     runs-on: ubuntu-latest
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
-
+        with:
+          token: ${{ secrets.PAT }}
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -108,4 +116,8 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
           git diff --staged --quiet || git commit -m "Auto-generate practice papers $(date +'%Y-%m-%d') — ${{ steps.batch.outputs.exams }}"
-          git push
+          for i in 1 2 3; do
+            git pull --rebase --autostash 2>/dev/null || true
+            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            sleep 5
+          done

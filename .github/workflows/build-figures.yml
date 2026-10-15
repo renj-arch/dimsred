@@ -135,6 +135,12 @@ concurrency:
 permissions:
   contents: write
 
+# Prevent pile-ups: periodic content jobs must not queue behind each
+# other — the newest run wins.
+concurrency:
+  group: build-figures
+  cancel-in-progress: true
+
 env:
   NODE_OPTIONS: --max-old-space-size=8192
   FIGURES_ALLOW_UNVERIFIED: '1'
@@ -142,6 +148,7 @@ env:
 jobs:
   figures:
     runs-on: ubuntu-latest
+    timeout-minutes: 120
     steps:
       # PAT, not GITHUB_TOKEN, for the same reason build-timeline.yml uses one:
       # GitHub does not fire workflow triggers for a GITHUB_TOKEN push, so the
