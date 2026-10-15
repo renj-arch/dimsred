@@ -2560,6 +2560,101 @@ async function agentSelfCheck() {
   return { agent: 'selfcheck', fixes: fixes };
 }
 
+// ── PLANNER: the agent thinks before acting ──
+// Rotation picks agents blindly (next slice, no judgment). The planner reads
+// live state — intake counts, standing-goal progress, what recent runs
+// actually produced — REASONS about what matters most right now, and emits
+// this run's action list. Rotation stays as the fallback when the planner
+// fails, returns garbage, or the model is unreachable.
+function collectRunState() {
+  const st = { queue: {}, goals: {}, lastRuns: [], filesPresent: {} };
+  try {
+    const intact = loadJson('data/faults.json', { faults: [] });
+    st.queue.openFaults = (intact.faults || []).length;
+    st.queue.criticalFaults = (intact.faults || []).filter(f => f.severity === 'critical').length;
+  } catch (e) { /* ignore */ }
+  try {
+    const figGaps = loadJson('data/figure-gaps.json', {});
+    st.queue.figureGaps = figGaps.totalGaps != null ? figGaps.totalGaps : Object.keys(figGaps.bySubject || {}).length;
+  } catch (e) { /* ignore */ }
+  try {
+    const ideasJ = loadJson('data/ideas.json', { ideas: [] });
+    st.queue.pendingIdeas = (ideasJ.ideas || []).length;
+  } catch (e) { /* ignore */ }
+  // Standing goals — present only where checked out; ABSENT means unknown,
+  // never zero (a sparse checkout without data/questions must not read as
+  // "no papers" and trigger pointless work).
+  const have = (p) => { try { return fs.existsSync(p); } catch (e) { return false; } };
+  st.filesPresent.papers = have('data/papers.json');
+  st.filesPresent.questions = have('data/questions');
+  st.filesPresent.sidecar = have('data/archive-answers.json');
+  st.filesPresent.syllabus = have('data/wiki-syllabus-plan.json');
+  if (st.filesPresent.papers) {
+    try {
+      const papers = loadJson('data/papers.json', { papers: [] });
+      const list = Array.isArray(papers.papers) ? papers.papers : [];
+      st.goals.papers = {
+        count: list.length,
+        incomplete: list.filter(p => (p.questions || []).length < (p.totalQuestions || 100))
+          .map(p => p.id + ' ' + (p.questions || []).length + '/' + (p.totalQuestions || 100))
+      };
+    } catch (e) { /* ignore */ }
+  }
+  if (st.filesPresent.syllabus) {
+    try {
+      const plan = loadJson(SYLLABUS_PLAN, { entries: [] });
+      const total = (plan.entries || []).length;
+      st.goals.syllabus = { done: (plan.entries || []).filter(e => e.status === 'added').length, total: total };
+    } catch (e) { /* ignore */ }
+  }
+  if (st.filesPresent.sidecar) {
+    try {
+      const sc = loadJson('data/archive-answers.json', { answers: {} });
+      st.goals.archiveAnswers = Object.keys(sc.answers || {}).length;
+    } catch (e) { /* ignore */ }
+  }
+  try {
+    const log = loadJson(LOG, { runs: [] });
+    st.lastRuns = (log.runs || []).slice(-3).map(r => ({
+      at: r.at, totalFixes: r.totalFixes,
+      byAgent: (r.byAgent || []).map(b => b.agent + ':' + b.count)
+    }));
+  } catch (e) { /* ignore */ }
+  return st;
+}
+
+async function agentPlanner(state, availableNames) {
+  // availableNames: LLM agent names to choose from (rule agents always run).
+  // Returns ordered names subset, or null → caller falls back to rotation.
+  const sys = 'You are the planner for an autonomous site-maintenance agent. ' +
+    'Think like the OWNER of the site, not a janitor: your job is to make this ' +
+    'the best exam-prep site among all others — deepest correct content, zero ' +
+    'broken pages, fresh material every day. Spend this run where it moves that ' +
+    'mission most. ' +
+    'Return STRICT JSON only: {"reasoning": "...", "actions": ["AgentName", ...]}. No markdown. ' +
+    'RULES: actions must be a subset of [' + availableNames.join(', ') + '], in execution order, ' +
+    '3-6 items. Prefer: unfinished standing goals (incomplete papers, syllabus gaps) over new ventures; ' +
+    'agents that produced 0 for 2+ runs go LAST (they may be starved of inputs, not broken — say so in reasoning); ' +
+    'a run that just completed a goal should move to the next gap. ' +
+    'Reasoning: 2-3 sentences a human can audit on the improve board.';
+  const user = 'STATE:\n' + JSON.stringify(state).slice(0, 2500) + '\nBudget: one run, CPU inference ~5-15 min per LLM call.';
+  const r = await callLLM(sys, user, 600);
+  if (!r || !r.text) return null;
+  try {
+    const txt = r.text.replace(/```[a-z]*|```/gi, '').trim();
+    const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+    if (!j || typeof j.reasoning !== 'string' || !Array.isArray(j.actions)) return null;
+    const valid = j.actions.map(String).filter(n => availableNames.indexOf(n) !== -1);
+    // Dedupe, cap, require at least 2.
+    const seen = {};
+    const ordered = valid.filter(n => { if (seen[n]) return false; seen[n] = 1; return true; }).slice(0, 6);
+    if (ordered.length < 2) return null;
+    console.log('agent: PLAN reasoning — ' + j.reasoning.slice(0, 300));
+    console.log('agent: PLAN actions — ' + ordered.join(' → '));
+    return { reasoning: j.reasoning.slice(0, 500), actions: ordered };
+  } catch (e) { return null; }
+}
+
 async function main() {
   const log = loadJson(LOG, { runs: [], lastRun: null, model: null });
   const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
@@ -2585,6 +2680,7 @@ async function main() {
   }
 
   const results = [];
+  let mainPlan = null; // planner reasoning, attached to the run log entry
   // Two classes of agent:
   //   ROTATE (LLM) — generate new things. Minutes of CPU inference per call,
   //     so one run can't do them all → rotate through them.
@@ -2657,9 +2753,25 @@ async function main() {
   const ruleAgents = agents.filter(([name]) => alwaysAgents.some(([n]) => n === name));
   // No rotation for dedicated workflows (AGENT_ONLY): their filtered scope IS
   // the job — slicing it would randomly drop capabilities run to run.
-  const sliceSize = process.env.AGENT_ONLY
-    ? llmAgents.length
-    : Math.max(1, parseInt(process.env.AGENT_ROTATE || '4', 10));
+  // Planner first (site-agent full runs with a live model only): reason over
+  // state and emit this run's actions. Rotation is the fallback.
+  let planned = null;
+  if (!process.env.AGENT_ONLY && ping) {
+    try {
+      const state = collectRunState();
+      planned = await agentPlanner(state, llmAgents.map(([n]) => n));
+    } catch (e) { console.log('agent: planner failed, falling back to rotation'); planned = null; }
+  }
+  if (planned && planned.actions && planned.actions.length) {
+    const byName = {};
+    llmAgents.forEach(([n, f]) => { byName[n] = f; });
+    agents = planned.actions.map(n => [n, byName[n]]).filter(([, f]) => typeof f === 'function').concat(ruleAgents);
+    // Record the reasoning on the run entry so the improve board shows WHY.
+    mainPlan = { reasoning: planned.reasoning, actions: planned.actions.slice() };
+  } else {
+    const sliceSize = process.env.AGENT_ONLY
+      ? llmAgents.length
+      : Math.max(1, parseInt(process.env.AGENT_ROTATE || '4', 10));
   if (sliceSize < llmAgents.length) {
     const runNo = parseInt(process.env.GITHUB_RUN_NUMBER || '0', 10) || (Math.floor(Date.now() / 3600000) % 997);
     const offset = (runNo * sliceSize) % llmAgents.length;
@@ -2668,6 +2780,7 @@ async function main() {
     console.log('agent: rotation ' + sliceSize + '/' + llmAgents.length + ' LLM agents (offset ' + offset + ', run #' + runNo + ') — ' + rotated.map(([n]) => n).join(', '));
     agents = rotated.concat(ruleAgents);
   }
+  } // end else (rotation fallback)
   console.log('agent: will run ' + agents.length + ' agent(s): ' + agents.map(([n]) => n).join(', '));
 
   for (const [name, fn] of agents) {
@@ -2696,6 +2809,7 @@ async function main() {
     model: model,
     totalFixes: totalFixes,
     byAgent: results.map(r => ({ agent: r.agent, count: (r.fixes || []).length })),
+    plan: mainPlan || undefined,
     details: results.filter(r => r.fixes && r.fixes.length).map(r => ({
       agent: r.agent,
       fixes: r.fixes.slice(0, 10) // cap at 10 per agent to keep log small

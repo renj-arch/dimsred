@@ -309,6 +309,10 @@ function renderFaults() {
       var last = ag.runs[ag.runs.length - 1];
       var section = '<div class="list-head" style="margin-top:18px">Site Agent <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; full autonomy: SEO, A11Y, code, content, figures, proposals</span></div>';
       section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(last.at) + ' &middot; ' + last.totalFixes + ' action(s) &middot; model: ' + esc(last.model || 'auto') + ' &middot; runs every 6h</p>';
+      if (last.plan && last.plan.reasoning) {
+        section += '<div style="margin:6px 0;padding:8px 12px;background:rgba(167,139,250,.06);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;font-size:12px;color:var(--text-sec)">🧠 Agent plan: ' + esc(last.plan.reasoning) +
+          (last.plan.actions && last.plan.actions.length ? '<div style="margin-top:3px;font-size:11px;color:var(--text-muted)">→ ' + last.plan.actions.map(esc).join(' → ') + '</div>' : '') + '</div>';
+      }
 
       var colors = { seo: 'var(--blue)', perf: 'var(--amber)', a11y: 'var(--purple)', code: 'var(--amber)', content: 'var(--emerald)', figures: 'var(--purple)', flowcharts: 'var(--cyan)', mindmaps: 'var(--emerald)', features: 'var(--cyan)', proposals: 'var(--amber)' };
 
