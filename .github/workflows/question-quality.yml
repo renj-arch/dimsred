@@ -81,6 +81,10 @@ jobs:
           echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
           ollama list
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Warm the model into RAM now so the agent + writer calls start warm.
+          echo "Warming 27B into RAM..."
+          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warmup done"
 
       - name: Ensure Ollama is up before agent
         run: |

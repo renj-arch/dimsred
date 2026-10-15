@@ -25,7 +25,10 @@ permissions:
 jobs:
   autofix:
     runs-on: ubuntu-latest
-    timeout-minutes: 60
+    # 27B on runner CPU: pull ~5 min + cold load ~5 min + up to 3 fixes at
+    # ~5-18 min each. 60 min starved run #13 (55 min of generation, then the
+    # cap killed publish and the work was lost).
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
         with:
@@ -97,6 +100,12 @@ jobs:
           fi
           ollama list
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Warm the model into RAM now: the first script call otherwise pays
+          # the full 17GB cold load (~15 min). With KEEP_ALIVE=60m it stays
+          # resident for the whole run.
+          echo "Warming 27B into RAM..."
+          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warmup done"
 
       - name: Ensure Ollama is up before agent
         run: |

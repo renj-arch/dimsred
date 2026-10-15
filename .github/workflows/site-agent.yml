@@ -102,6 +102,11 @@ jobs:
           echo "Using Qwen3.8-27B (score 90.3 — BEST free model)"
           ollama list
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Warm the model into RAM now so the agent's cold-start ping finds
+          # it resident instead of paying the 17GB cold load itself.
+          echo "Warming 27B into RAM..."
+          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warmup done"
 
       # Safety net: re-verify the server accepts a connection on IPv4 right
       # before the agent runs. Restart if the pull left it dead. This uses
