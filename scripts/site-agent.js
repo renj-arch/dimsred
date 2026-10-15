@@ -1320,6 +1320,62 @@ async function agentWorkflows() {
     );
   } catch (e) { /* gh not available */ }
 
+  // ── Platform drift self-repair: read run ANNOTATIONS, not just code ──
+  // GitHub announces hard breakage as check annotations (action version no
+  // longer supported, runner image removed). Static rules cannot see these;
+  // the annotations can. Conservative policy: migrate ONLY on hard-breakage
+  // language (removed/unsupported/no-longer-available) from FAILED checks —
+  // NEVER on deprecation warnings (those are informational; mass-editing 20
+  // workflows on a warning is how incidents happen).
+  try {
+    const { execSync: _ex } = require('child_process');
+    const repo = process.env.GITHUB_REPOSITORY || '';
+    const annoTexts = [];
+    if (repo) {
+      try {
+        const checks = JSON.parse(_ex('gh api repos/' + repo + '/commits/' + (process.env.GITHUB_SHA || 'HEAD') + '/check-runs --paginate -q "[.check_runs[] | select(.conclusion==\\"failure\\") | {name, output: (.output.annotations // [])}]"',
+          { encoding: 'utf8', timeout: 20000, stdio: ['pipe', 'pipe', 'pipe'] }));
+        for (const c of (Array.isArray(checks) ? checks : [])) {
+          for (const a of (c.output || [])) {
+            const t = (((a && (a.message || '')) + ' ' + (a && (a.title || ''))) || '').slice(0, 300);
+            if (t.trim()) annoTexts.push({ run: c.name, text: t });
+          }
+        }
+      } catch (e) { /* annotations unavailable offline */ }
+    }
+    const HARD_BREAK = /no longer supported|has been removed|not supported|no longer available|end of life|unsupported runner|invalid workflow|workflow file issue/i;
+    for (const n of annoTexts) {
+      if (!HARD_BREAK.test(n.text)) continue;
+      // actions/checkout major bump, only on hard breakage.
+      if (/actions\/checkout@v4/i.test(n.text)) {
+        for (const wf of wfFiles) {
+          const wfPath = path.join(wfDir, wf);
+          let content = fs.readFileSync(wfPath, 'utf8');
+          if (content.indexOf('actions/checkout@v4') !== -1) {
+            content = content.split('actions/checkout@v4').join('actions/checkout@v5');
+            fs.writeFileSync(wfPath, content);
+            fixes.push({ page: wfPath, fix: 'Bumped actions/checkout v4→v5 (hard breakage: ' + n.text.slice(0, 80) + ')' });
+          }
+        }
+      }
+      // setup-node version end-of-life, only on hard breakage.
+      const nd = n.text.match(/node\.js\s*(\d+)[^.]{0,60}?(end of life|no longer supported|has been removed|not supported)/i);
+      if (nd) {
+        const dead = nd[1];
+        for (const wf of wfFiles) {
+          const wfPath = path.join(wfDir, wf);
+          let content = fs.readFileSync(wfPath, 'utf8');
+          const re = new RegExp('(node-version:\\s*[\'"]?)' + dead + '([\'"]?)');
+          if (re.test(content)) {
+            content = content.replace(re, '$122');
+            fs.writeFileSync(wfPath, content);
+            fixes.push({ page: wfPath, fix: 'Bumped node-version ' + dead + '→22 (hard breakage)' });
+          }
+        }
+      }
+    }
+  } catch (e) { /* annotation self-repair is best-effort */ }
+
   const wfFiles = fs.readdirSync(wfDir).filter(f => f.endsWith('.yml') || f.endsWith('.yaml'));
 
   for (const wf of wfFiles) {
@@ -1392,6 +1448,53 @@ async function agentWorkflows() {
       content = content.replace(/sparse-checkout-cone:/g, 'sparse-checkout-cone-mode:');
       changed = true;
       fixes.push({ page: wfPath, fix: 'Renamed sparse-checkout-cone → sparse-checkout-cone-mode' });
+    }
+
+    // Duplicate `with:` blocks under one step: YAML parsers take the last one
+    // silently, but GitHub refuses to load the workflow at all ("workflow file
+    // issue", whole run dead). A hardening script created these once by
+    // inserting a second `with:` where one existed. Merge them.
+    {
+      const lines = content.split('\n');
+      const out = [];
+      let stepWithIdx = -1; // index in `out` of this step's first `with:`
+      let stepIndent = '';
+      let mergedAny = false;
+      for (let li = 0; li < lines.length; li++) {
+        const line = lines[li];
+        const stepM = /^(\s*)-(\s+)(uses:|name:|run:|id:)/.exec(line);
+        if (stepM) { stepWithIdx = -1; stepIndent = stepM[1]; out.push(line); continue; }
+        const withM = /^(\s*)with:\s*$/.exec(line);
+        if (withM && stepIndent && line.indexOf(stepIndent + '  ') === 0 && line.slice(stepIndent.length + 2).indexOf(' ') === -1) {
+          // A `with:` directly under the current step (exactly step indent + 2).
+          if (stepWithIdx === -1) { stepWithIdx = out.length; out.push(line); continue; }
+          // Duplicate: skip the `with:` line itself; its children stay (they
+          // belong to the same mapping — deeper indent keeps them attached to
+          // the first `with:` above).
+          mergedAny = true;
+          continue;
+        }
+        // Leaving a step body (dedent to job level or `jobs:`) resets tracking.
+        if (/^(\S|  \S)/.test(line) && stepWithIdx !== -1 && out.length && !/^\s/.test(line)) stepWithIdx = -1;
+        out.push(line);
+      }
+      if (mergedAny) {
+        const merged = out.join('\n');
+        // Self-verify: exactly one `with:` per step block now.
+        let dupLeft = false;
+        const blocks = merged.split(/(?=^\s*-\s+(?:uses:|name:))/m);
+        for (const b of blocks) {
+          const n = (b.match(/^\s+with:\s*$/gm) || []).length;
+          if (n > 1) { dupLeft = true; break; }
+        }
+        if (!dupLeft) {
+          content = merged;
+          changed = true;
+          fixes.push({ page: wfPath, fix: 'Merged duplicate with: blocks (GitHub refuses to load such files)' });
+        } else {
+          fixes.push({ page: wfPath, fix: 'WARNING: duplicate with: detected but auto-merge unsafe — needs review', kind: 'warn' });
+        }
+      }
     }
 
     if (changed) fs.writeFileSync(wfPath, content);

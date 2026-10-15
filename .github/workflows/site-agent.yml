@@ -145,6 +145,8 @@ jobs:
         run: node scripts/site-agent.js
 
       - name: Publish agent work
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "dimsred-bot"
@@ -154,12 +156,6 @@ jobs:
           git add figures/ 2>/dev/null || true
           git add -- *.html prototype-*.html 2>/dev/null || true
           git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add 2>/dev/null || true
-          if git diff --staged --quiet; then
-            echo "No agent work to publish"
-          else
-            git commit -m "site-agent: ${{ env.MODEL }} maintained the site (run #${{ github.run_number }})"
-            for i in 1 2 3; do
-              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed..."
-              sleep 5
-            done || echo "::warning::push failed"
-          fi
+          # Single shared publisher: PAT push, GITHUB_TOKEN fallback on PAT
+          # death (no lost work), loud alert. See scripts/ci-push.sh.
+          bash scripts/ci-push.sh "site-agent: ${{ env.MODEL }} maintained the site (run #${{ github.run_number }})"

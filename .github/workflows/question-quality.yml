@@ -122,18 +122,12 @@ jobs:
         run: node scripts/write-archive-answers.js
 
       - name: Publish question fixes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
           git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json 2>/dev/null || true
-          if git diff --staged --quiet; then
-            echo "No question fixes to publish"
-          else
-            git commit -m "question-quality: qwen3.8:27b improved questions (run #${{ github.run_number }})"
-            for i in 1 2 3; do
-              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed..."
-              sleep 5
-            done || echo "::warning::push failed"
-          fi
+          bash scripts/ci-push.sh "question-quality: qwen3.8:27b improved questions (run #${{ github.run_number }})"

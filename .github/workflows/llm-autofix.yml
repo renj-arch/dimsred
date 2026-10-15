@@ -127,18 +127,12 @@ jobs:
         run: node scripts/llm-autofix.js
 
       - name: Publish fixes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
           git add data/autofix-log.json figures/ data/questions/ 2>/dev/null || true
-          if git diff --staged --quiet; then
-            echo "No fixes to publish"
-          else
-            git commit -m "auto-fix: ${{ env.MODEL }} fixed weak content (run #${{ github.run_number }})"
-            for i in 1 2 3; do
-              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Fixes pushed"; break; } || echo "push attempt $i failed, retrying..."
-              sleep 5
-            done || echo "::warning::push failed after 3 attempts"
-          fi
+          bash scripts/ci-push.sh "auto-fix: ${{ env.MODEL }} fixed weak content (run #${{ github.run_number }})"
