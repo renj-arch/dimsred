@@ -30,43 +30,47 @@ memory.addRule('Add timeout-minutes to all GitHub Actions jobs', 'Jobs were canc
 memory.addRule('Use NODE_OPTIONS=--max-old-space-size=4096 for node scripts processing large data', 'Prevents OOM on 7GB runner');
 
 const LOG = 'data/agent-log.json';
-// Use 127.0.0.1 NOT localhost: Node's fetch resolves localhost to ::1 (IPv6)
-// first on GitHub runners; Ollama listens on IPv4 only → instant "fetch failed"
-// while curl/ollama CLI (IPv4) work fine. Observed in run #56: CLI generation
-// proof succeeded, then every Node fetch failed in <1s.
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 
-// ── LLM: EXACT copy of llm-autofix.js callLLM — the only free-27B path
-// proven to work on this runner. Do NOT add warmups, restarts, health-check
-// loops, num_ctx/num_thread/num_batch/use_mmap options, or flash-attn env:
-// every one of those "improvements" made generation fail with "fetch failed"
-// after a healthy warmup (runs #44–#54).
+// ── LLM call: curl via execSync, NOT Node fetch ──
+// WHY NOT fetch: (a) Node fetch resolves localhost → ::1 IPv6; Ollama is
+// IPv4-only → instant "fetch failed" (run #56). (b) Even on 127.0.0.1,
+// undici's default 300s headersTimeout fires while the 27B model cold-loads
+// through swap (run #57: hung exactly 300s, then failed). (c) llm-autofix.js
+// which we copied as "proven" never actually called Ollama — it referenced
+// an undefined OLLAMA_MODEL variable and threw ReferenceError every time
+// (its own log: "Ollama not reachable: OLLAMA_MODEL is not defined,
+// 0 fix(es) applied"). The only path PROVEN to generate on this runner is
+// the CLI (`ollama run` succeeded in run #56 pull step). curl is the
+// closest HTTP equivalent: IPv4-only, no undici timeout.
+// Do NOT add warmups, restarts, health-check loops, num_ctx/num_thread/
+// num_batch/use_mmap options, or flash-attn env: runs #44–#54 showed every
+// one of those "improvements" broke generation.
+const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
 async function callLLM(system, user, maxTokens) {
   const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+  const payload = JSON.stringify({
+    model: model,
+    messages: [
+      { role: 'system', content: system },
+      { role: 'user', content: user }
+    ],
+    stream: false,
+    options: { temperature: 0.3, num_predict: maxTokens || 1024 }
+  });
   try {
-    const res = await fetch(OLLAMA_HOST + '/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: model,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user }
-        ],
-        stream: false,
-        options: { temperature: 0.3, num_predict: maxTokens || 1024 }
-      })
-    });
-    if (res.ok) {
-      const j = await res.json();
-      const text = (j.message && j.message.content) || '';
-      if (text.trim()) return { text: text.trim(), model: model + ' (local)' };
-    } else {
-      const body = await res.text().catch(function () { return ''; });
-      console.log('agent: Ollama ' + model + ' → ' + res.status + ' ' + body.slice(0, 200));
-    }
+    // --max-time 1800 = 30 min: 27B cold-load + generation on 7GB RAM
+    // CPU+swap can take 5–15 min for the first call. curl has no
+    // undici-style hard 300s cap. Output is JSON from /api/chat.
+    const out = execSync(
+      'curl -s --max-time 1800 ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
+      { input: payload, encoding: 'utf8', timeout: 1850000, maxBuffer: 50 * 1024 * 1024 }
+    );
+    const j = JSON.parse(out);
+    const text = (j.message && j.message.content) || '';
+    if (text.trim()) return { text: text.trim(), model: model + ' (local)' };
+    console.log('agent: Ollama ' + model + ' returned empty: ' + out.slice(0, 200));
   } catch (e) {
-    console.log('agent: Ollama not reachable: ' + (e.message || e));
+    console.log('agent: Ollama curl failed: ' + (e.message || e).slice(0, 300));
   }
   return null;
 }
