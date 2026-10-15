@@ -69,8 +69,12 @@ jobs:
           ollama --version
 
       # EXACT same start as llm-autofix: no env vars, no flash-attn, no q8.
+      # KEEP_ALIVE=60m: without it Ollama unloads the 17GB model after 5 min
+      # idle, and the NEXT agent pays a full reload (minutes). Public-repo
+      # runners are 4 vCPU / 16GB RAM so the model nearly fits in RAM.
       - name: Start Ollama server
         run: |
+          export OLLAMA_KEEP_ALIVE=60m
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           echo $! > /tmp/ollama.pid
           for i in $(seq 1 30); do
@@ -81,6 +85,7 @@ jobs:
             sleep 1
           done
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
 
       # llm-autofix has NO proof call here — its script's first callLLM IS
       # the proof. The ollama-run proof we added in #56 succeeded via CLI

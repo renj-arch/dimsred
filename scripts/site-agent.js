@@ -1570,6 +1570,7 @@ async function main() {
   const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
   log.model = model;
   console.log('agent: using model ' + model);
+  const runStart = Date.now();
 
   // FIRST action: one real generation call. Proves the server can
   // load+generate before any filesystem work. If this fails, skip the LLM
@@ -1611,11 +1612,27 @@ async function main() {
   if (process.env.AGENT_ONLY === 'questions') {
     agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content');
   }
+  // AGENT_LIMIT: 27B on 2 CPU cores + 16GB swap takes 2-10 min PER call.
+  // All 14 agents x multiple calls each blows the 120-min job budget — runs
+  // #56-#60 burned 40+ min and produced nothing verifiable. Cap agents per
+  // run (schedule fires every 2h, so coverage continues across runs).
+  const limit = parseInt(process.env.AGENT_LIMIT || '0', 10);
+  if (limit > 0 && agents.length > limit) {
+    console.log('agent: AGENT_LIMIT=' + limit + ' — running first ' + limit + ' agent(s): ' + agents.slice(0, limit).map(([n]) => n).join(', '));
+    agents = agents.slice(0, limit);
+  }
+  console.log('agent: will run ' + agents.length + ' agent(s): ' + agents.map(([n]) => n).join(', '));
 
   for (const [name, fn] of agents) {
+    const t0 = Date.now();
+    // Log BEFORE each agent so the 5-10 min of CPU inference is visible
+    // in the logs instead of looking like a hang (runs #56-#60 looked dead
+    // for 40+ min with no output).
+    console.log('agent: START ' + name + ' (' + (Date.now() - runStart) / 1000 | 0 + 's into run)');
     try {
       const result = await fn();
       results.push(result);
+      console.log('agent: DONE ' + name + ' in ' + ((Date.now() - t0) / 1000 | 0) + 's');
     } catch (e) {
       console.log('agent: ' + name + ' failed: ' + e.message);
       results.push({ agent: name.toLowerCase(), fixes: [], error: e.message });
