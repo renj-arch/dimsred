@@ -27,7 +27,11 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 1
+          # Depth 10, not 1: restoreStrippedScripts reads recent repair
+          # history (git log -- <page>) to re-add wrongly stripped tags.
+          # Depth 1 has no history, so the damage is invisible (run #3
+          # found nothing). 10 commits of html+scripts+js is seconds.
+          fetch-depth: 10
           # Root-level HTML pages + the agent scripts + the logs only.
           # No data/questions (9GB), no figures, no model — finishes in ~1 min.
           # js/ is small (~21MB) and MUST be present: without it every
