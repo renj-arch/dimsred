@@ -544,7 +544,10 @@ function renderQuestion(q, idx) {
   const dateTag = date ? '<span class="tag date-tag">' + date + '</span>' : '';
   return '<div class="q-item">'
     + '<div class="q-num">#' + (idx + 1) + '</div>'
-    + '<div class="q-tags">' + catTag + dateTag + (q.autoGen ? '<span class="tag" style="background:rgba(52,211,153,.12);color:#34d399" title="Written by qwen3.8:27b (local LLM) from corpus material — distinguishable from wiki-mined text">auto gen · 27b</span>' : '') + '</div>'
+    + '<div class="q-tags">' + catTag + dateTag + (q.autoGen ? (q.origin === 'agent-made'
+      ? '<span class="tag" style="background:rgba(167,139,250,.14);color:#a78bfa" title="Question AND answer created by qwen3.8:27b (local LLM) for an uncovered must-know subtopic — distinguishable from mined questions">agent-made · 27b</span>'
+      : '<span class="tag" style="background:rgba(52,211,153,.12);color:#34d399" title="Explanation written by qwen3.8:27b (local LLM) from corpus material — distinguishable from wiki-mined text">auto gen · 27b</span>') : '')
+    + (q.importance === 'high' ? '<span class="tag" style="background:rgba(239,68,68,.12);color:#ef4444" title="High-yield for Indian govt exams' + (Array.isArray(q.importantFor) && q.importantFor.length ? ': ' + esc(q.importantFor.join(', ')) : '') + '">high-yield</span>' : '') + '</div>'
     + '<div class="q-question">' + esc(q.question) + '</div>'
     + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + esc(q.answer) + '</span></div>'
     + (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + esc(q.fact) + '</div>' : '')

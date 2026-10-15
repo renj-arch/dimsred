@@ -76,7 +76,10 @@ function renderHtml(entry) {
   }
   var facts = (entry.keyFacts || []).map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
   return '<div class="arch-answer">'
-    + '<div class="arch-badge">Archive answer · written by qwen3.8:27b (local LLM) · <span class="arch-tag">auto gen</span>'
+    + '<div class="arch-badge">Archive answer · written by qwen3.8:27b (local LLM) · '
+    + (entry.origin === 'agent-made'
+      ? '<span class="arch-tag" style="background:rgba(167,139,250,.14);color:#a78bfa">agent-made</span>'
+      : '<span class="arch-tag">auto gen</span>')
     + (entry.category ? ' · ' + esc(entry.category) + (entry.subject ? ' / ' + esc(entry.subject) : '') : '') + '</div>'
     + '<div class="arch-q">Q: ' + esc(entry.question) + '</div>'
     + '<div class="arch-a">' + esc(entry.modelAnswer).replace(/\n/g, '<br>') + '</div>'
