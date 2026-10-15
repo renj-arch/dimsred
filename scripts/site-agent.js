@@ -154,6 +154,37 @@ function listPages() {
     .sort();
 }
 
+// True when an inline <script> block reads a window.* global — i.e. the page
+// consumes a library's globals immediately at parse time and its lib scripts
+// must run synchronously (no defer). Shared contract between SelfCheck (which
+// strips defer in this case) and Perf (which must not re-add it).
+function pageNeedsSyncScripts(html) {
+  const inlineRe = /<script>([\s\S]*?)<\/script>/gi;
+  let im;
+  while ((im = inlineRe.exec(html)) !== null) {
+    if (/\bwindow\.[A-Za-z_$]/.test(im[1])) return true;
+  }
+  return false;
+}
+
+// Existence check that is CORRECT in sparse checkouts. fs.existsSync lies
+// when the file is tracked but not materialized (js/ missing from the
+// checkout) — run #2 stripped 37 live script tags on exactly that lie and
+// broke ask.html, the flowchart, and a dozen more pages. git ls-files sees
+// tracked files whether or not they are checked out.
+function fileExistsAnywhere(f) {
+  if (!f || /^(https?:)?\/\//i.test(f) || /^[a-z]+:/i.test(f)) return true; // external/CDN/data URLs: can't verify, never treat as missing
+  const base = f.split('?')[0].split('#')[0];
+  if (!base) return true;
+  try {
+    if (fs.existsSync(base)) return true;
+  } catch (e) { /* fall through to git */ }
+  try {
+    execSync('git ls-files --error-unmatch "' + base.replace(/"/g, '') + '"', { stdio: 'pipe' });
+    return true;
+  } catch (e) { return false; }
+}
+
 // ── Autonomous repair: deferred-lib vs inline-consumer ordering ──
 // Script execution order rules that make this a REAL, page-breaking bug:
 //   * a <script src> WITHOUT defer runs the moment the parser reaches it
@@ -172,14 +203,7 @@ function fixDeferredInlineOrder(html, page) {
   const fixes = [];
   const deferredTags = html.match(/<script\s+src="[^"]+"\s+defer\s*><\/script>/gi) || [];
   if (!deferredTags.length) return { html: html, fixes: fixes };
-  // Does any inline script read a global that a lib would define?
-  const inlineReadsGlobal = /<script>([\s\S]*?)<\/script>/gi;
-  let consume = false;
-  let im;
-  while ((im = inlineReadsGlobal.exec(html)) !== null) {
-    if (/\bwindow\.[A-Za-z_$]/.test(im[1])) { consume = true; break; }
-  }
-  if (!consume) return { html: html, fixes: fixes };
+  if (!pageNeedsSyncScripts(html)) return { html: html, fixes: fixes };
   const out = html.replace(/(<script\s+src="[^"]+")\s+defer\s*(><\/script>)/gi, '$1$2');
   if (out !== html) {
     fixes.push({
@@ -187,6 +211,64 @@ function fixDeferredInlineOrder(html, page) {
       fix: 'Removed defer from ' + deferredTags.length + ' script tag(s) — a deferred script runs after parsing, but the inline code that reads its globals runs immediately, so the page always reported "Failed to load". Libs at the end of body need no defer.'
     });
     return { html: out, fixes: fixes };
+  }
+  return { html: html, fixes: fixes };
+}
+
+// ── Autonomous repair of over-aggressive repairs ──
+// Run #2 stripped 37 LIVE <script> tags (ask.html's 12 ask libs, the
+// flowchart's 5 graph libs, core.js from a dozen pages) because js/ was not
+// in the sparse checkout and fs.existsSync lied. The evidence of what was
+// stripped lives in git history. For the most recent bot repair commits that
+// touched this page, re-add every removed <script src> tag whose target can
+// be verified (tracked in git, or an external CDN URL the page evidently
+// used). Insert position: before the page's first remaining script-src tag,
+// else before </body>. Never touches inline code. This is what makes the
+// system self-healing instead of self-breaking.
+function restoreStrippedScripts(page) {
+  const fixes = [];
+  let html;
+  try { html = fs.readFileSync(page, 'utf8'); } catch (e) { return { html: null, fixes: fixes }; }
+  let log = '';
+  try {
+    log = execSync('git log --format=%H -5 -- ' + JSON.stringify(page), { encoding: 'utf8', timeout: 20000 });
+  } catch (e) { return { html: html, fixes: fixes }; }
+  const commits = log.split('\n').map(s => s.trim()).filter(Boolean);
+  for (const c of commits) {
+    let diff = '';
+    try {
+      diff = execSync('git show ' + c + ' --format="" -- ' + JSON.stringify(page),
+        { encoding: 'utf8', timeout: 20000, maxBuffer: 10 * 1024 * 1024 });
+    } catch (e) { continue; }
+    for (const line of diff.split('\n')) {
+      const m = /^-(\s*<script\s+src="([^"]+)"[^>]*><\/script>)\s*$/.exec(line);
+      if (!m) continue;
+      const tag = m[1].trim();
+      const src = m[2];
+      if (html.indexOf(tag) !== -1) continue; // already present
+      // Same src already referenced in any form? Then nothing is missing.
+      const escSrc = src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      if (new RegExp('<script[^>]*src="' + escSrc + '"', 'i').test(html)) continue;
+      // Verify the target: tracked in git, or an external URL the page used.
+      const base = src.split('?')[0].split('#')[0];
+      let ok = false;
+      if (/^https?:\/\//i.test(base)) {
+        ok = true; // external CDN the page evidently loaded before
+      } else if (base && !/^[a-z]+:/i.test(base)) {
+        try { execSync('git ls-files --error-unmatch "' + base.replace(/"/g, '') + '"', { stdio: 'pipe' }); ok = true; } catch (e) { ok = false; }
+      }
+      if (!ok) continue;
+      // Insert where a lib belongs: before the first INLINE script (libs must
+      // run before the code that consumes them), else before the first
+      // remaining script-src tag, else before </body>.
+      const inlineAt = html.search(/<script(?![^>]*src=)[^>]*>/i);
+      const srcAt = html.search(/<script\s+src="/i);
+      const anchor = inlineAt !== -1 ? inlineAt : srcAt;
+      if (anchor !== -1) html = html.slice(0, anchor) + tag + '\n' + html.slice(anchor);
+      else if (/<\/body>/i.test(html)) html = html.replace(/<\/body>/i, tag + '\n</body>');
+      else html += '\n' + tag + '\n';
+      fixes.push({ page: page, fix: 'Restored stripped script tag ' + src + ' (removed by repair ' + c.slice(0, 8) + '; target verified)' });
+    }
   }
   return { html: html, fixes: fixes };
 }
@@ -244,13 +326,20 @@ async function agentPerf() {
     let changed = false;
 
     // Add defer to <script src> tags missing it (except JSON-LD and modules)
-    if (/<script[^>]+src=["'][^"']+["'](?!.*defer)(?!.*async)(?!.*type=["']module)/i.test(html) && !/type=["']application\/ld\+json/i.test(html)) {
+    // BUT NOT when an inline block consumes a lib's globals: a deferred
+    // script runs after parsing while inline code runs immediately, so defer
+    // there breaks the page deterministically (flowchart.html's graph libs).
+    // SelfCheck strips defer in exactly that case; adding it back here would
+    // flip-flop the file every run. Shared contract via pageNeedsSyncScripts.
+    if (!pageNeedsSyncScripts(html) && /<script[^>]+src=["'][^"']+["'](?!.*defer)(?!.*async)(?!.*type=["']module)/i.test(html) && !/type=["']application\/ld\+json/i.test(html)) {
       html = html.replace(/<script([^>]+src=["'][^"']+["'])([^>]*)>/gi, function (match, src, rest) {
         if (/defer|async|type=["']module/i.test(match)) return match;
         return '<script' + src + rest + ' defer>';
       });
       changed = true;
       fixes.push({ page: page, fix: 'Added defer to script tags' });
+    } else if (pageNeedsSyncScripts(html)) {
+      fixes.push({ page: page, fix: 'Left scripts synchronous — an inline block reads lib globals, defer would break the page', kind: 'perf-note' });
     }
 
     // Add loading="lazy" to images missing it
@@ -1561,7 +1650,9 @@ async function agentSelfCheck() {
     'data/papers.json', 'data/ask-index.json'
   ];
   for (const f of criticalFiles) {
-    if (!fs.existsSync(f)) {
+    // fileExistsAnywhere: fs.existsSync alone reports false for tracked
+    // files that a sparse checkout did not materialize.
+    if (!fileExistsAnywhere(f)) {
       fixes.push({ page: f, fix: 'CRITICAL FILE MISSING', kind: 'critical' });
     }
   }
@@ -1602,7 +1693,7 @@ async function agentSelfCheck() {
           if (fs.existsSync(pf)) {
             let html = fs.readFileSync(pf, 'utf8');
             const target = issue.detail.replace(/^→\s+/, '').split(' ')[0];
-            if (target && !fs.existsSync(target)) {
+            if (target && !fileExistsAnywhere(target)) {
               // Remove the broken link
               html = html.replace(
                 new RegExp('<a href="' + target.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '"[^>]*>([^<]*)</a>', 'gi'),
@@ -1623,6 +1714,17 @@ async function agentSelfCheck() {
   for (const page of pages) {
     let html = fs.readFileSync(page, 'utf8');
     let changed = false;
+
+    // ── FIRST: undo damage from over-aggressive repairs ──
+    // A past repair stripped live script tags on false evidence (sparse
+    // checkout made fs.existsSync lie). Re-add any removed tag whose target
+    // verifies, before any other repair runs.
+    const restored = restoreStrippedScripts(page);
+    if (restored.fixes.length) {
+      html = restored.html;
+      changed = true;
+      for (const f of restored.fixes) fixes.push(f);
+    }
 
     if (page === 'index.html') {
       const placeholders = (html.match(/<a href="#" class="exam-card/g) || []).length;
@@ -1654,7 +1756,10 @@ async function agentSelfCheck() {
     const scriptRefs = html.match(/src=["'](js\/[^"']+\.js)["']/gi) || [];
     for (const ref of scriptRefs) {
       const file = ref.match(/src=["']([^"']+)["']/i)[1];
-      if (!fs.existsSync(file)) {
+      // fileExistsAnywhere, NOT fs.existsSync: in a sparse checkout the file
+      // can be tracked-but-not-materialized, and stripping a live tag on that
+      // lie broke 17 pages in run #2. Externals always pass (can't verify).
+      if (!fileExistsAnywhere(file)) {
         html = html.replace(ref, '');
         changed = true;
         fixes.push({ page: page, fix: 'Removed broken script ref ' + file });

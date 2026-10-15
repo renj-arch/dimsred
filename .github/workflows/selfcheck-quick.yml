@@ -30,8 +30,12 @@ jobs:
           fetch-depth: 1
           # Root-level HTML pages + the agent scripts + the logs only.
           # No data/questions (9GB), no figures, no model — finishes in ~1 min.
+          # js/ is small (~21MB) and MUST be present: without it every
+          # existence check lies and live script tags get stripped (run #2
+          # removed 37 working tags across 17 pages on exactly that lie).
           sparse-checkout: |
             scripts
+            js
             /*.html
             data/agent-log.json
             data/browser-test.json
