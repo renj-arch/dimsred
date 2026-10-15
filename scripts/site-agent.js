@@ -1705,7 +1705,22 @@ async function agentQuestionQuality() {
   const files = fs.readdirSync(DIR).filter(f => f.endsWith('.json'));
   let mergedCount = 0, fixedQuestions = 0, processedFiles = 0;
 
-  for (const file of files) {
+  // ── Self-audit collectors (filled inline in the SAME single pass below —
+  // a second full sweep of 9GB doubled this agent's runtime past 2 hours) ──
+  const thinSubtopics = [];
+  const emptySubtopics = [];
+  const misplaced = [];
+  const MISPLACED = [
+    { re: /\bodi?yan\b/i, correct: 'Indian Folk Traditions', wrong: /classical.*language/i },
+    { re: /\b(hitopadesha|panchatantra|jataka)\b/i, correct: 'Indian Literature', wrong: /classical.*language/i },
+    { re: /\b(adhyatma|yoga|vedanta|sankhya)\b/i, correct: 'Indian Philosophy', wrong: /classical.*language/i },
+  ];
+
+  for (let fi = 0; fi < files.length; fi++) {
+    const file = files[fi];
+    if ((fi + 1) % 100 === 0 || fi === files.length - 1) {
+      console.log('agent: Questions — sweeping ' + (fi + 1) + '/' + files.length + ' files (' + processedFiles + ' changed, ' + fixedQuestions + ' fixed)');
+    }
     const fp = path.join(DIR, file);
     try {
       const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
@@ -1764,6 +1779,21 @@ async function agentQuestionQuality() {
         }
 
         data[sk].subSubjects = newSubs;
+
+        // Audit inline (same pass): thin/empty/misplaced on merged state.
+        for (const sub of Object.keys(newSubs)) {
+          const qs = newSubs[sub] || [];
+          for (const mp of MISPLACED) {
+            if (mp.re.test(sub) && mp.wrong.test(sk)) {
+              misplaced.push(file + ': "' + sub + '" belongs in "' + mp.correct + '"');
+            }
+          }
+          if (qs.length === 0 && sub.length > 3) {
+            emptySubtopics.push({ file: file, subject: sk, sub: sub });
+          } else if (qs.length < 15 && sub.length > 3) {
+            thinSubtopics.push({ file: file, subject: sk, sub: sub, count: qs.length });
+          }
+        }
       }
 
       if (fileChanged) {
@@ -1771,43 +1801,6 @@ async function agentQuestionQuality() {
         processedFiles++;
       }
     } catch (e) { /* skip unreadable */ }
-  }
-
-  // ── Self-audit: detect thin/empty subtopics for LLM generation ──
-  const thinSubtopics = [];
-  const emptySubtopics = [];
-  const misplaced = [];
-
-  // Misplaced topic detection
-  const MISPLACED = [
-    { re: /\bodi?yan\b/i, correct: 'Indian Folk Traditions', wrong: /classical.*language/i },
-    { re: /\b(hitopadesha|panchatantra|jataka)\b/i, correct: 'Indian Literature', wrong: /classical.*language/i },
-    { re: /\b(adhyatma|yoga|vedanta|sankhya)\b/i, correct: 'Indian Philosophy', wrong: /classical.*language/i },
-  ];
-
-  for (const file of files) {
-    const fp = path.join(DIR, file);
-    try {
-      const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
-      for (const sk of Object.keys(data)) {
-        const subs = data[sk].subSubjects || {};
-        for (const sub of Object.keys(subs)) {
-          const qs = subs[sub] || [];
-          // Check for misplaced
-          for (const mp of MISPLACED) {
-            if (mp.re.test(sub) && mp.wrong.test(sk)) {
-              misplaced.push(file + ': "' + sub + '" belongs in "' + mp.correct + '"');
-            }
-          }
-          // Detect thin/empty
-          if (qs.length === 0 && sub.length > 3) {
-            emptySubtopics.push({ file, subject: sk, sub });
-          } else if (qs.length < 15 && sub.length > 3) {
-            thinSubtopics.push({ file, subject: sk, sub, count: qs.length });
-          }
-        }
-      }
-    } catch (e) { /* skip */ }
   }
 
   thinSubtopics.sort((a, b) => a.count - b.count);
@@ -1832,6 +1825,7 @@ async function agentQuestionQuality() {
   const targets = [...emptySubtopics.slice(0, 1), ...thinSubtopics.slice(0, 2)];
 
   for (const target of targets) {
+    console.log('agent: Questions — generating for "' + target.sub + '" (' + target.subject + ')');
     try {
       const fp = path.join(DIR, target.file);
       const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
@@ -1850,13 +1844,15 @@ async function agentQuestionQuality() {
 
       const result = await callLLM(
         'You are an UPSC/SSC exam content writer. Generate exam-relevant questions.\n' +
+        EXAMINER_STYLE + '\n' +
         'STRICT RULES:\n' +
         '1. Each question tests a DIFFERENT fact — no duplicates even if worded differently\n' +
         '2. Do NOT rephrase existing questions — cover NEW facts only\n' +
-        '3. Include detailed explanations with facts, dates, numbers, names\n' +
+        '3. Explanations follow the examiner voice above (verdict + why + traps + hook)\n' +
         '4. Mix difficulty: easy (30%), medium (50%), hard (20%)\n' +
         '5. Questions must be specific and factual, not vague\n' +
-        '6. Return strict JSON: [{"question":"...","answer":"...","explanation":"...","difficulty":"easy|medium|hard"}]',
+        '6. Judge importance: "high" if PYQ-grade/core, "medium" if solid syllabus, "low" if trivia; list up to 5 exams from [UPSC, SSC CGL, SSC CHSL, SSC GD, SSC JE, IBPS PO, IBPS Clerk, SBI PO, SBI Clerk, RBI Grade B, RRB NTPC, NDA, CDS, CTET, GATE, NEET, JEE, Agniveer, UP Police, State PSC]\n' +
+        '7. Return strict JSON: [{"question":"...","answer":"...","explanation":"...","difficulty":"easy|medium|hard","importance":"high|medium|low","importantFor":["EXAM"]}]',
         'Topic: ' + target.sub + ' (subject: ' + target.subject + ')\n' +
         'Existing questions (' + existingQs.length + '):\n' +
         existingQs.slice(0, 10).map(q => '- ' + (q.question || '').substring(0, 80)).join('\n') + '\n\n' +
@@ -1906,6 +1902,8 @@ async function agentQuestionQuality() {
           explanation: nq.explanation || nq.answer,
           type: 'qa',
           difficulty: nq.difficulty || 'medium',
+          importance: ['high', 'medium', 'low'].indexOf(String(nq.importance || '').toLowerCase()) !== -1 ? String(nq.importance).toLowerCase() : 'medium',
+          importantFor: Array.isArray(nq.importantFor) ? nq.importantFor.map(String).slice(0, 5) : [],
           subSubject: target.sub,
           source: 'agent-generated'
         });
