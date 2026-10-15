@@ -128,6 +128,10 @@ jobs:
           # "fetch failed" while curl/ollama-CLI (IPv4) work. Run #56:
           # CLI proof succeeded, Node fetch failed in <1s.
           OLLAMA_HOST: http://127.0.0.1:11434
+          # Run only the first 3 agents (Foresight, Questions, Content) per
+          # run. All 14 take too long on CPU inference; the schedule fires
+          # every 2h so full coverage builds up across runs.
+          AGENT_LIMIT: '3'
           # Single pass, not --loop: llm-autofix runs once and succeeds.
           # The 6-cycle loop burned memory and LLM retry budget on cycle 1.
           AGENT_MAX_CYCLES: '1'
