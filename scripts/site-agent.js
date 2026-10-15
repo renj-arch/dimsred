@@ -60,14 +60,18 @@ async function callLLM(system, user, maxTokens) {
     options: { temperature: 0.3, num_predict: maxTokens || 2048 }
   });
   try {
-    // --max-time 1800 = 30 min: 27B cold-load + generation on 7GB RAM
-    // CPU+swap can take 5–15 min for the first call. curl has no
-    // undici-style hard 300s cap. Output is JSON from /api/chat.
+    // --max-time 1800 = 30 min: cold-load + generation can take minutes.
+    // -S shows curl's own errors; -w appends the HTTP status so a 400 (prompt
+    // too long / bad options) is distinguishable from a transport failure
+    // (server dead = exit 7, timeout = exit 28).
     const out = execSync(
-      'curl -s --max-time 1800 ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
+      'curl -sS --max-time 1800 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
       { input: payload, encoding: 'utf8', timeout: 1850000, maxBuffer: 50 * 1024 * 1024 }
     );
-    const j = JSON.parse(out);
+    const nl = out.lastIndexOf('\n');
+    const body = nl >= 0 ? out.slice(0, nl) : out;
+    const httpCode = nl >= 0 ? out.slice(nl + 1).trim() : '';
+    const j = JSON.parse(body);
     const msg = j.message || {};
     // qwen3.8:27b is a THINKING model: it reasons in message.thinking and
     // puts the final answer in message.content. With num_predict as low as
@@ -78,9 +82,21 @@ async function callLLM(system, user, maxTokens) {
     let text = (msg.content || '').trim();
     if (!text && msg.thinking) text = msg.thinking.trim();
     if (text) return { text: text, model: model + ' (local)' };
-    console.log('agent: Ollama ' + model + ' returned empty: ' + out.slice(0, 200));
+    console.log('agent: Ollama ' + model + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
   } catch (e) {
-    console.log('agent: Ollama curl failed: ' + (e.message || e).slice(0, 300));
+    // e.status = curl exit code (7=refused/server dead, 28=timeout),
+    // e.stderr = curl's error text, HTTP body may follow on stdout.
+    const detail = 'exit=' + (e.status === undefined ? '?' : e.status) +
+      ' stderr=' + String(e.stderr || '').slice(0, 200) +
+      ' out=' + String(e.stdout || '').slice(0, 300);
+    console.log('agent: Ollama curl failed: ' + detail);
+    // If the server is dead (exit 7 / Connection refused), restart it once.
+    // The 17GB model then needs reloading, so set a long keep-alive-agnostic
+    // retry: this call will be slow but the run continues.
+    if (e.status === 7 || String(e.stderr || '').match(/Connection refused|Failed to connect/i)) {
+      console.log('agent: server refused connection — restarting ollama for next call');
+      try { execSync('nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore' }); } catch (e2) { /* best effort */ }
+    }
   }
   return null;
 }
