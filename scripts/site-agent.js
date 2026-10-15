@@ -1606,8 +1606,13 @@ async function main() {
   }
 
   const results = [];
-  // LLM agents first (Foresight/Questions/Content), then the 262-page fixers.
-  let agents = [
+  // Two classes of agent:
+  //   ROTATE (LLM) — generate new things. Minutes of CPU inference per call,
+  //     so one run can't do them all → rotate through them.
+  //   ALWAYS (rules) — check + fix the site. Pure filesystem/HTML work, no
+  //     LLM, runs in seconds over 262 pages → runs on EVERY pass so the site
+  //     is continuously audited and corrected.
+  const rotateAgents = [
     ['Foresight', agentForesight],
     ['Questions', agentQuestionQuality],
     ['Content', agentContent],
@@ -1615,7 +1620,9 @@ async function main() {
     ['Flowcharts', agentFlowcharts],
     ['Mindmaps', agentMindmaps],
     ['Features', agentFeatures],
-    ['Proposals', agentProposals],
+    ['Proposals', agentProposals]
+  ];
+  const alwaysAgents = [
     ['Workflows', agentWorkflows],
     ['SelfCheck', agentSelfCheck],
     ['SEO', agentSEO],
@@ -1623,6 +1630,7 @@ async function main() {
     ['A11Y', agentA11Y],
     ['Code', agentCode]
   ];
+  let agents = rotateAgents.concat(alwaysAgents);
   // AGENT_ONLY=questions: dedicated question-quality workflow (questions data
   // checked out, site pages are not). Run only the agents that touch questions.
   if (process.env.AGENT_ONLY === 'questions') {
@@ -1654,19 +1662,25 @@ async function main() {
   } catch (e) { console.log('agent: work intake failed: ' + e.message); }
 
   // ── ROTATION (continuous working) ──
-  // One run cannot do everything: 14 agents × minutes of CPU inference each
-  // exceeds the 120-min job budget. Rotate instead of dropping work — each
-  // run takes the NEXT slice of the agent list, so an hourly schedule gives
-  // every capability a turn. Slice comes from AGENT_ROTATE (default 4).
-  // Rotation offset derives from GITHUB_RUN_NUMBER so it advances every run.
+  // One run cannot do everything: the 8 LLM agents × minutes of CPU inference
+  // each exceeds the 120-min job budget. Rotate instead of dropping work —
+  // each run takes the NEXT slice of the LLM agents, so an hourly schedule
+  // gives every capability a turn within ~2 hours. Slice comes from
+  // AGENT_ROTATE (default 4); the offset derives from GITHUB_RUN_NUMBER so
+  // it advances every run. Rotation applies ONLY to the LLM agents (the
+  // "build new" half) — the rule-based agents that check + correct the site
+  // (SEO/A11Y/Code/SelfCheck/Perf/Workflows) run on every single pass, which
+  // is what makes the site continuously maintained.
+  const llmAgents = agents.filter(([name]) => rotateAgents.some(([n]) => n === name));
+  const ruleAgents = agents.filter(([name]) => alwaysAgents.some(([n]) => n === name));
   const sliceSize = Math.max(1, parseInt(process.env.AGENT_ROTATE || '4', 10));
-  if (sliceSize < agents.length) {
+  if (sliceSize < llmAgents.length) {
     const runNo = parseInt(process.env.GITHUB_RUN_NUMBER || '0', 10) || (Math.floor(Date.now() / 3600000) % 997);
-    const offset = (runNo * sliceSize) % agents.length;
+    const offset = (runNo * sliceSize) % llmAgents.length;
     const rotated = [];
-    for (let i = 0; i < sliceSize; i++) rotated.push(agents[(offset + i) % agents.length]);
-    console.log('agent: rotation ' + sliceSize + '/' + agents.length + ' (offset ' + offset + ', run #' + runNo + ') — ' + rotated.map(([n]) => n).join(', '));
-    agents = rotated;
+    for (let i = 0; i < sliceSize; i++) rotated.push(llmAgents[(offset + i) % llmAgents.length]);
+    console.log('agent: rotation ' + sliceSize + '/' + llmAgents.length + ' LLM agents (offset ' + offset + ', run #' + runNo + ') — ' + rotated.map(([n]) => n).join(', '));
+    agents = rotated.concat(ruleAgents);
   }
   console.log('agent: will run ' + agents.length + ' agent(s): ' + agents.map(([n]) => n).join(', '));
 
