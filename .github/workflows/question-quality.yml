@@ -33,8 +33,10 @@ jobs:
             data/archive-answers.json
             data/archive-taxonomy.json
             data/pyq-patterns.json
+            data/wiki-syllabus-plan.json
             data/agent-log.json
             data/questions-report.json
+            data/questions-cursor.json
           sparse-checkout-cone-mode: false
           token: ${{ secrets.PAT }}
 
@@ -125,7 +127,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No question fixes to publish"
           else

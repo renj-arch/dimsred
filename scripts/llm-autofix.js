@@ -121,14 +121,14 @@ function saveJson(p, data) {
 // ── LLM call: Ollama (local, free forever) → optional API fallbacks ──
 async function callLLM(system, user, maxTokens) {
   // Primary: local Ollama via curl — no keys, no rate limits, runs on runner CPU.
-  // WHY curl NOT fetch: (a) fetch resolves localhost → ::1 IPv6, Ollama is
-  // IPv4-only → instant "fetch failed"; (b) undici's default 300s
-  // headersTimeout fires while the 27B model cold-loads (a full load takes
-  // minutes through swap); (c) curl is what `ollama run` uses internally
-  // and is PROVEN to work on this runner (Site Agent #63: cold-start OK).
+  // --max-time 2400: 27B generates ~1-3 tok/s on CPU; cutting off at 30 min
+  // wastes full generations. On timeout: restart (clears wedged server-side
+  // work — curl abandoning does NOT stop Ollama, and naive retries queue
+  // behind their own zombie), then ONE retry on a clean server.
+  let out;
   try {
-    const out = execSync(
-      'curl -sS --max-time 1800 -w "\\n%{http_code}" ' + OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-',
+    out = execSync(
+      'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-',
       {
         input: JSON.stringify({
           model: OLLAMA_MODEL,
@@ -141,16 +141,55 @@ async function callLLM(system, user, maxTokens) {
           // ~200-600 tokens on message.thinking before emitting content.
           options: { temperature: 0.3, num_predict: maxTokens || 2048 }
         }),
-        encoding: 'utf8', timeout: 1850000, maxBuffer: 50 * 1024 * 1024
+        encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024
       }
     );
+  } catch (e) {
+    if (e.status === 28) {
+      console.log('autofix: Ollama timed out — restarting server to clear wedged work, then one retry');
+      try { execSync('pkill -f "ollama serve"; sleep 2; nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
+      try {
+        for (let i = 0; i < 60; i++) {
+          try {
+            execSync('curl -sf --max-time 5 ' + OLLAMA_HOST + '/api/tags', { stdio: 'pipe', timeout: 10000 });
+            break;
+          } catch (e1) { execSync('sleep 2', { stdio: 'ignore' }); }
+        }
+        out = execSync(
+          'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-',
+          {
+            input: JSON.stringify({
+              model: OLLAMA_MODEL,
+              messages: [
+                { role: 'system', content: system },
+                { role: 'user', content: user }
+              ],
+              stream: false,
+              options: { temperature: 0.3, num_predict: maxTokens || 2048 }
+            }),
+            encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024
+          }
+        );
+      } catch (e2) {
+        console.log('autofix: Ollama retry failed after restart: exit=' + e2.status);
+        out = null;
+      }
+    } else {
+      console.log('autofix: Ollama curl failed: exit=' + (e.status === undefined ? '?' : e.status) +
+        ' stderr=' + String(e.stderr || '').slice(0, 200) + ' out=' + String(e.stdout || '').slice(0, 200));
+      out = null;
+    }
+  }
+  if (!out) {
+    // Optional fallbacks below (unchanged) — only used if API keys happen to be set.
+  } else {
+  try {
     const nl = out.lastIndexOf('\n');
     const body = nl >= 0 ? out.slice(0, nl) : out;
     const httpCode = nl >= 0 ? out.slice(nl + 1).trim() : '';
     const j = JSON.parse(body);
     const msg = j.message || {};
     let text = (msg.content || '').trim();
-    // Thinking model fallback: content can be empty with everything in thinking.
     if (!text && msg.thinking) text = msg.thinking.trim();
     if (text) {
       console.log('autofix: LLM ← ' + OLLAMA_MODEL + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
@@ -158,8 +197,8 @@ async function callLLM(system, user, maxTokens) {
     }
     console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
   } catch (e) {
-    console.log('autofix: Ollama curl failed: exit=' + (e.status === undefined ? '?' : e.status) +
-      ' stderr=' + String(e.stderr || '').slice(0, 200) + ' out=' + String(e.stdout || '').slice(0, 200));
+    console.log('autofix: Ollama response failed: ' + (e.message || e).slice(0, 200));
+  }
   }
 
   // Optional fallbacks — only used if API keys happen to be set.

@@ -47,13 +47,14 @@ const LOG = 'data/agent-log.json';
 // one of those "improvements" broke generation.
 const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
 
-// One HTTP attempt at the chat endpoint. Extracted so a timed-out cold-load
-// (exit 28, "0 bytes received" after the full 30 min) can be retried: the
-// model reload that caused the timeout is DONE by then, so the retry is fast.
+// One HTTP attempt at the chat endpoint. Timeout budget 40 min (was 30):
+// 27B on runner CPU generates ~1-3 tok/s after load, so a 1500-2000 token
+// answer legitimately takes 15-35 min. Cutting it off at 30 mid-stream
+// wastes the whole generation.
 function ollamaChat(payload) {
   return execSync(
-    'curl -sS --max-time 1800 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
-    { input: payload, encoding: 'utf8', timeout: 1850000, maxBuffer: 50 * 1024 * 1024 }
+    'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
+    { input: payload, encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024 }
   );
 }
 
@@ -95,16 +96,26 @@ async function callLLM(system, user, maxTokens) {
     const detail = 'exit=' + (e.status === undefined ? '?' : e.status) +
       ' stderr=' + String(e.stderr || '').slice(0, 200) +
       ' out=' + String(e.stdout || '').slice(0, 300);
-    // exit 28 = curl max-time hit. With "0 bytes received" the server never
-    // began responding: almost always a cold 17GB load that outran the 30-min
-    // cap on a CPU-starved runner. Retry once — the reload finishes during
-    // the failed attempt, so the second try starts warm.
+    // exit 28 = curl max-time hit with 0 bytes: the server never began
+    // responding. DO NOT blindly retry — curl abandoning the client does NOT
+    // stop the server: Ollama keeps grinding the abandoned request while
+    // holding the model lock, so a naive retry queues behind its own zombie
+    // and times out too (run #4: two 60-min cascades). Instead restart the
+    // server (clears wedged/zombie generations), then ONE retry on a clean
+    // server. If that also fails, give up this call — never burn the job.
     if (e.status === 28) {
-      console.log('agent: Ollama timed out (' + detail + ') — retrying once; the cold load is now complete');
+      console.log('agent: Ollama timed out (' + detail + ') — restarting server to clear wedged work, then one retry');
+      try { execSync('pkill -f "ollama serve"; sleep 2; nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
       try {
+        for (let i = 0; i < 60; i++) {
+          try {
+            execSync('curl -sf --max-time 5 ' + OLLAMA_URL + '/api/tags', { stdio: 'pipe', timeout: 10000 });
+            break;
+          } catch (e1) { execSync('sleep 2', { stdio: 'ignore' }); }
+        }
         out = ollamaChat(payload);
       } catch (e2) {
-        console.log('agent: Ollama retry also timed out: exit=' + e2.status);
+        console.log('agent: Ollama retry failed after restart: exit=' + e2.status);
         return null;
       }
     } else {
@@ -1705,6 +1716,43 @@ async function agentQuestionQuality() {
   const files = fs.readdirSync(DIR).filter(f => f.endsWith('.json'));
   let mergedCount = 0, fixedQuestions = 0, processedFiles = 0;
 
+  // ── Incremental sweep cursor: every run re-parsed all 1310 files from zero
+  // (fresh runner, no memory) — hours of re-reading unchanged JSON. Now: stat
+  // everything (milliseconds, no parse), parse ONLY changed files + a rotating
+  // slice for continuous full coverage. Tallies accumulate in the cursor so
+  // the thin/empty audit stays global without re-reading the world.
+  const CURSOR = 'data/questions-cursor.json';
+  const cursor = loadJson(CURSOR, { files: {}, rot: 0, tallies: {} });
+  if (!cursor.files) cursor.files = {};
+  if (!cursor.tallies) cursor.tallies = {};
+  const statOf = {};
+  for (const f of files) {
+    try {
+      const st = fs.statSync(path.join(DIR, f));
+      statOf[f] = { mtime: st.mtimeMs, size: st.size };
+    } catch (e) { /* unreadable */ }
+  }
+  const sweep = [];
+  const seen = new Set();
+  for (const f of files) {
+    const prev = cursor.files[f], cur = statOf[f];
+    if (!cur) continue;
+    if (!prev || prev.mtime !== cur.mtime || prev.size !== cur.size) { sweep.push(f); seen.add(f); }
+  }
+  // Rotating slice guarantees every file is re-swept periodically even when
+  // untouched (catches rule changes like new MERGE/RULES entries). Rotation
+  // advances a fixed SLICE per run → full coverage every ~9 runs (~2 days).
+  const SLICE = 150;
+  const rotStart = files.length ? (cursor.rot || 0) % files.length : 0;
+  let sliceAdded = 0;
+  for (let i = 0; i < files.length && sliceAdded < SLICE && sweep.length < 400; i++) {
+    const f = files[(rotStart + i) % files.length];
+    if (!seen.has(f) && statOf[f]) { sweep.push(f); seen.add(f); sliceAdded++; }
+  }
+  cursor.rot = files.length ? (rotStart + SLICE) % files.length : 0;
+  console.log('agent: Questions — incremental sweep: ' + sweep.length + '/' + files.length + ' files (' +
+    Object.keys(cursor.tallies).length + ' tallied from prior runs)');
+
   // ── Self-audit collectors (filled inline in the SAME single pass below —
   // a second full sweep of 9GB doubled this agent's runtime past 2 hours) ──
   const thinSubtopics = [];
@@ -1716,15 +1764,17 @@ async function agentQuestionQuality() {
     { re: /\b(adhyatma|yoga|vedanta|sankhya)\b/i, correct: 'Indian Philosophy', wrong: /classical.*language/i },
   ];
 
-  for (let fi = 0; fi < files.length; fi++) {
-    const file = files[fi];
-    if ((fi + 1) % 100 === 0 || fi === files.length - 1) {
-      console.log('agent: Questions — sweeping ' + (fi + 1) + '/' + files.length + ' files (' + processedFiles + ' changed, ' + fixedQuestions + ' fixed)');
+  for (let fi = 0; fi < sweep.length; fi++) {
+    const file = sweep[fi];
+    if ((fi + 1) % 50 === 0 || fi === sweep.length - 1) {
+      console.log('agent: Questions — sweeping ' + (fi + 1) + '/' + sweep.length + ' files (' + processedFiles + ' changed, ' + fixedQuestions + ' fixed)');
     }
     const fp = path.join(DIR, file);
     try {
       const data = JSON.parse(fs.readFileSync(fp, 'utf8'));
       let fileChanged = false;
+      // Fresh tallies for this file (replaces stale accumulated ones below).
+      const fileTallies = {};
 
       for (const sk of Object.keys(data)) {
         if (!data[sk] || !data[sk].subSubjects) continue;
@@ -1780,35 +1830,54 @@ async function agentQuestionQuality() {
 
         data[sk].subSubjects = newSubs;
 
-        // Audit inline (same pass): thin/empty/misplaced on merged state.
+        // Record fresh tallies for this file (replaces stale accumulated
+        // ones below). The global audit is derived from ALL tallies after
+        // the loop — full-corpus view without re-reading the world.
+        const ft = [];
         for (const sub of Object.keys(newSubs)) {
-          const qs = newSubs[sub] || [];
-          for (const mp of MISPLACED) {
-            if (mp.re.test(sub) && mp.wrong.test(sk)) {
-              misplaced.push(file + ': "' + sub + '" belongs in "' + mp.correct + '"');
-            }
-          }
-          if (qs.length === 0 && sub.length > 3) {
-            emptySubtopics.push({ file: file, subject: sk, sub: sub });
-          } else if (qs.length < 15 && sub.length > 3) {
-            thinSubtopics.push({ file: file, subject: sk, sub: sub, count: qs.length });
-          }
+          ft.push({ sk: sk, sub: sub, count: (newSubs[sub] || []).length });
         }
+        if (!cursor._tallyBuf) cursor._tallyBuf = {};
+        if (!cursor._tallyBuf[file]) cursor._tallyBuf[file] = [];
+        cursor._tallyBuf[file].push(...ft);
       }
 
       if (fileChanged) {
         fs.writeFileSync(fp, JSON.stringify(data), 'utf8');
         processedFiles++;
       }
+      if (statOf[file]) cursor.files[file] = statOf[file];
     } catch (e) { /* skip unreadable */ }
   }
 
+  // Commit this run's tallies, then audit GLOBALLY from accumulation.
+  for (const [f, arr] of Object.entries(cursor._tallyBuf || {})) cursor.tallies[f] = arr;
+  delete cursor._tallyBuf;
+  for (const [f, arr] of Object.entries(cursor.tallies)) {
+    for (const t of (arr || [])) {
+      for (const mp of MISPLACED) {
+        if (mp.re.test(t.sub) && mp.wrong.test(t.sk)) {
+          misplaced.push(f + ': "' + t.sub + '" belongs in "' + mp.correct + '"');
+        }
+      }
+      if (t.count === 0 && t.sub.length > 3) {
+        emptySubtopics.push({ file: f, subject: t.sk, sub: t.sub });
+      } else if (t.count < 15 && t.sub.length > 3) {
+        thinSubtopics.push({ file: f, subject: t.sk, sub: t.sub, count: t.count });
+      }
+    }
+  }
+  try { saveJson(CURSOR, cursor); } catch (e) { console.log('agent: Questions — cursor save failed'); }
+
   thinSubtopics.sort((a, b) => a.count - b.count);
 
-  // Report problems found
+  // Report problems found (audit is global via accumulated tallies; the file
+  // sweep itself was incremental — counts below note tallied coverage).
+  const tallyFiles = Object.keys(cursor.tallies).length;
   if (thinSubtopics.length > 0) fixes.push({ page: 'data/questions', fix: 'Found ' + thinSubtopics.length + ' thin subtopics (< 15 questions)' });
   if (emptySubtopics.length > 0) fixes.push({ page: 'data/questions', fix: 'Found ' + emptySubtopics.length + ' empty subtopics' });
   if (misplaced.length > 0) fixes.push({ page: 'data/questions', fix: 'Misplaced: ' + misplaced.slice(0, 3).join('; ') });
+  console.log('agent: Questions — swept ' + sweep.length + '/' + files.length + ' files this run, tallies cover ' + tallyFiles + '/' + files.length);
 
   // Save report
   fs.writeFileSync('data/questions-report.json', JSON.stringify({
@@ -1858,8 +1927,8 @@ async function agentQuestionQuality() {
         existingQs.slice(0, 10).map(q => '- ' + (q.question || '').substring(0, 80)).join('\n') + '\n\n' +
         'Other topics in this file (DO NOT DUPLICATE):\n' +
         allCovered.slice(0, 20).join('\n') + '\n\n' +
-        'Generate 10 NEW exam questions covering DIFFERENT facts.',
-        2500,
+        'Generate 6 NEW exam questions covering DIFFERENT facts.',
+        1500,
         'high'
       );
 
@@ -2084,6 +2153,116 @@ async function agentPapers() {
   return { agent: 'papers', fixes: fixes };
 }
 
+// ── AGENT: WikiSyllabus — exam syllabus coverage that never stops ──
+// Standing goal: every exam-relevant subject exists as a fetchable wiki
+// category group. The plan (data/wiki-syllabus-plan.json) lists pending
+// subjects; each run appends up to 2 missing groups to CATEGORIES in
+// scripts/wiki-fill-all.cjs and marks them added. The nightly fill
+// (WIKI_FILL_ALL=1) mines appended groups automatically; a DAY_GROUPS entry
+// is added too so manual group runs cover them as well. Already-covered
+// entries are marked done for free. When the plan empties, the agent keeps
+// verifying every run (continuous coverage, never stops).
+// The edit is append-only (existing indices never shift) and verified with
+// node --check — on syntax failure the file is restored untouched.
+const SYLLABUS_PLAN = 'data/wiki-syllabus-plan.json';
+const FILL_PATH = 'scripts/wiki-fill-all.cjs';
+async function agentWikiSyllabus() {
+  const fixes = [];
+  if (!fs.existsSync(SYLLABUS_PLAN) || !fs.existsSync(FILL_PATH)) return { agent: 'wikisyllabus', fixes: fixes };
+  const plan = loadJson(SYLLABUS_PLAN, { entries: [] });
+  if (!Array.isArray(plan.entries) || !plan.entries.length) return { agent: 'wikisyllabus', fixes: fixes };
+  let fillSrc;
+  try { fillSrc = fs.readFileSync(FILL_PATH, 'utf8'); }
+  catch (e) { return { agent: 'wikisyllabus', fixes: fixes }; }
+
+  const isCovered = (e) => {
+    if (fillSrc.indexOf("wikiCat:'" + (e.wikiCat || '') + "'") !== -1) return true;
+    const topics = Array.isArray(e.topics) ? e.topics : [];
+    if (!topics.length) return false;
+    let hits = 0;
+    for (const t of topics) if (fillSrc.indexOf("'" + t + "'") !== -1) hits++;
+    return hits >= Math.ceil(topics.length / 2);
+  };
+
+  let added = 0, checked = 0;
+  const pendingBlocks = [];
+  for (const e of plan.entries) {
+    if (e.status === 'added') continue;
+    checked++;
+    if (isCovered(e)) { e.status = 'added'; e.addedAt = e.addedAt || 'pre-existing'; continue; }
+    if (pendingBlocks.length >= 2) continue;
+    // Format a group block matching the file's style.
+    const topics = (Array.isArray(e.topics) ? e.topics : []).filter(t => t && t.length > 1);
+    if (!topics.length) continue;
+    pendingBlocks.push({ subject: e.subject, exam: e.exam || 'UPSC', wikiCat: e.wikiCat || '', topics: topics, entry: e });
+  }
+
+  for (const b of pendingBlocks) {
+    const lines = [];
+    for (let i = 0; i < b.topics.length; i += 5) {
+      lines.push("    '" + b.topics.slice(i, i + 5).join("','") + "',");
+    }
+    // Anchor without assuming line endings (fill file is CRLF): find the
+    // Rotation-groups marker, then the nearest preceding '];' — the
+    // CATEGORIES close. Newline style follows the file.
+    const eol = fillSrc.indexOf('\r\n') !== -1 ? '\r\n' : '\n';
+    const rgIdx = fillSrc.indexOf('// Rotation groups');
+    if (rgIdx === -1) { console.log('agent: WikiSyllabus — CATEGORIES anchor not found, skipping'); continue; }
+    const catEnd = fillSrc.lastIndexOf('];', rgIdx);
+    if (catEnd === -1) { console.log('agent: WikiSyllabus — CATEGORIES close not found, skipping'); continue; }
+    const block = '  // ── AUTO: ' + b.subject + ' (' + b.exam + ' optional — agent-managed) ──' + eol +
+      "  { name:'" + b.subject.replace(/'/g, '') + "', wikiCat:'" + b.wikiCat.replace(/'/g, '') + "', topics:[" + eol +
+      lines.join(eol) + eol + '  ]},' + eol;
+    fillSrc = fillSrc.slice(0, catEnd) + block + fillSrc.slice(catEnd);
+    b.entry.status = 'added';
+    b.entry.addedAt = new Date().toISOString().slice(0, 10);
+    added++;
+    fixes.push({ page: FILL_PATH, fix: 'Added wiki category group "' + b.subject + '" (' + b.topics.length + ' topics) for ' + b.exam });
+  }
+
+  if (added) {
+    // Extend DAY_GROUPS so manual group runs cover the new indices too.
+    // New groups appended above occupy the tail indices; recompute them.
+    const countGroups = (fillSrc.match(/\{ name:'/g) || []).length;
+    // DAY_GROUPS bookkeeping is index-based; rather than renumber anything,
+    // append one group entry per new category at the tail.
+    const dgAnchor = '\n];\n\nasync function main() {';
+    const dgIdx = fillSrc.indexOf(dgAnchor);
+    if (dgIdx !== -1) {
+      // Find current max index referenced to place new tail indices safely:
+      // appended CATEGORIES entries sit at positions (countGroups - added .. countGroups-1).
+      const tail = [];
+      for (let i = countGroups - added; i < countGroups; i++) tail.push(i);
+      const dgBlock = '  [' + tail.join(',') + '], // Group AUTO: agent-added syllabus cats (' + new Date().toISOString().slice(0, 10) + ')\n';
+      fillSrc = fillSrc.slice(0, dgIdx) + dgBlock + fillSrc.slice(dgIdx);
+    }
+    // Self-verify: syntax-check the NEW content in a temp file first; the
+    // original is only replaced after the check passes. Never break the
+    // 4MB fill pipeline with a bad edit.
+    const tmpCheck = FILL_PATH + '.agentcheck.tmp';
+    try {
+      fs.writeFileSync(tmpCheck, fillSrc);
+      execSync('node --check ' + tmpCheck, { stdio: 'pipe' });
+    } catch (e) {
+      try { fs.unlinkSync(tmpCheck); } catch (e2) { /* ignore */ }
+      console.log('agent: WikiSyllabus — syntax check failed, original untouched; ' + String((e.stderr || e.message || e)).slice(0, 120));
+      return { agent: 'wikisyllabus', fixes: [] };
+    }
+    try { fs.unlinkSync(tmpCheck); } catch (e) { /* ignore */ }
+    try { fs.writeFileSync(FILL_PATH, fillSrc); }
+    catch (e) { console.log('agent: WikiSyllabus — write failed'); return { agent: 'wikisyllabus', fixes: [] }; }
+    plan.updatedAt = new Date().toISOString().slice(0, 10);
+    saveJson(SYLLABUS_PLAN, plan);
+  } else if (checked) {
+    // Nothing to add but entries were verified — persist any status flips.
+    saveJson(SYLLABUS_PLAN, plan);
+  }
+  const total = plan.entries.length, done = plan.entries.filter(e => e.status === 'added').length;
+  console.log('agent: WikiSyllabus — plan ' + done + '/' + total + ' added (checked ' + checked + ', +' + added + ' this run)');
+  if (done === total) fixes.push({ page: SYLLABUS_PLAN, fix: 'Syllabus plan COMPLETE — all ' + total + ' exam subjects have wiki categories; verifying continuously' });
+  return { agent: 'wikisyllabus', fixes: fixes };
+}
+
 // ── Main ──
 async function agentSelfCheck() {
   const fixes = [];
@@ -2305,6 +2484,7 @@ async function main() {
     ['Features', agentFeatures],
     ['Proposals', agentProposals],
     ['Papers', agentPapers],
+    ['WikiSyllabus', agentWikiSyllabus],
     ['MetaLearn', agentMetaLearn]
   ];
   const alwaysAgents = [
@@ -2319,7 +2499,7 @@ async function main() {
   // AGENT_ONLY=questions: dedicated question-quality workflow (questions data
   // checked out, site pages are not). Run only the agents that touch questions.
   if (process.env.AGENT_ONLY === 'questions') {
-    agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content' || name === 'Papers');
+    agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content' || name === 'Papers' || name === 'WikiSyllabus');
   }
 
   // ── Work intake: LOOK before acting (the "intelligent" part) ──
@@ -2358,7 +2538,11 @@ async function main() {
   // is what makes the site continuously maintained.
   const llmAgents = agents.filter(([name]) => rotateAgents.some(([n]) => n === name));
   const ruleAgents = agents.filter(([name]) => alwaysAgents.some(([n]) => n === name));
-  const sliceSize = Math.max(1, parseInt(process.env.AGENT_ROTATE || '4', 10));
+  // No rotation for dedicated workflows (AGENT_ONLY): their filtered scope IS
+  // the job — slicing it would randomly drop capabilities run to run.
+  const sliceSize = process.env.AGENT_ONLY
+    ? llmAgents.length
+    : Math.max(1, parseInt(process.env.AGENT_ROTATE || '4', 10));
   if (sliceSize < llmAgents.length) {
     const runNo = parseInt(process.env.GITHUB_RUN_NUMBER || '0', 10) || (Math.floor(Date.now() / 3600000) % 997);
     const offset = (runNo * sliceSize) % llmAgents.length;
