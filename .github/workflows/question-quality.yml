@@ -29,6 +29,9 @@ jobs:
           sparse-checkout: |
             scripts
             data/questions
+            data/archive-answers.json
+            data/agent-log.json
+            data/questions-report.json
           sparse-checkout-cone-mode: false
           token: ${{ secrets.PAT }}
 
@@ -98,13 +101,24 @@ jobs:
           AGENT_ONLY: questions
         run: node scripts/site-agent.js
 
+      # 27B writes finished model answers into the archive (categorized under
+      # each question's own category, tagged auto gen). Model is already warm
+      # from the agent step above — no extra pull. Budget 5 answers/run.
+      - name: Write archive answers (27B)
+        env:
+          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          MAX_WRITE: '5'
+        run: node scripts/write-archive-answers.js
+
       - name: Publish question fixes
         run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No question fixes to publish"
           else

@@ -2298,13 +2298,19 @@ async function runSelfcheckOnly() {
   for (const f of (r.fixes || []).slice(0, 20)) console.log('  → ' + (f.fix || JSON.stringify(f)) + ' (' + (f.page || '?') + ')');
 }
 
-if (process.argv.includes('--selfcheck-only')) {
-  runSelfcheckOnly().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(0); });
-} else if (process.argv.includes('--loop')) {
-  runLoop().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(0); });
-} else {
-  main().then(() => process.exit(0)).catch(e => {
-    console.error('agent: FATAL — ' + (e.message || e));
-    process.exit(0);
-  });
+if (require.main === module) {
+  if (process.argv.includes('--selfcheck-only')) {
+    runSelfcheckOnly().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(0); });
+  } else if (process.argv.includes('--loop')) {
+    runLoop().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(0); });
+  } else {
+    main().then(() => process.exit(0)).catch(e => {
+      console.error('agent: FATAL — ' + (e.message || e));
+      process.exit(0);
+    });
+  }
 }
+// Shared LLM transport (proven: curl, IPv4, 30-min ceiling, thinking-model
+// aware). Required by writer scripts (archive answers, …) so transport fixes
+// propagate instead of being duplicated per script.
+module.exports = { callLLM: callLLM, loadJson: loadJson, saveJson: saveJson, OLLAMA_URL: OLLAMA_URL };

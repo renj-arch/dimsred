@@ -98,7 +98,11 @@ function safeAppend(p, data, tries) {
   }
 }
 
-const files = fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'archive-cat-index.json');
+const files = fs.readdirSync(outDir).filter(f => f.endsWith('.json') && f !== 'manifest.json' && f !== 'archive-cat-index.json').sort();
+// Sorted (was readdir order = OS-dependent): first occurrence wins dedup, so
+// the sort decides which copy of a duplicated question survives. Sorting makes
+// builds deterministic, and lets data/questions/00-27b-archive.json (27B
+// enriched supersets of wiki questions) win over the bare originals.
 
 // ── Phase 1 — dedup-key pass. ──
 const seen = new Set();
@@ -540,7 +544,7 @@ function renderQuestion(q, idx) {
   const dateTag = date ? '<span class="tag date-tag">' + date + '</span>' : '';
   return '<div class="q-item">'
     + '<div class="q-num">#' + (idx + 1) + '</div>'
-    + '<div class="q-tags">' + catTag + dateTag + '</div>'
+    + '<div class="q-tags">' + catTag + dateTag + (q.autoGen ? '<span class="tag" style="background:rgba(52,211,153,.12);color:#34d399" title="Written by qwen3.8:27b (local LLM) from corpus material — distinguishable from wiki-mined text">auto gen · 27b</span>' : '') + '</div>'
     + '<div class="q-question">' + esc(q.question) + '</div>'
     + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + esc(q.answer) + '</span></div>'
     + (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + esc(q.fact) + '</div>' : '')

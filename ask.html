@@ -58,6 +58,13 @@ h1{font-size:24px;margin:6px 0 8px}
 .samples{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
 .samples button{border:1px solid var(--border);background:var(--bg);border-radius:100px;padding:5px 12px;font-size:11.5px;cursor:pointer;color:var(--text-sec);white-space:nowrap}
 .samples button:hover{border-color:var(--purple);color:var(--purple)}
+.arch-answer{background:var(--bg);border:1px solid var(--border);border-radius:12px;padding:16px;margin:14px 0}
+.arch-badge{font-size:11.5px;color:var(--text-sec);margin-bottom:10px}
+.arch-tag{background:rgba(52,211,153,.12);color:#34d399;border-radius:100px;padding:2px 8px;font-size:10.5px;font-weight:600}
+.arch-q{font-weight:600;margin-bottom:8px}
+.arch-a{line-height:1.7;font-size:13.5px}
+.arch-facts{margin:10px 0 0 18px;font-size:12.5px;color:var(--text-sec)}
+.arch-src{margin-top:10px;font-size:11.5px;color:var(--text-sec)}
 </style>
 </head>
 <body>
@@ -103,6 +110,7 @@ h1{font-size:24px;margin:6px 0 8px}
 <script src="scripts/lib/ask-llm.js"></script>
 <script src="scripts/lib/ask-dataset.js"></script>
 <script src="scripts/lib/ask-fulltext.js"></script>
+<script src="scripts/lib/ask-archive.js"></script>
 <script>
 'use strict';
 // The question-bank path is OFF by default and must be turned on deliberately.
@@ -682,6 +690,27 @@ STATE.question = q;
 STATE.planMiss = null;
 el('ask').disabled = true;
 
+// Archive first: if qwen3.8:27B already wrote a finished model answer for
+// this question (archive-answers.json, surfaced in archive.html with an
+// "auto gen" tag), show it directly with provenance. Strong match only —
+// anything less falls through to the normal pipeline untouched, so this
+// pre-check can never degrade an answer, only shortcut to a better one.
+if (typeof VlymbooqAskArchive !== 'undefined') {
+el('out').innerHTML = '<div class="load">Checking the archive&hellip;</div>';
+VlymbooqAskArchive.match(q).then(function (hit) {
+if (hit) {
+el('out').innerHTML = VlymbooqAskArchive.renderHtml(hit);
+el('ask').disabled = false;
+return;
+}
+continueAsk(q);
+}).catch(function () { continueAsk(q); });
+return;
+}
+continueAsk(q);
+}
+
+function continueAsk(q) {
 // Local answer composition runs first when enabled. Retrieval gathers every
 // corpus sentence that touches the question -- through the entity path when the
 // question names an entity, through the phrase index when it does not -- and the
