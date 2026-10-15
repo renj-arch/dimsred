@@ -1,0 +1,64 @@
+name: Selfcheck Quick
+
+# The agent's fast hands: instant rule-based repair with NO model.
+# Fixes page-breaking bugs that need zero inference (deferred-lib vs
+# inline-consumer ordering, dead links, placeholder links, missing assets)
+# in seconds — no 17GB model pull, no Ollama, no swap. Runs hourly so the
+# site heals itself continuously while the heavy LLM generation rotates
+# through the site-agent workflow. All commits come from this workflow's
+# own runs — the site is maintained by the agent itself.
+
+on:
+  schedule:
+    - cron: '15 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: selfcheck-quick
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  selfcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          # Root-level HTML pages + the agent scripts + the logs only.
+          # No data/questions (9GB), no figures, no model — finishes in ~1 min.
+          sparse-checkout: |
+            scripts
+            /*.html
+            data/agent-log.json
+            data/browser-test.json
+          sparse-checkout-cone: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Rule-based repair only — no Ollama, no model pull, seconds of work.
+      - name: Run selfcheck-only (no model)
+        run: node scripts/site-agent.js --selfcheck-only
+
+      - name: Publish selfcheck repairs
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add -- *.html data/agent-log.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No selfcheck repairs to publish"
+          else
+            git commit -m "selfcheck: agent repaired pages itself (run #${{ github.run_number }})"
+            for i in 1 2 3; do
+              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed..."
+              sleep 5
+            done || echo "::warning::push failed"
+          fi

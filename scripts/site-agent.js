@@ -154,6 +154,43 @@ function listPages() {
     .sort();
 }
 
+// ── Autonomous repair: deferred-lib vs inline-consumer ordering ──
+// Script execution order rules that make this a REAL, page-breaking bug:
+//   * a <script src> WITHOUT defer runs the moment the parser reaches it
+//   * a <script src="..." defer> only runs AFTER the whole document parses
+//   * an INLINE <script> runs the moment the parser reaches it — BEFORE any
+//     deferred script gets its turn
+// So an inline block that reads globals provided by a deferred lib
+// (var GC = window.GC) ALWAYS sees undefined, and the page shows its
+// "Failed to load scripts/lib/..." message while the file is in fact served
+// fine. Diagnosed by hand on flowchart.html; now fixed autonomously:
+// whenever a page has deferred script tags AND an inline script that reads
+// window globals, drop defer so the libs run in document order.
+// (Our pages load libs at the end of <body>, where defer buys nothing and
+// costs correctness.)
+function fixDeferredInlineOrder(html, page) {
+  const fixes = [];
+  const deferredTags = html.match(/<script\s+src="[^"]+"\s+defer\s*><\/script>/gi) || [];
+  if (!deferredTags.length) return { html: html, fixes: fixes };
+  // Does any inline script read a global that a lib would define?
+  const inlineReadsGlobal = /<script>([\s\S]*?)<\/script>/gi;
+  let consume = false;
+  let im;
+  while ((im = inlineReadsGlobal.exec(html)) !== null) {
+    if (/\bwindow\.[A-Za-z_$]/.test(im[1])) { consume = true; break; }
+  }
+  if (!consume) return { html: html, fixes: fixes };
+  const out = html.replace(/(<script\s+src="[^"]+")\s+defer\s*(><\/script>)/gi, '$1$2');
+  if (out !== html) {
+    fixes.push({
+      page: page,
+      fix: 'Removed defer from ' + deferredTags.length + ' script tag(s) — a deferred script runs after parsing, but the inline code that reads its globals runs immediately, so the page always reported "Failed to load". Libs at the end of body need no defer.'
+    });
+    return { html: out, fixes: fixes };
+  }
+  return { html: html, fixes: fixes };
+}
+
 // ── AGENT 1: SEO optimizer ──
 // Ensures every page has: title, meta description, canonical, og tags,
 // proper heading hierarchy, structured data.
@@ -1602,6 +1639,18 @@ async function agentSelfCheck() {
       }
     }
 
+    // ── Deferred-lib vs inline-consumer ordering (real page-breaking bug) ──
+    // Detected autonomously: a deferred script runs after parsing, an inline
+    // script runs immediately — so an inline block reading a deferred lib's
+    // globals always fails ("Failed to load scripts/lib/..."). Repaired on
+    // every pass over every page, not just the ones browser-test reported.
+    const orderFix = fixDeferredInlineOrder(html, page);
+    if (orderFix.fixes.length) {
+      html = orderFix.html;
+      changed = true;
+      for (const f of orderFix.fixes) fixes.push(f);
+    }
+
     const scriptRefs = html.match(/src=["'](js\/[^"']+\.js)["']/gi) || [];
     for (const ref of scriptRefs) {
       const file = ref.match(/src=["']([^"']+)["']/i)[1];
@@ -1810,7 +1859,33 @@ async function runLoop() {
   console.log('\nagent: loop complete — ' + totalAll + ' total fixes');
 }
 
-if (process.argv.includes('--loop')) {
+// --selfcheck-only: instant rule-based repair, no model. Repairs the
+// deterministic page-breaking bugs (defer-vs-inline ordering, dead links,
+// placeholders) without loading the 17GB model — finishes in seconds, so a
+// dedicated lightweight workflow can run it hourly. The agent heals the site
+// itself; the heavy LLM generation stays in the full runs.
+async function runSelfcheckOnly() {
+  const started = Date.now();
+  console.log('agent: selfcheck-only — rule-based repair, no model needed');
+  const r = await agentSelfCheck();
+  const log = loadJson(LOG, { runs: [], lastRun: null, model: null });
+  log.lastRun = new Date().toISOString();
+  log.runs.push({
+    at: log.lastRun,
+    model: 'rule-based (no LLM)',
+    totalFixes: (r.fixes || []).length,
+    byAgent: [{ agent: 'selfcheck', count: (r.fixes || []).length }],
+    details: (r.fixes || []).length ? [{ agent: 'selfcheck', fixes: r.fixes.slice(0, 10) }] : []
+  });
+  if (log.runs.length > 15) log.runs = log.runs.slice(-15);
+  saveJson(LOG, log);
+  console.log('agent: selfcheck-only done in ' + ((Date.now() - started) / 1000 | 0) + 's — ' + (r.fixes || []).length + ' fix(es)');
+  for (const f of (r.fixes || []).slice(0, 20)) console.log('  → ' + (f.fix || JSON.stringify(f)) + ' (' + (f.page || '?') + ')');
+}
+
+if (process.argv.includes('--selfcheck-only')) {
+  runSelfcheckOnly().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(0); });
+} else if (process.argv.includes('--loop')) {
   runLoop().then(() => process.exit(0)).catch(e => { console.error(e); process.exit(0); });
 } else {
   main().then(() => process.exit(0)).catch(e => {
