@@ -55,7 +55,14 @@ jobs:
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          git add data/auth-status.json 2>/dev/null || true
+          git reset HEAD -- . 2>/dev/null || true
+          echo "--- pre-add diagnostics ---"
+          ls -la data/ 2>/dev/null || echo "no data dir"
+          git sparse-checkout list 2>/dev/null || echo "sparse list unavailable"
+          git status --porcelain 2>/dev/null | head -5 || true
+          git add data/auth-status.json 2>&1 || true
+          echo "--- post-add ---"
+          git status --porcelain 2>/dev/null | head -5 || true
           if git diff --staged --quiet; then
             echo "No auth status change"
           else
