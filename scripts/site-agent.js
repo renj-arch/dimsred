@@ -46,6 +46,34 @@ const LOG = 'data/agent-log.json';
 // num_batch/use_mmap options, or flash-attn env: runs #44–#54 showed every
 // one of those "improvements" broke generation.
 const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
+
+// One HTTP attempt at the chat endpoint. Extracted so a timed-out cold-load
+// (exit 28, "0 bytes received" after the full 30 min) can be retried: the
+// model reload that caused the timeout is DONE by then, so the retry is fast.
+function ollamaChat(payload) {
+  return execSync(
+    'curl -sS --max-time 1800 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
+    { input: payload, encoding: 'utf8', timeout: 1850000, maxBuffer: 50 * 1024 * 1024 }
+  );
+}
+
+// Report whether the model is currently resident in RAM. When it is NOT, the
+// next call must cold-load 17GB through swap — minutes of silence that looks
+// like a hang (run #64: Features timed out at exactly 30 min because the model
+// had unloaded and 7 concurrent workflows were starving the CPU).
+function logModelState(tag) {
+  try {
+    const ps = execSync('curl -s --max-time 15 ' + OLLAMA_URL + '/api/ps',
+      { encoding: 'utf8', timeout: 20000 });
+    const loaded = (JSON.parse(ps).models || []).map(m => m.name);
+    if (loaded.length) {
+      console.log('agent: ' + tag + ' — model resident: ' + loaded.join(', '));
+    } else {
+      console.log('agent: ' + tag + ' — NO model resident: next call cold-loads 17GB (expect minutes)');
+    }
+  } catch (e) { /* informational only */ }
+}
+
 async function callLLM(system, user, maxTokens) {
   const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
   const payload = JSON.stringify({
@@ -59,15 +87,38 @@ async function callLLM(system, user, maxTokens) {
     // it emits content. 1024 was cutting answers off mid-thought.
     options: { temperature: 0.3, num_predict: maxTokens || 2048 }
   });
+  logModelState('pre-call');
+  let out;
   try {
-    // --max-time 1800 = 30 min: cold-load + generation can take minutes.
-    // -S shows curl's own errors; -w appends the HTTP status so a 400 (prompt
-    // too long / bad options) is distinguishable from a transport failure
-    // (server dead = exit 7, timeout = exit 28).
-    const out = execSync(
-      'curl -sS --max-time 1800 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
-      { input: payload, encoding: 'utf8', timeout: 1850000, maxBuffer: 50 * 1024 * 1024 }
-    );
+    out = ollamaChat(payload);
+  } catch (e) {
+    const detail = 'exit=' + (e.status === undefined ? '?' : e.status) +
+      ' stderr=' + String(e.stderr || '').slice(0, 200) +
+      ' out=' + String(e.stdout || '').slice(0, 300);
+    // exit 28 = curl max-time hit. With "0 bytes received" the server never
+    // began responding: almost always a cold 17GB load that outran the 30-min
+    // cap on a CPU-starved runner. Retry once — the reload finishes during
+    // the failed attempt, so the second try starts warm.
+    if (e.status === 28) {
+      console.log('agent: Ollama timed out (' + detail + ') — retrying once; the cold load is now complete');
+      try {
+        out = ollamaChat(payload);
+      } catch (e2) {
+        console.log('agent: Ollama retry also timed out: exit=' + e2.status);
+        return null;
+      }
+    } else {
+      console.log('agent: Ollama curl failed: ' + detail);
+      // If the server is dead (exit 7 / Connection refused), restart it once
+      // so the NEXT call has something to talk to.
+      if (e.status === 7 || String(e.stderr || '').match(/Connection refused|Failed to connect/i)) {
+        console.log('agent: server refused connection — restarting ollama for next call');
+        try { execSync('nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore' }); } catch (e3) { /* best effort */ }
+      }
+      return null;
+    }
+  }
+  try {
     const nl = out.lastIndexOf('\n');
     const body = nl >= 0 ? out.slice(0, nl) : out;
     const httpCode = nl >= 0 ? out.slice(nl + 1).trim() : '';
@@ -77,26 +128,13 @@ async function callLLM(system, user, maxTokens) {
     // puts the final answer in message.content. With num_predict as low as
     // 10 the entire budget is consumed by thinking and content comes back
     // empty (run #60: content="" thinking="The user is asking me to
-    // confirm that generation works"). Fall back to thinking, but strip it
-    // from usable text when content exists.
+    // confirm that generation works"). Fall back to thinking when empty.
     let text = (msg.content || '').trim();
     if (!text && msg.thinking) text = msg.thinking.trim();
     if (text) return { text: text, model: model + ' (local)' };
     console.log('agent: Ollama ' + model + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
   } catch (e) {
-    // e.status = curl exit code (7=refused/server dead, 28=timeout),
-    // e.stderr = curl's error text, HTTP body may follow on stdout.
-    const detail = 'exit=' + (e.status === undefined ? '?' : e.status) +
-      ' stderr=' + String(e.stderr || '').slice(0, 200) +
-      ' out=' + String(e.stdout || '').slice(0, 300);
-    console.log('agent: Ollama curl failed: ' + detail);
-    // If the server is dead (exit 7 / Connection refused), restart it once.
-    // The 17GB model then needs reloading, so set a long keep-alive-agnostic
-    // retry: this call will be slow but the run continues.
-    if (e.status === 7 || String(e.stderr || '').match(/Connection refused|Failed to connect/i)) {
-      console.log('agent: server refused connection — restarting ollama for next call');
-      try { execSync('nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore' }); } catch (e2) { /* best effort */ }
-    }
+    console.log('agent: Ollama response unparseable: ' + String(out).slice(0, 300));
   }
   return null;
 }
