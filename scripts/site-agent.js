@@ -55,7 +55,9 @@ async function callLLM(system, user, maxTokens) {
       { role: 'user', content: user }
     ],
     stream: false,
-    options: { temperature: 0.3, num_predict: maxTokens || 1024 }
+    // 2048 not 1024: qwen3.8:27b spends ~200-600 tokens thinking before
+    // it emits content. 1024 was cutting answers off mid-thought.
+    options: { temperature: 0.3, num_predict: maxTokens || 2048 }
   });
   try {
     // --max-time 1800 = 30 min: 27B cold-load + generation on 7GB RAM
@@ -66,8 +68,16 @@ async function callLLM(system, user, maxTokens) {
       { input: payload, encoding: 'utf8', timeout: 1850000, maxBuffer: 50 * 1024 * 1024 }
     );
     const j = JSON.parse(out);
-    const text = (j.message && j.message.content) || '';
-    if (text.trim()) return { text: text.trim(), model: model + ' (local)' };
+    const msg = j.message || {};
+    // qwen3.8:27b is a THINKING model: it reasons in message.thinking and
+    // puts the final answer in message.content. With num_predict as low as
+    // 10 the entire budget is consumed by thinking and content comes back
+    // empty (run #60: content="" thinking="The user is asking me to
+    // confirm that generation works"). Fall back to thinking, but strip it
+    // from usable text when content exists.
+    let text = (msg.content || '').trim();
+    if (!text && msg.thinking) text = msg.thinking.trim();
+    if (text) return { text: text, model: model + ' (local)' };
     console.log('agent: Ollama ' + model + ' returned empty: ' + out.slice(0, 200));
   } catch (e) {
     console.log('agent: Ollama curl failed: ' + (e.message || e).slice(0, 300));
@@ -1561,13 +1571,16 @@ async function main() {
   log.model = model;
   console.log('agent: using model ' + model);
 
-  // FIRST action: one real generation call, identical to llm-autofix's first
-  // callLLM. Proves the server can load+generate before any filesystem work.
-  // If this fails, skip the whole LLM half of the agent — the server is dead.
+  // FIRST action: one real generation call. Proves the server can
+  // load+generate before any filesystem work. If this fails, skip the LLM
+  // half of the agent — the server is dead.
+  // 600 tokens NOT 10: qwen3.8:27b is a thinking model that burns ~200-500
+  // tokens on message.thinking before emitting content. Run #60 used 10 and
+  // got content:"" with the whole answer parked in thinking.
   const ping = await callLLM(
-    'Reply with exactly: OK',
+    'Reply with exactly: OK and nothing else.',
     'Ping the model to confirm generation works.',
-    10
+    600
   );
   if (!ping) {
     console.log('agent: LLM cold-start FAILED — server cannot generate. Running rule-based fixers only.');
