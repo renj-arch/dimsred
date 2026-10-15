@@ -77,10 +77,21 @@ function logModelState(tag) {
 
 async function callLLM(system, user, maxTokens) {
   const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+  // Recall: the agent records lessons/addRules/addWins every run but long
+  // ago stopped READING them (amnesia — same mistakes repeated). For
+  // generation-sized calls, prepend the distilled lessons so experience
+  // compounds instead of evaporating. Pings and small calls skip it.
+  let sysOut = system;
+  if ((maxTokens || 0) >= 800) {
+    try {
+      const lessons = (memory.getLessonsPrompt() || '').slice(0, 1200);
+      if (lessons.trim()) sysOut = lessons + '\n\n' + system;
+    } catch (e) { /* memory unreadable — proceed without */ }
+  }
   const payload = JSON.stringify({
     model: model,
     messages: [
-      { role: 'system', content: system },
+      { role: 'system', content: sysOut },
       { role: 'user', content: user }
     ],
     stream: false,

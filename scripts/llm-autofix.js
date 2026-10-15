@@ -120,6 +120,16 @@ function saveJson(p, data) {
 
 // ── LLM call: Ollama (local, free forever) → optional API fallbacks ──
 async function callLLM(system, user, maxTokens) {
+  // Recall distilled lessons on generation-sized calls (the agent wrote
+  // lessons for months without ever reading them — amnesia fix).
+  let sysOut = system;
+  if ((maxTokens || 0) >= 800) {
+    try {
+      const mem = require('./agent-memory.js');
+      const lessons = (mem.getLessonsPrompt() || '').slice(0, 1200);
+      if (lessons.trim()) sysOut = lessons + '\n\n' + system;
+    } catch (e) { /* proceed without */ }
+  }
   // Primary: local Ollama via curl — no keys, no rate limits, runs on runner CPU.
   // --max-time 2400: 27B generates ~1-3 tok/s on CPU; cutting off at 30 min
   // wastes full generations. On timeout: restart (clears wedged server-side
@@ -133,7 +143,7 @@ async function callLLM(system, user, maxTokens) {
         input: JSON.stringify({
           model: OLLAMA_MODEL,
           messages: [
-            { role: 'system', content: system },
+            { role: 'system', content: sysOut },
             { role: 'user', content: user }
           ],
           stream: false,
@@ -161,7 +171,7 @@ async function callLLM(system, user, maxTokens) {
             input: JSON.stringify({
               model: OLLAMA_MODEL,
               messages: [
-                { role: 'system', content: system },
+                { role: 'system', content: sysOut },
                 { role: 'user', content: user }
               ],
               stream: false,
@@ -211,7 +221,7 @@ async function callLLM(system, user, maxTokens) {
         body: JSON.stringify({
           model: 'llama-3.3-70b-versatile',
           messages: [
-            { role: 'system', content: system },
+            { role: 'system', content: sysOut },
             { role: 'user', content: user }
           ],
           max_tokens: maxTokens || 1024,
