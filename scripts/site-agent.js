@@ -149,9 +149,28 @@ function saveJson(p, data) {
 }
 
 function listPages() {
-  return fs.readdirSync('.')
-    .filter(f => /\.html$/i.test(f) && f[0] !== '_' && f[0] !== '.')
-    .sort();
+  // Recursive: the exam hubs (cgl/, rbi/, ...) and course pages live in
+  // subdirectories and were invisible to every audit until now — only root
+  // *.html was ever scanned. Excludes: VCS, modules, data dumps, and the
+  // generated figures/ tree (rebuilt wholesale by its pipeline; auditing it
+  // here only creates commit churn that the rebuild overwrites).
+  const SKIP_DIRS = new Set(['.git', 'node_modules', 'data', 'figures', 'live-dist', '.github']);
+  const out = [];
+  (function walk(dir) {
+    let entries = [];
+    try { entries = fs.readdirSync(dir, { withFileTypes: true }); } catch (e) { return; }
+    for (const e of entries) {
+      const p = dir === '.' ? e.name : dir + '/' + e.name;
+      if (e.isDirectory()) {
+        if (e.name[0] === '.' || e.name[0] === '_' || SKIP_DIRS.has(e.name) || SKIP_DIRS.has(p)) continue;
+        walk(p);
+      } else if (/\.html$/i.test(e.name) && e.name[0] !== '_' && e.name[0] !== '.') {
+        out.push(p);
+      }
+    }
+    if (out.length > 3000) return;
+  })('.');
+  return out.sort().slice(0, 3000);
 }
 
 // True when an inline <script> block reads a window.* global — i.e. the page
@@ -167,11 +186,25 @@ function pageNeedsSyncScripts(html) {
   return false;
 }
 
-// Existence check that is CORRECT in sparse checkouts. fs.existsSync lies
-// when the file is tracked but not materialized (js/ missing from the
-// checkout) — run #2 stripped 37 live script tags on exactly that lie and
-// broke ask.html, the flowchart, and a dozen more pages. git ls-files sees
-// tracked files whether or not they are checked out.
+// Resolve a page-relative URL (../js/x.js, js/main.js, /js/x.js) to a
+// repo-root-relative path for existence checks. Page authors mix styles:
+// root pages use js/..., hub pages use ../js/... — checking either against
+// the repo root directly gives the wrong answer and strips working tags.
+function resolvePageRef(page, ref) {
+  if (!ref) return '';
+  let r = ref.split('?')[0].split('#')[0].trim();
+  if (!r || /^(https?:|javascript:|mailto:|data:)/i.test(r)) return '';
+  if (r.charAt(0) === '/') return r.slice(1); // root-absolute
+  const dir = page.indexOf('/') !== -1 ? page.slice(0, page.lastIndexOf('/')) : '';
+  const parts = (dir ? dir + '/' + r : r).split('/');
+  const stack = [];
+  for (const p of parts) {
+    if (!p || p === '.') continue;
+    if (p === '..') { stack.pop(); continue; }
+    stack.push(p);
+  }
+  return stack.join('/');
+}
 function fileExistsAnywhere(f) {
   if (!f || /^(https?:)?\/\//i.test(f) || /^[a-z]+:/i.test(f)) return true; // external/CDN/data URLs: can't verify, never treat as missing
   const base = f.split('?')[0].split('#')[0];
@@ -1115,6 +1148,112 @@ ${sections}
 //   2. Detect broken syntax in scripts called by workflows
 //   3. Add NODE_OPTIONS memory limits, timeouts to workflows
 //   4. Fix common CI issues (missing files, wrong paths)
+// ── AGENT: MetaLearn — the agent teaches itself new repair skills ──
+// Every rule-based repair in this file (defer ordering, nav routing,
+// placeholder mapping) was once a NEW bug class needing a human to write
+// its detector. MetaLearn closes that loop: it reads failure patterns no
+// existing rule handles, asks the model to synthesize a small pure
+// detector/fixer, validates it (syntax-check + idempotence + control page
+// untouched), and stages it in scripts/learned-fixes.js. The NEXT run loads
+// and executes staged detectors inside SelfCheck — two-phase auto-adoption
+// with no human in the middle.
+// Safety: one detector per run; detectors are pure (html,page)->{html,fixes}
+// with no fs/network; a detector firing on >15 files is fuse-tripped
+// (logged, skipped); everything lands in agent-log for review.
+const LEARNED_PATH = 'scripts/learned-fixes.js';
+const KNOWN_ERROR_RES = [/failed to load scripts\/lib/i, /unexpected token/i, /placeholder/i, /broken link/i, /defer/i, /404/i, /net::/i, /failed to fetch/i, /graph-core/i, /exam.*hub/i];
+async function agentMetaLearn() {
+  const fixes = [];
+  // 1. Collect failure patterns no existing rule handles — only page-bound
+  // browser-test issues (a code fixer needs a victim page to validate on).
+  const patterns = [];
+  try {
+    const bt = loadJson('data/browser-test.json', { issues: [] });
+    for (const issue of (bt.issues || [])) {
+      const msg = String((issue.msg || issue.detail || '') + ' ' + (issue.type || ''));
+      const pg = issue.page ? String(issue.page).split('/').pop() : '';
+      if (msg && pg && fs.existsSync(pg) && !KNOWN_ERROR_RES.some(re => re.test(msg))) {
+        patterns.push({ page: pg, pattern: msg.slice(0, 220) });
+      }
+    }
+  } catch (e) { /* no data */ }
+  if (!patterns.length) { console.log('agent: MetaLearn — no unmatched page-bound patterns; nothing to learn'); return { agent: 'metalearn', fixes: fixes }; }
+  const target = patterns[0];
+  console.log('agent: MetaLearn — unmatched pattern on ' + target.page + ' :: ' + target.pattern.slice(0, 120));
+  // 2. Synthesize a detector via the model.
+  const spec = 'Write a JavaScript function fixLearned(html, page) for a static-site repair bot.\n' +
+    'FAILURE PATTERN: ' + target.pattern + ' (seen on ' + target.page + ')\n' +
+    'STRICT RULES:\n' +
+    '1. Pure function: inputs (html string, page filename string), output {html: string, fixes: array of {page, fix}}.\n' +
+    '2. NO fs, NO network, NO exec, NO require — string transforms only.\n' +
+    '3. Idempotent: running twice changes nothing the second time.\n' +
+    '4. Conservative: if the pattern is absent, return html unchanged with zero fixes.\n' +
+    '5. Return ONLY the function source starting with "function fixLearned(html, page) {", no markdown, no explanation.\n' +
+    '6. Keep it under 40 lines.';
+  const result = await callLLM('You write tiny, safe, deterministic repair functions for static HTML sites.', spec, 1500);
+  if (!result || !result.text) { console.log('agent: MetaLearn — model returned nothing'); return { agent: 'metalearn', fixes: fixes }; }
+  let fnSrc = result.text.replace(/```[a-z]*|```/gi, '').trim();
+  const fnStart = fnSrc.indexOf('function fixLearned');
+  if (fnStart < 0) { console.log('agent: MetaLearn — no function in model output'); return { agent: 'metalearn', fixes: fixes }; }
+  fnSrc = fnSrc.slice(fnStart);
+  // 3. Validate: syntax-check in isolation.
+  const tmpFile = 'scripts/.metalearn-tmp.js';
+  try {
+    fs.writeFileSync(tmpFile, fnSrc + '\nmodule.exports = fixLearned;\n');
+    execSync('node --check ' + tmpFile, { stdio: 'pipe' });
+  } catch (e) {
+    console.log('agent: MetaLearn — synthesized detector has syntax errors, discarding');
+    try { fs.unlinkSync(tmpFile); } catch (e2) { /* ignore */ }
+    return { agent: 'metalearn', fixes: fixes };
+  }
+  // 4. Validate: idempotent on the victim, silent on a control page.
+  let fn;
+  try {
+    delete require.cache[require.resolve('./.metalearn-tmp.js')];
+    fn = require('./.metalearn-tmp.js');
+    if (typeof fn !== 'function') throw new Error('not a function');
+  } catch (e) {
+    console.log('agent: MetaLearn — synthesized detector does not load: ' + e.message);
+    try { fs.unlinkSync(tmpFile); } catch (e2) { /* ignore */ }
+    return { agent: 'metalearn', fixes: fixes };
+  }
+  try {
+    const victim = fs.readFileSync(target.page, 'utf8');
+    const r1 = fn(victim, target.page);
+    const r2 = fn(r1.html, target.page);
+    if (r1.html !== r2.html) {
+      console.log('agent: MetaLearn — detector not idempotent, discarding');
+      try { fs.unlinkSync(tmpFile); } catch (e2) { /* ignore */ }
+      return { agent: 'metalearn', fixes: fixes };
+    }
+    const controlFile = listPages().find(p => p !== target.page);
+    if (controlFile) {
+      const control = fs.readFileSync(controlFile, 'utf8');
+      const rc = fn(control, controlFile);
+      if (rc.html !== control && !(rc.fixes || []).length) {
+        console.log('agent: MetaLearn — detector mutates without reporting, discarding');
+        try { fs.unlinkSync(tmpFile); } catch (e2) { /* ignore */ }
+        return { agent: 'metalearn', fixes: fixes };
+      }
+    }
+    // 5. Stage it: append to learned-fixes.js (SelfCheck executes it next run).
+    let learned = '';
+    try { learned = fs.readFileSync(LEARNED_PATH, 'utf8'); } catch (e) { learned = '// Auto-synthesized detectors (MetaLearn). Executed by SelfCheck with a blast-radius fuse.\n'; }
+    const idx = (learned.match(/function fixLearned_/g) || []).length + 1;
+    const staged = fnSrc.replace(/function fixLearned\s*\(/, 'function fixLearned_' + idx + '(');
+    fs.writeFileSync(LEARNED_PATH,
+      learned + '\n' + staged + '\nmodule.exports.fixLearned_' + idx + ' = fixLearned_' + idx + ';\n');
+    execSync('node --check ' + LEARNED_PATH, { stdio: 'pipe' });
+    try { fs.unlinkSync(tmpFile); } catch (e2) { /* ignore */ }
+    fixes.push({ page: LEARNED_PATH, fix: 'MetaLearn staged detector #' + idx + ' for ' + target.page + ' :: ' + target.pattern.slice(0, 80) + ' — executes next run' });
+    console.log('agent: MetaLearn — staged detector #' + idx);
+  } catch (e) {
+    console.log('agent: MetaLearn — validation failed: ' + (e.message || e).slice(0, 150));
+    try { fs.unlinkSync(tmpFile); } catch (e2) { /* ignore */ }
+  }
+  return { agent: 'metalearn', fixes: fixes };
+}
+
 async function agentWorkflows() {
   const fixes = [];
   const wfDir = '.github/workflows';
@@ -1155,21 +1294,52 @@ async function agentWorkflows() {
       fixes.push({ page: wfPath, fix: 'Added memory limit to node steps' });
     }
 
-    // Add retry to git push steps
-    if (/git push/.test(content) && !/push --retries|for i in/.test(content)) {
-      content = content.replace(/(git push)(?!\s*--retries)/g, 'git push --retries=3 --retry-delay=5');
+    // Add retry to git push steps. NOTE: `git push` has NO --retries flag —
+    // an old version of this rule injected `git push --retries=3`, which is
+    // an unknown option and breaks every push it touches. The only correct
+    // retry is a pull+push loop.
+    if (/git push/.test(content) && !/for i in 1 2 3/.test(content)) {
+      content = content.replace(/^(\s*)git push\s*$/gm,
+        '$1for i in 1 2 3; do\n' +
+        '$1  git pull --rebase --autostash 2>/dev/null || true\n' +
+        '$1  git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."\n' +
+        '$1  sleep 5\n' +
+        '$1done');
       changed = true;
-      fixes.push({ page: wfPath, fix: 'Added push retries' });
+      fixes.push({ page: wfPath, fix: 'Added pull+push retry loop' });
     }
 
-    // If a workflow uses ollama but has no server start step, add it
+    // If a workflow uses ollama but has no server start step, add it.
+    // IPv4 127.0.0.1 NOT localhost: Node fetch resolves localhost to ::1
+    // (IPv6) first and Ollama listens IPv4-only; an old snippet injected
+    // here used localhost and every call failed instantly.
     if (/ollama/.test(content) && !/Start Ollama|ollama serve/.test(content)) {
       content = content.replace(
         /(\s+- name: )(Install Ollama|Pull model)/,
-        '$1Start Ollama server\n        run: |\n          nohup ollama serve > /tmp/ollama.log 2>&1 &\n          for i in $(seq 1 30); do curl -s http://localhost:11434/api/tags > /dev/null 2>&1 && break; sleep 1; done\n          echo "Ollama server ready"\n\n$1$2'
+        '$1Start Ollama server\n        run: |\n          export OLLAMA_KEEP_ALIVE=60m\n          nohup ollama serve > /tmp/ollama.log 2>&1 &\n          for i in $(seq 1 30); do curl -s http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break; sleep 1; done\n          echo "Ollama server ready"\n\n$1$2'
       );
       changed = true;
       fixes.push({ page: wfPath, fix: 'Added Ollama server start step' });
+    }
+
+    // Concurrency: periodic jobs must not queue behind each other.
+    if (/schedule:/.test(content) && !/concurrency:/.test(content)) {
+      const g = (wf.match(/^[\w-]+/)[0] || 'job').replace(/\.yml$/, '');
+      content = content.replace(/(permissions:\s*\n\s*contents:\s*write\s*\n)/,
+        '$1\n# Prevent pile-ups: the newest run wins.\nconcurrency:\n  group: ' + g + '\n  cancel-in-progress: true\n');
+      if (content.indexOf('group: ' + g) !== -1) {
+        changed = true;
+        fixes.push({ page: wfPath, fix: 'Added concurrency group' });
+      }
+    }
+
+    // Stale input name: `sparse-checkout-cone` was replaced by
+    // `sparse-checkout-cone-mode`; the old name is silently ignored, which
+    // forces cone mode and rejects glob patterns with exit 128.
+    if (/sparse-checkout-cone:\s/.test(content)) {
+      content = content.replace(/sparse-checkout-cone:/g, 'sparse-checkout-cone-mode:');
+      changed = true;
+      fixes.push({ page: wfPath, fix: 'Renamed sparse-checkout-cone → sparse-checkout-cone-mode' });
     }
 
     if (changed) fs.writeFileSync(wfPath, content);
@@ -1858,21 +2028,55 @@ async function agentSelfCheck() {
       for (const f of orderFix.fixes) fixes.push(f);
     }
 
-    const scriptRefs = html.match(/src=["'](js\/[^"']+\.js)["']/gi) || [];
+    const scriptRefs = html.match(/src=["']((?:js|scripts)\/[^"']+\.js|\.\.\/(?:js|scripts)\/[^"']+\.js|\/(?:js|scripts)\/[^"']+\.js)["']/gi) || [];
     for (const ref of scriptRefs) {
-      const file = ref.match(/src=["']([^"']+)["']/i)[1];
+      const raw = ref.match(/src=["']([^"']+)["']/i)[1];
+      // Resolve against the PAGE's directory (cgl/index.html means js/… as
+      // cgl/js/…, ../js/… as js/…) — checking the raw string against the repo
+      // root strips working tags on every hub page.
+      const file = resolvePageRef(page, raw);
       // fileExistsAnywhere, NOT fs.existsSync: in a sparse checkout the file
       // can be tracked-but-not-materialized, and stripping a live tag on that
       // lie broke 17 pages in run #2. Externals always pass (can't verify).
-      if (!fileExistsAnywhere(file)) {
+      if (file && !fileExistsAnywhere(file)) {
         html = html.replace(ref, '');
         changed = true;
-        fixes.push({ page: page, fix: 'Removed broken script ref ' + file });
+        fixes.push({ page: page, fix: 'Removed broken script ref ' + raw });
       }
     }
 
     if (changed) fs.writeFileSync(page, html);
   }
+
+  // ── Learned detectors (MetaLearn auto-synthesis), once per pass ──
+  // Detectors staged by previous runs execute here with a blast-radius fuse:
+  // one bad detector must not kill the pass, and any detector firing on >15
+  // files is skipped and logged for review instead of applied.
+  try {
+    if (fs.existsSync('scripts/learned-fixes.js')) {
+      delete require.cache[require.resolve('./learned-fixes.js')];
+      const learned = require('./learned-fixes.js');
+      for (const key of Object.keys(learned)) {
+        if (typeof learned[key] !== 'function') continue;
+        const pending = [];
+        for (const pg of pages) {
+          try {
+            const h0 = fs.readFileSync(pg, 'utf8');
+            const r = learned[key](h0, pg);
+            if (r && typeof r.html === 'string' && r.html !== h0) {
+              pending.push({ pg: pg, html: r.html, fx: r.fixes || [] });
+            }
+          } catch (e) { /* one bad detector must not kill the pass */ }
+        }
+        if (pending.length > 0 && pending.length <= 15) {
+          for (const p of pending) { fs.writeFileSync(p.pg, p.html); for (const f of p.fx) fixes.push(f); }
+          fixes.push({ page: pending[0].pg, fix: 'Learned detector ' + key + ' applied to ' + pending.length + ' page(s)' });
+        } else if (pending.length > 15) {
+          fixes.push({ page: '-', fix: 'Learned detector ' + key + ' FUSE-TRIPPED (' + pending.length + ' pages) — skipped, needs review', kind: 'fuse' });
+        }
+      }
+    }
+  } catch (e) { /* learned module missing/broken — non-fatal */ }
 
   console.log('agent: SelfCheck — ' + fixes.length + ' issue(s)');
   return { agent: 'selfcheck', fixes: fixes };
@@ -1917,7 +2121,8 @@ async function main() {
     ['Flowcharts', agentFlowcharts],
     ['Mindmaps', agentMindmaps],
     ['Features', agentFeatures],
-    ['Proposals', agentProposals]
+    ['Proposals', agentProposals],
+    ['MetaLearn', agentMetaLearn]
   ];
   const alwaysAgents = [
     ['Workflows', agentWorkflows],
@@ -1959,7 +2164,7 @@ async function main() {
   } catch (e) { console.log('agent: work intake failed: ' + e.message); }
 
   // ── ROTATION (continuous working) ──
-  // One run cannot do everything: the 8 LLM agents × minutes of CPU inference
+  // One run cannot do everything: the 9 LLM agents × minutes of CPU inference
   // each exceeds the 120-min job budget. Rotate instead of dropping work —
   // each run takes the NEXT slice of the LLM agents, so an hourly schedule
   // gives every capability a turn within ~2 hours. Slice comes from

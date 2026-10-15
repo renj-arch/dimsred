@@ -1,0 +1,75 @@
+name: Auth Sentinel
+
+# The single point the agent cannot self-heal: if secrets.PAT expires, every
+# workflow's push fails and the whole system goes silent with green-looking
+# runs (push loops swallow the error). This workflow dry-run pushes once a
+# day; on auth failure it writes a loud, human-readable alert file that
+# improve.html surfaces. Nothing here needs a model or heavy checkout.
+
+on:
+  schedule:
+    - cron: '0 5 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: auth-sentinel
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  sentinel:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            data/auth-status.json
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - name: Probe push authorization (dry run, no side effects)
+        run: |
+          STATUS="ok"
+          DETAIL="PAT push authorization verified $(date -u +'%Y-%m-%d %H:%M UTC')"
+          if ! git push --dry-run origin HEAD:main 2>push-err.txt; then
+            ERR=$(cat push-err.txt 2>/dev/null | head -5)
+            if echo "$ERR" | grep -qi "403\|401\|authentication failed\|invalid credentials"; then
+              STATUS="PAT-DEAD"
+              DETAIL="PAT push authorization FAILED $(date -u +'%Y-%m-%d %H:%M UTC') — renew secrets.PAT or all publishing stops. Error: $ERR"
+            else
+              STATUS="push-probe-failed"
+              DETAIL="dry-run push failed (non-auth?) $(date -u +'%Y-%m-%d %H:%M UTC'): $ERR"
+            fi
+          fi
+          echo "auth_status=$STATUS"
+          mkdir -p data
+          printf '{"status":"%s","detail":"%s","checked":"%s"}\n' "$STATUS" "$DETAIL" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > data/auth-status.json
+          cat data/auth-status.json
+
+      - name: Publish auth status
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/auth-status.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No auth status change"
+          else
+            git commit -m "auth-sentinel: PAT status check" 2>/dev/null || true
+            for i in 1 2 3; do
+              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed..."
+              sleep 5
+            done || true
+          fi
+          # A dead PAT must NEVER look green: fail the job so Actions shows
+          # red and notifies. (The publish above cannot succeed without a
+          # working PAT — that is exactly the condition being reported.)
+          STATUS=$(node -e "console.log(require('./data/auth-status.json').status)" 2>/dev/null || echo unknown)
+          if [ "$STATUS" = "PAT-DEAD" ]; then
+            echo "::error::PAT is dead — renew secrets.PAT or all publishing stops"
+            exit 1
+          fi

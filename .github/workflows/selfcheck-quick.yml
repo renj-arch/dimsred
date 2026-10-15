@@ -32,17 +32,35 @@ jobs:
           # Depth 1 has no history, so the damage is invisible (run #3
           # found nothing). 10 commits of html+scripts+js is seconds.
           fetch-depth: 10
-          # Root-level HTML pages + the agent scripts + the logs only.
-          # No data/questions (9GB), no figures, no model — finishes in ~1 min.
+          # Root HTML + exam hubs + scripts + js + logs. No data/questions
+          # (9GB), no figures, no model — finishes in ~1-2 min.
           # js/ is small (~21MB) and MUST be present: without it every
           # existence check lies and live script tags get stripped (run #2
           # removed 37 working tags across 17 pages on exactly that lie).
+          # The 16 exam hubs (~31MB) are audited too — their navs and script
+          # refs had never been checked until now.
           # ideas.json is the nav audit's idea board (dedicated-hub ideas
           # for the builder agents); tiny, and published below.
           sparse-checkout: |
             scripts
             js
             /*.html
+            cgl
+            rbi
+            jee
+            neet
+            gate
+            agniveer
+            upsc
+            ibps-po
+            sbi-clerk
+            ssc-gd
+            ctet
+            nda
+            cds
+            clat
+            ldc
+            kerala-psc
             data/agent-log.json
             data/browser-test.json
             data/ideas.json
@@ -63,7 +81,9 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add -- *.html data/agent-log.json data/ideas.json 2>/dev/null || true
+          # Quoted '*.html' is a recursive pathspec (root + hub subdirs);
+          # bare *.html would only match root pages and silently drop hub fixes.
+          git add -- '*.html' data/agent-log.json data/ideas.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No selfcheck repairs to publish"
           else
