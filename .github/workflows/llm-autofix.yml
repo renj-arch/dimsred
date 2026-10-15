@@ -62,18 +62,22 @@ jobs:
       # Start Ollama server in background and wait until it responds.
       # `ollama pull` above briefly starts the server, but it shuts down
       # when the step ends — the fixer then sees "Ollama not reachable".
+      # KEEP_ALIVE=60m keeps the model loaded between calls. Public-repo
+      # runners are 4 vCPU / 16GB RAM so 27B nearly fits in RAM.
       - name: Start Ollama server
         run: |
+          export OLLAMA_KEEP_ALIVE=60m
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           echo $! > /tmp/ollama.pid
           for i in $(seq 1 30); do
-            if curl -sf http://localhost:11434/api/tags > /dev/null 2>&1; then
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
               echo "Ollama server ready after ${i}s"
               break
             fi
             sleep 1
           done
-          curl -sf http://localhost:11434/api/tags && echo " OK" || echo " FAILED"
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
 
       # Pull the strongest coding model. Qwen3.8-27B scores 90.3% on
       # LiveCodeBench — near the top of the entire leaderboard. Falls back
@@ -92,11 +96,25 @@ jobs:
             echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
           fi
           ollama list
-          curl -sf http://localhost:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
 
-      - name: Run auto-fixer (Qwen3.5 local, zero API keys)
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            nohup ollama serve >> /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      - name: Run auto-fixer (Qwen3.8 local, zero API keys)
         env:
           OLLAMA_MODEL: ${{ env.MODEL }}
+          OLLAMA_HOST: http://127.0.0.1:11434
         run: node scripts/llm-autofix.js
 
       - name: Publish fixes

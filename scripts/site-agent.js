@@ -1628,14 +1628,45 @@ async function main() {
   if (process.env.AGENT_ONLY === 'questions') {
     agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content');
   }
-  // AGENT_LIMIT: 27B on 2 CPU cores + 16GB swap takes 2-10 min PER call.
-  // All 14 agents x multiple calls each blows the 120-min job budget — runs
-  // #56-#60 burned 40+ min and produced nothing verifiable. Cap agents per
-  // run (schedule fires every 2h, so coverage continues across runs).
-  const limit = parseInt(process.env.AGENT_LIMIT || '0', 10);
-  if (limit > 0 && agents.length > limit) {
-    console.log('agent: AGENT_LIMIT=' + limit + ' — running first ' + limit + ' agent(s): ' + agents.slice(0, limit).map(([n]) => n).join(', '));
-    agents = agents.slice(0, limit);
+
+  // ── Work intake: LOOK before acting (the "intelligent" part) ──
+  // Read every report the site produces, count what's outstanding, and log
+  // the queue. The agent should know what exists before deciding what to do.
+  try {
+    const intact = loadJson('data/faults.json', { faults: [] });
+    const figGaps = loadJson('data/figure-gaps.json', {});
+    const topicGaps = loadJson('data/topic-gaps.json', {});
+    const ideasJ = loadJson('data/ideas.json', { ideas: [] });
+    const audit = loadJson('data/site-audit.json', {});
+    const queue = {
+      openFaults: (intact.faults || []).length,
+      criticalFaults: (intact.faults || []).filter(f => f.severity === 'critical').length,
+      figureGaps: figGaps.totalGaps != null ? figGaps.totalGaps : Object.keys(figGaps.bySubject || {}).length,
+      topicGaps: topicGaps.thin || topicGaps.gaps || Object.keys(topicGaps.byCategory || {}).length || 0,
+      pendingIdeas: (ideasJ.ideas || []).length,
+      pagesAudited: audit.pages || listPages().length,
+      pages: listPages().length
+    };
+    console.log('agent: work intake — ' + JSON.stringify(queue));
+    console.log('agent: intake detail — faults by severity: ' + JSON.stringify(
+      (intact.faults || []).reduce((acc, f) => { acc[f.severity || '?'] = (acc[f.severity || '?'] || 0) + 1; return acc; }, {})
+    ));
+  } catch (e) { console.log('agent: work intake failed: ' + e.message); }
+
+  // ── ROTATION (continuous working) ──
+  // One run cannot do everything: 14 agents × minutes of CPU inference each
+  // exceeds the 120-min job budget. Rotate instead of dropping work — each
+  // run takes the NEXT slice of the agent list, so an hourly schedule gives
+  // every capability a turn. Slice comes from AGENT_ROTATE (default 4).
+  // Rotation offset derives from GITHUB_RUN_NUMBER so it advances every run.
+  const sliceSize = Math.max(1, parseInt(process.env.AGENT_ROTATE || '4', 10));
+  if (sliceSize < agents.length) {
+    const runNo = parseInt(process.env.GITHUB_RUN_NUMBER || '0', 10) || (Math.floor(Date.now() / 3600000) % 997);
+    const offset = (runNo * sliceSize) % agents.length;
+    const rotated = [];
+    for (let i = 0; i < sliceSize; i++) rotated.push(agents[(offset + i) % agents.length]);
+    console.log('agent: rotation ' + sliceSize + '/' + agents.length + ' (offset ' + offset + ', run #' + runNo + ') — ' + rotated.map(([n]) => n).join(', '));
+    agents = rotated;
   }
   console.log('agent: will run ' + agents.length + ' agent(s): ' + agents.map(([n]) => n).join(', '));
 

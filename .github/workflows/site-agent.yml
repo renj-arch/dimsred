@@ -10,7 +10,9 @@ name: Site Agent
 
 on:
   schedule:
-    - cron: '55 */2 * * *'
+    # HOURLY + rotation = continuous coverage. Each run takes the next
+    # 4 agents; over 14 agents every capability gets a turn within ~4 hours.
+    - cron: '55 * * * *'
   # NO push trigger: the agent commits changes which used to re-trigger
   # this workflow, queueing doomed runs behind each other all day.
   workflow_dispatch:
@@ -128,12 +130,11 @@ jobs:
           # "fetch failed" while curl/ollama-CLI (IPv4) work. Run #56:
           # CLI proof succeeded, Node fetch failed in <1s.
           OLLAMA_HOST: http://127.0.0.1:11434
-          # Run only the first 3 agents (Foresight, Questions, Content) per
-          # run. All 14 take too long on CPU inference; the schedule fires
-          # every 2h so full coverage builds up across runs.
-          AGENT_LIMIT: '3'
-          # Single pass, not --loop: llm-autofix runs once and succeeds.
-          # The 6-cycle loop burned memory and LLM retry budget on cycle 1.
+          # Run the next 4 agents per run. All 14 take too long for one job;
+          # rotation + an hourly schedule gives every capability a turn.
+          # AGENT_LIMIT=3 still overrides (fixed slice) if ever set.
+          AGENT_ROTATE: '4'
+          # Single pass, not --loop.
           AGENT_MAX_CYCLES: '1'
           NODE_OPTIONS: '--max-old-space-size=2048'
         run: node scripts/site-agent.js

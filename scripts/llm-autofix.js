@@ -17,10 +17,20 @@
 
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 const LOG = 'data/autofix-log.json';
 const MAX_FIXES_PER_RUN = 3; // large models on CPU are slow — keep runs within timeout
-const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://localhost:11434';
+// 127.0.0.1 NOT localhost: Node fetch resolves localhost to ::1 (IPv6) first
+// on GitHub runners; Ollama listens on IPv4 only → instant "fetch failed"
+// while curl/ollama-CLI (IPv4) work fine.
+const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
+// This variable was referenced in callLLM but NEVER DEFINED — every Ollama
+// call threw "ReferenceError: OLLAMA_MODEL is not defined", was caught as
+// "Ollama not reachable", and the workflow reported success with 0 fixes
+// (proven in the LLM Auto-fix logs: "Ollama not reachable: OLLAMA_MODEL is
+// not defined" + "0 fix(es) applied this run"). Now it always exists.
+let OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3.8:27b'; // reassigned by main() after model selection
 
 // ── Self-upgrading model selector ──
 // Ranked by LiveCodeBench v6 / coding ability. When a better model appears
@@ -63,14 +73,17 @@ async function pickBestModel() {
   console.log('autofix: system RAM ' + ram.totalGB.toFixed(1) + 'GB total, ' + ram.freeGB.toFixed(1) + 'GB free');
 
   // Check which models are already pulled (no network needed).
+  // curl not fetch: fetch resolves localhost → ::1 IPv6 and Ollama is
+  // IPv4-only, so the probe always failed and the model list was always empty.
   let pulled = [];
   try {
-    const res = await fetch(OLLAMA_HOST + '/api/tags');
-    if (res.ok) {
-      const j = await res.json();
-      pulled = (j.models || []).map(function (m) { return m.name; });
-      console.log('autofix: ' + pulled.length + ' model(s) already pulled: ' + pulled.join(', '));
-    }
+    const out = execSync(
+      'curl -s --max-time 30 ' + OLLAMA_HOST + '/api/tags',
+      { encoding: 'utf8', timeout: 40000 }
+    );
+    const j = JSON.parse(out);
+    pulled = (j.models || []).map(function (m) { return m.name; });
+    console.log('autofix: ' + pulled.length + ' model(s) already pulled: ' + pulled.join(', '));
   } catch (e) { /* Ollama not up yet */ }
 
   // Pick the best model that (a) is already pulled, or (b) fits in total RAM.
@@ -107,31 +120,43 @@ function saveJson(p, data) {
 
 // ── LLM call: Ollama (local, free forever) → optional API fallbacks ──
 async function callLLM(system, user, maxTokens) {
-  // Primary: local Ollama — no keys, no rate limits, runs on runner CPU.
+  // Primary: local Ollama via curl — no keys, no rate limits, runs on runner CPU.
+  // WHY curl NOT fetch: (a) fetch resolves localhost → ::1 IPv6, Ollama is
+  // IPv4-only → instant "fetch failed"; (b) undici's default 300s
+  // headersTimeout fires while the 27B model cold-loads (a full load takes
+  // minutes through swap); (c) curl is what `ollama run` uses internally
+  // and is PROVEN to work on this runner (Site Agent #63: cold-start OK).
   try {
-    const res = await fetch(OLLAMA_HOST + '/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        model: OLLAMA_MODEL,
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user }
-        ],
-        stream: false,
-        options: { temperature: 0.3, num_predict: maxTokens || 1024 }
-      })
-    });
-    if (res.ok) {
-      const j = await res.json();
-      const text = (j.message && j.message.content) || '';
-      if (text.trim()) return { text: text.trim(), model: OLLAMA_MODEL + ' (local)' };
-    } else {
-      const body = await res.text().catch(function () { return ''; });
-      console.log('autofix: Ollama ' + OLLAMA_MODEL + ' → ' + res.status + ' ' + body.slice(0, 200));
-    }
+    const out = execSync(
+      'curl -sS --max-time 1800 -w "\\n%{http_code}" ' + OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-',
+      {
+        input: JSON.stringify({
+          model: OLLAMA_MODEL,
+          messages: [
+            { role: 'system', content: system },
+            { role: 'user', content: user }
+          ],
+          stream: false,
+          // 2048 not 1024: qwen3.8:27b is a THINKING model — it burns
+          // ~200-600 tokens on message.thinking before emitting content.
+          options: { temperature: 0.3, num_predict: maxTokens || 2048 }
+        }),
+        encoding: 'utf8', timeout: 1850000, maxBuffer: 50 * 1024 * 1024
+      }
+    );
+    const nl = out.lastIndexOf('\n');
+    const body = nl >= 0 ? out.slice(0, nl) : out;
+    const httpCode = nl >= 0 ? out.slice(nl + 1).trim() : '';
+    const j = JSON.parse(body);
+    const msg = j.message || {};
+    let text = (msg.content || '').trim();
+    // Thinking model fallback: content can be empty with everything in thinking.
+    if (!text && msg.thinking) text = msg.thinking.trim();
+    if (text) return { text: text, model: OLLAMA_MODEL + ' (local)' };
+    console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
   } catch (e) {
-    console.log('autofix: Ollama not reachable: ' + (e.message || e));
+    console.log('autofix: Ollama curl failed: exit=' + (e.status === undefined ? '?' : e.status) +
+      ' stderr=' + String(e.stderr || '').slice(0, 200) + ' out=' + String(e.stdout || '').slice(0, 200));
   }
 
   // Optional fallbacks — only used if API keys happen to be set.
@@ -347,6 +372,10 @@ async function main() {
   // Self-upgrade: pick the best available model automatically.
   const model = await pickBestModel();
   log.model = model;
+  // Apply the selection to the module-level variable callLLM uses (it was
+  // previously never wired up — callLLM used an undefined name).
+  if (model) OLLAMA_MODEL = model;
+  console.log('autofix: this run uses ' + OLLAMA_MODEL);
 
   // Collect actionable fixes from the board
   const thinCats = faults.faults.filter(f => f.severity === 'critical' && f.kind === 'coverage' && f.action);
