@@ -152,7 +152,10 @@ async function callLLM(system, user, maxTokens) {
     let text = (msg.content || '').trim();
     // Thinking model fallback: content can be empty with everything in thinking.
     if (!text && msg.thinking) text = msg.thinking.trim();
-    if (text) return { text: text, model: OLLAMA_MODEL + ' (local)' };
+    if (text) {
+      console.log('autofix: LLM ← ' + OLLAMA_MODEL + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
+      return { text: text, model: OLLAMA_MODEL + ' (local)' };
+    }
     console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
   } catch (e) {
     console.log('autofix: Ollama curl failed: exit=' + (e.status === undefined ? '?' : e.status) +
@@ -263,6 +266,11 @@ async function fixThinCategory(fault) {
 
   if (!added.length) return null;
   saveJson(catFile, cat);
+  // Detailed log: the actual questions written (first 2), so improve.html
+  // shows WHAT was written, not just a count.
+  const qPreview = parsed.filter(q => q && q.question).slice(0, 2).map(q =>
+    'Q: ' + q.question + ' | A: ' + (Array.isArray(q.options) ? (q.options[q.answer] || q.options[0]) : q.answer)
+  ).join('\n');
   return {
     kind: 'questions',
     target: catName,
@@ -270,7 +278,8 @@ async function fixThinCategory(fault) {
     count: added.length,
     ids: added,
     model: result.model,
-    detail: added.length + ' new MCQ(s) generated for "' + catName + '"'
+    detail: added.length + ' new MCQ(s) generated for "' + catName + '"',
+    text: qPreview.slice(0, 600)
   };
 }
 
@@ -313,12 +322,16 @@ async function fixMissingFigure(subject, topic) {
 
   fs.mkdirSync('figures', { recursive: true });
   fs.writeFileSync(figFile, html);
+  // Detailed log: the diagram's node labels (what the figure teaches).
+  const labels = (svg.match(/<text[^>]*>([^<]{1,60})<\/text>/g) || []).slice(0, 8)
+    .map(t => t.replace(/<[^>]*>/g, '').trim()).filter(Boolean);
   return {
     kind: 'figure',
     target: topic,
     file: figFile,
     model: result.model,
-    detail: 'Figure page created for "' + topic + '" (' + subject + ')'
+    detail: 'Figure page created for "' + topic + '" (' + subject + ')',
+    text: 'Nodes: ' + (labels.length ? labels.join(' → ') : topic)
   };
 }
 
@@ -354,7 +367,8 @@ async function fixBrokenCaption(fault) {
       target: page,
       file: page,
       model: result.model,
-      detail: 'Caption corrected on ' + path.basename(page)
+      detail: 'Caption corrected on ' + path.basename(page),
+      text: '→ ' + corrected.slice(0, 400)
     };
   }
   return null;

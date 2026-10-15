@@ -292,6 +292,7 @@ function renderFaults() {
           '<b style="color:' + kindColor + ';font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">' + esc(f.kind) + '</b>' +
           '<div style="margin-top:2px">' + esc(f.detail || '') + '</div>' +
           (f.model ? '<span style="color:var(--text-muted);font-size:11px">by ' + esc(f.model) + '</span>' : '') +
+          (f.text ? '<details style="margin-top:4px"><summary style="cursor:pointer;font-size:11px;color:var(--cyan)">show what was written</summary><pre style="white-space:pre-wrap;font-size:11px;color:var(--text-sec);background:rgba(255,255,255,.03);padding:8px;border-radius:6px;margin-top:4px;max-height:220px;overflow:auto">' + esc(f.text) + '</pre></details>' : '') +
           '</div>';
       }).join('');
       box.innerHTML += section;
@@ -329,7 +330,8 @@ function renderFaults() {
             var icon = f.kind === 'proposal' ? '💡' : f.kind === 'prototype' ? '🛠' : f.kind === 'figure' ? '📊' : f.kind === 'flowchart' ? '📈' : f.kind === 'mindmap' ? '🧠' : f.kind === 'revision' ? '📝' : f.kind === 'comparison' ? '⚖' : f.kind === 'mnemonics' ? '🔤' : f.kind === 'study' ? '📖' : '✅';
             return '<div style="margin:3px 0;font-size:12px;color:var(--text-sec)">' + icon + ' ' + esc(f.fix || '') +
               (f.page ? ' <span style="color:var(--text-muted);font-size:10px">(' + esc(f.page) + ')</span>' : '') +
-              (f.detail ? '<div style="color:var(--text-muted);font-size:11px;margin-left:18px">' + esc(f.detail) + '</div>' : '') + '</div>';
+              (f.detail ? '<div style="color:var(--text-muted);font-size:11px;margin-left:18px">' + esc(f.detail) + '</div>' : '') +
+              (f.text ? '<details style="margin:2px 0 2px 18px"><summary style="cursor:pointer;font-size:11px;color:var(--cyan)">show what was written</summary><pre style="white-space:pre-wrap;font-size:11px;color:var(--text-sec);background:rgba(255,255,255,.03);padding:8px;border-radius:6px;margin-top:4px;max-height:220px;overflow:auto">' + esc(f.text) + '</pre></details>' : '') + '</div>';
           }).join('');
           section += '</div>';
         });

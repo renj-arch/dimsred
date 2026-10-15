@@ -131,7 +131,11 @@ async function callLLM(system, user, maxTokens) {
     // confirm that generation works"). Fall back to thinking when empty.
     let text = (msg.content || '').trim();
     if (!text && msg.thinking) text = msg.thinking.trim();
-    if (text) return { text: text, model: model + ' (local)' };
+    if (text) {
+      // Detailed log: WHAT the model wrote (preview), not just that it did.
+      console.log('agent: LLM ← ' + model + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
+      return { text: text, model: model + ' (local)' };
+    }
     console.log('agent: Ollama ' + model + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
   } catch (e) {
     console.log('agent: Ollama response unparseable: ' + String(out).slice(0, 300));
@@ -2018,7 +2022,10 @@ async function agentPapers() {
     seenText.push(q.question);
     added++;
   }
-  if (added) fixes.push({ page: 'data/papers.json', fix: (isNew ? 'Started paper ' : 'Extended paper ') + target.id + ' (+' + added + ' questions, now ' + target.questions.length + '/' + (target.totalQuestions || slot.target) + ')' });
+  if (added) {
+    const addedQs = target.questions.slice(-added).slice(0, 2).map(q => 'Q: ' + (q.q || '').slice(0, 120) + ' | A: ' + String(q.answer || '').slice(0, 60)).join('\n');
+    fixes.push({ page: 'data/papers.json', fix: (isNew ? 'Started paper ' : 'Extended paper ') + target.id + ' (+' + added + ' questions, now ' + target.questions.length + '/' + (target.totalQuestions || slot.target) + ')', text: addedQs.slice(0, 600) });
+  }
 
   // Enrich: detailed 27B explanations for questions lacking them (cap 8/run).
   let enriched = 0;
@@ -2044,7 +2051,10 @@ async function agentPapers() {
       } catch (e) { /* retry */ }
     }
   }
-  if (enriched) fixes.push({ page: 'data/papers.json', fix: 'Wrote ' + enriched + ' detailed 27B explanation(s) in ' + target.id });
+  if (enriched) {
+    const exPreview = target.questions.filter(q => q.explain && q.explain.length >= 150).slice(-2).map(q => 'Q: ' + (q.q || '').slice(0, 100) + '\n→ ' + q.explain.slice(0, 220)).join('\n');
+    fixes.push({ page: 'data/papers.json', fix: 'Wrote ' + enriched + ' detailed 27B explanation(s) in ' + target.id, text: exPreview.slice(0, 800) });
+  }
   saveJson('data/papers.json', papers);
   console.log('agent: Papers — +' + added + ' questions, +' + enriched + ' explanations in ' + target.id);
   return { agent: 'papers', fixes: fixes };

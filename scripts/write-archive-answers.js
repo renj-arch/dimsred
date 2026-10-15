@@ -397,6 +397,33 @@ async function main() {
   }
   saveJson(CHUNK, chunk);
   console.log('writer: sidecar ' + Object.keys(sidecar.answers).length + ' total, chunk regenerated, +' + wrote + ' enriched, +' + created + ' created');
+  // Log to agent-log.json so improve.html shows WHAT was written (with
+  // excerpts), not just counts. Same shape as agent runs.
+  try {
+    const LOGP = 'data/agent-log.json';
+    const log = loadJson(LOGP, { runs: [], lastRun: null, model: null });
+    const fresh = Object.entries(sidecar.answers)
+      .filter(([id, a]) => a && a.writtenAt && (Date.now() - new Date(a.writtenAt).getTime()) < 12 * 3600000)
+      .slice(-6);
+    log.lastRun = new Date().toISOString();
+    log.runs.push({
+      at: log.lastRun,
+      model: 'qwen3.8:27b',
+      totalFixes: wrote + created,
+      byAgent: [{ agent: 'archive-writer', count: wrote + created }],
+      details: [{
+        agent: 'archive-writer',
+        fixes: fresh.map(([id, a]) => ({
+          page: 'archive (' + (a.category || '?') + ' / ' + (a.subject || '?') + ')',
+          fix: (a.origin === 'agent-made' ? 'Created' : 'Explained') + ' "' + String(a.question || '').slice(0, 90) + '"'
+            + (a.importance === 'high' ? ' [high-yield' + (a.importantFor && a.importantFor.length ? ': ' + a.importantFor.join(',') : '') + ']' : ''),
+          text: String(a.modelAnswer || '').slice(0, 500)
+        }))
+      }]
+    });
+    if (log.runs.length > 15) log.runs = log.runs.slice(-15);
+    saveJson(LOGP, log);
+  } catch (e) { console.log('writer: agent-log update skipped: ' + (e.message || e).slice(0, 100)); }
 }
 
 if (require.main === module) {
