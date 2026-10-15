@@ -1689,7 +1689,9 @@ async function main() {
     // Log BEFORE each agent so the 5-10 min of CPU inference is visible
     // in the logs instead of looking like a hang (runs #56-#60 looked dead
     // for 40+ min with no output).
-    console.log('agent: START ' + name + ' (' + (Date.now() - runStart) / 1000 | 0 + 's into run)');
+    // NOTE: ((...) / 1000 | 0) + 's' — the parens matter. Without them
+    // `'(' + n | 0 + 's...'` evaluates `|` across a string → prints "0".
+    console.log('agent: START ' + name + ' (' + (((Date.now() - runStart) / 1000) | 0) + 's into run)');
     try {
       const result = await fn();
       results.push(result);
