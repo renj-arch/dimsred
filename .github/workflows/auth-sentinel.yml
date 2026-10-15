@@ -35,8 +35,8 @@ jobs:
         run: |
           STATUS="ok"
           DETAIL="PAT push authorization verified $(date -u +'%Y-%m-%d %H:%M UTC')"
-          if ! git push --dry-run origin HEAD:main 2>push-err.txt; then
-            ERR=$(cat push-err.txt 2>/dev/null | head -5)
+          if ! git push --dry-run origin HEAD:main 2>/tmp/push-err.txt; then
+            ERR=$(cat /tmp/push-err.txt 2>/dev/null | head -5)
             if echo "$ERR" | grep -qi "403\|401\|authentication failed\|invalid credentials"; then
               STATUS="PAT-DEAD"
               DETAIL="PAT push authorization FAILED $(date -u +'%Y-%m-%d %H:%M UTC') — renew secrets.PAT or all publishing stops. Error: $ERR"
@@ -56,13 +56,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          echo "--- pre-add diagnostics ---"
-          ls -la data/ 2>/dev/null || echo "no data dir"
-          git sparse-checkout list 2>/dev/null || echo "sparse list unavailable"
-          git status --porcelain 2>/dev/null | head -5 || true
-          git add data/auth-status.json 2>&1 || true
-          echo "--- post-add ---"
-          git status --porcelain 2>/dev/null | head -5 || true
+          git add data/auth-status.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No auth status change"
           else
