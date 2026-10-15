@@ -37,12 +37,15 @@ jobs:
           # js/ is small (~21MB) and MUST be present: without it every
           # existence check lies and live script tags get stripped (run #2
           # removed 37 working tags across 17 pages on exactly that lie).
+          # ideas.json is the nav audit's idea board (dedicated-hub ideas
+          # for the builder agents); tiny, and published below.
           sparse-checkout: |
             scripts
             js
             /*.html
             data/agent-log.json
             data/browser-test.json
+            data/ideas.json
           sparse-checkout-cone-mode: false
           token: ${{ secrets.PAT }}
 
@@ -60,7 +63,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add -- *.html data/agent-log.json 2>/dev/null || true
+          git add -- *.html data/agent-log.json data/ideas.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No selfcheck repairs to publish"
           else

@@ -185,8 +185,102 @@ function fileExistsAnywhere(f) {
   } catch (e) { return false; }
 }
 
-// ── Autonomous repair: deferred-lib vs inline-consumer ordering ──
-// Script execution order rules that make this a REAL, page-breaking bug:
+// ── Autonomous repair: exam nav links landing on the wrong destination ──
+// Diagnosed from the live nav: cards titled "RBI Grade B Phase 1" landed on
+// ssc-je.html ("SSC-JE Mechanical"), CGL/IBPS/SBI/CTET all landed on ssc-je,
+// CLAT on papers.html — working links to the WRONG exam's hub — while each
+// exam's dedicated hub (/cgl/, /rbi/, ...) with real content sat unused, and
+// other pages used href="#" for the same exams. Dead-link checkers never
+// catch these because nothing 404s. Rule, longest-token-first:
+//   * anchor text names exam X and hub /X/ exists → href must be /X/
+//   * hub missing and href is bare "#" → mega-test.html?exam=X (honest quiz
+//     fallback) + queue a "dedicated X hub" idea for the builder agents
+//   * hub missing and href works → leave it, still queue the hub idea
+// Non-exam links, in-page fragments (#section), externals: untouched.
+// SSC JE's hub is the ssc-je.html page itself (not a directory).
+const EXAM_HUBS = [
+  ['SSC CGL', 'cgl'], ['SSC GD', 'ssc-gd'], ['SSC JE', 'PAGE:ssc-je.html'],
+  ['RBI GRADE B', 'rbi'], ['IBPS PO', 'ibps-po'], ['SBI CLERK', 'sbi-clerk'],
+  ['KERALA PSC', 'kerala-psc'], ['UP POLICE', null],
+  ['CGL', 'cgl'], ['RBI', 'rbi'], ['JEE', 'jee'], ['NEET', 'neet'],
+  ['GATE', 'gate'], ['AGNIVEER', 'agniveer'], ['UPSC', 'upsc'],
+  ['IBPS', 'ibps-po'], ['SBI', 'sbi-clerk'], ['CTET', 'ctet'],
+  ['NDA', 'nda'], ['CDS', 'cds'], ['CLAT', 'clat'], ['LDC', 'ldc']
+];
+function examTokenOf(text) {
+  const t = ' ' + String(text || '').toUpperCase().replace(/\s+/g, ' ').trim() + ' ';
+  for (const [token] of EXAM_HUBS) {
+    const re = new RegExp('(^|[^A-Z])' + token.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^A-Z]|$)');
+    if (re.test(t)) return token;
+  }
+  return null;
+}
+function hubSlugOf(token) {
+  for (const [t, s] of EXAM_HUBS) if (t === token) return s;
+  return undefined;
+}
+function fixExamNavLinks(html, page) {
+  const fixes = [];
+  const out = html.replace(/<a(\s[^>]*)?>([\s\S]*?)<\/a>/gi, function (full, attrs, inner) {
+    attrs = attrs || '';
+    const hm = /href="([^"]*)"/i.exec(attrs);
+    if (!hm) return full;
+    const href = hm[1];
+    if (/^(https?:|javascript:|mailto:)/i.test(href)) return full;
+    if (href.charAt(0) === '#' && href.length > 1) return full; // in-page fragment
+    const text = inner.replace(/<[^>]*>/g, ' ').replace(/\s+/g, ' ').trim();
+    if (!text) return full;
+    const token = examTokenOf(text);
+    if (!token) return full;
+    const slug = hubSlugOf(token);
+    if (slug && slug.indexOf('PAGE:') === 0) {
+      // This exam's hub is a page, not a directory (SSC JE → ssc-je.html).
+      const want = slug.slice(5);
+      if (href === want || href === './' + want) return full;
+      if (href === '#') {
+        fixes.push({ page: page, fix: 'Nav: "' + text.slice(0, 40) + '" → ' + want + ' (was dead #)' });
+        return full.replace(/href="#"/i, 'href="' + want + '"');
+      }
+      return full; // a working link to a generic page is acceptable here
+    }
+    if (slug) {
+      const okRe = new RegExp('^/?' + slug + '/(index\\.html)?$', 'i');
+      if (okRe.test(href)) return full; // already correct
+      if (!fileExistsAnywhere(slug + '/index.html')) return full; // hub not in repo — handled below
+      const fixed = full.replace(/href="[^"]*"/i, 'href="/' + slug + '/"');
+      fixes.push({ page: page, fix: 'Nav: "' + text.slice(0, 40) + '" → /' + slug + '/ (was ' + href + ')' });
+      return fixed;
+    }
+    // No hub for this exam.
+    queueHubIdea(token);
+    if (href === '#') {
+      const examParam = 'mega-test.html?exam=' + token.replace(/\s+/g, '+');
+      fixes.push({ page: page, fix: 'Nav: "' + text.slice(0, 40) + '" → ' + examParam + ' (no dedicated hub yet)' });
+      return full.replace(/href="#"/i, 'href="' + examParam + '"');
+    }
+    return full;
+  });
+  return { html: out, fixes: fixes };
+}
+// Queue a "build this exam's hub" idea for the Proposals/Features agents.
+// Deduped by title; capped so one run cannot flood the board.
+let hubIdeasQueued = 0;
+function queueHubIdea(token) {
+  if (hubIdeasQueued >= 3) return;
+  try {
+    const p = 'data/ideas.json';
+    const j = loadJson(p, { ideas: [] });
+    if (!Array.isArray(j.ideas)) j.ideas = [];
+    const title = 'Dedicated ' + token.toLowerCase().replace(/(^|\s)\S/g, c => c.toUpperCase()) + ' hub';
+    if (j.ideas.some(i => String(i.title || '').toLowerCase() === title.toLowerCase())) return;
+    j.ideas.push({
+      title: title,
+      detail: 'Nav links name this exam but no /<slug>/ hub exists yet — links fall back to the generic quiz. Build a hub (index, course, mock-tests, papers) like the other exams.',
+      source: 'nav-audit'
+    });
+    try { saveJson(p, j); hubIdeasQueued++; } catch (e) { /* checkout may lack data/ — logged by caller run */ }
+  } catch (e) { /* never block the repair pass on the idea board */ }
+}
 //   * a <script src> WITHOUT defer runs the moment the parser reaches it
 //   * a <script src="..." defer> only runs AFTER the whole document parses
 //   * an INLINE <script> runs the moment the parser reaches it — BEFORE any
@@ -1724,6 +1818,17 @@ async function agentSelfCheck() {
       html = restored.html;
       changed = true;
       for (const f of restored.fixes) fixes.push(f);
+    }
+
+    // ── Exam nav routing: link text naming exam X must land on X's hub ──
+    // Dead-link checkers never catch these (nothing 404s): CGL/RBI/IBPS
+    // cards landing on ssc-je.html, href="#" for the same exams. Fixed to
+    // the exam's hub (/cgl/, /rbi/, ...) when one exists.
+    const navFix = fixExamNavLinks(html, page);
+    if (navFix.fixes.length) {
+      html = navFix.html;
+      changed = true;
+      for (const f of navFix.fixes) fixes.push(f);
     }
 
     if (page === 'index.html') {
