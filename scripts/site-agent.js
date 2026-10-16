@@ -2139,18 +2139,16 @@ const EXAMINER_STYLE = 'Voice: a beloved examiner coaching a serious aspirant â€
 // (the page renders them as absent). Explanations are 27B-derived and tagged.
 // A partial honest paper beats a complete fake one, always.
 const PAPERS_WANT = [
-  { id: 'upsc-prelims-2023-gs1', exam: 'UPSC', year: 2023, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200, match: ['polity', 'history', 'geography', 'economy', 'environment', 'science'] },
-  { id: 'upsc-prelims-2024-gs1', exam: 'UPSC', year: 2024, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200, match: ['polity', 'history', 'geography', 'economy', 'environment', 'science'] },
-  { id: 'ssc-cgl-2024-tier1', exam: 'SSC CGL', year: 2024, paper: 'Tier 1', target: 100, duration: 60, marks: 200, match: ['quant', 'reasoning', 'english', 'general awareness', 'mathematics'] },
-  { id: 'ssc-chsl-2024', exam: 'SSC CHSL', year: 2024, paper: 'Tier 1', target: 100, duration: 60, marks: 200, match: ['quant', 'reasoning', 'english', 'general awareness'] },
-  { id: 'ssc-gd-2024', exam: 'SSC GD', year: 2024, paper: 'Constable', target: 80, duration: 60, marks: 160, match: ['quant', 'reasoning', 'english', 'hindi', 'general'] },
-  { id: 'ibps-po-2024-prelims', exam: 'IBPS PO', year: 2024, paper: 'Prelims', target: 100, duration: 60, marks: 100, match: ['quant', 'reasoning', 'english', 'banking'] },
-  { id: 'sbi-clerk-2024-prelims', exam: 'SBI Clerk', year: 2024, paper: 'Prelims', target: 100, duration: 60, marks: 100, match: ['quant', 'reasoning', 'english', 'banking'] },
-  { id: 'rbi-grade-b-2024', exam: 'RBI Grade B', year: 2024, paper: 'Phase 1', target: 200, duration: 120, marks: 200, match: ['economy', 'finance', 'banking', 'general awareness', 'reasoning', 'english', 'quant'] },
-  { id: 'rrb-ntpc-2024', exam: 'RRB NTPC', year: 2024, paper: 'CBT 1', target: 100, duration: 90, marks: 100, match: ['quant', 'reasoning', 'general awareness'] },
-  { id: 'nda-2024-gat', exam: 'NDA', year: 2024, paper: 'GAT', target: 150, duration: 150, marks: 600, match: ['history', 'geography', 'polity', 'economy', 'science', 'english', 'general'] },
-  { id: 'ctet-2024-paper1', exam: 'CTET', year: 2024, paper: 'Paper 1', target: 150, duration: 150, marks: 150, match: ['pedagogy', 'child development', 'english', 'hindi', 'mathematics', 'environment'] },
-  { id: 'cds-2024-gs', exam: 'CDS', year: 2024, paper: 'GS', target: 120, duration: 120, marks: 100, match: ['history', 'geography', 'polity', 'economy', 'science', 'english', 'defence'] }
+  // Official-pipeline exams ONLY: papers.html carries real official papers,
+  // which need a stable official QP + answer-key PDF pair. CBT exams
+  // (SSC/IBPS/SBI/RRB) publish no such pair - their PDFs are candidate
+  // response sheets, never official keys - so they are DELIBERATELY absent
+  // here (see excluded[] in official-paper-sources.json). Their practice
+  // needs are served by hubs, mocks and 27B practice sets, not papers.html.
+  { id: 'upsc-prelims-2023-gs1', exam: 'UPSC', year: 2023, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200 },
+  { id: 'upsc-prelims-2024-gs1', exam: 'UPSC', year: 2024, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200 },
+  { id: 'upsc-cds-2024-gs', exam: 'CDS', year: 2024, paper: 'GS', target: 120, duration: 120, marks: 100 },
+  { id: 'upsc-nda-2024-gat', exam: 'NDA', year: 2024, paper: 'GAT', target: 150, duration: 150, marks: 600 },
 ];
 function paperOverlap(a, b) {
   const wa = String(a || '').toLowerCase().split(/\s+/).filter(w => w.length > 3);

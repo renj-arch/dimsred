@@ -89,11 +89,75 @@ def wayback_snapshot(page_url):
     return None
 
 
+def score_qp(url, exam, year):
+    s = url.lower()
+    sc = 0
+    if str(year) in s:
+        sc += 3
+    for tok in re.findall(r'[a-z]+', exam.lower()):
+        if len(tok) > 2 and tok in s:
+            sc += 2
+    if 'question' in s or '/qp' in s or 'qp_' in s or 'paper' in s:
+        sc += 3
+    if 'key' in s or 'answer' in s:
+        sc -= 6
+    if 'hindi' in s:
+        sc -= 5
+    return sc
+
+
+def hunt_qp(want, portals):
+    exam, year = want.get('exam', ''), want.get('year', '')
+    cands = []
+    for portal in portals:
+        if out_of_budget():
+            break
+        html = fetch(portal.get('index', ''))
+        time.sleep(2)
+        if not html:
+            continue
+        for u in pdf_links(html, portal.get('index', '')):
+            cands.append((score_qp(u, exam, year), u))
+    cands.sort(reverse=True)
+    seen = set()
+    for sc, u in cands:
+        if u in seen or out_of_budget():
+            continue
+        seen.add(u)
+        if sc < 5:
+            continue
+        print('  QP candidate (%d): %s' % (sc, u[:100]))
+        if head_ok(u):
+            return u
+        time.sleep(1)
+    return None
+
+
 def main():
     with open(SOURCES, encoding='utf-8') as f:
         reg = json.load(f)
     portals = reg.get('portals', [])
     changed = False
+    # Phase 0: hunt QP URLs for wanted exams missing entirely from sources.
+    # (Key-filling below handles entries that already have a QP.)
+    for want in reg.get('wanted', []):
+        if out_of_budget():
+            break
+        wid = want.get('id')
+        if any(p.get('id') == wid for p in reg.get('papers', [])):
+            continue
+        print('discover QP for %s %s' % (want.get('exam', ''), want.get('year', '')))
+        found = hunt_qp(want, portals)
+        if found:
+            reg['papers'].append({
+                'id': wid, 'exam': want.get('exam'), 'year': want.get('year'),
+                'paper': want.get('paper', ''), 'qpUrl': found, 'keyUrl': None,
+                'status': 'need-key',
+            })
+            changed = True
+            print('  QP VERIFIED: %s' % found[:100])
+        else:
+            print('  no verified QP yet (retries next run)')
     for p in reg.get('papers', []):
         if p.get('keyUrl') or out_of_budget():
             continue
