@@ -432,8 +432,7 @@
             'question-bank/cgl.json',
             'question-bank/jee.json',
             'question-bank/gate.json',
-            'question-bank/upsc.json',
-            'question-bank/agniveer.json'
+            'question-bank/rbi.json'
         ];
         var promises = questionFiles.map(function(url) {
             return fetch(url).then(function(r) { return r.json(); }).then(function(data) {
@@ -653,7 +652,7 @@
         };
 
         function loadQuiz() {
-            fetch('/api/quiz-json').then(function(r) {
+            fetch('data/quiz.json').then(function(r) {
                 if (!r.ok) throw new Error('Not found');
                 return r.json();
             }).then(function(data) {

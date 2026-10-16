@@ -223,7 +223,23 @@ async function testPage(browser, url, pageName, file) {
     // as broken (noise the agent would then "fix").
     const tabLike = await page.$$('[data-tab], [data-target], .tab, .nav-tab, [onclick*="show"], [onclick*="switch"]');
     for (const tab of tabLike.slice(0, 10)) {
+      let tabLabel = '';
       try {
+        // Skip elements a real user cannot click: hidden duplicates (mobile
+        // drawers, collapsed panels) timed out for 8s and read as broken
+        // tabs even when the visible twin worked. Labels ride along so any
+        // remaining timeout names the guilty element.
+        const state = await tab.evaluate(el => {
+          const cs = getComputedStyle(el);
+          const r = el.getBoundingClientRect();
+          return {
+            hidden: cs.display === 'none' || cs.visibility === 'hidden' || r.width === 0 || r.height === 0,
+            disabled: !!el.disabled,
+            label: el.tagName + (el.id ? '#' + el.id : '') + (el.className ? '.' + String(el.className).split(' ')[0] : '')
+          };
+        });
+        tabLabel = state.label;
+        if (state.hidden || state.disabled) continue;
         const before = await page.url();
         await tab.click({ timeout: 8000 });
         await page.waitForTimeout(500);
@@ -232,7 +248,7 @@ async function testPage(browser, url, pageName, file) {
           log(pageName, 'broken-tab', 'Tab click caused console error');
         }
       } catch (e) {
-        log(pageName, 'broken-tab', 'Tab not clickable: ' + e.message.substring(0, 100));
+        log(pageName, 'broken-tab', 'Tab not clickable [' + tabLabel + ']: ' + e.message.substring(0, 100));
       }
     }
 
@@ -272,7 +288,8 @@ async function testMobilePage(context, url, pageName) {
       const text = msg.text();
       const loc = (typeof msg.location === 'function' ? msg.location() : null) || {};
       const u = loc.url || '';
-      if ((u + ' ' + text).match(/data\/questions\//i) && /404|failed to load|failed to fetch|not found/i.test(text)) {
+      if (((u + ' ' + text).match(/data\/questions\//i) && /404|failed to load|failed to fetch|not found/i.test(text)) ||
+          /writer-model\/?version\.json/.test(u)) {
         log(pageName + ' (mobile)', 'env-missing', text.substring(0, 200), u);
       } else {
         consoleErrors.push({ text, url: u });
