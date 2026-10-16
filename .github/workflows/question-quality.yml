@@ -87,7 +87,9 @@ jobs:
           # Warm the model into RAM now so the agent + writer calls start warm.
           echo "Warming 27B into RAM..."
           ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
-          echo "Warmup done"
+          # Verify residency — a silent warmup failure used to surface minutes
+          # later as "NO model resident: next call cold-loads 17GB" in the agent
+          curl -s http://127.0.0.1:11434/api/ps | grep -q qwen3.8 && echo "Warmup done (model resident)" || echo "WARNING: model NOT resident after warmup"
 
       # Official papers supply line (ingestor needs no model — pure parsing).
       # pip + pypdf are tiny; the runners already have python3.
@@ -111,6 +113,7 @@ jobs:
         run: |
           if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
             echo "Server down before agent — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
             nohup ollama serve > /tmp/ollama.log 2>&1 &
             echo $! > /tmp/ollama.pid
             for i in $(seq 1 60); do

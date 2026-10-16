@@ -16,7 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 const memory = require('./agent-memory');
 
 // Seed initial rules from hard-won experience
@@ -47,23 +47,92 @@ const LOG = 'data/agent-log.json';
 // one of those "improvements" broke generation.
 const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
 
-// One HTTP attempt at the chat endpoint, STREAMING. Why streaming: with
-// stream:false Ollama returns zero bytes until all ~2048 tokens finish —
-// 15-35 min of silence on runner CPU — so every total-time cap murders
-// perfectly healthy generations, and curl abandoning does NOT stop the
-// server (it keeps grinding the dead request, retries queue behind their
-// own zombie: runs #64/#71 burned hours this way). Streaming keeps bytes
-// flowing from the first token; --speed-limit aborts ONLY on true stalls
-// (no byte for 10 min — must exceed worst-case prompt processing, which
-// legitimately sends zero bytes for minutes on CPU with big system prompts);
-// --max-time 90 min is the backstop for the pathological.
+// One HTTP attempt at the chat endpoint, STREAMING via spawn + monitor.
+// History of this transport (each failure taught one clause):
+// - stream:false returns zero bytes until all ~2048 tokens finish (15-35 min
+//   on CPU), so total-time caps murdered healthy generations; curl abandoning
+//   does NOT stop the server (zombie retries queued for hours: runs #64/#71).
+// - Streaming fixed that, but curl's --speed-limit then aborted at 180s of
+//   ZERO bytes during prompt-processing / cold-load (observed live: the
+//   cold-start ping streamed OK, then the big planner prompt died "too slow"
+//   at exactly 180s). Zero bytes before the first token is NORMAL on CPU.
+// Correct policy: allow up to 25 min with NO first byte (cold load + prompt
+// eval), then watch REAL stalls: no byte for 12 min mid-stream = wedged.
+// That needs incremental visibility, which execSync cannot give — spawn can.
+// The server is NOT stopped by killing curl; callLLM's exit-28 path restarts
+// it. Hard cap 95 min: nothing legitimate needs more.
 function ollamaChat(payload) {
   const body = JSON.parse(payload);
   body.stream = true;
-  return execSync(
-    'curl -sS --speed-limit 1 --speed-time 600 --max-time 5400 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
-    { input: JSON.stringify(body), encoding: 'utf8', timeout: 5450000, maxBuffer: 100 * 1024 * 1024 }
-  );
+  const args = [
+    '-sS', '--max-time', '5400', '-w', '\\n%{http_code}',
+    OLLAMA_URL + '/api/chat',
+    '-H', 'Content-Type: application/json',
+    '-d', '@-'
+  ];
+  return new Promise((resolve, reject) => {
+    const child = spawn('curl', args, { stdio: ['pipe', 'pipe', 'pipe'] });
+    let out = '';
+    let stderr = '';
+    const started = Date.now();
+    let firstByteAt = 0;
+    let lastByteAt = Date.now();
+    let settled = false;
+
+    function fail(why) {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      try { child.kill('SIGKILL'); } catch (e) { /* ignore */ }
+      const err = new Error('stream monitor: ' + why);
+      err.status = 28; // same class as curl timeout -> restart+retry policy
+      err.stdout = out.slice(0, 2000);
+      err.stderr = stderr.slice(0, 400);
+      reject(err);
+    }
+
+    const mon = setInterval(() => {
+      const now = Date.now();
+      if (now - started > 95 * 60 * 1000) return fail('hard cap 95min');
+      if (!firstByteAt) {
+        if (now - started > 25 * 60 * 1000) return fail('no first byte in 25min (cold load/prompt eval over budget)');
+      } else if (now - lastByteAt > 12 * 60 * 1000) {
+        return fail('no byte for 12min mid-stream (wedged)');
+      }
+    }, 5000);
+
+    child.stdout.on('data', d => {
+      if (!firstByteAt) firstByteAt = Date.now();
+      lastByteAt = Date.now();
+      out += d.toString('utf8');
+      if (out.length > 100 * 1024 * 1024) fail('buffer cap 100MB');
+      // Progress beacon: first byte observed means prompt eval finished —
+      // log once so workflow logs distinguish cold-load silence from a stall.
+      if (firstByteAt && !ollamaChat._firstByteLogged) {
+        ollamaChat._firstByteLogged = true;
+        console.log('agent: LLM stream first bytes at ' + Math.round((firstByteAt - started) / 1000) + 's');
+      }
+    });
+    child.stderr.on('data', d => { stderr += d.toString('utf8'); });
+    child.on('error', err => { if (!settled) { settled = true; clearInterval(mon); reject(err); } });
+    child.on('close', code => {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      ollamaChat._firstByteLogged = false;
+      if (code === 0) resolve(out);
+      else {
+        const err = new Error('curl exit ' + code);
+        err.status = code;
+        err.stdout = out.slice(0, 2000);
+        err.stderr = stderr.slice(0, 400);
+        reject(err);
+      }
+    });
+    child.stdin.on('error', () => { /* curl died before reading stdin */ });
+    child.stdin.write(payload);
+    child.stdin.end();
+  });
 }
 
 // Parse an NDJSON chat stream: accumulate message.content deltas (and
@@ -138,7 +207,7 @@ async function callLLM(system, user, maxTokens) {
   logModelState('pre-call');
   let out;
   try {
-    out = ollamaChat(payload);
+    out = await ollamaChat(payload);
   } catch (e) {
     const detail = 'exit=' + (e.status === undefined ? '?' : e.status) +
       ' stderr=' + String(e.stderr || '').slice(0, 200) +
@@ -160,7 +229,7 @@ async function callLLM(system, user, maxTokens) {
             break;
           } catch (e1) { execSync('sleep 2', { stdio: 'ignore' }); }
         }
-        out = ollamaChat(payload);
+        out = await ollamaChat(payload);
       } catch (e2) {
         console.log('agent: Ollama retry failed after restart: exit=' + e2.status);
         return null;
