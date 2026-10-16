@@ -113,6 +113,8 @@ async function testPage(browser, url, pageName, file) {
     // the interaction class static checks never catch (a Next button that
     // dies on question N with zero console output until clicked). Best
     // effort per click — flow failures are logged, never fatal to the run.
+    // A page with no visible Next gets a flow-skipped note (coverage truth,
+    // not a failure) so the board never implies flows were tested.
     try {
       const nextBtn = await page.$('#nextBtn');
       if (nextBtn && await nextBtn.isVisible().catch(() => false)) {
@@ -133,6 +135,8 @@ async function testPage(browser, url, pageName, file) {
             }
           } catch (e) { /* one bad step must not kill the flow test */ }
         }
+      } else {
+        log(pageName, 'flow-skipped', 'no visible Next button — quiz flow not exercised on this load');
       }
     } catch (e) { /* quiz flow optional per page */ }
 
@@ -175,12 +179,14 @@ async function testPage(browser, url, pageName, file) {
       } catch (e) { /* skip */ }
     }
 
-    // Check for JS-triggered navigation (tabs, accordions)
+    // Check for JS-triggered navigation (tabs, accordions). Generous click
+    // timeout: CI runners render 1MB+ pages slowly; 3s flagged healthy tabs
+    // as broken (noise the agent would then "fix").
     const tabLike = await page.$$('[data-tab], [data-target], .tab, .nav-tab, [onclick*="show"], [onclick*="switch"]');
     for (const tab of tabLike.slice(0, 10)) {
       try {
         const before = await page.url();
-        await tab.click({ timeout: 3000 });
+        await tab.click({ timeout: 8000 });
         await page.waitForTimeout(500);
         const errors = consoleErrors.length;
         if (errors > 0) {

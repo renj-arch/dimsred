@@ -2657,7 +2657,11 @@ async function agentSelfCheck() {
             }
           }
         }
-        if (issue.type === 'js-error' || issue.type === 'console-error') {
+        // Bare resource-404 console errors duplicate broken-request entries
+        // (which carry the URL needed to judge env-vs-real) — skip them to
+        // keep the board signal-clean. All other console/js errors stay.
+        if (issue.type === 'js-error' || (issue.type === 'console-error' &&
+            !/failed to load resource|404 \(|status of 404/i.test(issue.msg || ''))) {
           fixes.push({ page: issue.page || 'unknown', fix: 'Runtime: ' + issue.msg.substring(0, 100), kind: 'runtime' });
         }
         // Interaction + load failures from the browser test (quiz flows,
