@@ -28,14 +28,42 @@ function log(page, type, msg, detail) {
   console.log('  [' + type + '] ' + page + ': ' + msg);
 }
 
-async function testPage(browser, url, pageName) {
+async function testPage(browser, url, pageName, file) {
   const page = await browser.newPage();
   const consoleErrors = [];
   const pageErrors = [];
   const failedRequests = [];
+  // Resolve local links against the PAGE's directory (cgl/index.html sees
+  // ../index.html as the repo root). Resolving against repo root instead
+  // flagged every hub-relative link broken — false evidence (same class as
+  // the run-#2 stripping incident).
+  const pageDir = file && file.indexOf('/') !== -1 ? file.slice(0, file.lastIndexOf('/')) : '.';
+  function resolveLocal(href) {
+    const target = href.split('#')[0].split('?')[0];
+    if (!target) return null;
+    if (target.charAt(0) === '/') return target.slice(1);
+    const parts = ((pageDir === '.' ? '' : pageDir + '/') + target).split('/');
+    const stack = [];
+    for (const p of parts) {
+      if (!p || p === '.') continue;
+      if (p === '..') { stack.pop(); continue; }
+      stack.push(p);
+    }
+    return stack.join('/');
+  }
 
   page.on('console', msg => {
-    if (msg.type() === 'error') consoleErrors.push(msg.text());
+    if (msg.type() === 'error') {
+      const text = msg.text();
+      // data/questions 404s in sparse CI checkouts surface as console
+      // resource errors (not requestfailed): same env-missing class, never a
+      // site bug the agent should "fix" on false evidence.
+      if (/data\/questions\//.test(text) && /404|failed to load|failed to fetch|not found/i.test(text)) {
+        log(pageName, 'env-missing', text.substring(0, 200));
+      } else {
+        consoleErrors.push(text);
+      }
+    }
   });
   page.on('pageerror', err => pageErrors.push(err.message));
   page.on('requestfailed', req => {
@@ -120,9 +148,9 @@ async function testPage(browser, url, pageName) {
         }
         continue;
       }
-      // Check local links exist
+      // Check local links exist (resolved against the page's own directory).
       if (!link.href.startsWith('http') && !link.href.startsWith('//')) {
-        const target = link.href.split('#')[0].split('?')[0];
+        const target = resolveLocal(link.href);
         if (target && !fs.existsSync(path.join(__dirname, '..', target))) {
           pageResult.brokenLinks++;
           log(pageName, 'broken-link', '→ ' + target + ' ("' + link.text + '")');
@@ -219,7 +247,7 @@ async function main() {
 
   for (const [file, name] of pages) {
     const url = BASE + '/' + file;
-    await testPage(browser, url, name);
+    await testPage(browser, url, name, file);
   }
 
   await browser.close();

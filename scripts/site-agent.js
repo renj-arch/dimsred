@@ -2724,6 +2724,28 @@ async function agentSelfCheck() {
       fixes.push({ page: page, fix: 'Added Fresh Practice Set button (mega-test.html?exam=' + slug + ')' });
     })();
 
+    // ── CSP vs inline-script mismatch (dead interactivity) ──
+    // A Content-Security-Policy meta WITHOUT 'unsafe-inline' in script-src
+    // silently kills every inline <script> block and onclick handler, while
+    // the page looks perfectly fine statically. The hub pages shipped exactly
+    // this: all JS dead, every button inert. Fix: add 'unsafe-inline' to
+    // script-src (matches the rest of the site, which carries no script CSP
+    // at all). Only when the page actually has inline scripts/handlers.
+    // NOTE: the content value itself contains single quotes, so it must be
+    // captured respecting the OUTER quote character.
+    const cspM = html.match(/<meta[^>]+http-equiv=["']?Content-Security-Policy["']?[^>]*content=("([^"]*)"|'([^']*)')/i);
+    if (cspM) {
+      const csp = cspM[2] !== undefined ? cspM[2] : cspM[3];
+      const scriptSrc = (csp.match(/script-src[^;]*/i) || [''])[0];
+      const hasInlineJs = /<script(?![^>]*src=)[^>]*>/i.test(html) || / onclick=/i.test(html);
+      if (hasInlineJs && scriptSrc && scriptSrc.indexOf('unsafe-inline') === -1) {
+        const fixed = csp.replace(/(script-src[^;]*)/i, '$1 \'unsafe-inline\'');
+        html = html.split(csp).join(fixed);
+        changed = true;
+        fixes.push({ page: page, fix: 'CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it' });
+      }
+    }
+
     if (page === 'index.html') {
       const placeholders = (html.match(/<a href="#" class="exam-card/g) || []).length;
       if (placeholders > 0) {

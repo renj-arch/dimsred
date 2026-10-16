@@ -155,6 +155,10 @@ upsc_sorted_topics.csv
 # Auth sentinel status (auth-sentinel.yml): PAT health probe result, surfaced
 # on improve.html. Tracked so a dead PAT is visible, not silent.
 !data/auth-status.json
+# Browser-test results (browser-test.yml): runtime + interaction findings
+# the agent consumes every run. Without this line the publish silently
+# drops them (git add refuses ignored paths) and the agent stays blind.
+!data/browser-test.json
 # Official-paper source registry (discover-official-papers.py): verified QP +
 # answer-key PDF URLs per exam/year. Nothing guessed — unverified stays null.
 !data/official-paper-sources.json
