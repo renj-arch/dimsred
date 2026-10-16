@@ -236,6 +236,58 @@ async function testPage(browser, url, pageName, file) {
   }
 }
 
+// Mobile pass: desktop Chromium never sees phone layout bugs (horizontal
+// overflow, viewport issues, mobile-only JS). Same env-missing rules; new
+// issue kinds ('mobile-overflow', 'mobile-js-error', 'mobile-load-error')
+// so desktop repair rules don't misapply and MetaLearn can learn them.
+async function testMobilePage(context, url, pageName) {
+  const page = await context.newPage();
+  const consoleErrors = [];
+  const pageErrors = [];
+  page.on('console', msg => {
+    if (msg.type() === 'error') {
+      const text = msg.text();
+      const loc = (typeof msg.location === 'function' ? msg.location() : null) || {};
+      const u = loc.url || '';
+      if ((u + ' ' + text).match(/data\/questions\//i) && /404|failed to load|failed to fetch|not found/i.test(text)) {
+        log(pageName + ' (mobile)', 'env-missing', text.substring(0, 200), u);
+      } else {
+        consoleErrors.push({ text, url: u });
+      }
+    }
+  });
+  page.on('pageerror', err => pageErrors.push(err.message));
+  let bad = false;
+  try {
+    const resp = await page.goto(url, { waitUntil: 'networkidle', timeout: TIMEOUT });
+    if (resp && resp.status() >= 400) {
+      log(pageName + ' (mobile)', 'mobile-load-error', 'HTTP ' + resp.status());
+      bad = true;
+    }
+    for (const err of consoleErrors.slice(0, 5)) {
+      log(pageName + ' (mobile)', 'mobile-js-error', err.text.substring(0, 160), err.url);
+      bad = true;
+    }
+    for (const err of pageErrors.slice(0, 5)) {
+      log(pageName + ' (mobile)', 'mobile-js-error', err.substring(0, 160));
+      bad = true;
+    }
+    // Horizontal overflow: the classic phone breaker (content wider than the
+    // viewport → sideways scrolling / cut-off columns).
+    const dims = await page.evaluate(() => ({ sw: document.documentElement.scrollWidth, iw: window.innerWidth })).catch(() => null);
+    if (dims && dims.sw > dims.iw + 2) {
+      log(pageName + ' (mobile)', 'mobile-overflow', 'scrolls sideways: ' + dims.sw + 'px content vs ' + dims.iw + 'px viewport');
+      bad = true;
+    }
+    console.log('  ' + (bad ? '❌' : '✅') + ' ' + pageName + ' (mobile)');
+  } catch (e) {
+    log(pageName + ' (mobile)', 'mobile-load-error', e.message.substring(0, 200));
+    console.log('  ❌ ' + pageName + ' (mobile) — ' + e.message.substring(0, 60));
+  } finally {
+    await page.close().catch(() => {});
+  }
+}
+
 async function main() {
   // Pages to test — all critical pages. Includes the pages users actually
   // reported broken (current-affairs quiz Next button, flowchart graph lib)
@@ -272,6 +324,20 @@ async function main() {
     await testPage(browser, url, name, file);
   }
 
+  // Mobile pass — same pages, real phone viewport + iPhone UA + touch.
+  console.log('\nMobile pass (390x844, iPhone UA, touch):');
+  const mctx = await browser.newContext({
+    viewport: { width: 390, height: 844 },
+    isMobile: true,
+    hasTouch: true,
+    deviceScaleFactor: 2,
+    userAgent: 'Mozilla/5.0 (iPhone; CPU iPhone OS 17_0 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.0 Mobile/15E148 Safari/604.1'
+  });
+  for (const [file, name] of pages) {
+    await testMobilePage(mctx, BASE + '/' + file, name);
+  }
+  await mctx.close();
+
   await browser.close();
 
   const out = path.join(__dirname, '..', 'data', 'browser-test.json');
@@ -282,6 +348,7 @@ async function main() {
   console.log('Broken links: ' + results.summary.brokenLinks);
   console.log('Broken buttons: ' + results.summary.brokenButtons);
   console.log('Total issues: ' + results.issues.length);
+  console.log('Mobile issues: ' + results.issues.filter(i => String(i.type).indexOf('mobile-') === 0).length);
   console.log('Output: data/browser-test.json');
 }
 
