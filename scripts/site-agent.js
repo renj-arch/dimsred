@@ -3095,6 +3095,28 @@ async function main() {
     ['A11Y', agentA11Y],
     ['Code', agentCode]
   ];
+  // ── Plugins: agents the site has built for itself ────────────────────
+  // Every non-dot file in scripts/agents/*.js exporting { name, run } is an
+  // agent. The Architect agent writes them; they load automatically on the
+  // NEXT run — the system extends its own toolbox with no core edits. A
+  // broken plugin is skipped loudly and can never crash a run
+  // (see scripts/lib/agent-registry.js).
+  try {
+    const registry = require('./lib/agent-registry').loadPlugins({
+      root: path.resolve(__dirname, '..'),
+      callLLM: callLLM,
+      loadJson: loadJson,
+      saveJson: saveJson,
+      listPages: listPages
+    });
+    for (const p of registry) {
+      if (rotateAgents.concat(alwaysAgents).some(([n]) => n === p.name)) {
+        console.log('registry: plugin ' + p.name + ' shadows a built-in — skipped');
+        continue;
+      }
+      (p.kind === 'always' ? alwaysAgents : rotateAgents).push([p.name, p.run]);
+    }
+  } catch (e) { console.log('registry: loader failed: ' + e.message); }
   let agents = rotateAgents.concat(alwaysAgents);
   // AGENT_ONLY=questions: dedicated question-quality workflow (questions data
   // checked out, site pages are not). Run only the agents that touch questions.
