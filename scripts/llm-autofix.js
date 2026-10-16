@@ -149,7 +149,7 @@ async function callLLM(system, user, maxTokens) {
     // ~200-600 tokens on message.thinking before emitting content.
     options: { temperature: 0.3, num_predict: maxTokens || 2048 }
   });
-  const curlChat = 'curl -sS --speed-limit 1 --speed-time 180 --max-time 5400 -w "\\n%{http_code}" ' +
+  const curlChat = 'curl -sS --speed-limit 1 --speed-time 600 --max-time 5400 -w "\\n%{http_code}" ' +
     OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-';
   let out;
   try {

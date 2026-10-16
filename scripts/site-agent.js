@@ -54,12 +54,14 @@ const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
 // server (it keeps grinding the dead request, retries queue behind their
 // own zombie: runs #64/#71 burned hours this way). Streaming keeps bytes
 // flowing from the first token; --speed-limit aborts ONLY on true stalls
-// (no byte for 3 min); --max-time 90 min is the backstop for the pathological.
+// (no byte for 10 min — must exceed worst-case prompt processing, which
+// legitimately sends zero bytes for minutes on CPU with big system prompts);
+// --max-time 90 min is the backstop for the pathological.
 function ollamaChat(payload) {
   const body = JSON.parse(payload);
   body.stream = true;
   return execSync(
-    'curl -sS --speed-limit 1 --speed-time 180 --max-time 5400 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
+    'curl -sS --speed-limit 1 --speed-time 600 --max-time 5400 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
     { input: JSON.stringify(body), encoding: 'utf8', timeout: 5450000, maxBuffer: 100 * 1024 * 1024 }
   );
 }
