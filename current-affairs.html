@@ -6199,6 +6199,15 @@ var _staticGen_polity = GK_GENERATORS.polity;
             document.getElementById('jumpRow').style.display = 'flex';
             document.getElementById('jumpInput').max = (state.baseIdx || 0) + state.questions.length;
             var q = state.questions[state.idx];
+            // Skip unrenderable entries (bounded) instead of dying on them.
+            var _skipN = 0;
+            var _nq = _asQuizQ(q);
+            while (!_nq && _skipN++ < 25 && state.idx < state.questions.length - 1) {
+                state.idx++;
+                _nq = _asQuizQ(state.questions[state.idx]);
+            }
+            if (!_nq) { showEnd(); return; }
+            q = _nq;
             _markSeen(q);
             var isLearning = (state.infinite && state.cat === 'mixed') || state.cat === 'static' || q.type === 'qa' || (!q.options && q.a && q.fact);
             if (isLearning) {
@@ -6596,6 +6605,30 @@ function prevQuestion() {
             }
         }
 
+        // Any producer (archive chunks, WIKI pool, generators, sidecars) may
+        // hand a differently-shaped item ({question,answer} vs {q,a}). A
+        // single malformed entry used to throw inside showQuestion and kill
+        // every Next click silently. Normalize here; unrenderable items are
+        // skipped (bounded) instead of crashing the quiz. Thrown errors
+        // elsewhere are LEFT to surface — the CI browser test must see them.
+        function _asQuizQ(raw) {
+            if (!raw) return null;
+            var q = raw.q != null ? raw.q : raw.question;
+            var a = raw.a != null ? raw.a : raw.answer;
+            if (q == null || String(q).trim() === '') return null;
+            return {
+                q: String(q),
+                a: a != null ? String(a) : '',
+                options: raw.options || raw.opts || null,
+                fact: raw.fact || raw.solution || raw.explanation || '',
+                hint: raw.hint || '',
+                subject: raw.subject || raw.category || '',
+                subTopic: raw.subTopic || raw.subsubject || '',
+                type: raw.type || '',
+                pubDate: raw.pubDate || raw._pubDate || '',
+                _wikiCat: raw._wikiCat || ''
+            };
+        }
         function nextQuestion() {
             if (state.questions.length === 0) return;
             var wasPaused = state.autoPaused;
@@ -8483,6 +8516,21 @@ var fact = q.fact || q.solution || q.explanation || '';
                 }
             }
             var q = state.questions[state.idx];
+            if (typeof _asQuizQ === 'function') {
+                var _fq = _asQuizQ(q);
+                var _fn = 0;
+                while (!_fq && _fn++ < 25 && state.idx < state.questions.length - 1) {
+                    state.idx++;
+                    _fq = _asQuizQ(state.questions[state.idx]);
+                }
+                if (!_fq) {
+                    document.getElementById('qText').innerHTML = '✅ All done! No more questions.';
+                    document.getElementById('optGrid').innerHTML = '<button class="action-btn secondary" onclick="backToMenu()">← Back to Menu</button>';
+                    document.getElementById('pauseBtn').classList.add('hidden');
+                    return;
+                }
+                q = _fq;
+            }
             document.getElementById('correctNum').textContent = (state.baseIdx || 0) + state.idx + 1;
             document.getElementById('totalNum').textContent = (state._feedTotal != null) ? state._feedTotal : (state.baseIdx || 0) + state.questions.length;
             document.getElementById('qNum').textContent = '';

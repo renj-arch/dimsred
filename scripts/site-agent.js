@@ -2660,6 +2660,15 @@ async function agentSelfCheck() {
         if (issue.type === 'js-error' || issue.type === 'console-error') {
           fixes.push({ page: issue.page || 'unknown', fix: 'Runtime: ' + issue.msg.substring(0, 100), kind: 'runtime' });
         }
+        // Interaction + load failures from the browser test (quiz flows,
+        // tabs, HTTP errors): logged visibly so the board shows them and
+        // MetaLearn can synthesize detectors. env-missing (sparse-checkout
+        // corpus gaps) and disabled-button are noise by design — ignored.
+        if (issue.type === 'quiz-flow-error' || issue.type === 'broken-tab' ||
+            issue.type === 'http-error' || issue.type === 'load-error' ||
+            issue.type === 'broken-request') {
+          fixes.push({ page: issue.page || 'unknown', fix: 'Browser: ' + issue.type + ' — ' + (issue.msg || issue.detail || '').substring(0, 120), kind: 'runtime' });
+        }
       }
     } catch (e) { /* ignore */ }
   }

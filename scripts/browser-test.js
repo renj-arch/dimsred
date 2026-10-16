@@ -69,12 +69,44 @@ async function testPage(browser, url, pageName) {
       log(pageName, 'js-error', err.substring(0, 200));
     }
 
-    // Check failed requests (broken scripts, images, data)
+    // Check failed requests (broken scripts, images, data). data/questions
+    // 404s in sparse CI checkouts are an ENVIRONMENT limitation (9GB corpus
+    // excluded on purpose), never a site bug — classify separately so the
+    // agent doesn't "fix" working code on false evidence (run #2 lesson).
     for (const req of failedRequests) {
-      if (req.includes('.js') || req.includes('.css') || req.includes('.json') || req.includes('.html')) {
+      if (req.includes('data/questions/')) {
+        log(pageName, 'env-missing', req.substring(0, 200));
+      } else if (req.includes('.js') || req.includes('.css') || req.includes('.json') || req.includes('.html')) {
         log(pageName, 'broken-request', req.substring(0, 200));
       }
     }
+
+    // Drive the quiz flow where one exists: answer + Next repeatedly. This is
+    // the interaction class static checks never catch (a Next button that
+    // dies on question N with zero console output until clicked). Best
+    // effort per click — flow failures are logged, never fatal to the run.
+    try {
+      const nextBtn = await page.$('#nextBtn');
+      if (nextBtn && await nextBtn.isVisible().catch(() => false)) {
+        for (let step = 0; step < 5; step++) {
+          try {
+            const errsBefore = consoleErrors.length + pageErrors.length;
+            const opts = await page.$$('.q-opt:not(.disabled), .opt-btn:not(.disabled)');
+            if (opts.length > 0) {
+              await opts[0].click({ timeout: 3000 }).catch(() => {});
+              await page.waitForTimeout(600);
+            }
+            const stillVisible = await page.$('#nextBtn').then(async (b) => b && await b.isVisible().catch(() => false)).catch(() => false);
+            if (!stillVisible) break;
+            await page.click('#nextBtn', { timeout: 3000 }).catch(() => {});
+            await page.waitForTimeout(1200);
+            if (consoleErrors.length + pageErrors.length > errsBefore) {
+              log(pageName, 'quiz-flow-error', 'Next/answer step ' + (step + 1) + ' produced console/page errors');
+            }
+          } catch (e) { /* one bad step must not kill the flow test */ }
+        }
+      }
+    } catch (e) { /* quiz flow optional per page */ }
 
     // Test every link
     const links = await page.$$eval('a[href]', els =>
@@ -155,7 +187,10 @@ async function testPage(browser, url, pageName) {
 }
 
 async function main() {
-  // Pages to test — all critical pages
+  // Pages to test — all critical pages. Includes the pages users actually
+  // reported broken (current-affairs quiz Next button, flowchart graph lib)
+  // plus exam-hub samples, so interaction failures are caught in CI instead
+  // of by user reports.
   const pages = [
     ['index.html', 'Homepage'],
     ['ask.html', 'Ask Engine'],
@@ -168,7 +203,15 @@ async function main() {
     ['ssc-je.html', 'SSC JE'],
     ['micro-test.html', 'Micro Test'],
     ['dashboard.html', 'Dashboard'],
-    ['404.html', '404 Page']
+    ['404.html', '404 Page'],
+    ['current-affairs.html', 'Current Affairs Quiz'],
+    ['flowchart.html', 'Flowchart'],
+    ['archive.html', 'Archive'],
+    ['map.html', 'Map'],
+    ['revision.html', 'Revision'],
+    ['cgl/index.html', 'CGL Hub'],
+    ['upsc/index.html', 'UPSC Hub'],
+    ['rbi/index.html', 'RBI Hub'],
   ];
 
   console.log('Browser Test Agent: starting...');
