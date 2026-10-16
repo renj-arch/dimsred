@@ -131,32 +131,34 @@ async function callLLM(system, user, maxTokens) {
     } catch (e) { /* proceed without */ }
   }
   // Primary: local Ollama via curl — no keys, no rate limits, runs on runner CPU.
-  // --max-time 2400: 27B generates ~1-3 tok/s on CPU; cutting off at 30 min
-  // wastes full generations. On timeout: restart (clears wedged server-side
-  // work — curl abandoning does NOT stop Ollama, and naive retries queue
-  // behind their own zombie), then ONE retry on a clean server.
+  // STREAMING: with stream:false the API returns zero bytes until all ~2048
+  // tokens finish (15-35 min of silence on CPU), so any total-time cap kills
+  // healthy generations. Streaming keeps bytes flowing from the first token;
+  // --speed-limit aborts ONLY on a true stall (no byte for 3 min); the 90-min
+  // max-time is a backstop. On stall: restart (clears wedged server-side work —
+  // curl abandoning does NOT stop Ollama, and naive retries queue behind their
+  // own zombie), then ONE retry on a clean server.
+  const payload = JSON.stringify({
+    model: OLLAMA_MODEL,
+    messages: [
+      { role: 'system', content: sysOut },
+      { role: 'user', content: user }
+    ],
+    stream: true,
+    // 2048 not 1024: qwen3.8:27b is a THINKING model — it burns
+    // ~200-600 tokens on message.thinking before emitting content.
+    options: { temperature: 0.3, num_predict: maxTokens || 2048 }
+  });
+  const curlChat = 'curl -sS --speed-limit 1 --speed-time 180 --max-time 5400 -w "\\n%{http_code}" ' +
+    OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-';
   let out;
   try {
-    out = execSync(
-      'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-',
-      {
-        input: JSON.stringify({
-          model: OLLAMA_MODEL,
-          messages: [
-            { role: 'system', content: sysOut },
-            { role: 'user', content: user }
-          ],
-          stream: false,
-          // 2048 not 1024: qwen3.8:27b is a THINKING model — it burns
-          // ~200-600 tokens on message.thinking before emitting content.
-          options: { temperature: 0.3, num_predict: maxTokens || 2048 }
-        }),
-        encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024
-      }
-    );
+    out = execSync(curlChat, { input: payload, encoding: 'utf8', timeout: 5450000, maxBuffer: 100 * 1024 * 1024 });
   } catch (e) {
-    if (e.status === 28) {
-      console.log('autofix: Ollama timed out — restarting server to clear wedged work, then one retry');
+    // exit 28 = stall/backstop hit. Also treat the Node execSync kill as
+    // restart-worthy; both mean the generation is wedged server-side.
+    if (e.status === 28 || e.signal === 'SIGTERM' || String(e.message || '').match(/timed out/i)) {
+      console.log('autofix: Ollama stalled/timed out — restarting server to clear wedged work, then one retry');
       try { execSync('pkill -f "ollama serve"; sleep 2; nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
       try {
         for (let i = 0; i < 60; i++) {
@@ -165,21 +167,7 @@ async function callLLM(system, user, maxTokens) {
             break;
           } catch (e1) { execSync('sleep 2', { stdio: 'ignore' }); }
         }
-        out = execSync(
-          'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-',
-          {
-            input: JSON.stringify({
-              model: OLLAMA_MODEL,
-              messages: [
-                { role: 'system', content: sysOut },
-                { role: 'user', content: user }
-              ],
-              stream: false,
-              options: { temperature: 0.3, num_predict: maxTokens || 2048 }
-            }),
-            encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024
-          }
-        );
+        out = execSync(curlChat, { input: payload, encoding: 'utf8', timeout: 5450000, maxBuffer: 100 * 1024 * 1024 });
       } catch (e2) {
         console.log('autofix: Ollama retry failed after restart: exit=' + e2.status);
         out = null;
@@ -194,20 +182,34 @@ async function callLLM(system, user, maxTokens) {
     // Optional fallbacks below (unchanged) — only used if API keys happen to be set.
   } else {
   try {
-    const nl = out.lastIndexOf('\n');
-    const body = nl >= 0 ? out.slice(0, nl) : out;
-    const httpCode = nl >= 0 ? out.slice(nl + 1).trim() : '';
-    const j = JSON.parse(body);
-    const msg = j.message || {};
-    let text = (msg.content || '').trim();
-    if (!text && msg.thinking) text = msg.thinking.trim();
+    // NDJSON stream: accumulate message.content (and thinking for think
+    // models, which may arrive per-chunk or only at end); the trailing line
+    // is curl's HTTP-code write-out.
+    const lines = String(out).split('\n');
+    let httpCode = '';
+    while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+    if (lines.length && /^\d{3}$/.test(lines[lines.length - 1].trim())) httpCode = lines.pop().trim();
+    let content = '', thinking = '';
+    for (const line of lines) {
+      const t = line.trim();
+      if (!t || t.charAt(0) !== '{') continue;
+      try {
+        const j = JSON.parse(t);
+        if (j.message) {
+          if (typeof j.message.content === 'string') content += j.message.content;
+          if (typeof j.message.thinking === 'string') thinking += j.message.thinking;
+        }
+        if (typeof j.response === 'string') content += j.response;
+      } catch (e) { /* partial line; ignore */ }
+    }
+    const text = content.trim() || thinking.trim();
     if (text) {
       console.log('autofix: LLM ← ' + OLLAMA_MODEL + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
       return { text: text, model: OLLAMA_MODEL + ' (local)' };
     }
-    console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
+    console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + httpCode + ')');
   } catch (e) {
-    console.log('autofix: Ollama response failed: ' + (e.message || e).slice(0, 200));
+    console.log('autofix: Ollama response failed: ' + String(e.message || e).slice(0, 200));
   }
   }
 

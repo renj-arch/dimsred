@@ -47,15 +47,48 @@ const LOG = 'data/agent-log.json';
 // one of those "improvements" broke generation.
 const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
 
-// One HTTP attempt at the chat endpoint. Timeout budget 40 min (was 30):
-// 27B on runner CPU generates ~1-3 tok/s after load, so a 1500-2000 token
-// answer legitimately takes 15-35 min. Cutting it off at 30 mid-stream
-// wastes the whole generation.
+// One HTTP attempt at the chat endpoint, STREAMING. Why streaming: with
+// stream:false Ollama returns zero bytes until all ~2048 tokens finish —
+// 15-35 min of silence on runner CPU — so every total-time cap murders
+// perfectly healthy generations, and curl abandoning does NOT stop the
+// server (it keeps grinding the dead request, retries queue behind their
+// own zombie: runs #64/#71 burned hours this way). Streaming keeps bytes
+// flowing from the first token; --speed-limit aborts ONLY on true stalls
+// (no byte for 3 min); --max-time 90 min is the backstop for the pathological.
 function ollamaChat(payload) {
+  const body = JSON.parse(payload);
+  body.stream = true;
   return execSync(
-    'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
-    { input: payload, encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024 }
+    'curl -sS --speed-limit 1 --speed-time 180 --max-time 5400 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
+    { input: JSON.stringify(body), encoding: 'utf8', timeout: 5450000, maxBuffer: 100 * 1024 * 1024 }
   );
+}
+
+// Parse an NDJSON chat stream: accumulate message.content deltas (and
+// message.thinking for think models, which may arrive per-chunk or at end),
+// plus legacy response field. Returns {text, httpCode}.
+function parseChatStream(out) {
+  const lines = String(out || '').split('\n');
+  let httpCode = '';
+  while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+  if (lines.length && /^\d{3}$/.test(lines[lines.length - 1].trim())) {
+    httpCode = lines.pop().trim();
+  }
+  let content = '', thinking = '';
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t || t.charAt(0) !== '{') continue;
+    try {
+      const j = JSON.parse(t);
+      if (j.message) {
+        if (typeof j.message.content === 'string') content += j.message.content;
+        if (typeof j.message.thinking === 'string') thinking += j.message.thinking;
+      }
+      if (typeof j.response === 'string') content += j.response;
+    } catch (e) { /* partial line; ignore */ }
+  }
+  const text = content.trim() || thinking.trim();
+  return { text: text, httpCode: httpCode };
 }
 
 // Report whether the model is currently resident in RAM. When it is NOT, the
@@ -94,7 +127,8 @@ async function callLLM(system, user, maxTokens) {
       { role: 'system', content: sysOut },
       { role: 'user', content: user }
     ],
-    stream: false,
+    // Streaming is forced by ollamaChat regardless; set here for clarity.
+    stream: true,
     // 2048 not 1024: qwen3.8:27b spends ~200-600 tokens thinking before
     // it emits content. 1024 was cutting answers off mid-thought.
     options: { temperature: 0.3, num_predict: maxTokens || 2048 }
@@ -141,24 +175,20 @@ async function callLLM(system, user, maxTokens) {
     }
   }
   try {
-    const nl = out.lastIndexOf('\n');
-    const body = nl >= 0 ? out.slice(0, nl) : out;
-    const httpCode = nl >= 0 ? out.slice(nl + 1).trim() : '';
-    const j = JSON.parse(body);
-    const msg = j.message || {};
+    const parsed = parseChatStream(out);
     // qwen3.8:27b is a THINKING model: it reasons in message.thinking and
     // puts the final answer in message.content. With num_predict as low as
     // 10 the entire budget is consumed by thinking and content comes back
     // empty (run #60: content="" thinking="The user is asking me to
     // confirm that generation works"). Fall back to thinking when empty.
-    let text = (msg.content || '').trim();
-    if (!text && msg.thinking) text = msg.thinking.trim();
-    if (text) {
-      // Detailed log: WHAT the model wrote (preview), not just that it did.
-      console.log('agent: LLM ← ' + model + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
-      return { text: text, model: model + ' (local)' };
+    const text = parsed.text;
+    if (!text) {
+      console.log('agent: Ollama ' + model + ' returned empty (http ' + parsed.httpCode + ')');
+      return null;
     }
-    console.log('agent: Ollama ' + model + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
+    // Detailed log: WHAT the model wrote (preview), not just that it did.
+    console.log('agent: LLM ← ' + model + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
+    return { text: text, model: model + ' (local)' };
   } catch (e) {
     console.log('agent: Ollama response unparseable: ' + String(out).slice(0, 300));
   }
