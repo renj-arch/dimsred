@@ -2447,6 +2447,150 @@ async function agentPracticeSets() {
   return { agent: 'practicesets', fixes: fixes };
 }
 
+// ── AGENT: GraphNotes — proper relationship explanations on flowchart cards ──
+// Clicking Gandhi showed generic (sometimes wrong-entity) descriptions and
+// "mentioned with" everywhere, plus junk cards (TV sitcoms, absurd spans).
+// The page already renders per-link evidence (REL_EV), authored briefs
+// (NOTES/CUR_DESC) and typed rels — it just has none for mined topics.
+// This agent upgrades one focus topic per run: junk out, every kept card
+// gets a verified-correct description + a HOW-it-relates note + a real verb.
+// When an entry is fully upgraded, its _gen flag is dropped (promoted to
+// curated authority on the page). Starts with Gandhi (most visible).
+const GRAPH_LAYERS = 'data/topic-layers.json';
+// Deterministic junk: not entities at all, or never a real relation.
+const GRAPH_JUNK_NAMES = ['friends', 'television', 'the bill', 'sports', 'empire',
+  '19th century', 'york', 'chelmsford', 'jews', 'theatre', 'poetry', 'cinema'];
+const GRAPH_VERBS = ['led', 'participated-in', 'founded', 'assassinated-by', 'assassinated',
+  'imprisoned-at', 'born-in', 'died-in', 'wrote', 'opposed', 'influenced', 'influenced-by',
+  'contemporary-of', 'member-of', 'took-place-in', 'lived-in', 'visited', 'worked-in',
+  'protested-against', 'negotiated-with', 'mentor-of', 'follower-of'];
+function graphJunk(item) {
+  const n = String((item && item.name) || '').toLowerCase().trim();
+  if (!n) return 'empty name';
+  if (GRAPH_JUNK_NAMES.indexOf(n) !== -1) return 'denylisted non-entity';
+  const d = String((item && (item.desc || item.note)) || '');
+  if (d.indexOf('_____') !== -1) return null; // bad note, entity may be fine
+  return null;
+}
+async function agentGraphNotes() {
+  const fixes = [];
+  if (!fs.existsSync(GRAPH_LAYERS)) return { agent: 'graphnotes', fixes: fixes };
+  let layers;
+  try { layers = JSON.parse(fs.readFileSync(GRAPH_LAYERS, 'utf8')); } catch (e) { return { agent: 'graphnotes', fixes: fixes }; }
+  const keys = Object.keys(layers);
+  // Priority: Gandhi first (user-named), then heaviest _gen entries.
+  const scored = [];
+  for (const k of keys) {
+    const e = layers[k];
+    if (!e || !e.branches) continue;
+    if (!e._gen) continue; // already curated
+    let w = 0, n = 0, bad = 0;
+    for (const b of (e.branches || [])) {
+      for (const it of (b.items || [])) {
+        n++;
+        w += (it && it.w) || 0;
+        const note = String((it && it.note) || '');
+        if (!note || note.indexOf('_____') !== -1) bad++;
+      }
+    }
+    if (!n) continue;
+    scored.push({ key: k, weight: (k.toLowerCase().indexOf('gandhi') !== -1 ? 1e12 : 0) + w, items: n, bad: bad });
+  }
+  scored.sort((a, b) => b.weight - a.weight);
+  const focus = scored[0];
+  if (!focus) { console.log('agent: GraphNotes — all layers curated, nothing to upgrade'); return { agent: 'graphnotes', fixes: fixes }; }
+  console.log('agent: GraphNotes — upgrading "' + focus.key + '" (' + focus.items + ' items, ' + focus.bad + ' bad notes)');
+  const entry = layers[focus.key];
+  const flat = [];
+  for (const b of (entry.branches || [])) {
+    for (const it of (b.items || [])) flat.push({ branch: b, item: it });
+  }
+  // Deterministic junk removal first (no LLM spent on non-entities).
+  let removed = 0;
+  for (const b of (entry.branches || [])) {
+    const keep = [];
+    for (const it of (b.items || [])) {
+      const why = graphJunk(it);
+      if (why && why !== null && GRAPH_JUNK_NAMES.indexOf(String(it.name || '').toLowerCase().trim()) !== -1) {
+        removed++;
+        fixes.push({ page: GRAPH_LAYERS, fix: 'GraphNotes dropped junk card "' + it.name + '" from ' + focus.key + ' (' + why + ')' });
+        continue;
+      }
+      keep.push(it);
+    }
+    b.items = keep;
+  }
+  // LLM upgrade in batches of 8: proper desc + relationship note + real verb,
+  // or drop:true with a reason for junk the rules cannot see.
+  let upgraded = 0, droppedLLM = 0;
+  for (let i = 0; i < flat.length; i += 8) {
+    const batch = flat.slice(i, i + 8).filter(x => (entry.branches || []).some(b => (b.items || []).indexOf(x.item) !== -1));
+    if (!batch.length) continue;
+    const spec = batch.map((x, j) => (j + 1) + '. "' + x.item.name + '" (' + (x.item.type || '?') + ') current desc: "' + String(x.item.desc || '').slice(0, 120) + '"').join('\n');
+    const sys = 'You curate knowledge-graph cards for Indian exam prep. Return STRICT JSON only: ' +
+      '{"items": [{"n": 1, "keep": true, "desc": "...", "note": "...", "rel": "verb"}]}. No markdown. ' +
+      'FOCUS TOPIC: ' + focus.key + '. For each numbered card: desc = one correct line ABOUT THE CARD ITSELF ' +
+      '(fix it if the current one belongs to another entity); note = 1-2 sentences explaining HOW THIS CARD ' +
+      'RELATES TO ' + focus.key + ' specifically (events, dates, places, roles — factual, verifiable, no invention); ' +
+      'rel = one verb from [' + GRAPH_VERBS.join(', ') + '] (never "mentioned with"). ' +
+      'If the card has NO real relationship to ' + focus.key + ', use {"n": N, "keep": false, "why": "..."} instead. ' +
+      EXAMINER_STYLE;
+    const r = await callLLM(sys, 'Cards for ' + focus.key + ':\n' + spec, 2048);
+    if (!r || !r.text) continue;
+    try {
+      const txt = r.text.replace(/```[a-z]*|```/gi, '').trim();
+      const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+      for (const out of (j.items || [])) {
+        const b = batch[(out.n || 1) - 1];
+        if (!b) continue;
+        if (out.keep === false) {
+          const arr = b.branch.items;
+          const at = arr.indexOf(b.item);
+          if (at !== -1) arr.splice(at, 1);
+          droppedLLM++;
+          fixes.push({ page: GRAPH_LAYERS, fix: 'GraphNotes dropped "' + b.item.name + '" from ' + focus.key + ' (LLM: ' + String(out.why || 'no real relation').slice(0, 100) + ')' });
+          continue;
+        }
+        const note = String(out.note || '').trim(), desc = String(out.desc || '').trim();
+        const rel = String(out.rel || '').trim();
+        if (note.length < 40 || note.length > 600 || note.indexOf('_____') !== -1) continue;
+        if (desc.length < 10 || desc.length > 300) continue;
+        if (GRAPH_VERBS.indexOf(rel) === -1) continue;
+        b.item.note = note;
+        b.item.desc = desc;
+        b.item.rel = rel;
+        b.item.src = 'curated';
+        upgraded++;
+      }
+    } catch (e) { console.log('agent: GraphNotes — batch unparseable, skipped'); }
+    if (upgraded + droppedLLM >= 24) break; // budget: ~3 LLM calls per run
+  }
+  // Promotion check: fully upgraded (no junk, every item has a real note) →
+  // drop _gen so the page grants curated authority.
+  let remaining = 0, badNotes = 0;
+  for (const b of (entry.branches || [])) {
+    for (const it of (b.items || [])) {
+      remaining++;
+      const note = String(it.note || '');
+      if (!note || note.indexOf('_____') !== -1 || it.rel === 'mentioned with') badNotes++;
+    }
+  }
+  if (remaining > 0 && badNotes === 0 && entry._gen) {
+    delete entry._gen;
+    fixes.push({ page: GRAPH_LAYERS, fix: 'GraphNotes PROMOTED "' + focus.key + '" to curated (' + remaining + ' verified cards)' });
+  }
+  if (upgraded || removed || droppedLLM || !entry._gen) {
+    try { fs.writeFileSync(GRAPH_LAYERS, JSON.stringify(layers)); } catch (e) { return { agent: 'graphnotes', fixes: fixes }; }
+  }
+  if (upgraded) fixes.push({
+    page: GRAPH_LAYERS,
+    fix: 'GraphNotes wrote ' + upgraded + ' relationship note(s) for ' + focus.key,
+    text: 'Sample: ' + String((flat.find(x => x.item.note) || {}).item?.note || '').slice(0, 300)
+  });
+  console.log('agent: GraphNotes — ' + focus.key + ': +' + upgraded + ' notes, -' + (removed + droppedLLM) + ' junk');
+  return { agent: 'graphnotes', fixes: fixes };
+}
+
 // ── Main ──
 async function agentSelfCheck() {
   const fixes = [];
@@ -2791,6 +2935,7 @@ async function main() {
     ['Papers', agentPapers],
     ['WikiSyllabus', agentWikiSyllabus],
     ['PracticeSets', agentPracticeSets],
+    ['GraphNotes', agentGraphNotes],
     ['MetaLearn', agentMetaLearn]
   ];
   const alwaysAgents = [
