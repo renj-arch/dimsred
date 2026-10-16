@@ -166,7 +166,17 @@ try { AOS.init({duration:600,once:true,offset:40}); } catch(e) {}
     var r = document.documentElement;
     r.style.setProperty('--purple', theme.purple);
     r.style.setProperty('--emerald', theme.emerald);
+    // index.html loads this script in <head>: document.body is still null at
+// this point, and the top-level throw killed every line below it (dead
+// homepage tabs — found by the browser eyes, which now report stacks).
+// Apply now if body exists, otherwise as soon as the DOM is ready.
+if (document.body) {
+  document.body.classList.add('theme-shift');
+} else {
+  document.addEventListener('DOMContentLoaded', function () {
     document.body.classList.add('theme-shift');
+  });
+}
 })();
 
 // ===== Your Exam Fortune (daily widget) =====

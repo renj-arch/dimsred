@@ -1,0 +1,85 @@
+name: Browser Test
+
+# The agent's eyes and hands: Playwright loads every critical page in a real
+# Chromium, clicks links/buttons/tabs, drives quiz flows (answer + Next),
+# and records console errors, JS exceptions, broken requests and dead UI
+# into data/browser-test.json. SelfCheck and MetaLearn consume that file on
+# every run — THIS is what ends reliance on user bug reports for runtime
+# and interaction failures (the dead-Next-button class).
+#
+# Browsers install HERE in CI only, never locally.
+
+on:
+  schedule:
+    # Daily off-peak. Heavy job (browser download + 20 pages with flows).
+    - cron: '30 3 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: browser-test
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  browsertest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          # Production-identical tree minus the 9GB corpus (same pattern as
+          # slim-live): everything pages fetch at runtime is present, so
+          # failures are real bugs, not missing fixtures. data/questions
+          # 404s are classified env-missing by the test itself, never as
+          # breakage the agent would "fix" on false evidence.
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Install Playwright Chromium (CI only)
+        run: |
+          npx playwright install --with-deps chromium 2>&1 | tail -3
+          echo "Chromium ready"
+
+      - name: Serve site locally
+        run: |
+          nohup python3 -m http.server 8080 --directory . > /tmp/http.log 2>&1 &
+          echo $! > /tmp/http.pid
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:8080/index.html > /dev/null 2>&1 && break
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:8080/index.html > /dev/null && echo "Server up" || echo "WARNING: server not responding"
+
+      - name: Run browser test (20 pages + quiz flows)
+        env:
+          SITE_URL: http://127.0.0.1:8080
+        run: node scripts/browser-test.js
+
+      - name: Stop server
+        if: always()
+        run: kill $(cat /tmp/http.pid) 2>/dev/null || true
+
+      - name: Publish browser-test results
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/browser-test.json 2>/dev/null || true
+          bash scripts/ci-push.sh "browser-test: runtime interaction results (run #${{ github.run_number }})"

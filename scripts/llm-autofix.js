@@ -17,7 +17,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 
 const LOG = 'data/autofix-log.json';
 const MAX_FIXES_PER_RUN = 3; // large models on CPU are slow — keep runs within timeout
@@ -119,6 +119,74 @@ function saveJson(p, data) {
 }
 
 // ── LLM call: Ollama (local, free forever) → optional API fallbacks ──
+// Streaming transport with a spawn-based monitor (same design as
+// site-agent.js). Why not curl --speed-limit: it aborts on ANY zero-byte
+// window, and zero bytes before the first token is NORMAL on CPU (cold load
+// + prompt eval of big prompts, observed >180s live). Policy: allow up to
+// 25 min with no first byte, then treat 12 min with no byte mid-stream as
+// wedged. Kill -> reject with status 28 -> caller's restart+retry path.
+function streamChat(payload) {
+  const args = [
+    '-sS', '--max-time', '5400', '-w', '\\n%{http_code}',
+    OLLAMA_HOST + '/api/chat',
+    '-H', 'Content-Type: application/json',
+    '-d', '@-'
+  ];
+  return new Promise((resolve, reject) => {
+    const child = spawn('curl', args, { stdio: ['pipe', 'pipe', 'pipe'] });
+    let out = '';
+    let stderr = '';
+    const started = Date.now();
+    let firstByteAt = 0;
+    let lastByteAt = Date.now();
+    let settled = false;
+    function fail(why) {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      try { child.kill('SIGKILL'); } catch (e) { /* ignore */ }
+      const err = new Error('stream monitor: ' + why);
+      err.status = 28;
+      err.stdout = out.slice(0, 2000);
+      err.stderr = stderr.slice(0, 400);
+      reject(err);
+    }
+    const mon = setInterval(() => {
+      const now = Date.now();
+      if (now - started > 95 * 60 * 1000) return fail('hard cap 95min');
+      if (!firstByteAt) {
+        if (now - started > 25 * 60 * 1000) return fail('no first byte in 25min');
+      } else if (now - lastByteAt > 12 * 60 * 1000) {
+        return fail('no byte for 12min mid-stream (wedged)');
+      }
+    }, 5000);
+    child.stdout.on('data', d => {
+      if (!firstByteAt) firstByteAt = Date.now();
+      lastByteAt = Date.now();
+      out += d.toString('utf8');
+      if (out.length > 100 * 1024 * 1024) fail('buffer cap 100MB');
+    });
+    child.stderr.on('data', d => { stderr += d.toString('utf8'); });
+    child.on('error', err => { if (!settled) { settled = true; clearInterval(mon); reject(err); } });
+    child.on('close', code => {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      if (code === 0) resolve(out);
+      else {
+        const err = new Error('curl exit ' + code);
+        err.status = code;
+        err.stdout = out.slice(0, 2000);
+        err.stderr = stderr.slice(0, 400);
+        reject(err);
+      }
+    });
+    child.stdin.on('error', () => { /* curl died before reading stdin */ });
+    child.stdin.write(payload);
+    child.stdin.end();
+  });
+}
+
 async function callLLM(system, user, maxTokens) {
   // Recall distilled lessons on generation-sized calls (the agent wrote
   // lessons for months without ever reading them — amnesia fix).
@@ -130,33 +198,28 @@ async function callLLM(system, user, maxTokens) {
       if (lessons.trim()) sysOut = lessons + '\n\n' + system;
     } catch (e) { /* proceed without */ }
   }
-  // Primary: local Ollama via curl — no keys, no rate limits, runs on runner CPU.
-  // --max-time 2400: 27B generates ~1-3 tok/s on CPU; cutting off at 30 min
-  // wastes full generations. On timeout: restart (clears wedged server-side
-  // work — curl abandoning does NOT stop Ollama, and naive retries queue
-  // behind their own zombie), then ONE retry on a clean server.
+  // Primary: local Ollama — no keys, no rate limits, runs on runner CPU.
+  // Transport + stall policy live in streamChat above. On stall (status 28):
+  // restart the server (clears wedged server-side work — killing curl does
+  // NOT stop Ollama, and naive retries queue behind their own zombie), then
+  // ONE retry on a clean server.
+  const payload = JSON.stringify({
+    model: OLLAMA_MODEL,
+    messages: [
+      { role: 'system', content: sysOut },
+      { role: 'user', content: user }
+    ],
+    stream: true,
+    // 2048 not 1024: qwen3.8:27b is a THINKING model — it burns
+    // ~200-600 tokens on message.thinking before emitting content.
+    options: { temperature: 0.3, num_predict: maxTokens || 2048 }
+  });
   let out;
   try {
-    out = execSync(
-      'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-',
-      {
-        input: JSON.stringify({
-          model: OLLAMA_MODEL,
-          messages: [
-            { role: 'system', content: sysOut },
-            { role: 'user', content: user }
-          ],
-          stream: false,
-          // 2048 not 1024: qwen3.8:27b is a THINKING model — it burns
-          // ~200-600 tokens on message.thinking before emitting content.
-          options: { temperature: 0.3, num_predict: maxTokens || 2048 }
-        }),
-        encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024
-      }
-    );
+    out = await streamChat(payload);
   } catch (e) {
-    if (e.status === 28) {
-      console.log('autofix: Ollama timed out — restarting server to clear wedged work, then one retry');
+    if (e.status === 28 || e.signal === 'SIGTERM' || String(e.message || '').match(/timed out/i)) {
+      console.log('autofix: Ollama stalled/timed out — restarting server to clear wedged work, then one retry');
       try { execSync('pkill -f "ollama serve"; sleep 2; nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
       try {
         for (let i = 0; i < 60; i++) {
@@ -165,21 +228,7 @@ async function callLLM(system, user, maxTokens) {
             break;
           } catch (e1) { execSync('sleep 2', { stdio: 'ignore' }); }
         }
-        out = execSync(
-          'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_HOST + '/api/chat -H "Content-Type: application/json" -d @-',
-          {
-            input: JSON.stringify({
-              model: OLLAMA_MODEL,
-              messages: [
-                { role: 'system', content: sysOut },
-                { role: 'user', content: user }
-              ],
-              stream: false,
-              options: { temperature: 0.3, num_predict: maxTokens || 2048 }
-            }),
-            encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024
-          }
-        );
+        out = await streamChat(payload);
       } catch (e2) {
         console.log('autofix: Ollama retry failed after restart: exit=' + e2.status);
         out = null;
@@ -194,20 +243,34 @@ async function callLLM(system, user, maxTokens) {
     // Optional fallbacks below (unchanged) — only used if API keys happen to be set.
   } else {
   try {
-    const nl = out.lastIndexOf('\n');
-    const body = nl >= 0 ? out.slice(0, nl) : out;
-    const httpCode = nl >= 0 ? out.slice(nl + 1).trim() : '';
-    const j = JSON.parse(body);
-    const msg = j.message || {};
-    let text = (msg.content || '').trim();
-    if (!text && msg.thinking) text = msg.thinking.trim();
+    // NDJSON stream: accumulate message.content (and thinking for think
+    // models, which may arrive per-chunk or only at end); the trailing line
+    // is curl's HTTP-code write-out.
+    const lines = String(out).split('\n');
+    let httpCode = '';
+    while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+    if (lines.length && /^\d{3}$/.test(lines[lines.length - 1].trim())) httpCode = lines.pop().trim();
+    let content = '', thinking = '';
+    for (const line of lines) {
+      const t = line.trim();
+      if (!t || t.charAt(0) !== '{') continue;
+      try {
+        const j = JSON.parse(t);
+        if (j.message) {
+          if (typeof j.message.content === 'string') content += j.message.content;
+          if (typeof j.message.thinking === 'string') thinking += j.message.thinking;
+        }
+        if (typeof j.response === 'string') content += j.response;
+      } catch (e) { /* partial line; ignore */ }
+    }
+    const text = content.trim() || thinking.trim();
     if (text) {
       console.log('autofix: LLM ← ' + OLLAMA_MODEL + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
       return { text: text, model: OLLAMA_MODEL + ' (local)' };
     }
-    console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
+    console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + httpCode + ')');
   } catch (e) {
-    console.log('autofix: Ollama response failed: ' + (e.message || e).slice(0, 200));
+    console.log('autofix: Ollama response failed: ' + String(e.message || e).slice(0, 200));
   }
   }
 

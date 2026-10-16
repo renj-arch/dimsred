@@ -30,6 +30,7 @@ jobs:
             scripts
             data/questions
             data/papers.json
+            data/official-paper-sources.json
             data/archive-answers.json
             data/archive-taxonomy.json
             data/pyq-patterns.json
@@ -86,12 +87,33 @@ jobs:
           # Warm the model into RAM now so the agent + writer calls start warm.
           echo "Warming 27B into RAM..."
           ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
-          echo "Warmup done"
+          # Verify residency — a silent warmup failure used to surface minutes
+          # later as "NO model resident: next call cold-loads 17GB" in the agent
+          curl -s http://127.0.0.1:11434/api/ps | grep -q qwen3.8 && echo "Warmup done (model resident)" || echo "WARNING: model NOT resident after warmup"
+
+      # Official papers supply line (ingestor needs no model — pure parsing).
+      # pip + pypdf are tiny; the runners already have python3.
+      - name: Setup Python PDF tools
+        run: pip install --quiet pypdf
+
+      # Discover official answer-key URLs (portal + archive strategies) for
+      # papers that have a QP but no key yet. Verified URLs only, else retry
+      # next run — never guessed.
+      - name: Discover official paper URLs
+        run: python3 scripts/discover-official-papers.py
+
+      # Ingest verified official papers (QP + key PDFs → key-joined questions
+      # with strict validation; anything uncertain is dropped, never faked)
+      # straight into data/papers.json. The Papers agent then enriches them
+      # with 27B explanations in the same run.
+      - name: Ingest official papers
+        run: python3 scripts/ingest-official-paper.py
 
       - name: Ensure Ollama is up before agent
         run: |
           if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
             echo "Server down before agent — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
             nohup ollama serve > /tmp/ollama.log 2>&1 &
             echo $! > /tmp/ollama.pid
             for i in $(seq 1 60); do
@@ -131,6 +153,11 @@ jobs:
           MAX_CONVERT: '10'
         run: node scripts/convert-quiz-proper.js
 
+      # Rebuild the mega quiz bank from the current corpus (fast, no model).
+      # Without this tracked + deployed, mega-test.html 404s live.
+      - name: Rebuild mega quiz bank
+        run: node scripts/build-mega-quiz.js
+
       - name: Publish question fixes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -139,5 +166,5 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json data/quiz-proper.json 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json 2>/dev/null || true
           bash scripts/ci-push.sh "question-quality: qwen3.8:27b improved questions (run #${{ github.run_number }})"

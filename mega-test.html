@@ -246,7 +246,17 @@ function loadData() {
   }).then(function (data) {
     data.questions = normalizeQs(data.questions);
     showExamSet(data, examParam);
-  }).catch(function () { loadMega(); });
+  }).catch(function () {
+    // Honest fallback: the exam was requested but its 27B set does not exist
+    // yet (first sets land over coming agent runs). Say so plainly instead
+    // of silently serving generic questions under a 27B promise.
+    var panel = document.getElementById('setupPanel');
+    var note = document.createElement('div');
+    note.style.cssText = 'padding:10px 14px;border:1px solid rgba(251,191,36,.35);border-radius:10px;margin-bottom:12px;font-size:.85em;color:#fbbf24';
+    note.textContent = 'No fresh 27B set yet for this exam — showing the general bank meanwhile. The agent writes new sets weekly.';
+    panel.insertBefore(note, panel.firstChild);
+    loadMega();
+  });
 }
 
 function startQuiz() {

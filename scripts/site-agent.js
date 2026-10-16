@@ -16,7 +16,7 @@
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
+const { execSync, spawn } = require('child_process');
 const memory = require('./agent-memory');
 
 // Seed initial rules from hard-won experience
@@ -47,15 +47,119 @@ const LOG = 'data/agent-log.json';
 // one of those "improvements" broke generation.
 const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
 
-// One HTTP attempt at the chat endpoint. Timeout budget 40 min (was 30):
-// 27B on runner CPU generates ~1-3 tok/s after load, so a 1500-2000 token
-// answer legitimately takes 15-35 min. Cutting it off at 30 mid-stream
-// wastes the whole generation.
+// One HTTP attempt at the chat endpoint, STREAMING via spawn + monitor.
+// History of this transport (each failure taught one clause):
+// - stream:false returns zero bytes until all ~2048 tokens finish (15-35 min
+//   on CPU), so total-time caps murdered healthy generations; curl abandoning
+//   does NOT stop the server (zombie retries queued for hours: runs #64/#71).
+// - Streaming fixed that, but curl's --speed-limit then aborted at 180s of
+//   ZERO bytes during prompt-processing / cold-load (observed live: the
+//   cold-start ping streamed OK, then the big planner prompt died "too slow"
+//   at exactly 180s). Zero bytes before the first token is NORMAL on CPU.
+// Correct policy: allow up to 25 min with NO first byte (cold load + prompt
+// eval), then watch REAL stalls: no byte for 12 min mid-stream = wedged.
+// That needs incremental visibility, which execSync cannot give — spawn can.
+// The server is NOT stopped by killing curl; callLLM's exit-28 path restarts
+// it. Hard cap 95 min: nothing legitimate needs more.
 function ollamaChat(payload) {
-  return execSync(
-    'curl -sS --max-time 2400 -w "\\n%{http_code}" ' + OLLAMA_URL + '/api/chat -H "Content-Type: application/json" -d @-',
-    { input: payload, encoding: 'utf8', timeout: 2450000, maxBuffer: 50 * 1024 * 1024 }
-  );
+  const body = JSON.parse(payload);
+  body.stream = true;
+  const args = [
+    '-sS', '--max-time', '5400', '-w', '\\n%{http_code}',
+    OLLAMA_URL + '/api/chat',
+    '-H', 'Content-Type: application/json',
+    '-d', '@-'
+  ];
+  return new Promise((resolve, reject) => {
+    const child = spawn('curl', args, { stdio: ['pipe', 'pipe', 'pipe'] });
+    let out = '';
+    let stderr = '';
+    const started = Date.now();
+    let firstByteAt = 0;
+    let lastByteAt = Date.now();
+    let settled = false;
+
+    function fail(why) {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      try { child.kill('SIGKILL'); } catch (e) { /* ignore */ }
+      const err = new Error('stream monitor: ' + why);
+      err.status = 28; // same class as curl timeout -> restart+retry policy
+      err.stdout = out.slice(0, 2000);
+      err.stderr = stderr.slice(0, 400);
+      reject(err);
+    }
+
+    const mon = setInterval(() => {
+      const now = Date.now();
+      if (now - started > 95 * 60 * 1000) return fail('hard cap 95min');
+      if (!firstByteAt) {
+        if (now - started > 25 * 60 * 1000) return fail('no first byte in 25min (cold load/prompt eval over budget)');
+      } else if (now - lastByteAt > 12 * 60 * 1000) {
+        return fail('no byte for 12min mid-stream (wedged)');
+      }
+    }, 5000);
+
+    child.stdout.on('data', d => {
+      if (!firstByteAt) firstByteAt = Date.now();
+      lastByteAt = Date.now();
+      out += d.toString('utf8');
+      if (out.length > 100 * 1024 * 1024) fail('buffer cap 100MB');
+      // Progress beacon: first byte observed means prompt eval finished —
+      // log once so workflow logs distinguish cold-load silence from a stall.
+      if (firstByteAt && !ollamaChat._firstByteLogged) {
+        ollamaChat._firstByteLogged = true;
+        console.log('agent: LLM stream first bytes at ' + Math.round((firstByteAt - started) / 1000) + 's');
+      }
+    });
+    child.stderr.on('data', d => { stderr += d.toString('utf8'); });
+    child.on('error', err => { if (!settled) { settled = true; clearInterval(mon); reject(err); } });
+    child.on('close', code => {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      ollamaChat._firstByteLogged = false;
+      if (code === 0) resolve(out);
+      else {
+        const err = new Error('curl exit ' + code);
+        err.status = code;
+        err.stdout = out.slice(0, 2000);
+        err.stderr = stderr.slice(0, 400);
+        reject(err);
+      }
+    });
+    child.stdin.on('error', () => { /* curl died before reading stdin */ });
+    child.stdin.write(payload);
+    child.stdin.end();
+  });
+}
+
+// Parse an NDJSON chat stream: accumulate message.content deltas (and
+// message.thinking for think models, which may arrive per-chunk or at end),
+// plus legacy response field. Returns {text, httpCode}.
+function parseChatStream(out) {
+  const lines = String(out || '').split('\n');
+  let httpCode = '';
+  while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+  if (lines.length && /^\d{3}$/.test(lines[lines.length - 1].trim())) {
+    httpCode = lines.pop().trim();
+  }
+  let content = '', thinking = '';
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t || t.charAt(0) !== '{') continue;
+    try {
+      const j = JSON.parse(t);
+      if (j.message) {
+        if (typeof j.message.content === 'string') content += j.message.content;
+        if (typeof j.message.thinking === 'string') thinking += j.message.thinking;
+      }
+      if (typeof j.response === 'string') content += j.response;
+    } catch (e) { /* partial line; ignore */ }
+  }
+  const text = content.trim() || thinking.trim();
+  return { text: text, httpCode: httpCode };
 }
 
 // Report whether the model is currently resident in RAM. When it is NOT, the
@@ -94,7 +198,8 @@ async function callLLM(system, user, maxTokens) {
       { role: 'system', content: sysOut },
       { role: 'user', content: user }
     ],
-    stream: false,
+    // Streaming is forced by ollamaChat regardless; set here for clarity.
+    stream: true,
     // 2048 not 1024: qwen3.8:27b spends ~200-600 tokens thinking before
     // it emits content. 1024 was cutting answers off mid-thought.
     options: { temperature: 0.3, num_predict: maxTokens || 2048 }
@@ -102,7 +207,7 @@ async function callLLM(system, user, maxTokens) {
   logModelState('pre-call');
   let out;
   try {
-    out = ollamaChat(payload);
+    out = await ollamaChat(payload);
   } catch (e) {
     const detail = 'exit=' + (e.status === undefined ? '?' : e.status) +
       ' stderr=' + String(e.stderr || '').slice(0, 200) +
@@ -124,7 +229,7 @@ async function callLLM(system, user, maxTokens) {
             break;
           } catch (e1) { execSync('sleep 2', { stdio: 'ignore' }); }
         }
-        out = ollamaChat(payload);
+        out = await ollamaChat(payload);
       } catch (e2) {
         console.log('agent: Ollama retry failed after restart: exit=' + e2.status);
         return null;
@@ -141,24 +246,20 @@ async function callLLM(system, user, maxTokens) {
     }
   }
   try {
-    const nl = out.lastIndexOf('\n');
-    const body = nl >= 0 ? out.slice(0, nl) : out;
-    const httpCode = nl >= 0 ? out.slice(nl + 1).trim() : '';
-    const j = JSON.parse(body);
-    const msg = j.message || {};
+    const parsed = parseChatStream(out);
     // qwen3.8:27b is a THINKING model: it reasons in message.thinking and
     // puts the final answer in message.content. With num_predict as low as
     // 10 the entire budget is consumed by thinking and content comes back
     // empty (run #60: content="" thinking="The user is asking me to
     // confirm that generation works"). Fall back to thinking when empty.
-    let text = (msg.content || '').trim();
-    if (!text && msg.thinking) text = msg.thinking.trim();
-    if (text) {
-      // Detailed log: WHAT the model wrote (preview), not just that it did.
-      console.log('agent: LLM ← ' + model + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
-      return { text: text, model: model + ' (local)' };
+    const text = parsed.text;
+    if (!text) {
+      console.log('agent: Ollama ' + model + ' returned empty (http ' + parsed.httpCode + ')');
+      return null;
     }
-    console.log('agent: Ollama ' + model + ' returned empty (http ' + httpCode + '): ' + body.slice(0, 200));
+    // Detailed log: WHAT the model wrote (preview), not just that it did.
+    console.log('agent: LLM ← ' + model + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
+    return { text: text, model: model + ' (local)' };
   } catch (e) {
     console.log('agent: Ollama response unparseable: ' + String(out).slice(0, 300));
   }
@@ -2129,24 +2230,26 @@ const EXAMINER_STYLE = 'Voice: a beloved examiner coaching a serious aspirant �
 // gap progressively: complete partial papers first, then the next missing
 // exam slot, enriching up to 8 explanations per run.
 //
-// HONESTY RULES (hard): assembled papers are labeled source:corpus-assembled
-// + official:false with officialPdf/cutoff null (the page renders those as
-// absent). Never invent official PDFs, cutoffs, or "real" questions the corpus
-// cannot verify — only add questions WITH corpus answers, and explain
-// consistently with them. A partial honest paper beats a complete fake one.
+// HONESTY RULES (hard, official-only): papers.html carries ONLY real official
+// papers. Corpus-assembled filler is FORBIDDEN - the old subject-matching
+// path is deleted, not skipped. A question enters papers.json ONLY with
+// official provenance (pyqExam + pyqYear set by the official-paper ingestor
+// from QP + answer-key PDFs). Text-sniffing "pyq"/"previous year" is proven
+// noise (matches game-sales trivia) and must never qualify anything.
+// officialPdf/cutoff stay null unless the exact official values are known
+// (the page renders them as absent). Explanations are 27B-derived and tagged.
+// A partial honest paper beats a complete fake one, always.
 const PAPERS_WANT = [
-  { id: 'upsc-prelims-2023-gs1', exam: 'UPSC', year: 2023, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200, match: ['polity', 'history', 'geography', 'economy', 'environment', 'science'] },
-  { id: 'upsc-prelims-2024-gs1', exam: 'UPSC', year: 2024, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200, match: ['polity', 'history', 'geography', 'economy', 'environment', 'science'] },
-  { id: 'ssc-cgl-2024-tier1', exam: 'SSC CGL', year: 2024, paper: 'Tier 1', target: 100, duration: 60, marks: 200, match: ['quant', 'reasoning', 'english', 'general awareness', 'mathematics'] },
-  { id: 'ssc-chsl-2024', exam: 'SSC CHSL', year: 2024, paper: 'Tier 1', target: 100, duration: 60, marks: 200, match: ['quant', 'reasoning', 'english', 'general awareness'] },
-  { id: 'ssc-gd-2024', exam: 'SSC GD', year: 2024, paper: 'Constable', target: 80, duration: 60, marks: 160, match: ['quant', 'reasoning', 'english', 'hindi', 'general'] },
-  { id: 'ibps-po-2024-prelims', exam: 'IBPS PO', year: 2024, paper: 'Prelims', target: 100, duration: 60, marks: 100, match: ['quant', 'reasoning', 'english', 'banking'] },
-  { id: 'sbi-clerk-2024-prelims', exam: 'SBI Clerk', year: 2024, paper: 'Prelims', target: 100, duration: 60, marks: 100, match: ['quant', 'reasoning', 'english', 'banking'] },
-  { id: 'rbi-grade-b-2024', exam: 'RBI Grade B', year: 2024, paper: 'Phase 1', target: 200, duration: 120, marks: 200, match: ['economy', 'finance', 'banking', 'general awareness', 'reasoning', 'english', 'quant'] },
-  { id: 'rrb-ntpc-2024', exam: 'RRB NTPC', year: 2024, paper: 'CBT 1', target: 100, duration: 90, marks: 100, match: ['quant', 'reasoning', 'general awareness'] },
-  { id: 'nda-2024-gat', exam: 'NDA', year: 2024, paper: 'GAT', target: 150, duration: 150, marks: 600, match: ['history', 'geography', 'polity', 'economy', 'science', 'english', 'general'] },
-  { id: 'ctet-2024-paper1', exam: 'CTET', year: 2024, paper: 'Paper 1', target: 150, duration: 150, marks: 150, match: ['pedagogy', 'child development', 'english', 'hindi', 'mathematics', 'environment'] },
-  { id: 'cds-2024-gs', exam: 'CDS', year: 2024, paper: 'GS', target: 120, duration: 120, marks: 100, match: ['history', 'geography', 'polity', 'economy', 'science', 'english', 'defence'] }
+  // Official-pipeline exams ONLY: papers.html carries real official papers,
+  // which need a stable official QP + answer-key PDF pair. CBT exams
+  // (SSC/IBPS/SBI/RRB) publish no such pair - their PDFs are candidate
+  // response sheets, never official keys - so they are DELIBERATELY absent
+  // here (see excluded[] in official-paper-sources.json). Their practice
+  // needs are served by hubs, mocks and 27B practice sets, not papers.html.
+  { id: 'upsc-prelims-2023-gs1', exam: 'UPSC', year: 2023, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200 },
+  { id: 'upsc-prelims-2024-gs1', exam: 'UPSC', year: 2024, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200 },
+  { id: 'upsc-cds-2024-gs', exam: 'CDS', year: 2024, paper: 'GS', target: 120, duration: 120, marks: 100 },
+  { id: 'upsc-nda-2024-gat', exam: 'NDA', year: 2024, paper: 'GAT', target: 150, duration: 150, marks: 600 },
 ];
 function paperOverlap(a, b) {
   const wa = String(a || '').toLowerCase().split(/\s+/).filter(w => w.length > 3);
@@ -2162,76 +2265,27 @@ async function agentPapers() {
   const haveIds = new Set();
   for (const p of papers.papers) for (const q of (p.questions || [])) if (q && q.id) haveIds.add(q.id);
 
-  // Target: first incomplete known paper, else first missing WANT slot.
-  let target = papers.papers.find(p => (p.questions || []).length < (p.totalQuestions || p.target || 100));
-  let isNew = false;
-  if (!target) {
-    const havePapers = new Set(papers.papers.map(p => p.id));
-    const slot = PAPERS_WANT.find(s => !havePapers.has(s.id));
-    if (!slot) { console.log('agent: Papers — all ' + PAPERS_WANT.length + ' wanted slots filled'); return { agent: 'papers', fixes: fixes }; }
-    target = {
-      id: slot.id, exam: slot.exam, year: slot.year, paper: slot.paper,
-      totalQuestions: slot.target, duration: slot.duration, marks: slot.marks,
-      cutoff: null, officialPdf: null, source: 'corpus-assembled', official: false,
-      questions: []
-    };
-    papers.papers.push(target);
-    isNew = true;
-  }
-  const slot = PAPERS_WANT.find(s => s.id === target.id) || { match: [], target: target.totalQuestions || 100 };
-  const need = (target.totalQuestions || slot.target || 100) - target.questions.length;
-  console.log('agent: Papers — target ' + target.id + ' (' + target.questions.length + '/' + (target.totalQuestions || slot.target) + ')' + (isNew ? ' [new slot]' : ''));
+  // Target: first incomplete paper. Explanations for its verified
+  // questions are progress that needs no new questions. Question INTAKE is
+  // the official-paper ingestor's job exclusively - this agent NEVER adds
+  // questions (no mining, no filler, official-only).
+  const target = papers.papers.find(p => (p.questions || []).length < (p.totalQuestions || 100));
 
-  // Mine candidates: rotating file offset, subject match, pyq first.
-  const files = fs.readdirSync('data/questions').filter(f => f.endsWith('.json') && f !== '00-27b-archive.json');
-  const startAt = files.length ? Math.floor(Date.now() / 3600000) % files.length : 0;
-  const matchers = (slot.match || []).map(m => m.toLowerCase());
-  const cands = [], seenText = (target.questions || []).map(q => q.q || q.question || '');
-  const t0 = Date.now();
-  let added = 0;
-  for (let i = 0; i < files.length && added < 12 && Date.now() - t0 < 90000; i++) {
-    const f = files[(startAt + i) % files.length];
-    let d;
-    try { d = JSON.parse(fs.readFileSync('data/questions/' + f, 'utf8')); } catch (e) { continue; }
-    for (const top of Object.values(d)) {
-      const subs = (top && top.subSubjects) || {};
-      for (const arr of Object.values(subs)) {
-        if (!Array.isArray(arr)) continue;
-        for (const q of arr) {
-          if (!q || !q.id || !q.question || !q.answer || haveIds.has(q.id)) continue;
-          const cat = ((q.category || '') + ' ' + (q.subject || '')).toLowerCase();
-          if (matchers.length && !matchers.some(m => cat.indexOf(m) !== -1)) continue;
-          const raw = JSON.stringify(q).toLowerCase();
-          const pyq = raw.indexOf('pyq') !== -1 || raw.indexOf('previous year') !== -1;
-          if (seenText.some(t => paperOverlap(q.question, t) > 0.7)) continue;
-          cands.push({ q: q, pyq: pyq });
-        }
-      }
-    }
+  // Coverage report vs WANT (informational only). Missing slots await the
+  // ingestor; this agent enriches whatever exists.
+  {
+    const havePapers = new Set(papers.papers.map(p => p.id));
+    const missing = PAPERS_WANT.filter(s => !havePapers.has(s.id)).map(s => s.id);
+    const partial = papers.papers
+      .filter(p => (p.questions || []).length < (p.totalQuestions || 100))
+      .map(p => p.id + ' ' + (p.questions || []).length + '/' + (p.totalQuestions || 100));
+    console.log('agent: Papers - ' + papers.papers.length + '/' + PAPERS_WANT.length + ' slots present' +
+      (partial.length ? '; partial: ' + partial.join(', ') : '; all complete') +
+      (missing.length ? '; missing (awaiting ingestion): ' + missing.slice(0, 6).join(', ') + (missing.length > 6 ? ',...' : '') : ''));
   }
-  cands.sort((a, b) => (b.pyq ? 1 : 0) - (a.pyq ? 1 : 0));
-  for (const c of cands.slice(0, Math.min(12, Math.max(0, need)))) {
-    const q = c.q;
-    // Re-check overlap here (not just at collect time): two candidates from
-    // the same batch can near-duplicate each other.
-    if (seenText.some(t => paperOverlap(q.question, t) > 0.7)) continue;
-    if (haveIds.has(q.id)) continue;
-    target.questions.push({
-      n: target.questions.length + 1,
-      id: q.id,
-      q: q.question,
-      options: q.options || null,
-      subject: q.subject || q.category || '',
-      answer: q.answer,
-      explain: (q.explain && q.explain.length >= 150) ? q.explain : null
-    });
-    haveIds.add(q.id);
-    seenText.push(q.question);
-    added++;
-  }
-  if (added) {
-    const addedQs = target.questions.slice(-added).slice(0, 2).map(q => 'Q: ' + (q.q || '').slice(0, 120) + ' | A: ' + String(q.answer || '').slice(0, 60)).join('\n');
-    fixes.push({ page: 'data/papers.json', fix: (isNew ? 'Started paper ' : 'Extended paper ') + target.id + ' (+' + added + ' questions, now ' + target.questions.length + '/' + (target.totalQuestions || slot.target) + ')', text: addedQs.slice(0, 600) });
+  if (!target) {
+    console.log('agent: Papers - all known papers complete, nothing to enrich');
+    return { agent: 'papers', fixes: fixes };
   }
 
   // Enrich: detailed 27B explanations for questions lacking them (cap 8/run).
@@ -2263,7 +2317,7 @@ async function agentPapers() {
     fixes.push({ page: 'data/papers.json', fix: 'Wrote ' + enriched + ' detailed 27B explanation(s) in ' + target.id, text: exPreview.slice(0, 800) });
   }
   saveJson('data/papers.json', papers);
-  console.log('agent: Papers — +' + added + ' questions, +' + enriched + ' explanations in ' + target.id);
+  console.log('agent: Papers — +' + enriched + ' explanations in ' + target.id + ' (official-only intake)');
   return { agent: 'papers', fixes: fixes };
 }
 
@@ -2494,6 +2548,150 @@ async function agentPracticeSets() {
   return { agent: 'practicesets', fixes: fixes };
 }
 
+// ── AGENT: GraphNotes — proper relationship explanations on flowchart cards ──
+// Clicking Gandhi showed generic (sometimes wrong-entity) descriptions and
+// "mentioned with" everywhere, plus junk cards (TV sitcoms, absurd spans).
+// The page already renders per-link evidence (REL_EV), authored briefs
+// (NOTES/CUR_DESC) and typed rels — it just has none for mined topics.
+// This agent upgrades one focus topic per run: junk out, every kept card
+// gets a verified-correct description + a HOW-it-relates note + a real verb.
+// When an entry is fully upgraded, its _gen flag is dropped (promoted to
+// curated authority on the page). Starts with Gandhi (most visible).
+const GRAPH_LAYERS = 'data/topic-layers.json';
+// Deterministic junk: not entities at all, or never a real relation.
+const GRAPH_JUNK_NAMES = ['friends', 'television', 'the bill', 'sports', 'empire',
+  '19th century', 'york', 'chelmsford', 'jews', 'theatre', 'poetry', 'cinema'];
+const GRAPH_VERBS = ['led', 'participated-in', 'founded', 'assassinated-by', 'assassinated',
+  'imprisoned-at', 'born-in', 'died-in', 'wrote', 'opposed', 'influenced', 'influenced-by',
+  'contemporary-of', 'member-of', 'took-place-in', 'lived-in', 'visited', 'worked-in',
+  'protested-against', 'negotiated-with', 'mentor-of', 'follower-of'];
+function graphJunk(item) {
+  const n = String((item && item.name) || '').toLowerCase().trim();
+  if (!n) return 'empty name';
+  if (GRAPH_JUNK_NAMES.indexOf(n) !== -1) return 'denylisted non-entity';
+  const d = String((item && (item.desc || item.note)) || '');
+  if (d.indexOf('_____') !== -1) return null; // bad note, entity may be fine
+  return null;
+}
+async function agentGraphNotes() {
+  const fixes = [];
+  if (!fs.existsSync(GRAPH_LAYERS)) return { agent: 'graphnotes', fixes: fixes };
+  let layers;
+  try { layers = JSON.parse(fs.readFileSync(GRAPH_LAYERS, 'utf8')); } catch (e) { return { agent: 'graphnotes', fixes: fixes }; }
+  const keys = Object.keys(layers);
+  // Priority: Gandhi first (user-named), then heaviest _gen entries.
+  const scored = [];
+  for (const k of keys) {
+    const e = layers[k];
+    if (!e || !e.branches) continue;
+    if (!e._gen) continue; // already curated
+    let w = 0, n = 0, bad = 0;
+    for (const b of (e.branches || [])) {
+      for (const it of (b.items || [])) {
+        n++;
+        w += (it && it.w) || 0;
+        const note = String((it && it.note) || '');
+        if (!note || note.indexOf('_____') !== -1) bad++;
+      }
+    }
+    if (!n) continue;
+    scored.push({ key: k, weight: (k.toLowerCase().indexOf('gandhi') !== -1 ? 1e12 : 0) + w, items: n, bad: bad });
+  }
+  scored.sort((a, b) => b.weight - a.weight);
+  const focus = scored[0];
+  if (!focus) { console.log('agent: GraphNotes — all layers curated, nothing to upgrade'); return { agent: 'graphnotes', fixes: fixes }; }
+  console.log('agent: GraphNotes — upgrading "' + focus.key + '" (' + focus.items + ' items, ' + focus.bad + ' bad notes)');
+  const entry = layers[focus.key];
+  const flat = [];
+  for (const b of (entry.branches || [])) {
+    for (const it of (b.items || [])) flat.push({ branch: b, item: it });
+  }
+  // Deterministic junk removal first (no LLM spent on non-entities).
+  let removed = 0;
+  for (const b of (entry.branches || [])) {
+    const keep = [];
+    for (const it of (b.items || [])) {
+      const why = graphJunk(it);
+      if (why && why !== null && GRAPH_JUNK_NAMES.indexOf(String(it.name || '').toLowerCase().trim()) !== -1) {
+        removed++;
+        fixes.push({ page: GRAPH_LAYERS, fix: 'GraphNotes dropped junk card "' + it.name + '" from ' + focus.key + ' (' + why + ')' });
+        continue;
+      }
+      keep.push(it);
+    }
+    b.items = keep;
+  }
+  // LLM upgrade in batches of 8: proper desc + relationship note + real verb,
+  // or drop:true with a reason for junk the rules cannot see.
+  let upgraded = 0, droppedLLM = 0;
+  for (let i = 0; i < flat.length; i += 8) {
+    const batch = flat.slice(i, i + 8).filter(x => (entry.branches || []).some(b => (b.items || []).indexOf(x.item) !== -1));
+    if (!batch.length) continue;
+    const spec = batch.map((x, j) => (j + 1) + '. "' + x.item.name + '" (' + (x.item.type || '?') + ') current desc: "' + String(x.item.desc || '').slice(0, 120) + '"').join('\n');
+    const sys = 'You curate knowledge-graph cards for Indian exam prep. Return STRICT JSON only: ' +
+      '{"items": [{"n": 1, "keep": true, "desc": "...", "note": "...", "rel": "verb"}]}. No markdown. ' +
+      'FOCUS TOPIC: ' + focus.key + '. For each numbered card: desc = one correct line ABOUT THE CARD ITSELF ' +
+      '(fix it if the current one belongs to another entity); note = 1-2 sentences explaining HOW THIS CARD ' +
+      'RELATES TO ' + focus.key + ' specifically (events, dates, places, roles — factual, verifiable, no invention); ' +
+      'rel = one verb from [' + GRAPH_VERBS.join(', ') + '] (never "mentioned with"). ' +
+      'If the card has NO real relationship to ' + focus.key + ', use {"n": N, "keep": false, "why": "..."} instead. ' +
+      EXAMINER_STYLE;
+    const r = await callLLM(sys, 'Cards for ' + focus.key + ':\n' + spec, 2048);
+    if (!r || !r.text) continue;
+    try {
+      const txt = r.text.replace(/```[a-z]*|```/gi, '').trim();
+      const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+      for (const out of (j.items || [])) {
+        const b = batch[(out.n || 1) - 1];
+        if (!b) continue;
+        if (out.keep === false) {
+          const arr = b.branch.items;
+          const at = arr.indexOf(b.item);
+          if (at !== -1) arr.splice(at, 1);
+          droppedLLM++;
+          fixes.push({ page: GRAPH_LAYERS, fix: 'GraphNotes dropped "' + b.item.name + '" from ' + focus.key + ' (LLM: ' + String(out.why || 'no real relation').slice(0, 100) + ')' });
+          continue;
+        }
+        const note = String(out.note || '').trim(), desc = String(out.desc || '').trim();
+        const rel = String(out.rel || '').trim();
+        if (note.length < 40 || note.length > 600 || note.indexOf('_____') !== -1) continue;
+        if (desc.length < 10 || desc.length > 300) continue;
+        if (GRAPH_VERBS.indexOf(rel) === -1) continue;
+        b.item.note = note;
+        b.item.desc = desc;
+        b.item.rel = rel;
+        b.item.src = 'curated';
+        upgraded++;
+      }
+    } catch (e) { console.log('agent: GraphNotes — batch unparseable, skipped'); }
+    if (upgraded + droppedLLM >= 24) break; // budget: ~3 LLM calls per run
+  }
+  // Promotion check: fully upgraded (no junk, every item has a real note) →
+  // drop _gen so the page grants curated authority.
+  let remaining = 0, badNotes = 0;
+  for (const b of (entry.branches || [])) {
+    for (const it of (b.items || [])) {
+      remaining++;
+      const note = String(it.note || '');
+      if (!note || note.indexOf('_____') !== -1 || it.rel === 'mentioned with') badNotes++;
+    }
+  }
+  if (remaining > 0 && badNotes === 0 && entry._gen) {
+    delete entry._gen;
+    fixes.push({ page: GRAPH_LAYERS, fix: 'GraphNotes PROMOTED "' + focus.key + '" to curated (' + remaining + ' verified cards)' });
+  }
+  if (upgraded || removed || droppedLLM || !entry._gen) {
+    try { fs.writeFileSync(GRAPH_LAYERS, JSON.stringify(layers)); } catch (e) { return { agent: 'graphnotes', fixes: fixes }; }
+  }
+  if (upgraded) fixes.push({
+    page: GRAPH_LAYERS,
+    fix: 'GraphNotes wrote ' + upgraded + ' relationship note(s) for ' + focus.key,
+    text: 'Sample: ' + String((flat.find(x => x.item.note) || {}).item?.note || '').slice(0, 300)
+  });
+  console.log('agent: GraphNotes — ' + focus.key + ': +' + upgraded + ' notes, -' + (removed + droppedLLM) + ' junk');
+  return { agent: 'graphnotes', fixes: fixes };
+}
+
 // ── Main ──
 async function agentSelfCheck() {
   const fixes = [];
@@ -2503,7 +2701,7 @@ async function agentSelfCheck() {
     'index.html', 'ask.html', 'papers.html', 'mega-test.html',
     'improve.html', 'science.html', 'polytechnic.html', 'mental.html', 'ssc-je.html',
     'js/mental-training.js', 'scripts/lib/ask-core.js', 'scripts/lib/ask-llm.js',
-    'data/papers.json', 'data/ask-index.json'
+    'data/papers.json', 'data/ask-index.json', 'data/mega-quiz.json'
   ];
   for (const f of criticalFiles) {
     // fileExistsAnywhere: fs.existsSync alone reports false for tracked
@@ -2512,6 +2710,19 @@ async function agentSelfCheck() {
       fixes.push({ page: f, fix: 'CRITICAL FILE MISSING', kind: 'critical' });
     }
   }
+  // Content sanity for the mega quiz bank (presence is not enough — a stale
+  // 4-subject build once shipped while the page 404d on missing data).
+  // Degraded bank = critical: mega-test has nothing to serve.
+  try {
+    if (fileExistsAnywhere('data/mega-quiz.json') && fs.existsSync('data/mega-quiz.json')) {
+      const mq = JSON.parse(fs.readFileSync('data/mega-quiz.json', 'utf8'));
+      const nq = ((mq && mq.questions) || []).length;
+      const ns = Object.keys((mq && mq.subjects) || {}).length;
+      if (nq < 1000 || ns < 20) {
+        fixes.push({ page: 'data/mega-quiz.json', fix: 'DEGRADED bank: ' + nq + ' questions across ' + ns + ' subjects (need 1000+/20+) — rebuild required', kind: 'critical' });
+      }
+    }
+  } catch (e) { /* unreadable treated as missing above when absent */ }
 
   // Read browser test results and fix issues found
   const btPath = 'data/browser-test.json';
@@ -2560,8 +2771,21 @@ async function agentSelfCheck() {
             }
           }
         }
-        if (issue.type === 'js-error' || issue.type === 'console-error') {
+        // Bare resource-404 console errors duplicate broken-request entries
+        // (which carry the URL needed to judge env-vs-real) — skip them to
+        // keep the board signal-clean. All other console/js errors stay.
+        if (issue.type === 'js-error' || (issue.type === 'console-error' &&
+            !/failed to load resource|404 \(|status of 404/i.test(issue.msg || ''))) {
           fixes.push({ page: issue.page || 'unknown', fix: 'Runtime: ' + issue.msg.substring(0, 100), kind: 'runtime' });
+        }
+        // Interaction + load failures from the browser test (quiz flows,
+        // tabs, HTTP errors): logged visibly so the board shows them and
+        // MetaLearn can synthesize detectors. env-missing (sparse-checkout
+        // corpus gaps) and disabled-button are noise by design — ignored.
+        if (issue.type === 'quiz-flow-error' || issue.type === 'broken-tab' ||
+            issue.type === 'http-error' || issue.type === 'load-error' ||
+            issue.type === 'broken-request') {
+          fixes.push({ page: issue.page || 'unknown', fix: 'Browser: ' + issue.type + ' — ' + (issue.msg || issue.detail || '').substring(0, 120), kind: 'runtime' });
         }
       }
     } catch (e) { /* ignore */ }
@@ -2617,6 +2841,28 @@ async function agentSelfCheck() {
       changed = true;
       fixes.push({ page: page, fix: 'Added Fresh Practice Set button (mega-test.html?exam=' + slug + ')' });
     })();
+
+    // ── CSP vs inline-script mismatch (dead interactivity) ──
+    // A Content-Security-Policy meta WITHOUT 'unsafe-inline' in script-src
+    // silently kills every inline <script> block and onclick handler, while
+    // the page looks perfectly fine statically. The hub pages shipped exactly
+    // this: all JS dead, every button inert. Fix: add 'unsafe-inline' to
+    // script-src (matches the rest of the site, which carries no script CSP
+    // at all). Only when the page actually has inline scripts/handlers.
+    // NOTE: the content value itself contains single quotes, so it must be
+    // captured respecting the OUTER quote character.
+    const cspM = html.match(/<meta[^>]+http-equiv=["']?Content-Security-Policy["']?[^>]*content=("([^"]*)"|'([^']*)')/i);
+    if (cspM) {
+      const csp = cspM[2] !== undefined ? cspM[2] : cspM[3];
+      const scriptSrc = (csp.match(/script-src[^;]*/i) || [''])[0];
+      const hasInlineJs = /<script(?![^>]*src=)[^>]*>/i.test(html) || / onclick=/i.test(html);
+      if (hasInlineJs && scriptSrc && scriptSrc.indexOf('unsafe-inline') === -1) {
+        const fixed = csp.replace(/(script-src[^;]*)/i, '$1 \'unsafe-inline\'');
+        html = html.split(csp).join(fixed);
+        changed = true;
+        fixes.push({ page: page, fix: 'CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it' });
+      }
+    }
 
     if (page === 'index.html') {
       const placeholders = (html.match(/<a href="#" class="exam-card/g) || []).length;
@@ -2838,6 +3084,7 @@ async function main() {
     ['Papers', agentPapers],
     ['WikiSyllabus', agentWikiSyllabus],
     ['PracticeSets', agentPracticeSets],
+    ['GraphNotes', agentGraphNotes],
     ['MetaLearn', agentMetaLearn]
   ];
   const alwaysAgents = [
@@ -2848,6 +3095,28 @@ async function main() {
     ['A11Y', agentA11Y],
     ['Code', agentCode]
   ];
+  // ── Plugins: agents the site has built for itself ────────────────────
+  // Every non-dot file in scripts/agents/*.js exporting { name, run } is an
+  // agent. The Architect agent writes them; they load automatically on the
+  // NEXT run — the system extends its own toolbox with no core edits. A
+  // broken plugin is skipped loudly and can never crash a run
+  // (see scripts/lib/agent-registry.js).
+  try {
+    const registry = require('./lib/agent-registry').loadPlugins({
+      root: path.resolve(__dirname, '..'),
+      callLLM: callLLM,
+      loadJson: loadJson,
+      saveJson: saveJson,
+      listPages: listPages
+    });
+    for (const p of registry) {
+      if (rotateAgents.concat(alwaysAgents).some(([n]) => n === p.name)) {
+        console.log('registry: plugin ' + p.name + ' shadows a built-in — skipped');
+        continue;
+      }
+      (p.kind === 'always' ? alwaysAgents : rotateAgents).push([p.name, p.run]);
+    }
+  } catch (e) { console.log('registry: loader failed: ' + e.message); }
   let agents = rotateAgents.concat(alwaysAgents);
   // AGENT_ONLY=questions: dedicated question-quality workflow (questions data
   // checked out, site pages are not). Run only the agents that touch questions.

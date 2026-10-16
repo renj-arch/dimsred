@@ -170,11 +170,15 @@ return {
   loadDir: function (dirJson, entitiesText) {
     var d = dirJson;
     if (typeof dirJson === 'string') d = JSON.parse(dirJson);
-    var e = entitiesText ? new qb.EntityDir().load(entitiesText) : null;
+    // qb (ask-qb.js) is optional in the browser: pages that only use the LLM
+    // ask box load ask-answer.js without it. Unguarded it threw at load time
+    // ("reading 'EntityDir'/'scoreShard' of undefined") and killed this whole
+    // module on those pages (Papers pageerror, found by the browser eyes).
+    var e = (entitiesText && qb && qb.EntityDir) ? new qb.EntityDir().load(entitiesText) : null;
     return { dir: d, entityDir: e };
   },
 
-  scoreShard: qb.scoreShard,
+  scoreShard: (qb && qb.scoreShard) || function () { return []; },
 
   // Merge scored hits from several shards, dedupe, and cap per entity so one
   // prolific entity cannot fill the whole answer.
