@@ -63,3 +63,11 @@ console.log('Built: ' + all.length + ' questions, ' + Object.keys(bySubject).len
 Object.keys(bySubject).sort(function(a,b){return bySubject[b]-bySubject[a]}).slice(0,15).forEach(function(s){
   console.log('  ' + s + ': ' + bySubject[s]);
 });
+// Self-validation: a degraded bank (like the stale 4-subject one) must fail
+// loudly, never publish quietly. The agent's eyes check presence; this checks
+// substance at build time.
+if (all.length < 1000 || Object.keys(bySubject).length < 20) {
+  console.error('BUILD REJECTED: only ' + all.length + ' questions across ' + Object.keys(bySubject).length + ' subjects (need 1000+/20+)');
+  try { fs.unlinkSync(outFile); } catch (e) { /* ignore */ }
+  process.exit(1);
+}

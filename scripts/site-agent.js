@@ -2600,7 +2600,7 @@ async function agentSelfCheck() {
     'index.html', 'ask.html', 'papers.html', 'mega-test.html',
     'improve.html', 'science.html', 'polytechnic.html', 'mental.html', 'ssc-je.html',
     'js/mental-training.js', 'scripts/lib/ask-core.js', 'scripts/lib/ask-llm.js',
-    'data/papers.json', 'data/ask-index.json'
+    'data/papers.json', 'data/ask-index.json', 'data/mega-quiz.json'
   ];
   for (const f of criticalFiles) {
     // fileExistsAnywhere: fs.existsSync alone reports false for tracked
@@ -2609,6 +2609,19 @@ async function agentSelfCheck() {
       fixes.push({ page: f, fix: 'CRITICAL FILE MISSING', kind: 'critical' });
     }
   }
+  // Content sanity for the mega quiz bank (presence is not enough — a stale
+  // 4-subject build once shipped while the page 404d on missing data).
+  // Degraded bank = critical: mega-test has nothing to serve.
+  try {
+    if (fileExistsAnywhere('data/mega-quiz.json') && fs.existsSync('data/mega-quiz.json')) {
+      const mq = JSON.parse(fs.readFileSync('data/mega-quiz.json', 'utf8'));
+      const nq = ((mq && mq.questions) || []).length;
+      const ns = Object.keys((mq && mq.subjects) || {}).length;
+      if (nq < 1000 || ns < 20) {
+        fixes.push({ page: 'data/mega-quiz.json', fix: 'DEGRADED bank: ' + nq + ' questions across ' + ns + ' subjects (need 1000+/20+) — rebuild required', kind: 'critical' });
+      }
+    }
+  } catch (e) { /* unreadable treated as missing above when absent */ }
 
   // Read browser test results and fix issues found
   const btPath = 'data/browser-test.json';
