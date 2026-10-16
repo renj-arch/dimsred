@@ -67,12 +67,20 @@ async function testPage(browser, url, pageName, file) {
       // site bug the agent should "fix" on false evidence.
       if ((u + ' ' + text).match(/data\/questions\//i) && /404|failed to load|failed to fetch|not found/i.test(text)) {
         log(pageName, 'env-missing', text.substring(0, 200), u);
+      } else if (/writer-model\/version\.json/.test(u)) {
+        // Optional fine-tuned-model branch probe: a miss is the NORMAL state
+        // (no model trained yet) and by design changes nothing. Classify as
+        // env-missing so it never reads as a site bug.
+        log(pageName, 'env-missing', 'optional writer-model probe missed (normal)', u);
       } else {
         consoleErrors.push({ text: text, url: u });
       }
     }
   });
-  page.on('pageerror', err => pageErrors.push(err.message));
+  // Stacks, not just messages: "Unexpected string" and "reading 'classList'"
+  // without a file:line are unactionable guesses. err.stack names the exact
+  // script frame that threw.
+  page.on('pageerror', err => pageErrors.push({ msg: err.message, stack: String(err.stack || '') }));
   page.on('requestfailed', req => {
     const u = req.url();
     if (!u.includes('chrome-extension') && !u.includes('favicon')) {
@@ -84,7 +92,11 @@ async function testPage(browser, url, pageName, file) {
 
   try {
     const start = Date.now();
-    const resp = await page.goto(url, { waitUntil: 'networkidle', timeout: TIMEOUT });
+    // domcontentloaded + bounded network settle, NOT networkidle as the gate:
+    // pages with a long-poll/CDN fetch (mental.html) never reach networkidle
+    // and were marked load-error although they render fine for users.
+    const resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+    await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {});
     pageResult.loadTime = Date.now() - start;
     pageResult.status = resp ? resp.status() : 0;
 
@@ -101,7 +113,7 @@ async function testPage(browser, url, pageName, file) {
     // Check page errors (uncaught exceptions)
     for (const err of pageErrors) {
       pageResult.pageErrors++;
-      log(pageName, 'js-error', err.substring(0, 200));
+      log(pageName, 'js-error', String(err.msg || '').substring(0, 200), String(err.stack || '').substring(0, 500));
     }
 
     // Check failed requests (broken scripts, images, data). data/questions
@@ -115,6 +127,17 @@ async function testPage(browser, url, pageName, file) {
         log(pageName, 'broken-request', req.substring(0, 200));
       }
     }
+
+    // Dismiss first-visit overlays (streak toast "Got it" etc.) before any
+    // click sweeps — an overlay intercepts clicks and healthy tabs/buttons
+    // then time out as "broken" (Homepage lost 3 tabs to this).
+    try {
+      const gotIt = await page.$('button:has-text("Got it"), [class*="toast"] button, [class*="popup"] button');
+      if (gotIt && await gotIt.isVisible().catch(() => false)) {
+        await gotIt.click({ timeout: 2000 }).catch(() => {});
+        await page.waitForTimeout(300);
+      }
+    } catch (e) { /* no overlay */ }
 
     // Drive the quiz flow where one exists: answer + Next repeatedly. This is
     // the interaction class static checks never catch (a Next button that
@@ -256,10 +279,11 @@ async function testMobilePage(context, url, pageName) {
       }
     }
   });
-  page.on('pageerror', err => pageErrors.push(err.message));
+  page.on('pageerror', err => pageErrors.push({ msg: err.message, stack: String(err.stack || '') }));
   let bad = false;
   try {
-    const resp = await page.goto(url, { waitUntil: 'networkidle', timeout: TIMEOUT });
+    const resp = await page.goto(url, { waitUntil: 'domcontentloaded', timeout: TIMEOUT });
+    await page.waitForLoadState('networkidle', { timeout: 8000 }).catch(() => {});
     if (resp && resp.status() >= 400) {
       log(pageName + ' (mobile)', 'mobile-load-error', 'HTTP ' + resp.status());
       bad = true;
@@ -269,7 +293,7 @@ async function testMobilePage(context, url, pageName) {
       bad = true;
     }
     for (const err of pageErrors.slice(0, 5)) {
-      log(pageName + ' (mobile)', 'mobile-js-error', err.substring(0, 160));
+      log(pageName + ' (mobile)', 'mobile-js-error', String(err.msg || '').substring(0, 160), String(err.stack || '').substring(0, 300));
       bad = true;
     }
     // Horizontal overflow: the classic phone breaker (content wider than the
