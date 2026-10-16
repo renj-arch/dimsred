@@ -55,13 +55,20 @@ async function testPage(browser, url, pageName, file) {
   page.on('console', msg => {
     if (msg.type() === 'error') {
       const text = msg.text();
+      // The console text of resource errors ("Failed to load resource...")
+      // does NOT contain the failing URL — it lives in msg.location(). Without
+      // it, 404 findings are unidentifiable (Ask Engine/Mega Test/Improve all
+      // showed bare "404" with empty detail). Capture it for classification
+      // and for the agent's repair step.
+      const loc = (typeof msg.location === 'function' ? msg.location() : null) || {};
+      const u = loc.url || '';
       // data/questions 404s in sparse CI checkouts surface as console
       // resource errors (not requestfailed): same env-missing class, never a
       // site bug the agent should "fix" on false evidence.
-      if (/data\/questions\//.test(text) && /404|failed to load|failed to fetch|not found/i.test(text)) {
-        log(pageName, 'env-missing', text.substring(0, 200));
+      if ((u + ' ' + text).match(/data\/questions\//i) && /404|failed to load|failed to fetch|not found/i.test(text)) {
+        log(pageName, 'env-missing', text.substring(0, 200), u);
       } else {
-        consoleErrors.push(text);
+        consoleErrors.push({ text: text, url: u });
       }
     }
   });
@@ -88,7 +95,7 @@ async function testPage(browser, url, pageName, file) {
     // Check console errors
     for (const err of consoleErrors) {
       pageResult.consoleErrors++;
-      log(pageName, 'console-error', err.substring(0, 200));
+      log(pageName, 'console-error', err.text.substring(0, 200), err.url);
     }
 
     // Check page errors (uncaught exceptions)
@@ -174,7 +181,16 @@ async function testPage(browser, url, pageName, file) {
         // Don't actually click navigation buttons — just verify they're clickable
         const enabled = await btn.isEnabled().catch(() => true);
         if (!enabled) {
-          log(pageName, 'disabled-button', '"' + text.trim().substring(0, 30) + '" is disabled');
+          const t = text.trim();
+          // Benign-at-load disabled states (verified by design, not bugs):
+          // - Pagination "Prev": disabled on page 1 by definition (hubs open
+          //   on page 1; flagging it every run was pure noise).
+          // - Flowchart action buttons: disabled until a topic/hero is
+          //   selected ("Open this topic's full timeline profile", "Toggle
+          //   UPSC revision notes for this topic", shrink-with-nothing-expanded).
+          const benign = /^(◀|←|«)?\s*(prev|previous)\b/i.test(t) ||
+            t === 'Revision' || t === 'Open in timeline map' || t === '↺ Shrink';
+          if (!benign) log(pageName, 'disabled-button', '"' + t.substring(0, 30) + '" is disabled');
         }
       } catch (e) { /* skip */ }
     }

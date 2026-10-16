@@ -9,12 +9,11 @@ name: Site Agent
 # Fully free: Ollama on the runner CPU, zero API keys.
 
 on:
-  schedule:
-    # HOURLY + rotation = continuous coverage. Each run takes the next
-    # 4 agents; over 14 agents every capability gets a turn within ~4 hours.
-    - cron: '55 * * * *'
-  # NO push trigger: the agent commits changes which used to re-trigger
-  # this workflow, queueing doomed runs behind each other all day.
+  # NO hourly cron: GitHub throttles schedules here to a 3-5h effective
+  # cadence, and cancel-in-progress made each late scheduled run KILL an
+  # in-progress chained run mid-publish. The Agent Chain workflow now
+  # dispatches the next run the moment one completes (back-to-back cycles),
+  # with a 6h seed cron as dead-man switch. Manual runs still allowed here.
   workflow_dispatch:
 
 concurrency:

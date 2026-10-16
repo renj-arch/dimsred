@@ -1,0 +1,56 @@
+name: Agent Chain
+
+# GitHub throttles scheduled workflows on busy public repos: the hourly cron
+# on site-agent.yml actually delivered runs every 3-5 hours, and half of them
+# died at the 120-min cap from wedge timeouts. "Continuous" must not depend on
+# the schedule service. This chain fires when a Site Agent run COMPLETES and
+# dispatches the next one immediately — back-to-back cycles with no gap beyond
+# a 17GB model pull. The 6-hour seed cron is a dead-man switch: if the chain
+# ever breaks (API failure, workflow disabled), it restarts the loop.
+#
+# Off switch: repo variable AGENT_CHAIN = "off" (Settings > Variables) stops
+# all future dispatches — the loop drains and stays stopped.
+#
+# The idle check prevents a second run entering site-agent's concurrency group
+# (cancel-in-progress: true would kill an in-progress run mid-publish).
+
+on:
+  workflow_run:
+    workflows: ["Site Agent"]
+    types: [completed]
+  schedule:
+    - cron: '0 */6 * * *'
+
+concurrency:
+  group: agent-chain
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+
+jobs:
+  chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch next Site Agent run (only when idle)
+        if: vars.AGENT_CHAIN != 'off'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REPO="${{ github.repository }}"
+          BUSY=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/runs?status=in_progress" \
+            | jq -r '.total_count')
+          if [ "$BUSY" != "0" ] && [ "$BUSY" != "null" ]; then
+            echo "site-agent already running ($BUSY in progress) — not dispatching"
+            exit 0
+          fi
+          CODE=$(curl -s -o /tmp/resp.json -w '%{http_code}' -X POST \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/dispatches" \
+            -d '{"ref":"main"}')
+          echo "dispatch HTTP $CODE"
+          if [ "$CODE" != "204" ]; then cat /tmp/resp.json; exit 1; fi
+          echo "next Site Agent run dispatched"
