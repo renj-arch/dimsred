@@ -286,13 +286,15 @@ function renderPaperGrid() {
     card.className = 'paper-card';
     card.innerHTML = '<div class="exam-badge">' + p.exam + '</div>' +
       '<div class="paper-title">' + p.year + ' ' + p.type + (p.subject ? ' — ' + p.subject : '') + '</div>' +
-      '<div class="paper-meta">' + qCount + ' questions' + (p.cutoff ? ' · Cutoff: ' + p.cutoff : '') + '</div>';
+      '<div class="paper-meta">' + qCount + ' questions' + (p.cutoff ? ' · Cutoff: ' + p.cutoff : '') +
+      (p.official ? ' · <span style="color:#34d399">● official paper</span>' : '') + '</div>';
     card.onclick = function() { openPaper(p.id); };
     grid.appendChild(card);
   });
 }
 
 function openPaper(paperId) {
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
   currentPaper = ALL_PAPERS[paperId];
   currentPaper.id = paperId;
   answeredSet = new Set();
@@ -302,7 +304,9 @@ function openPaper(paperId) {
   document.getElementById('emptyState').style.display = 'none';
   document.getElementById('paperView').style.display = 'block';
   document.getElementById('paperTitle').textContent = currentPaper.year + ' ' + currentPaper.exam + ' ' + currentPaper.type;
-  document.getElementById('paperMeta').textContent = (currentPaper.subject || '') + ' · ' + (currentPaper.questions ? currentPaper.questions.length : 0) + ' questions' + (currentPaper.cutoff ? ' · Cutoff: ' + currentPaper.cutoff : '');
+  document.getElementById('paperMeta').innerHTML = esc(currentPaper.subject || '') + ' · ' + (currentPaper.questions ? currentPaper.questions.length : 0) + ' questions' + (currentPaper.cutoff ? ' · Cutoff: ' + esc(String(currentPaper.cutoff)) : '') +
+    (currentPaper.official ? ' · <span style="color:#34d399">● official paper</span>' : '') +
+    (currentPaper.officialPdf ? ' · <a href="' + esc(currentPaper.officialPdf) + '" target="_blank" rel="noopener" style="color:#60a5fa">Official PDF</a>' : '');
   buildSubjectFilter();
   renderQuestions();
   updateStats();

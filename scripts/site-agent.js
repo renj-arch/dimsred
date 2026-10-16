@@ -2129,11 +2129,15 @@ const EXAMINER_STYLE = 'Voice: a beloved examiner coaching a serious aspirant �
 // gap progressively: complete partial papers first, then the next missing
 // exam slot, enriching up to 8 explanations per run.
 //
-// HONESTY RULES (hard): assembled papers are labeled source:corpus-assembled
-// + official:false with officialPdf/cutoff null (the page renders those as
-// absent). Never invent official PDFs, cutoffs, or "real" questions the corpus
-// cannot verify — only add questions WITH corpus answers, and explain
-// consistently with them. A partial honest paper beats a complete fake one.
+// HONESTY RULES (hard, official-only): papers.html carries ONLY real official
+// papers. Corpus-assembled filler is FORBIDDEN - the old subject-matching
+// path is deleted, not skipped. A question enters papers.json ONLY with
+// official provenance (pyqExam + pyqYear set by the official-paper ingestor
+// from QP + answer-key PDFs). Text-sniffing "pyq"/"previous year" is proven
+// noise (matches game-sales trivia) and must never qualify anything.
+// officialPdf/cutoff stay null unless the exact official values are known
+// (the page renders them as absent). Explanations are 27B-derived and tagged.
+// A partial honest paper beats a complete fake one, always.
 const PAPERS_WANT = [
   { id: 'upsc-prelims-2023-gs1', exam: 'UPSC', year: 2023, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200, match: ['polity', 'history', 'geography', 'economy', 'environment', 'science'] },
   { id: 'upsc-prelims-2024-gs1', exam: 'UPSC', year: 2024, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200, match: ['polity', 'history', 'geography', 'economy', 'environment', 'science'] },
@@ -2162,76 +2166,27 @@ async function agentPapers() {
   const haveIds = new Set();
   for (const p of papers.papers) for (const q of (p.questions || [])) if (q && q.id) haveIds.add(q.id);
 
-  // Target: first incomplete known paper, else first missing WANT slot.
-  let target = papers.papers.find(p => (p.questions || []).length < (p.totalQuestions || p.target || 100));
-  let isNew = false;
-  if (!target) {
-    const havePapers = new Set(papers.papers.map(p => p.id));
-    const slot = PAPERS_WANT.find(s => !havePapers.has(s.id));
-    if (!slot) { console.log('agent: Papers — all ' + PAPERS_WANT.length + ' wanted slots filled'); return { agent: 'papers', fixes: fixes }; }
-    target = {
-      id: slot.id, exam: slot.exam, year: slot.year, paper: slot.paper,
-      totalQuestions: slot.target, duration: slot.duration, marks: slot.marks,
-      cutoff: null, officialPdf: null, source: 'corpus-assembled', official: false,
-      questions: []
-    };
-    papers.papers.push(target);
-    isNew = true;
-  }
-  const slot = PAPERS_WANT.find(s => s.id === target.id) || { match: [], target: target.totalQuestions || 100 };
-  const need = (target.totalQuestions || slot.target || 100) - target.questions.length;
-  console.log('agent: Papers — target ' + target.id + ' (' + target.questions.length + '/' + (target.totalQuestions || slot.target) + ')' + (isNew ? ' [new slot]' : ''));
+  // Target: first incomplete paper. Explanations for its verified
+  // questions are progress that needs no new questions. Question INTAKE is
+  // the official-paper ingestor's job exclusively - this agent NEVER adds
+  // questions (no mining, no filler, official-only).
+  const target = papers.papers.find(p => (p.questions || []).length < (p.totalQuestions || 100));
 
-  // Mine candidates: rotating file offset, subject match, pyq first.
-  const files = fs.readdirSync('data/questions').filter(f => f.endsWith('.json') && f !== '00-27b-archive.json');
-  const startAt = files.length ? Math.floor(Date.now() / 3600000) % files.length : 0;
-  const matchers = (slot.match || []).map(m => m.toLowerCase());
-  const cands = [], seenText = (target.questions || []).map(q => q.q || q.question || '');
-  const t0 = Date.now();
-  let added = 0;
-  for (let i = 0; i < files.length && added < 12 && Date.now() - t0 < 90000; i++) {
-    const f = files[(startAt + i) % files.length];
-    let d;
-    try { d = JSON.parse(fs.readFileSync('data/questions/' + f, 'utf8')); } catch (e) { continue; }
-    for (const top of Object.values(d)) {
-      const subs = (top && top.subSubjects) || {};
-      for (const arr of Object.values(subs)) {
-        if (!Array.isArray(arr)) continue;
-        for (const q of arr) {
-          if (!q || !q.id || !q.question || !q.answer || haveIds.has(q.id)) continue;
-          const cat = ((q.category || '') + ' ' + (q.subject || '')).toLowerCase();
-          if (matchers.length && !matchers.some(m => cat.indexOf(m) !== -1)) continue;
-          const raw = JSON.stringify(q).toLowerCase();
-          const pyq = raw.indexOf('pyq') !== -1 || raw.indexOf('previous year') !== -1;
-          if (seenText.some(t => paperOverlap(q.question, t) > 0.7)) continue;
-          cands.push({ q: q, pyq: pyq });
-        }
-      }
-    }
+  // Coverage report vs WANT (informational only). Missing slots await the
+  // ingestor; this agent enriches whatever exists.
+  {
+    const havePapers = new Set(papers.papers.map(p => p.id));
+    const missing = PAPERS_WANT.filter(s => !havePapers.has(s.id)).map(s => s.id);
+    const partial = papers.papers
+      .filter(p => (p.questions || []).length < (p.totalQuestions || 100))
+      .map(p => p.id + ' ' + (p.questions || []).length + '/' + (p.totalQuestions || 100));
+    console.log('agent: Papers - ' + papers.papers.length + '/' + PAPERS_WANT.length + ' slots present' +
+      (partial.length ? '; partial: ' + partial.join(', ') : '; all complete') +
+      (missing.length ? '; missing (awaiting ingestion): ' + missing.slice(0, 6).join(', ') + (missing.length > 6 ? ',...' : '') : ''));
   }
-  cands.sort((a, b) => (b.pyq ? 1 : 0) - (a.pyq ? 1 : 0));
-  for (const c of cands.slice(0, Math.min(12, Math.max(0, need)))) {
-    const q = c.q;
-    // Re-check overlap here (not just at collect time): two candidates from
-    // the same batch can near-duplicate each other.
-    if (seenText.some(t => paperOverlap(q.question, t) > 0.7)) continue;
-    if (haveIds.has(q.id)) continue;
-    target.questions.push({
-      n: target.questions.length + 1,
-      id: q.id,
-      q: q.question,
-      options: q.options || null,
-      subject: q.subject || q.category || '',
-      answer: q.answer,
-      explain: (q.explain && q.explain.length >= 150) ? q.explain : null
-    });
-    haveIds.add(q.id);
-    seenText.push(q.question);
-    added++;
-  }
-  if (added) {
-    const addedQs = target.questions.slice(-added).slice(0, 2).map(q => 'Q: ' + (q.q || '').slice(0, 120) + ' | A: ' + String(q.answer || '').slice(0, 60)).join('\n');
-    fixes.push({ page: 'data/papers.json', fix: (isNew ? 'Started paper ' : 'Extended paper ') + target.id + ' (+' + added + ' questions, now ' + target.questions.length + '/' + (target.totalQuestions || slot.target) + ')', text: addedQs.slice(0, 600) });
+  if (!target) {
+    console.log('agent: Papers - all known papers complete, nothing to enrich');
+    return { agent: 'papers', fixes: fixes };
   }
 
   // Enrich: detailed 27B explanations for questions lacking them (cap 8/run).
@@ -2263,7 +2218,7 @@ async function agentPapers() {
     fixes.push({ page: 'data/papers.json', fix: 'Wrote ' + enriched + ' detailed 27B explanation(s) in ' + target.id, text: exPreview.slice(0, 800) });
   }
   saveJson('data/papers.json', papers);
-  console.log('agent: Papers — +' + added + ' questions, +' + enriched + ' explanations in ' + target.id);
+  console.log('agent: Papers — +' + enriched + ' explanations in ' + target.id + ' (official-only intake)');
   return { agent: 'papers', fixes: fixes };
 }
 
