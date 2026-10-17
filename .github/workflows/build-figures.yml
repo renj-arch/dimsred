@@ -277,6 +277,14 @@ jobs:
           PUBLISH_PER_PAGE: '200'
         run: node scripts/build-figure-pages.js
 
+      # The Ask page's figure strip reads a slim projection of the ledger above,
+      # not the gallery itself. Offline, cheap and idempotent: an unchanged
+      # projection writes nothing, so this can run beside every publish.
+      - name: Build compact Ask figures index
+        if: inputs.commit == 'true' || github.event_name == 'schedule'
+        continue-on-error: true
+        run: node scripts/build-ask-figures.js
+
       # Deliberately manual. All three are continue-on-error and none can run on
       # a schedule, because none is idempotent -- a timed stamp run would rewrite
       # dates forever, and a timed SVG mutation would edit content on every tick.
@@ -355,6 +363,7 @@ jobs:
             figures/ \
             data/figure-candidates.json \
             data/figure-published.json \
+            data/ask-figures.json \
             data/figure-files-auto.json \
             data/figure-files-curated.json \
             data/figure-topics-curated.json \

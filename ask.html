@@ -108,6 +108,7 @@ h1{font-size:24px;margin:6px 0 8px}
 <script src="scripts/lib/ask-synthesize.js"></script>
 <script src="scripts/lib/ask-browser.js"></script>
 <script src="scripts/lib/ask-llm.js"></script>
+<script src="scripts/lib/ask-figures.js"></script>
 <script src="scripts/lib/ask-dataset.js"></script>
 <script src="scripts/lib/ask-fulltext.js"></script>
 <script src="scripts/lib/ask-archive.js"></script>
@@ -712,10 +713,44 @@ h += '<div class="diag"><span>looked up: ' +
 esc(out.expanded.terms.join(', ')) + '</span></div>';
 }
 
+// Sentences the model marked (background) are its own knowledge, not corpus
+// facts. The reader asked to tell the two apart at a glance, so each marked
+// sentence is set in amber with a dashed underline, and a legend above the
+// sections explains the marking. The sentence split is manual because a
+// lookbehind regex would fail to PARSE on older browsers and take this whole
+// script down with it.
+function bgRender(line) {
+var parts = [];
+var text = String(line);
+var start = 0;
+for (var i = 0; i < text.length; i++) {
+var ch = text.charAt(i);
+if ((ch === '.' || ch === '!' || ch === '?') && text.charAt(i + 1) === ' ') {
+parts.push(text.slice(start, i + 1));
+start = i + 2;
+i++;
+}
+}
+if (start < text.length) parts.push(text.slice(start));
+var html = parts.map(function (s) {
+if (/\(background\)/i.test(s)) {
+var clean = s.replace(/\s*\(background\)\.?\s*$/i, '');
+return '<span class="ask-bg" style="border-bottom:1px dashed #f59e0b;background:rgba(245,158,11,.07);padding:0 2px" title="Added by the tutor: general knowledge, not from your corpus">' + esc(clean) + '</span>';
+}
+return esc(s);
+}).join(' ');
+return html;
+}
+
+if (/\(background\)/i.test(out.raw || '')) {
+h += '<div class="diag"><span>legend: [n] cites your corpus</span>' +
+'<span style="color:#f59e0b">&#10133; amber = tutor&rsquo;s addition, beyond the corpus</span></div>';
+}
+
 out.sections.forEach(function (s) {
 h += '<h3>' + esc(s.heading) + '</h3>';
 s.lines.forEach(function (line) {
-h += '<p>' + esc(line) + '</p>';
+h += '<p>' + bgRender(line) + '</p>';
 });
 });
 
@@ -768,8 +803,8 @@ var hasBackground = /\(background\)/i.test(rawText);
 h += '<p class="reason">The prose above was written by a small model running in ' +
 'this browser: it analysed the retrieved corpus facts and wrote in its own ' +
 'words, citing each fact it used as [n].' +
-(hasBackground ? ' Sentences marked (background) are the model\'s own general ' +
-'knowledge, not from the corpus. ' : ' ') +
+(hasBackground ? ' Points set in amber are the model\'s own general ' +
+'knowledge, added to complete the answer; they are not from the corpus. ' : ' ') +
 'Check every claim against its reference before using it.</p>';
 h += '</div></div>';
 return h;
@@ -1197,6 +1232,14 @@ updateStatus();
 QB_ERROR = err;
 updateStatus();
 });
+
+// Figures: every answer render path gets a matched "Sketches for your
+// write-up" strip appended. Watching the output pane covers the model path,
+// the mains path, the question bank and the timeline fallback in one place,
+// so a future renderer inherits it without remembering to ask.
+if (window.VlymbooqAskFigures) {
+VlymbooqAskFigures.watch(el('out'), function () { return STATE.question; });
+}
 
 // The index is two layers. `ask-index.json` is the small file: the dropped-title
 // table a refusal needs, the category histogram and the links. The quotable

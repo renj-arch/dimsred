@@ -442,10 +442,14 @@ function buildPrompt(question, facts) {
     '- Every specific claim (number, name, date, event) must cite the fact that',
     '  supports it: put the fact number in brackets after the claim, like [2]',
     '  or [2][5]. The page shows readers exactly which sources you used.',
-    '- You MAY add brief, well-accepted background knowledge (context, standard',
-    '  definitions, widely known interpretations) to make the argument flow.',
-    '  End any such sentence with (background) so the reader knows it is your',
-    '  own knowledge, not the retrieved facts.',
+    '- Completeness matters: an examiner should find every part of the question',
+    '  addressed, including angles the fetched facts missed.',
+    '- You MAY add up to three well-accepted, exam-relevant points beyond the',
+    '  facts (standard context, definitions, schemes, examples a model answer',
+    '  would carry). End each such sentence with (background) so the reader',
+    '  knows it is your own knowledge, not the retrieved facts.',
+    '- Each (background) point must be safe, verifiable general knowledge.',
+    '  When unsure of a specific number or date, make the point without it.',
     '- Never invent a number, name, or event — cited or not.',
     '- Do NOT write a References section; the page lists the cited facts for you.',
     '- If the facts are too thin to answer, say exactly what is missing.'
@@ -596,8 +600,11 @@ function buildWritePrompt(question, facts, plan) {
     'Rules:',
     '- Every specific claim (number, name, date, event) must cite its fact:',
     '  put the fact number in brackets after the claim, like [2] or [2][5].',
-    '- You MAY add brief, well-accepted background knowledge to make the',
-    '  argument flow; end any such sentence with (background).',
+    '- Completeness matters: address every part of the question, including',
+    '  angles the facts missed.',
+    '- You MAY add up to three well-accepted, exam-relevant points beyond the',
+    '  facts; end each such sentence with (background). Prefer safe general',
+    '  knowledge over risky specifics; never invent numbers or names.',
     '- Never invent a number, name, or event -- cited or not.',
     '- Do NOT write a References section; the page lists the cited facts.',
     '- No bullet fragments, no numbered lists, no headings inside sections.'
@@ -641,9 +648,10 @@ function synthesize(question, facts, opts) {
   return ensureEngine(onProgress).then(function (eng) {
     // 900 tokens stopped a full Introduction/Challenges/Way-forward answer
     // mid-sentence -- the caller never saw finish_reason, so the page rendered
-    // a paragraph that simply ended. 1600 covers the shape the prompts ask
-    // for, and the continuation below catches whatever still does not fit.
-    var cap = opts.maxTokens || 1600;
+    // a paragraph that simply ended. The prompts now also invite up to three
+    // (background) additions for completeness, so 2000 covers the shape; the
+    // continuation below catches whatever still does not fit.
+    var cap = opts.maxTokens || 2000;
     var temp = opts.temperature == null ? 0.3 : opts.temperature;
 
     function generate(prompt, tokens, t) {
