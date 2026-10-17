@@ -1,0 +1,45 @@
+name: Build Lectures
+
+# Recompiles data/lectures.json from the topic graph (topic-layers +
+# revision-content + person-bios). The build is deterministic, so a week with
+# no upstream change produces no diff and ci-push exits 0. lecture.html reads
+# the file directly — a merged commit is all it takes to update the library.
+
+on:
+  schedule:
+    - cron: '47 6 * * 2'   # weekly, Tuesday
+  workflow_dispatch:
+
+concurrency:
+  group: build-lectures
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Compile lectures
+        run: node scripts/build-lectures.js
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/lectures.json
+          bash scripts/ci-push.sh "lectures: rebuild spoken lecture library (run #${{ github.run_number }})"

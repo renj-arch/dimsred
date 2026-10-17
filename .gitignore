@@ -181,6 +181,10 @@ upsc_sorted_topics.csv
 # the page silently falls back to its built-ins, so an upgrade would never
 # reach visitors.
 !data/webllm-models.json
+# Spoken lectures (scripts/build-lectures.js, weekly build-lectures workflow):
+# compiled from the topic graph, read by lecture.html. Same trap as above --
+# un-allowlisted it never gets committed and the lecture library stays empty.
+!data/lectures.json
 
 # Python bytecode from local train/finetune.py checks
 __pycache__/
