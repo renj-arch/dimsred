@@ -144,6 +144,10 @@ jobs:
           AGENT_ROTATE: '4'
           # Single pass, not --loop.
           AGENT_MAX_CYCLES: '1'
+          # Wall-clock guard: stop starting LLM work 120 min in so the job's
+          # publish step always runs (job cap 240; the pull can eat 80).
+          # Skipped agents rotate in on the next run.
+          AGENT_DEADLINE_MIN: '120'
           NODE_OPTIONS: '--max-old-space-size=2048'
         run: node scripts/site-agent.js
 

@@ -130,6 +130,12 @@ jobs:
           NODE_OPTIONS: '--max-old-space-size=2048'
           # Signals site-agent.js to run ONLY the Questions+Content agents
           AGENT_ONLY: questions
+          # Wall-clock deadline. A run killed by the 6h job timeout publishes
+          # NOTHING (every fix lost). Typical pre-agent cost: checkout+swap+
+          # pull ~35-90 min; archive+quiz steps after need ~80-130 min. Past
+          # this the agent stops starting new LLM work so the run still
+          # reaches its publish step; skipped work rotates in next run.
+          AGENT_DEADLINE_MIN: '130'
         run: node scripts/site-agent.js
 
       # 27B writes finished model answers into the archive (categorized under
