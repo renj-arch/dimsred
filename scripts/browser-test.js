@@ -235,11 +235,16 @@ async function testPage(browser, url, pageName, file) {
           return {
             hidden: cs.display === 'none' || cs.visibility === 'hidden' || r.width === 0 || r.height === 0,
             disabled: !!el.disabled,
+            // Animated/decorative elements (homepage stat counters bounce via
+            // CSS animation) never reach Playwright's "stable" check and read
+            // as broken tabs after an 8s timeout. They are not tabs.
+            skip: (el.classList && el.classList.contains('stat-number')) ||
+                  (cs.animationName !== 'none' && cs.animationPlayState === 'running'),
             label: el.tagName + (el.id ? '#' + el.id : '') + (el.className ? '.' + String(el.className).split(' ')[0] : '')
           };
         });
         tabLabel = state.label;
-        if (state.hidden || state.disabled) continue;
+        if (state.hidden || state.disabled || state.skip) continue;
         const before = await page.url();
         await tab.click({ timeout: 8000 });
         await page.waitForTimeout(500);
