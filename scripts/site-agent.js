@@ -47,6 +47,19 @@ const LOG = 'data/agent-log.json';
 // one of those "improvements" broke generation.
 const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
 
+// ── Wall-clock deadline (AGENT_DEADLINE_MIN) ──
+// A run killed by its GitHub job timeout publishes NOTHING — every fix is
+// lost, which is worse than doing less work. Past this many minutes (counted
+// from the true run start in main()), callLLM refuses new prompts so agents
+// unwind, their saves flush, and the workflow still reaches its publish
+// step. Skipped work simply rotates in on the next run. Rule-based agents
+// (SEO/Perf/A11Y/…) never call the model and always run. 0/unset disables.
+const DEADLINE_MIN = parseFloat(process.env.AGENT_DEADLINE_MIN || '0') || 0;
+let deadlineAnchor = Date.now();
+function pastDeadline() {
+  return DEADLINE_MIN > 0 && Date.now() - deadlineAnchor > DEADLINE_MIN * 60000;
+}
+
 // One HTTP attempt at the chat endpoint, STREAMING via spawn + monitor.
 // History of this transport (each failure taught one clause):
 // - stream:false returns zero bytes until all ~2048 tokens finish (15-35 min
@@ -79,13 +92,13 @@ function ollamaChat(payload) {
     let lastByteAt = Date.now();
     let settled = false;
 
-    function fail(why) {
+    function fail(why, status) {
       if (settled) return;
       settled = true;
       clearInterval(mon);
       try { child.kill('SIGKILL'); } catch (e) { /* ignore */ }
       const err = new Error('stream monitor: ' + why);
-      err.status = 28; // same class as curl timeout -> restart+retry policy
+      err.status = status === undefined ? 28 : status; // 28 = curl-timeout class (restart+retry); other = plain fail
       err.stdout = out.slice(0, 2000);
       err.stderr = stderr.slice(0, 400);
       reject(err);
@@ -93,6 +106,11 @@ function ollamaChat(payload) {
 
     const mon = setInterval(() => {
       const now = Date.now();
+      // Deadline abort: when AGENT_DEADLINE_MIN is set and reached while a
+      // call is in flight, end the stream NOW with a custom status so
+      // callLLM does NOT do the exit-28 restart+retry dance. The abandoned
+      // server-side generation finishes on its own; nothing new starts.
+      if (pastDeadline()) return fail('agent deadline reached mid-call', 'DEADLINE');
       if (now - started > 95 * 60 * 1000) return fail('hard cap 95min');
       if (!firstByteAt) {
         if (now - started > 25 * 60 * 1000) return fail('no first byte in 25min (cold load/prompt eval over budget)');
@@ -180,6 +198,9 @@ function logModelState(tag) {
 }
 
 async function callLLM(system, user, maxTokens) {
+  if (pastDeadline()) {
+    throw new Error('AGENT_DEADLINE_REACHED (' + DEADLINE_MIN + 'min) — refusing new LLM work so the run can publish; skipped work rotates in next run');
+  }
   const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
   // Recall: the agent records lessons/addRules/addWins every run but long
   // ago stopped READING them (amnesia — same mistakes repeated). For
@@ -3067,6 +3088,7 @@ async function main() {
   log.model = model;
   console.log('agent: using model ' + model);
   const runStart = Date.now();
+  deadlineAnchor = runStart; // deadline counts from the real run start, not module load
 
   // FIRST action: one real generation call. Proves the server can
   // load+generate before any filesystem work. If this fails, skip the LLM
@@ -3212,8 +3234,14 @@ async function main() {
   }
   } // end else (rotation fallback)
   console.log('agent: will run ' + agents.length + ' agent(s): ' + agents.map(([n]) => n).join(', '));
+  if (DEADLINE_MIN > 0) console.log('agent: deadline ' + DEADLINE_MIN + 'min from run start — LLM agents skipped past it, rule agents still run');
 
   for (const [name, fn] of agents) {
+    if (pastDeadline() && !ruleAgents.some(([n]) => n === name)) {
+      console.log('agent: SKIP ' + name + ' — ' + DEADLINE_MIN + 'min deadline reached; publishing what is done (rotates next run)');
+      results.push({ agent: name.toLowerCase(), fixes: [], skipped: 'deadline' });
+      continue;
+    }
     const t0 = Date.now();
     // Log BEFORE each agent so the 5-10 min of CPU inference is visible
     // in the logs instead of looking like a hang (runs #56-#60 looked dead
