@@ -10,6 +10,13 @@ try {
   cglPractice = JSON.parse(fs.readFileSync(path.join(__dirname, 'course-practice.json'), 'utf-8'));
 } catch(e) { /* content files optional */ }
 
+// When set ("module/slug,module/slug"), only those lessons are written. The
+// course-content expander regenerates exactly the pages it just fed: a full
+// exam regen would revert per-page repairs and one-off enrichments that exist
+// only in the committed pages (NEET biology practice blocks, UPSC topic
+// layers, selfcheck's nav/head repairs).
+var ONLY = (process.env.COURSE_ONLY_KEYS || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
 }
@@ -186,7 +193,10 @@ function generateExam(examKey) {
   idx += '        </script>\n';
   idx += '<div style="text-align:center;padding:30px 0"><a href="../index.html" class="btn btn-success">&#x2190; Back to ' + esc(cfg.examName) + ' Home</a> <a href="../../dashboard.html" class="btn btn-primary">&#x1f4ca; Dashboard</a></div>\n';
   idx += foot();
-  fs.writeFileSync(path.join(COURSE_DIR, 'index.html'), idx, 'utf-8');
+  // The index only lists titles and counts, which content never changes.
+  // Skipping it in filtered mode keeps the regen diff to exactly the lesson
+  // pages the expander filled.
+  if (!ONLY.length) fs.writeFileSync(path.join(COURSE_DIR, 'index.html'), idx, 'utf-8');
   console.log('[' + examKey + '] Wrote: course/index.html');
 
   // ========== LESSON PAGES ==========
@@ -200,6 +210,7 @@ function generateExam(examKey) {
     var lessons = mod.lessons;
     for (var li = 0; li < lessons.length; li++) {
       var lesson = lessons[li];
+      if (ONLY.length && ONLY.indexOf(mk + '/' + lesson.slug) === -1) continue;
 
       // Get content and practice (with cross-exam reuse)
       var altKeys = {reasoning:'reasoning', quant:'quant', english:'english', ga:'ga', gk:'ga', maths:'quant', aptitude:'reasoning', gs:'ga', csat:'quant', evs:'ga', language:'english', science:'ga', cdp:'ga'};
@@ -312,7 +323,12 @@ function generateExam(examKey) {
   console.log('[' + examKey + '] Done!');
 }
 
-// Generate for all exams
+// Generate for all exams -- or only the COURSE_EXAMS subset. Regenerating an
+// exam that was not touched is not harmless: pages hand-patched after their
+// last generation (the NEET biology practice blocks, for one) would revert to
+// the generator's output. The content expander regenerates only what it fed.
 var examKeys = Object.keys(configs);
+var only = (process.env.COURSE_EXAMS || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+if (only.length) examKeys = examKeys.filter(function (k) { return only.indexOf(k) !== -1; });
 examKeys.forEach(generateExam);
-console.log('\n=== All course pages generated! ===');
+console.log('\n=== Course pages generated: ' + (examKeys.join(', ') || 'none') + ' ===');
