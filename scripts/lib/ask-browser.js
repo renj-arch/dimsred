@@ -73,14 +73,27 @@ var QB = 'data/ask-qb/';
   // router already orders them by measured relevance, so the tail adds cost
   // without changing the answer.
   var MAX_SHARDS = 5;
-  var MAX_BYTES = 90 * 1024 * 1024;
+  // Per-question byte budget. It must clear the largest category (World
+  // Geography, ~155 MiB in 60 MiB parts): a budget below a category's size
+  // silently dropped the shard holding the answer -- every "monsoon in india"
+  // fetch skipped Meteorology & Climate and the question refused. A category is
+  // now taken part by part, so an oversized one is truncated rather than
+  // dropped.
+  var MAX_BYTES = 200 * 1024 * 1024;
 
   var state = { ready: false, error: null, dir: null, entityDir: null, concepts: null };
 
   function isCorpusShard(url) {
     var u = String(url);
     return u.indexOf('ask-qb/bucket/bucket.') !== -1 ||
-           u.indexOf('ask-qb/phrase/phrase.') !== -1;
+           u.indexOf('ask-qb/phrase/phrase.') !== -1 ||
+           // Category shards (ask-qb.N.json and their split parts) ride the same
+           // corpus branch. They are gitignored from main, the deploy target
+           // cannot hold the largest ones, and the CF direct upload has been
+           // skipped since the deploy secrets went missing -- so without this
+           // fallback every routed shard 404s in production and Ask answers
+           // from the thin timeline index instead of the corpus.
+           u.indexOf('ask-qb/ask-qb.') !== -1;
   }
 
   function get(url) {
@@ -265,23 +278,39 @@ bucketReady: function () { return !!state.buckets; },
       var cats = route.categories.slice(0, opts.maxShards || MAX_SHARDS);
 
       // Shards are already ordered by score, so the byte budget is spent on the
-      // most relevant ones and the remainder is reported as missing.
+      // most relevant ones. A category is taken part by part -- each part is at
+      // most 60 MiB by construction -- and whatever does not fit is reported as
+      // missing so the caller can fall back.
       var budget = opts.maxBytes || MAX_BYTES;
       var chosen = [];
-      var skipped = 0;
+      var missing = 0;
       cats.forEach(function (c) {
-        var bytes = c.cat.bytes || 0;
-        if (bytes > budget) { skipped++; return; }
-        budget -= bytes;
-        chosen.push(c);
+        var files = (c.cat.files && c.cat.files.length) ? c.cat.files : [c.cat.file];
+        var sizes = (c.cat.partBytes && c.cat.partBytes.length === files.length) ? c.cat.partBytes : null;
+        var take = [];
+        for (var i = 0; i < files.length; i++) {
+          var b = sizes ? sizes[i] : Math.ceil((c.cat.bytes || 0) / files.length);
+          if (b > budget) break;
+          budget -= b;
+          take.push(files[i]);
+        }
+        if (!take.length) { missing++; return; }
+        missing += files.length - take.length;
+        chosen.push({ cat: c.cat, files: take });
       });
 
-      var missing = skipped;
       var lists = [];
       var jobs = chosen.map(function (c) {
-        return loadShard(c.cat.file).then(function (out) {
-          if (out.missing || !out.rows) { missing++; return; }
-          lists.push(state.qb.scoreShard(out.rows, question, {
+        return Promise.all(c.files.map(function (f) { return loadShard(f); })).then(function (outs) {
+          var rows = [];
+          var gone = false;
+          outs.forEach(function (out) {
+            if (out.missing || !out.rows) { gone = true; return; }
+            rows = rows.concat(out.rows);
+          });
+          if (gone) missing++;
+          if (!rows.length) return;
+          lists.push(state.qb.scoreShard(rows, question, {
             conceptPhrases: route.phrases,
             jurisdiction: route.jurisdiction,
             subject: route.anchorSubject,

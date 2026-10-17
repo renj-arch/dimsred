@@ -18,11 +18,16 @@ name: Ask Question-Bank Build
 #   A self-dispatch gets a fresh runner with a full disk and a full 6 h budget,
 #   and cannot jeopardise the job that actually commits the question data.
 #
-# ONLY THE SMALL TABLES ARE COMMITTED. The 828 MB of evidence shards are
-# gitignored (.gitignore:60) and exceed GitHub's blob limits (largest shard
-# 57 MB). They are deleted after the tables are built. Keeping the freshness
-# check green does NOT mean the page can serve full-corpus evidence — that
-# needs Git LFS or external artifact storage, still undecided.
+# THE SMALL TABLES GO TO MAIN; THE EVIDENCE SHARDS GO TO THE `corpus` BRANCH.
+# The shards (~2 GB, gitignored at .gitignore:68) are split into <60 MiB parts
+# by build-ask-qb.js, force-pushed to `corpus` together with the bucket and
+# phrase trees, and read in production through ask-browser.js's
+# raw.githubusercontent fallback. Before this they were deleted after the
+# tables were built, and production fetched each routed category from the page
+# origin only to get 404s -- Ask then answered from the thin timeline index,
+# which is why hard questions refused with "its only quotable sentence is 3
+# words long". The freshness check staying green never meant the page could
+# serve full-corpus evidence; this step is what makes it mean that.
 
 on:
   workflow_dispatch:
@@ -96,6 +101,31 @@ jobs:
       - name: Build evidence shards
         run: node scripts/build-ask-qb.js
 
+      # The splitter writes the files production reads; a bug here reaches
+      # users only after the ~55-minute build and a corpus force-push. Cheap
+      # guard first: synthetic split round-trip, then every category in the
+      # manifest that this run just produced.
+      - name: Verify shard split and part integrity
+        run: |
+          node scripts/test-ask-shard-split.js
+          node -e "
+          const fs=require('fs'), path=require('path');
+          const b=require('./scripts/build-ask-qb.js');
+          const m=JSON.parse(fs.readFileSync('data/ask-qb/manifest.json','utf8'));
+          let parts=0, bad=0;
+          m.categories.forEach(c=>{
+            const files=c.files||[c.file];
+            files.forEach(f=>{
+              parts++;
+              if(!fs.existsSync(f)){ console.log('MISSING '+f); bad++; return; }
+              const sz=fs.statSync(f).size;
+              if(sz>b.PART_LIMIT){ console.log('OVER LIMIT '+f+' '+sz); bad++; }
+            });
+          });
+          console.log('categories: '+m.categories.length+'  part files: '+parts+'  bad: '+bad);
+          process.exit(bad?1:0);
+          "
+
       - name: Build entity directory
         run: node scripts/build-ask-qb-dir.js
 
@@ -121,12 +151,12 @@ jobs:
       - name: Build phrase index
         run: node --max-old-space-size=12288 scripts/build-ask-qb-phrases.js
 
-      # Free ~838 MB before the git ops. Nothing tracked is lost: the shards are
-      # gitignored and the four tables were derived from them above.
-      - name: Drop evidence shards
-        run: |
-          rm -f data/ask-qb/ask-qb.*.json
-          df -h /
+      # NO DROP STEP HERE ANY MORE. The evidence shards used to be deleted at
+      # this point because nothing downstream read them. The corpus push now
+      # ships them (production fetches category shards from the `corpus` branch
+      # via the raw fallback), and the runner reported 72 GB free at this point
+      # on run #24, so keeping ~2 GB around for the push is the safe side of
+      # the trade.
 
       # `!= 'false'`, not `== 'true'`: the `inputs` context is only populated for
       # workflow_dispatch, so on the cron backstop `inputs.commit` is empty and an
@@ -203,13 +233,25 @@ jobs:
           git reset --hard 2>/dev/null || git reset 2>/dev/null || true
           git checkout --orphan corpus-tmp 2>/dev/null || git checkout --orphan corpus-tmp-$$
           git reset
-          # -f is REQUIRED: .gitignore lines data/ask-qb/bucket/* and
-          # data/ask-qb/phrase/* keep these artefacts off main, and a plain
-          # `git add` of an ignored directory silently adds nothing (only the
-          # un-ignored buckets.json manifest ever landed -- run #19's "corpus"
-          # branch was 200 KB, not 2 GB). The ignore rules protect main; this
-          # orphan branch is exactly where the shards belong.
-          git add -f data/ask-qb/bucket data/ask-qb/phrase
+          # -f is REQUIRED: .gitignore lines data/ask-qb/bucket/*,
+          # data/ask-qb/phrase/* and data/ask-qb/ask-qb.*.json keep these
+          # artefacts off main, and a plain `git add` of an ignored directory
+          # silently adds nothing (only the un-ignored buckets.json manifest
+          # ever landed -- run #19's "corpus" branch was 200 KB, not 2 GB). The
+          # ignore rules protect main; this orphan branch is exactly where the
+          # shards belong.
+          #
+          # The category shards ride this branch because they cannot ride main:
+          # the largest are ~160 MB against GitHub's 100 MB blob limit, and
+          # their absence is why production Ask refused hard questions -- the
+          # browser fetched each routed category from the page origin, got
+          # 404s, and fell back to the thin timeline index. build-ask-qb.js
+          # splits anything over 60 MiB into .pN.json parts, and ask-browser.js
+          # falls back to raw.githubusercontent for them exactly as it already
+          # did for bucket and phrase shards.
+          ls -la data/ask-qb/ask-qb.*.json 2>/dev/null | tail -3 || echo "WARNING: no category-shard files matched ask-qb.*.json"
+          ls -la data/ask-qb/bucket/bucket.0.json 2>/dev/null || echo "WARNING: no bucket files present"
+          git add -f data/ask-qb/bucket data/ask-qb/phrase data/ask-qb/ask-qb.*.json
           git commit -m "Ask corpus $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
           git branch -f corpus HEAD
           pushed=0

@@ -59,13 +59,17 @@ function main() {
   var t0 = Date.now();
 
   manifest.categories.forEach(function (cat) {
-    var m = /ask-qb\.(\d+)\.json$/.exec(cat.file);
-    if (!m) return;
-    var p = path.join(ROOT, cat.file);
-    if (!fs.existsSync(p)) { stats.missing++; return; }
-    var rows;
-    try { rows = JSON.parse(fs.readFileSync(p, 'utf8')); }
-    catch (e) { stats.missing++; return; }
+    var files = cat.files || [cat.file];
+    if (!files.length) return;
+    var rows = [];
+    var any = false;
+    files.forEach(function (f) {
+      var p = path.join(ROOT, f);
+      if (!fs.existsSync(p)) { stats.missing++; return; }
+      try { rows = rows.concat(JSON.parse(fs.readFileSync(p, 'utf8'))); any = true; }
+      catch (e) { stats.missing++; }
+    });
+    if (!any) return;
     stats.shards++;
 
     rows.forEach(function (row) {

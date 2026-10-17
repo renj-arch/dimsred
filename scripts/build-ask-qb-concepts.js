@@ -79,7 +79,11 @@ function main() {
 
   var totalSentences = 0;
   man.categories.forEach(function (c, ci) {
-    var rows = JSON.parse(fs.readFileSync(path.join(ROOT, c.file), 'utf8'));
+    var files = c.files || [c.file];
+    var rows = [];
+    files.forEach(function (f) {
+      rows = rows.concat(JSON.parse(fs.readFileSync(path.join(ROOT, f), 'utf8')));
+    });
     rows.forEach(function (row) {
       var sents = row[1] || [];
       for (var j = 0; j < sents.length; j++) {

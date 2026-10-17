@@ -47,6 +47,67 @@ var MAX_SENTENCES_PER_RECORD = 4;
 var MAX_SENTENCES_PER_ENTITY = Infinity;
 var MIN_SENTENCE_WORDS = 8;
 
+// Largest single shard file the browser can fetch. Two ceilings matter and the
+// lower one binds: raw.githubusercontent.com refuses to serve files over
+// 100 MiB (the corpus rides its own branch precisely because main cannot hold
+// these artefacts), and the deploy target enforces 25 MiB per file, which is
+// why the CF direct upload never carried them and the client fetches from the
+// raw fallback instead. 60 MiB keeps every part comfortably servable raw while
+// still being large enough that a category needs at most a handful of fetches.
+var PART_LIMIT = 60 * 1024 * 1024;
+
+// Write one category's rows, split into parts when the serialised shard exceeds
+// PART_LIMIT. Returns { files, partBytes, bytes, parts }. The rows are split
+// whole -- an entity's sentence array never straddles two files -- so every
+// part is a valid shard of the same shape, and a reader that concatenates the
+// parts sees exactly the unsplit row list.
+function writeShard(list, ci) {
+  var base = 'ask-qb.' + String(ci);
+  var text = JSON.stringify(list);
+  var bytes = Buffer.byteLength(text);
+  if (bytes <= PART_LIMIT) {
+    var one = base + '.json';
+    fs.writeFileSync(path.join(OUTDIR, one), text);
+    var rel1 = 'data/ask-qb/' + one;
+    return { files: [rel1], partBytes: [bytes], bytes: bytes, parts: 1 };
+  }
+
+  var nParts = Math.ceil(bytes / PART_LIMIT);
+  var per = Math.ceil(bytes / nParts);
+  var groups = [];
+  var cur = [];
+  var curBytes = 2; // the enclosing [ ]
+  for (var i = 0; i < list.length; i++) {
+    var rowText = JSON.stringify(list[i]);
+    var rb = rowText.length + 1; // comma
+    // Close the current part when it is at its share and later parts remain.
+    // Rounding can leave the final group slightly over `per`; PART_LIMIT is
+    // 40 MiB below raw's hard ceiling, so that is absorbed with room to spare.
+    if (cur.length && curBytes + rb > per && groups.length < nParts - 1) {
+      groups.push(cur);
+      cur = [];
+      curBytes = 2;
+    }
+    cur.push(rowText);
+    curBytes += rb;
+  }
+  groups.push(cur);
+
+  var files = [];
+  var partBytes = [];
+  for (var k = 0; k < groups.length; k++) {
+    var name = base + '.p' + k + '.json';
+    var body = '[' + groups[k].join(',') + ']';
+    fs.writeFileSync(path.join(OUTDIR, name), body);
+    files.push('data/ask-qb/' + name);
+    partBytes.push(Buffer.byteLength(body));
+  }
+  // A leftover unsplit file from an earlier run must not linger next to the
+  // parts: nothing references it, but a stale copy hides split regressions.
+  try { fs.unlinkSync(path.join(OUTDIR, base + '.json')); } catch (e) {}
+  return { files: files, partBytes: partBytes, bytes: bytes, parts: files.length };
+}
+
 function readCatIndex() {
   var p = path.join(QDIR, 'archive-cat-index.json');
   return JSON.parse(fs.readFileSync(p, 'utf8'));
@@ -169,14 +230,16 @@ function main() {
     }).filter(function (r) { return r[1].length; });
 
     if (!list.length) return;
-    var outName = 'ask-qb.' + String(ci) + '.json';
-    fs.writeFileSync(path.join(OUTDIR, outName), JSON.stringify(list));
+    var shard = writeShard(list, ci);
     perCat[ci] = {
       name: cat.name,
-      file: 'data/ask-qb/ask-qb.' + ci + '.json',
+      file: shard.files[0],
+      files: shard.files,
+      partBytes: shard.partBytes,
+      parts: shard.parts,
       entities: list.length,
       sentences: list.reduce(function (a, r) { return a + r[1].length; }, 0),
-      bytes: fs.statSync(path.join(OUTDIR, outName)).size
+      bytes: shard.bytes
     };
     process.stderr.write('  [' + (ci + 1) + '/' + cats.length + '] ' + cat.name + ': ' +
       list.length + ' entities, ' + perCat[ci].sentences + ' sentences, ' +
@@ -197,4 +260,8 @@ function main() {
     stats.keptSent.toLocaleString() + ' sentences kept, ' +
     ((Date.now() - t0) / 1000).toFixed(0) + 's\n');
 }
-main();
+if (require.main === module) main();
+// Exported for the split self-test (scripts/test-ask-shard-split.js): the
+// oversized-shard path cannot be exercised by a full rebuild in CI time, and an
+// untested splitter is the piece that would take the corpus branch down.
+module.exports = { writeShard: writeShard, PART_LIMIT: PART_LIMIT };

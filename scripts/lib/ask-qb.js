@@ -107,19 +107,60 @@ function containsRun(a, b) {
 // evidence of anything.
 var SUBJ_FILLER = { of: 1, the: 1, in: 1, and: 1, a: 1, an: 1, to: 1, for: 1 };
 
+// A prefix window that ends on one of these qualified a noun that the window
+// just dropped. "parts of the indian" ends on the demonym of the dropped
+// "constitution", and admitting on it answered a Constitution question with
+// "parts of the Indian subcontinent" -- egg-dish geography. A window that
+// cannot name the thing being asked about is not evidence.
+var SUBJ_QUALIFIER_TAIL = {};
+('indian national central general world modern ancient international digital')
+  .split(' ').forEach(function (w) { SUBJ_QUALIFIER_TAIL[w] = 1; });
+
 function subjectPhrases(subject) {
   var toks = tokens(subject);
   var out = [];
   var seen = {};
-  for (var drop = 0; drop < toks.length; drop++) {
-    var t = toks.slice(0, toks.length - drop);
+
+  function emit(t) {
     while (t.length && SUBJ_FILLER[t[t.length - 1]]) t.pop();
     while (t.length && t[0] === 'the') t.shift();
-    if (t.length < 2) break;
+    if (t.length < 2) return;
+    if (SUBJ_QUALIFIER_TAIL[t[t.length - 1]]) return;
     var p = t.join(' ');
-    if (p.length < 8 || seen[p]) continue;
+    if (p.length < 8 || seen[p]) return;
     seen[p] = 1;
     out.push({ raw: p, toks: t });
+  }
+
+  // A single-token subject is the whole question: "monsoon in india" reduces
+  // to "monsoon", and refusing to admit on it leaves the engine mute about the
+  // exact noun it was asked. The five-character floor keeps the generic short
+  // words ("city", "party") out, which is the failure the two-token rule was
+  // written for. An acronym ("RBI", "ISRO") is the exception: it is specific
+  // precisely because it is short, and it is admitted when it appears in caps
+  // in the raw subject, so "what is the role of the RBI" is not silenced by a
+  // length the acronym cannot have.
+  if (toks.length === 1) {
+    var t0 = toks[0];
+    var caps = String(subject || '').match(/\b[A-Z]{2,5}\b/g) || [];
+    var acronym = caps.some(function (a) { return a.toLowerCase() === t0; });
+    if ((t0.length >= 5 || acronym) && !STOP[t0]) out.push({ raw: t0, toks: [t0] });
+    return out;
+  }
+
+  // Prefix windows: the subject with its tail dropped, so a sentence holding
+  // the head of the noun phrase still matches.
+  for (var drop = 0; drop < toks.length; drop++) {
+    emit(toks.slice(0, toks.length - drop));
+  }
+  // Suffix windows: the subject with its head dropped. "parts of the indian
+  // constitution" has a generic head ("parts") and carries its meaning in the
+  // tail, so without these the only phrases emitted are the full string and
+  // the misleading "parts of the indian".
+  for (var lead = 1; lead < toks.length; lead++) {
+    var t = toks.slice(lead);
+    while (t.length && (t[0] === 'the' || SUBJ_FILLER[t[0]])) t.shift();
+    emit(t);
   }
   return out;
 }
@@ -503,10 +544,13 @@ EntityDir.prototype.prefixLookup = function (prefix, limit) {
 // trustworthy, which is why the search is ordered by length and not by position.
 EntityDir.prototype.candidates = function (subject) {
   var toks = nameTokens(subject);
-  if (toks.length < 2) return [];
+  if (!toks.length) return [];
   var seen = {};
+  // A single-token subject ("monsoon") is a legitimate lookup: the corpus may
+  // name the entity exactly, and if it does, the entity gate should open on it.
+  var minLen = toks.length >= 2 ? 2 : 1;
 
-  for (var len = toks.length; len >= 2; len--) {
+  for (var len = toks.length; len >= minLen; len--) {
     var exact = [];
     var prefix = [];
     for (var start = 0; start + len <= toks.length; start++) {
@@ -536,7 +580,40 @@ EntityDir.prototype.candidates = function (subject) {
     if (exact.length) return exact.concat(prefix);
     if (prefix.length) return prefix;
   }
-  return [];
+
+  // Nothing longer matched. A multi-token subject like "Bhopal gas tragedy" is
+  // a description rather than a name -- the corpus names the event "Bhopal
+  // disaster" -- so no window of the description equals it, and returning empty
+  // routed the question to no category at all. The discriminating word is a
+  // single token, so every token of length >= 5 is tried as a WEAK candidate.
+  // Weak matters: "bhopal" also names the city, and opening the entity gate on
+  // it would answer the tragedy with the city's government. Weak candidates
+  // still route, so the shard holding "Bhopal disaster" is fetched and
+  // sentence-text admission can quote it.
+  var singles = toks.filter(function (t) { return t.length >= 5 && !seen[t] && !STOP[t]; })
+    .sort(function (a, b) { return b.length - a.length; });
+  var out = [];
+  var cap = 6;
+  for (var s = 0; s < singles.length && out.length < cap; s++) {
+    var tok = singles[s];
+    seen[tok] = 1;
+    var hit1 = this.lookup(tok);
+    if (hit1) out.push({ name: tok, cats: hit1, len: 1, generic: true, strong: false });
+    // A token that heads more than a dozen entity names is a common word, not a
+    // name: "fundamental" titles agreements, analyses, attribution errors,
+    // albums and theorems, and expanding its prefixes is how a question about
+    // fundamental duties got routed to a jazz album that then won the entity
+    // gate on the token alone. A rare head ("bhopal", 10 names) expands to the
+    // handful of names that genuinely belong to the subject.
+    var pre1 = this.prefixLookup(tok, 16);
+    if (pre1.length > 12) continue;
+    for (var p1 = 0; p1 < pre1.length && out.length < cap; p1++) {
+      if (seen['p:' + pre1[p1].name]) continue;
+      seen['p:' + pre1[p1].name] = 1;
+      out.push({ name: pre1[p1].name, cats: pre1[p1].cats, len: 1, generic: pre1[p1].generic, strong: false });
+    }
+  }
+  return out;
 };
 
 // ── scoring within a loaded shard ───────────────────────────────────────────
