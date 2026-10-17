@@ -155,13 +155,15 @@ jobs:
         run: node scripts/write-archive-answers.js
 
       # 27B converts fill-blank fragments into proper MCQs for the quiz
-      # (current-affairs serves these first). Same warm model, budget 10/run.
+      # (current-affairs serves these first). Same warm model, budget 25/run --
+      # 10 left the quiz-proper pool filling too slowly to show current-affairs
+      # a fresh face each visit; 25 still fits inside the 6h job ceiling.
       - name: Convert proper quiz MCQs (27B)
         env:
           OLLAMA_MODEL: qwen3.8:27b
           OLLAMA_HOST: http://127.0.0.1:11434
           NODE_OPTIONS: '--max-old-space-size=2048'
-          MAX_CONVERT: '10'
+          MAX_CONVERT: '25'
         run: node scripts/convert-quiz-proper.js
 
       # Rebuild the mega quiz bank from the current corpus (fast, no model).
