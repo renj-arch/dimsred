@@ -143,6 +143,9 @@ jobs:
     needs: [feeds-merge]
     if: always() && needs.feeds-merge.result == 'success'
     runs-on: ubuntu-latest
+    # Without a job timeout this hung 7h on the timeline rebuild (run
+    # 38974828205) while every newer fill queued behind its data-fill group.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -163,6 +166,7 @@ jobs:
 
       - name: Rebuild timeline map from question data
         continue-on-error: true
+        timeout-minutes: 25
         run: |
           NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
 
