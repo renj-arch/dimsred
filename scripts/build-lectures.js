@@ -202,10 +202,16 @@ function main() {
     });
   });
 
+  const crypto = require('crypto');
+  const inputsHash = crypto.createHash('sha256')
+    .update(fs.readFileSync(path.join(ROOT, 'data/topic-layers.json')))
+    .update(fs.readFileSync(path.join(ROOT, 'data/revision-content.json')))
+    .update(fs.readFileSync(path.join(ROOT, 'data/person-bios.json')))
+    .digest('hex').slice(0, 16);
   const out = {
-    builtAt: new Date().toISOString(),
+    inputsHash: inputsHash,
     source: 'topic-layers.json + revision-content.json + person-bios.json',
-    note: 'Spoken lectures compiled from the topic graph. Deterministic build — variant lines are hashed from the topic id.',
+    note: 'Spoken lectures compiled from the topic graph. Deterministic: identical inputs produce identical bytes (variant lines are hashed from the topic id), so the weekly workflow diffs clean when nothing moved.',
     count: topics.length,
     topics: topics
   };
