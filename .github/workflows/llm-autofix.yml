@@ -1,0 +1,141 @@
+name: LLM Auto-fix
+
+# The model fixes its own weak content: reads the fault board, asks a
+# local Qwen3.5-9B (Ollama on the runner's CPU + swap) to generate
+# questions for thin categories, draw SVG figures for missing syllabus
+# topics, and rewrite broken captions. Results land in data/autofix-log.json
+# and show on improve.html as "what the model fixed".
+#
+# Fully free forever: Ollama runs the model locally on GitHub's runner.
+# No API keys, no rate limits, no paid services. 8GB swap is created so
+# the 9B model (~6GB) fits in the 7GB RAM runner without OOM.
+
+on:
+  schedule:
+    - cron: '40 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: llm-autofix
+  # false: fixes publish in one ci-push at the very end. Scheduled + manual
+  # triggers must queue behind an in-flight run, never cancel it mid-stream
+  # (a cancelled run loses every fix it already generated).
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    # 27B on runner CPU: pull ~5 min + cold load ~5 min + up to 3 fixes at
+    # ~5-18 min each. 60 min starved run #13 (55 min of generation, then the
+    # cap killed publish and the work was lost).
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          sparse-checkout: |
+            scripts
+            data/faults.json
+            data/figure-gaps.json
+            data/autofix-log.json
+            figures
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Create 16GB swap so Qwen3.8-27B (~18GB) fits: 7GB RAM + 16GB swap
+      # = 23GB total. CPU inference is slow but free.
+      - name: Create swap (16GB)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      # Install Ollama — free, open-source, runs models on CPU.
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+
+      # Start Ollama server in background and wait until it responds.
+      # `ollama pull` above briefly starts the server, but it shuts down
+      # when the step ends — the fixer then sees "Ollama not reachable".
+      # KEEP_ALIVE=60m keeps the model loaded between calls. Public-repo
+      # runners are 4 vCPU / 16GB RAM so 27B nearly fits in RAM.
+      - name: Start Ollama server
+        run: |
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      # Pull the strongest coding model. Qwen3.8-27B scores 90.3% on
+      # LiveCodeBench — near the top of the entire leaderboard. Falls back
+      # through smaller models if the 27B doesn't fit.
+      - name: Pull best coding model
+        run: |
+          if ollama pull qwen3.8:27b; then
+            echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
+            echo "Using Qwen3.8-27B (90.3% LiveCodeBench)"
+          elif ollama pull nvidia/nemotron-nano-9b-v2; then
+            echo "MODEL=nvidia/nemotron-nano-9b-v2" >> $GITHUB_ENV
+            echo "Using Nemotron Nano 9B v2 (71.1% LiveCodeBench)"
+          else
+            echo "Large models failed, using 4B"
+            ollama pull qwen3.5:4b
+            echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
+          fi
+          ollama list
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Warm the model into RAM now: the first script call otherwise pays
+          # the full 17GB cold load (~15 min). With KEEP_ALIVE=60m it stays
+          # resident for the whole run.
+          echo "Warming 27B into RAM..."
+          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warmup done"
+
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            nohup ollama serve >> /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      - name: Run auto-fixer (Qwen3.8 local, zero API keys)
+        env:
+          OLLAMA_MODEL: ${{ env.MODEL }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+        run: node scripts/llm-autofix.js
+
+      - name: Publish fixes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/autofix-log.json figures/ data/questions/ 2>/dev/null || true
+          bash scripts/ci-push.sh "auto-fix: ${{ env.MODEL }} fixed weak content (run #${{ github.run_number }})"

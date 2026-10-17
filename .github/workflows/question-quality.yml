@@ -1,0 +1,183 @@
+name: Question Quality
+
+# Runs the question-quality/generation agent against data/questions ONLY.
+# Separated from site-agent because data/questions is ~9GB: checking it out
+# alongside the full site caused 33-min "early EOF" failures and OOM'd the
+# 27B model. Here the checkout is questions-only and generation runs on a
+# clean machine — same proven 27B path as llm-autofix.
+
+on:
+  schedule:
+    - cron: '10 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: question-quality
+  # false, NOT true: this pipeline publishes only at the very END (archive +
+  # quiz conversions + commit). cancel-in-progress killed 59 of the last 60
+  # runs mid-flight — the converter step never executed even once since it
+  # shipped on 2026-10-15. With false, a newer trigger waits (superseding any
+  # older pending run) instead of murdering the in-flight publish.
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/questions
+            data/papers.json
+            data/official-paper-sources.json
+            data/archive-answers.json
+            data/archive-taxonomy.json
+            data/pyq-patterns.json
+            data/wiki-syllabus-plan.json
+            data/agent-log.json
+            data/questions-report.json
+            data/questions-cursor.json
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # EXACT same swap as proven llm-autofix (16GB works with 27B there).
+      - name: Create swap (16GB — same as proven llm-autofix)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+
+      # EXACT same start as llm-autofix: no flash-attn, no q8 KV.
+      # KEEP_ALIVE=60m: without it Ollama unloads the 17GB model after 5 min
+      # idle and the next agent pays a full reload. Public-repo runners are
+      # 4 vCPU / 16GB RAM so the model nearly fits in RAM.
+      - name: Start Ollama server
+        run: |
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull qwen3.8:27b
+        run: |
+          ollama pull qwen3.8:27b
+          echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
+          ollama list
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Warm the model into RAM now so the agent + writer calls start warm.
+          echo "Warming 27B into RAM..."
+          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          # Verify residency — a silent warmup failure used to surface minutes
+          # later as "NO model resident: next call cold-loads 17GB" in the agent
+          curl -s http://127.0.0.1:11434/api/ps | grep -q qwen3.8 && echo "Warmup done (model resident)" || echo "WARNING: model NOT resident after warmup"
+
+      # Official papers supply line (ingestor needs no model — pure parsing).
+      # pip + pypdf are tiny; the runners already have python3.
+      - name: Setup Python PDF tools
+        run: pip install --quiet pypdf
+
+      # Discover official answer-key URLs (portal + archive strategies) for
+      # papers that have a QP but no key yet. Verified URLs only, else retry
+      # next run — never guessed.
+      - name: Discover official paper URLs
+        run: python3 scripts/discover-official-papers.py
+
+      # Ingest verified official papers (QP + key PDFs → key-joined questions
+      # with strict validation; anything uncertain is dropped, never faked)
+      # straight into data/papers.json. The Papers agent then enriches them
+      # with 27B explanations in the same run.
+      - name: Ingest official papers
+        run: python3 scripts/ingest-official-paper.py
+
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
+            nohup ollama serve > /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      - name: Run question-quality agent
+        env:
+          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          # Signals site-agent.js to run ONLY the Questions+Content agents
+          AGENT_ONLY: questions
+          # Wall-clock deadline. A run killed by the 6h job timeout publishes
+          # NOTHING (every fix lost). Typical pre-agent cost: checkout+swap+
+          # pull ~35-90 min; archive+quiz steps after need ~80-130 min. Past
+          # this the agent stops starting new LLM work so the run still
+          # reaches its publish step; skipped work rotates in next run.
+          AGENT_DEADLINE_MIN: '130'
+        run: node scripts/site-agent.js
+
+      # 27B writes finished model answers into the archive (categorized under
+      # each question's own category, tagged auto gen). Model is already warm
+      # from the agent step above — no extra pull. Budget 5 answers/run.
+      - name: Write archive answers (27B)
+        env:
+          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          MAX_WRITE: '5'
+        run: node scripts/write-archive-answers.js
+
+      # 27B converts fill-blank fragments into proper MCQs for the quiz
+      # (current-affairs serves these first). Same warm model, budget 25/run --
+      # 10 left the quiz-proper pool filling too slowly to show current-affairs
+      # a fresh face each visit; 25 still fits inside the 6h job ceiling.
+      - name: Convert proper quiz MCQs (27B)
+        env:
+          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          MAX_CONVERT: '25'
+        run: node scripts/convert-quiz-proper.js
+
+      # Rebuild the mega quiz bank from the current corpus (fast, no model).
+      # Without this tracked + deployed, mega-test.html 404s live.
+      - name: Rebuild mega quiz bank
+        run: node scripts/build-mega-quiz.js
+
+      - name: Publish question fixes
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json 2>/dev/null || true
+          bash scripts/ci-push.sh "question-quality: qwen3.8:27b improved questions (run #${{ github.run_number }})"

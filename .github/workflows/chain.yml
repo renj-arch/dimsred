@@ -1,0 +1,74 @@
+name: Agent Chain
+
+# GitHub throttles scheduled workflows on busy public repos: the hourly cron
+# on site-agent.yml actually delivered runs every 3-5 hours, and half of them
+# died at the 120-min cap from wedge timeouts. "Continuous" must not depend on
+# the schedule service. This chain fires when a Site Agent run COMPLETES and
+# dispatches the next one immediately — back-to-back cycles with no gap beyond
+# a 17GB model pull. The 6-hour seed cron is a dead-man switch: if the chain
+# ever breaks (API failure, workflow disabled), it restarts the loop.
+#
+# Off switch: repo variable AGENT_CHAIN = "off" (Settings > Variables) stops
+# all future dispatches — the loop drains and stays stopped.
+#
+# The idle check prevents a second run entering site-agent's concurrency group
+# (cancel-in-progress: true would kill an in-progress run mid-publish).
+
+on:
+  workflow_run:
+    workflows: ["Site Agent"]
+    types: [completed]
+  schedule:
+    - cron: '0 */6 * * *'
+
+concurrency:
+  group: agent-chain
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+
+jobs:
+  chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch next Site Agent run (only when idle)
+        if: vars.AGENT_CHAIN != 'off'
+        env:
+          # PAT, not GITHUB_TOKEN, for the dispatch: runs started with
+          # GITHUB_TOKEN never fire workflow_run events, so the chain died
+          # after its first hop and only the 6h seed revived it (observed
+          # 2026-10-17: the 03:05 chain-dispatched run finished 07:00 and no
+          # successor appeared until the next seed). A PAT dispatch chains.
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: |
+          REPO="${{ github.repository }}"
+          BUSY=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/runs?status=in_progress" \
+            | jq -r '.total_count')
+          if [ "$BUSY" != "0" ] && [ "$BUSY" != "null" ]; then
+            echo "site-agent already running ($BUSY in progress) — not dispatching"
+            exit 0
+          fi
+          CODE=$(curl -s -o /tmp/resp.json -w '%{http_code}' -X POST \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/dispatches" \
+            -d '{"ref":"main"}')
+          echo "dispatch HTTP $CODE (PAT)"
+          if [ "$CODE" != "204" ]; then
+            # Dead PAT: dispatch anyway with GITHUB_TOKEN so work continues.
+            # This run's completion will NOT re-fire the chain — the 6h seed
+            # cron is the backstop until the PAT is renewed.
+            echo "PAT dispatch failed — falling back to GITHUB_TOKEN"
+            cat /tmp/resp.json 2>/dev/null || true
+            CODE=$(curl -s -o /tmp/resp2.json -w '%{http_code}' -X POST \
+              -H "Authorization: token ${{ github.token }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/dispatches" \
+              -d '{"ref":"main"}')
+            echo "fallback dispatch HTTP $CODE"
+            if [ "$CODE" != "204" ]; then cat /tmp/resp2.json; exit 1; fi
+          fi
+          echo "next Site Agent run dispatched"
