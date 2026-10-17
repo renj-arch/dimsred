@@ -1,0 +1,75 @@
+name: LLM Smoke Test
+
+# Dispatch-only verdict on the local-LLM layer: install Ollama, pull
+# qwen3.8:27b, run ONE call with think:false, print PASS/FAIL in ~15 minutes.
+#
+# Built after the 2026-10-17 post-mortem: Question Quality #15 and the Site
+# Agent run wedged for hours because the model's default thinking mode streams
+# at a fraction of a token per second on the 4-vCPU runner, so generation calls
+# died inside 90-minute curl timeouts with content still empty. The agents now
+# send think:false (scripts/site-agent.js, scripts/llm-autofix.js); this
+# workflow is how that fix gets verified cheaply instead of on the next
+# multi-hour agent run. Exit 2 means the daemon rejected the flag.
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: llm-smoke
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Same swap as site-agent/llm-autofix: the 17GB model nearly fills the
+      # 16GB runner, and swap keeps a cold load from OOM-killing the server.
+      - name: Create swap (16GB — same as site-agent)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+
+      - name: Start Ollama server
+        run: |
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+
+      - name: Pull and warm qwen3.8:27b
+        run: |
+          ollama pull qwen3.8:27b
+          ollama list
+          echo "Warming 27B into RAM so the smoke call is not measuring cold load..."
+          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warmup done"
+
+      - name: Smoke — think:false answers directly
+        env:
+          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          SMOKE_CAP_MIN: '35'
+        run: node scripts/llm-smoke-test.js
