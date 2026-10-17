@@ -256,6 +256,7 @@ jobs:
 
       - name: Rebuild timeline map from question data
         continue-on-error: true
+        timeout-minutes: 25
         run: |
           NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
 
