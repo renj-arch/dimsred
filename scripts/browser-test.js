@@ -12,6 +12,15 @@ const path = require('path');
 
 const BASE = process.env.SITE_URL || 'http://localhost:8080';
 const TIMEOUT = 15000;
+// The deployed site, checked with the same homepage contract the local tree
+// gets. The 2026-10-15 regression (widget scripts moved into <head> without
+// defer) broke every homepage widget but produced ZERO console errors --
+// the widget IIFEs guarded their element lookups and silently skipped -- so
+// every error-based check stayed green while the page visibly said "Loading..."
+// for a day and a half until a user reported it. Content contracts exist so
+// "the page renders its promised content" is verified, not assumed.
+const PROD = process.env.PROD_URL || 'https://vlymbooq.qzz.io';
+const SKIP_PROD = !!process.env.SKIP_PROD;
 const results = {
   testedAt: new Date().toISOString(),
   baseUrl: BASE,
@@ -25,6 +34,8 @@ function log(page, type, msg, detail) {
   if (type === 'console-error') results.summary.consoleErrors++;
   if (type === 'broken-link') results.summary.brokenLinks++;
   if (type === 'broken-button') results.summary.brokenButtons++;
+  if (type === 'content-contract') results.summary.contractFailures = (results.summary.contractFailures || 0) + 1;
+  if (type === 'production-contract') results.summary.productionFailures = (results.summary.productionFailures || 0) + 1;
   console.log('  [' + type + '] ' + page + ': ' + msg);
 }
 
@@ -257,8 +268,25 @@ async function testPage(browser, url, pageName, file) {
       }
     }
 
+    // Content contracts: the page's own widgets' post-load state. A page whose
+    // widgets never came alive fails here even though nothing threw.
+    if (CONTRACTS[file]) {
+      try {
+        const checks = await CONTRACTS[file](page);
+        pageResult.contracts = checks;
+        const failed = checks.filter(c => !c.ok);
+        if (failed.length) {
+          pageResult.contractFailures = failed.length;
+          failed.forEach(c => log(pageName, 'content-contract', c.name + (c.detail ? ' — ' + c.detail : '')));
+        }
+      } catch (e) {
+        pageResult.contractFailures = 1;
+        log(pageName, 'content-contract', 'contract run failed: ' + e.message.substring(0, 120));
+      }
+    }
+
     results.summary.total++;
-    if (pageResult.consoleErrors === 0 && pageResult.pageErrors === 0 && pageResult.brokenLinks === 0) {
+    if (pageResult.consoleErrors === 0 && pageResult.pageErrors === 0 && pageResult.brokenLinks === 0 && !pageResult.contractFailures) {
       results.summary.passed++;
       pageResult.passed = true;
     } else {
@@ -334,6 +362,125 @@ async function testMobilePage(context, url, pageName) {
   }
 }
 
+// ---- content contracts ----------------------------------------------------
+//
+// The rule these enforce: a page that finished loading is not the same as a
+// page that WORKS. Every failure class a user can see but the console cannot
+// (a widget stuck at "Loading...", a counter frozen at 0, a grid never filled
+// by its fetch) shows up here as a named contract instead of silence.
+
+async function waitFor(page, fn, timeout) {
+  try {
+    await page.waitForFunction(fn, null, { timeout: timeout || 8000 });
+    return true;
+  } catch (e) {
+    return false;
+  }
+}
+
+// Homepage widgets. Every selector here was verified against a healthy live
+// page; each check asserts the widget's post-load state, which is exactly the
+// state the defer regression destroyed.
+async function homepageContract(page, opts) {
+  const t = (opts && opts.timeout) || 8000;
+  const checks = [];
+  const add = async (name, fn, detailFn) => {
+    let ok = false, detail = '';
+    try {
+      ok = await fn();
+      if (detailFn) detail = await detailFn();
+    } catch (e) { detail = e.message; }
+    checks.push({ name, ok: !!ok, detail: String(detail || '').slice(0, 120) });
+  };
+
+  // Stat counters animate when scrolled into view; scroll first so the widget
+  // gets its IntersectionObserver chance even in a fresh viewport.
+  await page.$eval('.stat-number', el => el.scrollIntoView({ block: 'center' })).catch(() => {});
+  await add('stat counters reach their targets',
+    () => waitFor(page, () => {
+      const els = Array.from(document.querySelectorAll('.stat-number'));
+      if (els.length < 3) return false;
+      return els.slice(0, 3).every(e => parseInt(String(e.textContent).replace(/\D/g, ''), 10) > 0);
+    }, t),
+    () => page.$$eval('.stat-number', els => els.slice(0, 3).map(e => e.textContent.trim()).join(' / ')));
+
+  await add('fortune filled in', async () => {
+    const txt = (await page.textContent('#fortuneMsg').catch(() => '')) || '';
+    return txt.trim().length > 5 && !/loading/i.test(txt);
+  }, () => page.textContent('#fortuneMsg').catch(() => ''));
+
+  await add('paper of the day rendered', async () => {
+    const html = (await page.innerHTML('#podContent').catch(() => '')) || '';
+    return html.length > 80 && !/loading/i.test(html.replace(/<[^>]*>/g, ' '));
+  }, () => page.$eval('#podContent', e => String(e.textContent).trim().slice(0, 80)).catch(() => ''));
+
+  await add('ticker marquee built', () =>
+    page.$eval('#tickerText', e => e.childElementCount > 0).catch(() => false),
+    () => page.$eval('#tickerText', e => e.children.length + ' item(s)').catch(() => ''));
+
+  await add('question of the day served', async () => {
+    const q = (await page.textContent('#dailyQText').catch(() => '')) || '';
+    const n = await page.$eval('#dailyQOptions', e => e.children.length).catch(() => 0);
+    return q.trim().startsWith('Q:') && n >= 4;
+  }, () => page.$eval('#dailyQText', e => e.textContent.trim().slice(0, 70)).catch(() => ''));
+
+  await add('vibe panel options built', () =>
+    page.$eval('#vibePanel', e => e.querySelectorAll('.vibe-opt').length >= 4).catch(() => false),
+    () => page.$eval('#vibePanel', e => e.querySelectorAll('.vibe-opt').length + ' option(s)').catch(() => ''));
+
+  return checks;
+}
+
+// Lecture hall: the grid fills from data/lectures.json. A fetch path that
+// silently dies leaves the grid empty with no console error, the same class
+// of silent failure as the homepage widgets.
+async function lectureContract(page, opts) {
+  const t = (opts && opts.timeout) || 10000;
+  const ok = await waitFor(page, () => {
+    const g = document.getElementById('lecGrid');
+    return g && g.children.length >= 20;
+  }, t);
+  let detail = '';
+  try { detail = (await page.$eval('#lecGrid', e => e.children.length)) + ' card(s)'; } catch (e) {}
+  return [{ name: 'lecture grid filled from lectures.json', ok, detail }];
+}
+
+const CONTRACTS = {
+  'index.html': homepageContract,
+  'lecture.html': lectureContract
+};
+
+// Production contract run: same homepage contract, against the deployed site.
+// A failed deploy (or a bad push that CF served) is invisible to the local
+// run; this closes that gap. One retry covers CF swapping a deploy underneath.
+async function runProductionContracts(browser) {
+  const prod = { url: PROD, contracts: [], ok: null };
+  const ctx = await browser.newContext();
+  const page = await ctx.newPage();
+  try {
+    const resp = await page.goto(PROD + '/index.html', { waitUntil: 'domcontentloaded', timeout: 30000 });
+    prod.status = resp ? resp.status() : 0;
+    let checks = await homepageContract(page, { timeout: 12000 });
+    if (checks.some(c => !c.ok)) {
+      await page.waitForTimeout(15000);
+      await page.reload({ waitUntil: 'domcontentloaded', timeout: 30000 }).catch(() => {});
+      checks = await homepageContract(page, { timeout: 12000 });
+    }
+    prod.contracts = checks;
+    prod.ok = checks.every(c => c.ok);
+    checks.filter(c => !c.ok).forEach(c =>
+      log('Homepage (production)', 'production-contract', c.name + (c.detail ? ' — ' + c.detail : '')));
+    console.log('  ' + (prod.ok ? '✅' : '❌') + ' Homepage (production)');
+  } catch (e) {
+    prod.error = e.message;
+    log('Homepage (production)', 'production-contract', 'load failed: ' + e.message.substring(0, 120));
+    console.log('  ❌ Homepage (production) — ' + e.message.substring(0, 60));
+  } finally {
+    await ctx.close().catch(() => {});
+  }
+  results.production = prod;
+}
+
 async function main() {
   // Pages to test — all critical pages. Includes the pages users actually
   // reported broken (current-affairs quiz Next button, flowchart graph lib)
@@ -370,6 +517,12 @@ async function main() {
     await testPage(browser, url, name, file);
   }
 
+  // Production pass — catches silent deploy drift the local tree cannot.
+  if (!SKIP_PROD) {
+    console.log('\nProduction contract (deployed homepage):');
+    await runProductionContracts(browser);
+  }
+
   // Mobile pass — same pages, real phone viewport + iPhone UA + touch.
   console.log('\nMobile pass (390x844, iPhone UA, touch):');
   const mctx = await browser.newContext({
@@ -393,6 +546,10 @@ async function main() {
   console.log('Console errors: ' + results.summary.consoleErrors);
   console.log('Broken links: ' + results.summary.brokenLinks);
   console.log('Broken buttons: ' + results.summary.brokenButtons);
+  console.log('Content contract failures: ' + (results.summary.contractFailures || 0));
+  if (results.production) {
+    console.log('Production homepage contract: ' + (results.production.ok ? 'OK' : 'FAILED'));
+  }
   console.log('Total issues: ' + results.issues.length);
   console.log('Mobile issues: ' + results.issues.filter(i => String(i.type).indexOf('mobile-') === 0).length);
   console.log('Output: data/browser-test.json');
