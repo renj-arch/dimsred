@@ -61,9 +61,13 @@ data/questions/state-tracker.json
 # Ask's question-bank routing tables. The browser needs these to decide which
 # corpus shards a question routes to: the manifest and directory are tiny, the
 # entity table is 10.4 MB, and the concept table is measured category evidence.
-# The evidence shards themselves (828 MB under data/ask-qb/, ask-qb.*.json) are
-# deliberately NOT allowlisted; ask.html treats a 404 on those as "not deployed"
-# and falls back to the timeline engine.
+# The evidence shards themselves (~2 GB under data/ask-qb/: ask-qb.*.json and
+# the parts an oversized category splits into, ask-qb.*.pN.json) are
+# deliberately NOT allowlisted: the largest exceed GitHub's 100 MB blob limit
+# and none of them may enter a 10 MB-a-day history. They ship on the
+# force-replaced `corpus` branch instead (build-ask-qb.yml) and ask-browser.js
+# reads them through its raw.githubusercontent fallback; a deployment without
+# that branch still degrades to the timeline engine.
 !data/ask-qb/
 data/ask-qb/ask-qb.*.json
 # Entity buckets: the same rows repartitioned by entity hash, 968 MB across 512

@@ -200,8 +200,17 @@ async function callLLM(system, user, maxTokens) {
     ],
     // Streaming is forced by ollamaChat regardless; set here for clarity.
     stream: true,
-    // 2048 not 1024: qwen3.8:27b spends ~200-600 tokens thinking before
-    // it emits content. 1024 was cutting answers off mid-thought.
+    // THINKING OFF. qwen3.8:27b reasons in message.thinking by default, and on
+    // a 4-vCPU CPU runner that reasoning streams at a fraction of a token per
+    // second: a generation call then spends the whole 90-minute curl budget
+    // inside thinking and dies with content still empty (Question Quality #15
+    // and the Site Agent run of 2026-10-17 both wedged exactly there — 48 KB
+    // of thinking after 5400 s, then the restart retry lost another 90 min the
+    // same way). think:false makes the model answer directly, which is 3-5x
+    // fewer tokens for the same result. Rollback hatch: OLLAMA_THINK=true.
+    think: process.env.OLLAMA_THINK === 'true',
+    // 2048 not 1024: even without thinking, batched JSON answers (question
+    // generation) are long; 1024 cut them off mid-array.
     options: { temperature: 0.3, num_predict: maxTokens || 2048 }
   });
   logModelState('pre-call');
@@ -221,7 +230,7 @@ async function callLLM(system, user, maxTokens) {
     // server. If that also fails, give up this call — never burn the job.
     if (e.status === 28) {
       console.log('agent: Ollama timed out (' + detail + ') — restarting server to clear wedged work, then one retry');
-      try { execSync('pkill -f "ollama serve"; sleep 2; nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
+      try { execSync('pkill -f "ollama serve"; sleep 2; OLLAMA_KEEP_ALIVE=60m nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
       try {
         for (let i = 0; i < 60; i++) {
           try {
@@ -240,18 +249,30 @@ async function callLLM(system, user, maxTokens) {
       // so the NEXT call has something to talk to.
       if (e.status === 7 || String(e.stderr || '').match(/Connection refused|Failed to connect/i)) {
         console.log('agent: server refused connection — restarting ollama for next call');
-        try { execSync('nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore' }); } catch (e3) { /* best effort */ }
+        try { execSync('OLLAMA_KEEP_ALIVE=60m nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore' }); } catch (e3) { /* best effort */ }
       }
       return null;
     }
   }
   try {
-    const parsed = parseChatStream(out);
+    let parsed = parseChatStream(out);
+    // Older Ollama daemons or template-only thinkers reject the think field
+    // with HTTP 400. Drop it and give the call one clean retry — this keeps
+    // the fix safe across model/daemon combinations.
+    if (!parsed.text && parsed.httpCode === '400' && process.env.OLLAMA_THINK !== 'true') {
+      console.log('agent: Ollama rejected think:false (HTTP 400) — retrying without the parameter');
+      try {
+        out = await ollamaChat(JSON.stringify(Object.assign(JSON.parse(payload), { think: undefined })));
+        parsed = parseChatStream(out);
+      } catch (e4) {
+        console.log('agent: Ollama no-think retry failed: exit=' + (e4 && e4.status));
+        return null;
+      }
+    }
     // qwen3.8:27b is a THINKING model: it reasons in message.thinking and
-    // puts the final answer in message.content. With num_predict as low as
-    // 10 the entire budget is consumed by thinking and content comes back
-    // empty (run #60: content="" thinking="The user is asking me to
-    // confirm that generation works"). Fall back to thinking when empty.
+    // puts the final answer in message.content. The think:false request above
+    // normally skips reasoning outright; the thinking fallback stays for the
+    // no-think-flag retry path and for old daemons that ignore the field.
     const text = parsed.text;
     if (!text) {
       console.log('agent: Ollama ' + model + ' returned empty (http ' + parsed.httpCode + ')');

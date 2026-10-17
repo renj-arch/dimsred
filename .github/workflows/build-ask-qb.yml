@@ -12,7 +12,7 @@ name: Ask Question-Bank Build
 # self-dispatches this workflow after each commit so both stay in step.
 #
 # WHY ITS OWN WORKFLOW, NOT A STEP IN `finalize`:
-#   A runner needs ~9.4 GB free (8.5 GB data/questions + 838 MB of shards).
+#   A runner needs ~11 GB free (8.5 GB data/questions + ~2 GB of shards).
 #   That merge phase has a documented history of dying with "No space left on
 #   device" (run #458) and of outgrowing the 6 h job ceiling (runs #434, #519).
 #   A self-dispatch gets a fresh runner with a full disk and a full 6 h budget,
@@ -44,8 +44,8 @@ on:
   # question bank still rebuilds after every Wiki Fill commit and nothing is
   # lost by removing the nightly duplicate.
   #
-  # What it did cost: the workflow runs ~55 minutes, needs a runner with ~9.4 GB
-  # free, and rebuilds 828 MB of gitignored shards. Running it twice a day for
+  # What it did cost: the workflow runs ~55 minutes, needs a runner with ~11 GB
+  # free, and rebuilds ~2 GB of gitignored evidence shards. Running it twice a day for
   # the same input produced a nightly failure that was a DATA problem, not a
   # scheduling one -- see "Ask question-bank rebuild" run #6, which failed at
   # the freshness gate because archive-cat-index.json accounted for 15,901,975
@@ -178,7 +178,14 @@ jobs:
           git reset HEAD -- . 2>/dev/null
           # Specific paths, not `git add -A`: a typo in the builders writing a
           # stray large file must never reach a 10 MB-a-day history.
-          git add data/ask-qb/manifest.json data/ask-qb/dir.json data/ask-qb/entities.tsv data/ask-qb/concepts.json
+          #
+          # buckets.json is NOT gitignored (.gitignore:72 allowlists it) yet no
+          # step ever re-added it: the last main commit touching it was
+          # 2026-10-04, so production served a two-week-old entity->bucket map
+          # while the bucket CONTENTS it points at were rebuilt every run and
+          # served fresh from the corpus branch. Commit it with the tables so
+          # both halves of the mapping always ship together.
+          git add data/ask-qb/manifest.json data/ask-qb/dir.json data/ask-qb/entities.tsv data/ask-qb/concepts.json data/ask-qb/bucket/buckets.json
           if git diff --staged --quiet; then
             echo "No question-bank table changes to commit"
           else

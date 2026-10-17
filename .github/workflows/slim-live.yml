@@ -129,6 +129,10 @@ jobs:
       - name: Overlay retrieval corpus from the corpus branch
         run: |
           set -euo pipefail
+          # bucket + phrase only, ON PURPOSE. The category shards (up to 60 MiB
+          # parts) are too large for a Cloudflare Pages direct upload's per-file
+          # ceiling; ask-browser.js reads them straight off the corpus branch via
+          # the raw.githubusercontent fallback instead. Do not add them here.
           if git fetch --depth=1 origin corpus 2>/dev/null; then
             mkdir -p live-dist/data/ask-qb
             git archive FETCH_HEAD data/ask-qb/bucket data/ask-qb/phrase 2>/dev/null \
