@@ -174,6 +174,51 @@ var QB = 'data/ask-qb/';
     return out || list;
   }
 
+  // Rescue routing when nothing scored, but the subject is a phrase the corpus
+  // carries inside other entities' sentences. "fundamental duties" has no entity
+  // of its own, and every entity whose name begins with "fundamental" is listed
+  // by the candidate guard as too broad to admit, so the entity gate stays shut
+  // and the question refused even though the Constitution of India rows state
+  // exactly what fundamental duties are. The phrase index knows which entities
+  // carry the phrase; routing through those entities' categories lets the
+  // scorer match the sentences. The rescue only runs when everything else came
+  // back empty, so it cannot displace a route that already worked.
+  function phraseRescue(route) {
+    var phrases = (route.subjectPhrases || []).slice(0, 3);
+    return Promise.all(phrases.map(function (p) {
+      return api.phraseLookup(p.raw);
+    })).then(function (hits) {
+      var picked = route.categories;
+      var byName = {};
+      hits.forEach(function (h) {
+        if (!h || !h.entities) return;
+        h.entities.slice(0, 8).forEach(function (name) {
+          if (byName[name]) return;
+          byName[name] = 1;
+          var idxs = state.entityDir ? state.entityDir.lookup(name) : null;
+          (idxs || []).forEach(function (i) {
+            var c = state.dir.categories[i];
+            if (!c) return;
+            var cur = null;
+            for (var k = 0; k < picked.length; k++) {
+              if (picked[k].cat.name === c.name) { cur = picked[k]; break; }
+            }
+            // 10 sits below a directory hit (20) and below measured concept
+            // evidence (18), but above a plain hint, because this is the corpus
+            // itself naming the entities that hold the phrase.
+            if (cur) { if (cur.score < 10) cur.score = 10; }
+            else picked.push({ cat: c, score: 10 });
+          });
+        });
+      });
+      if (picked.length) {
+        picked.sort(function (a, b) { return b.score - a.score; });
+        route.rescued = true;
+      }
+      return null;
+    }).catch(function () { return null; });
+  }
+
   // Named rather than returned inline, because essay() needs to call mains() and
   // phraseLookup() on this same object.
   var api = {
@@ -280,6 +325,16 @@ bucketReady: function () { return !!state.buckets; },
       if (!state.ready) return Promise.reject(new Error('engine not booted'));
       var limit = opts.limit || 8;
       var route = state.answer.route(question, state.dir, state.entityDir, state.concepts);
+
+      // Nothing scored, but the subject may still be a phrase the corpus carries
+      // inside other entities' sentences (see phraseRescue). The rescue is
+      // awaited before any shard is chosen, so the byte budget is spent on the
+      // shards it routed to when it fired.
+      var rescue = (!route.categories.length && route.subjectPhrases && route.subjectPhrases.length)
+        ? phraseRescue(route)
+        : Promise.resolve();
+
+      return rescue.then(function () {
       var cats = route.categories.slice(0, opts.maxShards || MAX_SHARDS);
 
       // Shards are already ordered by score, so the byte budget is spent on the
@@ -339,6 +394,7 @@ route: route,
 missing: missing
 };
 });
+      });
 },
 
 // Answer a mains question as a structured dossier of evidence.

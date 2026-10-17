@@ -47,6 +47,15 @@ var MAX_SENTENCES_PER_RECORD = 4;
 var MAX_SENTENCES_PER_ENTITY = Infinity;
 var MIN_SENTENCE_WORDS = 8;
 
+// classify-global marks the sub-topics it moved with a leading tick ("✓ Chera
+// dynasty"). The mark is meaningful in data/questions, where it records the
+// triage, but it is noise in a name a reader is shown as the source of a quote,
+// so it is stripped here the same way build-timeline.js and
+// build-ask-qb-buckets.js strip it from the same names. Stripping before the
+// slug is built also merges "✓ X" and "X" into one entity instead of two rows
+// for the same content.
+var MARK = /^\s*[\u2713\u2714\u2715\u2716\u2717\u25a1\u25a0\u2022\u25cf\u00b7*o\u25cb]\s*|\s*[\u2713\u2714\u25a1\u25a0\u2022\u25cf\u00b7*o\u25cb]\s*$/g;
+
 // Largest single shard file the browser can fetch. Two ceilings matter and the
 // lower one binds: raw.githubusercontent.com refuses to serve files over
 // 100 MiB (the corpus rides its own branch precisely because main cannot hold
@@ -197,7 +206,7 @@ function main() {
       walk(data, { cat: cat.name }, out);
       out.forEach(function (x) {
         stats.records++;
-        var name = entityOf(x.ctx, x.r);
+        var name = entityOf(x.ctx, x.r).replace(MARK, '').trim();
         if (!name) return;
         var sents = sentencesOf(x.r);
         if (!sents.length) return;
