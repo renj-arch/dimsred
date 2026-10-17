@@ -46,7 +46,18 @@ for (const f of fs.readdirSync(DIR)) {
 
 const index = {
   generatedAt: new Date().toISOString(),
-  total,
+  // The deduplicated unique count — the number archive.html/catalog.json show
+  // and visitors browse (questions re-filed into several files collapse to
+  // one). catalog.json is written by build-archive-single.js in the same
+  // pipeline pass; fall back to the raw per-file sum if it is missing.
+  total: (() => {
+    try {
+      const cat = JSON.parse(fs.readFileSync(path.join(DIR, 'catalog.json'), 'utf8'));
+      if (cat && typeof cat.total === 'number' && cat.total > 0) return cat.total;
+    } catch (e) {}
+    return total;
+  })(),
+  rawTotal: total,
   fileCount: files.length,
   manifestFileCount: (() => {
     try { return JSON.parse(fs.readFileSync(path.join(DIR, 'manifest.json'), 'utf8')).length; } catch (e) { return null; }

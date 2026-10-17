@@ -116,9 +116,23 @@ try {
   try {
     const cov = JSON.parse(fs.readFileSync('data/wiki-coverage.json', 'utf8'));
     const thr = cov.thresholds || {};
+    // Unique (cross-file-deduplicated) total written by the archive build —
+    // the number visitors actually browse in archive.html. The raw scan total
+    // can be larger: re-filed sub-topics leave duplicate entries in several
+    // files, so raw-vs-unique must never be shown as two competing "totals".
+    let covUnique = 0;
+    try { covUnique = JSON.parse(fs.readFileSync('data/questions/archive-index.json', 'utf8')).total || 0; } catch (e) {}
+    const covRaw = cov.totals ? cov.totals.questions : 0;
     add('info', 'coverage',
-      (cov.totals ? cov.totals.categories : '?') + ' categories · ' +
-      (cov.totals ? cov.totals.questions.toLocaleString('en-US') : '?') + ' questions',
+      // "subject files" (one question shard file each — what the coverage pass
+      // walks) — NOT archive categories, so it can never be read against
+      // archive.html's "137 categories" total as a contradiction.
+      (cov.totals ? cov.totals.categories : '?') + ' subject files · ' +
+      (covUnique ? covUnique.toLocaleString('en-US') + ' unique questions'
+                 : (covRaw ? covRaw.toLocaleString('en-US') + ' questions' : '? questions')),
+      (covUnique && covRaw > covUnique
+        ? covRaw.toLocaleString('en-US') + ' entries incl. ' + (covRaw - covUnique).toLocaleString('en-US') + ' cross-file copies · '
+        : '') +
       'Low: ' + (cov.totals ? cov.totals.low : '?') + ' · critical: ' + (cov.totals ? cov.totals.critical : '?') +
       ' (thresholds: critical < ' + (thr.critical || '?') + ', low < ' + (thr.low || '?') + ') · checked ' +
       String(cov.generatedAt || '').slice(0, 16) + 'Z');
