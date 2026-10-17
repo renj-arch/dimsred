@@ -346,11 +346,39 @@ function listPages() {
 // consumes a library's globals immediately at parse time and its lib scripts
 // must run synchronously (no defer). Shared contract between SelfCheck (which
 // strips defer in this case) and Perf (which must not re-add it).
+//
+// Native browser properties are NOT library consumers. The first version of
+// this check flagged any window.X, so index.html's inline AdSense snippet
+// ((adsbygoogle = window.adsbygoogle || [])...) read as "the page consumes a
+// deferred lib's globals" and selfcheck stripped defer from the head-loaded
+// widget scripts — which run before <body> exists without it and silently
+// no-op, re-creating the 2026-10-15 homepage outage. Native/third-party names
+// are ignored so only real lib globals trigger the rule.
+var NATIVE_WINDOW = {
+  addEventListener: 1, removeEventListener: 1, dispatchEvent: 1,
+  location: 1, history: 1, navigator: 1, screen: 1, performance: 1,
+  localStorage: 1, sessionStorage: 1, crypto: 1, console: 1, document: 1,
+  scrollTo: 1, scrollBy: 1, scroll: 1, scrollY: 1, scrollX: 1, pageYOffset: 1,
+  innerWidth: 1, innerHeight: 1, devicePixelRatio: 1, isSecureContext: 1,
+  open: 1, close: 1, alert: 1, confirm: 1, prompt: 1, print: 1, postMessage: 1,
+  matchMedia: 1, getComputedStyle: 1, requestAnimationFrame: 1,
+  setTimeout: 1, setInterval: 1, clearTimeout: 1, clearInterval: 1,
+  speechSynthesis: 1, SpeechSynthesisUtterance: 1, adsbygoogle: 1,
+  fetch: 1, XMLHttpRequest: 1, WebSocket: 1, URL: 1, URLSearchParams: 1,
+  Image: 1, Audio: 1, Blob: 1, FileReader: 1, AbortController: 1,
+  MutationObserver: 1, IntersectionObserver: 1, ResizeObserver: 1,
+  CustomEvent: 1, Event: 1, frameElement: 1, frames: 1, parent: 1, top: 1,
+  self: 1, name: 1, status: 1, origin: 1
+};
 function pageNeedsSyncScripts(html) {
   const inlineRe = /<script>([\s\S]*?)<\/script>/gi;
   let im;
   while ((im = inlineRe.exec(html)) !== null) {
-    if (/\bwindow\.[A-Za-z_$]/.test(im[1])) return true;
+    const winRe = /\bwindow\.([A-Za-z_$][A-Za-z0-9_$]*)/g;
+    let wm;
+    while ((wm = winRe.exec(im[1])) !== null) {
+      if (!NATIVE_WINDOW[wm[1]]) return true;
+    }
   }
   return false;
 }
