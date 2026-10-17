@@ -104,6 +104,7 @@ var defaultState = {
     quicksolve: { attempts:0, correct:0 }, instinct: { attempts:0, correct:0 },
     fivesec: { attempts:0, correct:0 }, examrush: { attempts:0, correct:0 },
     weakspot: { attempts:0, correct:0 },
+    grandslam: { attempts:0, correct:0 }, examsim: { attempts:0, correct:0 },
     quant: { attempts:0, correct:0 }, reasoning: { attempts:0, correct:0 },
     verbal: { attempts:0, correct:0 }
   },
@@ -402,8 +403,16 @@ window.SPEED_TECHNIQUES = SPEED_TECHNIQUES;
 window.TECHNIQUE_DRILLS = TECHNIQUE_DRILLS;
 
 function load() {
-  try { return JSON.parse(localStorage.getItem(KEY)) || JSON.parse(JSON.stringify(defaultState)); }
-  catch(e) { return JSON.parse(JSON.stringify(defaultState)); }
+  var s;
+  try { s = JSON.parse(localStorage.getItem(KEY)) || JSON.parse(JSON.stringify(defaultState)); }
+  catch(e) { s = JSON.parse(JSON.stringify(defaultState)); }
+  // Sessions saved before a mode existed lack its stats key — backfill so
+  // updateUI renders it and per-mode stats accumulate from the first try.
+  if (s && s.stats) {
+    if (!s.stats.examsim) s.stats.examsim = { attempts:0, correct:0 };
+    if (!s.stats.grandslam) s.stats.grandslam = { attempts:0, correct:0 };
+  }
+  return s;
 }
 function save(s) { localStorage.setItem(KEY, JSON.stringify(s)); }
 
@@ -8349,6 +8358,67 @@ GENERATORS.quant = generateQuantQuestion;
 GENERATORS.reasoning = generateReasoningQuestion;
 GENERATORS.verbal = generateVerbalQuestion;
 
+// ====== EXAM SIM — live, exam-grade mixed practice ======
+// Every question is generated fresh the moment it is served (no bank, no
+// repeats by design). Tiers mirror real bank/govt exam difficulty and pace:
+//   diff   1..10 — difficulty fed to the topic generators
+//   seconds      — per-question clock, roughly the pace of that exam
+//   weights      — section mix of the paper (Quant / Reasoning / English)
+var EXAM_TIERS = {
+  clerk:  { key:'clerk',  name:'Bank & SSC Clerk',      diff: 3,  seconds: 36, weights: { quant: 35, reasoning: 35, verbal: 30 } },
+  po:     { key:'po',     name:'Bank PO / SSC CGL',     diff: 5,  seconds: 30, weights: { quant: 35, reasoning: 35, verbal: 30 } },
+  mains:  { key:'mains',  name:'PO Mains / CGL Tier-2', diff: 8,  seconds: 24, weights: { quant: 35, reasoning: 40, verbal: 25 } },
+  expert: { key:'expert', name:'Expert (CAT-level)',    diff: 10, seconds: 18, weights: { quant: 40, reasoning: 40, verbal: 20 } }
+};
+window.MENTAL_EXAM_TIERS = EXAM_TIERS;
+
+function generateExamSimQuestion() {
+  var cfg = window.__mentalExamSim || EXAM_TIERS.po;
+  var d = cfg.diff;
+  var w = cfg.weights || { quant: 35, reasoning: 35, verbal: 30 };
+  var r = rand(1, 100), category;
+  if (r <= w.quant) category = 'quant';
+  else if (r <= w.quant + w.reasoning) category = 'reasoning';
+  else category = 'verbal';
+
+  var q = null;
+  try {
+    if (category === 'quant') q = generateQuantQuestion(d);
+    else if (category === 'reasoning') q = generateReasoningQuestion(d);
+    else q = generateVerbalQuestion(d);
+  } catch (e) { q = null; }
+  if (!q) { q = generateNumberSenseQuestion(d, 'exam'); category = 'quant'; }
+
+  q.type = 'examsim';
+  q._parentCategory = category;
+  q.timeLimit = cfg.seconds;
+  q.techniqueLabel = '🎯 ' + cfg.name + ' · ' + category.charAt(0).toUpperCase() + category.slice(1) +
+    (q.techniqueLabel ? ' — ' + q.techniqueLabel : '');
+
+  // Sanitise options: drop blanks/NaN/duplicates, guarantee the answer is
+  // present and there are exactly four distinct choices (exam format).
+  var seen = {}, distractors = [];
+  (q.options || []).forEach(function(o) {
+    if (o == null || String(o) === 'undefined' || String(o) === 'NaN') return;
+    var k = String(o);
+    if (seen[k]) return;
+    seen[k] = 1;
+    if (q.answer == null || String(o) !== String(q.answer)) distractors.push(o);
+  });
+  shuffle(distractors);
+  var opts = [];
+  if (q.answer != null) opts.push(q.answer);
+  for (var di = 0; di < distractors.length && opts.length < 4; di++) opts.push(distractors[di]);
+  var fillers = ['None of these', 'Cannot be determined', 'Data inadequate', 'All of these'];
+  for (var fi = 0; fi < fillers.length && opts.length < 4; fi++) {
+    if (opts.indexOf(fillers[fi]) < 0) opts.push(fillers[fi]);
+  }
+  shuffle(opts);
+  q.options = opts;
+  return q;
+}
+GENERATORS.examsim = generateExamSimQuestion;
+
 // ====== MAIN TRAINING FUNCTIONS ======
 window.startMentalSession = function(mode, opts) {
   var state = load();
@@ -8381,11 +8451,11 @@ window.startMentalSession = function(mode, opts) {
 
   if (!mode || !GENERATORS[mode]) mode = 'mixed';
   var subMode = opts.subMode || null;
-  var totalQ = (mode === 'puzzle') ? 5 : (mode === 'grandslam') ? 999 : 10;
+  var totalQ = (mode === 'puzzle') ? 5 : (mode === 'grandslam') ? 999 : (mode === 'examsim') ? (opts.total || 20) : 10;
 
-  // Inject mistake bank questions (skip for puzzle/weakspot/grandslam mode and when a specific sub-topic is chosen)
+  // Inject mistake bank questions (skip for puzzle/weakspot/grandslam/examsim mode and when a specific sub-topic is chosen)
   var mistakeQueue = [];
-  if (mode !== 'puzzle' && mode !== 'weakspot' && mode !== 'grandslam' && !subMode) {
+  if (mode !== 'puzzle' && mode !== 'weakspot' && mode !== 'grandslam' && mode !== 'examsim' && !subMode) {
     mistakeQueue = getMistakesForRetry(2);
   }
 
@@ -8400,6 +8470,7 @@ window.startMentalSession = function(mode, opts) {
     active: true,
     hardMode: !!opts.hardMode,
     focusType: opts.focusType || null,
+    label: opts.label || null,
     review: [],
     mistakeQueue: mistakeQueue
   };
@@ -8638,7 +8709,7 @@ window.submitMentalAnswer = function(session, question, selectedAnswer, timeRema
     session.active = false;
     var elapsed = Math.round((Date.now() - session.startTime) / 1000);
     var accuracy = session.totalQuestions > 0 ? Math.round(session.correct / session.totalQuestions * 100) : 0;
-    state.sessions.push({ mode: session.mode, subMode: session.subMode || '', correct: session.correct, total: session.totalQuestions, accuracy: accuracy, time: elapsed, date: new Date().toISOString(), hardMode: !!session.hardMode });
+    state.sessions.push({ mode: session.mode, subMode: session.subMode || '', label: session.label || '', correct: session.correct, total: session.totalQuestions, accuracy: accuracy, time: elapsed, date: new Date().toISOString(), hardMode: !!session.hardMode });
     if (state.sessions.length > 50) state.sessions = state.sessions.slice(-50);
   }
 
