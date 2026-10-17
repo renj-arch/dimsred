@@ -257,6 +257,30 @@
                 <div id="speedGrid"></div>
             </div>
 
+            <!-- INVENTED — brand-new questions invented by the site's AI -->
+            <div class="mode-card" style="margin-top:12px;padding:18px;border:2px solid rgba(34,211,238,.3);background:linear-gradient(135deg,rgba(34,211,238,.07),rgba(167,139,250,.07))">
+                <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+                    <span style="font-size:1.8em">🧪</span>
+                    <span style="font-size:1.2em;font-weight:900;background:linear-gradient(135deg,#22d3ee,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Invented — fresh paper</span>
+                </div>
+                <div style="font-size:.78em;color:var(--text-sec);text-align:center;margin-top:2px">The site's own AI question-setter invents brand-new questions — new twists, new framings, new numbers. Nothing here existed on any paper before.</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startInvented('easy')">🙂 Easy<span style="display:block;font-size:.85em;color:var(--text-muted)">warm-up</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startInvented('moderate')">🎯 Moderate<span style="display:block;font-size:.85em;color:var(--text-muted)">exam level</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startInvented('hard')">🔥 Hard<span style="display:block;font-size:.85em;color:var(--text-muted)">tricky</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startInvented('veryhard')">💀 Very Hard<span style="display:block;font-size:.85em;color:var(--text-muted)">mains-grade</span></button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:.75em;color:var(--text-sec)">
+                    <label>Questions:
+                        <select id="invCount" style="background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:1em">
+                            <option>8</option><option selected>12</option><option>20</option><option>30</option>
+                        </select>
+                    </label>
+                    <span>· Quant + Reasoning + English · fresh batches invented round the clock</span>
+                </div>
+                <div class="stat" id="stat-invented" style="margin-top:8px;font-size:.78em">0 solved</div>
+            </div>
+
             <!-- EXAM SIM — live, exam-grade mixed practice -->
             <div class="mode-card" style="margin-top:12px;padding:18px;border:2px solid rgba(251,146,60,.3);background:linear-gradient(135deg,rgba(251,146,60,.07),rgba(59,130,246,.07))">
                 <div style="display:flex;align-items:center;justify-content:center;gap:10px">
@@ -716,6 +740,56 @@
         hasHint = false;
         inPuzzleCluePhase = false;
         loadQuestion();
+    }
+
+    // Invented: questions made from scratch by the site's CI setter agent
+    // (data/invented/questions.json). Same arena UI; falls back to Exam Sim
+    // while the pool is still warming up or when offline.
+    function startInvented(diffKey) {
+        var fallback = { easy: 'clerk', moderate: 'po', hard: 'mains', veryhard: 'expert' };
+        var pts = { easy: 2, moderate: 3, hard: 4, veryhard: 5 };
+        var sel = document.getElementById('invCount');
+        var count = sel ? (parseInt(sel.value, 10) || 12) : 12;
+        var go = function(pool) {
+            var qs = (pool || []).filter(function(q) { return q && q.difficulty === diffKey; });
+            if (qs.length < 3) {
+                alert('The invented pool for this level is still warming up — starting an Exam Sim instead.');
+                startExamSim(fallback[diffKey] || 'po');
+                return;
+            }
+            for (var i = qs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = qs[i]; qs[i] = qs[j]; qs[j] = t; }
+            qs = qs.slice(0, count).map(function(q) {
+                return {
+                    question: q.stem,
+                    answer: q.answer,
+                    options: (q.options || []).slice(),
+                    solution: q.solution || '',
+                    hint: q.hint || '',
+                    timeLimit: q.seconds || 40,
+                    difficulty: pts[q.difficulty] || 3,
+                    section: q.section,
+                    techniqueLabel: '🧪 Invented · ' + q.section + ' · ' + q.difficulty
+                };
+            });
+            session = window.startMentalSession('invented', {
+                hardMode: document.getElementById('hardModeToggle').checked,
+                total: qs.length,
+                layer: 'exam',
+                label: '🧪 Invented · ' + diffKey + ' · ' + qs.length + 'Q',
+                questions: qs
+            });
+            document.getElementById('modeSelect').style.display = 'none';
+            document.getElementById('arena').classList.add('active');
+            answered = false;
+            hasHint = false;
+            inPuzzleCluePhase = false;
+            loadQuestion();
+        };
+        if (window.__inventedPool) { go(window.__inventedPool); return; }
+        fetch('data/invented/questions.json').then(function(r) { return r.json(); }).then(function(j) {
+            window.__inventedPool = (j && j.questions) || [];
+            go(window.__inventedPool);
+        }).catch(function() { go(null); });
     }
 
     function loadQuestion() {

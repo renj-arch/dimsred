@@ -104,7 +104,7 @@ var defaultState = {
     quicksolve: { attempts:0, correct:0 }, instinct: { attempts:0, correct:0 },
     fivesec: { attempts:0, correct:0 }, examrush: { attempts:0, correct:0 },
     weakspot: { attempts:0, correct:0 },
-    grandslam: { attempts:0, correct:0 }, examsim: { attempts:0, correct:0 },
+    grandslam: { attempts:0, correct:0 }, examsim: { attempts:0, correct:0 }, invented: { attempts:0, correct:0 },
     quant: { attempts:0, correct:0 }, reasoning: { attempts:0, correct:0 },
     verbal: { attempts:0, correct:0 }
   },
@@ -411,6 +411,7 @@ function load() {
   if (s && s.stats) {
     if (!s.stats.examsim) s.stats.examsim = { attempts:0, correct:0 };
     if (!s.stats.grandslam) s.stats.grandslam = { attempts:0, correct:0 };
+    if (!s.stats.invented) s.stats.invented = { attempts:0, correct:0 };
   }
   return s;
 }
@@ -8389,6 +8390,30 @@ function generateExamSimQuestion() {
   } catch (e) { q = null; }
   if (!q) { q = generateNumberSenseQuestion(d, 'exam'); category = 'quant'; }
 
+  // Some generators return compact {q,a,o} shapes — normalise BEFORE the
+  // option sanitation below: _mentCanon rebuilds options from the raw o
+  // list if it still sees that shape, which could smuggle back duplicates
+  // or a non-4 option list past our filter.
+  if (q.question === undefined && q.a !== undefined) {
+    q.question = q.q;
+    q.answer = q.a;
+    q.options = (q.o || []).slice();
+  }
+
+  // Generators occasionally return no usable key (answer null/NaN/blank) —
+  // replace the whole item with a known-correct mini question instead of
+  // letting _mentCanon pad it into a broken 5-option question downstream.
+  if (q.answer == null || String(q.answer).trim() === '' || /undefined|NaN/.test(String(q.answer))) {
+    var fa = rand(12, 48), fb = rand(3, 9), fv = fa * fb;
+    q = {
+      question: 'What is ' + fa + ' x ' + fb + '?',
+      answer: String(fv),
+      options: [String(fv), String(fv + fa), String(fv - fb), String(fv + 10)],
+      hint: 'Multiply directly.',
+      solution: fa + ' x ' + fb + ' = ' + fv
+    };
+  }
+
   q.type = 'examsim';
   q._parentCategory = category;
   q.timeLimit = cfg.seconds;
@@ -8399,7 +8424,7 @@ function generateExamSimQuestion() {
   // present and there are exactly four distinct choices (exam format).
   var seen = {}, distractors = [];
   (q.options || []).forEach(function(o) {
-    if (o == null || String(o) === 'undefined' || String(o) === 'NaN') return;
+    if (o == null || /undefined|NaN/.test(String(o))) return;
     var k = String(o);
     if (seen[k]) return;
     seen[k] = 1;
@@ -8449,13 +8474,13 @@ window.startMentalSession = function(mode, opts) {
     return resume;
   }
 
-  if (!mode || !GENERATORS[mode]) mode = 'mixed';
+  if (!mode || (!GENERATORS[mode] && mode !== 'invented')) mode = 'mixed';
   var subMode = opts.subMode || null;
-  var totalQ = (mode === 'puzzle') ? 5 : (mode === 'grandslam') ? 999 : (mode === 'examsim') ? (opts.total || 20) : 10;
+  var totalQ = (mode === 'puzzle') ? 5 : (mode === 'grandslam') ? 999 : (mode === 'examsim') ? (opts.total || 20) : (mode === 'invented') ? (opts.total || ((opts.questions || []).length || 10)) : 10;
 
-  // Inject mistake bank questions (skip for puzzle/weakspot/grandslam/examsim mode and when a specific sub-topic is chosen)
+  // Inject mistake bank questions (skip for puzzle/weakspot/grandslam/examsim/invented mode and when a specific sub-topic is chosen)
   var mistakeQueue = [];
-  if (mode !== 'puzzle' && mode !== 'weakspot' && mode !== 'grandslam' && mode !== 'examsim' && !subMode) {
+  if (mode !== 'puzzle' && mode !== 'weakspot' && mode !== 'grandslam' && mode !== 'examsim' && mode !== 'invented' && !subMode) {
     mistakeQueue = getMistakesForRetry(2);
   }
 
@@ -8481,6 +8506,9 @@ window.startMentalSession = function(mode, opts) {
       catch(e) { session.puzzles.push(fallbackPuzzle(state.difficulty.level)); }
     }
     session.puzzleIndex = 0;
+  }
+  if (mode === 'invented') {
+    session.inventedQueue = (opts.questions || []).slice();
   }
   return session;
 };
@@ -8543,6 +8571,23 @@ window.getMentalQuestion = function(session) {
       hint: puzzle.hint,
       solution: puzzle.solution || ''
     };
+  }
+
+  // Invented mode: questions come pre-made from data/invented/questions.json
+  // (the CI setter agent). Serve them one by one; the UI path is identical.
+  if (session.mode === 'invented') {
+    var iq = session.inventedQueue && session.inventedQueue.shift();
+    if (!iq) return null;
+    if (iq.question === undefined && iq.stem !== undefined) iq.question = iq.stem;
+    iq = _mentCanon(iq);
+    iq.displayType = 'normal';
+    iq.index = session.questionIndex;
+    iq.total = session.totalQuestions;
+    iq.progress = Math.round(session.questionIndex / session.totalQuestions * 100);
+    iq.timeLimit = iq.timeLimit || 40;
+    iq.techniqueLabel = iq.techniqueLabel || ('Invented - ' + (iq.section || 'mixed') + (iq.difficulty ? ' - ' + iq.difficulty : ''));
+    if (session.hardMode) iq.timeLimit = Math.max(3, Math.round(iq.timeLimit * 0.55));
+    return iq;
   }
 
   // Normalize the many raw shapes procedural generators return ({q,a,o},
