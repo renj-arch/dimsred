@@ -119,6 +119,11 @@ jobs:
           done
 
       - name: Wiki fill
+        # Step-level cap so a stalled network call can never park a shard past
+        # the 360-min job budget again (run 38974805883 hung 10 shards ~7h on
+        # one dead socket; the script now times out sockets too - this is the
+        # second seatbelt and leaves the merge job its window).
+        timeout-minutes: 330
         run: node scripts/wiki-fill-all.cjs
         env:
           WIKI_FILL_CHUNK: ${{ matrix.chunk }}

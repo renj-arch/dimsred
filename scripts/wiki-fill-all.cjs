@@ -37,7 +37,7 @@ function log(msg) {
 
 function fetchJSON(url) {
   return new Promise((resolve, reject) => {
-    https.get(url + '&origin=*', { headers: { 'User-Agent': 'WikiFill/1.0' } }, (res) => {
+    const req = https.get(url + '&origin=*', { headers: { 'User-Agent': 'WikiFill/1.0' } }, (res) => {
       let data = '';
       res.on('data', c => data += c);
       res.on('end', () => {
@@ -53,7 +53,13 @@ function fetchJSON(url) {
         }
         try { resolve(JSON.parse(data)); } catch (e) { reject(new Error('not valid JSON: ' + data.substring(0, 120))); }
       });
-    }).on('error', reject);
+    });
+    // A stalled socket used to leave this promise pending forever: the run's
+    // wall-clock deadline is only checked BETWEEN fetches, so one dead
+    // connection hung every shard for 7h (all chunks killed, work discarded).
+    // No data for 60s = dead; the retry logic upstream handles the error.
+    req.setTimeout(60000, () => { req.destroy(new Error('stalled - no data for 60s')); });
+    req.on('error', reject);
   });
 }
 

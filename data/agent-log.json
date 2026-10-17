@@ -1,165 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-13T15:37:31.526Z",
-   "model": "qwen3.5:4b",
-   "totalFixes": 236,
-   "byAgent": [
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 6
-    },
-    {
-     "agent": "a11y",
-     "count": 208
-    },
-    {
-     "agent": "code",
-     "count": 22
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "figures",
-     "count": 0
-    },
-    {
-     "agent": "flowcharts",
-     "count": 0
-    },
-    {
-     "agent": "mindmaps",
-     "count": 0
-    },
-    {
-     "agent": "features",
-     "count": 0
-    }
-   ]
-  },
-  {
-   "at": "2026-10-14T22:33:13.319Z",
-   "model": "qwen3.8:27b",
-   "totalFixes": 6,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 2
-    },
-    {
-     "agent": "questions",
-     "count": 4
-    },
-    {
-     "agent": "content",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "foresight",
-     "fixes": [
-      {
-       "page": "3d-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      },
-      {
-       "page": "test-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe.html)"
-      }
-     ]
-    },
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 252718 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 16 overlapping subtopics into correct categories"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Converted 301013 fill-in-blank questions to proper Q&A"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Updated 1233 question files"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-15T08:53:30.527Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 76,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 76
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "js/mental-training.js",
-       "fix": "CRITICAL FILE MISSING",
-       "kind": "critical"
-      },
-      {
-       "page": "data/papers.json",
-       "fix": "CRITICAL FILE MISSING",
-       "kind": "critical"
-      },
-      {
-       "page": "data/ask-index.json",
-       "fix": "CRITICAL FILE MISSING",
-       "kind": "critical"
-      },
-      {
-       "page": "404.html",
-       "fix": "Removed broken script ref js/bundles/core.js"
-      },
-      {
-       "page": "about.html",
-       "fix": "Removed broken script ref js/bundles/core.js"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Removed defer from 12 script tag(s) — a deferred script runs after parsing, but the inline code that reads its globals runs immediately, so the page always reported \"Failed to load\". Libs at the end of body need no defer."
-      },
-      {
-       "page": "chemistry.html",
-       "fix": "Removed broken script ref js/exam-tutor.js"
-      },
-      {
-       "page": "contact.html",
-       "fix": "Removed broken script ref js/bundles/core.js"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Removed defer from 6 script tag(s) — a deferred script runs after parsing, but the inline code that reads its globals runs immediately, so the page always reported \"Failed to load\". Libs at the end of body need no defer."
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Removed broken script ref js/bundles/core.js"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-15T09:35:25.147Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 0,
@@ -563,8 +404,107 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-16T22:49:47.939Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      },
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      },
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-17T05:00:26.482Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      },
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      },
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-17T06:54:39.037Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      },
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      },
+      {
+       "page": "Homepage",
+       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-16T19:57:00.179Z",
+ "lastRun": "2026-10-17T06:54:39.037Z",
  "model": "qwen3.8:27b"
 }
