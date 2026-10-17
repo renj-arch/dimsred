@@ -92,13 +92,13 @@ function ollamaChat(payload) {
     let lastByteAt = Date.now();
     let settled = false;
 
-    function fail(why) {
+    function fail(why, status) {
       if (settled) return;
       settled = true;
       clearInterval(mon);
       try { child.kill('SIGKILL'); } catch (e) { /* ignore */ }
       const err = new Error('stream monitor: ' + why);
-      err.status = 28; // same class as curl timeout -> restart+retry policy
+      err.status = status === undefined ? 28 : status; // 28 = curl-timeout class (restart+retry); other = plain fail
       err.stdout = out.slice(0, 2000);
       err.stderr = stderr.slice(0, 400);
       reject(err);
@@ -106,6 +106,11 @@ function ollamaChat(payload) {
 
     const mon = setInterval(() => {
       const now = Date.now();
+      // Deadline abort: when AGENT_DEADLINE_MIN is set and reached while a
+      // call is in flight, end the stream NOW with a custom status so
+      // callLLM does NOT do the exit-28 restart+retry dance. The abandoned
+      // server-side generation finishes on its own; nothing new starts.
+      if (pastDeadline()) return fail('agent deadline reached mid-call', 'DEADLINE');
       if (now - started > 95 * 60 * 1000) return fail('hard cap 95min');
       if (!firstByteAt) {
         if (now - started > 25 * 60 * 1000) return fail('no first byte in 25min (cold load/prompt eval over budget)');

@@ -13,7 +13,12 @@ on:
 
 concurrency:
   group: question-quality
-  cancel-in-progress: true
+  # false, NOT true: this pipeline publishes only at the very END (archive +
+  # quiz conversions + commit). cancel-in-progress killed 59 of the last 60
+  # runs mid-flight — the converter step never executed even once since it
+  # shipped on 2026-10-15. With false, a newer trigger waits (superseding any
+  # older pending run) instead of murdering the in-flight publish.
+  cancel-in-progress: false
 
 permissions:
   contents: write

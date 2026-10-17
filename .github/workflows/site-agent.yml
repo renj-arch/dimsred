@@ -18,7 +18,10 @@ on:
 
 concurrency:
   group: site-agent
-  cancel-in-progress: true
+  # false: the chained back-to-back runs above publish at the END (ci-push).
+  # A late-arriving trigger must WAIT — pending supersedes pending — not
+  # kill the in-progress run mid-publish (the same lesson chain.yml learned).
+  cancel-in-progress: false
 
 permissions:
   contents: write
