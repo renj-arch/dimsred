@@ -203,10 +203,14 @@ function main() {
   });
 
   const crypto = require('crypto');
+  // Normalise CRLF -> LF before hashing: Windows working copies are CRLF while
+  // CI checkouts are LF, and a raw-bytes hash then differed per machine -- the
+  // first CI run saw "changed inputs", rebuilt, and committed a hash-only diff.
+  const norm = (p) => Buffer.from(fs.readFileSync(p, 'utf8').replace(/\r\n/g, '\n'), 'utf8');
   const inputsHash = crypto.createHash('sha256')
-    .update(fs.readFileSync(path.join(ROOT, 'data/topic-layers.json')))
-    .update(fs.readFileSync(path.join(ROOT, 'data/revision-content.json')))
-    .update(fs.readFileSync(path.join(ROOT, 'data/person-bios.json')))
+    .update(norm(path.join(ROOT, 'data/topic-layers.json')))
+    .update(norm(path.join(ROOT, 'data/revision-content.json')))
+    .update(norm(path.join(ROOT, 'data/person-bios.json')))
     .digest('hex').slice(0, 16);
   const out = {
     inputsHash: inputsHash,
