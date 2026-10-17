@@ -86,6 +86,11 @@ var QB = 'data/ask-qb/';
   function isCorpusShard(url) {
     var u = String(url);
     return u.indexOf('ask-qb/bucket/bucket.') !== -1 ||
+           // The bucket manifest is small and committed on main, but during the
+           // window between a corpus push and the Cloudflare deploy of the
+           // matching main commit the origin copy is a rebuild behind; the
+           // corpus copy is authoritative and costs 55 KB.
+           u.indexOf('ask-qb/bucket/buckets.json') !== -1 ||
            u.indexOf('ask-qb/phrase/phrase.') !== -1 ||
            // Category shards (ask-qb.N.json and their split parts) ride the same
            // corpus branch. They are gitignored from main, the deploy target
