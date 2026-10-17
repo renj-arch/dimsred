@@ -20,12 +20,26 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.PAT }}
-          fetch-depth: 1
+      # Replaces actions/checkout on purpose. A full checkout downloads the
+      # 8.8 GB data/questions blobs this job never touches; on a 15-minute
+      # timeout that ate the whole budget (first dispatch: compile OK,
+      # publish killed mid-step). Same lean fetch as slim-live.yml, except the
+      # remote carries the PAT because ci-push's push must trigger downstream
+      # workflows (slim-live, deploy).
+      - name: Fetch main without downloading question blobs
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "https://x-access-token:${{ secrets.PAT }}@github.com/$GITHUB_REPOSITORY.git"
+          git fetch -q --depth=50 --filter=blob:none origin main
+          git sparse-checkout init --no-cone
+          git sparse-checkout set --no-cone '/*' '!/data/questions/'
+          git update-ref refs/remotes/origin/main FETCH_HEAD
+          git checkout -q -B main FETCH_HEAD
+          git branch -q --set-upstream-to=origin/main
+          echo "checked out $(git ls-files | wc -l) paths"
 
       - uses: actions/setup-node@v4
         with:
