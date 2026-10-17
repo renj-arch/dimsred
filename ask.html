@@ -1169,6 +1169,9 @@ if (window.VlymbooqAskLLM) {
     modelSel.value = VlymbooqAskLLM.currentModelKey();
   }
   fillModelOptions();
+  // The runtime model set (data/webllm-models.json) may land a beat later --
+  // refill so the picker shows the newest sizes without a reload.
+  if (VlymbooqAskLLM.whenReady) VlymbooqAskLLM.whenReady().then(function () { fillModelOptions(); });
   modelSel.addEventListener('change', function () {
     try { localStorage.setItem('askModel', modelSel.value); } catch (err) {}
   });

@@ -175,6 +175,12 @@ upsc_sorted_topics.csv
 # mega-test.html?exam=<slug> on single click. Regenerated when stale (>7d).
 !data/practice-sets/
 !data/practice-sets/*.json
+# WebLLM model set (scripts/update-webllm-models.js, weekly webllm-upgrade
+# workflow): the runtime config ask-llm.js reads to offer the newest validated
+# models. Same rule as mega-quiz.json — un-allowlisted, git add skips it and
+# the page silently falls back to its built-ins, so an upgrade would never
+# reach visitors.
+!data/webllm-models.json
 
 # Python bytecode from local train/finetune.py checks
 __pycache__/
