@@ -138,10 +138,12 @@ function decodeEntities(s) {
 }
 
 // UTF-8 text that was once decoded as windows-1252 shows up as mojibake
-// ("âˆš" for "√", "â‚‚" for "₂", "Clâ‚‚" for "Cl₂"). Reverse it: map the string
-// back to cp1252 bytes and decode as UTF-8 — but only when that yields valid
-// text, so legitimately non-ASCII strings are never mangled.
+// ("âˆš" for "√", "â‚‚" for "₂", "Clâ‚‚" for "Cl₂"). Reverse it by decoding
+// each mojibake *run* back to UTF-8. Decoding run-by-run (instead of the whole
+// string) keeps genuine characters like "•" or "é" — which map to high bytes —
+// from poisoning the decode.
 var CP1252_HIGH = {
+  '\u20AC': 0x80,
   '\u201A': 0x82, '\u0192': 0x83, '\u201E': 0x84, '\u2026': 0x85, '\u2020': 0x86, '\u2021': 0x87,
   '\u02C6': 0x88, '\u2030': 0x89, '\u0160': 0x8A, '\u2039': 0x8B, '\u0152': 0x8C, '\u017D': 0x8E,
   '\u2018': 0x91, '\u2019': 0x92, '\u201C': 0x93, '\u201D': 0x94, '\u2022': 0x95, '\u2013': 0x96,
@@ -151,17 +153,20 @@ var CP1252_HIGH = {
 
 function fixMojibake(s) {
   if (!/[ÂÃâ]/.test(s)) return s;
-  var bytes = [];
-  for (var i = 0; i < s.length; i++) {
-    var ch = s[i], cc = s.charCodeAt(i);
-    if (cc <= 0xFF) bytes.push(cc);
-    else if (CP1252_HIGH[ch] !== undefined) bytes.push(CP1252_HIGH[ch]);
-    else return s;
-  }
-  var dec = Buffer.from(bytes).toString('utf8');
-  if (dec.indexOf('\uFFFD') !== -1) return s;
-  if (dec === s) return s;
-  return dec;
+  var CONT = '\u0080-\u00BF\u201A\u0192\u201E\u2026\u2020\u2021\u02C6\u2030\u0160\u2039\u0152\u017D\u2018\u2019\u201C\u201D\u2022\u2013\u2014\u02DC\u2122\u0161\u203A\u0153\u017E\u0178\u20AC';
+  var RUN = new RegExp('[\u00C0-\u00C3\u00E0-\u00EF\u00F0][' + CONT + ']+', 'g');
+  return s.replace(RUN, function (seq) {
+    var bytes = [];
+    for (var i = 0; i < seq.length; i++) {
+      var ch = seq[i], cc = seq.charCodeAt(i);
+      if (cc <= 0xFF) bytes.push(cc);
+      else if (CP1252_HIGH[ch] !== undefined) bytes.push(CP1252_HIGH[ch]);
+      else return seq;
+    }
+    var dec = Buffer.from(bytes).toString('utf8');
+    if (dec === '' || dec.indexOf('\uFFFD') !== -1) return seq;
+    return dec;
+  });
 }
 
 // A fragment counts as a real word only if it is long enough to be reliable in
@@ -213,11 +218,14 @@ function repairWordSplits(text, V) {
 function tryJoinRules(w1, w2, w3, V) {
   var j1 = w1.toLowerCase(), j2 = w2.toLowerCase();
 
-  // A0: single capital letter + lowercase fragment ("S tadium")
+  // A0: single capital letter + lowercase fragment ("S tadium", "W omen").
+  // When the fragment is itself a word ("omen"), only a letter that is not a
+  // word/article ("A", "I") may absorb it — otherwise "A man" could become
+  // "Aman". In that case the joined form must be a known word.
   if (w1.length === 1 && w1 === w1.toUpperCase() && !COMMON_SET.has(j1) &&
-      w2.length >= 3 && w2 === j2 && !isWord(j2, V)) {
+      w2.length >= 3 && w2 === j2 && (!isWord(j2, V) || (j1 !== 'a' && j1 !== 'i'))) {
     var joinedA0 = j1 + j2;
-    if (V.has(joinedA0) || joinedA0.length >= 6) return { text: w1 + w2, consumed: 3 };
+    if (V.has(joinedA0) || (!isWord(j2, V) && joinedA0.length >= 6)) return { text: w1 + w2, consumed: 3 };
   }
 
   // C: triple join (requires a third word)
@@ -594,6 +602,7 @@ module.exports = {
   tryJoinRules: tryJoinRules,
   repairOnePass: repairOnePass,
   inspectQuestion: inspectQuestion,
+  classifySection: classifySection,
   pairSplitHits: pairSplitHits,
   rareTokens: rareTokens,
   isWord: isWord,
