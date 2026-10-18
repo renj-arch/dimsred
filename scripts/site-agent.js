@@ -2824,6 +2824,120 @@ async function agentMainsUpdates() {
   return { agent: 'mainsupdates', fixes: fixes };
 }
 
+// ── AGENT: BankFigures — figures for the pre-inline static SSC-JE bank ──
+// The ~7,000-question SSC-JE quiz bank predates inline figures, and its 42 JS
+// files should not be rewritten to add them. Instead this agent draws small,
+// labeled SVGs and stores them in data/ssc-je-qfig.json keyed by a hash of the
+// normalized question text; js/ssc-je-training.js applies them at render time
+// (and re-checks a stored text prefix, so a hash collision can never show the
+// wrong diagram). Every figure passes the same server gate as practice-set
+// figures (cleanFigSvg) and the client gate (js/fig-svg.js) — junk is dropped
+// silently, and when a diagram would not genuinely help, the model must skip.
+// Three questions per run; the cursor in the sidecar sweeps the whole bank.
+const BANK_FIGS = 'data/ssc-je-qfig.json';
+function readBankText(p) {
+  const b = fs.readFileSync(p);
+  if (b[0] === 0xFF && b[1] === 0xFE) return b.slice(2).toString('utf16le'); // some bank files are UTF-16LE
+  if (b[0] === 0xEF && b[1] === 0xBB && b[2] === 0xBF) return b.slice(3).toString('utf8');
+  return b.toString('utf8');
+}
+function qfigHash(t) {
+  const s = String(t || '').toLowerCase().replace(/\s+/g, ' ').trim();
+  let h = 2166136261;
+  for (let i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return (h >>> 0).toString(16);
+}
+function loadBankQuestions() {
+  const out = [];
+  let files = [];
+  try { files = fs.readdirSync('js').filter(f => /^ssc-je-.*\.js$/.test(f) && f !== 'ssc-je-training.js'); } catch (e) { return out; }
+  for (const f of files) {
+    let code = '';
+    try { code = readBankText('js/' + f); } catch (e) { continue; }
+    const sandbox = {};
+    try { new Function('window', 'self', 'document', code)(sandbox, sandbox, { querySelector: function () { return null; } }); } catch (e) { continue; }
+    for (const k of Object.keys(sandbox)) {
+      const v = sandbox[k];
+      if (!v || typeof v !== 'object') continue;
+      for (const sub in v) {
+        if (!Array.isArray(v[sub])) continue;
+        for (const q of v[sub]) {
+          if (q && q.q && !q.f) out.push({ sub: sub, q: String(q.q), h: String(q.h || ''), a: String(q.a || '') });
+        }
+      }
+    }
+  }
+  return out;
+}
+async function agentBankFigures() {
+  const fixes = [];
+  let side = loadJson(BANK_FIGS, null);
+  if (!side || typeof side !== 'object') side = {};
+  if (!side.meta || typeof side.meta !== 'object') side.meta = {};
+  if (!side.figs || typeof side.figs !== 'object') side.figs = {};
+  if (typeof side.meta.cursor !== 'number') side.meta.cursor = 0;
+  const all = loadBankQuestions();
+  if (!all.length) return { agent: 'bankfigures', fixes: fixes };
+  const start = side.meta.cursor % all.length;
+  const rotated = all.slice(start).concat(all.slice(0, start));
+  const picks = [];
+  let lastIdx = 0;
+  for (let i = 0; i < rotated.length && picks.length < 3; i++) {
+    const item = rotated[i];
+    if (!side.figs[qfigHash(item.q)]) { picks.push(item); lastIdx = i; }
+  }
+  if (!picks.length) {
+    console.log('agent: BankFigures — bank fully covered (' + Object.keys(side.figs).length + ' figures)');
+    return { agent: 'bankfigures', fixes: fixes };
+  }
+  let added = 0;
+  for (const item of picks) {
+    let r = null;
+    try {
+      r = await callLLM(
+        'You write tiny inline SVG diagrams for an SSC-JE mechanical-engineering question bank. Draw ONE labeled monochrome diagram that explains the concept the question tests: a free-body or section sketch, a stress/strain or cycle curve on labeled axes, a velocity diagram, a mechanism outline. Style rules: exactly one <svg> element, viewBox="0 0 360 220", stroke #222, fill none, stroke-width 1.5, font-size 12, short labels (at most 4 words), transparent background, at most 40 shapes, no colors, no scripts, no images, no <style>. If a diagram would NOT genuinely help this question, do not force one. Reply STRICT JSON only: {"svg":"<svg ...>...</svg>"} or {"skip":true}.',
+        'Subject: ' + item.sub + '\nQuestion: ' + item.q + '\nHint: ' + item.h + '\nAnswer: ' + item.a,
+        2000
+      );
+    } catch (e) { r = null; }
+    let ok = false;
+    if (r && r.text) {
+      try {
+        const txt = String(r.text).replace(/```[a-z]*|```/gi, '').trim();
+        const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+        if (j && j.svg) {
+          const svg = cleanFigSvg(String(j.svg));
+          if (svg && /<text/i.test(svg)) {
+            side.figs[qfigHash(item.q)] = {
+              svg: svg,
+              n: String(item.q).toLowerCase().replace(/\s+/g, ' ').trim().slice(0, 120),
+              sub: item.sub,
+              at: new Date().toISOString().slice(0, 10)
+            };
+            added++;
+            ok = true;
+          }
+        }
+      } catch (e) { /* unparseable — nothing ships */ }
+    }
+    if (!ok) console.log('agent: BankFigures — skipped "' + item.q.slice(0, 50) + '" (' + (r ? 'no usable svg' : 'llm unavailable') + ')');
+  }
+  side.meta.cursor = (start + lastIdx + 1) % all.length;
+  side.meta.built = Object.keys(side.figs).length;
+  if (added) side.meta.updatedAt = new Date().toISOString();
+  saveJson(BANK_FIGS, side);
+  if (added) {
+    fixes.push({
+      page: BANK_FIGS,
+      kind: 'figure',
+      fix: added + ' bank figure(s) added (' + side.meta.built + ' total)',
+      text: picks.map(function (p) { return p.q.slice(0, 80); }).join(' | ').slice(0, 400)
+    });
+  }
+  console.log('agent: BankFigures — ' + added + '/' + picks.length + ' added this run, ' + side.meta.built + ' total');
+  return { agent: 'bankfigures', fixes: fixes };
+}
+
 // ── AGENT: GraphNotes — proper relationship explanations on flowchart cards ──
 // Clicking Gandhi showed generic (sometimes wrong-entity) descriptions and
 // "mentioned with" everywhere, plus junk cards (TV sitcoms, absurd spans).
@@ -3362,6 +3476,7 @@ async function main() {
     ['WikiSyllabus', agentWikiSyllabus],
     ['PracticeSets', agentPracticeSets],
     ['MainsUpdates', agentMainsUpdates],
+    ['BankFigures', agentBankFigures],
     ['GraphNotes', agentGraphNotes],
     ['MetaLearn', agentMetaLearn]
   ];

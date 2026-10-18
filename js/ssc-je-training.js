@@ -9,6 +9,38 @@
     try { return (window.VlymbooqFig && window.VlymbooqFig.toSafeSvg) ? window.VlymbooqFig.toSafeSvg(s) : ''; } catch (e) { return ''; }
   }
 
+  // Figures for the static bank that predates inline `f` fields: the site's CI
+  // agent draws them and writes data/ssc-je-qfig.json, keyed by a hash of the
+  // normalized question text. Applied at render time; the client sanitizer
+  // still gates every SVG (fail closed), and the stored text prefix must match
+  // before a figure is trusted, so a hash collision can never show the wrong
+  // diagram. A missing or broken file simply means no figures.
+  var QFIG = {};
+  function qfigHash(t) {
+    var s = String(t || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    var h = 2166136261;
+    for (var i = 0; i < s.length; i++) { h ^= s.charCodeAt(i); h = Math.imul(h, 16777619); }
+    return (h >>> 0).toString(16);
+  }
+  function qfigFor(q) {
+    if (q.f) return q.f;
+    try {
+      var n = String(q.q || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      if (!n) return '';
+      var hit = QFIG[qfigHash(q.q)];
+      if (hit && hit.svg && hit.n && n.indexOf(hit.n) === 0) return hit.svg;
+    } catch (e) { /* no figure this render */ }
+    return '';
+  }
+  try {
+    if (typeof fetch === 'function' && window.location && window.location.protocol.indexOf('http') === 0) {
+      fetch('data/ssc-je-qfig.json')
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (d) { if (d && d.figs && typeof d.figs === 'object') QFIG = d.figs; })
+        .catch(function () { /* stay empty; questions render without figures */ });
+    }
+  } catch (e) { /* fail closed */ }
+
   function merge(dest, src) {
     if (!src) return;
     var k;
@@ -506,10 +538,8 @@
     h += '<div class="ssc-card">';
     h += '<div class="ssc-qnum">Q' + (state.idx + 1) + ' / ' + state.total + (q.exam ? ' <span style="color:var(--amber)">' + q.exam + '</span>' : '') + '</div>';
     h += '<div class="ssc-qtext">' + q.q + '</div>';
-    if (q.f) {
-      var _fig = figSvg(q.f);
-      if (_fig) h += '<div class="ssc-qfig" style="margin:10px 0;padding:8px;background:#fff;border-radius:8px;overflow:auto">' + _fig + '</div>';
-    }
+    var _fig = figSvg(qfigFor(q));
+    if (_fig) h += '<div class="ssc-qfig" style="margin:10px 0;padding:8px;background:#fff;border-radius:8px;overflow:auto">' + _fig + '</div>';
 
     h += '<div class="ssc-section">';
     h += '<button class="ssc-toggle" data-t="hint">Show Hint</button>';

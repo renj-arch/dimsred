@@ -68,6 +68,10 @@ data/questions/state-tracker.json
 # fetches it at runtime; must be tracked for the same slim-live git-index
 # reason as the bank above or the rail would silently never render.
 !data/mains-updates.json
+# Figures for the static SSC-JE quiz bank, keyed by question-text hash. The
+# quiz page fetches this at runtime and the site agent appends to it; tracked
+# for the same slim-live git-index reason as the bank above.
+!data/ssc-je-qfig.json
 # ask.html fetches this prebuilt retrieval index at runtime. Same reasoning as
 # mains-questions.json: slim-live builds from the git index, so without this the
 # Ask page would load with no data. The sentence rows are sharded out of it
