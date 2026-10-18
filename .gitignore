@@ -72,6 +72,11 @@ data/questions/state-tracker.json
 # quiz page fetches this at runtime and the site agent appends to it; tracked
 # for the same slim-live git-index reason as the bank above.
 !data/ssc-je-qfig.json
+# Mock-test machinery: the pattern registry the ExamPatterns agent keeps
+# current (mocks read it at load) and the fresh pattern-matched question pool
+# MockPapers grows every run. Both must deploy with the site.
+!data/exam-patterns.json
+!data/mock-fresh.json
 # ask.html fetches this prebuilt retrieval index at runtime. Same reasoning as
 # mains-questions.json: slim-live builds from the git index, so without this the
 # Ask page would load with no data. The sentence rows are sharded out of it

@@ -2938,6 +2938,152 @@ async function agentBankFigures() {
   return { agent: 'bankfigures', fixes: fixes };
 }
 
+// ── AGENT: MockPapers — fresh questions for the unlimited mock tests ──
+// The mock engine on /ssc-je blends a fresh pool (data/mock-fresh.json) ahead
+// of the static bank. This agent writes one subject batch per run in the
+// model's own words (nothing copied), validates strictly, and skips anything
+// that duplicates the bank or the pool. Subject rotation lives in the file
+// cursor, so the pool sweeps the whole technical syllabus over time.
+const MOCK_FRESH = 'data/mock-fresh.json';
+const MOCK_SUBJECT_ROT = [
+  ['som', 'Strength of Materials'], ['tom', 'Theory of Machines'],
+  ['thermo', 'Thermodynamics'], ['fluids', 'Fluid Mechanics'],
+  ['design', 'Machine Design'], ['production', 'Production Technology'],
+  ['emech', 'Engineering Mechanics'], ['materials', 'Materials & Metallurgy'],
+  ['rac', 'Refrigeration & Air Conditioning'], ['ice', 'IC Engines'],
+  ['hydmach', 'Hydraulic Machines'], ['heatt', 'Heat Transfer'],
+  ['maths', 'Engineering Mathematics'], ['industrial', 'Industrial Engineering'],
+  ['workshop', 'Workshop Technology'], ['steamturb', 'Steam Turbines'],
+  ['boilers', 'Boilers'], ['aircomp', 'Air Compressors'],
+  ['gasturb', 'Gas Turbines'], ['powerplant', 'Power Plant Engineering']
+];
+async function agentMockPapers() {
+  const fixes = [];
+  let pool = loadJson(MOCK_FRESH, null);
+  if (!pool || typeof pool !== 'object') pool = {};
+  if (!pool.meta || typeof pool.meta !== 'object') pool.meta = {};
+  if (!Array.isArray(pool.items)) pool.items = [];
+  if (typeof pool.meta.cursor !== 'number') pool.meta.cursor = 0;
+  const pick = MOCK_SUBJECT_ROT[pool.meta.cursor % MOCK_SUBJECT_ROT.length];
+
+  const r = await callLLM(
+    'You are an exam question setter for Indian junior-engineer exams (SSC JE, RRB JE). Write NEW practice questions in your own words \u2014 direct-answer style (the app reveals hint, answer and solution, so no multiple-choice options; for numericals, state the given data inside the question). Use only standard textbook physics/engineering facts; never invent data.',
+    'Generate 10 new exam-style questions on: ' + pick[1] + '.\n' +
+    'Mix definition, numerical and applied-conceptual questions; each on a DIFFERENT sub-topic. Difficulty: SSC JE / RRB JE level.\n' +
+    'Reply STRICT JSON array only: [{"q":"\u2026","h":"one-line hint","a":"direct answer (value+unit where numerical)","s":"2-3 sentence solution/why"}].',
+    2400
+  );
+  let added = 0;
+  if (r && r.text) {
+    try {
+      const txt = String(r.text).replace(/```[a-z]*|```/gi, '').trim();
+      const arr = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1));
+      if (Array.isArray(arr)) {
+        // Dedupe keys: the static bank + everything already in the pool.
+        const seen = {};
+        loadBankQuestions().forEach(function (x) { seen[qfigHash(x.q)] = 1; });
+        pool.items.forEach(function (x) { if (x && x.q) seen[qfigHash(x.q)] = 1; });
+        for (const x of arr) {
+          if (!x || !x.q || !x.a) continue;
+          const q = String(x.q).trim(), a = String(x.a).trim();
+          const h = String(x.h || '').trim(), s = String(x.s || '').trim();
+          if (q.length < 12 || q.length > 500 || a.length < 1 || a.length > 300) continue;
+          const hk = qfigHash(q);
+          if (seen[hk]) continue;
+          seen[hk] = 1;
+          pool.items.push({ ex: 'ssc-je', sub: pick[1], q: q, a: a, h: h, s: s, at: new Date().toISOString().slice(0, 10) });
+          added++;
+        }
+      }
+    } catch (e) { /* unparseable — nothing ships */ }
+  }
+  const CAP = 360;
+  if (pool.items.length > CAP) pool.items = pool.items.slice(-CAP);
+  pool.meta.cursor = (pool.meta.cursor + 1) % MOCK_SUBJECT_ROT.length;
+  pool.meta.count = pool.items.length;
+  if (added) pool.meta.updatedAt = new Date().toISOString();
+  saveJson(MOCK_FRESH, pool);
+  if (added) fixes.push({ page: MOCK_FRESH, kind: 'content', fix: added + ' fresh mock questions on ' + pick[1] + ' (' + pool.meta.count + ' in pool)', text: pick[1] });
+  console.log('agent: MockPapers — ' + added + ' questions on ' + pick[1] + ' (' + pool.meta.count + ' in pool)');
+  return { agent: 'mockpapers', fixes: fixes };
+}
+
+// ── AGENT: ExamPatterns — keeps the mock-test pattern registry current ──
+// Mock tests follow data/exam-patterns.json. This agent watches news signals
+// for JE-exam pattern/notification events and updates the registry ONLY when
+// the model points at one of the fetched signal links as its source and the
+// numbers pass sanity bounds; otherwise it records a dated, unverified watch
+// note. Numbers are never invented without a source, and a pattern's verified
+// date moves only on a real, sourced update. One model call, only when
+// signals exist; feeds are used as event titles only, never article text.
+const EXAM_PATTERNS = 'data/exam-patterns.json';
+function patternDay() { return new Date().toISOString().slice(0, 10); }
+async function agentExamPatterns() {
+  const fixes = [];
+  const conf = loadJson(EXAM_PATTERNS, null);
+  if (!conf || !Array.isArray(conf.patterns) || !conf.patterns.length) return { agent: 'exampatterns', fixes: fixes };
+  if (!conf.meta || typeof conf.meta !== 'object') conf.meta = {};
+  if (!Array.isArray(conf.meta.changelog)) conf.meta.changelog = [];
+
+  // Event signals: JE-exam stories that talk about pattern/notification and
+  // could carry a change. Headlines only — feeds are never article text.
+  const signals = [];
+  for (const [name, url] of MAINS_FEEDS) {
+    const items = rssItems(curlText(url), name, 12);
+    for (const it of items) {
+      if (!/SSC|RRB|Staff Selection|Railway/i.test(it.title)) continue;
+      if (!/JE|Junior Engineer|pattern|syllabus|negative|marking|paper/i.test(it.title)) continue;
+      signals.push(it);
+    }
+  }
+  const sig = signals.slice(0, 8);
+  if (!sig.length) {
+    conf.meta.lastChecked = patternDay();
+    saveJson(EXAM_PATTERNS, conf);
+    console.log('agent: ExamPatterns — no pattern signals in feeds');
+    return { agent: 'exampatterns', fixes: fixes };
+  }
+  const current = conf.patterns.map(function (p) { return p.id + ' | ' + p.name + ' | qs=' + p.qs + ' min=' + p.min + ' neg=' + p.neg; }).join('\n');
+  const r = await callLLM(
+    'You audit exam-pattern news for Indian junior-engineer exams. You are given CURRENT mock-pattern numbers and recent headlines. Decide if any headline reports an actual pattern change (question count, duration, negative marking, sections). Reply STRICT JSON: {"changed":false} OR {"changed":true,"id":"<one of the given pattern ids>","updates":{"qs":N?, "min":N?, "neg":N?},"note":"one line","source":"<the exact link>"} \u2014 include only fields that genuinely changed, and only when the headline text supports it. If unsure, reply {"changed":false}.',
+    'CURRENT PATTERNS:\n' + current + '\n\nHEADLINES:\n' + sig.map(function (s, i) { return '[' + (i + 1) + '] ' + s.title + ' (' + s.source + ', ' + s.date + ') ' + s.link; }).join('\n'),
+    800
+  );
+  let applied = false;
+  if (r && r.text) {
+    try {
+      const txt = String(r.text).replace(/```[a-z]*|```/gi, '').trim();
+      const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+      if (j && j.changed && j.id && j.updates && j.source) {
+        const linkOk = sig.some(function (s) { return s.link === j.source; });
+        const p = conf.patterns.filter(function (x) { return x.id === j.id; })[0];
+        if (linkOk && p) {
+          let touched = false;
+          if (typeof j.updates.qs === 'number' && j.updates.qs >= 10 && j.updates.qs <= 300) { p.qs = Math.round(j.updates.qs); touched = true; }
+          if (typeof j.updates.min === 'number' && j.updates.min >= 20 && j.updates.min <= 300) { p.min = Math.round(j.updates.min); touched = true; }
+          if (typeof j.updates.neg === 'number' && j.updates.neg >= 0 && j.updates.neg <= 0.5) { p.neg = Math.round(j.updates.neg * 100) / 100; touched = true; }
+          if (touched) {
+            p.verifiedAt = patternDay();
+            p.source = (j.note ? String(j.note).slice(0, 160) + ' \u2014 ' : '') + j.source;
+            conf.meta.updatedAt = patternDay();
+            conf.meta.changelog.push({ at: patternDay(), id: p.id, note: String(j.note || '').slice(0, 200), source: j.source, verified: true });
+            applied = true;
+          }
+        }
+        if (!applied) {
+          conf.meta.changelog.push({ at: patternDay(), id: String(j.id).slice(0, 40), note: String(j.note || 'reported change could not be confirmed with a source').slice(0, 200), source: String(j.source).slice(0, 300), verified: false });
+        }
+      }
+    } catch (e) { /* unparseable — nothing changes */ }
+  }
+  if (conf.meta.changelog.length > 40) conf.meta.changelog = conf.meta.changelog.slice(-40);
+  conf.meta.lastChecked = patternDay();
+  saveJson(EXAM_PATTERNS, conf);
+  if (applied) fixes.push({ page: EXAM_PATTERNS, kind: 'content', fix: 'mock pattern updated from a news signal (see changelog)', text: sig[0].title });
+  console.log('agent: ExamPatterns — ' + (applied ? 'pattern updated' : 'signals seen, no verified change') + ' (' + sig.length + ' signals)');
+  return { agent: 'exampatterns', fixes: fixes };
+}
+
 // ── AGENT: GraphNotes — proper relationship explanations on flowchart cards ──
 // Clicking Gandhi showed generic (sometimes wrong-entity) descriptions and
 // "mentioned with" everywhere, plus junk cards (TV sitcoms, absurd spans).
@@ -3477,6 +3623,8 @@ async function main() {
     ['PracticeSets', agentPracticeSets],
     ['MainsUpdates', agentMainsUpdates],
     ['BankFigures', agentBankFigures],
+    ['MockPapers', agentMockPapers],
+    ['ExamPatterns', agentExamPatterns],
     ['GraphNotes', agentGraphNotes],
     ['MetaLearn', agentMetaLearn]
   ];
