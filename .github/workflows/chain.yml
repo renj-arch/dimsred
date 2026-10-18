@@ -14,10 +14,12 @@ name: Agent Chain
 # The idle check prevents a second run entering site-agent's concurrency group
 # (cancel-in-progress: true would kill an in-progress run mid-publish).
 #
-# Heavy-tier refill (2026-10-18): site-agent dispatches now default to the
-# fast tier (qwen3:4b), so this chain also dispatches the heavy MainsFresh
-# pass (qwen3.8:27b, one pool item per run) when the mains-fresh pool's
-# lastAttempt is older than ~20h. meta.lastAttempt is written on EVERY
+# MainsFresh refill (2026-10-18): site-agent dispatches default to the fast
+# tier (qwen3:4b), so this chain also dispatches the MainsFresh pass (one
+# pool item per run) when the mains-fresh pool's lastAttempt is older than
+# ~20h. The refill runs on the MID tier qwen3.5:9b — the 17GB 27B proved
+# un-runnable on the 4-vCPU runner (cold load blew every first-byte budget
+# and each restart re-paid it). meta.lastAttempt is written on EVERY
 # attempt (success or not), so a failed attempt throttles the next refill
 # just the same.
 
@@ -74,8 +76,8 @@ jobs:
             if [ "$THEN" -gt 0 ] && [ $((NOW - THEN)) -lt 72000 ]; then AGE_OK=1; fi
           fi
           if [ "$AGE_OK" = "0" ]; then
-            INPUTS='{"ref":"main","inputs":{"agent_only":"mainsfresh","model":"qwen3.8:27b"}}'
-            echo "mains-fresh: lastAttempt='$LAST' pool=$COUNT — dispatching heavy refill"
+            INPUTS='{"ref":"main","inputs":{"agent_only":"mainsfresh","model":"qwen3.5:9b"}}'
+            echo "mains-fresh: lastAttempt='$LAST' pool=$COUNT — dispatching MainsFresh refill (qwen3.5:9b)"
           else
             echo "mains-fresh: lastAttempt='$LAST' pool=$COUNT — fresh; normal fast dispatch"
           fi
