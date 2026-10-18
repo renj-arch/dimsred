@@ -1,6 +1,6 @@
 name: Invent Questions
 
-# The site's own question-setter agent: qwen3.8:27b invents BRAND-NEW exam
+# The site's own question-setter agent: qwen3.5:9b invents BRAND-NEW exam
 # questions — new mechanisms, new contexts, worked solutions — and publishes
 # them to data/invented/questions.json. mental.html serves them as
 # "Invented - fresh paper" practice.
@@ -12,9 +12,9 @@ name: Invent Questions
 #
 # Zero API keys: the model runs locally on the runner through Ollama.
 #
-# The model is dispatch-pinnable (input "model", default qwen3.8:27b — the
-# heavy tier). A fast-tier trial (qwen3:4b + cache) is one dispatch away if
-# the 27B's pull/generation ever stalls the schedule.
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b — the
+# mid tier). The 4b fast-tier trials decide whether it can go smaller; the
+# old 27B could not complete runs here, so nothing dispatches it anymore.
 
 on:
   schedule:
@@ -26,9 +26,9 @@ on:
         required: false
         default: '2'
       model:
-        description: 'Ollama model tag. Default = heavy tier (qwen3.8:27b); qwen3:4b is the cached fast tier.'
+        description: 'Ollama model tag. Default = mid tier (qwen3.5:9b); qwen3:4b is the cached fast tier.'
         required: false
-        default: 'qwen3.8:27b'
+        default: 'qwen3.5:9b'
 
 concurrency:
   group: invent-questions
@@ -60,7 +60,7 @@ jobs:
         with:
           node-version: 22
 
-      # EXACT same swap as proven llm-autofix / question-quality (16GB works with 27B).
+      # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
       - name: Create swap (16GB - same as proven llm-autofix)
         run: |
           sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
@@ -86,16 +86,16 @@ jobs:
           sudo systemctl restart ollama
 
       # Model cache: one entry per size class (repo budget 10GB) — "fast" for
-      # small models, "mid" for qwen3.5:9b. The default 27B skips this step.
+      # small models, "mid" for qwen3.5:9b. Both current default tags are cacheable.
       - name: Cache Ollama models
-        if: ${{ !contains(inputs.model || 'qwen3.8:27b', '27b') && !contains(inputs.model || 'qwen3.8:27b', '22b') }}
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
         continue-on-error: true
         uses: actions/cache@v4
         with:
           path: /home/runner/.ollama/models
-          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.8:27b', '9b') && 'mid-v1' || 'fast-v2' }}
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
           restore-keys: |
-            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.8:27b', '9b') && 'mid-' || 'fast-' }}
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
 
       - name: Start Ollama server
         run: |
@@ -112,9 +112,9 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
           free -h
 
-      - name: Pull model (${{ inputs.model || 'qwen3.8:27b' }})
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
         env:
-          MODEL_INPUT: ${{ inputs.model || 'qwen3.8:27b' }}
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
         run: |
           case "$MODEL_INPUT" in *[!A-Za-z0-9._:-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
           ollama pull "$MODEL_INPUT"
@@ -141,7 +141,7 @@ jobs:
           fi
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
 
-      - name: Invent questions (${{ inputs.model || 'qwen3.8:27b' }} as exam setter)
+      - name: Invent questions (${{ inputs.model || 'qwen3.5:9b' }} as exam setter)
         # Hard stop at 120 min; the script's own 110-min deadline stops
         # gracefully first. Run #2 logged 24/24 calls aborted at the old
         # 4-min client timeout; run #5 then died at undici's hidden ~5-min
@@ -151,7 +151,7 @@ jobs:
         # mid-stream silence is wedged, 95 min is the per-call cap.
         timeout-minutes: 120
         env:
-          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.8:27b' }}
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
           INVENT_PER_SLOT: ${{ github.event.inputs.per_slot || '2' }}
           INVENT_DEADLINE_MIN: '110'
@@ -168,4 +168,4 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add data/invented/
-          bash scripts/ci-push.sh "invent: ${{ inputs.model || 'qwen3.8:27b' }} invented fresh exam questions (run #${{ github.run_number }})"
+          bash scripts/ci-push.sh "invent: ${{ inputs.model || 'qwen3.5:9b' }} invented fresh exam questions (run #${{ github.run_number }})"

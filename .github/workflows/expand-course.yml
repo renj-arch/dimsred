@@ -1,6 +1,6 @@
 name: Expand Course Content
 
-# The site's course-writing agent: qwen3.8:27b (Ollama on the runner) writes
+# The site's course-writing agent: qwen3.5:9b (Ollama on the runner) writes
 # the lesson bodies and practice MCQs that the exam courses are missing, and
 # ONLY those lesson pages are regenerated afterwards.
 #
@@ -16,8 +16,9 @@ name: Expand Course Content
 # 70% word-overlap rule (same as the rest of the site) drops any accidental
 # duplicate before it can be stored.
 #
-# The model is dispatch-pinnable (input "model", default qwen3.8:27b — the
-# heavy tier). Fast-tier trials (qwen3:4b + cache) are one dispatch away.
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b — the
+# mid tier). The 4b fast-tier trials decide whether it can go smaller; the
+# old 27B could not complete runs here, so nothing dispatches it anymore.
 
 on:
   schedule:
@@ -29,9 +30,9 @@ on:
         required: false
         default: '5'
       model:
-        description: 'Ollama model tag. Default = heavy tier (qwen3.8:27b); qwen3:4b is the cached fast tier.'
+        description: 'Ollama model tag. Default = mid tier (qwen3.5:9b); qwen3:4b is the cached fast tier.'
         required: false
-        default: 'qwen3.8:27b'
+        default: 'qwen3.5:9b'
 
 concurrency:
   group: expand-course
@@ -76,7 +77,7 @@ jobs:
         with:
           node-version: 22
 
-      # EXACT same swap as proven llm-autofix / question-quality (16GB works with 27B).
+      # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
       - name: Create swap (16GB - same as proven llm-autofix)
         run: |
           sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
@@ -102,16 +103,16 @@ jobs:
           sudo systemctl restart ollama
 
       # Model cache: one entry per size class (repo budget 10GB) — "fast" for
-      # small models, "mid" for qwen3.5:9b. The default 27B skips this step.
+      # small models, "mid" for qwen3.5:9b. Both current default tags are cacheable.
       - name: Cache Ollama models
-        if: ${{ !contains(inputs.model || 'qwen3.8:27b', '27b') && !contains(inputs.model || 'qwen3.8:27b', '22b') }}
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
         continue-on-error: true
         uses: actions/cache@v4
         with:
           path: /home/runner/.ollama/models
-          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.8:27b', '9b') && 'mid-v1' || 'fast-v2' }}
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
           restore-keys: |
-            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.8:27b', '9b') && 'mid-' || 'fast-' }}
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
 
       - name: Start Ollama server
         run: |
@@ -128,9 +129,9 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
           free -h
 
-      - name: Pull model (${{ inputs.model || 'qwen3.8:27b' }})
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
         env:
-          MODEL_INPUT: ${{ inputs.model || 'qwen3.8:27b' }}
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
         run: |
           case "$MODEL_INPUT" in *[!A-Za-z0-9._:-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
           ollama pull "$MODEL_INPUT"
@@ -139,9 +140,9 @@ jobs:
           echo "Warming $MODEL_INPUT..."
           ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
 
-      - name: Write course lessons (${{ inputs.model || 'qwen3.8:27b' }} as teacher)
+      - name: Write course lessons (${{ inputs.model || 'qwen3.5:9b' }} as teacher)
         env:
-          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.8:27b' }}
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
           EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '5' }}
           EXPAND_DEADLINE_MIN: '75'
@@ -185,4 +186,4 @@ jobs:
           git add scripts/course-data.json scripts/course-practice.json 2>/dev/null || true
           if [ -f /tmp/course-files.txt ]; then xargs -a /tmp/course-files.txt git add; fi
           rm -f scripts/.course-touched.json
-          bash scripts/ci-push.sh "course-expand: ${{ inputs.model || 'qwen3.8:27b' }} wrote new exam lessons (run #${{ github.run_number }})"
+          bash scripts/ci-push.sh "course-expand: ${{ inputs.model || 'qwen3.5:9b' }} wrote new exam lessons (run #${{ github.run_number }})"
