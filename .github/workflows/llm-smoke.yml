@@ -2,7 +2,7 @@ name: LLM Smoke Test
 
 # Dispatch-only verdict on the local-LLM layer: install Ollama, pull the
 # requested model (input "model"; default is the FAST tier qwen3:4b — the
-# fleet default; pass qwen3.8:27b to smoke the heavy tier), run ONE call
+# fleet default; pass qwen3.5:9b to smoke the heavy tier), run ONE call
 # with think:false, print PASS/FAIL in ~15 minutes.
 #
 # Built after the 2026-10-17 post-mortem: Question Quality #15 and the Site
@@ -20,7 +20,7 @@ on:
   workflow_dispatch:
     inputs:
       model:
-        description: 'Ollama model tag to smoke. Default = fast tier (fleet default); use qwen3.8:27b for the heavy tier.'
+        description: 'Ollama model tag to smoke. Default = fast tier (fleet default); use qwen3.5:9b for the heavy tier.'
         required: false
         default: 'qwen3:4b'
 

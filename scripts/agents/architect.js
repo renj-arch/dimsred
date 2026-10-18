@@ -59,7 +59,7 @@ function buildPrompt(idea) {
     '',
     'The plugin runs inside the site agent (Node 20, repo root cwd) with this toolbox bound into run(ctx):',
     '  ctx.root      — absolute repo path',
-    '  ctx.callLLM(system, user, maxTokens) → Promise<string> — local 27B model, minutes per call, use sparingly',
+    '  ctx.callLLM(system, user, maxTokens) → Promise<string> — local mid-tier model, minutes per call, use sparingly',
     '  ctx.loadJson(relPath, fallback) / ctx.saveJson(relPath, data) — repo-root-relative data files',
     '  ctx.listPages() → array of site page filenames',
     'You may also require("fs"), require("path"), require("child_process").',

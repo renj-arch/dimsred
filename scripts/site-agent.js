@@ -34,7 +34,7 @@ const LOG = 'data/agent-log.json';
 // ── LLM call: curl via execSync, NOT Node fetch ──
 // WHY NOT fetch: (a) Node fetch resolves localhost → ::1 IPv6; Ollama is
 // IPv4-only → instant "fetch failed" (run #56). (b) Even on 127.0.0.1,
-// undici's default 300s headersTimeout fires while the 27B model cold-loads
+// undici's default 300s headersTimeout fires while a model cold-loads
 // through swap (run #57: hung exactly 300s, then failed). (c) llm-autofix.js
 // which we copied as "proven" never actually called Ollama — it referenced
 // an undefined OLLAMA_MODEL variable and threw ReferenceError every time
@@ -192,7 +192,7 @@ function logModelState(tag) {
     if (loaded.length) {
       console.log('agent: ' + tag + ' — model resident: ' + loaded.join(', '));
     } else {
-      console.log('agent: ' + tag + ' — NO model resident: next call cold-loads 17GB (expect minutes)');
+      console.log('agent: ' + tag + ' — NO model resident: next call cold-loads the model (expect minutes)');
     }
   } catch (e) { /* informational only */ }
 }
@@ -201,7 +201,7 @@ async function callLLM(system, user, maxTokens) {
   if (pastDeadline()) {
     throw new Error('AGENT_DEADLINE_REACHED (' + DEADLINE_MIN + 'min) — refusing new LLM work so the run can publish; skipped work rotates in next run');
   }
-  const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+  const model = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
   // Recall: the agent records lessons/addRules/addWins every run but long
   // ago stopped READING them (amnesia — same mistakes repeated). For
   // generation-sized calls, prepend the distilled lessons so experience
@@ -2284,7 +2284,7 @@ async function agentQuestionQuality() {
   return { agent: 'questions', fixes };
 }
 
-// ── Shared voice for ALL 27B study-content generation ──
+// ── Shared voice for ALL study-content generation ──
 // Creative + intelligent + engaging is not a vibe, it is a structure: every
 // explanation teaches the fact, defuses each trap, and leaves a memory hook.
 // Used by the papers agent and the archive writer alike.
@@ -2293,7 +2293,7 @@ const EXAMINER_STYLE = 'Voice: a beloved examiner coaching a serious aspirant �
   '3) TRAPS (why each wrong option fails — name the specific error), 4) HOOK (one vivid memory hook + one exam-day trap alert). ' +
   'Plain text only. Stay consistent with the given answer; invent no dates, numbers, or names.';
 
-// ── AGENT: Papers — real govt-exam papers with detailed 27B explanations ──
+// ── AGENT: Papers — real govt-exam papers with detailed model explanations ──
 // Standing goal (pursued every rotation without being asked): papers.json
 // covers the major govt exams with COMPLETE papers. papers.json held 1 paper
 // (UPSC 2023, 39/100) while the nav promises 16 exams — this agent closes that
@@ -2307,7 +2307,7 @@ const EXAMINER_STYLE = 'Voice: a beloved examiner coaching a serious aspirant �
 // from QP + answer-key PDFs). Text-sniffing "pyq"/"previous year" is proven
 // noise (matches game-sales trivia) and must never qualify anything.
 // officialPdf/cutoff stay null unless the exact official values are known
-// (the page renders them as absent). Explanations are 27B-derived and tagged.
+// (the page renders them as absent). Explanations are model-derived and tagged.
 // A partial honest paper beats a complete fake one, always.
 const PAPERS_WANT = [
   // Official-pipeline exams ONLY: papers.html carries real official papers,
@@ -2315,7 +2315,7 @@ const PAPERS_WANT = [
   // (SSC/IBPS/SBI/RRB) publish no such pair - their PDFs are candidate
   // response sheets, never official keys - so they are DELIBERATELY absent
   // here (see excluded[] in official-paper-sources.json). Their practice
-  // needs are served by hubs, mocks and 27B practice sets, not papers.html.
+  // needs are served by hubs, mocks and practice sets, not papers.html.
   { id: 'upsc-prelims-2023-gs1', exam: 'UPSC', year: 2023, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200 },
   { id: 'upsc-prelims-2024-gs1', exam: 'UPSC', year: 2024, paper: 'GS Paper 1', target: 100, duration: 120, marks: 200 },
   { id: 'upsc-cds-2024-gs', exam: 'CDS', year: 2024, paper: 'GS', target: 120, duration: 120, marks: 100 },
@@ -2358,7 +2358,7 @@ async function agentPapers() {
     return { agent: 'papers', fixes: fixes };
   }
 
-  // Enrich: detailed 27B explanations for questions lacking them (cap 8/run).
+  // Enrich: detailed model explanations for questions lacking them (cap 8/run).
   let enriched = 0;
   for (const q of target.questions) {
     if (enriched >= 8) break;
@@ -2384,7 +2384,7 @@ async function agentPapers() {
   }
   if (enriched) {
     const exPreview = target.questions.filter(q => q.explain && q.explain.length >= 150).slice(-2).map(q => 'Q: ' + (q.q || '').slice(0, 100) + '\n→ ' + q.explain.slice(0, 220)).join('\n');
-    fixes.push({ page: 'data/papers.json', fix: 'Wrote ' + enriched + ' detailed 27B explanation(s) in ' + target.id, text: exPreview.slice(0, 800) });
+    fixes.push({ page: 'data/papers.json', fix: 'Wrote ' + enriched + ' detailed model explanation(s) in ' + target.id, text: exPreview.slice(0, 800) });
   }
   saveJson('data/papers.json', papers);
   console.log('agent: Papers — +' + enriched + ' explanations in ' + target.id + ' (official-only intake)');
@@ -2504,7 +2504,7 @@ async function agentWikiSyllabus() {
   return { agent: 'wikisyllabus', fixes: fixes };
 }
 
-// ── AGENT: PracticeSets — fresh 27B exam sets, single-click served ──
+// ── AGENT: PracticeSets — fresh exam sets, single-click served ──
 // Exam tabs (hubs) get single-click practice: mega-test.html?exam=<slug>
 // serves data/practice-sets/<slug>.json instantly — pre-generated here, no
 // live generation, no quality compromise. Standing goal: every exam hub has
@@ -2644,7 +2644,7 @@ async function agentPracticeSets() {
     const item = {
       q: q, a: a, sub: String((it && it.sub) || 'General').slice(0, 60),
       fact: fact.slice(0, 600), hint: String((it && it.hint) || '').slice(0, 160),
-      autoGen: true, writtenBy: 'qwen3.8:27b'
+      autoGen: true, writtenBy: process.env.OLLAMA_MODEL || 'qwen3.5:9b'
     };
     const fig = figCount < 2 ? cleanFigSvg(it && it.fig) : '';
     if (fig) { item.fig = fig; figCount++; }
@@ -2655,10 +2655,10 @@ async function agentPracticeSets() {
   try { fs.mkdirSync(PRACTICE_DIR, { recursive: true }); } catch (e) { /* ignore */ }
   saveJson(PRACTICE_DIR + '/' + target.slug + '.json', {
     exam: examName, slug: target.slug, updatedAt: new Date().toISOString(),
-    writtenBy: 'qwen3.8:27b', questions: clean
+    writtenBy: process.env.OLLAMA_MODEL || 'qwen3.5:9b', questions: clean
   });
   // Registry index: the on-page tutor reads this (one tiny fetch) to find
-  // which 27B sets cover a subject, instead of probing every exam file.
+  // which agent-made sets cover a subject, instead of probing every exam file.
   try {
     const idxPath = PRACTICE_DIR + '/index.json';
     const idx = loadJson(idxPath, { updatedAt: null, sets: {} });
@@ -2674,7 +2674,7 @@ async function agentPracticeSets() {
   } catch (e) { /* registry best-effort */ }
   fixes.push({
     page: PRACTICE_DIR + '/' + target.slug + '.json',
-    fix: 'Fresh 27B practice set for ' + examName + ' (' + clean.length + ' exam-real items)',
+    fix: 'Fresh practice set for ' + examName + ' (' + clean.length + ' exam-real items)',
     text: clean.slice(0, 3).map(c => 'Q: ' + c.q.slice(0, 100) + ' | A: ' + c.a).join('\n')
   });
   return { agent: 'practicesets', fixes: fixes };
@@ -3591,7 +3591,7 @@ async function agentSelfCheck() {
     }
 
     // ── Fresh practice-set button on exam hub indexes ──
-    // Each exam hub gets single-click access to its 27B-written set via
+    // Each exam hub gets single-click access to its model-written set via
     // mega-test.html?exam=<slug> (served instantly, no live generation).
     // Guarded: hub index only, skip when any such link exists, anchor on the
     // page's first </h1> (universal on hub indexes), skip silently otherwise.
@@ -3606,7 +3606,7 @@ async function agentSelfCheck() {
       if (!h1) return;
       const btn =
         '<div class="fresh-practice" style="margin:14px 0;padding:12px 16px;border:1px solid rgba(52,211,153,.35);border-radius:12px;background:rgba(52,211,153,.06)">\n' +
-        '<a class="btn" href="../mega-test.html?exam=' + slug + '" style="display:inline-block;padding:9px 20px;border-radius:100px;background:rgba(52,211,153,.15);color:#34d399;font-weight:700;text-decoration:none">⚡ Fresh Practice Set — 27B exam-real questions</a>\n' +
+        '<a class="btn" href="../mega-test.html?exam=' + slug + '" style="display:inline-block;padding:9px 20px;border-radius:100px;background:rgba(52,211,153,.15);color:#34d399;font-weight:700;text-decoration:none">⚡ Fresh Practice Set — exam-real questions</a>\n' +
         '<div style="font-size:.75em;color:#8a8a93;margin-top:6px">Single click → instant quiz. New set written weekly.</div>\n' +
         '</div>';
       const at = h1.index + h1[0].length;
@@ -3815,7 +3815,7 @@ async function agentPlanner(state, availableNames) {
 
 async function main() {
   const log = loadJson(LOG, { runs: [], lastRun: null, model: null });
-  const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+  const model = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
   log.model = model;
   console.log('agent: using model ' + model);
   const runStart = Date.now();
@@ -3923,7 +3923,7 @@ async function main() {
   // of slowing every normal pass. AGENT_HEAVY overrides the heavy list;
   // AGENT_FAST_TAGS overrides the fast tag list — no code change needed.
   const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
-  const modelTag = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+  const modelTag = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
   const fastTags = (process.env.AGENT_FAST_TAGS || 'qwen3:4b,qwen3.5:4b,qwen3.5:2b,qwen3.5:0.8b,qwen3:1.7b,qwen3:0.6b,lfm2.5:1.2b').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
   const heavyTier = fastTags.indexOf(modelTag.toLowerCase()) === -1;
   const pinned = !!(process.env.AGENT_ONLY && process.env.AGENT_ONLY.trim());

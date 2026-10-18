@@ -5,7 +5,7 @@
   'use strict';
 // Archive FAQ match for the Ask engine.
 //
-// The archive (data/archive-answers.json, written by qwen3.8:27B in CI) holds
+// The archive (data/archive-answers.json, written by the CI model) holds
 // finished model answers — full explanations, not raw sentences. When a user
 // question strongly matches an archived question, the archived answer IS the
 // answer (with provenance), and the page shows it directly instead of asking
@@ -76,7 +76,7 @@ function renderHtml(entry) {
   }
   var facts = (entry.keyFacts || []).map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
   return '<div class="arch-answer">'
-    + '<div class="arch-badge">Archive answer · written by qwen3.8:27b (local LLM) · '
+    + '<div class="arch-badge">Archive answer · written by ' + (entry.writtenBy ? esc(entry.writtenBy) + ' (local LLM)' : 'the local LLM') + ' · '
     + (entry.origin === 'agent-made'
       ? '<span class="arch-tag" style="background:rgba(167,139,250,.14);color:#a78bfa">agent-made</span>'
       : '<span class="arch-tag">auto gen</span>')

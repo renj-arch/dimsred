@@ -117,8 +117,8 @@ jobs:
       # small models: qwen3:4b first, then lfm2.5:1.2b, then qwen3.5:4b.
       # All fit easily in RAM: no swap, no 20-min 17GB pull, and no OOM
       # taking the server down mid-run (the "fetch failed" class that hit
-      # this workflow on the 27B). The 27B stays where writing quality
-      # matters: invent-questions and expand-course. First successful pull
+      # this workflow on the 27B). Writing-quality work stays in the mid
+      # tier (qwen3.5:9b): invent-questions and expand-course. First successful pull
       # wins; a bad small-model reply still dies safely in the script's
       # JSON validation (it applies no fix it cannot parse).
       - name: Pull fast model (mechanical fixes)

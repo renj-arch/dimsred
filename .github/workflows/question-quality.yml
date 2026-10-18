@@ -133,7 +133,7 @@ jobs:
       # Ingest verified official papers (QP + key PDFs → key-joined questions
       # with strict validation; anything uncertain is dropped, never faked)
       # straight into data/papers.json. The Papers agent then enriches them
-      # with 27B explanations in the same run.
+      # with qwen3.5:9b explanations in the same run.
       - name: Ingest official papers
         run: python3 scripts/ingest-official-paper.py
 

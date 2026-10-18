@@ -4,7 +4,7 @@
  * Invent Questions — the site's own exam-setter agent.
  *
  * What this is NOT: a template bank. Nothing here is procedurally generated
- * from wired-in formulas. Instead, qwen3.8:27b (the CI model) is briefed like
+ * from wired-in formulas. Instead, the CI model (qwen3.5:9b) is briefed like
  * a veteran Indian exam setter — section, difficulty, novelty rules — and
  * asked to INVENT one brand-new question at a time: new context, new twist,
  * new framing, with a worked solution. Output is validated hard (4 distinct
@@ -18,7 +18,7 @@
  * accidental repeat before it can reach storage.
  *
  * Env:
- *   OLLAMA_MODEL        default qwen3.8:27b
+ *   OLLAMA_MODEL        default qwen3.5:9b
  *   OLLAMA_HOST         default http://127.0.0.1:11434
  *   INVENT_PER_SLOT     questions per section x difficulty (default 2)
  *   INVENT_DEADLINE_MIN wall-clock budget for inventing (default 95)
@@ -34,7 +34,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawn, execSync } = require('child_process');
 
-const MODEL = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const HOST = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').replace(/\/+$/, '');
 const PER_SLOT = Math.max(1, parseInt(process.env.INVENT_PER_SLOT || '2', 10) || 2);
 const DEADLINE_MIN = parseFloat(process.env.INVENT_DEADLINE_MIN || '95') || 95;

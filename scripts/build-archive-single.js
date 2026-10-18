@@ -542,11 +542,15 @@ function renderQuestion(q, idx) {
   const catTag = '<span class="tag cat-tag">' + esc(q.category) + '</span>';
   const date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
   const dateTag = date ? '<span class="tag date-tag">' + date + '</span>' : '';
+  // Writer badge (dead path today — the live client renderQuestionItem carries
+  // no model badge; kept truthful in case this server-side renderer returns).
+  const wb = q.writtenBy ? String(q.writtenBy) : '';
+  const wbShort = (wb.match(/:([0-9][0-9.]*b)/i) || [0, 'local'])[1];
   return '<div class="q-item">'
     + '<div class="q-num">#' + (idx + 1) + '</div>'
     + '<div class="q-tags">' + catTag + dateTag + (q.autoGen ? (q.origin === 'agent-made'
-      ? '<span class="tag" style="background:rgba(167,139,250,.14);color:#a78bfa" title="Question AND answer created by qwen3.8:27b (local LLM) for an uncovered must-know subtopic — distinguishable from mined questions">agent-made · 27b</span>'
-      : '<span class="tag" style="background:rgba(52,211,153,.12);color:#34d399" title="Explanation written by qwen3.8:27b (local LLM) from corpus material — distinguishable from wiki-mined text">auto gen · 27b</span>') : '')
+      ? '<span class="tag" style="background:rgba(167,139,250,.14);color:#a78bfa" title="Question AND answer created by ' + esc(wb || 'the local LLM') + ' for an uncovered must-know subtopic — distinguishable from mined questions">agent-made · ' + esc(wbShort) + '</span>'
+      : '<span class="tag" style="background:rgba(52,211,153,.12);color:#34d399" title="Explanation written by ' + esc(wb || 'the local LLM') + ' from corpus material — distinguishable from wiki-mined text">auto gen · ' + esc(wbShort) + '</span>') : '')
     + (q.importance === 'high' ? '<span class="tag" style="background:rgba(239,68,68,.12);color:#ef4444" title="High-yield for Indian govt exams' + (Array.isArray(q.importantFor) && q.importantFor.length ? ': ' + esc(q.importantFor.join(', ')) : '') + '">high-yield</span>' : '') + '</div>'
     + '<div class="q-question">' + esc(q.question) + '</div>'
     + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + esc(q.answer) + '</span></div>'

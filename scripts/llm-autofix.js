@@ -30,7 +30,7 @@ const OLLAMA_HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 // "Ollama not reachable", and the workflow reported success with 0 fixes
 // (proven in the LLM Auto-fix logs: "Ollama not reachable: OLLAMA_MODEL is
 // not defined" + "0 fix(es) applied this run"). Now it always exists.
-let OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3.8:27b'; // reassigned by main() after model selection
+let OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3:4b'; // reassigned by main() after model selection
 
 // ── Self-upgrading model selector ──
 // Ranked by LiveCodeBench v6 / coding ability. When a better model appears
@@ -40,10 +40,10 @@ let OLLAMA_MODEL = process.env.OLLAMA_MODEL || 'qwen3.8:27b'; // reassigned by m
 //
 // To upgrade: just add a new entry at the right position. No code changes
 // needed elsewhere. Example: when Qwen4-30B releases and hits 95%+, insert
-// it above Qwen3.8-27B and the next run uses it.
+// it at the TOP of this list and the next run uses it. (The 27B was removed
+// 2026-10-18 — it needs ~18GB and can never fit this runner.)
 const MODEL_RANKING = [
   // { ollama: 'tag', ramGB: approx RAM needed, score: LiveCodeBench %, note }
-  { ollama: 'qwen3.8:27b',        ramGB: 18, score: 90.3, note: 'Qwen3.8-27B' },
   { ollama: 'nvidia/nemotron-nano-9b-v2', ramGB: 6, score: 71.1, note: 'Nemotron 9B v2' },
   { ollama: 'qwen3.5:9b',         ramGB: 6, score: 65,   note: 'Qwen3.5-9B' },
   { ollama: 'qwen3.5:4b',         ramGB: 3.5, score: 55, note: 'Qwen3.5-4B' },

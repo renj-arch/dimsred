@@ -1,9 +1,9 @@
-// Archive answers writer: qwen3.8:27B writes rich model answers for archive
+// Archive answers writer: the CI model (qwen3.5:9b mid tier in the workflow) writes rich model answers for archive
 // questions, categorized under each question's OWN category/subject and
 // tagged auto-gen so readers can distinguish them from corpus text.
 //
-// Why 27B here and not browser WebLLM: the in-browser model is small and its
-// answers read thin next to ChatGPT. The 27B writes once in CI; the browser
+// Why a CI model here and not browser WebLLM: the in-browser model is small and
+// its answers read thin next to ChatGPT. The model writes once in CI; the browser
 // then RETRIEVES the finished answer (ask-archive.js) instead of composing
 // from scratch.
 //
@@ -19,7 +19,7 @@
 //       the enriched copy is a superset, nothing is lost).
 //
 // Budget: MAX_WRITE answers per run (default 5), MAX_CREATE new gap
-// questions per run (default 6). 27B on runner CPU takes minutes per answer;
+// questions per run (default 6). The model on runner CPU takes minutes per answer;
 // the schedule fills the archive steadily — and never stops until the gaps
 // are gone (the plan is the taxonomy itself: empty subjects keep coming up).
 //
@@ -173,7 +173,7 @@ async function writeOne(q) {
       const j = JSON.parse(txt.slice(s, e + 1));
       const ma = String(j.modelAnswer || '').trim();
       if (ma.length < 60 || ma.length > 4000) { console.log('writer: bad length ' + ma.length + ' for ' + q.id); continue; }
-      // 27B verdict on importance (validated: closed level + closed exam list).
+      // Model verdict on importance (validated: closed level + closed exam list).
       // Falls back to the rules scorer when the model abstains or errs.
       let imp = IMP.validLevel(j.importance);
       let impFor = IMP.validExams(j.importantFor);
@@ -196,8 +196,8 @@ async function writeOne(q) {
 // ── Gap mode: create must-have Q&A where the archive has nothing ──
 // 1. Thinnest high-weight subjects (thin = low count; weight = subject
 //    mentioned in real PYQ analyses in pyq-patterns.json).
-// 2. 27B lists must-know subtopics missing from the subject's list.
-// 3. 27B writes 3 MCQs per accepted subtopic, placed via CLOSED vocabulary.
+// 2. The model lists must-know subtopics missing from the subject's list.
+// 3. The model writes 3 MCQs per accepted subtopic, placed via CLOSED vocabulary.
 // 4. Every new question is overlap-checked vs the sidecar AND corpus samples:
 //    >0.7 = duplicate, dropped. Nothing duplicated anywhere else, ever.
 function pyqWeight(subject, category) {
@@ -253,7 +253,7 @@ async function gapFill(sidecar, tax) {
 
   for (const t of targets) {
     if (created >= MAX_CREATE) break;
-    // 27B: which must-know subtopics are missing here?
+    // Model: which must-know subtopics are missing here?
     const listSys = 'You are an exam syllabus expert. Return STRICT JSON only: {"subtopics": ["...", "..."]}. No markdown.';
     const listUser = 'Exam-relevant subject: ' + t.subj + ' (category: ' + t.cat + ').\n' +
       'Already covered subtopics: ' + t.subs.slice(0, 40).join('; ') + '\n' +
@@ -313,7 +313,7 @@ async function gapFill(sidecar, tax) {
           importance: IMP.validLevel(it.importance),
           importantFor: IMP.validExams(it.importantFor),
           autoGen: true, origin: 'agent-made',
-          writtenBy: 'qwen3.8:27b', writtenAt: new Date().toISOString()
+          writtenBy: process.env.OLLAMA_MODEL || 'qwen3.5:9b', writtenAt: new Date().toISOString()
         };
         sidecarQs.push(qq);
         created++;
@@ -351,7 +351,7 @@ async function main() {
       importantFor: w.importantFor,
       autoGen: true,
       origin: 'enriched',
-      writtenBy: 'qwen3.8:27b',
+      writtenBy: process.env.OLLAMA_MODEL || 'qwen3.5:9b',
       writtenAt: new Date().toISOString()
     };
     wrote++;
@@ -408,7 +408,7 @@ async function main() {
     log.lastRun = new Date().toISOString();
     log.runs.push({
       at: log.lastRun,
-      model: 'qwen3.8:27b',
+      model: process.env.OLLAMA_MODEL || 'qwen3.5:9b',
       totalFixes: wrote + created,
       byAgent: [{ agent: 'archive-writer', count: wrote + created }],
       details: [{

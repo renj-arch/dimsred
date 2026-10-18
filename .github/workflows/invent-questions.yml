@@ -126,7 +126,7 @@ jobs:
       # The 17GB warm-up load can take the server down on release. Run #3
       # then logged "fetch failed" on EVERY call for 70+ minutes and invented
       # nothing. llm-autofix and site-agent both restart the server right
-      # before their agent step; invent was the only 27B workflow missing it.
+      # before their agent step; invent was the only writer workflow missing it.
       - name: Ensure Ollama is up before agent
         run: |
           if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then

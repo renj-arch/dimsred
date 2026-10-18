@@ -6,7 +6,7 @@
 // scripts/course-practice.json, keyed "<module>/<slug>". Slots without a key
 // render the generator's bare auto filler ("This lesson covers ...").
 //
-// This agent finds those slots, has qwen3.8:27b (Ollama, on the CI runner)
+// This agent finds those slots, has the CI model (qwen3.5:9b, Ollama on the runner)
 // write each one in the exact HTML dialect the course pages render, validates
 // it hard, stores it, and records exactly which pages the workflow should
 // regenerate. Rules that keep it safe:
@@ -23,7 +23,7 @@
 //   - Hard validation: tag/class whitelist, structure minimums, MCQ shape, and
 //     the site-wide 70% word-overlap dedupe against the subject's bank.
 //
-// Run:  OLLAMA_HOST=http://127.0.0.1:11434 OLLAMA_MODEL=qwen3.8:27b node scripts/expand-course.js
+// Run:  OLLAMA_HOST=http://127.0.0.1:11434 OLLAMA_MODEL=qwen3.5:9b node scripts/expand-course.js
 // Dry:  EXPAND_DRY=1 node scripts/expand-course.js            (list gaps, no model)
 'use strict';
 var fs = require('fs');
@@ -37,7 +37,7 @@ var PRACTICE_FILE = path.join(__dirname, 'course-practice.json');
 var TOUCHED_FILE = path.join(__dirname, '.course-touched.json');
 
 var HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
-var MODEL = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+var MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 var PER_RUN = parseInt(process.env.EXPAND_PER_RUN || '5', 10);
 var DEADLINE_MIN = parseInt(process.env.EXPAND_DEADLINE_MIN || '70', 10);
 var DRY = !!process.env.EXPAND_DRY;

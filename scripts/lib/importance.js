@@ -6,7 +6,7 @@
 // Importance scoring for Indian govt-exam questions.
 //
 // Which questions are highly important/relevant is DECIDED here (rules) and
-// refined by qwen3.8:27b verdicts wherever the model touches an item — the
+// refined by model verdicts wherever the model touches an item — the
 // browser (WebLLM, quiz pickers, archive matcher) then PICKS by these tags.
 // Decision and use are split on purpose: judging 500k+ items per page-view
 // in a small local model is slow and noisy; judging once in CI is free.

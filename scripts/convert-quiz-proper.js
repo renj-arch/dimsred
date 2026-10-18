@@ -1,4 +1,4 @@
-// Quiz proper converter: qwen3.8:27B rewrites fill-in-the-blank fragments
+// Quiz proper converter: the CI model (qwen3.5:9b mid tier) rewrites fill-in-the-blank fragments
 // into proper questionnaire MCQs (interrogative stem + 4 options + answer +
 // explanation). The current-affairs quiz serves these FIRST (properMCQ flag
 // + proper-first ordering), so quizzes ask real questions instead of showing
@@ -135,7 +135,7 @@ async function main() {
       properMCQ: true,
       autoGen: true,
       origin: 'converted',
-      writtenBy: 'qwen3.8:27b',
+      writtenBy: process.env.OLLAMA_MODEL || 'qwen3.5:9b',
       writtenAt: new Date().toISOString()
     });
     existingQs.push(w.stem);

@@ -21,7 +21,7 @@
 // HTTP 400 for think:false (agents auto-retry without the flag, but knowing
 // early matters).
 var HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
-var MODEL = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+var MODEL = process.env.OLLAMA_MODEL || 'qwen3:4b';
 var CALL_CAP_MIN = Number(process.env.SMOKE_CAP_MIN || 35);
 var FIRST_BYTE_MIN = Number(process.env.SMOKE_FIRST_BYTE_MIN || 25);
 var STALL_MIN = Number(process.env.SMOKE_STALL_MIN || 12);

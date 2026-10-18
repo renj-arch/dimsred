@@ -1,7 +1,7 @@
 name: Site Agent
 
 # Infrastructure is an EXACT clone of llm-autofix.yml — the only workflow
-# proven to run qwen3.8:27b successfully on this runner (run #10, #12).
+# that ever ran qwen3.8:27b on this runner (runs #10/#12 — the 27B has since been benched; see the tier notes below).
 # Do NOT add flash-attn, q8 KV, browser tests, warmups, or self-restarts:
 # every one of those "improvements" caused "fetch failed" on generation
 # (runs #44–#54: warmup loads, then every real call dies).
@@ -13,7 +13,7 @@ name: Site Agent
 # cache step and the tier gate in scripts/site-agent.js). The 27B is 17GB:
 # it only fits with swap, costs ~25 min per pull, and can never fit the
 # 10GB Actions cache — so heavy agents (MainsFresh — the mains-fresh pool)
-# run in their own dispatches (agent_only=mainsfresh, model=qwen3.8:27b),
+# run in their own dispatches (agent_only=mainsfresh, model=qwen3.5:9b),
 # which the Agent Chain refills once a day.
 
 on:
@@ -25,11 +25,11 @@ on:
   workflow_dispatch:
     inputs:
       agent_only:
-        description: 'Run only these agents (comma list, e.g. practicesets). Empty = normal rotation. MainsFresh is heavy-tier: pair it with model=qwen3.8:27b.'
+        description: 'Run only these agents (comma list, e.g. practicesets). Empty = normal rotation. MainsFresh is heavy-tier: pair it with model=qwen3.5:9b.'
         required: false
         default: ''
       model:
-        description: 'Ollama model tag. Default = fast tier (qwen3:4b); use qwen3.8:27b for heavy agents (MainsFresh).'
+        description: 'Ollama model tag. Default = fast tier (qwen3:4b); use qwen3.5:9b for heavy agents (MainsFresh).'
         required: false
         default: 'qwen3:4b'
 
@@ -81,7 +81,7 @@ jobs:
         with:
           node-version: 22
 
-      # EXACT same swap as llm-autofix (16GB works with 27B there).
+      # EXACT same swap as llm-autofix (kept as safety margin for the heavy tier).
       # 24GB filled more disk and made paging worse, not better.
       # (Only the heavy tier needs it; harmless on fast runs.)
       - name: Create swap (16GB — same as proven llm-autofix)
@@ -160,7 +160,7 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
           # Warm the model into RAM now so the agent's cold-start ping finds
           # it resident instead of paying the cold load itself. Seconds on the
-          # fast tier, minutes on the heavy 27B.
+          # fast tier, minutes on a heavy model.
           echo "Warming $MODEL_INPUT into RAM..."
           ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
           echo "Warmup done"
