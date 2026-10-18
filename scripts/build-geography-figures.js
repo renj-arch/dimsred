@@ -339,15 +339,62 @@ var FIGURES = [
     marks: ['bay on Cuba\u2019s southern coast (Zapata Peninsula / Gulf of Cazones)', 'site of the failed 1961 US-backed invasion', 'swampy Zapata coastal plain \u2014 hindered the landing force', 'Caribbean locator: Cuba 145 km from Florida', 'label Havana and the US state of Florida'],
     src: 'Source: Wikimedia Commons \u00b7 CC BY-SA',
     topics: ['bay of pigs', 'bay of pigs invasion', 'bahia de cochinos', 'cuba']
+  },
+  // --- Gap-report picks: report-figure-gaps.js flagged soils, forest cover,
+  // biosphere reserves, Gir and Kaziranga as missing from EVERY source (the
+  // subject packs AND this geo pool), so the pack could never grow on them.
+  // Hand-picked, verified Commons files (exist + sane license) instead of
+  // letting the auto-scorer guess.
+  {
+    url: C('Major_soil_types_in_India.jpg'),
+    sec: 'India \u00b7 Soils & Forests', title: 'Soils of India \u2014 Major Types (NCERT/ICAR Map)',
+    marks: ['alluvial \u2014 Indo-Gangetic plain & coasts; the largest group; khadar (new) vs bhangar (old)', 'black (regur) \u2014 Deccan lava plateau; moisture-retentive, ideal for cotton', 'red & yellow \u2014 crystalline Peninsular interiors; iron-oxide colouring', 'laterite \u2014 alternating wet-dry tropics (Ghats, Konkan, NE); hardens on exposure', 'remaining groups: arid/desert, saline-alkaline (reh, kallar), peaty, forest & mountain soils', 'label one exemplar state per group (regur \u2192 Maharashtra, laterite \u2192 Kerala)'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0 (soil map derived from NCERT material)',
+    topics: ['soils of india', 'soil types of india', 'major soil types in india']
+  },
+  {
+    url: C('2010_India_forest_cover_distribution_map_for_its_States_and_Union_Territories.svg'),
+    sec: 'India \u00b7 Soils & Forests', title: 'Forest Cover of India \u2014 ISFR Density Classes',
+    marks: ['ISFR classes: very dense (>70% canopy), moderately dense (40\u201370%), open (10\u201340%); scrub recorded separately', 'largest forest area: Madhya Pradesh; highest share of state area: Lakshadweep, then Mizoram', 'belts to label: Western Ghats, NE states, Central Indian tribal belt, Andaman & Nicobar', 'shifting cultivation & mining belts show the losses (NE + central India)', 'map is a 2010 vintage \u2014 quote the latest India State of Forest Report figures in answers'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0 \u00b7 M Tracy Hunter',
+    topics: ['forest cover of india', 'forests in india', 'forest cover india']
+  },
+  {
+    url: C('Biosphere_Reserves_in_India.png'),
+    sec: 'India \u00b7 Wildlife & Protected Areas', title: 'Biosphere Reserves of India \u2014 UNESCO Network',
+    marks: ['Nilgiri (1986) \u2014 India\u2019s first biosphere reserve', 'designation by MoEFCC under UNESCO\u2019s Man and the Biosphere (MAB) programme', 'zonation: core (legal protection) \u2013 buffer (research) \u2013 transition (settlements)', 'locate: Nanda Devi, Sundarbans, Gulf of Mannar, Great Nicobar, Simlipal, Panna', 'know which reserves are in the UNESCO world network vs national-only'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 4.0 \u00b7 MapsIntro',
+    topics: ['biosphere reserves in india', 'biosphere reserves india', 'biosphere reserve']
+  },
+  {
+    url: C('Gir_National_Park_in_India.png'),
+    sec: 'India \u00b7 Wildlife & Protected Areas', title: 'Gir National Park \u2014 Last Home of the Asiatic Lion',
+    marks: ['the only wild population of Panthera leo persica (Asiatic lion)', 'Saurashtra/Kathiawar peninsula, Gujarat (Junagadh, Gir Somnath, Amreli districts)', 'sanctuary (1965) \u2192 national park (1975); core NP ~258 km\u00b2 inside the wider Gir ecosystem', 'dry deciduous teak\u2013acacia forest on Deccan lava-derived soil', 'differentiate Asiatic vs African lion: belly fold of skin, smaller mane'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 4.0 \u00b7 The Nature Box',
+    topics: ['gir national park', 'gir forest national park', 'gir']
+  },
+  {
+    url: C('Kaziranga-National-Park-map-en-mod.svg'),
+    sec: 'India \u00b7 Wildlife & Protected Areas', title: 'Kaziranga National Park \u2014 Brahmaputra Floodplain',
+    marks: ['Assam \u2014 Golaghat, Nagaon & Sonitpur districts, south bank of the Brahmaputra', 'great one-horned rhinoceros: largest remaining population; also tigers, elephants, wild buffalo', 'national park 1974; UNESCO World Heritage 1985; Tiger Reserve 2006; Important Bird Area', 'annual monsoon floods renew the grassland\u2013beel wetland ecosystem', 'locate the park between the Brahmaputra and the Karbi Anglong hills'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 2.5',
+    topics: ['kaziranga national park']
+  },
+  {
+    url: C('Airports_and_seaports_map.png'),
+    sec: 'India \u00b7 Maps', title: 'Airports & Major Seaports of India',
+    marks: ['west-coast ports: Kandla (Deendayal), Mumbai, JNPT, Mormugao, New Mangalore, Cochin', 'east-coast ports: Kolkata\u2013Haldia, Paradip, Visakhapatnam, Chennai, Kamarajar (Ennore), V.O. Chidambaranar (Tuticorin)', 'major ports are administered centrally; others are non-major ports under state maritime boards', 'note newer capacity: Vizhinjam (Kerala) & Vadhavan (Maharashtra) transhipment projects', 'map is a 2010 vintage \u2014 confirm current terminals before quoting'],
+    src: 'Source: Wikimedia Commons \u00b7 CC BY-SA 3.0 (2010 map)',
+    topics: ['major ports of india', 'ports of india', 'airports of india']
   }
 ];
 
-var SECTION = { 'India \u00b7 Maps': 1, 'India \u00b7 Geophysics': 1, 'India \u00b7 Climate': 1, 'World \u00b7 Geophysics': 1, 'World \u00b7 Geomorphology': 1, 'World \u00b7 Climate': 1, 'World \u00b7 Oceanography': 1, 'World \u00b7 Islands': 1, 'World \u00b7 Coastal Landforms': 1, 'World \u00b7 Globe Concepts': 1, 'World \u00b7 Wildlife & Protected Areas': 1, 'World \u00b7 Locator': 1 };
+var SECTION = { 'India \u00b7 Maps': 1, 'India \u00b7 Geophysics': 1, 'India \u00b7 Climate': 1, 'India \u00b7 Soils & Forests': 1, 'India \u00b7 Wildlife & Protected Areas': 1, 'World \u00b7 Geophysics': 1, 'World \u00b7 Geomorphology': 1, 'World \u00b7 Climate': 1, 'World \u00b7 Oceanography': 1, 'World \u00b7 Islands': 1, 'World \u00b7 Coastal Landforms': 1, 'World \u00b7 Globe Concepts': 1, 'World \u00b7 Wildlife & Protected Areas': 1, 'World \u00b7 Locator': 1 };
 
 // ---- load geography topic names from topic-layers.json ----
 var TOPIC_GEO_REGEX = /canal|glacier|volcan|river|plateau|desert|sea\b|\blake\b|strait|monsoon|cyclone|earthquake|island|mountain|range|coast|peninsula|gulf|bay\b|delta|tectonic|soil|climate|forest|national park|sanctuary|wildlife|wetland|drought|flood|tsunami|hurricane|typhoon|el ni\u00f1o|la ni\u00f1a|ocean|hemisphere|tropic|equator|atoll|reef|watershed|estuary|fjord|mangrove|coral|savanna|prairie|steppe|taiga|tundra|pampas/i;
 var GEO_CORE = { 'siachen glacier': 1, 'mcmahon line': 1, 'line of actual control': 1, 'line of control': 1, 'doklam': 1, 'suez canal': 1, 'panama canal': 1, 'gir': 1, 'volcano': 1, 'mauna loa': 1, 'barren island': 1, 'el ni\u00f1o': 1, 'la ni\u00f1a': 1 };
-var GEO_EXCLUDE = { 'operation flood': 1, 'battle of lake poyang': 1, 'pulakeshin ii': 1, 'basavanna': 1, 'helicopter': 1 };
+var GEO_EXCLUDE = { 'operation flood': 1, 'battle of lake poyang': 1, 'pulakeshin ii': 1, 'basavanna': 1, 'helicopter': 1, 'western disturbances': 1, 'drought prone areas of india': 1, 'ramsar wetlands of india': 1, 'national parks of india': 1 };
 
 // Curated UPSC Geography (GS1) topic feed for auto-fill.
 //
@@ -409,7 +456,18 @@ var GEO_CURRICULUM = [
   'Karst topography', 'Loess plateau', 'Cirque and arete', 'Mangrove forest',
   // World physical landmarks
   'Great Barrier Reef', 'Galapagos Islands', 'Maldives', 'Hawaiian Islands', 'Canary Islands',
-  'Mauna Loa', 'Krakatoa', 'Mount Vesuvius', 'Mount Fuji', 'Mount Etna'
+  'Mauna Loa', 'Krakatoa', 'Mount Vesuvius', 'Mount Fuji', 'Mount Etna',
+  // India hazards & protected-area extensions (fed from the gap report:
+  // data/figure-gaps.json listed these as missing while the geo pool never
+  // offered them to the auto-filler at all). Only topics Commons can
+  // actually serve survive here: the 2026-10-18 trial resolved "national
+  // parks", "western disturbances", "drought" and "Ramsar" to junk photos
+  // (a Ghana mining site, a sorghum field, a heatwave snap, a single-park
+  // photo), so those four are moved to GEO_EXCLUDE instead of shipping a
+  // wrong pick. Rainfall resolves to a real map (India annual rainfall map
+  // en.svg), flood zones to India flood zone map.svg, and the Andaman Sea
+  // to the Bay of Bengal locator -- the only English map covering it.
+  'Rainfall distribution of India', 'Flood prone areas of India', 'Andaman Sea'
 ];
 
 var layerTopics = [];
