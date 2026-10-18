@@ -8135,9 +8135,9 @@ var fact = q.fact || q.solution || q.explanation || '';
             loadBatch();
         }
         var _subjCache = null;
-        // 27B-converted proper MCQs (data/quiz-proper.json): preloaded once,
+        // CI-converted proper MCQs (data/quiz-proper.json): preloaded once,
         // served FIRST so the quiz asks proper questions, not fill-blanks.
-        // The 27B converts fill-blanks to stem+options in CI; the browser
+        // The CI model converts fill-blanks to stem+options; the browser
         // only retrieves. Missing file = empty pool = existing behavior.
         var _properCache = null;
         (function _preloadProper() {
@@ -9041,7 +9041,7 @@ var fact = q.fact || q.solution || q.explanation || '';
         // interrogative stem (real MCQ); 1 = options but fragment stem;
         // 2 = full-sentence Q&A; 3 = fill-blank / bare fragment (learning
         // mode only). Stable: preserves the caller's shuffle within ranks.
-        // 27B-converted proper MCQs (data/quiz-proper.json) always rank 0.
+        // CI-converted proper MCQs (data/quiz-proper.json) always rank 0.
         var INTERROGATIVE = /^(who|what|which|when|where|why|how|is|are|was|were|does|did|can|could|should|would|will|has|have|had|name|identify|choose|select|match|consider|examine|discuss)\b/i;
         function _properRank(q) {
             if (!q) return 3;

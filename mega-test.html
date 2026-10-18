@@ -182,7 +182,7 @@ var timerSec = 0, timerInt = null, currentQ = null, started = false;
 var megaData = null;
 
 function loadData() {
-  // Exam practice sets (?exam=cgl): 27B-written fresh sets in CI
+  // Exam practice sets (?exam=cgl): AI-written fresh sets in CI (runner-side)
   // (data/practice-sets/<slug>.json), served instantly on single click —
   // no live generation, no quality compromise. Falls back to the generic
   // bank when no set exists (or the param is absent), so every existing
@@ -211,7 +211,7 @@ function loadData() {
     var panel = document.getElementById('setupPanel');
     var banner = document.createElement('div');
     banner.style.cssText = 'padding:10px 14px;border:1px solid rgba(52,211,153,.35);border-radius:10px;margin-bottom:12px;font-size:.85em;color:#34d399';
-    banner.textContent = '⚡ Fresh practice set for ' + (data.exam || slug) + (when ? ' · ' + when : '') + ' · written by 27B, exam-real difficulty';
+    banner.textContent = '⚡ Fresh practice set for ' + (data.exam || slug) + (when ? ' · ' + when : '') + ' · exam-real difficulty, written by the site\u2019s own AI';
     panel.insertBefore(banner, panel.firstChild);
   }
   function loadMega() {
@@ -249,13 +249,13 @@ function loadData() {
     data.questions = normalizeQs(data.questions);
     showExamSet(data, examParam);
   }).catch(function () {
-    // Honest fallback: the exam was requested but its 27B set does not exist
+    // Honest fallback: the exam was requested but its set does not exist
     // yet (first sets land over coming agent runs). Say so plainly instead
-    // of silently serving generic questions under a 27B promise.
+    // of silently serving generic questions under a fresh-set promise.
     var panel = document.getElementById('setupPanel');
     var note = document.createElement('div');
     note.style.cssText = 'padding:10px 14px;border:1px solid rgba(251,191,36,.35);border-radius:10px;margin-bottom:12px;font-size:.85em;color:#fbbf24';
-    note.textContent = 'No fresh 27B set yet for this exam — showing the general bank meanwhile. The agent writes new sets weekly.';
+    note.textContent = 'No fresh set yet for this exam — showing the general bank meanwhile. The site\u2019s own AI writes new sets as its agents run.';
     panel.insertBefore(note, panel.firstChild);
     loadMega();
   });
