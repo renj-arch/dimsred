@@ -1899,21 +1899,34 @@ async function agentForesight() {
     }
   } catch (e) {}
 
-  // 5. Check for duplicate page titles (SEO issue)
+  // 5. Check for duplicate page titles (SEO issue). The site-agent workspace
+  // is a sparse checkout — most real pages are NOT on disk — so pair whatever
+  // listPages() sees with every page title in data/site-audit.json (checked
+  // out here and refreshed by the audit pipeline).
   const pages = listPages();
-  const titles = new Map();
+  const byTitle = new Map(); // lowercased title -> [{file, title}]
+  const addTitle = (file, title) => {
+    const t = String(title || '').trim();
+    if (!t) return;
+    const k = t.toLowerCase();
+    if (!byTitle.has(k)) byTitle.set(k, []);
+    const arr = byTitle.get(k);
+    if (!arr.some(x => x.file === file)) arr.push({ file: file, title: t });
+  };
   for (const p of pages) {
     try {
-      const html = fs.readFileSync(p, 'utf8');
-      const m = html.match(/<title>([^<]+)<\/title>/i);
-      if (m) {
-        const t = m[1].trim().toLowerCase();
-        if (titles.has(t)) {
-          fixes.push({ page: p, fix: 'Duplicate title "' + m[1] + '" (same as ' + titles.get(t) + ')' });
-        }
-        titles.set(t, p);
-      }
+      const m = fs.readFileSync(p, 'utf8').match(/<title>([^<]+)<\/title>/i);
+      if (m) addTitle(p, m[1]);
     } catch (e) {}
+  }
+  try {
+    const audit = loadJson('data/site-audit.json', null);
+    for (const r of ((audit && audit.results) || [])) if (r && r.file && r.title) addTitle(r.file, r.title);
+  } catch (e) {}
+  for (const arr of byTitle.values()) {
+    for (let i = 1; i < arr.length; i++) {
+      fixes.push({ page: arr[i].file, fix: 'Duplicate title "' + arr[i].title + '" (same as ' + arr[0].file + ')' });
+    }
   }
 
   if (fixes.length > 0) console.log('agent: Foresight — ' + fixes.length + ' issue(s) predicted/prevented');
@@ -3095,6 +3108,76 @@ async function agentExamPatterns() {
 const INVENTIONS = 'data/inventions.json';
 // ── invention-gate (pure; test harness extracts this block) ──
 const INVENTION_BANNED = /(fetch\s*\(|XMLHttpRequest|WebSocket|EventSource|\beval\s*\(|new\s+Function|import\s*\(|localStorage|sessionStorage|document\.cookie|window\.open|https?:\/\/)/;
+// Tolerant JSON extraction for big model-written objects. The invention
+// payload embeds an entire tool page — body_html plus a script up to 9,000
+// chars — and a small model at temperature will inevitably emit raw control
+// characters inside those string values (invalid JSON) or a trailing comma
+// after the last member. Slice the first balanced {...} (string-aware), then
+// repair both in one pass. Returns null when nothing parses.
+function parseLooseJson(text) {
+  if (!text) return null;
+  const t = String(text).replace(/```[a-z]*|```/gi, '').trim();
+  const start = t.indexOf('{');
+  if (start < 0) return null;
+  let depth = 0, inStr = false, esc = false, end = -1;
+  for (let i = start; i < t.length; i++) {
+    const ch = t[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (ch === '\\') esc = true;
+      else if (ch === '"') inStr = false;
+    } else if (ch === '"') { inStr = true; }
+    else if (ch === '{') { depth++; }
+    else if (ch === '}') { depth--; if (depth === 0) { end = i; break; } }
+  }
+  if (end < 0) return null;
+  const slice = t.slice(start, end + 1);
+  try { return JSON.parse(slice); } catch (e) { /* repair below */ }
+  // Pass 1: escape raw control characters that appear INSIDE strings.
+  let s1 = '', rin = false, resc = false;
+  for (let i = 0; i < slice.length; i++) {
+    const ch = slice[i];
+    if (rin) {
+      if (resc) {
+        resc = false;
+        if (ch.charCodeAt(0) < 0x20) {
+          s1 = s1.slice(0, -1); // drop the stray backslash
+          s1 += ch === '\n' ? '\\n' : ch === '\r' ? '\\r' : ch === '\t' ? '\\t' : ' ';
+          continue;
+        }
+        s1 += ch;
+        continue;
+      }
+      if (ch === '\\') { s1 += ch; resc = true; continue; }
+      if (ch === '"') { s1 += ch; rin = false; continue; }
+      if (ch.charCodeAt(0) < 0x20) { s1 += ch === '\n' ? '\\n' : ch === '\r' ? '\\r' : ch === '\t' ? '\\t' : ' '; continue; }
+      s1 += ch;
+    } else {
+      if (ch === '"') rin = true;
+      s1 += ch;
+    }
+  }
+  // Pass 2: drop trailing commas before } or ] — outside strings only.
+  let s2 = '', rin2 = false, resc2 = false;
+  for (let i = 0; i < s1.length; i++) {
+    const ch = s1[i];
+    if (rin2) {
+      if (resc2) resc2 = false;
+      else if (ch === '\\') resc2 = true;
+      else if (ch === '"') rin2 = false;
+      s2 += ch;
+      continue;
+    }
+    if (ch === '"') { rin2 = true; s2 += ch; continue; }
+    if (ch === ',') {
+      let j = i + 1;
+      while (j < s1.length && (s1[j] === ' ' || s1[j] === '\t' || s1[j] === '\n' || s1[j] === '\r')) j++;
+      if (j < s1.length && (s1[j] === '}' || s1[j] === ']')) continue; // skip the comma
+    }
+    s2 += ch;
+  }
+  try { return JSON.parse(s2); } catch (e2) { return null; }
+}
 function buildInventionPage(d) {
   const reject = (why) => ({ ok: false, reason: why });
   if (!d || typeof d !== 'object') return reject('no payload');
@@ -3123,10 +3206,27 @@ function buildInventionPage(d) {
 }
 // ── /invention-gate ──
 function inventionInventory() {
-  const pages = listPages().filter(p => p.endsWith('.html')).slice(0, 70);
+  // The site-agent workspace is a SPARSE checkout: real site pages are not on
+  // disk, so listPages() alone would tell the inventing model "(nothing
+  // exists)" and let it pick a slug that collides with a live page — the
+  // publish step commits root *.html, which would then overwrite that page.
+  // data/site-audit.json IS checked out and lists every page; use it as the
+  // collision map. Returns files too, for the slug guard.
+  const names = new Set(listPages().filter(p => /\.html$/i.test(p)));
+  try {
+    const audit = loadJson('data/site-audit.json', null);
+    for (const r of ((audit && audit.results) || [])) {
+      if (r && r.file && /\.html$/i.test(r.file)) names.add(String(r.file).replace(/^\.?\/+/, ''));
+    }
+  } catch (e) { /* audit unreadable — fall back to workspace pages only */ }
+  const files = Array.from(names).sort().slice(0, 400);
   const inv = loadJson(INVENTIONS, { items: [] });
   const titles = ((inv && inv.items) || []).map(x => x && x.title).filter(Boolean);
-  return { pages: pages.join(', '), titles: titles.join(' | ') || '(none yet)' };
+  return {
+    files: files,
+    pages: files.map(f => f.replace(/\.html$/i, '')).join(', '),
+    titles: titles.join(' | ') || '(none yet)'
+  };
 }
 async function agentInvention() {
   const fixes = [];
@@ -3135,7 +3235,7 @@ async function agentInvention() {
   if (!reg.meta || typeof reg.meta !== 'object') reg.meta = {};
   if (!Array.isArray(reg.items)) reg.items = [];
   const inv = inventionInventory();
-  const existing = new Set(listPages());
+  const existing = new Set(inv.files);
   reg.items.forEach(x => { if (x && x.slug) existing.add(x.slug + '.html'); });
 
   const r = await callLLM(
@@ -3144,12 +3244,12 @@ async function agentInvention() {
     'ALREADY-INVENTED TOOLS (do not repeat): ' + inv.titles + '\n' +
     'EXISTING PAGES (slug must not collide): ' + inv.pages + '\n\n' +
     'Reply STRICT JSON only: {"title":"<=90 chars","slug":"kebab-case-unique","concept":"2-3 sentences: the new idea and the study gap it fills","why":"one sentence: the value it adds","body_html":"inner HTML of the tool (controls + output areas; classes are fine; no <script>)","script":"JavaScript for the tool: wire handlers with addEventListener to ids/classes present in body_html; fully self-contained; <=9000 chars"}',
-    3200, 'high'
+    8000
   );
   if (r && r.text) {
     try {
-      const txt = String(r.text).replace(/```[a-z]*|```/gi, '').trim();
-      const d = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+      const d = parseLooseJson(r.text);
+      if (!d) throw new Error('no JSON object in model output');
       const built = buildInventionPage(d);
       if (!built.ok) {
         reg.meta.lastAttempt = { at: new Date().toISOString(), reason: built.reason };
@@ -3951,7 +4051,7 @@ async function main() {
   // their own dispatches (agent_only=mainsfresh, model=qwen3.5:9b) instead
   // of slowing every normal pass. AGENT_HEAVY overrides the heavy list;
   // AGENT_FAST_TAGS overrides the fast tag list — no code change needed.
-  const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+  const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh,invention').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
   const modelTag = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
   const fastTags = (process.env.AGENT_FAST_TAGS || 'qwen3:4b,qwen3.5:4b,qwen3.5:2b,qwen3.5:0.8b,qwen3:1.7b,qwen3:0.6b,lfm2.5:1.2b').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
   const heavyTier = fastTags.indexOf(modelTag.toLowerCase()) === -1;
