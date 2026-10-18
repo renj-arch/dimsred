@@ -32,7 +32,7 @@ permissions:
 jobs:
   invent:
     runs-on: ubuntu-latest
-    timeout-minutes: 150
+    timeout-minutes: 160
     steps:
       - name: Free runner disk space (swap + 17GB model + repo)
         run: |
@@ -90,11 +90,16 @@ jobs:
           ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
 
       - name: Invent questions (27B as exam setter)
+        # Hard stop at 120 min; the script's own 110-min deadline stops
+        # gracefully first. Both guards exist because run #2 logged 24/24
+        # calls aborted at the old 4-min client timeout — a reasoned answer
+        # needs ~5-15 min on the 4 vCPU runner (CALL_MAX_MS is now 20 min).
+        timeout-minutes: 120
         env:
           OLLAMA_MODEL: qwen3.8:27b
           OLLAMA_HOST: http://127.0.0.1:11434
           INVENT_PER_SLOT: ${{ github.event.inputs.per_slot || '2' }}
-          INVENT_DEADLINE_MIN: '90'
+          INVENT_DEADLINE_MIN: '110'
         run: node scripts/invent-questions.js
 
       # Incremental saves mean even a timeout keeps every question invented

@@ -22,6 +22,7 @@
  *   OLLAMA_HOST         default http://127.0.0.1:11434
  *   INVENT_PER_SLOT     questions per section x difficulty (default 2)
  *   INVENT_DEADLINE_MIN wall-clock budget for inventing (default 95)
+ *   INVENT_CALL_MS      per-call client timeout in ms (default 1200000 = 20 min)
  *   INVENT_MAX_STORE    max questions kept (default 1200)
  *   INVENT_OUT          override output path (for tests)
  *   INVENT_FAKE_LLM=1   no model needed — canned responses for local tests
@@ -38,7 +39,10 @@ const MAX_STORE = parseInt(process.env.INVENT_MAX_STORE || '1200', 10) || 1200;
 const OUT_FILE = process.env.INVENT_OUT || path.join('data', 'invented', 'questions.json');
 const FAKE = process.env.INVENT_FAKE_LLM === '1';
 const RUN = process.env.GITHUB_RUN_NUMBER || String(Date.now());
-const CALL_MAX_MS = parseInt(process.env.INVENT_CALL_MS || '240000', 10);
+// 4 min aborted EVERY call on the 4 vCPU runner (24/24 in run #2): a
+// 1600-token reasoned answer needs ~5-15 min there. 20 min lets slow calls
+// finish; the deadline budget still guards the total run.
+const CALL_MAX_MS = parseInt(process.env.INVENT_CALL_MS || '1200000', 10);
 
 const SECTIONS = ['quant', 'reasoning', 'english'];
 const TIERS = ['easy', 'moderate', 'hard', 'veryhard'];

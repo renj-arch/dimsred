@@ -28,10 +28,12 @@ permissions:
 jobs:
   autofix:
     runs-on: ubuntu-latest
-    # 27B on runner CPU: pull ~5 min + cold load ~5 min + up to 3 fixes at
-    # ~5-18 min each. 60 min starved run #13 (55 min of generation, then the
-    # cap killed publish and the work was lost).
-    timeout-minutes: 180
+    # 27B on runner CPU. Measured (#24): model pull takes 23 min, then the
+    # fixer ran 155+ min and was still working when the old 180-min cap hit —
+    # publish was skipped every time (4/4 runs, zero payoff). 340 leaves the
+    # fixer ~300 min; the step cap below plus publish (if: always()) mean
+    # whatever finished is still committed inside the job ceiling.
+    timeout-minutes: 340
     steps:
       - uses: actions/checkout@v4
         with:
@@ -124,12 +126,19 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
 
       - name: Run auto-fixer (Qwen3.8 local, zero API keys)
+        # 300 min for up to 3 fixes; if it still overruns, publish below
+        # (if: always()) commits whatever the fixer already wrote.
+        timeout-minutes: 300
         env:
           OLLAMA_MODEL: ${{ env.MODEL }}
           OLLAMA_HOST: http://127.0.0.1:11434
         run: node scripts/llm-autofix.js
 
       - name: Publish fixes
+        # always(): a fixer step that was capped or died still gets whatever
+        # it wrote (figures/ and rewritten pages are written per-fix).
+        if: always()
+        timeout-minutes: 10
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
