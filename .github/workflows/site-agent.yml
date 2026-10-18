@@ -15,6 +15,11 @@ on:
   # dispatches the next run the moment one completes (back-to-back cycles),
   # with a 6h seed cron as dead-man switch. Manual runs still allowed here.
   workflow_dispatch:
+    inputs:
+      agent_only:
+        description: 'Run only these agents (comma list, e.g. practicesets). Empty = normal rotation.'
+        required: false
+        default: ''
 
 concurrency:
   group: site-agent
@@ -136,6 +141,9 @@ jobs:
       - name: Run site agent (single pass — same shape as llm-autofix)
         env:
           OLLAMA_MODEL: qwen3.8:27b
+          # Manual dispatches can pin the agent set (e.g. a practice-set run
+          # for one exam). Empty on normal runs -> full rotation.
+          AGENT_ONLY: ${{ github.event.inputs.agent_only }}
           # 127.0.0.1 NOT localhost: Node fetch on this runner resolves
           # localhost to ::1 (IPv6) and Ollama listens IPv4-only → instant
           # "fetch failed" while curl/ollama-CLI (IPv4) work. Run #56:

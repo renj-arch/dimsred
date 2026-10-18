@@ -2,6 +2,13 @@
   var ALL = {};
   var BY_ID = {};
 
+  // Question figures: raw SVG written by the site's CI agents, gated through
+  // js/fig-svg.js. Fail closed — without the sanitizer or with bad markup the
+  // figure is dropped and the question still renders.
+  function figSvg(s) {
+    try { return (window.VlymbooqFig && window.VlymbooqFig.toSafeSvg) ? window.VlymbooqFig.toSafeSvg(s) : ''; } catch (e) { return ''; }
+  }
+
   function merge(dest, src) {
     if (!src) return;
     var k;
@@ -499,6 +506,10 @@
     h += '<div class="ssc-card">';
     h += '<div class="ssc-qnum">Q' + (state.idx + 1) + ' / ' + state.total + (q.exam ? ' <span style="color:var(--amber)">' + q.exam + '</span>' : '') + '</div>';
     h += '<div class="ssc-qtext">' + q.q + '</div>';
+    if (q.f) {
+      var _fig = figSvg(q.f);
+      if (_fig) h += '<div class="ssc-qfig" style="margin:10px 0;padding:8px;background:#fff;border-radius:8px;overflow:auto">' + _fig + '</div>';
+    }
 
     h += '<div class="ssc-section">';
     h += '<button class="ssc-toggle" data-t="hint">Show Hint</button>';

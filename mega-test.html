@@ -145,6 +145,7 @@ select:focus,input:focus{outline:none;border-color:var(--purple)}
     <div class="q-card">
       <div class="q-subject-tag" id="qSubject"></div>
       <div class="q-text" id="qText"></div>
+      <div id="qFig" style="margin-bottom:14px"></div>
       <div class="q-type" id="qType"></div>
       <input type="text" class="answer-input" id="answerInput" placeholder="Type your answer..." autocomplete="off" spellcheck="false">
       <div class="result-box" id="resultBox">
@@ -174,6 +175,7 @@ select:focus,input:focus{outline:none;border-color:var(--purple)}
 </div>
 </main>
 
+<script src="js/fig-svg.js"></script>
 <script>
 var QUESTIONS = [], queue = [], idx = 0, score = 0, wrong = 0, streak = 0;
 var timerSec = 0, timerInt = null, currentQ = null, started = false;
@@ -303,6 +305,11 @@ function showQuestion() {
   document.getElementById('qProgressFill').style.width = Math.round((idx / queue.length) * 100) + '%';
   document.getElementById('qSubject').textContent = currentQ.sub || currentQ.subject || 'General';
   document.getElementById('qText').textContent = currentQ.q;
+  var figEl = document.getElementById('qFig');
+  if (figEl) {
+    var sv = (currentQ.fig && window.VlymbooqFig && window.VlymbooqFig.toSafeSvg) ? window.VlymbooqFig.toSafeSvg(currentQ.fig) : '';
+    figEl.innerHTML = sv ? '<div style="padding:8px;background:#fff;border-radius:8px;overflow:auto">' + sv + '</div>' : '';
+  }
   document.getElementById('qType').textContent = currentQ.type === 'fill_blank' ? 'Fill in the blank' : '';
   var inp = document.getElementById('answerInput');
   inp.value = ''; inp.className = 'answer-input'; inp.disabled = false; inp.focus();

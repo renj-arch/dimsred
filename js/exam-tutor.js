@@ -38,6 +38,15 @@
     return String(slug || '').replace(/[_-]+/g, ' ').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
   }
 
+  // Figures attached to practice items are raw SVG strings written by the
+  // site's CI agents (qwen3.8:27b sets). Fail closed: if the shared
+  // sanitizer (js/fig-svg.js) is not loaded or the markup fails the gate,
+  // the figure is dropped and the question still renders. Raw model output
+  // is never injected directly.
+  function safeSvg(s) {
+    try { return (window.VlymbooqFig && window.VlymbooqFig.toSafeSvg) ? window.VlymbooqFig.toSafeSvg(s) : ''; } catch (e) { return ''; }
+  }
+
   // Which PYQ weightage entry matches this page. Polytechnic has no published
   // multi-year analysis in pyq-weightage.json, so it stays null (chips hidden).
   function pyqKeyForPage() {
@@ -549,7 +558,9 @@
       var sets = (idx && idx.sets) || {};
       var slugs = Object.keys(sets);
       if (!slugs.length) return null;
-      // Rank sets by subject overlap with what was asked.
+      // Rank sets by subject overlap with what was asked. Ties keep registry
+      // order, so subject-scoped sets (ssc-je-thermo) can out-serve the mixed
+      // exam set when both mention the subject once.
       var ranked = slugs.map(function (slug) {
         var subs = (sets[slug] && sets[slug].subjects) || [];
         var score = 0;
@@ -557,23 +568,33 @@
         return { slug: slug, score: score };
       }).filter(function (r) { return r.score > 0; }).sort(function (a, b) { return b.score - a.score; });
       if (!ranked.length) return null;
-      return fetch('data/practice-sets/' + ranked[0].slug + '.json').then(function (r) {
-        if (!r.ok) throw new Error('no set');
-        return r.json();
-      }).then(function (d) {
-        var items = ((d && d.questions) || []).filter(function (q) {
-          return q && q.q && q.a && subjMatchesSetSubject(subjName, q.sub) ;
-        });
-        if (items.length < 3) return null;
-        // Shuffle, take count, shape like generator output.
-        for (var i = items.length - 1; i > 0; i--) {
-          var j = Math.floor(Math.random() * (i + 1));
-          var t = items[i]; items[i] = items[j]; items[j] = t;
-        }
-        return items.slice(0, Math.max(count, 3)).map(function (q) {
-          return { q: q.q, a: q.a, h: q.hint || '', s: q.sub || '' };
-        });
-      }).catch(function () { return null; });
+      // Try sets best-first until one actually yields >= 3 items for this
+      // subject: an exam-level mixed set may mention the subject once, while
+      // a lower-ranked subject set covers it with all its items.
+      var i = 0;
+      function attempt() {
+        if (i >= ranked.length) return null;
+        var slug = ranked[i++].slug;
+        return fetch('data/practice-sets/' + slug + '.json').then(function (r) {
+          if (!r.ok) throw new Error('no set');
+          return r.json();
+        }).then(function (d) {
+          var items = ((d && d.questions) || []).filter(function (q) {
+            return q && q.q && q.a && subjMatchesSetSubject(subjName, q.sub) ;
+          });
+          if (items.length < 3) return attempt();
+          // Shuffle, take count, shape like generator output (figures ride
+          // along when the set carries a validated SVG).
+          for (var j = items.length - 1; j > 0; j--) {
+            var k = Math.floor(Math.random() * (j + 1));
+            var t = items[j]; items[j] = items[k]; items[k] = t;
+          }
+          return items.slice(0, Math.max(count, 3)).map(function (q) {
+            return { q: q.q, a: q.a, h: q.hint || '', s: q.sub || '', f: q.fig || '' };
+          });
+        }).catch(function () { return attempt(); });
+      }
+      return attempt();
     }).catch(function () { return null; });
   }
   function generatePracticeLLM(subjKey, subjName, seedQs, count, status) {
@@ -581,6 +602,11 @@
     var llm = window.VlymbooqAskLLM;
     if (!llm || typeof llm.ensureEngine !== 'function') {
       return Promise.reject(new Error('LLM backend not loaded'));
+    }
+    // WebLLM needs WebGPU; failing early beats a stalled 1GB download attempt
+    // on browsers that cannot run the engine at all.
+    if (typeof navigator !== 'undefined' && !navigator.gpu) {
+      return Promise.reject(new Error('this browser has no WebGPU — open in Chrome/Edge on desktop (the in-browser model runs on your GPU)'));
     }
     return llm.ensureEngine(function (msg) { if (status) status.textContent = msg; }).then(function (eng) {
       return eng.chat.completions.create({
@@ -628,6 +654,7 @@
       var h = '<div style="margin-bottom:12px">';
       h += '<div style="font-size:11px;color:#71717a;margin-bottom:4px">Q' + (idx + 1) + ' / ' + questions.length + ' \u00B7 ' + subjName + '</div>';
       h += '<div style="font-weight:600;color:#fafafa;margin-bottom:8px">' + q.q + '</div>';
+      if (q.f) { var _fig = safeSvg(q.f); if (_fig) h += '<div style="margin:0 0 8px;padding:6px;background:#fff;border-radius:8px;overflow:auto">' + _fig + '</div>'; }
       h += '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px">';
       h += '<button class="pp-toggle" data-t="h" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:#18181b;color:#a1a1aa;cursor:pointer;font-size:11px">Hint</button>';
       h += '<button class="pp-toggle" data-t="a" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(255,255,255,.1);background:#18181b;color:#a1a1aa;cursor:pointer;font-size:11px">Answer</button>';

@@ -2508,9 +2508,17 @@ async function agentWikiSyllabus() {
 // Exam tabs (hubs) get single-click practice: mega-test.html?exam=<slug>
 // serves data/practice-sets/<slug>.json instantly — pre-generated here, no
 // live generation, no quality compromise. Standing goal: every exam hub has
-// a set fresher than 7 days. One set per run (10 items, 1 LLM call).
+// a set fresher than 7 days. One set per run (1 LLM call).
 // Exam slugs discovered dynamically (hub dirs with index.html) + RRB (asked
 // for, no hub dir yet) so new hubs are covered without code changes.
+//
+// SSC-JE special case: it is the biggest bank on the site (7000+ items,
+// 26 subjects) and its page tutor serves these sets on a single click. The
+// tutor only uses a set when >=3 of its items match the asked subject, so
+// the exam-level mixed set alone never covered a subject. The four core
+// subjects therefore get whole subject-scoped sets; priority order below
+// puts the exam set first, then the subject sets, then everything else.
+// Sets may carry validated SVG figures ("fig") for diagram-worthy items.
 const PRACTICE_DIR = 'data/practice-sets';
 const PRACTICE_EXTRA_SLUGS = ['rrb', 'ssc-je'];
 const PRACTICE_EXAM_NAMES = {
@@ -2519,6 +2527,41 @@ const PRACTICE_EXAM_NAMES = {
   'ssc-gd': 'SSC GD', ctet: 'CTET', nda: 'NDA', cds: 'CDS', clat: 'CLAT',
   ldc: 'LDC', 'kerala-psc': 'Kerala PSC', rrb: 'RRB NTPC', 'ssc-je': 'SSC JE'
 };
+const PRACTICE_SSC_JE_SETS = [
+  { slug: 'ssc-je', subj: null },
+  { slug: 'ssc-je-som', subj: 'Strength of Materials' },
+  { slug: 'ssc-je-tom', subj: 'Theory of Machines' },
+  { slug: 'ssc-je-thermo', subj: 'Thermodynamics' },
+  { slug: 'ssc-je-fluids', subj: 'Fluid Mechanics' }
+];
+function practicePriority(slug) {
+  if (slug === 'ssc-je') return 0;
+  const i = PRACTICE_SSC_JE_SETS.findIndex(s => s.slug === slug);
+  if (i !== -1) return i; // 1..4, in listed order
+  if (slug === 'rrb') return 9;
+  return 10;
+}
+function practiceExamName(slug) {
+  const s = PRACTICE_SSC_JE_SETS.find(x => x.slug === slug);
+  if (s) return s.subj ? 'SSC JE — ' + s.subj : 'SSC JE';
+  return PRACTICE_EXAM_NAMES[slug] || slug.toUpperCase();
+}
+// Server-side gate for item figures. The client re-checks (js/fig-svg.js),
+// but nothing questionable is ever stored: a figure must be a single <svg>
+// with a viewBox and no script/handlers/external refs — or it is dropped and
+// the item stays text-only.
+function cleanFigSvg(raw) {
+  if (!raw) return '';
+  const s = String(raw).replace(/```[a-z]*|```/gi, '').trim();
+  const m = s.match(/<svg[\s\S]*?<\/svg>/i);
+  if (!m) return '';
+  const svg = m[0];
+  if (svg.length > 4000) return '';
+  if (!/^<svg/i.test(svg)) return '';
+  if (!/viewBox\s*=\s*["']?[-\d.]/.test(svg)) return '';
+  if (/<script|on[a-z]+\s*=|javascript:|<image|href\s*=|xlink|data:|<foreignObject|<!\[CDATA|<iframe|<use|<animate/i.test(svg)) return '';
+  return svg;
+}
 function practiceSlugs() {
   const slugs = [];
   try {
@@ -2531,7 +2574,11 @@ function practiceSlugs() {
   } catch (e) { /* ignore */ }
   for (const s of PRACTICE_EXTRA_SLUGS) if (slugs.indexOf(s) === -1) slugs.push(s);
   // Only exam-like hubs (skip tooling dirs that happen to have index.html).
-  return slugs.filter(s => PRACTICE_EXAM_NAMES[s] || /^(cgl|rbi|jee|neet|gate|upsc|nda|cds|ctet|clat|ldc)/.test(s));
+  const keep = slugs.filter(s => PRACTICE_EXAM_NAMES[s] || /^(cgl|rbi|jee|neet|gate|upsc|nda|cds|ctet|clat|ldc)/.test(s));
+  // Subject-scoped SSC-JE sets are added after the exam-like filter (they are
+  // not hubs, but the tutor serves them by subject name).
+  for (const s of PRACTICE_SSC_JE_SETS) if (keep.indexOf(s.slug) === -1) keep.push(s.slug);
+  return keep;
 }
 async function agentPracticeSets() {
   const fixes = [];
@@ -2550,23 +2597,34 @@ async function agentPracticeSets() {
     } catch (e) { /* treat as missing */ }
     scored.push({ slug: slug, age: age });
   }
-  scored.sort((a, b) => b.age - a.age);
+  scored.sort((a, b) => (b.age - a.age) || (practicePriority(a.slug) - practicePriority(b.slug)));
   const target = scored[0];
   if (target.age < 7 * 86400000) {
     console.log('agent: PracticeSets — all sets fresh (stalest ' + Math.round(target.age / 86400000) + 'd)');
     return { agent: 'practicesets', fixes: fixes };
   }
-  const examName = PRACTICE_EXAM_NAMES[target.slug] || target.slug.toUpperCase();
+  const examName = practiceExamName(target.slug);
+  const targetSubj = (PRACTICE_SSC_JE_SETS.find(s => s.slug === target.slug) || {}).subj || null;
+  const want = targetSubj ? 12 : 10;
   console.log('agent: PracticeSets — writing fresh set for ' + examName + ' (age ' + (target.age === Infinity ? 'missing' : Math.round(target.age / 86400000) + 'd') + ')');
+  const figRule = 'FIGURES: only when a question genuinely needs a diagram (curve, cycle, sketch, geometry, chart), add "fig": a SMALL monochrome outline SVG string — viewBox="0 0 400 260", black strokes (#111) on white, font-family="serif", only <svg> <g> <path> <line> <circle> <rect> <polygon> <polyline> <text> elements, no scripts, no images, no external references, under 3500 characters. At most 2 items in the whole set get a fig. No diagram needed -> no "fig" key at all.';
   const sys = 'You are an expert govt-exam setter writing a rapid-fire practice set. ' +
-    'Return STRICT JSON only: {"questions": [{"q": "...", "a": "...", "sub": "...", "fact": "...", "hint": "..."}]}. No markdown. ' +
+    'Return STRICT JSON only: {"questions": [{"q": "...", "a": "...", "sub": "...", "fact": "...", "hint": "...", optional "fig": "<svg>"}]}. No markdown. ' +
     'FORMAT: short exact-answer items for a type-the-answer quiz (q = crisp question under 140 chars, a = exact short answer under 40 chars, ' +
     'sub = subject area, fact = 2-3 sentence solution with the working/shortcut, hint = one-line trap alert or speed tip). ' +
+    'The optional "fig" is governed by the FIGURES rule in the brief. ' +
     EXAMINER_STYLE;
-  const user = 'Write 10 exam-real practice items for ' + examName + ' (real paper difficulty: multi-step where apt, ' +
-    'realistic numbers, standard exam patterns — SSC CGL Tier-1 / Banking / NDA style as applicable). ' +
-    'Mix subjects across the exam syllabus. Every answer exact and checkable. Stay factual; invent no dates/numbers/names.';
-  const r = await callLLM(sys, user, 2048);
+  const user = targetSubj
+    ? 'Write ' + want + ' exam-real practice items for ' + examName + ' (SSC JE Mechanical paper difficulty: multi-step where apt, ' +
+      'realistic numbers, standard SSC patterns). EVERY item must be from ' + targetSubj + ' and "sub" must be exactly "' + targetSubj + '". ' +
+      'Every answer exact and checkable. Stay factual; invent no dates/numbers/names. ' + figRule
+    : 'Write ' + want + ' exam-real practice items for ' + examName + ' (real paper difficulty: multi-step where apt, ' +
+      'realistic numbers, standard exam patterns — SSC CGL Tier-1 / Banking / NDA style as applicable). ' +
+      (target.slug === 'ssc-je'
+        ? 'Spread items across the official SSC JE Mechanical subjects (Strength of Materials, Theory of Machines, Thermodynamics, Fluid Mechanics, Machine Design, Production Technology, Workshop Technology, Engineering Mechanics, Materials & Metallurgy, IC Engines, Heat Transfer, Boilers, Steam Turbines, Refrigeration & AC, Industrial Engineering, Engineering Mathematics) and set "sub" to the exact subject name. '
+        : 'Mix subjects across the exam syllabus. ') +
+      'Every answer exact and checkable. Stay factual; invent no dates/numbers/names. ' + figRule;
+  const r = await callLLM(sys, user, 3072);
   if (!r || !r.text) return { agent: 'practicesets', fixes: fixes };
   let items = [];
   try {
@@ -2576,18 +2634,22 @@ async function agentPracticeSets() {
   } catch (e) { console.log('agent: PracticeSets — unparseable response'); return { agent: 'practicesets', fixes: fixes }; }
   const clean = [];
   const seenQ = [];
+  let figCount = 0;
   for (const it of items) {
     const q = String((it && it.q) || '').trim(), a = String((it && it.a) || '').trim();
     const fact = String((it && it.fact) || '').trim();
     if (q.length < 15 || q.length > 220 || !a || a.length > 60 || fact.length < 40) continue;
     if (seenQ.concat(loadJson(PRACTICE_DIR + '/' + target.slug + '.json', { questions: [] }).questions.map(x => x.q)).some(t => paperOverlap(q, t) > 0.7)) continue;
     seenQ.push(q);
-    clean.push({
+    const item = {
       q: q, a: a, sub: String((it && it.sub) || 'General').slice(0, 60),
       fact: fact.slice(0, 600), hint: String((it && it.hint) || '').slice(0, 160),
       autoGen: true, writtenBy: 'qwen3.8:27b'
-    });
-    if (clean.length >= 10) break;
+    };
+    const fig = figCount < 2 ? cleanFigSvg(it && it.fig) : '';
+    if (fig) { item.fig = fig; figCount++; }
+    clean.push(item);
+    if (clean.length >= want) break;
   }
   if (clean.length < 5) { console.log('agent: PracticeSets — only ' + clean.length + ' valid items, discarding set'); return { agent: 'practicesets', fixes: fixes }; }
   try { fs.mkdirSync(PRACTICE_DIR, { recursive: true }); } catch (e) { /* ignore */ }
@@ -3191,8 +3253,15 @@ async function main() {
   let agents = rotateAgents.concat(alwaysAgents);
   // AGENT_ONLY=questions: dedicated question-quality workflow (questions data
   // checked out, site pages are not). Run only the agents that touch questions.
+  // AGENT_ONLY=<comma list>: manual dispatch pinning (e.g. practicesets for a
+  // one-off practice-set run). Empty/absent on normal runs -> full rotation.
   if (process.env.AGENT_ONLY === 'questions') {
     agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content' || name === 'Papers' || name === 'WikiSyllabus');
+  } else if (process.env.AGENT_ONLY && process.env.AGENT_ONLY.trim()) {
+    const want = process.env.AGENT_ONLY.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+    const keep = agents.filter(([name]) => want.indexOf(name.toLowerCase()) !== -1);
+    if (keep.length) agents = keep;
+    else console.log('agent: AGENT_ONLY=' + process.env.AGENT_ONLY + ' matched no agents in rotation');
   }
 
   // ── Work intake: LOOK before acting (the "intelligent" part) ──
