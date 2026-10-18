@@ -43,7 +43,19 @@ git commit -m "$MSG" || { echo "[ci-push] commit failed"; exit 1; }
 sync_remote() {
   git pull --rebase --autostash 2>/dev/null && return 0
   git rebase --abort 2>/dev/null || true
+  # -X ours resolves content conflicts, but git still refuses modify/delete
+  # conflicts (e.g. an archive-refresh run deletes
+  # data/questions/00-27b-archive.json in the same window the 27B lane
+  # rewrites it) — they surface as an unmerged index. Every following push
+  # then dies non-fast-forward and the run ends in a fake "TOTAL AUTH
+  # FAILURE" while the real work sits on the runner (observed 2026-10-18,
+  # run 39151431625, ~30 min of 27B answers lost). Resolve whatever is left
+  # keeping OUR side, then finish the merge so a push can actually happen.
   git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+  if [ -f .git/MERGE_HEAD ]; then
+    git add -A 2>/dev/null || true
+    git commit --no-edit >/dev/null 2>&1 || true
+  fi
   return 0
 }
 
@@ -86,34 +98,49 @@ try_push() {
   return 1
 }
 
+PAT_AUTH=0
 for i in 1 2 3; do
   echo "[ci-push] push attempt $i (PAT)..."
   try_push "pat"
   ST=$?
   if [ $ST -eq 0 ]; then echo "[ci-push] Pushed with PAT"; exit 0; fi
-  if [ $ST -eq 2 ]; then echo "[ci-push] PAT looks dead"; break; fi
+  if [ $ST -eq 2 ]; then PAT_AUTH=1; echo "[ci-push] PAT looks dead"; break; fi
   echo "[ci-push] transient push failure, retrying..."
   sleep 5
 done
 
-# --- PAT-death fallback: same push via GITHUB_TOKEN ---
+# --- Fallback: same push via GITHUB_TOKEN ---
 if [ -z "${GITHUB_TOKEN:-}" ]; then
   echo "::error::ci-push: PAT push failed AND no GITHUB_TOKEN available — work is committed locally but UNPUBLISHED"
   exit 1
 fi
-echo "::warning::ci-push: PAT push failed — falling back to GITHUB_TOKEN (downstream workflows will NOT trigger for this run)"
+# Only an auth-shaped rejection proves the PAT is dead; a transient failure
+# (push race, conflict left by sync_remote) just means retry via the token.
+# Never write PAT-DEAD for a transient failure — that is how a false
+# "renew secrets" alarm shipped on 2026-10-18 (run 39151431625).
+if [ "$PAT_AUTH" = "1" ]; then
+  echo "::warning::ci-push: PAT push rejected as unauthorized — falling back to GITHUB_TOKEN (downstream workflows will NOT trigger for this run)"
+else
+  echo "::warning::ci-push: PAT push failed transiently (not an auth error) — falling back to GITHUB_TOKEN (downstream workflows will NOT trigger for this run)"
+fi
 git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-mkdir -p data
-printf '{"status":"PAT-DEAD","detail":"PAT push failed %s — published via GITHUB_TOKEN fallback; renew secrets.PAT or downstream triggers stay skipped.","checked":"%s"}\n' \
-  "$(date -u +'%Y-%m-%d %H:%M UTC')" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > data/auth-status.json
-git add data/auth-status.json 2>/dev/null || true
-git commit -m "ci-push: PAT-dead fallback marker" 2>/dev/null || true
+if [ "$PAT_AUTH" = "1" ]; then
+  mkdir -p data
+  printf '{"status":"PAT-DEAD","detail":"PAT push failed %s — published via GITHUB_TOKEN fallback; renew secrets.PAT or downstream triggers stay skipped.","checked":"%s"}\n' \
+    "$(date -u +'%Y-%m-%d %H:%M UTC')" "$(date -u +'%Y-%m-%dT%H:%M:%SZ')" > data/auth-status.json
+  git add data/auth-status.json 2>/dev/null || true
+  git commit -m "ci-push: PAT-dead fallback marker" 2>/dev/null || true
+fi
 for i in 1 2 3; do
   echo "[ci-push] fallback push attempt $i (GITHUB_TOKEN)..."
   sync_remote
   union_invented
   if git push 2>&1; then
-    echo "::error::ci-push: published via GITHUB_TOKEN fallback — PAT IS DEAD, renew secrets.PAT"
+    if [ "$PAT_AUTH" = "1" ]; then
+      echo "::error::ci-push: published via GITHUB_TOKEN fallback — PAT IS DEAD, renew secrets.PAT"
+    else
+      echo "::error::ci-push: published via GITHUB_TOKEN fallback after TRANSIENT PAT failures (PAT not proven dead — check auth-sentinel) — downstream triggers skipped for this run"
+    fi
     exit 1
   fi
   sleep 5
