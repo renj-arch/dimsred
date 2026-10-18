@@ -145,16 +145,21 @@ async function probeServer() {
   finally { clearTimeout(timer); }
 }
 async function reviveServer() {
-  if (await probeServer()) return true;
-  log('[invent] Ollama unreachable — restarting it in-place');
+  // Hard restart, always. A wedged server can still answer /api/tags while
+  // the model runner behind it is dead — every chat call then hangs until
+  // undici's headers timeout (~5 min) and surfaces as "fetch failed". Run #3
+  // burned its whole 110-min budget exactly this way. A /api/tags probe
+  // would have said "healthy" and skipped the restart, so pkill + start
+  // fresh instead (the same recovery site-agent.js uses). The first call
+  // after this pays a cold model load, well inside the 20-min call budget.
+  log('[invent] Ollama transport failures — hard restarting ollama serve');
   try {
-    const { spawn } = require('child_process');
-    const child = spawn('bash', ['-c', 'nohup ollama serve >> /tmp/ollama.log 2>&1 &'], { detached: true, stdio: 'ignore' });
-    child.unref();
-  } catch (e) { /* the probe below decides */ }
-  for (let i = 0; i < 60; i++) {
+    const { execSync } = require('child_process');
+    execSync('pkill -f "ollama serve" 2>/dev/null; sleep 2; OLLAMA_KEEP_ALIVE=60m nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 20000 });
+  } catch (e) { /* the wait below decides */ }
+  for (let i = 0; i < 90; i++) {
     await sleep(1000);
-    if (await probeServer()) { log('[invent] Ollama back up after ' + (i + 1) + 's'); return true; }
+    if (await probeServer()) { log('[invent] Ollama back up after ' + (i + 1) + 's — cold load expected on the next call'); return true; }
   }
   return false;
 }
