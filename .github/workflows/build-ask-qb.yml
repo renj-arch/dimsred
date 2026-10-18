@@ -132,6 +132,17 @@ jobs:
       - name: Build concept table
         run: node scripts/build-ask-qb-concepts.js
 
+      # The gate below compares archive-cat-index.json's declared per-category
+      # totals against the corpus. Records appended without an index update
+      # (Wiki Fill appends; only a successful ask-qb build rewrites the index)
+      # leave it behind by a few records and the gate then refuses to publish
+      # anything at all — observed 2026-10-18: 6 records behind, whole rebuild
+      # discarded. Recompute the totals from the very files the index points
+      # at BEFORE the gate, and commit the repair with the tables so main's
+      # copy converges instead of re-drifted on every append.
+      - name: Repair archive-cat-index totals from the corpus
+        run: node scripts/diag-cat-index-totals.js --repair
+
       # Hard gate: if the tables still disagree with the corpus after a full
       # rebuild, something is wrong upstream and committing would only replace
       # one stale snapshot with another.
@@ -185,7 +196,7 @@ jobs:
           # while the bucket CONTENTS it points at were rebuilt every run and
           # served fresh from the corpus branch. Commit it with the tables so
           # both halves of the mapping always ship together.
-          git add data/ask-qb/manifest.json data/ask-qb/dir.json data/ask-qb/entities.tsv data/ask-qb/concepts.json data/ask-qb/bucket/buckets.json
+          git add data/ask-qb/manifest.json data/ask-qb/dir.json data/ask-qb/entities.tsv data/ask-qb/concepts.json data/ask-qb/bucket/buckets.json data/questions/archive-cat-index.json
           if git diff --staged --quiet; then
             echo "No question-bank table changes to commit"
           else

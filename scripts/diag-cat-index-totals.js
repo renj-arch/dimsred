@@ -1,16 +1,27 @@
-// Audit: does archive-cat-index.json's `total` per category match the number
-// of question objects actually present in the files it points at?
+// Audit — and, with `--repair`, fix — whether archive-cat-index.json's `total`
+// per category matches the number of question objects actually present in the
+// files it points at.
 //
-// The freshness gate compares the sum of these totals against
-// manifest.stats.records. Run #6 failed with the builder reporting 16 MORE
-// records than the index claims, and build-ask-qb.js is itself driven by this
-// file -- so the totals must be undercounting somewhere.
+// The freshness gate (scripts/check-ask-qb-fresh.js) compares the sum of these
+// totals against manifest.stats.records. Run #6 failed with the builder
+// reporting 16 MORE records than the index claims, and build-ask-qb.js is
+// itself driven by this file -- so the totals must be undercounting somewhere.
+//
+// 2026-10-18: the drift returns every time records are appended without an
+// index update (Wiki Fill appends; only a successful ask-qb build rewrites the
+// index). A 6-record drift then blocked the whole rebuild: the gate refused to
+// publish, so the index could never catch up on its own. build-ask-qb.yml now
+// runs this script with --repair BEFORE the gate, and commits the repaired
+// file together with the rebuilt tables, so the index converges instead of
+// freezing the pipeline by a handful of records.
 
 const fs = require('fs');
 const path = require('path');
 const ROOT = path.join(__dirname, '..');
 const QD = path.join(ROOT, 'data', 'questions');
-const ci = JSON.parse(fs.readFileSync(path.join(QD, 'archive-cat-index.json'), 'utf8'));
+const INDEX = path.join(QD, 'archive-cat-index.json');
+const REPAIR = process.argv.includes('--repair');
+const ci = JSON.parse(fs.readFileSync(INDEX, 'utf8'));
 
 function countIn(file) {
   // Shape: { Subject: { subSubjects: { SubSub: [ ...questions ] } } }
@@ -57,4 +68,27 @@ for (const r of bad) {
   console.log('  ' + r.name.padEnd(34) + ' declared=' + String(r.declared).padStart(8) +
     ' actual=' + String(r.real).padStart(8) + ' delta=' + String(r.delta).padStart(6) +
     (r.missing.length ? '  MISSING FILES: ' + r.missing.join(',') : ''));
+}
+
+if (REPAIR) {
+  let fixed = 0;
+  for (const r of rows) {
+    if (r.missing.length) continue;       // never rewrite a total from a partial read
+    if (r.delta === 0) continue;
+    const entry = ci.find(x => x && x.name === r.name);
+    if (!entry) continue;
+    entry.total = r.real;
+    fixed++;
+  }
+  if (fixed) {
+    fs.writeFileSync(INDEX, JSON.stringify(ci));
+    let after = 0;
+    for (const c of ci) after += c.total || 0;
+    console.log('');
+    console.log('repaired ' + fixed + ' categor' + (fixed === 1 ? 'y' : 'ies') +
+      '; totals now sum to ' + after.toLocaleString());
+  } else {
+    console.log('');
+    console.log('nothing to repair');
+  }
 }
