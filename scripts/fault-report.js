@@ -30,6 +30,13 @@ const fs = require('fs');
 const OUT = 'data/faults.json';
 const faults = [];
 
+// Corpus-growth watchdog constants: a fill chain is stalled when none of
+// these workflows has a successful run within FILL_STALE_HOURS and none is
+// queued/running. Kept in sync with scripts/fill-watchdog.js (the script that
+// actually dispatches the restart; this report only surfaces the state).
+const FILL_STALE_HOURS = parseInt(process.env.FILL_STALE_HOURS || '30', 10);
+const FILL_WORKFLOWS = ['daily-wiki-fill.yml', 'recover-wiki-fill.yml', 'daily-feed-fill.yml'];
+
 function add(severity, kind, title, detail, action) {
   faults.push({ severity: severity, kind: kind, title: title, detail: detail || '', action: action || null });
 }
@@ -61,6 +68,56 @@ function collectRuns() {
   } catch (e) {
     console.error('fault-report: pipeline status unavailable — ' + (e.message || e));
     return [];
+  }
+}
+
+// Corpus growth watch: the archive count only moves when a fill run reaches
+// its commit step, and a cancelled run self-dispatches no successor — so the
+// chain can die while every surface still looks "finished" (archive-refresh
+// keeps re-stamping the page timestamp from an unchanged corpus). Reads the
+// recent runs of each fill workflow and reports (a) a stall — nothing running
+// and no success within FILL_STALE_HOURS — or (b) an in-flight run, so the
+// board explains the wait instead of leaving the reader guessing. The
+// dispatch half of the watchdog lives in scripts/fill-watchdog.js.
+function checkFillStall() {
+  if (!process.env.GITHUB_TOKEN && !process.env.GH_TOKEN) return null;
+  try {
+    const execFileSync = require('child_process').execFileSync;
+    const all = [];
+    FILL_WORKFLOWS.forEach(function (wf) {
+      try {
+        JSON.parse(execFileSync('gh', ['run', 'list', '--workflow', wf, '--limit', '12',
+          '--json', 'status,conclusion,updatedAt,number'], { encoding: 'utf8', timeout: 30000 }))
+          .forEach(function (r) { r.workflow = wf; all.push(r); });
+      } catch (e) { /* one workflow's history unavailable — judge on the rest */ }
+    });
+    if (!all.length) return null;
+    const now = Date.now();
+    let lastSuccess = null;
+    all.forEach(function (r) {
+      const at = Date.parse(r.updatedAt || '') || 0;
+      if (r.conclusion === 'success' && (!lastSuccess || at > lastSuccess.at)) {
+        lastSuccess = { at: at, workflow: r.workflow, updatedAt: r.updatedAt };
+      }
+    });
+    const active = all.filter(function (r) { return r.status !== 'completed'; });
+    const dead = all.filter(function (r) {
+      return (r.conclusion === 'cancelled' || r.conclusion === 'failure') &&
+        (!lastSuccess || (Date.parse(r.updatedAt || '') || 0) > lastSuccess.at);
+    }).length;
+    const hours = lastSuccess ? Math.round((now - lastSuccess.at) / 3600000) : null;
+    return {
+      stalled: active.length === 0 && (!lastSuccess || hours > FILL_STALE_HOURS),
+      active: active,
+      hours: hours,
+      dead: dead,
+      lastSuccessText: lastSuccess
+        ? lastSuccess.workflow.replace(/\.yml$/, '') + ' at ' + String(lastSuccess.updatedAt).replace('T', ' ').slice(0, 16) + 'Z'
+        : 'none in the last 12 runs of each fill workflow'
+    };
+  } catch (e) {
+    console.error('fault-report: fill stall check unavailable — ' + (e.message || e));
+    return null;
   }
 }
 
@@ -395,6 +452,27 @@ try {
       });
     });
   });
+
+  // ── corpus growth: stalled chain or an in-flight fill ──
+  const fill = checkFillStall();
+  if (fill && fill.stalled) {
+    add('warn', 'pipeline',
+      'Corpus fill stalled — ' + (fill.hours === null
+        ? 'no successful Wiki/Feed fill run in the recent history'
+        : 'no successful Wiki/Feed fill for ' + fill.hours + 'h'),
+      'Last success: ' + fill.lastSuccessText + ' · ' + fill.dead +
+        ' run(s) since then ended before their commit step (job caps / cancellations). ' +
+        'Nothing is lost: cancelled runs keep their chunk artifacts and the recovery workflow can merge them. ' +
+        'The fill watchdog in fault-status.yml dispatches a fresh Wiki Fill automatically whenever the chain is dead and idle.',
+      'Automatic — the fill watchdog restarts the chain on its next pass (every 6h). To restart immediately: Actions → Wiki Fill → Run workflow.');
+  } else if (fill && fill.active.length) {
+    add('info', 'pipeline',
+      'Corpus fill run in progress — ' + fill.active.slice(0, 2).map(function (r) {
+        return r.workflow.replace(/\.yml$/, '') + ' #' + r.number;
+      }).join(', '),
+      'The archive count only moves when this run reaches its commit step; the page re-stamps its timestamp every few hours even while the corpus is unchanged.' +
+        (fill.lastSuccessText ? ' Last successful fill: ' + fill.lastSuccessText + '.' : ''));
+  }
 
   const changes = diffAgainstPrevious(faults);
   const runs = collectRuns();

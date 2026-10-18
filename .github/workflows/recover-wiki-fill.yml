@@ -21,12 +21,21 @@ on:
         default: 'true'
 
 concurrency:
-  group: data-fill
+  # Its OWN group (previously shared `data-fill` with Wiki Fill). GitHub
+  # cancels a QUEUED run when a newer run enters the same group, so whenever
+  # a Wiki Fill run was dispatched while a recovery waited its turn, the
+  # recovery died in the queue — recoveries #42-#47 were all cancelled and
+  # none of them ever merged their salvage. Feed Fill escaped this exact trap
+  # with its own group (see its header comment). An overlap with a fresh wiki
+  # run is safe: both commit with rebase + union-merge fallbacks.
+  group: wiki-recover
   cancel-in-progress: false
 
 permissions:
   contents: write
-  actions: read
+  # write (not read): after a successful recovery commit the workflow
+  # self-dispatches the next Wiki Fill so the mining chain continues.
+  actions: write
 
 env:
   NODE_OPTIONS: --max-old-space-size=6144
@@ -270,6 +279,8 @@ jobs:
 
       - name: Commit and push recovered wiki data
         if: steps.list.outputs.recoverable == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           if [ "${{ inputs.dry-run || 'false' }}" = "true" ]; then
             echo "DRY RUN — would have committed and pushed. Showing pending changes:"
@@ -290,6 +301,7 @@ jobs:
             echo "No changes to commit"
           else
             git commit -m "Wiki fill recovery — run ${{ steps.resolve.outputs.run-id }} $(date +'%Y-%m-%d %H:%M UTC')"
+            PUSHED=0
             for i in 1 2 3; do
               if git pull --rebase 2>/dev/null; then
                 echo "Rebased cleanly"
@@ -302,7 +314,16 @@ jobs:
                   git commit --no-edit 2>/dev/null || true
                 }
               fi
-              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
+              if git push; then echo "Push succeeded"; PUSHED=1; break; fi
+              echo "Push attempt $i failed, retrying..."
               sleep 5
-            done || true
+            done
+            # Same contract as Wiki Fill's finalize: a recovered commit means
+            # fresh questions landed, so start the next mining run now instead
+            # of waiting for the next cron or watchdog pass. Recoveries used
+            # to end the chain silently — the corpus then sat still even
+            # though the salvage itself had succeeded.
+            if [ "$PUSHED" = "1" ]; then
+              gh workflow run daily-wiki-fill.yml 2>/dev/null && echo "Self-dispatched next Wiki Fill" || echo "Self-dispatch failed (non-fatal)"
+            fi
           fi
