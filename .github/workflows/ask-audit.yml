@@ -24,6 +24,10 @@ name: Ask Retrieval Audit
 
 on:
   push:
+    # Main only. It verifies the live site's Ask engine, and without the
+    # filter it also fired on training-data pushes (branch syncs touch
+    # .github/workflows/ask-audit.yml) — auditing a branch users never see.
+    branches: [main]
     # Everything this workflow actually reads or executes. The list used to omit
     # the test files and the workflow file itself, which meant a commit touching
     # only those changed the audit's behaviour without ever running the audit:

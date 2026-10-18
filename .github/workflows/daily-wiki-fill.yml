@@ -119,6 +119,11 @@ jobs:
           done
 
       - name: Wiki fill
+        # Step-level cap so a stalled network call can never park a shard past
+        # the 360-min job budget again (run 38974805883 hung 10 shards ~7h on
+        # one dead socket; the script now times out sockets too - this is the
+        # second seatbelt and leaves the merge job its window).
+        timeout-minutes: 330
         run: node scripts/wiki-fill-all.cjs
         env:
           WIKI_FILL_CHUNK: ${{ matrix.chunk }}
@@ -333,6 +338,14 @@ jobs:
     if: ${{ !cancelled() && needs.merge.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
+      # build-archive-single.js streams every unique question as NDJSON into
+      # /tmp (~6-8GB) on top of the ~5GB merged-raw download — runner default
+      # free space is not enough (Feed Fill #25 died with ENOSPC at flushCat).
+      - name: Free runner disk space (archive build needs ~20GB)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}

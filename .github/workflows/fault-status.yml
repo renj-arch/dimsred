@@ -26,6 +26,8 @@ concurrency:
 
 permissions:
   contents: write
+  # The fill watchdog below dispatches daily-wiki-fill.yml via the API.
+  actions: write
 
 jobs:
   report:
@@ -75,6 +77,18 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/fault-report.js
+
+      # Self-healing hand for the corpus-growth chain. GitHub job caps and
+      # concurrency groups cancel long fill runs without a next run being
+      # dispatched (the chain only self-dispatches after a successful commit),
+      # so the archive count can sit frozen for days while nothing is running
+      # and every surface still looks "finished". This dispatches a fresh Wiki
+      # Fill when every fill workflow has been silent past FILL_STALE_HOURS
+      # (default 30h). Never fails the job — the board must still publish.
+      - name: Restart stalled fill chain (fill-watchdog)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node scripts/fill-watchdog.js
 
       - name: Publish board to improve.html
         run: |

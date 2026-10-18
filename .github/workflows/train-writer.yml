@@ -152,10 +152,14 @@ jobs:
           pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
           pip install --quiet transformers peft accelerate datasets
           # MLC conversion (safetensors -> q4f16_1 param shards + the JSON the
-          # browser reads). Wheels index first (canonical); PyPI fallback if it
-          # moves. Conversion is CPU-only math -- no GPU on this runner.
-          pip install --quiet --pre mlc-llm -f https://mlc.ai/wheels \
-            || pip install --quiet mlc-llm
+          # browser reads). The PyPI distribution was renamed: plain `mlc-llm`
+          # is NOT published anymore (verified 404 — that is exactly what
+          # killed #2-#4 before a single CPU-hour was spent). The wheels index
+          # carries the CPU build as `mlc-llm-cpu` / `mlc-llm-nightly-cpu`
+          # (py3-none-manylinux_2_28, no Python-version tag). Conversion is
+          # CPU-only math -- no GPU on this runner.
+          pip install --quiet --pre mlc-llm-cpu -f https://mlc.ai/wheels \
+            || pip install --quiet --pre mlc-llm-nightly-cpu -f https://mlc.ai/wheels
           mlc_llm --help > /dev/null
           df -h /
 
