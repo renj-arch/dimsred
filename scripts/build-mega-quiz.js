@@ -36,7 +36,11 @@ for (const f of files) {
             sub: q.subSubject || subKey,
             type: q.type || 'short',
             hint: q.hint || '',
-            fact: q.fact || ''
+            fact: q.fact || '',
+            // Exam-relevance tags when the corpus item carries them (enriched
+            // records); mega-test.html renders them as a chip in the explanation.
+            importance: q.importance || '',
+            importantFor: Array.isArray(q.importantFor) ? q.importantFor : []
           });
           if (!bySubject[subjectKey]) bySubject[subjectKey] = 0;
           bySubject[subjectKey]++;

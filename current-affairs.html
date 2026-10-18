@@ -6219,6 +6219,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
                 if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">→ ' + q.a + '</div>';
                 if (q.fact || q.solution) displayText += '<div style="font-size:.85em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
+                displayText += _yieldChipHtml(q);
                 document.getElementById('qText').innerHTML = displayText;
                 document.getElementById('qText').style.fontSize = '.95em';
                 document.getElementById('qText').style.lineHeight = '1.6';
@@ -6247,7 +6248,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('catTag').textContent = state.categoryName;
                 var pd = q.pubDate || q._pubDate;
                 var yearStr = pd ? ' (' + pd.slice(0,4) + ')' : '';
-                document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr;
+                document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr + _yieldChipHtml(q);
                 document.getElementById('qText').style.fontSize = '';
                 document.getElementById('qText').style.lineHeight = '';
                 document.getElementById('qHint').style.display = 'none';
@@ -6611,6 +6612,20 @@ function prevQuestion() {
         // every Next click silently. Normalize here; unrenderable items are
         // skipped (bounded) instead of crashing the quiz. Thrown errors
         // elsewhere are LEFT to surface — the CI browser test must see them.
+        // Exam-relevance chip for quiz questions (importance + importantFor,
+        // AI-assessed by the writer/converter). Missing field = no chip.
+        function _yieldChipHtml(q) {
+            if (!q || !q.importance) return '';
+            function esc(s) {
+                return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            }
+            var exams = (q.importantFor && q.importantFor.length) ? ' · ' + esc(q.importantFor.join(', ')) : '';
+            var label = q.importance === 'high' ? 'high-yield' : (q.importance === 'medium' ? 'exam-relevant' : 'low priority');
+            var color = q.importance === 'high' ? 'background:rgba(239,68,68,.12);color:#ef4444'
+                : q.importance === 'medium' ? 'background:rgba(245,158,11,.12);color:#f59e0b'
+                : 'background:rgba(148,163,184,.12);color:#94a3b8';
+            return '<span style="display:inline-block;margin-top:8px;padding:2px 10px;border-radius:100px;font-size:.72em;font-weight:600;' + color + '" title="AI-assessed exam relevance — not an official syllabus list">' + label + exams + '</span>';
+        }
         function _asQuizQ(raw) {
             if (!raw) return null;
             var q = raw.q != null ? raw.q : raw.question;
@@ -6625,6 +6640,8 @@ function prevQuestion() {
                 subject: raw.subject || raw.category || '',
                 subTopic: raw.subTopic || raw.subsubject || '',
                 type: raw.type || '',
+                importance: raw.importance || '',
+                importantFor: Array.isArray(raw.importantFor) ? raw.importantFor : [],
                 pubDate: raw.pubDate || raw._pubDate || '',
                 _wikiCat: raw._wikiCat || ''
             };
@@ -8097,7 +8114,7 @@ function prevQuestion() {
                                         var q = item[2];
                                         if (q && q.question && q.answer) {
 var fact = q.fact || q.solution || q.explanation || '';
-                                                allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:item[0], subTopic:item[1], pubDate:q.pubDate||''});
+                                                allQ.push({q:q.question, a:q.answer, options:q.options||[], solution:fact, hint:q.hint||'', fact:fact, subject:item[0], subTopic:item[1], pubDate:q.pubDate||'', importance:q.importance||'', importantFor:q.importantFor||[]});
                                         }
                                     }
                                 }
@@ -8671,7 +8688,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                                     var q = qs[qi];
                                     if (!q || !q.question || !q.answer) continue;
                                     var fact = q.fact || q.solution || q.explanation || '';
-                                    out.push({ q: q.question, a: q.answer, options: q.options || [], solution: fact, hint: q.hint || '', fact: fact, subject: sk, subTopic: st, pubDate: q.pubDate || '' });
+                                    out.push({ q: q.question, a: q.answer, options: q.options || [], solution: fact, hint: q.hint || '', fact: fact, subject: sk, subTopic: st, pubDate: q.pubDate || '', importance: q.importance || '', importantFor: q.importantFor || [] });
                                 }
                             }
                         }

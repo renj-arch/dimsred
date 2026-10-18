@@ -534,29 +534,6 @@ try {
 }
 
 // ── Generate archive.html ──
-function esc(s) {
-  return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-}
-
-function renderQuestion(q, idx) {
-  const catTag = '<span class="tag cat-tag">' + esc(q.category) + '</span>';
-  const date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' }) : '';
-  const dateTag = date ? '<span class="tag date-tag">' + date + '</span>' : '';
-  // Writer badge (dead path today — the live client renderQuestionItem carries
-  // no model badge; kept truthful in case this server-side renderer returns).
-  const wb = q.writtenBy ? String(q.writtenBy) : '';
-  const wbShort = (wb.match(/:([0-9][0-9.]*b)/i) || [0, 'local'])[1];
-  return '<div class="q-item">'
-    + '<div class="q-num">#' + (idx + 1) + '</div>'
-    + '<div class="q-tags">' + catTag + dateTag + (q.autoGen ? (q.origin === 'agent-made'
-      ? '<span class="tag" style="background:rgba(167,139,250,.14);color:#a78bfa" title="Question AND answer created by ' + esc(wb || 'the local LLM') + ' for an uncovered must-know subtopic — distinguishable from mined questions">agent-made · ' + esc(wbShort) + '</span>'
-      : '<span class="tag" style="background:rgba(52,211,153,.12);color:#34d399" title="Explanation written by ' + esc(wb || 'the local LLM') + ' from corpus material — distinguishable from wiki-mined text">auto gen · ' + esc(wbShort) + '</span>') : '')
-    + (q.importance === 'high' ? '<span class="tag" style="background:rgba(239,68,68,.12);color:#ef4444" title="High-yield for Indian govt exams' + (Array.isArray(q.importantFor) && q.importantFor.length ? ': ' + esc(q.importantFor.join(', ')) : '') + '">high-yield</span>' : '') + '</div>'
-    + '<div class="q-question">' + esc(q.question) + '</div>'
-    + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + esc(q.answer) + '</span></div>'
-    + (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + esc(q.fact) + '</div>' : '')
-    + '</div>';
-}
 
 // The category tree (98 categories, ~240k sub-topic leaves, ~10.6 MB of JSON) is
 // no longer baked inline into archive.html — that single blob was the entire
@@ -833,10 +810,19 @@ html += 'function renderQuestionItem(q, i) {\n';
 html += '  var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString(\'en-IN\',{day:\'numeric\',month:\'short\',year:\'numeric\'}) : \'\';\n';
 html += '  return \'<div class="q-item"><div class="q-num">#\' + (i+1) + \'</div>\'\n';
 html += '    + \'<div class="q-tags"><span class="tag cat-tag">\' + escHtml(q.category) + \'</span>\'\n';
-html += '    + (date ? \'<span class="tag date-tag">\' + date + \'</span>\' : \'\') + \'</div>\'\n';
+html += '    + (date ? \'<span class="tag date-tag">\' + date + \'</span>\' : \'\') + yieldChip(q) + \'</div>\'\n';
 html += '    + \'<div class="q-question">\' + escHtml(q.question) + \'</div>\'\n';
 html += '    + \'<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">\' + escHtml(q.answer) + \'</span></div>\'\n';
 html += '    + (q.fact ? \'<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">\' + escHtml(q.fact) + \'</div>\' : \'\') + \'</div>\';\n';
+html += '}\n';
+
+html += 'function yieldChip(q) {\n';
+html += '  var imp = q && q.importance;\n';
+html += '  if (!imp) return \'\';\n';
+html += '  var exams = (q.importantFor && q.importantFor.length) ? \' · \' + escHtml(q.importantFor.join(\', \')) : \'\';\n';
+html += '  var label = imp === \'high\' ? \'high-yield\' : (imp === \'medium\' ? \'exam-relevant\' : \'low priority\');\n';
+html += '  var color = imp === \'high\' ? \'background:rgba(239,68,68,.12);color:#ef4444\' : (imp === \'medium\' ? \'background:rgba(245,158,11,.12);color:#f59e0b\' : \'background:rgba(148,163,184,.12);color:#94a3b8\');\n';
+html += '  return \'<span class="tag" style="\' + color + \'" title="AI-assessed exam relevance — not an official syllabus list">\' + label + exams + \'</span>\';\n';
 html += '}\n';
 
 html += 'function escHtml(s) {\n  if(!s) return \'\';\n  return String(s).replace(/&/g,\'&amp;\').replace(/</g,\'&lt;\').replace(/>/g,\'&gt;\').replace(/"/g,\'&quot;\');\n}\n';
@@ -1124,7 +1110,7 @@ html += '}\n';
 html += 'function _searchItemHTML(r) {\n';
 html += '  var q = r.question;\n';
 html += '  var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString(\'en-IN\',{day:\'numeric\',month:\'short\',year:\'numeric\'}) : \'\';\n';
-html += '  var h = \'<div class="q-item"><div class="q-tags"><span class="tag cat-tag">\' + escHtml(r.category) + \' &rsaquo; \' + escHtml(r.subject) + \' &rsaquo; \' + escHtml(r.subSubject) + \'</span>\' + (date?\'<span class="tag date-tag">\'+date+\'</span>\':\'\') + \'</div>\';\n';
+html += '  var h = \'<div class="q-item"><div class="q-tags"><span class="tag cat-tag">\' + escHtml(r.category) + \' &rsaquo; \' + escHtml(r.subject) + \' &rsaquo; \' + escHtml(r.subSubject) + \'</span>\' + (date?\'<span class="tag date-tag">\'+date+\'</span>\':\'\') + yieldChip(q) + \'</div>\';\n';
 html += '  h += \'<div class="q-question">\' + escHtml(q.question) + \'</div>\';\n';
 html += '  h += \'<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">\' + escHtml(q.answer) + \'</span></div>\';\n';
 html += '  h += (q.fact ? \'<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">\' + escHtml(q.fact) + \'</div>\' : \'\') + \'</div>\';\n';

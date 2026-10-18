@@ -115,7 +115,8 @@ async function callFake() {
       topic: 'train travel ' + u, style: 'staggered train mechanism ' + u,
       stem: 'Train marker ' + u + ': a wagon rolls at ' + speed + ' km/h for ' + hours + ' hours. How far?',
       options: [String(dist), String(dist + 15), String(dist - 15), String(dist + 30)],
-      answer: String(dist), solution: 'Distance = ' + speed + ' x ' + hours + ' = ' + dist + ' km.', hint: 'distance = speed x time'
+      answer: String(dist), solution: 'Distance = ' + speed + ' x ' + hours + ' = ' + dist + ' km.', hint: 'distance = speed x time',
+      importance: n % 8 === 0 ? 'high' : 'medium', importantFor: ['IBPS PO', 'SBI PO']
     });
   }
   if (variant === 1) {
@@ -385,6 +386,13 @@ function validate(raw, section, tier, recentTokenSets) {
   const solution = String(t.solution || t.explanation || '').trim();
   const style = String(t.style || '').trim();
   const topic = String(t.topic || '').trim();
+  // Exam-relevance tags (optional but asked for; never a rejection reason —
+  // a valid question is never thrown away over a label).
+  const impRaw = String(t.importance || '').trim().toLowerCase();
+  const importance = (impRaw === 'high' || impRaw === 'medium' || impRaw === 'low') ? impRaw : '';
+  const importantFor = Array.isArray(t.importantFor)
+    ? t.importantFor.map(x => String(x == null ? '' : x).trim()).filter(Boolean).slice(0, 3)
+    : [];
   if (stem.length < 15 || stem.length > 900) return { ok: false, why: 'stem length ' + stem.length };
   if (/^bad shape/i.test(stem)) return { ok: false, why: 'malformed fields' };
   if (section === 'quant' && !/\d/.test(stem)) return { ok: false, why: 'quant stem has no numbers' };
@@ -420,6 +428,8 @@ function validate(raw, section, tier, recentTokenSets) {
       difficulty: tier,
       style: style.slice(0, 90),
       topic: topic.slice(0, 70),
+      importance: importance,
+      importantFor: importantFor,
       seconds: TIER_SECONDS[tier],
       inventedAt: nowISO(),
       model: FAKE ? 'fake-llm' : MODEL,
@@ -453,8 +463,12 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
     '- Indian exam context (trains, markets, railways, schemes, festivals, cricket...). No controversial or copyrighted content.',
     '- The solution must show the working in 8 lines or fewer.',
     '',
+    'EXAM RELEVANCE (be honest, not generous):',
+    '- "importance": "high" = a core pattern Indian govt exams repeat; "medium" = plausible exam material; "low" = peripheral trivia.',
+    '- "importantFor": 1-3 exam names, ONLY from: IBPS PO, IBPS Clerk, SBI PO, SSC CGL, SSC CHSL, RRB NTPC, State PSC.',
+    '',
     'Reply with ONLY this JSON (no markdown, no commentary):',
-    '{"topic":"3-5 words","style":"name of the mechanism you invented","stem":"the question text","options":["A","B","C","D"],"answer":"exact text of the correct option","solution":"step-by-step working","hint":"one-line nudge"}'
+    '{"topic":"3-5 words","style":"name of the mechanism you invented","stem":"the question text","options":["A","B","C","D"],"answer":"exact text of the correct option","solution":"step-by-step working","hint":"one-line nudge","importance":"high|medium|low","importantFor":["exam name"]}'
   ].filter(Boolean).join('\n');
 }
 

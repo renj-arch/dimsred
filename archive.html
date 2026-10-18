@@ -309,10 +309,18 @@ function renderQuestionItem(q, i) {
   var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
   return '<div class="q-item"><div class="q-num">#' + (i+1) + '</div>'
     + '<div class="q-tags"><span class="tag cat-tag">' + escHtml(q.category) + '</span>'
-    + (date ? '<span class="tag date-tag">' + date + '</span>' : '') + '</div>'
+    + (date ? '<span class="tag date-tag">' + date + '</span>' : '') + yieldChip(q) + '</div>'
     + '<div class="q-question">' + escHtml(q.question) + '</div>'
     + '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>'
     + (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.fact) + '</div>' : '') + '</div>';
+}
+function yieldChip(q) {
+  var imp = q && q.importance;
+  if (!imp) return '';
+  var exams = (q.importantFor && q.importantFor.length) ? ' · ' + escHtml(q.importantFor.join(', ')) : '';
+  var label = imp === 'high' ? 'high-yield' : (imp === 'medium' ? 'exam-relevant' : 'low priority');
+  var color = imp === 'high' ? 'background:rgba(239,68,68,.12);color:#ef4444' : (imp === 'medium' ? 'background:rgba(245,158,11,.12);color:#f59e0b' : 'background:rgba(148,163,184,.12);color:#94a3b8');
+  return '<span class="tag" style="' + color + '" title="AI-assessed exam relevance — not an official syllabus list">' + label + exams + '</span>';
 }
 function escHtml(s) {
   if(!s) return '';
@@ -594,7 +602,7 @@ function _renderSearchHeader() {
 function _searchItemHTML(r) {
   var q = r.question;
   var date = q.pubDate ? new Date(q.pubDate).toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'}) : '';
-  var h = '<div class="q-item"><div class="q-tags"><span class="tag cat-tag">' + escHtml(r.category) + ' &rsaquo; ' + escHtml(r.subject) + ' &rsaquo; ' + escHtml(r.subSubject) + '</span>' + (date?'<span class="tag date-tag">'+date+'</span>':'') + '</div>';
+  var h = '<div class="q-item"><div class="q-tags"><span class="tag cat-tag">' + escHtml(r.category) + ' &rsaquo; ' + escHtml(r.subject) + ' &rsaquo; ' + escHtml(r.subSubject) + '</span>' + (date?'<span class="tag date-tag">'+date+'</span>':'') + yieldChip(q) + '</div>';
   h += '<div class="q-question">' + escHtml(q.question) + '</div>';
   h += '<div class="q-answer"><span class="a-label">Answer:</span> <span class="a-value">' + escHtml(q.answer) + '</span></div>';
   h += (q.fact ? '<button class="explain-btn" onclick="toggleExplain(this)">📖 Explanation</button><div class="q-explain">' + escHtml(q.fact) + '</div>' : '') + '</div>';

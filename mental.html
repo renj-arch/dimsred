@@ -753,6 +753,15 @@
         loadQuestion();
     }
 
+    // Exam-relevance suffix for invented questions (importance + importantFor,
+    // set by the CI setter; missing field = plain label). Honest labels only.
+    function invYieldSuffix(q) {
+        if (!q || !q.importance) return '';
+        var exams = (q.importantFor && q.importantFor.length) ? ' · ' + q.importantFor.join(', ') : '';
+        if (q.importance === 'high') return ' · 🎯 high-yield' + exams;
+        if (q.importance === 'medium') return ' · 🎯 exam-relevant' + exams;
+        return ' · low priority';
+    }
     // Invented: questions made from scratch by the site's CI setter agent
     // (data/invented/questions.json). Same arena UI; falls back to Exam Sim
     // while the pool is still warming up or when offline.
@@ -779,7 +788,7 @@
                     timeLimit: q.seconds || 40,
                     difficulty: pts[q.difficulty] || 3,
                     section: q.section,
-                    techniqueLabel: '🧪 Invented · ' + q.section + ' · ' + q.difficulty
+                    techniqueLabel: '🧪 Invented · ' + q.section + ' · ' + q.difficulty + invYieldSuffix(q)
                 };
             });
             session = window.startMentalSession('invented', {

@@ -74,12 +74,25 @@ function renderHtml(entry) {
   function esc(s) {
     return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
   }
+  // Exam-relevance chip (importance + importantFor, writer-assessed). Honest
+  // label: it is the site AI's assessment, not an official syllabus list.
+  function yieldTag(e) {
+    var imp = e && e.importance;
+    if (!imp) return '';
+    var exams = (e.importantFor && e.importantFor.length) ? ' · ' + esc(e.importantFor.join(', ')) : '';
+    var label = imp === 'high' ? 'high-yield' : (imp === 'medium' ? 'exam-relevant' : 'low priority');
+    var color = imp === 'high' ? 'background:rgba(239,68,68,.14);color:#ef4444'
+      : imp === 'medium' ? 'background:rgba(245,158,11,.14);color:#f59e0b'
+      : 'background:rgba(148,163,184,.14);color:#94a3b8';
+    return ' · <span class="arch-tag" style="' + color + '" title="AI-assessed exam relevance — not an official syllabus list">' + label + exams + '</span>';
+  }
   var facts = (entry.keyFacts || []).map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('');
   return '<div class="arch-answer">'
     + '<div class="arch-badge">Archive answer · written by ' + (entry.writtenBy ? esc(entry.writtenBy) + ' (local LLM)' : 'the local LLM') + ' · '
     + (entry.origin === 'agent-made'
       ? '<span class="arch-tag" style="background:rgba(167,139,250,.14);color:#a78bfa">agent-made</span>'
       : '<span class="arch-tag">auto gen</span>')
+    + yieldTag(entry)
     + (entry.category ? ' · ' + esc(entry.category) + (entry.subject ? ' / ' + esc(entry.subject) : '') : '') + '</div>'
     + '<div class="arch-q">Q: ' + esc(entry.question) + '</div>'
     + '<div class="arch-a">' + esc(entry.modelAnswer).replace(/\n/g, '<br>') + '</div>'
