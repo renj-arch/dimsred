@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-16T11:18:47.432Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-10-16T16:36:00.291Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 108,
@@ -468,8 +456,102 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-18T13:59:02.055Z",
+   "model": "qwen3:4b",
+   "totalFixes": 23,
+   "byAgent": [
+    {
+     "agent": "mainsupdates",
+     "count": 0
+    },
+    {
+     "agent": "bankfigures",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 23
+    },
+    {
+     "agent": "selfcheck",
+     "count": 0
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 0
+    },
+    {
+     "agent": "a11y",
+     "count": 0
+    },
+    {
+     "agent": "code",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/ask-audit.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/browser-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-lectures.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/daily-globe-fill.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-papers.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-pib-feed.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/expand-course.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/fault-status.yml",
+       "fix": "Added memory limit to node steps"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-18T13:43:45.017Z",
+ "lastRun": "2026-10-18T13:59:02.055Z",
  "model": "qwen3:4b"
 }
