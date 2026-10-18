@@ -20,10 +20,39 @@ name: Slim live mirror
 #     (the Pages project's build quota is finite and must not be burnt on
 #     polling).
 #   - Manual dispatch still forces an immediate attempt.
+#
+# 2026-10-18 addendum: the scheduler alone proved unreliable. This workflow's
+# ticks stopped arriving shortly after 14:00 UTC while the repo was busy, and
+# live sat 3+ hours stale — the mock-test repair and the 27B questions only
+# moved when a manual dispatch ran. GitHub throttles scheduled workflows on
+# busy public repos (site-agent's hourly cron delivered every 3-5 hours, see
+# chain.yml). So the mirror now ALSO deploys when a big writer finishes: a
+# workflow_run trigger fires once per completed agent run — bounded volume,
+# event-driven freshness — and the 30-min tick remains as the dead-man switch
+# for anything not listed.
+#
+# And even a fired deploy was not enough: from 15:34 UTC main carried a
+# 49.5 MB data/questions-cursor.json, Cloudflare Pages rejects any asset over
+# 25 MiB, so every build after that failed at Cloudflare while the push here
+# still said success — the site kept serving its last good build (14:00 UTC)
+# with no visible error anywhere. The rebuild step now strips oversized blobs
+# (loudly) and the verify step refuses a tree that still contains one.
 on:
   schedule:
     # Off the top of the hour on purpose: GitHub's scheduler is busiest at :00.
     - cron: '11,41 * * * *'
+  workflow_run:
+    # Deploy right after each big writer completes. A burst of completions
+    # coalesces: the newest trigger supersedes any PENDING mirror run
+    # (cancel-in-progress: false never kills a running one), and each run
+    # fetches main's tip, so whoever starts last deploys the newest state.
+    workflows:
+      - Site Agent
+      - Question Quality
+      - Invent Questions
+      - Invent Questions (27B quality lane)
+      - LLM Auto-fix
+    types: [completed]
   workflow_dispatch:
 
 concurrency:
@@ -66,9 +95,11 @@ jobs:
           git config http.https://github.com/.extraheader "AUTHORIZATION: basic $AUTH"
           git fetch -q --depth=1 --filter=blob:none origin main
           # `/*` picks up any directory added later, so a new top-level path is
-          # deployed without editing this workflow. data/questions is the only
-          # exclusion: it is tracked in main, needed by other workflows, and never
-          # served here.
+          # deployed without editing this workflow. data/questions is excluded
+          # here: it is tracked in main, needed by other workflows, and reached
+          # at runtime through functions/data/questions/[[path]].js instead
+          # (proxying straight off main's raw, 1 h cache). The rebuild step
+          # removes a few more internal paths — see there.
           git sparse-checkout init --no-cone
           git sparse-checkout set --no-cone '/*' '!/data/questions/'
           git checkout -q FETCH_HEAD
@@ -91,8 +122,35 @@ jobs:
           git rm -r -q --cached --sparse --ignore-unmatch data/questions
           git rm -q --cached --sparse --ignore-unmatch upsc_sorted_topics.csv
           git rm -q --cached --sparse --ignore-unmatch topics.txt
+          # Question-quality sweep state: tens of MB of internal cursor/tally
+          # JSON, never fetched by any page, and — past 25 MiB — a build-killer
+          # for Cloudflare Pages. It crossed that limit on 2026-10-18 (49.5 MB)
+          # and every deploy after that failed at Cloudflare while the site
+          # served the last good build for hours. Never deploy it.
+          git rm -q --cached --sparse --ignore-unmatch data/questions-cursor.json
 
           TREE=$(git write-tree)
+
+          # Cloudflare Pages rejects ANY asset over 25 MiB (26214400 bytes) by
+          # failing the build — and that failure is invisible from here: the
+          # push succeeds, production just never moves. That is exactly how the
+          # site froze on 2026-10-18. So instead of trusting the explicit
+          # exclusions forever, strip every oversized blob from the tree and
+          # say so loudly; the verify step then refuses a tree that still has
+          # one. If a served file ever outgrows the limit (data/timeline.json
+          # at ~24.7 MB is already close), the deploy still moves and this log
+          # names exactly what was dropped.
+          stripped=0
+          while IFS=$'\t' read -r meta path; do
+            size=${meta##* }
+            case "$size" in ''|*[!0-9]*) continue;; esac
+            if [ "$size" -gt 26214400 ]; then
+              echo "STRIPPING oversized asset (>25 MiB, Cloudflare Pages limit): $path ($size bytes)"
+              git rm -q --cached --sparse --ignore-unmatch -- "$path" || true
+              stripped=1
+            fi
+          done < <(git ls-tree -r -l "$TREE")
+          [ "$stripped" -eq 0 ] || TREE=$(git write-tree)
           ROOT=$(git commit-tree "$TREE" -m "slim live $(date -u +'%Y-%m-%d %H:%M UTC')")
           # Deliberately not pushed yet. The push is force, so a wrong tree
           # replaces a working site rather than merely failing, and nothing after
@@ -114,9 +172,13 @@ jobs:
                    data/ask-qb/concepts.json data/ask-qb/bucket/buckets.json; do
             git cat-file -e "$LIVE_TREE:$p" 2>/dev/null || { echo "MISSING required: $p"; fail=1; }
           done
-          for p in data/questions topics.txt upsc_sorted_topics.csv; do
+          for p in data/questions topics.txt upsc_sorted_topics.csv data/questions-cursor.json; do
             git cat-file -e "$LIVE_TREE:$p" 2>/dev/null && { echo "UNEXPECTED present: $p"; fail=1; }
           done
+          # Hard Cloudflare Pages limit: no asset may exceed 25 MiB. The
+          # rebuild step strips oversized blobs; this asserts it worked.
+          BIG=$(git ls-tree -r -l "$LIVE_TREE" | awk -F'\t' '{ n=split($1,a," "); if (a[n]+0 > 26214400) print $2 }')
+          [ -z "$BIG" ] || { echo "oversized assets remain (CF Pages 25 MiB limit):"; echo "$BIG"; fail=1; }
           n=$(git ls-tree -r --name-only "$LIVE_TREE" | wc -l)
           echo "files in slim tree: $n"
           # 2092 as of the last good run. Catches a sparse pattern that silently

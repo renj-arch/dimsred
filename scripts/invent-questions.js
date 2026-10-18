@@ -21,6 +21,11 @@
  *   OLLAMA_MODEL        default qwen3.5:9b
  *   OLLAMA_HOST         default http://127.0.0.1:11434
  *   INVENT_PER_SLOT     questions per section x difficulty (default 2)
+ *   INVENT_NUM_CTX      model context window (default 8192; the 27B quality
+ *                       lane runs 4096 — the briefs fit and CPU prompt-eval
+ *                       halves)
+ *   INVENT_NUM_PREDICT  max generated tokens per question (default 1600; the
+ *                       27B lane runs 1200 — solutions are briefed to 8 lines)
  *   INVENT_DEADLINE_MIN wall-clock budget for inventing (default 95)
  *   INVENT_FIRST_BYTE_MIN patience waiting for the first streamed byte (default 25)
  *   INVENT_STALL_MIN    mid-stream silence that counts as wedged (default 12)
@@ -37,6 +42,8 @@ const { spawn, execSync } = require('child_process');
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const HOST = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').replace(/\/+$/, '');
 const PER_SLOT = Math.max(1, parseInt(process.env.INVENT_PER_SLOT || '2', 10) || 2);
+const NUM_CTX = Math.max(1024, parseInt(process.env.INVENT_NUM_CTX || '8192', 10) || 8192);
+const NUM_PREDICT = Math.max(256, parseInt(process.env.INVENT_NUM_PREDICT || '1600', 10) || 1600);
 const DEADLINE_MIN = parseFloat(process.env.INVENT_DEADLINE_MIN || '95') || 95;
 const MAX_STORE = parseInt(process.env.INVENT_MAX_STORE || '1200', 10) || 1200;
 const OUT_FILE = process.env.INVENT_OUT || path.join('data', 'invented', 'questions.json');
@@ -285,7 +292,7 @@ async function callLLM(system, user) {
     model: MODEL,
     stream: true,
     think: false,
-    options: { temperature: 0.95, top_p: 0.92, num_ctx: 8192, num_predict: 1600 },
+    options: { temperature: 0.95, top_p: 0.92, num_ctx: NUM_CTX, num_predict: NUM_PREDICT },
     messages: [
       { role: 'system', content: system },
       { role: 'user', content: user }

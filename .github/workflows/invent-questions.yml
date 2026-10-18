@@ -13,8 +13,11 @@ name: Invent Questions
 # Zero API keys: the model runs locally on the runner through Ollama.
 #
 # The model is dispatch-pinnable (input "model", default qwen3.5:9b — the
-# mid tier). The 4b fast-tier trials decide whether it can go smaller; the
-# old 27B could not complete runs here, so nothing dispatches it anymore.
+# bulk lane). The 27B is proven on this runner now (batiai/qwen3.8-27b:iq3,
+# trial 39136862076 on 2026-10-18: 3 accepted + published inside 110 min) and
+# runs its own once-a-day quality lane in invent-27b.yml — dispatch model=...
+# here only for experiments. Both lanes append to the same pool, and ci-push
+# unions the pool on merge so no run can drop another run's questions.
 
 on:
   schedule:

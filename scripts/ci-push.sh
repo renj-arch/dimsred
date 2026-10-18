@@ -37,7 +37,9 @@ git commit -m "$MSG" || { echo "[ci-push] commit failed"; exit 1; }
 # 39130826980 — 12 invented practice items lost). So: if the rebase cannot
 # finish, abort it and merge instead, keeping OUR side of conflicts — the
 # work this run just generated. Losing an overlapping log line beats losing
-# the whole publish.
+# the whole publish. One exception folds on top of that merge:
+# data/invented/questions.json is unioned (see union_invented) because there
+# a dropped line IS a lost question.
 sync_remote() {
   git pull --rebase --autostash 2>/dev/null && return 0
   git rebase --abort 2>/dev/null || true
@@ -45,10 +47,35 @@ sync_remote() {
   return 0
 }
 
+# The invented-questions pool (data/invented/questions.json) is append-only,
+# so "-X ours" above can drop a racing invent run's questions (observed
+# 2026-10-18: a 27B publish replaced the 9b run's 9 questions). Union the
+# arrays instead: remote questions first, ours appended by id; fold the
+# result into the commit this run is publishing. Idempotent, and a no-op
+# for the many workflows whose checkout has no data/invented at all.
+union_invented() {
+  local f=data/invented/questions.json
+  [ -f "$f" ] || return 0
+  local ref="" cand
+  for cand in FETCH_HEAD origin/main MERGE_HEAD; do
+    if git cat-file -e "$cand:$f" 2>/dev/null; then ref="$cand"; break; fi
+  done
+  [ -n "$ref" ] || return 0
+  git show "$ref:$f" > "$f.remote.json" 2>/dev/null || { rm -f "$f.remote.json"; return 0; }
+  node scripts/union-invented.js "$f.remote.json" "$f" || true
+  rm -f "$f.remote.json"
+  git add "$f" 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit --amend --no-edit >/dev/null 2>&1 || true
+  fi
+  return 0
+}
+
 try_push() {
   # $1 = label for logs. Echoes server output to stdout, returns push status.
   local out
   sync_remote
+  union_invented
   out=$(git push 2>&1)
   local st=$?
   echo "$out"
@@ -83,7 +110,9 @@ git add data/auth-status.json 2>/dev/null || true
 git commit -m "ci-push: PAT-dead fallback marker" 2>/dev/null || true
 for i in 1 2 3; do
   echo "[ci-push] fallback push attempt $i (GITHUB_TOKEN)..."
-  if sync_remote && git push 2>&1; then
+  sync_remote
+  union_invented
+  if git push 2>&1; then
     echo "::error::ci-push: published via GITHUB_TOKEN fallback — PAT IS DEAD, renew secrets.PAT"
     exit 1
   fi
