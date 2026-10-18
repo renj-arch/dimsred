@@ -1,13 +1,38 @@
 name: Slim live mirror
 
+# Deploys were push-triggered with cancel-in-progress, and that lost a race it
+# could not win during busy periods: a run sat 10-22 minutes in the free-runner
+# queue, and the next push -- mine or any agent workflow's -- cancelled the
+# pending run and restarted the wait. Live then stayed hours stale even though
+# the mirror itself needs only ~30 s once a runner appears (observed: 31 s runs
+# when it did get one). Deploys landed only when a runner freed in the small
+# gap between two pushes; seven consecutive deploy attempts were lost that way
+# on 2026-10-18, and the WebLLM loader fix of e952bf087 never reached users.
+#
+# The mirror now polls on a fixed cadence instead:
+#   - It always deploys main AS OF RUN TIME (the fetch below takes main's tip),
+#     so a late run publishes the newest state, never a stale snapshot.
+#   - The cadence (30 min) is wider than the observed 10-22 min queue wait, so
+#     a pending run survives long enough to start instead of being replaced by
+#     the next trigger.
+#   - An unchanged tree is detected and skipped before the deploy step, so a
+#     no-op tick costs one short job and produces NO Cloudflare Pages build
+#     (the Pages project's build quota is finite and must not be burnt on
+#     polling).
+#   - Manual dispatch still forces an immediate attempt.
 on:
-  push:
-    branches: [main]
+  schedule:
+    # Off the top of the hour on purpose: GitHub's scheduler is busiest at :00.
+    - cron: '11,41 * * * *'
   workflow_dispatch:
 
 concurrency:
   group: slim-live
-  cancel-in-progress: true
+  # A running mirror takes ~30 s and deploys the newest main, so cancelling it
+  # saves nothing. (New triggers still supersede a PENDING run -- that is what
+  # kept resetting the queue position -- but with no push trigger, only the
+  # 30-minute tick and manual dispatches can do that now.)
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -100,7 +125,27 @@ jobs:
           [ "$fail" -eq 0 ] || { echo "REFUSING to deploy an unverified tree"; exit 1; }
           echo "slim tree verified"
 
+      # Frequent polls must not each replace the live branch: every push to it
+      # triggers a Cloudflare Pages build, and a no-op tick would burn those on
+      # nothing. The slim tree is rebuilt from main's index each run, so an
+      # identical tree SHA means live already serves this exact content.
+      - name: Skip when live already matches main
+        run: |
+          set -euo pipefail
+          if git fetch -q --depth=1 --filter=blob:none origin live 2>/dev/null; then
+            LIVE_OLD=$(git rev-parse 'FETCH_HEAD^{tree}')
+            if [ "$LIVE_OLD" = "$LIVE_TREE" ]; then
+              echo "live already matches main (tree $LIVE_TREE) -- nothing to deploy"
+              echo "SKIP_DEPLOY=1" >> "$GITHUB_ENV"
+            else
+              echo "live tree differs: $LIVE_OLD -> $LIVE_TREE"
+            fi
+          else
+            echo "no live branch yet -- first deploy"
+          fi
+
       - name: Publish live branch
+        if: env.SKIP_DEPLOY != '1'
         run: |
           set -euo pipefail
           git push --force origin "$LIVE_TREE:refs/heads/live"
