@@ -2609,7 +2609,7 @@ async function agentPracticeSets() {
   console.log('agent: PracticeSets — writing fresh set for ' + examName + ' (age ' + (target.age === Infinity ? 'missing' : Math.round(target.age / 86400000) + 'd') + ')');
   const figRule = 'FIGURES: only when a question genuinely needs a diagram (curve, cycle, sketch, geometry, chart), add "fig": a SMALL monochrome outline SVG string — viewBox="0 0 400 260", black strokes (#111) on white, font-family="serif", only <svg> <g> <path> <line> <circle> <rect> <polygon> <polyline> <text> elements, no scripts, no images, no external references, under 3500 characters. At most 2 items in the whole set get a fig. No diagram needed -> no "fig" key at all.';
   const sys = 'You are an expert govt-exam setter writing a rapid-fire practice set. ' +
-    'Return STRICT JSON only: {"questions": [{"q": "...", "a": "...", "sub": "...", "fact": "...", "hint": "...", optional "fig": "<svg>"}]}. No markdown. ' +
+    'Return STRICT JSON only: {"questions": [{"q": "...", "a": "...", "sub": "...", "fact": "...", "hint": "..."}]} — each item may optionally add a "fig" key (SVG, see the FIGURES rule in the brief). No markdown. ' +
     'FORMAT: short exact-answer items for a type-the-answer quiz (q = crisp question under 140 chars, a = exact short answer under 40 chars, ' +
     'sub = subject area, fact = 2-3 sentence solution with the working/shortcut, hint = one-line trap alert or speed tip). ' +
     'The optional "fig" is governed by the FIGURES rule in the brief. ' +
