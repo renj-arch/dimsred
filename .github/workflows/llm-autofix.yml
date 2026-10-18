@@ -68,18 +68,27 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
           mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
 
-      # Fast-tier model cache — shared key family with site-agent / llm-smoke
-      # so ONE entry serves every small model (Ollama's blob store is
-      # content-addressed). First run stores qwen3:4b (~3GB); later runs
-      # restore in ~1 min instead of re-downloading. continue-on-error:
-      # a cache hiccup must never fail a maintenance run.
-      - name: Cache Ollama models (fast tier)
+      # Model cache: one shared "fast" entry for the small-model chain
+      # (Ollama's blob store is content-addressed). First run stores the
+      # blobs; later runs restore instead of re-downloading.
+      # continue-on-error: a cache hiccup must never fail a run.
+      - name: Cache Ollama models
         continue-on-error: true
         uses: actions/cache@v4
         with:
-          path: ~/.ollama/models
-          key: ollama-${{ runner.os }}-fast-v1
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-fast-v2
           restore-keys: |
             ollama-${{ runner.os }}-fast-
 

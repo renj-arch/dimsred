@@ -26,7 +26,9 @@ on:
 
 concurrency:
   group: llm-smoke
-  cancel-in-progress: true
+  # false: verification runs must never cancel each other mid-flight — we
+  # queue 4b and 9b smokes back to back (the 4b seeds the fast cache class).
+  cancel-in-progress: false
 
 permissions:
   contents: read
@@ -57,19 +59,29 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
           mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
 
-      # Fast-tier model cache — shared key family with site-agent/llm-autofix.
-      # The 17GB heavy model can never fit the 10GB repo cache budget, so
-      # heavy runs skip this step entirely.
-      - name: Cache Ollama models (fast tier)
+      # Model cache: one entry per size class (repo budget 10GB) — "fast" for
+      # small models (~2.5GB), "mid" for qwen3.5:9b (~6.6GB). 17GB heavy
+      # models skip this step entirely.
+      - name: Cache Ollama models
         if: ${{ !contains(inputs.model || 'qwen3:4b', '27b') && !contains(inputs.model || 'qwen3:4b', '22b') }}
         continue-on-error: true
         uses: actions/cache@v4
         with:
           path: /home/runner/.ollama/models
-          key: ollama-${{ runner.os }}-fast-v1
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3:4b', '9b') && 'mid-v1' || 'fast-v2' }}
           restore-keys: |
-            ollama-${{ runner.os }}-fast-
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3:4b', '9b') && 'mid-' || 'fast-' }}
 
       - name: Start Ollama server
         run: |
@@ -91,6 +103,7 @@ jobs:
           case "$MODEL_INPUT" in *[!A-Za-z0-9._:-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
           ollama pull "$MODEL_INPUT"
           ollama list
+          du -sh /home/runner/.ollama/models 2>/dev/null || true
           echo "Warming $MODEL_INPUT so the smoke call is not measuring cold load..."
           ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
           echo "Warmup done"

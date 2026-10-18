@@ -3913,21 +3913,25 @@ async function main() {
 
   // ── Model tier gate ──────────────────────────────────────────────────
   // The fleet default is the FAST tier (qwen3:4b — ~3GB, fully in RAM on the
-  // 4 vCPU/16GB runner, and small enough to live in the Actions model cache;
-  // see .github/workflows/site-agent.yml). Heavy agents need the 27B (17GB,
-  // only runs with swap, ~25min pull, uncacheable), so they run in their own
-  // heavy dispatches (agent_only=mainsfresh, model=qwen3.8:27b) instead of
-  // slowing every normal pass. AGENT_HEAVY overrides the heavy list without
-  // a code change.
+  // 4 vCPU/16GB runner, and cached in the Actions model cache; see
+  // .github/workflows/site-agent.yml). Heavy agents (MainsFresh) need a
+  // STRONGER model, but the 17GB 27B proved un-runnable here (2026-10-18
+  // post-mortem: cold load + prompt eval blew every first-byte budget, and
+  // each restart re-paid the cold load). Any NON-fast tag can host them —
+  // the intended mid tier is qwen3.5:9b (6.6GB, fully in RAM). They run in
+  // their own dispatches (agent_only=mainsfresh, model=qwen3.5:9b) instead
+  // of slowing every normal pass. AGENT_HEAVY overrides the heavy list;
+  // AGENT_FAST_TAGS overrides the fast tag list — no code change needed.
   const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
   const modelTag = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
-  const heavyTier = /27b|22b/i.test(modelTag);
+  const fastTags = (process.env.AGENT_FAST_TAGS || 'qwen3:4b,qwen3.5:4b,qwen3.5:2b,qwen3.5:0.8b,qwen3:1.7b,qwen3:0.6b,lfm2.5:1.2b').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+  const heavyTier = fastTags.indexOf(modelTag.toLowerCase()) === -1;
   const pinned = !!(process.env.AGENT_ONLY && process.env.AGENT_ONLY.trim());
   if (!heavyTier) {
     const skippedHeavy = agents.filter(([name]) => heavyNames.indexOf(name.toLowerCase()) !== -1);
     if (skippedHeavy.length) {
       agents = agents.filter(([name]) => heavyNames.indexOf(name.toLowerCase()) === -1);
-      console.log('agent: tier fast (' + modelTag + ') — skipped heavy agent(s): ' + skippedHeavy.map(([n]) => n).join(', ') + '; dispatch with model=qwen3.8:27b to run them');
+      console.log('agent: tier fast (' + modelTag + ') — skipped heavy agent(s): ' + skippedHeavy.map(([n]) => n).join(', ') + '; dispatch with a mid/heavy model (e.g. qwen3.5:9b) to run them');
     }
   } else if (!pinned) {
     const heavyOnly = agents.filter(([name]) => heavyNames.indexOf(name.toLowerCase()) !== -1);

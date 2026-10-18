@@ -74,18 +74,28 @@ jobs:
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
           mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
 
-      # Fast-tier model cache — engaged only when a trial runs a small model;
-      # the default 27B can never fit the 10GB repo cache budget.
-      - name: Cache Ollama models (fast tier)
+      # Model cache: one entry per size class (repo budget 10GB) — "fast" for
+      # small models, "mid" for qwen3.5:9b. The default 27B skips this step.
+      - name: Cache Ollama models
         if: ${{ !contains(inputs.model || 'qwen3.8:27b', '27b') && !contains(inputs.model || 'qwen3.8:27b', '22b') }}
         continue-on-error: true
         uses: actions/cache@v4
         with:
           path: /home/runner/.ollama/models
-          key: ollama-${{ runner.os }}-fast-v1
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.8:27b', '9b') && 'mid-v1' || 'fast-v2' }}
           restore-keys: |
-            ollama-${{ runner.os }}-fast-
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.8:27b', '9b') && 'mid-' || 'fast-' }}
 
       - name: Start Ollama server
         run: |
