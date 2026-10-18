@@ -13,10 +13,23 @@ name: Invent Questions (27B quality lane)
 # 17 GB pull. The weights do not fit the 10 GB repo cache — re-pulling every
 # run is accepted on purpose for a once-a-day lane whose point is quality.
 # The shared concurrency group keeps it serialized with the 9b lane.
+#
+# MODEL PINNING (upgrade safety, added 2026-10-18): scheduled runs are
+# DIGEST-PINNED — the pull step refuses to run if the upstream tag's manifest
+# digest moved, so a vendor re-tag can never silently change the weights a
+# scheduled run uses. To pilot an upgrade, dispatch this workflow with
+# model=<candidate tag> (trials skip the digest check on purpose); evidence
+# from the trial (acceptance / parse failures / wall time) is what justifies
+# bumping PINNED_DIGEST deliberately.
 on:
   schedule:
     - cron: '37 1 * * *'   # once daily, off :00 and off the busy evening block
   workflow_dispatch:
+    inputs:
+      model:
+        description: 'TRIAL ONLY: model tag to test instead of the pinned default (scheduled runs ignore this)'
+        required: false
+        default: ''
 
 concurrency:
   group: invent-questions   # shared with the 9b lane: never run concurrently
@@ -28,7 +41,7 @@ permissions:
 jobs:
   invent27b:
     runs-on: ubuntu-latest
-    timeout-minutes: 175
+    timeout-minutes: 195
     steps:
       - name: Free runner disk space (swap + 17GB model + repo)
         run: |
@@ -91,12 +104,41 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
           free -h
 
-      - name: Pull model (batiai/qwen3.8-27b:iq3)
+      - name: Pull model (digest-pinned; trial dispatches may override)
+        env:
+          TRIAL_MODEL: ${{ github.event_name == 'workflow_dispatch' && inputs.model || '' }}
         run: |
-          MODEL_INPUT=batiai/qwen3.8-27b:iq3
+          PINNED_MODEL='batiai/qwen3.8-27b:iq3'
+          # Registry manifest digest observed 2026-10-18 via:
+          #   curl -sI https://registry.ollama.ai/v2/batiai/qwen3.8-27b/manifests/iq3
+          # If the upstream tag moves, this step fails LOUD instead of silently
+          # running different weights. Read the current digest, trial the new
+          # build (dispatch input `model`), then bump the pin deliberately.
+          PINNED_DIGEST='abca93dece6899e6b1f4a98dfb8089c328fadc65a3df825d33ca5e39e0961d64'
+          MODEL_INPUT="${TRIAL_MODEL:-$PINNED_MODEL}"
           case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          if [ "$MODEL_INPUT" = "$PINNED_MODEL" ]; then
+            want="${PINNED_MODEL%%:*}"; tag="${PINNED_MODEL##*:}"
+            got=''
+            for i in 1 2 3; do
+              got=$(curl -fsSL -I "https://registry.ollama.ai/v2/${want}/manifests/${tag}" | tr -d '\r' | awk -F': ' 'tolower($1)=="ollama-content-digest" {print $2}' | head -1)
+              [ -n "$got" ] && break
+              sleep 3
+            done
+            got="${got#sha256:}"
+            if [ "$got" != "$PINNED_DIGEST" ]; then
+              echo "::error::DIGEST PIN REFUSED: ${PINNED_MODEL} upstream digest is '${got}', pinned '${PINNED_DIGEST}'."
+              echo "::error::A scheduled run must never silently change weights. Trial the new build first (dispatch with model=${PINNED_MODEL}), compare acceptance/parse/wall time, then bump PINNED_DIGEST deliberately."
+              exit 1
+            fi
+            echo "digest pin OK: $got"
+          else
+            echo "::warning::TRIAL MODEL: $MODEL_INPUT (digest pin not enforced for trials)"
+          fi
           ollama pull "$MODEL_INPUT"
           ollama list
+          # Downstream steps (agent + publish message) read OLLAMA_MODEL.
+          echo "OLLAMA_MODEL=$MODEL_INPUT" >> "$GITHUB_ENV"
           # Warm the model into RAM now so invention calls start warm.
           echo "Warming $MODEL_INPUT..."
           ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
@@ -115,7 +157,7 @@ jobs:
           fi
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
 
-      - name: Invent questions (batiai/qwen3.8-27b:iq3, quality budget)
+      - name: Invent questions (quality budget — model chosen by the pull step)
         # 110-min graceful deadline (env) and a 125-min step cap behind it.
         # num_ctx 4096 halves CPU prompt-eval vs the default 8192 (the briefs
         # fit); num_predict 1200 still covers a full worked solution. KV-cache
@@ -124,7 +166,6 @@ jobs:
         # is inconsistent about — not worth risking a load failure for ~0.25 GB.
         timeout-minutes: 125
         env:
-          OLLAMA_MODEL: batiai/qwen3.8-27b:iq3
           OLLAMA_HOST: http://127.0.0.1:11434
           INVENT_PER_SLOT: '1'
           INVENT_DEADLINE_MIN: '110'
@@ -143,4 +184,4 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add data/invented/
-          bash scripts/ci-push.sh "invent-27b: batiai/qwen3.8-27b:iq3 invented fresh exam questions (run #${{ github.run_number }})"
+          bash scripts/ci-push.sh "invent-27b: ${OLLAMA_MODEL:-batiai/qwen3.8-27b:iq3} invented fresh exam questions (run #${{ github.run_number }})"

@@ -193,20 +193,16 @@ jobs:
           git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
           bash scripts/ci-push.sh "question-quality: agent fixes checkpoint (run #${{ github.run_number }})"
 
-      # 9b writes finished model answers into the archive (categorized under
-      # each question's own category, tagged auto gen). Model is already warm
-      # from the agent step above — no extra pull. Quotas kept from the 27B
-      # era (2 writes + 1 create); the quota rotates every run and can be
-      # raised once the tier proves itself.
-      - name: Write archive answers (9b)
-        timeout-minutes: 60
-        env:
-          OLLAMA_MODEL: qwen3.5:9b
-          OLLAMA_HOST: http://127.0.0.1:11434
-          NODE_OPTIONS: '--max-old-space-size=2048'
-          MAX_WRITE: '2'
-          MAX_CREATE: '1'
-        run: node scripts/write-archive-answers.js
+      # Archive answers moved to the dedicated 27B quality lane
+      # (.github/workflows/archive-27b.yml, daily) on 2026-10-18 — tiered
+      # rollout: one pipeline at a time, user-visible content on the 27B.
+      # The move ALSO makes the sidecar single-writer on purpose: two writers
+      # racing on data/archive-answers.json could drop each other's entries
+      # (the exact failure class the invented pool hit today, where a merge
+      # kept one side's questions and dropped the other's). If that lane is
+      # ever disabled, re-enable this step — but then add an id-union merge
+      # for data/archive-answers.json to ci-push first, or keep only one
+      # writer active.
 
       # 9b converts fill-blank fragments into proper MCQs for the quiz
       # (current-affairs serves these first). The old 27B never reached this

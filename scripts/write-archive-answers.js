@@ -23,6 +23,13 @@
 // the schedule fills the archive steadily — and never stops until the gaps
 // are gone (the plan is the taxonomy itself: empty subjects keep coming up).
 //
+// Resilience (added 2026-10-18 for the 27B lane): progress is saved
+// ATOMICALLY after EVERY accepted unit, so a step-cap kill still publishes
+// everything already written (the workflow commits with always()) — the same
+// contract invent-questions.js uses. Soft stop: ARCHIVE_DEADLINE_MIN (checked
+// between units; exits cleanly through the final save + log). Hard stop:
+// AGENT_DEADLINE_MIN (callLLM refuses new prompts — see site-agent.js).
+//
 // PLACEMENT DISCIPLINE (anti-garbage rule): every item lands in a REAL
 // category/subject/subSubject from the closed taxonomy
 // (data/archive-taxonomy.json, grown monotonically from observed corpus
@@ -46,6 +53,72 @@ const MAX_CREATE = parseInt(process.env.MAX_CREATE || '6', 10);
 // Prefer descriptive items (mains/essay answers showcase the model); fall
 // back to objective items (fill_blank/mcq get rich explanations).
 const DESCRIPTIVE_RES = /mains|essay|descriptive|subjective|long.answer/i;
+
+// Soft wall-clock deadline: stop STARTING new units past it so the run still
+// reaches its final save + agent log cleanly. Unset/0 disables.
+const DEADLINE_MIN = parseFloat(process.env.ARCHIVE_DEADLINE_MIN || '0') || 0;
+const START_MS = Date.now();
+function deadlineHit() {
+  return DEADLINE_MIN > 0 && (Date.now() - START_MS) > DEADLINE_MIN * 60000;
+}
+
+// Atomic save: a mid-write kill (step-cap SIGKILL) must never leave torn JSON
+// on disk — a reader would silently fall back to the EMPTY default, i.e.
+// "lose" the whole archive. tmp + rename (atomic on POSIX), Windows fallback.
+function saveAtomic(p, data) {
+  fs.mkdirSync(path.dirname(p), { recursive: true });
+  const tmp = p + '.tmp';
+  fs.writeFileSync(tmp, JSON.stringify(data, null, 1) + '\n');
+  try { fs.renameSync(tmp, p); }
+  catch (e) { fs.writeFileSync(p, fs.readFileSync(tmp)); fs.unlinkSync(tmp); }
+}
+
+// The builder chunk, regenerated from the sidecar (idempotent full regen),
+// shaped exactly like wiki chunks so build-archive-single.js consumes it with
+// zero changes. The `00-` prefix sorts first so enriched records win
+// first-occurrence dedup (same question+answer text as the wiki original =
+// same dedup key; the enriched copy is a superset, nothing is lost).
+function buildChunk(sidecar) {
+  const chunk = {};
+  for (const [id, a] of Object.entries(sidecar.answers)) {
+    const subj = a.subject || 'General';
+    const sub = a.subSubject || subj;
+    if (!chunk[subj]) chunk[subj] = { subSubjects: {} };
+    if (!chunk[subj].subSubjects[sub]) chunk[subj].subSubjects[sub] = [];
+    chunk[subj].subSubjects[sub].push({
+      id: id,
+      type: a.type || 'fill_blank',
+      category: a.category,
+      region: '',
+      source: a.source,
+      pubDate: a.writtenAt,
+      subject: subj,
+      subSubject: sub,
+      emoji: '',
+      question: a.question,
+      answer: a.answer,
+      options: a.options || undefined,
+      fact: a.modelAnswer,
+      modelAnswer: a.modelAnswer,
+      keyFacts: a.keyFacts,
+      importance: a.importance || 'medium',
+      importantFor: Array.isArray(a.importantFor) ? a.importantFor : [],
+      autoGen: true,
+      origin: a.origin || 'enriched',
+      writtenBy: a.writtenBy,
+      writtenAt: a.writtenAt
+    });
+  }
+  return chunk;
+}
+
+// Incremental progress save, called after EVERY accepted unit (enriched
+// answer or created gap item) — hard-kill insurance.
+function saveProgress(sidecar) {
+  sidecar.updatedAt = new Date().toISOString();
+  saveAtomic(SIDECAR, sidecar);
+  saveAtomic(CHUNK, buildChunk(sidecar));
+}
 
 function norm(s) {
   return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
@@ -99,7 +172,7 @@ function loadTaxonomy() {
     }
   }
   tax.updatedAt = new Date().toISOString();
-  try { saveJson(TAXONOMY, tax); } catch (e) { /* non-fatal */ }
+  try { saveAtomic(TAXONOMY, tax); } catch (e) { /* non-fatal */ }
   console.log('writer: taxonomy ' + Object.keys(tax.cats).length + ' cats (scanned ' + scanned + ' files)');
   return tax;
 }
@@ -253,6 +326,7 @@ async function gapFill(sidecar, tax) {
 
   for (const t of targets) {
     if (created >= MAX_CREATE) break;
+    if (deadlineHit()) { console.log('writer: gaps — soft deadline hit, stopping'); break; }
     // Model: which must-know subtopics are missing here?
     const listSys = 'You are an exam syllabus expert. Return STRICT JSON only: {"subtopics": ["...", "..."]}. No markdown.';
     const listUser = 'Exam-relevant subject: ' + t.subj + ' (category: ' + t.cat + ').\n' +
@@ -317,6 +391,7 @@ async function gapFill(sidecar, tax) {
         };
         sidecarQs.push(qq);
         created++;
+        saveProgress(sidecar);   // hard-kill insurance: publishable after every unit
         console.log('writer: gaps — created ' + id + ' (' + t.cat + ' / ' + t.subj + ' / ' + sub + ')');
       }
     }
@@ -332,6 +407,7 @@ async function main() {
   console.log('writer: ' + cands.length + ' enrich candidate(s), budget ' + MAX_WRITE);
   let wrote = 0;
   for (const q of cands) {
+    if (deadlineHit()) { console.log('writer: soft deadline hit — stopping enrichment (' + wrote + ' written)'); break; }
     // No Misc-dumping: a question without real placement is SKIPPED, and its
     // placement is snapped to the closed taxonomy (typo-level correction only).
     if (!q.category || !q.subject) { console.log('writer: skip unplaced ' + q.id); continue; }
@@ -355,6 +431,7 @@ async function main() {
       writtenAt: new Date().toISOString()
     };
     wrote++;
+    saveProgress(sidecar);   // hard-kill insurance: publishable after every unit
     console.log('writer: wrote ' + q.id + ' (' + q.category + ' / ' + q.subject + ')');
   }
   // Gap mode: create must-have Q&A where the archive has nothing.
@@ -362,40 +439,10 @@ async function main() {
   try { created = await gapFill(sidecar, tax); }
   catch (e) { console.log('writer: gaps failed: ' + (e.message || e).slice(0, 150)); }
   if (!wrote && !created) { console.log('writer: 0 written this run'); return; }
-  sidecar.updatedAt = new Date().toISOString();
-  saveJson(SIDECAR, sidecar);
-  // Regenerate the builder chunk from the sidecar (idempotent full regen).
-  const chunk = {};
-  for (const [id, a] of Object.entries(sidecar.answers)) {
-    const subj = a.subject || 'General';
-    const sub = a.subSubject || subj;
-    if (!chunk[subj]) chunk[subj] = { subSubjects: {} };
-    if (!chunk[subj].subSubjects[sub]) chunk[subj].subSubjects[sub] = [];
-    chunk[subj].subSubjects[sub].push({
-      id: id,
-      type: a.type || 'fill_blank',
-      category: a.category,
-      region: '',
-      source: a.source,
-      pubDate: a.writtenAt,
-      subject: subj,
-      subSubject: sub,
-      emoji: '',
-      question: a.question,
-      answer: a.answer,
-      options: a.options || undefined,
-      fact: a.modelAnswer,
-      modelAnswer: a.modelAnswer,
-      keyFacts: a.keyFacts,
-      importance: a.importance || 'medium',
-      importantFor: Array.isArray(a.importantFor) ? a.importantFor : [],
-      autoGen: true,
-      origin: a.origin || 'enriched',
-      writtenBy: a.writtenBy,
-      writtenAt: a.writtenAt
-    });
-  }
-  saveJson(CHUNK, chunk);
+  // Final save. Per-unit saveProgress already flushed every accepted unit;
+  // this renormalizes the files once more and guarantees both exist even if
+  // the per-unit saves were the only ones (no separate end-of-run write).
+  saveProgress(sidecar);
   console.log('writer: sidecar ' + Object.keys(sidecar.answers).length + ' total, chunk regenerated, +' + wrote + ' enriched, +' + created + ' created');
   // Log to agent-log.json so improve.html shows WHAT was written (with
   // excerpts), not just counts. Same shape as agent runs.
@@ -429,4 +476,4 @@ async function main() {
 if (require.main === module) {
   main().then(() => process.exit(0)).catch(e => { console.error('writer: FATAL ' + (e.message || e)); process.exit(0); });
 }
-module.exports = { main: main };
+module.exports = { main: main, _test: { buildChunk: buildChunk, saveAtomic: saveAtomic, deadlineHit: deadlineHit } };
