@@ -99,6 +99,9 @@ jobs:
 
       - name: Start Ollama server
         run: |
+          # Same as llm-smoke: stop the kernel from paging model weights out
+          # under memory pressure (swap thrash is what killed the 18GB era).
+          sudo sysctl -w vm.swappiness=10 || true
           export OLLAMA_KEEP_ALIVE=60m
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           echo $! > /tmp/ollama.pid
@@ -116,7 +119,7 @@ jobs:
         env:
           MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
         run: |
-          case "$MODEL_INPUT" in *[!A-Za-z0-9._:-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
           ollama pull "$MODEL_INPUT"
           ollama list
           # Warm the model into RAM now so invention calls start warm.

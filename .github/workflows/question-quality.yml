@@ -92,6 +92,9 @@ jobs:
       # 4 vCPU / 16GB RAM; the 9b tier fits RAM comfortably.
       - name: Start Ollama server
         run: |
+          # Same as llm-smoke: stop the kernel from paging model weights out
+          # under memory pressure.
+          sudo sysctl -w vm.swappiness=10 || true
           export OLLAMA_KEEP_ALIVE=60m
           nohup ollama serve > /tmp/ollama.log 2>&1 &
           echo $! > /tmp/ollama.pid
