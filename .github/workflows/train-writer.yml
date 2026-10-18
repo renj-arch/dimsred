@@ -160,7 +160,12 @@ jobs:
           # CPU-only math -- no GPU on this runner.
           pip install --quiet --pre mlc-llm-cpu -f https://mlc.ai/wheels \
             || pip install --quiet --pre mlc-llm-nightly-cpu -f https://mlc.ai/wheels
-          mlc_llm --help > /dev/null
+          # The wheels ship the Python package but NO console script (their
+          # dist-info has no entry_points at all — that is what left run #5
+          # dying with "mlc_llm: command not found" AFTER a clean install).
+          # The CLI lives in mlc_llm/__main__.py, so `python -m mlc_llm` is
+          # the entrypoint; the convert step below uses it directly.
+          python -m mlc_llm --help > /dev/null
           df -h /
 
       - name: Fine-tune (CPU)
@@ -183,8 +188,9 @@ jobs:
         if: steps.gate.outputs.run == 'true'
         run: |
           set -e
-          mlc_llm convert_weight merged --quantization q4f16_1 -o mlc
-          mlc_llm gen_config merged --quantization q4f16_1 --conv-template qwen2 -o mlc
+          # `python -m mlc_llm` because the wheel ships no console script.
+          python -m mlc_llm convert_weight merged --quantization q4f16_1 -o mlc
+          python -m mlc_llm gen_config merged --quantization q4f16_1 --conv-template qwen2 -o mlc
           # WebLLM 0.2.86 reads mlc-chat-config.json + tensor-cache.json +
           # params_shard_*.bin + tokenizer files, all resolved relative to the
           # model URL. Fail loudly here rather than publishing a tree the
