@@ -50,12 +50,22 @@ var SYMBOL_RE=/\b(flag|flags|emblem|logo|logos|coat of arms|arms of|seal of|anth
 // here -- "chemical symbols diagram" is a real figure and must stay eligible --
 // so the Wikipedia template images are matched by their full names instead.
 var CHROME_RE=/\b(icon|icons|stub|ambox|disambiguation|padlock|navbox)\b|category class|portal class|commons-logo|question book|wiki letter|text document|wiki page|noun-theatre/;
+// Localised file names are not figures for an English exam pack. Observed
+// shipped junk before this gate: "EM-spectrum de.svg", "Nitrogen Cycle-cy.svg"
+// (Welsh), "Diagrama carbono lindo esp.svg", "United Nations Security Council
+// regional groups-ar.svg". The marker must sit immediately before the
+// extension, so English words that merely END in a code word ("Cortes") stay
+// eligible; non-Latin script names are rejected outright.
+var LANG_RE=/(?:^|[^a-z])(de|fr|es|pt|nl|sv|da|fi|pl|cs|sk|hu|ro|bg|el|ru|ja|jp|ko|zh|th|vi|cy|ga|eu|lt|lv|et|sq|hr|sr|sl|az|kk|uz|mn|tg|tk|ur|bn|ta|te|ml|kn|mr|ar|fa|he|esp|deu|fra|ita|por|rus)(?=\.[a-z0-9]{3,5}$)/i;
+var NONLATIN_RE=/[\u0400-\u04ff\u0590-\u05ff\u0600-\u06ff\u0900-\u097f\u0e00-\u0e7f\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/;
+function isLocalised(f){ return NONLATIN_RE.test(String(f))||LANG_RE.test(String(f)); }
 
 function isSymbol(f){ return SYMBOL_RE.test(contentTokens(f).join(' '))||CHROME_RE.test(norm(f)); }
 function isJunk(f){ return JUNK_RE.test(contentTokens(f).join(' ')); }
 
 function isDiagramish(title, desc){
   if(NON_IMAGE_RE.test(title))return false;
+  if(isLocalised(title))return false;
   if(/\.svg$/i.test(title))return true;
   var t=norm(title)+' '+norm(desc||'');
   if(PHOTO_RE.test(t))return false;
@@ -247,6 +257,7 @@ function pickImage(imgs, articleTitle, concept, opts){
     if(excl[f])return;
     if(isJunk(f))return;
     if(NON_IMAGE_RE.test(f))return;
+    if(isLocalised(f))return;
     if(isSymbol(f))return;
     var diagram=isDiagramish(f,'');
     if(opts.wantsDiagram&&!diagram)return;
@@ -792,7 +803,7 @@ async function autoDiscover(topic,opts){
 }
 
 module.exports={resolve:resolve,autoDiscover:autoDiscover,discoveryCandidates:discoveryCandidates,
-  isDiagramish:isDiagramish,norm:norm,topicQids:topicQids,respectsScope:respectsScope,
+  isDiagramish:isDiagramish,isLocalised:isLocalised,norm:norm,topicQids:topicQids,respectsScope:respectsScope,
   plausibleFigureType:plausibleFigureType,belongsToOriginal:belongsToOriginal,
   apiGet:jget,UA:UA,p373:p373,
   filesDepicting:filesDepicting,filesInCategory:filesInCategory,apiStats:apiStats,

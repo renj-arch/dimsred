@@ -89,6 +89,24 @@ jobs:
           echo "Warming 27B into RAM..."
           ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
 
+      # The 17GB warm-up load can take the server down on release. Run #3
+      # then logged "fetch failed" on EVERY call for 70+ minutes and invented
+      # nothing. llm-autofix and site-agent both restart the server right
+      # before their agent step; invent was the only 27B workflow missing it.
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
+            nohup ollama serve >> /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
       - name: Invent questions (27B as exam setter)
         # Hard stop at 120 min; the script's own 110-min deadline stops
         # gracefully first. Both guards exist because run #2 logged 24/24

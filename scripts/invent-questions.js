@@ -127,6 +127,38 @@ async function callFake() {
   });
 }
 
+// ── server liveness ──────────────────────────────────────────────────────
+// A dead Ollama process surfaces as undici's "fetch failed" (ECONNREFUSED)
+// on every call — invent #3 retried into a dead socket for 70+ minutes and
+// invented nothing. Transport death is now distinguishable from slow
+// generation (AbortError): one in-place restart is attempted, and if the
+// server stays down the run fails fast instead of burning the deadline.
+let transportFails = 0;
+function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+async function probeServer() {
+  const ctl = new AbortController();
+  const timer = setTimeout(() => ctl.abort(), 8000);
+  try {
+    const res = await fetch(HOST + '/api/tags', { signal: ctl.signal });
+    return res.ok;
+  } catch (e) { return false; }
+  finally { clearTimeout(timer); }
+}
+async function reviveServer() {
+  if (await probeServer()) return true;
+  log('[invent] Ollama unreachable — restarting it in-place');
+  try {
+    const { spawn } = require('child_process');
+    const child = spawn('bash', ['-c', 'nohup ollama serve >> /tmp/ollama.log 2>&1 &'], { detached: true, stdio: 'ignore' });
+    child.unref();
+  } catch (e) { /* the probe below decides */ }
+  for (let i = 0; i < 60; i++) {
+    await sleep(1000);
+    if (await probeServer()) { log('[invent] Ollama back up after ' + (i + 1) + 's'); return true; }
+  }
+  return false;
+}
+
 async function callLLM(system, user) {
   if (FAKE) return callFake();
   const ctl = new AbortController();
@@ -150,6 +182,13 @@ async function callLLM(system, user) {
     if (!res.ok) throw new Error('HTTP ' + res.status);
     const j = await res.json();
     return (j && j.message && j.message.content) || '';
+  } catch (e) {
+    const msg = String((e && e.message) || e);
+    if (/fetch failed|ECONNREFUSED|ECONNRESET|socket hang up|other side closed|connect timeout|UND_ERR/i.test(msg)) {
+      transportFails++;
+      e.transport = true;
+    }
+    throw e;
   } finally { clearTimeout(timer); }
 }
 
@@ -300,9 +339,25 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
               'You are an exam setter. You reply with a single strict JSON object and nothing else.',
               prompt
             );
+            transportFails = 0;
           } catch (e) {
             rejects['call-error'] = (rejects['call-error'] || 0) + 1;
-            log('[invent] ' + section + '/' + tier + ' attempt ' + attempt + ' call failed: ' + e.message);
+            if (e.transport) {
+              log('[invent] ' + section + '/' + tier + ' attempt ' + attempt + ' TRANSPORT failure (server down?): ' + e.message);
+              if (transportFails >= 2) {
+                const alive = await reviveServer();
+                if (!alive) {
+                  console.error('[invent] ABORT: Ollama unreachable after ' + transportFails +
+                    ' transport failures and a restart attempt — failing fast instead of burning the deadline');
+                  process.exit(1);
+                }
+                transportFails = 0;
+              } else {
+                await sleep(15000);
+              }
+            } else {
+              log('[invent] ' + section + '/' + tier + ' attempt ' + attempt + ' call failed: ' + e.message);
+            }
             continue;
           }
           const v = validate(raw, section, tier, recentTokenSets.concat(accepted.map(a => a.tokenSet)));

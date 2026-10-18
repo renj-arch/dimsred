@@ -1,14 +1,16 @@
 name: LLM Auto-fix
 
 # The model fixes its own weak content: reads the fault board, asks a
-# local Qwen3.5-9B (Ollama on the runner's CPU + swap) to generate
-# questions for thin categories, draw SVG figures for missing syllabus
-# topics, and rewrite broken captions. Results land in data/autofix-log.json
-# and show on improve.html as "what the model fixed".
+# local small model (the mechanical half of the model split — qwen3:4b /
+# lfm2.5:1.2b on Ollama, runner CPU) to generate questions for thin
+# categories, draw SVG figures for missing syllabus topics, and rewrite
+# broken captions. Results land in data/autofix-log.json and show on
+# improve.html as "what the model fixed".
 #
 # Fully free forever: Ollama runs the model locally on GitHub's runner.
-# No API keys, no rate limits, no paid services. 8GB swap is created so
-# the 9B model (~6GB) fits in the 7GB RAM runner without OOM.
+# No API keys, no rate limits, no paid services. The models are <=3.5GB,
+# so no swap is needed (the old 27B path needed 16GB of it); the writing
+# workflows (invent-questions, expand-course) keep the big model.
 
 on:
   schedule:
@@ -51,15 +53,14 @@ jobs:
         with:
           node-version: 22
 
-      # Create 16GB swap so Qwen3.8-27B (~18GB) fits: 7GB RAM + 16GB swap
-      # = 23GB total. CPU inference is slow but free.
-      - name: Create swap (16GB)
-        run: |
-          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
-          sudo chmod 600 /tmp/swapfile
-          sudo mkswap /tmp/swapfile
-          sudo swapon /tmp/swapfile
-          free -h
+      # No swap on purpose: the mechanical split runs 1.2B-4B models
+      # (<=3.5GB), which fit in RAM with room to spare. The 16GB swapfile
+      # only existed for the 17GB Qwen3.8-27B load, which autofix no longer
+      # pulls — the 27B stays in the writing workflows (invent-questions,
+      # expand-course). This also removes the ~1.5-min dd and the OOM-death
+      # class where the swap-thrashing model took the Ollama server with it.
+      - name: Report memory (no swap needed for small models)
+        run: free -h
 
       # Install Ollama — free, open-source, runs models on CPU.
       - name: Install Ollama
@@ -87,29 +88,30 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
           free -h
 
-      # Pull the strongest coding model. Qwen3.8-27B scores 90.3% on
-      # LiveCodeBench — near the top of the entire leaderboard. Falls back
-      # through smaller models if the 27B doesn't fit.
-      - name: Pull best coding model
+      # MECHANICAL WORK RUNS SMALL (the model split): autofix generates JSON
+      # fixes and captions — no long-form writing — so it runs on the fast
+      # small models: qwen3:4b first, then lfm2.5:1.2b, then qwen3.5:4b.
+      # All fit easily in RAM: no swap, no 20-min 17GB pull, and no OOM
+      # taking the server down mid-run (the "fetch failed" class that hit
+      # this workflow on the 27B). The 27B stays where writing quality
+      # matters: invent-questions and expand-course. First successful pull
+      # wins; a bad small-model reply still dies safely in the script's
+      # JSON validation (it applies no fix it cannot parse).
+      - name: Pull fast model (mechanical fixes)
         run: |
-          if ollama pull qwen3.8:27b; then
-            echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
-            echo "Using Qwen3.8-27B (90.3% LiveCodeBench)"
-          elif ollama pull nvidia/nemotron-nano-9b-v2; then
-            echo "MODEL=nvidia/nemotron-nano-9b-v2" >> $GITHUB_ENV
-            echo "Using Nemotron Nano 9B v2 (71.1% LiveCodeBench)"
-          else
-            echo "Large models failed, using 4B"
-            ollama pull qwen3.5:4b
-            echo "MODEL=qwen3.5:4b" >> $GITHUB_ENV
-          fi
+          MODEL=""
+          for m in qwen3:4b lfm2.5:1.2b qwen3.5:4b; do
+            echo "trying $m ..."
+            if ollama pull "$m"; then MODEL="$m"; break; fi
+          done
+          if [ -z "$MODEL" ]; then echo "no fast model could be pulled"; exit 1; fi
+          echo "MODEL=$MODEL" >> $GITHUB_ENV
+          echo "Using fast model: $MODEL"
           ollama list
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
-          # Warm the model into RAM now: the first script call otherwise pays
-          # the full 17GB cold load (~15 min). With KEEP_ALIVE=60m it stays
-          # resident for the whole run.
-          echo "Warming 27B into RAM..."
-          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          # Warm it: seconds for small models, and the first real call then
+          # never pays a cold load.
+          ollama run "$MODEL" "Reply with exactly: OK" 2>&1 | tail -2
           echo "Warmup done"
 
       - name: Ensure Ollama is up before agent
@@ -125,9 +127,10 @@ jobs:
           fi
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
 
-      - name: Run auto-fixer (Qwen3.8 local, zero API keys)
-        # 300 min for up to 3 fixes; if it still overruns, publish below
-        # (if: always()) commits whatever the fixer already wrote.
+      - name: Run auto-fixer (fast local model, zero API keys)
+        # 300 min was sized for the 27B on CPU. The fast model answers in
+        # seconds, so this normally finishes in minutes; the generous cap and
+        # the always() publish below still protect a stuck run.
         timeout-minutes: 300
         env:
           OLLAMA_MODEL: ${{ env.MODEL }}

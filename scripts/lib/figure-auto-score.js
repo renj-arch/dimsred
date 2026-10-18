@@ -82,6 +82,57 @@ function tokens(s) {
     .split(' ').filter(Boolean);
 }
 
+// ── fetch-time junk gates ────────────────────────────────────────────────
+// Hard evidence that a candidate is NOT a figure for an English exam pack,
+// however well its words match the topic. These run inside autoScore(), so
+// every auto-pick by BOTH builders is gated at fetch time — junk never
+// enters the cache where it would need hand-auditing later. (The hand-pick
+// ledger and the exclusion file still win where they exist; these gates
+// only change what the auto-picker can newly admit.)
+//
+// 1) Localised files. Actually shipped before the audit:
+//    "EM-spectrum de.svg" (German), "Nitrogen Cycle-cy.svg" (Welsh),
+//    "Diagrama carbono lindo esp.svg" (Spanish), "…regional groups-ar.svg".
+//    The marker must sit immediately before the extension, so English names
+//    that merely END in a code ("Cortes.svg") are untouched, and "-en"/"-eng"
+//    variants stay eligible.
+var LANG_RE = /(?:^|[^a-z])(de|fr|es|pt|nl|sv|da|fi|pl|cs|sk|hu|ro|bg|el|ru|ja|jp|ko|zh|th|vi|cy|ga|eu|lt|lv|et|sq|hr|sr|sl|az|kk|uz|mn|tg|tk|ur|bn|ta|te|ml|kn|mr|ar|fa|he|esp|deu|fra|ita|por|rus)(?=\.[a-z0-9]{3,5}$)/i;
+// Non-Latin script in the filename (Cyrillic, Hebrew, Arabic, Devanagari,
+// Thai, CJK, Hangul) — Commons keeps localised uploads under their own
+// script, and none of them is a figure for this site.
+var NONLATIN_RE = /[\u0400-\u04ff\u0590-\u05ff\u0600-\u06ff\u0900-\u097f\u0e00-\u0e7f\u3040-\u30ff\u4e00-\u9fff\uac00-\ud7af]/;
+// 2) Press-event photos (conference/ceremony/summit snapshots). The gate
+//    only fires when the name carries NO diagram evidence, so a real figure
+//    that happens to mention the event ("Bandung Conference map.svg") stays.
+var EVENT_RE = /\b(?:press conference|press briefing|conference|summit|ceremony|inaugurat|delegation|felicitat|signing|handshake|briefing|meeting|courtesy call|bilateral|roundtable|panel discussion|keynote|unveiling|foundation stone|ribbon cutting|memorandum|group photo|family photo|launch of the|during (his|her|the) (visit|address)|takes part|participates|attends)/;
+var DIAGRAM_EVIDENCE_RE = /\b(?:map|maps|chart|charts|diagram|diagrams|graph|graphs|plan|plans|scheme|schematic|figure|drawing|illustration|sketch|cutaway|labelled|labeled|outline|topolog(y|ies)|hierarchy|flowchart|layers?|pyramid|timeline|cross section|anatomy|structure|blueprint|cladogram|phylogenetic|distribution|density|projection|framework|mechanism|network|route|routes|table|template|spectrum|formula|cycle|profile)\b/;
+// 3) Photo standing in for a diagram topic: when the topic itself asks for a
+//    map/chart/cycle, a plain photo (jpg/jpeg/webp/tif) whose name says
+//    nothing figure-like is not the figure. Raster files that DO advertise
+//    "map"/"chart"/"section"/... in the name, and all SVG/PNG/GIF, stay.
+var DIAGRAM_TOPIC_RE = /\b(?:map|maps|diagram|diagrams|chart|charts|graph|graphs|cycle|cycles|structure|structures|layers?|spectrum|topolog(y|ies)|flowchart|schematic|cross section|pyramid|hierarchy|classification|circuit|anatomy|profile|timeline|block diagram|mechanism)\b/i;
+
+function langJunk(title) {
+  var raw = String(title || '').toLowerCase();
+  if (NONLATIN_RE.test(raw)) return 'non-Latin script file name';
+  if (LANG_RE.test(raw)) return 'localised (non-English) file name';
+  return '';
+}
+
+function eventJunk(tNorm) {
+  if (!EVENT_RE.test(tNorm)) return '';
+  if (DIAGRAM_EVIDENCE_RE.test(tNorm)) return '';
+  return 'press/event photo, not a figure';
+}
+
+function photoForDiagramTopic(title, topic) {
+  if (!DIAGRAM_TOPIC_RE.test(String(topic || ''))) return '';
+  var raw = String(title || '').toLowerCase();
+  if (!/\.(jpe?g|webp|tiff?)$/i.test(raw)) return '';
+  if (DIAGRAM_EVIDENCE_RE.test(norm(raw))) return '';
+  return 'photo for a diagram topic';
+}
+
 /**
  * Split a topic's tokens into distinctive / generic parts.
  * @returns {{ all: string[], key: string[], generic: string[] }}
@@ -161,12 +212,19 @@ function autoScore(titleRaw, topic, opts) {
   var bigNum = /[0-9]{4,}/.test(t) ? -1 : 0;
   var rel = topicRelevance(t, topic);
   var reject = (opts.rejectRe && opts.rejectRe.test(t)) ? -4 : 0;
+  // Fetch-time junk gates: localised file names, press-event photos, and
+  // photos standing in for diagram topics always lose, whatever the words say.
+  var langReason = langJunk(raw);
+  var eventReason = eventJunk(t);
+  var diagramReason = photoForDiagramTopic(raw, topic);
+  reject += (langReason ? -8 : 0) + (eventReason ? -6 : 0) + (diagramReason ? -4 : 0);
   var accept = typeof opts.accept === 'number' ? opts.accept : 3;
   var score = hint + ext + rel.score + reject + bigNum;
   return {
     score: score,
     accepted: score >= accept,
     rel: rel,
+    junk: langReason || eventReason || diagramReason || '',
     parts: { ext: ext, hint: hint, rel: rel.score, reject: reject, bigNum: bigNum }
   };
 }
@@ -178,5 +236,8 @@ module.exports = {
   topicTokens: topicTokens,
   topicRelevance: topicRelevance,
   isRelevant: isRelevant,
+  langJunk: langJunk,
+  eventJunk: eventJunk,
+  photoForDiagramTopic: photoForDiagramTopic,
   autoScore: autoScore
 };
