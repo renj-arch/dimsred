@@ -21,6 +21,7 @@ var R = require('./lib/figure-resolve.js');
 var DATA = path.join(__dirname, '..', 'data');
 var TOPICS_FILE = path.join(DATA, 'figure-topics-curated.json');
 var OUT_FILE = path.join(DATA, 'figure-files-auto.json');
+var EXCLUDE_FILE = path.join(DATA, 'figure-files-excluded.json');
 var DELAY_MS = parseInt(process.env.RESOLVE_DELAY_MS || '150', 10);
 
 function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
@@ -28,6 +29,22 @@ function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 async function main() {
   var topics = JSON.parse(fs.readFileSync(TOPICS_FILE, 'utf8'));
   var results = {};
+  // Hand-pick-only topics and banned files (data/figure-files-excluded.json):
+  // resolving an excluded topic here would only commit a figure the builder
+  // then refuses to render, so it is skipped and reported as a gap.
+  var exclTopics = {};
+  var exclFiles = {};
+  function nrm(s) { return String(s).toLowerCase().replace(/[^a-z0-9]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+  try {
+    if (fs.existsSync(EXCLUDE_FILE)) {
+      var xj = JSON.parse(fs.readFileSync(EXCLUDE_FILE, 'utf8'));
+      (xj._files || []).forEach(function (f) { exclFiles[nrm(f)] = 1; });
+      Object.keys(xj).forEach(function (s) {
+        if (s.charAt(0) === '_') return;
+        (xj[s] || []).forEach(function (t) { exclTopics[s + '|' + nrm(t)] = 1; });
+      });
+    }
+  } catch (e) {}
   var unresolved = [];
   var picks = [];
   var stats = { tier1: 0, tier2: 0, tier3: 0, total: 0 };
@@ -42,8 +59,13 @@ async function main() {
     for (var ti = 0; ti < list.length; ti++) {
       var topic = String(list[ti]).trim();
       stats.total++;
+      if (exclTopics[slug + '|' + nrm(topic)]) {
+        unresolved.push(slug + ' :: ' + topic + ' (excluded - hand-pick only)');
+        continue;
+      }
       var r = null;
       try { r = await R.resolve(topic); } catch (e) { r = null; }
+      if (r && exclFiles[nrm(r.file)]) r = null;
       if (r) {
         results[slug][topic] = { file: r.file, tier: r.tier, conf: r.conf, method: r.method };
         picks.push(slug + ' :: ' + topic + '  ->  ' + r.file + '  [' + r.method + ' T' + r.tier + ']');

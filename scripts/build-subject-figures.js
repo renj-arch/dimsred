@@ -26,6 +26,14 @@ var RESOLVER = require('./lib/figure-resolve.js');
 var QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
 var CACHE_FILE = path.join(__dirname, '..', 'data', 'subject-figures-cache.json');
 var AUTO_FILE = path.join(__dirname, '..', 'data', 'figure-files-auto.json');
+// Hand-pick-only topics + banned files (data/figure-files-excluded.json). A
+// topic listed here refuses auto/cache/live picks; a hand pick still wins. A
+// gap is the honest outcome, per the same rule as AUTO_MIN_CONF below.
+var EXCLUDE_FILE = path.join(__dirname, '..', 'data', 'figure-files-excluded.json');
+// FIGURES_OFFLINE=1 rebuilds from committed picks only (hand + resolver +
+// cache), with no live searches and no auto-discovery, so a refresh of the
+// published packs is deterministic.
+var OFFLINE = /^(1|true|yes)$/i.test(String(process.env.FIGURES_OFFLINE || ''));
 // Picks below this confidence are treated as no answer. The resolver skips
 // rather than guesses, so a low number here means fewer figures, never worse.
 // 0.85 is deliberate: the resolver scores tier-1 (Wikidata/category) and
@@ -416,6 +424,23 @@ async function main() {
     var v = cache[k];
     cache[k] = (typeof v === 'string') ? { file: v, source: 'cache' } : v;
   });
+  // Exclusion list: subject slug -> topics that only a hand pick may fill,
+  // plus a run-wide banned-files list. Loaded here so the topic loop, the
+  // resolver fallbacks and (when the workflow runs it) the resolver output
+  // all agree on what must never ship.
+  var exclTopics = {};
+  var exclFiles = {};
+  try {
+    if (fs.existsSync(EXCLUDE_FILE)) {
+      var xj = JSON.parse(fs.readFileSync(EXCLUDE_FILE, 'utf8'));
+      (xj._files || []).forEach(function (f) { exclFiles[norm(f)] = 1; });
+      Object.keys(xj).forEach(function (s) {
+        if (s.charAt(0) === '_') return;
+        (xj[s] || []).forEach(function (t) { exclTopics[s + '|' + norm(t)] = 1; });
+      });
+    }
+  } catch (e) { exclTopics = {}; exclFiles = {}; }
+  function fileBanned(f) { return !!exclFiles[norm(f)]; }
   var source = String(process.env.FIGURE_SOURCE || 'curated').toLowerCase();
   var subjects = source === 'shards' ? scanSubjects() : curatedSubjects();
   // HAND_PICKED_ONLY=1 renders just the hand-verified files from
@@ -464,24 +489,31 @@ async function main() {
       var hand = exact[tname];
       var auto = subjects[sname].auto || {};
       var ap = auto[tname];
-      if (hand && (await fileOK(hand))) {
+      var excluded = !!exclTopics[sname + '|' + key];
+      if (hand && !fileBanned(hand) && (await fileOK(hand))) {
         fname = hand; source = 'hand';
       } else if (HAND_ONLY) {
         unmatched.push(tname); // hand-picked-only mode never falls back to search
-      } else if (ap && ap.file && Number(ap.conf) >= AUTO_MIN_CONF && (await fileOK(ap.file))) {
+      } else if (excluded) {
+        // On the hand-pick-only list (data/figure-files-excluded.json): the
+        // committed auto pick and the cache are refused here, so the topic
+        // reads as a gap until a hand pick lands. A wrong-but-confident
+        // figure must not be replaced by a different wrong figure.
+        unmatched.push(tname);
+      } else if (ap && ap.file && !fileBanned(ap.file) && Number(ap.conf) >= AUTO_MIN_CONF && (await fileOK(ap.file))) {
         // Committed by the Resolve Figures workflow: already resolved against
         // Wikimedia structured data and existence-checked there.
         fname = ap.file; source = 'auto'; cache[key] = { file: fname, source: 'auto' };
-      } else if (cache[key] && cache[key].file && (await fileOK(cache[key].file))) {
+      } else if (cache[key] && cache[key].file && !fileBanned(cache[key].file) && (await fileOK(cache[key].file))) {
         fname = cache[key].file;
         source = cache[key].source || 'cache';
-      } else {
+      } else if (!OFFLINE) {
         var hit = null;
         if (/^(1|true|yes)$/i.test(String(process.env.LEGACY_SEARCH || ''))) {
           // Opt-in only: the old free-text search matched historic maps of
           // North America to Indian topics, so it is no longer the default.
           try { hit = await resolveAuto(tname); } catch (e) { hit = null; }
-          if (hit) { fname = hit.f; source = 'legacy'; cache[key] = { file: fname, source: 'legacy' }; }
+          if (hit && !fileBanned(hit.f)) { fname = hit.f; source = 'legacy'; cache[key] = { file: fname, source: 'legacy' }; }
         } else {
           // A curated entity mapping, when one exists for this topic, replaces
           // the search outright rather than being tried after it. Searching
@@ -506,7 +538,7 @@ async function main() {
             try { hit = await RESOLVER.autoDiscover(tname, ropts); } catch (e) { hit = null; }
             if (hit) via = 'auto-discovered';
           }
-          if (hit && Number(hit.conf) >= AUTO_MIN_CONF) {
+          if (hit && !fileBanned(hit.file) && Number(hit.conf) >= AUTO_MIN_CONF) {
             fname = hit.file;
             source = hint ? 'curated' : via;
             cache[key] = { file: fname, source: source };
@@ -515,6 +547,10 @@ async function main() {
         if (!fname) unmatched.push(tname);
         budget--;
         await new Promise(function (res) { setTimeout(res, 180); });
+      } else {
+        // FIGURES_OFFLINE=1: committed picks only. A topic with no hand pick,
+        // resolver pick or cache entry reads as a gap, never a fresh search.
+        unmatched.push(tname);
       }
       if (fname && figs.length < TOPICS_PER_SUBJECT) {
         AUTO_EXCLUDE_IMG[fname] = 1;
