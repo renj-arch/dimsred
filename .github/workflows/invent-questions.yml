@@ -109,9 +109,12 @@ jobs:
 
       - name: Invent questions (27B as exam setter)
         # Hard stop at 120 min; the script's own 110-min deadline stops
-        # gracefully first. Both guards exist because run #2 logged 24/24
-        # calls aborted at the old 4-min client timeout — a reasoned answer
-        # needs ~5-15 min on the 4 vCPU runner (CALL_MAX_MS is now 20 min).
+        # gracefully first. Run #2 logged 24/24 calls aborted at the old
+        # 4-min client timeout; run #5 then died at undici's hidden ~5-min
+        # headers timeout (fetch failed -> false "server down" -> restart
+        # loop that killed every cold load). Transport is now curl via spawn
+        # with watchdogs: 25 min of first-byte silence is patience, 12 min
+        # mid-stream silence is wedged, 95 min is the per-call cap.
         timeout-minutes: 120
         env:
           OLLAMA_MODEL: qwen3.8:27b

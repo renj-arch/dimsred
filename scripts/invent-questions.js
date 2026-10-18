@@ -22,7 +22,9 @@
  *   OLLAMA_HOST         default http://127.0.0.1:11434
  *   INVENT_PER_SLOT     questions per section x difficulty (default 2)
  *   INVENT_DEADLINE_MIN wall-clock budget for inventing (default 95)
- *   INVENT_CALL_MS      per-call client timeout in ms (default 1200000 = 20 min)
+ *   INVENT_FIRST_BYTE_MIN patience waiting for the first streamed byte (default 25)
+ *   INVENT_STALL_MIN    mid-stream silence that counts as wedged (default 12)
+ *   INVENT_CALL_CAP_MIN absolute per-call cap in minutes (default 95)
  *   INVENT_MAX_STORE    max questions kept (default 1200)
  *   INVENT_OUT          override output path (for tests)
  *   INVENT_FAKE_LLM=1   no model needed — canned responses for local tests
@@ -30,6 +32,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { spawn, execSync } = require('child_process');
 
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
 const HOST = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').replace(/\/+$/, '');
@@ -39,10 +42,18 @@ const MAX_STORE = parseInt(process.env.INVENT_MAX_STORE || '1200', 10) || 1200;
 const OUT_FILE = process.env.INVENT_OUT || path.join('data', 'invented', 'questions.json');
 const FAKE = process.env.INVENT_FAKE_LLM === '1';
 const RUN = process.env.GITHUB_RUN_NUMBER || String(Date.now());
-// 4 min aborted EVERY call on the 4 vCPU runner (24/24 in run #2): a
-// 1600-token reasoned answer needs ~5-15 min there. 20 min lets slow calls
-// finish; the deadline budget still guards the total run.
-const CALL_MAX_MS = parseInt(process.env.INVENT_CALL_MS || '1200000', 10);
+// Run #5 burned its whole slot in a restart loop: the old undici fetch
+// transport carries its own ~5-min headers timeout which fired BEFORE our
+// 20-min abort on every cold/slow call, surfaced as "fetch failed", and the
+// restart that "recovery" triggered killed the model load in progress — so
+// the cold load could never finish. Transport is now curl via spawn (no
+// hidden headers wall) with watchdogs: silence before the first byte is
+// normal on CPU (25 min = cold load + prompt eval), a 12-min mid-stream
+// stall means wedged, and 95 min is nobody-legitimate-needs-more.
+const RUN_STARTED = Date.now();
+const FIRST_BYTE_MIN = parseFloat(process.env.INVENT_FIRST_BYTE_MIN || '25') || 25;
+const STALL_MIN = parseFloat(process.env.INVENT_STALL_MIN || '12') || 12;
+const CALL_CAP_MIN = parseFloat(process.env.INVENT_CALL_CAP_MIN || '95') || 95;
 
 const SECTIONS = ['quant', 'reasoning', 'english'];
 const TIERS = ['easy', 'moderate', 'hard', 'veryhard'];
@@ -128,11 +139,12 @@ async function callFake() {
 }
 
 // ── server liveness ──────────────────────────────────────────────────────
-// A dead Ollama process surfaces as undici's "fetch failed" (ECONNREFUSED)
-// on every call — invent #3 retried into a dead socket for 70+ minutes and
-// invented nothing. Transport death is now distinguishable from slow
-// generation (AbortError): one in-place restart is attempted, and if the
+// With the curl transport in place, a transport failure genuinely means the
+// server is unreachable (exit 7/52/56) or a call was wedge-killed by a
+// watchdog (status 28): one in-place restart is attempted, and if the
 // server stays down the run fails fast instead of burning the deadline.
+// (Invent #3 retried into a dead socket for 70+ minutes because "fetch
+// failed" could not tell a dead server from undici's own timeout.)
 let transportFails = 0;
 function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 async function probeServer() {
@@ -146,15 +158,12 @@ async function probeServer() {
 }
 async function reviveServer() {
   // Hard restart, always. A wedged server can still answer /api/tags while
-  // the model runner behind it is dead — every chat call then hangs until
-  // undici's headers timeout (~5 min) and surfaces as "fetch failed". Run #3
-  // burned its whole 110-min budget exactly this way. A /api/tags probe
-  // would have said "healthy" and skipped the restart, so pkill + start
-  // fresh instead (the same recovery site-agent.js uses). The first call
-  // after this pays a cold model load, well inside the 20-min call budget.
+  // the model runner behind it is dead, and curl abandoning a call does NOT
+  // stop the server-side generation (it keeps holding the model lock). One
+  // pkill + fresh serve clears the zombie work; the first call after this
+  // pays a cold model load — the 25-min first-byte allowance is sized for it.
   log('[invent] Ollama transport failures — hard restarting ollama serve');
   try {
-    const { execSync } = require('child_process');
     execSync('pkill -f "ollama serve" 2>/dev/null; sleep 2; OLLAMA_KEEP_ALIVE=60m nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 20000 });
   } catch (e) { /* the wait below decides */ }
   for (let i = 0; i < 90; i++) {
@@ -164,37 +173,135 @@ async function reviveServer() {
   return false;
 }
 
+// One HTTP attempt at the chat endpoint, STREAMING via spawn + watchdogs
+// (mirrors site-agent.js — its failure history shaped these exact rules).
+// stream:false returns zero bytes until every token finishes (5-15+ min on
+// CPU), so absolute time caps murdered healthy generations; instead allow
+// 25 min of silence BEFORE the first byte (that is just cold load + prompt
+// eval), then only treat real stalls (12 min with no byte mid-stream) as
+// wedged. Killing curl does NOT stop the server-side generation, which is
+// why a wedge-kill carries restart:true so the caller restarts serve first.
+function curlChat(payload) {
+  const args = [
+    '-sS', '--max-time', '5400', '-w', '\\n%{http_code}',
+    HOST + '/api/chat',
+    '-H', 'Content-Type: application/json',
+    '-d', '@-'
+  ];
+  return new Promise((resolve, reject) => {
+    const child = spawn('curl', args, { stdio: ['pipe', 'pipe', 'pipe'] });
+    let out = '';
+    let stderr = '';
+    const startedAt = Date.now();
+    let firstByteAt = 0;
+    let lastByteAt = Date.now();
+    let settled = false;
+
+    function fail(why, status) {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      try { child.kill('SIGKILL'); } catch (e) { /* ignore */ }
+      const err = new Error('stream monitor: ' + why);
+      err.status = status === undefined ? 28 : status;
+      if (err.status !== 'DEADLINE') { err.restart = true; err.transport = true; }
+      err.stdout = out.slice(0, 2000);
+      err.stderr = stderr.slice(0, 400);
+      reject(err);
+    }
+
+    const mon = setInterval(() => {
+      const now = Date.now();
+      if (now - RUN_STARTED > DEADLINE_MIN * 60000) return fail('invent deadline reached mid-call', 'DEADLINE');
+      if (now - startedAt > CALL_CAP_MIN * 60000) return fail('hard cap ' + CALL_CAP_MIN + 'min');
+      if (!firstByteAt) {
+        if (now - startedAt > FIRST_BYTE_MIN * 60000) return fail('no first byte in ' + FIRST_BYTE_MIN + 'min (cold load/prompt eval over budget)');
+      } else if (now - lastByteAt > STALL_MIN * 60000) {
+        return fail('no byte for ' + STALL_MIN + 'min mid-stream (wedged)');
+      }
+    }, 5000);
+
+    child.stdout.on('data', d => {
+      if (!firstByteAt) {
+        firstByteAt = Date.now();
+        log('[invent] LLM first byte at ' + Math.round((firstByteAt - startedAt) / 1000) + 's');
+      }
+      lastByteAt = Date.now();
+      out += d.toString('utf8');
+      if (out.length > 32 * 1024 * 1024) fail('buffer cap 32MB');
+    });
+    child.stderr.on('data', d => { stderr += d.toString('utf8'); });
+    child.on('error', err => { if (!settled) { settled = true; clearInterval(mon); reject(err); } });
+    child.on('close', code => {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      if (code === 0) resolve(out);
+      else {
+        const err = new Error('curl exit ' + code);
+        err.status = code;
+        if (code === 28) { err.restart = true; err.transport = true; }
+        else if (code === 7 || code === 52 || code === 56) err.transport = true;
+        err.stdout = out.slice(0, 2000);
+        err.stderr = stderr.slice(0, 400);
+        reject(err);
+      }
+    });
+    child.stdin.on('error', () => { /* curl died before reading stdin */ });
+    child.stdin.write(payload);
+    child.stdin.end();
+  });
+}
+
+// Parse an NDJSON chat stream: accumulate message.content deltas (thinking
+// may arrive per-chunk or at the end), plus the legacy response field; curl
+// appends the HTTP code as a final line via -w. Returns {text, httpCode}.
+function parseChatStream(out) {
+  const lines = String(out || '').split('\n');
+  let httpCode = '';
+  while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+  if (lines.length && /^\d{3}$/.test(lines[lines.length - 1].trim())) {
+    httpCode = lines.pop().trim();
+  }
+  let content = '', thinking = '';
+  for (const line of lines) {
+    const t = line.trim();
+    if (!t || t.charAt(0) !== '{') continue;
+    try {
+      const j = JSON.parse(t);
+      if (j.message) {
+        if (typeof j.message.content === 'string') content += j.message.content;
+        if (typeof j.message.thinking === 'string') thinking += j.message.thinking;
+      }
+      if (typeof j.response === 'string') content += j.response;
+    } catch (e) { /* partial line; ignore */ }
+  }
+  return { text: content.trim() || thinking.trim(), httpCode: httpCode };
+}
+
 async function callLLM(system, user) {
   if (FAKE) return callFake();
-  const ctl = new AbortController();
-  const timer = setTimeout(() => ctl.abort(), CALL_MAX_MS);
-  try {
-    const res = await fetch(HOST + '/api/chat', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      signal: ctl.signal,
-      body: JSON.stringify({
-        model: MODEL,
-        stream: false,
-        think: false,
-        options: { temperature: 0.95, top_p: 0.92, num_ctx: 8192, num_predict: 1600 },
-        messages: [
-          { role: 'system', content: system },
-          { role: 'user', content: user }
-        ]
-      })
-    });
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    const j = await res.json();
-    return (j && j.message && j.message.content) || '';
-  } catch (e) {
-    const msg = String((e && e.message) || e);
-    if (/fetch failed|ECONNREFUSED|ECONNRESET|socket hang up|other side closed|connect timeout|UND_ERR/i.test(msg)) {
-      transportFails++;
-      e.transport = true;
-    }
-    throw e;
-  } finally { clearTimeout(timer); }
+  const payload = JSON.stringify({
+    model: MODEL,
+    stream: true,
+    think: false,
+    options: { temperature: 0.95, top_p: 0.92, num_ctx: 8192, num_predict: 1600 },
+    messages: [
+      { role: 'system', content: system },
+      { role: 'user', content: user }
+    ]
+  });
+  let out = await curlChat(payload);
+  let parsed = parseChatStream(out);
+  if (!parsed.text && parsed.httpCode === '400') {
+    // Older daemons reject think:false with HTTP 400 — one clean retry
+    // without the parameter (same hatch as site-agent.js).
+    log('[invent] Ollama rejected think:false (HTTP 400) — retrying without the parameter');
+    out = await curlChat(JSON.stringify(Object.assign(JSON.parse(payload), { think: undefined })));
+    parsed = parseChatStream(out);
+  }
+  if (parsed.httpCode && parsed.httpCode !== '200') throw new Error('HTTP ' + parsed.httpCode);
+  return parsed.text || '';
 }
 
 // ── parsing + validation ─────────────────────────────────────────────────
@@ -346,14 +453,19 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
             );
             transportFails = 0;
           } catch (e) {
+            if (e.status === 'DEADLINE') {
+              log('[invent] deadline reached mid-call — stopping early');
+              break outer;
+            }
             rejects['call-error'] = (rejects['call-error'] || 0) + 1;
             if (e.transport) {
-              log('[invent] ' + section + '/' + tier + ' attempt ' + attempt + ' TRANSPORT failure (server down?): ' + e.message);
-              if (transportFails >= 2) {
+              transportFails++;
+              log('[invent] ' + section + '/' + tier + ' attempt ' + attempt + ' TRANSPORT failure: ' + e.message +
+                (e.restart ? ' — wedged call, restarting serve now' : ''));
+              if (e.restart || transportFails >= 2) {
                 const alive = await reviveServer();
                 if (!alive) {
-                  console.error('[invent] ABORT: Ollama unreachable after ' + transportFails +
-                    ' transport failures and a restart attempt — failing fast instead of burning the deadline');
+                  console.error('[invent] ABORT: Ollama unreachable after transport failures and a restart attempt — failing fast instead of burning the deadline');
                   process.exit(1);
                 }
                 transportFails = 0;
