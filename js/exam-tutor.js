@@ -204,15 +204,19 @@
       try { gens = window.getMentalGenerators() || {}; } catch (e) {}
       Object.keys(gens).forEach(function (mode) {
         SUBJ_MAP[mode] = pretty(mode);
-        CORPUS.push({ q: pretty(mode) + ' (mental ability mode)', a: mode, h: '', s: '', subj: mode });
+        CORPUS.push({ q: pretty(mode) + ' (mental ability mode)', a: mode, h: '', s: '', subj: mode, _stub: true });
         var fn = gens[mode];
         if (typeof fn === 'function') {
-          try {
-            var it = fn();
-            if (it && it.q) {
-              CORPUS.push({ q: it.q, a: it.a || '', h: it.hint || it.h || '', s: it.solution || it.s || '', subj: mode });
-            }
-          } catch (e) {}
+          // A few live samples per mode so bank answers are real questions, not
+          // just the mode stub. Pure procedural calls — nothing leaves the tab.
+          for (var s = 0; s < 3; s++) {
+            try {
+              var it = fn();
+              if (it && it.q) {
+                CORPUS.push({ q: it.q, a: it.a || '', h: it.hint || it.h || '', s: it.solution || it.s || '', subj: mode });
+              }
+            } catch (e) {}
+          }
         }
       });
     }
@@ -354,44 +358,91 @@
 
     outputEl = document.createElement('div');
     outputEl.style.cssText = 'padding:12px 16px;overflow-y:auto;flex:1;font-size:13px;line-height:1.6;color:#d4d4d8';
-    outputEl.innerHTML = '<div style="color:#52525b;font-size:12px">Ask a question, or hit \u2728 Generate to have the model write a fresh practice set on your weak topics. First use downloads the AI model (~1GB, cached).</div>';
+    outputEl.innerHTML = '<div style="color:#52525b;font-size:12px">Ask a question \u2014 answers are served from this site\u2019s own question bank, instantly and without running anything on your device. \u2728 Generate uses pre-written sets when available; the on-device AI is optional and always asks first.</div>';
     panel.appendChild(outputEl);
 
     document.body.appendChild(panel);
     wireGenerator();
 
+    function esc(s) {
+      return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+    // Answers are served straight from the site's own bank — instant, and
+    // NOTHING runs on the visitor's device. The on-device write-up stays
+    // available as an explicit opt-in below; it asks (permission card) before
+    // anything compiles or downloads.
+    function bankAnswerHTML(matches) {
+      var real = matches.filter(function (m) { return !m._stub; });
+      var stubs = matches.filter(function (m) { return m._stub; });
+      if (!real.length) {
+        var names = stubs.map(function (m) { return SUBJ_MAP[m.subj] || m.subj; }).join(', ');
+        return '<div style="color:#a1a1aa;font-size:12px">That points at practice mode(s) on this page: <b style="color:#e4e4e7">' + esc(names) +
+          '</b>. Start them from the mode cards \u2014 they write questions instantly in your browser, no AI model involved.</div>';
+      }
+      var top = real[0];
+      var h = '<div style="font-weight:700;color:#a78bfa;margin:0 0 4px;font-size:13px">Answer</div>';
+      h += '<div style="color:#34d399;margin-bottom:8px">' + esc(top.a) + '</div>';
+      if (top.s) {
+        h += '<div style="font-weight:700;color:#a78bfa;margin:10px 0 4px;font-size:13px">Why</div>';
+        h += '<div style="margin-bottom:6px">' + esc(top.s) + '</div>';
+      }
+      if (top.h) {
+        h += '<div style="font-weight:700;color:#a78bfa;margin:10px 0 4px;font-size:13px">Speed tip</div>';
+        h += '<div style="color:#a1a1aa">' + esc(top.h) + '</div>';
+      }
+      if (real.length > 1) {
+        h += '<div style="font-weight:700;color:#a78bfa;margin:12px 0 4px;font-size:13px">Also from the bank</div>';
+        real.slice(1).forEach(function (m) {
+          h += '<div style="margin-top:6px;padding:8px;background:#18181b;border-radius:8px;font-size:12px"><b>' + esc(m.q) + '</b><br><span style="color:#a1a1aa">' + esc(m.a) + '</span></div>';
+        });
+      }
+      h += '<div style="margin-top:10px;color:#52525b;font-size:10.5px">Served from this site\u2019s own bank \u2014 nothing ran on your device.</div>';
+      return h;
+    }
+    function deviceOfferHTML() {
+      return '<div style="margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.06);font-size:11px;color:#71717a">' +
+        'Want a written-up explanation? <button id="ssc-ai-opt" style="padding:4px 10px;border-radius:6px;border:1px solid rgba(167,139,250,.35);background:rgba(139,92,246,.08);color:#a78bfa;cursor:pointer;font-size:11px">\u2728 On-device AI</button> ' +
+        '<span id="ssc-ai-opt-note">(one-time ~1GB model \u00B7 only runs after you allow it)</span></div>';
+    }
+    function wireDeviceOffer(q, matches) {
+      var btn = document.getElementById('ssc-ai-opt');
+      if (!btn) return;
+      btn.onclick = function () {
+        btn.disabled = true;
+        btn.textContent = '\u2026';
+        var note = document.getElementById('ssc-ai-opt-note');
+        if (note) note.textContent = 'waiting for your permission\u2026';
+        askLLM(q, matches).then(function (raw) {
+          btn.style.display = 'none';
+          if (note) note.textContent = 'done \u2014 the engine unloads itself after a quiet minute.';
+          var box = document.createElement('div');
+          box.style.cssText = 'margin-top:10px;padding-top:8px;border-top:1px solid rgba(255,255,255,.08)';
+          box.innerHTML = '<div style="font-weight:700;color:#a78bfa;margin:0 0 4px;font-size:13px">AI write-up (on your device)</div>' + renderMD(raw);
+          outputEl.appendChild(box);
+        }).catch(function (err) {
+          if (note) note.textContent = 'not run: ' + String((err && err.message) || err).slice(0, 140);
+          btn.disabled = false;
+          btn.textContent = '\u2728 On-device AI';
+        });
+      };
+    }
     function doAsk() {
       var q = input.value.trim();
       if (!q) return;
       askBtn.disabled = true;
       askBtn.textContent = '\u2026';
-      statusEl.textContent = CORPUS.length ? 'Searching ' + CORPUS.length + ' items\u2026' : 'Composing\u2026';
+      statusEl.textContent = CORPUS.length ? 'Searching ' + CORPUS.length + ' bank items\u2026' : '';
       outputEl.innerHTML = '';
       var matches = retrieve(q, 4);
-      if (!matches.length && CORPUS.length) {
-        statusEl.textContent = '';
-        outputEl.innerHTML = '<div style="color:#f59e0b">No matching bank item. The model can still try from its general knowledge:</div>';
-        askLLM(q, []).then(function (raw) {
-          outputEl.innerHTML = renderMD(raw);
-          askBtn.disabled = false; askBtn.textContent = 'Ask';
-        }).catch(function () {
-          askBtn.disabled = false; askBtn.textContent = 'Ask';
-        });
-        return;
+      statusEl.textContent = '';
+      askBtn.disabled = false;
+      askBtn.textContent = 'Ask';
+      if (matches.length) {
+        outputEl.innerHTML = bankAnswerHTML(matches) + deviceOfferHTML();
+      } else {
+        outputEl.innerHTML = '<div style="color:#f59e0b;margin-bottom:6px">Nothing in this site\u2019s bank matches that yet. Questions written by the site\u2019s builders land here as they are published.</div>' + deviceOfferHTML();
       }
-      askLLM(q, matches).then(function (raw) {
-        statusEl.textContent = '';
-        outputEl.innerHTML = renderMD(raw);
-        askBtn.disabled = false;
-        askBtn.textContent = 'Ask';
-      }).catch(function (err) {
-        statusEl.textContent = '';
-        outputEl.innerHTML = '<div style="color:#ef4444">Model error: ' + (err && err.message || err) + '</div>' +
-          (matches.length ? '<div style="margin-top:8px;color:#a1a1aa;font-size:12px">Retrieved from bank (no LLM):</div>' +
-            matches.map(function (m) { return '<div style="margin-top:6px;padding:8px;background:#18181b;border-radius:8px;font-size:12px"><b>' + m.q + '</b><br>' + m.a + '</div>'; }).join('') : '');
-        askBtn.disabled = false;
-        askBtn.textContent = 'Ask';
-      });
+      wireDeviceOffer(q, matches);
     }
     askBtn.onclick = doAsk;
     input.addEventListener('keydown', function (e) { if (e.key === 'Enter') doAsk(); });
@@ -598,7 +649,7 @@
     }).catch(function () { return null; });
   }
   function generatePracticeLLM(subjKey, subjName, seedQs, count, status) {
-    if (status) status.textContent = 'Generating ' + count + ' new ' + subjName + ' questions\u2026 (first use downloads model ~1GB)';
+    if (status) status.textContent = 'Generating ' + count + ' new ' + subjName + ' questions\u2026 (on-device \u2014 the permission card appears first)';
     var llm = window.VlymbooqAskLLM;
     if (!llm || typeof llm.ensureEngine !== 'function') {
       return Promise.reject(new Error('LLM backend not loaded'));
@@ -743,7 +794,7 @@
         subj = g.lowScore.length ? g.lowScore[0].subj : (g.never.length ? g.never[0].subj : Object.keys(SUBJ_MAP)[0]);
       }
       genBtn.disabled = true;
-      outputEl.innerHTML = '<div style="color:#52525b;font-size:12px">Generating\u2026 the model is writing exam-style questions from the syllabus.</div>';
+      outputEl.innerHTML = '<div style="color:#52525b;font-size:12px">Getting fresh questions\u2026 (pre-written sets are served instantly; the on-device model only runs with your permission)</div>';
       generatePractice(subj, count).then(function (qs) {
         genBtn.disabled = false;
         renderPracticeSet(qs, SUBJ_MAP[subj] || subj);
@@ -751,7 +802,7 @@
         genBtn.disabled = false;
         if (statusEl) statusEl.textContent = '';
         outputEl.innerHTML = '<div style="color:#ef4444">Generation failed: ' + (err && err.message || err) + '</div>' +
-          '<div style="color:#71717a;font-size:11px;margin-top:6px">If this is the first use, the model may still be downloading (~1GB). Try again in a minute.</div>';
+          '<div style="color:#71717a;font-size:11px;margin-top:6px">Pre-written sets need no model. If you allowed the on-device AI, its first use may still be downloading (~1GB) \u2014 retry in a minute.</div>';
       });
     };
   }
@@ -798,7 +849,7 @@
     var b = document.createElement('button');
     b.id = 'ssc-tutor-toggle';
     b.innerHTML = '\uD83E\uDDE0 Tutor';
-    b.title = 'AI tutor \u2014 ask any ' + PAGE_NAME + ' concept, generate practice sets';
+    b.title = 'Tutor \u2014 ask any ' + PAGE_NAME + ' concept (answers from the site\u2019s own bank)';
     b.style.cssText = [
       'position:fixed', 'bottom:20px', 'right:20px', 'width:auto', 'padding:10px 16px',
       'border-radius:100px', 'border:none', 'background:#8b5cf6', 'color:#fff',
