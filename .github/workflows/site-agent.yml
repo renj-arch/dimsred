@@ -58,6 +58,9 @@ jobs:
           # runs in question-quality.yml which checks out questions only.
           sparse-checkout: |
             scripts
+            js
+            /*.html
+            figures
             .github/workflows
             data/faults.json
             data/browser-test.json
@@ -73,7 +76,10 @@ jobs:
             data/mains-questions.json
             data/mains-updates.json
             data/mains-fresh.json
-            figures
+            data/inventions.json
+            data/mock-fresh.json
+            data/ssc-je-qfig.json
+            data/exam-patterns.json
           sparse-checkout-cone-mode: false
           token: ${{ secrets.PAT }}
 
@@ -222,7 +228,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/practice-sets/ data/topic-layers.json data/mains-fresh.json data/mains-updates.json 2>/dev/null || true
+          git add data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/practice-sets/ data/topic-layers.json data/mains-fresh.json data/mains-updates.json data/inventions.json data/mock-fresh.json data/ssc-je-qfig.json data/exam-patterns.json scripts/learned-fixes.js 2>/dev/null || true
           git add figures/ 2>/dev/null || true
           git add -- *.html prototype-*.html 2>/dev/null || true
           git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add 2>/dev/null || true

@@ -142,7 +142,13 @@ var entityDir = new qb.EntityDir().load(
 var outline = [
   ['1. Threats', 'piracy', []],
   ['2. Islands', 'Andaman and Nicobar Islands', []],
-  ['3. Absent', 'SAGAR', []]
+  // The third term is deliberately synthetic, and that is a lesson from this
+  // very fixture: it used to be 'SAGAR' until the entity table was rebuilt and
+  // turned out to hold a real entity "sagar" (the city, id 68). The absent
+  // case then silently became an unquoted one while the test kept asserting
+  // the wrong path. A term that cannot become a corpus entity keeps this
+  // testing what it claims to.
+  ['3. Absent', 'zxq placeholder', []]
 ];
 var result = EE.retrieve(rows, 'test question', outline, entityDir, {});
 var composed = C.compose('test question', outline, result, {});
@@ -284,14 +290,35 @@ console.log('');
 console.log('=== honesty regression: the SAGAR trap ===');
 // The token-scorer accepted "The waterfalls are in the Sagar taluk of the
 // Shivamogga district" as support for a SAGAR heading. Entity-anchored
-// resolution must reject it, because no entity is named "sagar".
+// resolution must reject it: the sentence belongs to "Sagar taluk".
 var trap = EE.retrieve(
   [['Sagar taluk', ['The waterfalls are in the Sagar taluk of the Shivamogga district.'],
     ['Cat 1'], [{ source: 'Wiki', pubDate: '2026-01-01' }]]],
   'test', [['Regional influence', 'SAGAR', []]], entityDir, {});
 ok(trap.points[0].supported === false,
   'SAGAR is NOT supported by the Sagar taluk sentence');
-ok(trap.absent === 1, 'SAGAR is reported as absent from the corpus', 'got absent=' + trap.absent);
+// The classification moved, and the move is the honest one. The entity table
+// was rebuilt and now holds a real entity "sagar" (the city, id 68), so this
+// term is no longer a name the corpus lacks — it is an entity whose rows were
+// not loaded into this slice, which is 'unquoted': never support, never
+// 'absent'. Asserting 'absent' here would repeat, in reverse, the exact
+// confusion this section exists to catch.
+ok(trap.unquoted.length === 1, 'SAGAR reads as unquoted, not absent', 'absent=' + trap.absent);
+ok(trap.absent === 0, 'and the corpus is not accused of lacking it', 'absent=' + trap.absent);
+
+// The absent case needs the El Nino shape: a term that IS in the text but in
+// no entity name at all. A synthetic term keeps it that shape forever — any
+// real-world name can be added to the table by the next rebuild, which is how
+// this fixture's previous term stopped testing what it said.
+var absentTrap = EE.retrieve(
+  [['Pelagic thresher', ['The zxq warming pattern alters monsoon rainfall.'],
+    ['Cat 2'], [{ source: 'Wiki', pubDate: '2026-01-02' }]]],
+  'test', [['Monsoon', 'zxq warming pattern', []]], entityDir, {});
+ok(absentTrap.points[0].supported === false,
+  'a text-present term with no entity is not supported');
+ok(absentTrap.absent === 1,
+  'and is reported absent from the entity table, not unquoted',
+  'absent=' + absentTrap.absent + ' unquoted=' + absentTrap.unquoted.length);
 
 console.log('');
 console.log('=== honesty regression: unquoted is not absent ===');
