@@ -229,6 +229,28 @@ async function testPage(browser, url, pageName, file) {
       }
     } catch (e) { /* mental flow optional */ }
 
+    // Mains: the in-browser AI generator must exist and react to a click.
+    // CI has no WebGPU, so the honest reaction there is the unsupported
+    // notice (set at boot, button disabled); on a GPU machine the click
+    // flips the status into engine progress. Either way, a silent button is
+    // the dead-control class of bug and gets logged.
+    try {
+      const gen = await page.$('#genAI');
+      if (gen && await gen.isVisible().catch(() => false)) {
+        const readStat = () => page.$eval('#genStat', n => String(n.textContent || '').trim()).catch(() => '');
+        const before = await readStat();
+        await gen.click({ timeout: 3000 }).catch(() => {});
+        await page.waitForTimeout(1500);
+        const after = await readStat();
+        const disabled = await gen.isDisabled().catch(() => false);
+        if (after && (after !== before || disabled)) {
+          log(pageName, 'ai-ok', 'in-browser AI control reacted: ' + after.substring(0, 100));
+        } else {
+          log(pageName, 'ai-inert', 'genStat unchanged after click: ' + (before || '(empty)').substring(0, 100));
+        }
+      }
+    } catch (e) { /* mains AI optional */ }
+
     // Test every link
     const links = await page.$$eval('a[href]', els =>
       els.map(e => ({ href: e.getAttribute('href'), text: e.textContent.trim().substring(0, 50) }))

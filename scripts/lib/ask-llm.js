@@ -137,8 +137,20 @@ function modelId() { return MODELS[currentModelKey()].id; }
 // module -- the CDN copy is the same file byte for byte (hash-verified by the
 // generator) -- and the raw npm path is used rather than a CDN transform like
 // esm.run, whose rewritten bundle failed to resolve this model id.
+//
+// Two live bugs fixed here (2026-10-18, verified against the live site and
+// with WebGPU hardware):
+// 1. A bare relative specifier in a CLASSIC script resolves against the
+//    script's own directory (scripts/lib/), so import(VENDOR_URL) actually
+//    requested scripts/lib/scripts/vendor/webllm/index.min.js -- a 404 for
+//    every WebGPU visitor since the vendoring landed. loadLibrary() now
+//    resolves the file from this script tag's own src instead.
+// 2. The CDN mirror named the npm package @web-llm, which answers HTTP 400;
+//    the real package is @mlc-ai/web-llm (the same name the generator
+//    downloads from). With both routes dead, every engine start ended at
+//    "The writing model library could not be loaded".
 var VENDOR_URL = 'scripts/vendor/webllm/index.min.js';
-var CDN_URL = 'https://cdn.jsdelivr.net/npm/@web-llm@' + WEBLLM_LIB_VERSION + '/lib/index.min.js';
+var CDN_URL = 'https://cdn.jsdelivr.net/npm/@mlc-ai/web-llm@' + WEBLLM_LIB_VERSION + '/lib/index.min.js';
 
 var engine = null;
 var engineKey = null;
@@ -234,7 +246,15 @@ function loadLibrary() {
   if (typeof window !== 'undefined' && window.webllm) {
     return Promise.resolve(window.webllm);
   }
-  return import(VENDOR_URL).catch(function () {
+  // Resolve the vendored file from THIS script tag's own src (see the note
+  // at VENDOR_URL): script-relative, depth-proof, correct for any page path.
+  var vendor = VENDOR_URL;
+  try {
+    var tag = document.querySelector('script[src$="lib/ask-llm.js"]');
+    if (tag && tag.src) vendor = new URL('../vendor/webllm/index.min.js', tag.src).href;
+    else if (document.baseURI) vendor = new URL(VENDOR_URL, document.baseURI).href;
+  } catch (e) { /* keep the bare specifier as a last resort */ }
+  return import(vendor).catch(function () {
     return import(CDN_URL);
   }).catch(function () {
     throw new Error(
