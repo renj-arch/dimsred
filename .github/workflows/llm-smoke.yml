@@ -1,5 +1,12 @@
 name: LLM Smoke Test
 
+# The run title shows the model tag — with several smokes in flight, the
+# plain "LLM Smoke Test" titles made runs indistinguishable (2026-10-18).
+# NOTE: this concurrency group keeps only ONE pending run — a newer dispatch
+# CANCELS an older pending one (it is NOT queued behind it). Never fire two
+# smokes back to back; wait for the pending one to go active first.
+run-name: 'LLM Smoke: ${{ inputs.model }}'
+
 # Dispatch-only verdict on the local-LLM layer: install Ollama, pull the
 # requested model (input "model"; default is the FAST tier qwen3:4b — the
 # fleet default; pass qwen3.5:9b to smoke the heavy tier), run ONE call
