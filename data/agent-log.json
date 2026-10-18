@@ -1,39 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-16T19:57:00.179Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      },
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      },
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-16T22:49:47.939Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 3,
@@ -435,8 +402,102 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-18T15:30:09.285Z",
+   "model": "qwen3:4b",
+   "totalFixes": 23,
+   "byAgent": [
+    {
+     "agent": "flowcharts",
+     "count": 0
+    },
+    {
+     "agent": "mindmaps",
+     "count": 0
+    },
+    {
+     "agent": "features",
+     "count": 0
+    },
+    {
+     "agent": "proposals",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 23
+    },
+    {
+     "agent": "selfcheck",
+     "count": 0
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 0
+    },
+    {
+     "agent": "a11y",
+     "count": 0
+    },
+    {
+     "agent": "code",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/ask-audit.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/browser-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-lectures.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/daily-globe-fill.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-papers.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-pib-feed.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/expand-course.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/fault-status.yml",
+       "fix": "Added memory limit to node steps"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-18T14:21:24.398Z",
- "model": "qwen3.5:9b"
+ "lastRun": "2026-10-18T15:30:09.285Z",
+ "model": "qwen3:4b"
 }
