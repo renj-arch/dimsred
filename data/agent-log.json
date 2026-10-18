@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-17T15:30:39.558Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-10-17T18:28:26.937Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 1,
@@ -411,8 +399,50 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-10-18T21:14:43.851Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 245121 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 3 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-18T20:38:37.292Z",
+ "lastRun": "2026-10-18T21:14:43.851Z",
  "model": "qwen3.5:9b"
 }
