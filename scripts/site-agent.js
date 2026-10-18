@@ -3084,6 +3084,113 @@ async function agentExamPatterns() {
   return { agent: 'exampatterns', fixes: fixes };
 }
 
+// ── AGENT: Invention — the site invents a new tool for itself ──
+// Once per qualifying run this agent CONCEIVES a new interactive study tool
+// (never a text page, never a fix), writes its code, and ships it only after
+// automated verification. The inventory of existing features is fed in so it
+// invents something genuinely new; the registry (data/inventions.json) is
+// surfaced live on lab.html, so every shipped invention is visible to users.
+// Nothing ships on failure — the idea waits, with the reason logged.
+const INVENTIONS = 'data/inventions.json';
+// ── invention-gate (pure; test harness extracts this block) ──
+const INVENTION_BANNED = /(fetch\s*\(|XMLHttpRequest|WebSocket|EventSource|\beval\s*\(|new\s+Function|import\s*\(|localStorage|sessionStorage|document\.cookie|window\.open|https?:\/\/)/;
+function buildInventionPage(d) {
+  const reject = (why) => ({ ok: false, reason: why });
+  if (!d || typeof d !== 'object') return reject('no payload');
+  const title = String(d.title || '').trim();
+  const slug = String(d.slug || '').trim().toLowerCase();
+  const concept = String(d.concept || '').trim();
+  const why = String(d.why || '').trim();
+  const body = String(d.body_html || '').trim();
+  const script = String(d.script || '').trim();
+  if (title.length < 8 || title.length > 90) return reject('title length');
+  if (!/^[a-z0-9]+(-[a-z0-9]+)*$/.test(slug) || slug.length < 4 || slug.length > 40) return reject('slug shape');
+  if (concept.length < 40 || concept.length > 600) return reject('concept length');
+  if (why.length < 10 || why.length > 300) return reject('why length');
+  if (body.length < 200 || body.length > 10000) return reject('body length');
+  if (script.length < 200 || script.length > 9000) return reject('script length');
+  const joined = body + '\n' + script;
+  if (/<\s*\/?\s*(script|style|html|head|body)\b/i.test(joined)) return reject('markup breakout');
+  if (/<(iframe|object|embed|link)\b/i.test(joined)) return reject('external/embedding tag');
+  if (/href\s*=\s*["']#/i.test(joined)) return reject('href="#" present');
+  if (INVENTION_BANNED.test(joined)) return reject('banned API or external URL');
+  if (!/(addEventListener|onclick|oninput|onchange)/.test(script)) return reject('no interaction loop');
+  try { new Function(script); } catch (e) { return reject('script syntax: ' + String(e.message).slice(0, 120)); }
+  const descAttr = esc(concept.slice(0, 150)).replace(/"/g, '&quot;');
+  const html = '<!DOCTYPE html>\n<html lang="en">\n<head>\n<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">\n<title>' + esc(title) + ' \u2014 invented by the site agent</title>\n<meta name="description" content="' + descAttr + '">\n<style>body{background:#0a0a0a;color:#e5e5e5;font-family:system-ui,-apple-system,sans-serif;padding:20px;max-width:920px;margin:0 auto;line-height:1.55}h1{font-size:22px;margin:0 0 4px}.crumb{color:#71717a;font-size:12px;margin-bottom:16px}.crumb a{color:#60a5fa;text-decoration:none}.lead{color:#a1a1aa;font-size:13px;margin:0 0 18px}button{font-family:inherit;background:#1a1a2e;color:#e5e5e5;border:1px solid #3b82f6;border-radius:8px;padding:8px 14px;font-size:13.5px;cursor:pointer;font-weight:600}button:hover{border-color:#60a5fa;color:#fff}input,select{font-family:inherit;background:#111;color:#e5e5e5;border:1px solid #333;border-radius:8px;padding:7px 10px;font-size:13.5px}table{border-collapse:collapse}td,th{padding:6px 10px;border-bottom:1px solid #27272a;font-size:13.5px}</style>\n</head>\n<body>\n<div class="crumb"><a href="lab.html">Invention Lab</a> / ' + esc(title) + '</div>\n<h1>' + esc(title) + '</h1>\n<div class="lead">' + esc(concept) + '</div>\n' + body + '\n<script>\n' + script + '\n</script>\n<div style="margin-top:26px;font-size:11.5px;color:#52525b">Invented and built by the site agent on ' + new Date().toISOString().slice(0, 10) + '. No human asked for this.</div>\n</body>\n</html>';
+  return { ok: true, slug: slug, title: title, concept: concept, why: why, html: html };
+}
+// ── /invention-gate ──
+function inventionInventory() {
+  const pages = listPages().filter(p => p.endsWith('.html')).slice(0, 70);
+  const inv = loadJson(INVENTIONS, { items: [] });
+  const titles = ((inv && inv.items) || []).map(x => x && x.title).filter(Boolean);
+  return { pages: pages.join(', '), titles: titles.join(' | ') || '(none yet)' };
+}
+async function agentInvention() {
+  const fixes = [];
+  let reg = loadJson(INVENTIONS, null);
+  if (!reg || typeof reg !== 'object') reg = {};
+  if (!reg.meta || typeof reg.meta !== 'object') reg.meta = {};
+  if (!Array.isArray(reg.items)) reg.items = [];
+  const inv = inventionInventory();
+  const existing = new Set(listPages());
+  reg.items.forEach(x => { if (x && x.slug) existing.add(x.slug + '.html'); });
+
+  const r = await callLLM(
+    'You invent interactive study tools for Indian engineering-exam aspirants (SSC JE / RRB JE, mechanical). Invent ONE genuinely NEW tool — never a static text page, never a copy of an existing feature. It must be a single self-contained page: interactive (input, choices, generated practice, scoring or visualisation), usable offline, no network, no storage, no external assets, no eval. Think: practice generators for a single tricky unit, calculators that drill you afterwards, visualisers (SFD/BMD, gear trains, cycles), formula trainers, small timed sprints.',
+    'EXISTING SITE FEATURES (do not duplicate or rephrase): timed mock tests with negative marking; subject-wise reveal-style practice quiz with bookmarks and history; AI exam tutor; practice-set generator; mains exams section; mental math arena; figures/visual packs; comparison/revision/mnemonic pages; wiki; lessons.\n' +
+    'ALREADY-INVENTED TOOLS (do not repeat): ' + inv.titles + '\n' +
+    'EXISTING PAGES (slug must not collide): ' + inv.pages + '\n\n' +
+    'Reply STRICT JSON only: {"title":"<=90 chars","slug":"kebab-case-unique","concept":"2-3 sentences: the new idea and the study gap it fills","why":"one sentence: the value it adds","body_html":"inner HTML of the tool (controls + output areas; classes are fine; no <script>)","script":"JavaScript for the tool: wire handlers with addEventListener to ids/classes present in body_html; fully self-contained; <=9000 chars"}',
+    3200, 'high'
+  );
+  if (r && r.text) {
+    try {
+      const txt = String(r.text).replace(/```[a-z]*|```/gi, '').trim();
+      const d = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+      const built = buildInventionPage(d);
+      if (!built.ok) {
+        reg.meta.lastAttempt = { at: new Date().toISOString(), reason: built.reason };
+        console.log('agent: Invention — rejected (' + built.reason + ')');
+      } else if (existing.has(built.slug + '.html') || fs.existsSync(built.slug + '.html')) {
+        reg.meta.lastAttempt = { at: new Date().toISOString(), reason: 'slug already exists: ' + built.slug };
+        console.log('agent: Invention — rejected (slug exists)');
+      } else {
+        // Final gate: the script must also pass the same standalone syntax
+        // check the CI deploy stack uses.
+        const tmp = 'scripts/.invention-check.js';
+        let syntaxOk = true;
+        try {
+          fs.writeFileSync(tmp, String(d.script));
+          execSync('node --check ' + tmp, { stdio: 'pipe' });
+        } catch (e) { syntaxOk = false; }
+        try { fs.unlinkSync(tmp); } catch (e2) { /* ignore */ }
+        if (!syntaxOk) {
+          reg.meta.lastAttempt = { at: new Date().toISOString(), reason: 'node --check failed' };
+          console.log('agent: Invention — rejected (node --check)');
+        } else {
+          fs.writeFileSync(built.slug + '.html', built.html);
+          reg.items.push({ slug: built.slug, title: built.title, concept: built.concept, why: built.why, at: new Date().toISOString().slice(0, 10), model: r.model || '' });
+          if (reg.items.length > 60) reg.items = reg.items.slice(-60);
+          reg.meta.count = reg.items.length;
+          reg.meta.updatedAt = new Date().toISOString();
+          reg.meta.lastAttempt = { at: new Date().toISOString(), reason: 'shipped' };
+          fixes.push({ page: built.slug + '.html', kind: 'invention', fix: 'INVENTED + shipped: ' + built.title + ' — ' + built.concept.slice(0, 140), model: r.model || '' });
+          console.log('agent: Invention — shipped ' + built.slug + '.html :: ' + built.title);
+        }
+      }
+    } catch (e) {
+      reg.meta.lastAttempt = { at: new Date().toISOString(), reason: 'unparseable output' };
+      console.log('agent: Invention — unparseable model output');
+    }
+  } else {
+    reg.meta.lastAttempt = { at: new Date().toISOString(), reason: 'model returned nothing' };
+  }
+  saveJson(INVENTIONS, reg);
+  return { agent: 'invention', fixes: fixes };
+}
+
 // ── AGENT: GraphNotes — proper relationship explanations on flowchart cards ──
 // Clicking Gandhi showed generic (sometimes wrong-entity) descriptions and
 // "mentioned with" everywhere, plus junk cards (TV sitcoms, absurd spans).
@@ -3625,6 +3732,7 @@ async function main() {
     ['BankFigures', agentBankFigures],
     ['MockPapers', agentMockPapers],
     ['ExamPatterns', agentExamPatterns],
+    ['Invention', agentInvention],
     ['GraphNotes', agentGraphNotes],
     ['MetaLearn', agentMetaLearn]
   ];

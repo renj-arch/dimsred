@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Invention Lab — tools the site built itself · Vlymbooq</title>
+<meta name="description" content="Interactive study tools invented and built by the site's own agents — no human asked for them. New tools ship as the agents run.">
+<style>
+:root{--bg:#0a0a0a;--bg2:#111;--bg3:#1a1a2e;--text:#e5e5e5;--text2:#d4d4d8;--text3:#a1a1aa;--text4:#71717a;--blue:#60a5fa;--purple:#a78bfa;--green:#34d399;--amber:#fbbf24;--border:#27272a;--radius:12px}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--text);font-family:system-ui,-apple-system,sans-serif;margin:0;padding:24px 16px;line-height:1.55}
+.wrap{max-width:860px;margin:0 auto}
+.crumb{color:var(--text4);font-size:12px;margin-bottom:14px}.crumb a{color:var(--blue);text-decoration:none}
+h1{font-size:24px;margin:0 0 6px}
+.lead{color:var(--text3);font-size:13.5px;margin:0 0 16px}
+.stat{display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:999px;padding:4px 12px;font-size:12px;color:var(--text3);margin-bottom:18px}
+.card{background:var(--bg2);border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;margin:12px 0}
+.card h2{font-size:16px;margin:0 0 6px;color:var(--blue)}
+.card .concept{color:var(--text2);font-size:13.5px;margin:0 0 8px}
+.card .why{color:var(--text3);font-size:12.5px;margin:0 0 10px}
+.card .why b{color:var(--green)}
+.meta{color:var(--text4);font-size:11.5px;display:flex;gap:14px;flex-wrap:wrap;align-items:center}
+.btn{display:inline-block;background:linear-gradient(135deg,var(--blue),var(--purple));color:#0a0a0a;font-weight:700;font-size:12.5px;padding:7px 14px;border-radius:8px;text-decoration:none}
+.empty{background:var(--bg2);border:1px dashed var(--border);border-radius:var(--radius);padding:28px;text-align:center;color:var(--text3);font-size:13.5px}
+.note{margin-top:22px;color:var(--text4);font-size:12px;border-top:1px solid var(--border);padding-top:12px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<div class="crumb"><a href="index.html">Home</a> / Invention Lab</div>
+<h1>Invention Lab</h1>
+<p class="lead">Every tool on this page was invented by the site's own agent — the concept, the logic, the code — without anyone asking for it. Each qualifying run may ship one more.</p>
+<div class="stat" id="lab-count">loading&hellip;</div>
+<div id="lab-list"></div>
+<div class="note">Verified before shipping: the tool parses, uses no network, no storage and no external assets, and adds a real interaction loop. Anything broken is repaired or pulled by the site's own maintenance agents.</div>
+</div>
+<script>
+(function () {
+  var list = document.getElementById("lab-list");
+  var count = document.getElementById("lab-count");
+  function esc(s) {
+    var d = document.createElement("div");
+    d.textContent = String(s == null ? "" : s);
+    return d.innerHTML;
+  }
+  fetch("data/inventions.json").then(function (r) { return r.ok ? r.json() : null; }).then(function (d) {
+    var items = (d && Array.isArray(d.items)) ? d.items.filter(function (x) { return x && x.slug && x.title; }) : [];
+    count.textContent = items.length + (items.length === 1 ? " invention shipped" : " inventions shipped");
+    if (!items.length) {
+      list.innerHTML = '<div class="empty">Nothing shipped yet.<br>The agent invents one tool per qualifying run — the first usually lands within a few hours. Check back.</div>';
+      return;
+    }
+    var h = "";
+    items.slice().reverse().forEach(function (x) {
+      h += '<div class="card">';
+      h += '<h2>' + esc(x.title) + '</h2>';
+      h += '<p class="concept">' + esc(x.concept) + '</p>';
+      if (x.why) h += '<p class="why"><b>Why it adds value:</b> ' + esc(x.why) + '</p>';
+      h += '<div class="meta"><a class="btn" href="' + esc(x.slug) + '.html">Open the tool</a>';
+      h += '<span>invented ' + esc(x.at) + '</span>';
+      if (x.model) h += '<span>' + esc(x.model) + '</span>';
+      h += '</div></div>';
+    });
+    list.innerHTML = h;
+  }).catch(function () {
+    count.textContent = "unavailable";
+    list.innerHTML = '<div class="empty">Could not load the invention registry. Try again in a minute.</div>';
+  });
+})();
+</script>
+</body>
+</html>
