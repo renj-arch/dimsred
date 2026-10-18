@@ -3261,7 +3261,7 @@ async function agentMainsFresh() {
     '"keywords":["term"],"laws":["law, case or scheme, only if certain"]}. ' +
     'Constraints: "paper" is one of gs1,gs2,gs3,gs4,essay; marks 10, 15 or 20 for GS papers, 125 or 250 only for the essay; ' +
     '4 to 6 objects in "answer"; 3 to 5 strings each in marksGuide and pitfalls; 5 to 8 keywords; "laws" may be []. ' +
-    'Keep every "p" paragraph to 2-4 sentences. Never invent a scheme, case, article or statistic: name a reform only when certain of it, with its year; ' +
+    'Keep every "p" paragraph to 2-3 sentences and under 600 characters (the reply has a strict token budget — longer text gets cut off and the item is rejected). Never invent a scheme, case, article or statistic: name a reform only when certain of it, with its year; ' +
     'a verified older example beats an uncertain new one. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral. ' +
     'Do not reason step by step; reply with ONLY the JSON object.';
   const avoid = Array.from(sigs).slice(0, 60).map((s, i) => (i + 1) + '. ' + s).join('\n');
@@ -3269,48 +3269,76 @@ async function agentMainsFresh() {
     'and never repeating any question below (already covered).\n\nALREADY COVERED (do not repeat, do not reword):\n' + (avoid || '(none)');
 
   let r = null;
-  try { r = await callLLM(sys, user, 2600); }
+  try { r = await callLLM(sys, user, 3400); }
   catch (e) { console.log('agent: MainsFresh — call failed: ' + String(e.message || e).slice(0, 160)); }
 
   let reason = 'no model output';
   let shipped = null;
+  // The first ever refill failed with 'unparseable output' and left the pool
+  // empty: 2600 output tokens cut the JSON off mid-object because a full item
+  // (question + 4-6 answer paragraphs) can run past that. Fix: a real budget
+  // (3400), bounded paragraphs in the prompt, and one stricter retry when the
+  // reply is cut off or a paragraph overshoots — all other failures (bad
+  // paper, duplicates) are not worth a second call.
+  function parseMainsItem(text) {
+    const t = String(text)
+      .replace(/<think(?:ing)?>[\s\S]*?<\/think(?:ing)?>/gi, ' ')
+      .replace(/```[a-z]*|```/gi, '').trim();
+    return JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1));
+  }
+  function validateMainsItem(obj) {
+    const bad = mainsItemOk(obj);
+    if (bad) { reason = 'validation: ' + bad; return false; }
+    const nq = mainsNorm(obj && obj.question);
+    if (known.has(nq) || sigs.has(nq.slice(0, 80))) { reason = 'duplicate question'; return false; }
+    return true;
+  }
+  function shipMainsItem(obj, model) {
+    const item = {
+      id: 'ci-' + Date.now().toString(36),
+      at: new Date().toISOString().slice(0, 10),
+      paper: String(obj.paper),
+      topic: String(obj.topic || 'AI practice').slice(0, 160),
+      marks: Number(obj.marks),
+      difficulty: String(obj.difficulty),
+      years: [],
+      question: String(obj.question).trim(),
+      answer: obj.answer.filter(s => s && (s.h || s.p)).slice(0, 6)
+        .map(s => ({ h: String(s.h || 'Section').slice(0, 120), p: String(s.p || '').slice(0, 1400) })),
+      marksGuide: obj.marksGuide.filter(Boolean).map(String).slice(0, 6),
+      pitfalls: obj.pitfalls.filter(Boolean).map(String).slice(0, 6),
+      laws: (obj.laws || []).filter(Boolean).map(String).slice(0, 8),
+      keywords: obj.keywords.filter(Boolean).map(String).slice(0, 8),
+      origin: 'ci',
+      ai: 1,
+      model: model || ''
+    };
+    pool.items.push(item);
+    if (pool.items.length > MAINS_FRESH_CAP) pool.items = pool.items.slice(-MAINS_FRESH_CAP);
+    shipped = item;
+    fixes.push({ page: MAINS_FRESH, kind: 'mainsfresh', fix: 'Shipped practice question ' + item.id + ' (' + item.paper + ', ' + item.marks + ' marks): ' + item.question.slice(0, 120), model: model || '' });
+  }
+  let got = null;
   if (r && r.text) {
     try {
-      const t = String(r.text)
-        .replace(/<think(?:ing)?>[\s\S]*?<\/think(?:ing)?>/gi, ' ')
-        .replace(/```[a-z]*|```/gi, '').trim();
-      const obj = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1));
-      const bad = mainsItemOk(obj);
-      const nq = mainsNorm(obj && obj.question);
-      if (bad) reason = 'validation: ' + bad;
-      else if (known.has(nq) || sigs.has(nq.slice(0, 80))) reason = 'duplicate question';
-      else {
-        const item = {
-          id: 'ci-' + Date.now().toString(36),
-          at: new Date().toISOString().slice(0, 10),
-          paper: String(obj.paper),
-          topic: String(obj.topic || 'AI practice').slice(0, 160),
-          marks: Number(obj.marks),
-          difficulty: String(obj.difficulty),
-          years: [],
-          question: String(obj.question).trim(),
-          answer: obj.answer.filter(s => s && (s.h || s.p)).slice(0, 6)
-            .map(s => ({ h: String(s.h || 'Section').slice(0, 120), p: String(s.p || '').slice(0, 1400) })),
-          marksGuide: obj.marksGuide.filter(Boolean).map(String).slice(0, 6),
-          pitfalls: obj.pitfalls.filter(Boolean).map(String).slice(0, 6),
-          laws: (obj.laws || []).filter(Boolean).map(String).slice(0, 8),
-          keywords: obj.keywords.filter(Boolean).map(String).slice(0, 8),
-          origin: 'ci',
-          ai: 1,
-          model: r.model || ''
-        };
-        pool.items.push(item);
-        if (pool.items.length > MAINS_FRESH_CAP) pool.items = pool.items.slice(-MAINS_FRESH_CAP);
-        shipped = item;
-        fixes.push({ page: MAINS_FRESH, kind: 'mainsfresh', fix: 'Shipped practice question ' + item.id + ' (' + item.paper + ', ' + item.marks + ' marks): ' + item.question.slice(0, 120), model: r.model || '' });
-      }
+      const obj = parseMainsItem(r.text);
+      if (validateMainsItem(obj)) got = { obj: obj, model: r.model || '' };
     } catch (e) { reason = 'unparseable output'; }
   }
+  if (!got && (reason === 'unparseable output' || /validation: (section paragraph|question length)/.test(reason))) {
+    console.log('agent: MainsFresh — retrying after: ' + reason);
+    let r2 = null;
+    try {
+      r2 = await callLLM(sys + ' IMPORTANT: the previous reply was cut off or invalid. Reply with ONLY the JSON object. Keep each "p" paragraph to 2-3 sentences and under 600 characters.', user, 3400);
+    } catch (e) { console.log('agent: MainsFresh — retry call failed: ' + String(e.message || e).slice(0, 160)); }
+    if (r2 && r2.text) {
+      try {
+        const obj2 = parseMainsItem(r2.text);
+        if (validateMainsItem(obj2)) got = { obj: obj2, model: r2.model || '' };
+      } catch (e) { reason = 'unparseable output (retry)'; }
+    }
+  }
+  if (got) shipMainsItem(got.obj, got.model);
   pool.meta.about = "Frozen AI practice questions for the mains page button. Written by the site's own model " +
     "(scripts/site-agent.js, agent MainsFresh) on the GitHub build runners, in its own words. Unreviewed practice " +
     'material, badged on the page, and kept out of the hand-authored bank in data/mains-questions.json.';

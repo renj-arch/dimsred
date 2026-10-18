@@ -67,19 +67,29 @@ jobs:
           INPUTS='{"ref":"main"}'
           MAINS=$(curl -sf "https://raw.githubusercontent.com/$REPO/main/data/mains-fresh.json" || true)
           LAST=$(echo "$MAINS" | jq -r '.meta.lastAttempt.at // ""' 2>/dev/null || true)
+          LREASON=$(echo "$MAINS" | jq -r '.meta.lastAttempt.reason // ""' 2>/dev/null || true)
           COUNT=$(echo "$MAINS" | jq -r '.items | length' 2>/dev/null || true)
           [ -n "$COUNT" ] || COUNT=0
           AGE_OK=0
           if [ -n "$LAST" ] && [ "$LAST" != "null" ]; then
             NOW=$(date -u +%s)
             THEN=$(date -u -d "$LAST" +%s 2>/dev/null || echo 0)
-            if [ "$THEN" -gt 0 ] && [ $((NOW - THEN)) -lt 72000 ]; then AGE_OK=1; fi
+            if [ "$THEN" -gt 0 ] && [ $((NOW - THEN)) -lt 72000 ]; then
+              # A shipped attempt throttles the refill for 20h. A FAILED one
+              # (unparseable, validation, no output) only counts as fresh for
+              # 90 minutes: the first ever refill failed with 'unparseable
+              # output' and still froze the pool until the next day — a failed
+              # attempt must not lock the refill out.
+              if echo "$LREASON" | grep -q '^shipped'; then AGE_OK=1
+              elif [ $((NOW - THEN)) -lt 5400 ]; then AGE_OK=1
+              fi
+            fi
           fi
           if [ "$AGE_OK" = "0" ]; then
             INPUTS='{"ref":"main","inputs":{"agent_only":"mainsfresh","model":"qwen3.5:9b"}}'
-            echo "mains-fresh: lastAttempt='$LAST' pool=$COUNT — dispatching MainsFresh refill (qwen3.5:9b)"
+            echo "mains-fresh: lastAttempt='$LAST' ($LREASON) pool=$COUNT — dispatching MainsFresh refill (qwen3.5:9b)"
           else
-            echo "mains-fresh: lastAttempt='$LAST' pool=$COUNT — fresh; normal fast dispatch"
+            echo "mains-fresh: lastAttempt='$LAST' ($LREASON) pool=$COUNT — fresh; normal fast dispatch"
           fi
           CODE=$(curl -s -o /tmp/resp.json -w '%{http_code}' -X POST \
             -H "Authorization: token $GH_TOKEN" \
