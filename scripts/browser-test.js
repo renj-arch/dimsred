@@ -111,6 +111,19 @@ async function testPage(browser, url, pageName, file) {
     pageResult.loadTime = Date.now() - start;
     pageResult.status = resp ? resp.status() : 0;
 
+    // Kill the first-visit weekly-goal modal BEFORE its 3 s timer fires: it
+    // covers every control until a goal is picked and was intercepting the
+    // agent's own taps (Mental's flow read "skipped" while real clicks were
+    // being swallowed). A fresh CI profile stores no goal, so pre-seed one;
+    // showGoalPrompt() re-reads storage at fire time and skips the overlay.
+    await page.evaluate(() => {
+      try {
+        if (!localStorage.getItem('studypro_goals')) {
+          localStorage.setItem('studypro_goals', JSON.stringify({ papersPerWeek: 1, dismissed: true }));
+        }
+      } catch (e) { /* storage blocked: showGoalPrompt self-guards */ }
+    }).catch(() => {});
+
     if (pageResult.status >= 400) {
       log(pageName, 'http-error', 'HTTP ' + pageResult.status);
     }
@@ -180,6 +193,41 @@ async function testPage(browser, url, pageName, file) {
         log(pageName, 'flow-skipped', 'no visible Next button — quiz flow not exercised on this load');
       }
     } catch (e) { /* quiz flow optional per page */ }
+
+    // Mental trainer: its arena has no #nextBtn — the Next control is
+    // [onclick="nextQuestion()"]. Exercise the real tap path (mode card →
+    // technique flash → answer → Next) so this page gets flow coverage too;
+    // the dead-Next class of bug must be caught by the agent, not a user.
+    try {
+      const skip = await page.$('#goalSkip');
+      if (skip && await skip.isVisible().catch(() => false)) { await skip.click({ timeout: 2000 }).catch(() => {}); await page.waitForTimeout(300); }
+      const mentalCard = await page.$('.mode-card[onclick*="startTraining"]');
+      if (mentalCard && await mentalCard.isVisible().catch(() => false)) {
+        await mentalCard.click({ timeout: 3000 }).catch(() => {});
+        await page.waitForTimeout(1300);
+        const flash = await page.$('#techFlash button, #techFlash .action-btn');
+        if (flash && await flash.isVisible().catch(() => false)) { await flash.click({ timeout: 3000 }).catch(() => {}); await page.waitForTimeout(900); }
+        let advanced = 0;
+        for (let step = 0; step < 3; step++) {
+          const opts = await page.$$('.opt-btn:not(.disabled)');
+          if (!opts.length) break;
+          await opts[0].click({ timeout: 3000 }).catch(() => {});
+          await page.waitForTimeout(900);
+          const nx = await page.$('[onclick="nextQuestion()"]');
+          if (!nx || !(await nx.isVisible().catch(() => false))) break;
+          await nx.click({ timeout: 3000 }).catch(() => {});
+          await page.waitForTimeout(1100);
+          advanced++;
+        }
+        if (advanced > 0) {
+          log(pageName, 'flow-ok', 'mental arena: answered + Next advanced through ' + advanced + ' question(s)');
+        } else {
+          const q = await page.$('#qText');
+          const qt = q ? String(await q.textContent().catch(() => '') || '').trim() : '';
+          log(pageName, 'mental-flow-stuck', qt ? ('question rendered but Next never appeared: ' + qt.substring(0, 80)) : 'startTraining rendered no question');
+        }
+      }
+    } catch (e) { /* mental flow optional */ }
 
     // Test every link
     const links = await page.$$eval('a[href]', els =>

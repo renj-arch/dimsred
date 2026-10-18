@@ -280,7 +280,7 @@
   // ========== 6. GOAL SETTING ==========
   function showGoalPrompt() {
     var goals = JSON.parse(localStorage.getItem(GOALS_KEY) || '{}');
-    if (goals.papersPerWeek) return;
+    if (goals.papersPerWeek || goals.dismissed) return;
     if (document.getElementById('goalOverlay')) return;
     var html = '<div class="goal-overlay" id="goalOverlay"><div class="goal-modal">';
     html += '<h3 style="margin:0 0 12px">🎯 Set Your Weekly Goal</h3>';
@@ -289,6 +289,10 @@
     for (var i = 1; i <= 10; i++) { html += '<option value="' + i + '">' + i + ' paper' + (i > 1 ? 's' : '') + ' per week</option>'; }
     html += '</select>';
     html += '<button class="pc-btn" id="goalSave" style="width:100%">Save Goal</button>';
+    // A modal with no exit is hostile: landing pages load this 3 s in and it
+    // covers every control until a goal is picked. "Not now" dismisses for
+    // good (remembered in the same record), so nobody is ever stuck behind it.
+    html += '<button id="goalSkip" style="width:100%;margin-top:8px;padding:10px;border-radius:8px;background:transparent;color:#a1a1aa;border:1px solid rgba(255,255,255,.12);cursor:pointer;font-size:.85em">Not now</button>';
     html += '</div></div>';
     var div = document.createElement('div');
     div.innerHTML = html;
@@ -298,6 +302,11 @@
       goals.papersPerWeek = val;
       goals.weekStart = new Date().toISOString().slice(0, 10);
       goals.completed = 0;
+      localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+      document.getElementById('goalOverlay').remove();
+    });
+    document.getElementById('goalSkip').addEventListener('click', function () {
+      goals.dismissed = true;
       localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
       document.getElementById('goalOverlay').remove();
     });
