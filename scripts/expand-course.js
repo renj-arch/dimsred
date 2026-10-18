@@ -28,6 +28,7 @@
 'use strict';
 var fs = require('fs');
 var path = require('path');
+var cp = require('child_process');
 
 var ROOT = path.join(__dirname, '..');
 var CONFIGS_FILE = path.join(__dirname, 'exam-configs.json');
@@ -44,6 +45,15 @@ var SKIP_EXAMS = (process.env.EXPAND_SKIP_EXAMS || '').split(',').map(function (
 // Lessons shorter than this (characters of HTML) are treated as brief stubs
 // and rewritten by the enrich role. 0 disables enrichment entirely.
 var THIN = parseInt(process.env.EXPAND_THIN_THRESHOLD || '2500', 10);
+
+// Transport watchdogs (see curlChat): silence before the first streamed byte
+// is normal on CPU (cold load + prompt eval), mid-stream silence is wedged,
+// and CALL_CAP_MIN is nobody-legitimate-needs-more. runDeadlineAt lets a
+// mid-call generation stop at the run deadline instead of overshooting it.
+var FIRST_BYTE_MIN = parseFloat(process.env.EXPAND_FIRST_BYTE_MIN || '25') || 25;
+var STALL_MIN = parseFloat(process.env.EXPAND_STALL_MIN || '12') || 12;
+var CALL_CAP_MIN = parseFloat(process.env.EXPAND_CALL_CAP_MIN || '95') || 95;
+var runDeadlineAt = 0;
 
 // The same cross-exam aliasing gen-course.js applies when it looks content up.
 var ALT = { reasoning: 'reasoning', quant: 'quant', english: 'english', ga: 'ga', gk: 'ga', maths: 'quant', aptitude: 'reasoning', gs: 'ga', csat: 'quant', evs: 'ga', language: 'english', science: 'ga', cdp: 'ga' };
@@ -216,30 +226,153 @@ function theoryPrompt(gap) {
   return lines.join('\n');
 }
 
-function callModel(prompt, numPredict, timeoutMs) {
-  if (typeof fetch !== 'function') return Promise.reject(new Error('fetch unavailable'));
-  var ctrl = typeof AbortController !== 'undefined' ? new AbortController() : null;
-  var timer = ctrl ? setTimeout(function () { ctrl.abort(); }, timeoutMs || 600000) : null;
-  return fetch(HOST + '/api/chat', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    signal: ctrl ? ctrl.signal : undefined,
-    body: JSON.stringify({
-      model: MODEL,
-      stream: false,
-      options: { temperature: 0.4, top_p: 0.9, num_predict: numPredict || 3400 },
-      messages: [{ role: 'user', content: prompt }]
-    })
-  }).then(function (r) {
-    if (!r.ok) throw new Error('ollama HTTP ' + r.status);
-    return r.json();
-  }).then(function (j) {
-    var text = j && j.message && j.message.content ? j.message.content : '';
-    if (!text) throw new Error('empty model reply');
-    if (timer) clearTimeout(timer);
-    return text;
-  }).catch(function (e) {
-    if (timer) clearTimeout(timer);
+// ---- transport -------------------------------------------------------------
+// One HTTP attempt at the chat endpoint, STREAMING via spawn + watchdogs.
+// The old fetch transport carried undici's hidden ~5-min headers timeout: a
+// 3400-token lesson needs 15-40+ min on the 4 vCPU runner, so every call
+// died "fetch failed" before it could finish — the same wall that burned
+// invent run #5 in a restart loop. curl via spawn has no hidden wall; the
+// watchdogs are the only time policy. Killing curl does NOT stop the
+// server-side generation (it keeps holding the model lock), so a wedge-kill
+// restarts serve via restartServe() before the next gap is attempted.
+function curlChat(payload) {
+  return new Promise(function (resolve, reject) {
+    var args = [
+      '-sS', '--max-time', '5400', '-w', '\\n%{http_code}',
+      HOST + '/api/chat',
+      '-H', 'Content-Type: application/json',
+      '-d', '@-'
+    ];
+    var child = cp.spawn('curl', args, { stdio: ['pipe', 'pipe', 'pipe'] });
+    var out = '';
+    var stderr = '';
+    var settled = false;
+    var startedAt = Date.now();
+    var firstByteAt = 0;
+    var lastByteAt = Date.now();
+
+    function fail(why, status) {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      try { child.kill('SIGKILL'); } catch (e) { /* ignore */ }
+      var err = new Error('stream monitor: ' + why);
+      err.status = status === undefined ? 28 : status;
+      if (err.status !== 'DEADLINE') { err.restart = true; err.transport = true; }
+      err.stdout = out.slice(0, 2000);
+      err.stderr = stderr.slice(0, 400);
+      reject(err);
+    }
+
+    var mon = setInterval(function () {
+      var now = Date.now();
+      if (runDeadlineAt && now > runDeadlineAt) return fail('run deadline reached mid-call', 'DEADLINE');
+      if (now - startedAt > CALL_CAP_MIN * 60000) return fail('hard cap ' + CALL_CAP_MIN + 'min');
+      if (!firstByteAt) {
+        if (now - startedAt > FIRST_BYTE_MIN * 60000) return fail('no first byte in ' + FIRST_BYTE_MIN + 'min (cold load/prompt eval over budget)');
+      } else if (now - lastByteAt > STALL_MIN * 60000) {
+        return fail('no byte for ' + STALL_MIN + 'min mid-stream (wedged)');
+      }
+    }, 5000);
+
+    child.stdout.on('data', function (d) {
+      if (!firstByteAt) {
+        firstByteAt = Date.now();
+        console.log('expand: LLM first byte at ' + Math.round((firstByteAt - startedAt) / 1000) + 's');
+      }
+      lastByteAt = Date.now();
+      out += d.toString('utf8');
+      if (out.length > 32 * 1024 * 1024) fail('buffer cap 32MB');
+    });
+    child.stderr.on('data', function (d) { stderr += d.toString('utf8'); });
+    child.on('error', function (e) { if (!settled) { settled = true; clearInterval(mon); reject(e); } });
+    child.on('close', function (code) {
+      if (settled) return;
+      settled = true;
+      clearInterval(mon);
+      if (code === 0) resolve(out);
+      else {
+        var err = new Error('curl exit ' + code);
+        err.status = code;
+        if (code === 28) { err.restart = true; err.transport = true; }
+        else if (code === 7 || code === 52 || code === 56) err.transport = true;
+        err.stdout = out.slice(0, 2000);
+        err.stderr = stderr.slice(0, 400);
+        reject(err);
+      }
+    });
+    child.stdin.on('error', function () { /* curl died before reading stdin */ });
+    child.stdin.write(payload);
+    child.stdin.end();
+  });
+}
+
+// Parse an NDJSON chat stream: accumulate message.content deltas (thinking
+// may arrive per-chunk or at the end), plus the legacy response field; curl
+// appends the HTTP code as a final line via -w.
+function parseChatStream(out) {
+  var lines = String(out || '').split('\n');
+  var httpCode = '';
+  while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
+  if (lines.length && /^\d{3}$/.test(lines[lines.length - 1].trim())) httpCode = lines.pop().trim();
+  var content = '', thinking = '';
+  lines.forEach(function (line) {
+    var t = line.trim();
+    if (!t || t.charAt(0) !== '{') return;
+    try {
+      var j = JSON.parse(t);
+      if (j.message) {
+        if (typeof j.message.content === 'string') content += j.message.content;
+        if (typeof j.message.thinking === 'string') thinking += j.message.thinking;
+      }
+      if (typeof j.response === 'string') content += j.response;
+    } catch (e) { /* partial line; ignore */ }
+  });
+  return { text: content.trim() || thinking.trim(), httpCode: httpCode };
+}
+
+function restartServe() {
+  console.log('expand: restarting ollama serve to clear wedged work');
+  try {
+    cp.execSync('pkill -f "ollama serve"; sleep 2; OLLAMA_KEEP_ALIVE=60m nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 20000 });
+  } catch (e) { /* the probe below decides */ }
+  return new Promise(function (resolve) {
+    var tries = 0;
+    var iv = setInterval(function () {
+      tries++;
+      var up = false;
+      try { cp.execSync('curl -sf --max-time 5 ' + HOST + '/api/tags', { stdio: 'pipe', timeout: 10000 }); up = true; } catch (e) { up = false; }
+      if (up || tries >= 45) {
+        clearInterval(iv);
+        console.log('expand: serve ' + (up ? 'back up — next call cold-loads' : 'STILL DOWN after restart') + ' (' + tries + ' probes)');
+        resolve(up);
+      }
+    }, 2000);
+  });
+}
+
+function callModel(prompt, numPredict, timeoutMs) { // timeoutMs kept for callers; the watchdogs own the time policy
+  var payload = JSON.stringify({
+    model: MODEL,
+    stream: true,
+    think: false,
+    options: { temperature: 0.4, top_p: 0.9, num_predict: numPredict || 3400 },
+    messages: [{ role: 'user', content: prompt }]
+  });
+  function one(p) {
+    return curlChat(p).then(function (out) {
+      var parsed = parseChatStream(out);
+      if (!parsed.text && parsed.httpCode === '400') {
+        console.log('expand: Ollama rejected think:false (HTTP 400) — retrying without the parameter');
+        return one(JSON.stringify(Object.assign(JSON.parse(p), { think: undefined })));
+      }
+      if (parsed.httpCode && parsed.httpCode !== '200') throw new Error('ollama HTTP ' + parsed.httpCode);
+      if (!parsed.text) throw new Error('empty model reply');
+      return parsed.text;
+    });
+  }
+  return one(payload).catch(function (e) {
+    if (e && e.restart) return restartServe().then(function () { throw e; });
     throw e;
   });
 }
@@ -425,6 +558,7 @@ async function main() {
   var queue = fills.concat(thins);
 
   var deadline = Date.now() + DEADLINE_MIN * 60000;
+  runDeadlineAt = deadline;
   var added = 0;
   var addedKeys = [];
   var addedFiles = [];
