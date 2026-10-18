@@ -1,72 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-16T19:57:00.179Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      },
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      },
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-16T22:49:47.939Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      },
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      },
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-17T05:00:26.482Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 3,
@@ -435,8 +369,88 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-18T15:17:10.411Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 1
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 245120 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 3 overlapping subtopics into correct categories"
+      }
+     ]
+    },
+    {
+     "agent": "papers",
+     "fixes": [
+      {
+       "page": "data/papers.json",
+       "fix": "Wrote 4 detailed model explanation(s) in upsc-prelims-2023-gs1",
+       "text": "Q: Which one of the following countries has been suffering from decades of civil strife and food shorta\n→ Zimbabwe has faced decades of civil strife and food shortages. The Maputo Accord for National Unity and Reconciliation was signed in Zimbabwe's context. Answer per UPSC key.\nQ: In the recent years Chad, Guinea, Mali and Sudan caught the international attention for which one of\n→ Chad, Guinea, Mali, and Sudan all experienced military coups and were suspended from the African Union in recent years. The answer per UPSC key relates to their common political instability — all had coups between 2019-2"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-18T15:20:05.828Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "archive-writer",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "archive-writer",
+     "fixes": [
+      {
+       "page": "archive (World Geography / World Geography)",
+       "fix": "Explained \"What do you know about Carolina TopCats Cheerleaders?\"",
+       "text": "VERDICT: The Carolina TopCats Cheerleaders are the official cheerleading squad of the NFL's Carolina Panthers.\nWHY: This team represents the franchise in game-day entertainment and community events, distinct from squads like the Dallas Cowboys Cheerleaders.\nTRAPS: Do not confuse them with college squads (like UNC) or other NFL teams; 'TopCats' is specific to the Panthers only.\nHOOK: Remember the name 'TopCats' links directly to the 'Panthers' brand—no other team uses this name. Exam trap: Questi"
+      },
+      {
+       "page": "archive (World Geography / World Geography)",
+       "fix": "Explained \"In _____, the TopCats became the first cheerleading team of the National Football League t\"",
+       "text": "VERDICT: The blank is filled by 2022.\nWHY: In this year, the TopCats made history as the first NFL cheerleading squad to hire an openly transgender member, marking a significant milestone in sports inclusivity.\nTRAPS: Do not confuse this with earlier diversity hires or non-NFL teams; the key is 'first' and 'NFL'.\nHOOK: Remember the image of a diverse locker room celebrating unity. Exam trap: Questions often mix up years of major social milestones; stick to the specific event's documented date."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-18T14:21:24.398Z",
+ "lastRun": "2026-10-18T15:20:05.828Z",
  "model": "qwen3.5:9b"
 }
