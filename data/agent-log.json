@@ -1,39 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-16T22:49:47.939Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      },
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      },
-      {
-       "page": "Homepage",
-       "fix": "Browser: broken-tab — Tab not clickable [DIV.stat-number]: elementHandle.click: Timeout 8000ms exceeded.\nCall log:\n  - attempting click action",
-       "kind": "runtime"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-17T05:00:26.482Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 3,
@@ -418,8 +385,50 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-10-18T16:23:41.653Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 245121 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 3 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-18T15:39:53.738Z",
+ "lastRun": "2026-10-18T16:23:41.653Z",
  "model": "qwen3.5:9b"
 }
