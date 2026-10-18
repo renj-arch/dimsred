@@ -77,11 +77,12 @@ jobs:
             if [ "$THEN" -gt 0 ] && [ $((NOW - THEN)) -lt 72000 ]; then
               # A shipped attempt throttles the refill for 20h. A FAILED one
               # (unparseable, validation, no output) only counts as fresh for
-              # 90 minutes: the first ever refill failed with 'unparseable
-              # output' and still froze the pool until the next day — a failed
-              # attempt must not lock the refill out.
+              # 30 minutes — one chain cycle or so: the first ever refill
+              # failed with 'unparseable output' and still froze the pool
+              # until the next day. A failed attempt must not lock the refill
+              # out, but must not starve normal passes either.
               if echo "$LREASON" | grep -q '^shipped'; then AGE_OK=1
-              elif [ $((NOW - THEN)) -lt 5400 ]; then AGE_OK=1
+              elif [ $((NOW - THEN)) -lt 1800 ]; then AGE_OK=1
               fi
             fi
           fi
