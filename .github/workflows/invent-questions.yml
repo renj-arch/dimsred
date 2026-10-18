@@ -11,6 +11,10 @@ name: Invent Questions
 # accidental duplicate before it can be stored.
 #
 # Zero API keys: the model runs locally on the runner through Ollama.
+#
+# The model is dispatch-pinnable (input "model", default qwen3.8:27b — the
+# heavy tier). A fast-tier trial (qwen3:4b + cache) is one dispatch away if
+# the 27B's pull/generation ever stalls the schedule.
 
 on:
   schedule:
@@ -21,6 +25,10 @@ on:
         description: 'Questions per section x difficulty (default 2 -> 24/run)'
         required: false
         default: '2'
+      model:
+        description: 'Ollama model tag. Default = heavy tier (qwen3.8:27b); qwen3:4b is the cached fast tier.'
+        required: false
+        default: 'qwen3.8:27b'
 
 concurrency:
   group: invent-questions
@@ -65,6 +73,19 @@ jobs:
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
+          mkdir -p ~/.ollama/models
+
+      # Fast-tier model cache — engaged only when a trial runs a small model;
+      # the default 27B can never fit the 10GB repo cache budget.
+      - name: Cache Ollama models (fast tier)
+        if: ${{ !contains(inputs.model || 'qwen3.8:27b', '27b') && !contains(inputs.model || 'qwen3.8:27b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-fast-v1
+          restore-keys: |
+            ollama-${{ runner.os }}-fast-
 
       - name: Start Ollama server
         run: |
@@ -81,13 +102,16 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
           free -h
 
-      - name: Pull qwen3.8:27b
+      - name: Pull model (${{ inputs.model || 'qwen3.8:27b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.8:27b' }}
         run: |
-          ollama pull qwen3.8:27b
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
           ollama list
           # Warm the model into RAM now so invention calls start warm.
-          echo "Warming 27B into RAM..."
-          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warming $MODEL_INPUT..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
 
       # The 17GB warm-up load can take the server down on release. Run #3
       # then logged "fetch failed" on EVERY call for 70+ minutes and invented
@@ -107,7 +131,7 @@ jobs:
           fi
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
 
-      - name: Invent questions (27B as exam setter)
+      - name: Invent questions (${{ inputs.model || 'qwen3.8:27b' }} as exam setter)
         # Hard stop at 120 min; the script's own 110-min deadline stops
         # gracefully first. Run #2 logged 24/24 calls aborted at the old
         # 4-min client timeout; run #5 then died at undici's hidden ~5-min
@@ -117,7 +141,7 @@ jobs:
         # mid-stream silence is wedged, 95 min is the per-call cap.
         timeout-minutes: 120
         env:
-          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.8:27b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
           INVENT_PER_SLOT: ${{ github.event.inputs.per_slot || '2' }}
           INVENT_DEADLINE_MIN: '110'
@@ -134,4 +158,4 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add data/invented/
-          bash scripts/ci-push.sh "invent: qwen3.8:27b invented fresh exam questions (run #${{ github.run_number }})"
+          bash scripts/ci-push.sh "invent: ${{ inputs.model || 'qwen3.8:27b' }} invented fresh exam questions (run #${{ github.run_number }})"

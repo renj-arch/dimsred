@@ -3911,6 +3911,31 @@ async function main() {
     else console.log('agent: AGENT_ONLY=' + process.env.AGENT_ONLY + ' matched no agents in rotation');
   }
 
+  // ── Model tier gate ──────────────────────────────────────────────────
+  // The fleet default is the FAST tier (qwen3:4b — ~3GB, fully in RAM on the
+  // 4 vCPU/16GB runner, and small enough to live in the Actions model cache;
+  // see .github/workflows/site-agent.yml). Heavy agents need the 27B (17GB,
+  // only runs with swap, ~25min pull, uncacheable), so they run in their own
+  // heavy dispatches (agent_only=mainsfresh, model=qwen3.8:27b) instead of
+  // slowing every normal pass. AGENT_HEAVY overrides the heavy list without
+  // a code change.
+  const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+  const modelTag = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
+  const heavyTier = /27b|22b/i.test(modelTag);
+  const pinned = !!(process.env.AGENT_ONLY && process.env.AGENT_ONLY.trim());
+  if (!heavyTier) {
+    const skippedHeavy = agents.filter(([name]) => heavyNames.indexOf(name.toLowerCase()) !== -1);
+    if (skippedHeavy.length) {
+      agents = agents.filter(([name]) => heavyNames.indexOf(name.toLowerCase()) === -1);
+      console.log('agent: tier fast (' + modelTag + ') — skipped heavy agent(s): ' + skippedHeavy.map(([n]) => n).join(', ') + '; dispatch with model=qwen3.8:27b to run them');
+    }
+  } else if (!pinned) {
+    const heavyOnly = agents.filter(([name]) => heavyNames.indexOf(name.toLowerCase()) !== -1);
+    if (heavyOnly.length) { agents = heavyOnly; console.log('agent: tier heavy (' + modelTag + ') — heavy agents only: ' + heavyOnly.map(([n]) => n).join(', ')); }
+    else console.log('agent: tier heavy but no heavy agent registered — keeping the normal rotation');
+  }
+  if (!agents.length) console.log('agent: WARNING — no agents selected after tier/AGENT_ONLY filtering; nothing will run this pass');
+
   // ── Work intake: LOOK before acting (the "intelligent" part) ──
   // Read every report the site produces, count what's outstanding, and log
   // the queue. The agent should know what exists before deciding what to do.

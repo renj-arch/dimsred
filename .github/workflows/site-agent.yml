@@ -7,6 +7,14 @@ name: Site Agent
 # (runs #44–#54: warmup loads, then every real call dies).
 #
 # Fully free: Ollama on the runner CPU, zero API keys.
+#
+# Model tiers (2026-10-18): the default dispatch is now the FAST tier
+# (qwen3:4b — ~3GB, stays fully in RAM, cached between runs; see the model
+# cache step and the tier gate in scripts/site-agent.js). The 27B is 17GB:
+# it only fits with swap, costs ~25 min per pull, and can never fit the
+# 10GB Actions cache — so heavy agents (MainsFresh — the mains-fresh pool)
+# run in their own dispatches (agent_only=mainsfresh, model=qwen3.8:27b),
+# which the Agent Chain refills once a day.
 
 on:
   # NO hourly cron: GitHub throttles schedules here to a 3-5h effective
@@ -17,9 +25,13 @@ on:
   workflow_dispatch:
     inputs:
       agent_only:
-        description: 'Run only these agents (comma list, e.g. practicesets). Empty = normal rotation.'
+        description: 'Run only these agents (comma list, e.g. practicesets). Empty = normal rotation. MainsFresh is heavy-tier: pair it with model=qwen3.8:27b.'
         required: false
         default: ''
+      model:
+        description: 'Ollama model tag. Default = fast tier (qwen3:4b); use qwen3.8:27b for heavy agents (MainsFresh).'
+        required: false
+        default: 'qwen3:4b'
 
 concurrency:
   group: site-agent
@@ -71,6 +83,7 @@ jobs:
 
       # EXACT same swap as llm-autofix (16GB works with 27B there).
       # 24GB filled more disk and made paging worse, not better.
+      # (Only the heavy tier needs it; harmless on fast runs.)
       - name: Create swap (16GB — same as proven llm-autofix)
         run: |
           sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
@@ -83,11 +96,27 @@ jobs:
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
+          mkdir -p ~/.ollama/models
+
+      # Fast-tier model cache: the Ollama blob store is content-addressed and
+      # shared across tags, so ONE entry serves every small model (site-agent,
+      # llm-autofix, llm-smoke use the same key family). The 17GB heavy model
+      # can never fit the repo's 10GB cache budget — heavy runs skip this
+      # step. continue-on-error: a cache hiccup must never fail a run.
+      - name: Cache Ollama models (fast tier)
+        if: ${{ !contains(inputs.model || 'qwen3:4b', '27b') && !contains(inputs.model || 'qwen3:4b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-fast-v1
+          restore-keys: |
+            ollama-${{ runner.os }}-fast-
 
       # EXACT same start as llm-autofix: no env vars, no flash-attn, no q8.
-      # KEEP_ALIVE=60m: without it Ollama unloads the 17GB model after 5 min
+      # KEEP_ALIVE=60m: without it Ollama unloads the model after 5 min
       # idle, and the NEXT agent pays a full reload (minutes). Public-repo
-      # runners are 4 vCPU / 16GB RAM so the model nearly fits in RAM.
+      # runners are 4 vCPU / 16GB RAM so fast-tier models fit fully in RAM.
       - name: Start Ollama server
         run: |
           export OLLAMA_KEEP_ALIVE=60m
@@ -109,17 +138,21 @@ jobs:
       # proof may also OOM the server on exit after loading 17GB. Do what
       # llm-autofix does: just pull, warn if down, and let the script's
       # cold-start ping (via Node fetch) be the real proof.
-      - name: Pull qwen3.8:27b
+      - name: Pull model (${{ inputs.model || 'qwen3:4b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3:4b' }}
         run: |
-          ollama pull qwen3.8:27b
-          echo "MODEL=qwen3.8:27b" >> $GITHUB_ENV
-          echo "Using Qwen3.8-27B (score 90.3 — BEST free model)"
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          echo "MODEL=$MODEL_INPUT" >> $GITHUB_ENV
+          echo "Using model: $MODEL_INPUT"
           ollama list
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
           # Warm the model into RAM now so the agent's cold-start ping finds
-          # it resident instead of paying the 17GB cold load itself.
-          echo "Warming 27B into RAM..."
-          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          # it resident instead of paying the cold load itself. Seconds on the
+          # fast tier, minutes on the heavy 27B.
+          echo "Warming $MODEL_INPUT into RAM..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
           echo "Warmup done"
 
       # Safety net: re-verify the server accepts a connection on IPv4 right
@@ -139,11 +172,11 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
 
       # No browser test before the model. Playwright + serve fragment memory
-      # and disk right before the 18GB model load; llm-autofix has none and
+      # and disk right before the model load; llm-autofix has none and
       # generation works. Browser tests can run in their own workflow.
       - name: Run site agent (single pass — same shape as llm-autofix)
         env:
-          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3:4b' }}
           # Manual dispatches can pin the agent set (e.g. a practice-set run
           # for one exam). Empty on normal runs -> full rotation.
           AGENT_ONLY: ${{ github.event.inputs.agent_only }}
@@ -152,14 +185,14 @@ jobs:
           # "fetch failed" while curl/ollama-CLI (IPv4) work. Run #56:
           # CLI proof succeeded, Node fetch failed in <1s.
           OLLAMA_HOST: http://127.0.0.1:11434
-          # Run the next 4 agents per run. All 14 take too long for one job;
-          # rotation + an hourly schedule gives every capability a turn.
+          # Run the next 4 agents per run. All 19 take too long for one job;
+          # rotation + the Agent Chain gives every capability a turn.
           # AGENT_LIMIT=3 still overrides (fixed slice) if ever set.
           AGENT_ROTATE: '4'
           # Single pass, not --loop.
           AGENT_MAX_CYCLES: '1'
           # Wall-clock guard: stop starting LLM work 120 min in so the job's
-          # publish step always runs (job cap 240; the pull can eat 80).
+          # publish step always runs (job cap 240; the heavy pull can eat 80).
           # Skipped agents rotate in on the next run.
           AGENT_DEADLINE_MIN: '120'
           NODE_OPTIONS: '--max-old-space-size=2048'

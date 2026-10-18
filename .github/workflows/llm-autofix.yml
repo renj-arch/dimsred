@@ -67,6 +67,21 @@ jobs:
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
+          mkdir -p ~/.ollama/models
+
+      # Fast-tier model cache — shared key family with site-agent / llm-smoke
+      # so ONE entry serves every small model (Ollama's blob store is
+      # content-addressed). First run stores qwen3:4b (~3GB); later runs
+      # restore in ~1 min instead of re-downloading. continue-on-error:
+      # a cache hiccup must never fail a maintenance run.
+      - name: Cache Ollama models (fast tier)
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: ~/.ollama/models
+          key: ollama-${{ runner.os }}-fast-v1
+          restore-keys: |
+            ollama-${{ runner.os }}-fast-
 
       # Start Ollama server in background and wait until it responds.
       # `ollama pull` above briefly starts the server, but it shuts down

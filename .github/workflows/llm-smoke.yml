@@ -1,7 +1,9 @@
 name: LLM Smoke Test
 
-# Dispatch-only verdict on the local-LLM layer: install Ollama, pull
-# qwen3.8:27b, run ONE call with think:false, print PASS/FAIL in ~15 minutes.
+# Dispatch-only verdict on the local-LLM layer: install Ollama, pull the
+# requested model (input "model"; default is the FAST tier qwen3:4b — the
+# fleet default; pass qwen3.8:27b to smoke the heavy tier), run ONE call
+# with think:false, print PASS/FAIL in ~15 minutes.
 #
 # Built after the 2026-10-17 post-mortem: Question Quality #15 and the Site
 # Agent run wedged for hours because the model's default thinking mode streams
@@ -10,8 +12,17 @@ name: LLM Smoke Test
 # send think:false (scripts/site-agent.js, scripts/llm-autofix.js); this
 # workflow is how that fix gets verified cheaply instead of on the next
 # multi-hour agent run. Exit 2 means the daemon rejected the flag.
+#
+# Fast-tier runs restore ~/.ollama/models from the shared Actions cache
+# (same key family as site-agent / llm-autofix) — only the first run pays
+# the download.
 on:
   workflow_dispatch:
+    inputs:
+      model:
+        description: 'Ollama model tag to smoke. Default = fast tier (fleet default); use qwen3.8:27b for the heavy tier.'
+        required: false
+        default: 'qwen3:4b'
 
 concurrency:
   group: llm-smoke
@@ -31,8 +42,8 @@ jobs:
         with:
           node-version: 22
 
-      # Same swap as site-agent/llm-autofix: the 17GB model nearly fills the
-      # 16GB runner, and swap keeps a cold load from OOM-killing the server.
+      # Same swap as site-agent/llm-autofix. Only the 17GB heavy model needs
+      # it (it nearly fills the 16GB runner); harmless for the fast tier.
       - name: Create swap (16GB — same as site-agent)
         run: |
           sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
@@ -45,6 +56,20 @@ jobs:
         run: |
           curl -fsSL https://ollama.com/install.sh | sh
           ollama --version
+          mkdir -p ~/.ollama/models
+
+      # Fast-tier model cache — shared key family with site-agent/llm-autofix.
+      # The 17GB heavy model can never fit the 10GB repo cache budget, so
+      # heavy runs skip this step entirely.
+      - name: Cache Ollama models (fast tier)
+        if: ${{ !contains(inputs.model || 'qwen3:4b', '27b') && !contains(inputs.model || 'qwen3:4b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-fast-v1
+          restore-keys: |
+            ollama-${{ runner.os }}-fast-
 
       - name: Start Ollama server
         run: |
@@ -59,17 +84,20 @@ jobs:
           done
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
-      - name: Pull and warm qwen3.8:27b
+      - name: Pull and warm model (${{ inputs.model || 'qwen3:4b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3:4b' }}
         run: |
-          ollama pull qwen3.8:27b
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
           ollama list
-          echo "Warming 27B into RAM so the smoke call is not measuring cold load..."
-          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warming $MODEL_INPUT so the smoke call is not measuring cold load..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
           echo "Warmup done"
 
       - name: Smoke — think:false answers directly
         env:
-          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3:4b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
           SMOKE_CAP_MIN: '35'
         run: node scripts/llm-smoke-test.js

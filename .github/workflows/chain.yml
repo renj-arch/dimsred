@@ -5,7 +5,7 @@ name: Agent Chain
 # died at the 120-min cap from wedge timeouts. "Continuous" must not depend on
 # the schedule service. This chain fires when a Site Agent run COMPLETES and
 # dispatches the next one immediately — back-to-back cycles with no gap beyond
-# a 17GB model pull. The 6-hour seed cron is a dead-man switch: if the chain
+# a model pull. The 6-hour seed cron is a dead-man switch: if the chain
 # ever breaks (API failure, workflow disabled), it restarts the loop.
 #
 # Off switch: repo variable AGENT_CHAIN = "off" (Settings > Variables) stops
@@ -13,6 +13,13 @@ name: Agent Chain
 #
 # The idle check prevents a second run entering site-agent's concurrency group
 # (cancel-in-progress: true would kill an in-progress run mid-publish).
+#
+# Heavy-tier refill (2026-10-18): site-agent dispatches now default to the
+# fast tier (qwen3:4b), so this chain also dispatches the heavy MainsFresh
+# pass (qwen3.8:27b, one pool item per run) when the mains-fresh pool's
+# lastAttempt is older than ~20h. meta.lastAttempt is written on EVERY
+# attempt (success or not), so a failed attempt throttles the next refill
+# just the same.
 
 on:
   workflow_run:
@@ -51,11 +58,32 @@ jobs:
             echo "site-agent already running ($BUSY in progress) — not dispatching"
             exit 0
           fi
+          # Pick the dispatch: fast-tier normal pass by default; a heavy
+          # MainsFresh refill when the frozen pool's last attempt is stale.
+          # Safe defaults on any fetch/parse hiccup: with no readable state
+          # the pool is treated as stale (boot case — first ever refill).
+          INPUTS='{"ref":"main"}'
+          MAINS=$(curl -sf "https://raw.githubusercontent.com/$REPO/main/data/mains-fresh.json" || true)
+          LAST=$(echo "$MAINS" | jq -r '.meta.lastAttempt.at // ""' 2>/dev/null || true)
+          COUNT=$(echo "$MAINS" | jq -r '.items | length' 2>/dev/null || true)
+          [ -n "$COUNT" ] || COUNT=0
+          AGE_OK=0
+          if [ -n "$LAST" ] && [ "$LAST" != "null" ]; then
+            NOW=$(date -u +%s)
+            THEN=$(date -u -d "$LAST" +%s 2>/dev/null || echo 0)
+            if [ "$THEN" -gt 0 ] && [ $((NOW - THEN)) -lt 72000 ]; then AGE_OK=1; fi
+          fi
+          if [ "$AGE_OK" = "0" ]; then
+            INPUTS='{"ref":"main","inputs":{"agent_only":"mainsfresh","model":"qwen3.8:27b"}}'
+            echo "mains-fresh: lastAttempt='$LAST' pool=$COUNT — dispatching heavy refill"
+          else
+            echo "mains-fresh: lastAttempt='$LAST' pool=$COUNT — fresh; normal fast dispatch"
+          fi
           CODE=$(curl -s -o /tmp/resp.json -w '%{http_code}' -X POST \
             -H "Authorization: token $GH_TOKEN" \
             -H "Accept: application/vnd.github+json" \
             "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/dispatches" \
-            -d '{"ref":"main"}')
+            -d "$INPUTS")
           echo "dispatch HTTP $CODE (PAT)"
           if [ "$CODE" != "204" ]; then
             # Dead PAT: dispatch anyway with GITHUB_TOKEN so work continues.
@@ -67,7 +95,7 @@ jobs:
               -H "Authorization: token ${{ github.token }}" \
               -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/dispatches" \
-              -d '{"ref":"main"}')
+              -d "$INPUTS")
             echo "fallback dispatch HTTP $CODE"
             if [ "$CODE" != "204" ]; then cat /tmp/resp2.json; exit 1; fi
           fi
