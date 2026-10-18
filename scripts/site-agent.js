@@ -2515,7 +2515,7 @@ async function agentWikiSyllabus() {
 // SSC-JE special case: it is the biggest bank on the site (7000+ items,
 // 26 subjects) and its page tutor serves these sets on a single click. The
 // tutor only uses a set when >=3 of its items match the asked subject, so
-// the exam-level mixed set alone never covered a subject. The four core
+// the exam-level mixed set alone never covered a subject. The core
 // subjects therefore get whole subject-scoped sets; priority order below
 // puts the exam set first, then the subject sets, then everything else.
 // Sets may carry validated SVG figures ("fig") for diagram-worthy items.
@@ -2529,6 +2529,7 @@ const PRACTICE_EXAM_NAMES = {
 };
 const PRACTICE_SSC_JE_SETS = [
   { slug: 'ssc-je', subj: null },
+  { slug: 'ssc-je-production', subj: 'Production Technology' },
   { slug: 'ssc-je-som', subj: 'Strength of Materials' },
   { slug: 'ssc-je-tom', subj: 'Theory of Machines' },
   { slug: 'ssc-je-thermo', subj: 'Thermodynamics' },

@@ -658,7 +658,7 @@
       if (i >= batches) { finish(true); return; }
       var key = subs[i % subs.length];
       var name = (SUBJECTS[key] && SUBJECTS[key].name) || key;
-      renderAiStatus(c, p, 'Batch ' + (i + 1) + ' / ' + batches + ' \u00B7 ' + name + ' \u00B7 the model is writing new questions' + (i === 0 ? ' \u2014 first use downloads the on-device model (~1 GB, cached after)' : '') + '\u2026', '', false);
+      renderAiStatus(c, p, 'Batch ' + (i + 1) + ' / ' + batches + ' \u00B7 ' + name + ' \u00B7 the model is writing new questions\u2026', '', false);
       et.generatePractice(key, 8).then(function (arr) {
         (arr || []).forEach(function (x) {
           if (x && x.q) got.push({ q: String(x.q), a: String(x.a || ''), h: String(x.h || ''), s: String(x.s || ''), f: x.f || '', _sub: name, _ai: true });
