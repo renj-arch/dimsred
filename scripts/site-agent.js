@@ -1238,7 +1238,7 @@ async function agentFeatures() {
     if (!result) continue;
     try {
       const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      const d = JSON.parse(clean);
+      const d = parseLooseJson(clean);
       if (!d.rows || !d.rows.length) continue;
       const rows = d.rows.map(r =>
         '<tr><td style="padding:10px;border-bottom:1px solid #333;color:#a1a1aa">' + esc(r.feature) + '</td>' +
@@ -1286,7 +1286,7 @@ ${d.conclusion ? '<div class="conclusion"><b>Key takeaway:</b> ' + esc(d.conclus
     if (!result) continue;
     try {
       const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-      const d = JSON.parse(clean);
+      const d = parseLooseJson(clean);
       if (!d.sections || !d.sections.length) continue;
       const sections = d.sections.map(s =>
         '<div style="background:#111;border-radius:12px;padding:16px;margin:12px 0">' +
@@ -1325,7 +1325,7 @@ ${sections}
     if (result) {
       try {
         const clean = result.text.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
-        const d = JSON.parse(clean);
+        const d = parseLooseJson(clean);
         if (d.sections && d.sections.length) {
           const sections = d.sections.map(s =>
             '<div style="background:#111;border-radius:12px;padding:16px;margin:12px 0">' +
@@ -2917,8 +2917,7 @@ async function agentBankFigures() {
     let ok = false;
     if (r && r.text) {
       try {
-        const txt = String(r.text).replace(/```[a-z]*|```/gi, '').trim();
-        const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+        const j = parseLooseJson(r.text);
         if (j && j.svg) {
           const svg = cleanFigSvg(String(j.svg));
           if (svg && /<text/i.test(svg)) {
@@ -2985,13 +2984,17 @@ async function agentMockPapers() {
     'Generate 10 new exam-style questions on: ' + pick[1] + '.\n' +
     'Mix definition, numerical and applied-conceptual questions; each on a DIFFERENT sub-topic. Difficulty: SSC JE / RRB JE level.\n' +
     'Reply STRICT JSON array only: [{"q":"\u2026","h":"one-line hint","a":"direct answer (value+unit where numerical)","s":"2-3 sentence solution/why"}].',
-    2400
+    4200
   );
   let added = 0;
   if (r && r.text) {
     try {
-      const txt = String(r.text).replace(/```[a-z]*|```/gi, '').trim();
-      const arr = JSON.parse(txt.slice(txt.indexOf('['), txt.lastIndexOf(']') + 1));
+      // 10 items of q+h+a+s at SSC-JE depth do not fit in the old 2,400-token
+      // budget: the first real runs would have emitted a truncated array that
+      // bare JSON.parse then dropped, leaving the pool at zero. 4,200 leaves
+      // room for all ten, and parseLooseJson adds the raw-control-character /
+      // trailing-comma repair big arrays need.
+      const arr = parseLooseJson(r.text);
       if (Array.isArray(arr)) {
         // Dedupe keys: the static bank + everything already in the pool.
         const seen = {};
@@ -3016,6 +3019,9 @@ async function agentMockPapers() {
   pool.meta.cursor = (pool.meta.cursor + 1) % MOCK_SUBJECT_ROT.length;
   pool.meta.count = pool.items.length;
   if (added) pool.meta.updatedAt = new Date().toISOString();
+  // Written on EVERY attempt (like inventions/mains-fresh), so pool staleness
+  // is observable in one place and the chain can throttle off it.
+  pool.meta.lastAttempt = { at: new Date().toISOString(), reason: added ? ('added ' + added) : 'nothing' };
   saveJson(MOCK_FRESH, pool);
   if (added) fixes.push({ page: MOCK_FRESH, kind: 'content', fix: added + ' fresh mock questions on ' + pick[1] + ' (' + pool.meta.count + ' in pool)', text: pick[1] });
   console.log('agent: MockPapers — ' + added + ' questions on ' + pick[1] + ' (' + pool.meta.count + ' in pool)');
@@ -3066,8 +3072,7 @@ async function agentExamPatterns() {
   let applied = false;
   if (r && r.text) {
     try {
-      const txt = String(r.text).replace(/```[a-z]*|```/gi, '').trim();
-      const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+      const j = parseLooseJson(r.text);
       if (j && j.changed && j.id && j.updates && j.source) {
         const linkOk = sig.some(function (s) { return s.link === j.source; });
         const p = conf.patterns.filter(function (x) { return x.id === j.id; })[0];
@@ -3117,7 +3122,13 @@ const INVENTION_BANNED = /(fetch\s*\(|XMLHttpRequest|WebSocket|EventSource|\beva
 function parseLooseJson(text) {
   if (!text) return null;
   const t = String(text).replace(/```[a-z]*|```/gi, '').trim();
-  const start = t.indexOf('{');
+  // Accept BOTH objects and arrays: MockPapers returns [...] while every other
+  // caller returns {...}. Slice the first balanced opener of whichever kind
+  // the text leads with, string-aware, then repair both the same way.
+  const oi = t.indexOf('{'), ai = t.indexOf('[');
+  let start = -1, open = '{', close = '}';
+  if (oi >= 0 && (ai < 0 || oi < ai)) { start = oi; }
+  else if (ai >= 0) { start = ai; open = '['; close = ']'; }
   if (start < 0) return null;
   let depth = 0, inStr = false, esc = false, end = -1;
   for (let i = start; i < t.length; i++) {
@@ -3127,8 +3138,8 @@ function parseLooseJson(text) {
       else if (ch === '\\') esc = true;
       else if (ch === '"') inStr = false;
     } else if (ch === '"') { inStr = true; }
-    else if (ch === '{') { depth++; }
-    else if (ch === '}') { depth--; if (depth === 0) { end = i; break; } }
+    else if (ch === open) { depth++; }
+    else if (ch === close) { depth--; if (depth === 0) { end = i; break; } }
   }
   if (end < 0) return null;
   const slice = t.slice(start, end + 1);
@@ -4051,7 +4062,7 @@ async function main() {
   // their own dispatches (agent_only=mainsfresh, model=qwen3.5:9b) instead
   // of slowing every normal pass. AGENT_HEAVY overrides the heavy list;
   // AGENT_FAST_TAGS overrides the fast tag list — no code change needed.
-  const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh,invention').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+  const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh,invention,mockpapers,bankfigures,exampatterns').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
   const modelTag = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
   const fastTags = (process.env.AGENT_FAST_TAGS || 'qwen3:4b,qwen3.5:4b,qwen3.5:2b,qwen3.5:0.8b,qwen3:1.7b,qwen3:0.6b,lfm2.5:1.2b').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
   const heavyTier = fastTags.indexOf(modelTag.toLowerCase()) === -1;
