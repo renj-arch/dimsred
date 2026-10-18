@@ -18,29 +18,53 @@ function shuffle(arr) {
   return arr;
 }
 
-function pickQuestions(bank, sectionName, count, usedIds) {
+function normText(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function pickQuestions(bank, sectionName, count, usedIds, seenText) {
   if (!usedIds) usedIds = {};
+  if (!seenText) seenText = {};
+  var aliases = sectionMappings[sectionName] || [sectionName];
+  var aliasNorm = aliases.map(function(a){ return a.toLowerCase().replace(/[^a-z0-9]/g,''); });
   var matched = (bank.questions || []).filter(function(q){
-    return q.section === sectionName && !usedIds[q.id];
+    if (usedIds[q.id]) return false;
+    if (!q.text || seenText[normText(q.text)]) return false;
+    return aliasNorm.indexOf((q.section || '').toLowerCase().replace(/[^a-z0-9]/g,'')) !== -1;
   });
-  // Also try matching without some extra words
+  // Fallback: fuzzy section-name containment. Questions with no section are
+  // never pulled in (an empty section means "unclassified", not "any section").
   if (matched.length < count) {
+    var sn = sectionName.toLowerCase().replace(/[^a-z0-9]/g,'');
     var extra = (bank.questions || []).filter(function(q){
       if (usedIds[q.id]) return false;
-      var sn = sectionName.toLowerCase().replace(/[^a-z0-9]/g,'');
+      if (!q.text || seenText[normText(q.text)]) return false;
+      if (matched.indexOf(q) !== -1) return false;
       var qs = (q.section || '').toLowerCase().replace(/[^a-z0-9]/g,'');
+      if (!qs) return false;
       return qs.indexOf(sn) !== -1 || sn.indexOf(qs) !== -1;
     });
-    extra.forEach(function(q){ if (matched.indexOf(q) === -1) matched.push(q); });
+    extra.forEach(function(q){ matched.push(q); });
   }
+  // Dedupe the candidate list by normalized text (template refills can hold
+  // the same question text under several ids).
+  var seenLocal = {};
+  matched = matched.filter(function(q){
+    var nt = normText(q.text);
+    if (seenLocal[nt]) return false;
+    seenLocal[nt] = true;
+    return true;
+  });
   shuffle(matched);
   var picked = matched.slice(0, count);
-  picked.forEach(function(q){ usedIds[q.id] = true; });
+  picked.forEach(function(q){ usedIds[q.id] = true; seenText[normText(q.text)] = true; });
   return picked;
 }
 
 // Map exam config section names to question bank section names
 var sectionMappings = {
+  'Botany': ['Biology', 'Botany'],
+  'Zoology': ['Biology', 'Zoology'],
   'General Intelligence & Reasoning': ['General Intelligence & Reasoning', 'General Intelligence', 'Reasoning'],
   'General Awareness': ['General Awareness', 'General Knowledge', 'GK'],
   'Quantitative Aptitude': ['Quantitative Aptitude', 'Mathematics', 'Maths', 'Quant'],
@@ -59,15 +83,44 @@ var sectionMappings = {
   'Language': ['Language', 'English']
 };
 
+// Banks that store one shared pool for several pattern sections.
+var SHARED_POOLS = {
+  neet: { 'Biology': ['Botany', 'Zoology'] }
+};
+
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
 }
 
-function generateMockTest(examKey) {
+function generateMockTest(examKey, dateOverride) {
   var pattern = patterns[examKey];
   if (!pattern) { console.log(examKey + ': no exam pattern'); return; }
   var bank = questionBanks[examKey];
   if (!bank) { console.log(examKey + ': no question bank'); return; }
+
+  // Some banks keep one shared pool that the exam pattern splits into several
+  // sections (neet stores "Biology"; the pattern wants Botany + Zoology).
+  // Split it randomly for the mock so one section does not swallow the pool.
+  var shared = SHARED_POOLS[examKey];
+  if (shared) {
+    var moved = [];
+    Object.keys(shared).forEach(function (src) {
+      var targets = shared[src];
+      var ti = 0;
+      (bank.questions || []).forEach(function (q) {
+        if (q.section === src) {
+          var c = JSON.parse(JSON.stringify(q));
+          c.section = targets[ti % targets.length];
+          ti++;
+          moved.push(c);
+        }
+      });
+    });
+    if (moved.length) {
+      var rest = (bank.questions || []).filter(function (q) { return !shared[q.section]; });
+      bank = Object.assign({}, bank, { questions: rest.concat(moved) });
+    }
+  }
 
   var EXAM_DIR = path.join(ROOT, bank.folder || examKey);
   var MOCK_DIR = path.join(EXAM_DIR, 'mock-tests');
@@ -75,20 +128,19 @@ function generateMockTest(examKey) {
 
   // Pick questions for each section (in-memory dedup only — mock tests can reuse questions from practice papers)
   var usedIds = {};
+  var seenText = {};
   var selectedQs = [];
+  var sectionCounts = {};
   pattern.sections.forEach(function(sec){
-    var count = sec.count;
-    var picked = pickQuestions(bank, sec.name, count, usedIds);
-    // If not enough, pad with more from broader search
-    if (picked.length < count) {
-      var remaining = (bank.questions || []).filter(function(q){ return !usedIds[q.id]; });
-      shuffle(remaining);
-      var extra = remaining.slice(0, count - picked.length);
-      extra.forEach(function(q){ usedIds[q.id] = true; });
-      picked = picked.concat(extra);
-    }
-    // Assign section name
-    picked.forEach(function(q){ q.section = sec.name; });
+    var picked = pickQuestions(bank, sec.name, sec.count, usedIds, seenText);
+    // Honest shortfall: leave a section short rather than pad it with questions
+    // from other sections — a mismatched question is worse than a short mock.
+    picked = picked.map(function(q){
+      var c = JSON.parse(JSON.stringify(q));
+      c.section = sec.name; // relabel the copy only; only mapped-section questions are picked
+      return c;
+    });
+    sectionCounts[sec.name] = picked.length;
     selectedQs = selectedQs.concat(picked);
   });
 
@@ -96,22 +148,32 @@ function generateMockTest(examKey) {
     console.log(examKey + ': only ' + selectedQs.length + ' questions available (need ' + pattern.totalQuestions + ')');
   }
 
-  // Generate mock test ID
+  // Generate mock test ID (dateOverride is used when refreshing existing files)
   var now = new Date();
-  var dateStr = now.toISOString().split('T')[0];
+  var dateStr = dateOverride || now.toISOString().split('T')[0];
   var mockId = 'mock-' + dateStr + '-' + examKey;
+
+  // Per-question marks: most patterns use a number; GATE-style patterns say
+  // "1 or 2". Fire a numeric approximation (the paper's average) so scoring
+  // never becomes NaN.
+  var pqmRaw = String(pattern.perQuestionMarks === undefined || pattern.perQuestionMarks === null ? '' : pattern.perQuestionMarks).trim();
+  var pqmNum = /^\d+(\.\d+)?$/.test(pqmRaw) ? parseFloat(pqmRaw) : NaN;
+  if (isNaN(pqmNum) || !isFinite(pqmNum) || pqmNum <= 0) {
+    pqmNum = Math.round((pattern.totalMarks / (pattern.totalQuestions || 1)) * 100) / 100;
+  }
+  var mockTotalMarks = Math.round(pqmNum * selectedQs.length);
 
   // Build test data
   var testData = {
     examName: pattern.fullName || examKey.toUpperCase(),
     totalQuestions: selectedQs.length,
-    totalMarks: pattern.totalMarks,
+    totalMarks: mockTotalMarks,
     duration: pattern.durationMinutes,
     negativeMarking: pattern.negativeMarking || '0',
     negativeMarkingDisplay: pattern.negativeMarkingDisplay || '',
-    perQuestionMarks: pattern.perQuestionMarks || 1,
+    perQuestionMarks: pqmNum,
     hasNegative: pattern.hasNegative || false,
-    sections: pattern.sections.map(function(s){ return {name: s.name, count: s.count, color: getSectionColor(s.name)}; }),
+    sections: pattern.sections.filter(function(s){ return sectionCounts[s.name] > 0; }).map(function(s){ return {name: s.name, count: sectionCounts[s.name], color: getSectionColor(s.name)}; }),
     questions: selectedQs
   };
 
@@ -285,11 +347,18 @@ function generateMockIndex(examKey, pattern, bank) {
 
   files.forEach(function(f){
     var name = f.replace('.html','').replace(/mock-/g,'Mock Test ').replace(/-/g,' ');
-    var parts = f.replace('.html','').split('-');
-    var datePart = parts.length >= 3 ? parts[1] + '-' + parts[2] + '-' + parts[3] : '';
+    var qCount = pattern.totalQuestions;
+    try {
+      var head = fs.readFileSync(path.join(MOCK_DIR, f), 'utf-8').slice(0, 1200);
+      var mm = head.match(/with (\d+) questions/);
+      if (mm) qCount = parseInt(mm[1], 10);
+    } catch (e) {}
     h += '        <div class="mock-card">\n';
     h += '            <div class="m-title"><a href="' + f + '">' + esc(name) + '</a></div>\n';
-    h += '            <div class="m-meta">' + pattern.totalQuestions + ' Questions &middot; ' + pattern.durationMinutes + ' min &middot; ' + pattern.totalMarks + ' Marks</div>\n';
+    var pqmRaw = String(pattern.perQuestionMarks === undefined || pattern.perQuestionMarks === null ? '' : pattern.perQuestionMarks).trim();
+    var pqm = /^\d+(\.\d+)?$/.test(pqmRaw) ? parseFloat(pqmRaw) : NaN;
+    if (isNaN(pqm) || pqm <= 0) pqm = Math.round((pattern.totalMarks / (pattern.totalQuestions || 1)) * 100) / 100;
+    h += '            <div class="m-meta">' + qCount + ' Questions &middot; ' + pattern.durationMinutes + ' min &middot; ' + Math.round(qCount * pqm) + ' Marks</div>\n';
     h += '            <a href="' + f + '" class="btn btn-success">Start Test &#x2192;</a>\n';
     h += '        </div>\n';
   });
@@ -302,14 +371,38 @@ function generateMockIndex(examKey, pattern, bank) {
   console.log(examKey + ': wrote mock-tests/index.html');
 }
 
-// Generate for all exams with question banks
-var examKeys = Object.keys(patterns);
-examKeys.forEach(function(key){
-  if (questionBanks[key]) {
-    generateMockTest(key);
-  } else {
-    console.log(key + ': skipped (no question bank)');
-  }
+// CLI: default writes today's mock per exam. --refresh-all rewrites every
+// existing mock-*.html from the current (cleaned) bank, keeping filenames;
+// --only=cgl,rbi limits the run to specific exams.
+var cliArgs = process.argv.slice(2);
+var refreshAll = cliArgs.indexOf('--refresh-all') !== -1;
+var onlyExams = null;
+cliArgs.forEach(function(a){
+  var m = a.match(/^--only=(.+)$/);
+  if (m) onlyExams = m[1].split(',');
 });
+
+var examKeys = Object.keys(patterns).filter(function(key){
+  if (!questionBanks[key]) { console.log(key + ': skipped (no question bank)'); return false; }
+  if (onlyExams && onlyExams.indexOf(key) === -1) return false;
+  return true;
+});
+
+if (refreshAll) {
+  examKeys.forEach(function(key){
+    var bank = questionBanks[key];
+    var MOCK_DIR = path.join(ROOT, bank.folder || key, 'mock-tests');
+    if (!fs.existsSync(MOCK_DIR)) { console.log(key + ': no mock-tests dir'); return; }
+    var dates = [];
+    fs.readdirSync(MOCK_DIR).forEach(function(f){
+      var m = f.match(/^mock-(\d{4}-\d{2}-\d{2})-.+\.html$/);
+      if (m && dates.indexOf(m[1]) === -1) dates.push(m[1]);
+    });
+    if (!dates.length) { console.log(key + ': no existing mocks to refresh'); return; }
+    dates.sort().forEach(function(d){ generateMockTest(key, d); });
+  });
+} else {
+  examKeys.forEach(function(key){ generateMockTest(key); });
+}
 
 console.log('\n=== Mock tests generated ===');

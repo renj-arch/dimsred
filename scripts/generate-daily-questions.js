@@ -76,7 +76,8 @@ T['Quantitative Aptitude'] = function(r) {
     case 'simpleinterest': {
       var p = randInt(r, 10, 50) * 100, rate = pick(r, [5, 6, 8, 10]), t = randInt(r, 1, 4);
       var si = (p * rate * t) / 100;
-      return { text: fmt('Simple interest on ₹{0} at {1}% for {2} years:', [p, rate, t]), opts: [si, si + p / 20, si * 2, si / 2].map(String), ans: 0, sol: fmt('SI = ({0}×{1}×{2})/100 = ₹{3}', [p, rate, t, si]) };
+      var yearStr = t === 1 ? 'year' : 'years';
+      return { text: fmt('Simple interest on ₹{0} at {1}% for {2} {3}:', [p, rate, t, yearStr]), opts: [si, si + p / 20, si * 2, si / 2].map(String), ans: 0, sol: fmt('SI = ({0}×{1}×{2})/100 = ₹{3}', [p, rate, t, si]) };
     }
     case 'ratio': {
       var a = randInt(r, 2, 7), b = randInt(r, 2, 7), c = randInt(r, 2, 7), d = randInt(r, 2, 7);
@@ -111,7 +112,7 @@ T['English Language'] = function(r) {
     {t:'Correct spelling:', o:['Accommodate','Accomodate','Acommodate','Acocomodate'], a:0, s:'Correct: Accommodate (double c, double m).'},
     {t:'Idiom "burn midnight oil":', o:['Work late','Wake late','Waste fuel','Cook at night'], a:0, s:'Means to work late into the night.'},
     {t:'Article before "university":', o:['a','an','the','no article'], a:0, s:'"University" starts with consonant sound /juː/, so "a".'},
-    {t:'Past tense of "teach":', o:['taught','teached','teached','teached'], a:0, s:'Teach → taught (irregular).'},
+    {t:'Past tense of "teach":', o:['taught','teached','tought','teaching'], a:0, s:'Teach → taught (irregular).'},
     {t:'One who collects stamps:', o:['Philatelist','Numismatist','Collector','Bibliophile'], a:0, s:'Philatelist = stamp collector. Numismatist = coin collector.'},
     {t:'She is afraid ___ dogs:', o:['of','from','with','about'], a:0, s:'"Afraid of" is correct collocation.'},
     {t:'Correct passive: "She writes a letter":', o:['A letter is written by her','A letter was written by her','A letter has been written','A letter had been written'], a:0, s:'Simple present passive: is/am/are + past participle.'},
