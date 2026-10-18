@@ -326,7 +326,33 @@ function extractJson(text) {
     }
   }
   if (end < 0) return null;
-  try { return JSON.parse(t.slice(s, end + 1)); } catch (e) { return null; }
+  const slice = t.slice(s, end + 1);
+  try { return JSON.parse(slice); } catch (e) { /* fall through to the repair pass */ }
+  // Repair pass: at temperature 0.95 the model regularly emits JSON that is
+  // one hair off — most often a literal newline/tab inside the long
+  // "solution" string (raw control characters are invalid JSON), sometimes a
+  // trailing comma. That single flaw rejected roughly half of the invent
+  // calls with 'unparseable JSON' (run #10, 2026-10-18) while the content
+  // itself was complete and good. Escape control characters inside strings,
+  // drop trailing commas, parse again.
+  let rout = '', rinStr = false, resc = false;
+  for (let i = 0; i < slice.length; i++) {
+    const ch = slice[i];
+    if (rinStr) {
+      if (resc) { rout += ch; resc = false; continue; }
+      if (ch === '\\') { rout += ch; resc = true; continue; }
+      if (ch === '"') { rout += ch; rinStr = false; continue; }
+      const code = ch.charCodeAt(0);
+      if (code < 0x20) {
+        rout += ch === '\n' ? '\\n' : ch === '\r' ? '\\r' : ch === '\t' ? '\\t' : ' ';
+        continue;
+      }
+      rout += ch; continue;
+    }
+    if (ch === '"') { rinStr = true; rout += ch; continue; }
+    rout += ch;
+  }
+  try { return JSON.parse(rout.replace(/,\s*([}\]])/g, '$1')); } catch (e2) { return null; }
 }
 
 const STOP = new Set(('the a an and or of in on at to for from with is are was were be been being ' +

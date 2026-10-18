@@ -28,10 +28,27 @@ fi
 
 git commit -m "$MSG" || { echo "[ci-push] commit failed"; exit 1; }
 
+# Bring the local branch up to date with origin. Concurrent runs publish
+# constantly, and two runs can touch the same append-only journals
+# (data/agent-log.json, autofix-log.json): the rebase then stops CONFLICTED
+# with a detached HEAD, every following `git push` dies with "not currently
+# on a branch", and the run ends in a fake "TOTAL AUTH FAILURE" while the
+# real work sits stranded on the runner (observed 2026-10-18, run
+# 39130826980 — 12 invented practice items lost). So: if the rebase cannot
+# finish, abort it and merge instead, keeping OUR side of conflicts — the
+# work this run just generated. Losing an overlapping log line beats losing
+# the whole publish.
+sync_remote() {
+  git pull --rebase --autostash 2>/dev/null && return 0
+  git rebase --abort 2>/dev/null || true
+  git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+  return 0
+}
+
 try_push() {
   # $1 = label for logs. Echoes server output to stdout, returns push status.
   local out
-  git pull --rebase --autostash 2>/dev/null || true
+  sync_remote
   out=$(git push 2>&1)
   local st=$?
   echo "$out"
@@ -66,7 +83,7 @@ git add data/auth-status.json 2>/dev/null || true
 git commit -m "ci-push: PAT-dead fallback marker" 2>/dev/null || true
 for i in 1 2 3; do
   echo "[ci-push] fallback push attempt $i (GITHUB_TOKEN)..."
-  if git pull --rebase --autostash 2>/dev/null && git push 2>&1; then
+  if sync_remote && git push 2>&1; then
     echo "::error::ci-push: published via GITHUB_TOKEN fallback — PAT IS DEAD, renew secrets.PAT"
     exit 1
   fi
