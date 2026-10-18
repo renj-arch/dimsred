@@ -3191,6 +3191,136 @@ async function agentInvention() {
   return { agent: 'invention', fixes: fixes };
 }
 
+// ── AGENT: MainsFresh — frozen mains practice questions for the page button ──
+// mains.html's "Generate one more question + model answer" used to compile a
+// 1-2 GB language model in the VISITOR's browser and run it on their GPU --
+// the hottest thing on the site, and visitors reported machines heating up.
+// This agent writes the same kind of item here, on the build runners, once per
+// run, into data/mains-fresh.json; the page then serves from that frozen batch
+// instantly and only falls back to on-device generation (behind an explicit
+// permission card) when the batch is empty.
+const MAINS_FRESH = 'data/mains-fresh.json';
+const MAINS_FRESH_CAP = 40;
+const MAINS_PAPERS = ['gs1', 'gs2', 'gs3', 'gs4', 'essay'];
+const MAINS_MARKS = [10, 15, 20, 125, 250];
+function mainsNorm(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+function mainsItemOk(o) {
+  if (!o || typeof o !== 'object') return 'not an object';
+  const q = String(o.question || '').trim();
+  if (q.length < 40 || q.length > 700) return 'question length';
+  if (/[<>]/.test(q)) return 'question markup';
+  const paper = String(o.paper);
+  if (MAINS_PAPERS.indexOf(paper) === -1) return 'paper';
+  const marks = Number(o.marks);
+  if (MAINS_MARKS.indexOf(marks) === -1) return 'marks';
+  if (paper === 'essay' && marks !== 125 && marks !== 250) return 'essay marks';
+  if (paper !== 'essay' && marks > 20) return 'gs marks';
+  if (['easy', 'medium', 'high'].indexOf(String(o.difficulty)) === -1) return 'difficulty';
+  const ans = Array.isArray(o.answer) ? o.answer.filter(s => s && (s.h || s.p)) : [];
+  if (ans.length < 4 || ans.length > 6) return 'answer sections';
+  for (const s of ans) {
+    if (String(s.h || '').length < 2 || String(s.h || '').length > 90) return 'section heading';
+    if (String(s.p || '').length < 120 || String(s.p || '').length > 1500) return 'section paragraph';
+  }
+  if (!Array.isArray(o.marksGuide) || o.marksGuide.length < 3 || o.marksGuide.length > 6) return 'marksGuide';
+  if (!Array.isArray(o.pitfalls) || o.pitfalls.length < 3 || o.pitfalls.length > 6) return 'pitfalls';
+  if (!Array.isArray(o.keywords) || o.keywords.length < 5 || o.keywords.length > 8) return 'keywords';
+  if (!Array.isArray(o.laws) || o.laws.length > 8) return 'laws';
+  return null;
+}
+async function agentMainsFresh() {
+  const fixes = [];
+  let pool = loadJson(MAINS_FRESH, null);
+  if (!pool || typeof pool !== 'object') pool = {};
+  if (!pool.meta || typeof pool.meta !== 'object') pool.meta = {};
+  if (!Array.isArray(pool.items)) pool.items = [];
+
+  // Dedupe against the hand-authored bank and the pool itself, by normalized
+  // full text and by opening signature (a reworded opener is still a repeat).
+  const bank = loadJson(MAINS_BANK, null);
+  const known = new Set();
+  const sigs = new Set();
+  function addKnown(question) {
+    const n = mainsNorm(question);
+    if (!n) return;
+    known.add(n);
+    sigs.add(n.slice(0, 80));
+  }
+  if (bank && Array.isArray(bank.questions)) bank.questions.forEach(q => addKnown(q.question));
+  pool.items.forEach(x => { if (x && x.question) addKnown(x.question); });
+
+  const sys = 'You write UPSC Civil Services Mains practice questions with model-answer skeletons for Indian aspirants. ' +
+    'Reply with ONE valid JSON object and nothing else: no markdown fences, no commentary before or after. ' +
+    'Shape: {"paper":"gs3","topic":"short topic label","marks":15,"difficulty":"medium",' +
+    '"question":"full question text including the marking note, e.g. (15 marks, 250 words)",' +
+    '"answer":[{"h":"short heading","p":"2-4 sentence paragraph"}],' +
+    '"marksGuide":["what the examiner rewards"],"pitfalls":["how this is answered badly"],' +
+    '"keywords":["term"],"laws":["law, case or scheme, only if certain"]}. ' +
+    'Constraints: "paper" is one of gs1,gs2,gs3,gs4,essay; marks 10, 15 or 20 for GS papers, 125 or 250 only for the essay; ' +
+    '4 to 6 objects in "answer"; 3 to 5 strings each in marksGuide and pitfalls; 5 to 8 keywords; "laws" may be []. ' +
+    'Keep every "p" paragraph to 2-4 sentences. Never invent a scheme, case, article or statistic: name a reform only when certain of it, with its year; ' +
+    'a verified older example beats an uncertain new one. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral. ' +
+    'Do not reason step by step; reply with ONLY the JSON object.';
+  const avoid = Array.from(sigs).slice(0, 60).map((s, i) => (i + 1) + '. ' + s).join('\n');
+  const user = 'Create ONE practice question, choosing the paper and a topic where aspirants are weakest, avoiding the most over-used questions ' +
+    'and never repeating any question below (already covered).\n\nALREADY COVERED (do not repeat, do not reword):\n' + (avoid || '(none)');
+
+  let r = null;
+  try { r = await callLLM(sys, user, 2600); }
+  catch (e) { console.log('agent: MainsFresh — call failed: ' + String(e.message || e).slice(0, 160)); }
+
+  let reason = 'no model output';
+  let shipped = null;
+  if (r && r.text) {
+    try {
+      const t = String(r.text)
+        .replace(/<think(?:ing)?>[\s\S]*?<\/think(?:ing)?>/gi, ' ')
+        .replace(/```[a-z]*|```/gi, '').trim();
+      const obj = JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1));
+      const bad = mainsItemOk(obj);
+      const nq = mainsNorm(obj && obj.question);
+      if (bad) reason = 'validation: ' + bad;
+      else if (known.has(nq) || sigs.has(nq.slice(0, 80))) reason = 'duplicate question';
+      else {
+        const item = {
+          id: 'ci-' + Date.now().toString(36),
+          at: new Date().toISOString().slice(0, 10),
+          paper: String(obj.paper),
+          topic: String(obj.topic || 'AI practice').slice(0, 160),
+          marks: Number(obj.marks),
+          difficulty: String(obj.difficulty),
+          years: [],
+          question: String(obj.question).trim(),
+          answer: obj.answer.filter(s => s && (s.h || s.p)).slice(0, 6)
+            .map(s => ({ h: String(s.h || 'Section').slice(0, 120), p: String(s.p || '').slice(0, 1400) })),
+          marksGuide: obj.marksGuide.filter(Boolean).map(String).slice(0, 6),
+          pitfalls: obj.pitfalls.filter(Boolean).map(String).slice(0, 6),
+          laws: (obj.laws || []).filter(Boolean).map(String).slice(0, 8),
+          keywords: obj.keywords.filter(Boolean).map(String).slice(0, 8),
+          origin: 'ci',
+          ai: 1,
+          model: r.model || ''
+        };
+        pool.items.push(item);
+        if (pool.items.length > MAINS_FRESH_CAP) pool.items = pool.items.slice(-MAINS_FRESH_CAP);
+        shipped = item;
+        fixes.push({ page: MAINS_FRESH, kind: 'mainsfresh', fix: 'Shipped practice question ' + item.id + ' (' + item.paper + ', ' + item.marks + ' marks): ' + item.question.slice(0, 120), model: r.model || '' });
+      }
+    } catch (e) { reason = 'unparseable output'; }
+  }
+  pool.meta.about = "Frozen AI practice questions for the mains page button. Written by the site's own model " +
+    "(scripts/site-agent.js, agent MainsFresh) on the GitHub build runners, in its own words. Unreviewed practice " +
+    'material, badged on the page, and kept out of the hand-authored bank in data/mains-questions.json.';
+  pool.meta.updated = new Date().toISOString().slice(0, 10);
+  pool.meta.count = pool.items.length;
+  pool.meta.lastAttempt = { at: new Date().toISOString(), reason: shipped ? 'shipped ' + shipped.id : reason };
+  saveJson(MAINS_FRESH, pool);
+  console.log('MAINS-FRESH-RESULT shipped=' + (shipped ? shipped.id : 'none') + ' pool=' + pool.items.length + ' reason=' + (shipped ? 'ok' : reason));
+  return { agent: 'mainsfresh', fixes: fixes };
+}
+
 // ── AGENT: GraphNotes — proper relationship explanations on flowchart cards ──
 // Clicking Gandhi showed generic (sometimes wrong-entity) descriptions and
 // "mentioned with" everywhere, plus junk cards (TV sitcoms, absurd spans).
@@ -3734,7 +3864,8 @@ async function main() {
     ['ExamPatterns', agentExamPatterns],
     ['Invention', agentInvention],
     ['GraphNotes', agentGraphNotes],
-    ['MetaLearn', agentMetaLearn]
+    ['MetaLearn', agentMetaLearn],
+    ['MainsFresh', agentMainsFresh]
   ];
   const alwaysAgents = [
     ['Workflows', agentWorkflows],

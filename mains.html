@@ -93,7 +93,7 @@ h1{font-size:24px;margin:6px 0 8px}
   </div>
 
   <div class="genbar">
-    <button class="btn sec" id="genAI" type="button">&#10024; Generate one more question + model answer (in-browser AI)</button>
+    <button class="btn sec" id="genAI" type="button">&#10024; Generate one more question + model answer (AI)</button>
     <span class="stat" id="genStat" role="status" aria-live="polite"></span>
   </div>
 
@@ -116,11 +116,16 @@ function updDate(d) {
   var mm = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return mm[Number(m[2]) - 1] + ' ' + m[1];
 }
-// Browser-session AI items (the in-browser generator). Never persisted and
-// never merged into data/mains-questions.json, which promises a reviewed,
-// hand-authored bank; these ride in their own array, badged, until refresh.
+// Browser-session AI items. Two sources, both badged and both session-only:
+// the frozen batch in data/mains-fresh.json (written by the site's own model
+// on the GitHub build runners -- instant, nothing runs on the visitor's
+// device) and, only as a fallback, the in-browser generator after the
+// visitor allows on-device AI. Never persisted and never merged into
+// data/mains-questions.json, which promises a reviewed, hand-authored bank.
 var AI_QS = [];
 var AI_BUSY = false;
+var FRESH = { items: [] }; // frozen batch served to the generate button
+var POOL_USED = {};        // pool ids already served this session
 
 function esc(s) {
   return String(s == null ? '' : s)
@@ -192,7 +197,7 @@ function card(q) {
       '<span class="tag m">' + esc(q.marks) + ' marks</span>' +
       (yrs ? '<span class="tag">' + yrs + '</span>' : '') +
     '</div>' +
-    (q.ai ? '<div class="badge ai">AI-GENERATED IN YOUR BROWSER &middot; unreviewed &middot; this session only &middot; verify before trusting</div>' : '') +
+    (q.ai ? '<div class="badge ai">AI-GENERATED ' + (q.origin === 'ci' ? 'BY THE SITE\u2019S MODEL ON ITS BUILD RUNNERS' : 'IN YOUR BROWSER') + ' &middot; unreviewed &middot; this session only &middot; verify before trusting</div>' : '') +
     '<h2>' + esc(q.question) + '</h2>' +
     '<div class="badge model">MODEL ANSWER &middot; not an official UPSC key &middot; write your own attempt first</div>' +
     '<button class="btn" data-open="' + esc(q.id) + '">Show the model answer</button>' +
@@ -229,14 +234,20 @@ function boot(data) {
   }).join('');
   render();
 
-  // Tell the visitor what the AI button costs before they click it (a
-  // one-time model download into their own browser), or why it cannot run.
+  // Tell the visitor what the AI button costs before they click it. The frozen
+  // batch from the build runners is instant and free; the in-browser fallback
+  // compiles the model on the visitor's own GPU (behind a permission card, and
+  // it unloads itself once done) or is unavailable without WebGPU.
   if (el('genAI')) {
-    if (!navigator.gpu) {
+    var poolN = (FRESH.items || []).length;
+    if (poolN) {
+      el('genAI').disabled = false;
+      setGenStat('One click adds a fresh question written by the site\u2019s own model on its build runners (frozen batch of ' + poolN + '). Nothing runs on your device.');
+    } else if (!navigator.gpu) {
       el('genAI').disabled = true;
-      setGenStat('This browser has no WebGPU, so the in-browser model cannot run here. Desktop Chrome, Edge 121+ or recent Safari works.');
+      setGenStat('The frozen batch is empty right now and this browser has no WebGPU, so the in-browser model cannot run here. Desktop Chrome, Edge 121+ or recent Safari works.');
     } else {
-      setGenStat('One click, nothing sent to any server: the first run downloads the model (1-2 GB) into this browser once, then it is cached here.');
+      setGenStat('The frozen batch is empty right now, so this runs the model in your browser: weights (1-2 GB) download once and are cached, then your device\u2019s GPU writes the question and can warm the machine while it does. You will be asked to allow it first.');
     }
   }
 }
@@ -271,12 +282,14 @@ el('q').addEventListener('input', function (e) {
 
 el('genAI').addEventListener('click', generateOne);
 
-// ---- in-browser generation: one click, zero keys, zero requests ----------
-// WebLLM compiles the model for this visitor's own GPU; nothing leaves the
-// browser and no server is involved. Output is badged and session-only: the
-// hand-authored note in data/mains-questions.json promises the reviewed bank
-// is never machine-generated, and that promise stays true -- these items sit
-// in their own array, disappear on refresh, and carry the AI badge.
+// ---- generation: frozen batch first, in-browser only as a fallback -------
+// Source 1 is data/mains-fresh.json, written by the site's own model on the
+// GitHub build runners -- instant, nothing runs locally. Source 2 (fallback)
+// compiles WebLLM on the visitor's own GPU behind a permission card; nothing
+// leaves the browser and no server is involved. Both outputs are badged and
+// session-only: the hand-authored note in data/mains-questions.json promises
+// the reviewed bank is never machine-generated, and that promise stays true --
+// these items sit in their own array, disappear on refresh, and carry the badge.
 function setGenStat(msg) { el('genStat').textContent = msg || ''; }
 
 function stripThinking(text) {
@@ -347,16 +360,61 @@ function aiPrompt() {
   };
 }
 
+// A frozen-batch item (data/mains-fresh.json, written by the site's CI agent)
+// is already in the render shape; cleanAI re-validates it exactly like an
+// in-browser item so a malformed batch entry can never reach the page.
+function fromPool(o) {
+  var q = cleanAI(o);
+  if (!q) return null;
+  q.id = 'ci-' + String(o.id || Date.now().toString(36)).replace(/[^a-z0-9-]/gi, '').slice(0, 40);
+  q.origin = 'ci';
+  if (o.years && o.years.length) q.years = o.years.map(String).slice(0, 6);
+  return q;
+}
+
+// Serve one unused batch item, or null when the batch is missing/malformed.
+// When every item has been shown this session, the cycle restarts rather than
+// failing -- the page says the pool refills on the site's next build run.
+function takeFromPool() {
+  var items = (FRESH.items || []);
+  for (var tries = 0; tries < 6 && items.length; tries++) {
+    var pool = items.filter(function (o) { return o && o.id && !POOL_USED[o.id]; });
+    if (!pool.length) { POOL_USED = {}; pool = items.slice(); }
+    var pick = pool[Math.floor(Math.random() * pool.length)];
+    var q = fromPool(pick);
+    POOL_USED[pick.id] = 1;
+    if (q) return q;
+  }
+  return null;
+}
+
 function generateOne() {
   if (AI_BUSY) return;
   if (!STATE.data) { setGenStat('Still loading the question bank -- try again in a second.'); return; }
+
+  // Source 1: the frozen batch. Written by the site's own model on the GitHub
+  // build runners and shipped with the site, so this click costs nothing
+  // locally: no download, no GPU work, no heat.
+  var fromBatch = takeFromPool();
+  if (fromBatch) {
+    AI_QS.unshift(fromBatch);
+    render();
+    setGenStat('Added one question from the site\u2019s frozen AI batch (written on the build runners). Refresh discards it.');
+    var node0 = el('q-' + fromBatch.id);
+    if (node0 && node0.scrollIntoView) node0.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    return;
+  }
+
+  // Source 2: in-browser fallback, opt-in. The shared engine shows its
+  // device-heat permission card before compiling anything; declining (or no
+  // WebGPU) ends here without heating anything.
   var lib = window.VlymbooqAskLLM;
-  if (!lib) { setGenStat('The in-browser AI library could not load (offline?).'); return; }
-  if (!navigator.gpu) { setGenStat('This browser has no WebGPU, so the in-browser model cannot run here. Desktop Chrome, Edge 121+ or recent Safari works.'); return; }
+  if (!lib) { setGenStat('The in-browser AI library could not load (offline?) and the frozen batch is empty right now -- try again later.'); return; }
+  if (!navigator.gpu) { setGenStat('The frozen batch is empty right now and this browser has no WebGPU, so the in-browser model cannot run here. Desktop Chrome, Edge 121+ or recent Safari works.'); return; }
 
   var btn = el('genAI');
   AI_BUSY = true; btn.disabled = true;
-  setGenStat('Waking the in-browser model... the first run downloads the weights once (~1-2 GB), then they stay cached here. Nothing is sent to any server.');
+  setGenStat('Waking the in-browser model... the first run downloads the weights once (~1-2 GB) and they stay cached; while it writes, your device\u2019s GPU works and the machine can get warm. Nothing is sent to any server.');
 
   Promise.resolve(lib.whenReady ? lib.whenReady() : null).catch(function () {})
     .then(function () {
@@ -402,7 +460,12 @@ function generateOne() {
       if (/quota/i.test(m)) m = 'This browser refused to store the model (storage full or blocked). Free some disk space or allow site data, then click again.';
       setGenStat(m + (/click again/i.test(m) ? '' : ' Click again to retry.'));
     })
-    .then(function () { AI_BUSY = false; btn.disabled = false; });
+    .then(function () {
+      AI_BUSY = false; btn.disabled = false;
+      // Free the device once the writing is done: the engine unloads itself
+      // after a quiet minute, so the machine cools instead of idling hot.
+      if (lib.unloadSoon) { try { lib.unloadSoon(); } catch (e) { /* ignore */ } }
+    });
 }
 
 // A file:// page cannot fetch() its own data (CORS), which is the single most
@@ -417,11 +480,18 @@ Promise.all([
   // never take the bank down with it.
   fetch('data/mains-updates.json')
     .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; }),
+  // The frozen AI batch (written by the site's own model on the build
+  // runners) is optional too: when present, the generate button serves from
+  // it without running anything on the visitor's device.
+  fetch('data/mains-fresh.json')
+    .then(function (r) { return r.ok ? r.json() : null; })
     .catch(function () { return null; })
 ])
   .then(function (res) {
     var data = res[0];
     UPD = res[1] && res[1].items ? res[1] : { items: {} };
+    if (res[2] && res[2].items && res[2].items.length) FRESH = res[2];
     if (data) {
       (data.questions || []).forEach(function (q) {
         if (UPD.items[q.id]) q.updates = UPD.items[q.id];

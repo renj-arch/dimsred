@@ -13,6 +13,13 @@
 // browser. The weights (~1 GB) download once from a public CDN and are then
 // cached by the browser's own storage, so later visits start instantly.
 //
+// Because that work lands on the visitor's own hardware (audible fan, a warm
+// laptop), nothing compiles until they explicitly allow it: the first start
+// shows a permission card that says what will happen. When the writer goes
+// quiet for a minute the engine is unloaded so the GPU is released and the
+// machine cools instead of idling hot. A plugged-in backend (setBackend) never
+// touches the visitor's GPU and is not gated.
+//
 // The model is given the facts, not asked to remember them. Its instructions
 // forbid inventing a claim the corpus does not support, and every sentence it
 // borrows keeps its source, so the answer stays checkable.
@@ -157,6 +164,119 @@ var engineKey = null;
 var loading = null;
 var engineError = null;
 
+// --- device-heat gate: consent before compile, cool-down after --------------
+// Compiling and running a model is heavy work on the visitor's own hardware.
+// Nothing compiles until they allow it (the permission card below says what
+// will happen), and once writing stops the engine is unloaded after a quiet
+// minute so the GPU is released and the machine cools instead of idling hot.
+var HEAT_KEY = 'vlymbooqDeviceAI';
+var heatAsked = null;       // Promise<boolean>, memoized for this page load
+var unloadTimer = null;     // pending auto-unload after quiet time
+var UNLOAD_IDLE_MS = 90000; // no model work for 90s -> release the GPU
+
+function cancelUnload() {
+  if (unloadTimer) { clearTimeout(unloadTimer); unloadTimer = null; }
+}
+
+// Arm (or re-arm) the cool-down. Safe to call repeatedly.
+function unloadSoon(ms) {
+  if (typeof window === 'undefined') return;
+  cancelUnload();
+  unloadTimer = setTimeout(function () {
+    unloadTimer = null;
+    var eng = engine;
+    engine = null;
+    engineKey = null;
+    if (eng && typeof eng.unload === 'function') {
+      try { Promise.resolve(eng.unload()).catch(function () {}); } catch (e) { /* ignore */ }
+    }
+  }, ms || UNLOAD_IDLE_MS);
+}
+
+// Best-effort stop for a generation already running (the engine exposes an
+// interrupt; on builds that do not, the current call simply finishes).
+function stopGeneration() {
+  if (engine && typeof engine.interruptGenerate === 'function') {
+    try { engine.interruptGenerate(); } catch (e) { /* ignore */ }
+  }
+}
+
+// Wrap the engine so every generation settles the cool-down clock. Doing it
+// here means every caller (ask page, mains page, exam tutor) gets the
+// behaviour without page changes; if a build refuses the wrap, consent still
+// holds and auto-unload simply does not arm.
+function decorateEngine(eng) {
+  cancelUnload();
+  try {
+    var cc = eng && eng.chat && eng.chat.completions;
+    if (cc && typeof cc.create === 'function' && !cc.__heatWrapped) {
+      var orig = cc.create;
+      cc.create = function () {
+        cancelUnload();
+        var p = orig.apply(cc, arguments);
+        if (p && typeof p.then === 'function') {
+          p.then(function () { unloadSoon(); }).catch(function () { unloadSoon(); });
+        } else {
+          unloadSoon();
+        }
+        return p;
+      };
+      cc.__heatWrapped = true;
+    }
+  } catch (e) { /* best-effort */ }
+  return eng;
+}
+
+// The permission card. Non-DOM harnesses (scripts/check-ask-page-boot.js runs
+// this file under stubs) just pass through.
+function requireHeatConsent() {
+  if (typeof window === 'undefined' || typeof document === 'undefined') return Promise.resolve(true);
+  try {
+    var saved = localStorage.getItem(HEAT_KEY);
+    if (saved === 'yes') return Promise.resolve(true);
+    if (saved === 'no') return Promise.resolve(false);
+  } catch (e) { /* private mode etc. -- ask once */ }
+  if (heatAsked) return heatAsked;
+  heatAsked = new Promise(function (resolve) {
+    var box = document.createElement('div');
+    box.setAttribute('role', 'dialog');
+    box.setAttribute('aria-label', 'Run the AI model on this device?');
+    box.style.cssText = 'position:fixed;inset:0;z-index:2147483000;display:flex;' +
+      'align-items:center;justify-content:center;background:rgba(0,0,0,.66);padding:16px;' +
+      'font-family:Inter,system-ui,-apple-system,sans-serif';
+    box.innerHTML =
+      '<div style="max-width:470px;width:100%;background:#131316;border:1px solid rgba(255,255,255,.14);' +
+      'border-radius:14px;padding:18px 18px 14px;color:#e8e8ec;box-shadow:0 18px 60px rgba(0,0,0,.6)">' +
+        '<div style="font-weight:700;font-size:15px;margin-bottom:8px">This runs the AI model on <span style="color:#fbbf24">your device</span></div>' +
+        '<div style="font-size:13px;line-height:1.55;color:#b9b9c1">The site has no server behind this feature, so the writing model ' +
+        'compiles and runs in this browser on your own GPU/CPU. It downloads its weights once (about 1-2&nbsp;GB, cached for later visits) ' +
+        'and while it writes your machine works hard &mdash; <b style="color:#e8e8ec">the fan may spin up and it can get warm</b>. ' +
+        'Nothing is sent anywhere, and it unloads itself a minute after finishing. Everything else on the site needs none of this.</div>' +
+        '<label style="display:flex;gap:8px;align-items:center;margin:12px 0 2px;font-size:12px;color:#8a8a93;cursor:pointer">' +
+        '<input type="checkbox" id="heatRemember"> remember my choice on this device</label>' +
+        '<div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">' +
+          '<button id="heatNo" style="padding:8px 14px;border-radius:9px;border:1px solid rgba(255,255,255,.16);background:transparent;color:#d4d4d8;font-size:13px;cursor:pointer">Not now (stay cool)</button>' +
+          '<button id="heatYes" style="padding:8px 14px;border-radius:9px;border:1px solid rgba(251,191,36,.5);background:rgba(251,191,36,.14);color:#fbbf24;font-size:13px;font-weight:700;cursor:pointer">Run on my device</button>' +
+        '</div>' +
+      '</div>';
+    function finish(ok) {
+      try {
+        var cb = box.querySelector('#heatRemember');
+        if (cb && cb.checked) {
+          try { localStorage.setItem(HEAT_KEY, ok ? 'yes' : 'no'); } catch (e) { /* private mode */ }
+        }
+      } catch (e) { /* ignore */ }
+      try { if (box.parentNode) box.parentNode.removeChild(box); } catch (e) { /* ignore */ }
+      resolve(ok);
+    }
+    box.querySelector('#heatYes').onclick = function () { finish(true); };
+    box.querySelector('#heatNo').onclick = function () { finish(false); };
+    var host = document.body || document.documentElement;
+    host.appendChild(box);
+  });
+  return heatAsked;
+}
+
 // --- self-updating model set ------------------------------------------------
 // data/webllm-models.json (rebuilt by scripts/update-webllm-models.js on a
 // schedule) names the newest validated model for each size. Applying it here
@@ -270,6 +390,8 @@ function ensureEngine(onProgress) {
   // A plugged-in backend replaces WebLLM entirely: no WebGPU, no CDN weights.
   var custom = backendEngine();
   if (custom) return Promise.resolve(custom);
+  // Any request for the model cancels a pending cool-down: it is back on duty.
+  cancelUnload();
   // The remote model set refreshes in the background; a first compile waits
   // for it so the newest choice wins. A miss costs one tick.
   return applyRemoteModels().then(function () { return ensureEngineNow(onProgress); });
@@ -301,6 +423,22 @@ function ensureEngineNow(onProgress) {
     return Promise.reject(engineError);
   }
 
+  // Heavy on-device work is opt-in. The card explains the cost (one-time
+  // download, the machine runs hot while it writes); "remember" persists the
+  // choice. Declining fails cleanly -- every caller has a lighter path.
+  return requireHeatConsent().then(function (allowed) {
+    if (!allowed) {
+      engineError = new Error('On-device AI is off, so nothing heavy ran on this machine (reload to change this).');
+      engineKey = key;
+      throw engineError;
+    }
+    return compileNow(key, onProgress);
+  });
+}
+
+// The compile itself, split out so the permission gate above reads as one
+// decision instead of threading through the engine plumbing.
+function compileNow(key, onProgress) {
   // Switching sizes: drop the compiled engine before compiling the new one,
   // or two models sit in VRAM at once.
   var prev = engine;
@@ -346,7 +484,7 @@ function ensureEngineNow(onProgress) {
       return tryCompile(webllm, chain, opts, report);
     });
   }).then(function (eng) {
-    engine = eng;
+    engine = decorateEngine(eng);
     loading = null;
     return engine;
   }).catch(function (err) {
@@ -751,6 +889,8 @@ return {
   synthesize: synthesize,
   expand: expand,
   ensureEngine: ensureEngine,
+  unloadSoon: unloadSoon,
+  stop: stopGeneration,
   ensureMine: ensureMine,
   whenReady: applyRemoteModels,
   mineInfo: mineInfo,

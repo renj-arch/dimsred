@@ -68,6 +68,13 @@ data/questions/state-tracker.json
 # fetches it at runtime; must be tracked for the same slim-live git-index
 # reason as the bank above or the rail would silently never render.
 !data/mains-updates.json
+# Frozen AI batch for the mains page button (agent MainsFresh): practice
+# questions + model-answer skeletons written on the GitHub build runners so
+# that the "generate one more" click never compiles a model on a visitor's
+# device. mains.html fetches it at runtime; must be tracked for the same
+# slim-live git-index reason as the bank above, or the page would silently
+# fall back to on-device generation for everyone.
+!data/mains-fresh.json
 # Figures for the static SSC-JE quiz bank, keyed by question-text hash. The
 # quiz page fetches this at runtime and the site agent appends to it; tracked
 # for the same slim-live git-index reason as the bank above.
