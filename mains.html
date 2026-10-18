@@ -52,6 +52,10 @@ h1{font-size:24px;margin:6px 0 8px}
 .box.pit{background:rgba(239,68,68,.06);border:1px solid rgba(239,68,68,.25);color:var(--rose)}
 .box.pit li{color:var(--text-sec)}
 .box.laws{background:var(--bg);border:1px solid var(--border);color:var(--text-sec)}
+.box.upd{background:rgba(34,211,238,.06);border:1px solid rgba(34,211,238,.25);color:var(--cyan)}
+.box.upd li{color:var(--text-sec)}
+.box.upd .u{color:var(--cyan);font-weight:700}
+.box.upd a{color:var(--cyan)}
 .box ul{margin:0;padding-left:17px}.box li{margin:3px 0}
 .kw{font-size:11.5px;color:var(--text-sec);margin-top:10px}
 .kw span{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px;margin-right:5px;display:inline-block}
@@ -100,6 +104,18 @@ h1{font-size:24px;margin:6px 0 8px}
 <script>
 'use strict';
 var STATE = { data: null, paper: 'all', term: '' };
+// Post-publication updates (data/mains-updates.json): dated, source-linked
+// additions the site agent appends when a major development lands after an
+// answer was written. The core answer text stays hand-authored; this rail is
+// the only machine-written layer, and it shows dated with its source so a
+// reader can weigh it themselves.
+var UPD = { items: {} };
+function updDate(d) {
+  var m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(d || ''));
+  if (!m) return String(d || '');
+  var mm = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  return mm[Number(m[2]) - 1] + ' ' + m[1];
+}
 // Browser-session AI items (the in-browser generator). Never persisted and
 // never merged into data/mains-questions.json, which promises a reviewed,
 // hand-authored bank; these ride in their own array, badged, until refresh.
@@ -129,7 +145,7 @@ function visible() {
   var qs = (STATE.data.questions || []).filter(function (q) {
     if (STATE.paper !== 'all' && q.paper !== STATE.paper) return false;
     if (!STATE.term) return true;
-    var hay = norm([q.question, q.topic, (q.keywords || []).join(' '), (q.laws || []).join(' ')].join(' '));
+    var hay = norm([q.question, q.topic, (q.keywords || []).join(' '), (q.laws || []).join(' '), (q.updates || []).map(function (u) { return u.text; }).join(' ')].join(' '));
     return hay.indexOf(STATE.term) !== -1;
   });
   // Session AI items ride along, held to the same paper and search filters.
@@ -148,6 +164,16 @@ function card(q) {
   var secs = (q.answer || []).map(function (s) {
     return '<h3>' + esc(s.h) + '</h3><p>' + esc(s.p) + '</p>';
   }).join('');
+  // Updates after publication: the only machine-written layer in the bank,
+  // dated and linked to its source so the reader can weigh it. Capped at
+  // three; the agent enforces the same cap on write.
+  var ups = (q.updates || []).slice(-3);
+  var upd = ups.length
+    ? '<div class="box upd"><b>Updates after the answer was written</b><ul>' + ups.map(function (u) {
+        return '<li><span class="u">' + esc(updDate(u.date)) + '</span> ' + esc(u.text) +
+          (u.src ? ' <a href="' + esc(u.src) + '" target="_blank" rel="noopener nofollow">source</a>' : '') + '</li>';
+      }).join('') + '</ul></div>'
+    : '';
   var marks = (q.marksGuide || []).map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('');
   var pits = (q.pitfalls || []).map(function (m) { return '<li>' + esc(m) + '</li>'; }).join('');
   var laws = (q.laws || []).length
@@ -170,7 +196,7 @@ function card(q) {
     '<h2>' + esc(q.question) + '</h2>' +
     '<div class="badge model">MODEL ANSWER &middot; not an official UPSC key &middot; write your own attempt first</div>' +
     '<button class="btn" data-open="' + esc(q.id) + '">Show the model answer</button>' +
-    '<div class="ans" id="ans-' + esc(q.id) + '" hidden>' + secs +
+    '<div class="ans" id="ans-' + esc(q.id) + '" hidden>' + secs + upd +
       '<div class="box marks"><b>What the examiner rewards</b><ul>' + marks + '</ul></div>' +
       '<div class="box pit"><b>How this is answered badly</b><ul>' + pits + '</ul></div>' +
       laws + kw +
@@ -382,12 +408,27 @@ function generateOne() {
 // A file:// page cannot fetch() its own data (CORS), which is the single most
 // likely reason a student sees nothing. Say so, and say how to fix it, rather
 // than showing a blank page.
-fetch('data/mains-questions.json')
-  .then(function (r) {
+Promise.all([
+  fetch('data/mains-questions.json').then(function (r) {
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
+  }),
+  // The updates rail is optional by design: a missing or broken file must
+  // never take the bank down with it.
+  fetch('data/mains-updates.json')
+    .then(function (r) { return r.ok ? r.json() : null; })
+    .catch(function () { return null; })
+])
+  .then(function (res) {
+    var data = res[0];
+    UPD = res[1] && res[1].items ? res[1] : { items: {} };
+    if (data) {
+      (data.questions || []).forEach(function (q) {
+        if (UPD.items[q.id]) q.updates = UPD.items[q.id];
+      });
+    }
+    boot(data);
   })
-  .then(boot)
   .catch(function (err) {
     el('list').innerHTML = '<div class="empty">Could not load <code>data/mains-questions.json</code> (' + esc(err.message) + ').' +
       '<br><br>This page reads its data over HTTP. If you opened the file directly, run ' +

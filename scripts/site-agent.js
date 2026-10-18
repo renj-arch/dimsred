@@ -2680,6 +2680,150 @@ async function agentPracticeSets() {
   return { agent: 'practicesets', fixes: fixes };
 }
 
+// ── AGENT: MainsUpdates — dated "what changed after the answer" rail ──
+// The mains bank is hand-authored and deliberately stable; the world it
+// answers questions about is not. When a genuinely important development
+// lands (a new law, a landmark judgment, a committee report, a scheme
+// milestone), a candidate needs it ON the model answer, dated and sourced —
+// not buried in a news feed. This agent checks ONE question per run (oldest
+// checked first), reads a few free, working English news feeds (no API keys —
+// PIB's RSS serves Hindi at every documented endpoint, and LiveLaw, Down To
+// Earth and ThePrint refused the fetcher, all verified 2026-10-18; the desk
+// is: The Hindu, Indian Express news + explained, Hindustan Times), and asks
+// the model to pick at most two items that are BOTH major and directly
+// relevant.
+// The model may only pick by NUMBER from the fetched list; the URL is
+// attached from the feed itself, never typed by the model, so an invented
+// link cannot ship. The update TEXT is likewise the model's own writing:
+// nothing is copied from the article or the headline, and a title-overlap
+// gate rejects near-copies before anything is saved. Nothing relevant ->
+// nothing is written: on a reviewed bank, silence beats noise. The whole bank
+// rotates for free via the checked stamps kept in data/mains-updates.json.
+const MAINS_BANK = 'data/mains-questions.json';
+const MAINS_UPDATES = 'data/mains-updates.json';
+const MAINS_FEEDS = [
+  ['The Hindu', 'https://www.thehindu.com/news/national/feeder/default.rss'],
+  ['Indian Express', 'https://indianexpress.com/section/india/feed/'],
+  ['IE Explained', 'https://indianexpress.com/section/explained/feed/'],
+  ['Hindustan Times', 'https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml']
+];
+function curlText(url, maxSeconds) {
+  try {
+    return execSync('curl -sfL --max-time ' + (maxSeconds || 25) + ' ' + JSON.stringify(url),
+      { encoding: 'utf8', timeout: (maxSeconds + 8) * 1000, maxBuffer: 4 * 1024 * 1024 });
+  } catch (e) { return ''; }
+}
+function rssDecode(s) {
+  return String(s || '')
+    .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, '$1')
+    .replace(/&#(\d+);/g, function (m, n) { return String.fromCharCode(+n); })
+    .replace(/&#x([0-9a-f]+);/gi, function (m, n) { return String.fromCharCode(parseInt(n, 16)); })
+    .replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+    .replace(/&quot;/g, '"').replace(/&apos;/g, "'").replace(/&nbsp;/g, ' ')
+    .replace(/\s+/g, ' ').trim();
+}
+function rssItems(xml, source, maxItems) {
+  const out = [];
+  const parts = String(xml || '').split(/<item[\s>]/i).slice(1);
+  for (const b of parts) {
+    const t = rssDecode((b.match(/<title[^>]*>([\s\S]*?)<\/title>/i) || [])[1]);
+    const l = rssDecode((b.match(/<link[^>]*>([\s\S]*?)<\/link>/i) || [])[1]);
+    const d = rssDecode((b.match(/<pubDate[^>]*>([\s\S]*?)<\/pubDate>/i) || [])[1]);
+    if (!t || !/^https?:\/\//.test(l)) continue;
+    const dt = d ? new Date(d) : null;
+    out.push({
+      source: source, title: t, link: l,
+      date: (dt && !isNaN(dt.getTime())) ? dt.toISOString().slice(0, 10) : ''
+    });
+    if (out.length >= (maxItems || 15)) break;
+  }
+  return out;
+}
+async function agentMainsUpdates() {
+  const fixes = [];
+  const bank = loadJson(MAINS_BANK, null);
+  if (!bank || !Array.isArray(bank.questions) || !bank.questions.length) return { agent: 'mainsupdates', fixes: fixes };
+  let upd = loadJson(MAINS_UPDATES, null);
+  if (!upd || typeof upd !== 'object') upd = {};
+  if (!upd.meta || typeof upd.meta !== 'object') upd.meta = {};
+  if (!upd.meta.checked || typeof upd.meta.checked !== 'object') upd.meta.checked = {};
+  if (!upd.items || typeof upd.items !== 'object') upd.items = {};
+
+  // Stalest checked first: never-checked questions come up before re-checks.
+  const ranked = bank.questions.slice().sort(function (a, b) {
+    const ca = Date.parse(upd.meta.checked[a.id] || '') || 0;
+    const cb = Date.parse(upd.meta.checked[b.id] || '') || 0;
+    return ca - cb;
+  });
+  const q = ranked[0];
+  upd.meta.checked[q.id] = new Date().toISOString();
+
+  // Gather: last ~14 months only, deduped by link, capped hard.
+  const items = [];
+  const seen = {};
+  for (const f of MAINS_FEEDS) {
+    for (const it of rssItems(curlText(f[1], 25), f[0], 15)) {
+      const age = it.date ? (Date.now() - Date.parse(it.date)) : Infinity;
+      if (!it.date || age > 430 * 86400000 || age < 0) continue;
+      if (seen[it.link]) continue;
+      seen[it.link] = 1;
+      items.push(it);
+      if (items.length >= 40) break;
+    }
+    if (items.length >= 40) break;
+  }
+  if (!items.length) {
+    console.log('agent: MainsUpdates — feeds empty/unreachable; ' + q.id + ' checked with nothing to judge');
+    saveJson(MAINS_UPDATES, upd);
+    return { agent: 'mainsupdates', fixes: fixes };
+  }
+  const list = items.map(function (it, i) { return (i + 1) + '. [' + it.source + ' ' + it.date + '] ' + it.title; }).join('\n');
+  const sys = 'You maintain a reviewed UPSC Mains model-answer bank. You get ONE exam question and a numbered list of recent news items. Pick an item ONLY if it is both (a) a major, citable development — a new law, a landmark court judgment, a committee report or a scheme milestone — and (b) directly relevant to that question\u2019s subject: an examiner would award marks for citing it. Ignore crime reports, obituaries, sports, routine politics and awareness days. Write the update ENTIRELY in your own words: never copy or lightly rephrase the headline — state the event and what it changes for the answer. Reply with STRICT JSON only: {"updates":[{"n":<item number>,"text":"one factual exam-register sentence under 260 characters, no URLs, in original wording, saying specifically what changed"}]} — or {"updates":[]} if nothing qualifies. At most 2 items. Never invent: use only what the title states as the underlying fact. No prose outside the JSON.';
+  const user = 'Question: ' + q.question + '\nTopic: ' + (q.topic || '') + '\nPaper: ' + (q.paper || '') + '\n\nRecent items:\n' + list;
+  const r = await callLLM(sys, user, 1024);
+  let picks = [];
+  try {
+    const txt = String((r && r.text) || '').replace(/```[a-z]*|```/gi, '').trim();
+    const j = JSON.parse(txt.slice(txt.indexOf('{'), txt.lastIndexOf('}') + 1));
+    picks = Array.isArray(j.updates) ? j.updates : [];
+  } catch (e) { picks = []; }
+
+  const have = Array.isArray(upd.items[q.id]) ? upd.items[q.id] : [];
+  let added = 0;
+  for (const p of picks) {
+    if (added >= 2) break;
+    const n = parseInt(p && p.n, 10);
+    if (!(n >= 1 && n <= items.length)) continue;
+    const it = items[n - 1];
+    const text = rssDecode(String((p && p.text) || ''));
+    if (text.length < 60 || text.length > 300) continue;
+    if (/https?:\/\/|www\./i.test(text)) continue;
+    if (have.some(function (u) { return u.src === it.link; })) continue;
+    if (have.some(function (u) { return paperOverlap(u.text, text) > 0.6; })) continue;
+    // Originality gate: the sentence must be the model's own wording. A high
+    // word-overlap with the source headline means it parroted the feed — drop
+    // it. Nothing copied ever ships; the link is attribution, not the text.
+    if (paperOverlap(it.title, text) > 0.75) continue;
+    have.push({ date: it.date, text: text, src: it.link, source: it.source });
+    added++;
+  }
+  if (added) {
+    upd.items[q.id] = have.slice(-3); // newest three; older ones roll off
+    upd.meta.updatedAt = new Date().toISOString();
+    saveJson(MAINS_UPDATES, upd);
+    fixes.push({
+      page: MAINS_UPDATES,
+      fix: added + ' dated update(s) added to the model answer "' + q.id + '"',
+      text: upd.items[q.id].map(function (u) { return u.date + ' — ' + u.text.slice(0, 120); }).join('\n')
+    });
+    console.log('agent: MainsUpdates — added ' + added + ' update(s) to ' + q.id);
+  } else {
+    saveJson(MAINS_UPDATES, upd); // persist the checked stamp; add nothing
+    console.log('agent: MainsUpdates — nothing worth adding for ' + q.id);
+  }
+  return { agent: 'mainsupdates', fixes: fixes };
+}
+
 // ── AGENT: GraphNotes — proper relationship explanations on flowchart cards ──
 // Clicking Gandhi showed generic (sometimes wrong-entity) descriptions and
 // "mentioned with" everywhere, plus junk cards (TV sitcoms, absurd spans).
@@ -3217,6 +3361,7 @@ async function main() {
     ['Papers', agentPapers],
     ['WikiSyllabus', agentWikiSyllabus],
     ['PracticeSets', agentPracticeSets],
+    ['MainsUpdates', agentMainsUpdates],
     ['GraphNotes', agentGraphNotes],
     ['MetaLearn', agentMetaLearn]
   ];
