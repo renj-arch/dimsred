@@ -32,6 +32,9 @@ jobs:
       - name: Install dependencies
         run: npm install
 
+      - name: Clean question banks (repair corruption, drop junk)
+        run: node scripts/bank-cleanup.js --fix --strict=cgl
+
       - name: Generate weekly mock tests for all exams
         run: node scripts/generate-weekly-mocks.js
 
