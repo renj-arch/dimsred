@@ -82,11 +82,9 @@
         .download-btn{display:inline-flex;align-items:center;gap:6px;padding:8px 18px;border-radius:100px;font-weight:600;font-size:.82em;border:1px solid var(--border);cursor:pointer;background:var(--bg-card);color:var(--text-sec);transition:all .2s}
         .download-btn:hover{background:rgba(255,255,255,.06);color:var(--text)}
         @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}
-        body{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none}
-        body{-webkit-touch-callout:none}
     </style>
 </head>
-<body oncontextmenu="return false">
+<body>
     <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="/nda/">NDA</a><a href="index.html" class="active">Course</a></div></div></nav>
     <div class="container">
         <div class="flex-row">
@@ -109,7 +107,10 @@
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
                         <span style="font-size:.75em;color:var(--text-muted)">Grammar · Vocabulary · Comprehension · Sentence Correction</span>
                     </div>
-
+                    <div style="display:flex;gap:8px;margin-top:10px">
+                        <button onclick="window.print()" class="download-btn">&#x1f4c4; Download PDF</button>
+                        <a href="../../mock-tests/index.html" class="download-btn">&#x1f3af; Take Mock Test</a>
+                    </div>
                 </div>
                 <div class="lesson-body">
                     <h3>Learning Objectives</h3>
@@ -119,24 +120,64 @@
                         <li>Practice with exam-level questions to build speed and accuracy</li>
                     </ul>
                     <h3>Key Concepts</h3>
-<p>This lesson covers <strong>English</strong>, a key topic in General Ability Test (Paper 2) for NDA. Below is a structured overview of the core concepts you need to master.</p>
-<h3>Key Concepts Covered</h3>
+<p>The English section of the General Ability Test is a rigorous assessment designed to test your command over the language through grammar, vocabulary, reading comprehension, and sentence correction. Success in this module does not rely on rote memorization but rather on understanding the underlying logic of how sentences are constructed and how words interact with one another. This lesson provides a comprehensive guide to mastering these four pillars, offering clear rules, practical examples, and strategies to tackle even the most tricky questions under time pressure.</p>
+
+<h3>Grammar</h3>
+<p>Grammar is the structural framework of a sentence, ensuring that thoughts are conveyed logically and accurately. The fundamental rule governing agreement is subject-verb concord: the verb must always match the number (singular or plural) of its subject. For instance, if the subject is "The list of items," which is singular because it refers to one list, the verb must be singular as well, such as "is." Conversely, a compound subject joined by 'and' usually requires a plural verb, like "Tom and Jerry are friends." The examiner typically asks you to identify errors in these agreements or to select the correct verb form based on the tense indicated by time words like 'yesterday' (past) or 'tomorrow' (future). You must scan for the subject first before looking at the verb to avoid being misled by intervening phrases.</p>
+
+<h3>Vocabulary</h3>
+<p>Vocabulary tests your ability to understand the precise meaning of words and their contextual usage within a sentence. A key concept here is synonymy, where words with similar meanings are used to vary style, but antonymy, where opposite meanings create contrast, is often tested in fill-in-the-blank questions. The examiner frequently presents a sentence with a missing word or an incorrect word and expects you to choose the option that best fits the tone and logic of the paragraph. To solve these, read the entire sentence first to grasp the context; then, look for clue words like 'however' (indicating contrast) or 'therefore' (indicating result). If a word seems ambiguous, eliminate options that are too extreme or unrelated to the main theme.</p>
+
+<h3>Reading Comprehension</h3>
+<p>Reading comprehension measures your ability to extract specific information, understand the author's intent, and infer meaning from text. The core principle is that every answer must be directly supported by the passage; you cannot use outside knowledge. The examiner typically asks questions about the main idea, the author's attitude, or specific details mentioned in a paragraph. To approach these effectively, read the question before reading the options to keep your focus sharp. Look for keywords in the question and locate them in the text, paying attention to pronouns like 'it' or 'they' which refer back to a noun mentioned earlier. Always verify that your chosen answer does not contradict any part of the passage.</p>
+
+<h3>Sentence Correction</h3>
+<p>Sentence correction focuses on identifying grammatical faults such as misplaced modifiers, dangling participles, and run-on sentences. A modifier is a word or phrase that describes another word, and it must be placed immediately next to the word it describes to avoid ambiguity. For example, in "Running down the street, the dog chased the ball," the phrase 'running' correctly modifies 'the dog.' However, if you wrote "Running down the street, the ball was caught by the boy," the modifier incorrectly suggests the ball was running. The examiner often presents a sentence with an underlined part and asks which option improves clarity or correctness. You must check for parallelism in lists (e.g., "He likes swimming, hiking, and to run" is incorrect; it should be "swimming, hiking, and running") and ensure that the tense remains consistent throughout the sentence.</p>
+
+<div class="example-box">
+  <div class="ex-title">Technique: Subject-Verb Agreement Check</div>
+  <div class="ex-text">
+    <strong>Question:</strong> Identify the error in the following sentence:<br>
+    "The number of students who are present in the class is increasing every day."
+  </div>
+  <div class="ex-soln">
+    <strong>Solution:</strong><br>
+    The subject of the sentence is "The number," which is singular. Therefore, the verb must be singular ("is"). However, the phrase "who are present" contains a relative clause where "who" refers to "students" (plural), so "are" is correct there. The main error lies in the agreement between "number" and "is." If the sentence were "The numbers of students," it would be plural, but usually, we say "The number of..." implying one collective count. A common trap is confusing "The number" (singular) with "A number of" (meaning several, which is plural). In this specific case, the sentence structure is actually grammatically correct in standard usage because "number" is singular. Let us create a corrected version for clarity: <em>"The numbers of students who are present in the class are increasing every day."</em> Wait, that changes meaning. Let's look at a clearer error: "One of the boys who play cricket has won." Here, 'play' should be 'plays' because it refers to 'One'.
+  </div>
+</div>
+
+<div class="example-box">
+  <div class="ex-title">Technique: Contextual Word Choice</div>
+  <div class="ex-text">
+    <strong>Question:</strong> Choose the correct word:<br>
+    "He was accused _____ stealing the money."<br>
+    Options: A) of, B) for, C) with, D) on.
+  </div>
+  <div class="ex-soln">
+    <strong>Solution:</strong><br>
+    The correct preposition to use after the verb "accuse" is "of." This is a fixed collocation in English: "accuse someone of something." Using 'for' implies reason, 'with' implies possession or accompaniment, and 'on' implies location. Therefore, option A is the only grammatically correct choice that fits the standard idiom.
+  </div>
+</div>
+
+<h3>Common Traps</h3>
 <ul>
-  <li><strong>Grammar:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Vocabulary:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Comprehension:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Sentence Correction:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
+  <li><strong>Misplaced Modifiers:</strong> Students often place descriptive phrases too far from the noun they describe, leading to confusing sentences like "She saw the man with the telescope" (did she use the telescope or did the man have it?). Always ensure the modifier touches the word it modifies.</li>
+  <li><strong>Confusing 'Few' and 'A Few':</strong> 'Few' means not many (negative connotation), while 'a few' means some (positive connotation). Students often mix these up when describing quantities.</li>
+  <li><strong>Dangling Participles:</strong> Using a participle phrase without a clear subject, such as "Walking down the street, the trees looked beautiful" (trees cannot walk).</li>
+  <li><strong>Run-on Sentences:</strong> Combining two independent clauses with only a comma instead of a conjunction or semicolon.</li>
 </ul>
-<h3>Important Formulas & Rules</h3>
-<p>Focus on understanding the core formulas and when to apply them. Practice identifying the correct formula based on question type. Create a formula sheet for quick revision before the exam.</p>
-<h3>Common Question Types</h3>
+
+<h3>Memory Tricks</h3>
 <ul>
-  <li>Direct application of formulas and concepts</li>
-  <li>Multi-step problems requiring combination of concepts</li>
-  <li>Data interpretation and analysis-based questions</li>
+  <li><strong>The 'A Few' Rule:</strong> Remember that "a" usually adds positivity. "A few friends" means you have some friends (good). "Few friends" means you are lonely (bad).</li>
+  <li><strong>Parallelism Mnemonic:</strong> Think of a train track; both rails must be identical in shape. In lists, keep parts of speech the same: nouns with nouns, verbs with verbs.</li>
+  <li><strong>Subject-Verb Shortcut:</strong> Cross out everything between the subject and the verb to see if they match directly. Ignore words like "and," "with," or "who" that might distract you.</li>
 </ul>
-<div class="tip-box"><div class="tip-title">Exam Strategy</div><div class="tip-text">Practice topic-wise questions first, then attempt mixed sets. Focus on accuracy before speed. Review your mistakes and maintain an error log.</div></div>
-                </div>
+
+<div class="tip-box">
+  <div class="tip-title">Exam-Day Strategy</div>
+  <div class="tip-text">On the exam day, read the instructions for each section carefully before starting. For grammar and vocabulary questions, do not spend more than 45 seconds per question; if you are stuck, mark it and move on to return later. In reading comprehension, scan the passage for keywords rather than reading every single word linearly if time is tight. Always double-check your answers for sentence correction by reading the full sentence aloud in your head to catch awkward phrasing.</div>
+</div>                </div>
                 <h3 style="margin-top:24px;margin-bottom:12px;font-size:1.1em">Practice Questions</h3>
                 <div id="practice-qs"></div>
                 <div style="display:flex;gap:10px;margin-top:10px">
@@ -150,7 +191,7 @@
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":6,"text":"What is the primary concept tested in English?","options":[{"l":"a","t":"Direct application","c":false},{"l":"b","t":"Conceptual understanding","c":false},{"l":"c","t":"Formula recall","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for English."},{"id":7,"text":"Which of the following best describes the approach to solve English problems?","options":[{"l":"a","t":"Memorize all formulas","c":false},{"l":"b","t":"Understand concepts first","c":true},{"l":"c","t":"Practice only difficult questions","c":false},{"l":"d","t":"Skip theory","c":false}],"sol":"The correct approach is: Understand concepts first. Focus on understanding core concepts and regular practice for English."},{"id":8,"text":"In English, which step is most critical for accurate problem-solving?","options":[{"l":"a","t":"Reading the question carefully","c":false},{"l":"b","t":"Using the correct formula","c":false},{"l":"c","t":"Performing calculations accurately","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for English."},{"id":9,"text":"How can you improve your speed in English questions?","options":[{"l":"a","t":"Regular practice with timer","c":true},{"l":"b","t":"Solving only easy questions","c":false},{"l":"c","t":"Memorizing answers","c":false},{"l":"d","t":"Skipping calculations","c":false}],"sol":"The correct approach is: Regular practice with timer. Focus on understanding core concepts and regular practice for English."},{"id":10,"text":"What is the best strategy for attempting English questions in the exam?","options":[{"l":"a","t":"Attempt all questions","c":false},{"l":"b","t":"Easy questions first, then difficult","c":true},{"l":"c","t":"Difficult questions first","c":false},{"l":"d","t":"Random order","c":false}],"sol":"The correct approach is: Easy questions first, then difficult. Focus on understanding core concepts and regular practice for English."}];
+        var practiceQs = [{"id":101,"text":"Identify the grammatically correct sentence regarding subject-verb agreement.","options":[{"l":"a","t":"The number of students who are present in the class is increasing.","c":true},{"l":"b","t":"A number of students who are present in the class are increasing.","c":false},{"l":"c","t":"The number of students who is present in the class is increasing.","c":false},{"l":"d","t":"A number of students who is present in the class are increasing.","c":false}],"sol":"The subject 'The number' is singular, so it requires a singular verb 'is'. The phrase 'who are present' refers to 'students', which is plural, so 'are' is correct there. Option 1 is correct. Option 2 uses 'are' with 'number', which is wrong. Options 3 and 4 have agreement errors in the relative clause."},{"id":102,"text":"Select the word that best completes the sentence: 'She was accused _____ lying to the committee.'","options":[{"l":"a","t":"for","c":false},{"l":"b","t":"on","c":false},{"l":"c","t":"of","c":true},{"l":"d","t":"with","c":false}],"sol":"The verb 'accuse' is always followed by the preposition 'of'. This is a fixed grammatical rule in English. Therefore, 'of' is the only correct option."},{"id":103,"text":"In the sentence 'Walking down the street, the trees looked beautiful,' what is the error?","options":[{"l":"a","t":"No error","c":false},{"l":"b","t":"Misplaced modifier: 'Walking' should modify the subject 'trees', but trees cannot walk.","c":true},{"l":"c","t":"Parallelism error in the verb phrase","c":false},{"l":"d","t":"Incorrect use of preposition","c":false}],"sol":"The phrase 'Walking down the street' is a dangling modifier. It implies the subject performing the action is 'the trees', which is illogical since trees do not walk. The sentence should be corrected to specify who was walking, e.g., 'Walking down the street, I saw the trees look beautiful.'."},{"id":104,"text":"Choose the correct meaning of the phrase 'Few people came to the party.'","options":[{"l":"a","t":"Some people came","c":false},{"l":"b","t":"Not many people came (negative)","c":true},{"l":"c","t":"Many people came","c":false},{"l":"d","t":"A specific number of people came","c":false}],"sol":"'Few' without the article 'a' implies a negative quantity, meaning 'not many'. It suggests disappointment or scarcity. In contrast, 'a few' would mean 'some', which is positive."},{"id":105,"text":"Which sentence demonstrates correct parallel structure in a list?","options":[{"l":"a","t":"He likes swimming, hiking, and to run.","c":false},{"l":"b","t":"He likes swimming, hiking, and running.","c":true},{"l":"c","t":"He likes to swim, to hike, and runs.","c":false},{"l":"d","t":"He likes swimming, to hike, and running.","c":false}],"sol":"Parallel structure requires items in a list to be the same part of speech. 'Swimming' and 'hiking' are gerunds (verb+ing), so 'running' must also be a gerund. Option 1 mixes gerunds with an infinitive. Options 3 and 4 mix different forms incorrectly."}];
         var answered={},correctCount=0,lessonSlug="english";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
