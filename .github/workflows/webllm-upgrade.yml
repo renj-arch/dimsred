@@ -1,0 +1,59 @@
+name: WebLLM Upgrade
+
+# Keeps the browser writing model current with zero hands. Each run mirrors the
+# newest official @mlc-ai/web-llm release into scripts/vendor byte-for-byte
+# (restoring it if a hand-edit ever mangled it), validates every model record
+# the tiers would use, regenerates data/webllm-models.json + the offline
+# defaults inside ask-llm.js, and publishes. Nothing changed -> ci-push exits 0.
+
+on:
+  schedule:
+    - cron: '23 5 * * 1'   # weekly, Monday
+  workflow_dispatch:
+
+concurrency:
+  group: webllm-upgrade
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  upgrade:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      # Replaces actions/checkout on purpose: a full checkout downloads the
+      # 8.8 GB data/questions blobs this job never touches (~20 wasted minutes
+      # per weekly run). Same lean fetch as slim-live.yml, except the remote
+      # carries the PAT because ci-push's push must trigger downstream
+      # workflows (slim-live, deploy).
+      - name: Fetch main without downloading question blobs
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "https://x-access-token:${{ secrets.PAT }}@github.com/$GITHUB_REPOSITORY.git"
+          git fetch -q --depth=50 --filter=blob:none origin main
+          git sparse-checkout init --no-cone
+          git sparse-checkout set --no-cone '/*' '!/data/questions/'
+          git update-ref refs/remotes/origin/main FETCH_HEAD
+          git checkout -q -B main FETCH_HEAD
+          git branch -q --set-upstream-to=origin/main
+          echo "checked out $(git ls-files | wc -l) paths"
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Sync + validate WebLLM models
+        run: node scripts/update-webllm-models.js
+
+      - name: Publish
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/webllm-models.json scripts/vendor/webllm/index.min.js scripts/lib/ask-llm.js
+          bash scripts/ci-push.sh "webllm-upgrade: library + model tiers synced with the newest release (run #${{ github.run_number }})"

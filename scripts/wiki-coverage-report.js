@@ -42,7 +42,12 @@ try {
 function main() {
   const files = fs.readdirSync(DIR).filter(f =>
     f.endsWith('.json') && f !== 'catalog.json' && f !== 'manifest.json' &&
-    f !== 'archive-cat-index.json' && f !== 'wiki-coverage.json');
+    f !== 'archive-cat-index.json' && f !== 'wiki-coverage.json' &&
+    // archive-index.json and the search-filter.* Bloom shards are not question
+    // banks: their top-level keys are metadata ("common", "fileCount", "m"),
+    // and treating each key as a category filled the fault board with critical
+    // "Category 'm' has only 0 questions" entries that buried the real ones.
+    f !== 'archive-index.json' && !/^search-filter/i.test(f));
 
   const subjects = [];
   let totalQuestions = 0;

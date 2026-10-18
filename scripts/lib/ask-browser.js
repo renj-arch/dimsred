@@ -73,14 +73,32 @@ var QB = 'data/ask-qb/';
   // router already orders them by measured relevance, so the tail adds cost
   // without changing the answer.
   var MAX_SHARDS = 5;
-  var MAX_BYTES = 90 * 1024 * 1024;
+  // Per-question byte budget. It must clear the largest category (World
+  // Geography, ~155 MiB in 60 MiB parts): a budget below a category's size
+  // silently dropped the shard holding the answer -- every "monsoon in india"
+  // fetch skipped Meteorology & Climate and the question refused. A category is
+  // now taken part by part, so an oversized one is truncated rather than
+  // dropped.
+  var MAX_BYTES = 200 * 1024 * 1024;
 
   var state = { ready: false, error: null, dir: null, entityDir: null, concepts: null };
 
   function isCorpusShard(url) {
     var u = String(url);
     return u.indexOf('ask-qb/bucket/bucket.') !== -1 ||
-           u.indexOf('ask-qb/phrase/phrase.') !== -1;
+           // The bucket manifest is small and committed on main, but during the
+           // window between a corpus push and the Cloudflare deploy of the
+           // matching main commit the origin copy is a rebuild behind; the
+           // corpus copy is authoritative and costs 55 KB.
+           u.indexOf('ask-qb/bucket/buckets.json') !== -1 ||
+           u.indexOf('ask-qb/phrase/phrase.') !== -1 ||
+           // Category shards (ask-qb.N.json and their split parts) ride the same
+           // corpus branch. They are gitignored from main, the deploy target
+           // cannot hold the largest ones, and the CF direct upload has been
+           // skipped since the deploy secrets went missing -- so without this
+           // fallback every routed shard 404s in production and Ask answers
+           // from the thin timeline index instead of the corpus.
+           u.indexOf('ask-qb/ask-qb.') !== -1;
   }
 
   function get(url) {
@@ -154,6 +172,51 @@ var QB = 'data/ask-qb/';
       }
     }
     return out || list;
+  }
+
+  // Rescue routing when nothing scored, but the subject is a phrase the corpus
+  // carries inside other entities' sentences. "fundamental duties" has no entity
+  // of its own, and every entity whose name begins with "fundamental" is listed
+  // by the candidate guard as too broad to admit, so the entity gate stays shut
+  // and the question refused even though the Constitution of India rows state
+  // exactly what fundamental duties are. The phrase index knows which entities
+  // carry the phrase; routing through those entities' categories lets the
+  // scorer match the sentences. The rescue only runs when everything else came
+  // back empty, so it cannot displace a route that already worked.
+  function phraseRescue(route) {
+    var phrases = (route.subjectPhrases || []).slice(0, 3);
+    return Promise.all(phrases.map(function (p) {
+      return api.phraseLookup(p.raw);
+    })).then(function (hits) {
+      var picked = route.categories;
+      var byName = {};
+      hits.forEach(function (h) {
+        if (!h || !h.entities) return;
+        h.entities.slice(0, 8).forEach(function (name) {
+          if (byName[name]) return;
+          byName[name] = 1;
+          var idxs = state.entityDir ? state.entityDir.lookup(name) : null;
+          (idxs || []).forEach(function (i) {
+            var c = state.dir.categories[i];
+            if (!c) return;
+            var cur = null;
+            for (var k = 0; k < picked.length; k++) {
+              if (picked[k].cat.name === c.name) { cur = picked[k]; break; }
+            }
+            // 10 sits below a directory hit (20) and below measured concept
+            // evidence (18), but above a plain hint, because this is the corpus
+            // itself naming the entities that hold the phrase.
+            if (cur) { if (cur.score < 10) cur.score = 10; }
+            else picked.push({ cat: c, score: 10 });
+          });
+        });
+      });
+      if (picked.length) {
+        picked.sort(function (a, b) { return b.score - a.score; });
+        route.rescued = true;
+      }
+      return null;
+    }).catch(function () { return null; });
   }
 
   // Named rather than returned inline, because essay() needs to call mains() and
@@ -262,26 +325,52 @@ bucketReady: function () { return !!state.buckets; },
       if (!state.ready) return Promise.reject(new Error('engine not booted'));
       var limit = opts.limit || 8;
       var route = state.answer.route(question, state.dir, state.entityDir, state.concepts);
+
+      // Nothing scored, but the subject may still be a phrase the corpus carries
+      // inside other entities' sentences (see phraseRescue). The rescue is
+      // awaited before any shard is chosen, so the byte budget is spent on the
+      // shards it routed to when it fired.
+      var rescue = (!route.categories.length && route.subjectPhrases && route.subjectPhrases.length)
+        ? phraseRescue(route)
+        : Promise.resolve();
+
+      return rescue.then(function () {
       var cats = route.categories.slice(0, opts.maxShards || MAX_SHARDS);
 
       // Shards are already ordered by score, so the byte budget is spent on the
-      // most relevant ones and the remainder is reported as missing.
+      // most relevant ones. A category is taken part by part -- each part is at
+      // most 60 MiB by construction -- and whatever does not fit is reported as
+      // missing so the caller can fall back.
       var budget = opts.maxBytes || MAX_BYTES;
       var chosen = [];
-      var skipped = 0;
+      var missing = 0;
       cats.forEach(function (c) {
-        var bytes = c.cat.bytes || 0;
-        if (bytes > budget) { skipped++; return; }
-        budget -= bytes;
-        chosen.push(c);
+        var files = (c.cat.files && c.cat.files.length) ? c.cat.files : [c.cat.file];
+        var sizes = (c.cat.partBytes && c.cat.partBytes.length === files.length) ? c.cat.partBytes : null;
+        var take = [];
+        for (var i = 0; i < files.length; i++) {
+          var b = sizes ? sizes[i] : Math.ceil((c.cat.bytes || 0) / files.length);
+          if (b > budget) break;
+          budget -= b;
+          take.push(files[i]);
+        }
+        if (!take.length) { missing++; return; }
+        missing += files.length - take.length;
+        chosen.push({ cat: c.cat, files: take });
       });
 
-      var missing = skipped;
       var lists = [];
       var jobs = chosen.map(function (c) {
-        return loadShard(c.cat.file).then(function (out) {
-          if (out.missing || !out.rows) { missing++; return; }
-          lists.push(state.qb.scoreShard(out.rows, question, {
+        return Promise.all(c.files.map(function (f) { return loadShard(f); })).then(function (outs) {
+          var rows = [];
+          var gone = false;
+          outs.forEach(function (out) {
+            if (out.missing || !out.rows) { gone = true; return; }
+            rows = rows.concat(out.rows);
+          });
+          if (gone) missing++;
+          if (!rows.length) return;
+          lists.push(state.qb.scoreShard(rows, question, {
             conceptPhrases: route.phrases,
             jurisdiction: route.jurisdiction,
             subject: route.anchorSubject,
@@ -305,6 +394,7 @@ route: route,
 missing: missing
 };
 });
+      });
 },
 
 // Answer a mains question as a structured dossier of evidence.

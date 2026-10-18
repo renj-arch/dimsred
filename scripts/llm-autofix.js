@@ -210,8 +210,12 @@ async function callLLM(system, user, maxTokens) {
       { role: 'user', content: user }
     ],
     stream: true,
-    // 2048 not 1024: qwen3.8:27b is a THINKING model — it burns
-    // ~200-600 tokens on message.thinking before emitting content.
+    // 2048 not 1024: batched JSON answers are long even without thinking.
+    // THINKING OFF (full post-mortem in site-agent.js): the default thinking
+    // mode on a 4-vCPU runner streams far slower than a token per second and
+    // generation calls die in the 90-minute curl cap with content still empty.
+    // qwen3.8:27b answers directly with think:false. Rollback: OLLAMA_THINK=true.
+    think: process.env.OLLAMA_THINK === 'true',
     options: { temperature: 0.3, num_predict: maxTokens || 2048 }
   });
   let out;
@@ -220,7 +224,7 @@ async function callLLM(system, user, maxTokens) {
   } catch (e) {
     if (e.status === 28 || e.signal === 'SIGTERM' || String(e.message || '').match(/timed out/i)) {
       console.log('autofix: Ollama stalled/timed out — restarting server to clear wedged work, then one retry');
-      try { execSync('pkill -f "ollama serve"; sleep 2; nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
+      try { execSync('pkill -f "ollama serve"; sleep 2; OLLAMA_KEEP_ALIVE=60m nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
       try {
         for (let i = 0; i < 60; i++) {
           try {
@@ -239,14 +243,11 @@ async function callLLM(system, user, maxTokens) {
       out = null;
     }
   }
-  if (!out) {
-    // Optional fallbacks below (unchanged) — only used if API keys happen to be set.
-  } else {
-  try {
+  function parseChatStream(outStr) {
     // NDJSON stream: accumulate message.content (and thinking for think
     // models, which may arrive per-chunk or only at end); the trailing line
     // is curl's HTTP-code write-out.
-    const lines = String(out).split('\n');
+    const lines = String(outStr).split('\n');
     let httpCode = '';
     while (lines.length && lines[lines.length - 1].trim() === '') lines.pop();
     if (lines.length && /^\d{3}$/.test(lines[lines.length - 1].trim())) httpCode = lines.pop().trim();
@@ -263,16 +264,27 @@ async function callLLM(system, user, maxTokens) {
         if (typeof j.response === 'string') content += j.response;
       } catch (e) { /* partial line; ignore */ }
     }
-    const text = content.trim() || thinking.trim();
-    if (text) {
-      console.log('autofix: LLM ← ' + OLLAMA_MODEL + ' (' + text.length + ' chars): ' + text.slice(0, 400).replace(/\s+/g, ' '));
-      return { text: text, model: OLLAMA_MODEL + ' (local)' };
+    return { text: content.trim() || thinking.trim(), httpCode: httpCode };
+  }
+
+  let parsed = out ? parseChatStream(out) : null;
+  // Older daemons reject think:false with HTTP 400 — drop the field once and
+  // retry (see site-agent.js for the full post-mortem).
+  if (parsed && !parsed.text && parsed.httpCode === '400' && process.env.OLLAMA_THINK !== 'true') {
+    console.log('autofix: Ollama rejected think:false (HTTP 400) — retrying without the parameter');
+    try {
+      out = await streamChat(JSON.stringify(Object.assign(JSON.parse(payload), { think: undefined })));
+      parsed = parseChatStream(out);
+    } catch (e5) {
+      console.log('autofix: no-think retry failed: exit=' + (e5 && e5.status));
+      parsed = null;
     }
-    console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + httpCode + ')');
-  } catch (e) {
-    console.log('autofix: Ollama response failed: ' + String(e.message || e).slice(0, 200));
   }
+  if (parsed && parsed.text) {
+    console.log('autofix: LLM ← ' + OLLAMA_MODEL + ' (' + parsed.text.length + ' chars): ' + parsed.text.slice(0, 400).replace(/\s+/g, ' '));
+    return { text: parsed.text, model: OLLAMA_MODEL + ' (local)' };
   }
+  if (parsed) console.log('autofix: Ollama ' + OLLAMA_MODEL + ' returned empty (http ' + parsed.httpCode + ')');
 
   // Optional fallbacks — only used if API keys happen to be set.
   const groqKey = process.env.GROQ_API_KEY;

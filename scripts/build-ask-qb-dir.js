@@ -43,7 +43,11 @@ function main() {
   var totalRows = 0;
 
   cats.forEach(function (c, ci) {
-    var rows = JSON.parse(fs.readFileSync(path.join(ROOT, c.file), 'utf8'));
+    var files = c.files || [c.file];
+    var rows = [];
+    files.forEach(function (f) {
+      rows = rows.concat(JSON.parse(fs.readFileSync(path.join(ROOT, f), 'utf8')));
+    });
     c.entities = rows.length;
     c.sentences = rows.reduce(function (a, r) { return a + (r[1] ? r[1].length : 0); }, 0);
     rows.forEach(function (r) {
@@ -70,7 +74,8 @@ function main() {
     distinctNames: names.length,
     entitiesFile: 'entities.tsv',
     categories: cats.map(function (c) {
-      return { name: c.name, file: c.file, entities: c.entities, sentences: c.sentences, bytes: c.bytes };
+      return { name: c.name, file: c.file, files: c.files, partBytes: c.partBytes,
+               entities: c.entities, sentences: c.sentences, bytes: c.bytes };
     })
   };
   fs.writeFileSync(DIR_JSON, JSON.stringify(out, null, 1));

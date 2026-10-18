@@ -13,7 +13,12 @@ on:
 
 concurrency:
   group: question-quality
-  cancel-in-progress: true
+  # false, NOT true: this pipeline publishes only at the very END (archive +
+  # quiz conversions + commit). cancel-in-progress killed 59 of the last 60
+  # runs mid-flight — the converter step never executed even once since it
+  # shipped on 2026-10-15. With false, a newer trigger waits (superseding any
+  # older pending run) instead of murdering the in-flight publish.
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -130,6 +135,12 @@ jobs:
           NODE_OPTIONS: '--max-old-space-size=2048'
           # Signals site-agent.js to run ONLY the Questions+Content agents
           AGENT_ONLY: questions
+          # Wall-clock deadline. A run killed by the 6h job timeout publishes
+          # NOTHING (every fix lost). Typical pre-agent cost: checkout+swap+
+          # pull ~35-90 min; archive+quiz steps after need ~80-130 min. Past
+          # this the agent stops starting new LLM work so the run still
+          # reaches its publish step; skipped work rotates in next run.
+          AGENT_DEADLINE_MIN: '130'
         run: node scripts/site-agent.js
 
       # 27B writes finished model answers into the archive (categorized under
@@ -144,13 +155,15 @@ jobs:
         run: node scripts/write-archive-answers.js
 
       # 27B converts fill-blank fragments into proper MCQs for the quiz
-      # (current-affairs serves these first). Same warm model, budget 10/run.
+      # (current-affairs serves these first). Same warm model, budget 25/run --
+      # 10 left the quiz-proper pool filling too slowly to show current-affairs
+      # a fresh face each visit; 25 still fits inside the 6h job ceiling.
       - name: Convert proper quiz MCQs (27B)
         env:
           OLLAMA_MODEL: qwen3.8:27b
           OLLAMA_HOST: http://127.0.0.1:11434
           NODE_OPTIONS: '--max-old-space-size=2048'
-          MAX_CONVERT: '10'
+          MAX_CONVERT: '25'
         run: node scripts/convert-quiz-proper.js
 
       # Rebuild the mega quiz bank from the current corpus (fast, no model).

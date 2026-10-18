@@ -11,8 +11,11 @@ name: Browser Test
 
 on:
   schedule:
-    # Daily off-peak. Heavy job (browser download + 20 pages with flows).
-    - cron: '30 3 * * *'
+    # Every 3 hours. The job is minutes-long and public-repo Actions are free;
+    # BUGS, not minutes, are the expensive resource. Daily meant a regression
+    # could sit live for ~24h (the 2026-10-15 homepage break waited far longer
+    # than that). The content contracts now fail fast, so the cadence can too.
+    - cron: '30 */3 * * *'
   workflow_dispatch:
 
 concurrency:

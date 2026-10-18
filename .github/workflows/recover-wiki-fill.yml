@@ -40,6 +40,14 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 180
     steps:
+      # build-archive-single.js streams every unique question as NDJSON into
+      # /tmp (~6-8GB) on top of the full checkout — drop unused preinstalled
+      # SDKs to free ~20GB so the tail never dies with ENOSPC.
+      - name: Free runner disk space (archive build needs ~20GB)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
@@ -256,6 +264,7 @@ jobs:
 
       - name: Rebuild timeline map from question data
         continue-on-error: true
+        timeout-minutes: 25
         run: |
           NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
 

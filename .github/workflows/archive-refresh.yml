@@ -1,0 +1,120 @@
+name: Archive Refresh
+
+# Self-healing convergence for the archive artifacts.
+#
+# data/questions is the corpus source of truth, but archive.html / catalog.json /
+# archive-cat-index.json / archive-index.json are only rebuilt by the LAST job of
+# the multi-hour Wiki Fill / Feed Fill pipelines — and every run cancellation kills
+# that job, silently freezing the archive at an old snapshot while the corpus keeps
+# growing. Caught 2026-10-17: 32 shard files / 280,999 questions were present in
+# the corpus but absent from every category in the archive — the archive footer
+# said "16,708,419 across 137 categories" while the coverage report counted
+# 16,989,418.
+#
+# This workflow rebuilds those artifacts from current main on its own schedule, no
+# matter what killed the pipeline runs. Idempotent: when the archive already
+# matches the corpus the build produces no diff and ci-push publishes nothing.
+
+on:
+  schedule:
+    - cron: '43 2,8,14,20 * * *'   # 4x daily, off :00 to dodge the busy minute
+  workflow_dispatch:
+
+concurrency:
+  group: archive-refresh
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 170
+    steps:
+      # The build streams every unique question as NDJSON into /tmp (~6-8GB)
+      # while the checkout holds the corpus. Runner default free space is not
+      # enough (Feed Fill #25 died with ENOSPC at flushCat) — drop the
+      # preinstalled SDKs nobody here uses to free ~20GB.
+      - name: Free runner disk space (archive build needs ~20GB)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/questions
+            current-affairs.html
+            archive.html
+
+      - name: Freshness gate — skip when the archive is already newer than the data
+        id: gate
+        run: |
+          STAMP=$(node -p "require('./data/questions/archive-index.json').generatedAt || ''" 2>/dev/null || echo '')
+          NEWEST=$(git log -1 --format=%cI -- data/questions 2>/dev/null || true)
+          echo "archive built at: ${STAMP:-unknown}"
+          echo "newest data/questions commit: ${NEWEST:-unknown}"
+          if [ -n "$STAMP" ] && [ -n "$NEWEST" ]; then
+            S=$(date -d "$STAMP" +%s 2>/dev/null || echo 0)
+            N=$(date -d "$NEWEST" +%s 2>/dev/null || echo 0)
+            if [ "$N" -gt 0 ] && [ "$N" -le "$S" ]; then
+              echo "skip=true" >> "$GITHUB_OUTPUT"
+            fi
+          fi
+
+      - name: Build archive + category index from corpus
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          NODE_OPTIONS: --max-old-space-size=6144
+        run: node scripts/build-archive-single.js
+
+      - name: Rebuild per-file archive index
+        if: steps.gate.outputs.skip != 'true'
+        run: node scripts/build-archive-index.mjs
+
+      - name: Verify — every question file is wired into the archive
+        if: steps.gate.outputs.skip != 'true'
+        run: |
+          node - <<'NODE'
+          const fs = require('fs'), path = require('path');
+          const DIR = 'data/questions';
+          const idx = JSON.parse(fs.readFileSync(path.join(DIR, 'archive-cat-index.json'), 'utf8'));
+          const refs = new Set();
+          (function walk(n) {
+            if (!n || typeof n !== 'object') return;
+            if (Array.isArray(n)) return n.forEach(walk);
+            if (n.file) String(n.file).split(',').forEach(p => {
+              p = p.trim().replace(/^data\/questions\//, '');
+              if (p) refs.add(p);
+            });
+            for (const k of Object.keys(n)) walk(n[k]);
+          })(idx);
+          const skip = /^(catalog|manifest|archive-cat-index|archive-index|wiki-coverage)\.json$/i;
+          const files = fs.readdirSync(DIR).filter(f => f.endsWith('.json') && !skip.test(f) && !/^search-filter/i.test(f));
+          const orphans = files.filter(f => !refs.has(f));
+          const catSum = idx.reduce((s, c) => s + (c.total || 0), 0);
+          const ai = JSON.parse(fs.readFileSync(path.join(DIR, 'archive-index.json'), 'utf8'));
+          console.log('categories:', idx.length, '| cat-index total:', catSum);
+          console.log('archive-index total:', ai.total, '| files:', ai.fileCount, '| built:', ai.generatedAt);
+          console.log('question files on disk:', files.length, '| orphans:', orphans.length);
+          if (orphans.length) {
+            console.log('orphans:', orphans.slice(0, 10).join(', '));
+            console.error('::error::archive refresh left ' + orphans.length + ' question files unreferenced — refusing to publish');
+            process.exit(1);
+          }
+          NODE
+
+      - name: Publish refreshed archive
+        if: steps.gate.outputs.skip != 'true'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          bash scripts/ci-push.sh "archive-refresh: rebuild archive + indexes from corpus (run #${{ github.run_number }})"

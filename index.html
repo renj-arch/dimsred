@@ -12,8 +12,12 @@
     <link rel="icon" type="image/svg+xml" href="favicon.svg">
     <link rel="icon" type="image/png" href="logo.png">
     <link rel="canonical" href="https://vlymbooq.qzz.io/">
-    <script src="js/bundles/core.js"></script>
-<script src="js/index.js"></script>
+    <!-- Homepage widget scripts must keep defer: they query the DOM when
+         they execute, and without defer they run in <head> before the body
+         exists, silently no-op, and leave every widget stuck on
+         "Loading..." (the 2026-10-15 outage). Do not remove defer. -->
+    <script src="js/bundles/core.js" defer></script>
+<script src="js/index.js" defer></script>
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","name":"vlymbooq — Smart Practice for Competitive Exams","description":"Free practice papers for SSC CGL, RBI Grade B, JEE, NEET, GATE, UPSC & more with answer keys, topic drills, custom mock generator, and mistake review.","url":"https://vlymbooq.qzz.io/","educationalLevel":"Competitive Exam","audience":{"@type":"EducationalAudience","educationalRole":"student"},"publisher":{"@type":"Organization","name":"vlymbooq","url":"https://vlymbooq.qzz.io"}}</script>
     <meta property="og:title" content="vlymbooq — Smart Practice for Competitive Exams">
     <meta property="og:description" content="Free practice papers, topic drills, custom mocks, and mistake review for SSC CGL, RBI, JEE, NEET, GATE, UPSC & more.">
@@ -830,6 +834,7 @@
                 <a href="micro-test.html">🎯 Drill</a>
                 <a href="papers.html">📜 Papers</a>
                 <a href="mental.html"><i data-lucide="brain" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Mental</a>
+                <a href="lecture.html">🎧 Lectures</a>
                 <a href="science.html"><i data-lucide="flask-conical" style="width:14px;height:14px;vertical-align:middle;margin-right:2px"></i> Science</a>
                 <a href="polytechnic.html">🏫 Polytechnic</a>
                 <a href="current-affairs.html">📰 GK</a>
@@ -1410,6 +1415,7 @@
                     <a href="leaderboard.html">Leaderboard</a>
                     <a href="mistakes.html">Mistake Review</a>
                     <a href="mental.html">Mental Training</a>
+                    <a href="lecture.html">Spoken Lectures</a>
                     <a href="science.html">Science Lab</a>
                     <a href="polytechnic.html">Polytechnic</a>
                     <a href="mega-test.html">Study Guides</a>

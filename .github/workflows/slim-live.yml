@@ -106,7 +106,13 @@ jobs:
           git push --force origin "$LIVE_TREE:refs/heads/live"
           echo "live -> $LIVE_TREE"
 
+      # Only needed by the direct-upload deploy below. When that is skipped
+      # (no CF secrets in this repo) staging + the 2 GB corpus overlay are
+      # pure waste: Cloudflare Pages deploys the `live` branch (git
+      # integration), and live-dist never fed anything else. Same `if` as
+      # the deploy step so the moment CF secrets exist this runs again.
       - name: Stage slim site for direct upload
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
         run: |
           set -euo pipefail
           mkdir -p live-dist
@@ -127,8 +133,13 @@ jobs:
       # degradation Ask already handles -- the question is answered from the
       # 217k timeline nodes instead of the full corpus, never with an error.
       - name: Overlay retrieval corpus from the corpus branch
+        if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
         run: |
           set -euo pipefail
+          # bucket + phrase only, ON PURPOSE. The category shards (up to 60 MiB
+          # parts) are too large for a Cloudflare Pages direct upload's per-file
+          # ceiling; ask-browser.js reads them straight off the corpus branch via
+          # the raw.githubusercontent fallback instead. Do not add them here.
           if git fetch --depth=1 origin corpus 2>/dev/null; then
             mkdir -p live-dist/data/ask-qb
             git archive FETCH_HEAD data/ask-qb/bucket data/ask-qb/phrase 2>/dev/null \

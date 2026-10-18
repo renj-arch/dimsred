@@ -47,6 +47,19 @@ const LOG = 'data/agent-log.json';
 // one of those "improvements" broke generation.
 const OLLAMA_URL = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434');
 
+// ── Wall-clock deadline (AGENT_DEADLINE_MIN) ──
+// A run killed by its GitHub job timeout publishes NOTHING — every fix is
+// lost, which is worse than doing less work. Past this many minutes (counted
+// from the true run start in main()), callLLM refuses new prompts so agents
+// unwind, their saves flush, and the workflow still reaches its publish
+// step. Skipped work simply rotates in on the next run. Rule-based agents
+// (SEO/Perf/A11Y/…) never call the model and always run. 0/unset disables.
+const DEADLINE_MIN = parseFloat(process.env.AGENT_DEADLINE_MIN || '0') || 0;
+let deadlineAnchor = Date.now();
+function pastDeadline() {
+  return DEADLINE_MIN > 0 && Date.now() - deadlineAnchor > DEADLINE_MIN * 60000;
+}
+
 // One HTTP attempt at the chat endpoint, STREAMING via spawn + monitor.
 // History of this transport (each failure taught one clause):
 // - stream:false returns zero bytes until all ~2048 tokens finish (15-35 min
@@ -79,13 +92,13 @@ function ollamaChat(payload) {
     let lastByteAt = Date.now();
     let settled = false;
 
-    function fail(why) {
+    function fail(why, status) {
       if (settled) return;
       settled = true;
       clearInterval(mon);
       try { child.kill('SIGKILL'); } catch (e) { /* ignore */ }
       const err = new Error('stream monitor: ' + why);
-      err.status = 28; // same class as curl timeout -> restart+retry policy
+      err.status = status === undefined ? 28 : status; // 28 = curl-timeout class (restart+retry); other = plain fail
       err.stdout = out.slice(0, 2000);
       err.stderr = stderr.slice(0, 400);
       reject(err);
@@ -93,6 +106,11 @@ function ollamaChat(payload) {
 
     const mon = setInterval(() => {
       const now = Date.now();
+      // Deadline abort: when AGENT_DEADLINE_MIN is set and reached while a
+      // call is in flight, end the stream NOW with a custom status so
+      // callLLM does NOT do the exit-28 restart+retry dance. The abandoned
+      // server-side generation finishes on its own; nothing new starts.
+      if (pastDeadline()) return fail('agent deadline reached mid-call', 'DEADLINE');
       if (now - started > 95 * 60 * 1000) return fail('hard cap 95min');
       if (!firstByteAt) {
         if (now - started > 25 * 60 * 1000) return fail('no first byte in 25min (cold load/prompt eval over budget)');
@@ -180,6 +198,9 @@ function logModelState(tag) {
 }
 
 async function callLLM(system, user, maxTokens) {
+  if (pastDeadline()) {
+    throw new Error('AGENT_DEADLINE_REACHED (' + DEADLINE_MIN + 'min) — refusing new LLM work so the run can publish; skipped work rotates in next run');
+  }
   const model = process.env.OLLAMA_MODEL || 'qwen3.8:27b';
   // Recall: the agent records lessons/addRules/addWins every run but long
   // ago stopped READING them (amnesia — same mistakes repeated). For
@@ -200,8 +221,17 @@ async function callLLM(system, user, maxTokens) {
     ],
     // Streaming is forced by ollamaChat regardless; set here for clarity.
     stream: true,
-    // 2048 not 1024: qwen3.8:27b spends ~200-600 tokens thinking before
-    // it emits content. 1024 was cutting answers off mid-thought.
+    // THINKING OFF. qwen3.8:27b reasons in message.thinking by default, and on
+    // a 4-vCPU CPU runner that reasoning streams at a fraction of a token per
+    // second: a generation call then spends the whole 90-minute curl budget
+    // inside thinking and dies with content still empty (Question Quality #15
+    // and the Site Agent run of 2026-10-17 both wedged exactly there — 48 KB
+    // of thinking after 5400 s, then the restart retry lost another 90 min the
+    // same way). think:false makes the model answer directly, which is 3-5x
+    // fewer tokens for the same result. Rollback hatch: OLLAMA_THINK=true.
+    think: process.env.OLLAMA_THINK === 'true',
+    // 2048 not 1024: even without thinking, batched JSON answers (question
+    // generation) are long; 1024 cut them off mid-array.
     options: { temperature: 0.3, num_predict: maxTokens || 2048 }
   });
   logModelState('pre-call');
@@ -221,7 +251,7 @@ async function callLLM(system, user, maxTokens) {
     // server. If that also fails, give up this call — never burn the job.
     if (e.status === 28) {
       console.log('agent: Ollama timed out (' + detail + ') — restarting server to clear wedged work, then one retry');
-      try { execSync('pkill -f "ollama serve"; sleep 2; nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
+      try { execSync('pkill -f "ollama serve"; sleep 2; OLLAMA_KEEP_ALIVE=60m nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore', timeout: 15000 }); } catch (e0) { /* ignore */ }
       try {
         for (let i = 0; i < 60; i++) {
           try {
@@ -240,18 +270,30 @@ async function callLLM(system, user, maxTokens) {
       // so the NEXT call has something to talk to.
       if (e.status === 7 || String(e.stderr || '').match(/Connection refused|Failed to connect/i)) {
         console.log('agent: server refused connection — restarting ollama for next call');
-        try { execSync('nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore' }); } catch (e3) { /* best effort */ }
+        try { execSync('OLLAMA_KEEP_ALIVE=60m nohup ollama serve >> /tmp/ollama.log 2>&1 &', { stdio: 'ignore' }); } catch (e3) { /* best effort */ }
       }
       return null;
     }
   }
   try {
-    const parsed = parseChatStream(out);
+    let parsed = parseChatStream(out);
+    // Older Ollama daemons or template-only thinkers reject the think field
+    // with HTTP 400. Drop it and give the call one clean retry — this keeps
+    // the fix safe across model/daemon combinations.
+    if (!parsed.text && parsed.httpCode === '400' && process.env.OLLAMA_THINK !== 'true') {
+      console.log('agent: Ollama rejected think:false (HTTP 400) — retrying without the parameter');
+      try {
+        out = await ollamaChat(JSON.stringify(Object.assign(JSON.parse(payload), { think: undefined })));
+        parsed = parseChatStream(out);
+      } catch (e4) {
+        console.log('agent: Ollama no-think retry failed: exit=' + (e4 && e4.status));
+        return null;
+      }
+    }
     // qwen3.8:27b is a THINKING model: it reasons in message.thinking and
-    // puts the final answer in message.content. With num_predict as low as
-    // 10 the entire budget is consumed by thinking and content comes back
-    // empty (run #60: content="" thinking="The user is asking me to
-    // confirm that generation works"). Fall back to thinking when empty.
+    // puts the final answer in message.content. The think:false request above
+    // normally skips reasoning outright; the thinking fallback stays for the
+    // no-think-flag retry path and for old daemons that ignore the field.
     const text = parsed.text;
     if (!text) {
       console.log('agent: Ollama ' + model + ' returned empty (http ' + parsed.httpCode + ')');
@@ -304,11 +346,39 @@ function listPages() {
 // consumes a library's globals immediately at parse time and its lib scripts
 // must run synchronously (no defer). Shared contract between SelfCheck (which
 // strips defer in this case) and Perf (which must not re-add it).
+//
+// Native browser properties are NOT library consumers. The first version of
+// this check flagged any window.X, so index.html's inline AdSense snippet
+// ((adsbygoogle = window.adsbygoogle || [])...) read as "the page consumes a
+// deferred lib's globals" and selfcheck stripped defer from the head-loaded
+// widget scripts — which run before <body> exists without it and silently
+// no-op, re-creating the 2026-10-15 homepage outage. Native/third-party names
+// are ignored so only real lib globals trigger the rule.
+var NATIVE_WINDOW = {
+  addEventListener: 1, removeEventListener: 1, dispatchEvent: 1,
+  location: 1, history: 1, navigator: 1, screen: 1, performance: 1,
+  localStorage: 1, sessionStorage: 1, crypto: 1, console: 1, document: 1,
+  scrollTo: 1, scrollBy: 1, scroll: 1, scrollY: 1, scrollX: 1, pageYOffset: 1,
+  innerWidth: 1, innerHeight: 1, devicePixelRatio: 1, isSecureContext: 1,
+  open: 1, close: 1, alert: 1, confirm: 1, prompt: 1, print: 1, postMessage: 1,
+  matchMedia: 1, getComputedStyle: 1, requestAnimationFrame: 1,
+  setTimeout: 1, setInterval: 1, clearTimeout: 1, clearInterval: 1,
+  speechSynthesis: 1, SpeechSynthesisUtterance: 1, adsbygoogle: 1,
+  fetch: 1, XMLHttpRequest: 1, WebSocket: 1, URL: 1, URLSearchParams: 1,
+  Image: 1, Audio: 1, Blob: 1, FileReader: 1, AbortController: 1,
+  MutationObserver: 1, IntersectionObserver: 1, ResizeObserver: 1,
+  CustomEvent: 1, Event: 1, frameElement: 1, frames: 1, parent: 1, top: 1,
+  self: 1, name: 1, status: 1, origin: 1
+};
 function pageNeedsSyncScripts(html) {
   const inlineRe = /<script>([\s\S]*?)<\/script>/gi;
   let im;
   while ((im = inlineRe.exec(html)) !== null) {
-    if (/\bwindow\.[A-Za-z_$]/.test(im[1])) return true;
+    const winRe = /\bwindow\.([A-Za-z_$][A-Za-z0-9_$]*)/g;
+    let wm;
+    while ((wm = winRe.exec(im[1])) !== null) {
+      if (!NATIVE_WINDOW[wm[1]]) return true;
+    }
   }
   return false;
 }
@@ -3046,6 +3116,7 @@ async function main() {
   log.model = model;
   console.log('agent: using model ' + model);
   const runStart = Date.now();
+  deadlineAnchor = runStart; // deadline counts from the real run start, not module load
 
   // FIRST action: one real generation call. Proves the server can
   // load+generate before any filesystem work. If this fails, skip the LLM
@@ -3191,8 +3262,14 @@ async function main() {
   }
   } // end else (rotation fallback)
   console.log('agent: will run ' + agents.length + ' agent(s): ' + agents.map(([n]) => n).join(', '));
+  if (DEADLINE_MIN > 0) console.log('agent: deadline ' + DEADLINE_MIN + 'min from run start — LLM agents skipped past it, rule agents still run');
 
   for (const [name, fn] of agents) {
+    if (pastDeadline() && !ruleAgents.some(([n]) => n === name)) {
+      console.log('agent: SKIP ' + name + ' — ' + DEADLINE_MIN + 'min deadline reached; publishing what is done (rotates next run)');
+      results.push({ agent: name.toLowerCase(), fixes: [], skipped: 'deadline' });
+      continue;
+    }
     const t0 = Date.now();
     // Log BEFORE each agent so the 5-10 min of CPU inference is visible
     // in the logs instead of looking like a hang (runs #56-#60 looked dead

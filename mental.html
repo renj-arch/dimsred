@@ -181,7 +181,7 @@
                 <a href="index.html">Home</a>
                 <a href="dashboard.html">Dashboard</a>
                 <a href="micro-test.html">Drill</a>
-                <a href="#">Guides</a>
+                <a href="revision.html">Guides</a>
                 <a href="current-affairs.html">📰 GK</a>
                 <a href="mental.html" class="active" style="color:var(--text);background:rgba(255,255,255,.06)">Mental</a>
                 <a href="science.html" style="color:var(--text-sec)">🔬 Science</a>
@@ -255,6 +255,64 @@
                     <span id="speedOverall" style="color:var(--amber)">—</span>
                 </div>
                 <div id="speedGrid"></div>
+            </div>
+
+            <!-- INVENTED — brand-new questions invented by the site's AI -->
+            <div class="mode-card" style="margin-top:12px;padding:18px;border:2px solid rgba(34,211,238,.3);background:linear-gradient(135deg,rgba(34,211,238,.07),rgba(167,139,250,.07))">
+                <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+                    <span style="font-size:1.8em">🧪</span>
+                    <span style="font-size:1.2em;font-weight:900;background:linear-gradient(135deg,#22d3ee,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Invented — fresh paper</span>
+                </div>
+                <div style="font-size:.78em;color:var(--text-sec);text-align:center;margin-top:2px">The site's own AI question-setter invents brand-new questions — new twists, new framings, new numbers. Nothing here existed on any paper before.</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startInvented('easy')">🙂 Easy<span style="display:block;font-size:.85em;color:var(--text-muted)">warm-up</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startInvented('moderate')">🎯 Moderate<span style="display:block;font-size:.85em;color:var(--text-muted)">exam level</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startInvented('hard')">🔥 Hard<span style="display:block;font-size:.85em;color:var(--text-muted)">tricky</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startInvented('veryhard')">💀 Very Hard<span style="display:block;font-size:.85em;color:var(--text-muted)">mains-grade</span></button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:.75em;color:var(--text-sec)">
+                    <label>Questions:
+                        <select id="invCount" style="background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:1em">
+                            <option>8</option><option selected>12</option><option>20</option><option>30</option>
+                        </select>
+                    </label>
+                    <span>· Quant + Reasoning + English · fresh batches invented round the clock</span>
+                </div>
+                <div class="stat" id="stat-invented" style="margin-top:8px;font-size:.78em">0 solved</div>
+            </div>
+
+            <!-- EXAM SIM — live, exam-grade mixed practice -->
+            <div class="mode-card" style="margin-top:12px;padding:18px;border:2px solid rgba(251,146,60,.3);background:linear-gradient(135deg,rgba(251,146,60,.07),rgba(59,130,246,.07))">
+                <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+                    <span style="font-size:1.8em">🎯</span>
+                    <span style="font-size:1.2em;font-weight:900;background:linear-gradient(135deg,#fb923c,#3b82f6);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Exam Sim — Live</span>
+                </div>
+                <div style="font-size:.78em;color:var(--text-sec);text-align:center;margin-top:2px">Fresh questions generated on demand — Quant + Reasoning + English at real bank / govt-exam difficulty. Pick your level:</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px">
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startExamSim('clerk')">🏦 Bank Clerk<span style="display:block;font-size:.85em;color:var(--text-muted)">easy–moderate</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startExamSim('po')">🎯 PO / SSC CGL<span style="display:block;font-size:.85em;color:var(--text-muted)">exam standard</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startExamSim('mains')">🔥 PO Mains<span style="display:block;font-size:.85em;color:var(--text-muted)">hard</span></button>
+                    <button class="action-btn secondary" style="padding:10px 8px;font-size:.78em" onclick="startExamSim('expert')">💀 Expert<span style="display:block;font-size:.85em;color:var(--text-muted)">CAT-level</span></button>
+                </div>
+                <div style="display:flex;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:.75em;color:var(--text-sec)">
+                    <label>Questions:
+                        <select id="examSimCount" style="background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:1em">
+                            <option>10</option><option selected>20</option><option>30</option><option>50</option>
+                        </select>
+                    </label>
+                    <span>· mixed sections · timed like the exam</span>
+                </div>
+                <div class="stat" id="stat-examsim" style="margin-top:8px;font-size:.78em">0 solved</div>
+            </div>
+
+            <!-- SPOKEN LECTURES — hear the story, not the text -->
+            <div class="mode-card" style="margin-top:12px;padding:18px;border:2px solid rgba(52,211,153,.3);background:linear-gradient(135deg,rgba(52,211,153,.07),rgba(34,211,238,.07))">
+                <div style="display:flex;align-items:center;justify-content:center;gap:10px">
+                    <span style="font-size:1.8em">🎧</span>
+                    <span style="font-size:1.2em;font-weight:900;background:linear-gradient(135deg,#34d399,#22d3ee);-webkit-background-clip:text;-webkit-text-fill-color:transparent">Spoken Lectures</span>
+                </div>
+                <div style="font-size:.78em;color:var(--text-sec);text-align:center;margin-top:2px">Don't read it — hear it. Any topic performed aloud in chapters — the people, the turning points, the ideas — with the words lighting up as they are spoken, closing with three lines to remember forever.</div>
+                <div style="margin-top:10px"><a href="lecture.html" class="action-btn primary" style="display:block;text-align:center;text-decoration:none;padding:10px 8px;font-size:.85em;font-weight:800">🎬 Open the lecture hall</a></div>
             </div>
 
             <!-- GRAND SLAM -->
@@ -671,6 +729,79 @@
         loadQuestion();
     }
 
+    // Exam Sim: on-demand mixed paper (Quant + Reasoning + English) generated
+    // question by question at the chosen exam tier's difficulty and pace.
+    function startExamSim(tierKey) {
+        var cfg = (window.MENTAL_EXAM_TIERS || {})[tierKey];
+        if (!cfg) return;
+        window.__mentalExamSim = cfg;
+        var sel = document.getElementById('examSimCount');
+        var count = sel ? (parseInt(sel.value, 10) || 20) : 20;
+        var hardMode = document.getElementById('hardModeToggle').checked;
+        session = window.startMentalSession('examsim', {
+            hardMode: hardMode,
+            total: count,
+            layer: 'exam',
+            label: '🎯 ' + cfg.name + ' · ' + count + 'Q'
+        });
+        document.getElementById('modeSelect').style.display = 'none';
+        document.getElementById('arena').classList.add('active');
+        answered = false;
+        hasHint = false;
+        inPuzzleCluePhase = false;
+        loadQuestion();
+    }
+
+    // Invented: questions made from scratch by the site's CI setter agent
+    // (data/invented/questions.json). Same arena UI; falls back to Exam Sim
+    // while the pool is still warming up or when offline.
+    function startInvented(diffKey) {
+        var fallback = { easy: 'clerk', moderate: 'po', hard: 'mains', veryhard: 'expert' };
+        var pts = { easy: 2, moderate: 3, hard: 4, veryhard: 5 };
+        var sel = document.getElementById('invCount');
+        var count = sel ? (parseInt(sel.value, 10) || 12) : 12;
+        var go = function(pool) {
+            var qs = (pool || []).filter(function(q) { return q && q.difficulty === diffKey; });
+            if (qs.length < 3) {
+                alert('The invented pool for this level is still warming up — starting an Exam Sim instead.');
+                startExamSim(fallback[diffKey] || 'po');
+                return;
+            }
+            for (var i = qs.length - 1; i > 0; i--) { var j = Math.floor(Math.random() * (i + 1)); var t = qs[i]; qs[i] = qs[j]; qs[j] = t; }
+            qs = qs.slice(0, count).map(function(q) {
+                return {
+                    question: q.stem,
+                    answer: q.answer,
+                    options: (q.options || []).slice(),
+                    solution: q.solution || '',
+                    hint: q.hint || '',
+                    timeLimit: q.seconds || 40,
+                    difficulty: pts[q.difficulty] || 3,
+                    section: q.section,
+                    techniqueLabel: '🧪 Invented · ' + q.section + ' · ' + q.difficulty
+                };
+            });
+            session = window.startMentalSession('invented', {
+                hardMode: document.getElementById('hardModeToggle').checked,
+                total: qs.length,
+                layer: 'exam',
+                label: '🧪 Invented · ' + diffKey + ' · ' + qs.length + 'Q',
+                questions: qs
+            });
+            document.getElementById('modeSelect').style.display = 'none';
+            document.getElementById('arena').classList.add('active');
+            answered = false;
+            hasHint = false;
+            inPuzzleCluePhase = false;
+            loadQuestion();
+        };
+        if (window.__inventedPool) { go(window.__inventedPool); return; }
+        fetch('data/invented/questions.json').then(function(r) { return r.json(); }).then(function(j) {
+            window.__inventedPool = (j && j.questions) || [];
+            go(window.__inventedPool);
+        }).catch(function() { go(null); });
+    }
+
     function loadQuestion() {
         if (!session || !session.active) { endTraining(); return; }
         var q = window.getMentalQuestion(session);
@@ -866,7 +997,7 @@
             avgTime = Math.round(totalTime / session.review.length);
         }
         h += '<div class="detail-row"><span>Avg/Q</span><span style="color:var(--amber)">' + (avgTime > 0 ? avgTime + 's' : '—') + '</span></div>';
-        h += '<div class="detail-row"><span>Mode</span><span style="color:var(--purple)">' + lastSession.mode.charAt(0).toUpperCase() + lastSession.mode.slice(1) + '</span></div>';
+        h += '<div class="detail-row"><span>Mode</span><span style="color:var(--purple)">' + (lastSession.label || (lastSession.mode.charAt(0).toUpperCase() + lastSession.mode.slice(1))) + '</span></div>';
         if (lastSession.hardMode) h += '<div class="detail-row"><span>Difficulty</span><span style="color:var(--red);font-weight:700">🔥 Hard</span></div>';
         h += '<div class="detail-row"><span>Total Points</span><span style="color:var(--amber)">' + stats.points + '</span></div>';
         h += '<div class="detail-row"><span>Streak</span><span style="color:var(--amber)">' + stats.streak + '🔥</span></div>';

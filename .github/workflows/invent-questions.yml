@@ -1,0 +1,111 @@
+name: Invent Questions
+
+# The site's own question-setter agent: qwen3.8:27b invents BRAND-NEW exam
+# questions — new mechanisms, new contexts, worked solutions — and publishes
+# them to data/invented/questions.json. mental.html serves them as
+# "Invented - fresh paper" practice.
+#
+# Nothing here is templated: each brief lists the styles/topics already used
+# so the agent keeps inventing fresh mechanisms instead of repeating, and a
+# 70% word-overlap filter (same rule as the rest of the site) drops any
+# accidental duplicate before it can be stored.
+#
+# Zero API keys: the model runs locally on the runner through Ollama.
+
+on:
+  schedule:
+    - cron: '17 3,11,19 * * *'   # 3 batches a day, off :00
+  workflow_dispatch:
+    inputs:
+      per_slot:
+        description: 'Questions per section x difficulty (default 2 -> 24/run)'
+        required: false
+        default: '2'
+
+concurrency:
+  group: invent-questions
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  invent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Free runner disk space (swap + 17GB model + repo)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/invented
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # EXACT same swap as proven llm-autofix / question-quality (16GB works with 27B).
+      - name: Create swap (16GB - same as proven llm-autofix)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+
+      - name: Start Ollama server
+        run: |
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull qwen3.8:27b
+        run: |
+          ollama pull qwen3.8:27b
+          ollama list
+          # Warm the model into RAM now so invention calls start warm.
+          echo "Warming 27B into RAM..."
+          ollama run qwen3.8:27b "Reply with exactly: OK" 2>&1 | tail -3
+
+      - name: Invent questions (27B as exam setter)
+        env:
+          OLLAMA_MODEL: qwen3.8:27b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          INVENT_PER_SLOT: ${{ github.event.inputs.per_slot || '2' }}
+          INVENT_DEADLINE_MIN: '90'
+        run: node scripts/invent-questions.js
+
+      # Incremental saves mean even a timeout keeps every question invented
+      # so far — publish whatever landed. Nothing staged -> ci-push exits 0.
+      - name: Publish invented questions
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/invented/
+          bash scripts/ci-push.sh "invent: qwen3.8:27b invented fresh exam questions (run #${{ github.run_number }})"
