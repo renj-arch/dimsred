@@ -158,13 +158,24 @@ jobs:
           # carries the CPU build as `mlc-llm-cpu` / `mlc-llm-nightly-cpu`
           # (py3-none-manylinux_2_28, no Python-version tag). Conversion is
           # CPU-only math -- no GPU on this runner.
-          pip install --quiet --pre mlc-llm-cpu -f https://mlc.ai/wheels \
-            || pip install --quiet --pre mlc-llm-nightly-cpu -f https://mlc.ai/wheels
+          #
+          # `mlc-llm-cpu` alone is NOT enough: it declares no tvm dependency
+          # (verified — its METADATA Requires-Dist list has no tvm entry) yet
+          # does `from tvm import register_global_func` at package init. That
+          # is exactly how run #6 died: ModuleNotFoundError: No module named
+          # 'tvm'. The provider is the matching runtime wheel `mlc-ai-cpu` on
+          # the same index (verified: it ships top-level tvm/__init__.py).
+          # Install the pair, with a fallback to the nightly pair.
+          pip install --quiet --pre mlc-ai-cpu mlc-llm-cpu -f https://mlc.ai/wheels \
+            || pip install --quiet --pre mlc-ai-nightly-cpu mlc-llm-nightly-cpu -f https://mlc.ai/wheels
           # The wheels ship the Python package but NO console script (their
           # dist-info has no entry_points at all — that is what left run #5
           # dying with "mlc_llm: command not found" AFTER a clean install).
           # The CLI lives in mlc_llm/__main__.py, so `python -m mlc_llm` is
-          # the entrypoint; the convert step below uses it directly.
+          # the entrypoint; the convert step below uses it directly. The
+          # import chain pulls mlc_llm/__init__.py -> tvm, so these checks
+          # fail fast HERE (before any CPU-hour) if the runtime is missing.
+          python -c "import tvm; print('tvm', tvm.__version__)"
           python -m mlc_llm --help > /dev/null
           df -h /
 
