@@ -1252,6 +1252,15 @@
         if (typeof window.getMentalStats !== 'function') { setTimeout(init, 300); return; }
         updateUI();
         wireOwnerRunner();
+        // Deep link used by the dashboard's "Just Added" card: open a fresh
+        // paper right away (mental.html?invent=moderate) instead of making the
+        // visitor hunt for the invented section.
+        try {
+            var invParam = new URLSearchParams(window.location.search).get('invent');
+            if (invParam && /^(easy|moderate|hard|veryhard)$/.test(invParam)) {
+                setTimeout(function () { startInvented(invParam); }, 400);
+            }
+        } catch (e) {}
     }, 500);
     </script>
 <script ></script>
