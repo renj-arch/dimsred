@@ -185,6 +185,10 @@ upsc_sorted_topics.csv
 !data/site-audit.json
 !data/autofix-log.json
 !data/agent-log.json
+# Proposal lane's daily output, read by improve.html's Proposal-lane section.
+# Same trap as agent-log.json: under the blanket `data/*` rule git add refuses
+# ignored paths and the publish silently drops the file.
+!data/agent-proposals.json
 # Archive sidecar (write-archive-answers.js): 27B-written model answers keyed
 # by question id, tagged autoGen. Source of truth for 00-27b-archive.json.
 !data/archive-answers.json
