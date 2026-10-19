@@ -449,9 +449,40 @@ function hubSlugOf(token) {
   for (const [t, s] of EXAM_HUBS) if (t === token) return s;
   return undefined;
 }
+// The page's nav container: <nav>…</nav>, or the div-based nav a few
+// standalone lesson pages carry. Returns [start, end) offsets, or null.
+function navRangeOf(html) {
+  let m = /<nav\b[^>]*>/i.exec(html);
+  if (m) {
+    const end = html.indexOf('</nav>', m.index);
+    if (end !== -1) return [m.index, end + 6];
+  }
+  m = /<div\b[^>]*class="[^"]*\bnav\b[^"]*"[^>]*>/i.exec(html);
+  if (!m) return null;
+  const re = /<div\b|<\/div>/gi;
+  re.lastIndex = m.index;
+  let depth = 0, t;
+  while ((t = re.exec(html))) {
+    if (t[0].slice(0, 2) === '</') {
+      depth--;
+      if (depth === 0) return [m.index, t.index + 6];
+    } else depth++;
+    if (depth > 60) break; // malformed markup — treat as no nav
+  }
+  return null;
+}
 function fixExamNavLinks(html, page) {
   const fixes = [];
-  const out = html.replace(/<a(\s[^>]*)?>([\s\S]*?)<\/a>/gi, function (full, attrs, inner) {
+  // Scope the pass to the page's nav container: this rule exists to
+  // normalize NAV exam links; running it over the whole document also
+  // rewrote CONTENT links whose text merely named an exam — every mock card
+  // title ("Mock Test … cgl" → /cgl/) got pointed at the exam hub on every
+  // regeneration, and selfcheck then "fixed" the fallout forever. Pages
+  // without any nav container are left untouched (nothing to normalize).
+  const navR = navRangeOf(html);
+  if (!navR) return { html: html, fixes: fixes };
+  const out = html.replace(/<a(\s[^>]*)?>([\s\S]*?)<\/a>/gi, function (full, attrs, inner, offset) {
+    if (offset < navR[0] || offset >= navR[1]) return full;
     attrs = attrs || '';
     const hm = /href="([^"]*)"/i.exec(attrs);
     if (!hm) return full;

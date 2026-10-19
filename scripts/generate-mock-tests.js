@@ -213,8 +213,10 @@ function generateMockTest(examKey, dateOverride) {
   h += '    </style>\n';
   h += '</head>\n<body>\n';
 
-  // Nav
-  h += '    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><img src="../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="../index.html">' + esc(testData.examName) + '</a><a href="../course/index.html">Course</a><a href="index.html" class="active">Mock Tests</a></div></div></nav>\n';
+  // Nav. The exam link is root-absolute "/<folder>/" — the shape the
+  // selfcheck agent enforces for exam-nav links (site-agent.js
+  // fixExamNavLinks) — so a regenerated page never gets re-fixed.
+  h += '    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><img src="../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="/' + (bank.folder || examKey) + '/">' + esc(testData.examName) + '</a><a href="../course/index.html">Course</a><a href="index.html" class="active">Mock Tests</a></div></div></nav>\n';
 
   // Intro screen
   h += '    <div class="container" id="mt-intro">\n';
@@ -340,7 +342,8 @@ function generateMockIndex(examKey, pattern, bank) {
   h += '        @media print{.nav{display:none}}\n';
   h += '    </style>\n';
   h += '</head>\n<body>\n';
-  h += '    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><img src="../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="../index.html">' + esc(examName) + '</a><a href="../course/index.html">Course</a><a href="index.html" class="active">Mock Tests</a></div></div></nav>\n';
+  // Nav: exam link root-absolute (see the mock-page nav note above).
+  h += '    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><img src="../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="/' + (bank.folder || examKey) + '/">' + esc(examName) + '</a><a href="../course/index.html">Course</a><a href="index.html" class="active">Mock Tests</a></div></div></nav>\n';
   h += '    <div class="container">\n';
   h += '        <h1 style="font-size:1.5em;font-weight:900;margin-bottom:4px">' + esc(examName) + ' Mock Tests</h1>\n';
   h += '        <p style="color:var(--text-sec);font-size:.85em;margin-bottom:20px">Full-length mock tests with real-time timer and detailed solutions.</p>\n';

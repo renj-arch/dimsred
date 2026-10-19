@@ -14,13 +14,18 @@ function esc(s) {
 const NAV_LABELS = { cgl: 'CGL', rbi: 'RBI', jee: 'JEE', neet: 'NEET', gate: 'GATE', agniveer: 'Agniveer', 'upsc': 'UPSC', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', 'ctet': 'CTET' };
 
 function navLinks(folder) {
+  // Exam-hub links are emitted root-absolute "/<slug>/" — the exact shape
+  // site-agent.js's selfcheck enforces for exam-nav links. Emitting the old
+  // relative "../../<slug>/index.html" made every regenerated paper page get
+  // "repaired" by the selfcheck afterwards (runs #6/#13/#26 touched the same
+  // pages), i.e. the two builders ping-ponged the same lines forever.
   var links = '<a href="../index.html">Home</a>';
   for (var i = 0; i < EXAMS.length; i++) {
     var exam = EXAMS[i];
     if (exam === folder) {
-      links += '<a href="../index.html" class="active">' + NAV_LABELS[exam] + '</a>';
+      links += '<a href="/' + exam + '/" class="active">' + NAV_LABELS[exam] + '</a>';
     } else {
-      links += '<a href="../../' + exam + '/index.html">' + NAV_LABELS[exam] + '</a>';
+      links += '<a href="/' + exam + '/">' + NAV_LABELS[exam] + '</a>';
     }
   }
   return links;
