@@ -41,7 +41,7 @@ const path = require('path');
 const { spawn } = require('child_process');
 
 const HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
-const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
+const MODEL = process.env.OLLAMA_MODEL || 'batiai/qwen3.8-27b:iq3';
 const ID = String(process.env.OD_ID || '').replace(/[^A-Za-z0-9-]/g, '') || ('adhoc-' + Date.now());
 const KIND = String(process.env.OD_KIND || '');
 const FAKE = process.env.OD_FAKE_TEXT || ''; // test hook: skips Ollama entirely
@@ -269,6 +269,25 @@ function normText(s) {
 
 function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
 
+// Meta-text guard ("thinking leak"). Observed 2026-10-19: the owner's DI paper
+// shipped a question whose solution read "The question has been updated.
+// Let's provide a valid question. Let's use: 2 dots at 5..." — the model's
+// self-repair commentary leaked into the text a student reads. Any item whose
+// visible fields match is dropped before it can reach the page or the pools.
+const META_LEAK = [
+  [/the question has been updated/i, 'question-updated note'],
+  [/provide a valid question/i, 'valid-question note'],
+  [/let'?s use\s*:/i, 'rewrite marker'],
+  [/as an ai (?:language )?model/i, 'AI identity text'],
+  [/i (?:cannot|can'?t|can not) (?:provide|answer|solve) (?:a|the|this)/i, 'refusal text'],
+  [/the (?:given|provided|original) question (?:is|seems|appears) (?:invalid|incomplete|incorrect|unclear)/i, 'invalid-question note']
+];
+function metaLeak(text) {
+  const s = String(text == null ? '' : text);
+  for (const p of META_LEAK) { if (p[0].test(s)) return p[1]; }
+  return '';
+}
+
 // The closing line of a solution ("Final answer: X") is what the student
 // reads as the conclusion; when the "a" field disagrees with it the shown
 // answer contradicts the shown working (observed 2026-10-19: a shaft
@@ -336,6 +355,8 @@ async function runWriter(p) {
     ], { temperature: p.temperature == null ? 0.3 : p.temperature, numPredict: 1200 });
     if (cont.text) text = text + (/\s$/.test(text) ? '' : ' ') + cont.text;
   }
+  const leak = metaLeak(text);
+  if (leak) throw new Error('the answer contained meta text (' + leak + ') - dropped instead of shipped');
   return { text: text };
 }
 
@@ -391,6 +412,7 @@ async function runTutorQuestions(p) {
   if (!Array.isArray(arr)) throw new Error('model did not return an array');
   const seen = {};
   const questions = [];
+  const rejected = [];
   const seedNorm = {};
   seeds.forEach(function (s) { seedNorm[normText(s)] = 1; });
   function addItems(list) {
@@ -398,6 +420,12 @@ async function runTutorQuestions(p) {
     if (!x || !x.q || !x.a) return;
     const n = normText(x.q);
     if (!n || n.length < 12 || seen[n] || seedNorm[n]) return;
+    const leak = metaLeak([x.q, x.a, x.h, x.s].join('\n'));
+    if (leak) {
+      rejected.push({ why: leak, head: clean(x.q).slice(0, 90) });
+      log('tutor: dropped 1 item - ' + leak + ' - ' + clean(x.q).slice(0, 90));
+      return;
+    }
     seen[n] = 1;
     let a = clean(x.a);
     const fa = finalAnswerOf(clean(x.s));
@@ -429,8 +457,16 @@ async function runTutorQuestions(p) {
     } catch (e) { arr2 = null; log('tutor: retry pass failed: ' + (e && e.message)); }
     addItems(arr2);
   }
-  if (questions.length < need) throw new Error('only ' + questions.length + ' of ' + count + ' valid questions generated (needed at least ' + need + ')');
-  return { questions: questions.slice(0, count) };
+  if (questions.length < need) {
+    throw new Error('only ' + questions.length + ' of ' + count + ' valid questions generated (needed at least ' + need + ')' +
+      (rejected.length ? ' - ' + rejected.length + ' dropped by the meta-text guard' : ''));
+  }
+  const out = { questions: questions.slice(0, count) };
+  if (rejected.length) {
+    out.rejected = rejected.slice(0, 8);
+    log('tutor: ' + rejected.length + ' item(s) dropped by the meta-text guard');
+  }
+  return out;
 }
 
 function mentalPrompt(count, difficulty) {
@@ -473,6 +509,7 @@ async function runMentalBatch(p) {
   );
   const seen = {};
   const questions = [];
+  const rejected = [];
   const now = new Date().toISOString();
   (Array.isArray(arr) ? arr : []).forEach(function (x) {
     if (!x || !x.stem || !Array.isArray(x.options)) return;
@@ -495,6 +532,12 @@ async function runMentalBatch(p) {
     const stem = clean(x.stem);
     const n = normText(stem);
     if (!n || n.length < 15 || seen[n]) return;
+    const leak = metaLeak([stem, options.join(' | '), x.solution, x.hint].join('\n'));
+    if (leak) {
+      rejected.push({ why: leak, head: stem.slice(0, 90) });
+      log('mental: dropped 1 item - ' + leak);
+      return;
+    }
     seen[n] = 1;
     const section = SECTIONS[clean(x.section)] ? clean(x.section) : 'reasoning';
     questions.push({
@@ -512,10 +555,15 @@ async function runMentalBatch(p) {
       model: MODEL
     });
   });
-  if (!questions.length) throw new Error('no valid questions generated');
+  if (!questions.length) throw new Error('no valid questions generated' + (rejected.length ? ' (' + rejected.length + ' dropped by the meta-text guard)' : ''));
   const picked = questions.slice(0, count);
   appendToInventedPool(picked);
-  return { questions: picked };
+  const out = { questions: picked };
+  if (rejected.length) {
+    out.rejected = rejected.slice(0, 8);
+    log('mental: ' + rejected.length + ' item(s) dropped by the meta-text guard');
+  }
+  return out;
 }
 
 // ---- mains-fresh: one UPSC Mains question + model-answer skeleton ----------
@@ -535,6 +583,8 @@ function mainsItemOk(o) {
   const q = String(o.question || '').trim();
   if (q.length < 40 || q.length > 700) return 'question length';
   if (/[<>]/.test(q)) return 'question markup';
+  const leak = metaLeak(q + '\n' + (Array.isArray(o.answer) ? o.answer.map(function (s) { return String((s && s.h) || '') + ' ' + String((s && s.p) || ''); }).join('\n') : ''));
+  if (leak) return 'meta-text leak (' + leak + ')';
   const paper = String(o.paper);
   if (MAINS_PAPERS.indexOf(paper) === -1) return 'paper';
   const marks = Number(o.marks);
@@ -691,7 +741,7 @@ async function runMainsFresh(p) {
 // oldest beyond KEEP_MAX (a chatty day must not grow the repo forever).
 function pruneOld() {
   try {
-    const files = fs.readdirSync(OUT_DIR).filter(function (f) { return f.endsWith('.json'); });
+    const files = fs.readdirSync(OUT_DIR).filter(function (f) { return f.endsWith('.json') && f !== 'index.json'; });
     const cutoff = Date.now() - KEEP_HOURS * 3600 * 1000;
     const rows = [];
     files.forEach(function (f) {
@@ -718,6 +768,48 @@ function writeResult(obj) {
   log('wrote ' + file);
 }
 
+// data/on-demand/index.json - the newest-first list of owner-lane results
+// that improve.html renders ("Recent papers"). Written beside every result
+// file so the list survives file pruning and the owner can find the last
+// run's paper without reading GitHub. The workflow publishes it with it.
+const OD_INDEX = path.join(OUT_DIR, 'index.json');
+const OD_INDEX_CAP = 25;
+
+function paperLabel(kind, payload, obj) {
+  payload = payload || {};
+  if (kind === 'tutor-questions') {
+    const n = obj && Array.isArray(obj.questions) ? obj.questions.length : 0;
+    return (clean(payload.exam) || 'Exam') + ' - ' + (clean(payload.subject) || 'practice') + ' - ' + n + ' q';
+  }
+  if (kind === 'mental-batch') return 'Mental fresh paper - ' + (obj && Array.isArray(obj.questions) ? obj.questions.length : 0) + ' q';
+  if (kind === 'mains-fresh') return 'Mains - ' + (obj && obj.item ? (String(obj.item.paper) + ' - ' + String(obj.item.topic || '')) : 'question');
+  if (kind === 'writer') return 'Ask answer - ' + String(payload.prompt || '').replace(/\s+/g, ' ').slice(0, 70);
+  return kind;
+}
+
+function updateIndex(kind, payload, obj) {
+  try {
+    const idx = readJsonFile(OD_INDEX) || {};
+    const list = Array.isArray(idx.papers) ? idx.papers : [];
+    const entry = {
+      id: ID,
+      kind: kind,
+      label: paperLabel(kind, payload, obj),
+      model: MODEL,
+      status: String(obj.status || ''),
+      finishedAt: String(obj.finishedAt || '')
+    };
+    if (obj.questions && Array.isArray(obj.questions)) entry.n = obj.questions.length;
+    if (obj.item) entry.n = 1;
+    if (obj.error) entry.error = String(obj.error).slice(0, 140);
+    const next = [entry].concat(list.filter(function (e) { return e && e.id !== ID; })).slice(0, OD_INDEX_CAP);
+    fs.mkdirSync(OUT_DIR, { recursive: true });
+    fs.writeFileSync(OD_INDEX, JSON.stringify({ generatedAt: new Date().toISOString(), papers: next }, null, 1) + '\n');
+  } catch (e) {
+    log('index update skipped: ' + (e && e.message));
+  }
+}
+
 // ---- main -------------------------------------------------------------------
 
 async function main() {
@@ -729,28 +821,34 @@ async function main() {
   else if (KIND === 'mental-batch') out = await runMentalBatch(payload);
   else if (KIND === 'mains-fresh') out = await runMainsFresh(payload);
   else throw new Error('unknown kind: ' + KIND);
-  writeResult(Object.assign({
+  const result = Object.assign({
     status: 'done',
     kind: KIND,
     model: MODEL,
     finishedAt: new Date().toISOString()
-  }, out));
+  }, out);
+  writeResult(result);
+  updateIndex(KIND, payload, result);
 }
 
 // Test hooks: require() this file to exercise the parsers without a runner.
-module.exports = { extractArray, tutorPrompt, mentalPrompt, mainsPrompt, mainsItemOk, extractOneObject };
+module.exports = { extractArray, tutorPrompt, mentalPrompt, mainsPrompt, mainsItemOk, extractOneObject, metaLeak };
 
 if (require.main === module) {
   main().catch(function (err) {
     console.error('[on-demand] FAILED:', (err && err.stack) || err);
     try {
-      writeResult({
+      const failed = {
         status: 'failed',
         kind: KIND,
         model: MODEL,
         error: String((err && err.message) || err).slice(0, 500),
         finishedAt: new Date().toISOString()
-      });
+      };
+      writeResult(failed);
+      let payload = {};
+      try { payload = loadPayload(); } catch (e2) {}
+      updateIndex(KIND, payload, failed);
     } catch (e) {}
     process.exitCode = 1;
   });

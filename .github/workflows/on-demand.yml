@@ -8,8 +8,10 @@ name: On-Demand (owner runner)
 # the dispatcher rate-limits to keep the queue sane.
 #
 # Zero API keys: the model runs locally on the runner through Ollama.
-# Default model is the mid tier (qwen3.5:9b, same as invent-questions); the
-# dispatch input can pin another tag.
+# Default model is the quality tier (batiai/qwen3.8-27b:iq3) — the owner lane
+# is low-frequency and quality-first, and the huge tag skips the model cache
+# by design. The dispatch input can pin another tag (qwen3.5:9b for a quick
+# answer).
 #
 # Kinds (scripts/on-demand-generate.js):
 #   writer           — one prose answer from a fully-built prompt (ask pages)
@@ -30,9 +32,9 @@ on:
         description: 'JSON payload for the kind'
         required: true
       model:
-        description: 'Ollama model tag (default qwen3.5:9b — the mid tier)'
+        description: 'Ollama model tag (default batiai/qwen3.8-27b:iq3 — the quality tier)'
         required: false
-        default: 'qwen3.5:9b'
+        default: 'batiai/qwen3.8-27b:iq3'
 
 concurrency:
   group: on-demand
@@ -94,14 +96,14 @@ jobs:
       # Same cache classes as invent-questions: "mid" for the 9b, "fast" for
       # small tags; the huge 27B/22B tags skip the cache by design.
       - name: Cache Ollama models
-        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
+        if: ${{ !contains(inputs.model || 'batiai/qwen3.8-27b:iq3', '27b') && !contains(inputs.model || 'batiai/qwen3.8-27b:iq3', '22b') }}
         continue-on-error: true
         uses: actions/cache@v4
         with:
           path: /home/runner/.ollama/models
-          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'batiai/qwen3.8-27b:iq3', '9b') && 'mid-v1' || 'fast-v2' }}
           restore-keys: |
-            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'batiai/qwen3.8-27b:iq3', '9b') && 'mid-' || 'fast-' }}
 
       - name: Start Ollama server
         run: |
@@ -118,9 +120,9 @@ jobs:
           done
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
 
-      - name: Pull + warm the model (${{ inputs.model || 'qwen3.5:9b' }})
+      - name: Pull + warm the model (${{ inputs.model || 'batiai/qwen3.8-27b:iq3' }})
         env:
-          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+          MODEL_INPUT: ${{ inputs.model || 'batiai/qwen3.8-27b:iq3' }}
         run: |
           case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
           ollama pull "$MODEL_INPUT"
@@ -145,7 +147,7 @@ jobs:
       - name: Generate (${{ inputs.kind }})
         timeout-minutes: 120
         env:
-          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_MODEL: ${{ inputs.model || 'batiai/qwen3.8-27b:iq3' }}
           OLLAMA_HOST: http://127.0.0.1:11434
           OD_ID: ${{ inputs.request_id }}
           OD_KIND: ${{ inputs.kind }}
