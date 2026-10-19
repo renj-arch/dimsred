@@ -35,6 +35,8 @@
   var POLL_MS = 20000;
   var DEFAULT_TIMEOUT_MS = 45 * 60 * 1000;
   var STORE_KEY = 'vlymbooqOwnerRunner';
+  var PENDING_KEY = 'vlymbooqOwnerPending';
+  var KEEP_PENDING_MS = 24 * 60 * 60 * 1000;
 
   var state = {
     resolved: false,
@@ -53,6 +55,37 @@
   }
   function writeEnabled(on) {
     try { localStorage.setItem(STORE_KEY, on ? 'on' : 'off'); } catch (e) {}
+  }
+
+  // ---- pending requests (closed-tab resume) --------------------------------
+  // Written when a request is dispatched, removed once its outcome has been
+  // shown in-page. If the tab dies mid-run, the next owner visit finds the
+  // entry, re-polls the result file and surfaces the paper when it lands.
+
+  function readPending() {
+    try {
+      var list = JSON.parse(localStorage.getItem(PENDING_KEY) || '[]');
+      return Array.isArray(list) ? list.filter(function (x) { return x && x.id; }) : [];
+    } catch (e) { return []; }
+  }
+  function writePending(list) {
+    try { localStorage.setItem(PENDING_KEY, JSON.stringify(list)); } catch (e) {}
+  }
+  function addPending(entry) {
+    var list = readPending().filter(function (x) { return x.id !== entry.id; });
+    list.push(entry);
+    while (list.length > 8) list.shift();
+    writePending(list);
+  }
+  function dropPending(id) {
+    writePending(readPending().filter(function (x) { return x.id !== id; }));
+  }
+  function kindLabel(kind, payload) {
+    payload = payload || {};
+    if (kind === 'tutor-questions') return String(payload.subject || 'Tutor') + ' \u00B7 fresh questions';
+    if (kind === 'mental-batch') return 'Mental \u00B7 fresh paper';
+    if (kind === 'writer') return 'Ask \u00B7 written answer';
+    return String(kind || 'request');
   }
 
   function snapshot() {
@@ -132,6 +165,7 @@
             if (state.owner) {
               installWriterBackend();
               makePill();
+              resumePending();
             }
             emit();
           }
@@ -275,9 +309,30 @@
     }).then(function (r) {
       return r.json().catch(function () { return {}; }).then(function (j) {
         if (!r.ok || !j.id) throw new Error((j && j.error) || ('the runner refused the request (' + r.status + ')'));
+        addPending({ id: j.id, kind: kind, label: kindLabel(kind, payload), at: Date.now() });
         return j;
       });
     });
+  }
+
+  // Fetch one result file: GitHub raw first (serves seconds after the commit),
+  // the site's own copy second (waits for the live-branch mirror). Shared by
+  // the in-page poll and the closed-tab resume path.
+  function fetchResult(id) {
+    var bust = '.json?t=' + Date.now();
+    var idEnc = encodeURIComponent(id);
+    return fetch(RAW + idEnc + bust, { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+      .then(function (j) {
+        if (j && j.status) return j;
+        // Raw unreachable or not there yet (fresh 404s are not cached
+        // because every request carries a new cache-buster) — try the
+        // site's own copy as the fallback path.
+        return fetch(RESULT + idEnc + bust, { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .catch(function () { return null; });
+      });
   }
 
   function poll(id, opts) {
@@ -291,28 +346,12 @@
         onStatus('The GitHub runner is writing\u2026 (' + mins + ' min elapsed \u2014 usually 8\u201320 min, nothing runs on this device)');
         setTimeout(tick, POLL_MS);
       }
-      function fetchResult() {
-        var bust = '.json?t=' + Date.now();
-        var idEnc = encodeURIComponent(id);
-        return fetch(RAW + idEnc + bust, { cache: 'no-store' })
-          .then(function (r) { return r.ok ? r.json() : null; })
-          .catch(function () { return null; })
-          .then(function (j) {
-            if (j && j.status) return j;
-            // Raw unreachable or not there yet (fresh 404s are not cached
-            // because every request carries a new cache-buster) — try the
-            // site's own copy as the fallback path.
-            return fetch(RESULT + idEnc + bust, { cache: 'no-store' })
-              .then(function (r) { return r.ok ? r.json() : null; })
-              .catch(function () { return null; });
-          });
-      }
       function tick() {
         if (Date.now() - started > timeoutMs) {
           reject(new Error('the runner is taking unusually long. The run may still finish \u2014 open GitHub \u2192 renj-arch/dimsred \u2192 Actions \u2192 On-Demand to watch it, then try again.'));
           return;
         }
-        fetchResult()
+        fetchResult(id)
           .then(function (j) {
             if (j && j.status === 'done') { resolve(j); return; }
             if (j && j.status === 'failed') { reject(new Error(j.error || 'the runner reported a failure')); return; }
@@ -335,12 +374,154 @@
       return submit(kind, payload, opts).then(function (j) {
         return poll(j.id, { onStatus: onStatus, timeoutMs: opts.timeoutMs }).then(function (res) {
           res.run = j.run || '';
+          dropPending(j.id);
           return res;
+        }, function (err) {
+          dropPending(j.id);
+          throw err;
         });
       }).finally(function () {
         activeDown();
       });
     });
+  }
+
+  // ---- closed-tab resume: ready chip + viewer --------------------------------
+
+  var noticeEl = null;
+  var readyPapers = [];
+  var overlayEl = null;
+
+  // Runs once per owner page load. Pending entries that finished while the
+  // tab was away pop up as a small chip bottom-right; entries still writing
+  // are re-polled quietly until they land (or age out).
+  function resumePending() {
+    try {
+      var list = readPending().filter(function (x) {
+        return x && x.id && (Date.now() - (x.at || 0) < KEEP_PENDING_MS);
+      });
+      writePending(list);
+      list.forEach(function (entry) {
+        (function tickResume() {
+          if (Date.now() - (entry.at || 0) > 4 * 60 * 60 * 1000) {
+            dropPending(entry.id);
+            return;
+          }
+          fetchResult(entry.id).then(function (j) {
+            if (j && j.status === 'done') {
+              dropPending(entry.id);
+              entry.result = j;
+              readyPapers.push(entry);
+              renderNotice();
+              return;
+            }
+            if (j && j.status === 'failed') {
+              dropPending(entry.id);
+              entry.result = null;
+              entry.error = j.error || 'the runner reported a failure';
+              readyPapers.push(entry);
+              renderNotice();
+              return;
+            }
+            setTimeout(tickResume, 45000);
+          }).catch(function () { setTimeout(tickResume, 60000); });
+        })();
+      });
+    } catch (e) { /* resume is best-effort — never break the page */ }
+  }
+
+  function renderNotice() {
+    if (!document.body) return;
+    if (!readyPapers.length) {
+      if (noticeEl && noticeEl.parentNode) noticeEl.parentNode.removeChild(noticeEl);
+      noticeEl = null;
+      return;
+    }
+    if (!noticeEl) {
+      noticeEl = document.createElement('button');
+      noticeEl.id = 'vlymbooq-paper-notice';
+      noticeEl.style.cssText = [
+        'position:fixed', 'right:16px', 'bottom:112px', 'z-index:9998',
+        'padding:8px 14px', 'border-radius:100px', 'cursor:pointer',
+        'border:1px solid rgba(52,211,153,.55)',
+        'background:rgba(9,9,11,.92)', 'color:#a7f3d0',
+        'font:600 11px/1.4 system-ui,sans-serif', 'letter-spacing:.02em',
+        'backdrop-filter:blur(6px)', 'box-shadow:0 2px 12px rgba(0,0,0,.4)'
+      ].join(';');
+      noticeEl.onclick = openOverlay;
+      document.body.appendChild(noticeEl);
+    }
+    noticeEl.textContent = readyPapers.length > 1
+      ? '\uD83D\uDCC4 ' + readyPapers.length + ' fresh papers ready \u2014 view'
+      : '\uD83D\uDCC4 Fresh paper ready \u2014 view';
+  }
+
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function overlaySection(entry) {
+    var h = '<section style="margin:14px 0 0;padding:0 0 4px">';
+    h += '<div style="font:700 13px/1.5 system-ui,sans-serif;color:#a7f3d0">' + esc(entry.label) + '</div>';
+    if (entry.error) {
+      h += '<div style="font:400 13px/1.6 system-ui,sans-serif;color:#fda4af;margin-top:6px">That one failed: ' + esc(entry.error) + '</div>';
+      return h + '</section>';
+    }
+    var r = entry.result || {};
+    var qs = r.questions || [];
+    if (entry.kind === 'writer') {
+      h += '<pre style="white-space:pre-wrap;font:400 13px/1.6 system-ui,sans-serif;color:#e4e4e7;margin:8px 0 0">' + esc(r.text || '') + '</pre>';
+    } else if (qs.length) {
+      qs.forEach(function (q, i) {
+        h += '<div style="margin:10px 0 0">';
+        h += '<div style="font:600 13px/1.6 system-ui,sans-serif;color:#e4e4e7">' + (i + 1) + '. ' + esc(q.q || q.stem || '') + '</div>';
+        if (q.options && q.options.length) {
+          h += '<div style="font:400 12px/1.7 system-ui,sans-serif;color:#a1a1aa;margin:2px 0 0">' + q.options.map(function (o) { return esc(o); }).join(' \u00B7 ') + '</div>';
+        }
+        h += '<div style="font:600 12px/1.6 system-ui,sans-serif;color:#6ee7b7;margin:4px 0 0">Answer: ' + esc(q.a || q.answer || '') + '</div>';
+        if (q.s || q.solution) h += '<div style="font:400 12px/1.6 system-ui,sans-serif;color:#a1a1aa;margin:2px 0 0">' + esc(q.s || q.solution) + '</div>';
+        if (q.h || q.hint) h += '<div style="font:400 12px/1.6 system-ui,sans-serif;color:#71717a;margin:2px 0 0">Hint: ' + esc(q.h || q.hint) + '</div>';
+        h += '</div>';
+      });
+    } else {
+      h += '<div style="font:400 13px/1.6 system-ui,sans-serif;color:#a1a1aa;margin-top:6px">The result file had no questions.</div>';
+    }
+    return h + '</section>';
+  }
+
+  function openOverlay() {
+    if (!readyPapers.length || !document.body) return;
+    if (!overlayEl) {
+      overlayEl = document.createElement('div');
+      overlayEl.id = 'vlymbooq-paper-overlay';
+      overlayEl.style.cssText = [
+        'position:fixed', 'inset:0', 'z-index:10000',
+        'background:rgba(2,2,6,.72)', 'backdrop-filter:blur(3px)',
+        'display:flex', 'align-items:center', 'justify-content:center',
+        'padding:18px'
+      ].join(';');
+      overlayEl.onclick = function (e) { if (e.target === overlayEl) closeOverlay(); };
+      document.body.appendChild(overlayEl);
+    }
+    var h = '<div style="max-width:680px;width:100%;max-height:82vh;overflow:auto;background:#0c0c10;border:1px solid rgba(255,255,255,.14);border-radius:14px;padding:16px 20px;box-shadow:0 12px 40px rgba(0,0,0,.5)">';
+    h += '<div style="display:flex;align-items:center;justify-content:space-between;gap:10px">';
+    h += '<div style="font:700 14px/1.4 system-ui,sans-serif;color:#e4e4e7">\uD83D\uDCC4 Your fresh paper' + (readyPapers.length > 1 ? 's' : '') + '</div>';
+    h += '<button id="vlymbooq-paper-close" style="padding:6px 12px;border-radius:100px;cursor:pointer;border:1px solid rgba(255,255,255,.18);background:transparent;color:#d4d4d8;font:600 12px/1.4 system-ui,sans-serif">Close</button>';
+    h += '</div>';
+    readyPapers.forEach(function (entry) { h += overlaySection(entry); });
+    h += '</div>';
+    overlayEl.innerHTML = h;
+    var btn = overlayEl.querySelector('#vlymbooq-paper-close');
+    if (btn) btn.onclick = closeOverlay;
+  }
+
+  function closeOverlay() {
+    if (overlayEl && overlayEl.parentNode) overlayEl.parentNode.removeChild(overlayEl);
+    overlayEl = null;
+    readyPapers = [];
+    renderNotice();
   }
 
   // ---- public API -------------------------------------------------------------
