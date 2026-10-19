@@ -208,6 +208,16 @@ function normText(s) {
 
 function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
 
+// The closing line of a solution ("Final answer: X") is what the student
+// reads as the conclusion; when the "a" field disagrees with it the shown
+// answer contradicts the shown working (observed 2026-10-19: a shaft
+// question shipped a="1/4" while its own solution corrected to 1/8). The
+// solution's line wins and the correction is logged.
+function finalAnswerOf(s) {
+  const m = /final answer\s*:\s*(.+)$/i.exec(String(s || ''));
+  return m ? clean(m[1]).replace(/[.\s]+$/, '') : '';
+}
+
 // ---- kinds ------------------------------------------------------------------
 
 async function runWriter(p) {
@@ -252,13 +262,14 @@ function tutorPrompt(exam, subject, count, seeds, bias) {
     (seeds && seeds.length) ? seeds.map(function (s) { return '- ' + s; }).join('\n') : '(none provided)',
     '',
     'Output STRICT JSON array, no markdown, no explanation. Each element:',
-    '{"q":"question text","a":"answer text","h":"one-line hint","s":"2-3 sentence solution/explanation"}',
+    '{"q":"question text","a":"answer text","h":"one-line hint","s":"2-3 sentence solution/explanation ending with a final line"}',
     '',
     'Rules:',
     '- q must be a real exam-style question, not a topic label.',
     '- a must be the direct correct answer (formula value, term, or short sentence).',
     '- h gives the student a nudge without giving it away.',
-    '- s explains WHY, with the formula or reasoning chain.',
+    '- s explains WHY, with the formula or reasoning chain, and MUST end with a final line exactly like: Final answer: <X> — where <X> is the exact same text as "a".',
+    '- Before returning, re-check every item: if your working changed the answer while writing "s", update "a" to match the final line so the two can never disagree.',
     '- Questions must be on DIFFERENT sub-topics within ' + subject + '.',
     '- Use only standard syllabus content; no made-up facts.',
     '',
@@ -289,7 +300,13 @@ async function runTutorQuestions(p) {
     const n = normText(x.q);
     if (!n || n.length < 12 || seen[n] || seedNorm[n]) return;
     seen[n] = 1;
-    questions.push({ q: clean(x.q), a: clean(x.a), h: clean(x.h), s: clean(x.s) });
+    let a = clean(x.a);
+    const fa = finalAnswerOf(clean(x.s));
+    if (fa && normText(fa) !== normText(a)) {
+      log('tutor: "a" (' + a.slice(0, 70) + ') disagreed with the solution\'s final line (' + fa.slice(0, 70) + ') — using the solution\'s line');
+      a = fa;
+    }
+    questions.push({ q: clean(x.q), a: a, h: clean(x.h), s: clean(x.s) });
   });
   if (!questions.length) throw new Error('no valid questions generated');
   return { questions: questions.slice(0, count) };
