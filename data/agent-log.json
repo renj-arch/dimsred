@@ -1,29 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-18T14:13:32.473Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "practicesets",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "practicesets",
-     "fixes": [
-      {
-       "page": "data/practice-sets/ssc-je-production.json",
-       "fix": "Fresh practice set for SSC JE — Production Technology (10 exam-real items)",
-       "text": "Q: In orthogonal turning, if chip thickness ratio is 0.5 and rake angle is 10°, what is the shear plane | A: 26.57°\nQ: A job requires 500 parts. Setup time is 4 hours. Cycle time per part is 12 seconds. What is total pr | A: 78 hours\nQ: In a lathe operation, if the feed is 0.2 mm/rev and depth of cut is 2 mm, what is the material remov | A: V * d * f"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-18T14:21:24.398Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -532,8 +509,258 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-19T10:36:57.838Z",
+   "model": "qwen3:4b",
+   "totalFixes": 347,
+   "byAgent": [
+    {
+     "agent": "features",
+     "count": 0
+    },
+    {
+     "agent": "proposals",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 27
+    },
+    {
+     "agent": "selfcheck",
+     "count": 0
+    },
+    {
+     "agent": "seo",
+     "count": 49
+    },
+    {
+     "agent": "perf",
+     "count": 55
+    },
+    {
+     "agent": "a11y",
+     "count": 213
+    },
+    {
+     "agent": "code",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/ask-audit.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/browser-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-lectures.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/daily-globe-fill.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-papers.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-pib-feed.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/expand-course.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/fault-status.yml",
+       "fix": "Added memory limit to node steps"
+      }
+     ]
+    },
+    {
+     "agent": "seo",
+     "fixes": [
+      {
+       "page": "3d-globe.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "courts-cases-verdicts-figures.html",
+       "fix": "Added meta description"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "courts-cases-verdicts-figures.html",
+       "fix": "Added lazy loading to images"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "3d-globe.html",
+       "fix": "Added alt attributes to images"
+      },
+      {
+       "page": "archive.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lecture.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    },
+    {
+     "agent": "code",
+     "fixes": [
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Converted dead link to text: jee/course/maths/lesson-vector-3d.html"
+      },
+      {
+       "page": "lesson-coding-theory.html",
+       "fix": "Converted dead link to text: jee/course/maths/lesson-vector-3d.html"
+      },
+      {
+       "page": "lesson-math-biology.html",
+       "fix": "Converted dead link to text: jee/course/maths/lesson-vector-3d.html"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-19T09:23:35.747Z",
- "model": "qwen3.5:9b"
+ "lastRun": "2026-10-19T10:36:57.838Z",
+ "model": "qwen3:4b"
 }
