@@ -1,0 +1,67 @@
+name: Search index
+
+# Builds data/search-index.json — the page corpus that search.html searches
+# client-side (no server, no model, no API keys). A plain text scan, run on
+# every push that touches a page, daily as a safety net, and on demand.
+#
+# When the index is unchanged the script exits without writing, so this job
+# stays quiet — no commit noise. search.html reads GitHub raw first and the
+# site copy second (same pattern as the owner runner), so a fresh index
+# serves seconds after this job commits, without waiting for the mirror.
+#
+# If the index changed but could not be staged, the run FAILS LOUD instead of
+# exiting green — the same integrity rule as the other publish lanes.
+
+on:
+  push:
+    paths:
+      - '**/*.html'
+  schedule:
+    - cron: '25 2 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: search-index
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            *.html
+            scripts
+            data/search-index.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Build the page index
+        run: node scripts/build-search-index.js
+
+      - name: Publish the index
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add --sparse data/search-index.json 2>/dev/null || git add -f data/search-index.json 2>/dev/null || true
+          if ! git diff --cached --quiet; then
+            bash scripts/ci-push.sh "search-index: rebuild the page index"
+          elif [ -n "$(git status --porcelain -- data/search-index.json 2>/dev/null)" ]; then
+            echo "::error::search-index: the index changed but could not be staged (sparse path problem) — fix the workflow's sparse-checkout"
+            exit 1
+          else
+            echo "[search-index] no change — nothing to publish"
+          fi

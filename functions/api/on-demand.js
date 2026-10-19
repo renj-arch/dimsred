@@ -30,7 +30,9 @@ var SB_ANON = 'sb_publishable_jQqqojpcRKwI3boRYfmBYg_-Kem7UyW';
 var REPO = 'renj-arch/dimsred';
 var WORKFLOW = 'on-demand.yml';
 var DEFAULT_OWNER = 'red835699@gmail.com';
-var DEFAULT_MODEL = 'qwen3.5:9b';
+// The owner lane is low-frequency and quality-first: default to the 27B
+// quality tier (it skips the model cache by design - 17GB pull per run).
+var DEFAULT_MODEL = 'batiai/qwen3.8-27b:iq3';
 // Requests accepted per window before the runner refuses new ones. Runs take
 // minutes; the cap only exists to stop a flood, not normal use.
 var MAX_RUNS_PER_WINDOW = 3;
