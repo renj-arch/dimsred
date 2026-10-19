@@ -274,6 +274,30 @@
                         cta: 'Try a fresh paper \u2192'
                     };
                 }).catch(function() { return null; }));
+                // AI-written practice sets (the 27B lane) — the exam tutor
+                // serves them instantly on their exam page, so the button
+                // drops the visitor straight into practice.
+                sources.push(fetch('data/practice-sets/index.json').then(function(r) {
+                    if (!r.ok) throw new Error('no sets');
+                    return r.json();
+                }).then(function(j) {
+                    var sets = (j && j.sets) || {};
+                    var pages = { 'ssc-je': 'ssc-je.html', 'ssc-je-production': 'ssc-je.html' };
+                    var best = null;
+                    Object.keys(sets).forEach(function(k) {
+                        var s = sets[k] || {};
+                        if (!pages[k] || !s.count || s.count < 5 || !s.updatedAt) return;
+                        if (!best || s.updatedAt > best.updatedAt) best = { key: k, s: s };
+                    });
+                    if (!best) return null;
+                    if ((Date.now() - new Date(best.s.updatedAt).getTime()) > 7 * 86400000) return null;
+                    return {
+                        title: '&#x1f3af; AI-written practice set',
+                        detail: (best.s.exam || best.key) + ' \u00b7 ' + best.s.count + ' questions \u00b7 updated ' + (fmtWhen(best.s.updatedAt) || 'recently'),
+                        href: pages[best.key],
+                        cta: 'Practise it \u2192'
+                    };
+                }).catch(function() { return null; }));
                 // Model answers written for the archive/ask pages.
                 sources.push(fetch('data/archive-answers.json').then(function(r) {
                     if (!r.ok) throw new Error('no answers');
