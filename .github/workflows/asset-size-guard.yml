@@ -1,0 +1,61 @@
+name: Asset size guard
+
+# Cloudflare Pages fails a build when any deployed asset exceeds 25 MiB — and
+# that failure is invisible from CI: the lane's push still succeeds, production
+# just never moves. That is exactly how the site froze on 2026-10-18, when
+# data/questions-cursor.json (47.2 MiB) sat in main's tree and every Cloudflare
+# build failed asset validation while users kept seeing the last good build.
+# The cursor now lives under data/questions/ (stripped from every deploy path),
+# and this guard names any new offender at push time — the failure shows up in
+# Actions instead of as a silently stale site.
+#
+# data/questions/** is exempt by design: the Cloudflare build command removes
+# it (rm -rf .deploy/data/questions) and the slim-live mirror excludes it, so
+# files there never reach the CDN, whatever their size.
+#
+# Blobless on purpose: git ls-tree -r -l reads blob sizes straight from the
+# tree objects — no multi-GB checkout needed, the whole check runs in seconds.
+
+on:
+  push:
+    branches: [main]
+  schedule:
+    - cron: '37 4 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Flag deployable tracked files over 24 MiB
+        run: |
+          set -euo pipefail
+          git init -q .
+          git remote add origin "https://github.com/$GITHUB_REPOSITORY.git"
+          AUTH=$(printf 'x-access-token:%s' '${{ secrets.GITHUB_TOKEN }}' | base64 -w0)
+          git config http.https://github.com/.extraheader "AUTHORIZATION: basic $AUTH"
+          git fetch -q --depth=1 --filter=blob:none origin main
+
+          LIMIT=$((24 * 1024 * 1024))
+          BAD=$(git ls-tree -r -l FETCH_HEAD | awk -v lim="$LIMIT" '
+            { n = split($1, a, " "); size = a[n] + 0; path = $2 }
+            size > lim && path !~ /^data\/questions\// {
+              printf "%7.1f MiB  %s\n", size / 1048576, path
+            }')
+          if [ -n "$BAD" ]; then
+            echo "::error::Deployable files over the 24 MiB guard (Cloudflare Pages limit is 25 MiB):"
+            echo "$BAD"
+            echo "These would silently freeze the next Cloudflare build. Move internal state under data/questions/ (never deployed) or shrink/split the file."
+            exit 1
+          fi
+
+          echo "OK: no deployable tracked file over 24 MiB"
+          echo "Largest deployable files today:"
+          git ls-tree -r -l FETCH_HEAD | awk '
+            { n = split($1, a, " "); size = a[n] + 0; path = $2 }
+            path !~ /^data\/questions\// { printf "%9.1f MiB  %s\n", size / 1048576, path }' \
+            | sort -rn | head -5

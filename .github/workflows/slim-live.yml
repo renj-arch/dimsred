@@ -37,6 +37,9 @@ name: Slim live mirror
 # still said success — the site kept serving its last good build (14:00 UTC)
 # with no visible error anywhere. The rebuild step now strips oversized blobs
 # (loudly) and the verify step refuses a tree that still contains one.
+# 2026-10-19: that cursor moved to data/questions/_state/cursor.json, inside
+# the directory already removed below — so main itself (which Cloudflare also
+# builds) no longer carries it, whatever its size grows to.
 on:
   schedule:
     # Off the top of the hour on purpose: GitHub's scheduler is busiest at :00.
@@ -124,12 +127,13 @@ jobs:
           git rm -r -q --cached --sparse --ignore-unmatch data/questions
           git rm -q --cached --sparse --ignore-unmatch upsc_sorted_topics.csv
           git rm -q --cached --sparse --ignore-unmatch topics.txt
-          # Question-quality sweep state: tens of MB of internal cursor/tally
-          # JSON, never fetched by any page, and — past 25 MiB — a build-killer
-          # for Cloudflare Pages. It crossed that limit on 2026-10-18 (49.5 MB)
-          # and every deploy after that failed at Cloudflare while the site
-          # served the last good build for hours. Never deploy it.
-          git rm -q --cached --sparse --ignore-unmatch data/questions-cursor.json
+          # Question-quality sweep state (cursor + tallies, tens of MB) now
+          # lives at data/questions/_state/cursor.json — inside the directory
+          # removed above, so there is nothing extra to strip here. It used to
+          # sit at data/questions-cursor.json, where it crossed Cloudflare's
+          # 25 MiB per-asset limit on 2026-10-18 (~49.5 MB) and froze every
+          # deploy while the site kept serving its last good build. Never
+          # deploy it.
 
           TREE=$(git write-tree)
 
@@ -174,7 +178,7 @@ jobs:
                    data/ask-qb/concepts.json data/ask-qb/bucket/buckets.json; do
             git cat-file -e "$LIVE_TREE:$p" 2>/dev/null || { echo "MISSING required: $p"; fail=1; }
           done
-          for p in data/questions topics.txt upsc_sorted_topics.csv data/questions-cursor.json; do
+          for p in data/questions topics.txt upsc_sorted_topics.csv; do
             git cat-file -e "$LIVE_TREE:$p" 2>/dev/null && { echo "UNEXPECTED present: $p"; fail=1; }
           done
           # Hard Cloudflare Pages limit: no asset may exceed 25 MiB. The

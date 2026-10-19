@@ -44,7 +44,6 @@ jobs:
             data/wiki-syllabus-plan.json
             data/agent-log.json
             data/questions-report.json
-            data/questions-cursor.json
             data/quiz-proper.json
           sparse-checkout-cone-mode: false
           token: ${{ secrets.PAT }}
@@ -190,7 +189,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
           bash scripts/ci-push.sh "question-quality: agent fixes checkpoint (run #${{ github.run_number }})"
 
       # Archive answers moved to the dedicated 27B quality lane
@@ -235,5 +234,5 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/questions-cursor.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
           bash scripts/ci-push.sh "question-quality: qwen3.5:9b improved questions (run #${{ github.run_number }})"

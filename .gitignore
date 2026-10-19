@@ -199,7 +199,10 @@ upsc_sorted_topics.csv
 !data/wiki-syllabus-plan.json
 # Questions sweep cursor (agentQuestionQuality): per-file mtime/size +
 # accumulated subtopic tallies so runs are incremental, not full re-scans.
-!data/questions-cursor.json
+# Lives at data/questions/_state/cursor.json on purpose — under the tree every
+# deploy path strips, so its size can never fail a Cloudflare build again (it
+# did exactly that at the old top-level path). No negation needed: nothing
+# above ignores paths under data/questions/.
 # Auth sentinel status (auth-sentinel.yml): PAT health probe result, surfaced
 # on improve.html. Tracked so a dead PAT is visible, not silent.
 !data/auth-status.json

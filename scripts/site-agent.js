@@ -2050,7 +2050,14 @@ async function agentQuestionQuality() {
   // everything (milliseconds, no parse), parse ONLY changed files + a rotating
   // slice for continuous full coverage. Tallies accumulate in the cursor so
   // the thin/empty audit stays global without re-reading the world.
-  const CURSOR = 'data/questions-cursor.json';
+  //
+  // The cursor lives under data/questions/_state/ ON PURPOSE: every deploy
+  // path strips data/questions wholesale (the Cloudflare build removes it and
+  // slim-live excludes it), so internal state here can never freeze a deploy.
+  // At its old top-level path it crossed Cloudflare's 25 MiB per-asset limit
+  // on 2026-10-18 (47-50 MB) and every build of main after that failed while
+  // the site silently kept serving its last good build. Keep it in here.
+  const CURSOR = 'data/questions/_state/cursor.json';
   const cursor = loadJson(CURSOR, { files: {}, rot: 0, tallies: {} });
   if (!cursor.files) cursor.files = {};
   if (!cursor.tallies) cursor.tallies = {};
