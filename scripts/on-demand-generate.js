@@ -14,6 +14,15 @@
 //                   -> {questions:[{q,a,h,s}]}
 //   mental-batch    {count, difficulty}
 //                   -> {questions:[{stem,options,answer,solution,hint,section,...}]}
+//                   also appended to the public invented pool
+//                   (data/invented/questions.json): one owner request grows
+//                   the page's "agent fetch" pool for every visitor.
+//   mains-fresh     {paper?, topic?, seeds?}
+//                   -> {item:{paper,topic,marks,difficulty,question,answer[],...}}
+//                   one UPSC Mains question + model-answer skeleton, with the
+//                   same acceptance rules as the site agent's MainsFresh lane;
+//                   also appended to the public frozen batch
+//                   (data/mains-fresh.json).
 //
 // Transport: curl via spawn, streaming, with watchdogs — the exact lessons
 // learned in invent-questions.js (node's fetch has a hidden ~5-min headers
@@ -37,6 +46,15 @@ const ID = String(process.env.OD_ID || '').replace(/[^A-Za-z0-9-]/g, '') || ('ad
 const KIND = String(process.env.OD_KIND || '');
 const FAKE = process.env.OD_FAKE_TEXT || ''; // test hook: skips Ollama entirely
 const OUT_DIR = path.join(__dirname, '..', 'data', 'on-demand');
+
+// Public pools the on-demand lane can also grow (checked out by the workflow
+// via sparse-checkout). Missing files are a no-op: the result file still
+// lands, the public pool is just left untouched.
+const INVENTED_POOL = path.join(__dirname, '..', 'data', 'invented', 'questions.json');
+const MAINS_FRESH = path.join(__dirname, '..', 'data', 'mains-fresh.json');
+const MAINS_BANK = path.join(__dirname, '..', 'data', 'mains-questions.json');
+const PUBLIC_INVENTED_CAP = 1200; // same cap as the invent lane (INVENT_MAX_STORE)
+const MAINS_FRESH_CAP = 40;       // same cap as the site agent (MAINS_FRESH_CAP)
 
 // Watchdog constants (same shape as invent-questions.js): 25 min of silence
 // before the first byte is patience (cold load + prompt eval), 12 min of
@@ -218,6 +236,43 @@ function finalAnswerOf(s) {
   return m ? clean(m[1]).replace(/[.\s]+$/, '') : '';
 }
 
+function readJsonFile(file) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { return null; }
+}
+
+// The owner's mental batch also grows the PUBLIC invented pool
+// (data/invented/questions.json — the page's "agent fetch" side), so one
+// on-demand request leaves the whole site better, not just this session.
+// The workflow commits the file; ci-push's union_invented() keeps a racing
+// invent-lane run from dropping either side's questions.
+function appendToInventedPool(questions) {
+  const pool = readJsonFile(INVENTED_POOL);
+  if (!pool || !Array.isArray(pool.questions)) {
+    log('invented pool not checked out — public pool left untouched');
+    return 0;
+  }
+  const have = {};
+  pool.questions.forEach(function (q) { const n = normText(q && q.stem); if (n) have[n] = 1; });
+  let added = 0;
+  questions.forEach(function (q) {
+    const n = normText(q && q.stem);
+    if (!n || have[n]) return;
+    have[n] = 1;
+    pool.questions.push(Object.assign({}, q, { id: 'inv-od-' + ID + '-' + (added + 1), run: 'on-demand' }));
+    added++;
+  });
+  if (!added) return 0;
+  if (pool.questions.length > PUBLIC_INVENTED_CAP) {
+    pool.questions = pool.questions.slice(pool.questions.length - PUBLIC_INVENTED_CAP);
+  }
+  pool.generatedAt = new Date().toISOString();
+  pool.model = MODEL;
+  pool.version = pool.version || 1;
+  fs.writeFileSync(INVENTED_POOL, JSON.stringify(pool));
+  log('public invented pool += ' + added + ' (now ' + pool.questions.length + ')');
+  return added;
+}
+
 // ---- kinds ------------------------------------------------------------------
 
 async function runWriter(p) {
@@ -392,7 +447,176 @@ async function runMentalBatch(p) {
     });
   });
   if (!questions.length) throw new Error('no valid questions generated');
-  return { questions: questions.slice(0, count) };
+  const picked = questions.slice(0, count);
+  appendToInventedPool(picked);
+  return { questions: picked };
+}
+
+// ---- mains-fresh: one UPSC Mains question + model-answer skeleton ----------
+// Same acceptance rules and item shape as the build-runner agent
+// (scripts/site-agent.js, agent MainsFresh) so on-demand items and frozen
+// batch items stay interchangeable on the mains page.
+
+const MAINS_PAPERS = ['gs1', 'gs2', 'gs3', 'gs4', 'essay'];
+const MAINS_MARKS = [10, 15, 20, 125, 250];
+
+function mainsNorm(s) {
+  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+}
+
+function mainsItemOk(o) {
+  if (!o || typeof o !== 'object') return 'not an object';
+  const q = String(o.question || '').trim();
+  if (q.length < 40 || q.length > 700) return 'question length';
+  if (/[<>]/.test(q)) return 'question markup';
+  const paper = String(o.paper);
+  if (MAINS_PAPERS.indexOf(paper) === -1) return 'paper';
+  const marks = Number(o.marks);
+  if (MAINS_MARKS.indexOf(marks) === -1) return 'marks';
+  if (paper === 'essay' && marks !== 125 && marks !== 250) return 'essay marks';
+  if (paper !== 'essay' && marks > 20) return 'gs marks';
+  if (['easy', 'medium', 'high'].indexOf(String(o.difficulty)) === -1) return 'difficulty';
+  const ans = Array.isArray(o.answer) ? o.answer.filter(s => s && (s.h || s.p)) : [];
+  if (ans.length < 4 || ans.length > 6) return 'answer sections';
+  for (const s of ans) {
+    if (String(s.h || '').length < 2 || String(s.h || '').length > 90) return 'section heading';
+    if (String(s.p || '').length < 120 || String(s.p || '').length > 1500) return 'section paragraph';
+  }
+  if (!Array.isArray(o.marksGuide) || o.marksGuide.length < 3 || o.marksGuide.length > 6) return 'marksGuide';
+  if (!Array.isArray(o.pitfalls) || o.pitfalls.length < 3 || o.pitfalls.length > 6) return 'pitfalls';
+  if (!Array.isArray(o.keywords) || o.keywords.length < 5 || o.keywords.length > 8) return 'keywords';
+  if (!Array.isArray(o.laws) || o.laws.length > 8) return 'laws';
+  return null;
+}
+
+// Models wrap the object in fences or a thinking block often enough that a
+// strict parse would fail whole requests; slice from the first { to the last }.
+function extractOneObject(text) {
+  const t = String(text)
+    .replace(/<think(?:ing)?>[\s\S]*?<\/think(?:ing)?>/gi, ' ')
+    .replace(/```[a-z]*|```/gi, '').trim();
+  const a = t.indexOf('{');
+  const b = t.lastIndexOf('}');
+  if (a === -1 || b <= a) throw new Error('no JSON object in the model output');
+  return JSON.parse(t.slice(a, b + 1));
+}
+
+function mainsPrompt(paper, topic, seeds, stricter) {
+  const sys = 'You write UPSC Civil Services Mains practice questions with model-answer skeletons for Indian aspirants. ' +
+    'Reply with ONE valid JSON object and nothing else: no markdown fences, no commentary before or after. ' +
+    'Shape: {"paper":"gs3","topic":"short topic label","marks":15,"difficulty":"medium",' +
+    '"question":"full question text including the marking note, e.g. (15 marks, 250 words)",' +
+    '"answer":[{"h":"short heading","p":"2-4 sentence paragraph"}],' +
+    '"marksGuide":["what the examiner rewards"],"pitfalls":["how this is answered badly"],' +
+    '"keywords":["term"],"laws":["law, case or scheme, only if certain"]}. ' +
+    'Constraints: "paper" is one of gs1,gs2,gs3,gs4,essay; marks 10, 15 or 20 for GS papers, 125 or 250 only for the essay; ' +
+    '4 to 6 objects in "answer"; 3 to 5 strings each in marksGuide and pitfalls; 5 to 8 keywords; "laws" may be []. ' +
+    'Keep every "p" paragraph to 2-3 sentences and under 600 characters (the reply has a strict token budget — longer text gets cut off and the item is rejected). ' +
+    'Never invent a scheme, case, article or statistic: name a reform only when certain of it, with its year; a verified older example beats an uncertain new one. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral. ' +
+    'Structure the skeleton like a strong answer: the FIRST object in "answer" opens with context — define the term or topic and say where or when it took shape (an agreement, body or year, and only when certain) — never start mid-argument; ' +
+    'the LAST object is a way forward or conclusion (heading like "Way forward"), 2-3 sentences on what should change or what to watch; the middle objects carry the analysis. ' +
+    'Across the answer, place 2 to 3 specific anchors — a court, committee, agreement, scheme, fund, index or landmark event — each one only when you are certain of it; a paragraph that names no real thing is a weak paragraph. ' +
+    'For a topic with a governing law, agreement or scheme you are certain of, name at least one in "laws"; keep [] only when nothing is certain. ' +
+    'Do not reason step by step; reply with ONLY the JSON object.';
+  const lines = [];
+  lines.push('Create ONE practice question' +
+    (paper ? ' for the paper "' + paper + '"' : ', choosing the paper and a topic where aspirants are weakest') +
+    (topic ? ' on the topic: ' + topic : '') +
+    ', avoiding the most over-used questions and never repeating any question below (already covered).');
+  lines.push('');
+  lines.push('ALREADY COVERED (do not repeat, do not reword):');
+  lines.push(seeds.length
+    ? seeds.map(function (s, i) { return (i + 1) + '. ' + s; }).join('\n')
+    : '(none provided — prefer a fresh, less over-used angle)');
+  if (stricter) {
+    lines.push('', 'IMPORTANT: the previous reply was cut off, invalid, or repeated a covered question. ' +
+      'Reply with ONLY the JSON object; keep each "p" paragraph to 2-3 sentences and under 600 characters.');
+  }
+  return { sys: sys, user: lines.join('\n') };
+}
+
+function shipMainsItem(obj) {
+  return {
+    id: 'od-' + Date.now().toString(36),
+    at: new Date().toISOString().slice(0, 10),
+    paper: String(obj.paper),
+    topic: String(obj.topic || 'AI practice').slice(0, 160),
+    marks: Number(obj.marks),
+    difficulty: String(obj.difficulty),
+    years: [],
+    question: String(obj.question).trim(),
+    answer: obj.answer.filter(s => s && (s.h || s.p)).slice(0, 6)
+      .map(s => ({ h: String(s.h || 'Section').slice(0, 120), p: String(s.p || '').slice(0, 1400) })),
+    marksGuide: obj.marksGuide.filter(Boolean).map(String).slice(0, 6),
+    pitfalls: obj.pitfalls.filter(Boolean).map(String).slice(0, 6),
+    laws: (obj.laws || []).filter(Boolean).map(String).slice(0, 8),
+    keywords: obj.keywords.filter(Boolean).map(String).slice(0, 8),
+    origin: 'od',
+    ai: 1,
+    model: MODEL
+  };
+}
+
+// Appending keeps the on-demand item for every visitor instead of only the
+// owner's session; the page's frozen batch is the "agent fetch" side and the
+// heavy MainsFresh lane rewrites the same file — a rare collision keeps this
+// run's side (ci-push -X ours), which is exactly what was just written.
+function appendToMainsFresh(item) {
+  const pool = readJsonFile(MAINS_FRESH);
+  if (!pool || !Array.isArray(pool.items)) {
+    log('mains-fresh pool not checked out — public pool left untouched');
+    return false;
+  }
+  pool.items.push(item);
+  if (pool.items.length > MAINS_FRESH_CAP) pool.items = pool.items.slice(-MAINS_FRESH_CAP);
+  if (!pool.meta || typeof pool.meta !== 'object') pool.meta = {};
+  pool.meta.updated = new Date().toISOString().slice(0, 10);
+  pool.meta.count = pool.items.length;
+  pool.meta.lastAttempt = { at: new Date().toISOString(), reason: 'shipped ' + item.id + ' (on demand)' };
+  fs.writeFileSync(MAINS_FRESH, JSON.stringify(pool, null, 1) + '\n');
+  log('public mains pool += ' + item.id + ' (now ' + pool.items.length + ')');
+  return true;
+}
+
+async function runMainsFresh(p) {
+  const paper = MAINS_PAPERS.indexOf(clean(p.paper)) !== -1 ? clean(p.paper) : '';
+  const topic = clean(p.topic).slice(0, 160);
+  const seeds = (Array.isArray(p.seeds) ? p.seeds : []).slice(0, 80).map(clean).filter(Boolean);
+
+  // Hard-drop repeats, by opening signature, against the hand-written bank,
+  // the frozen pool and whatever the page sent as seeds.
+  const knownSigs = {};
+  function addKnown(text) { const n = mainsNorm(text); if (n) knownSigs[n.slice(0, 80)] = 1; }
+  seeds.forEach(addKnown);
+  const bank = readJsonFile(MAINS_BANK);
+  if (bank && Array.isArray(bank.questions)) bank.questions.forEach(function (q) { addKnown(q && q.question); });
+  const pool = readJsonFile(MAINS_FRESH);
+  if (pool && Array.isArray(pool.items)) pool.items.forEach(function (q) { addKnown(q && q.question); });
+
+  let reason = 'no attempts';
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const pr = mainsPrompt(paper, topic, seeds, attempt === 1);
+    const r = await callLLM([
+      { role: 'system', content: pr.sys },
+      { role: 'user', content: pr.user }
+    ], { temperature: attempt === 1 ? 0.55 : 0.7, numPredict: 3400 });
+    let obj = null;
+    try { obj = extractOneObject(r.text); }
+    catch (e) {
+      reason = 'unparseable output';
+      log('mains: output was not a JSON object (' + e.message + ') · head: '
+        + String(r.text).replace(/\s+/g, ' ').slice(0, 220));
+      continue;
+    }
+    const bad = mainsItemOk(obj);
+    if (bad) { reason = 'validation: ' + bad; log('mains: rejected (' + reason + ')'); continue; }
+    const nq = mainsNorm(obj.question);
+    if (knownSigs[nq.slice(0, 80)]) { reason = 'duplicate question'; log('mains: repeated a covered question — retrying'); continue; }
+    const item = shipMainsItem(obj);
+    appendToMainsFresh(item);
+    return { item: item };
+  }
+  throw new Error('could not write an acceptable question (' + reason + ')');
 }
 
 // ---- result file ------------------------------------------------------------
@@ -437,6 +661,7 @@ async function main() {
   if (KIND === 'writer') out = await runWriter(payload);
   else if (KIND === 'tutor-questions') out = await runTutorQuestions(payload);
   else if (KIND === 'mental-batch') out = await runMentalBatch(payload);
+  else if (KIND === 'mains-fresh') out = await runMainsFresh(payload);
   else throw new Error('unknown kind: ' + KIND);
   writeResult(Object.assign({
     status: 'done',
@@ -447,7 +672,7 @@ async function main() {
 }
 
 // Test hooks: require() this file to exercise the parsers without a runner.
-module.exports = { extractArray, tutorPrompt, mentalPrompt };
+module.exports = { extractArray, tutorPrompt, mentalPrompt, mainsPrompt, mainsItemOk, extractOneObject };
 
 if (require.main === module) {
   main().catch(function (err) {

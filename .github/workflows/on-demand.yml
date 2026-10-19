@@ -15,6 +15,7 @@ name: On-Demand (owner runner)
 #   writer           — one prose answer from a fully-built prompt (ask pages)
 #   tutor-questions  — N practice questions for a subject (exam tutor, fresh paper)
 #   mental-batch     — N invented MCQs for the mental "fresh paper" pool
+#   mains-fresh      — one UPSC Mains question + model-answer skeleton (mains page)
 
 on:
   workflow_dispatch:
@@ -23,7 +24,7 @@ on:
         description: 'Caller-generated id; the result is committed as data/on-demand/<id>.json'
         required: true
       kind:
-        description: 'writer | tutor-questions | mental-batch'
+        description: 'writer | tutor-questions | mental-batch | mains-fresh'
         required: true
       payload:
         description: 'JSON payload for the kind'
@@ -57,6 +58,9 @@ jobs:
           sparse-checkout: |
             scripts
             data/on-demand
+            data/invented
+            data/mains-fresh.json
+            data/mains-questions.json
           sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
@@ -159,5 +163,5 @@ jobs:
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          git add data/on-demand/
+          git add data/on-demand/ data/invented/ data/mains-fresh.json
           bash scripts/ci-push.sh "on-demand: ${{ inputs.kind }} request ${{ inputs.request_id }}"

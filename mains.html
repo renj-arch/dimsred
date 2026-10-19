@@ -94,6 +94,7 @@ h1{font-size:24px;margin:6px 0 8px}
 
   <div class="genbar">
     <button class="btn sec" id="genAI" type="button">&#10024; Generate one more question + model answer (AI)</button>
+    <button class="btn sec" id="genRunner" type="button" style="display:none">&#9997;&#65039; Write a brand-new one on the GitHub runner (8&ndash;20 min)</button>
     <span class="stat" id="genStat" role="status" aria-live="polite"></span>
   </div>
 
@@ -101,7 +102,7 @@ h1{font-size:24px;margin:6px 0 8px}
 </div>
 
 <script src="scripts/lib/ask-llm.js"></script>
-<script src="js/owner-runner.js?v=20261019a"></script>
+<script src="js/owner-runner.js?v=20261019b"></script>
 <script>
 'use strict';
 var STATE = { data: null, paper: 'all', term: '' };
@@ -198,7 +199,7 @@ function card(q) {
       '<span class="tag m">' + esc(q.marks) + ' marks</span>' +
       (yrs ? '<span class="tag">' + yrs + '</span>' : '') +
     '</div>' +
-    (q.ai ? '<div class="badge ai">AI-GENERATED ' + (q.origin === 'ci' ? 'BY THE SITE\u2019S MODEL ON ITS BUILD RUNNERS' : 'IN YOUR BROWSER') + ' &middot; unreviewed &middot; this session only &middot; verify before trusting</div>' : '') +
+    (q.ai ? '<div class="badge ai">AI-GENERATED ' + (q.origin === 'ci' ? 'BY THE SITE\u2019S MODEL ON ITS BUILD RUNNERS' : q.origin === 'runner' ? 'BY THE SITE\u2019S MODEL ON THE GITHUB RUNNER, JUST FOR YOU' : 'IN YOUR BROWSER') + ' &middot; unreviewed &middot; this session only &middot; verify before trusting</div>' : '') +
     '<h2>' + esc(q.question) + '</h2>' +
     '<div class="badge model">MODEL ANSWER &middot; not an official UPSC key &middot; write your own attempt first</div>' +
     '<button class="btn" data-open="' + esc(q.id) + '">Show the model answer</button>' +
@@ -468,6 +469,69 @@ function generateOne() {
       if (lib.unloadSoon) { try { lib.unloadSoon(); } catch (e) { /* ignore */ } }
     });
 }
+
+// ---- Owner runner: write a fresh one on the GitHub runner -------------------
+// The owner's lane: one brand-new mains question + model-answer skeleton,
+// written on GitHub's machine (js/owner-runner.js; the server refuses every
+// non-owner request). The runner also appends the item to the public frozen
+// batch, so one request grows the batch every visitor sees. The session copy
+// is badged "just for you"; nothing is merged into the hand-authored bank.
+function runnerSeeds() {
+  var seeds = [];
+  function push(t) {
+    t = String(t || '').replace(/\s+/g, ' ').trim();
+    if (t.length >= 24) seeds.push(t.slice(0, 90));
+  }
+  AI_QS.forEach(function (q) { push(q.question); });
+  ((FRESH.items) || []).forEach(function (q) { push(q.question); });
+  if (STATE.data) (STATE.data.questions || []).forEach(function (q) { push(q.question); });
+  return seeds.slice(-60);
+}
+function fromRunnerItem(item) {
+  var q = cleanAI(item);
+  if (!q) return null;
+  q.id = 'od-' + String(item.id || Date.now().toString(36)).replace(/[^a-z0-9-]/gi, '').slice(0, 40);
+  q.origin = 'runner';
+  if (item.years && item.years.length) q.years = item.years.map(String).slice(0, 6);
+  return q;
+}
+function generateRunner() {
+  var R = window.OwnerRunner;
+  var btn = el('genRunner');
+  if (AI_BUSY) return;
+  if (!R) { setGenStat('The owner-runner library did not load -- refresh and try again.'); return; }
+  if (!STATE.data) { setGenStat('Still loading the question bank -- try again in a second.'); return; }
+  AI_BUSY = true; btn.disabled = true;
+  setGenStat('Sending the request to the GitHub runner\u2026');
+  R.run('mains-fresh', { seeds: runnerSeeds() }, {
+    onStatus: function (m) { setGenStat(m); }
+  }).then(function (res) {
+    var item = res && res.item;
+    if (!item) throw new Error('the runner returned no question');
+    var q = fromRunnerItem(item);
+    if (!q) throw new Error('the runner\u2019s question did not validate on this page');
+    AI_QS.unshift(q);
+    render();
+    setGenStat('Written on the GitHub runner just now -- badged so, and added to the site\u2019s frozen batch too. Refresh discards it here; the batch keeps it for every visitor.');
+    var node = el('q-' + q.id);
+    if (node && node.scrollIntoView) node.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }).catch(function (err) {
+    setGenStat(String((err && err.message) || err || 'The run failed.') + ' Click again to retry.');
+  }).then(function () {
+    AI_BUSY = false; btn.disabled = false;
+  });
+}
+function refreshRunnerBtn() {
+  var R = window.OwnerRunner;
+  var btn = el('genRunner');
+  if (!btn || !R) return;
+  R.ready().then(function (st) {
+    if (st && st.owner) btn.style.display = '';
+  }).catch(function () {});
+}
+window.addEventListener('vlymbooq-owner', refreshRunnerBtn);
+refreshRunnerBtn();
+if (el('genRunner')) el('genRunner').addEventListener('click', generateRunner);
 
 // A file:// page cannot fetch() its own data (CORS), which is the single most
 // likely reason a student sees nothing. Say so, and say how to fix it, rather
