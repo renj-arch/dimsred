@@ -1,0 +1,56 @@
+{
+ "meta": {
+  "generatedAt": "2026-10-19T07:36:13.267Z",
+  "model": "qwen3.5:9b",
+  "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
+  "count": 4,
+  "lastAttempt": {
+   "at": "2026-10-19T07:36:13.267Z",
+   "ok": true,
+   "count": 4,
+   "dropped": 0
+  }
+ },
+ "proposals": [
+  {
+   "id": "prp-mvexxdcj-1",
+   "at": "2026-10-19T07:36:13.267Z",
+   "title": "Fix on-demand LLM output parsing",
+   "why": "The fault board shows a recent failure where 'tutor-questions' received 'no JSON array in the model output' at 2026-10-19T04:29, causing an item to fail.",
+   "idea": "Update the Node.js script that consumes Ollama responses to implement a robust parser that strips markdown code blocks (```json) and handles stream interruptions before attempting JSON.parse. This ensures that even if the model outputs text wrapping the JSON or truncates slightly, the system can extract the valid array.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvexxdcj-2",
+   "at": "2026-10-19T07:36:13.267Z",
+   "title": "Enable Homepage quiz flow interaction",
+   "why": "Browser tests report 'flow-skipped on Homepage' because there is no visible Next button, meaning the quiz exercise is not triggered when users first load the site.",
+   "idea": "Modify the main HTML template to conditionally render a 'Start Practice' button or auto-initialize the first available question from the 'invented pool' (13 items) if the user has not yet completed a session today. This ensures the quiz flow is exercised on every visit.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvexxdcj-3",
+   "at": "2026-10-19T07:36:13.267Z",
+   "title": "Expand single-click practice sets with AI batch",
+   "why": "The mains page currently holds only 'frozen AI batch 1 item(s)', while the invented pool contains 13 questions; the news/file lanes pipe 0 items.",
+   "idea": "Trigger a GitHub Action workflow to generate a new batch of questions using the local Ollama model (e.g., qwen3.5:9b) specifically for the 'mains' page, targeting topics from the existing 1308 tracked files, and update the single-click practice sets to include this fresh content.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvexxdcj-4",
+   "at": "2026-10-19T07:36:13.267Z",
+   "title": "Automate fault triage for 'Corpus fill' tasks",
+   "why": "The fault board lists 'daily-wiki-fill #607' and 'daily-feed-fill #29' as in-progress, contributing to the 10 critical faults.",
+   "idea": "Create a lightweight cron job or GitHub Action step that checks the status of these specific fill tasks. If they exceed a certain duration without completion, automatically append a debug log entry to data/agent-log.json requesting an Ollama retry or fallback to rule-based generation for those specific slots.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  }
+ ]
+}
