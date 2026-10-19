@@ -1,48 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-19T07:36:13.267Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 4,
-   "byAgent": [
-    {
-     "agent": "proposals",
-     "count": 4
-    }
-   ],
-   "details": [
-    {
-     "agent": "proposals",
-     "fixes": [
-      {
-       "kind": "proposal",
-       "fix": "Fix on-demand LLM output parsing",
-       "detail": "The fault board shows a recent failure where 'tutor-questions' received 'no JSON array in the model output' at 2026-10-19T04:29, causing an item to fail.",
-       "text": "Update the Node.js script that consumes Ollama responses to implement a robust parser that strips markdown code blocks (```json) and handles stream interruptions before attempting JSON.parse. This ensures that even if the model outputs text wrapping the JSON or truncates slightly, the system can extract the valid array."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Enable Homepage quiz flow interaction",
-       "detail": "Browser tests report 'flow-skipped on Homepage' because there is no visible Next button, meaning the quiz exercise is not triggered when users first load the site.",
-       "text": "Modify the main HTML template to conditionally render a 'Start Practice' button or auto-initialize the first available question from the 'invented pool' (13 items) if the user has not yet completed a session today. This ensures the quiz flow is exercised on every visit."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Expand single-click practice sets with AI batch",
-       "detail": "The mains page currently holds only 'frozen AI batch 1 item(s)', while the invented pool contains 13 questions; the news/file lanes pipe 0 items.",
-       "text": "Trigger a GitHub Action workflow to generate a new batch of questions using the local Ollama model (e.g., qwen3.5:9b) specifically for the 'mains' page, targeting topics from the existing 1308 tracked files, and update the single-click practice sets to include this fresh content."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Automate fault triage for 'Corpus fill' tasks",
-       "detail": "The fault board lists 'daily-wiki-fill #607' and 'daily-feed-fill #29' as in-progress, contributing to the 10 critical faults.",
-       "text": "Create a lightweight cron job or GitHub Action step that checks the status of these specific fill tasks. If they exceed a certain duration without completion, automatically append a debug log entry to data/agent-log.json requesting an Ollama retry or fallback to rule-based generation for those specific slots."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-19T09:54:24.822Z",
    "model": "batiai/qwen3.8-27b:iq3",
    "totalFixes": 3,
@@ -2552,8 +2510,212 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-19T19:55:53.189Z",
+   "model": "qwen3:4b",
+   "totalFixes": 265,
+   "byAgent": [
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "figures",
+     "count": 0
+    },
+    {
+     "agent": "flowcharts",
+     "count": 0
+    },
+    {
+     "agent": "mindmaps",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 27
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 28
+    },
+    {
+     "agent": "a11y",
+     "count": 209
+    },
+    {
+     "agent": "code",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/ask-audit.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/browser-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-lectures.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/daily-globe-fill.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-papers.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-pib-feed.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/expand-course.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/fault-status.yml",
+       "fix": "Added memory limit to node steps"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "improve.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-anabelian-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-19T19:30:59.231Z",
+ "lastRun": "2026-10-19T19:55:53.189Z",
  "model": "qwen3:4b"
 }
