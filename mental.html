@@ -781,7 +781,7 @@
         var go = function(pool) {
             var qs = (pool || []).filter(function(q) { return q && q.difficulty === diffKey; });
             if (qs.length < 3) {
-                alert('The invented pool for this level is still warming up — starting an Exam Sim instead.');
+                alert('Not enough fresh invented questions at this level yet — the site invents more round the clock, so try again in a while. Starting an Exam Sim (always full) instead.');
                 startExamSim(fallback[diffKey] || 'po');
                 return;
             }
