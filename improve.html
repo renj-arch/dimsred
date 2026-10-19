@@ -365,6 +365,7 @@ function renderFaults() {
       s += row('⚡', 'Single-click practice sets', 'data/practice-sets/&lt;exam&gt;.json', '<a href="mega-test.html">mega-test.html?exam=&lt;exam&gt;</a> &rarr; an instant set built from that exam\'s bank, linked from each exam hub; tagged questions show the exam-relevance chip inside the explanation box.');
       s += row('🧾', 'What every agent run did (with excerpts)', 'data/agent-log.json', 'This page &mdash; the Site Agent section above renders the latest run per agent, and &ldquo;show what was written&rdquo; opens the actual text a run produced. Q&amp;A runs also land in the sweep journal.');
       s += row('🛠', 'Inventions / prototypes', 'data/inventions.json', 'lab.html is retired (it redirects to micro-test.html); shipped inventions surface through the agent-log excerpts above, and the file itself always carries meta.lastAttempt for the chain.');
+      s += row('🧠', 'Proposal lane — daily improvement ideas (for the owner)', 'data/agent-proposals.json', 'This page — the <b>&ldquo;Proposal lane&rdquo;</b> section below: 3&ndash;5 concrete suggestions the site\'s own model writes each morning from a factual digest of the site. The owner approves one by filing it as a GitHub issue (prefilled link); nothing is implemented automatically.');
       box.innerHTML += s;
     })();
 
@@ -402,6 +403,40 @@ function renderFaults() {
       }
       box.innerHTML += section;
     }).catch(function () { /* browser test not yet published */ });
+
+    // 5d. Proposal Lane (scripts/proposal-lane.js → data/agent-proposals.json).
+    // Once a day the site's own model reads a factual digest of the site and
+    // writes 3–5 improvement proposals. The owner approves one by filing it
+    // as a GitHub issue (prefilled link) — nothing is built automatically.
+    fetch('data/agent-proposals.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (pp) {
+      if (!pp || !pp.proposals || !pp.proposals.length) return;
+      var recent = pp.proposals.slice(0, 6);
+      var section = '<div class="list-head" style="margin-top:18px">🧠 Proposal lane <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; the model\'s daily improvement ideas &mdash; nothing is built until the owner approves one</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last pass: ' + stamp(pp.generatedAt) + ' &middot; model: ' + esc((pp.meta && pp.meta.model) || 'the site\'s own model') + ' &middot; writes 3&ndash;5 ideas each morning on the build runner &middot; ' + pp.proposals.length + ' kept</p>';
+      if (pp.meta && pp.meta.lastAttempt && pp.meta.lastAttempt.ok === false) {
+        section += '<div style="margin:6px 0;padding:6px 12px;background:rgba(239,68,68,.08);border-left:3px solid var(--rose);border-radius:0 8px 8px 0;font-size:12px;color:var(--text-sec)">⚠️ The last pass failed (' + esc(String(pp.meta.lastAttempt.error || '').slice(0, 160)) + ') — these are the previous proposals.</div>';
+      }
+      section += recent.map(function (p) {
+        var effColor = p.effort === 'small' ? 'var(--emerald)' : p.effort === 'large' ? 'var(--amber)' : 'var(--cyan)';
+        var riskColor = p.risk === 'low' ? 'var(--emerald)' : p.risk === 'high' ? 'var(--rose)' : 'var(--amber)';
+        var issueUrl = 'https://github.com/renj-arch/dimsred/issues/new?title=' +
+          encodeURIComponent('[Proposal] ' + p.title) +
+          '&body=' + encodeURIComponent('From the site\'s Proposal Lane (' + (p.id || '') + ', ' + stamp(pp.generatedAt) + ').\n\n**Why:** ' + p.why + '\n\n**Idea:** ' + p.idea + '\n\n**Effort:** ' + p.effort + ' · **Risk:** ' + p.risk + '\n\n_The owner approved this suggestion from the site\'s improve page._');
+        return '<div style="border-left:3px solid var(--purple);padding:8px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0">' +
+          '<b style="font-size:13px">' + esc(p.title) + '</b>' +
+          '<span style="margin-left:6px;font-size:10px;color:' + effColor + ';border:1px solid ' + effColor + ';border-radius:8px;padding:1px 6px">effort: ' + esc(p.effort) + '</span>' +
+          '<span style="margin-left:4px;font-size:10px;color:' + riskColor + ';border:1px solid ' + riskColor + ';border-radius:8px;padding:1px 6px">risk: ' + esc(p.risk) + '</span>' +
+          '<div style="font-size:12px;color:var(--text-sec);margin-top:3px">' + esc(p.why) + '</div>' +
+          '<div style="font-size:12px;color:var(--text-sec);margin-top:2px">💡 ' + esc(p.idea) + '</div>' +
+          '<div style="margin-top:6px"><a class="btn" style="display:inline-block;font-size:11px;padding:4px 12px;text-decoration:none" href="' + esc(issueUrl) + '" target="_blank" rel="noopener">Approve &rarr; file as GitHub issue</a>' +
+          '<span style="font-size:10.5px;color:var(--text-muted);margin-left:8px">opens a prefilled issue &mdash; your to-do list; nothing builds itself</span></div>' +
+          '</div>';
+      }).join('');
+      box.innerHTML += section;
+    }).catch(function () { /* proposal lane has not run yet */ });
 
     if (ideas.length) {
       html += '<div class="list-head" style="margin-top:18px">Ideas <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; adopt one into the form below</span></div>' +
