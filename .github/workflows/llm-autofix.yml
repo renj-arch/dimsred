@@ -173,5 +173,26 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/autofix-log.json figures/ data/questions/ 2>/dev/null || true
+          # Per-path adds (2026-10-19): git add is all-or-nothing per call —
+          # data/questions/ is NOT in this workflow's sparse checkout, so a
+          # caption-only run used to kill the WHOLE add (log + figures too)
+          # silently via 2>/dev/null. Same per-path pattern as site-agent.
+          for p in data/autofix-log.json figures data/questions; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          MODN=$(git diff --name-only | wc -l)
+          STAGEDN=$(git diff --cached --name-only | wc -l)
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "[publish] safety-net: $MODN modified tracked file(s) but nothing staged — retrying with -f"
+            git diff --name-only | while read -r f; do git add --sparse -f "$f" || echo "[publish] WARNING: could not stage $f"; done
+            MODN=$(git diff --name-only | wc -l)
+            STAGEDN=$(git diff --cached --name-only | wc -l)
+            echo "[publish] after safety-net: staged=$STAGEDN modified-left=$MODN"
+          fi
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "::error::fixer work exists but nothing could be staged (silent-loss class). Diagnostics:"
+            git diff --name-only | sed 's/^/  unpushed: /'
+            exit 1
+          fi
+          echo "[publish] staged: $STAGEDN file(s)"
           bash scripts/ci-push.sh "auto-fix: ${{ env.MODEL }} fixed weak content (run #${{ github.run_number }})"

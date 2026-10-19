@@ -1439,9 +1439,18 @@ async function agentMetaLearn() {
       }
     }
   } catch (e) { /* no data */ }
-  if (!patterns.length) { console.log('agent: MetaLearn — no unmatched page-bound patterns; nothing to learn'); return { agent: 'metalearn', fixes: fixes }; }
+  if (!patterns.length) {
+    try { fs.writeFileSync('data/metalearn.json', JSON.stringify({ lastAttempt: { at: new Date().toISOString(), target: '', pattern: '', outcome: 'none' } }, null, 2) + '\n'); } catch (e) { /* best effort */ }
+    console.log('agent: MetaLearn — no unmatched page-bound patterns; nothing to learn');
+    return { agent: 'metalearn', fixes: fixes };
+  }
   const target = patterns[0];
   console.log('agent: MetaLearn — unmatched pattern on ' + target.page + ' :: ' + target.pattern.slice(0, 120));
+  try {
+    // Attempt marker (published): the Agent Chain reads data/metalearn.json
+    // to throttle coder-model dispatches (12h), and improve.html can show it.
+    fs.writeFileSync('data/metalearn.json', JSON.stringify({ lastAttempt: { at: new Date().toISOString(), target: target.page, pattern: target.pattern.slice(0, 160), outcome: 'attempt' } }, null, 2) + '\n');
+  } catch (e) { /* best effort — a marker must never break the agent */ }
   // 2. Synthesize a detector via the model.
   const spec = 'Write a JavaScript function fixLearned(html, page) for a static-site repair bot.\n' +
     'FAILURE PATTERN: ' + target.pattern + ' (seen on ' + target.page + ')\n' +
@@ -1509,6 +1518,7 @@ async function agentMetaLearn() {
     try { fs.unlinkSync(tmpFile); } catch (e2) { /* ignore */ }
     fixes.push({ page: LEARNED_PATH, fix: 'MetaLearn staged detector #' + idx + ' for ' + target.page + ' :: ' + target.pattern.slice(0, 80) + ' — executes next run' });
     console.log('agent: MetaLearn — staged detector #' + idx);
+    try { fs.writeFileSync('data/metalearn.json', JSON.stringify({ lastAttempt: { at: new Date().toISOString(), target: target.page, pattern: target.pattern.slice(0, 160), outcome: 'staged' } }, null, 2) + '\n'); } catch (e2) { /* best effort */ }
   } catch (e) {
     console.log('agent: MetaLearn — validation failed: ' + (e.message || e).slice(0, 150));
     try { fs.unlinkSync(tmpFile); } catch (e2) { /* ignore */ }
@@ -4112,7 +4122,7 @@ async function main() {
   // their own dispatches (agent_only=mainsfresh, model=qwen3.5:9b) instead
   // of slowing every normal pass. AGENT_HEAVY overrides the heavy list;
   // AGENT_FAST_TAGS overrides the fast tag list — no code change needed.
-  const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh,invention,mockpapers,bankfigures,exampatterns').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
+  const heavyNames = (process.env.AGENT_HEAVY || 'mainsfresh,invention,mockpapers,bankfigures,exampatterns,metalearn').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
   const modelTag = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
   const fastTags = (process.env.AGENT_FAST_TAGS || 'qwen3:4b,qwen3.5:4b,qwen3.5:2b,qwen3.5:0.8b,qwen3:1.7b,qwen3:0.6b,lfm2.5:1.2b').toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
   const heavyTier = fastTags.indexOf(modelTag.toLowerCase()) === -1;

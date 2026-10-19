@@ -64,6 +64,7 @@ jobs:
             .github/workflows
             data/faults.json
             data/browser-test.json
+            data/metalearn.json
             data/agent-log.json
             data/figure-gaps.json
             data/topic-gaps.json
@@ -117,10 +118,12 @@ jobs:
       # Model cache: the Ollama blob store is content-addressed, so ONE entry
       # serves every model of a size class. Two classes (repo budget 10GB):
       # "fast" for small models (~2.5GB), "mid" for qwen3.5:9b (~6.6GB).
-      # 17GB heavy models skip this step entirely. continue-on-error: a
-      # cache hiccup must never fail a run.
+      # 17GB heavy models AND the ~9GB coder model (qwen2.5-coder:14b, the
+      # MetaLearn code lane) skip this step entirely and re-pull: neither
+      # fits the 10GB repo cache budget. continue-on-error: a cache hiccup
+      # must never fail a run.
       - name: Cache Ollama models
-        if: ${{ !contains(inputs.model || 'qwen3:4b', '27b') && !contains(inputs.model || 'qwen3:4b', '22b') }}
+        if: ${{ !contains(inputs.model || 'qwen3:4b', '27b') && !contains(inputs.model || 'qwen3:4b', '22b') && !contains(inputs.model || 'qwen3:4b', 'coder') }}
         continue-on-error: true
         uses: actions/cache@v4
         with:
@@ -234,14 +237,34 @@ jobs:
           # whole add with the error hidden — every run from 2026-10-18
           # 15:19 silently discarded its work this way ("nothing staged").
           # The loop + visible warnings make that loss class impossible.
-          for p in data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/practice-sets data/topic-layers.json data/mains-fresh.json data/mains-updates.json data/inventions.json data/mock-fresh.json data/ssc-je-qfig.json data/exam-patterns.json scripts/learned-fixes.js; do
+          for p in data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/metalearn.json data/practice-sets data/topic-layers.json data/mains-fresh.json data/mains-updates.json data/inventions.json data/mock-fresh.json data/ssc-je-qfig.json data/exam-patterns.json scripts/learned-fixes.js; do
             if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
           done
           for p in figures *.html prototype-*.html; do
             if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
           done
           git status --porcelain --sparse | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add --sparse 2>/dev/null || true
-          echo "[publish] staged: $(git diff --cached --name-only | wc -l) file(s)"
+          # Self-diagnosis: if this pass modified tracked files but staged
+          # NOTHING, the adds above were defeated (ignored path, bad glob —
+          # the class that silently discarded 20h of work on 2026-10-18).
+          # First try one self-repair (force-add each modified tracked file);
+          # if even that stages nothing, fail LOUDLY with diagnostics instead
+          # of the silent-green "nothing staged".
+          MODN=$(git diff --name-only | wc -l)
+          STAGEDN=$(git diff --cached --name-only | wc -l)
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "[publish] safety-net: $MODN modified tracked file(s) but nothing staged — retrying with -f"
+            git diff --name-only | while read -r f; do git add --sparse -f "$f" || echo "[publish] WARNING: could not stage $f"; done
+            MODN=$(git diff --name-only | wc -l)
+            STAGEDN=$(git diff --cached --name-only | wc -l)
+            echo "[publish] after safety-net: staged=$STAGEDN modified-left=$MODN"
+          fi
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "::error::agent work exists but nothing could be staged — the silent-loss class (2026-10-18 incident). Diagnostics:"
+            git diff --name-only | sed 's/^/  unpushed: /'
+            exit 1
+          fi
+          echo "[publish] staged: $STAGEDN file(s)"
           # Single shared publisher: PAT push, GITHUB_TOKEN fallback on PAT
           # death (no lost work), loud alert. See scripts/ci-push.sh.
           bash scripts/ci-push.sh "site-agent: ${{ env.MODEL }} maintained the site (run #${{ github.run_number }})"
