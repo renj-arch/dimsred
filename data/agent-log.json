@@ -1,39 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-19T09:54:24.822Z",
-   "model": "batiai/qwen3.8-27b:iq3",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "archive-writer",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "archive-writer",
-     "fixes": [
-      {
-       "page": "archive (International Relations / International Relations)",
-       "fix": "Explained \"What do you know about The final offensive of 1981 (Spanish: ofensiva final de 1981), also\"",
-       "text": "VERDICT: The 1981 general offensive was the FMLN's first major military push in the Salvadoran Civil War. WHY: The Farabundo Martí National Liberation Front aimed to trigger a popular revolution to overthrow the government, marking a pivotal escalation. TRAPS: Do not confuse this with later guerrilla campaigns; it was specifically the initial large-scale offensive that failed. HOOK: Remember 'FMLN's first big push' to distinguish it from subsequent phases. Exam trap: Verify the year 1981 and the"
-      },
-      {
-       "page": "archive (International Relations / International Relations)",
-       "fix": "Explained \"The objective of the offensive was to initiate a popular revolution to overthrow the Revol\"",
-       "text": "1) VERDICT: The correct year is 1979. 2) WHY: The 1979 Salvadoran coup d'état overthrew President Romero and installed the Revolutionary Government Junta (JRG), which remained in power until 1984. 3) TRAPS: Confusing this with the 1978 elections or the 1984 transition to civilian rule. The JRG specifically ruled from 1979 to 1984. 4) HOOK: Remember '79 Coup, Junta Rule'. Exam-day trap: Do not confuse the JRG with the earlier military juntas or the later civilian governments."
-      },
-      {
-       "page": "archive (International Relations / International Relations)",
-       "fix": "Explained \"The _____ Salvadoran coup d'état, which was covertly supported by the United States, is of\"",
-       "text": "1) VERDICT: The 1979 Salvadoran coup d'état. 2) WHY: This US-backed military takeover installed the Revolutionary Government Junta (JRG), replacing the civilian president and triggering the civil war. 3) TRAPS: Avoid confusing this with the 1931 coup or later 1989 events; the question specifically targets the junta's inception. 4) HOOK: Remember 1979 as the year the 'JRG' took power, marking the war's start. Exam trap: Do not conflate this with the 1979 Iranian Revolution, despite the shared yea"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-19T10:36:57.838Z",
    "model": "qwen3:4b",
    "totalFixes": 347,
@@ -2714,8 +2681,212 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-19T20:45:00.781Z",
+   "model": "qwen3:4b",
+   "totalFixes": 265,
+   "byAgent": [
+    {
+     "agent": "features",
+     "count": 0
+    },
+    {
+     "agent": "proposals",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 27
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 28
+    },
+    {
+     "agent": "a11y",
+     "count": 209
+    },
+    {
+     "agent": "code",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/ask-audit.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/browser-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-lectures.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/daily-globe-fill.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-papers.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-pib-feed.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/expand-course.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/fault-status.yml",
+       "fix": "Added memory limit to node steps"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "improve.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-anabelian-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-19T19:55:53.189Z",
+ "lastRun": "2026-10-19T20:45:00.781Z",
  "model": "qwen3:4b"
 }
