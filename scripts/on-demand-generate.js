@@ -350,7 +350,8 @@ async function runTutorQuestions(p) {
   const questions = [];
   const seedNorm = {};
   seeds.forEach(function (s) { seedNorm[normText(s)] = 1; });
-  arr.forEach(function (x) {
+  function addItems(list) {
+  (Array.isArray(list) ? list : []).forEach(function (x) {
     if (!x || !x.q || !x.a) return;
     const n = normText(x.q);
     if (!n || n.length < 12 || seen[n] || seedNorm[n]) return;
@@ -363,7 +364,26 @@ async function runTutorQuestions(p) {
     }
     questions.push({ q: clean(x.q), a: a, h: clean(x.h), s: clean(x.s) });
   });
-  if (!questions.length) throw new Error('no valid questions generated');
+  }
+
+  addItems(arr);
+  // A thin reply (truncated or lazy JSON) is the most common tutor-lane
+  // failure; one retry usually fills the set. Still short => fail loudly so a
+  // half-empty "success" never reaches the page (see od 44161b74, 1 of 5).
+  const need = Math.min(count, 3);
+  if (questions.length < need) {
+    log('tutor: only ' + questions.length + ' of ' + count + ' valid - retrying once');
+    let arr2 = null;
+    try {
+      arr2 = await callArray(
+        [{ role: 'user', content: tutorPrompt(exam, subject, count - questions.length, seeds, bias) }],
+        { temperature: 0.85, numPredict: Math.min(6000, 450 * count + 600) },
+        'tutor'
+      );
+    } catch (e) { arr2 = null; }
+    addItems(arr2);
+  }
+  if (questions.length < need) throw new Error('only ' + questions.length + ' of ' + count + ' valid questions generated (needed at least ' + need + ')');
   return { questions: questions.slice(0, count) };
 }
 
