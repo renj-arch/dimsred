@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-19T16:41:24.922Z",
-  "cursor": 6,
-  "built": 5
+  "updatedAt": "2026-10-19T23:31:43.703Z",
+  "cursor": 9,
+  "built": 8
  },
  "figs": {
   "ce3585b0": {
@@ -33,6 +33,24 @@
   "8805d22a": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Allowable Stress</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"40\" y=\"165\">σ_allow = σ_ult / FOS</text><text x=\"320\" y=\"165\">= 400 / 2 = 200 N/mm²</text><circle cx=\"40\" cy=\"140\" r=\"3\"/><circle cx=\"320\" cy=\"140\" r=\"3\"/></svg>",
    "n": "if ultimate tensile strength is 400 n/mm² and the factor of safety is 2, what is the allowable stress?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "7fcaa642": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"175\">Working Stress</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><text x=\"330\" y=\"35\">Failure Stress</text><line x1=\"80\" y1=\"180\" x2=\"80\" y2=\"40\" stroke-dasharray=\"4,2\"/><text x=\"75\" y=\"95\">Material</text><rect x=\"60\" y=\"30\" width=\"20\" height=\"100\" fill=\"#ddd\"/><text x=\"72\" y=\"105\" text-anchor=\"middle\">Yield Point</text><text x=\"72\" y=\"125\" text-anchor=\"middle\">Ultimate Point</text><rect x=\"60\" y=\"30\" width=\"20\" height=\"100\" fill=\"#ddd\"/><line x1=\"80\" y1=\"40\" x2=\"80\" y2=\"180\" stroke-dasharray=\"4,2\"/><text x=\"95\" y=\"110\">FOS = Failure / Working</text><circle cx=\"320\" cy=\"110\" r=\"3\" fill=\"#222\"/></svg>",
+   "n": "define factor of safety.",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "4e6f7288": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Stress (σ)</text><line x1=\"40\" y1=\"20\" x2=\"320\" y2=\"20\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"330\" y=\"105\">Yield</text><circle cx=\"260\" cy=\"105\" r=\"3\"/><text x=\"270\" y=\"115\">σy</text><text x=\"40\" y=\"195\">Strain (ε)</text><path d=\"M 40 180 L 260 105 L 320 20\"/><text x=\"180\" y=\"140\">Ductile</text></svg>",
+   "n": "which stress is normally the basis of factor of safety for ductile materials?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "b17b86de": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"195\">Stress</text><text x=\"30\" y=\"160\">/</text><text x=\"30\" y=\"140\">Strain</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"95\">Strain</text><path d=\"M 60 180 L 140 180 L 140 40\" stroke-dasharray=\"3,3\"/><text x=\"100\" y=\"170\">Elastic</text><text x=\"100\" y=\"155\">Region</text><path d=\"M 140 180 L 260 180\"/><text x=\"195\" y=\"170\">Fracture</text><text x=\"195\" y=\"155\">Point</text><circle cx=\"140\" cy=\"180\" r=\"3\"/><text x=\"125\" y=\"195\">Yield</text><text x=\"125\" y=\"210\">(None)</text><circle cx=\"260\" cy=\"180\" r=\"3\"/><text x=\"245\" y=\"195\">Fail</text><text x=\"245\" y=\"210\">Sudden</text></svg>",
+   "n": "why is a larger factor of safety needed for brittle materials?",
    "sub": "design",
    "at": "2026-10-19"
   }

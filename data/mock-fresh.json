@@ -1,11 +1,11 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-19T16:50:27.227Z",
-  "cursor": 2,
-  "count": 20,
+  "updatedAt": "2026-10-19T23:43:38.439Z",
+  "cursor": 3,
+  "count": 30,
   "lastAttempt": {
-   "at": "2026-10-19T16:50:27.227Z",
+   "at": "2026-10-19T23:43:38.439Z",
    "reason": "added 10"
   }
  },
@@ -188,6 +188,96 @@
    "a": "63.7%",
    "h": "Use the efficiency formula for square threads: eta = tan(alpha) / tan(alpha + phi), where alpha is lead angle and phi is friction angle.",
    "s": "The lead angle alpha is calculated as arctan(Lead / (pi * Mean Diameter)) = arctan(10 / (pi * 50)) ≈ 3.64°. The friction angle phi is arctan(mu) = arctan(0.15) ≈ 8.53°. Efficiency η = tan(alpha) / tan(alpha + phi) = tan(3.64°) / tan(12.17°) ≈ 0.0637 / 0.2153 ≈ 0.296 or 29.6%.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Define the term 'adiabatic process' and state the relationship between pressure and volume for an ideal gas undergoing such a process.",
+   "a": "An adiabatic process is one where Q=0. For an ideal gas, PV^γ = constant, where γ is the specific heat ratio (Cp/Cv).",
+   "h": "Recall that no heat is exchanged with surroundings in this process.",
+   "s": "In an adiabatic process, there is no transfer of heat between the system and its surroundings (Q=0). Consequently, any work done by or on the gas changes its internal energy, leading to a temperature change. For an ideal gas with constant specific heats, this results in the relation PV^γ = constant.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "A rigid tank contains 2 kg of air at 500 kPa and 300 K. If 150 kJ of work is done on the air by a paddle wheel, determine the final temperature of the air. Assume air is an ideal gas with Cv = 0.718 kJ/kg·K.",
+   "a": "The final temperature is approximately 439 K.",
+   "h": "Use the first law of thermodynamics for a closed rigid system (ΔU = W_net).",
+   "s": "For a rigid tank, volume is constant so boundary work is zero; thus, net work done on the system is the paddle wheel work (+150 kJ). Using the first law for a closed system (Q - W = ΔU), with Q=0 and W being work done by the system (-150 kJ input), we get ΔU = 150 kJ. Since U = m*Cv*(T2-T1), then 150 = 2 * 0.718 * (T2 - 300). Solving gives T2 ≈ 439 K.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Explain the concept of 'enthalpy' and write its mathematical expression in terms of internal energy, pressure, and volume.",
+   "a": "Enthalpy (H) is defined as H = U + PV.",
+   "h": "Enthalpy combines internal energy with flow work.",
+   "s": "Enthalpy is a thermodynamic property particularly useful for open systems (control volumes) where mass flows across boundaries. It represents the total heat content of the system, combining its internal energy (U) and the work required to make room for it at constant pressure (PV). The expression H = U + PV allows simplification of energy balance equations in steady-flow devices like turbines and compressors.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "A steam turbine receives steam at 10 bar and 300°C and discharges it at 0.1 bar with a dryness fraction of 0.9. If the heat loss from the turbine is negligible, calculate the work done per kg of steam flowing through the turbine.",
+   "a": "Work done ≈ (h_in - h_out) kJ/kg. (Note: Exact numerical value requires steam table lookup for h at 10 bar/300°C and h_g/h_f at 0.1 bar).",
+   "h": "Apply the steady flow energy equation assuming kinetic and potential energy changes are negligible.",
+   "s": "For a steady-flow adiabatic turbine, the work output per unit mass is equal to the drop in enthalpy of the steam (h_in - h_out), neglecting changes in kinetic and potential energy. The inlet state is superheated vapor at 10 bar and 300°C. The outlet state is a wet mixture at 0.1 bar with quality x=0.9, so h_out = h_f + x(h_g - h_f) at that pressure.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "State the Second Law of Thermodynamics in terms of entropy for an isolated system.",
+   "a": "For an isolated system, ΔS ≥ 0 (ΔS > 0 for irreversible, ΔS = 0 for reversible).",
+   "h": "Entropy never decreases in an isolated system undergoing any process.",
+   "s": "The Second Law dictates the direction of spontaneous processes. For an isolated system (no mass or energy exchange), the total entropy can only increase during an irreversible real-world process or remain constant in an idealized reversible process; it can never decrease.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Define 'specific heat at constant volume' (Cv) and explain why it is different from 'specific heat at constant pressure' (Cp).",
+   "a": "Cv = (dU/dT)_v and Cp = (dH/dT)_p. For ideal gases, Cp - Cv = R.",
+   "h": "Consider the work done during expansion at constant pressure.",
+   "s": "Specific heat at constant volume (Cv) is the heat required to raise unit mass temperature by one degree without changing volume (no boundary work). Specific heat at constant pressure (Cp) includes both internal energy change and the work done by expansion against constant pressure. Hence, Cp is always greater than Cv because extra energy is needed for expansion work.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "What is a 'reversible process' in thermodynamics? Give one example of an irreversible process.",
+   "a": "A reversible process is an idealized quasi-static process with no dissipative effects like friction or unrestrained expansion. An example of an irreversible process is the free expansion of a gas into a vacuum or heat transfer across a finite temperature difference.",
+   "h": "Reversibility implies no entropy generation and ability to restore initial states without external effects.",
+   "s": "A reversible process occurs infinitely slowly such that the system remains in thermodynamic equilibrium at every instant, and both the system and surroundings can be restored to their original states without any net change. Real processes are always irreversible due to friction, turbulence, or finite temperature gradients which generate entropy.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Calculate the efficiency of a Carnot engine operating between a heat source at 500 K and a heat sink at 300 K.",
+   "a": "Efficiency = 1 - (T_L/T_H) = 1 - (300/500) = 0.4 or 40%.",
+   "h": "Carnot efficiency depends only on absolute temperatures of source and sink.",
+   "s": "The Carnot engine represents the maximum theoretical efficiency possible for any heat engine operating between two thermal reservoirs. Its efficiency is given by η = 1 - T_L/T_H, where temperatures must be in Kelvin. Here, substituting T_H=500 K and T_L=300 K yields an efficiency of 40%.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Define 'stagnation temperature' (or total temperature) for a flowing fluid.",
+   "a": "Stagnation temperature (T0) is the temperature a fluid would attain if it were decelerated to zero velocity isentropically.",
+   "h": "It is the temperature reached when a fluid is brought to rest adiabatically.",
+   "s": "As a moving fluid flows through a duct or enters a device like a nozzle diffuser, its kinetic energy can be converted into internal energy if brought to rest. The stagnation temperature accounts for both the static thermal energy and the kinetic energy of the flow, representing the total enthalpy per unit mass.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Explain the significance of the 'Triple Point' on a phase diagram of water.",
+   "a": "The triple point of water occurs at 0.01°C (273.16 K) and 611.657 Pa.",
+   "h": "It is the unique condition where solid, liquid, and gas phases coexist in equilibrium.",
+   "s": "The triple point is a specific combination of temperature and pressure where the solid, liquid, and vapor phases of a substance coexist in thermodynamic equilibrium. For water, this unique state serves as a fundamental fixed point for calibrating thermometers because it occurs at a precise, invariant temperature regardless of the amount of substance.",
    "at": "2026-10-19"
   }
  ]
