@@ -1,29 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-18T13:11:48.226Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "practicesets",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "practicesets",
-     "fixes": [
-      {
-       "page": "data/practice-sets/ssc-je.json",
-       "fix": "Fresh practice set for SSC JE (10 exam-real items)",
-       "text": "Q: A cantilever beam of length L carries a point load W at the free end. What is the maximum bending mo | A: -WL\nQ: In a simple pendulum, if the length of the string is increased by 21%, what is the percentage increa | A: 10%\nQ: A steam engine operates between source temperature 500K and sink temperature 300K. What is the maxim | A: 40%"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-18T13:17:26.584Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -515,8 +492,50 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-19T06:41:13.613Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 4,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 4
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix Homepage 'Next' Button Flow",
+       "detail": "Browser tests show flow-skipped on Homepage due to no visible Next button, preventing quiz exercise.",
+       "text": "Add a minimal HTML/JS snippet to the homepage that renders a 'Next Question' button if any questions are loaded in the DOM context. This requires zero backend changes and fixes the interactive loop immediately."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Add Retry Logic for Tutor Lane Failures",
+       "detail": "The on-demand lane shows 1 failure (tutor-questions) where the model output lacked a JSON array, causing the pipeline to stop.",
+       "text": "Modify the local Node script handling 'owner-on-demand' to wrap Ollama calls in a retry loop with a simple regex fallback if the JSON parse fails. This keeps the system self-healing without external APIs."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Auto-Generate 'Easy' Questions from Invented Pool",
+       "detail": "The invented pool has 7 easy questions but the main bank is frozen at 1 AI item; we need to grow thin pools.",
+       "text": "Create a GitHub Action step that randomly selects 2 items from the 'easy' category of the invented pool and formats them as standard HTML question blocks, appending them to the main content directory via the existing file-lane mechanism."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Clear Daily Fill Pipeline Status",
+       "detail": "Fault board lists 'Corpus fill run in progress' for daily-wiki-fill #607 and daily-feed-fill #29, suggesting a potential hang.",
+       "text": "Add a simple Node script to the GitHub Actions workflow that checks if the data directory size matches the last known commit; if stable, it writes a 'completed' flag to a .json status file to clear the fault board automatically."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-19T06:18:23.272Z",
+ "lastRun": "2026-10-19T06:41:13.613Z",
  "model": "qwen3.5:9b"
 }
