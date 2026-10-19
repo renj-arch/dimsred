@@ -3412,6 +3412,10 @@ async function agentMainsFresh() {
     '4 to 6 objects in "answer"; 3 to 5 strings each in marksGuide and pitfalls; 5 to 8 keywords; "laws" may be []. ' +
     'Keep every "p" paragraph to 2-3 sentences and under 600 characters (the reply has a strict token budget — longer text gets cut off and the item is rejected). Never invent a scheme, case, article or statistic: name a reform only when certain of it, with its year; ' +
     'a verified older example beats an uncertain new one. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral. ' +
+    'Structure the skeleton like a strong answer: the FIRST object in "answer" opens with context — define the term or topic and say where or when it took shape (an agreement, body or year, and only when certain) — never start mid-argument; ' +
+    'the LAST object is a way forward or conclusion (heading like "Way forward"), 2-3 sentences on what should change or what to watch; the middle objects carry the analysis. ' +
+    'Across the answer, place 2 to 3 specific anchors — a court, committee, agreement, scheme, fund, index or landmark event — each one only when you are certain of it; a paragraph that names no real thing is a weak paragraph. ' +
+    'For a topic with a governing law, agreement or scheme you are certain of, name at least one in "laws"; keep [] only when nothing is certain. ' +
     'Do not reason step by step; reply with ONLY the JSON object.';
   const avoid = Array.from(sigs).slice(0, 60).map((s, i) => (i + 1) + '. ' + s).join('\n');
   const user = 'Create ONE practice question, choosing the paper and a topic where aspirants are weakest, avoiding the most over-used questions ' +
