@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-18T00:01:19.619Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-10-18T05:41:44.980Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 0,
@@ -431,8 +419,58 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-10-19T05:11:52.325Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 4,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 4
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 245121 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "accounting-auditing.json",
+       "fix": "Generated 6 questions for \"Ledger\" (7 → 13)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 3 overlapping subtopics into correct categories"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Generated 6 new exam questions via LLM"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-19T01:13:43.548Z",
+ "lastRun": "2026-10-19T05:11:52.325Z",
  "model": "qwen3.5:9b"
 }
