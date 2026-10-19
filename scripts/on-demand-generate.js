@@ -186,6 +186,22 @@ function extractArray(text) {
   return JSON.parse(s.slice(a, b + 1));
 }
 
+// One stricter retry when the model forgets the JSON array. Log the raw head
+// first — without it a parse failure leaves no diagnostic in the step log.
+async function callArray(messages, opts, tag) {
+  const first = await callLLM(messages, opts);
+  try { return extractArray(first.text); }
+  catch (e) {
+    log(tag + ' output was not a JSON array (' + e.message + ') · head: '
+      + String(first.text).replace(/\s+/g, ' ').slice(0, 220));
+    const retry = await callLLM(messages.concat([
+      { role: 'assistant', content: String(first.text).slice(0, 600) },
+      { role: 'user', content: 'That reply was not a valid JSON array. Return ONLY the JSON array — start with [ and end with ]. No explanation, no markdown, nothing before or after the brackets.' }
+    ]), { temperature: 0.4, numPredict: opts.numPredict });
+    return extractArray(retry.text);
+  }
+}
+
 function normText(s) {
   return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim();
 }
@@ -258,11 +274,11 @@ async function runTutorQuestions(p) {
   const seeds = (Array.isArray(p.seeds) ? p.seeds : []).slice(0, 8).map(clean).filter(Boolean);
   const bias = (Array.isArray(p.bias) ? p.bias : []).slice(0, 6).map(clean).filter(Boolean);
 
-  const res = await callLLM(
+  const arr = await callArray(
     [{ role: 'user', content: tutorPrompt(exam, subject, count, seeds, bias) }],
-    { temperature: 0.75, numPredict: Math.min(6000, 450 * count + 600) }
+    { temperature: 0.75, numPredict: Math.min(6000, 450 * count + 600) },
+    'tutor'
   );
-  const arr = extractArray(res.text);
   if (!Array.isArray(arr)) throw new Error('model did not return an array');
   const seen = {};
   const questions = [];
@@ -312,11 +328,11 @@ async function runMentalBatch(p) {
   const difficulty = MENTAL_LEVELS[clean(p.difficulty)] ? clean(p.difficulty) : 'moderate';
   const count = Math.max(3, Math.min(20, parseInt(p.count, 10) || 12));
 
-  const res = await callLLM(
+  const arr = await callArray(
     [{ role: 'user', content: mentalPrompt(count, difficulty) }],
-    { temperature: 0.8, numPredict: Math.min(7000, 550 * count + 600) }
+    { temperature: 0.8, numPredict: Math.min(7000, 550 * count + 600) },
+    'mental'
   );
-  const arr = extractArray(res.text);
   const seen = {};
   const questions = [];
   const now = new Date().toISOString();
