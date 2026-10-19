@@ -1,100 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-18T13:43:45.017Z",
-   "model": "qwen3:4b",
-   "totalFixes": 23,
-   "byAgent": [
-    {
-     "agent": "proposals",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    },
-    {
-     "agent": "practicesets",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 23
-    },
-    {
-     "agent": "selfcheck",
-     "count": 0
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 0
-    },
-    {
-     "agent": "a11y",
-     "count": 0
-    },
-    {
-     "agent": "code",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/ask-audit.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/browser-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-lectures.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/daily-globe-fill.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/daily-papers.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/daily-pib-feed.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/expand-course.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/fault-status.yml",
-       "fix": "Added memory limit to node steps"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-18T14:13:32.473Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -564,8 +470,70 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-19T09:23:35.747Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (3 total)",
+       "text": "What is the first activity of the machine design process? | What factor of safety is recommended when loads are accurately known and materia | What are preferred numbers (Renard series) used for?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Strength of Materials (10 in pool)",
+       "text": "Strength of Materials"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvf1rgea (gs3, 15 marks): Critically examine the statement: 'India's Digital Public Infrastructure (DPI) has created a new paradigm of digital sov",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-19T07:36:13.267Z",
+ "lastRun": "2026-10-19T09:23:35.747Z",
  "model": "qwen3.5:9b"
 }
