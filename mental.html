@@ -278,6 +278,7 @@
                     </label>
                     <span>· Quant + Reasoning + English · fresh batches invented round the clock · nothing runs on your device</span>
                 </div>
+                <div id="invPoolLine" style="text-align:center;font-size:.72em;color:var(--text-muted);margin-top:6px">Checking the invented pool&hellip;</div>
                 <div id="invRunnerRow" style="display:none;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:.75em;color:var(--text-sec);flex-wrap:wrap">
                     <select id="invRunDiff" style="background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:1em">
                         <option value="easy">Easy</option><option value="moderate" selected>Moderate</option><option value="hard">Hard</option><option value="veryhard">Very Hard</option>
@@ -400,7 +401,7 @@
 
     <script src="js/bundles/core.js"></script>
 <script src="js/fig-svg.js?v=20261018"></script>
-<script src="js/owner-runner.js?v=20261019a"></script>
+<script src="js/owner-runner.js?v=20261019b"></script>
 <script src="js/exam-tutor.js?v=20261018"></script>
 <script>
     var session = null;
@@ -781,6 +782,12 @@
         var go = function(pool) {
             var qs = (pool || []).filter(function(q) { return q && q.difficulty === diffKey; });
             if (qs.length < 3) {
+                // Owner with the runner on: invent the missing level right now
+                // on GitHub's machine instead of dropping into a different arena.
+                if (window.OwnerRunner && window.OwnerRunner.isActive()) {
+                    inventOnRunner(diffKey);
+                    return;
+                }
                 alert('Not enough fresh invented questions at this level yet — the site invents more round the clock, so try again in a while. Starting an Exam Sim (always full) instead.');
                 startExamSim(fallback[diffKey] || 'po');
                 return;
@@ -822,11 +829,39 @@
 
     // Owner route: ask the GitHub runner for a fresh batch right now
     // (js/owner-runner.js; the row stays hidden for every other visitor and
-    // the server refuses non-owner requests anyway).
-    function wireOwnerRunner() {
+    // the server refuses non-owner requests anyway). The runner also appends
+    // the batch to the public invented pool, so one request helps every visitor.
+    var invBusy = false;
+    function inventOnRunner(diff) {
         var row = document.getElementById('invRunnerRow');
         var btn = document.getElementById('invRunBtn');
         var status = document.getElementById('invRunStatus');
+        if (invBusy) return;
+        invBusy = true;
+        if (row) row.style.display = 'flex';
+        if (btn) btn.disabled = true;
+        if (status) status.textContent = 'Sending the request to the GitHub runner\u2026';
+        window.OwnerRunner.run('mental-batch', { count: 12, difficulty: diff }, {
+            onStatus: function (m) { if (status) status.textContent = m; }
+        }).then(function (res) {
+            var fresh = (res && res.questions) || [];
+            if (!fresh.length) throw new Error('the runner returned no questions');
+            window.__inventedPool = (window.__inventedPool || []).concat(fresh);
+            renderInvPoolLine(window.__inventedPool);
+            invBusy = false;
+            if (btn) btn.disabled = false;
+            if (status) status.textContent = 'Done \u2014 starting the fresh paper\u2026';
+            startInvented(diff);
+        }).catch(function (err) {
+            invBusy = false;
+            if (btn) btn.disabled = false;
+            if (status) status.textContent = String((err && err.message) || err).slice(0, 240);
+        });
+    }
+
+    function wireOwnerRunner() {
+        var row = document.getElementById('invRunnerRow');
+        var btn = document.getElementById('invRunBtn');
         if (!row || !btn || !window.OwnerRunner) return;
         if (row.dataset.wired) return;
         row.dataset.wired = '1';
@@ -836,24 +871,34 @@
         });
         btn.onclick = function () {
             var diffSel = document.getElementById('invRunDiff');
-            var diff = (diffSel && diffSel.value) || 'moderate';
-            btn.disabled = true;
-            if (status) status.textContent = '';
-            window.OwnerRunner.run('mental-batch', { count: 12, difficulty: diff }, {
-                onStatus: function (m) { if (status) status.textContent = m; }
-            }).then(function (res) {
-                var fresh = (res && res.questions) || [];
-                if (!fresh.length) throw new Error('the runner returned no questions');
-                window.__inventedPool = (window.__inventedPool || []).concat(fresh);
-                btn.disabled = false;
-                if (status) status.textContent = 'Done \u2014 starting the fresh paper\u2026';
-                startInvented(diff);
-            }).catch(function (err) {
-                btn.disabled = false;
-                if (status) status.textContent = String((err && err.message) || err).slice(0, 200);
-            });
+            inventOnRunner((diffSel && diffSel.value) || 'moderate');
         };
     }
+
+    // Honest pool counts: the arena needs 3+ questions at a level, so a thin
+    // level is why a click can fall back. The line says so before the click.
+    function renderInvPoolLine(pool) {
+        var line = document.getElementById('invPoolLine');
+        if (!line) return;
+        var c = { easy: 0, moderate: 0, hard: 0, veryhard: 0 };
+        (pool || []).forEach(function (q) { if (q && c[q.difficulty] != null) c[q.difficulty]++; });
+        line.textContent = 'Pool right now: ' + c.easy + ' easy \u00B7 ' + c.moderate + ' moderate \u00B7 ' + c.hard + ' hard \u00B7 ' + c.veryhard + ' very hard \u2014 a level opens with 3+ questions; the runner button fills a level on demand.';
+    }
+    function refreshInvPool() {
+        if (window.__inventedPool) { renderInvPoolLine(window.__inventedPool); return; }
+        fetch('data/invented/questions.json').then(function (r) { return r.json(); }).then(function (j) {
+            window.__inventedPool = (j && j.questions) || [];
+            renderInvPoolLine(window.__inventedPool);
+        }).catch(function () {
+            renderInvPoolLine([]);
+        });
+    }
+    window.addEventListener('vlymbooq-owner', function () {
+        if (window.OwnerRunner && window.OwnerRunner.isOwner()) {
+            var row = document.getElementById('invRunnerRow');
+            if (row) row.style.display = 'flex';
+        }
+    });
 
     function loadQuestion() {
         if (!session || !session.active) { endTraining(); return; }
@@ -1252,6 +1297,7 @@
         if (typeof window.getMentalStats !== 'function') { setTimeout(init, 300); return; }
         updateUI();
         wireOwnerRunner();
+        refreshInvPool();
         // Deep link used by the dashboard's "Just Added" card: open a fresh
         // paper right away (mental.html?invent=moderate) instead of making the
         // visitor hunt for the invented section.

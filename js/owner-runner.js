@@ -84,6 +84,7 @@
     payload = payload || {};
     if (kind === 'tutor-questions') return String(payload.subject || 'Tutor') + ' \u00B7 fresh questions';
     if (kind === 'mental-batch') return 'Mental \u00B7 fresh paper';
+    if (kind === 'mains-fresh') return 'Mains \u00B7 fresh question';
     if (kind === 'writer') return 'Ask \u00B7 written answer';
     return String(kind || 'request');
   }
@@ -473,6 +474,17 @@
     var qs = r.questions || [];
     if (entry.kind === 'writer') {
       h += '<pre style="white-space:pre-wrap;font:400 13px/1.6 system-ui,sans-serif;color:#e4e4e7;margin:8px 0 0">' + esc(r.text || '') + '</pre>';
+    } else if (entry.kind === 'mains-fresh') {
+      var it = r.item || {};
+      h += '<div style="font:400 13px/1.7 system-ui,sans-serif;color:#e4e4e7;margin:8px 0 0">' + esc(it.question || '') + '</div>';
+      h += '<div style="font:400 12px/1.6 system-ui,sans-serif;color:#a1a1aa;margin:4px 0 0">' + esc(String(it.paper || '').toUpperCase() + ' \u00B7 ' + (it.topic || '') + ' \u00B7 ' + (it.marks || '?') + ' marks') + '</div>';
+      (it.answer || []).forEach(function (s) {
+        h += '<div style="margin:10px 0 0">';
+        h += '<div style="font:600 13px/1.6 system-ui,sans-serif;color:#6ee7b7">' + esc(s.h || '') + '</div>';
+        h += '<div style="font:400 13px/1.7 system-ui,sans-serif;color:#d4d4d8">' + esc(s.p || '') + '</div>';
+        h += '</div>';
+      });
+      if (it.laws && it.laws.length) h += '<div style="font:400 12px/1.6 system-ui,sans-serif;color:#a1a1aa;margin:10px 0 0">Laws &amp; schemes: ' + it.laws.map(esc).join(' \u00B7 ') + '</div>';
     } else if (qs.length) {
       qs.forEach(function (q, i) {
         h += '<div style="margin:10px 0 0">';
