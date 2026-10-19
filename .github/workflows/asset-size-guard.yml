@@ -13,12 +13,16 @@ name: Asset size guard
 # it (rm -rf .deploy/data/questions) and the slim-live mirror excludes it, so
 # files there never reach the CDN, whatever their size.
 #
-# Sizes come from GitHub's trees API, not from a clone. The first version of
-# this job fetched bloblessly and then ran `git ls-tree -l` — but on a blobless
-# clone that call needs every blob's content to learn its size, so it started
-# pulling the ~8.8 GB data/questions corpus and died silently at the job
-# timeout (run #1, 2026-10-19: step cancelled at the 10-minute mark, no
-# output). One API call answers the same question in seconds.
+# History of this job, so the next person does not repeat it:
+#   run #1: blobless clone + `git ls-tree -l`. That call needs every blob's
+#           content to learn its size, so it started pulling the ~8.8 GB
+#           data/questions corpus and died silently at the 10-min timeout.
+#   run #2: gh + jq + awk in a bash step. Died in 3 s with exit code 2 before
+#           producing anything readable (raw logs are admin-only here).
+#   run #3: plain node — fetch() with the workflow token, one API call,
+#           deterministic exit codes, and every failure path prints an
+#           ::error:: line, which surfaces as a run annotation even when the
+#           raw log is not readable.
 
 on:
   push:
@@ -37,28 +41,58 @@ jobs:
     steps:
       - name: Flag deployable tracked files over 24 MiB
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_API_TOKEN: ${{ github.token }}
         run: |
-          set -euo pipefail
-          LIMIT=$((24 * 1024 * 1024))
+          cat > size-check.js <<'NODE'
+          // Fails when any deployable tracked file exceeds 24 MiB. Cloudflare
+          // Pages rejects assets over 25 MiB, and the site then silently freezes
+          // on its last good build; this guard names the offender in the Actions
+          // log and as an annotation. data/questions/** is exempt: no deploy path
+          // ships it (the CF build command removes the directory, the slim-live
+          // mirror excludes it).
+          'use strict';
 
-          gh api "repos/$GITHUB_REPOSITORY/git/trees/$GITHUB_SHA?recursive=1" > tree.json
-          if [ "$(jq -r '.truncated' tree.json)" != "false" ]; then
-            echo "::error::tree listing was truncated — the guard cannot see every file, so a pass would be meaningless"
-            exit 1
-          fi
-          jq -r '.tree[] | select(.type == "blob") | "\(.size)\t\(.path)"' tree.json > blobs.tsv
-          echo "checked $(wc -l < blobs.tsv) files at $GITHUB_SHA"
+          var LIMIT = 24 * 1024 * 1024;
+          var repo = process.env.GITHUB_REPOSITORY || '';
+          var sha = process.argv[2] || process.env.GITHUB_SHA || 'main';
+          var token = process.env.GH_API_TOKEN || '';
 
-          BAD=$(awk -F'\t' -v lim="$LIMIT" \
-            '$1 > lim && $2 !~ /^data\/questions\// { printf "%7.1f MiB  %s\n", $1/1048576, $2 }' blobs.tsv)
-          if [ -n "$BAD" ]; then
-            echo "::error::Deployable files over the 24 MiB guard (Cloudflare Pages limit is 25 MiB):"
-            echo "$BAD"
-            echo "These would silently freeze the next Cloudflare build. Move internal state under data/questions/ (never deployed) or shrink/split the file."
-            exit 1
-          fi
+          function fail(msg) {
+            console.log('::error::' + msg);
+            process.exit(1);
+          }
 
-          echo "OK: no deployable tracked file over 24 MiB"
-          echo "Largest deployable files today:"
-          awk -F'\t' '$2 !~ /^data\/questions\// { printf "%9.1f MiB  %s\n", $1/1048576, $2 }' blobs.tsv | sort -rn | head -5
+          (async function () {
+            console.log('asset size guard: repo=' + repo + ' sha=' + sha);
+
+            var headers = { 'accept': 'application/vnd.github+json', 'user-agent': 'asset-size-guard' };
+            if (token) headers.authorization = 'Bearer ' + token;
+
+            var r = await fetch('https://api.github.com/repos/' + repo + '/git/trees/' + sha + '?recursive=1', { headers: headers });
+            if (!r.ok) fail('trees API HTTP ' + r.status + ' for ' + sha + ' — the guard cannot list files');
+            var j = await r.json();
+            if (j.truncated) fail('tree listing for ' + sha + ' was truncated — the guard cannot see every file');
+
+            var blobs = (j.tree || []).filter(function (x) { return x.type === 'blob'; });
+            console.log('checked ' + blobs.length + ' files at ' + sha);
+
+            var bad = blobs
+              .filter(function (b) { return b.size > LIMIT && b.path.indexOf('data/questions/') !== 0; })
+              .sort(function (a, b) { return b.size - a.size; });
+            if (bad.length) {
+              console.log('::error::Deployable files over the 24 MiB guard (Cloudflare Pages limit is 25 MiB): ' +
+                bad.map(function (b) { return b.path + ' (' + (b.size / 1048576).toFixed(1) + ' MiB)'; }).join(', ') +
+                ' — these would silently freeze the next Cloudflare build. Move internal state under data/questions/ (never deployed) or shrink/split the file.');
+              process.exit(1);
+            }
+
+            console.log('OK: no deployable tracked file over 24 MiB');
+            var top = blobs
+              .filter(function (b) { return b.path.indexOf('data/questions/') !== 0; })
+              .sort(function (a, b) { return b.size - a.size; })
+              .slice(0, 5);
+            console.log('largest deployable files:');
+            top.forEach(function (t) { console.log('  ' + (t.size / 1048576).toFixed(2) + ' MiB  ' + t.path); });
+          })().catch(function (e) { fail('size guard crashed: ' + (e && e.message)); });
+          NODE
+          node size-check.js "$GITHUB_SHA"
