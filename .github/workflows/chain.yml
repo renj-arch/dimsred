@@ -22,6 +22,15 @@ name: Agent Chain
 # and each restart re-paid it). meta.lastAttempt is written on EVERY
 # attempt (success or not), so a failed attempt throttles the next refill
 # just the same.
+#
+# Coder lane (2026-10-19): MetaLearn is the one agent that writes repair
+# CODE (it synthesizes a detector function, validates it, stages it for the
+# next pass). That is the work 4B models fail at, so it left fast rotations;
+# this chain dispatches it alone on qwen2.5-coder:14b whenever the browser
+# test reports .html page issues no known rule handles, throttled to once
+# per 12h by the attempt marker the agent writes (data/metalearn.json).
+# When the staged detector fixes the page, the next browser-test rewrite
+# clears the pattern and the cadence stops by itself.
 
 on:
   workflow_run:
@@ -110,7 +119,27 @@ jobs:
               INPUTS='{"ref":"main","inputs":{"agent_only":"mockpapers,bankfigures,exampatterns,invention","model":"qwen3.5:9b"}}'
               echo "heavy content: inventions lastAttempt='$LAST2' — dispatching heavy content pass (qwen3.5:9b)"
             else
-              echo "mains-fresh: lastAttempt='$LAST' ($LREASON) pool=$COUNT — fresh; heavy content fresh; normal fast dispatch"
+              # Self-repair cadence: see the header note. NEED counts only
+              # real .html page issues (display-name rows like "Homepage"
+              # have no file to patch and are ignored here, same as in the
+              # agent). Safe defaults: unreadable state -> NEED=0 -> normal.
+              BT=$(curl -sf "https://raw.githubusercontent.com/$REPO/main/data/browser-test.json" || true)
+              NEED=$(echo "$BT" | jq -r '[.issues[]? | select(((.page // "") | test("\\.html$"; "i")) and ((((.msg // "") + " " + (.type // "")) | test("failed to load|unexpected token|placeholder|broken link|defer|404|net::|failed to fetch|graph-core|exam.*hub"; "i")) | not))] | length' 2>/dev/null || true)
+              case "$NEED" in ''|*[!0-9]*) NEED=0;; esac
+              ML=$(curl -sf "https://raw.githubusercontent.com/$REPO/main/data/metalearn.json" || true)
+              MLLAST=$(echo "$ML" | jq -r '.lastAttempt.at // ""' 2>/dev/null || true)
+              MLOK=0
+              if [ -n "$MLLAST" ] && [ "$MLLAST" != "null" ]; then
+                NOW3=$(date -u +%s)
+                THEN3=$(date -u -d "$MLLAST" +%s 2>/dev/null || echo 0)
+                if [ "$THEN3" -gt 0 ] && [ $((NOW3 - THEN3)) -lt 43200 ]; then MLOK=1; fi
+              fi
+              if [ "$NEED" -gt 0 ] && [ "$MLOK" = "0" ]; then
+                INPUTS='{"ref":"main","inputs":{"agent_only":"metalearn","model":"qwen2.5-coder:14b"}}'
+                echo "self-repair: $NEED .html pattern(s); last coder attempt='$MLLAST' - dispatching MetaLearn on qwen2.5-coder:14b"
+              else
+                echo "mains-fresh: lastAttempt='$LAST' ($LREASON) pool=$COUNT — fresh; heavy content fresh; normal fast dispatch"
+              fi
             fi
           fi
           CODE=$(curl -s -o /tmp/resp.json -w '%{http_code}' -X POST \
