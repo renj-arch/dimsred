@@ -229,6 +229,37 @@ async function testPage(browser, url, pageName, file) {
       }
     } catch (e) { /* mental flow optional */ }
 
+    // Invented arena levels: the four level buttons sit inside .mode-card
+    // containers whose decorative ::before tint covers the whole card. If the
+    // tint lacks pointer-events:none it swallows every REAL tap while
+    // synthetic el.click() still fires — which is exactly how the dead-level
+    // buttons hid from the click sweeps. So hit-test the top-of-stack element
+    // at the button's centre instead of trusting a DOM-level click.
+    try {
+      const invBtns = await page.$$('button[onclick^="startInvented"]');
+      if (invBtns.length) {
+        const skip2 = await page.$('#goalSkip');
+        if (skip2 && await skip2.isVisible().catch(() => false)) { await skip2.click({ timeout: 2000 }).catch(() => {}); await page.waitForTimeout(300); }
+        let blocked = 0;
+        for (const b of invBtns) {
+          const probe = await b.evaluate((el) => {
+            const r = el.getBoundingClientRect();
+            if (r.width < 2 || r.height < 2) return { ok: false, why: 'not rendered (size 0)' };
+            const top = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2);
+            if (top === el || el.contains(top)) return { ok: true };
+            const who = top ? (top.tagName.toLowerCase() + (top.className ? '.' + String(top.className).split(' ')[0] : '')) : 'nothing';
+            return { ok: false, why: who + ' is on top' };
+          }).catch(() => ({ ok: false, why: 'probe failed' }));
+          if (!probe.ok) {
+            blocked++;
+            const oc = (await b.getAttribute('onclick').catch(() => '')) || '';
+            log(pageName, 'blocked-button', 'invented level [' + oc + '] cannot receive real taps: ' + probe.why);
+          }
+        }
+        if (!blocked) log(pageName, 'flow-ok', 'invented levels: all ' + invBtns.length + ' buttons receive real taps (hit-test)');
+      }
+    } catch (e) { /* hit-test optional */ }
+
     // Mains: the in-browser AI generator must exist and react to a click.
     // CI has no WebGPU, so the honest reaction there is the unsupported
     // notice (set at boot, button disabled); on a GPU machine the click
