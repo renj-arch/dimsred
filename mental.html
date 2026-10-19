@@ -278,6 +278,13 @@
                     </label>
                     <span>· Quant + Reasoning + English · fresh batches invented round the clock · nothing runs on your device</span>
                 </div>
+                <div id="invRunnerRow" style="display:none;align-items:center;justify-content:center;gap:8px;margin-top:10px;font-size:.75em;color:var(--text-sec);flex-wrap:wrap">
+                    <select id="invRunDiff" style="background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:6px;padding:4px 6px;font-size:1em">
+                        <option value="easy">Easy</option><option value="moderate" selected>Moderate</option><option value="hard">Hard</option><option value="veryhard">Very Hard</option>
+                    </select>
+                    <button id="invRunBtn" class="action-btn secondary" style="padding:8px 12px;font-size:.9em">⚙ Invent 12 fresh on the GitHub runner</button>
+                    <span id="invRunStatus" style="color:var(--text-mut);max-width:28em"></span>
+                </div>
                 <div class="stat" id="stat-invented" style="margin-top:8px;font-size:.78em">0 solved</div>
             </div>
 
@@ -393,6 +400,7 @@
 
     <script src="js/bundles/core.js"></script>
 <script src="js/fig-svg.js?v=20261018"></script>
+<script src="js/owner-runner.js?v=20261019a"></script>
 <script src="js/exam-tutor.js?v=20261018"></script>
 <script>
     var session = null;
@@ -812,6 +820,41 @@
         }).catch(function() { go(null); });
     }
 
+    // Owner route: ask the GitHub runner for a fresh batch right now
+    // (js/owner-runner.js; the row stays hidden for every other visitor and
+    // the server refuses non-owner requests anyway).
+    function wireOwnerRunner() {
+        var row = document.getElementById('invRunnerRow');
+        var btn = document.getElementById('invRunBtn');
+        var status = document.getElementById('invRunStatus');
+        if (!row || !btn || !window.OwnerRunner) return;
+        if (row.dataset.wired) return;
+        row.dataset.wired = '1';
+        window.OwnerRunner.ready().then(function (st) {
+            if (!st || !st.owner) return;
+            row.style.display = 'flex';
+        });
+        btn.onclick = function () {
+            var diffSel = document.getElementById('invRunDiff');
+            var diff = (diffSel && diffSel.value) || 'moderate';
+            btn.disabled = true;
+            if (status) status.textContent = '';
+            window.OwnerRunner.run('mental-batch', { count: 12, difficulty: diff }, {
+                onStatus: function (m) { if (status) status.textContent = m; }
+            }).then(function (res) {
+                var fresh = (res && res.questions) || [];
+                if (!fresh.length) throw new Error('the runner returned no questions');
+                window.__inventedPool = (window.__inventedPool || []).concat(fresh);
+                btn.disabled = false;
+                if (status) status.textContent = 'Done \u2014 starting the fresh paper\u2026';
+                startInvented(diff);
+            }).catch(function (err) {
+                btn.disabled = false;
+                if (status) status.textContent = String((err && err.message) || err).slice(0, 200);
+            });
+        };
+    }
+
     function loadQuestion() {
         if (!session || !session.active) { endTraining(); return; }
         var q = window.getMentalQuestion(session);
@@ -1208,6 +1251,7 @@
     setTimeout(function init(){
         if (typeof window.getMentalStats !== 'function') { setTimeout(init, 300); return; }
         updateUI();
+        wireOwnerRunner();
     }, 500);
     </script>
 <script ></script>

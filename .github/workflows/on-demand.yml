@@ -1,0 +1,163 @@
+name: On-Demand (owner runner)
+
+# The owner-gated on-demand lane. The site's owner clicks "generate" in the
+# browser; functions/api/on-demand.js verifies his login and dispatches this
+# workflow with the request; the model runs HERE, on GitHub's runner, and the
+# result is committed to data/on-demand/<request-id>.json for the page to
+# fetch. Visitors never trigger this — only an authenticated owner can, and
+# the dispatcher rate-limits to keep the queue sane.
+#
+# Zero API keys: the model runs locally on the runner through Ollama.
+# Default model is the mid tier (qwen3.5:9b, same as invent-questions); the
+# dispatch input can pin another tag.
+#
+# Kinds (scripts/on-demand-generate.js):
+#   writer           — one prose answer from a fully-built prompt (ask pages)
+#   tutor-questions  — N practice questions for a subject (exam tutor, fresh paper)
+#   mental-batch     — N invented MCQs for the mental "fresh paper" pool
+
+on:
+  workflow_dispatch:
+    inputs:
+      request_id:
+        description: 'Caller-generated id; the result is committed as data/on-demand/<id>.json'
+        required: true
+      kind:
+        description: 'writer | tutor-questions | mental-batch'
+        required: true
+      payload:
+        description: 'JSON payload for the kind'
+        required: true
+      model:
+        description: 'Ollama model tag (default qwen3.5:9b — the mid tier)'
+        required: false
+        default: 'qwen3.5:9b'
+
+concurrency:
+  group: on-demand
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/on-demand
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # EXACT same swap as the proven Ollama lanes — safety net against
+      # paging model weights out under memory pressure.
+      - name: Create swap (16GB - same as the other model lanes)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          echo "Fetching installer from ollama.com..."
+          curl -fsSL --max-time 120 -o /tmp/ollama-install.sh https://ollama.com/install.sh
+          sudo sh /tmp/ollama-install.sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # Run the service as the runner user pointed at the runner home so
+          # models land where the Actions cache can see them (see invent-questions.yml).
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # Same cache classes as invent-questions: "mid" for the 9b, "fast" for
+      # small tags; the huge 27B/22B tags skip the cache by design.
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+
+      - name: Pull + warm the model (${{ inputs.model || 'qwen3.5:9b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          echo "Warming $MODEL_INPUT..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+
+      - name: Ensure Ollama is up before the request
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before request — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
+            nohup ollama serve >> /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready" || echo "WARNING: server still down"
+
+      - name: Generate (${{ inputs.kind }})
+        timeout-minutes: 120
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+          OD_ID: ${{ inputs.request_id }}
+          OD_KIND: ${{ inputs.kind }}
+          OD_PAYLOAD: ${{ inputs.payload }}
+        run: node scripts/on-demand-generate.js
+
+      # Even a failed generation writes {status:"failed", ...} so the browser
+      # stops polling with a real reason instead of timing out silently.
+      # Nothing staged -> ci-push exits 0.
+      - name: Publish result
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/on-demand/
+          bash scripts/ci-push.sh "on-demand: ${{ inputs.kind }} request ${{ inputs.request_id }}"

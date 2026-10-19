@@ -629,45 +629,55 @@
     var c = $("#ssc-je-container");
     var et = (typeof window !== 'undefined') ? window.ExamTutor : null;
     if (!et || typeof et.generatePractice !== 'function') {
-      renderAiStatus(c, p, 'The on-device generator is not available on this page right now. A bank paper is built from the live bank + the fresh pool.', '<button class="ssc-mock-btn" id="ssc-ai-fallback">Start bank paper</button>', false);
+      renderAiStatus(c, p, 'The question generator is not available on this page right now. A bank paper is built from the live bank + the fresh pool.', '<button class="ssc-mock-btn" id="ssc-ai-fallback">Start bank paper</button>', false);
       return;
     }
-    var wantAi = Math.min(p.qs, 24);
-    var batches = Math.max(1, Math.ceil(wantAi / 8));
-    var subs = pickMockSubjects(batches);
-    if (!subs.length) subs = ['som'];
-    var got = [], i = 0;
-    function finish(ok, err) {
-      var seen = {}, qs = [];
-      got.forEach(function (x) {
-        var n = normQ(x.q);
-        if (!n || seen[n]) return;
-        seen[n] = 1;
-        qs.push(x);
-      });
-      if (qs.length < 5) {
-        renderAiStatus(c, p, ok
-          ? 'The model produced only ' + qs.length + ' usable question(s) \u2014 not enough for a paper. Try again, or start a bank paper.'
-          : 'AI generation stopped: ' + String((err && err.message) || err || 'unknown error').slice(0, 160) + '. If this is the first use, the model may still be downloading (~1 GB, cached after) \u2014 retry in a minute.',
-          '<button class="ssc-mock-btn" id="ssc-ai-fallback">Start bank paper</button>', true);
-        return;
-      }
-      startMock(p.id, qs);
-    }
-    function nextBatch() {
-      if (i >= batches) { finish(true); return; }
-      var key = subs[i % subs.length];
-      var name = (SUBJECTS[key] && SUBJECTS[key].name) || key;
-      renderAiStatus(c, p, 'Batch ' + (i + 1) + ' / ' + batches + ' \u00B7 ' + name + ' \u00B7 the model is writing new questions\u2026', '', false);
-      et.generatePractice(key, 8).then(function (arr) {
-        (arr || []).forEach(function (x) {
-          if (x && x.q) got.push({ q: String(x.q), a: String(x.a || ''), h: String(x.h || ''), s: String(x.s || ''), f: x.f || '', _sub: name, _ai: true });
+    // Owner with the GitHub runner switched on (js/owner-runner.js): one
+    // request writes the whole batch on GitHub's machines — no device heat,
+    // no 8-at-a-time loop. Everyone else keeps the on-device batches.
+    var runner = (typeof window !== 'undefined') ? window.OwnerRunner : null;
+    var prep = (runner && typeof runner.ready === 'function') ? runner.ready() : Promise.resolve(null);
+    prep.then(function () {
+      var runnerOn = !!(runner && runner.isActive());
+      var wantAi = Math.min(p.qs, runnerOn ? 12 : 24);
+      var batches = runnerOn ? 1 : Math.max(1, Math.ceil(wantAi / 8));
+      var subs = pickMockSubjects(batches);
+      if (!subs.length) subs = ['som'];
+      var got = [], i = 0;
+      function finish(ok, err) {
+        var seen = {}, qs = [];
+        got.forEach(function (x) {
+          var n = normQ(x.q);
+          if (!n || seen[n]) return;
+          seen[n] = 1;
+          qs.push(x);
         });
-        i++;
-        nextBatch();
-      }).catch(function (err) { finish(false, err); });
-    }
-    nextBatch();
+        if (qs.length < 5) {
+          renderAiStatus(c, p, ok
+            ? 'The model produced only ' + qs.length + ' usable question(s) \u2014 not enough for a paper. Try again, or start a bank paper.'
+            : 'AI generation stopped: ' + String((err && err.message) || err || 'unknown error').slice(0, 200) + '. If this was the on-device model\u2019s first use, it may still be downloading (~1 GB, cached after) \u2014 retry in a minute.',
+            '<button class="ssc-mock-btn" id="ssc-ai-fallback">Start bank paper</button>', true);
+          return;
+        }
+        startMock(p.id, qs);
+      }
+      function nextBatch() {
+        if (i >= batches) { finish(true); return; }
+        var key = subs[i % subs.length];
+        var name = (SUBJECTS[key] && SUBJECTS[key].name) || key;
+        renderAiStatus(c, p, runnerOn
+          ? 'The GitHub runner is writing ' + wantAi + ' new questions on GitHub\u2019s machines \u00B7 usually 8\u201320 minutes \u00B7 nothing runs on your device\u2026'
+          : 'Batch ' + (i + 1) + ' / ' + batches + ' \u00B7 ' + name + ' \u00B7 the model is writing new questions\u2026', '', false);
+        et.generatePractice(key, runnerOn ? wantAi : 8).then(function (arr) {
+          (arr || []).forEach(function (x) {
+            if (x && x.q) got.push({ q: String(x.q), a: String(x.a || ''), h: String(x.h || ''), s: String(x.s || ''), f: x.f || '', _sub: name, _ai: true });
+          });
+          i++;
+          nextBatch();
+        }).catch(function (err) { finish(false, err); });
+      }
+      nextBatch();
+    });
   }
   function renderMockResult(c) {
     var m = state.mock;

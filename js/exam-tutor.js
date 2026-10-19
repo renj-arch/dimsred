@@ -7,6 +7,9 @@
 //
 // Zero API key, zero cost: same WebLLM/Qwen backend as ask.html, runs on the
 // visitor's GPU. First use downloads model weights (~1GB, cached by browser).
+// The site's owner can route generation to the repo's GitHub runners instead
+// (js/owner-runner.js, "⚙ GitHub runner") — that option is invisible to
+// everyone else and the server refuses their requests regardless.
 
 (function () {
   'use strict';
@@ -574,7 +577,39 @@
         setQs._fromSet = true;
         return setQs;
       }
+      // Owner with the runner switched on: GitHub's machines write and this
+      // device stays cool (js/owner-runner.js). Everyone else: on-device.
+      if (window.OwnerRunner && window.OwnerRunner.isActive()) {
+        return generatePracticeRunner(subjKey, subjName, seedQs, count, status);
+      }
       return generatePracticeLLM(subjKey, subjName, seedQs, count, status);
+    });
+  }
+
+  // The owner route: queue the request on the GitHub runner and wait for the
+  // committed result file (usually 8-20 minutes; the page keeps polling).
+  function generatePracticeRunner(subjKey, subjName, seedQs, count, status) {
+    var payload = {
+      exam: PAGE_NAME,
+      subject: subjName,
+      count: Math.min(count, 12),
+      seeds: (seedQs || []).slice(-8),
+      bias: pyqTopics(6).map(function (t) {
+        return t.topic + (t.detail ? ' (' + t.detail + ')' : '');
+      })
+    };
+    return window.OwnerRunner.run('tutor-questions', payload, {
+      onStatus: function (msg) { if (status) status.textContent = msg; }
+    }).then(function (res) {
+      if (status) status.textContent = '';
+      var list = ((res && res.questions) || []).filter(function (x) {
+        return x && x.q && x.a;
+      }).map(function (x) {
+        return { q: String(x.q), a: String(x.a), h: String(x.h || ''), s: String(x.s || '') };
+      });
+      if (!list.length) throw new Error('the runner did not return usable questions');
+      list._fromRunner = true;
+      return list;
     });
   }
 
@@ -687,11 +722,13 @@
     var idx = 0, score = 0;
     function renderCard() {
       if (idx >= questions.length) {
-        var srcLabel = questions._fromSet ? '27B-written set' : 'generated';
+        var srcLabel = questions._fromSet ? '27B-written set'
+          : (questions._fromRunner ? 'runner-written set (site 9B on GitHub)' : 'generated');
         outputEl.innerHTML = '<div style="text-align:center;padding:20px">' +
           '<div style="font-size:20px;font-weight:800;color:#a78bfa">' + score + ' / ' + questions.length + '</div>' +
           '<div style="color:#71717a;font-size:12px;margin-top:4px">' + srcLabel + ' ' + subjName + ' set complete' +
-          (questions._fromSet ? ' · <span style="color:#34d399">exam-real difficulty</span>' : '') + '</div>' +
+          (questions._fromSet ? ' · <span style="color:#34d399">exam-real difficulty</span>' : '') +
+          (questions._fromRunner ? ' · <span style="color:#22d3ee">written on GitHub, nothing ran on this device</span>' : '') + '</div>' +
           '<button id="pp-again" style="margin-top:12px;padding:8px 16px;border-radius:8px;border:1px solid rgba(167,139,250,.4);background:rgba(167,139,250,.1);color:#a78bfa;cursor:pointer;font-size:12px">Generate another set</button>' +
           '</div>';
         var again = document.getElementById('pp-again');
@@ -740,6 +777,34 @@
     renderCard();
   }
 
+  // Owner-only route switch: send generation to the GitHub runner instead of
+  // this device (js/owner-runner.js). Hidden until the page knows the visitor
+  // is the owner; on pages without owner-runner.js it never appears.
+  function addRunnerToggle(row) {
+    var runner = window.OwnerRunner;
+    if (!runner || typeof runner.ready !== 'function') return;
+    var label = document.createElement('label');
+    label.id = 'ssc-gen-runner-wrap';
+    label.style.cssText = 'display:none;align-items:center;gap:4px;font-size:11px;color:#a1a1aa;cursor:pointer;user-select:none';
+    label.title = 'Owner only: GitHub\u2019s runners write the questions \u2014 no heat on this device';
+    var input = document.createElement('input');
+    input.type = 'checkbox';
+    input.id = 'ssc-gen-runner';
+    input.style.cssText = 'accent-color:#8b5cf6;margin:0';
+    label.appendChild(input);
+    label.appendChild(document.createTextNode('\u2699 GitHub runner'));
+    row.appendChild(label);
+    input.checked = runner.enabled();
+    input.onchange = function () { runner.setEnabled(input.checked); };
+    var show = function (st) {
+      if (!st || !st.owner) return;
+      input.checked = st.enabled;
+      label.style.display = 'inline-flex';
+    };
+    runner.ready().then(show);
+    window.addEventListener('vlymbooq-owner', function (e) { show(e && e.detail); });
+  }
+
   // wire the generate button into the panel
   function wireGenerator() {
     if (!panel) return;
@@ -780,6 +845,7 @@
       countSel.appendChild(o);
     });
     row.appendChild(countSel);
+    addRunnerToggle(row);
     var genBtn = document.createElement('button');
     genBtn.id = 'ssc-gen-btn';
     genBtn.textContent = '\u2728 Generate';
@@ -794,7 +860,7 @@
         subj = g.lowScore.length ? g.lowScore[0].subj : (g.never.length ? g.never[0].subj : Object.keys(SUBJ_MAP)[0]);
       }
       genBtn.disabled = true;
-      outputEl.innerHTML = '<div style="color:#52525b;font-size:12px">Getting fresh questions\u2026 (pre-written sets are served instantly; the on-device model only runs with your permission)</div>';
+      outputEl.innerHTML = '<div style="color:#52525b;font-size:12px">Getting fresh questions\u2026 (pre-written sets are served instantly; generated ones follow your runner/device choice)</div>';
       generatePractice(subj, count).then(function (qs) {
         genBtn.disabled = false;
         renderPracticeSet(qs, SUBJ_MAP[subj] || subj);
