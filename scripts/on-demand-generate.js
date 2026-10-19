@@ -204,6 +204,36 @@ function extractArray(text) {
   return JSON.parse(s.slice(a, b + 1));
 }
 
+// A reply cut off by the output cap has no closing bracket, so extractArray
+// throws and every finished question dies with it (observed 2026-10-19: the
+// 9b DI reply arrived as a truncated array and the whole pass was rejected).
+// Walk the text and keep each complete {...} object instead; the caller still
+// field-validates every item, so salvaging can only add usable questions.
+function extractLooseItems(text) {
+  const s = String(text || '');
+  const items = [];
+  let depth = 0, start = -1, inStr = false, escNext = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) {
+      if (escNext) escNext = false;
+      else if (c === '\\') escNext = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') { inStr = true; continue; }
+    if (c === '{') { if (depth === 0) start = i; depth++; continue; }
+    if (c === '}' && depth > 0) {
+      depth--;
+      if (depth === 0 && start !== -1) {
+        try { items.push(JSON.parse(s.slice(start, i + 1))); } catch (e) { /* half-written object */ }
+        start = -1;
+      }
+    }
+  }
+  return items;
+}
+
 // One stricter retry when the model forgets the JSON array. Log the raw head
 // first — without it a parse failure leaves no diagnostic in the step log.
 async function callArray(messages, opts, tag) {
@@ -212,11 +242,24 @@ async function callArray(messages, opts, tag) {
   catch (e) {
     log(tag + ' output was not a JSON array (' + e.message + ') · head: '
       + String(first.text).replace(/\s+/g, ' ').slice(0, 220));
+    const salvaged = extractLooseItems(first.text);
+    if (salvaged.length) {
+      log(tag + ': salvaged ' + salvaged.length + ' complete item(s) from the cut-off reply');
+      return salvaged;
+    }
     const retry = await callLLM(messages.concat([
       { role: 'assistant', content: String(first.text).slice(0, 600) },
       { role: 'user', content: 'That reply was not a valid JSON array. Return ONLY the JSON array — start with [ and end with ]. No explanation, no markdown, nothing before or after the brackets.' }
     ]), { temperature: 0.4, numPredict: opts.numPredict });
-    return extractArray(retry.text);
+    try { return extractArray(retry.text); }
+    catch (e2) {
+      const salvaged2 = extractLooseItems(retry.text);
+      if (salvaged2.length) {
+        log(tag + ': salvaged ' + salvaged2.length + ' complete item(s) from the cut-off retry reply');
+        return salvaged2;
+      }
+      throw e2;
+    }
   }
 }
 
@@ -342,7 +385,7 @@ async function runTutorQuestions(p) {
 
   const arr = await callArray(
     [{ role: 'user', content: tutorPrompt(exam, subject, count, seeds, bias) }],
-    { temperature: 0.75, numPredict: Math.min(6000, 450 * count + 600) },
+    { temperature: 0.75, numPredict: Math.min(7000, 700 * count + 1200) },
     'tutor'
   );
   if (!Array.isArray(arr)) throw new Error('model did not return an array');
@@ -368,8 +411,11 @@ async function runTutorQuestions(p) {
 
   addItems(arr);
   // A thin reply (truncated or lazy JSON) is the most common tutor-lane
-  // failure; one retry usually fills the set. Still short => fail loudly so a
-  // half-empty "success" never reaches the page (see od 44161b74, 1 of 5).
+  // failure (the output budget must fit full DI tables + worked solutions —
+  // 450n+600 cut a 5-question DI reply mid-array on 2026-10-19). callArray
+  // salvages every finished item from a cut-off reply; one retry then tops the
+  // set up. Still short => fail loudly so a half-empty "success" never
+  // reaches the page (see od 44161b74, 1 of 5).
   const need = Math.min(count, 3);
   if (questions.length < need) {
     log('tutor: only ' + questions.length + ' of ' + count + ' valid - retrying once');
@@ -377,10 +423,10 @@ async function runTutorQuestions(p) {
     try {
       arr2 = await callArray(
         [{ role: 'user', content: tutorPrompt(exam, subject, count - questions.length, seeds, bias) }],
-        { temperature: 0.85, numPredict: Math.min(6000, 450 * count + 600) },
+        { temperature: 0.85, numPredict: Math.min(7000, 700 * count + 1200) },
         'tutor'
       );
-    } catch (e) { arr2 = null; }
+    } catch (e) { arr2 = null; log('tutor: retry pass failed: ' + (e && e.message)); }
     addItems(arr2);
   }
   if (questions.length < need) throw new Error('only ' + questions.length + ' of ' + count + ' valid questions generated (needed at least ' + need + ')');
