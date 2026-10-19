@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-19T08:56:22.092Z",
-  "cursor": 3,
-  "built": 3
+  "updatedAt": "2026-10-19T16:41:24.922Z",
+  "cursor": 6,
+  "built": 5
  },
  "figs": {
   "ce3585b0": {
@@ -21,6 +21,18 @@
   "2e90a653": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"30\" y=\"100\" text-anchor=\"end\">Size</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"175\" y=\"195\" text-anchor=\"middle\">Standardized Values</text><polyline points=\"60,180 60,160 80,160 80,140 100,140 100,120 120,120 120,100 140,100 140,80 160,80 160,60 180,60 180,40 200,40 200,20 220,20\" fill=\"none\"/><text x=\"55\" y=\"170\">R10</text><text x=\"55\" y=\"150\">R10</text><text x=\"55\" y=\"130\">R10</text><text x=\"55\" y=\"110\">R10</text><text x=\"55\" y=\"90\">R10</text><text x=\"55\" y=\"70\">R10</text><text x=\"55\" y=\"50\">R10</text><text x=\"55\" y=\"30\">R10</text><text x=\"55\" y=\"10\">R10</text><line x1=\"240\" y1=\"180\" x2=\"240\" y2=\"20\"/><text x=\"230\" y=\"100\" text-anchor=\"end\">Ratio ~1.26</text></svg>",
    "n": "what are preferred numbers (renard series) used for?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "c21e6d54": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"175\">Failure Stress</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><text x=\"20\" y=\"95\">Working Stress</text><rect x=\"40\" y=\"60\" width=\"240\" height=\"10\" fill=\"#222\"/><line x1=\"40\" y1=\"70\" x2=\"320\" y2=\"70\"/><text x=\"330\" y=\"75\">Factor of Safety</text><text x=\"180\" y=\"110\">Stress</text><text x=\"40\" y=\"195\">Strain</text></svg>",
+   "n": "define working stress (design stress).",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "8805d22a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Allowable Stress</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"40\" y=\"165\">σ_allow = σ_ult / FOS</text><text x=\"320\" y=\"165\">= 400 / 2 = 200 N/mm²</text><circle cx=\"40\" cy=\"140\" r=\"3\"/><circle cx=\"320\" cy=\"140\" r=\"3\"/></svg>",
+   "n": "if ultimate tensile strength is 400 n/mm² and the factor of safety is 2, what is the allowable stress?",
    "sub": "design",
    "at": "2026-10-19"
   }

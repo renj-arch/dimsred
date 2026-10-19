@@ -1,11 +1,11 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-19T09:03:08.902Z",
-  "cursor": 1,
-  "count": 10,
+  "updatedAt": "2026-10-19T16:50:27.227Z",
+  "cursor": 2,
+  "count": 20,
   "lastAttempt": {
-   "at": "2026-10-19T09:03:08.902Z",
+   "at": "2026-10-19T16:50:27.227Z",
    "reason": "added 10"
   }
  },
@@ -98,6 +98,96 @@
    "a": "Location: Passes through the centroid of the cross-section for homogeneous materials under pure bending.",
    "h": "The Neutral Axis is the line within the cross-section where longitudinal fibers experience zero strain and zero stress.",
    "s": "Above the neutral axis, fibers are in compression; below it, they are in tension. For symmetric sections made of uniform material, the neutral axis coincides with the geometric centroid.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Define 'Kinematic Pair' and classify the pair formed between a piston and cylinder in an internal combustion engine as either lower or upper, providing the reason based on contact type.",
+   "a": "Lower pair (Surface contact)",
+   "h": "Recall that kinematic pairs are classified by the nature of contact between links (surface vs point/line).",
+   "s": "A kinematic pair is a joint between two links allowing relative motion. The piston and cylinder form a lower pair because they have surface contact (sliding), whereas an upper pair would involve point or line contact like gears or cam-follower mechanisms.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Calculate the angular velocity of a gear wheel with 40 teeth if it meshes with a driving gear having 20 teeth rotating at 1200 rpm.",
+   "a": "600 rpm",
+   "h": "Use the inverse relationship between number of teeth and angular velocity for meshing gears.",
+   "s": "The speed ratio is inversely proportional to the number of teeth. Since the driven gear has twice as many teeth (40) as the driver (20), its speed will be half. Therefore, 1200 rpm / 2 = 600 rpm.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Explain the concept of 'Critical Speed' in a rotating shaft and state what happens to the amplitude of vibration when the operating speed equals the critical speed.",
+   "a": "Amplitude becomes theoretically infinite (resonance)",
+   "h": "Recall that critical speed is related to the natural frequency of the system's transverse vibrations.",
+   "s": "Critical speed is the rotational speed at which the shaft's natural frequency coincides with the excitation frequency. At this point, resonance occurs, causing the amplitude of vibration to increase drastically, potentially leading to failure if damping is insufficient.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Define 'Degree of Freedom' in the context of a mechanism and calculate it for a planar four-bar linkage using Gruebler's equation.",
+   "a": "1 Degree of Freedom",
+   "h": "Recall Gruebler's equation: DoF = 3(n-1) - 2j - h, where n is links, j is lower pairs, h is higher pairs (usually 0 here).",
+   "s": "Degree of freedom represents the number of independent parameters required to define the configuration of a mechanism. For a standard planar four-bar linkage with 4 links and 4 revolute joints (lower pairs), applying Gruebler's equation yields 3(4-1) - 2(4) = 9 - 8 = 1 DoF.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Describe the function of a 'Flywheel' in an engine and explain why it is not used to smooth out fluctuations in speed caused by external load variations on a machine tool.",
+   "a": "Used for fluctuating supply, not demand; ineffective for load fluctuations alone without inertia coupling.",
+   "h": "Distinguish between energy storage for cyclic sources (engine) vs. constant torque sources (machine tools).",
+   "s": "A flywheel stores kinetic energy during power strokes and releases it during non-power strokes to smooth out speed variations caused by the intermittent nature of the engine's power delivery. However, if the external load on a machine tool fluctuates continuously, a flywheel cannot effectively compensate because it lacks the high torque capacity needed to overcome sudden load spikes; a governor is required for that.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Calculate the maximum shear stress in a solid circular shaft of diameter 50 mm transmitting a torque of 1200 Nm.",
+   "a": "95.5 MPa",
+   "h": "Use the torsion formula tau = (T * r) / J, where J = (pi * d^4)/32 and r = d/2.",
+   "s": "First, calculate the polar moment of inertia J = (pi * 0.05^4)/32 = 6.136e-7 m^4. The radius r is 0.025 m. Shear stress tau = (1200 * 0.025) / 6.136e-7 = 95,498,000 Pa, which rounds to 95.5 MPa.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Define 'Dwell' in the context of cam-follower motion and give one common application where a dwell period is essential.",
+   "a": "Zero displacement/velocity (Stationary position)",
+   "h": "Recall that dwell means zero follower velocity/displacement change for a specific angular interval of cam rotation.",
+   "s": "Dwell refers to the portion of the cam cycle where the follower remains stationary relative to the cam. A common application is in automatic lathes or indexing machines, where the tool must stop moving while the workpiece rotates to a specific position for cutting.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Explain why a 'Hooke's Joint' (Universal Joint) cannot transmit constant velocity between two shafts unless they are perfectly aligned.",
+   "a": "Variable velocity ratio due to angular misalignment",
+   "h": "Recall that angular velocity transmission depends on the cosine of the angle between shaft axes.",
+   "s": "A Hooke's joint connects two shafts at an angle. As the driving shaft rotates, the driven shaft experiences a periodic variation in angular velocity unless the angle is zero. This results in non-uniform motion, which is why double universal joints with specific phasing are used to restore constant velocity.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Define 'Interference' in gear teeth and state one design parameter that must be increased to avoid it.",
+   "a": "Increase Pressure Angle or Decrease Addendum",
+   "h": "Recall that interference occurs when the tip of a tooth undercuts the root of the mating tooth profile.",
+   "s": "Interference happens when the non-involute portion of the tooth profile comes into contact, causing undercutting. To prevent this, designers can increase the pressure angle (which reduces the base circle size relative to the addendum) or decrease the addendum height.",
+   "at": "2026-10-19"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Theory of Machines",
+   "q": "Calculate the theoretical efficiency of a square-threaded screw jack with a lead of 10 mm, a mean diameter of 50 mm, and a coefficient of friction of 0.15.",
+   "a": "63.7%",
+   "h": "Use the efficiency formula for square threads: eta = tan(alpha) / tan(alpha + phi), where alpha is lead angle and phi is friction angle.",
+   "s": "The lead angle alpha is calculated as arctan(Lead / (pi * Mean Diameter)) = arctan(10 / (pi * 50)) ≈ 3.64°. The friction angle phi is arctan(mu) = arctan(0.15) ≈ 8.53°. Efficiency η = tan(alpha) / tan(alpha + phi) = tan(3.64°) / tan(12.17°) ≈ 0.0637 / 0.2153 ≈ 0.296 or 29.6%.",
    "at": "2026-10-19"
   }
  ]

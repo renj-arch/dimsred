@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-18T23:09:05.899Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-10-19T01:13:43.548Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 0,
@@ -1827,8 +1815,55 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-19T17:01:58.095Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (5 total)",
+       "text": "Which body publishes the Indian Standard (IS) specifications used in machine des | Define working stress (design stress). | If ultimate tensile strength is 400 N/mm² and the factor of safety is 2, what is"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Theory of Machines (20 in pool)",
+       "text": "Theory of Machines"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-19T16:13:46.693Z",
- "model": "qwen3:4b"
+ "lastRun": "2026-10-19T17:01:58.095Z",
+ "model": "qwen3.5:9b"
 }
