@@ -604,6 +604,14 @@ function restoreStrippedScripts(page) {
       // Same src already referenced in any form? Then nothing is missing.
       const escSrc = src.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
       if (new RegExp('<script[^>]*src="' + escSrc + '"', 'i').test(html)) continue;
+      // A cache-busting bump (?v=old -> ?v=new) is NOT a stripped tag: if the
+      // same path is already referenced with ANY query/hash, skip. Otherwise
+      // every version bump gets "restored" back as a duplicate include.
+      const srcPath = src.split('?')[0].split('#')[0];
+      if (srcPath && srcPath !== src) {
+        const escPath = srcPath.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        if (new RegExp('<script[^>]*src="' + escPath + '(\\?|#|")', 'i').test(html)) continue;
+      }
       // Verify the target: tracked in git, or an external URL the page used.
       const base = src.split('?')[0].split('#')[0];
       let ok = false;

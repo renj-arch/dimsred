@@ -47,7 +47,7 @@
         .mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:20px}
         @media(max-width:480px){.mode-grid{grid-template-columns:1fr}}
         .mode-card{padding:20px;border-radius:var(--radius);border:1px solid var(--border);background:var(--glass-bg);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);cursor:pointer;transition:all .3s cubic-bezier(.4,0,.2,1);text-align:center;position:relative;overflow:hidden}
-        .mode-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:var(--radius);opacity:0;transition:opacity .3s;background:linear-gradient(135deg,var(--purple-dim),var(--emerald-dim))}
+        .mode-card::before{content:'';position:absolute;top:0;left:0;right:0;bottom:0;border-radius:var(--radius);pointer-events:none;opacity:0;transition:opacity .3s;background:linear-gradient(135deg,var(--purple-dim),var(--emerald-dim))}
         .mode-card:hover::before{opacity:1}
         .mode-card:hover{border-color:var(--border-glow);transform:translateY(-3px);box-shadow:0 8px 30px rgba(167,139,250,.08)}
         .mode-card .icon{font-size:2em;margin-bottom:6px;position:relative}
@@ -403,7 +403,6 @@
 <script src="js/fig-svg.js?v=20261018"></script>
 <script src="js/owner-runner.js?v=20261019b"></script>
 <script src="js/exam-tutor.js?v=20261018"></script>
-<script src="js/owner-runner.js?v=20261019a"></script>
 <script>
     var session = null;
     var currentQuestion = null;

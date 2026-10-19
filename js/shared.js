@@ -297,19 +297,32 @@
     var div = document.createElement('div');
     div.innerHTML = html;
     document.body.appendChild(div);
+    function closeOverlay() {
+      var ov = document.getElementById('goalOverlay');
+      if (ov) ov.remove();
+      document.removeEventListener('keydown', onKey);
+    }
+    function dismissGoal() {
+      goals.dismissed = true;
+      localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
+      closeOverlay();
+    }
+    function onKey(e) { if (e.key === 'Escape') dismissGoal(); }
     document.getElementById('goalSave').addEventListener('click', function () {
       var val = parseInt(document.getElementById('goalSelect').value);
       goals.papersPerWeek = val;
       goals.weekStart = new Date().toISOString().slice(0, 10);
       goals.completed = 0;
       localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
-      document.getElementById('goalOverlay').remove();
+      closeOverlay();
     });
-    document.getElementById('goalSkip').addEventListener('click', function () {
-      goals.dismissed = true;
-      localStorage.setItem(GOALS_KEY, JSON.stringify(goals));
-      document.getElementById('goalOverlay').remove();
+    document.getElementById('goalSkip').addEventListener('click', dismissGoal);
+    // Escape or a tap on the dim backdrop also dismisses — a stray tap while
+    // the prompt covers the page must never be a dead end.
+    document.getElementById('goalOverlay').addEventListener('click', function (e) {
+      if (e.target === this) dismissGoal();
     });
+    document.addEventListener('keydown', onKey);
   }
 
   function updateGoalProgress() {
