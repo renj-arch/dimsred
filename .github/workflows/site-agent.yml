@@ -228,10 +228,20 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/practice-sets/ data/topic-layers.json data/mains-fresh.json data/mains-updates.json data/inventions.json data/mock-fresh.json data/ssc-je-qfig.json data/exam-patterns.json scripts/learned-fixes.js 2>/dev/null || true
-          git add figures/ 2>/dev/null || true
-          git add -- *.html prototype-*.html 2>/dev/null || true
-          git status --porcelain | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add 2>/dev/null || true
+          # Per-path adds: git add is all-or-nothing per invocation, so ONE
+          # absent path (scripts/learned-fixes.js is written only by the
+          # SelfCheck agent, so it is usually not on disk) used to abort the
+          # whole add with the error hidden — every run from 2026-10-18
+          # 15:19 silently discarded its work this way ("nothing staged").
+          # The loop + visible warnings make that loss class impossible.
+          for p in data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/practice-sets data/topic-layers.json data/mains-fresh.json data/mains-updates.json data/inventions.json data/mock-fresh.json data/ssc-je-qfig.json data/exam-patterns.json scripts/learned-fixes.js; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          for p in figures *.html prototype-*.html; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          git status --porcelain --sparse | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add --sparse 2>/dev/null || true
+          echo "[publish] staged: $(git diff --cached --name-only | wc -l) file(s)"
           # Single shared publisher: PAT push, GITHUB_TOKEN fallback on PAT
           # death (no lost work), loud alert. See scripts/ci-push.sh.
           bash scripts/ci-push.sh "site-agent: ${{ env.MODEL }} maintained the site (run #${{ github.run_number }})"
