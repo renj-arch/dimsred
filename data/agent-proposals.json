@@ -1,17 +1,57 @@
 {
  "meta": {
-  "generatedAt": "2026-10-19T07:36:13.267Z",
+  "generatedAt": "2026-10-20T10:53:30.197Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 4,
+  "count": 8,
   "lastAttempt": {
-   "at": "2026-10-19T07:36:13.267Z",
+   "at": "2026-10-20T10:53:30.197Z",
    "ok": true,
    "count": 4,
    "dropped": 0
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvgkexg5-1",
+   "at": "2026-10-20T10:53:30.197Z",
+   "title": "Recover failed tutor-questions lane",
+   "why": "The digest shows recent failures in 'tutor-questions' where the model output lacked a valid JSON array or generated insufficient questions (2 of 5).",
+   "idea": "Update the Node script parsing the Ollama response to wrap the raw text in a try-catch block. If the JSON parse fails, extract content between ```json and ``` markers; if question count is low, retry the generation with a higher temperature or different prompt phrasing before logging an error.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvgkexg5-2",
+   "at": "2026-10-20T10:53:30.197Z",
+   "title": "Activate daily-feed-fill pipeline",
+   "why": "The fault board lists 'daily-feed-fill #31' as a run in progress with 0 updates piped to the mains page, indicating a potential blockage or lack of post-processing.",
+   "idea": "Modify the GitHub Actions workflow for 'daily-feed-fill' to explicitly move generated items from the temporary processing bucket to the main content pool after generation, ensuring the 'news/file lanes' count reflects actual published updates.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvgkexg5-3",
+   "at": "2026-10-20T10:53:30.197Z",
+   "title": "Expand single-click practice sets",
+   "why": "Currently only 2 exam sets (ssc-je, ssc-je-production) exist. The site has a massive pool of 1309 tracked questions and an 'invented' pool with 50 items.",
+   "idea": "Create a new script to randomly sample 20-30 questions from the 'invented' pool or the main bank to generate a generic 'Daily Mix' practice set, which can be added to the single-click list without manual authoring.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvgkexg5-4",
+   "at": "2026-10-20T10:53:30.197Z",
+   "title": "Fix homepage quiz flow interaction",
+   "why": "Browser tests flagged 'flow-skipped on Homepage' where no visible Next button exists, preventing users from exercising the quiz flow.",
+   "idea": "Add a simple JavaScript event listener to the homepage that checks for a hidden or non-existent 'Next' button and programmatically triggers the next question logic if one is missing, ensuring the quiz state advances even without explicit UI clicks during initial loads.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvexxdcj-1",
    "at": "2026-10-19T07:36:13.267Z",
