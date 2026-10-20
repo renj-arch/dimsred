@@ -2354,89 +2354,75 @@
    ]
   },
   {
-   "at": "2026-10-20T10:53:30.197Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 4,
+   "at": "2026-10-20T11:31:31.074Z",
+   "model": "batiai/qwen3.8-27b:iq3",
+   "totalFixes": 3,
    "byAgent": [
     {
-     "agent": "proposals",
-     "count": 4
+     "agent": "archive-writer",
+     "count": 3
     }
    ],
    "details": [
     {
-     "agent": "proposals",
+     "agent": "archive-writer",
      "fixes": [
       {
-       "kind": "proposal",
-       "fix": "Recover failed tutor-questions lane",
-       "detail": "The digest shows recent failures in 'tutor-questions' where the model output lacked a valid JSON array or generated insufficient questions (2 of 5).",
-       "text": "Update the Node script parsing the Ollama response to wrap the raw text in a try-catch block. If the JSON parse fails, extract content between ```json and ``` markers; if question count is low, retry the generation with a higher temperature or different prompt phrasing before logging an error."
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"What do you know about Anjem Choudary (born 18 January 1967), also called Abu Luqman,?\"",
+       "text": "VERDICT: Anjem Choudary is a British Islamist extremist. WHY: Born 18 January 1967, he adopted the alias Abu Luqman and became the public face of militant Islamism in the UK. TRAPS: Do not confuse him with generic political Islamists; his specific label is 'best known Islamic extremist in Britain.' HOOK: Remember 'Abu Luqman' as the British face of extremism. Exam trap: Verify nationality; he is British, not Pakistani or Arab."
       },
       {
-       "kind": "proposal",
-       "fix": "Activate daily-feed-fill pipeline",
-       "detail": "The fault board lists 'daily-feed-fill #31' as a run in progress with 0 updates piped to the mains page, indicating a potential blockage or lack of post-processing.",
-       "text": "Modify the GitHub Actions workflow for 'daily-feed-fill' to explicitly move generated items from the temporary processing bucket to the main content pool after generation, ensuring the 'news/file lanes' count reflects actual published updates."
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"Anjem Choudary (born 18 January _____), also known as Abu Luqman, is a British Islamist wh\"",
+       "text": "VERDICT: 1967. WHY: Anjem Choudary, alias Abu Luqman, was born on 18 January 1967. He is a British Islamist figure frequently cited in international security contexts. TRAPS: Do not confuse his birth year with his rise to prominence in the 2000s. Avoid mixing him with other British extremists like Daud Abdullah. HOOK: Remember '67' as the anchor year for this specific profile. Exam trap: Questions often test exact birth dates of controversial figures to distinguish between similar-sounding names"
       },
       {
-       "kind": "proposal",
-       "fix": "Expand single-click practice sets",
-       "detail": "Currently only 2 exam sets (ssc-je, ssc-je-production) exist. The site has a massive pool of 1309 tracked questions and an 'invented' pool with 50 items.",
-       "text": "Create a new script to randomly sample 20-30 questions from the 'invented' pool or the main bank to generate a generic 'Daily Mix' practice set, which can be added to the single-click list without manual authoring."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Fix homepage quiz flow interaction",
-       "detail": "Browser tests flagged 'flow-skipped on Homepage' where no visible Next button exists, preventing users from exercising the quiz flow.",
-       "text": "Add a simple JavaScript event listener to the homepage that checks for a hidden or non-existent 'Next' button and programmatically triggers the next question logic if one is missing, ensuring the quiz state advances even without explicit UI clicks during initial loads."
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"He was sentenced to life imprisonment in _____ after being found guilty of directing a ter\"",
+       "text": "VERDICT: 2024. WHY: The sentence reflects a recent judicial verdict against a leader of a designated terror outfit, marking a significant legal milestone in counter-terrorism efforts. TRAPS: Do not confuse this with earlier convictions; the specific year 2024 is the key differentiator for this particular sentencing event. HOOK: Remember '2024' as the year the gavel fell on this specific terror direction charge. Exam-day trap: Ensure you distinguish between the year of arrest and the year of fina"
       }
      ]
     }
    ]
   },
   {
-   "at": "2026-10-20T11:23:17.078Z",
+   "at": "2026-10-20T12:09:51.792Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
+     "agent": "foresight",
      "count": 0
     },
     {
-     "agent": "invention",
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
      "count": 0
     }
    ],
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "questions",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (11 total)",
-       "text": "What is bearing stress? | Which stress range of factor of safety is normally used when designing against f | Which theory of failure is most suitable for ductile materials?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
+       "page": "data/questions",
+       "fix": "Found 245125 thin subtopics (< 15 questions)"
+      },
       {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Fluid Mechanics (40 in pool)",
-       "text": "Fluid Mechanics"
+       "page": "data/questions",
+       "fix": "Merged 3 overlapping subtopics into correct categories"
       }
      ]
     }
