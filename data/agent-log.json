@@ -1,233 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-19T19:30:59.231Z",
-   "model": "qwen3:4b",
-   "totalFixes": 268,
-   "byAgent": [
-    {
-     "agent": "graphnotes",
-     "count": 0
-    },
-    {
-     "agent": "architect",
-     "count": 1
-    },
-    {
-     "agent": "foresight",
-     "count": 2
-    },
-    {
-     "agent": "questions",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 27
-    },
-    {
-     "agent": "selfcheck",
-     "count": 1
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 28
-    },
-    {
-     "agent": "a11y",
-     "count": 209
-    },
-    {
-     "agent": "code",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "architect",
-     "fixes": [
-      {
-       "kind": "info",
-       "page": "ideas",
-       "fix": "Architect: proposal \"Exam-style pencil-outline figures inside Ask answers\" — model output unparseable, retry next run"
-      }
-     ]
-    },
-    {
-     "agent": "foresight",
-     "fixes": [
-      {
-       "page": "3d-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      },
-      {
-       "page": "test-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      }
-     ]
-    },
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/ask-audit.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/browser-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-lectures.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/daily-globe-fill.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/daily-papers.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/daily-pib-feed.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/expand-course.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/fault-status.yml",
-       "fix": "Added memory limit to node steps"
-      }
-     ]
-    },
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-anabelian-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-19T20:01:12.168Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 1,
@@ -2806,8 +2579,41 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-20T11:31:31.074Z",
+   "model": "batiai/qwen3.8-27b:iq3",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "archive-writer",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "archive-writer",
+     "fixes": [
+      {
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"What do you know about Anjem Choudary (born 18 January 1967), also called Abu Luqman,?\"",
+       "text": "VERDICT: Anjem Choudary is a British Islamist extremist. WHY: Born 18 January 1967, he adopted the alias Abu Luqman and became the public face of militant Islamism in the UK. TRAPS: Do not confuse him with generic political Islamists; his specific label is 'best known Islamic extremist in Britain.' HOOK: Remember 'Abu Luqman' as the British face of extremism. Exam trap: Verify nationality; he is British, not Pakistani or Arab."
+      },
+      {
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"Anjem Choudary (born 18 January _____), also known as Abu Luqman, is a British Islamist wh\"",
+       "text": "VERDICT: 1967. WHY: Anjem Choudary, alias Abu Luqman, was born on 18 January 1967. He is a British Islamist figure frequently cited in international security contexts. TRAPS: Do not confuse his birth year with his rise to prominence in the 2000s. Avoid mixing him with other British extremists like Daud Abdullah. HOOK: Remember '67' as the anchor year for this specific profile. Exam trap: Questions often test exact birth dates of controversial figures to distinguish between similar-sounding names"
+      },
+      {
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"He was sentenced to life imprisonment in _____ after being found guilty of directing a ter\"",
+       "text": "VERDICT: 2024. WHY: The sentence reflects a recent judicial verdict against a leader of a designated terror outfit, marking a significant legal milestone in counter-terrorism efforts. TRAPS: Do not confuse this with earlier convictions; the specific year 2024 is the key differentiator for this particular sentencing event. HOOK: Remember '2024' as the year the gavel fell on this specific terror direction charge. Exam-day trap: Ensure you distinguish between the year of arrest and the year of fina"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-20T05:39:52.826Z",
+ "lastRun": "2026-10-20T11:31:31.074Z",
  "model": "qwen3:4b"
 }
