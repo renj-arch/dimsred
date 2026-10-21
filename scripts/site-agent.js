@@ -3431,7 +3431,8 @@ async function agentMainsFresh() {
     'Keep every "p" paragraph to 2-3 sentences and under 600 characters (the reply has a strict token budget — longer text gets cut off and the item is rejected). Never invent a scheme, case, article or statistic: name a reform only when certain of it, with its year; ' +
     'a verified older example beats an uncertain new one. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral. ' +
     'Structure the skeleton like a strong answer: the FIRST object in "answer" opens with context — define the term or topic and say where or when it took shape (an agreement, body or year, and only when certain) — never start mid-argument; ' +
-    'the LAST object is a way forward or conclusion (heading like "Way forward"), 2-3 sentences on what should change or what to watch; the middle objects carry the analysis. ' +
+    'the LAST object is a way forward or conclusion (heading exactly "Way forward" or "Conclusion"), 2-3 sentences on what should change or what to watch; the middle objects carry the analysis. ' +
+    'Length: the whole answer must reach at least 150 words for 10 marks, 250 for 15, 300 for 20, 900 for a 125-mark essay and 1800 for a 250-mark essay. A short skeleton that stops at 150 words for a 15-mark question is rejected. ' +
     'Across the answer, place 2 to 3 specific anchors — a court, committee, agreement, scheme, fund, index or landmark event — each one only when you are certain of it; a paragraph that names no real thing is a weak paragraph. ' +
     'For a topic with a governing law, agreement or scheme you are certain of, name at least one in "laws"; keep [] only when nothing is certain. ' +
     'Do not reason step by step; reply with ONLY the JSON object.';

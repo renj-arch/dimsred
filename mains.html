@@ -59,6 +59,11 @@ h1{font-size:24px;margin:6px 0 8px}
 .box ul{margin:0;padding-left:17px}.box li{margin:3px 0}
 .kw{font-size:11.5px;color:var(--text-sec);margin-top:10px}
 .kw span{background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:2px 7px;margin-right:5px;display:inline-block}
+.fresh-wrap{margin-top:44px;border-top:1px solid var(--border);padding-top:24px}
+.fresh-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.fresh-head h2{font-size:18px;margin:0}
+.fresh-tag{font-size:10px;letter-spacing:.1em;font-weight:800;color:var(--amber);background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:5px;padding:3px 8px}
+.fresh-note{font-size:12.5px;color:var(--text-sec);line-height:1.6;margin:6px 0 4px;max-width:680px}
 .empty{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
 .load{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
 @page{size:A4;margin:14mm}
@@ -100,6 +105,15 @@ h1{font-size:24px;margin:6px 0 8px}
   </div>
 
   <div id="list"><div class="load">Loading&hellip;</div></div>
+
+  <section class="fresh-wrap" id="freshWrap" hidden>
+    <div class="fresh-head">
+      <h2>Fresh AI practice</h2>
+      <span class="fresh-tag">PUBLIC BATCH &middot; UNREVIEWED</span>
+    </div>
+    <p class="fresh-note">Written by the site&rsquo;s model on its GitHub runners. These are kept separate from the reviewed bank above; every reviewed item has been read before publication, and these have not. Verify every fact before trusting them.</p>
+    <div id="freshGrid"></div>
+  </section>
 </div>
 
 <script src="scripts/lib/ask-llm.js"></script>
@@ -159,6 +173,7 @@ function addAI(q) {
   AI_QS = AI_QS.slice(0, AI_STORE_MAX);
   var saved = saveAI();
   refreshClear();
+  renderFresh();
   return saved;
 }
 function loadSavedAI() {
@@ -251,7 +266,7 @@ function card(q) {
       '<span class="tag m">' + esc(q.marks) + ' marks</span>' +
       (yrs ? '<span class="tag">' + yrs + '</span>' : '') +
     '</div>' +
-    (q.ai ? '<div class="badge ai">AI-GENERATED ' + (q.origin === 'ci' ? 'BY THE SITE\u2019S MODEL ON ITS BUILD RUNNERS' : q.origin === 'runner' ? 'BY THE SITE\u2019S MODEL ON THE GITHUB RUNNER, JUST FOR YOU' : 'IN YOUR BROWSER') + ' &middot; unreviewed &middot; ' + (q.saved ? 'saved on this device' : 'this session only') + ' &middot; verify before trusting</div>' : '') +
+    (q.ai ? '<div class="badge ai">AI-GENERATED ' + (q.origin === 'ci' ? 'BY THE SITE\u2019S MODEL ON ITS BUILD RUNNERS' : q.origin === 'runner' ? (q.public ? 'BY THE SITE\u2019S MODEL ON THE GITHUB RUNNER, PUBLIC BATCH' : 'BY THE SITE\u2019S MODEL ON THE GITHUB RUNNER, JUST FOR YOU') : 'IN YOUR BROWSER') + ' &middot; unreviewed &middot; ' + (q.public ? 'public batch' : q.saved ? 'saved on this device' : 'this session only') + ' &middot; verify before trusting</div>' : '') +
     '<h2>' + esc(q.question) + '</h2>' +
     '<div class="badge model">MODEL ANSWER &middot; not an official UPSC key &middot; write your own attempt first</div>' +
     '<button class="btn" data-open="' + esc(q.id) + '">Show the model answer</button>' +
@@ -263,11 +278,27 @@ function card(q) {
   '</section>';
 }
 
+// The frozen batch is public: every visitor sees the latest items even without
+// clicking Generate. Items already saved in this browser stay in the list at
+// the top instead, so the same card is never shown twice.
+function renderFresh() {
+  var wrap = el('freshWrap'), host = el('freshGrid');
+  if (!wrap || !host) return;
+  var local = {};
+  AI_QS.forEach(function (q) { if (q.question) local[q.question] = 1; });
+  var items = (FRESH.items || []).filter(function (o) {
+    return o && o.question && !local[o.question];
+  }).slice(-12).reverse();
+  var cards = items.map(fromPool).filter(Boolean).map(card);
+  host.innerHTML = cards.join('');
+  wrap.hidden = !cards.length;
+}
+
 function render() {
   var qs = visible();
   if (!qs.length) {
     el('list').innerHTML = '<div class="empty">No question matches that filter. ' +
-      'The bank is deliberately small and hand-authored, so gaps are real &mdash; ' +
+      'The bank is deliberately small and every item is reviewed, so gaps are real &mdash; ' +
       'see the note in <code>data/mains-questions.json</code>.</div>';
     return;
   }
@@ -289,6 +320,7 @@ function boot(data) {
       esc(p.name) + ' (' + (counts[p.id] || 0) + ')</button>';
   }).join('');
   render();
+  renderFresh();
 
   // Tell the visitor what the AI button costs before they click it. The frozen
   // batch from the build runners is instant and free; the in-browser fallback
@@ -343,6 +375,7 @@ if (el('clearAI')) el('clearAI').addEventListener('click', function () {
   AI_QS = [];
   try { localStorage.removeItem(AI_STORE_KEY); } catch (e) {}
   render();
+  renderFresh();
   refreshClear();
   setGenStat('Saved AI questions cleared from this device.');
 });
@@ -419,7 +452,7 @@ function aiPrompt() {
       '"marksGuide":["what the examiner rewards"],"pitfalls":["how this is answered badly"],' +
       '"keywords":["term"],"laws":["law, case or scheme, only if certain"]}\n\n' +
       'Constraints: 4 to 6 objects in "answer"; 3 to 5 strings each in marksGuide and pitfalls; 5 to 8 keywords; "laws" may be [].\n' +
-      'Keep every "p" paragraph to 2-3 sentences. Never invent a scheme, case, article or statistic. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral.\n' +
+      'Keep every "p" paragraph to 2-3 sentences. The whole answer must reach at least 150 words for 10 marks, 250 for 15 and 300 for 20; use "Introduction" or "Context" as the first heading and "Way forward" or "Conclusion" as the last. Never invent a scheme, case, article or statistic. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral.\n' +
       'Where a recent reform is squarely relevant and you are certain of it, name it with its year (a law, a court direction, a scheme); if the year or detail is not certain, leave it out - a verified older example beats an uncertain new one.\n' +
       'Do not reason step by step. Do not output any thinking or analysis. Reply with ONLY the JSON object -- first character {, last character }.\n' +
       '/no_think'
@@ -432,8 +465,10 @@ function aiPrompt() {
 function fromPool(o) {
   var q = cleanAI(o);
   if (!q) return null;
-  q.id = 'ci-' + String(o.id || Date.now().toString(36)).replace(/[^a-z0-9-]/gi, '').slice(0, 40);
-  q.origin = 'ci';
+  var raw = String(o.id || Date.now().toString(36)).replace(/[^a-z0-9-]/gi, '').slice(0, 48);
+  q.id = /^(ci|od)-/.test(raw) ? raw : 'ci-' + raw;
+  q.origin = o.origin === 'od' ? 'runner' : 'ci';
+  q.public = true;
   if (o.years && o.years.length) q.years = o.years.map(String).slice(0, 6);
   return q;
 }
