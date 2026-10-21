@@ -47,12 +47,14 @@ def paper_material(name="Paper", tint=(0.78, 0.68, 0.50)):
     nodes = mat.node_tree.nodes
     links = mat.node_tree.links
     bsdf = nodes.get("Principled BSDF")
+    coord = nodes.new("ShaderNodeTexCoord")
     noise = nodes.new("ShaderNodeTexNoise")
-    noise.inputs["Scale"].default_value = 18.0
+    noise.inputs["Scale"].default_value = 28.0
     noise.inputs["Detail"].default_value = 3.0
     bump = nodes.new("ShaderNodeBump")
-    bump.inputs["Strength"].default_value = 0.08
-    bump.inputs["Distance"].default_value = 0.005
+    bump.inputs["Strength"].default_value = 0.10
+    bump.inputs["Distance"].default_value = 0.004
+    links.new(coord.outputs["Object"], noise.inputs["Vector"])
     links.new(noise.outputs["Fac"], bump.inputs["Height"])
     links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
     return mat
@@ -63,6 +65,7 @@ def stone_material(name="Stone", tint=(0.19, 0.16, 0.12)):
     nodes = mat.node_tree.nodes
     links = mat.node_tree.links
     bsdf = nodes.get("Principled BSDF")
+    coord = nodes.new("ShaderNodeTexCoord")
     noise = nodes.new("ShaderNodeTexNoise")
     noise.inputs["Scale"].default_value = 2.2
     noise.inputs["Detail"].default_value = 5.0
@@ -75,6 +78,7 @@ def stone_material(name="Stone", tint=(0.19, 0.16, 0.12)):
     bump = nodes.new("ShaderNodeBump")
     bump.inputs["Strength"].default_value = 0.35
     bump.inputs["Distance"].default_value = 0.04
+    links.new(coord.outputs["Object"], noise.inputs["Vector"])
     links.new(noise.outputs["Fac"], ramp.inputs["Fac"])
     links.new(ramp.outputs["Color"], bsdf.inputs["Base Color"])
     links.new(noise.outputs["Fac"], bump.inputs["Height"])
@@ -88,23 +92,33 @@ def wall_material():
     links = mat.node_tree.links
     bsdf = nodes.get("Principled BSDF")
     coord = nodes.new("ShaderNodeTexCoord")
-    vor = nodes.new("ShaderNodeTexVoronoi")
-    vor.feature = "DISTANCE_TO_EDGE"
-    vor.inputs["Scale"].default_value = 4.5
-    ramp = nodes.new("ShaderNodeValToRGB")
-    ramp.color_ramp.elements[0].position = 0.0
-    ramp.color_ramp.elements[0].color = (0.08, 0.05, 0.03, 1)
-    ramp.color_ramp.elements[1].position = 0.16
-    ramp.color_ramp.elements[1].color = (0.48, 0.33, 0.19, 1)
+    # Brick is evaluated in X/Z, not the cube's X/Y, so map the wall's
+    # vertical axis into texture Y. Object coordinates are in metres, which
+    # keeps the courses the same size on the bagh wall and the well wall.
+    sep = nodes.new("ShaderNodeSeparateXYZ")
+    comb = nodes.new("ShaderNodeCombineXYZ")
+    brick = nodes.new("ShaderNodeTexBrick")
+    brick.inputs["Scale"].default_value = 1.0
+    brick.inputs["Brick Width"].default_value = 0.52
+    brick.inputs["Row Height"].default_value = 0.25
+    brick.inputs["Mortar Size"].default_value = 0.018
+    brick.inputs["Mortar Smooth"].default_value = 0.18
+    brick.inputs["Color1"].default_value = (0.31, 0.22, 0.14, 1)
+    brick.inputs["Color2"].default_value = (0.21, 0.145, 0.085, 1)
+    brick.inputs["Mortar"].default_value = (0.055, 0.038, 0.025, 1)
     bump = nodes.new("ShaderNodeBump")
-    bump.inputs["Strength"].default_value = 0.42
-    bump.inputs["Distance"].default_value = 0.06
+    bump.inputs["Strength"].default_value = 0.24
+    bump.inputs["Distance"].default_value = 0.018
     noise = nodes.new("ShaderNodeTexNoise")
-    noise.inputs["Scale"].default_value = 7.0
-    noise.inputs["Detail"].default_value = 4.0
-    links.new(coord.outputs["Object"], vor.inputs["Vector"])
-    links.new(vor.outputs["Distance"], ramp.inputs["Fac"])
-    links.new(ramp.outputs["Color"], bsdf.inputs["Base Color"])
+    noise.inputs["Scale"].default_value = 18.0
+    noise.inputs["Detail"].default_value = 5.0
+    links.new(coord.outputs["Object"], sep.inputs["Vector"])
+    links.new(sep.outputs["X"], comb.inputs["X"])
+    links.new(sep.outputs["Z"], comb.inputs["Y"])
+    links.new(sep.outputs["Y"], comb.inputs["Z"])
+    links.new(comb.outputs["Vector"], brick.inputs["Vector"])
+    links.new(brick.outputs["Color"], bsdf.inputs["Base Color"])
+    links.new(coord.outputs["Object"], noise.inputs["Vector"])
     links.new(noise.outputs["Fac"], bump.inputs["Height"])
     links.new(bump.outputs["Normal"], bsdf.inputs["Normal"])
     return mat
