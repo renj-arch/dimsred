@@ -131,10 +131,10 @@ function nameOccurrences(text, entityId) {
 function nodeDescScore(desc, ownerId) {
   var t = String(desc).replace(/\s+/g, ' ').trim();
   if (t.length < 13) return -100;
-  // A first-person memoir title ("My Journey Back from ...") or a route/list
+  // A first-person singular memoir title ("My Journey Back from ...") or a route/list
   // fragment ("Louis, with Joliet, ... in between") is a work or a place
   // description, not a fact about the entity it was filed under.
-  if (/^(?:my|our|his|her|their)\b/i.test(t)) return -70;
+  if (/^my\b/i.test(t)) return -70;
   if (/^[A-Z][\w.'-]*,\s+with\b/.test(t) || /\bin between\b/i.test(t)) return -70;
   if (t.charAt(0) === '"' || /\\"/.test(t)) return -60;
   // A truncated fragment such as "rritory by defeating the Seleucid Empire"
@@ -430,7 +430,7 @@ function nodeDescIsOwned(desc, selectedId) {
   // Nazi Germany"), not titles or route fragments. These two patterns were
   // live on the revision page: "My Journey Back from Chronic Pain ..." under
   // Adam Smith, and "Louis, with Joliet, ... in between" under Abraham Lincoln.
-  if (/^(?:my|our|his|her|their)\b/i.test(text)) return false;
+  if (/^my\b/i.test(text)) return false;
   if (/^[A-Z][\w.'-]*,\s+with\b/.test(text) || /\bin between\b/i.test(text)) return false;
   return true;
 }
