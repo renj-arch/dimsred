@@ -131,6 +131,7 @@ function nameOccurrences(text, entityId) {
 function nodeDescScore(desc, ownerId) {
   var t = String(desc).replace(/\s+/g, ' ').trim();
   if (t.length < 13) return -100;
+  if ((t.match(/\(/g) || []).length !== (t.match(/\)/g) || []).length) return -80;
   // A first-person singular memoir title ("My Journey Back from ...") or a route/list
   // fragment ("Louis, with Joliet, ... in between") is a work or a place
   // description, not a fact about the entity it was filed under.
@@ -424,6 +425,9 @@ function nodeDescIsOwned(desc, selectedId) {
   var text = String(desc).trim();
   if (!text) return false;
   if (isPlaceholderDesc(text)) return false;
+  // A cut-off description such as "Adam Wyman Smith (December 28" has an
+  // unbalanced bracket. It is a fragment, not a fact.
+  if ((text.match(/\(/g) || []).length !== (text.match(/\)/g) || []).length) return false;
   if (EO.mentionsEntity(text, selectedId, idSet, aliasIndex)) return true;
   if (text.length >= 90) return false;
   // Short labels are allowed only when they are descriptions ("Dictator of
@@ -596,6 +600,47 @@ Object.keys(revisionContent).forEach(function (topicName) {
     })
   }];
 });
+
+// Curated overrides: a topic whose timeline node is ambiguous or truncated can
+// be pinned to a verified one-line fact here. The page labels the source; no
+// text is invented at runtime.
+var OVERRIDES = path.join(DATA_DIR, 'revision-overrides.json');
+if (fs.existsSync(OVERRIDES)) {
+  var overrides = JSON.parse(fs.readFileSync(OVERRIDES, 'utf8'));
+  Object.keys(overrides).forEach(function (topicName) {
+    if (topicName.charAt(0) === '_') return;
+    var topic = revisionContent[topicName];
+    if (!topic) return;
+    var o = overrides[topicName] || {};
+    var fact = String(o.fact || '').trim();
+    if (!fact) return;
+    topic.primaryFacts = [{
+      fact: fact,
+      role: 'primary',
+      factType: o.factType || 'CORE_FACT',
+      subjectEntityId: topic.selectedEntityId,
+      objectEntityId: null,
+      sourceEntityId: topic.selectedEntityId,
+      source: 'curated-override',
+      via: 'curated',
+      confidence: 1,
+      provenance: {
+        source: 'curated-override',
+        sourceEntityId: topic.selectedEntityId,
+        subjectEntityId: topic.selectedEntityId,
+        objectEntityId: null,
+        extractor: 'revision-overrides',
+        method: 'curated',
+        confidence: 1
+      }
+    }];
+    topic.summary = String(o.summary || fact);
+    topic.bullets = ['\u2022 ' + fact];
+    topic.facts = ['\uD83D\uDCCA ' + fact];
+    topic.ownership.primaryCount = 1;
+    topic.ownership.override = true;
+  });
+}
 
 fs.writeFileSync(OUTPUT, JSON.stringify(revisionContent, null, 2));
 
