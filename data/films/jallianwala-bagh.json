@@ -1,0 +1,458 @@
+{
+  "schema": "vlymbooq.film.v1",
+  "id": "jallianwala-bagh",
+  "topicId": "jallianwala bagh massacre",
+  "title": "JALLIANWALA BAGH",
+  "titleLines": ["JALLIANWALA", "BAGH"],
+  "titleSize": "10.2vw",
+  "subtitle": "The Garden the Empire Could Not Bury",
+  "posterPlate": "bagh-wall",
+  "posterTitleSize": "9.6vw",
+  "posterMeta": "1919 · THE GARDEN · THE ORDER · THE INQUIRY",
+  "logline": "On 13 April 1919, a walled garden in Amritsar became the place where the British Empire stopped being able to call itself lawful.",
+  "targetDuration": 152,
+  "aspect": "16:9",
+  "fps": 24,
+  "voice": "en_US-lessac-medium",
+  "style": {
+    "genre": "cinematic 3D documentary",
+    "look": "dusk ochre, deep charcoal, aged paper, brass, dust in hard light, restrained typography",
+    "rules": [
+      "Show the object before the explanation: a notice, a wall, a watch, a well.",
+      "No bodies, no blood, no reconstructed killing. The aftermath carries the violence.",
+      "One idea per shot. The camera pushes, reveals, or holds. It never drifts.",
+      "Use silence as a cut. Let the narration stop before the next image lands.",
+      "Every number on screen is an official figure or explicitly attributed."
+    ]
+  },
+  "toolchain": {
+    "blender": {
+      "version": "4.2 LTS",
+      "role": "procedural sets, wall, gate, well, watch, lamp, memorial, hero stills",
+      "automation": "scripts/film/blender/jallianwala_scenes.py"
+    },
+    "piper": {
+      "role": "local narration, no cloud API",
+      "voice": "en_US-lessac-medium"
+    },
+    "node": {
+      "role": "timeline, Chromium camera moves, ffmpeg encode, captions, metadata",
+      "automation": "scripts/film/build-film.js"
+    }
+  },
+  "sources": [
+    {
+      "id": "jallianwala",
+      "title": "Jallianwala Bagh massacre",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Jallianwala_Bagh_massacre",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "rowlatt",
+      "title": "Rowlatt Act",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Rowlatt_Act",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "noncooperation",
+      "title": "Non-cooperation movement (1919–1922)",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Non-cooperation_movement_(1919%E2%80%931922)",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "tagore",
+      "title": "Rabindranath Tagore",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Rabindranath_Tagore",
+      "accessed": "2026-10-22"
+    }
+  ],
+  "youtube": {
+    "title": "Jallianwala Bagh: The Garden the Empire Could Not Bury",
+    "description": "A short cinematic history of 13 April 1919: the order, the garden, the firing, the inquiry, and the argument that never ended. Sources below.",
+    "tags": [
+      "Jallianwala Bagh",
+      "Amritsar massacre",
+      "1919",
+      "Indian history",
+      "British Empire",
+      "Rowlatt Act",
+      "Hunter Commission",
+      "history documentary"
+    ]
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "title": "The order",
+      "start": 0,
+      "duration": 22,
+      "purpose": "Open on the paper that made a peaceful gathering illegal.",
+      "narration": [
+        {
+          "text": "Jallianwala Bagh.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "A garden in Amritsar. A banned meeting. A general who decided to teach a city a lesson.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The Rowlatt Act had allowed detention without trial. Punjab was already on edge.",
+          "source": "rowlatt"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S01-A",
+          "plate": "title",
+          "camera": "locked title card, a slow 2.5% scale",
+          "visual": "The film title in bone-white serif on black, with a thin gold rule and a line of small caps. No texture, no noise, no decoration.",
+          "sfx": ["low room tone", "a single distant bell"],
+          "text": "",
+          "transition": "cut",
+          "render": "title",
+          "weight": 6
+        },
+        {
+          "id": "S01-B",
+          "plate": "notice-desk",
+          "camera": "35mm, low three-quarter, slow push-in",
+          "visual": "A typed notice on a dark desk under a brass lamp: NO PUBLIC MEETINGS. A fountain pen, an inkpot, and a clock at half past four. The paper is the brightest object.",
+          "vfx": ["dust in the lamp beam", "a faint ink bloom"],
+          "sfx": ["clock tick", "paper under a pen", "lamp hum"],
+          "text": "13 APRIL 1919 · AMRITSAR",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 16,
+          "framing": {
+            "zoom": [1.02, 1.09],
+            "x": [50, 49],
+            "y": [50, 52]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "The garden",
+      "start": 22,
+      "duration": 22,
+      "purpose": "Make the place concrete: a walled garden with one way out.",
+      "narration": [
+        {
+          "text": "On 13 April 1919, Baisakhi, thousands gathered in the Bagh. Some came to worship. Some came to protest the arrest of two local leaders.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The Bagh was about two hundred yards square, walled to ten feet, with five narrow entrances.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The meeting began at half past five. Dyer arrived an hour later with about fifty soldiers and blocked the main exit.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S02-A",
+          "plate": "bagh-wall",
+          "camera": "24mm, low, slow lateral push toward the gate",
+          "visual": "A high ochre wall at dusk, patched and weathered, with one round-topped gate. A neem tree leans over the wall. Dust hangs in a hard shaft of low sun.",
+          "vfx": ["dust", "heat shimmer at the gate"],
+          "sfx": ["evening birds", "wind across the wall", "a distant crowd"],
+          "text": "THE BAGH · 13 APRIL 1919",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 12,
+          "framing": {
+            "zoom": [1.04, 1.12],
+            "x": [48, 51],
+            "y": [52, 50]
+          }
+        },
+        {
+          "id": "S02-B",
+          "plate": "bagh-gate",
+          "camera": "35mm, inside the garden, looking out through the gate",
+          "visual": "The narrow gate from inside. The opening is bright; the wall around it is almost black. A single shoe and a scatter of dust sit in the threshold.",
+          "vfx": ["dust", "light bloom through the gate"],
+          "sfx": ["wind", "a low crowd murmur", "a single footstep"],
+          "text": "FIVE NARROW ENTRANCES",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 10,
+          "framing": {
+            "zoom": [1.03, 1.10],
+            "x": [50, 50],
+            "y": [50, 48]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "The firing",
+      "start": 44,
+      "duration": 30,
+      "purpose": "Turn the order into an event without reconstructing the killing.",
+      "narration": [
+        {
+          "text": "He gave no warning to disperse. He later said the purpose was not to disperse the meeting, but to punish.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The troops fired into the densest part of the crowd, toward the narrow exits.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The firing lasted about ten minutes. Dyer later reported that his party fired 1,650 rounds.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The official inquiry counted 379 dead. More than 1,200 were wounded. Other estimates were higher.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S03-A",
+          "plate": "watch",
+          "camera": "100mm macro, overhead, very shallow focus",
+          "visual": "A brass pocket watch lying in dust. The glass is scratched. The hands stand at 6:30. A single grain of dust catches the light on the crystal.",
+          "vfx": ["dust motes", "a slow shadow crossing the face"],
+          "sfx": ["a clock tick that stops", "a low sub hit", "wind"],
+          "text": "6:30 PM",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 14,
+          "framing": {
+            "zoom": [1.02, 1.12],
+            "x": [52, 49],
+            "y": [48, 51]
+          }
+        },
+        {
+          "id": "S03-B",
+          "plate": "bagh-wall",
+          "camera": "50mm, tight on the wall, slow tilt up",
+          "visual": "The wall in hard side light. Small pockmarks and chips across the plaster. No bodies, no blood, no crowd. The wall has to carry the sound.",
+          "vfx": ["plaster dust falling", "a shaft of light"],
+          "sfx": ["a distant volley", "dust falling", "silence after"],
+          "text": "1,650 ROUNDS",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 8,
+          "framing": {
+            "zoom": [1.12, 1.02],
+            "x": [49, 51],
+            "y": [55, 47]
+          }
+        },
+        {
+          "id": "S03-C",
+          "plate": "bagh-gate",
+          "camera": "35mm, low, static, the gate slightly off-centre",
+          "visual": "The gate from inside, now empty. The light outside has gone amber. A torn piece of white cloth caught on the threshold.",
+          "vfx": ["dust", "the cloth moving once"],
+          "sfx": ["wind", "a single distant cry", "then nothing"],
+          "text": "THE OFFICIAL COUNT · 379 DEAD",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 8,
+          "framing": {
+            "zoom": [1.08, 1.04],
+            "x": [50, 50],
+            "y": [52, 50]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "The well",
+      "start": 74,
+      "duration": 30,
+      "purpose": "Let the aftermath be a place, not a statistic.",
+      "narration": [
+        {
+          "text": "Some died at the gates. Some died in the well.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "A plaque at the site says 120 bodies were recovered from the well.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The wounded lay where they fell. Curfew kept help away until morning.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The Empire called it a disturbance. India called it a massacre.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S04-A",
+          "plate": "well",
+          "camera": "28mm, high angle, slow descent toward the water",
+          "visual": "A circular stone well inside the walled garden. The water is black and still. A white cloth rests on the rim. The wall and a tree are out of focus behind.",
+          "vfx": ["dust", "a ripple that crosses the water once"],
+          "sfx": ["wind in the well", "a drop of water", "a low drone"],
+          "text": "THE WELL",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 16,
+          "framing": {
+            "zoom": [1.02, 1.14],
+            "x": [50, 50],
+            "y": [46, 54]
+          }
+        },
+        {
+          "id": "S04-B",
+          "plate": "well",
+          "camera": "65mm, close on the rim and cloth, static",
+          "visual": "The stone rim in close-up, the white cloth, the dark water just below. The texture of the stone is the only movement.",
+          "vfx": ["a thin veil of dust"],
+          "sfx": ["a distant bell", "wind"],
+          "text": "120 BODIES RECOVERED",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 14,
+          "framing": {
+            "zoom": [1.14, 1.06],
+            "x": [54, 51],
+            "y": [52, 50]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "The inquiry",
+      "start": 104,
+      "duration": 24,
+      "purpose": "Show what the state did with the truth.",
+      "narration": [
+        {
+          "text": "The Hunter Commission criticised Dyer. It did not prosecute him.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "He was relieved of his command and barred from employment in India.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "He was never tried for murder.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "Britain has never formally apologised. In 2019 it expressed deep regret.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S05-A",
+          "plate": "report-desk",
+          "camera": "overhead, locked, a slow lateral drift",
+          "visual": "A typed report on a dark desk, lit by a brass lamp. The figures 379 and 1,200 are printed in the paper, not added later. A red stamp reads NO PROSECUTION.",
+          "vfx": ["paper dust", "a soft pool of lamplight"],
+          "sfx": ["a stamp pressed once", "paper", "clock tick"],
+          "text": "HUNTER COMMISSION · 1920",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 14,
+          "framing": {
+            "zoom": [1.03, 1.10],
+            "x": [49, 52],
+            "y": [50, 48]
+          }
+        },
+        {
+          "id": "S05-B",
+          "plate": "lamp",
+          "camera": "50mm, low, slow push toward the flame",
+          "visual": "A brass oil lamp on a dark table, a folded letter beside it. The flame is the only warm thing in the frame. The room is almost black.",
+          "vfx": ["flame flicker", "smoke"],
+          "sfx": ["lamp hiss", "a page turning", "silence"],
+          "text": "NO PROSECUTION",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 10,
+          "framing": {
+            "zoom": [1.02, 1.08],
+            "x": [53, 50],
+            "y": [48, 50]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "The argument",
+      "start": 128,
+      "duration": 24,
+      "purpose": "Carry the event into the political argument it created.",
+      "narration": [
+        {
+          "text": "The massacre helped turn the Congress toward mass non-cooperation in 1920 and 1921.",
+          "source": "noncooperation"
+        },
+        {
+          "text": "Rabindranath Tagore renounced his knighthood in protest.",
+          "source": "tagore"
+        },
+        {
+          "text": "The Raj survived the inquiry. It did not survive the loss of trust.",
+          "source": "jallianwala"
+        },
+        {
+          "text": "The question is not whether the Empire could kill. It is what a country does with the memory.",
+          "source": "jallianwala"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S06-A",
+          "plate": "lamp",
+          "camera": "35mm, low, static, the flame small in frame",
+          "visual": "The lamp again, now further away. The letter is open. The room is larger and emptier than before.",
+          "vfx": ["smoke", "a slight flicker"],
+          "sfx": ["lamp hiss", "wind at a window"],
+          "text": "NON-COOPERATION · 1920",
+          "transition": "cut",
+          "render": "blender",
+          "weight": 12,
+          "framing": {
+            "zoom": [1.04, 1.10],
+            "x": [50, 50],
+            "y": [50, 51]
+          }
+        },
+        {
+          "id": "S06-B",
+          "plate": "memorial",
+          "camera": "65mm, low, slow push into the flame",
+          "visual": "A single flame on a stone plinth in a dark hall. The number 1919 is cut into the stone. Dust moves through the light. The image holds.",
+          "vfx": ["flame", "dust", "a slow bloom"],
+          "sfx": ["low drone", "a single bell", "silence"],
+          "text": "THE GARDEN REMEMBERS",
+          "transition": "fade to black",
+          "render": "blender",
+          "weight": 12,
+          "framing": {
+            "zoom": [1.02, 1.12],
+            "x": [50, 50],
+            "y": [52, 49]
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -18,6 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const ROOT = process.cwd();
 const OUT = path.join(ROOT, 'data/lectures.json');
+const OVERRIDES = 'data/lecture-overrides.json';
 const MAX_TOPICS = 60;
 const MIN_ITEMS = 8;
 
@@ -178,6 +179,7 @@ function main() {
   const layersAll = readJSON('data/topic-layers.json');
   const revision = readJSON('data/revision-content.json', {});
   const bios = readJSON('data/person-bios.json', {});
+  const overrides = readJSON(OVERRIDES, {});
 
   const built = [];
   const ids = Object.keys(layersAll);
@@ -187,6 +189,18 @@ function main() {
   }
   built.sort(function (a, b) { return b.beats - a.beats; });
   const topics = built.slice(0, MAX_TOPICS);
+
+  // Hand-authored lectures win over generated filler. The override file is the
+  // only place a lecture may depart from the deterministic topic graph.
+  Object.keys(overrides).forEach(function (id) {
+    const hand = overrides[id];
+    if (!hand || hand.id !== id || !Array.isArray(hand.chapters) || !hand.chapters.length) {
+      throw new Error('bad lecture override: ' + id);
+    }
+    const at = topics.findIndex(function (t) { return t.id === id; });
+    if (at >= 0) topics[at] = hand;
+    else topics.unshift(hand);
+  });
 
   if (topics.length < 5) {
     console.error('[lectures] only ' + topics.length + ' usable lectures found — refusing to write');
@@ -211,10 +225,11 @@ function main() {
     .update(norm(path.join(ROOT, 'data/topic-layers.json')))
     .update(norm(path.join(ROOT, 'data/revision-content.json')))
     .update(norm(path.join(ROOT, 'data/person-bios.json')))
+    .update(norm(path.join(ROOT, OVERRIDES)))
     .digest('hex').slice(0, 16);
   const out = {
     inputsHash: inputsHash,
-    source: 'topic-layers.json + revision-content.json + person-bios.json',
+    source: 'topic-layers.json + revision-content.json + person-bios.json + lecture-overrides.json',
     note: 'Spoken lectures compiled from the topic graph. Deterministic: identical inputs produce identical bytes (variant lines are hashed from the topic id), so the weekly workflow diffs clean when nothing moved.',
     count: topics.length,
     topics: topics

@@ -23,6 +23,21 @@
   var fade = el('fade');
   var flash = el('flash');
 
+  var FALLBACK = {
+    'salt-march': {
+      titleLines: ['SALT'],
+      subtitle: "The Empire's Smallest Fear",
+      titleSize: '13vw',
+      debate: 'debates.html?film=salt-march'
+    },
+    'jallianwala-bagh': {
+      titleLines: ['JALLIANWALA', 'BAGH'],
+      subtitle: 'The Garden the Empire Could Not Bury',
+      titleSize: '10.2vw',
+      debate: 'debates.html?film=jallianwala-bagh'
+    }
+  };
+
   var film = null;
   var timeline = null;
   var mapData = null;
@@ -99,12 +114,19 @@
     return '<div class="html-plate"><div class="plate-vignette"></div></div>';
   }
 
+  function titleLines() {
+    if (film && Array.isArray(film.titleLines) && film.titleLines.length) return film.titleLines;
+    return [film && film.title ? film.title : 'SALT'];
+  }
+
   function titleCard(t, p) {
-    var main = esc(film.title || 'SALT');
-    var sub = esc(film.subtitle || '');
+    var main = titleLines().map(esc).join('<br>');
+    var sub = esc((film && film.subtitle) || '');
+    var size = film && /^\d+(\.\d+)?(vw|vh|px|rem)$/.test(String(film.titleSize || ''))
+      ? 'font-size:' + film.titleSize + ';' : '';
     return '<div class="title-card">' +
       '<div class="title-kicker">A vlymbooq film</div>' +
-      '<div class="title-main" style="transform:scale(' + (1 + 0.025 * p) + ')">' + main + '</div>' +
+      '<div class="title-main" style="' + size + 'transform:scale(' + (1 + 0.025 * p) + ')">' + main + '</div>' +
       '<div class="title-rule"></div>' +
       '<div class="title-sub">' + sub + '</div>' +
       '</div>';
@@ -247,15 +269,24 @@
 
   function renderPoster(t) {
     if (!timeline) throw new Error('timeline not ready');
-    // Use the march plate even if the requested time lands in another scene.
-    var march = null;
+    // A poster uses the film's chosen hero plate even if the requested time
+    // lands in another scene. Fall back to the first 3D shot.
+    var poster = null;
+    var wanted = (film && film.posterPlate) || 'march-wide';
     timeline.scenes.forEach(function (s) {
       s.shots.forEach(function (h) {
-        if (h.plate === 'march-wide' && !march) march = { scene: s, shot: h };
+        if (h.plate === wanted && !poster) poster = { scene: s, shot: h };
       });
     });
-    if (!march) return renderFilmAt(t);
-    setShot(march.scene, march.shot);
+    if (!poster) {
+      timeline.scenes.forEach(function (s) {
+        s.shots.forEach(function (h) {
+          if (h.render === 'blender' && !poster) poster = { scene: s, shot: h };
+        });
+      });
+    }
+    if (!poster) return renderFilmAt(t);
+    setShot(poster.scene, poster.shot);
     var img = el('plateImg');
     if (img) img.style.transform = 'scale(1.12) translate(-1.2%,1.4%)';
     chapter.style.opacity = '0';
@@ -263,12 +294,14 @@
     meta.style.opacity = '0';
     fade.style.opacity = '0';
     flash.style.opacity = '0';
+    var posterSize = film && /^\d+(\.\d+)?(vw|vh|px|rem)$/.test(String(film.posterTitleSize || ''))
+      ? ' style="font-size:' + film.posterTitleSize + '"' : '';
     var overlay = document.createElement('div');
     overlay.className = 'poster-overlay';
     overlay.innerHTML = '<div class="poster-kicker">A VLYMBOOQ FILM</div>' +
-      '<div class="poster-title">' + esc(film.title || 'SALT') + '</div>' +
+      '<div class="poster-title"' + posterSize + '>' + titleLines().map(esc).join('<br>') + '</div>' +
       '<div class="poster-sub">' + esc(film.subtitle || '') + '</div>' +
-      '<div class="poster-meta">1930 · THE MARCH THAT BROKE A LAW</div>';
+      '<div class="poster-meta">' + esc(film.posterMeta || '1930 · THE MARCH THAT BROKE A LAW') + '</div>';
     stage.appendChild(overlay);
   }
 
@@ -281,28 +314,45 @@
     meta.style.opacity = '0';
     fade.style.opacity = '0';
     flash.style.opacity = '0';
+    var base = film || FALLBACK[filmId] || FALLBACK['salt-march'];
+    var comingLines = Array.isArray(base.titleLines) && base.titleLines.length
+      ? base.titleLines : [base.title || 'SALT'];
+    var comingSize = /^\d+(\.\d+)?(vw|vh|px|rem)$/.test(String(base.titleSize || ''))
+      ? ' style="font-size:' + base.titleSize + '"' : '';
+    var debateUrl = base.debate || ('debates.html?film=' + filmId);
     titleLayer.innerHTML = '<div class="title-card coming-card">' +
       '<div class="title-kicker">A VLYMBOOQ FILM</div>' +
-      '<div class="title-main">SALT</div>' +
-      '<div class="title-sub">The Empire’s smallest fear</div>' +
+      '<div class="title-main"' + comingSize + '>' + comingLines.map(esc).join('<br>') + '</div>' +
+      '<div class="title-sub">' + esc(base.subtitle || '') + '</div>' +
       '<div class="title-rule"></div>' +
       '<p class="coming-note">The film is in production. The argument is already open.</p>' +
       '<div class="coming-links">' +
-        '<a href="debates.html#context">Explore the political context</a>' +
-        '<a class="strong" href="debates.html#debate">Open the argument →</a>' +
+        '<a href="' + esc(debateUrl) + '#context">Explore the political context</a>' +
+        '<a class="strong" href="' + esc(debateUrl) + '#debate">Open the argument &rarr;</a>' +
       '</div></div>';
     var wm = document.querySelector('.watermark');
     if (wm) wm.textContent = 'vlymbooq · film in production';
     window.FILM_DURATION = 0;
   }
 
+  function debateHref() {
+    var base = film || FALLBACK[filmId];
+    return (base && base.debate) || ('debates.html?film=' + filmId);
+  }
+
   function boot() {
-    meta.innerHTML = 'A VLYMBOOQ FILM<br>3D · SOUND · HISTORY';
+    var navLinks = document.querySelectorAll('#filmNav a');
+    if (navLinks[0]) navLinks[0].href = debateHref() + '#context';
+    if (navLinks[1]) navLinks[1].href = debateHref() + '#debate';
+    meta.innerHTML = 'A VLYMBOOQ FILM<br>3D &middot; SOUND &middot; HISTORY';
     Promise.all([withJson(timelineUrl), withJson(filmUrl), withJson('out/film/' + filmId + '/map.json').catch(function () { return null; })])
       .then(function (res) {
         timeline = res[0];
         film = res[1];
         mapData = res[2];
+        if (film && film.title) {
+          document.title = film.title + ' — ' + (film.subtitle || 'A vlymbooq film');
+        }
         if (!timeline || !timeline.scenes || !timeline.scenes.length) throw new Error('timeline has no scenes');
         if (!timeline.plateBase) timeline.plateBase = 'out/film/' + filmId + '/plates/';
         var needsMap = timeline.scenes.some(function (s) {
