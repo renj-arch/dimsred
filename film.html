@@ -53,6 +53,13 @@
   #flash { position:absolute; inset:0; background:#fff8e8; pointer-events:none; opacity:0; mix-blend-mode:screen; z-index:29; }
 
   #type { position:absolute; inset:0; pointer-events:none; z-index:10; }
+  #filmNav { position:absolute; top:4.2vh; right:5.2vw; z-index:40; display:flex; gap:8px; align-items:center; }
+  #filmNav a { text-decoration:none; color:rgba(242,230,208,.7); font-size:.62vw; letter-spacing:.2em;
+    text-transform:uppercase; border:1px solid rgba(242,230,208,.18); padding:8px 12px; border-radius:999px;
+    background:rgba(0,0,0,.28); backdrop-filter:blur(8px); }
+  #filmNav a:hover { color:#f2e6d0; border-color:var(--gold); }
+  #filmNav a.strong { color:#17110a; background:var(--gold); border-color:var(--gold); font-weight:800; }
+  body.capture #filmNav, body.poster #filmNav { display:none; }
   .chapter { position:absolute; left:5.2vw; top:6.4vh; display:flex; align-items:center; gap:14px;
     font-size:.72vw; letter-spacing:.28em; text-transform:uppercase; color:rgba(242,230,208,.55); }
   .chapter b { font-weight:800; color:var(--gold); letter-spacing:.18em; }
@@ -78,6 +85,22 @@
   .title-sub { margin-top:2.2vh; font-size:1.0vw; letter-spacing:.28em; text-transform:uppercase;
     color:rgba(242,230,208,.62); }
   .title-rule { width:9vw; height:1px; margin:2.4vh auto 0; background:linear-gradient(90deg,transparent,var(--gold),transparent); }
+  .coming-card { max-width:1100px; }
+  .coming-note { margin:3.2vh auto 0; max-width:620px; color:rgba(242,230,208,.62);
+    font-size:clamp(14px,1vw,18px); line-height:1.6; letter-spacing:.02em; }
+  .coming-links { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-top:3.4vh; }
+  .coming-links a { color:var(--bone); text-decoration:none; border:1px solid rgba(242,230,208,.22);
+    border-radius:999px; padding:12px 18px; font-size:clamp(11px,.7vw,14px); letter-spacing:.2em;
+    text-transform:uppercase; background:rgba(0,0,0,.25); }
+  .coming-links a:hover { border-color:var(--gold); }
+  .coming-links a.strong { color:#17110a; background:var(--gold); border-color:var(--gold); font-weight:800; }
+  @media (max-width:760px) {
+    .title-main { font-size:28vw; }
+    .title-sub { font-size:3.6vw; letter-spacing:.18em; }
+    .title-kicker { font-size:2.6vw; }
+    #filmNav { top:18px; right:18px; }
+    #filmNav a { font-size:10px; padding:7px 10px; }
+  }
 
   /* ---------- HTML plates ---------- */
   .html-plate { overflow:hidden; background:#080808; }
@@ -192,6 +215,10 @@
     <div class="statement" id="statement"></div>
     <div class="watermark">vlymbooq · a film in the making</div>
   </div>
+  <nav id="filmNav" aria-label="Film extras">
+    <a href="debates.html#context">Context</a>
+    <a class="strong" href="debates.html#debate">The argument →</a>
+  </nav>
 </div>
 <script src="js/film.js"></script>
 </body>

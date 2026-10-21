@@ -124,6 +124,9 @@ jobs:
       - name: Validate storyboard
         run: node scripts/film/validate-film.js "data/films/${FILM}.json"
 
+      - name: Validate political argument map
+        run: node scripts/film/validate-debates.js
+
       - name: Render 3D plates with Blender
         run: |
           node scripts/film/render-plates.js \

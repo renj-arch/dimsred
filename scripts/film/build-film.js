@@ -385,7 +385,7 @@ async function renderFrames(timeline, opts) {
   page.on('pageerror', (e) => pageErrors.push(e.message));
   page.on('console', (m) => { if (m.type() === 'error') console.log('  browser:', m.text()); });
   const timelineRel = path.relative(ROOT, path.join(opts.work, 'timeline.json')).replace(/\\/g, '/');
-  const url = `${local.url}/film.html?film=${encodeURIComponent(opts.film)}&timeline=${encodeURIComponent(timelineRel)}`;
+  const url = `${local.url}/film.html?film=${encodeURIComponent(opts.film)}&timeline=${encodeURIComponent(timelineRel)}&capture=1`;
   console.log(`capture: ${opts.captureFps} fps · ${opts.width}x${opts.height} · ${timeline.duration.toFixed(1)}s`);
   await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 120000 });
   await page.waitForFunction(() => window.FILM_READY === true || !!window.FILM_ERROR, null, { timeout: 120000 });

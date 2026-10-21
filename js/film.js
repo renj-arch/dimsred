@@ -6,6 +6,9 @@
   var timelineUrl = params.get('timeline') || ('out/film/' + filmId + '/timeline.json');
   var filmUrl = 'data/films/' + filmId + '.json';
   var posterMode = params.get('poster') === '1';
+  var captureMode = params.get('capture') === '1' || posterMode;
+  if (captureMode) document.body.classList.add('capture');
+  if (posterMode) document.body.classList.add('poster');
 
   var el = function (id) { return document.getElementById(id); };
   var stage = el('stage');
@@ -269,6 +272,30 @@
     stage.appendChild(overlay);
   }
 
+  function renderInProduction() {
+    media.classList.add('hidden');
+    mapLayer.classList.add('hidden');
+    titleLayer.classList.remove('hidden');
+    chapter.style.opacity = '0';
+    statement.style.opacity = '0';
+    meta.style.opacity = '0';
+    fade.style.opacity = '0';
+    flash.style.opacity = '0';
+    titleLayer.innerHTML = '<div class="title-card coming-card">' +
+      '<div class="title-kicker">A VLYMBOOQ FILM</div>' +
+      '<div class="title-main">SALT</div>' +
+      '<div class="title-sub">The Empire’s smallest fear</div>' +
+      '<div class="title-rule"></div>' +
+      '<p class="coming-note">The film is in production. The argument is already open.</p>' +
+      '<div class="coming-links">' +
+        '<a href="debates.html#context">Explore the political context</a>' +
+        '<a class="strong" href="debates.html#debate">Open the argument →</a>' +
+      '</div></div>';
+    var wm = document.querySelector('.watermark');
+    if (wm) wm.textContent = 'vlymbooq · film in production';
+    window.FILM_DURATION = 0;
+  }
+
   function boot() {
     meta.innerHTML = 'A VLYMBOOQ FILM<br>3D · SOUND · HISTORY';
     Promise.all([withJson(timelineUrl), withJson(filmUrl), withJson('out/film/' + filmId + '/map.json').catch(function () { return null; })])
@@ -298,8 +325,8 @@
       })
       .catch(function (err) {
         window.FILM_ERROR = err.message;
-        document.body.innerHTML = '<pre style="color:#f88;background:#000;padding:40px;font:16px monospace">FILM ERROR\n' +
-          esc(err.message) + '</pre>';
+        console.warn('Film timeline is not published yet:', err.message);
+        renderInProduction();
       });
   }
 
