@@ -37,6 +37,7 @@ jobs:
             data/timeline.nodes.*.json
             data/topic-layers.json
             data/person-bios.json
+            data/revision-overrides.json
             data/revision-content.json
           sparse-checkout-cone-mode: false
 
@@ -53,10 +54,14 @@ jobs:
           const j = require('./data/revision-content.json');
           const keys = Object.keys(j);
           if (keys.length < 100) throw new Error('too few topics: ' + keys.length);
+          const unbalanced = s => ((s.match(/\(/g) || []).length !== (s.match(/\)/g) || []).length);
           const bad = keys.filter(k => {
-            const s = String((j[k] || {}).summary || '');
+            const topic = j[k] || {};
+            const s = String(topic.summary || '');
+            const facts = (topic.primaryFacts || []).map(f => String(f.fact || ''));
             return /^my\b/i.test(s) ||
-                   /^[A-Z][\w.'-]*,\s+with\b/.test(s);
+                   /^[A-Z][\w.'-]*,\s+with\b/.test(s) ||
+                   facts.some(unbalanced);
           });
           if (bad.length) {
             bad.slice(0, 20).forEach(k => console.error('BAD ' + k + ' :: ' + String((j[k] || {}).summary || '').slice(0, 240)));
