@@ -59,7 +59,7 @@ jobs:
                    /^[A-Z][\w.'-]*,\s+with\b/.test(s);
           });
           if (bad.length) {
-            console.error('bad summaries:', bad.slice(0, 20));
+            bad.slice(0, 20).forEach(k => console.error('BAD ' + k + ' :: ' + String((j[k] || {}).summary || '').slice(0, 240)));
             process.exit(1);
           }
           const empty = keys.filter(k => !(j[k] || {}).summary);
