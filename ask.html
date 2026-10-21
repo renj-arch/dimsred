@@ -168,6 +168,8 @@ function _suggestEntities() {
     s = String(s || '').replace(/\s+/g, ' ').trim();
     if (s.length < 4 || s.length > 60) return;
     if (/^(what|why|how|when|where|which|who|the|and|for|with|from|that|this)\b/i.test(s)) return;
+    if (/^(introduction|conclusion|way forward|context|background|overview|analysis|significance|definition|key facts|summary|remember this|the core)\b/i.test(s)) return;
+    if (/^(no headings|searching|reading the question|this is a statement|source material|ask next)/i.test(s)) return;
     for (var i = 0; i < found.length; i++) {
       if (found[i].toLowerCase() === s.toLowerCase()) return;
     }
@@ -182,7 +184,9 @@ function _suggestEntities() {
         add(t.split(/[:–—]/)[0].trim());
       }
       var evs = out.querySelectorAll('.ev .src a, .src a');
-      for (var e = 0; e < evs.length && found.length < 6; e++) add(evs[e].textContent);
+      for (var e = 0; e < evs.length && found.length < 6; e++) {
+        add(String(evs[e].textContent || '').split(/[,–—:(]/)[0].trim());
+      }
     }
   } catch (err) { /* DOM scraping is best-effort */ }
   // Nouns from the question itself as fallback.
@@ -197,37 +201,68 @@ function _suggestEntities() {
   }
   return found.slice(0, 3);
 }
+var _lastSuggestKey = '';
+function _shuffle(list) {
+  var a = list.slice();
+  for (var i = a.length - 1; i > 0; i--) {
+    var j = Math.floor(Math.random() * (i + 1));
+    var t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
 function _suggestQuestions() {
   var ents = _suggestEntities();
-  var out = [];
+  var pool = [];
   if (ents[0]) {
-    out.push('Tell me more about ' + ents[0]);
-    out.push('Why is ' + ents[0] + ' important for UPSC?');
+    var a = ents[0];
+    pool.push('Tell me more about ' + a);
+    pool.push('Why is ' + a + ' important for UPSC?');
+    pool.push('What are the mains angles on ' + a + '?');
+    pool.push('Give me a timeline of ' + a);
+    pool.push('Which laws, committees or judgments are linked to ' + a + '?');
+    pool.push('Previous year questions on ' + a);
   }
-  if (ents[1]) out.push(ents[0] + ' vs ' + ents[1] + ': key differences');
-  else if (ents[0]) out.push('Previous year questions on ' + ents[0]);
-  // Never suggest the question just asked.
+  if (ents[0] && ents[1]) {
+    pool.push(ents[0] + ' vs ' + ents[1] + ': key differences');
+    pool.push('How are ' + ents[0] + ' and ' + ents[1] + ' connected?');
+  }
+  if (ents[2]) pool.push('What is the significance of ' + ents[2] + '?');
   var asked = String(STATE.question || '').toLowerCase().trim();
-  return out.filter(function (s) { return s.toLowerCase().trim() !== asked; }).slice(0, 4);
+  var seen = {}, out = [];
+  _shuffle(pool).forEach(function (s) {
+    if (!s || seen[s] || s.toLowerCase().trim() === asked) return;
+    seen[s] = 1;
+    out.push(s);
+  });
+  return out.slice(0, 5);
 }
-function _maybeSuggest() {
+function _renderSuggestRow() {
   try {
-    var q = STATE.question;
     var out = el('out');
-    if (!q || !out || out.querySelector('.suggest-row')) return;
+    if (!out) return;
+    var old = out.querySelector('.suggest-row');
+    var answerLen = (out.innerHTML || '').length - (old ? old.outerHTML.length : 0);
+    if (!STATE.question) return;
     // Only on real answers — never on loaders, errors, empties, refusals.
     if (out.querySelector('.load') || out.querySelector('.err') || out.querySelector('.empty')) return;
-    var html = out.innerHTML || '';
-    if (html.length < 400) return;
+    if (answerLen < 400) return;
     if (out.querySelector('.refusal')) return;
-    var chips = _suggestQuestions();
+    if (/(no headings could be planned|no usable facts|could not answer|not in the corpus)/i.test(out.innerText || '')) return;
+    if (old) old.remove();
+    var chips = _suggestQuestions(), key = '', tries = 0;
+    do {
+      chips = _suggestQuestions();
+      key = chips.join('|');
+      tries++;
+    } while (key === _lastSuggestKey && tries < 6);
     if (!chips.length) return;
+    _lastSuggestKey = key;
     var row = document.createElement('div');
     row.className = 'samples suggest-row';
     row.style.marginTop = '14px';
     var label = document.createElement('div');
     label.style.cssText = 'width:100%;font-size:11.5px;color:var(--text-sec);margin-bottom:4px';
-    label.textContent = 'Ask next ↓';
+    label.textContent = 'Ask next · shuffle for different questions ↓';
     row.appendChild(label);
     chips.forEach(function (c) {
       var b = document.createElement('button');
@@ -235,7 +270,23 @@ function _maybeSuggest() {
       b.onclick = function () { el('q').value = c; doAsk(); };
       row.appendChild(b);
     });
+    var more = document.createElement('button');
+    more.textContent = '↻ More';
+    more.title = 'Show different suggestions';
+    more.onclick = function () { _renderSuggestRow(); };
+    row.appendChild(more);
     out.appendChild(row);
+  } catch (err) { /* suggestions must never break answers */ }
+}
+function _maybeSuggest() {
+  try {
+    var q = STATE.question;
+    var out = el('out');
+    if (!q || !out || out.querySelector('.suggest-row')) return;
+    if (out.querySelector('.load') || out.querySelector('.err') || out.querySelector('.empty')) return;
+    if ((out.innerHTML || '').length < 400) return;
+    if (out.querySelector('.refusal')) return;
+    _renderSuggestRow();
   } catch (err) { /* suggestions must never break answers */ }
 }
 if (typeof MutationObserver !== 'undefined') {
@@ -260,8 +311,52 @@ var SAMPLES = [
   'What is the anti-defection law in India?',
   'Discuss the environmental impact of the Bhopal gas tragedy.',
   'What were the aims and outcomes of the Indian National Congress at its founding in 1885?',
-  'Examine whether the constitutional office of the Lok Sabha Speaker has become vulnerable to partisan politics under the current anti-defection regime.'
+  'Examine whether the constitutional office of the Lok Sabha Speaker has become vulnerable to partisan politics under the current anti-defection regime.',
+  'How does the Comptroller and Auditor General enforce accountability in India?',
+  'Explain the basic structure doctrine and its significance.',
+  'What is the role of the GST Council in Indian federalism?',
+  'Discuss the main challenges of urban local governance in India.',
+  'How does the Reserve Bank of India control inflation?',
+  'What are the key issues in India’s climate finance position?',
+  'Examine the debate around simultaneous elections in India.',
+  'What is the significance of the Loss and Damage Fund for developing countries?',
+  'Discuss the constitutional position of the Governor in India.',
+  'How did the Green Revolution change Indian agriculture?',
+  'What are the major cybersecurity challenges before India?',
+  'Explain the significance of the Quit India Movement.',
+  'What are the ethical issues in data protection and privacy?',
+  'Discuss the role of the Quad in the Indo-Pacific.',
+  'How does the Indian Constitution protect federalism?',
+  'What are the main causes of agrarian distress in India?',
+  'Examine the role of the Public Accounts Committee.',
+  'What is the doctrine of judicial review?',
+  'Discuss the impact of the Bengal Famine on colonial policy.',
+  'What are the key features of India’s new criminal laws?'
 ];
+
+var _lastSamples = '';
+function _pickSamples(n) {
+  var pool = SAMPLES.slice(), out = [];
+  while (out.length < n && pool.length) {
+    var i = Math.floor(Math.random() * pool.length);
+    out.push(pool.splice(i, 1)[0]);
+  }
+  return out;
+}
+function renderSamples() {
+  var host = el('samples');
+  if (!host) return;
+  var picks = [], key = '', tries = 0;
+  do {
+    picks = _pickSamples(4);
+    key = picks.join('|');
+    tries++;
+  } while (key === _lastSamples && tries < 8);
+  _lastSamples = key;
+  host.innerHTML = picks.map(function (s) {
+    return '<button data-q="' + esc(s) + '">' + esc(s.length > 60 ? s.slice(0, 57) + '…' : s) + '</button>';
+  }).join('') + '<button data-more-samples="1" title="Show different suggestions">↻ More</button>';
+}
 
 function covColor(pct) {
   if (pct >= 60) return '#059669';
@@ -1165,9 +1260,7 @@ function boot(idx, meta) {
   TIMELINE_META = 'Timeline: ' + kept.toLocaleString() + ' quotable nodes (from ' +
     scanned.toLocaleString() + ' scanned), built ' + (m.builtAt || '?').slice(0, 10);
   updateStatus();
-  el('samples').innerHTML = SAMPLES.map(function (s) {
-    return '<button data-q="' + esc(s) + '">' + esc(s.length > 60 ? s.slice(0, 57) + '…' : s) + '</button>';
-  }).join('');
+  renderSamples();
   el('out').innerHTML = '<div class="empty">Ask a question above. The engine will either return verbatim corpus sentences with source links, or tell you it cannot answer.</div>';
 }
 
@@ -1180,6 +1273,8 @@ if (QB_READY) updateStatus();
 document.addEventListener('click', function (e) {
   var btn = e.target.closest('#ask');
   if (btn) { doAsk(); return; }
+  var moreSamples = e.target.closest('[data-more-samples]');
+  if (moreSamples) { renderSamples(); return; }
   var samp = e.target.closest('[data-q]');
   if (samp) {
     el('q').value = samp.getAttribute('data-q');

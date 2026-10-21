@@ -1,0 +1,77 @@
+name: Promote a mains item
+
+# Owner-only, manual gate. A fresh AI card becomes part of the reviewed bank
+# only after a human has read it and chosen to promote it. The script refuses
+# items that fail the quality floor; this workflow only commits the result.
+
+on:
+  workflow_dispatch:
+    inputs:
+      id:
+        description: 'Fresh item id (e.g. ci-mvdwyl9p) or --latest'
+        required: true
+        default: '--latest'
+      dry_run:
+        description: 'Check only; do not write or commit'
+        type: choice
+        options: ['false', 'true']
+        default: 'false'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: promote-mains
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Check the quality floor
+        id: gate
+        shell: bash
+        run: |
+          set -o pipefail
+          ARGS="${{ inputs.id }}"
+          if [ "${{ inputs.dry_run }}" = "true" ]; then ARGS="$ARGS --dry-run"; fi
+          node scripts/promote-mains.js $ARGS | tee /tmp/promote.log
+
+      - name: Commit the promoted item
+        if: ${{ inputs.dry_run != 'true' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "vlymbooq-review"
+          git config user.email "review@vlymbooq.qzz.io"
+          git add data/mains-questions.json data/mains-fresh.json
+          if git diff --cached --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
+          git commit -m "Mains: promote ${{ inputs.id }} to the reviewed bank"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Summary
+        if: always()
+        shell: bash
+        run: |
+          if [ -f /tmp/promote.log ]; then
+            {
+              echo '### Promote mains item'
+              echo '```'
+              cat /tmp/promote.log
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+          fi
