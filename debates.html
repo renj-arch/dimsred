@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>The Argument — Salt, power and the fight for India</title>
-<meta name="description" content="The political fight behind the Salt March: nine turning points, seven arguments, and the uncomfortable questions that still matter." />
+<meta name="description" id="metaDesc" content="The political fight behind the Salt March: nine turning points, seven arguments, and the uncomfortable questions that still matter." />
 <style>
   :root{
     --bg:#070707; --panel:#0e0d0b; --panel2:#14110d;
@@ -101,6 +101,8 @@
   .loading{padding:60px 0;color:var(--muted)}
   @media(max-width:760px){
     .wrap{padding:0 18px}
+    .brand{font-size:.62rem;letter-spacing:.16em}
+    .back{font-size:.6rem;letter-spacing:.14em;white-space:nowrap;padding:8px 11px}
     header.hero{padding:44px 0 28px}
     .tabs .wrap{padding-left:18px;padding-right:18px}
     .cases,.sources{grid-template-columns:1fr}
@@ -117,22 +119,17 @@
 <body>
 <div class="wrap">
   <div class="top">
-    <a class="brand" href="index.html"><b>vlymbooq</b> · the argument</a>
-    <a class="back" href="film.html?film=salt-march">← The film</a>
+    <a class="brand" href="index.html"><b>vlymbooq</b> &middot; the argument</a>
+    <a class="back" id="backLink" href="film.html?film=salt-march">&larr; The film</a>
   </div>
 
   <header class="hero">
-    <div class="kicker">Politics is not background</div>
-    <h1>THE<br>ARGUMENT</h1>
-    <p class="sub">What the Salt March was really fighting over.</p>
-    <p class="dek">The march is remembered as a walk. It was also a fight inside a fight: over strategy, representation, and who had the right to speak for India.</p>
-    <div class="eye"><strong>An eye-opener.</strong> A tax on salt looks small. That is the point. A small tax on a thing everyone needs is a quiet way to make a whole population pay — and a quiet way to make them obey. When Gandhi picked up a lump of salt, he was not arguing about chemistry. He was saying: the Empire's smallest tax is still the Empire's claim on your life.</div>
-    <div class="stats">
-      <div class="stat"><b>09</b><span>turning points</span></div>
-      <div class="stat"><b>07</b><span>arguments</span></div>
-      <div class="stat"><b>11</b><span>sources</span></div>
-      <div class="stat"><b>01</b><span>uncomfortable question</span></div>
-    </div>
+    <div class="kicker" id="heroKicker">Politics is not background</div>
+    <h1 id="heroTitle">THE<br>ARGUMENT</h1>
+    <p class="sub" id="heroSub">What the Salt March was really fighting over.</p>
+    <p class="dek" id="heroDek">The march is remembered as a walk. It was also a fight inside a fight: over strategy, representation, and who had the right to speak for India.</p>
+    <div class="eye" id="heroEye"><strong>An eye-opener.</strong> A tax on salt looks small. That is the point. A small tax on a thing everyone needs is a quiet way to make a whole population pay &mdash; and a quiet way to make them obey.</div>
+    <div class="stats" id="heroStats"></div>
   </header>
 </div>
 
@@ -145,14 +142,13 @@
 </div>
 
 <main class="wrap" id="app">
-  <div class="loading">Loading the political map…</div>
+  <div class="loading">Loading the political map&hellip;</div>
 </main>
 
 <footer class="wrap">
-  <p>This is a map of the argument, not a verdict. Contested interpretations are marked. Facts carry a source. If a claim changes the story, it needs evidence.</p>
-  <p>vlymbooq · a film in the making · <a href="film.html?film=salt-march">return to the film</a></p>
+  <p id="footNote">This is a map of the argument, not a verdict. Contested interpretations are marked. Facts carry a source. If a claim changes the story, it needs evidence.</p>
+  <p>vlymbooq &middot; a film in the making &middot; <a id="footLink" href="film.html?film=salt-march">return to the film</a></p>
 </footer>
-
 <script src="js/debates.js"></script>
 </body>
 </html>

@@ -136,6 +136,7 @@ function runNode(script, args) {
 }
 
 function checkTools(opts) {
+  if (opts.dryRun) return;
   const ff = spawnSync('ffmpeg', ['-version'], { encoding: 'utf8' });
   if (ff.error || ff.status !== 0) throw new Error('ffmpeg is not on PATH');
   if (!opts.skipPlates) {
@@ -169,6 +170,7 @@ function flattenNarration(film) {
         sceneIndex: si,
         lineIndex: li,
         text: String(line.text || '').trim(),
+        speak: String(line.speak || line.text || '').trim(),
         source: line.source || ''
       });
     });
@@ -189,7 +191,7 @@ function generateTts(lines, opts) {
   const inputPath = path.join(work, 'tts-input.json');
   const audioDir = path.join(work, 'audio');
   fs.mkdirSync(audioDir, { recursive: true });
-  fs.writeFileSync(inputPath, JSON.stringify({ texts: lines.map((l) => l.text) }, null, 2) + '\n');
+  fs.writeFileSync(inputPath, JSON.stringify({ texts: lines.map((l) => l.speak || l.text) }, null, 2) + '\n');
   const py = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
   const r = spawnSync(py, [
     path.join(__dirname, 'piper-tts.py'),
@@ -536,9 +538,13 @@ function writeMetadata(timeline, film, opts) {
       thumbnail: path.relative(ROOT, path.join(opts.work, `${opts.film}-thumb.jpg`)).replace(/\\/g, '/')
     },
     youtube: {
-      title: `${film.title}: ${film.subtitle}`,
-      description,
-      tags: ['Salt March', 'Dandi March', 'Gandhi', 'Indian history', 'civil disobedience', 'UPSC', 'history documentary']
+      title: (film.youtube && film.youtube.title) || `${film.title}: ${film.subtitle}`,
+      description: film.youtube && film.youtube.description
+        ? `${film.youtube.description}\n\n${description}`
+        : description,
+      tags: (film.youtube && Array.isArray(film.youtube.tags) && film.youtube.tags.length)
+        ? film.youtube.tags
+        : ['history', 'Indian history', 'documentary', 'vlymbooq']
     }
   };
   const json = path.join(opts.work, 'metadata.json');
@@ -590,7 +596,7 @@ async function main() {
   const film = loadFilm(opts);
   fs.mkdirSync(opts.work, { recursive: true });
 
-  if (!opts.skipPlates) {
+  if (!opts.dryRun && !opts.skipPlates) {
     runNode('render-plates.js', [
       '--film', opts.film,
       '--out-dir', path.join(opts.work, 'plates'),

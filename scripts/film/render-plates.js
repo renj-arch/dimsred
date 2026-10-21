@@ -15,14 +15,34 @@ const path = require('path');
 const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..', '..');
-const BLENDER_SCRIPT = path.join(__dirname, 'blender', 'salt_scenes.py');
 
-const SCENE = {
-  'crystal-macro': 'crystal',
-  'march-wide': 'march',
-  'dandi-hand': 'dandi',
-  'dharasana-line': 'dharasana',
-  'prison-gate': 'prison'
+// Each film owns a small, explicit set of procedural Blender scenes. A plate
+// name is part of the storyboard contract; an unknown plate must fail before a
+// runner spends an hour rendering the wrong thing.
+const FILMS = {
+  'salt-march': {
+    script: 'salt_scenes.py',
+    scenes: {
+      'crystal-macro': 'crystal',
+      'march-wide': 'march',
+      'dandi-hand': 'dandi',
+      'dharasana-line': 'dharasana',
+      'prison-gate': 'prison'
+    }
+  },
+  'jallianwala-bagh': {
+    script: 'jallianwala_scenes.py',
+    scenes: {
+      'notice-desk': 'notice',
+      'bagh-wall': 'bagh-wall',
+      'bagh-gate': 'bagh-gate',
+      'watch': 'watch',
+      'well': 'well',
+      'report-desk': 'report',
+      'lamp': 'lamp',
+      'memorial': 'memorial'
+    }
+  }
 };
 
 function parse(argv) {
@@ -64,18 +84,22 @@ function main() {
   const filmPath = path.join(ROOT, 'data', 'films', `${opts.film}.json`);
   if (!fs.existsSync(filmPath)) throw new Error(`Film not found: ${filmPath}`);
   const film = JSON.parse(fs.readFileSync(filmPath, 'utf8'));
+  const config = FILMS[opts.film];
+  if (!config) throw new Error(`No Blender scene set registered for film ${opts.film}`);
+  const blenderScript = path.join(__dirname, 'blender', config.script);
+  if (!fs.existsSync(blenderScript)) throw new Error(`Blender script not found: ${blenderScript}`);
   fs.mkdirSync(opts.outDir, { recursive: true });
 
   const plates = new Map();
   for (const scene of film.scenes || []) {
     for (const shot of scene.shots || []) {
       if (shot.render !== 'blender') continue;
-      if (!SCENE[shot.plate]) throw new Error(`No Blender scene mapped for plate ${shot.plate}`);
-      plates.set(shot.plate, SCENE[shot.plate]);
+      if (!config.scenes[shot.plate]) throw new Error(`No Blender scene mapped for plate ${shot.plate} in ${opts.film}`);
+      plates.set(shot.plate, config.scenes[shot.plate]);
     }
   }
   const wanted = opts.only
-    ? [{ plate: opts.only, scene: SCENE[opts.only] }]
+    ? [{ plate: opts.only, scene: config.scenes[opts.only] }]
     : [...plates].map(([plate, scene]) => ({ plate, scene }));
   if (!wanted.length) throw new Error('No Blender plates requested');
 
@@ -97,7 +121,7 @@ function main() {
       opts.blender,
       [
         '-b',
-        '--python', BLENDER_SCRIPT,
+        '--python', blenderScript,
         '--',
         '--scene', scene,
         '--out', out,

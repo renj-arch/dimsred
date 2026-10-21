@@ -2,7 +2,12 @@
   'use strict';
 
   var app = document.getElementById('app');
+  var params = new URLSearchParams(location.search);
+  var requested = params.get('film') || 'salt-march';
+  var film = /^[a-z0-9-]+$/.test(requested) ? requested : 'salt-march';
   var data = null;
+
+  function el(id) { return document.getElementById(id); }
 
   function esc(s) {
     return String(s == null ? '' : s)
@@ -26,15 +31,37 @@
   function tag(id) {
     var s = srcMap()[id];
     if (!s) return '';
-    return '<a class="tag" href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.publisher) + '</a>';
+    var label = s.short || String(s.title || '').split(':')[0];
+    if (label.length > 34) label = label.slice(0, 31).replace(/\s+\S*$/, '') + '…';
+    return '<a class="tag" href="' + esc(s.url) + '" target="_blank" rel="noopener" title="' +
+      esc(s.title) + '">' + esc(label) + '</a>';
+  }
+
+  function labels() { return data.labels || {}; }
+
+  function renderStats() {
+    var stats = data.stats;
+    if (!Array.isArray(stats) || !stats.length) {
+      stats = [
+        { value: String((data.context || []).length).padStart(2, '0'), label: 'turning points' },
+        { value: String((data.debates || []).length).padStart(2, '0'), label: 'arguments' },
+        { value: String((data.sources || []).length).padStart(2, '0'), label: 'sources' }
+      ];
+    }
+    el('heroStats').innerHTML = stats.map(function (s) {
+      return '<div class="stat"><b>' + esc(s.value) + '</b><span>' + esc(s.label) + '</span></div>';
+    }).join('');
   }
 
   function renderContext() {
-    var html = '<div class="section-head"><h2>The room around the march</h2>' +
-      '<p>Nine turns in the political fight. The walk did not happen in a vacuum; it happened because the constitutional road had stalled.</p></div>' +
+    var l = labels();
+    var html = '<div class="section-head"><h2>' +
+      esc(l.contextTitle || 'The room around the argument') + '</h2>' +
+      '<p>' + esc(l.contextDek || 'The turns in the political fight.') + '</p></div>' +
       '<div class="timeline">';
     (data.context || []).forEach(function (e) {
-      html += '<article class="event" id="context-' + esc(e.year).replace(/[^a-z0-9]+/gi, '-') + '">' +
+      html += '<article class="event" id="context-' +
+        esc(String(e.year).replace(/[^a-z0-9]+/gi, '-')) + '">' +
         '<div class="year">' + esc(e.year) + '</div><div class="dot"></div>' +
         '<div class="card"><h3>' + esc(e.title) + '</h3><p>' + esc(e.text) + '</p>' +
         sourceLink(e.source) + '</div></article>';
@@ -43,12 +70,15 @@
   }
 
   function renderDebates() {
-    var html = '<div class="section-head"><h2>The arguments</h2>' +
-      '<p>Seven questions that still start fights. Each one gives the strongest case on both sides, then names the fact that makes the argument uncomfortable.</p></div>' +
-      '<p class="note">Read this as a debate map. The aim is not to tell you what to think. It is to make the disagreement precise enough that evidence can change your mind.</p>';
+    var l = labels();
+    var html = '<div class="section-head"><h2>' +
+      esc(l.debateTitle || 'The arguments') + '</h2>' +
+      '<p>' + esc(l.debateDek || 'The questions that still start fights.') + '</p></div>' +
+      '<p class="note">Read this as a debate map. The aim is not to tell you what to think. ' +
+      'It is to make the disagreement precise enough that evidence can change your mind.</p>';
     (data.debates || []).forEach(function (d, i) {
       html += '<article class="debate" id="' + esc(d.id) + '">' +
-        '<div class="num">Argument ' + String(i + 1).padStart(2, '0') + ' · open verdict</div>' +
+        '<div class="num">Argument ' + String(i + 1).padStart(2, '0') + ' &middot; open verdict</div>' +
         '<h3>' + esc(d.question) + '</h3>' +
         '<p class="hook">' + esc(d.hook) + '</p>' +
         '<p class="stakes"><b>Why it still matters.</b> ' + esc(d.stakes) + '</p>' +
@@ -69,8 +99,10 @@
   }
 
   function renderSources() {
-    var html = '<div class="section-head"><h2>Sources</h2>' +
-      '<p>Every factual claim in the timeline points here. Interpretations are arguments, not facts. A source can be wrong; a source can also be improved.</p></div>' +
+    var l = labels();
+    var html = '<div class="section-head"><h2>' +
+      esc(l.sourcesTitle || 'Sources') + '</h2>' +
+      '<p>' + esc(l.sourcesDek || 'Every factual claim points here.') + '</p></div>' +
       '<div class="sources">';
     (data.sources || []).forEach(function (s) {
       html += '<a class="source" href="' + esc(s.url) + '" target="_blank" rel="noopener">' +
@@ -84,7 +116,8 @@
     document.querySelectorAll('.tab').forEach(function (b) {
       b.setAttribute('aria-selected', String(b.dataset.tab === tab));
     });
-    app.innerHTML = tab === 'debate' ? renderDebates() : tab === 'sources' ? renderSources() : renderContext();
+    app.innerHTML = tab === 'debate' ? renderDebates()
+      : tab === 'sources' ? renderSources() : renderContext();
     if (push !== false) history.replaceState(null, '', '#' + tab);
     if (push === 'scroll') {
       var tabs = document.querySelector('.tabs');
@@ -93,14 +126,38 @@
     }
   }
 
+  function paint() {
+    var headline = data.headline || esc(data.title || 'THE ARGUMENT');
+    document.title = (data.title || 'The argument').replace(/<br\s*\/?>/gi, ' ') +
+      ' \u00b7 ' + (data.filmTitle || data.subtitle || 'vlymbooq');
+    var md = document.getElementById('metaDesc');
+    if (md) md.setAttribute('content', data.dek || data.subtitle || '');
+    el('heroKicker').textContent = data.kicker || 'Politics is not background';
+    el('heroTitle').innerHTML = headline;
+    el('heroSub').textContent = data.subtitle || '';
+    el('heroDek').textContent = data.dek || '';
+    var eye = el('heroEye');
+    if (data.eyeopener) {
+      eye.innerHTML = '<strong>An eye-opener.</strong> ' + esc(data.eyeopener);
+      eye.hidden = false;
+    } else {
+      eye.hidden = true;
+    }
+    renderStats();
+    var filmHref = 'film.html?film=' + encodeURIComponent(film);
+    el('backLink').href = filmHref;
+    el('footLink').href = filmHref;
+  }
+
   function boot() {
-    fetch('data/films/salt-march-debates.json', { cache: 'no-cache' })
+    fetch('data/films/' + film + '-debates.json', { cache: 'no-cache' })
       .then(function (r) {
         if (!r.ok) throw new Error('HTTP ' + r.status);
         return r.json();
       })
       .then(function (json) {
         data = json;
+        paint();
         var initial = (location.hash || '#context').replace('#', '');
         activate(initial, false);
         document.querySelectorAll('.tab').forEach(function (b) {
@@ -108,7 +165,8 @@
         });
       })
       .catch(function (err) {
-        app.innerHTML = '<div class="loading" style="color:#e89775">Could not load the argument map: ' + esc(err.message) + '</div>';
+        app.innerHTML = '<div class="loading" style="color:#e89775">Could not load the argument map: ' +
+          esc(err.message) + '. <a href="debates.html">Open the Salt March argument</a>.</div>';
       });
   }
 
