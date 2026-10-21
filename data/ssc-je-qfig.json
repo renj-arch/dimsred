@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-19T23:31:43.703Z",
-  "cursor": 9,
-  "built": 8
+  "updatedAt": "2026-10-21T00:41:01.937Z",
+  "cursor": 18,
+  "built": 17
  },
  "figs": {
   "ce3585b0": {
@@ -53,6 +53,60 @@
    "n": "why is a larger factor of safety needed for brittle materials?",
    "sub": "design",
    "at": "2026-10-19"
+  },
+  "e6d328c2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" /><text x=\"50\" y=\"70\">Member A</text><line x1=\"60\" y1=\"60\" x2=\"300\" y2=\"60\" /><text x=\"50\" y=\"110\">Member B</text><line x1=\"60\" y1=\"110\" x2=\"300\" y2=\"110\" /><path d=\"M 60 60 L 60 110 M 300 60 L 300 110\" stroke-dasharray=\"4,2\" /><circle cx=\"180\" cy=\"85\" r=\"5\" /><text x=\"175\" y=\"90\">Contact Area</text><path d=\"M 60 60 L 300 60 M 60 110 L 300 110\" stroke-width=\"2\" /><text x=\"180\" y=\"45\">Normal Load (F)</text><text x=\"180\" y=\"135\">Bearing Stress</text></svg>",
+   "n": "what is bearing stress?",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "7a1561a2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Stress Range (Δσ)</text><line x1=\"40\" y1=\"20\" x2=\"320\" y2=\"20\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"35\" y=\"195\">Mean Stress (σm)</text><line x1=\"160\" y1=\"170\" x2=\"160\" y2=\"30\"/><path d=\"M 160 30 L 320 30 L 320 180 L 40 180 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"200\" y=\"105\">Fatigue Limit</text><text x=\"270\" y=\"160\">Endurance Data</text><text x=\"170\" y=\"190\">(Includes Allowances)</text><text x=\"140\" y=\"180\">Factor of Safety ≈ 1.5–2</text></svg>",
+   "n": "which stress range of factor of safety is normally used when designing against fatigue?",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "34961fc4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"190\">σ₁</text><text x=\"330\" y=\"190\">σ₂</text><line x1=\"40\" y1=\"50\" x2=\"40\" y2=\"180\"/><text x=\"35\" y=\"60\">σ₃</text><circle cx=\"180\" cy=\"110\" r=\"70\" stroke-dasharray=\"4,2\"/><path d=\"M 110 110 L 180 40 L 250 110 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"160\" y=\"95\">Distortion Energy</text><text x=\"160\" y=\"75\">(Von Mises)</text><text x=\"145\" y=\"135\">Yield Surface</text><circle cx=\"180\" cy=\"110\" r=\"25\" fill=\"#222\"/><text x=\"170\" y=\"130\">σᵧ</text></svg>",
+   "n": "which theory of failure is most suitable for ductile materials?",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "91c460b7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Maximum Principal Stress Theory</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"65\">σ₁ (Max Principal)</text><text x=\"325\" y=\"65\">σ₃ (Min Principal)</text><path d=\"M 40 60 L 320 60\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"50\" text-anchor=\"middle\">Failure occurs when σ₁ ≥ σ_ultimate</text><circle cx=\"180\" cy=\"180\" r=\"5\" fill=\"#222\"/><text x=\"175\" y=\"195\">Tensile fracture surface</text></svg>",
+   "n": "which theory of failure is used for brittle materials?",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "2cfed362": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"axes\">\n<path d=\"M40 180 L40 40\"/>\n<path d=\"M40 40 L320 40\"/>\n</g>\n<g id=\"stress_curve\">\n<path d=\"M50 40 L50 60 L90 60 L90 140 L130 140 L130 40\"/>\n</g>\n<g id=\"labels\">\n<text x=\"20\" y=\"80\">σ₁ (Max Principal)</text>\n<text x=\"20\" y=\"160\">σ₃ (Min Principal)</text>\n<text x=\"330\" y=\"45\">Tension</text>\n<text x=\"330\" y=\"145\">Compression</text>\n<text x=\"140\" y=\"20\">Failure Line</text>\n</g>\n<g id=\"concept\">\n<rect x=\"60\" y=\"10\" width=\"200\" height=\"20\" rx=\"5\"/>\n<text x=\"70\" y=\"28\">Rankine Theory</text>\n</g>\n</svg>",
+   "n": "state the maximum principal stress theory.",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "f37a1dff": {
+   "svg": "<svg viewBox=\"0 0 360 220\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"50\" y=\"40\" width=\"180\" height=\"120\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"60\" y=\"70\" font-family=\"sans-serif\" font-size=\"12\">σ₁</text><text x=\"240\" y=\"70\" font-family=\"sans-serif\" font-size=\"12\">ε₁</text><line x1=\"80\" y1=\"95\" x2=\"260\" y2=\"95\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"80\" y1=\"95\" x2=\"80\" y2=\"145\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"70\" y=\"160\" font-family=\"sans-serif\" font-size=\"12\">ε_y</text><line x1=\"80\" y1=\"95\" x2=\"130\" y2=\"145\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"110\" y=\"160\" font-family=\"sans-serif\" font-size=\"12\">ε_max</text><text x=\"85\" y=\"90\" font-family=\"sans-serif\" font-size=\"12\" text-anchor=\"end\">σ₁</text><text x=\"245\" y=\"90\" font-family=\"sans-serif\" font-size=\"12\" text-anchor=\"start\">ε₁</text><text x=\"85\" y=\"155\" font-family=\"sans-serif\" font-size=\"12\" text-anchor=\"end\">ε_y</text><text x=\"135\" y=\"155\" font-family=\"sans-serif\" font-size=\"12\" text-anchor=\"end\">ε_max</text><text x=\"90\" y=\"180\" font-family=\"sans-serif\" font-size=\"12\">Failure: ε₁ = ε_y</text></svg>",
+   "n": "state the maximum principal strain theory.",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "f82ca3bb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" stroke-dasharray=\"4,2\"/><text x=\"50\" y=\"70\">Simple Tension</text><line x1=\"60\" y1=\"90\" x2=\"300\" y2=\"90\"/><line x1=\"60\" y1=\"90\" x2=\"60\" y2=\"180\"/><circle cx=\"60\" cy=\"90\" r=\"4\"/><text x=\"55\" y=\"85\">Yield Point</text><path d=\"M 60 90 L 300 90\" stroke-dasharray=\"2,2\"/><line x1=\"300\" y1=\"90\" x2=\"300\" y2=\"180\"/><circle cx=\"300\" cy=\"90\" r=\"4\"/><text x=\"295\" y=\"85\">Failure</text><text x=\"160\" y=\"120\">τmax = Syt / 2</text><text x=\"170\" y=\"140\">(Tresca Theory)</text></svg>",
+   "n": "state the maximum shear stress theory.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "cd1c4bc5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Total Strain Energy</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><text x=\"30\" y=\"35\">U_total</text><path d=\"M 40 40 L 180 40 L 180 180 L 40 180 Z\"/><text x=\"100\" y=\"120\" text-anchor=\"middle\">Yield Limit</text><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"180\" stroke-dasharray=\"4\"/><text x=\"195\" y=\"110\" text-anchor=\"start\">Failure Point</text><path d=\"M 180 40 L 320 40\"/><text x=\"260\" y=\"35\">Simple Tension</text></svg>",
+   "n": "state the total strain energy theory.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "fea22cd3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"175\" y=\"195\" text-anchor=\"middle\">Shear Stress (τ)</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"105\" text-anchor=\"end\">Distortion Energy</text><path d=\"M 40 180 L 320 180 L 320 40 L 40 40 Z\" fill=\"none\" stroke=\"#222\"/><circle cx=\"180\" cy=\"105\" r=\"15\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"100\">Yield Point</text><path d=\"M 40 180 L 320 180 L 320 40 L 40 40 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"180\" y=\"55\" text-anchor=\"middle\">Distortion Energy Theory</text></svg>",
+   "n": "state the maximum distortion energy theory.",
+   "sub": "design",
+   "at": "2026-10-21"
   }
  }
 }
