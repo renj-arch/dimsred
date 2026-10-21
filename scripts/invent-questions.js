@@ -379,6 +379,78 @@ function jaccard(a, b) {
   return inter / (A.size + B.size - inter);
 }
 
+// ── quality gates (2026-10-21) ───────────────────────────────────────────
+// Owner report: invented "fresh paper" questions on mental.html had a stem
+// and an answer that did not belong together. Root cause: the 9b solver's
+// self-repair loop ("Wait, let's re-calculate...", "Option not available.
+// Let's change numbers.") leaked into the shipped solution, and the key was
+// often copied from a rewritten version of the question. 50 of the 94 pool
+// items were defective. A polished solution never negotiates with itself, so
+// any self-repair marker rejects the item before it can be stored.
+const THINK_LEAK = [
+  [/\bwait\s*[,!.…]/i, 'self-correction pause'],
+  [/\blet'?s\s+(?:change|adjust|fix|try|assume|construct|revise|re-?do|make)\b/i, 'rewrite marker'],
+  [/\blet me\s+(?:re|adjust|fix|change|try)/i, 'rewrite marker'],
+  [/\b(?:my|the) (?:calculation|answer|previous (?:answer|step|attempt)) (?:is|was) wrong\b/i, 'wrong-answer note'],
+  [/\boptions?\s+(?:is|are)?\s*not available\b/i, 'missing-option note'],
+  [/\bdoes(?:n't| not) match (?:the )?(?:options|choices)\b/i, 'missing-option note'],
+  [/\bi (?:made|make) an? (?:error|mistake)\b/i, 'error note'],
+  [/\bre-?(?:calculat|evaluat|read|check|compute)/i, 'recheck marker'],
+  [/\brevised (?:question|stem|scenario|calculation)\b/i, 'rewrite marker'],
+  [/\bfor (?:self-)?consistency with (?:the )?options\b/i, 'option fitting'],
+  [/\bto match (?:the )?options?\b/i, 'option fitting'],
+  [/\b(?:correction|correct logic)\s*:/i, 'correction note'],
+  [/\bthought (?:process|trace)\b/i, 'thinking trace'],
+  [/\bfinal consistent scenario\b/i, 'rewrite marker'],
+  [/\bthe (?:question|stem) (?:needs|should) (?:to be|be)\b/i, 'rewrite marker'],
+  [/\b(?:hmm|okay)\b[,.]/i, 'filler marker'],
+  [/\bactually\s*,/i, 'self-correction'],
+  [/\bon second thought\b/i, 'self-correction'],
+  [/\bno clear pattern\b/i, 'dead-end note'],
+  [/\bthis is (?:hard|tricky)\b/i, 'dead-end note'],
+  [/\bmental arithmetic\b/i, 'trace marker'],
+  [/\brestart(?:ing)? (?:the )?(?:calculation|logic)\b/i, 'restart marker'],
+  [/\badjust(?:ing)? (?:the )?(?:numbers|stem|question)/i, 'rewrite marker'],
+  [/\bnot in (?:the )?options\b/i, 'option fitting'],
+  [/\bmy setup was wrong\b/i, 'self-correction']
+];
+function solutionLeak(text) {
+  const s = String(text == null ? '' : text);
+  for (const p of THINK_LEAK) { if (p[0].test(s)) return p[1]; }
+  return '';
+}
+// Numbers in text, commas removed ("₹10,000" -> 10000).
+function numbersIn(text) {
+  return (String(text == null ? '' : text).match(/\d[\d,]*(?:\.\d+)?/g) || [])
+    .map(x => Number(x.replace(/,/g, '')))
+    .filter(n => isFinite(n));
+}
+function meaningfulNumbers(nums) {
+  return nums.filter(n => Math.abs(n) >= 10 || !Number.isInteger(n));
+}
+// A solution that never repeats a single given number is a solution to a
+// different question (observed: a 200 km / 80-60 kmph stem solved with 36 km
+// and 9 kmph; a ₹10,000 / 12% loan solved with ₹5,000 / 10%). If the stem
+// supplies at least two distinct numbers, the working must use one of them.
+function solutionUsesStemNumbers(stem, solution) {
+  const given = meaningfulNumbers(numbersIn(stem));
+  if (new Set(given).size < 2) return true;
+  const sol = numbersIn(solution);
+  return given.some(g => sol.some(n => Math.abs(n - g) < 1e-9));
+}
+// The answer's number must appear in the working ("C) 20 months" -> 20);
+// otherwise the key and the shown steps describe different results
+// (observed: a 3.45-year computation shipped with key "20 months").
+function answerEchoed(answer, solution) {
+  const a = numbersIn(answer);
+  if (!a.length) return true;
+  const key = a[a.length - 1];
+  return numbersIn(solution).some(n => Math.abs(n - key) < 1e-9);
+}
+function optionsAreBareLetters(options) {
+  return options.every(o => /^[A-D]\.?$/i.test(String(o).trim()));
+}
+
 function validate(raw, section, tier, recentTokenSets) {
   const t = extractJson(raw);
   if (!t) return { ok: false, why: 'unparseable JSON' };
@@ -407,6 +479,18 @@ function validate(raw, section, tier, recentTokenSets) {
   if (idx < 0) return { ok: false, why: 'answer not among options' };
   answer = options[idx];
   if (solution.length < 8) return { ok: false, why: 'solution too short' };
+  // Thinking-leak gate: a solution that argues with itself is a trace, not
+  // an answer a student should read.
+  const leak = solutionLeak(solution + '\n' + String(t.hint || ''));
+  if (leak) return { ok: false, why: 'solution leak: ' + leak };
+  // Numeric consistency gates (quant only - the rules are meaningless for
+  // word-based English items).
+  if (section === 'quant') {
+    if (!solutionUsesStemNumbers(stem, solution)) return { ok: false, why: 'solution uses none of the stem numbers' };
+    if (!answerEchoed(answer, solution)) return { ok: false, why: 'answer value absent from the solution' };
+    if (optionsAreBareLetters(options)) return { ok: false, why: 'quant options are only letters' };
+  }
+  if (/matrix/i.test(stem) && !/\d/.test(stem)) return { ok: false, why: 'matrix stem without data' };
   if (!style) return { ok: false, why: 'style label missing' };
   // 70% word-overlap dedupe against the store (standing site rule)
   const tk = tokens(stem);

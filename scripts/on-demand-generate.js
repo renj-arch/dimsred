@@ -288,6 +288,72 @@ function metaLeak(text) {
   return '';
 }
 
+// Thinking-leak gate (2026-10-21). Same failure class the owner hit on
+// mental.html: the 9b solver's repair loop ("Wait, let's re-calculate...",
+// "Option not available. Let's change numbers.") leaked into the visible
+// solution, and the key often belonged to a rewritten version of the stem.
+// 8 of the owner's 11-question "Mental fresh paper" were broken this way.
+// Runs on the solution/hint text only: a stem may legitimately say "wait".
+const THINK_LEAK = [
+  [/\bwait\s*[,!.…]/i, 'self-correction pause'],
+  [/\blet'?s\s+(?:change|adjust|fix|try|assume|construct|revise|re-?do|make)\b/i, 'rewrite marker'],
+  [/\blet me\s+(?:re|adjust|fix|change|try)/i, 'rewrite marker'],
+  [/\b(?:my|the) (?:calculation|answer|previous (?:answer|step|attempt)) (?:is|was) wrong\b/i, 'wrong-answer note'],
+  [/\boptions?\s+(?:is|are)?\s*not available\b/i, 'missing-option note'],
+  [/\bdoes(?:n't| not) match (?:the )?(?:options|choices)\b/i, 'missing-option note'],
+  [/\bi (?:made|make) an? (?:error|mistake)\b/i, 'error note'],
+  [/\bre-?(?:calculat|evaluat|read|check|compute)/i, 'recheck marker'],
+  [/\brevised (?:question|stem|scenario|calculation)\b/i, 'rewrite marker'],
+  [/\bfor (?:self-)?consistency with (?:the )?options\b/i, 'option fitting'],
+  [/\bto match (?:the )?options?\b/i, 'option fitting'],
+  [/\b(?:correction|correct logic)\s*:/i, 'correction note'],
+  [/\bthought (?:process|trace)\b/i, 'thinking trace'],
+  [/\bfinal consistent scenario\b/i, 'rewrite marker'],
+  [/\bthe (?:question|stem) (?:needs|should) (?:to be|be)\b/i, 'rewrite marker'],
+  [/\b(?:hmm|okay)\b[,.]/i, 'filler marker'],
+  [/\bactually\s*,/i, 'self-correction'],
+  [/\bon second thought\b/i, 'self-correction'],
+  [/\bno clear pattern\b/i, 'dead-end note'],
+  [/\bthis is (?:hard|tricky)\b/i, 'dead-end note'],
+  [/\bmental arithmetic\b/i, 'trace marker'],
+  [/\brestart(?:ing)? (?:the )?(?:calculation|logic)\b/i, 'restart marker'],
+  [/\badjust(?:ing)? (?:the )?(?:numbers|stem|question)/i, 'rewrite marker'],
+  [/\bnot in (?:the )?options\b/i, 'option fitting'],
+  [/\bmy setup was wrong\b/i, 'self-correction']
+];
+function thinkLeak(text) {
+  const s = String(text == null ? '' : text);
+  for (const p of THINK_LEAK) { if (p[0].test(s)) return p[1]; }
+  return '';
+}
+function numbersIn(text) {
+  return (String(text == null ? '' : text).match(/\d[\d,]*(?:\.\d+)?/g) || [])
+    .map(x => Number(x.replace(/,/g, '')))
+    .filter(n => isFinite(n));
+}
+function meaningfulNumbers(nums) {
+  return nums.filter(n => Math.abs(n) >= 10 || !Number.isInteger(n));
+}
+// A working that never repeats a given number answers a different question
+// (observed: a 200 km / 80-60 kmph stem solved with 36 km and 9 kmph).
+function solutionUsesStemNumbers(stem, solution) {
+  const given = meaningfulNumbers(numbersIn(stem));
+  if (new Set(given).size < 2) return true;
+  const sol = numbersIn(solution);
+  return given.some(g => sol.some(n => Math.abs(n - g) < 1e-9));
+}
+// The key's number must appear in the working (observed: a 3.45-year
+// computation shipped with "C) 20 months").
+function answerEchoed(answer, solution) {
+  const a = numbersIn(answer);
+  if (!a.length) return true;
+  const key = a[a.length - 1];
+  return numbersIn(solution).some(n => Math.abs(n - key) < 1e-9);
+}
+function optionsAreBareLetters(options) {
+  return options.every(o => /^[A-D]\.?$/i.test(String(o).trim()));
+}
+
 // The closing line of a solution ("Final answer: X") is what the student
 // reads as the conclusion; when the "a" field disagrees with it the shown
 // answer contradicts the shown working (observed 2026-10-19: a shaft
@@ -426,6 +492,12 @@ async function runTutorQuestions(p) {
       log('tutor: dropped 1 item - ' + leak + ' - ' + clean(x.q).slice(0, 90));
       return;
     }
+    const tleak = thinkLeak([x.s, x.h].join('\n'));
+    if (tleak) {
+      rejected.push({ why: tleak, head: clean(x.q).slice(0, 90) });
+      log('tutor: dropped 1 item - ' + tleak + ' - ' + clean(x.q).slice(0, 90));
+      return;
+    }
     seen[n] = 1;
     let a = clean(x.a);
     const fa = finalAnswerOf(clean(x.s));
@@ -538,13 +610,38 @@ async function runMentalBatch(p) {
       log('mental: dropped 1 item - ' + leak);
       return;
     }
-    seen[n] = 1;
     const section = SECTIONS[clean(x.section)] ? clean(x.section) : 'reasoning';
+    const sol = clean(x.solution);
+    const tleak = thinkLeak(sol + '\n' + clean(x.hint));
+    if (tleak) {
+      rejected.push({ why: tleak, head: stem.slice(0, 90) });
+      log('mental: dropped 1 item - ' + tleak);
+      return;
+    }
+    if (section === 'quant') {
+      if (!solutionUsesStemNumbers(stem, sol)) {
+        rejected.push({ why: 'numbers not from the stem', head: stem.slice(0, 90) });
+        return;
+      }
+      if (!answerEchoed(answer, sol)) {
+        rejected.push({ why: 'answer absent from the solution', head: stem.slice(0, 90) });
+        return;
+      }
+      if (optionsAreBareLetters(options)) {
+        rejected.push({ why: 'letter-only options', head: stem.slice(0, 90) });
+        return;
+      }
+    }
+    if (/matrix/i.test(stem) && !/\d/.test(stem)) {
+      rejected.push({ why: 'matrix without data', head: stem.slice(0, 90) });
+      return;
+    }
+    seen[n] = 1;
     questions.push({
       stem: stem,
       options: options,
       answer: answer,
-      solution: clean(x.solution),
+      solution: sol,
       hint: clean(x.hint),
       section: section,
       difficulty: difficulty,
@@ -760,9 +857,13 @@ function pruneOld() {
   } catch (e) { /* pruning is best-effort */ }
 }
 
-function writeResult(obj) {
+function writeResult(obj, payload) {
   fs.mkdirSync(OUT_DIR, { recursive: true });
   pruneOld();
+  // id + label in the result file let a later index merge recover this paper
+  // even if another run overwrote the shared index (see updateIndex).
+  obj.id = ID;
+  try { obj.label = paperLabel(KIND, payload || {}, obj); } catch (e) {}
   const file = path.join(OUT_DIR, ID + '.json');
   fs.writeFileSync(file, JSON.stringify(obj, null, 1));
   log('wrote ' + file);
@@ -790,7 +891,35 @@ function paperLabel(kind, payload, obj) {
 function updateIndex(kind, payload, obj) {
   try {
     const idx = readJsonFile(OD_INDEX) || {};
-    const list = Array.isArray(idx.papers) ? idx.papers : [];
+    const byId = {};
+    (Array.isArray(idx.papers) ? idx.papers : []).forEach(function (e) {
+      if (e && e.id) byId[e.id] = e;
+    });
+    // Heal a lost entry. Two runs can publish close together and each prepend
+    // to its own checkout of this file, so one overwrites the other's entry
+    // (observed 2026-10-19: od-agent-1019f never reached Recent papers). The
+    // result files on disk are the source of truth; merge any missing id back.
+    try {
+      fs.readdirSync(OUT_DIR).forEach(function (f) {
+        if (!f.endsWith('.json') || f === 'index.json') return;
+        const id = f.replace(/\.json$/, '');
+        if (byId[id]) return;
+        const j = readJsonFile(path.join(OUT_DIR, f));
+        if (!j || !j.finishedAt) return;
+        const n = Array.isArray(j.questions) ? j.questions.length : (j.item ? 1 : 0);
+        const healed = {
+          id: id,
+          kind: String(j.kind || ''),
+          label: String(j.label || (String(j.kind || 'paper') + ' - ' + n + ' q')),
+          model: String(j.model || ''),
+          status: String(j.status || ''),
+          finishedAt: String(j.finishedAt || '')
+        };
+        if (n) healed.n = n;
+        if (j.error) healed.error = String(j.error).slice(0, 140);
+        byId[id] = healed;
+      });
+    } catch (e) { /* directory scan is best-effort */ }
     const entry = {
       id: ID,
       kind: kind,
@@ -802,7 +931,10 @@ function updateIndex(kind, payload, obj) {
     if (obj.questions && Array.isArray(obj.questions)) entry.n = obj.questions.length;
     if (obj.item) entry.n = 1;
     if (obj.error) entry.error = String(obj.error).slice(0, 140);
-    const next = [entry].concat(list.filter(function (e) { return e && e.id !== ID; })).slice(0, OD_INDEX_CAP);
+    byId[ID] = entry;
+    const next = Object.keys(byId).map(function (k) { return byId[k]; })
+      .sort(function (a, b) { return String(b.finishedAt).localeCompare(String(a.finishedAt)); })
+      .slice(0, OD_INDEX_CAP);
     fs.mkdirSync(OUT_DIR, { recursive: true });
     fs.writeFileSync(OD_INDEX, JSON.stringify({ generatedAt: new Date().toISOString(), papers: next }, null, 1) + '\n');
   } catch (e) {
@@ -827,12 +959,12 @@ async function main() {
     model: MODEL,
     finishedAt: new Date().toISOString()
   }, out);
-  writeResult(result);
+  writeResult(result, payload);
   updateIndex(KIND, payload, result);
 }
 
 // Test hooks: require() this file to exercise the parsers without a runner.
-module.exports = { extractArray, tutorPrompt, mentalPrompt, mainsPrompt, mainsItemOk, extractOneObject, metaLeak };
+module.exports = { extractArray, tutorPrompt, mentalPrompt, mainsPrompt, mainsItemOk, extractOneObject, metaLeak, thinkLeak, solutionUsesStemNumbers, answerEchoed, optionsAreBareLetters };
 
 if (require.main === module) {
   main().catch(function (err) {
@@ -845,9 +977,9 @@ if (require.main === module) {
         error: String((err && err.message) || err).slice(0, 500),
         finishedAt: new Date().toISOString()
       };
-      writeResult(failed);
       let payload = {};
       try { payload = loadPayload(); } catch (e2) {}
+      writeResult(failed, payload);
       updateIndex(KIND, payload, failed);
     } catch (e) {}
     process.exitCode = 1;
