@@ -423,7 +423,7 @@ def scene_memorial(samples, width, height, out):
     bpy.ops.object.light_add(type="SPOT", location=(0, -1.5, 5.0))
     spot = bpy.context.object
     spot.data.energy = 1200
-    spot.data.angle = math.radians(28)
+    spot.data.spot_size = math.radians(28)
     spot.data.color = (1.0, 0.70, 0.42)
     spot.rotation_euler = (math.radians(18), 0, 0)
     dust(60, seed=919, zmax=2.2, ymax=3.0)
