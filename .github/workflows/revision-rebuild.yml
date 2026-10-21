@@ -46,7 +46,11 @@ jobs:
           node-version: 22
 
       - name: Generate revision content
-        run: node --max-old-space-size=6144 scripts/generate-revision-content.js
+        run: |
+          ls -l data/revision-overrides.json || echo "MISSING overrides file"
+          node -e "try{console.log('override keys:', Object.keys(require('./data/revision-overrides.json')))}catch(e){console.error('override read error:', e.message)}"
+          node --max-old-space-size=6144 scripts/generate-revision-content.js
+          node -e "const j=require('./data/revision-content.json'); for (const k of ['adam smith','abraham lincoln']) console.log('check', k, JSON.stringify((j[k]||{}).summary), 'override=' + ((j[k]||{}).ownership||{}).override)"
 
       - name: Validate output
         run: |
