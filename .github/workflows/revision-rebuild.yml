@@ -1,0 +1,97 @@
+name: Revision Content Rebuild
+
+# Keeps data/revision-content.json in step with the timeline + mind-tree.
+# The generator is deterministic: it reads the same topic graph and timeline
+# the site already publishes, so this runs after the Timeline build (or by
+# hand), validates the output, and commits only when the file changed.
+
+on:
+  workflow_dispatch:
+  workflow_run:
+    workflows:
+      - Timeline + Mind-tree + Geography Build
+    types: [completed]
+
+concurrency:
+  group: revision-rebuild
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Checkout the generator and its inputs only
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.PAT || github.token }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/timeline.json
+            data/timeline.nodes.*.json
+            data/topic-layers.json
+            data/person-bios.json
+            data/revision-overrides.json
+            data/revision-content.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Generate revision content
+        run: |
+          ls -l data/revision-overrides.json || echo "MISSING overrides file"
+          node -e "try{console.log('override keys:', Object.keys(require('./data/revision-overrides.json')))}catch(e){console.error('override read error:', e.message)}"
+          node --max-old-space-size=6144 scripts/generate-revision-content.js
+          node -e "const j=require('./data/revision-content.json'); for (const k of ['adam smith','abraham lincoln']) console.log('check', k, JSON.stringify((j[k]||{}).summary), 'override=' + ((j[k]||{}).ownership||{}).override)"
+
+      - name: Validate output
+        run: |
+          node - <<'NODE'
+          const j = require('./data/revision-content.json');
+          const keys = Object.keys(j);
+          if (keys.length < 100) throw new Error('too few topics: ' + keys.length);
+          const unbalanced = s => ((s.match(/\(/g) || []).length !== (s.match(/\)/g) || []).length);
+          const bad = keys.filter(k => {
+            const topic = j[k] || {};
+            const s = String(topic.summary || '');
+            const facts = (topic.primaryFacts || []).map(f => String(f.fact || ''));
+            return /^my\b/i.test(s) ||
+                   /^[A-Z][\w.'-]*,\s+with\b/.test(s) ||
+                   facts.some(unbalanced);
+          });
+          if (bad.length) {
+            bad.slice(0, 20).forEach(k => console.error('BAD ' + k + ' :: ' + String((j[k] || {}).summary || '').slice(0, 240)));
+            process.exit(1);
+          }
+          const empty = keys.filter(k => !(j[k] || {}).summary);
+          console.log('topics: ' + keys.length + ', empty summaries: ' + empty.length);
+          NODE
+
+      - name: Commit if changed
+        run: |
+          set -euo pipefail
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/revision-content.json
+          if git diff --staged --quiet; then
+            echo "No revision-content changes"
+            exit 0
+          fi
+          git commit -m "Revision content rebuild $(date -u +'%Y-%m-%d %H:%M UTC')"
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              echo "Pushed revision content"
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "push failed after 3 attempts" >&2
+          exit 1

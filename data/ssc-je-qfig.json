@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-21T00:41:01.937Z",
-  "cursor": 18,
-  "built": 17
+  "updatedAt": "2026-10-21T15:58:03.060Z",
+  "cursor": 24,
+  "built": 22
  },
  "figs": {
   "ce3585b0": {
@@ -105,6 +105,36 @@
   "fea22cd3": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"175\" y=\"195\" text-anchor=\"middle\">Shear Stress (τ)</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"105\" text-anchor=\"end\">Distortion Energy</text><path d=\"M 40 180 L 320 180 L 320 40 L 40 40 Z\" fill=\"none\" stroke=\"#222\"/><circle cx=\"180\" cy=\"105\" r=\"15\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"100\">Yield Point</text><path d=\"M 40 180 L 320 180 L 320 40 L 40 40 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"180\" y=\"55\" text-anchor=\"middle\">Distortion Energy Theory</text></svg>",
    "n": "state the maximum distortion energy theory.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "6f1f032b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"30\" y=\"105\">Combined Bending</text><text x=\"30\" y=\"115\">&amp; Torsion</text><circle cx=\"180\" cy=\"100\" r=\"40\"/><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"140\"/><line x1=\"140\" y1=\"100\" x2=\"220\" y2=\"100\"/><text x=\"135\" y=\"95\">Principal</text><text x=\"135\" y=\"108\">Stress State</text><path d=\"M 140 100 L 180 60 L 220 100 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"75\">Max Shear Stress</text><text x=\"170\" y=\"95\">(Tresca)</text><path d=\"M 140 100 L 180 60 L 220 100 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"115\">Max Distortion</text><text x=\"170\" y=\"135\">Energy (Von Mises)</text></svg>",
+   "n": "which theories are used for a ductile shaft carrying combined bending and torsion?",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "e6ac1409": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Shear Stress (τ)</text><line x1=\"40\" y1=\"30\" x2=\"320\" y2=\"30\"/><line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"190\"/><text x=\"35\" y=\"110\">τ_yield</text><circle cx=\"80\" cy=\"30\" r=\"3\" fill=\"#222\"/><line x1=\"80\" y1=\"30\" x2=\"80\" y2=\"60\"/><text x=\"65\" y=\"45\">Tresca</text><circle cx=\"90\" cy=\"30\" r=\"3\" fill=\"#222\"/><line x1=\"90\" y1=\"30\" x2=\"90\" y2=\"60\"/><text x=\"75\" y=\"45\">von Mises</text><path d=\"M 80 30 L 80 60 L 100 60 L 100 30 Z\" fill=\"#222\" opacity=\"0.2\"/><text x=\"95\" y=\"75\">Yield Surface</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">Shear Strain (γ)</text></svg>",
+   "n": "for a round shaft in pure torsion, which ductile theory agrees best with experiment?",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "410316b8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <path d=\"M40,100 L80,100 L80,60 L120,60 L120,100 L160,100 L160,140 L120,140 L120,180 L80,180 L80,140 L40,140 Z\" />\n <path d=\"M160,100 L200,100 L200,140 L160,140 Z\" fill=\"#222\" opacity=\"0.1\" stroke=\"none\" />\n <path d=\"M200,100 L240,100 L240,60 L280,60 L280,100 L320,100 L320,140 L280,140 L280,180 L240,180 L240,140 Z\" />\n <path d=\"M280,60 L280,100 L320,100 L320,140 L280,140\" fill=\"#222\" opacity=\"0.1\" stroke=\"none\" />\n <text x=\"50\" y=\"45\">Flat</text>\n <text x=\"190\" y=\"45\">Cone</text>\n <text x=\"290\" y=\"45\">Shear Lip</text>\n <text x=\"80\" y=\"205\">Ductile Fracture</text>\n <text x=\"200\" y=\"205\">Tensile Failure</text>\n</svg>",
+   "n": "what is cup-and-cone fracture?",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "93ce2f3a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"35\" text-anchor=\"middle\" font-weight=\"bold\">Endurance Limit Concept</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"330\" y=\"65\" text-anchor=\"end\">Stress (σ)</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><text x=\"35\" y=\"120\" text-anchor=\"middle\">-</text><text x=\"35\" y=\"195\" text-anchor=\"end\">Cycles (N)</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"185\" text-anchor=\"end\">Infinite</text><path d=\"M 40 180 L 100 180 L 100 60 L 40 60 Z\" fill=\"#222\" stroke=\"none\"/><line x1=\"100\" y1=\"60\" x2=\"100\" y2=\"180\"/><text x=\"95\" y=\"120\" text-anchor=\"middle\">Endurance Limit</text><text x=\"110\" y=\"65\" text-anchor=\"start\">σ_e ≈ 0.5 Sut</text><path d=\"M 100 60 L 320 60\" stroke-dasharray=\"4,2\"/><text x=\"220\" y=\"55\" text-anchor=\"middle\">Fatigue Failure Region</text><text x=\"220\" y=\"185\" text-anchor=\"middle\">Infinite Life Region</text></svg>",
+   "n": "define endurance limit.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "c90db8c4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\" xmlns=\"http://www.w3.org/2000/svg\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">S-N Curve (Stress vs Cycles)</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\"/><text x=\"35\" y=\"175\">log N</text><line x1=\"40\" y1=\"160\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"85\">S</text><path d=\"M 40 160 L 320 40\"/><text x=\"170\" y=\"115\" text-anchor=\"middle\">Fatigue Limit (if exists)</text><circle cx=\"320\" cy=\"40\" r=\"4\"/><text x=\"325\" y=\"45\" font-size=\"10\">Endurance</text></svg>",
+   "n": "what is the s-n curve?",
    "sub": "design",
    "at": "2026-10-21"
   }
