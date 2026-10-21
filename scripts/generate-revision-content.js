@@ -131,6 +131,11 @@ function nameOccurrences(text, entityId) {
 function nodeDescScore(desc, ownerId) {
   var t = String(desc).replace(/\s+/g, ' ').trim();
   if (t.length < 13) return -100;
+  // A first-person memoir title ("My Journey Back from ...") or a route/list
+  // fragment ("Louis, with Joliet, ... in between") is a work or a place
+  // description, not a fact about the entity it was filed under.
+  if (/^(?:my|our|his|her|their)\b/i.test(t)) return -70;
+  if (/^[A-Z][\w.'-]*,\s+with\b/.test(t) || /\bin between\b/i.test(t)) return -70;
   if (t.charAt(0) === '"' || /\\"/.test(t)) return -60;
   // A truncated fragment such as "rritory by defeating the Seleucid Empire"
   // begins mid-word. A lowercase opening is otherwise perfectly normal
@@ -420,7 +425,14 @@ function nodeDescIsOwned(desc, selectedId) {
   if (!text) return false;
   if (isPlaceholderDesc(text)) return false;
   if (EO.mentionsEntity(text, selectedId, idSet, aliasIndex)) return true;
-  return text.length < 90;
+  if (text.length >= 90) return false;
+  // Short labels are allowed only when they are descriptions ("Dictator of
+  // Nazi Germany"), not titles or route fragments. These two patterns were
+  // live on the revision page: "My Journey Back from Chronic Pain ..." under
+  // Adam Smith, and "Louis, with Joliet, ... in between" under Abraham Lincoln.
+  if (/^(?:my|our|his|her|their)\b/i.test(text)) return false;
+  if (/^[A-Z][\w.'-]*,\s+with\b/.test(text) || /\bin between\b/i.test(text)) return false;
+  return true;
 }
 
 function run(text, source, sourceEntityId, trusted, nodeType) {
