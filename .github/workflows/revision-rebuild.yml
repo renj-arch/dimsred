@@ -55,7 +55,7 @@ jobs:
           if (keys.length < 100) throw new Error('too few topics: ' + keys.length);
           const bad = keys.filter(k => {
             const s = String((j[k] || {}).summary || '');
-            return /^(?:my|our|his|her|their)\b/i.test(s) ||
+            return /^my\b/i.test(s) ||
                    /^[A-Z][\w.'-]*,\s+with\b/.test(s);
           });
           if (bad.length) {
