@@ -95,6 +95,7 @@ h1{font-size:24px;margin:6px 0 8px}
   <div class="genbar">
     <button class="btn sec" id="genAI" type="button">&#10024; Generate one more question + model answer (AI)</button>
     <button class="btn sec" id="genRunner" type="button" style="display:none">&#9997;&#65039; Write a brand-new one on the GitHub runner (8&ndash;20 min)</button>
+    <button class="btn sec" id="clearAI" type="button" style="display:none">Clear saved AI</button>
     <span class="stat" id="genStat" role="status" aria-live="polite"></span>
   </div>
 
@@ -118,16 +119,19 @@ function updDate(d) {
   var mm = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
   return mm[Number(m[2]) - 1] + ' ' + m[1];
 }
-// Browser-session AI items. Two sources, both badged and both session-only:
-// the frozen batch in data/mains-fresh.json (written by the site's own model
-// on the GitHub build runners -- instant, nothing runs on the visitor's
-// device) and, only as a fallback, the in-browser generator after the
-// visitor allows on-device AI. Never persisted and never merged into
-// data/mains-questions.json, which promises a reviewed, hand-authored bank.
+// Browser AI items. Two sources, both badged: the frozen batch in
+// data/mains-fresh.json (written by the site's own model on the GitHub build
+// runners -- instant, nothing runs on the visitor's device) and, only as a
+// fallback, the in-browser generator after the visitor allows on-device AI.
+// They are saved in this browser's localStorage so they survive a refresh, but
+// never merged into data/mains-questions.json, which promises a reviewed,
+// hand-authored bank.
 var AI_QS = [];
 var AI_BUSY = false;
 var FRESH = { items: [] }; // frozen batch served to the generate button
 var POOL_USED = {};        // pool ids already served this session
+var AI_STORE_KEY = 'vlymbooq.mains.ai.v1';
+var AI_STORE_MAX = 20;
 
 function esc(s) {
   return String(s == null ? '' : s)
@@ -135,6 +139,52 @@ function esc(s) {
     .replace(/"/g, '&quot;');
 }
 function el(id) { return document.getElementById(id); }
+
+// AI practice items survive a refresh on this device, but stay out of the
+// reviewed bank. The store is deliberately small and easy to clear.
+function saveAI() {
+  try {
+    AI_QS = AI_QS.slice(0, AI_STORE_MAX);
+    localStorage.setItem(AI_STORE_KEY, JSON.stringify(AI_QS));
+    for (var i = 0; i < AI_QS.length; i++) AI_QS[i].saved = true;
+    return true;
+  } catch (e) { return false; }
+}
+function addAI(q) {
+  if (!q) return false;
+  AI_QS = AI_QS.filter(function (x) {
+    return x.id !== q.id && x.question !== q.question;
+  });
+  AI_QS.unshift(q);
+  AI_QS = AI_QS.slice(0, AI_STORE_MAX);
+  var saved = saveAI();
+  refreshClear();
+  return saved;
+}
+function loadSavedAI() {
+  var raw;
+  try { raw = JSON.parse(localStorage.getItem(AI_STORE_KEY) || '[]'); }
+  catch (e) { return; }
+  if (!Array.isArray(raw)) return;
+  raw.slice(0, AI_STORE_MAX).forEach(function (item) {
+    var q = cleanAI(item);
+    if (!q) return;
+    if (item.id) q.id = String(item.id).replace(/[^a-z0-9-]/gi, '').slice(0, 60);
+    q.ai = 1;
+    q.origin = item.origin === 'ci' || item.origin === 'runner' ? item.origin : 'browser';
+    if (item.years && item.years.length) q.years = item.years.map(String).slice(0, 6);
+    q.saved = true;
+    var duplicate = false;
+    for (var i = 0; i < AI_QS.length; i++) {
+      if (AI_QS[i].id === q.id || AI_QS[i].question === q.question) { duplicate = true; break; }
+    }
+    if (!duplicate) AI_QS.push(q);
+  });
+}
+function refreshClear() {
+  var b = el('clearAI');
+  if (b) b.style.display = AI_QS.length ? '' : 'none';
+}
 
 // Fold accents and punctuation so "fema" matches "FEMA" and "prize" matches
 // "prize-winning", the way a candidate would expect a search box to behave.
@@ -155,16 +205,18 @@ function visible() {
     var hay = norm([q.question, q.topic, (q.keywords || []).join(' '), (q.laws || []).join(' '), (q.updates || []).map(function (u) { return u.text; }).join(' ')].join(' '));
     return hay.indexOf(STATE.term) !== -1;
   });
-  // Session AI items ride along, held to the same paper and search filters.
+  // Saved AI items ride along at the top, held to the same paper and search
+  // filters. They are badged and never mixed into the reviewed bank.
+  var ai = [];
   AI_QS.forEach(function (q) {
     if (STATE.paper !== 'all' && q.paper !== STATE.paper) return;
     if (STATE.term) {
       var hay = norm([q.question, q.topic, (q.keywords || []).join(' ')].join(' '));
       if (hay.indexOf(STATE.term) === -1) return;
     }
-    qs.push(q);
+    ai.push(q);
   });
-  return qs;
+  return ai.concat(qs);
 }
 
 function card(q) {
@@ -199,7 +251,7 @@ function card(q) {
       '<span class="tag m">' + esc(q.marks) + ' marks</span>' +
       (yrs ? '<span class="tag">' + yrs + '</span>' : '') +
     '</div>' +
-    (q.ai ? '<div class="badge ai">AI-GENERATED ' + (q.origin === 'ci' ? 'BY THE SITE\u2019S MODEL ON ITS BUILD RUNNERS' : q.origin === 'runner' ? 'BY THE SITE\u2019S MODEL ON THE GITHUB RUNNER, JUST FOR YOU' : 'IN YOUR BROWSER') + ' &middot; unreviewed &middot; this session only &middot; verify before trusting</div>' : '') +
+    (q.ai ? '<div class="badge ai">AI-GENERATED ' + (q.origin === 'ci' ? 'BY THE SITE\u2019S MODEL ON ITS BUILD RUNNERS' : q.origin === 'runner' ? 'BY THE SITE\u2019S MODEL ON THE GITHUB RUNNER, JUST FOR YOU' : 'IN YOUR BROWSER') + ' &middot; unreviewed &middot; ' + (q.saved ? 'saved on this device' : 'this session only') + ' &middot; verify before trusting</div>' : '') +
     '<h2>' + esc(q.question) + '</h2>' +
     '<div class="badge model">MODEL ANSWER &middot; not an official UPSC key &middot; write your own attempt first</div>' +
     '<button class="btn" data-open="' + esc(q.id) + '">Show the model answer</button>' +
@@ -224,6 +276,8 @@ function render() {
 
 function boot(data) {
   STATE.data = data;
+  loadSavedAI();
+  refreshClear();
   if (data.meta && data.meta.disclaimer) el('disc').textContent = data.meta.disclaimer;
   if (data.meta && data.meta.howToUse) el('howto').textContent = data.meta.howToUse;
 
@@ -283,15 +337,25 @@ el('q').addEventListener('input', function (e) {
 });
 
 el('genAI').addEventListener('click', generateOne);
+if (el('clearAI')) el('clearAI').addEventListener('click', function () {
+  if (!AI_QS.length) return;
+  if (!window.confirm('Remove the AI questions saved on this device?')) return;
+  AI_QS = [];
+  try { localStorage.removeItem(AI_STORE_KEY); } catch (e) {}
+  render();
+  refreshClear();
+  setGenStat('Saved AI questions cleared from this device.');
+});
 
 // ---- generation: frozen batch first, in-browser only as a fallback -------
 // Source 1 is data/mains-fresh.json, written by the site's own model on the
 // GitHub build runners -- instant, nothing runs locally. Source 2 (fallback)
 // compiles WebLLM on the visitor's own GPU behind a permission card; nothing
 // leaves the browser and no server is involved. Both outputs are badged and
-// session-only: the hand-authored note in data/mains-questions.json promises
-// the reviewed bank is never machine-generated, and that promise stays true --
-// these items sit in their own array, disappear on refresh, and carry the badge.
+// saved only in this browser: the hand-authored note in
+// data/mains-questions.json promises the reviewed bank is never
+// machine-generated, and that promise stays true -- these items stay in their
+// own array and carry the badge.
 function setGenStat(msg) { el('genStat').textContent = msg || ''; }
 
 function stripThinking(text) {
@@ -399,9 +463,10 @@ function generateOne() {
   // locally: no download, no GPU work, no heat.
   var fromBatch = takeFromPool();
   if (fromBatch) {
-    AI_QS.unshift(fromBatch);
+    var savedBatch = addAI(fromBatch);
     render();
-    setGenStat('Added one question from the site\u2019s frozen AI batch (written on the build runners). Refresh discards it.');
+    setGenStat('Added one question from the site\u2019s frozen AI batch (written on the build runners). ' +
+      (savedBatch ? 'Saved on this device; refresh keeps it.' : 'Refresh discards it.'));
     var node0 = el('q-' + fromBatch.id);
     if (node0 && node0.scrollIntoView) node0.scrollIntoView({ behavior: 'smooth', block: 'start' });
     return;
@@ -451,9 +516,10 @@ function generateOne() {
     })
     .then(function (q) {
       if (!q) throw new Error('The model could not produce a valid question twice in a row.');
-      AI_QS.unshift(q);
+      var savedBrowser = addAI(q);
       render();
-      setGenStat('Added one question (badged AI) at the top of the list. Refresh discards it.');
+      setGenStat('Added one question (badged AI) at the top of the list. ' +
+        (savedBrowser ? 'Saved on this device; refresh keeps it.' : 'Refresh discards it.'));
       var node = el('q-' + q.id);
       if (node && node.scrollIntoView) node.scrollIntoView({ behavior: 'smooth', block: 'start' });
     })
@@ -510,9 +576,10 @@ function generateRunner() {
     if (!item) throw new Error('the runner returned no question');
     var q = fromRunnerItem(item);
     if (!q) throw new Error('the runner\u2019s question did not validate on this page');
-    AI_QS.unshift(q);
+    var savedRunner = addAI(q);
     render();
-    setGenStat('Written on the GitHub runner just now -- badged so, and added to the site\u2019s frozen batch too. Refresh discards it here; the batch keeps it for every visitor.');
+    setGenStat('Written on the GitHub runner just now -- badged so, and added to the site\u2019s frozen batch too. ' +
+      (savedRunner ? 'Saved on this device; ' : '') + 'the batch keeps it for every visitor.');
     var node = el('q-' + q.id);
     if (node && node.scrollIntoView) node.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }).catch(function (err) {
