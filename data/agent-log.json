@@ -1,39 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-21T09:46:25.484Z",
-   "model": "batiai/qwen3.8-27b:iq3",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "archive-writer",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "archive-writer",
-     "fixes": [
-      {
-       "page": "archive (Education in India / Education in India)",
-       "fix": "Explained \"Key facts: The December 2005 IISc shooting occurred on Wednesday, 28 December 2005 at the \"",
-       "text": "VERDICT: The attack occurred on 28 December 2005 in Bangalore. WHY: Lashkar-e-Taiba militants targeted Prof. Munish Chandra Puri, killing him and injuring four. TRAPS: Do not confuse this with the 2008 Mumbai attacks; the victim was an IIT Delhi professor, not a local IISc staff member. HOOK: Remember '28th, 2005, Bangalore' and the LeT connection. Exam trap: Verify the day of the week if asked, as 28 December 2005 was a Wednesday."
-      },
-      {
-       "page": "archive (Education in India / Education in India)",
-       "fix": "Explained \"The December _____ IISc shooting occurred on Wednesday, 28 December 2005 at the Indian Ins\"",
-       "text": "1) VERDICT: The answer is 2005. 2) WHY: The tragic incident happened on 28 December 2005, a Wednesday, at IISc Bangalore. 3) TRAPS: Do not confuse this with other campus incidents; the year is explicitly 2005. 4) HOOK: Remember '28 Dec 2005' as a fixed date for IISc history. Exam trap: Verify the day of the week matches the date to confirm the year."
-      },
-      {
-       "page": "archive (Education in India / Education in India)",
-       "fix": "Explained \"What do you know about A New Kind of Science?\"",
-       "text": "1) VERDICT: A New Kind of Science is a non-fiction book by Stephen Wolfram, self-published in 2002 under Wolfram Media. 2) WHY: Wolfram, a physicist and mathematician, used this work to propose that simple computational rules can generate complex natural phenomena, challenging traditional scientific reductionism. 3) TRAPS: Do not confuse it with a standard physics textbook or attribute it to a major academic publisher; its self-published nature and controversial reception are key identifiers. 4)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-21T09:46:21.247Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -2164,8 +2131,212 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-21T21:56:06.958Z",
+   "model": "qwen3:4b",
+   "totalFixes": 270,
+   "byAgent": [
+    {
+     "agent": "flowcharts",
+     "count": 0
+    },
+    {
+     "agent": "mindmaps",
+     "count": 0
+    },
+    {
+     "agent": "features",
+     "count": 0
+    },
+    {
+     "agent": "proposals",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 31
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 29
+    },
+    {
+     "agent": "a11y",
+     "count": 209
+    },
+    {
+     "agent": "code",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/ask-audit.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/browser-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-lectures.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/daily-globe-fill.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-papers.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-pib-feed.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/expand-course.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/fault-status.yml",
+       "fix": "Added memory limit to node steps"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "improve.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-anabelian-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-21T20:40:44.002Z",
+ "lastRun": "2026-10-21T21:56:06.958Z",
  "model": "qwen3:4b"
 }
