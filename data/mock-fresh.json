@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-20T18:03:32.557Z",
-  "cursor": 6,
-  "count": 50,
+  "updatedAt": "2026-10-21T09:40:59.162Z",
+  "cursor": 7,
+  "count": 60,
   "lastAttempt": {
-   "at": "2026-10-21T00:46:55.725Z",
-   "reason": "nothing"
+   "at": "2026-10-21T09:40:59.162Z",
+   "reason": "added 10"
   }
  },
  "items": [
@@ -459,6 +459,96 @@
    "h": "Identify the parameter that accounts for tooth geometry in bending stress calculations.",
    "s": "The Lewis Form Factor is a geometric constant derived from the profile of the gear tooth. It is used in the Lewis bending equation to determine the maximum bending stress at the root of the gear tooth. A higher form factor indicates a stronger tooth geometry capable of withstanding higher loads before bending failure.",
    "at": "2026-10-20"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Define the principle of transmissibility of a force and state its significance in rigid body mechanics.",
+   "a": "The magnitude, direction, and point of application (constrained to the line of action) remain unchanged.",
+   "h": "A force can be moved along its line of action without changing external effects.",
+   "s": "The principle states that a force acting on a rigid body produces the same external effect regardless of where it is applied along its line of action. This allows simplifying complex loading scenarios by shifting forces to convenient points for analysis without altering equilibrium conditions.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A block of mass 50 kg rests on a horizontal surface with a coefficient of static friction μ = 0.4. Calculate the minimum horizontal force required to initiate motion.",
+   "a": "98.1 N",
+   "h": "Use F_friction = μ * N, where N equals weight on a horizontal plane.",
+   "s": "The normal reaction N equals the weight mg = 50 kg × 9.81 m/s² = 490.5 N. The limiting friction force is μN = 0.4 × 490.5 N = 196.2 N. Therefore, a horizontal force slightly exceeding 196.2 N is required to initiate motion.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Determine the moment of inertia of a solid circular disc of mass M and radius R about an axis perpendicular to its plane and passing through its center.",
+   "a": "(1/2)MR²",
+   "h": "Use the standard formula for a solid disc about its centroidal perpendicular axis.",
+   "s": "For a uniform solid disc, the mass distribution is symmetric about the central axis. Integration of r² dm over the area yields I = (1/2)MR², which is a fundamental result used in rotational dynamics problems involving flywheels or pulleys.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Explain the difference between 'work done' and 'power' with their respective SI units.",
+   "a": "Work: Joule (J); Power: Watt (W) or J/s",
+   "h": "Work is energy transfer; power is the rate of doing work.",
+   "s": "Work done is defined as the dot product of force and displacement (W = F·d), measured in Joules. Power is the time derivative of work (P = dW/dt), representing how quickly energy is transferred, measured in Watts.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A simply supported beam of length L carries a uniformly distributed load w per unit length. Find the maximum bending moment and its location.",
+   "a": "wL²/8 at L/2",
+   "h": "Max BM occurs at mid-span for UDL; use M_max = wL²/8.",
+   "s": "For a simply supported beam with uniform load, reactions are wL/2 at each support. The bending moment diagram is parabolic, reaching its maximum value at the center (mid-span), calculated as M_max = wL²/8.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Define 'centroid' and distinguish it from 'center of gravity' for a homogeneous body.",
+   "a": "The centroid is the geometric center of an area or volume, while the center of gravity is the point where total weight acts. For a homogeneous body with uniform density, these two points are identical.",
+   "h": "Centroid is geometric; CG depends on mass distribution; they coincide for uniform density.",
+   "s": "The centroid is purely a geometric property derived from shape dimensions, whereas the center of gravity depends on mass distribution. In engineering mechanics problems involving uniform materials, we assume they coincide, simplifying calculations for beams and plates.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Calculate the tension in each cable supporting a 100 kg weight if two cables make angles of 30° and 60° with the horizontal.",
+   "a": "T₁ ≈ 490.5 N, T₂ ≈ 866.0 N (approximate values based on equilibrium)",
+   "h": "Resolve forces vertically: T₁sin(30°) + T₂sin(60°) = mg; assume symmetry or solve system if needed. (Note: Without horizontal equilibrium constraint given, infinite solutions exist unless angles imply specific geometry. Let's assume symmetric setup for clarity or standard 3-4-5 triangle case? Re-evaluating prompt: 'two cables make angles...'. Standard problem assumes concurrent forces. Let's set T1 and T2 unknowns with vertical sum = mg and horizontal sum = 0.)",
+   "s": "Resolving forces horizontally: T₁cos(30°) = T₂cos(60°). Resolving vertically: T₁sin(30°) + T₂sin(60°) = mg = 981 N. Solving these simultaneous equations gives T₁ ≈ 490.5 N and T₂ ≈ 866.0 N.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "State the condition for equilibrium of a particle in three-dimensional space.",
+   "a": "ΣF_x = 0, ΣF_y = 0, ΣF_z = 0",
+   "h": "Sum of forces in x, y, and z directions must each be zero.",
+   "s": "For a particle to remain in static equilibrium in 3D, the vector sum of all external forces acting on it must be zero. This requires three scalar equations corresponding to the x, y, and z axes simultaneously being satisfied.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "What is the relationship between shear force V and bending moment M at a section of a beam?",
+   "a": "V = dM/dx",
+   "h": "dM/dx = V; slope of M diagram equals V.",
+   "s": "In beam theory, the rate of change of bending moment with respect to distance along the beam equals the shear force at that section. Mathematically expressed as dM/dx = V, this differential relationship is crucial for drawing shear and moment diagrams.",
+   "at": "2026-10-21"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Define 'virtual work' principle in the context of rigid body mechanics.",
+   "a": "δW_ext = 0",
+   "h": "Total virtual work done by external forces during a compatible virtual displacement is zero for equilibrium.",
+   "s": "The principle of virtual work states that if a system of forces maintains a rigid body in equilibrium, the algebraic sum of the works done by all active forces during any infinitesimal virtual displacement consistent with constraints is zero. This principle is powerful for analyzing indeterminate structures or finding displacements.",
+   "at": "2026-10-21"
   }
  ]
 }
