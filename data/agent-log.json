@@ -2014,36 +2014,33 @@
    ]
   },
   {
-   "at": "2026-10-21T09:07:50.879Z",
-   "model": "qwen3.5:9b",
+   "at": "2026-10-21T09:46:25.484Z",
+   "model": "batiai/qwen3.8-27b:iq3",
    "totalFixes": 3,
    "byAgent": [
     {
-     "agent": "proposals",
+     "agent": "archive-writer",
      "count": 3
     }
    ],
    "details": [
     {
-     "agent": "proposals",
+     "agent": "archive-writer",
      "fixes": [
       {
-       "kind": "proposal",
-       "fix": "Fix 'flow-skipped' on Homepage and Ask Engine",
-       "detail": "Browser tests show flow is skipped on both pages due to missing visible Next buttons, preventing quiz flow exercise.",
-       "text": "Update the static HTML templates for the homepage and ask-engine page to include an explicit 'Next Question' button that triggers the practice set logic. This ensures users can progress through questions without relying on accidental clicks or hidden interactions."
+       "page": "archive (Education in India / Education in India)",
+       "fix": "Explained \"Key facts: The December 2005 IISc shooting occurred on Wednesday, 28 December 2005 at the \"",
+       "text": "VERDICT: The attack occurred on 28 December 2005 in Bangalore. WHY: Lashkar-e-Taiba militants targeted Prof. Munish Chandra Puri, killing him and injuring four. TRAPS: Do not confuse this with the 2008 Mumbai attacks; the victim was an IIT Delhi professor, not a local IISc staff member. HOOK: Remember '28th, 2005, Bangalore' and the LeT connection. Exam trap: Verify the day of the week if asked, as 28 December 2005 was a Wednesday."
       },
       {
-       "kind": "proposal",
-       "fix": "Improve Tutor-Questions Lane Reliability",
-       "detail": "Recent logs show failures in this lane: one returned no JSON array, another only generated 2 of 5 required questions. The model (qwen3:4b) is sensitive to output formatting or count constraints.",
-       "text": "Refine the prompt sent to the local Ollama model for the 'tutor-questions' lane to strictly enforce a JSON array format and request a specific minimum count (e.g., 'generate exactly 5 questions'). Add a post-processing step in the Node script to parse the raw text, extract valid JSON if wrapped in markdown, and retry or fallback if the count is insufficient."
+       "page": "archive (Education in India / Education in India)",
+       "fix": "Explained \"The December _____ IISc shooting occurred on Wednesday, 28 December 2005 at the Indian Ins\"",
+       "text": "1) VERDICT: The answer is 2005. 2) WHY: The tragic incident happened on 28 December 2005, a Wednesday, at IISc Bangalore. 3) TRAPS: Do not confuse this with other campus incidents; the year is explicitly 2005. 4) HOOK: Remember '28 Dec 2005' as a fixed date for IISc history. Exam trap: Verify the day of the week matches the date to confirm the year."
       },
       {
-       "kind": "proposal",
-       "fix": "Utilize Auto-Fix Mechanism for Fault Board Items",
-       "detail": "The fault board lists 11 critical faults and mentions successful auto-fixes (e.g., creating figure pages); currently, these seem manual or sporadic rather than systematic.",
-       "text": "Create a scheduled GitHub Action that scans the 'fault board' JSON data for items tagged as 'autofixable' (like missing figures) and automatically triggers the local AI model to generate the missing content, then updates the relevant HTML files without human intervention."
+       "page": "archive (Education in India / Education in India)",
+       "fix": "Explained \"What do you know about A New Kind of Science?\"",
+       "text": "1) VERDICT: A New Kind of Science is a non-fiction book by Stephen Wolfram, self-published in 2002 under Wolfram Media. 2) WHY: Wolfram, a physicist and mathematician, used this work to propose that simple computational rules can generate complex natural phenomena, challenging traditional scientific reductionism. 3) TRAPS: Do not confuse it with a standard physics textbook or attribute it to a major academic publisher; its self-published nature and controversial reception are key identifiers. 4)"
       }
      ]
     }
