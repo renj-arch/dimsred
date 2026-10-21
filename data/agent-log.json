@@ -1,227 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-20T17:44:10.616Z",
-   "model": "qwen3:4b",
-   "totalFixes": 269,
-   "byAgent": [
-    {
-     "agent": "practicesets",
-     "count": 0
-    },
-    {
-     "agent": "mainsupdates",
-     "count": 0
-    },
-    {
-     "agent": "graphnotes",
-     "count": 3
-    },
-    {
-     "agent": "architect",
-     "count": 1
-    },
-    {
-     "agent": "workflows",
-     "count": 27
-    },
-    {
-     "agent": "selfcheck",
-     "count": 0
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 29
-    },
-    {
-     "agent": "a11y",
-     "count": 209
-    },
-    {
-     "agent": "code",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "graphnotes",
-     "fixes": [
-      {
-       "page": "data/topic-layers.json",
-       "fix": "GraphNotes dropped junk card \"The Bill\" from indira gandhi (denylisted non-entity)"
-      },
-      {
-       "page": "data/topic-layers.json",
-       "fix": "GraphNotes dropped junk card \"Television\" from indira gandhi (denylisted non-entity)"
-      },
-      {
-       "page": "data/topic-layers.json",
-       "fix": "GraphNotes dropped junk card \"Sports\" from indira gandhi (denylisted non-entity)"
-      }
-     ]
-    },
-    {
-     "agent": "architect",
-     "fixes": [
-      {
-       "kind": "info",
-       "page": "ideas",
-       "fix": "Architect: proposal \"Exam-style pencil-outline figures inside Ask answers\" — model output unparseable, retry next run"
-      }
-     ]
-    },
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/ask-audit.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/browser-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-lectures.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/daily-globe-fill.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/daily-papers.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/daily-pib-feed.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/expand-course.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/fault-status.yml",
-       "fix": "Added memory limit to node steps"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-anabelian-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-20T18:14:29.412Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -2478,8 +2257,44 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-21T09:07:50.879Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix 'flow-skipped' on Homepage and Ask Engine",
+       "detail": "Browser tests show flow is skipped on both pages due to missing visible Next buttons, preventing quiz flow exercise.",
+       "text": "Update the static HTML templates for the homepage and ask-engine page to include an explicit 'Next Question' button that triggers the practice set logic. This ensures users can progress through questions without relying on accidental clicks or hidden interactions."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Improve Tutor-Questions Lane Reliability",
+       "detail": "Recent logs show failures in this lane: one returned no JSON array, another only generated 2 of 5 required questions. The model (qwen3:4b) is sensitive to output formatting or count constraints.",
+       "text": "Refine the prompt sent to the local Ollama model for the 'tutor-questions' lane to strictly enforce a JSON array format and request a specific minimum count (e.g., 'generate exactly 5 questions'). Add a post-processing step in the Node script to parse the raw text, extract valid JSON if wrapped in markdown, and retry or fallback if the count is insufficient."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Utilize Auto-Fix Mechanism for Fault Board Items",
+       "detail": "The fault board lists 11 critical faults and mentions successful auto-fixes (e.g., creating figure pages); currently, these seem manual or sporadic rather than systematic.",
+       "text": "Create a scheduled GitHub Action that scans the 'fault board' JSON data for items tagged as 'autofixable' (like missing figures) and automatically triggers the local AI model to generate the missing content, then updates the relevant HTML files without human intervention."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-21T05:24:14.229Z",
+ "lastRun": "2026-10-21T09:07:50.879Z",
  "model": "qwen3.5:9b"
 }

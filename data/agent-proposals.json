@@ -1,17 +1,47 @@
 {
  "meta": {
-  "generatedAt": "2026-10-20T10:53:30.197Z",
+  "generatedAt": "2026-10-21T09:07:50.879Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 8,
+  "count": 11,
   "lastAttempt": {
-   "at": "2026-10-20T10:53:30.197Z",
+   "at": "2026-10-21T09:07:50.879Z",
    "ok": true,
-   "count": 4,
-   "dropped": 0
+   "count": 3,
+   "dropped": 1
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvhw2wnz-1",
+   "at": "2026-10-21T09:07:50.879Z",
+   "title": "Fix 'flow-skipped' on Homepage and Ask Engine",
+   "why": "Browser tests show flow is skipped on both pages due to missing visible Next buttons, preventing quiz flow exercise.",
+   "idea": "Update the static HTML templates for the homepage and ask-engine page to include an explicit 'Next Question' button that triggers the practice set logic. This ensures users can progress through questions without relying on accidental clicks or hidden interactions.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvhw2wnz-2",
+   "at": "2026-10-21T09:07:50.879Z",
+   "title": "Improve Tutor-Questions Lane Reliability",
+   "why": "Recent logs show failures in this lane: one returned no JSON array, another only generated 2 of 5 required questions. The model (qwen3:4b) is sensitive to output formatting or count constraints.",
+   "idea": "Refine the prompt sent to the local Ollama model for the 'tutor-questions' lane to strictly enforce a JSON array format and request a specific minimum count (e.g., 'generate exactly 5 questions'). Add a post-processing step in the Node script to parse the raw text, extract valid JSON if wrapped in markdown, and retry or fallback if the count is insufficient.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvhw2wnz-3",
+   "at": "2026-10-21T09:07:50.879Z",
+   "title": "Utilize Auto-Fix Mechanism for Fault Board Items",
+   "why": "The fault board lists 11 critical faults and mentions successful auto-fixes (e.g., creating figure pages); currently, these seem manual or sporadic rather than systematic.",
+   "idea": "Create a scheduled GitHub Action that scans the 'fault board' JSON data for items tagged as 'autofixable' (like missing figures) and automatically triggers the local AI model to generate the missing content, then updates the relevant HTML files without human intervention.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvgkexg5-1",
    "at": "2026-10-20T10:53:30.197Z",
