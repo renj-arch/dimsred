@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-20T17:56:40.768Z",
-  "cursor": 15,
-  "built": 14
+  "updatedAt": "2026-10-21T00:41:01.937Z",
+  "cursor": 18,
+  "built": 17
  },
  "figs": {
   "ce3585b0": {
@@ -89,6 +89,24 @@
    "n": "state the maximum principal strain theory.",
    "sub": "design",
    "at": "2026-10-20"
+  },
+  "f82ca3bb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" stroke-dasharray=\"4,2\"/><text x=\"50\" y=\"70\">Simple Tension</text><line x1=\"60\" y1=\"90\" x2=\"300\" y2=\"90\"/><line x1=\"60\" y1=\"90\" x2=\"60\" y2=\"180\"/><circle cx=\"60\" cy=\"90\" r=\"4\"/><text x=\"55\" y=\"85\">Yield Point</text><path d=\"M 60 90 L 300 90\" stroke-dasharray=\"2,2\"/><line x1=\"300\" y1=\"90\" x2=\"300\" y2=\"180\"/><circle cx=\"300\" cy=\"90\" r=\"4\"/><text x=\"295\" y=\"85\">Failure</text><text x=\"160\" y=\"120\">τmax = Syt / 2</text><text x=\"170\" y=\"140\">(Tresca Theory)</text></svg>",
+   "n": "state the maximum shear stress theory.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "cd1c4bc5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Total Strain Energy</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><text x=\"30\" y=\"35\">U_total</text><path d=\"M 40 40 L 180 40 L 180 180 L 40 180 Z\"/><text x=\"100\" y=\"120\" text-anchor=\"middle\">Yield Limit</text><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"180\" stroke-dasharray=\"4\"/><text x=\"195\" y=\"110\" text-anchor=\"start\">Failure Point</text><path d=\"M 180 40 L 320 40\"/><text x=\"260\" y=\"35\">Simple Tension</text></svg>",
+   "n": "state the total strain energy theory.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "fea22cd3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"175\" y=\"195\" text-anchor=\"middle\">Shear Stress (τ)</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"105\" text-anchor=\"end\">Distortion Energy</text><path d=\"M 40 180 L 320 180 L 320 40 L 40 40 Z\" fill=\"none\" stroke=\"#222\"/><circle cx=\"180\" cy=\"105\" r=\"15\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"100\">Yield Point</text><path d=\"M 40 180 L 320 180 L 320 40 L 40 40 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"180\" y=\"55\" text-anchor=\"middle\">Distortion Energy Theory</text></svg>",
+   "n": "state the maximum distortion energy theory.",
+   "sub": "design",
+   "at": "2026-10-21"
   }
  }
 }
