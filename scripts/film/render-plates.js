@@ -35,6 +35,7 @@ const FILMS = {
     scenes: {
       'notice-desk': 'notice',
       'bagh-wall': 'bagh-wall',
+      'bagh-wall-empty': 'bagh-wall-empty',
       'bagh-gate': 'bagh-gate',
       'bagh-gate-empty': 'bagh-gate-empty',
       'wall-scar': 'wall-scar',

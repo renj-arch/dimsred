@@ -916,6 +916,11 @@ def scene_bagh_wall(samples, width, height, out):
     render(samples, width, height, out)
 
 
+def scene_bagh_wall_empty(samples, width, height, out):
+    _bagh(False, empty=True)
+    render(samples, width, height, out)
+
+
 def scene_bagh_gate(samples, width, height, out):
     _bagh(True)
     render(samples, width, height, out)
@@ -1059,7 +1064,7 @@ def scene_well(samples, width, height, out):
     bpy.ops.object.modifier_apply(modifier=mod.name)
     bpy.data.objects.remove(cutter, do_unlink=True)
     paver_floor("WellPavers", 0, 4.15, 19, 15, 0.34, seed=73, skip=(0, 3.0, 2.15))
-    stone = stone_material("WellStone", (0.24, 0.19, 0.135))
+    stone = stone_material("WellStone", (0.16, 0.125, 0.088))
     # A real circular parapet: an outer cylinder with a smaller cylinder
     # subtracted, not a torus with blocks around it like a gear.
     bpy.ops.mesh.primitive_cylinder_add(
@@ -1104,7 +1109,7 @@ def scene_well(samples, width, height, out):
     bpy.data.objects.remove(cutter, do_unlink=True)
     # A dark, gently rippled water surface. The normal detail gives the sky a
     # broken specular path instead of a flat black disc.
-    water = principled("WellWater", (0.004, 0.010, 0.012), roughness=0.10, metallic=0.12)
+    water = principled("WellWater", (0.002, 0.006, 0.008), roughness=0.22, metallic=0.0)
     wnodes = water.node_tree.nodes
     wlinks = water.node_tree.links
     wtmp = wnodes.new("ShaderNodeTexCoord")
@@ -1117,7 +1122,7 @@ def scene_well(samples, width, height, out):
     wlinks.new(wtmp.outputs["Object"], wnoise.inputs["Vector"])
     wlinks.new(wnoise.outputs["Fac"], wbump.inputs["Height"])
     wlinks.new(wbump.outputs["Normal"], wnodes.get("Principled BSDF").inputs["Normal"])
-    cylinder("Water", (0, 3.0, -0.22), 1.45, 0.02, water, vertices=64)
+    cylinder("Water", (0, 3.0, -0.45), 1.45, 0.02, water, vertices=64)
     # worn capstone ring
     bpy.ops.mesh.primitive_torus_add(
         major_radius=1.80, minor_radius=0.13,
@@ -1149,7 +1154,7 @@ def scene_well(samples, width, height, out):
     petal = principled("WellPetal", (0.56, 0.18, 0.016), roughness=0.64)
     for i, (x, y) in enumerate(((-0.62, 2.75), (-0.38, 3.42), (0.12, 2.54),
                                 (0.55, 3.72), (-0.78, 3.82), (0.32, 3.28))):
-        cube(f"WaterPetal-{i}", (x, y, -0.208), (0.055, 0.032, 0.003), petal,
+        cube(f"WaterPetal-{i}", (x, y, -0.436), (0.055, 0.032, 0.003), petal,
              rot=(0, 0, i * 0.8))
     # concentric ripple highlights, very low contrast
     ripple = principled("WellRipple", (0.10, 0.13, 0.13), roughness=0.15, metallic=0.2)
@@ -1499,6 +1504,7 @@ def scene_memorial(samples, width, height, out):
 SCENES = {
     "notice": scene_notice,
     "bagh-wall": scene_bagh_wall,
+    "bagh-wall-empty": scene_bagh_wall_empty,
     "bagh-gate": scene_bagh_gate,
     "bagh-gate-empty": scene_bagh_gate_empty,
     "wall-scar": scene_wall_scar,
