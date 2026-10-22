@@ -818,13 +818,8 @@ def _bagh(inside=False, empty=False):
     pockmarks(count=78)
     # dark tree mass at the left, plus a separate out-of-focus branch close to
     # the lens so the frame has foreground, middle ground and wall.
-    trunk = principled("TreeTrunk", (0.020, 0.013, 0.008), roughness=0.94)
-    leaf = principled("Leaves", (0.006, 0.010, 0.005), roughness=0.9)
-    # Put the neem behind the wall: a trunk in front of the plaster read as a
-    # giant black column at the left edge of the frame.
-    tree_kit("BaghTree", -2.90, 6.75, 0.0, 4.9, trunk, leaf, seed=31, spread=1.9)
-    # The tree sits at the wall, not in the lens. The old foreground leaf
-    # clusters read as a black rectangle across the top of the frame.
+    # No foreground tree: at this lens a canopy became a black mountain across
+    # the top-left corner. The wall and gate carry the frame on their own.
     # torn orders pasted on the plaster, at different heights and angles
     torn_notice("OrderLeft", -1.92, 5.795, 1.62, rot=0.035, width=0.42, height=0.54)
     torn_notice("OrderRight", 1.55, 5.795, 1.18, rot=-0.085, width=0.34, height=0.46)
@@ -900,12 +895,12 @@ def _bagh(inside=False, empty=False):
     gate_lamp.data.color = (1.0, 0.37, 0.10)
     gate_lamp.data.shadow_soft_size = 0.12
     if inside:
-        # Close on the door and threshold. A wider view through the opening
-        # became a corridor of giant bricks with the street in a black slot.
-        camera((0.70, 8.95, 1.80), (-0.30, 6.0, 0.62), lens=50, fstop=4.0, focus=focus)
-        bpy.context.scene.view_settings.exposure = -0.25
-        area("InsideFill", (0.0, 7.4, 2.8), (0, 6.0, 1.3), 140, 2.4, (0.58, 0.46, 0.34))
-        area("DoorFill", (1.35, 7.35, 1.65), (-0.30, 6.0, 1.0), 55, 1.1,
+        # Three-quarter view from inside, far enough back to keep the arch, the
+        # door, the threshold and the paving in one composition.
+        camera((2.60, 11.80, 1.90), (-0.20, 6.0, 1.35), lens=45, fstop=5.0, focus=focus)
+        bpy.context.scene.view_settings.exposure = -0.38
+        area("InsideFill", (0.0, 7.4, 2.8), (0, 6.0, 1.3), 150, 2.4, (0.58, 0.46, 0.34))
+        area("DoorFill", (1.35, 8.0, 1.65), (-0.30, 6.0, 1.0), 70, 1.4,
              (1.0, 0.48, 0.20))
     else:
         camera((0.15, -3.2, 0.82), (0, 6.0, 1.50), lens=40, fstop=4.2, focus=focus)
@@ -952,12 +947,6 @@ def scene_wall_scar(samples, width, height, out):
                  chip, rot=(math.pi / 2, 0, 0), vertices=10)
         cylinder(f"ScarHole-{i:02d}", (x, -0.2530, z), r * 0.78, 0.0008,
                  hole, rot=(math.pi / 2, 0, 0), vertices=10)
-    # hairline cracks, some long, none perfectly straight
-    crack_mat = principled("ScarCrackMat", (0.017, 0.012, 0.008), roughness=0.98)
-    for i, (x, z, h, a) in enumerate(((-0.80, 1.18, 0.46, 0.12), (0.96, 0.70, 0.33, -0.21),
-                                      (0.31, 1.62, 0.24, 0.07), (-1.42, 0.63, 0.52, -0.05))):
-        cube(f"ScarCrack-{i}", (x, -0.2518, z), (0.0045, 0.002, h),
-             crack_mat, rot=(0, 0, a))
     # a few brick-shaped losses near the coping, without a rectangular decal
     brick_mat = principled("ScarBrick", (0.18, 0.078, 0.035), roughness=0.94)
     for i, (bx, bz) in enumerate(((0.38, 1.92), (0.47, 1.90), (0.42, 1.83),
@@ -1053,7 +1042,22 @@ def scene_well(samples, width, height, out):
     reset()
     sky((0.006, 0.016, 0.022), (0.42, 0.24, 0.11), (0.005, 0.005, 0.007))
     ground = principled("WellGround", (0.075, 0.055, 0.036), roughness=0.97)
-    plane("Ground", (0, 5, 0), 40, ground)
+    # A solid slab with the well mouth cut out. A flat plane across the set
+    # covered the water and made the well look like a tiled paddling pool.
+    cube("Ground", (0, 5, -0.30), (40, 40, 0.60), ground)
+    ground_obj = bpy.data.objects["Ground"]
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=64, radius=1.62, depth=3.0, location=(0, 3.0, -1.0)
+    )
+    cutter = bpy.context.object
+    cutter.name = "GroundWellCutter"
+    mod = ground_obj.modifiers.new("WellMouth", "BOOLEAN")
+    mod.operation = "DIFFERENCE"
+    mod.object = cutter
+    mod.solver = "EXACT"
+    bpy.context.view_layer.objects.active = ground_obj
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+    bpy.data.objects.remove(cutter, do_unlink=True)
     paver_floor("WellPavers", 0, 4.15, 19, 15, 0.34, seed=73, skip=(0, 3.0, 2.15))
     stone = stone_material("WellStone", (0.24, 0.19, 0.135))
     # A real circular parapet: an outer cylinder with a smaller cylinder
@@ -1376,7 +1380,7 @@ def scene_lamp(samples, width, height, out):
     cube("ForegroundBook", (-0.92, -0.78, 0.06), (0.54, 0.32, 0.12),
          principled("ForegroundBookMat", (0.05, 0.022, 0.014), roughness=0.6),
          rot=(0, 0.04, 0.18))
-    dust(20, seed=77, zmax=0.9, ymax=1.4)
+    # no floating dust in the Tagore close-up; the film overlay supplies it
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 0.36))
     focus = bpy.context.object
     camera((0.86, -2.95, 1.16), (0, 0.10, 0.38), lens=45, fstop=2.2, focus=focus)
