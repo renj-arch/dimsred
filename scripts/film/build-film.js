@@ -466,12 +466,12 @@ function srtTime(sec) {
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')},${String(r).padStart(3, '0')}`;
 }
 
-function captionChunks(text) {
+function wrapCaption(text, max = 46) {
   const words = String(text || '').split(/\s+/).filter(Boolean);
   const lines = [];
   let line = '';
   for (const word of words) {
-    if ((line + ' ' + word).trim().length > 42 && line) {
+    if ((line + ' ' + word).trim().length > max && line) {
       lines.push(line.trim());
       line = word;
     } else {
@@ -479,11 +479,40 @@ function captionChunks(text) {
     }
   }
   if (line) lines.push(line.trim());
+  return lines;
+}
+
+function captionChunks(text) {
+  // Cue at sentence boundaries, then wrap a sentence over at most two lines.
+  // The old word-count split could leave a one-word cue such as "lesson." on
+  // screen for less than half a second.
+  const sentences = String(text || '').match(/[^.!?]+[.!?]+["')\]]?|[^.!?]+$/g) || [String(text || '')];
   const chunks = [];
-  for (let i = 0; i < lines.length; i += 2) {
-    chunks.push(lines.slice(i, i + 2).join('\n'));
+  for (const sentence of sentences) {
+    const clean = sentence.trim();
+    if (!clean) continue;
+    const lines = wrapCaption(clean);
+    if (lines.length <= 2) {
+      chunks.push(lines.join('\n'));
+      continue;
+    }
+    // A long sentence is easier to read as comma-sized cues than as one
+    // three-line block. Split only after wrapping proved too tall.
+    const clauses = clean.match(/[^,;—]+[,;—]?/g) || [clean];
+    for (const clause of clauses) {
+      const part = clause.trim();
+      if (!part) continue;
+      const partLines = wrapCaption(part);
+      if (partLines.length <= 2) {
+        chunks.push(partLines.join('\n'));
+      } else {
+        for (let i = 0; i < partLines.length; i += 2) {
+          chunks.push(partLines.slice(i, i + 2).join('\n'));
+        }
+      }
+    }
   }
-  return chunks;
+  return chunks.length ? chunks : [''];
 }
 
 function writeSrt(timeline, opts) {

@@ -72,9 +72,9 @@ def stone_material(name="Stone", tint=(0.19, 0.16, 0.12)):
     noise.inputs["Roughness"].default_value = 0.7
     ramp = nodes.new("ShaderNodeValToRGB")
     ramp.color_ramp.elements[0].position = 0.28
-    ramp.color_ramp.elements[0].color = (0.08, 0.065, 0.05, 1)
+    ramp.color_ramp.elements[0].color = (0.035, 0.028, 0.020, 1)
     ramp.color_ramp.elements[1].position = 0.75
-    ramp.color_ramp.elements[1].color = (0.30, 0.25, 0.18, 1)
+    ramp.color_ramp.elements[1].color = (0.16, 0.125, 0.085, 1)
     bump = nodes.new("ShaderNodeBump")
     bump.inputs["Strength"].default_value = 0.35
     bump.inputs["Distance"].default_value = 0.04
@@ -103,9 +103,9 @@ def wall_material():
     brick.inputs["Row Height"].default_value = 0.25
     brick.inputs["Mortar Size"].default_value = 0.018
     brick.inputs["Mortar Smooth"].default_value = 0.18
-    brick.inputs["Color1"].default_value = (0.31, 0.22, 0.14, 1)
-    brick.inputs["Color2"].default_value = (0.21, 0.145, 0.085, 1)
-    brick.inputs["Mortar"].default_value = (0.055, 0.038, 0.025, 1)
+    brick.inputs["Color1"].default_value = (0.175, 0.120, 0.075, 1)
+    brick.inputs["Color2"].default_value = (0.105, 0.070, 0.042, 1)
+    brick.inputs["Mortar"].default_value = (0.035, 0.025, 0.016, 1)
     bump = nodes.new("ShaderNodeBump")
     bump.inputs["Strength"].default_value = 0.24
     bump.inputs["Distance"].default_value = 0.018
@@ -177,7 +177,7 @@ def dark_wood(name="DarkWood"):
 
 def clock(date_angle=195.0, minute_angle=180.0):
     metal = aged_brass()
-    face = paper_material("ClockFace", (0.39, 0.32, 0.22))
+    face = paper_material("ClockFace", (0.30, 0.245, 0.16))
     ink = principled("ClockInk", (0.028, 0.020, 0.014), roughness=0.68)
     cylinder("WatchBody", (0, 0, 0.035), 0.34, 0.065, metal, vertices=64)
     cylinder("WatchFace", (0, 0, 0.069), 0.302, 0.008, face, vertices=64)
@@ -203,11 +203,6 @@ def clock(date_angle=195.0, minute_angle=180.0):
             ink,
             rot=(0, 0, -a)
         )
-    for label, angle, r in (("XII", 0, 0.175), ("III", 90, 0.178),
-                            ("VI", 180, 0.178), ("IX", 270, 0.178)):
-        a = math.radians(angle)
-        text_obj(label, label, (math.sin(a) * r, math.cos(a) * r, 0.079),
-                 0.030, mat=ink, align="CENTER")
     # Two hands. Angle is measured clockwise from 12 o'clock.
     for name, length, angle, width in (
         ("HourHand", 0.16, date_angle, 0.014),
@@ -222,7 +217,7 @@ def clock(date_angle=195.0, minute_angle=180.0):
                                             (0.08, 79, 0.10), (0.05, 123, 0.23))):
         a = math.radians(angle)
         cube(f"Scratch-{i}", (math.sin(a) * r, math.cos(a) * r, 0.078),
-             (0.002, length, 0.001), principled(f"ScratchInk-{i}", (0.55, 0.48, 0.38), 0.6),
+             (0.002, length, 0.001), principled(f"ScratchInk-{i}", (0.14, 0.11, 0.075), 0.7),
              rot=(0, 0, -a))
     # crown and chain
     cylinder("Crown", (0, 0.37, 0.045), 0.04, 0.05, metal, rot=(math.pi / 2, 0, 0), vertices=16)
@@ -237,30 +232,30 @@ def clock(date_angle=195.0, minute_angle=180.0):
 
 
 def flame(name="Flame", loc=(0, 0, 0.7), scale=1.0):
-    outer_mat = emission("FlameOuter", (1.0, 0.30, 0.045), 2.4)
-    inner_mat = emission("FlameInner", (1.0, 0.70, 0.24), 5.2)
+    outer_mat = emission("FlameOuter", (1.0, 0.28, 0.035), 1.7)
+    inner_mat = emission("FlameInner", (1.0, 0.68, 0.22), 3.8)
     bpy.ops.mesh.primitive_cone_add(
-        vertices=16, radius1=0.072 * scale, radius2=0.0,
-        depth=0.24 * scale,
-        location=(loc[0], loc[1], loc[2] + 0.12 * scale)
+        vertices=20, radius1=0.040 * scale, radius2=0.0,
+        depth=0.18 * scale,
+        location=(loc[0], loc[1], loc[2] + 0.09 * scale)
     )
     outer = bpy.context.object
     outer.name = name
     smooth(outer)
     assign(outer, outer_mat)
-    core = sphere(name + "Core", (loc[0], loc[1], loc[2] + 0.045 * scale),
-                  0.046 * scale, inner_mat, segments=16, rings=12)
-    core.scale = (0.78, 0.78, 1.35)
-    glow = sphere(name + "Glow", (loc[0], loc[1], loc[2] + 0.10 * scale),
-                  0.10 * scale, emission("FlameGlow", (1.0, 0.20, 0.035), 0.55),
+    core = sphere(name + "Core", (loc[0], loc[1], loc[2] + 0.035 * scale),
+                  0.026 * scale, inner_mat, segments=16, rings=12)
+    core.scale = (0.75, 0.75, 1.25)
+    glow = sphere(name + "Glow", (loc[0], loc[1], loc[2] + 0.08 * scale),
+                  0.055 * scale, emission("FlameGlow", (1.0, 0.18, 0.03), 0.40),
                   segments=16, rings=10)
-    glow.scale = (0.9, 0.9, 1.3)
+    glow.scale = (0.9, 0.9, 1.25)
     glow.visible_shadow = False
-    bpy.ops.object.light_add(type="POINT", location=(loc[0], loc[1], loc[2] + 0.12 * scale))
+    bpy.ops.object.light_add(type="POINT", location=(loc[0], loc[1], loc[2] + 0.09 * scale))
     lamp = bpy.context.object
-    lamp.data.energy = 3.5 * scale
+    lamp.data.energy = 2.2 * scale
     lamp.data.color = (1.0, 0.42, 0.12)
-    lamp.data.shadow_soft_size = 0.05
+    lamp.data.shadow_soft_size = 0.04
     return outer
 
 
@@ -353,15 +348,15 @@ def _bagh(inside=False):
     bevel.width = 0.030
     bevel.segments = 3
     # Stone surround: two jambs, voussoirs around the arch, and a threshold.
-    gate_stone = stone_material("GateStone", (0.25, 0.21, 0.16))
+    gate_stone = stone_material("GateStone", (0.12, 0.10, 0.075))
     for side in (-1, 1):
-        cube(f"GateJamb-{side}", (side * 0.86, 5.80, 1.03),
-             (0.20, 0.40, 2.08), gate_stone)
+        cube(f"GateJamb-{side}", (side * 0.86, 5.82, 1.03),
+             (0.18, 0.34, 2.08), gate_stone)
     for i in range(9):
         a = (i / 8.0) * math.pi
-        cube(f"Voussoir-{i}", (math.cos(a) * 0.86, 5.80, 2.10 + math.sin(a) * 0.86),
-             (0.20, 0.40, 0.18), gate_stone, rot=(0, -a, 0))
-    cube("Threshold", (0, 5.64, 0.055), (1.95, 0.62, 0.11), gate_stone)
+        cube(f"Voussoir-{i}", (math.cos(a) * 0.87, 5.86, 2.10 + math.sin(a) * 0.87),
+             (0.16, 0.22, 0.20), gate_stone, rot=(0, -a, 0))
+    cube("Threshold", (0, 5.70, 0.055), (1.95, 0.56, 0.11), gate_stone)
     # One dark timber door stands ajar, so the entrance has a human scale.
     cube("GateDoor", (-0.38, 6.02, 1.04), (0.70, 0.055, 1.86), dark_wood(),
          rot=(0, 0, 0.22))
@@ -376,27 +371,35 @@ def _bagh(inside=False):
     stone = stone_material()
     cube("Coping", (0, 6.0, 3.26), (7.25, 0.48, 0.14), stone)
     pockmarks(count=62)
-    # A tree on the far side: a silhouette, not a botanical model.
-    trunk = principled("TreeTrunk", (0.035, 0.022, 0.014), roughness=0.9)
-    leaf = principled("Leaves", (0.020, 0.030, 0.016), roughness=0.85)
-    cylinder("Trunk", (-3.9, 7.2, 1.8), 0.16, 3.6, trunk, rot=(0, -0.12, 0), vertices=9)
+    # A tree in front of the wall: its shadow is part of the composition, and
+    # the dark canopy gives the gate a human-scale edge.
+    trunk = principled("TreeTrunk", (0.020, 0.013, 0.008), roughness=0.94)
+    leaf = principled("Leaves", (0.008, 0.012, 0.006), roughness=0.9)
+    cylinder("Trunk", (-3.15, 5.15, 1.8), 0.15, 3.6, trunk, rot=(0, -0.12, 0), vertices=9)
     for i in range(7):
-        x = -3.9 + (i - 3) * 0.54
-        z = 3.2 + (i % 3) * 0.42
-        s = 0.9 + (i % 4) * 0.18
-        ico(f"Canopy-{i}", (x, 7.1 + (i % 2) * 0.35, z), s, leaf, subdivisions=2)
+        x = -3.15 + (i - 3) * 0.52
+        z = 3.1 + (i % 3) * 0.40
+        s = 0.85 + (i % 4) * 0.16
+        ico(f"Canopy-{i}", (x, 5.05 + (i % 2) * 0.32, z), s, leaf, subdivisions=2)
     # a single cloth at the threshold
     cloth = principled("Cloth", (0.78, 0.73, 0.62), roughness=0.9)
     cube("Cloth", (0.32, 5.45, 0.018), (0.20, 0.13, 0.006), cloth, rot=(0, 0.12, 0.18))
     dust(100, seed=1919, zmax=3.2, ymax=14)
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 6.0, 1.25))
     focus = bpy.context.object
+    bpy.ops.object.light_add(type="POINT", location=(0, 7.4, 1.25))
+    interior = bpy.context.object
+    interior.data.energy = 42
+    interior.data.color = (1.0, 0.40, 0.12)
+    interior.data.shadow_soft_size = 0.55
     if inside:
         camera((0, 2.8, 1.10), (0, 6.0, 1.35), lens=48, fstop=4.0, focus=focus)
+        bpy.context.scene.view_settings.exposure = -0.35
     else:
-        camera((0.18, -3.8, 0.80), (0, 6.0, 1.48), lens=38, fstop=4.2, focus=focus)
-    area("LowSun", (-9, 3, 4.2), (0, 6, 1.5), 1300, 5.0, (1.0, 0.48, 0.18))
-    area("CoolFill", (8, 0, 5.0), (0, 6, 1.2), 500, 7.0, (0.34, 0.55, 0.75))
+        camera((0.15, -3.2, 0.78), (0, 6.0, 1.48), lens=42, fstop=4.2, focus=focus)
+        bpy.context.scene.view_settings.exposure = -0.70
+    area("LowSun", (-9, 3, 4.2), (0, 6, 1.5), 720, 5.0, (1.0, 0.44, 0.15))
+    area("CoolFill", (8, 0, 5.0), (0, 6, 1.2), 150, 7.0, (0.34, 0.55, 0.75))
 
 
 def scene_bagh_wall(samples, width, height, out):
@@ -409,60 +412,136 @@ def scene_bagh_gate(samples, width, height, out):
     render(samples, width, height, out)
 
 
+def scene_wall_scar(samples, width, height, out):
+    reset()
+    dark_world((0.0004, 0.0003, 0.0003))
+    cube("ScarWall", (0, 0, 1.08), (3.80, 0.50, 2.16), wall_material())
+    stone = stone_material("ScarStone", (0.16, 0.13, 0.095))
+    rng = random.Random(41)
+    for i in range(34):
+        x = rng.uniform(-1.65, 1.65)
+        z = rng.uniform(0.30, 1.92)
+        r = rng.uniform(0.012, 0.045)
+        cylinder(f"ScarHole-{i:02d}", (x, -0.247, z), r, 0.014,
+                 stone, rot=(math.pi / 2, 0, 0), vertices=10)
+    # a few dark chips and one long hairline crack
+    for i, (x, z, h) in enumerate(((-0.72, 1.28, 0.42), (0.95, 0.78, 0.30),
+                                   (0.30, 1.72, 0.22))):
+        cube(f"ScarCrack-{i}", (x, -0.252, z), (0.010, 0.004, h),
+             principled(f"ScarCrackMat-{i}", (0.018, 0.013, 0.009), roughness=0.96),
+             rot=(0, 0, 0.18 - i * 0.13))
+    cube("ScarPlaster", (0.54, -0.252, 0.90), (0.42, 0.006, 0.26),
+         principled("ScarPlasterMat", (0.28, 0.21, 0.14), roughness=0.98))
+    dust(60, seed=88, zmax=1.9, ymax=2.5)
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.2, 0, 1.12))
+    focus = bpy.context.object
+    camera((0.12, -2.45, 1.02), (0.18, 0, 1.18), lens=55, fstop=2.4, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.55
+    area("HardSun", (-2.8, -1.1, 2.7), (0, 0, 1.1), 360, 0.35, (1.0, 0.46, 0.16))
+    area("CoolRim", (2.6, 0.4, 1.8), (0, 0, 1.1), 85, 1.2, (0.38, 0.60, 0.90))
+    render(samples, width, height, out)
+
+
 def scene_watch(samples, width, height, out):
     reset()
     dark_world((0.0004, 0.0003, 0.0002))
-    floor = principled("DustFloor", (0.145, 0.095, 0.055), roughness=0.94)
+    floor = principled("DustFloor", (0.040, 0.028, 0.017), roughness=0.98)
     plane("Floor", (0, 0, 0), 7, floor)
     clock()
-    dust(55, seed=515, zmax=0.38, ymax=1.8)
+    dust(90, seed=515, zmax=0.40, ymax=1.4)
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 0.055))
     focus = bpy.context.object
-    camera((0.54, -1.32, 0.70), (0, 0, 0.045), lens=62, fstop=2.2, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.85
-    area("Key", (-0.9, -1.1, 1.7), (0, 0, 0.07), 125, 0.9, (1.0, 0.52, 0.24))
-    area("Rim", (1.0, 0.9, 1.1), (0, 0, 0.06), 80, 0.7, (0.42, 0.68, 1.0))
-    area("Fill", (0, -1.6, 0.3), (0, 0, 0.06), 12, 1.6, (0.55, 0.55, 0.62))
+    camera((0.56, -1.42, 0.76), (0, 0, 0.045), lens=58, fstop=2.0, focus=focus)
+    bpy.context.scene.view_settings.exposure = -1.30
+    area("Key", (-0.9, -1.1, 1.7), (0, 0, 0.07), 70, 0.8, (1.0, 0.52, 0.24))
+    area("Rim", (1.0, 0.9, 1.1), (0, 0, 0.06), 55, 0.6, (0.42, 0.68, 1.0))
+    area("Fill", (0, -1.6, 0.3), (0, 0, 0.06), 5, 1.5, (0.55, 0.55, 0.62))
     render(samples, width, height, out)
 
 
 def scene_well(samples, width, height, out):
     reset()
-    sky((0.008, 0.020, 0.028), (0.48, 0.28, 0.13), (0.006, 0.006, 0.008))
-    ground = principled("WellGround", (0.21, 0.15, 0.10), roughness=0.95)
+    sky((0.006, 0.016, 0.022), (0.42, 0.24, 0.11), (0.005, 0.005, 0.007))
+    ground = principled("WellGround", (0.095, 0.070, 0.045), roughness=0.97)
     plane("Ground", (0, 5, 0), 40, ground)
     stone = stone_material()
-    # circular rim
+    # A real circular parapet: an outer cylinder with a smaller cylinder
+    # subtracted, not a torus with blocks around it like a gear.
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=64, radius=2.05, depth=0.70, location=(0, 3.0, 0.35)
+    )
+    parapet = bpy.context.object
+    parapet.name = "WellParapet"
+    assign(parapet, stone)
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=64, radius=1.52, depth=1.40, location=(0, 3.0, 0.35)
+    )
+    cutter = bpy.context.object
+    cutter.name = "WellCutter"
+    mod = parapet.modifiers.new("WellOpening", "BOOLEAN")
+    mod.operation = "DIFFERENCE"
+    mod.object = cutter
+    mod.solver = "EXACT"
+    bpy.context.view_layer.objects.active = parapet
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+    bpy.data.objects.remove(cutter, do_unlink=True)
+    bevel = parapet.modifiers.new("WellWornEdge", "BEVEL")
+    bevel.width = 0.035
+    bevel.segments = 3
+    # The shaft continues below the rim so the eye sees depth and water.
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=64, radius=1.52, depth=1.90, location=(0, 3.0, -0.55)
+    )
+    shaft = bpy.context.object
+    shaft.name = "WellShaft"
+    assign(shaft, stone)
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=64, radius=1.42, depth=2.10, location=(0, 3.0, -0.55)
+    )
+    cutter = bpy.context.object
+    cutter.name = "ShaftCutter"
+    mod = shaft.modifiers.new("ShaftOpening", "BOOLEAN")
+    mod.operation = "DIFFERENCE"
+    mod.object = cutter
+    mod.solver = "EXACT"
+    bpy.context.view_layer.objects.active = shaft
+    bpy.ops.object.modifier_apply(modifier=mod.name)
+    bpy.data.objects.remove(cutter, do_unlink=True)
+    # A dark, slightly rippled water surface.
+    water = principled("WellWater", (0.003, 0.008, 0.010), roughness=0.24, metallic=0.08)
+    cylinder("Water", (0, 3.0, -0.55), 1.41, 0.02, water, vertices=64)
+    # worn capstone ring
     bpy.ops.mesh.primitive_torus_add(
-        major_radius=1.85, minor_radius=0.30,
-        major_segments=64, minor_segments=16, location=(0, 3.0, 0.34)
+        major_radius=1.80, minor_radius=0.13,
+        major_segments=64, minor_segments=12, location=(0, 3.0, 0.71)
     )
     assign(bpy.context.object, stone)
-    # blocks around the rim
-    for i in range(22):
-        a = (i / 22.0) * math.tau
-        cube(f"RimBlock-{i:02d}", (math.sin(a) * 2.05, 3.0 + math.cos(a) * 2.05, 0.30),
-             (0.22, 0.34, 0.24), stone, rot=(0, 0, -a))
-    water = principled("WellWater", (0.004, 0.010, 0.012), roughness=0.075, metallic=0.22)
-    cylinder("Water", (0, 3.0, 0.20), 1.62, 0.02, water, vertices=64)
-    # a white cloth on the rim
-    cloth = principled("WellCloth", (0.62, 0.56, 0.44), roughness=0.94)
-    cube("WellCloth", (0.76, 4.50, 0.67), (0.26, 0.18, 0.012), cloth, rot=(0, 0.18, 0.4))
-    # background wall, wide enough to fill the frame
-    cube("BackWall", (0, 8.6, 2.25), (12.0, 0.24, 4.50), wall_material())
-    trunk = principled("Trunk", (0.035, 0.022, 0.014), roughness=0.9)
-    leaf = principled("Leaf", (0.020, 0.028, 0.016), roughness=0.85)
-    cylinder("Tree", (-5.8, 8.2, 2.4), 0.16, 5.0, trunk, vertices=9)
+    # vertical joints on the outer face
+    for i in range(16):
+        a = (i / 16.0) * math.tau
+        cube(f"WellJoint-{i:02d}",
+             (math.sin(a) * 2.045, 3.0 + math.cos(a) * 2.045, 0.34),
+             (0.025, 0.060, 0.42), principled("WellJointMat", (0.025, 0.018, 0.012), roughness=0.98),
+             rot=(0, 0, -a))
+    # a cloth left on the rim
+    cloth = principled("WellCloth", (0.52, 0.46, 0.35), roughness=0.96)
+    cube("WellCloth", (0.78, 4.22, 0.79), (0.38, 0.26, 0.014), cloth, rot=(0, 0.10, 0.38))
+    cube("WellClothFold", (0.64, 4.15, 0.80), (0.18, 0.12, 0.020), cloth, rot=(0, 0.22, 0.12))
+    # background wall and a dark tree silhouette
+    cube("BackWall", (0, 8.6, 2.30), (12.0, 0.24, 4.60), wall_material())
+    trunk = principled("Trunk", (0.020, 0.013, 0.008), roughness=0.94)
+    leaf = principled("Leaf", (0.008, 0.012, 0.006), roughness=0.9)
+    cylinder("Tree", (-5.4, 8.1, 2.4), 0.15, 5.0, trunk, vertices=9)
     for i in range(7):
-        ico(f"Leaf-{i}", (-5.8 + (i - 3) * 0.58, 8.1, 4.2 + (i % 3) * 0.50),
-            0.9 + (i % 3) * 0.22, leaf, subdivisions=2)
+        ico(f"Leaf-{i}", (-5.4 + (i - 3) * 0.56, 8.0, 4.1 + (i % 3) * 0.48),
+            0.85 + (i % 3) * 0.20, leaf, subdivisions=2)
     dust(90, seed=313, zmax=3.4, ymax=11)
-    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 3.0, 0.25))
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 3.0, 0.10))
     focus = bpy.context.object
-    camera((0.2, -4.4, 4.3), (0, 3.0, 0.25), lens=42, fstop=4.0, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.45
-    area("Sky", (-5, -2, 7), (0, 3, 0.4), 480, 8.0, (0.42, 0.58, 0.82))
-    area("Warm", (6, 6, 3.5), (0, 3, 0.4), 260, 4.0, (1.0, 0.48, 0.20))
+    camera((0.15, -4.0, 4.25), (0, 3.0, 0.10), lens=44, fstop=4.0, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.65
+    area("Sky", (-5, -2, 7), (0, 3, 0.4), 300, 8.0, (0.42, 0.58, 0.82))
+    area("Warm", (6, 6, 3.5), (0, 3, 0.4), 170, 4.0, (1.0, 0.48, 0.20))
     render(samples, width, height, out)
 
 
@@ -470,17 +549,25 @@ def scene_report(samples, width, height, out):
     reset()
     dark_world((0.0005, 0.0004, 0.0003))
     plane("Desk", (0, 0, 0), 7, dark_wood())
-    paper = paper_material("ReportPaper", (0.68, 0.60, 0.46))
+    paper = paper_material("ReportPaper", (0.62, 0.55, 0.42))
     cube("Report", (0, 0, 0.012), (2.15, 1.42, 0.010), paper)
     ink = principled("ReportInk", (0.025, 0.020, 0.015), roughness=0.65)
-    red = principled("StampRed", (0.36, 0.035, 0.020), roughness=0.8)
+    red = principled("StampRed", (0.30, 0.025, 0.015), roughness=0.82)
     text_obj("ReportHead", "HUNTER COMMISSION", (-1.00, 0.55, 0.026), 0.105, mat=ink)
     text_obj("ReportSub", "DISORDERS INQUIRY · 1919–1920", (-1.00, 0.40, 0.026), 0.045, mat=ink)
     text_obj("ReportDead", "379 DEAD", (-1.00, 0.14, 0.026), 0.160, mat=ink)
     text_obj("ReportWounded", "1,200 WOUNDED", (-1.00, -0.10, 0.026), 0.100, mat=ink)
     text_obj("ReportNote", "THE OFFICIAL FIGURES", (-1.00, -0.29, 0.026), 0.042, mat=ink)
-    text_obj("Stamp", "NO PROSECUTION", (0.45, -0.49, 0.031), 0.063, mat=red, align="CENTER")
-    cube("StampFrame", (0.45, -0.49, 0.024), (0.96, 0.15, 0.002), red, rot=(0, 0, -0.10))
+    # A rubber-stamp border, not a solid red block. The old filled frame
+    # buried the words and looked like a pink sticker on the report.
+    text_obj("Stamp", "NO PROSECUTION", (0.45, -0.47, 0.031), 0.061, mat=red, align="CENTER")
+    for name, loc, dims in (
+        ("StampTop", (0.45, -0.395, 0.026), (0.96, 0.012, 0.002)),
+        ("StampBottom", (0.45, -0.545, 0.026), (0.96, 0.012, 0.002)),
+        ("StampLeft", (-0.03, -0.47, 0.026), (0.012, 0.16, 0.002)),
+        ("StampRight", (0.93, -0.47, 0.026), (0.012, 0.16, 0.002)),
+    ):
+        cube(name, loc, dims, red)
     # lamp and a small stack of papers
     metal = aged_brass()
     cylinder("LampBase", (1.65, 0.42, 0.16), 0.24, 0.32, metal, vertices=24)
@@ -500,87 +587,99 @@ def scene_report(samples, width, height, out):
 
 def scene_lamp(samples, width, height, out):
     reset()
-    dark_world((0.0006, 0.0004, 0.0003))
+    dark_world((0.0004, 0.0003, 0.0002))
     plane("Table", (0, 0, 0), 6, dark_wood())
     metal = aged_brass()
-    cylinder("LampBase", (0, 0, 0.12), 0.30, 0.24, metal, vertices=32)
-    cylinder("LampStem", (0, 0, 0.33), 0.075, 0.20, metal, vertices=16)
-    bpy.ops.mesh.primitive_uv_sphere_add(segments=32, ring_count=16, radius=0.25, location=(0, 0, 0.51))
-    bowl = bpy.context.object
-    bowl.name = "LampBowl"
-    bowl.scale = (1.0, 1.0, 0.64)
-    assign(bowl, metal)
-    smooth(bowl)
+    # A candle in a brass dish is a cleaner object than a modelled oil lamp:
+    # one small flame, one pool of wax, one letter. The frame stays dark.
+    cylinder("CandleDish", (0, 0, 0.025), 0.170, 0.035, metal, vertices=40)
     bpy.ops.mesh.primitive_torus_add(
-        major_radius=0.225, minor_radius=0.020,
-        major_segments=32, minor_segments=8, location=(0, 0, 0.62)
+        major_radius=0.155, minor_radius=0.012,
+        major_segments=40, minor_segments=8, location=(0, 0, 0.047)
     )
     assign(bpy.context.object, metal)
-    cylinder("Wick", (0, 0, 0.69), 0.022, 0.10,
-             principled("WickChar", (0.020, 0.014, 0.010), roughness=0.95), vertices=12)
-    flame(loc=(0, 0, 0.73), scale=0.72)
+    wax = principled("CandleWax", (0.50, 0.41, 0.285), roughness=0.58, transmission=0.04)
+    cylinder("Candle", (0, 0, 0.275), 0.056, 0.455, wax, vertices=32)
+    cylinder("Wick", (0, 0, 0.510), 0.006, 0.055,
+             principled("WickChar", (0.018, 0.012, 0.008), roughness=0.96), vertices=10)
+    flame(loc=(0, 0, 0.512), scale=0.55)
     # a letter and a pen
-    paper = paper_material("LetterPaper", (0.62, 0.54, 0.40))
-    cube("Letter", (0.58, -0.32, 0.012), (0.48, 0.32, 0.008), paper, rot=(0, 0, 0.16))
+    paper = paper_material("LetterPaper", (0.58, 0.50, 0.36))
+    cube("Letter", (0.46, -0.30, 0.012), (0.46, 0.30, 0.008), paper, rot=(0, 0, 0.16))
     letter_ink = principled("LetterInk", (0.030, 0.022, 0.016), roughness=0.72)
-    text_obj("LetterLine1", "I renounce", (0.39, -0.31, 0.021), 0.026, mat=letter_ink,
+    text_obj("LetterLine1", "I renounce", (0.27, -0.29, 0.021), 0.024, mat=letter_ink,
              align="LEFT")
-    text_obj("LetterLine2", "my knighthood", (0.39, -0.36, 0.021), 0.026, mat=letter_ink,
+    text_obj("LetterLine2", "my knighthood", (0.27, -0.34, 0.021), 0.024, mat=letter_ink,
              align="LEFT")
-    cube("Pen", (0.58, 0.18, 0.036), (0.30, 0.025, 0.014),
+    cube("Pen", (0.50, 0.14, 0.034), (0.30, 0.024, 0.014),
          principled("PenInk", (0.01, 0.008, 0.006), roughness=0.35), rot=(0, 0, 0.5))
-    dust(45, seed=77, zmax=1.4, ymax=2.0)
-    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 0.62))
+    # a little spilled wax, so the candle is not a perfect primitive
+    for i, (x, y, r) in enumerate(((0.045, -0.035, 0.035), (-0.030, 0.055, 0.028),
+                                   (0.075, 0.020, 0.022))):
+        sphere(f"WaxDrip-{i}", (x, y, 0.050), r, wax, segments=16, rings=8).scale = (1.0, 1.0, 0.35)
+    dust(55, seed=77, zmax=1.2, ymax=1.7)
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 0.40))
     focus = bpy.context.object
-    camera((0.95, -2.05, 0.95), (0, 0, 0.58), lens=55, fstop=2.2, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.85
-    area("WarmKey", (0.8, -0.8, 1.6), (0, 0, 0.55), 110, 0.9, (1.0, 0.48, 0.18))
-    area("CoolRim", (-1.0, 0.9, 1.1), (0, 0, 0.55), 75, 0.8, (0.38, 0.62, 0.92))
+    camera((0.46, -1.85, 0.78), (0, 0, 0.36), lens=55, fstop=2.2, focus=focus)
+    bpy.context.scene.view_settings.exposure = -1.15
+    area("WarmKey", (0.8, -0.8, 1.6), (0, 0, 0.40), 80, 0.9, (1.0, 0.48, 0.18))
+    area("CoolRim", (-1.0, 0.9, 1.1), (0, 0, 0.45), 45, 0.8, (0.38, 0.62, 0.92))
     render(samples, width, height, out)
 
 
 def scene_memorial(samples, width, height, out):
     reset()
-    dark_world((0.0005, 0.0004, 0.0004))
-    plane("Floor", (0, 0, 0), 8, stone_material("FloorStone", (0.050, 0.046, 0.042)))
-    stone = stone_material("MemorialStone", (0.095, 0.085, 0.075))
-    # A low memorial wall carries the name and date; the flame sits in front
-    # of it, so the frame is an object study rather than a blocky statue.
-    cube("MemorialWall", (0, 1.00, 1.05), (2.80, 0.35, 2.10), stone)
-    cube("Plinth", (0, 0, 0.34), (0.82, 0.54, 0.68), stone)
-    cube("Step", (0, 0, 0.09), (1.25, 0.78, 0.18), stone)
-    gold = principled("MemorialGold", (0.54, 0.35, 0.10), roughness=0.38, metallic=0.75)
-    text_obj("MemorialTitle", "JALLIANWALA BAGH", (0, 0.815, 1.72), 0.105,
+    dark_world((0.0004, 0.0003, 0.0003))
+    plane("Floor", (0, 0, 0), 10, stone_material("FloorStone", (0.045, 0.040, 0.035)))
+    stone = stone_material("MemorialStone", (0.080, 0.070, 0.060))
+    # A shallow stone niche, not a floating billboard. The side walls give the
+    # plaque a real edge and keep the frame from ending in black voids.
+    cube("MemorialWall", (0, 1.25, 1.45), (4.40, 0.40, 2.90), stone)
+    for side in (-1, 1):
+        cube(f"MemorialSide-{side}", (side * 2.06, 0.82, 1.45),
+             (0.30, 1.20, 2.90), stone)
+    cube("Plinth", (0, 0, 0.34), (0.90, 0.60, 0.68), stone)
+    cube("PlinthCap", (0, 0, 0.70), (1.02, 0.72, 0.06), stone)
+    cube("Step", (0, 0, 0.09), (1.42, 0.88, 0.18), stone)
+    # dark bronze plaque + restrained gold lettering
+    plaque = principled("MemorialPlaque", (0.060, 0.042, 0.024),
+                        roughness=0.46, metallic=0.58)
+    cube("Plaque", (0, 1.015, 1.50), (2.60, 0.035, 1.50), plaque)
+    gold = principled("MemorialGold", (0.62, 0.43, 0.14), roughness=0.34, metallic=0.82)
+    text_obj("MemorialTitle", "JALLIANWALA BAGH", (0, 0.992, 1.94), 0.078,
              rot=(math.pi / 2, 0, 0), mat=gold, align="CENTER")
-    text_obj("Year", "1919", (0, 0.812, 1.38), 0.30,
+    text_obj("Year", "1919", (0, 0.991, 1.55), 0.235,
              rot=(math.pi / 2, 0, 0), mat=gold, align="CENTER")
-    # bronze bowl and flame
+    # bronze brazier, in contact with the plinth
     bpy.ops.mesh.primitive_uv_sphere_add(segments=32, ring_count=16, radius=0.22,
-                                         location=(0, 0, 0.84))
+                                         location=(0, 0, 0.82))
     bowl = bpy.context.object
     bowl.name = "MemorialBowl"
-    bowl.scale = (1.0, 1.0, 0.44)
+    bowl.scale = (1.0, 1.0, 0.38)
     assign(bowl, aged_brass("MemorialBronze"))
     smooth(bowl)
     bpy.ops.mesh.primitive_torus_add(
-        major_radius=0.20, minor_radius=0.018,
-        major_segments=32, minor_segments=8, location=(0, 0, 0.90)
+        major_radius=0.205, minor_radius=0.017,
+        major_segments=32, minor_segments=8, location=(0, 0, 0.885)
     )
     assign(bpy.context.object, aged_brass("MemorialBronzeRim"))
-    flame(loc=(0, 0, 0.98), scale=0.58)
-    # light shaft from above
-    bpy.ops.object.light_add(type="SPOT", location=(0, -1.0, 5.2))
+    flame(loc=(0, 0, 0.885), scale=0.50)
+    # a soft vertical light shaft
+    bpy.ops.object.light_add(type="SPOT", location=(0, -1.2, 5.2))
     spot = bpy.context.object
-    spot.data.energy = 900
-    spot.data.spot_size = math.radians(30)
+    spot.data.energy = 620
+    spot.data.spot_size = math.radians(40)
+    spot.data.spot_blend = 0.55
+    spot.data.shadow_soft_size = 0.35
     spot.data.color = (1.0, 0.70, 0.42)
-    spot.rotation_euler = (math.radians(15), 0, 0)
-    area("Rim", (2.4, 1.8, 2.4), (0, 0.5, 1.0), 130, 2.0, (0.42, 0.60, 0.82))
-    dust(60, seed=919, zmax=2.2, ymax=3.0)
+    spot.rotation_euler = (math.radians(14), 0, 0)
+    area("Rim", (2.6, 1.8, 2.4), (0, 0.4, 1.1), 95, 2.0, (0.42, 0.60, 0.82))
+    area("Fill", (-2.0, -1.5, 3.0), (0, 0.4, 1.0), 35, 2.5, (0.46, 0.38, 0.30))
+    dust(55, seed=919, zmax=2.4, ymax=3.2)
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 0.98))
     focus = bpy.context.object
-    camera((0.0, -4.0, 1.25), (0, 0, 1.00), lens=45, fstop=2.8, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.45
+    camera((0.0, -4.2, 1.38), (0, 0, 1.10), lens=42, fstop=3.2, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.55
     render(samples, width, height, out)
 
 
@@ -588,6 +687,7 @@ SCENES = {
     "notice": scene_notice,
     "bagh-wall": scene_bagh_wall,
     "bagh-gate": scene_bagh_gate,
+    "wall-scar": scene_wall_scar,
     "watch": scene_watch,
     "well": scene_well,
     "report": scene_report,

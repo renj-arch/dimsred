@@ -36,6 +36,7 @@ const FILMS = {
       'notice-desk': 'notice',
       'bagh-wall': 'bagh-wall',
       'bagh-gate': 'bagh-gate',
+      'wall-scar': 'wall-scar',
       'watch': 'watch',
       'well': 'well',
       'report-desk': 'report',
