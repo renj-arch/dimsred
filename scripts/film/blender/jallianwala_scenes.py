@@ -338,10 +338,24 @@ def torn_notice(prefix, x, y, z, rot=0.0, width=0.36, height=0.46):
     paper = paper_material(f"{prefix}-Paper", (0.48, 0.39, 0.26))
     ink = principled(f"{prefix}-Ink", (0.018, 0.014, 0.010), roughness=0.72)
     cube(prefix, (x, y, z), (width, 0.004, height), paper, rot=(0, 0, rot))
-    text_obj(f"{prefix}-Line1", "NO", (x - width * 0.34, y - 0.004, z + height * 0.20),
-             0.035, rot=(math.pi / 2, 0, rot), mat=ink)
+    text_obj(f"{prefix}-Line1", "NO", (x - width * 0.30, y - 0.004, z + height * 0.22),
+             0.052, rot=(math.pi / 2, 0, rot), mat=ink)
     text_obj(f"{prefix}-Line2", "MEETINGS", (x - width * 0.34, y - 0.004, z + height * 0.05),
-             0.025, rot=(math.pi / 2, 0, rot), mat=ink)
+             0.036, rot=(math.pi / 2, 0, rot), mat=ink)
+    # printed body lines and a faded seal: at wall distance the old posters read
+    # as blank rectangles.
+    for i in range(6):
+        lw = width * (0.48 - (i % 3) * 0.07)
+        cube(f"{prefix}-Print-{i}", (x - width * 0.10, y - 0.005,
+                                     z - height * 0.11 - i * height * 0.075),
+             (lw, 0.001, 0.006), ink)
+    bpy.ops.mesh.primitive_torus_add(
+        major_radius=width * 0.13, minor_radius=0.004,
+        major_segments=24, minor_segments=6,
+        location=(x + width * 0.22, y - 0.006, z - height * 0.28),
+        rotation=(math.pi / 2, 0, rot)
+    )
+    assign(bpy.context.object, ink)
 
 
 def book_stack(prefix, x, y, z, count=3):
@@ -546,11 +560,8 @@ def flame(name="Flame", loc=(0, 0, 0.7), scale=1.0):
     core = sphere(name + "Core", (loc[0], loc[1], loc[2] + 0.030 * scale),
                   0.016 * scale, inner_mat, segments=16, rings=12)
     core.scale = (0.70, 0.70, 1.55)
-    glow = sphere(name + "Glow", (loc[0], loc[1], loc[2] + 0.055 * scale),
-                  0.042 * scale, emission("FlameGlow", (1.0, 0.20, 0.03), 1.15),
-                  segments=16, rings=10)
-    glow.scale = (0.85, 0.85, 1.30)
-    glow.visible_shadow = False
+    # No glowing sphere around the flame: it turned into an orange marble.
+    # The compositor bloom is enough once the cone itself is hot.
     bpy.ops.mesh.primitive_cone_add(
         vertices=16, radius1=0.009 * scale, radius2=0.0,
         depth=0.026 * scale, location=(loc[0], loc[1], loc[2] + 0.013 * scale)
@@ -605,9 +616,16 @@ def scene_notice(samples, width, height, out):
     cylinder("DeskClock", (-1.30, 0.36, 0.055), 0.20, 0.09, metal, vertices=32)
     cylinder("DeskClockFace", (-1.30, 0.36, 0.102), 0.17, 0.006,
              paper_material("ClockPaper", (0.80, 0.73, 0.58)), vertices=32)
-    # lamp on the right: a warm practical
-    cylinder("LampBase", (1.50, 0.70, 0.18), 0.24, 0.36, metal, vertices=24)
-    sphere("LampShade", (1.50, 0.70, 0.52), 0.30, emission("LampWarm", (1.0, 0.50, 0.18), 1.4),
+    clock_hand = principled("ClockHandInk", (0.015, 0.012, 0.009), roughness=0.55)
+    cube("ClockHour", (-1.30, 0.36, 0.108), (0.012, 0.095, 0.0015), clock_hand,
+         rot=(0, 0, -0.72))
+    cube("ClockMinute", (-1.30, 0.36, 0.109), (0.008, 0.145, 0.0015), clock_hand,
+         rot=(0, 0, 1.57))
+    cylinder("ClockPin", (-1.30, 0.36, 0.112), 0.012, 0.002, clock_hand, vertices=12)
+    # lamp on the right: a warm practical, kept inside the frame
+    cylinder("LampBase", (1.55, 0.58, 0.16), 0.18, 0.30, metal, vertices=24)
+    sphere("LampShade", (1.55, 0.58, 0.36), 0.17,
+           emission("LampWarm", (1.0, 0.50, 0.18), 0.85),
            segments=24, rings=12).scale = (1.0, 1.0, 0.55)
     # the rest of the desk: a folded newspaper, a second stack of paper, a
     # magnifier, a cup, a stick of sealing wax and a red official seal
@@ -625,15 +643,15 @@ def scene_notice(samples, width, height, out):
         cube(f"NoticeStack-{i}", (1.22, -0.54, 0.018 + i * 0.009),
              (0.39, 0.53, 0.008), page, rot=(0, 0, 0.04 - i * 0.025))
     # brass magnifier
-    cylinder("MagnifierHandle", (1.06, -1.02, 0.035), 0.022, 0.34, metal,
+    cylinder("MagnifierHandle", (1.28, -0.90, 0.035), 0.022, 0.30, metal,
              rot=(math.pi / 2, 0, 0.5), vertices=12)
     bpy.ops.mesh.primitive_torus_add(
-        major_radius=0.145, minor_radius=0.014,
+        major_radius=0.130, minor_radius=0.014,
         major_segments=32, minor_segments=8,
-        location=(0.78, -0.86, 0.042), rotation=(math.pi / 2, 0, 0.5)
+        location=(1.02, -0.74, 0.042), rotation=(math.pi / 2, 0, 0.5)
     )
     assign(bpy.context.object, metal)
-    cylinder("MagnifierLens", (0.78, -0.86, 0.042), 0.135, 0.004,
+    cylinder("MagnifierLens", (1.02, -0.74, 0.042), 0.120, 0.004,
              principled("MagnifierGlass", (0.20, 0.27, 0.27), roughness=0.08,
                         transmission=0.55), rot=(math.pi / 2, 0, 0.5), vertices=32)
     # tea cup with a dark rim
@@ -650,14 +668,14 @@ def scene_notice(samples, width, height, out):
     cylinder("NoticeSealInner", (0.56, -0.38, 0.035), 0.050, 0.010, red, vertices=24)
     cylinder("WaxStick", (1.15, 0.10, 0.035), 0.019, 0.34, red,
              rot=(math.pi / 2, 0, 1.15), vertices=10)
-    spectacles("NoticeGlasses", -0.92, -0.82, 0.032)
+    spectacles("NoticeGlasses", -1.25, -0.64, 0.032)
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 0.02))
     focus = bpy.context.object
-    camera((0.72, -3.25, 2.05), (0.0, 0.0, 0.10), lens=44, fstop=2.0, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.72
-    area("Key", (-1.0, -1.4, 3.3), (0, 0, 0.1), 310, 1.8, (1.0, 0.62, 0.34))
-    area("Rim", (2.2, 0.8, 2.0), (0, 0, 0.1), 165, 1.8, (0.40, 0.62, 0.85))
-    area("Fill", (1.0, -1.8, 1.2), (0, 0, 0.1), 32, 1.2, (0.55, 0.40, 0.26))
+    camera((0.55, -3.45, 2.12), (0.0, 0.0, 0.10), lens=46, fstop=2.1, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.82
+    area("Key", (-1.0, -1.4, 3.3), (0, 0, 0.1), 260, 1.8, (1.0, 0.62, 0.34))
+    area("Rim", (2.2, 0.8, 2.0), (0, 0, 0.1), 150, 1.8, (0.40, 0.62, 0.85))
+    area("Fill", (1.0, -1.8, 1.2), (0, 0, 0.1), 28, 1.2, (0.55, 0.40, 0.26))
     render(samples, width, height, out)
 
 
@@ -745,6 +763,14 @@ def _bagh(inside=False, empty=False):
         # the doorway a lit destination and catches the lamp.
         cube("OutsideWall", (0.0, -2.0, 1.35), (7.0, 0.30, 2.70),
              wall_material())
+        # A lit doorway and a tree on the far side of the lane: the gate should
+        # open onto a place, not onto a flat brick backdrop.
+        cube("StreetDoorGlow", (0.28, -1.83, 0.96), (0.78, 0.018, 1.62),
+             emission("StreetDoorWarm", (1.0, 0.38, 0.09), 0.42))
+        street_tree = principled("StreetTreeTrunk", (0.012, 0.009, 0.006), roughness=0.95)
+        street_leaf = principled("StreetTreeLeaf", (0.005, 0.009, 0.004), roughness=0.92)
+        tree_kit("StreetTree", -1.35, -0.20, 0.0, 3.4, street_tree, street_leaf,
+                 seed=27, spread=1.3)
         area("StreetFill", (1.8, 1.8, 2.6), (0.0, -1.0, 1.2), 78, 2.0,
              (1.0, 0.47, 0.18))
     # coping stones, individual blocks with worn edges and uneven joints
@@ -838,10 +864,10 @@ def _bagh(inside=False, empty=False):
     gate_lamp.data.color = (1.0, 0.37, 0.10)
     gate_lamp.data.shadow_soft_size = 0.12
     if inside:
-        camera((0.35, 9.05, 1.58), (0, 6.0, 1.35), lens=36, fstop=4.5, focus=focus)
-        bpy.context.scene.view_settings.exposure = -0.30
-        # The garden face is in shade; a low fill keeps the arch and the
-        # threshold readable without flattening the stone.
+        # A low three-quarter view from the garden side. The old straight-on
+        # camera placed the door and two brick jambs across the whole frame.
+        camera((1.90, 8.50, 1.05), (-0.15, 6.0, 0.72), lens=35, fstop=4.5, focus=focus)
+        bpy.context.scene.view_settings.exposure = -0.35
         area("InsideFill", (0.0, 7.4, 2.8), (0, 6.0, 1.3), 150, 2.4, (0.58, 0.46, 0.34))
         area("InsideEdge", (2.6, 7.2, 1.8), (0, 6.0, 1.2), 55, 1.2, (1.0, 0.46, 0.18))
     else:
@@ -871,8 +897,9 @@ def scene_wall_scar(samples, width, height, out):
     dark_world((0.0004, 0.0003, 0.0003))
     plaster = plaster_material("ScarPlaster", (0.30, 0.235, 0.155))
     cube("ScarWall", (0, 0, 1.10), (4.40, 0.50, 2.20), plaster)
-    # A return wall gives the close-up a corner and a deep shadow on the left.
-    cube("ScarReturn", (-2.09, -0.65, 1.10), (0.34, 1.55, 2.20), plaster)
+    coping = stone_material("ScarCopingStone", (0.19, 0.15, 0.11))
+    cube("ScarCoping", (0, -0.02, 2.22), (4.62, 0.60, 0.16), coping)
+    cube("ScarPlinth", (0, -0.06, 0.11), (4.62, 0.66, 0.22), coping)
     hole = principled("ScarHoleMat", (0.004, 0.003, 0.002), roughness=0.99)
     chip = principled("ScarChipMat", (0.36, 0.29, 0.20), roughness=0.97)
     rng = random.Random(41)
@@ -892,13 +919,12 @@ def scene_wall_scar(samples, width, height, out):
                                       (0.31, 1.62, 0.24, 0.07), (-1.42, 0.63, 0.52, -0.05))):
         cube(f"ScarCrack-{i}", (x, -0.2518, z), (0.0045, 0.002, h),
              crack_mat, rot=(0, 0, a))
-    # a small patch of exposed brick, laid like brickwork rather than a decal
+    # a few brick-shaped losses near the coping, without a rectangular decal
     brick_mat = principled("ScarBrick", (0.18, 0.078, 0.035), roughness=0.94)
-    for i in range(12):
-        bx = 0.55 + (i % 4) * 0.105
-        bz = 1.34 + (i // 4) * 0.052
-        cube(f"ScarBrick-{i}", (bx, -0.252, bz), (0.092, 0.004, 0.040),
-             brick_mat, rot=(0, 0, 0.015))
+    for i, (bx, bz) in enumerate(((0.38, 1.92), (0.47, 1.90), (0.42, 1.83),
+                                  (0.83, 1.95), (0.94, 1.88))):
+        cube(f"ScarBrick-{i}", (bx, -0.252, bz), (0.080, 0.004, 0.038),
+             brick_mat, rot=(0, 0, 0.015 - i * 0.01))
     # falling plaster dust and a few chips caught in the air
     rng2 = random.Random(902)
     plaster_bit = principled("ScarPlasterBit", (0.42, 0.36, 0.25), roughness=0.95)
@@ -911,11 +937,26 @@ def scene_wall_scar(samples, width, height, out):
     damp = principled("ScarDamp", (0.010, 0.008, 0.006), roughness=0.98)
     for i, (x, w) in enumerate(((-1.20, .055), (0.92, .035), (1.42, .075))):
         cube(f"ScarDamp-{i}", (x, -0.2515, 1.72), (w, 0.001, 0.82), damp)
-    dust(170, seed=88, zmax=2.0, ymax=2.7)
-    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.1, 0, 1.12))
+    # ground, plaster debris and three spent cases: a close-up needs a scale cue
+    paver_floor("ScarPavers", 0.0, -2.1, 12, 9, 0.33, z=0.018, seed=144)
+    rubble = stone_material("ScarRubble", (0.28, 0.23, 0.16))
+    for i in range(9):
+        s = 0.025 + (i % 3) * 0.012
+        cube(f"ScarRubble-{i}", (-0.55 + i * 0.15, -0.48 + (i % 2) * 0.10,
+                                 0.035 + s * 0.5), (s, s * 0.8, s * 0.45),
+             rubble, rot=(0, 0, i * 0.31))
+    case_mat = aged_brass("ScarCase")
+    for i, (cx, cy, cz) in enumerate(((0.44, -0.70, 0.031), (0.55, -0.76, 0.029),
+                                      (0.35, -0.79, 0.030))):
+        cylinder(f"ScarCase-{i}", (cx, cy, cz), 0.013, 0.058, case_mat,
+                 rot=(math.pi / 2, 0, 0.2 + i * 0.25), vertices=14)
+    sphere("ScarSlug", (0.67, -0.64, 0.030), 0.016, case_mat,
+           segments=14, rings=8).scale = (1.0, 1.5, 0.55)
+    dust(170, seed=88, zmax=2.0, ymax=4.2)
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.1, 0, 1.05))
     focus = bpy.context.object
-    camera((0.24, -3.25, 1.12), (0.06, 0, 1.12), lens=58, fstop=2.2, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.55
+    camera((0.40, -4.80, 1.18), (0.03, 0, 1.02), lens=46, fstop=2.4, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.62
     area("HardSun", (-2.6, -1.2, 2.9), (0, 0, 1.1), 470, 0.30, (1.0, 0.54, 0.24))
     area("CoolRim", (2.6, 0.4, 1.8), (0, 0, 1.1), 110, 1.2, (0.38, 0.60, 0.90))
     area("Bounce", (0.4, -2.0, 0.30), (0, 0, 0.9), 24, 1.2, (0.55, 0.40, 0.24))
@@ -1102,31 +1143,27 @@ def scene_well(samples, width, height, out):
             rotation=(math.pi / 2, 0, 0.2)
         )
         assign(bpy.context.object, rope)
-    # background wall, two shallow niches and a smarter tree silhouette
+    # background wall, shallow stone pilasters and a tree over the coping
     cube("BackWall", (0, 8.6, 2.30), (12.0, 0.24, 4.60), wall_material())
-    niche_dark = principled("NicheDark", (0.006, 0.005, 0.004), roughness=0.98)
-    niche_stone = stone_material("NicheStone", (0.12, 0.095, 0.065))
+    pilaster = stone_material("WellPilaster", (0.16, 0.125, 0.085))
     for side in (-1, 1):
-        nx = side * 2.05
-        cube(f"NicheBack-{side}", (nx, 8.44, 1.55), (1.10, 0.05, 1.45), niche_dark)
-        for j in (-1, 1):
-            cube(f"NicheJamb-{side}-{j}", (nx + j * 0.61, 8.40, 1.55),
-                 (0.12, 0.20, 1.62), niche_stone)
-        cube(f"NicheLintel-{side}", (nx, 8.40, 2.30), (1.42, 0.20, 0.15), niche_stone)
+        cube(f"WellPilaster-{side}", (side * 2.45, 8.34, 1.70),
+             (0.28, 0.24, 3.40), pilaster)
+        cube(f"WellPilasterCap-{side}", (side * 2.45, 8.30, 3.42),
+             (0.40, 0.34, 0.12), pilaster)
     trunk = principled("Trunk", (0.018, 0.012, 0.007), roughness=0.94)
     leaf = principled("Leaf", (0.006, 0.011, 0.005), roughness=0.9)
     tree_kit("WellTree", -5.2, 8.15, 0.0, 6.0, trunk, leaf, seed=83, spread=2.6)
-    limb("WellForeground", (2.85, -2.90, 4.10), (1.55, -2.45, 3.25),
-         0.038, trunk, vertices=7)
-    leaf_cluster("WellForegroundLeaves", 1.72, -2.52, 3.18, 0.28, leaf, count=5, seed=95)
+    # vines hanging over the wall; the old black rectangles read as windows
+    leaf_cluster("WellVine", -1.25, 8.40, 2.70, 0.34, leaf, count=7, seed=67)
     dust(190, seed=313, zmax=3.6, ymax=11)
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 3.0, 0.10))
     focus = bpy.context.object
-    camera((1.20, -6.80, 3.80), (0, 3.20, 0.85), lens=42, fstop=3.2, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.12
+    camera((0.90, -3.40, 3.25), (0, 3.00, 0.55), lens=46, fstop=3.0, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.10
     area("Sky", (-5, -2, 7), (0, 3, 0.4), 780, 7.0, (0.46, 0.62, 0.88))
     area("Warm", (6, 6, 3.5), (0, 3, 0.4), 420, 4.0, (1.0, 0.48, 0.20))
-    area("WaterGlint", (1.6, 0.8, 5.2), (0, 3, 0.0), 520, 2.0, (0.52, 0.70, 0.88))
+    area("WaterGlint", (1.6, 0.8, 5.2), (0, 3, 0.0), 900, 1.8, (0.62, 0.78, 0.94))
     area("FrontFill", (-1.0, -3.0, 2.0), (0, 3.0, 0.8), 85, 2.0, (0.48, 0.42, 0.34))
     render(samples, width, height, out)
 
@@ -1163,13 +1200,14 @@ def scene_report(samples, width, height, out):
              (0.58 - (i % 3) * 0.07, 0.004, 0.0016), ink)
     # lamp, inkpot, stamp block, magnifier, glasses and paper stacks
     metal = aged_brass()
-    cylinder("LampBase", (1.65, 0.42, 0.16), 0.24, 0.32, metal, vertices=24)
-    sphere("LampShade", (1.65, 0.42, 0.48), 0.28, emission("ReportLamp", (1.0, 0.52, 0.22), 1.3),
-           segments=24, rings=12).scale = (1.0, 1.0, 0.55)
+    cylinder("LampBase", (1.30, 0.62, 0.14), 0.19, 0.28, metal, vertices=24)
+    sphere("LampShade", (1.30, 0.62, 0.36), 0.18,
+           emission("ReportLamp", (1.0, 0.52, 0.22), 0.85),
+           segments=24, rings=12).scale = (1.0, 1.0, 0.52)
     for i in range(5):
         cube(f"Stack-{i}", (-1.38 + i * 0.012, -0.64 + i * 0.020, 0.020 + i * 0.012),
              (0.34, 0.25, 0.008), paper, rot=(0, 0, i * 0.018))
-    cylinder("Inkpot", (1.15, -0.62, 0.10), 0.12, 0.17,
+    cylinder("Inkpot", (1.18, -0.68, 0.10), 0.12, 0.17,
              principled("ReportInkpot", (0.025, 0.020, 0.015), roughness=0.28), vertices=24)
     bpy.ops.mesh.primitive_torus_add(
         major_radius=0.115, minor_radius=0.014,
@@ -1195,7 +1233,7 @@ def scene_report(samples, width, height, out):
     cylinder("ReportMagnifier", (-0.98, -0.92, 0.034), 0.092, 0.004,
              principled("ReportLens", (0.18, 0.25, 0.25), roughness=0.08,
                         transmission=0.6), rot=(math.pi / 2, 0, -0.3), vertices=28)
-    spectacles("ReportGlasses", 0.30, -0.82, 0.032)
+    spectacles("ReportGlasses", -0.10, -0.74, 0.032)
     # a desk edge and a dark chair back give the overhead frame depth
     cube("ReportDeskEdge", (0, 0.88, -0.03), (4.2, 0.16, 0.12),
          principled("ReportDeskEdgeMat", (0.045, 0.028, 0.017), roughness=0.8))
@@ -1204,11 +1242,11 @@ def scene_report(samples, width, height, out):
          rot=(0, 0, 0.04))
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 0.02))
     focus = bpy.context.object
-    camera((-1.05, -2.55, 2.55), (0.02, 0.02, 0.10), lens=40, fstop=2.0, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.78
-    area("Key", (0.7, -2.1, 3.2), (0, 0, 0.05), 300, 1.7, (1.0, 0.65, 0.36))
-    area("Rim", (2.0, 0.7, 1.7), (0, 0, 0.05), 125, 1.6, (0.42, 0.60, 0.82))
-    area("Side", (-2.3, 0.6, 1.5), (0, 0, 0.05), 26, 1.2, (0.55, 0.38, 0.26))
+    camera((-1.15, -3.05, 2.85), (0.02, 0.02, 0.10), lens=42, fstop=2.1, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.92
+    area("Key", (0.7, -2.1, 3.2), (0, 0, 0.05), 250, 1.7, (1.0, 0.65, 0.36))
+    area("Rim", (2.0, 0.7, 1.7), (0, 0, 0.05), 115, 1.6, (0.42, 0.60, 0.82))
+    area("Side", (-2.3, 0.6, 1.5), (0, 0, 0.05), 24, 1.2, (0.55, 0.38, 0.26))
     render(samples, width, height, out)
 
 
@@ -1261,9 +1299,9 @@ def scene_lamp(samples, width, height, out):
     paper = paper_material("LetterPaper", (0.58, 0.50, 0.36))
     cube("Letter", (0.46, -0.30, 0.012), (0.46, 0.30, 0.008), paper, rot=(0, 0, 0.16))
     letter_ink = principled("LetterInk", (0.030, 0.022, 0.016), roughness=0.72)
-    text_obj("LetterLine1", "I renounce", (0.25, -0.27, 0.021), 0.030, mat=letter_ink,
+    text_obj("LetterLine1", "I renounce", (0.24, -0.26, 0.021), 0.036, mat=letter_ink,
              align="LEFT")
-    text_obj("LetterLine2", "my knighthood", (0.25, -0.33, 0.021), 0.030, mat=letter_ink,
+    text_obj("LetterLine2", "my knighthood", (0.24, -0.325, 0.021), 0.036, mat=letter_ink,
              align="LEFT")
     cube("Pen", (0.50, 0.14, 0.034), (0.30, 0.024, 0.014),
          principled("PenInk", (0.01, 0.008, 0.006), roughness=0.35), rot=(0, 0, 0.5))
@@ -1290,7 +1328,7 @@ def scene_lamp(samples, width, height, out):
     cube("ForegroundBook", (-0.92, -0.78, 0.06), (0.54, 0.32, 0.12),
          principled("ForegroundBookMat", (0.05, 0.022, 0.014), roughness=0.6),
          rot=(0, 0.04, 0.18))
-    dust(42, seed=77, zmax=1.0, ymax=1.5)
+    dust(20, seed=77, zmax=0.9, ymax=1.4)
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 0.36))
     focus = bpy.context.object
     camera((0.86, -2.95, 1.16), (0, 0.10, 0.38), lens=45, fstop=2.2, focus=focus)
@@ -1316,7 +1354,7 @@ def scene_memorial(samples, width, height, out):
              (0.30, 0.42, 3.10), stone)
     # warm light behind the lattice, so the screen reads as pierced stone
     cube("JaliGlow", (0, 1.86, 1.55), (3.02, 0.018, 2.30),
-         emission("MemorialJaliGlow", (1.0, 0.42, 0.11), 0.32))
+         emission("MemorialJaliGlow", (1.0, 0.42, 0.11), 0.55))
     jali_screen("MemorialJali", 1.74, 0.42, width=3.00, height=2.30, cols=22, rows=18)
     # the plaque sits in front of the screen; gold text is lit, not black metal
     plaque = principled("MemorialPlaque", (0.080, 0.055, 0.030),
@@ -1324,11 +1362,11 @@ def scene_memorial(samples, width, height, out):
     cube("Plaque", (0, 1.42, 1.48), (1.96, 0.045, 1.05), plaque)
     cube("PlaqueLip", (0, 1.395, 0.94), (2.02, 0.075, 0.045), aged_brass("PlaqueLip"))
     gold = principled("MemorialGold", (0.80, 0.57, 0.20), roughness=0.40, metallic=0.38)
-    text_obj("MemorialTitle", "JALLIANWALA BAGH", (0, 1.388, 1.80), 0.068,
+    text_obj("MemorialTitle", "JALLIANWALA BAGH", (0, 1.388, 1.80), 0.072,
              rot=(math.pi / 2, 0, 0), mat=gold, align="CENTER")
-    text_obj("MemorialMemory", "IN MEMORY", (0, 1.388, 1.31), 0.042,
+    text_obj("MemorialMemory", "IN MEMORY", (0, 1.388, 1.30), 0.052,
              rot=(math.pi / 2, 0, 0), mat=gold, align="CENTER")
-    text_obj("Year", "1919", (0, 1.387, 1.57), 0.205,
+    text_obj("Year", "1919", (0, 1.387, 1.56), 0.218,
              rot=(math.pi / 2, 0, 0), mat=gold, align="CENTER")
     # plinth and step
     cube("Plinth", (0, 0, 0.34), (0.96, 0.62, 0.68), stone)
@@ -1347,7 +1385,12 @@ def scene_memorial(samples, width, height, out):
         major_segments=32, minor_segments=8, location=(0.78, 0.02, 0.885)
     )
     assign(bpy.context.object, aged_brass("MemorialBronzeRim"))
-    flame(loc=(0.78, 0.02, 0.885), scale=0.44)
+    ember_mat = emission("MemorialEmbers", (1.0, 0.22, 0.035), 2.4)
+    for i, (ex, ey) in enumerate(((-0.06, -0.03), (0.05, -0.02), (0.02, 0.05),
+                                  (-0.02, 0.06), (0.08, 0.03))):
+        sphere(f"MemorialEmber-{i}", (0.78 + ex, 0.02 + ey, 0.875), 0.022,
+               ember_mat, segments=10, rings=6).scale = (1.0, 1.0, 0.45)
+    flame(loc=(0.78, 0.02, 0.885), scale=0.58)
     # two small brass diyas on the plinth
     for side in (-1, 1):
         cylinder(f"DiyaBase-{side}", (side * 0.36, -0.02, 0.735), 0.075, 0.035,
@@ -1359,6 +1402,7 @@ def scene_memorial(samples, width, height, out):
         flame(loc=(side * 0.36, -0.02, 0.755), scale=0.16)
     # marigolds, petals and a few incense sticks
     marigold_cluster("Garland", 0, -0.30, 0.735, count=20, spread=0.58, seed=14)
+    marigold_cluster("GarlandFront", 0.0, -0.345, 0.45, count=16, spread=0.44, seed=31)
     marigold_cluster("MemorialFloorFlowers", -1.16, -0.32, 0.055, count=13,
                      spread=0.30, seed=18)
     petal = principled("MemorialPetal", (0.58, 0.20, 0.018), roughness=0.66)
@@ -1383,14 +1427,14 @@ def scene_memorial(samples, width, height, out):
     spot.data.shadow_soft_size = 0.28
     spot.data.color = (1.0, 0.72, 0.46)
     spot.rotation_euler = (math.radians(15), 0, 0)
-    area("PlaqueWash", (0, -1.8, 2.6), (0, 1.45, 1.55), 34, 1.1, (1.0, 0.72, 0.42))
-    area("Rim", (2.8, 1.8, 2.4), (0, 0.4, 1.1), 54, 1.8, (0.42, 0.60, 0.82))
-    area("Fill", (-2.2, -1.8, 3.0), (0, 0.4, 1.0), 18, 2.5, (0.46, 0.38, 0.30))
+    area("PlaqueWash", (0, -1.8, 2.6), (0, 1.45, 1.55), 46, 1.1, (1.0, 0.72, 0.42))
+    area("Rim", (2.8, 1.8, 2.4), (0, 0.4, 1.1), 62, 1.8, (0.42, 0.60, 0.82))
+    area("Fill", (-2.2, -1.8, 3.0), (0, 0.4, 1.0), 22, 2.5, (0.46, 0.38, 0.30))
     dust(100, seed=919, zmax=2.4, ymax=3.2)
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0, 1.10))
     focus = bpy.context.object
     camera((1.82, -5.15, 1.72), (-0.06, 0.22, 1.18), lens=42, fstop=2.4, focus=focus)
-    bpy.context.scene.view_settings.exposure = -0.88
+    bpy.context.scene.view_settings.exposure = -0.78
     render(samples, width, height, out)
 
 
