@@ -1,17 +1,57 @@
 {
  "meta": {
-  "generatedAt": "2026-10-21T09:07:50.879Z",
+  "generatedAt": "2026-10-22T06:42:31.186Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 11,
+  "count": 15,
   "lastAttempt": {
-   "at": "2026-10-21T09:07:50.879Z",
+   "at": "2026-10-22T06:42:31.186Z",
    "ok": true,
-   "count": 3,
-   "dropped": 1
+   "count": 4,
+   "dropped": 0
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvj6bv6a-1",
+   "at": "2026-10-22T06:42:31.186Z",
+   "title": "Seed mains bank from Invented pool",
+   "why": "The main page shows only 9 hand-authored questions and a frozen batch, while the 'Invented' arena holds 43 questions ready for use.",
+   "idea": "Create a GitHub Action or Node script that periodically selects a random subset of questions from the 'invented pool' JSON data to populate the 'frozen AI batch' on the main page, increasing content availability without manual review.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvj6bv6a-2",
+   "at": "2026-10-22T06:42:31.186Z",
+   "title": "Parse tutor-questions lane robustness",
+   "why": "Recent failures show the model sometimes outputs non-array JSON or insufficient question counts (e.g., only 2 of 5 valid).",
+   "idea": "Update the request handler script to wrap the LLM output in a try-catch block that attempts to extract the first valid JSON array from the text response, and if the count is below the minimum threshold, automatically retry the generation with adjusted parameters or fallback logic.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvj6bv6a-3",
+   "at": "2026-10-22T06:42:31.186Z",
+   "title": "Auto-fix corpus fill pipeline",
+   "why": "The fault board indicates a 'Corpus fill run in progress' for daily-feed-fill #36, suggesting the automated filling mechanism is active but potentially stalled or needs monitoring.",
+   "idea": "Implement a lightweight watcher script that checks the status of the 'daily-feed-fill' process defined in the GitHub Actions workflow; if it runs longer than a set timeout without updating the corpus count, trigger a restart of the specific step to prevent silent hangs.",
+   "effort": "small",
+   "risk": "medium",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvj6bv6a-4",
+   "at": "2026-10-22T06:42:31.186Z",
+   "title": "Visualize fault board trends",
+   "why": "The fault board lists 11 critical and 45 warn items, but the current state only shows raw counts without context on which specific files or types are causing issues.",
+   "idea": "Add a simple HTML/JS dashboard on the main page that aggregates data from the fault board JSON to show a pie chart of fault types (critical/warn/info) and a list of the top 5 most frequent fault categories, helping owners prioritize fixes.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvhw2wnz-1",
    "at": "2026-10-21T09:07:50.879Z",
