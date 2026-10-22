@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-22T11:14:10.443Z",
-  "cursor": 30,
-  "built": 28
+  "updatedAt": "2026-10-22T18:47:09.589Z",
+  "cursor": 33,
+  "built": 31
  },
  "figs": {
   "87926696": {
@@ -171,6 +171,24 @@
   "5b45d49f": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Damage D</text><line x1=\"40\" y1=\"20\" x2=\"320\" y2=\"20\"/><text x=\"180\" y=\"35\">D = 1 (Failure)</text><path d=\"M 40 20 L 40 160 L 320 160 L 320 20 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"20\" y=\"95\">n₁ cycles @ S₁</text><line x1=\"40\" y1=\"80\" x2=\"100\" y2=\"80\" stroke-dasharray=\"4\"/><text x=\"105\" y=\"85\">D₁ = n₁/N₁</text><text x=\"20\" y=\"130\">n₂ cycles @ S₂</text><line x1=\"40\" y1=\"115\" x2=\"160\" y2=\"115\" stroke-dasharray=\"4\"/><text x=\"165\" y=\"120\">D₂ = n₂/N₂</text><text x=\"20\" y=\"175\">Σ Dᵢ = 1</text></svg>",
    "n": "state miner's rule for cumulative fatigue damage.",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "532388d5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"190\" y=\"195\" text-anchor=\"middle\">σa</text><text x=\"30\" y=\"100\" text-anchor=\"end\">Se</text><text x=\"30\" y=\"185\" text-anchor=\"start\">σm</text><text x=\"20\" y=\"40\" text-anchor=\"end\">Sut</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><polyline points=\"40,180 320,180 320,40 40,40\" fill=\"none\" stroke-dasharray=\"5,5\"/><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"40\"/><text x=\"160\" y=\"110\" text-anchor=\"middle\">Goodman Line</text><text x=\"170\" y=\"205\" text-anchor=\"middle\">σa/Se + σm/Sut = 1</text></svg>",
+   "n": "write the goodman line criterion equation.",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "1ca3803e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" />\n <line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\" />\n <text x=\"35\" y=\"195\">σm</text>\n <text x=\"325\" y=\"175\">σa</text>\n <text x=\"340\" y=\"165\">Se</text>\n <text x=\"340\" y=\"185\">Syt</text>\n <polygon points=\"40,180 320,180 320,40 40,40\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" />\n <line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\" />\n <text x=\"170\" y=\"25\">Soderberg Line</text>\n <circle cx=\"320\" cy=\"40\" r=\"3\" fill=\"#222\"/>\n <text x=\"325\" y=\"45\">Yield Point</text>\n <line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\" />\n <circle cx=\"40\" cy=\"180\" r=\"3\" fill=\"#222\"/>\n <text x=\"35\" y=\"175\">Mean Stress</text>\n</svg>",
+   "n": "write the soderberg line equation.",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "7c338106": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"50\" y=\"195\" font-family=\"sans-serif\">σa</text><text x=\"305\" y=\"195\" font-family=\"sans-serif\">Se</text><text x=\"40\" y=\"60\" font-family=\"sans-serif\">Sut</text><text x=\"40\" y=\"205\" font-family=\"sans-serif\">σm</text><path d=\"M 40 180 Q 180 40 320 180\" fill=\"none\" stroke=\"#222\"/><text x=\"160\" y=\"110\" text-anchor=\"middle\" font-family=\"sans-serif\">Gerber Parabola</text></svg>",
+   "n": "write the gerber line (parabolic) equation.",
    "sub": "design",
    "at": "2026-10-22"
   }
