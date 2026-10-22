@@ -22,6 +22,61 @@
   var meta = el('meta');
   var fade = el('fade');
   var flash = el('flash');
+  var atmos = el('atmos');
+  var motes = el('motes');
+  var shaft = atmos ? atmos.querySelector('.shaft') : null;
+  var glow = atmos ? atmos.querySelector('.glow') : null;
+  var moteData = [];
+
+  function initMotes() {
+    if (!motes || moteData.length) return;
+    var seed = 17;
+    var rnd = function () { seed = (seed * 16807) % 2147483647; return seed / 2147483647; };
+    for (var i = 0; i < 24; i++) {
+      var s = document.createElement('span');
+      s.className = 'mote';
+      var d = {
+        x: rnd() * 100,
+        y: rnd() * 100,
+        z: 0.35 + rnd() * 0.9,
+        speed: 0.4 + rnd() * 1.2,
+        sway: 0.5 + rnd() * 1.8,
+        phase: rnd() * 6.28
+      };
+      s.style.width = s.style.height = (1 + d.z * 2.4).toFixed(2) + 'px';
+      s.style.opacity = (0.18 + d.z * 0.42).toFixed(2);
+      motes.appendChild(s);
+      d.el = s;
+      moteData.push(d);
+    }
+  }
+
+  function drawAtmos(t, shot) {
+    if (!atmos) return;
+    if (motes) motes.style.opacity = shot.render === 'title' ? '0' : '1';
+    var plate = String(shot.plate || '');
+    var warm = /lamp|memorial|report-desk|notice-desk/.test(plate);
+    var exterior = /bagh|well|wall-scar/.test(plate);
+    var flicker = 0.72 + 0.28 * Math.sin(t * 7.1) * Math.sin(t * 2.3 + 0.8);
+    if (shaft) {
+      shaft.style.opacity = shot.render === 'title' ? '0'
+        : exterior ? (0.20 + 0.08 * Math.sin(t * 0.45)).toFixed(3)
+        : warm ? (0.10 * flicker).toFixed(3) : '0.045';
+      shaft.style.transform = 'translateX(' + ((shot.framing && (shot.framing.x[0] - 50) * 0.10) || 0).toFixed(2) +
+        'vw) rotate(' + (exterior ? 8 : 3) + 'deg) scaleX(' + (0.8 + 0.08 * Math.sin(t * 0.27)).toFixed(3) + ')';
+    }
+    if (glow) {
+      glow.style.opacity = warm ? (0.18 * flicker).toFixed(3) : (exterior ? '0.07' : '0');
+      glow.style.transform = 'translate(-50%,-50%) scale(' + (0.9 + 0.05 * Math.sin(t * 0.33)).toFixed(3) + ')';
+    }
+    for (var i = 0; i < moteData.length; i++) {
+      var d = moteData[i];
+      var y = ((d.y - t * d.speed * 1.4) % 108 + 108) % 108;
+      var x = d.x + Math.sin(t * d.sway + d.phase) * 1.7;
+      d.el.style.transform = 'translate3d(' + x.toFixed(2) + 'vw,' + y.toFixed(2) + 'vh,0)';
+      d.el.style.opacity = (0.10 + d.z * 0.30).toFixed(3);
+    }
+  }
 
   var FALLBACK = {
     'salt-march': {
@@ -221,7 +276,13 @@
       var z = f.zoom[0] + (f.zoom[1] - f.zoom[0]) * ease;
       var px = (f.x[0] + (f.x[1] - f.x[0]) * ease - 50) * 0.55;
       var py = (f.y[0] + (f.y[1] - f.y[0]) * ease - 50) * 0.55;
-      img.style.transform = 'scale(' + z.toFixed(4) + ') translate(' + px.toFixed(2) + '%,' + py.toFixed(2) + '%)';
+      // Tiny gate weave and breathing: the frame feels photographed, not a
+      // static JPEG being zoomed by a slide projector.
+      var wx = Math.sin(t * 0.73 + 0.4) * 0.045;
+      var wy = Math.cos(t * 0.51 + 1.2) * 0.030;
+      var rot = Math.sin(t * 0.37) * 0.028;
+      img.style.transform = 'scale(' + z.toFixed(4) + ') translate(' +
+        (px + wx).toFixed(3) + '%,' + (py + wy).toFixed(3) + '%) rotate(' + rot.toFixed(3) + 'deg)';
     }
 
     if (shot.render === 'map' && routeEl) {
@@ -259,6 +320,13 @@
     var flashAlpha = 0;
     if (/flash/i.test(shot.transition || '')) flashAlpha = clamp(1 - shotLocal / 0.22) * 0.92;
     flash.style.opacity = String(flashAlpha);
+
+    drawAtmos(t, shot);
+    var grain = el('grain');
+    if (grain) {
+      grain.style.backgroundPosition = (Math.floor(t * 19) % 220) + 'px ' +
+        (Math.floor(t * 13) % 220) + 'px';
+    }
 
     if (shot.render === 'title') {
       chapter.style.opacity = '0';
@@ -315,6 +383,9 @@
     fade.style.opacity = '0';
     flash.style.opacity = '0';
     var base = film || FALLBACK[filmId] || FALLBACK['salt-march'];
+    if (base && base.titleLines) {
+      document.title = base.titleLines.join(' ') + ' — ' + (base.subtitle || 'A vlymbooq film');
+    }
     var comingLines = Array.isArray(base.titleLines) && base.titleLines.length
       ? base.titleLines : [base.title || 'SALT'];
     var comingSize = /^\d+(\.\d+)?(vw|vh|px|rem)$/.test(String(base.titleSize || ''))
@@ -341,6 +412,7 @@
   }
 
   function boot() {
+    initMotes();
     var navLinks = document.querySelectorAll('#filmNav a');
     if (navLinks[0]) navLinks[0].href = debateHref() + '#context';
     if (navLinks[1]) navLinks[1].href = debateHref() + '#debate';
