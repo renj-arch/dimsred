@@ -847,22 +847,29 @@ def _bagh(inside=False, empty=False):
             crowd_figure(f"Crowd{i}", x, y, scale=s,
                          pose=(-11 if i % 2 else 8), cloth=(0.011, 0.010, 0.009))
     if empty:
-        # The empty gate from inside: a fallen shoe, dropped paper and three
-        # spent cases, all on the garden side of the threshold.
-        prop_y = 6.35 if inside else 5.12
-        leather = principled("EmptyLeather", (0.022, 0.016, 0.011), roughness=0.72)
-        cube("EmptyShoeSole", (0.58, prop_y + 0.16, 0.035), (0.22, 0.10, 0.035), leather,
+        # Evidence in the foreground, just outside the threshold. At the old
+        # distance these props were three pixels and the "empty" plate read as
+        # a wall with nothing in it.
+        prop_y = 4.50 if not inside else 6.55
+        leather = principled("EmptyLeather", (0.030, 0.022, 0.015), roughness=0.72)
+        cube("EmptyShoeSole", (0.52, prop_y + 0.22, 0.045), (0.30, 0.13, 0.045), leather,
              rot=(0, 0, -0.34))
-        cube("EmptyShoeUpper", (0.52, prop_y + 0.18, 0.085), (0.15, 0.075, 0.085), leather,
+        cube("EmptyShoeUpper", (0.45, prop_y + 0.25, 0.105), (0.20, 0.10, 0.105), leather,
              rot=(0, 0.10, -0.34))
-        for i in range(9):
-            paper_scrap(f"EmptyPaper-{i}", rng.uniform(-.55, .90),
-                        prop_y + rng.uniform(-.15, .65), 0.046, paper,
-                        size=rng.uniform(0.06, 0.16), rot=rng.uniform(-1.4, 1.4))
+        cloth_empty = principled("EmptyCloth", (0.72, 0.67, 0.55), roughness=0.94)
+        cube("EmptyCloth", (-0.18, prop_y + 0.05, 0.047), (0.34, 0.20, 0.008),
+             cloth_empty, rot=(0, 0.04, 0.35))
+        for i in range(11):
+            paper_scrap(f"EmptyPaper-{i}", rng.uniform(-.65, .85),
+                        prop_y + rng.uniform(-.10, .55), 0.049, paper,
+                        size=rng.uniform(0.08, 0.18), rot=rng.uniform(-1.4, 1.4))
         brass_case = brass("CaseBrass", (0.42, 0.25, 0.075), roughness=0.34)
-        for i, (x, y, r) in enumerate(((-.18, prop_y, .2), (.08, prop_y - .18, -.4),
-                                       (.71, prop_y + .30, .9))):
-            shell_casing(f"EmptyCase-{i}", x, y, 0.032, brass_case, rot=r)
+        for i, (x, y, r) in enumerate(((-.28, prop_y + .30, .2), (-.08, prop_y + .18, -.4),
+                                       (.82, prop_y + .38, .9))):
+            shell_casing(f"EmptyCase-{i}", x, y, 0.040, brass_case, rot=r)
+        bpy.context.scene.view_settings.exposure = -0.08
+        area("EmptyLight", (0.0, 2.0, 2.2), (0.0, 4.8, 0.2), 55, 1.2,
+             (1.0, 0.54, 0.23))
     dust(150, seed=1919, zmax=3.2, ymax=14)
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 6.0, 1.25))
     focus = bpy.context.object
@@ -909,6 +916,8 @@ def _bagh(inside=False, empty=False):
              (0.40, 0.52, 0.70))
     area("LowSun", (-9, 3, 4.2), (0, 6, 1.5), 760, 5.0, (1.0, 0.44, 0.15))
     area("CoolFill", (8, 0, 5.0), (0, 6, 1.2), 170, 7.0, (0.34, 0.55, 0.75))
+    if empty:
+        bpy.context.scene.view_settings.exposure = -0.08
 
 
 def scene_bagh_wall(samples, width, height, out):
@@ -936,7 +945,7 @@ def scene_wall_scar(samples, width, height, out):
     dark_world((0.0004, 0.0003, 0.0003))
     plaster = plaster_material("ScarPlaster", (0.30, 0.235, 0.155))
     cube("ScarWall", (0, 0, 1.10), (4.40, 0.50, 2.20), plaster)
-    coping = stone_material("ScarCopingStone", (0.19, 0.15, 0.11))
+    coping = stone_material("ScarCopingStone", (0.095, 0.075, 0.052))
     cube("ScarCoping", (0, -0.02, 2.22), (4.62, 0.60, 0.16), coping)
     cube("ScarPlinth", (0, -0.06, 0.11), (4.62, 0.66, 0.22), coping)
     hole = principled("ScarHoleMat", (0.004, 0.003, 0.002), roughness=0.99)
@@ -978,7 +987,7 @@ def scene_wall_scar(samples, width, height, out):
     cube("ScarSill", (0.72, -1.38, 0.32), (1.34, 0.72, 0.18), coping)
     for i, (cx, cy, cz) in enumerate(((0.44, -1.30, 0.432), (0.55, -1.36, 0.430),
                                       (0.35, -1.39, 0.431))):
-        cylinder(f"ScarCase-{i}", (cx, cy, cz), 0.013, 0.058, case_mat,
+        cylinder(f"ScarCase-{i}", (cx, cy, cz), 0.017, 0.075, case_mat,
                  rot=(math.pi / 2, 0, 0.2 + i * 0.25), vertices=14)
     sphere("ScarSlug", (0.67, -1.24, 0.432), 0.016, case_mat,
            segments=14, rings=8).scale = (1.0, 1.5, 0.55)
@@ -1156,14 +1165,7 @@ def scene_well(samples, width, height, out):
                                 (0.55, 3.72), (-0.78, 3.82), (0.32, 3.28))):
         cube(f"WaterPetal-{i}", (x, y, -0.436), (0.055, 0.032, 0.003), petal,
              rot=(0, 0, i * 0.8))
-    # concentric ripple highlights, very low contrast
-    ripple = principled("WellRipple", (0.10, 0.13, 0.13), roughness=0.15, metallic=0.2)
-    for i, r in enumerate((0.38, 0.66, 0.94)):
-        bpy.ops.mesh.primitive_torus_add(
-            major_radius=r, minor_radius=0.0035,
-            major_segments=48, minor_segments=6, location=(0.1, 3.2, -0.205)
-        )
-        assign(bpy.context.object, ripple)
+    # no concentric rings: they read as painted blue circles, not water
     # a bucket and coiled rope, left on the parapet
     wood = dark_wood("BucketWood")
     cylinder("Bucket", (-1.52, 3.30, 0.86), 0.22, 0.30, wood, vertices=24)
