@@ -1,0 +1,68 @@
+name: Film autopilot
+
+# The agent maintains data/film-slate.json. This job chooses the next topic,
+# validates that its sourced storyboard is complete, and dispatches the normal
+# film pipeline. If no brief is ready it stops with a research note instead of
+# inventing a film. That failure mode is deliberate.
+
+on:
+  schedule:
+    - cron: '0 4 * * 1'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  actions: write
+
+jobs:
+  choose:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Choose next film
+        id: choose
+        run: |
+          set -euo pipefail
+          mkdir -p out/autopilot
+          node scripts/film/autopilot.js --json > out/autopilot/pick.json
+          node -e "
+            const r = require('./out/autopilot/pick.json');
+            const fs = require('fs');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'kind=' + r.kind + '\n');
+            if (r.topic) fs.appendFileSync(process.env.GITHUB_OUTPUT, 'film=' + r.topic.id + '\n');
+            fs.appendFileSync(process.env.GITHUB_OUTPUT, 'title=' + (r.topic ? r.topic.title : '') + '\n');
+          "
+          cat out/autopilot/pick.json
+
+      - name: Dispatch validated film
+        if: steps.choose.outputs.kind == 'ready'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run film.yml \
+            --ref main \
+            -f film='${{ steps.choose.outputs.film }}' \
+            -f quality=final \
+            -f release=true
+
+      - name: Report research queue
+        if: steps.choose.outputs.kind != 'ready'
+        run: |
+          echo "::notice title=No validated film ready::Next research topic: ${{ steps.choose.outputs.film || 'none' }}. See out/autopilot/next-topic.json."
+          echo "No render was dispatched. A sourced storyboard and debate map are required."
+
+      - name: Upload selection
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: film-autopilot-selection
+          path: out/autopilot/
+          if-no-files-found: warn
