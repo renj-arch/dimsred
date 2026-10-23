@@ -739,11 +739,11 @@ def scene_city_rooftops(samples, width, height, out):
                      vertices=16)
         # a handful of lit windows, never a grid of every window
         for k in range(3):
-            if rng.random() < 0.55:
+            if rng.random() < 0.78:
                 wx = x - w * 0.32 + k * w * 0.30
                 cube(f"CityWindow-{i}-{k}", (wx, y - 2.02, h * 0.48 + rng.uniform(-0.4, 0.4)),
                      (0.28, 0.02, 0.36),
-                     emission(f"CityWindowMat-{i}-{k}", (0.90, 0.43, 0.12), 0.55))
+                     emission(f"CityWindowMat-{i}-{k}", (0.95, 0.48, 0.15), 0.95))
     # a minaret and a water tower break the skyline
     cylinder("MinaretBase", (8.5, 17.0, 4.0), 0.55, 8.0,
              plaster_material("MinaretPlaster", (0.14, 0.115, 0.080)), vertices=16)
@@ -777,9 +777,10 @@ def scene_city_rooftops(samples, width, height, out):
     sphere("Moon", (-12.0, 22.0, 14.0), 0.75,
            emission("MoonGlow", (0.60, 0.72, 0.88), 2.0), segments=24, rings=16)
     camera((3.8, -7.0, 3.2), (-0.5, 9.0, 3.2), lens=32, fstop=4.2)
-    bpy.context.scene.view_settings.exposure = -1.3
-    area("MoonFill", (-10.0, -2.0, 10.0), (0, 8.0, 3.0), 180, 4.0, (0.28, 0.42, 0.66))
-    area("CitySodium", (6.0, 2.0, 4.5), (0, 8.0, 2.0), 150, 3.0, (1.0, 0.44, 0.12))
+    bpy.context.scene.view_settings.exposure = -0.35
+    area("MoonFill", (-10.0, -2.0, 10.0), (0, 8.0, 3.0), 780, 7.0, (0.34, 0.48, 0.72))
+    area("CitySodium", (6.0, 2.0, 4.5), (0, 8.0, 2.0), 520, 6.0, (1.0, 0.44, 0.12))
+    area("ForegroundFill", (4.0, -7.0, 7.0), (0, 1.0, 1.0), 260, 4.0, (0.40, 0.50, 0.66))
     render(samples, width, height, out)
 
 
