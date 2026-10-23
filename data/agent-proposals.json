@@ -1,17 +1,37 @@
 {
  "meta": {
-  "generatedAt": "2026-10-22T06:42:31.186Z",
+  "generatedAt": "2026-10-23T10:44:23.023Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 15,
+  "count": 17,
   "lastAttempt": {
-   "at": "2026-10-22T06:42:31.186Z",
+   "at": "2026-10-23T10:44:23.023Z",
    "ok": true,
-   "count": 4,
-   "dropped": 0
+   "count": 2,
+   "dropped": 2
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvkuer8v-1",
+   "at": "2026-10-23T10:44:23.023Z",
+   "title": "Fix Tutor Questions Lane Generation Count",
+   "why": "Recent failures show the tutor-questions lane generating only 2 valid questions instead of the required 3, and sometimes failing to output a JSON array entirely.",
+   "idea": "Update the Node.js script for the 'tutor-questions' lane to wrap the LLM response in a strict template that guarantees at least 3 items, adding a fallback loop that retries generation until the count threshold is met or a max retry limit is reached.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvkuer8v-2",
+   "at": "2026-10-23T10:44:23.023Z",
+   "title": "Auto-Resolve Fault Board Info Items",
+   "why": "The fault board shows 14 info items and recent agent runs have successfully applied '270 fix(es)' to workflows, perf, and a11y issues.",
+   "idea": "Implement a lightweight cron job in the GitHub Actions schedule that scans the fault board JSON for 'info' severity items matching known patterns (like missing buttons or skipped flows) and automatically applies the corresponding HTML/JS patch from the agent's fix repository.",
+   "effort": "small",
+   "risk": "medium",
+   "status": "new"
+  },
   {
    "id": "prp-mvj6bv6a-1",
    "at": "2026-10-22T06:42:31.186Z",

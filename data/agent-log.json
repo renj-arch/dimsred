@@ -2403,24 +2403,30 @@
    ]
   },
   {
-   "at": "2026-10-23T10:43:23.284Z",
+   "at": "2026-10-23T10:44:23.023Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "mainsfresh",
-     "count": 1
+     "agent": "proposals",
+     "count": 2
     }
    ],
    "details": [
     {
-     "agent": "mainsfresh",
+     "agent": "proposals",
      "fixes": [
       {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvkudh5f (gs3, 15 marks): India's space activities have raised concerns regarding orbital debris and collision risks. Critically examine the state",
-       "model": "qwen3.5:9b (local)"
+       "kind": "proposal",
+       "fix": "Fix Tutor Questions Lane Generation Count",
+       "detail": "Recent failures show the tutor-questions lane generating only 2 valid questions instead of the required 3, and sometimes failing to output a JSON array entirely.",
+       "text": "Update the Node.js script for the 'tutor-questions' lane to wrap the LLM response in a strict template that guarantees at least 3 items, adding a fallback loop that retries generation until the count threshold is met or a max retry limit is reached."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Auto-Resolve Fault Board Info Items",
+       "detail": "The fault board shows 14 info items and recent agent runs have successfully applied '270 fix(es)' to workflows, perf, and a11y issues.",
+       "text": "Implement a lightweight cron job in the GitHub Actions schedule that scans the fault board JSON for 'info' severity items matching known patterns (like missing buttons or skipped flows) and automatically applies the corresponding HTML/JS patch from the agent's fix repository."
       }
      ]
     }
