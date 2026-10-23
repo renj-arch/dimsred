@@ -1472,8 +1472,10 @@ def main() -> int:
     ap.add_argument("--width", type=int, default=1920)
     ap.add_argument("--height", type=int, default=1080)
     ap.add_argument("--samples", type=int, default=32)
-    args = ap.parse_args()
-    SCENES[args.scene](args.samples, args.width, args.height, args.out)
+    args = ap.parse_args(sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else [])
+    if args.width % 2 or args.height % 2:
+        raise SystemExit("width and height must be even")
+    SCENES[args.scene](args.samples, args.width, args.height, os.path.abspath(args.out))
     return 0
 
 
