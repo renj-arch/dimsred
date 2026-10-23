@@ -1,30 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-22T12:54:37.895Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvjjmekn (gs3, 15 marks): Critically examine the role of carbon pricing as a tool for climate mitigation in India, discussing its challenges and p",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-22T13:47:02.476Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 0,
@@ -2667,8 +2643,202 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-23T03:31:01.750Z",
+   "model": "qwen3:4b",
+   "totalFixes": 270,
+   "byAgent": [
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "figures",
+     "count": 0
+    },
+    {
+     "agent": "flowcharts",
+     "count": 0
+    },
+    {
+     "agent": "mindmaps",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 32
+    },
+    {
+     "agent": "selfcheck",
+     "count": 0
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 29
+    },
+    {
+     "agent": "a11y",
+     "count": 209
+    },
+    {
+     "agent": "code",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/ask-audit.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/browser-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-lectures.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/daily-globe-fill.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-papers.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/daily-pib-feed.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/expand-course.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/fault-status.yml",
+       "fix": "Added memory limit to node steps"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "improve.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-anabelian-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-23T02:57:05.612Z",
+ "lastRun": "2026-10-23T03:31:01.750Z",
  "model": "qwen3:4b"
 }
