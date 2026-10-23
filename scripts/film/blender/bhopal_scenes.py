@@ -1213,8 +1213,10 @@ def scene_water_tap(samples, width, height, out):
         location=(-1.35, 0.75, 0.48), rotation=(0, 0, 0)
     )
     assign(bpy.context.object, rust("BucketRust"))
-    plane("Puddle", (-1.45, 0.2, 0.012), 2.2,
-          principled("PuddleToxic", (0.08, 0.070, 0.025), 0.12, metallic=0.20))
+    cylinder("PuddleToxic", (-1.45, 0.2, 0.012), 1.05, 0.008,
+             principled("PuddleToxic", (0.08, 0.070, 0.025), 0.12, metallic=0.20), vertices=32)
+    cylinder("PuddleToxicSmall", (-0.45, 0.55, 0.012), 0.45, 0.006,
+             principled("PuddleToxic", (0.08, 0.070, 0.025), 0.12, metallic=0.20), vertices=24)
     # barrels at the edge and a warning sign
     for i in range(3):
         cylinder(f"Barrel-{i}", (-4.0 + i * 0.8, 0.9, 0.55), 0.30, 1.10,
@@ -1225,15 +1227,15 @@ def scene_water_tap(samples, width, height, out):
                 location=(-4.0 + i * 0.8, 0.9, 0.20 + k * 0.34)
             )
             assign(bpy.context.object, steel("BarrelBandSteel"))
-    cube("TapSign", (2.3, 1.98, 2.0), (1.4, 0.03, 0.55),
+    cube("TapSign", (-0.55, 1.98, 2.35), (1.45, 0.03, 0.55),
          paper_material("TapSignPaper", (0.56, 0.46, 0.30)))
-    text_obj("TapSignText", "DO NOT DRINK", (1.65, 1.95, 2.10), 0.10,
+    text_obj("TapSignText", "DO NOT DRINK", (-1.20, 1.95, 2.45), 0.10,
              rot=(math.pi / 2, 0, 0), mat=principled("TapSignInk", (0.05, 0.030, 0.018), 0.8), align="LEFT")
-    point_lamp("TapLight", (2.0, 0.7, 2.8), 55, (0.80, 0.85, 0.75), 0.30)
-    camera((-0.4, -4.8, 1.45), (-1.3, 1.2, 1.25), lens=40, fstop=2.4)
-    bpy.context.scene.view_settings.exposure = -0.7
-    area("Key", (0.0, -1.5, 3.2), (0, 1.5, 1.2), 150, 1.8, (0.58, 0.70, 0.70))
-    area("Warm", (2.2, 1.0, 1.8), (0, 1.5, 1.1), 65, 0.9, (1.0, 0.46, 0.14))
+    point_lamp("TapLight", (1.2, 0.7, 2.8), 80, (0.80, 0.85, 0.75), 0.30)
+    camera((-0.4, -4.8, 1.5), (-0.8, 1.2, 1.45), lens=36, fstop=2.4)
+    bpy.context.scene.view_settings.exposure = -0.55
+    area("Key", (0.0, -1.5, 3.2), (0, 1.5, 1.4), 210, 2.2, (0.58, 0.70, 0.70))
+    area("Warm", (1.8, 1.0, 2.2), (0, 1.5, 1.3), 90, 1.1, (1.0, 0.46, 0.14))
     render(samples, width, height, out)
 
 
@@ -1242,13 +1244,22 @@ def scene_sample_jar(samples, width, height, out):
     dark_world((0.0004, 0.0004, 0.0003))
     plane("Bench", (0, 0, 0), 6, concrete("LabBench", (0.070, 0.075, 0.072)))
     # a glass jar with a murky sample, a label and a pipette
-    glass = principled("JarGlass", (0.30, 0.38, 0.36), 0.05, transmission=0.72)
-    cylinder("JarBody", (0, 0, 0.42), 0.34, 0.78, glass, vertices=40)
+    glass = principled("JarGlass", (0.34, 0.42, 0.40), 0.04, transmission=0.85)
+    # An open-ended tube reads as glass; a solid cylinder reads as a can.
+    bpy.ops.mesh.primitive_cylinder_add(
+        vertices=48, radius=0.34, depth=0.78, end_fill_type="NOTHING",
+        location=(0, 0, 0.42)
+    )
+    jar = bpy.context.object
+    jar.name = "JarBody"
+    smooth(jar)
+    assign(jar, glass)
+    cylinder("JarBottom", (0, 0, 0.035), 0.34, 0.03, glass, vertices=48)
     cylinder("JarShoulder", (0, 0, 0.82), 0.32, 0.06, glass, vertices=40)
     cylinder("JarNeck", (0, 0, 0.90), 0.22, 0.12, glass, vertices=32)
     cylinder("JarLid", (0, 0, 0.98), 0.24, 0.08, steel("JarLidSteel"), vertices=32)
-    liquid = principled("SampleLiquid", (0.12, 0.10, 0.035), 0.18, transmission=0.25)
-    cylinder("SampleLiquid", (0, 0, 0.37), 0.315, 0.60, liquid, vertices=40)
+    liquid = principled("SampleLiquid", (0.16, 0.12, 0.030), 0.22, transmission=0.15)
+    cylinder("SampleLiquid", (0, 0, 0.36), 0.305, 0.58, liquid, vertices=40)
     # label on the front of the jar
     cube("JarLabel", (0, -0.335, 0.42), (0.32, 0.01, 0.22),
          paper_material("JarLabelPaper", (0.64, 0.58, 0.43)))
@@ -1338,12 +1349,14 @@ def scene_memorial_flame(samples, width, height, out):
     )
     assign(bpy.context.object, brass_mat)
     cylinder("FlameBase", (0, 0, 0.10), 0.42, 0.20, brass_mat, vertices=40)
-    # a single flame, protected from the wind by a low glass ring
-    flame("MemorialFlame", (0, 0, 0.37), 1.8)
-    bpy.ops.mesh.primitive_cylinder_add(vertices=48, radius=0.62, depth=0.55,
-                                      location=(0, 0, 0.64))
+    # a single flame behind a low glass wind-ring, never a glowing enclosure
+    flame("MemorialFlame", (0, 0, 0.38), 2.4)
+    bpy.ops.mesh.primitive_torus_add(
+        major_radius=0.60, minor_radius=0.035, major_segments=48, minor_segments=8,
+        location=(0, 0, 0.43)
+    )
     glass = bpy.context.object
-    glass.name = "FlameGlass"
+    glass.name = "FlameGlassRing"
     assign(glass, principled("FlameGlassMat", (0.20, 0.26, 0.26), 0.05, transmission=0.78))
     # petals on the stone
     rng = random.Random(200)
@@ -1353,10 +1366,10 @@ def scene_memorial_flame(samples, width, height, out):
         sphere(f"FlamePetal-{i}", (math.cos(a) * r, math.sin(a) * r, 0.025),
                rng.uniform(0.025, 0.050),
                principled(f"FlamePetalMat-{i}", (0.48, 0.13, 0.010), 0.85), segments=10, rings=6)
-    point_lamp("FlameWarm", (0, 0, 0.75), 40, (1.0, 0.40, 0.08), 0.28)
-    camera((0.45, -2.6, 0.93), (0, 0, 0.62), lens=55, fstop=1.8)
-    bpy.context.scene.view_settings.exposure = -0.55
-    area("FlameFill", (0.0, -1.2, 1.5), (0, 0, 0.65), 38, 0.8, (1.0, 0.42, 0.10))
+    point_lamp("FlameWarm", (0, 0, 0.66), 9, (1.0, 0.40, 0.08), 0.18)
+    camera((0.35, -2.2, 0.88), (0, 0, 0.55), lens=60, fstop=1.8)
+    bpy.context.scene.view_settings.exposure = -0.35
+    area("FlameFill", (0.0, -1.2, 1.5), (0, 0, 0.60), 28, 0.8, (1.0, 0.42, 0.10))
     render(samples, width, height, out)
 
 
