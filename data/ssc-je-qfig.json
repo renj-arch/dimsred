@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-23T10:54:47.816Z",
-  "cursor": 39,
-  "built": 36
+  "updatedAt": "2026-10-23T17:49:10.717Z",
+  "cursor": 42,
+  "built": 39
  },
  "figs": {
   "87926696": {
@@ -219,6 +219,24 @@
   "e0d59ee1": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Stress (σ)</text><line x1=\"40\" y1=\"35\" x2=\"320\" y2=\"35\"/><text x=\"180\" y=\"200\" text-anchor=\"middle\">Distance</text><line x1=\"190\" y1=\"40\" x2=\"190\" y2=\"190\"/><path d=\"M 60 35 L 190 170 L 320 35\" fill=\"none\" stroke=\"#222\"/><path d=\"M 60 35 L 190 170 L 320 35\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\">Kt (Theoretical)</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Kf (Fatigue)</text><text x=\"30\" y=\"45\">Notch</text><circle cx=\"190\" cy=\"170\" r=\"3\"/><circle cx=\"190\" cy=\"170\" r=\"3\"/></svg>",
    "n": "define the fatigue stress concentration factor kf.",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "644897cc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"25\" text-anchor=\"middle\">Stress Concentration Reduction</text>\n <!-- Sharp Corner (Bad) -->\n <path d=\"M 60 40 L 120 40 L 120 100 L 90 70 Z\" stroke-width=\"3\"/>\n <text x=\"85\" y=\"65\">Sharp</text>\n <text x=\"85\" y=\"80\">Corner</text>\n <!-- Fillet Radius (Good) -->\n <path d=\"M 140 40 L 200 40 Q 230 70 200 100 L 140 100\" stroke-width=\"3\"/>\n <text x=\"165\" y=\"65\">Generous</text>\n <text x=\"165\" y=\"80\">Fillet</text>\n <!-- Groove (Good) -->\n <path d=\"M 240 40 L 300 40 L 300 100 L 270 70 Z\" stroke-width=\"3\"/>\n <text x=\"285\" y=\"65\">Relieving</text>\n <text x=\"285\" y=\"80\">Groove</text>\n <!-- Axis Labels -->\n <text x=\"10\" y=\"45\">Load Direction →</text>\n <text x=\"340\" y=\"115\">Stress ↓</text>\n</svg>",
+   "n": "how can stress concentration be reduced?",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "3da5f903": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Shaft Body -->\n  <rect x=\"40\" y=\"80\" width=\"280\" height=\"60\" rx=\"30\" />\n  <!-- Gear on Left -->\n  <circle cx=\"70\" cy=\"110\" r=\"35\" stroke-width=\"1.5\"/>\n  <path d=\"M 70 75 L 70 145 M 35 110 L 105 110 M 60 95 L 80 115 L 60 125 L 40 105\" stroke-width=\"1.5\"/>\n  <text x=\"55\" y=\"70\">Gear</text>\n  <!-- Pulley on Right -->\n  <circle cx=\"310\" cy=\"110\" r=\"40\" stroke-width=\"1.5\"/>\n  <path d=\"M 310 70 L 310 150 M 270 110 L 350 110\" stroke-width=\"1.5\"/>\n  <text x=\"295\" y=\"70\">Pulley</text>\n  <!-- Bearing on Left -->\n  <circle cx=\"40\" cy=\"110\" r=\"8\" fill=\"#222\"/>\n  <text x=\"35\" y=\"125\">Bearing</text>\n  <!-- Bearing on Right -->\n  <circle cx=\"320\" cy=\"110\" r=\"8\" fill=\"#222\"/>\n  <text x=\"315\" y=\"125\">Bearing</text>\n  <!-- Torque Arrow -->\n  <path d=\"M 40 110 L 360 110\" stroke-dasharray=\"4,2\" opacity=\"0.5\"/>\n  <circle cx=\"360\" cy=\"110\" r=\"3\" fill=\"#222\"/>\n  <text x=\"340\" y=\"95\">Torque</text>\n  <!-- Power Flow Arrow -->\n  <path d=\"M 40 80 L 40 140\" stroke-dasharray=\"4,2\" opacity=\"0.5\"/>\n  <circle cx=\"40\" cy=\"140\" r=\"3\" fill=\"#222\"/>\n  <text x=\"55\" y=\"130\">Power</text>\n</svg>",
+   "n": "what is a shaft?",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "866cb29d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\">T (Torque)</text><text x=\"180\" y=\"115\" text-anchor=\"middle\">τ (Shear Stress)</text><path d=\"M 40 100 L 320 100\"/><circle cx=\"60\" cy=\"100\" r=\"3\"/><circle cx=\"300\" cy=\"100\" r=\"3\"/><line x1=\"80\" y1=\"95\" x2=\"80\" y2=\"105\"/><line x1=\"320\" y1=\"95\" x2=\"320\" y2=\"105\"/><text x=\"70\" y=\"85\">Solid Shaft</text><text x=\"310\" y=\"85\">Solid Shaft</text><rect x=\"40\" y=\"140\" width=\"280\" height=\"60\" rx=\"5\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">T = (π/16) × τ × d³</text></svg>",
+   "n": "write the torsion equation for a solid circular shaft.",
    "sub": "design",
    "at": "2026-10-23"
   }
