@@ -2159,66 +2159,33 @@
    ]
   },
   {
-   "at": "2026-10-23T10:44:23.023Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
+   "at": "2026-10-23T11:35:17.082Z",
+   "model": "batiai/qwen3.8-27b:iq3",
+   "totalFixes": 3,
    "byAgent": [
     {
-     "agent": "proposals",
-     "count": 2
+     "agent": "archive-writer",
+     "count": 3
     }
    ],
    "details": [
     {
-     "agent": "proposals",
+     "agent": "archive-writer",
      "fixes": [
       {
-       "kind": "proposal",
-       "fix": "Fix Tutor Questions Lane Generation Count",
-       "detail": "Recent failures show the tutor-questions lane generating only 2 valid questions instead of the required 3, and sometimes failing to output a JSON array entirely.",
-       "text": "Update the Node.js script for the 'tutor-questions' lane to wrap the LLM response in a strict template that guarantees at least 3 items, adding a fallback loop that retries generation until the count threshold is met or a max retry limit is reached."
+       "page": "archive (Sports / Sports)",
+       "fix": "Explained \"The _____–26 Australian region cyclone season was an annual cycle of tropical cyclone form\"",
+       "text": "VERDICT: 2025. WHY: The 2025–26 Australian region cyclone season is the specific annual cycle in the Southern Hemisphere characterized by an unusually rapid succession of storms during its early months. TRAPS: Confusing this with the 2024–25 season or misidentifying the hemisphere. The season officially ran from 1 November 2025 to 30 April 2026, but activity began as early as mid-July with a tropical low. HOOK: Remember the '25' as the start year of this specific active cycle. Exam trap: Do not "
       },
       {
-       "kind": "proposal",
-       "fix": "Auto-Resolve Fault Board Info Items",
-       "detail": "The fault board shows 14 info items and recent agent runs have successfully applied '270 fix(es)' to workflows, perf, and a11y issues.",
-       "text": "Implement a lightweight cron job in the GitHub Actions schedule that scans the fault board JSON for 'info' severity items matching known patterns (like missing buttons or skipped flows) and automatically applies the corresponding HTML/JS patch from the agent's fix repository."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-23T11:17:10.556Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
+       "page": "archive (Sports / Sports)",
+       "fix": "Explained \"The season officially ran from 1 November _____ to 30 April 2026, activity began as early \"",
+       "text": "1) VERDICT: The answer is 2025. 2) WHY: The 2025–26 Australian region cyclone season officially spans 1 November 2025 to 30 April 2026, with pre-season activity starting in mid-July 2025. 3) TRAPS: Do not confuse the start year with the end year; the season is named by its start year. 4) HOOK: Remember '25 to 26' for the Nov-Apr window. Exam trap: Early July activity is pre-season, not part of the official count."
+      },
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (36 total)",
-       "text": "Define the theoretical stress concentration factor Kt. | Define notch sensitivity q. | Define the fatigue stress concentration factor Kf."
+       "page": "archive (Sports / Sports)",
+       "fix": "Explained \"It was the fourth consecutive season to have 5 or more severe tropical cyclones, a streak \"",
+       "text": "1) VERDICT: The streak began in 2022-23. 2) WHY: This marks the fourth straight season with five or more severe tropical cyclones, starting from the 2022-23 cycle. 3) TRAPS: Do not confuse the start year with the current season; the timeline is strictly sequential. 4) HOOK: Remember '22-23' as the anchor point for this four-year run. Exam trap: Verify the exact season label, not just the year, to avoid off-by-one errors in consecutive streak questions."
       }
      ]
     }
