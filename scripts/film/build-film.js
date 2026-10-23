@@ -247,6 +247,11 @@ function buildTimeline(film, tts, opts) {
         visual: shot.visual,
         sfx: shot.sfx || [],
         text: shot.text || '',
+        impact: !!shot.impact,
+        impactSub: shot.impactSub || '',
+        cardKicker: shot.cardKicker || '',
+        cardLines: Array.isArray(shot.cardLines) ? shot.cardLines : undefined,
+        cardSub: shot.cardSub || '',
         transition: shot.transition || 'cut',
         framing: shot.framing || { zoom: [1.02, 1.08], x: [50, 50], y: [50, 50] },
         start: start + local,
@@ -297,17 +302,51 @@ function writeTimeline(timeline, opts) {
 
 function makeBed(timeline, file) {
   const d = timeline.duration.toFixed(3);
+  const hitFile = path.join(path.dirname(file), 'impact.wav');
+  // A short sub impact, delayed to each typographic hit. This is the sound of
+  // a cut landing, not a gunshot: the film never reconstructs the firing.
   runFfmpeg([
+    '-y',
+    '-f', 'lavfi', '-i', 'sine=frequency=42:sample_rate=48000:duration=1.8',
+    '-af', 'afade=t=in:st=0:d=0.006,afade=t=out:st=0.12:d=1.65,volume=0.72',
+    '-ac', '2', '-ar', '48000', '-c:a', 'pcm_s16le', hitFile
+  ], 'impact bed');
+  const hits = [];
+  timeline.scenes.forEach((s) => s.shots.forEach((h) => {
+    if (h.impact) hits.push(h.start);
+  }));
+  const args = [
     '-y',
     '-f', 'lavfi', '-i', `sine=frequency=52:sample_rate=48000:duration=${d}`,
     '-f', 'lavfi', '-i', `anoisesrc=color=brown:amplitude=0.8:sample_rate=48000:duration=${d}`,
-    '-filter_complex',
-    `[0:a]volume=0.055,lowpass=f=100[a0];` +
-    `[1:a]lowpass=f=430,volume=0.075[a1];` +
-    `[a0][a1]amix=inputs=2:normalize=0,` +
-    `afade=t=in:st=0:d=2.5,afade=t=out:st=${Math.max(0, timeline.duration - 3.5)}:d=3.5[out]`,
-    '-map', '[out]', '-ac', '2', '-ar', '48000', '-c:a', 'pcm_s16le', file
-  ], 'audio bed');
+    '-f', 'lavfi', '-i', `aevalsrc=0.10*sin(2*PI*1500*t)*lt(mod(t\\,1.0)\\,0.012):s=48000:d=80`,
+    '-f', 'lavfi', '-i', `aevalsrc=0.20*sin(2*PI*54*t)*exp(-18*mod(t\\,1.25))*lt(mod(t\\,1.25)\\,0.20):s=48000:d=120`,
+    '-f', 'lavfi', '-i', `anoisesrc=color=pink:amplitude=0.35:sample_rate=48000:duration=${d}`
+  ];
+  if (hits.length) args.push('-i', hitFile);
+  const filters = [
+    '[0:a]volume=0.050,lowpass=f=100[a0]',
+    '[1:a]lowpass=f=430,volume=0.065[a1]',
+    '[2:a]highpass=f=900,lowpass=f=5000,volume=0.32,afade=t=in:st=0:d=1,afade=t=out:st=70:d=10[a2]',
+    '[3:a]volume=0.34,lowpass=f=150,afade=t=in:st=0:d=1.5,afade=t=out:st=112:d=8[a3]',
+    '[4:a]highpass=f=220,lowpass=f=1200,volume=0.030[a4]'
+  ];
+  const labels = ['[a0]', '[a1]', '[a2]', '[a3]', '[a4]'];
+  if (hits.length) {
+    const split = hits.map((_, i) => `[h${i}]`).join('');
+    filters.push(`[5:a]asplit=${hits.length}${split}`);
+    hits.forEach((at, i) => {
+      const ms = Math.round(at * 1000);
+      filters.push(`[h${i}]adelay=${ms}|${ms},volume=0.62[hb${i}]`);
+      labels.push(`[hb${i}]`);
+    });
+  }
+  filters.push(`${labels.join('')}amix=inputs=${labels.length}:normalize=0,` +
+    `alimiter=limit=0.92,afade=t=in:st=0:d=2.2,` +
+    `afade=t=out:st=${Math.max(0, timeline.duration - 3.5)}:d=3.5[out]`);
+  args.push('-filter_complex', filters.join(';'), '-map', '[out]', '-ac', '2', '-ar', '48000',
+    '-t', d, '-c:a', 'pcm_s16le', file);
+  runFfmpeg(args, 'audio bed');
 }
 
 function buildAudio(timeline, tts, opts) {
@@ -415,13 +454,23 @@ async function renderFrames(timeline, opts) {
   return framesDir;
 }
 
-function encode(framesDir, audio, timeline, opts) {
+function encode(framesDir, audio, timeline, opts, subtitleFile) {
   const pattern = path.join(framesDir, 'frame-%06d.jpg');
   const args = [
     '-y',
     '-framerate', String(opts.captureFps),
     '-i', pattern,
-    '-i', audio,
+    '-i', audio
+  ];
+  if (subtitleFile) {
+    // Burn the captions into the master. A sidecar SRT is easy to forget, and
+    // a film with narration but no visible captions is not accessible.
+    const rel = path.relative(ROOT, subtitleFile).replace(/\\/g, '/');
+    const style = 'FontName=DejaVu Sans,FontSize=22,PrimaryColour=&H00F2E6D0,' +
+      'OutlineColour=&H00000000,BorderStyle=1,Outline=1,Shadow=0,MarginV=42,Alignment=2';
+    args.push('-vf', `subtitles=${rel}:force_style='${style}'`);
+  }
+  args.push(
     '-c:v', 'libx264',
     '-preset', opts.preset,
     '-crf', String(opts.crf),
@@ -433,7 +482,7 @@ function encode(framesDir, audio, timeline, opts) {
     '-shortest',
     '-movflags', '+faststart',
     opts.out
-  ];
+  );
   runFfmpeg(args, 'encode');
   const size = fs.statSync(opts.out).size;
   console.log(`master: ${opts.out} (${(size / 1024 / 1024).toFixed(1)} MB)`);
@@ -647,9 +696,9 @@ async function main() {
 
   const audio = buildAudio(timeline, tts, opts);
   const frames = await renderFrames(timeline, opts);
-  encode(frames, audio, timeline, opts);
+  const srt = opts.srt ? writeSrt(timeline, opts) : '';
+  encode(frames, audio, timeline, opts, srt);
   if (opts.thumbnail) await makeThumbnail(timeline, opts);
-  if (opts.srt) writeSrt(timeline, opts);
   if (opts.metadata) writeMetadata(timeline, film, opts);
   writeScript(timeline, film, opts);
   console.log('\nDONE');

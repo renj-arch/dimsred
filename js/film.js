@@ -22,6 +22,9 @@
   var meta = el('meta');
   var fade = el('fade');
   var flash = el('flash');
+  var ghost = el('ghost');
+  var dip = el('dip');
+  var ghostActive = false;
   var atmos = el('atmos');
   var motes = el('motes');
   var shaft = atmos ? atmos.querySelector('.shaft') : null;
@@ -128,8 +131,18 @@
     });
   }
 
-  function htmlPlate(name) {
+  function htmlPlate(name, shot) {
     var vignette = '<div class="plate-vignette"></div>';
+    if (name === 'type-card') {
+      var lines = (shot && Array.isArray(shot.cardLines)) ? shot.cardLines : [];
+      var long = lines.length > 2 ? ' long' : '';
+      return '<div class="html-plate type-card' + long + '">' +
+        '<div class="tc-rule"></div>' +
+        '<div class="tc-kicker">' + esc((shot && shot.cardKicker) || '') + '</div>' +
+        '<div class="tc-main">' + lines.map(esc).join('<br>') + '</div>' +
+        '<div class="tc-sub">' + esc((shot && shot.cardSub) || '') + '</div>' +
+        '<div class="tc-rule bottom"></div>' + vignette + '</div>';
+    }
     if (name === 'ledger') {
       return '<div class="html-plate ledger"><div class="desk"></div>' +
         '<div class="paper"><h3>The Salt Act</h3><p>An Act for the collection and manufacture of salt</p>' +
@@ -222,13 +235,93 @@
     routeEl.style.strokeDashoffset = String(routeLen);
   }
 
+  function transitionDuration(kind) {
+    if (/whip/i.test(kind)) return 0.36;
+    if (/mask/i.test(kind)) return 0.52;
+    if (/cross|match/i.test(kind)) return 0.62;
+    if (/dip/i.test(kind)) return 0.52;
+    return 0.22;
+  }
+
+  function prepareGhost(previous, shot) {
+    if (!ghost) return;
+    var kind = String(shot.transition || 'cut');
+    var keepsFrame = previous && previous.render === 'blender' && shot.render === 'blender' &&
+      /whip|mask|cross|match|dip/i.test(kind);
+    if (!keepsFrame) {
+      ghostActive = false;
+      ghost.style.opacity = '0';
+      ghost.style.backgroundImage = 'none';
+      return;
+    }
+    ghostActive = true;
+    var src = timeline.plateBase + previous.plate + '.png';
+    ghost.style.backgroundImage = 'url("' + String(src).replace(/"/g, '%22') + '")';
+    ghost.style.backgroundSize = 'cover';
+    ghost.style.backgroundPosition = 'center';
+    ghost.style.opacity = '1';
+    ghost.style.transform = 'none';
+    ghost.style.clipPath = 'none';
+    ghost.style.filter = 'none';
+  }
+
+  function applyTransition(shot, local) {
+    var kind = String(shot.transition || 'cut');
+    var p = clamp(local / transitionDuration(kind));
+    var e = smooth(p);
+    media.style.transform = '';
+    media.style.filter = '';
+    media.style.opacity = '1';
+    dip.style.opacity = '0';
+    if (!ghost) return;
+    if (!ghostActive) {
+      ghost.style.opacity = '0';
+      return;
+    }
+    if (/whip/i.test(kind)) {
+      var dir = /left/i.test(kind) ? -1 : 1;
+      ghost.style.opacity = p < 1 ? '1' : '0';
+      ghost.style.clipPath = 'none';
+      ghost.style.transform = 'translateX(' + (dir * e * 100).toFixed(3) + '%) scale(1.04)';
+      ghost.style.filter = 'blur(' + (e * 10).toFixed(2) + 'px)';
+      media.style.transform = 'translateX(' + (-dir * (1 - e) * 100).toFixed(3) + '%) scale(1.03)';
+      media.style.filter = 'blur(' + ((1 - e) * 9).toFixed(2) + 'px)';
+    } else if (/mask/i.test(kind)) {
+      var fromLeft = /left/i.test(kind);
+      ghost.style.opacity = p < 1 ? '1' : '0';
+      ghost.style.transform = 'none';
+      ghost.style.filter = 'none';
+      ghost.style.clipPath = fromLeft
+        ? 'inset(0 0 0 ' + (e * 100).toFixed(2) + '%)'
+        : 'inset(0 ' + (e * 100).toFixed(2) + '% 0 0)';
+    } else if (/cross|match/i.test(kind)) {
+      ghost.style.opacity = String(1 - e);
+      ghost.style.clipPath = 'none';
+      ghost.style.transform = 'scale(' + (1 + e * (kind.match(/match/i) ? 0.06 : 0.015)).toFixed(4) + ')';
+      ghost.style.filter = 'none';
+    } else if (/dip/i.test(kind)) {
+      ghost.style.opacity = '0';
+      dip.style.opacity = String(Math.sin(Math.PI * p));
+    } else {
+      ghost.style.opacity = '0';
+    }
+  }
+
   function setShot(scene, shot) {
+    var previous = currentShot;
+    prepareGhost(previous, shot);
     currentShot = shot;
     currentScene = scene;
     chapterNum.textContent = fmt((timeline.scenes.indexOf(scene) || 0) + 1);
     chapterTitle.textContent = scene.title || '';
-    statement.textContent = shot.text || '';
-    statement.className = 'statement' + (String(shot.text || '').length > 96 ? ' small' : '');
+    if (shot.impact) {
+      statement.className = 'statement impact' + (String(shot.text || '').length > 8 ? ' wide' : '');
+      statement.innerHTML = '<span class="impact-value">' + esc(shot.text || '') + '</span>' +
+        (shot.impactSub ? '<span class="impact-label">' + esc(shot.impactSub) + '</span>' : '');
+    } else {
+      statement.textContent = shot.text || '';
+      statement.className = 'statement' + (String(shot.text || '').length > 96 ? ' small' : '');
+    }
     media.className = 'hidden';
     mapLayer.className = 'hidden';
     titleLayer.className = 'hidden';
@@ -238,7 +331,7 @@
       media.innerHTML = '<img id="plateImg" alt="" src="' + esc(timeline.plateBase + shot.plate + '.png') + '">';
     } else if (shot.render === 'html') {
       media.className = 'html';
-      media.innerHTML = htmlPlate(shot.plate);
+      media.innerHTML = htmlPlate(shot.plate, shot);
     } else if (shot.render === 'map') {
       mapLayer.className = '';
       if (!mapSvg) buildMap();
@@ -306,8 +399,14 @@
     var inS = smooth(shotLocal / 0.55);
     var outS = smooth((shot.duration - shotLocal) / 0.50);
     var statementAlpha = shot.text && shot.render !== 'title' ? Math.min(inS, outS) : 0;
+    if (shot.impact) {
+      var pop = smooth(Math.min(1, shotLocal / 0.34));
+      statementAlpha = Math.min(pop, outS);
+      statement.style.transform = 'translateY(-50%) scale(' + (0.84 + 0.16 * pop).toFixed(4) + ')';
+    } else {
+      statement.style.transform = 'translateY(' + ((1 - inS) * 12).toFixed(2) + 'px)';
+    }
     statement.style.opacity = String(statementAlpha);
-    statement.style.transform = 'translateY(' + ((1 - inS) * 12).toFixed(2) + 'px)';
 
     var chapterIn = smooth(sceneLocal / 0.45);
     var chapterOut = smooth((scene.duration - sceneLocal) / 0.55);
@@ -320,6 +419,7 @@
     var flashAlpha = 0;
     if (/flash/i.test(shot.transition || '')) flashAlpha = clamp(1 - shotLocal / 0.22) * 0.92;
     flash.style.opacity = String(flashAlpha);
+    applyTransition(shot, shotLocal);
 
     drawAtmos(t, shot);
     var grain = el('grain');
@@ -362,6 +462,11 @@
     meta.style.opacity = '0';
     fade.style.opacity = '0';
     flash.style.opacity = '0';
+    if (ghost) ghost.style.opacity = '0';
+    if (dip) dip.style.opacity = '0';
+    ghostActive = false;
+    media.style.transform = '';
+    media.style.filter = '';
     var posterSize = film && /^\d+(\.\d+)?(vw|vh|px|rem)$/.test(String(film.posterTitleSize || ''))
       ? ' style="font-size:' + film.posterTitleSize + '"' : '';
     var overlay = document.createElement('div');
@@ -382,6 +487,11 @@
     meta.style.opacity = '0';
     fade.style.opacity = '0';
     flash.style.opacity = '0';
+    if (ghost) ghost.style.opacity = '0';
+    if (dip) dip.style.opacity = '0';
+    ghostActive = false;
+    media.style.transform = '';
+    media.style.filter = '';
     var base = film || FALLBACK[filmId] || FALLBACK['salt-march'];
     if (base && base.titleLines) {
       document.title = base.titleLines.join(' ') + ' — ' + (base.subtitle || 'A vlymbooq film');
