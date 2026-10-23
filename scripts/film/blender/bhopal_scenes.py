@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+﻿#!/usr/bin/env python3
 """Procedural 3D plates for the Bhopal film.
 
 The film is object-led. It never reconstructs the dead or the dying: a tank, a
@@ -279,8 +279,8 @@ def scene_tank_farm(samples, width, height, out):
     reset()
     night_sky((0.24, 0.075, 0.020), (0.002, 0.005, 0.012))
     plane("Ground", (0, 10, 0), 80, concrete("FarmGround", (0.070, 0.068, 0.062)))
-    body = paint("TankPaint", (0.075, 0.090, 0.083))
-    band = rust("TankBand", (0.20, 0.085, 0.030))
+    body = paint("TankPaint", (0.115, 0.135, 0.125))
+    band = rust("TankBand", (0.28, 0.120, 0.042))
     # four tanks at different depths, all faceted enough to read as built
     storage_tank("Tank-A", -7.2, 14.0, 3.2, 7.2, body, band)
     storage_tank("Tank-B", 0.0, 18.0, 3.8, 8.2, body, band)
@@ -328,10 +328,11 @@ def scene_tank_farm(samples, width, height, out):
         cube(f"HorizonBlock-{i}", (x, 30.0, h / 2), (3.2, 2.0, h),
              principled(f"HorizonMat-{i}", (0.008, 0.009, 0.010), roughness=0.95))
     dust(100, seed=21, zmax=6.0, ymax=28)
-    camera((-4.0, -12.0, 3.3), (1.0, 12.0, 5.0), lens=30, fstop=5.6)
-    bpy.context.scene.view_settings.exposure = -1.15
-    area("MoonFill", (-14.0, -6.0, 11.0), (0, 12.0, 4.0), 380, 5.0, (0.28, 0.44, 0.70))
-    area("SodiumWash", (8.0, 2.0, 5.0), (0, 10.0, 3.0), 210, 4.0, (1.0, 0.46, 0.13))
+    camera((-3.0, -9.0, 3.2), (1.0, 14.0, 5.5), lens=33, fstop=5.0)
+    bpy.context.scene.view_settings.exposure = -0.35
+    area("MoonFill", (-14.0, -6.0, 12.0), (0, 14.0, 4.0), 1300, 8.0, (0.30, 0.46, 0.72))
+    area("SodiumWash", (9.0, 1.0, 7.0), (0, 12.0, 3.0), 900, 6.0, (1.0, 0.46, 0.13))
+    area("TankFill", (2.0, -2.0, 4.0), (0, 12.0, 3.0), 320, 5.0, (0.44, 0.56, 0.70))
     render(samples, width, height, out)
 
 
@@ -517,49 +518,59 @@ def scene_valve(samples, width, height, out):
 
 def scene_flare(samples, width, height, out):
     reset()
-    night_sky((0.20, 0.055, 0.012), (0.001, 0.003, 0.008))
-    plane("Ground", (0, 0, 0), 70, concrete("FlareGround", (0.060, 0.058, 0.052)))
-    st = steel("FlareSteel", (0.075, 0.080, 0.085))
-    # lattice tower and the flare tip
-    for x in (-2.1, 2.1):
-        cube(f"TowerLeg-{x}", (x, 0, 8.0), (0.20, 0.20, 16.0), st)
+    night_sky((0.22, 0.065, 0.014), (0.001, 0.003, 0.009))
+    plane("Ground", (0, 0, 0), 70, concrete("FlareGround", (0.080, 0.075, 0.064)))
+    st = steel("FlareSteel", (0.115, 0.120, 0.122))
+    # A taller lattice tower, braced on both faces so it reads as structure.
+    for x in (-2.3, 2.3):
+        cube(f"TowerLeg-{x}", (x, 0, 8.2), (0.26, 0.26, 16.4), st)
         for i in range(8):
             z = 1.0 + i * 2.0
-            cube(f"TowerBrace-{x}-{i}", (x, 0, z), (0.10, 0.10, 2.2), st, rot=(0, 0.35, 0))
+            cube(f"TowerBrace-{x}-{i}", (x, 0, z), (0.12, 0.12, 2.3), st, rot=(0, 0.38, 0))
     for z in (2.0, 6.0, 10.0, 14.0):
-        cube(f"TowerBridge-{z}", (0, 0, z), (4.2, 0.14, 0.14), st)
+        cube(f"TowerBridge-{z}", (0, 0, z), (4.7, 0.16, 0.16), st)
+    for i in range(7):
+        z = 1.4 + i * 2.1
+        limb(f"TowerCrossA-{i}", (-2.25, -0.02, z), (2.25, -0.02, z + 2.1), 0.045, st, vertices=6)
+        limb(f"TowerCrossB-{i}", (2.25, 0.02, z), (-2.25, 0.02, z + 2.1), 0.045, st, vertices=6)
     pipe_run("FlareRiser", [(-0.6, 0.0, 0.0), (-0.6, 0.0, 12.0), (0.0, 0.0, 12.0),
-                            (0.0, 0.0, 16.2)], 0.26, rust())
-    cylinder("FlareTip", (0, 0, 16.6), 0.30, 0.90, rust(), vertices=24)
-    # a tall, wind-bent flame
-    for i, (dx, dz, r, h) in enumerate(((0.0, 16.9, 0.24, 2.6), (0.28, 17.6, 0.15, 2.0),
-                                       (-0.16, 18.0, 0.10, 1.5))):
+                            (0.0, 0.0, 16.2)], 0.30, rust())
+    cylinder("FlareTip", (0, 0, 16.7), 0.36, 1.0, rust(), vertices=24)
+    # a large, wind-bent flame: three cones, not a single candle
+    for i, (dx, dz, r, h) in enumerate(((0.0, 16.9, 0.56, 4.2), (0.35, 17.8, 0.34, 3.2),
+                                       (-0.22, 18.6, 0.20, 2.4))):
         bpy.ops.mesh.primitive_cone_add(
-            vertices=24, radius1=r, radius2=0.0, depth=h,
-            location=(dx, 0.0, dz + h / 2), rotation=(0, 0.16, 0)
+            vertices=28, radius1=r, radius2=0.0, depth=h,
+            location=(dx, 0.0, dz + h / 2), rotation=(0, 0.18, 0)
         )
         obj = bpy.context.object
         obj.name = f"FlareFlame-{i}"
         smooth(obj)
-        assign(obj, emission(f"FlareFlameMat-{i}", (1.0, 0.32 - i * 0.04, 0.04), 16.0 - i * 3))
-    sphere("FlareCore", (0, 0, 17.6), 0.22,
-           emission("FlareCoreMat", (1.0, 0.82, 0.42), 30.0), segments=16, rings=10)
-    point_lamp("FlareLight", (0, 0, 18.0), 560, (1.0, 0.35, 0.07), 1.0)
-    # pipework and tanks in the foreground, silhouetted
-    storage_tank("FlareTank-A", -8.0, 9.0, 2.4, 5.0, paint("FlareTankPaint", (0.050, 0.065, 0.060)),
+        assign(obj, emission(f"FlareFlameMat-{i}", (1.0, 0.38 - i * 0.05, 0.045), 22.0 - i * 4))
+    sphere("FlareCore", (0, 0, 18.4), 0.34,
+           emission("FlareCoreMat", (1.0, 0.84, 0.44), 36.0), segments=18, rings=12)
+    point_lamp("FlareLight", (0, 0, 18.6), 1200, (1.0, 0.36, 0.07), 1.3)
+    # aircraft warning lights on the tower
+    for i, z in enumerate((6.0, 11.0, 15.0)):
+        sphere(f"FlareWarning-{i}", (2.45, 0.0, z), 0.10,
+               emission(f"FlareWarningMat-{i}", (1.0, 0.06, 0.015), 4.0), segments=12, rings=8)
+    # pipework and tanks in the foreground, lit just enough to frame the tower
+    storage_tank("FlareTank-A", -8.0, 9.0, 2.4, 5.0, paint("FlareTankPaint", (0.085, 0.105, 0.098)),
                  rust("FlareTankBand"))
-    storage_tank("FlareTank-B", 8.5, 12.0, 2.8, 6.4, paint("FlareTankPaint", (0.050, 0.065, 0.060)),
+    storage_tank("FlareTank-B", 8.5, 12.0, 2.8, 6.4, paint("FlareTankPaint", (0.085, 0.105, 0.098)),
                  rust("FlareTankBand"))
     pipe_run("FlarePipe", [(-12, 4.0, 1.0), (10, 4.0, 1.0)], 0.20, st)
     for i, x in enumerate((-10, -4, 3, 10)):
         cube(f"FlareLampPost-{i}", (x, 2.0, 1.5), (0.08, 0.08, 3.0), st)
         sphere(f"FlareLampGlow-{i}", (x, 2.0, 3.0), 0.13,
                emission(f"FlareLampMat-{i}", (1.0, 0.48, 0.14), 3.0), segments=12, rings=8)
-        point_lamp(f"FlareLamp-{i}", (x, 2.0, 3.0), 42, (1.0, 0.44, 0.12), 0.18)
+        point_lamp(f"FlareLamp-{i}", (x, 2.0, 3.0), 55, (1.0, 0.44, 0.12), 0.18)
     dust(100, seed=52, zmax=8.0, ymax=24)
-    camera((8.0, -14.0, 2.4), (0.0, 1.0, 10.0), lens=30, fstop=4.5)
-    bpy.context.scene.view_settings.exposure = -1.2
-    area("Rim", (-8.0, -5.0, 8.0), (0, 0, 8.0), 280, 4.0, (0.24, 0.40, 0.68))
+    camera((7.0, -21.0, 2.5), (0.0, 0.0, 9.5), lens=26, fstop=4.5)
+    bpy.context.scene.view_settings.exposure = -0.30
+    area("TowerRim", (-7.0, -5.0, 11.0), (0, 0, 8.0), 900, 5.0, (0.26, 0.42, 0.70))
+    area("TowerSodium", (8.0, 2.0, 8.0), (0, 0, 8.0), 650, 4.0, (1.0, 0.44, 0.12))
+    area("BaseFill", (0.0, -8.0, 2.0), (0, 0, 3.0), 220, 4.0, (0.44, 0.56, 0.70))
     render(samples, width, height, out)
 
 
@@ -661,10 +672,10 @@ def scene_pipe_corridor(samples, width, height, out):
         cube(f"CatwalkRail-{i}", (3.3, y, 1.8), (0.07, 2.2, 0.07), st)
     # steam vent and a single work lamp
     cylinder("SteamVent", (-2.3, 7.0, 0.7), 0.18, 1.4, rust_mat, vertices=16)
-    for i in range(4):
-        sphere(f"Steam-{i}", (-2.3 + i * 0.10, 7.0 - i * 0.08, 1.5 + i * 0.14),
-               0.18 + i * 0.08, principled(f"SteamMat-{i}", (0.38, 0.40, 0.41), 0.98),
-               segments=12, rings=8)
+    for i in range(5):
+        sphere(f"Steam-{i}", (-2.3 + i * 0.08, 7.0 - i * 0.05, 1.5 + i * 0.10),
+               0.10 + i * 0.025, principled(f"SteamMat-{i}", (0.13, 0.14, 0.145), 0.98),
+               segments=10, rings=6)
     cylinder("CorridorLampPost", (4.8, 5.0, 2.1), 0.08, 4.2, st, vertices=8)
     cube("CorridorLampArm", (4.8, 3.8, 4.1), (0.12, 2.5, 0.12), st)
     sphere("CorridorLamp", (4.8, 2.55, 4.0), 0.16,
@@ -801,33 +812,58 @@ def scene_city_rooftops(samples, width, height, out):
 def scene_street_lamp(samples, width, height, out):
     reset()
     night_sky((0.16, 0.050, 0.015), (0.001, 0.002, 0.006))
-    plane("Street", (0, 3, 0), 40, asphalt("StreetAsphalt"))
-    concrete_mat = concrete("StreetConcrete", (0.11, 0.10, 0.085))
-    # buildings close in from both sides; the lane is a slot of light
+    plane("Street", (0, 6, 0), 40, asphalt("StreetAsphalt"))
+    concrete_mat = concrete("StreetConcrete", (0.13, 0.115, 0.095))
+    # A closed lane with a real end wall: a door, a window and a stairwell,
+    # not a flat orange rectangle at the vanishing point.
     for side in (-1, 1):
         for i in range(3):
-            y = -1.0 + i * 4.5
-            h = 4.0 + (i % 2) * 1.2
-            cube(f"LaneBlock-{side}-{i}", (side * 3.6, y, h / 2),
-                 (2.0, 4.2, h), concrete_mat)
-            cube(f"LaneShutter-{side}-{i}", (side * 2.56, y, 1.10),
-                 (0.06, 2.0, 2.2), steel("ShutterSteel"))
+            y = -1.0 + i * 4.8
+            h = 4.4 + (i % 2) * 1.0
+            cube(f"LaneBlock-{side}-{i}", (side * 3.9, y, h / 2),
+                 (2.4, 4.8, h), concrete_mat)
+            cube(f"LaneShutter-{side}-{i}", (side * 2.66, y, 1.10),
+                 (0.06, 2.2, 2.2), steel("ShutterSteel"))
             for k in range(7):
-                cube(f"ShutterRib-{side}-{i}-{k}", (side * 2.52, y, 0.20 + k * 0.30),
-                     (0.04, 2.0, 0.035), rust("ShutterRust"))
-            cube(f"LaneWindow-{side}-{i}", (side * 2.57, y - 1.0, 3.0),
-                 (0.04, 0.62, 0.82), emission(f"LaneWindowGlow-{side}-{i}", (0.62, 0.28, 0.07), 0.35))
+                cube(f"ShutterRib-{side}-{i}-{k}", (side * 2.62, y, 0.20 + k * 0.30),
+                     (0.04, 2.2, 0.035), rust("ShutterRust"))
+            cube(f"LaneWindow-{side}-{i}", (side * 2.67, y - 1.1, 3.15),
+                 (0.04, 0.72, 0.90), emission(f"LaneWindowGlow-{side}-{i}",
+                                            (0.68, 0.31, 0.08), 0.45))
+            cube(f"LaneBalcony-{side}-{i}", (side * 2.35, y, 2.42),
+                 (0.85, 1.6, 0.08), concrete_mat)
+            for k in range(4):
+                cube(f"BalconyRail-{side}-{i}-{k}", (side * 2.30, y - 0.6 + k * 0.4, 2.62),
+                     (0.05, 0.05, 0.40), steel("BalconySteel"))
+    cube("LaneEndWall", (0, 15.0, 2.8), (8.0, 0.35, 5.6), concrete_mat)
+    cube("LaneEndDoor", (0.9, 14.78, 1.05), (1.0, 0.05, 2.1),
+         paint("LaneEndDoorPaint", (0.10, 0.14, 0.13)))
+    cube("LaneEndDoorGlow", (0.9, 14.74, 1.65), (0.62, 0.02, 0.42),
+         emission("LaneEndDoorGlowMat", (0.72, 0.34, 0.10), 0.55))
+    cube("LaneEndWindow", (-1.8, 14.78, 3.3), (1.3, 0.04, 0.9),
+         emission("LaneEndWindowGlow", (0.56, 0.26, 0.07), 0.42))
+    for i in range(3):
+        cube(f"EndWindowBar-{i}", (-2.3 + i * 0.45, 14.75, 3.3), (0.035, 0.05, 0.95),
+             steel("EndWindowSteel"))
     # a single sodium lamp on a bracket, the source of the whole frame
-    cylinder("StreetLampPost", (2.35, 4.2, 2.2), 0.095, 4.4, steel("LampPostSteel"), vertices=10)
-    cube("StreetLampArm", (1.70, 4.2, 4.28), (1.5, 0.12, 0.12), steel("LampPostSteel"))
-    cube("StreetLampHead", (0.92, 4.2, 4.18), (0.60, 0.32, 0.16), steel("LampHeadSteel"))
-    cube("StreetLampGlow", (0.92, 4.2, 4.08), (0.52, 0.26, 0.02),
-         emission("StreetLampMat", (1.0, 0.50, 0.14), 4.0))
-    point_lamp("StreetLight", (0.92, 4.2, 4.0), 190, (1.0, 0.47, 0.12), 0.45)
-    # puddle and drain
-    plane("Puddle", (0.0, -0.8, 0.012), 1.9, principled("PuddleWater", (0.015, 0.018, 0.020), 0.10))
-    cylinder("Drain", (1.85, 1.0, 0.012), 0.26, 0.02, rust("DrainRust"), vertices=16)
-    # bicycle, a chair and a bucket: traces of a street, not a crowd
+    cylinder("StreetLampPost", (2.55, 4.2, 2.2), 0.10, 4.4, steel("LampPostSteel"), vertices=10)
+    cube("StreetLampArm", (1.80, 4.2, 4.28), (1.6, 0.12, 0.12), steel("LampPostSteel"))
+    cube("StreetLampHead", (0.95, 4.2, 4.18), (0.64, 0.34, 0.16), steel("LampHeadSteel"))
+    cube("StreetLampGlow", (0.95, 4.2, 4.08), (0.56, 0.28, 0.02),
+         emission("StreetLampMat", (1.0, 0.50, 0.14), 4.5))
+    point_lamp("StreetLight", (0.95, 4.2, 4.0), 300, (1.0, 0.47, 0.12), 0.50)
+    # a second, weaker bulb down the lane gives the eye a destination
+    cylinder("FarBulbPost", (-2.2, 11.0, 2.0), 0.06, 4.0, steel("FarBulbSteel"), vertices=8)
+    sphere("FarBulb", (-2.2, 11.0, 4.0), 0.10,
+           emission("FarBulbGlow", (1.0, 0.52, 0.16), 2.2), segments=12, rings=8)
+    point_lamp("FarBulbLight", (-2.2, 11.0, 3.9), 40, (1.0, 0.48, 0.14), 0.18)
+    # puddle and drain, with a wet, irregular edge
+    cylinder("Puddle", (0.2, 1.1, 0.012), 1.1, 0.008,
+             principled("PuddleWater", (0.012, 0.016, 0.018), 0.08, metallic=0.15), vertices=32)
+    cylinder("PuddleSmall", (-1.2, 6.8, 0.012), 0.55, 0.006,
+             principled("PuddleWater", (0.012, 0.016, 0.018), 0.08, metallic=0.15), vertices=24)
+    cylinder("Drain", (1.95, 1.0, 0.012), 0.26, 0.02, rust("DrainRust"), vertices=16)
+    # bicycle, chair, bucket and a parked auto-rickshaw
     bike = steel("StreetBike", (0.012, 0.012, 0.012))
     for wheel_y in (2.4, 3.3):
         bpy.ops.mesh.primitive_torus_add(
@@ -837,18 +873,34 @@ def scene_street_lamp(samples, width, height, out):
         assign(bpy.context.object, bike)
     cube("StreetBikeFrame", (1.35, 2.85, 0.55), (0.035, 0.92, 0.035), bike, rot=(0.50, 0, 0))
     cube("StreetBikeSeat", (1.35, 2.55, 0.88), (0.08, 0.22, 0.04), bike)
-    cube("StreetChair", (-1.55, 0.3, 0.55), (0.60, 0.60, 0.06), dark_wood("ChairWood"))
+    cube("StreetChair", (-1.65, 0.3, 0.55), (0.60, 0.60, 0.06), dark_wood("ChairWood"))
     for side in (-1, 1):
-        cube(f"ChairLeg-{side}", (-1.55 + side * 0.25, 0.3, 0.27), (0.05, 0.05, 0.54), dark_wood("ChairWood"))
-    cylinder("StreetBucket", (1.85, 2.0, 0.20), 0.22, 0.40, rust("BucketRust"), vertices=20)
+        cube(f"ChairLeg-{side}", (-1.65 + side * 0.25, 0.3, 0.27), (0.05, 0.05, 0.54), dark_wood("ChairWood"))
+    cylinder("StreetBucket", (1.95, 2.0, 0.20), 0.22, 0.40, rust("BucketRust"), vertices=20)
+    auto = paint("AutoPaint", (0.055, 0.11, 0.075))
+    cube("AutoBody", (-1.75, 8.0, 0.55), (1.10, 1.85, 0.62), auto)
+    cube("AutoRoof", (-1.75, 8.0, 1.28), (1.18, 1.95, 0.10), auto)
+    cube("AutoWindshield", (-1.75, 7.10, 1.02), (0.92, 0.04, 0.46),
+         principled("AutoGlass", (0.20, 0.28, 0.28), 0.10, transmission=0.45))
+    cube("AutoSeat", (-1.75, 8.05, 0.78), (0.82, 1.05, 0.16),
+         principled("AutoSeatMat", (0.055, 0.045, 0.035), 0.8))
+    for i, (wx, wy) in enumerate(((-1.75, 7.25), (-1.75, 8.75), (-1.75, 7.95))):
+        bpy.ops.mesh.primitive_torus_add(
+            major_radius=0.22, minor_radius=0.055, major_segments=20, minor_segments=6,
+            location=(wx, wy, 0.24), rotation=(0, math.pi / 2, 0)
+        )
+        assign(bpy.context.object, steel("AutoWheelSteel"))
+    sphere("AutoHeadlight", (-1.75, 7.08, 0.62), 0.09,
+           emission("AutoHeadlightGlow", (1.0, 0.56, 0.18), 2.0), segments=12, rings=8)
     # overhead wires
     for i in range(3):
-        cube(f"Wire-{i}", (0, 6.0, 4.8 - i * 0.35), (0.012, 18.0, 0.012), steel("WireSteel"))
-    dust(70, seed=88, zmax=3.6, ymax=12)
-    camera((0.3, -6.2, 1.65), (0.0, 6.0, 2.4), lens=40, fstop=2.4)
-    bpy.context.scene.view_settings.exposure = -0.8
-    area("LampFill", (0.6, 1.0, 3.0), (0, 4.0, 1.6), 90, 1.2, (1.0, 0.47, 0.14))
-    area("CoolSky", (-2.0, 5.0, 5.5), (0, 4.0, 3.0), 60, 2.0, (0.24, 0.36, 0.58))
+        cube(f"Wire-{i}", (0, 7.0, 4.9 - i * 0.35), (0.012, 20.0, 0.012), steel("WireSteel"))
+    dust(70, seed=88, zmax=3.6, ymax=14)
+    camera((0.4, -6.8, 1.7), (0.0, 8.0, 2.6), lens=35, fstop=2.4)
+    bpy.context.scene.view_settings.exposure = -0.35
+    area("LampFill", (0.6, 1.0, 3.0), (0, 5.0, 1.8), 180, 1.6, (1.0, 0.47, 0.14))
+    area("CoolSky", (-2.0, 6.0, 6.0), (0, 6.0, 3.0), 120, 3.0, (0.24, 0.36, 0.58))
+    area("EndFill", (0.0, 10.0, 4.0), (0, 14.0, 2.4), 90, 2.0, (1.0, 0.45, 0.14))
     render(samples, width, height, out)
 
 
@@ -1014,25 +1066,26 @@ def scene_courtroom(samples, width, height, out):
     reset()
     dark_world((0.0006, 0.0005, 0.0004))
     plane("Floor", (0, 0, 0), 20, dark_wood("CourtFloorWood"))
-    wall = plaster_material("CourtWall", (0.16, 0.13, 0.10))
+    wall = plaster_material("CourtWall", (0.24, 0.20, 0.15))
+    court_wood = principled("CourtWood", (0.16, 0.085, 0.040), roughness=0.55)
     cube("CourtBackWall", (0, 6.0, 2.2), (12.0, 0.30, 4.4), wall)
     for side in (-1, 1):
         cube(f"CourtSideWall-{side}", (side * 5.8, 2.0, 2.2), (0.30, 8.0, 4.4), wall)
     # raised bench, empty
-    cube("CourtBench", (0, 4.7, 1.15), (7.2, 1.8, 2.3), dark_wood("CourtBenchWood"))
-    cube("CourtBenchTop", (0, 4.0, 2.30), (7.4, 2.1, 0.18), dark_wood("CourtBenchWood"))
-    cube("CourtBenchFront", (0, 3.55, 1.35), (7.2, 0.18, 2.7), dark_wood("CourtBenchWood"))
+    cube("CourtBench", (0, 4.7, 1.15), (7.2, 1.8, 2.3), court_wood)
+    cube("CourtBenchTop", (0, 4.0, 2.30), (7.4, 2.1, 0.18), court_wood)
+    cube("CourtBenchFront", (0, 3.55, 1.35), (7.2, 0.18, 2.7), court_wood)
     # witness box, clerk table, empty chairs
-    cube("WitnessBox", (-3.2, 3.2, 0.65), (1.5, 1.4, 1.3), dark_wood("CourtWitnessWood"))
-    cube("ClerkTable", (2.8, 3.1, 0.72), (2.6, 1.2, 0.14), dark_wood("CourtTableWood"))
+    cube("WitnessBox", (-3.2, 3.2, 0.65), (1.5, 1.4, 1.3), court_wood)
+    cube("ClerkTable", (2.8, 3.1, 0.72), (2.6, 1.2, 0.14), court_wood)
     for side in (-1, 1):
         cube(f"ClerkLeg-{side}", (2.8 + side * 1.1, 3.1, 0.36), (0.12, 0.12, 0.72),
-             dark_wood("CourtTableWood"))
+             court_wood)
     for i in range(3):
         cube(f"CourtChairSeat-{i}", (-2.4 + i * 2.4, 1.6, 0.48), (1.1, 1.0, 0.08),
-             dark_wood("CourtChairWood"))
+             court_wood)
         cube(f"CourtChairBack-{i}", (-2.4 + i * 2.4, 1.15, 0.98), (1.1, 0.10, 1.0),
-             dark_wood("CourtChairWood"))
+             court_wood)
     # the scales: a thin brass beam, two pans, a central column
     brass_mat = aged_brass("CourtBrass")
     cylinder("ScalesBase", (2.3, 3.0, 0.95), 0.26, 0.12, brass_mat, vertices=24)
@@ -1057,7 +1110,7 @@ def scene_courtroom(samples, width, height, out):
          emission("CourtWindowGlow", (0.22, 0.32, 0.46), 0.30))
     for i in range(4):
         cube(f"CourtWindowBar-{i}", (-0.8 + i * 0.53, 5.80, 2.6), (0.035, 0.05, 1.95),
-             dark_wood("CourtWindowWood"))
+             court_wood)
     for i in range(6):
         cube(f"CourtFile-{i}", (1.55 + (i % 3) * 0.16, 3.1 + (i // 3) * 0.22, 0.82 + (i % 2) * 0.03),
              (0.34, 0.24, 0.035), paper_material(f"CourtFilePaper-{i}", (0.52, 0.45, 0.32)),
@@ -1066,11 +1119,12 @@ def scene_courtroom(samples, width, height, out):
     cube("DockRail", (4.35, 2.1, 1.05), (0.10, 2.5, 0.08), brass_mat)
     for i in range(4):
         cube(f"DockPost-{i}", (4.35, 1.0 + i * 0.75, 0.62), (0.07, 0.07, 1.24), brass_mat)
-    cube("DockChair", (4.35, 2.1, 0.55), (0.75, 0.75, 0.08), dark_wood("DockChairWood"))
-    camera((0.0, -7.2, 2.0), (0.0, 4.0, 1.9), lens=34, fstop=4.2)
-    bpy.context.scene.view_settings.exposure = -1.0
-    area("Key", (-3.0, -2.0, 5.2), (0, 3.0, 1.8), 260, 3.0, (0.52, 0.66, 0.80))
-    area("Warm", (4.0, 4.0, 3.6), (0, 3.0, 1.6), 150, 2.0, (1.0, 0.47, 0.16))
+    cube("DockChair", (4.35, 2.1, 0.55), (0.75, 0.75, 0.08), court_wood)
+    camera((5.5, -6.8, 2.4), (0.0, 4.2, 1.8), lens=35, fstop=4.2)
+    bpy.context.scene.view_settings.exposure = -0.30
+    area("Key", (-3.0, -2.0, 5.2), (0, 3.0, 1.8), 700, 4.0, (0.52, 0.66, 0.80))
+    area("Warm", (4.0, 4.0, 3.6), (0, 3.0, 1.6), 380, 2.6, (1.0, 0.47, 0.16))
+    area("Fill", (0.0, -4.0, 1.5), (0, 3.0, 1.2), 160, 3.0, (0.40, 0.50, 0.64))
     render(samples, width, height, out)
 
 
@@ -1375,32 +1429,35 @@ def scene_siren(samples, width, height, out):
     # the horn: a flared cone with a small motor housing
     bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=0.12, radius2=0.72,
                                   depth=1.0, location=(0, 2.0, 4.55),
-                                  rotation=(math.pi / 2, 0, 0))
+                                  rotation=(math.pi / 2, 0, 0.60))
     horn = bpy.context.object
     horn.name = "SirenHorn"
     smooth(horn)
-    assign(horn, grime("SirenHornMat", (0.10, 0.095, 0.080), 0.68, 0.35))
+    assign(horn, grime("SirenHornMat", (0.14, 0.125, 0.100), 0.62, 0.42))
     cylinder("SirenMotor", (0, 2.62, 4.55), 0.20, 0.30, st,
              rot=(math.pi / 2, 0, 0), vertices=20)
     bpy.ops.mesh.primitive_torus_add(
         major_radius=0.66, minor_radius=0.035, major_segments=32, minor_segments=6,
-        location=(0, 2.48, 4.55), rotation=(math.pi / 2, 0, 0)
+        location=(0, 2.48, 4.55), rotation=(math.pi / 2, 0, 0.60)
     )
     assign(bpy.context.object, rust("SirenRimRust"))
-    # distant city, blurred, and a moon
+    sphere("SirenBeacon", (0, 2.62, 4.86), 0.09,
+           emission("SirenBeaconGlow", (1.0, 0.05, 0.01), 5.0), segments=12, rings=8)
+    point_lamp("SirenBeaconLight", (0, 2.62, 4.86), 16, (1.0, 0.06, 0.01), 0.12)
+    # distant city, kept low and soft so the horn owns the frame
     rng = random.Random(411)
     for i in range(18):
-        x = -14 + i * 1.7
-        h = 1.2 + rng.uniform(0, 3.2)
-        cube(f"SirenCity-{i}", (x, 9.0 + (i % 3) * 2.0, h / 2), (1.4, 2.0, h),
-             principled(f"SirenCityMat-{i}", (0.014, 0.014, 0.013), 0.96))
-    sphere("SirenMoon", (-8.0, 14.0, 8.0), 0.55,
-           emission("SirenMoonGlow", (0.50, 0.62, 0.78), 1.8), segments=20, rings=12)
+        x = -16 + i * 1.9
+        h = 0.8 + rng.uniform(0, 2.4)
+        cube(f"SirenCity-{i}", (x, 10.0 + (i % 3) * 2.0, h / 2), (1.6, 2.4, h),
+             principled(f"SirenCityMat-{i}", (0.020, 0.019, 0.017), 0.96))
     dust(50, seed=412, zmax=4.0, ymax=14)
-    camera((3.2, -6.0, 1.55), (0, 2.0, 3.6), lens=50, fstop=3.0)
-    bpy.context.scene.view_settings.exposure = -1.2
-    area("Moon", (-4.0, 1.0, 5.0), (0, 2.0, 3.5), 100, 3.0, (0.34, 0.46, 0.68))
-    area("RoofWarm", (3.0, 1.0, 1.0), (0, 1.5, 1.0), 45, 1.0, (1.0, 0.46, 0.14))
+    camera((5.0, -9.0, 1.8), (0, 2.0, 3.8), lens=45, fstop=3.0)
+    bpy.context.scene.view_settings.exposure = -0.25
+    area("Moon", (-4.0, 1.0, 6.0), (0, 2.0, 3.8), 360, 5.0, (0.34, 0.46, 0.68))
+    area("HornWarm", (1.0, 1.0, 2.0), (0, 2.0, 4.2), 220, 2.0, (1.0, 0.46, 0.14))
+    area("HornRim", (4.0, 3.0, 5.0), (0, 2.0, 4.2), 300, 2.0, (0.40, 0.54, 0.74))
+    area("RoofFill", (3.0, 0.0, 1.0), (0, 1.5, 1.0), 80, 2.0, (1.0, 0.46, 0.14))
     render(samples, width, height, out)
 
 
@@ -1496,3 +1553,4 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
