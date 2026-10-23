@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-22T11:21:05.524Z",
-  "cursor": 11,
-  "count": 72,
+  "updatedAt": "2026-10-23T01:39:02.916Z",
+  "cursor": 12,
+  "count": 82,
   "lastAttempt": {
-   "at": "2026-10-22T19:02:38.771Z",
-   "reason": "nothing"
+   "at": "2026-10-23T01:39:02.916Z",
+   "reason": "added 10"
   }
  },
  "items": [
@@ -657,6 +657,96 @@
    "h": "Detonation refers to abnormal combustion; typically associated with SI engines.",
    "s": "The term 'detonation' or 'knock' is primarily used for spark-ignition (petrol) engines where it refers to end-gas auto-ignition. In diesel engines, combustion is initiated by compression ignition of injected fuel; while abnormal combustion exists (like pre-ignition or misfire), the specific phenomenon known as 'knock' due to end-gas auto-ignition does not occur because there is no spark plug and the mixture is lean. Diesel engines may experience 'diesel knock' which is a different acoustic phenomenon related to rapid pressure rise during injection, but standard textbook definitions distinguish SI knock from diesel combustion characteristics.",
    "at": "2026-10-22"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "Define the phenomenon of thermal conductivity and state its SI unit. Explain why metals generally have higher thermal conductivity than non-metals.",
+   "a": "Thermal conductivity is the property of a material to conduct heat; SI unit is W/(m·K). Metals have high thermal conductivity due to the presence of free electrons that transport kinetic energy rapidly, whereas non-metals rely on slower lattice vibrations (phonons).",
+   "h": "Relate free electron movement to heat transfer efficiency in solids.",
+   "s": "Thermal conductivity quantifies the rate of heat flow through a unit thickness of a material per unit area per unit temperature difference. In metals, delocalized electrons act as efficient carriers of thermal energy, leading to high values. In non-metals like wood or plastic, heat transfer occurs primarily via atomic vibrations, resulting in lower conductivity and making them good insulators.",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "A wall of thickness 0.2 m has a thermal conductivity of 1.5 W/(m·K). If the temperature difference across the wall is 40°C, calculate the steady-state heat flux (heat flow per unit area).",
+   "a": "3000 W/m²",
+   "h": "Use Fourier's Law: q = -k * (dT/dx), ignoring the negative sign for magnitude.",
+   "s": "Using Fourier's Law of conduction, q = k(ΔT)/L. With k=1.5 W/(m·K), ΔT=40 K, and L=0.2 m, the heat flux is (1.5 × 40) / 0.2 = 300 W/m².",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "In a counter-flow double-pipe heat exchanger, hot oil enters at 90°C and leaves at 60°C, while cold water enters at 20°C and leaves at 50°C. Calculate the Log Mean Temperature Difference (LMTD).",
+   "a": "43.8 K",
+   "h": "Identify inlet/outlet temperatures for both fluids and apply the LMTD formula for counter-flow.",
+   "s": "Given Th,in=90°C, Th,out=55°C, Tc,in=20°C, Tc,out=45°C for a counter-flow arrangement. The temperature differences at the ends are ΔT₁ = Th,in - Tc,out = 90 - 45 = 45°C and ΔT₂ = Th,out - Tc,in = 55 - 20 = 35°C. The LMTD is calculated as (ΔT₁ - ΔT₂) / ln(ΔT₁/ΔT₂) = (45 - 35) / ln(45/35) ≈ 10 / 0.2513 ≈ 39.8 K.",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "State Newton's Law of Cooling and define the convective heat transfer coefficient (h). Why does forced convection usually result in a higher h value compared to natural convection?",
+   "a": "Newton's Law: q = hA(Ts - T∞); h is the convective heat transfer coefficient. Forced convection yields higher h because external forces (fans/pumps) increase fluid velocity, thinning the thermal boundary layer and enhancing heat exchange.",
+   "h": "Relate fluid motion speed to boundary layer thickness and heat transfer rate.",
+   "s": "Newton's Law of Cooling states that the rate of heat loss from a body is directly proportional to the temperature difference between the body and its surroundings. The convective heat transfer coefficient (h) represents the effectiveness of convection; forced convection uses pumps or fans to increase fluid velocity, which disrupts the stagnant boundary layer near the surface, significantly increasing h compared to natural convection driven only by buoyancy.",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "A 10 kg block of copper (specific heat capacity = 385 J/kg·K) is heated from 20°C to 80°C. Calculate the amount of heat energy absorbed by the block.",
+   "a": "23100 J",
+   "h": "Use Q = mcΔT, ensuring units are consistent.",
+   "s": "Using the formula Q = mcΔT with m=10 kg, c=385 J/kg·K, and ΔT=60 K. The calculation is 10 * 385 * 60 = 231,000 Joules.",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "Explain the concept of 'critical thickness of insulation' for a cylindrical pipe. Why does adding insulation to a small-diameter wire sometimes increase heat loss instead of decreasing it?",
+   "a": "Critical radius rc = k/h; if outer radius < rc, adding insulation increases surface area more than it adds conductive resistance, thus increasing heat loss.",
+   "h": "Consider the combined effect of conduction resistance (insulation) and convection resistance (surface area change).",
+   "s": "For a cylinder, adding insulation increases the conductive resistance but also increases the outer surface area for convection. If the pipe diameter is small (small initial radius), the increase in surface area can outweigh the increase in conductive resistance up to a certain point called the critical radius (rc = k/h). Below this radius, adding thin layers of low-conductivity insulation actually increases heat loss because the enhanced convection dominates.",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "In radiation heat transfer, two black bodies at temperatures T1 and T2 exchange radiant energy. According to Stefan-Boltzmann Law, how does the net rate of radiation exchange depend on the absolute temperatures?",
+   "a": "Net rate ∝ σ(T₁⁴ - T₂⁴)",
+   "h": "Recall that radiative flux is proportional to the fourth power of absolute temperature.",
+   "s": "According to the Stefan-Boltzmann Law, the emissive power of a black body is proportional to T⁴. The net radiative heat transfer between two black bodies at temperatures T1 and T2 is proportional to σ(T₁⁴ - T₂⁴), where σ is the Stefan-Boltzmann constant.",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "Define 'thermal stress' in the context of heat transfer. If a steel rod (α = 12×10⁻⁶ /K, E = 200 GPa) is rigidly fixed at both ends and heated by 50°C without being allowed to expand, calculate the induced thermal stress.",
+   "a": "120 MPa",
+   "h": "Use σ = E * α * ΔT for constrained expansion.",
+   "s": "Thermal stress is the internal stress generated in a material when its thermal expansion is constrained. Using σ = EαΔT with E=200 GPa, α=12×10⁻⁶ K⁻¹, and ΔT=50°C: Stress = (200 × 10⁹) × (12 × 10⁻⁶) × 50 = 120 × 10⁶ Pa or 120 MPa.",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "Describe the function of a fin in heat transfer. Why are fins typically made of materials with high thermal conductivity like aluminum or copper?",
+   "a": "High thermal conductivity ensures the entire fin surface remains close to the base temperature, maximizing convective heat dissipation.",
+   "h": "Fins extend surface area to enhance convection; high k minimizes temperature drop along the fin.",
+   "s": "Fins are extended surfaces attached to a main body to increase the effective surface area available for convection, thereby enhancing heat transfer. They are made of high-conductivity materials like aluminum or copper to minimize the temperature gradient along the fin length; if conductivity were low, the tip would be much cooler than the base, rendering the extra surface area ineffective.",
+   "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "In a boiling process, distinguish between nucleate boiling and film boiling based on the heat flux curve (pool boiling curve). Which region is characterized by a sudden drop in heat transfer coefficient?",
+   "a": "Film boiling; occurs at high wall superheat where a stable vapor blanket isolates the surface.",
+   "h": "Identify the transition point where vapor forms a continuous insulating layer over the surface.",
+   "s": "The pool boiling curve shows different regimes: nucleate boiling (efficient, increasing flux with temperature), transition boiling (unstable), and film boiling. Film boiling is characterized by the formation of a continuous vapor layer (film) over the heated surface, which acts as an insulator, causing a sudden drop in the heat transfer coefficient compared to nucleate boiling.",
+   "at": "2026-10-23"
   }
  ]
 }
