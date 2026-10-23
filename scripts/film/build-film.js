@@ -217,6 +217,13 @@ function generateTts(lines, opts) {
 function buildTimeline(film, tts, opts) {
   let lineIndex = 0;
   let cursor = 0;
+  // Tight films cut on the voice instead of parking on a plate. The authored
+  // duration becomes a fallback for silent/title scenes; a scene that needs a
+  // deliberate breath must ask for it with `hold`.
+  const tight = film.pacing === 'tight';
+  const lead = tight ? 0.14 : 0.45;
+  const gap = tight ? 0.14 : 0.28;
+  const tail = tight ? 0.22 : 0.9;
   const scenes = film.scenes.map((scene, si) => {
     const narration = (scene.narration || []).map((line) => {
       const duration = Number(tts.durations[lineIndex]) || 1.2;
@@ -227,8 +234,15 @@ function buildTimeline(film, tts, opts) {
         duration: Math.max(0.3, duration)
       };
     });
-    const lineTotal = narration.reduce((sum, l) => sum + l.duration + 0.28, 0);
-    const duration = Math.max(Number(scene.duration) || 0, lineTotal + 0.9);
+    const spoken = narration.reduce((sum, l) => sum + l.duration, 0);
+    const lineTotal = spoken + gap * Math.max(0, narration.length - 1);
+    const scripted = Number(scene.duration) || 0;
+    const duration = narration.length
+      ? (tight
+        ? Math.max(Number(scene.minDuration) || 0,
+          lead + lineTotal + tail + (Number(scene.hold) || 0))
+        : Math.max(scripted, spoken + gap * narration.length + 0.9))
+      : Math.max(scripted, Number(scene.minDuration) || 0);
     const start = cursor;
     cursor += duration;
 
@@ -261,11 +275,11 @@ function buildTimeline(film, tts, opts) {
       return out;
     });
 
-    let nlocal = 0.45;
+    let nlocal = lead;
     narration.forEach((line) => {
       line.start = start + nlocal;
       line.end = line.start + line.duration;
-      nlocal += line.duration + 0.28;
+      nlocal += line.duration + gap;
     });
 
     return {
@@ -283,6 +297,7 @@ function buildTimeline(film, tts, opts) {
     film: film.id,
     title: film.title,
     subtitle: film.subtitle,
+    pacing: film.pacing || 'standard',
     fps: opts.fps,
     captureFps: opts.captureFps,
     width: opts.width,

@@ -45,6 +45,34 @@ const FILMS = {
       'lamp': 'lamp',
       'memorial': 'memorial'
     }
+  },
+  'bhopal-gas-tragedy': {
+    script: 'bhopal_scenes.py',
+    scenes: {
+      'plant-gate': 'plant-gate',
+      'tank-farm': 'tank-farm',
+      'tank-610': 'tank-610',
+      'gauge': 'gauge',
+      'valve': 'valve',
+      'flare': 'flare',
+      'control-panel': 'control-panel',
+      'pipe-corridor': 'pipe-corridor',
+      'company-sign': 'company-sign',
+      'city-rooftops': 'city-rooftops',
+      'street-lamp': 'street-lamp',
+      'hospital-corridor': 'hospital-corridor',
+      'clinic-window': 'clinic-window',
+      'newspaper-desk': 'newspaper-desk',
+      'courtroom': 'courtroom',
+      'court-ledger': 'court-ledger',
+      'water-tap': 'water-tap',
+      'sample-jar': 'sample-jar',
+      'memorial-wall': 'memorial-wall',
+      'memorial-flame': 'memorial-flame',
+      'archive': 'archive',
+      'siren': 'siren',
+      'clock': 'clock'
+    }
   }
 };
 

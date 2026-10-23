@@ -1,0 +1,890 @@
+{
+  "schema": "vlymbooq.film.v1",
+  "id": "bhopal-gas-tragedy",
+  "topicId": "bhopal gas tragedy",
+  "title": "BHOPAL",
+  "titleLines": [
+    "BHOPAL",
+    "1984"
+  ],
+  "titleSize": "12.4vw",
+  "subtitle": "The Night the City Woke",
+  "posterPlate": "city-rooftops",
+  "posterTitleSize": "10.6vw",
+  "posterMeta": "2 DECEMBER 1984 - THE GAS - THE COUNT - THE CLAIMS",
+  "logline": "A pesticide plant vented methyl isocyanate over Bhopal at midnight. The gas lasted one night; the argument over who counted has lasted four decades.",
+  "targetDuration": 132,
+  "aspect": "16:9",
+  "fps": 24,
+  "voice": "en_US-lessac-medium",
+  "pacing": "tight",
+  "style": {
+    "genre": "cinematic 3D documentary",
+    "look": "midnight sodium and cold cyan, wet concrete, oxidised steel, paper, dust in hard light, restrained typography",
+    "rules": [
+      "Show the object before the explanation: a tank, a gauge, a ledger, a tap, a flame.",
+      "No bodies, no blood, no reconstruction of the dying. The aftermath carries the violence.",
+      "One idea per shot. The camera pushes, reveals or holds. It never drifts.",
+      "Cut on the voice. Do not park on a plate after the narration has stopped.",
+      "Every number on screen is an official figure or explicitly attributed."
+    ]
+  },
+  "sources": [
+    {
+      "id": "bhopal",
+      "title": "Bhopal disaster",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Bhopal_disaster"
+    },
+    {
+      "id": "britannica",
+      "title": "Bhopal disaster",
+      "publisher": "Encyclopaedia Britannica",
+      "url": "https://www.britannica.com/event/Bhopal-disaster"
+    },
+    {
+      "id": "pmc",
+      "title": "The Bhopal disaster and its aftermath: a review",
+      "publisher": "Environmental Health / PMC",
+      "url": "https://pmc.ncbi.nlm.nih.gov/articles/PMC1142333/"
+    },
+    {
+      "id": "sambhavna",
+      "title": "Sambhavna Trust Clinic",
+      "publisher": "Sambhavna Trust",
+      "url": "https://www.sambhavnatrust.org/"
+    },
+    {
+      "id": "bma",
+      "title": "Bhopal Medical Appeal",
+      "publisher": "Bhopal Medical Appeal",
+      "url": "https://bhopal.org/"
+    }
+  ],
+  "toolchain": {
+    "blender": {
+      "version": "4.2 LTS",
+      "role": "3D sets, hero stills, camera moves, render passes, procedural tank farm, gauges, city rooftops and memorial",
+      "automation": "scripts/film/blender/bhopal_scenes.py"
+    },
+    "tts": "Piper en_US-lessac-medium, local ONNX voice",
+    "capture": "Chromium at 12/24 fps",
+    "encode": "ffmpeg H.264/AAC"
+  },
+  "scenes": [
+    {
+      "id": "S01",
+      "title": "The city",
+      "start": 0,
+      "duration": 8,
+      "purpose": "Open on a sleeping city, then land the date and the title without a lecture.",
+      "narration": [
+        {
+          "text": "Bhopal, 2 December 1984.",
+          "source": "bhopal"
+        },
+        {
+          "text": "A city sleeps beside a pesticide plant.",
+          "source": "bhopal"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S01-A",
+          "plate": "title",
+          "render": "title",
+          "camera": "locked title card, grain and a slow push",
+          "visual": "The title arrives over a black field with a thin sodium line, holding just long enough to read.",
+          "sfx": [
+            "low room tone",
+            "a distant train",
+            "a single metal tick"
+          ],
+          "transition": "flash",
+          "weight": 2
+        },
+        {
+          "id": "S01-B",
+          "plate": "city-rooftops",
+          "render": "blender",
+          "camera": "slow push over rooftops, lens 32",
+          "visual": "A dense roofscape at night: water tanks, antennas, a minaret, a few lit windows, and the plant's flare beyond.",
+          "sfx": [
+            "night insects",
+            "a dog barks once",
+            "low industrial hum"
+          ],
+          "text": "2 DECEMBER 1984",
+          "transition": "cut",
+          "weight": 3,
+          "framing": {
+            "zoom": [
+              1.04,
+              1.12
+            ],
+            "x": [
+              50,
+              47
+            ],
+            "y": [
+              50,
+              52
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "The plant",
+      "start": 8,
+      "duration": 15,
+      "purpose": "Establish the factory as a place of work and a place of storage, not a monster.",
+      "narration": [
+        {
+          "text": "The Union Carbide plant made pesticides for Indian farms.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Its tanks held methyl isocyanate, a chemical that attacks the lungs.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Tank 610 held about forty-two tonnes of it.",
+          "source": "bhopal"
+        },
+        {
+          "text": "The safety systems were not all working.",
+          "source": "bhopal"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S02-A",
+          "plate": "plant-gate",
+          "render": "blender",
+          "camera": "wide, low, the gate and the sign",
+          "visual": "The plant gate at night under a sodium lamp, a bicycle at the fence, the factory wall and stacks behind.",
+          "sfx": [
+            "gate chain",
+            "a bicycle freewheel",
+            "transformer hum"
+          ],
+          "transition": "cut",
+          "weight": 2,
+          "framing": {
+            "zoom": [
+              1.02,
+              1.10
+            ],
+            "x": [
+              50,
+              52
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S02-B",
+          "plate": "tank-farm",
+          "render": "blender",
+          "camera": "wide from the pipe rack, lens 30",
+          "visual": "Four storage tanks and a flare tower under a low sky, pipework crossing the foreground.",
+          "sfx": [
+            "wind in the pipes",
+            "a valve release",
+            "low compressor"
+          ],
+          "transition": "whip-right",
+          "weight": 3
+        },
+        {
+          "id": "S02-C",
+          "plate": "company-sign",
+          "render": "blender",
+          "camera": "slow push, the sign filling the frame",
+          "visual": "A weathered company sign bolted to concrete: UNION CARBIDE / INDIA LIMITED / BHOPAL PESTICIDES PLANT.",
+          "sfx": [
+            "metal ticking as it cools",
+            "a distant forklift"
+          ],
+          "text": "UNION CARBIDE INDIA LIMITED",
+          "transition": "match",
+          "weight": 2
+        },
+        {
+          "id": "S02-D",
+          "plate": "pipe-corridor",
+          "render": "blender",
+          "camera": "low tracking line down the pipe rack",
+          "visual": "A corridor of pipes, catwalk and steam, receding into sodium light.",
+          "sfx": [
+            "steam",
+            "metal expansion",
+            "footsteps on grating"
+          ],
+          "transition": "crossfade",
+          "weight": 2
+        },
+        {
+          "id": "S02-E",
+          "plate": "flare",
+          "render": "blender",
+          "camera": "upward tilt, the flare against the sky",
+          "visual": "The flare stack burns above the tank farm, a thin orange line in the dark.",
+          "sfx": [
+            "distant flare roar",
+            "wind",
+            "a low drone"
+          ],
+          "text": "42 TONNES OF MIC",
+          "impact": true,
+          "impactSub": "TANK 610",
+          "transition": "cut",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "The warning",
+      "start": 23,
+      "duration": 17,
+      "purpose": "Make the failure mechanical and legible: water, pressure, a shut refrigeration unit, an offline flare.",
+      "narration": [
+        {
+          "text": "The official inquiry found water had entered Tank 610.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Pressure and temperature climbed.",
+          "source": "bhopal"
+        },
+        {
+          "text": "The refrigeration unit had been shut down.",
+          "source": "bhopal"
+        },
+        {
+          "text": "The flare tower was offline, and the scrubber could not cope.",
+          "source": "bhopal"
+        },
+        {
+          "text": "No public warning prepared the city.",
+          "source": "bhopal"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S03-A",
+          "plate": "gauge",
+          "render": "blender",
+          "camera": "macro, the needle in the red",
+          "visual": "A pressure gauge fills the frame, its needle deep in the red arc, condensation on the glass.",
+          "sfx": [
+            "a needle ticking",
+            "air through a seal",
+            "room tone"
+          ],
+          "text": "PRESSURE",
+          "transition": "cut",
+          "weight": 2
+        },
+        {
+          "id": "S03-B",
+          "plate": "valve",
+          "render": "blender",
+          "camera": "low three-quarter on the handwheel",
+          "visual": "A corroded handwheel and a tagged valve, lit by one work lamp, pipework running into the dark.",
+          "sfx": [
+            "a chain against metal",
+            "a drip",
+            "distant steam"
+          ],
+          "transition": "whip-left",
+          "weight": 2
+        },
+        {
+          "id": "S03-C",
+          "plate": "control-panel",
+          "render": "blender",
+          "camera": "slow push across the analog panel",
+          "visual": "A wall of dials, switches and one red warning lamp; an empty chair and a logbook.",
+          "sfx": [
+            "fluorescent hum",
+            "a relay click",
+            "a pen on paper"
+          ],
+          "text": "THE PANEL",
+          "transition": "crossfade",
+          "weight": 3
+        },
+        {
+          "id": "S03-D",
+          "plate": "flare",
+          "render": "blender",
+          "camera": "hold on the cold flare tower",
+          "visual": "The flare tower stands unlit against the sky, its tip dark; the tank farm below is a row of shadows.",
+          "sfx": [
+            "wind",
+            "a far-off train",
+            "silence"
+          ],
+          "text": "FLARE OFFLINE",
+          "transition": "cut",
+          "weight": 2
+        },
+        {
+          "id": "S03-E",
+          "plate": "clock",
+          "render": "blender",
+          "camera": "close on the wall clock, hands at 00:45",
+          "visual": "A wall clock reads 00:45 above a logbook; the minute hand is the only moving thing in the room.",
+          "sfx": [
+            "clock tick",
+            "a phone off the hook",
+            "a low hum"
+          ],
+          "text": "00:45",
+          "transition": "dip",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "The release",
+      "start": 40,
+      "duration": 16,
+      "purpose": "Move the gas through the city without reconstructing death; the sound carries the scale.",
+      "narration": [
+        {
+          "text": "Around midnight, the tank vented.",
+          "source": "bhopal"
+        },
+        {
+          "text": "A cloud of MIC rolled low over the railway colony and the old city.",
+          "source": "bhopal"
+        },
+        {
+          "text": "People woke with burning eyes and no breath.",
+          "source": "pmc"
+        },
+        {
+          "text": "They ran into the dark, away from a smell they could not name.",
+          "source": "pmc"
+        },
+        {
+          "text": "The gas moved through the streets before the city understood.",
+          "source": "bhopal"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S04-A",
+          "plate": "flare",
+          "render": "blender",
+          "camera": "low angle, the tower and a plume of vapor",
+          "visual": "Vapor spills from the tank farm and crosses the flare tower; the flare is still dark.",
+          "sfx": [
+            "a deep release",
+            "wind",
+            "metal groaning"
+          ],
+          "text": "THE RELEASE",
+          "transition": "cut",
+          "weight": 2
+        },
+        {
+          "id": "S04-B",
+          "plate": "pipe-corridor",
+          "render": "blender",
+          "camera": "tracking at ground level, vapor in the light",
+          "visual": "A low corridor of pipes and steam, the light scattering in a pale cloud.",
+          "sfx": [
+            "escaping gas",
+            "a distant shout",
+            "running feet"
+          ],
+          "transition": "whip-right",
+          "weight": 2
+        },
+        {
+          "id": "S04-C",
+          "plate": "street-lamp",
+          "render": "blender",
+          "camera": "low, the lamp above an empty lane",
+          "visual": "A narrow street under one sodium lamp; shutters closed, a bicycle, a bucket, a puddle holding the light.",
+          "sfx": [
+            "a dog",
+            "a door slamming",
+            "coughing far away"
+          ],
+          "transition": "match",
+          "weight": 3
+        },
+        {
+          "id": "S04-D",
+          "plate": "city-rooftops",
+          "render": "blender",
+          "camera": "high wide, the roofscape under a pale cloud",
+          "visual": "The city from above, a low haze moving between roofs, windows lighting one by one.",
+          "sfx": [
+            "a rising murmur",
+            "a baby crying",
+            "wind"
+          ],
+          "transition": "crossfade",
+          "weight": 3
+        },
+        {
+          "id": "S04-E",
+          "plate": "siren",
+          "render": "blender",
+          "camera": "low, the siren horn against the sky",
+          "visual": "A rooftop siren, horn pointed at the city, moon behind it; the pole and braces read as a skeleton.",
+          "sfx": [
+            "a siren winding up",
+            "a city waking",
+            "a low drone"
+          ],
+          "text": "NO PUBLIC WARNING",
+          "transition": "cut",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "The count",
+      "start": 56,
+      "duration": 17,
+      "purpose": "Put the numbers on screen with their sources and their disagreements intact.",
+      "narration": [
+        {
+          "text": "The official immediate death toll was 2,259.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Madhya Pradesh later confirmed 3,787 deaths.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Survivors' clinics estimate 8,000 died in the first weeks, and 8,000 more since.",
+          "source": "sambhavna"
+        },
+        {
+          "text": "More than 500,000 people were exposed.",
+          "source": "bhopal"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S05-A",
+          "plate": "hospital-corridor",
+          "render": "blender",
+          "camera": "slow push down the empty corridor",
+          "visual": "A hospital corridor at night: fluorescent tubes, an empty stretcher, a curtain, no patient.",
+          "sfx": [
+            "a trolley wheel",
+            "a fluorescent buzz",
+            "a distant pump"
+          ],
+          "transition": "cut",
+          "weight": 2
+        },
+        {
+          "id": "S05-B",
+          "plate": "clinic-window",
+          "render": "blender",
+          "camera": "three-quarter on the window and oxygen cylinder",
+          "visual": "A clinic room lit by a moonlit window and one bulb: an oxygen cylinder, a chair, a bottle, a curtain.",
+          "sfx": [
+            "oxygen hiss",
+            "a clock",
+            "night air"
+          ],
+          "transition": "crossfade",
+          "weight": 2
+        },
+        {
+          "id": "S05-C",
+          "plate": "newspaper-desk",
+          "render": "blender",
+          "camera": "overhead, the front page fills the frame",
+          "visual": "A newspaper desk under a brass lamp: the word BHOPAL, a typewriter, a telephone, a cup, a cigarette.",
+          "sfx": [
+            "typewriter keys",
+            "paper",
+            "a telephone ringing once"
+          ],
+          "text": "2,259",
+          "impact": true,
+          "impactSub": "OFFICIAL IMMEDIATE DEATHS",
+          "transition": "whip-left",
+          "weight": 3
+        },
+        {
+          "id": "S05-D",
+          "plate": "archive",
+          "render": "blender",
+          "camera": "push between shelves to the reading table",
+          "visual": "Archive shelves and boxes; one open file on a table under a green lamp.",
+          "sfx": [
+            "paper",
+            "a drawer",
+            "a fan"
+          ],
+          "text": "3,787",
+          "impact": true,
+          "impactSub": "MADHYA PRADESH, 1991",
+          "transition": "match",
+          "weight": 2
+        },
+        {
+          "id": "S05-E",
+          "plate": "memorial-wall",
+          "render": "blender",
+          "camera": "low, the wall of plaques and marigolds",
+          "visual": "A stone memorial wall with brass plaques, marigolds and candles; the names are abstract, not invented.",
+          "sfx": [
+            "a match striking",
+            "a low room tone",
+            "a bell far away"
+          ],
+          "text": "500,000+",
+          "impact": true,
+          "impactSub": "PEOPLE EXPOSED",
+          "transition": "dip",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "The settlement",
+      "start": 73,
+      "duration": 18,
+      "purpose": "Follow the claim from the courtroom to the ledger, and show what a settlement does not settle.",
+      "narration": [
+        {
+          "text": "In 1989, the Supreme Court approved a $470 million settlement.",
+          "source": "bhopal"
+        },
+        {
+          "text": "The claims were consolidated under the Indian government.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Union Carbide's chairman was charged in India, but never extradited.",
+          "source": "bhopal"
+        },
+        {
+          "text": "In 2010, seven former employees were convicted. The sentence was two years.",
+          "source": "bhopal"
+        },
+        {
+          "text": "The settlement did not end the argument.",
+          "source": "britannica"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S06-A",
+          "plate": "courtroom",
+          "render": "blender",
+          "camera": "wide from the aisle, the empty bench",
+          "visual": "A wooden courtroom, empty: the bench, the witness box, the clerk's table, the scales, the fan.",
+          "sfx": [
+            "a ceiling fan",
+            "a door closing",
+            "paper"
+          ],
+          "transition": "cut",
+          "weight": 2
+        },
+        {
+          "id": "S06-B",
+          "plate": "court-ledger",
+          "render": "blender",
+          "camera": "overhead, the amount is the subject",
+          "visual": "An open ledger under a lamp: SETTLEMENT, $470,000,000, 1989, a stamp, a pen, a gavel.",
+          "sfx": [
+            "a stamp",
+            "a pen",
+            "a clock"
+          ],
+          "text": "$470,000,000",
+          "impact": true,
+          "impactSub": "1989 SETTLEMENT",
+          "transition": "match",
+          "weight": 3
+        },
+        {
+          "id": "S06-C",
+          "plate": "archive",
+          "render": "blender",
+          "camera": "slow push along the files",
+          "visual": "Archive boxes and files, the paper trail of a case that outlived the hearing.",
+          "sfx": [
+            "paper",
+            "a metal shelf",
+            "a fan"
+          ],
+          "text": "THE CLAIMS",
+          "transition": "crossfade",
+          "weight": 2
+        },
+        {
+          "id": "S06-D",
+          "plate": "company-sign",
+          "render": "blender",
+          "camera": "hold, the sign in the sodium light",
+          "visual": "The company sign again, rust running from its bolts; the name is the same, the ownership is not.",
+          "sfx": [
+            "wind",
+            "a distant truck",
+            "metal ticking"
+          ],
+          "transition": "whip-right",
+          "weight": 2
+        },
+        {
+          "id": "S06-E",
+          "plate": "newspaper-desk",
+          "render": "blender",
+          "camera": "close on the headline and the date",
+          "visual": "The newspaper again, the date 1984 beside a stack of later clippings.",
+          "sfx": [
+            "paper",
+            "a telephone",
+            "a low room tone"
+          ],
+          "text": "NO EXTRADITION",
+          "transition": "cut",
+          "weight": 2
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "The water",
+      "start": 91,
+      "duration": 15,
+      "purpose": "Bring the disaster into the present through the tap, the sample and the body.",
+      "narration": [
+        {
+          "text": "The plant stopped production in 1986.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Its waste and contaminated water remained.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Groundwater near the site is still contaminated.",
+          "source": "bhopal"
+        },
+        {
+          "text": "Survivors still carry the exposure in their bodies.",
+          "source": "pmc"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S07-A",
+          "plate": "water-tap",
+          "render": "blender",
+          "camera": "low, the tap and the bucket",
+          "visual": "A corroded standpipe and tap above a bucket, a toxic-looking puddle, barrels and a warning sign.",
+          "sfx": [
+            "a drip",
+            "a bucket",
+            "a distant dog"
+          ],
+          "text": "DO NOT DRINK",
+          "transition": "cut",
+          "weight": 3
+        },
+        {
+          "id": "S07-B",
+          "plate": "sample-jar",
+          "render": "blender",
+          "camera": "macro, the jar and its label",
+          "visual": "A glass jar of murky water on a lab bench, labelled BHOPAL / WATER SAMPLE, with a vial and a pipette.",
+          "sfx": [
+            "glass on metal",
+            "a pipette",
+            "a fridge hum"
+          ],
+          "text": "THE SAMPLE",
+          "transition": "crossfade",
+          "weight": 2
+        },
+        {
+          "id": "S07-C",
+          "plate": "clinic-window",
+          "render": "blender",
+          "camera": "slow push, the empty chair",
+          "visual": "The clinic room again; the oxygen cylinder and the empty chair hold the frame.",
+          "sfx": [
+            "oxygen",
+            "a clock",
+            "a curtain"
+          ],
+          "transition": "match",
+          "weight": 2
+        },
+        {
+          "id": "S07-D",
+          "plate": "hospital-corridor",
+          "render": "blender",
+          "camera": "hold at the end of the corridor",
+          "visual": "The corridor recedes into fluorescent light; the stretcher is still empty.",
+          "sfx": [
+            "a trolley",
+            "fluorescent hum",
+            "a low drone"
+          ],
+          "text": "THE BODY",
+          "transition": "dip",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "The memory",
+      "start": 106,
+      "duration": 17,
+      "purpose": "Move from the archive to the memorial without turning the dead into decoration.",
+      "narration": [
+        {
+          "text": "Every year, Bhopal remembers.",
+          "source": "bhopal"
+        },
+        {
+          "text": "The disaster helped push India's Environment Protection Act in 1986.",
+          "source": "bhopal"
+        },
+        {
+          "text": "It did not settle the question of who was responsible.",
+          "source": "britannica"
+        },
+        {
+          "text": "The memorial is a wall, a flame, and an unfinished argument.",
+          "source": "bhopal"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S08-A",
+          "plate": "memorial-wall",
+          "render": "blender",
+          "camera": "low, the plaques and the word BHOPAL",
+          "visual": "The memorial wall: brass plaques, marigolds, candles, the word BHOPAL and the year 1984.",
+          "sfx": [
+            "a match",
+            "a bell",
+            "wind"
+          ],
+          "transition": "cut",
+          "weight": 2
+        },
+        {
+          "id": "S08-B",
+          "plate": "memorial-flame",
+          "render": "blender",
+          "camera": "macro, the flame inside the glass ring",
+          "visual": "A single flame in a brass bowl behind glass, petals on the stone, the background almost black.",
+          "sfx": [
+            "a flame",
+            "room tone",
+            "a distant chant"
+          ],
+          "transition": "crossfade",
+          "weight": 2
+        },
+        {
+          "id": "S08-C",
+          "plate": "city-rooftops",
+          "render": "blender",
+          "camera": "wide, the city and the plant beyond",
+          "visual": "The roofscape again, the plant's flare still on the horizon; the city is awake.",
+          "sfx": [
+            "night insects",
+            "a train",
+            "wind"
+          ],
+          "transition": "match",
+          "weight": 2
+        },
+        {
+          "id": "S08-D",
+          "plate": "archive",
+          "render": "blender",
+          "camera": "pull back from the open file",
+          "visual": "The archive file open under the lamp; boxes recede into the dark.",
+          "sfx": [
+            "paper",
+            "a drawer",
+            "a low hum"
+          ],
+          "text": "THE RECORD",
+          "transition": "cut",
+          "weight": 3
+        }
+      ]
+    },
+    {
+      "id": "S09",
+      "title": "The claims",
+      "start": 123,
+      "duration": 9,
+      "purpose": "Close on a sentence, not a spectacle.",
+      "narration": [
+        {
+          "text": "The gas lasted one night.",
+          "source": "bhopal"
+        },
+        {
+          "text": "The claims have lasted four decades.",
+          "source": "bhopal"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S09-A",
+          "plate": "memorial-flame",
+          "render": "blender",
+          "camera": "hold, the flame in the dark",
+          "visual": "The memorial flame, the only warm light in the frame.",
+          "sfx": [
+            "a flame",
+            "silence",
+            "a low tone"
+          ],
+          "text": "THE GAS LASTED ONE NIGHT",
+          "transition": "cut",
+          "weight": 2
+        },
+        {
+          "id": "S09-B",
+          "plate": "title",
+          "render": "title",
+          "camera": "locked, the title returns as an end card",
+          "visual": "The title card returns over black with the date and a single line of source text.",
+          "sfx": [
+            "a low tone",
+            "silence"
+          ],
+          "text": "THE CLAIMS HAVE LASTED FOUR DECADES",
+          "transition": "dip",
+          "weight": 3
+        }
+      ]
+    }
+  ]
+}

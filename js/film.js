@@ -236,11 +236,12 @@
   }
 
   function transitionDuration(kind) {
-    if (/whip/i.test(kind)) return 0.36;
-    if (/mask/i.test(kind)) return 0.52;
-    if (/cross|match/i.test(kind)) return 0.62;
-    if (/dip/i.test(kind)) return 0.52;
-    return 0.22;
+    var tight = timeline && timeline.pacing === 'tight';
+    if (/whip/i.test(kind)) return tight ? 0.22 : 0.36;
+    if (/mask/i.test(kind)) return tight ? 0.30 : 0.52;
+    if (/cross|match/i.test(kind)) return tight ? 0.34 : 0.62;
+    if (/dip/i.test(kind)) return tight ? 0.24 : 0.52;
+    return tight ? 0.10 : 0.22;
   }
 
   function prepareGhost(previous, shot) {
@@ -396,8 +397,9 @@
       }
     }
 
-    var inS = smooth(shotLocal / 0.55);
-    var outS = smooth((shot.duration - shotLocal) / 0.50);
+    var tight = timeline.pacing === 'tight';
+    var inS = smooth(shotLocal / (tight ? 0.34 : 0.55));
+    var outS = smooth((shot.duration - shotLocal) / (tight ? 0.28 : 0.50));
     var statementAlpha = shot.text && shot.render !== 'title' ? Math.min(inS, outS) : 0;
     if (shot.impact) {
       var pop = smooth(Math.min(1, shotLocal / 0.34));
@@ -408,13 +410,21 @@
     }
     statement.style.opacity = String(statementAlpha);
 
-    var chapterIn = smooth(sceneLocal / 0.45);
-    var chapterOut = smooth((scene.duration - sceneLocal) / 0.55);
+    var chapterIn = smooth(sceneLocal / (tight ? 0.30 : 0.45));
+    var chapterOut = smooth((scene.duration - sceneLocal) / (tight ? 0.32 : 0.55));
     var chapterAlpha = shot.render === 'title' ? 0 : Math.min(chapterIn, chapterOut);
     chapter.style.opacity = String(chapterAlpha);
 
-    var edge = Math.min(smooth(sceneLocal / 0.22), smooth((scene.duration - sceneLocal) / 0.22));
-    fade.style.opacity = String(1 - edge);
+    if (tight) {
+      // A tight cut does not fade to black at every scene boundary. Only the
+      // film itself opens and closes from black; transitions carry the rest.
+      var filmIn = smooth(t / 0.20);
+      var filmOut = smooth((timeline.duration - t) / 0.30);
+      fade.style.opacity = String(1 - Math.min(filmIn, filmOut));
+    } else {
+      var edge = Math.min(smooth(sceneLocal / 0.22), smooth((scene.duration - sceneLocal) / 0.22));
+      fade.style.opacity = String(1 - edge);
+    }
 
     var flashAlpha = 0;
     if (/flash/i.test(shot.transition || '')) flashAlpha = clamp(1 - shotLocal / 0.22) * 0.92;
@@ -523,9 +533,12 @@
 
   function boot() {
     initMotes();
-    var navLinks = document.querySelectorAll('#filmNav a');
-    if (navLinks[0]) navLinks[0].href = debateHref() + '#context';
-    if (navLinks[1]) navLinks[1].href = debateHref() + '#debate';
+    var making = document.getElementById('makingLink');
+    if (making) making.href = 'production.html?film=' + encodeURIComponent(filmId);
+    var contextLink = document.querySelector('#filmNav a[data-nav="context"]');
+    var debateLink = document.querySelector('#filmNav a[data-nav="debate"]');
+    if (contextLink) contextLink.href = debateHref() + '#context';
+    if (debateLink) debateLink.href = debateHref() + '#debate';
     meta.innerHTML = 'A VLYMBOOQ FILM<br>3D &middot; SOUND &middot; HISTORY';
     Promise.all([withJson(timelineUrl), withJson(filmUrl), withJson('out/film/' + filmId + '/map.json').catch(function () { return null; })])
       .then(function (res) {
