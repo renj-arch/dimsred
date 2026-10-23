@@ -224,6 +224,11 @@ jobs:
       # pure waste: Cloudflare Pages deploys the `live` branch (git
       # integration), and live-dist never fed anything else. Same `if` as
       # the deploy step so the moment CF secrets exist this runs again.
+      - name: Warn when Cloudflare direct upload is unavailable
+        if: env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == ''
+        run: |
+          echo "::warning title=Cloudflare direct upload skipped::CLOUDFLARE_API_TOKEN or CLOUDFLARE_ACCOUNT_ID is not configured. This run only pushed the live branch; the Cloudflare Pages project has to build it."
+
       - name: Stage slim site for direct upload
         if: env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != ''
         run: |
@@ -269,5 +274,5 @@ jobs:
         run: |
           npx --yes wrangler@3 pages deploy live-dist \
             --project-name=studypro \
-            --branch=main \
+            --branch=live \
             --account-id="$CLOUDFLARE_ACCOUNT_ID"
