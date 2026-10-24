@@ -1,0 +1,298 @@
+{
+ "meta": {
+  "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
+  "updatedAt": "2026-10-24T15:21:16.301Z",
+  "cursor": 51,
+  "built": 48
+ },
+ "figs": {
+  "87926696": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Stress (σ)</text><line x1=\"40\" y1=\"30\" x2=\"320\" y2=\"30\"/><line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"190\"/><line x1=\"320\" y1=\"30\" x2=\"320\" y2=\"190\"/><text x=\"180\" y=\"205\" text-anchor=\"middle\">Cycles (N)</text><polyline points=\"40,190 320,190\" stroke-dasharray=\"4,2\"/><text x=\"280\" y=\"175\">Specified Life</text><circle cx=\"260\" cy=\"110\" r=\"3\" fill=\"#222\"/><line x1=\"250\" y1=\"107\" x2=\"270\" y2=\"107\"/><text x=\"245\" y=\"102\">Fatigue Strength</text><path d=\"M 40 190 L 320 190 L 320 30 L 40 30 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"180\" y=\"150\" text-anchor=\"middle\">S-N Curve</text></svg>",
+   "n": "define fatigue strength.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "ce3585b0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\" />\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\" />\n  <!-- Arrowheads -->\n  <polygon points=\"320,200 310,195 310,205\" fill=\"#222\" />\n  <polygon points=\"40,20 30,40 50,40\" fill=\"#222\" />\n  <!-- Labels -->\n  <text x=\"180\" y=\"220\" text-anchor=\"middle\">Time / Process Steps</text>\n  <text x=\"20\" y=\"100\" text-anchor=\"middle\">Activity Sequence</text>\n  <!-- Step 1: Recognition of Need -->\n  <rect x=\"50\" y=\"40\" width=\"80\" height=\"60\" rx=\"3\" />\n  <line x1=\"50\" y1=\"40\" x2=\"50\" y2=\"100\" stroke=\"#222\" stroke-width=\"1.5\" />\n  <text x=\"90\" y=\"75\" text-anchor=\"middle\">Recognition</text>\n  <text x=\"90\" y=\"88\" text-anchor=\"middle\">of Need</text>\n  <!-- Arrow to Step 2 -->\n  <line x1=\"130\" y1=\"80\" x2=\"140\" y2=\"80\" stroke=\"#222\" />\n  <polygon points=\"140,80 135,75 135,85\" fill=\"#222\" />\n  <!-- Step 2: Design Specification -->\n  <rect x=\"150\" y=\"40\" width=\"80\" height=\"60\" rx=\"3\" />\n  <line x1=\"150\" y1=\"40\" x2=\"150\" y2=\"100\" stroke=\"#222\" stroke-width=\"1.5\" />\n  <text x=\"190\" y=\"75\" text-anchor=\"middle\">Preparation</text>\n  <text x=\"190\" y=\"88\" text-anchor=\"middle\">of Specification</text>\n  <!-- Arrow to Step 3 -->\n  <line x1=\"230\" y1=\"80\" x2=\"240\" y2=\"80\" stroke=\"#222\" />\n  <polygon points=\"240,80 235,75 235,85\" fill=\"#222\" />\n  <!-- Step 3: Conceptual Design -->\n  <rect x=\"250\" y=\"40\" width=\"80\" height=\"60\" rx=\"3\" />\n  <line x1=\"250\" y1=\"40\" x2=\"250\" y2=\"100\" stroke=\"#222\" stroke-width=\"1.5\" />\n  <text x=\"290\" y=\"75\" text-anchor=\"middle\">Conceptual</text>\n  <text x=\"290\" y=\"88\" text-anchor=\"middle\">Design</text>\n</svg>",
+   "n": "what is the first activity of the machine design process?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "22d60422": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">Load (P)</text>\n <line x1=\"40\" y1=\"30\" x2=\"320\" y2=\"30\"/>\n <line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"200\"/>\n <line x1=\"320\" y1=\"30\" x2=\"320\" y2=\"200\"/>\n <text x=\"180\" y=\"215\" text-anchor=\"middle\">Factor of Safety (F.S.)</text>\n <path d=\"M 60 30 L 60 190 M 300 30 L 300 190\"/>\n <rect x=\"80\" y=\"40\" width=\"200\" height=\"140\" stroke-dasharray=\"4\"/>\n <text x=\"180\" y=\"75\" text-anchor=\"middle\">Accurate Data</text>\n <text x=\"180\" y=\"95\" text-anchor=\"middle\">&amp; Homogeneous Material</text>\n <line x1=\"80\" y1=\"130\" x2=\"300\" y2=\"130\"/>\n <text x=\"180\" y=\"145\" text-anchor=\"middle\">Recommended F.S.</text>\n <text x=\"180\" y=\"165\" text-anchor=\"middle\">~ 1.5 to 2.0</text>\n <line x1=\"80\" y1=\"130\" x2=\"80\" y2=\"190\"/>\n <line x1=\"300\" y1=\"130\" x2=\"300\" y2=\"190\"/>\n</svg>",
+   "n": "what factor of safety is recommended when loads are accurately known and materials are homogeneous?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "2e90a653": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"30\" y=\"100\" text-anchor=\"end\">Size</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"175\" y=\"195\" text-anchor=\"middle\">Standardized Values</text><polyline points=\"60,180 60,160 80,160 80,140 100,140 100,120 120,120 120,100 140,100 140,80 160,80 160,60 180,60 180,40 200,40 200,20 220,20\" fill=\"none\"/><text x=\"55\" y=\"170\">R10</text><text x=\"55\" y=\"150\">R10</text><text x=\"55\" y=\"130\">R10</text><text x=\"55\" y=\"110\">R10</text><text x=\"55\" y=\"90\">R10</text><text x=\"55\" y=\"70\">R10</text><text x=\"55\" y=\"50\">R10</text><text x=\"55\" y=\"30\">R10</text><text x=\"55\" y=\"10\">R10</text><line x1=\"240\" y1=\"180\" x2=\"240\" y2=\"20\"/><text x=\"230\" y=\"100\" text-anchor=\"end\">Ratio ~1.26</text></svg>",
+   "n": "what are preferred numbers (renard series) used for?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "c21e6d54": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"175\">Failure Stress</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><text x=\"20\" y=\"95\">Working Stress</text><rect x=\"40\" y=\"60\" width=\"240\" height=\"10\" fill=\"#222\"/><line x1=\"40\" y1=\"70\" x2=\"320\" y2=\"70\"/><text x=\"330\" y=\"75\">Factor of Safety</text><text x=\"180\" y=\"110\">Stress</text><text x=\"40\" y=\"195\">Strain</text></svg>",
+   "n": "define working stress (design stress).",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "8805d22a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Allowable Stress</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"40\" y=\"165\">σ_allow = σ_ult / FOS</text><text x=\"320\" y=\"165\">= 400 / 2 = 200 N/mm²</text><circle cx=\"40\" cy=\"140\" r=\"3\"/><circle cx=\"320\" cy=\"140\" r=\"3\"/></svg>",
+   "n": "if ultimate tensile strength is 400 n/mm² and the factor of safety is 2, what is the allowable stress?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "7fcaa642": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"175\">Working Stress</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><text x=\"330\" y=\"35\">Failure Stress</text><line x1=\"80\" y1=\"180\" x2=\"80\" y2=\"40\" stroke-dasharray=\"4,2\"/><text x=\"75\" y=\"95\">Material</text><rect x=\"60\" y=\"30\" width=\"20\" height=\"100\" fill=\"#ddd\"/><text x=\"72\" y=\"105\" text-anchor=\"middle\">Yield Point</text><text x=\"72\" y=\"125\" text-anchor=\"middle\">Ultimate Point</text><rect x=\"60\" y=\"30\" width=\"20\" height=\"100\" fill=\"#ddd\"/><line x1=\"80\" y1=\"40\" x2=\"80\" y2=\"180\" stroke-dasharray=\"4,2\"/><text x=\"95\" y=\"110\">FOS = Failure / Working</text><circle cx=\"320\" cy=\"110\" r=\"3\" fill=\"#222\"/></svg>",
+   "n": "define factor of safety.",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "4e6f7288": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Stress (σ)</text><line x1=\"40\" y1=\"20\" x2=\"320\" y2=\"20\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"330\" y=\"105\">Yield</text><circle cx=\"260\" cy=\"105\" r=\"3\"/><text x=\"270\" y=\"115\">σy</text><text x=\"40\" y=\"195\">Strain (ε)</text><path d=\"M 40 180 L 260 105 L 320 20\"/><text x=\"180\" y=\"140\">Ductile</text></svg>",
+   "n": "which stress is normally the basis of factor of safety for ductile materials?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "b17b86de": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"195\">Stress</text><text x=\"30\" y=\"160\">/</text><text x=\"30\" y=\"140\">Strain</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"95\">Strain</text><path d=\"M 60 180 L 140 180 L 140 40\" stroke-dasharray=\"3,3\"/><text x=\"100\" y=\"170\">Elastic</text><text x=\"100\" y=\"155\">Region</text><path d=\"M 140 180 L 260 180\"/><text x=\"195\" y=\"170\">Fracture</text><text x=\"195\" y=\"155\">Point</text><circle cx=\"140\" cy=\"180\" r=\"3\"/><text x=\"125\" y=\"195\">Yield</text><text x=\"125\" y=\"210\">(None)</text><circle cx=\"260\" cy=\"180\" r=\"3\"/><text x=\"245\" y=\"195\">Fail</text><text x=\"245\" y=\"210\">Sudden</text></svg>",
+   "n": "why is a larger factor of safety needed for brittle materials?",
+   "sub": "design",
+   "at": "2026-10-19"
+  },
+  "e6d328c2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" /><text x=\"50\" y=\"70\">Member A</text><line x1=\"60\" y1=\"60\" x2=\"300\" y2=\"60\" /><text x=\"50\" y=\"110\">Member B</text><line x1=\"60\" y1=\"110\" x2=\"300\" y2=\"110\" /><path d=\"M 60 60 L 60 110 M 300 60 L 300 110\" stroke-dasharray=\"4,2\" /><circle cx=\"180\" cy=\"85\" r=\"5\" /><text x=\"175\" y=\"90\">Contact Area</text><path d=\"M 60 60 L 300 60 M 60 110 L 300 110\" stroke-width=\"2\" /><text x=\"180\" y=\"45\">Normal Load (F)</text><text x=\"180\" y=\"135\">Bearing Stress</text></svg>",
+   "n": "what is bearing stress?",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "7a1561a2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Stress Range (Δσ)</text><line x1=\"40\" y1=\"20\" x2=\"320\" y2=\"20\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"35\" y=\"195\">Mean Stress (σm)</text><line x1=\"160\" y1=\"170\" x2=\"160\" y2=\"30\"/><path d=\"M 160 30 L 320 30 L 320 180 L 40 180 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"200\" y=\"105\">Fatigue Limit</text><text x=\"270\" y=\"160\">Endurance Data</text><text x=\"170\" y=\"190\">(Includes Allowances)</text><text x=\"140\" y=\"180\">Factor of Safety ≈ 1.5–2</text></svg>",
+   "n": "which stress range of factor of safety is normally used when designing against fatigue?",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "34961fc4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"190\">σ₁</text><text x=\"330\" y=\"190\">σ₂</text><line x1=\"40\" y1=\"50\" x2=\"40\" y2=\"180\"/><text x=\"35\" y=\"60\">σ₃</text><circle cx=\"180\" cy=\"110\" r=\"70\" stroke-dasharray=\"4,2\"/><path d=\"M 110 110 L 180 40 L 250 110 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"160\" y=\"95\">Distortion Energy</text><text x=\"160\" y=\"75\">(Von Mises)</text><text x=\"145\" y=\"135\">Yield Surface</text><circle cx=\"180\" cy=\"110\" r=\"25\" fill=\"#222\"/><text x=\"170\" y=\"130\">σᵧ</text></svg>",
+   "n": "which theory of failure is most suitable for ductile materials?",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "91c460b7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Maximum Principal Stress Theory</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"65\">σ₁ (Max Principal)</text><text x=\"325\" y=\"65\">σ₃ (Min Principal)</text><path d=\"M 40 60 L 320 60\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"50\" text-anchor=\"middle\">Failure occurs when σ₁ ≥ σ_ultimate</text><circle cx=\"180\" cy=\"180\" r=\"5\" fill=\"#222\"/><text x=\"175\" y=\"195\">Tensile fracture surface</text></svg>",
+   "n": "which theory of failure is used for brittle materials?",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "2cfed362": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"axes\">\n<path d=\"M40 180 L40 40\"/>\n<path d=\"M40 40 L320 40\"/>\n</g>\n<g id=\"stress_curve\">\n<path d=\"M50 40 L50 60 L90 60 L90 140 L130 140 L130 40\"/>\n</g>\n<g id=\"labels\">\n<text x=\"20\" y=\"80\">σ₁ (Max Principal)</text>\n<text x=\"20\" y=\"160\">σ₃ (Min Principal)</text>\n<text x=\"330\" y=\"45\">Tension</text>\n<text x=\"330\" y=\"145\">Compression</text>\n<text x=\"140\" y=\"20\">Failure Line</text>\n</g>\n<g id=\"concept\">\n<rect x=\"60\" y=\"10\" width=\"200\" height=\"20\" rx=\"5\"/>\n<text x=\"70\" y=\"28\">Rankine Theory</text>\n</g>\n</svg>",
+   "n": "state the maximum principal stress theory.",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "f37a1dff": {
+   "svg": "<svg viewBox=\"0 0 360 220\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"50\" y=\"40\" width=\"180\" height=\"120\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"60\" y=\"70\" font-family=\"sans-serif\" font-size=\"12\">σ₁</text><text x=\"240\" y=\"70\" font-family=\"sans-serif\" font-size=\"12\">ε₁</text><line x1=\"80\" y1=\"95\" x2=\"260\" y2=\"95\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"80\" y1=\"95\" x2=\"80\" y2=\"145\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"70\" y=\"160\" font-family=\"sans-serif\" font-size=\"12\">ε_y</text><line x1=\"80\" y1=\"95\" x2=\"130\" y2=\"145\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"110\" y=\"160\" font-family=\"sans-serif\" font-size=\"12\">ε_max</text><text x=\"85\" y=\"90\" font-family=\"sans-serif\" font-size=\"12\" text-anchor=\"end\">σ₁</text><text x=\"245\" y=\"90\" font-family=\"sans-serif\" font-size=\"12\" text-anchor=\"start\">ε₁</text><text x=\"85\" y=\"155\" font-family=\"sans-serif\" font-size=\"12\" text-anchor=\"end\">ε_y</text><text x=\"135\" y=\"155\" font-family=\"sans-serif\" font-size=\"12\" text-anchor=\"end\">ε_max</text><text x=\"90\" y=\"180\" font-family=\"sans-serif\" font-size=\"12\">Failure: ε₁ = ε_y</text></svg>",
+   "n": "state the maximum principal strain theory.",
+   "sub": "design",
+   "at": "2026-10-20"
+  },
+  "f82ca3bb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" stroke-dasharray=\"4,2\"/><text x=\"50\" y=\"70\">Simple Tension</text><line x1=\"60\" y1=\"90\" x2=\"300\" y2=\"90\"/><line x1=\"60\" y1=\"90\" x2=\"60\" y2=\"180\"/><circle cx=\"60\" cy=\"90\" r=\"4\"/><text x=\"55\" y=\"85\">Yield Point</text><path d=\"M 60 90 L 300 90\" stroke-dasharray=\"2,2\"/><line x1=\"300\" y1=\"90\" x2=\"300\" y2=\"180\"/><circle cx=\"300\" cy=\"90\" r=\"4\"/><text x=\"295\" y=\"85\">Failure</text><text x=\"160\" y=\"120\">τmax = Syt / 2</text><text x=\"170\" y=\"140\">(Tresca Theory)</text></svg>",
+   "n": "state the maximum shear stress theory.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "cd1c4bc5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Total Strain Energy</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><text x=\"30\" y=\"35\">U_total</text><path d=\"M 40 40 L 180 40 L 180 180 L 40 180 Z\"/><text x=\"100\" y=\"120\" text-anchor=\"middle\">Yield Limit</text><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"180\" stroke-dasharray=\"4\"/><text x=\"195\" y=\"110\" text-anchor=\"start\">Failure Point</text><path d=\"M 180 40 L 320 40\"/><text x=\"260\" y=\"35\">Simple Tension</text></svg>",
+   "n": "state the total strain energy theory.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "fea22cd3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"175\" y=\"195\" text-anchor=\"middle\">Shear Stress (τ)</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"105\" text-anchor=\"end\">Distortion Energy</text><path d=\"M 40 180 L 320 180 L 320 40 L 40 40 Z\" fill=\"none\" stroke=\"#222\"/><circle cx=\"180\" cy=\"105\" r=\"15\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"100\">Yield Point</text><path d=\"M 40 180 L 320 180 L 320 40 L 40 40 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"180\" y=\"55\" text-anchor=\"middle\">Distortion Energy Theory</text></svg>",
+   "n": "state the maximum distortion energy theory.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "6f1f032b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"30\" y=\"105\">Combined Bending</text><text x=\"30\" y=\"115\">&amp; Torsion</text><circle cx=\"180\" cy=\"100\" r=\"40\"/><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"140\"/><line x1=\"140\" y1=\"100\" x2=\"220\" y2=\"100\"/><text x=\"135\" y=\"95\">Principal</text><text x=\"135\" y=\"108\">Stress State</text><path d=\"M 140 100 L 180 60 L 220 100 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"75\">Max Shear Stress</text><text x=\"170\" y=\"95\">(Tresca)</text><path d=\"M 140 100 L 180 60 L 220 100 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"115\">Max Distortion</text><text x=\"170\" y=\"135\">Energy (Von Mises)</text></svg>",
+   "n": "which theories are used for a ductile shaft carrying combined bending and torsion?",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "e6ac1409": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Shear Stress (τ)</text><line x1=\"40\" y1=\"30\" x2=\"320\" y2=\"30\"/><line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"190\"/><text x=\"35\" y=\"110\">τ_yield</text><circle cx=\"80\" cy=\"30\" r=\"3\" fill=\"#222\"/><line x1=\"80\" y1=\"30\" x2=\"80\" y2=\"60\"/><text x=\"65\" y=\"45\">Tresca</text><circle cx=\"90\" cy=\"30\" r=\"3\" fill=\"#222\"/><line x1=\"90\" y1=\"30\" x2=\"90\" y2=\"60\"/><text x=\"75\" y=\"45\">von Mises</text><path d=\"M 80 30 L 80 60 L 100 60 L 100 30 Z\" fill=\"#222\" opacity=\"0.2\"/><text x=\"95\" y=\"75\">Yield Surface</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">Shear Strain (γ)</text></svg>",
+   "n": "for a round shaft in pure torsion, which ductile theory agrees best with experiment?",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "410316b8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <path d=\"M40,100 L80,100 L80,60 L120,60 L120,100 L160,100 L160,140 L120,140 L120,180 L80,180 L80,140 L40,140 Z\" />\n <path d=\"M160,100 L200,100 L200,140 L160,140 Z\" fill=\"#222\" opacity=\"0.1\" stroke=\"none\" />\n <path d=\"M200,100 L240,100 L240,60 L280,60 L280,100 L320,100 L320,140 L280,140 L280,180 L240,180 L240,140 Z\" />\n <path d=\"M280,60 L280,100 L320,100 L320,140 L280,140\" fill=\"#222\" opacity=\"0.1\" stroke=\"none\" />\n <text x=\"50\" y=\"45\">Flat</text>\n <text x=\"190\" y=\"45\">Cone</text>\n <text x=\"290\" y=\"45\">Shear Lip</text>\n <text x=\"80\" y=\"205\">Ductile Fracture</text>\n <text x=\"200\" y=\"205\">Tensile Failure</text>\n</svg>",
+   "n": "what is cup-and-cone fracture?",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "93ce2f3a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"35\" text-anchor=\"middle\" font-weight=\"bold\">Endurance Limit Concept</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"330\" y=\"65\" text-anchor=\"end\">Stress (σ)</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><text x=\"35\" y=\"120\" text-anchor=\"middle\">-</text><text x=\"35\" y=\"195\" text-anchor=\"end\">Cycles (N)</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"185\" text-anchor=\"end\">Infinite</text><path d=\"M 40 180 L 100 180 L 100 60 L 40 60 Z\" fill=\"#222\" stroke=\"none\"/><line x1=\"100\" y1=\"60\" x2=\"100\" y2=\"180\"/><text x=\"95\" y=\"120\" text-anchor=\"middle\">Endurance Limit</text><text x=\"110\" y=\"65\" text-anchor=\"start\">σ_e ≈ 0.5 Sut</text><path d=\"M 100 60 L 320 60\" stroke-dasharray=\"4,2\"/><text x=\"220\" y=\"55\" text-anchor=\"middle\">Fatigue Failure Region</text><text x=\"220\" y=\"185\" text-anchor=\"middle\">Infinite Life Region</text></svg>",
+   "n": "define endurance limit.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "c90db8c4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\" xmlns=\"http://www.w3.org/2000/svg\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">S-N Curve (Stress vs Cycles)</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\"/><text x=\"35\" y=\"175\">log N</text><line x1=\"40\" y1=\"160\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"85\">S</text><path d=\"M 40 160 L 320 40\"/><text x=\"170\" y=\"115\" text-anchor=\"middle\">Fatigue Limit (if exists)</text><circle cx=\"320\" cy=\"40\" r=\"4\"/><text x=\"325\" y=\"45\" font-size=\"10\">Endurance</text></svg>",
+   "n": "what is the s-n curve?",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "7ceaf94f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Fatigue Life (N)</text><line x1=\"40\" y1=\"35\" x2=\"320\" y2=\"35\"/><line x1=\"40\" y1=\"35\" x2=\"40\" y2=\"185\"/><text x=\"30\" y=\"95\">Failure</text><path d=\"M 60 35 L 60 185 M 320 35 L 320 185\"/><polyline points=\"60,45 70,55 80,45 90,55 100,45 110,55 120,45 130,55 140,45 150,55 160,45 170,55 180,45 190,55 200,45 210,55 220,45 230,55 240,45 250,55 260,45 270,55 280,45 290,55 300,45 310,55\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">N cycles</text><rect x=\"240\" y=\"10\" width=\"60\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"260\" y=\"30\" text-anchor=\"middle\">Stress Amplitude</text></svg>",
+   "n": "define fatigue life.",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "5672c95c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"195\">N (cycles)</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"100\">log N</text><polyline points=\"60,180 60,160 70,160 70,140 80,140 80,120 90,120 90,100 100,100 100,80 110,80 110,60 120,60 120,40\" fill=\"none\" stroke=\"#222\"/><polyline points=\"300,180 300,160 290,160 290,140 280,140 280,120 270,120 270,100 260,100 260,80 250,80 250,60 240,60 240,40\" fill=\"none\" stroke=\"#222\"/><text x=\"170\" y=\"195\">Low-Cycle Fatigue</text><text x=\"230\" y=\"195\">High-Cycle Fatigue</text><line x1=\"160\" y1=\"180\" x2=\"160\" y2=\"40\" stroke-dasharray=\"4,2\"/><text x=\"140\" y=\"100\">10³ - 10⁴</text><text x=\"130\" y=\"75\">Separation</text><rect x=\"60\" y=\"40\" width=\"100\" height=\"10\" rx=\"2\"/><text x=\"80\" y=\"55\">Strain-Controlled</text></svg>",
+   "n": "what separates low-cycle fatigue from high-cycle fatigue?",
+   "sub": "design",
+   "at": "2026-10-21"
+  },
+  "8670d50e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Stress (σ)</text><line x1=\"40\" y1=\"35\" x2=\"320\" y2=\"35\"/><line x1=\"40\" y1=\"35\" x2=\"40\" y2=\"185\"/><text x=\"35\" y=\"105\" text-anchor=\"end\">σe (Smooth)</text><path d=\"M 60 160 Q 180 140 300 170\" fill=\"none\"/><text x=\"260\" y=\"165\" text-anchor=\"start\">σe (Machined)</text><circle cx=\"60\" cy=\"160\" r=\"3\"/><circle cx=\"300\" cy=\"170\" r=\"3\"/><path d=\"M 40 185 L 320 185\"/><text x=\"180\" y=\"200\" text-anchor=\"middle\">Number of Cycles (N)</text><rect x=\"60\" y=\"45\" width=\"10\" height=\"10\" rx=\"2\"/><text x=\"75\" y=\"58\">Machining marks</text><text x=\"75\" y=\"38\" text-anchor=\"middle\">Stress raisers</text></svg>",
+   "n": "how does a poor surface finish affect the endurance limit?",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "9b0c542d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" />\n <text x=\"325\" y=\"175\">Ultimate Tensile Strength</text>\n <line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" />\n <text x=\"325\" y=\"155\">Endurance Limit</text>\n <line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\" />\n <text x=\"35\" y=\"100\">Stress</text>\n <line x1=\"60\" y1=\"40\" x2=\"60\" y2=\"180\" />\n <text x=\"70\" y=\"110\">Cycles to Failure</text>\n <path d=\"M 80 180 L 300 40\" />\n <line x1=\"150\" y1=\"180\" x2=\"150\" y2=\"160\" />\n <line x1=\"150\" y1=\"160\" x2=\"150\" y2=\"180\" />\n <text x=\"145\" y=\"170\">Fatigue Ratio</text>\n <text x=\"130\" y=\"195\">≈ 0.4 - 0.6 (Steel)</text>\n</svg>",
+   "n": "what is the fatigue ratio?",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "5b45d49f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Damage D</text><line x1=\"40\" y1=\"20\" x2=\"320\" y2=\"20\"/><text x=\"180\" y=\"35\">D = 1 (Failure)</text><path d=\"M 40 20 L 40 160 L 320 160 L 320 20 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"20\" y=\"95\">n₁ cycles @ S₁</text><line x1=\"40\" y1=\"80\" x2=\"100\" y2=\"80\" stroke-dasharray=\"4\"/><text x=\"105\" y=\"85\">D₁ = n₁/N₁</text><text x=\"20\" y=\"130\">n₂ cycles @ S₂</text><line x1=\"40\" y1=\"115\" x2=\"160\" y2=\"115\" stroke-dasharray=\"4\"/><text x=\"165\" y=\"120\">D₂ = n₂/N₂</text><text x=\"20\" y=\"175\">Σ Dᵢ = 1</text></svg>",
+   "n": "state miner's rule for cumulative fatigue damage.",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "532388d5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"190\" y=\"195\" text-anchor=\"middle\">σa</text><text x=\"30\" y=\"100\" text-anchor=\"end\">Se</text><text x=\"30\" y=\"185\" text-anchor=\"start\">σm</text><text x=\"20\" y=\"40\" text-anchor=\"end\">Sut</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><polyline points=\"40,180 320,180 320,40 40,40\" fill=\"none\" stroke-dasharray=\"5,5\"/><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"40\"/><text x=\"160\" y=\"110\" text-anchor=\"middle\">Goodman Line</text><text x=\"170\" y=\"205\" text-anchor=\"middle\">σa/Se + σm/Sut = 1</text></svg>",
+   "n": "write the goodman line criterion equation.",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "1ca3803e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" />\n <line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\" />\n <text x=\"35\" y=\"195\">σm</text>\n <text x=\"325\" y=\"175\">σa</text>\n <text x=\"340\" y=\"165\">Se</text>\n <text x=\"340\" y=\"185\">Syt</text>\n <polygon points=\"40,180 320,180 320,40 40,40\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" />\n <line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\" />\n <text x=\"170\" y=\"25\">Soderberg Line</text>\n <circle cx=\"320\" cy=\"40\" r=\"3\" fill=\"#222\"/>\n <text x=\"325\" y=\"45\">Yield Point</text>\n <line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\" />\n <circle cx=\"40\" cy=\"180\" r=\"3\" fill=\"#222\"/>\n <text x=\"35\" y=\"175\">Mean Stress</text>\n</svg>",
+   "n": "write the soderberg line equation.",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "7c338106": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"50\" y=\"195\" font-family=\"sans-serif\">σa</text><text x=\"305\" y=\"195\" font-family=\"sans-serif\">Se</text><text x=\"40\" y=\"60\" font-family=\"sans-serif\">Sut</text><text x=\"40\" y=\"205\" font-family=\"sans-serif\">σm</text><path d=\"M 40 180 Q 180 40 320 180\" fill=\"none\" stroke=\"#222\"/><text x=\"160\" y=\"110\" text-anchor=\"middle\" font-family=\"sans-serif\">Gerber Parabola</text></svg>",
+   "n": "write the gerber line (parabolic) equation.",
+   "sub": "design",
+   "at": "2026-10-22"
+  },
+  "589224e7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"40\" />\n <line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\" />\n <line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\" />\n <text x=\"50\" y=\"195\">Yield</text>\n <text x=\"325\" y=\"65\">Tensile Strength</text>\n <path d=\"M 40 180 L 320 40\" stroke-dasharray=\"4,2\" />\n <text x=\"170\" y=\"110\" text-anchor=\"middle\">Soderberg Line</text>\n <text x=\"185\" y=\"195\">Mean Stress (σm)</text>\n <text x=\"35\" y=\"110\" text-anchor=\"end\">Alternating Stress (σa)</text>\n</svg>",
+   "n": "which fatigue mean-stress line is the most conservative?",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "743b1a2a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\" font-weight=\"bold\">Mean Stress (σm)</text><line x1=\"40\" y1=\"20\" x2=\"340\" y2=\"20\"/><text x=\"180\" y=\"5\" text-anchor=\"middle\">0</text><text x=\"350\" y=\"20\" font-weight=\"bold\">Alternating Stress (σa)</text><line x1=\"40\" y1=\"190\" x2=\"40\" y2=\"20\"/><text x=\"35\" y=\"110\" text-anchor=\"end\">0</text><path d=\"M 40 190 L 340 20 Q 340 190 40 190\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"280\" y=\"105\" text-anchor=\"middle\">Gerber</text><path d=\"M 40 190 L 340 20 Q 180 110 40 190\" fill=\"none\" stroke-dasharray=\"2,2\"/><text x=\"160\" y=\"105\" text-anchor=\"middle\">Goodman</text><circle cx=\"180\" cy=\"110\" r=\"3\"/><text x=\"175\" y=\"125\" font-size=\"10\">Exp. Data</text></svg>",
+   "n": "which fatigue criterion agrees best with experimental data?",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "3c52f224": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">σ (Stress)</text><line x1=\"20\" y1=\"20\" x2=\"20\" y2=\"180\"/><line x1=\"20\" y1=\"100\" x2=\"340\" y2=\"100\"/><text x=\"350\" y=\"105\">σnominal</text><path d=\"M 40 100 L 80 60 L 120 100 L 160 40 L 200 100 L 240 60 L 280 100 L 320 100\"/><text x=\"100\" y=\"50\">σmax</text><line x1=\"30\" y1=\"100\" x2=\"330\" y2=\"100\"/><text x=\"180\" y=\"190\">Kt = σmax / σnominal</text></svg>",
+   "n": "define the theoretical stress concentration factor kt.",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "5653a03a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Notch Sensitivity (q)</text><line x1=\"60\" y1=\"90\" x2=\"300\" y2=\"90\"/><text x=\"50\" y=\"95\">Kt (Theoretical Stress)</text><circle cx=\"180\" cy=\"90\" r=\"4\"/><text x=\"175\" y=\"85\">Notch</text><line x1=\"60\" y1=\"130\" x2=\"300\" y2=\"130\"/><text x=\"50\" y=\"135\">q (Sensitivity)</text><circle cx=\"180\" cy=\"130\" r=\"4\"/><line x1=\"60\" y1=\"90\" x2=\"60\" y2=\"130\"/><line x1=\"300\" y1=\"90\" x2=\"300\" y2=\"130\"/><text x=\"185\" y=\"110\">q = (Kf - 1)/(Kt - 1)</text><text x=\"185\" y=\"125\">(0 ≤ q ≤ 1)</text></svg>",
+   "n": "define notch sensitivity q.",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "e0d59ee1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Stress (σ)</text><line x1=\"40\" y1=\"35\" x2=\"320\" y2=\"35\"/><text x=\"180\" y=\"200\" text-anchor=\"middle\">Distance</text><line x1=\"190\" y1=\"40\" x2=\"190\" y2=\"190\"/><path d=\"M 60 35 L 190 170 L 320 35\" fill=\"none\" stroke=\"#222\"/><path d=\"M 60 35 L 190 170 L 320 35\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\">Kt (Theoretical)</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Kf (Fatigue)</text><text x=\"30\" y=\"45\">Notch</text><circle cx=\"190\" cy=\"170\" r=\"3\"/><circle cx=\"190\" cy=\"170\" r=\"3\"/></svg>",
+   "n": "define the fatigue stress concentration factor kf.",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "644897cc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"25\" text-anchor=\"middle\">Stress Concentration Reduction</text>\n <!-- Sharp Corner (Bad) -->\n <path d=\"M 60 40 L 120 40 L 120 100 L 90 70 Z\" stroke-width=\"3\"/>\n <text x=\"85\" y=\"65\">Sharp</text>\n <text x=\"85\" y=\"80\">Corner</text>\n <!-- Fillet Radius (Good) -->\n <path d=\"M 140 40 L 200 40 Q 230 70 200 100 L 140 100\" stroke-width=\"3\"/>\n <text x=\"165\" y=\"65\">Generous</text>\n <text x=\"165\" y=\"80\">Fillet</text>\n <!-- Groove (Good) -->\n <path d=\"M 240 40 L 300 40 L 300 100 L 270 70 Z\" stroke-width=\"3\"/>\n <text x=\"285\" y=\"65\">Relieving</text>\n <text x=\"285\" y=\"80\">Groove</text>\n <!-- Axis Labels -->\n <text x=\"10\" y=\"45\">Load Direction →</text>\n <text x=\"340\" y=\"115\">Stress ↓</text>\n</svg>",
+   "n": "how can stress concentration be reduced?",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "3da5f903": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Shaft Body -->\n  <rect x=\"40\" y=\"80\" width=\"280\" height=\"60\" rx=\"30\" />\n  <!-- Gear on Left -->\n  <circle cx=\"70\" cy=\"110\" r=\"35\" stroke-width=\"1.5\"/>\n  <path d=\"M 70 75 L 70 145 M 35 110 L 105 110 M 60 95 L 80 115 L 60 125 L 40 105\" stroke-width=\"1.5\"/>\n  <text x=\"55\" y=\"70\">Gear</text>\n  <!-- Pulley on Right -->\n  <circle cx=\"310\" cy=\"110\" r=\"40\" stroke-width=\"1.5\"/>\n  <path d=\"M 310 70 L 310 150 M 270 110 L 350 110\" stroke-width=\"1.5\"/>\n  <text x=\"295\" y=\"70\">Pulley</text>\n  <!-- Bearing on Left -->\n  <circle cx=\"40\" cy=\"110\" r=\"8\" fill=\"#222\"/>\n  <text x=\"35\" y=\"125\">Bearing</text>\n  <!-- Bearing on Right -->\n  <circle cx=\"320\" cy=\"110\" r=\"8\" fill=\"#222\"/>\n  <text x=\"315\" y=\"125\">Bearing</text>\n  <!-- Torque Arrow -->\n  <path d=\"M 40 110 L 360 110\" stroke-dasharray=\"4,2\" opacity=\"0.5\"/>\n  <circle cx=\"360\" cy=\"110\" r=\"3\" fill=\"#222\"/>\n  <text x=\"340\" y=\"95\">Torque</text>\n  <!-- Power Flow Arrow -->\n  <path d=\"M 40 80 L 40 140\" stroke-dasharray=\"4,2\" opacity=\"0.5\"/>\n  <circle cx=\"40\" cy=\"140\" r=\"3\" fill=\"#222\"/>\n  <text x=\"55\" y=\"130\">Power</text>\n</svg>",
+   "n": "what is a shaft?",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "866cb29d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\">T (Torque)</text><text x=\"180\" y=\"115\" text-anchor=\"middle\">τ (Shear Stress)</text><path d=\"M 40 100 L 320 100\"/><circle cx=\"60\" cy=\"100\" r=\"3\"/><circle cx=\"300\" cy=\"100\" r=\"3\"/><line x1=\"80\" y1=\"95\" x2=\"80\" y2=\"105\"/><line x1=\"320\" y1=\"95\" x2=\"320\" y2=\"105\"/><text x=\"70\" y=\"85\">Solid Shaft</text><text x=\"310\" y=\"85\">Solid Shaft</text><rect x=\"40\" y=\"140\" width=\"280\" height=\"60\" rx=\"5\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">T = (π/16) × τ × d³</text></svg>",
+   "n": "write the torsion equation for a solid circular shaft.",
+   "sub": "design",
+   "at": "2026-10-23"
+  },
+  "364fc394": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Torsion of Hollow Shaft</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"180\" cy=\"60\" r=\"50\"/><circle cx=\"180\" cy=\"60\" r=\"30\" stroke-dasharray=\"4,2\"/><text x=\"190\" y=\"70\">d₀ (Outer)</text><text x=\"190\" y=\"90\">dᵢ (Inner)</text><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"130\"/><text x=\"170\" y=\"145\">τ</text><text x=\"170\" y=\"165\">T</text><text x=\"170\" y=\"185\">J</text><text x=\"170\" y=\"205\">C</text></svg>",
+   "n": "write the torsion equation for a hollow shaft.",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "346cf496": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"325\" y=\"105\">Torque (T)</text><circle cx=\"90\" cy=\"100\" r=\"6\"/><circle cx=\"310\" cy=\"100\" r=\"6\"/><line x1=\"90\" y1=\"100\" x2=\"90\" y2=\"50\"/><line x1=\"90\" y1=\"100\" x2=\"90\" y2=\"150\"/><text x=\"75\" y=\"45\">Angular Speed (ω)</text><text x=\"85\" y=\"165\">Power (P)</text><path d=\"M 90 50 L 310 50 M 90 150 L 310 150\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"70\">Shaft</text><text x=\"180\" y=\"180\">Formula: P = T × ω</text></svg>",
+   "n": "write the formula for power transmitted by a shaft.",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "6d990a1e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"8\" stroke-dasharray=\"4,4\"/><text x=\"55\" y=\"65\">Bending Moment</text><path d=\"M 70 80 Q 90 100 110 80\" fill=\"none\" stroke=\"#222\"/><path d=\"M 70 80 L 110 80\" stroke-dasharray=\"2,2\"/><text x=\"85\" y=\"95\">Bending</text><text x=\"95\" y=\"95\">(M)</text><text x=\"55\" y=\"135\">Torsion Moment</text><path d=\"M 70 120 L 110 120\" fill=\"none\" stroke=\"#222\"/><path d=\"M 70 120 Q 90 140 110 120\" fill=\"none\" stroke=\"#222\"/><text x=\"85\" y=\"135\">Torsion</text><text x=\"95\" y=\"135\">(T)</text><path d=\"M 70 80 L 70 120 M 110 80 L 110 120\" stroke-dasharray=\"4,2\"/><circle cx=\"160\" cy=\"110\" r=\"35\" fill=\"none\" stroke=\"#222\"/><text x=\"145\" y=\"100\">Resultant</text><text x=\"145\" y=\"115\">Moment (Te)</text><path d=\"M 160 75 L 160 145 M 125 110 L 195 110\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"85\">√(M² + T²)</text></svg>",
+   "n": "what is the equivalent twisting moment for combined bending and torsion?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "a383859a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Equivalent Bending Moment (Me)</text><path d=\"M 40 60 L 320 60\"/><text x=\"170\" y=\"50\" text-anchor=\"middle\">Bending Moment M</text><path d=\"M 40 80 L 320 80\"/><text x=\"170\" y=\"70\" text-anchor=\"middle\">Torsion T</text><path d=\"M 40 100 L 320 100\"/><text x=\"170\" y=\"90\" text-anchor=\"middle\">Equivalent Me</text><circle cx=\"60\" cy=\"60\" r=\"5\" fill=\"#222\"/><circle cx=\"60\" cy=\"80\" r=\"5\" fill=\"#222\"/><circle cx=\"60\" cy=\"100\" r=\"5\" fill=\"#222\"/><path d=\"M 40 60 L 60 60 M 60 80 L 60 100\"/><text x=\"30\" y=\"70\" text-anchor=\"end\">+√(M² + T²)</text><line x1=\"280\" y1=\"55\" x2=\"320\" y2=\"55\" stroke-dasharray=\"4,2\"/><line x1=\"280\" y1=\"95\" x2=\"320\" y2=\"95\" stroke-dasharray=\"4,2\"/><text x=\"290\" y=\"65\" text-anchor=\"start\">M</text><text x=\"290\" y=\"105\" text-anchor=\"start\">Me</text></svg>",
+   "n": "write the expression for the equivalent bending moment.",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "ef011245": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Allowable Shear Stress (τ)</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><text x=\"30\" y=\"50\">Lower Limit</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"70\">τ_allow = min(0.18 Sut, 0.30 Syt)</text><circle cx=\"180\" cy=\"40\" r=\"3\"/><circle cx=\"180\" cy=\"60\" r=\"3\"/><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"60\"/><text x=\"175\" y=\"55\">ASME Code</text><rect x=\"40\" y=\"80\" width=\"280\" height=\"10\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Material Properties (Sut, Syt)</text></svg>",
+   "n": "what allowable shear stress does the asme code prescribe for shaft design?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "740d9ba3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Shaft Cross-Section</text><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"5\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"110\" r=\"60\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"130\" text-anchor=\"middle\">Solid Shaft</text><rect x=\"90\" y=\"70\" width=\"80\" height=\"40\" fill=\"#222\"/><line x1=\"150\" y1=\"110\" x2=\"150\" y2=\"110\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"60\">Keyway</text><text x=\"170\" y=\"60\">(Stress Raiser)</text><rect x=\"40\" y=\"180\" width=\"280\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/><line x1=\"40\" y1=\"190\" x2=\"105\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"70\" y=\"205\">~80% Strength</text><line x1=\"105\" y1=\"190\" x2=\"165\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"135\" y=\"205\">-25-30%</text><line x1=\"165\" y1=\"190\" x2=\"280\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"220\" y=\"205\">~70% Strength</text></svg>",
+   "n": "how much does a keyway reduce the strength of a shaft?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "b6386f9c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"axes\">\n<line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\" />\n<line x1=\"40\" y1=\"200\" x2=\"360\" y2=\"200\" />\n</g>\n<g id=\"curve\">\n<path d=\"M 50 180 C 90 170, 110 120, 140 100 S 220 60, 280 50\" />\n</g>\n<g id=\"labels\">\n<text x=\"35\" y=\"195\">Deflection (y)</text>\n<text x=\"320\" y=\"205\">Rotational Speed (ω)</text>\n<circle cx=\"140\" cy=\"100\" r=\"3\" fill=\"#222\" />\n<text x=\"145\" y=\"95\">Natural Freq.</text>\n</g>\n<g id=\"whirling-zone\">\n<line x1=\"100\" y1=\"180\" x2=\"100\" y2=\"60\" stroke-dasharray=\"4\" />\n<text x=\"95\" y=\"120\">Whirling Speed</text>\n</g>\n<g id=\"shaft-schematic\">\n<path d=\"M 30 180 L 330 180\" stroke-width=\"6\" />\n<circle cx=\"140\" cy=\"100\" r=\"25\" fill=\"none\" stroke=\"#222\" stroke-dasharray=\"2\" />\n</g>\n</svg>",
+   "n": "what is the critical or whirling speed of a shaft?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "15964cae": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\" />\n <circle cx=\"180\" cy=\"110\" r=\"60\" />\n <path d=\"M 120 50 L 120 170 M 240 50 L 240 170 M 180 50 L 180 170\" stroke-dasharray=\"3,3\" />\n <line x1=\"180\" y1=\"50\" x2=\"180\" y2=\"110\" />\n <rect x=\"160\" y=\"90\" width=\"40\" height=\"30\" rx=\"5\" />\n <text x=\"180\" y=\"107\" text-anchor=\"middle\">KEY</text>\n <line x1=\"120\" y1=\"110\" x2=\"160\" y2=\"90\" stroke-dasharray=\"3,3\" />\n <line x1=\"240\" y1=\"110\" x2=\"200\" y2=\"90\" stroke-dasharray=\"3,3\" />\n <text x=\"180\" y=\"45\" text-anchor=\"middle\">SHAFT</text>\n <text x=\"180\" y=\"190\" text-anchor=\"middle\">HUB</text>\n</svg>",
+   "n": "what is a key and what does it do?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "4c639ec5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Shaft Diameter d</text><circle cx=\"180\" cy=\"45\" r=\"30\"/><line x1=\"150\" y1=\"75\" x2=\"210\" y2=\"75\" stroke-dasharray=\"4,2\"/><rect x=\"160\" y=\"80\" width=\"40\" height=\"20\"/><text x=\"180\" y=\"98\" text-anchor=\"middle\">Width b = d/4</text><text x=\"180\" y=\"115\" text-anchor=\"middle\">Thickness t = d/6</text><line x1=\"150\" y1=\"75\" x2=\"150\" y2=\"95\" stroke-dasharray=\"4,2\"/><line x1=\"210\" y1=\"75\" x2=\"210\" y2=\"95\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"135\" text-anchor=\"middle\">Key Proportions</text></svg>",
+   "n": "give the standard proportions of a rectangular sunk key for a shaft of diameter d.",
+   "sub": "design",
+   "at": "2026-10-24"
+  }
+ }
+}

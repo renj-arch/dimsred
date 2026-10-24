@@ -1,0 +1,43 @@
+{
+ "meta": {
+  "about": "Machine-readable exam patterns that drive the Mock Test mode on /ssc-je. The CI agent ExamPatterns (scripts/site-agent.js) re-checks news/official signals every run and may update entries here ONLY with a source link and sanity-checked numbers; the quiz page reads this file at load, so a pattern change reaches mocks on the next deploy without any page edit. agentMockPapers writes fresh pattern-matched questions to data/mock-fresh.json. Baseline numbers below are the published paper structures; 'min' on each mock is the technical share of the real paper duration.",
+  "updatedAt": "2026-10-18",
+  "lastChecked": "2026-10-24",
+  "changelog": []
+ },
+ "patterns": [
+  {
+   "id": "sscje-p1",
+   "exam": "SSC JE",
+   "name": "SSC JE Paper 1 — Technical (Part A)",
+   "desc": "the 100-question Part A share of the real 200-question paper (GA + Reasoning sections join when their pools are wired)",
+   "qs": 100,
+   "min": 60,
+   "neg": 0.25,
+   "source": "SSC JE Paper-I (CBT): 200 Q / 200 marks / 2 hours, negative marking 0.25; Part A = 100 technical questions",
+   "verifiedAt": "2026-10-18"
+  },
+  {
+   "id": "rrbje-cbt2",
+   "exam": "RRB JE",
+   "name": "RRB JE CBT-2 — Technical Abilities",
+   "desc": "the 100-question Technical Abilities share of the real 150-question CBT-2",
+   "qs": 100,
+   "min": 80,
+   "neg": 0.33,
+   "source": "RRB JE CBT-2: 150 Q / 120 min, negative marking 1/3; Technical Abilities = 100 questions",
+   "verifiedAt": "2026-10-18"
+  },
+  {
+   "id": "quick",
+   "exam": "SSC JE / RRB JE",
+   "name": "Quick Mock",
+   "desc": "short timed paper for daily practice",
+   "qs": 25,
+   "min": 30,
+   "neg": 0.25,
+   "source": "practice pattern (not an official paper)",
+   "verifiedAt": "2026-10-18"
+  }
+ ]
+}

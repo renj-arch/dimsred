@@ -1,0 +1,670 @@
+{
+  "schema": "vlymbooq.film.v1",
+  "id": "salt-march",
+  "topicId": "civil disobedience movement",
+  "title": "SALT",
+  "subtitle": "The Empire's Smallest Fear",
+  "logline": "In 1930, the British Raj taxed the one thing every Indian could gather for free. One man picked up a handful of salt, and the Empire discovered a weapon it could not arrest.",
+  "targetDuration": 210,
+  "aspect": "16:9",
+  "fps": 24,
+  "voice": "en_US-lessac-medium",
+  "style": {
+    "genre": "cinematic 3D documentary",
+    "look": "dawn salt flat, deep teal shadows, warm rim light, visible dust, restrained typography",
+    "rules": [
+      "Show the object before the explanation.",
+      "One idea per shot. No wall of text.",
+      "The camera moves with purpose: push, reveal, or follow. Never drift without a reason.",
+      "Sound carries the scale: wind, footsteps, distant surf, a low drone, then silence before the turn.",
+      "Violence is implied through sound and aftermath, never lingered on."
+    ]
+  },
+  "toolchain": {
+    "blender": {
+      "version": "4.2 LTS",
+      "role": "3D sets, hero stills, camera moves, render passes, procedural salt flat, marchers, crystals",
+      "automation": "scripts/film/blender/salt_scenes.py"
+    },
+    "cascadeur": {
+      "version": "Indie (paid) or Free for non-commercial tests",
+      "role": "character animation and physics-assisted poses; exported as FBX/GLB",
+      "constraint": "FBX export requires Indie or Pro. Free exports .casc only. Run on the owner machine, not GitHub Actions."
+    },
+    "embergen": {
+      "version": "Indie subscription",
+      "role": "fire, smoke, dust and fluid simulations; exported as VDB or flipbook",
+      "constraint": "Needs a GPU. Bake once on the owner machine and store the VDB/flipbook in assets/vfx/."
+    },
+    "blenderkit": {
+      "role": "CC0 and royalty-free props, anatomy, tools and environments",
+      "constraint": "Record the license and source URL in assets/library/manifest.json."
+    },
+    "sketchfab": {
+      "role": "CC0/CC-BY models for monuments, objects and anatomy",
+      "constraint": "Download only assets whose license allows commercial use. Record attribution."
+    },
+    "after_effects": {
+      "role": "online edit, parallax, grade, typography, sound design",
+      "constraint": "Adobe does not run on GitHub Actions. The repository exports layered plates, an EDL and a shot manifest."
+    },
+    "premiere_pro": {
+      "role": "final conform, mix and YouTube master",
+      "constraint": "Owner-machine finishing step. The CI cut is an animatic, not the final online."
+    },
+    "python": {
+      "role": "Blender scene assembly, naming, pass rendering, validation and batch exports",
+      "automation": "scripts/film/blender/*.py"
+    },
+    "node": {
+      "role": "orchestration, schema validation, ffmpeg assembly, caption and thumbnail generation",
+      "automation": "scripts/film/*.js"
+    }
+  },
+  "sources": [
+    {
+      "id": "salt-march",
+      "title": "Salt March",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Salt_March",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "civil-disobedience",
+      "title": "Civil disobedience movement",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Civil_disobedience_movement",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "dharasana",
+      "title": "Dharasana Satyagraha",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Dharasana_Satyagraha",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "gandhi-irwin",
+      "title": "Gandhi-Irwin Pact",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Gandhi%E2%80%93Irwin_Pact",
+      "accessed": "2026-10-22"
+    },
+    {
+      "id": "poonapact",
+      "title": "Poona Pact",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Poona_Pact",
+      "accessed": "2026-10-22"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "title": "A grain",
+      "start": 0,
+      "duration": 14,
+      "purpose": "Hook with the smallest object in the story.",
+      "narration": [
+        {
+          "text": "Salt.",
+          "source": "salt-march"
+        },
+        {
+          "text": "The British Empire could tax almost anything. It chose the one thing the poorest Indian could gather for free.",
+          "source": "civil-disobedience"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S01-A",
+          "plate": "crystal-macro",
+          "camera": "100mm macro, slow push-in, shallow focus",
+          "visual": "A single translucent salt crystal on black volcanic stone. One hard rim light. The crystal is almost a jewel, then the light reveals the coarse, ordinary edges.",
+          "vfx": [
+            "fine dust motes",
+            "subtle heat shimmer"
+          ],
+          "sfx": [
+            "low room tone",
+            "a single dry tap as the crystal settles"
+          ],
+          "text": "",
+          "transition": "cut",
+          "render": "blender",
+          "framing": {
+            "zoom": [
+              1.02,
+              1.1
+            ],
+            "x": [
+              50,
+              49
+            ],
+            "y": [
+              50,
+              51
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "The tax",
+      "start": 14,
+      "duration": 28,
+      "purpose": "Make the salt tax concrete, not abstract.",
+      "narration": [
+        {
+          "text": "The Salt Act of 1882 gave the Raj a monopoly on collection and manufacture. Salt was free on the coast. The law made it a crime to take it.",
+          "source": "civil-disobedience"
+        },
+        {
+          "text": "The tax was small at the till and enormous in a poor family's kitchen. By 1930 it was 8.2 percent of British India's tax revenue.",
+          "source": "civil-disobedience"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S02-A",
+          "plate": "ledger",
+          "camera": "overhead, locked, slow reveal by a moving light",
+          "visual": "A colonial ledger, a brass scale, and a cone of coarse salt. The numbers are stamped, not written. A hand in a white sleeve enters and takes a pinch.",
+          "vfx": [
+            "paper dust",
+            "ink bloom"
+          ],
+          "sfx": [
+            "pen scratch",
+            "brass scale tick",
+            "salt crunch"
+          ],
+          "text": "1882 · THE SALT ACT",
+          "transition": "match cut on the falling salt",
+          "render": "html",
+          "framing": {
+            "zoom": [
+              1.02,
+              1.08
+            ],
+            "x": [
+              50,
+              52
+            ],
+            "y": [
+              50,
+              49
+            ]
+          }
+        },
+        {
+          "id": "S02-B",
+          "plate": "kitchen",
+          "camera": "low tabletop, 50mm, shallow depth",
+          "visual": "A clay bowl, flatbread, and a small dish of salt in a dim kitchen. The bowl is almost empty. The salt dish is the brightest object in the frame.",
+          "vfx": [
+            "smoke from a cooking fire"
+          ],
+          "sfx": [
+            "crackling fire",
+            "a child's voice far away"
+          ],
+          "text": "8.2% OF RAJ TAX REVENUE",
+          "transition": "cut",
+          "render": "html",
+          "framing": {
+            "zoom": [
+              1.04,
+              1.12
+            ],
+            "x": [
+              50,
+              48
+            ],
+            "y": [
+              52,
+              55
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "The choice",
+      "start": 42,
+      "duration": 30,
+      "purpose": "Turn a policy story into a duel of judgment.",
+      "narration": [
+        {
+          "text": "On 2 March 1930, Gandhi wrote to the Viceroy with eleven demands. Abolish the salt tax. Cut military spending. Protect Indian cloth.",
+          "source": "salt-march"
+        },
+        {
+          "text": "Lord Irwin was not impressed. He wrote to London that a salt campaign did not keep him awake at night.",
+          "source": "civil-disobedience"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S03-A",
+          "plate": "letter",
+          "camera": "top-down, 35mm, slow lateral move",
+          "visual": "The letter on a dark wooden desk. Ink, a fountain pen, a small spinning wheel in the background. The eleven demands sit under a shaft of light.",
+          "vfx": [
+            "dust in the light beam"
+          ],
+          "sfx": [
+            "pen on paper",
+            "a spinning wheel, slow"
+          ],
+          "text": "ELEVEN DEMANDS",
+          "transition": "cut",
+          "render": "html",
+          "framing": {
+            "zoom": [
+              1.02,
+              1.1
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S03-B",
+          "plate": "viceroy",
+          "camera": "wide, symmetrical, cold",
+          "visual": "A vast Viceroy's office. A tiny figure at a huge desk, framed by columns. The letter is a white speck on the desk.",
+          "vfx": [
+            "curtains breathing in the draft"
+          ],
+          "sfx": [
+            "clock tick",
+            "distant traffic",
+            "paper folded"
+          ],
+          "text": "“DOES NOT KEEP ME AWAKE AT NIGHT”",
+          "transition": "hard cut to wind",
+          "render": "html",
+          "framing": {
+            "zoom": [
+              1,
+              1.06
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "The march",
+      "start": 72,
+      "duration": 44,
+      "purpose": "The spectacle: small figures, huge land, growing line.",
+      "narration": [
+        {
+          "text": "On 12 March 1930, Gandhi left Sabarmati with 78 volunteers. They walked for 24 days, 387 kilometres, through 48 villages.",
+          "source": "salt-march"
+        },
+        {
+          "text": "The line grew. Farmers, weavers, students, women. The world's press came to watch a man walk toward the sea.",
+          "source": "salt-march"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S04-A",
+          "plate": "march-wide",
+          "camera": "low wide, 28mm, slow dolly in; silhouettes against a huge dawn sun",
+          "visual": "A column of marchers crosses a white salt flat. The first figures are close and dark; the line recedes to a thin thread. Heat shimmer, dust, a distant blue sea.",
+          "vfx": [
+            "dust",
+            "heat haze",
+            "sun bloom"
+          ],
+          "sfx": [
+            "wind",
+            "bare feet on salt",
+            "a low drone"
+          ],
+          "text": "12 MARCH 1930",
+          "transition": "cut",
+          "render": "blender",
+          "framing": {
+            "zoom": [
+              1.02,
+              1.18
+            ],
+            "x": [
+              50,
+              52
+            ],
+            "y": [
+              52,
+              50
+            ]
+          }
+        },
+        {
+          "id": "S04-B",
+          "plate": "march-wide",
+          "camera": "handheld close, 50mm, follow the feet",
+          "visual": "Bare feet, dust, a wooden staff. The rhythm is steady. We never see the face; the crowd is the character.",
+          "vfx": [
+            "dust bursts",
+            "sweat glints"
+          ],
+          "sfx": [
+            "footsteps",
+            "breathing",
+            "a distant crowd"
+          ],
+          "text": "78 VOLUNTEERS · 24 DAYS · 387 KM",
+          "transition": "cut",
+          "render": "blender",
+          "framing": {
+            "zoom": [
+              1.8,
+              2.4
+            ],
+            "x": [
+              52,
+              56
+            ],
+            "y": [
+              70,
+              76
+            ]
+          }
+        },
+        {
+          "id": "S04-C",
+          "plate": "route-map",
+          "camera": "top-down map, animated route draw",
+          "visual": "A dark relief map of western India. A thin gold line runs from Sabarmati to Dandi. Villages light up as the line passes. The sea is a deep teal.",
+          "vfx": [
+            "route glow",
+            "map grain"
+          ],
+          "sfx": [
+            "a single tabla pulse",
+            "paper map unfold"
+          ],
+          "text": "SABARMATI → DANDI",
+          "transition": "cut",
+          "render": "map",
+          "framing": {
+            "zoom": [
+              1.04,
+              1.1
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "Dandi",
+      "start": 116,
+      "duration": 32,
+      "purpose": "The turn: a handful of salt becomes a political fact.",
+      "narration": [
+        {
+          "text": "At 8:30 on the morning of 6 April, Gandhi bent down and picked up a lump of salt.",
+          "source": "salt-march"
+        },
+        {
+          "text": "The law was broken. Within weeks, millions joined. Over 60,000 were jailed.",
+          "source": "salt-march"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S05-A",
+          "plate": "dandi-hand",
+          "camera": "macro, 85mm, shallow focus, one slow tilt",
+          "visual": "A weathered hand lifts a wet lump of salt from the mud. The salt glistens. The hand is calm. The background is a white blur of sea and sky.",
+          "vfx": [
+            "water droplets",
+            "salt grit"
+          ],
+          "sfx": [
+            "surf",
+            "wet mud",
+            "a single breath"
+          ],
+          "text": "6 APRIL 1930 · 8:30 AM",
+          "transition": "flash to white",
+          "render": "blender",
+          "framing": {
+            "zoom": [
+              1.02,
+              1.12
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              52
+            ]
+          }
+        },
+        {
+          "id": "S05-B",
+          "plate": "headlines",
+          "camera": "top-down, fast lateral move across newspapers",
+          "visual": "Newspaper front pages in different languages. One headline: SALT LAW BROKEN. The camera moves faster as the headlines multiply.",
+          "vfx": [
+            "paper texture",
+            "ink bleed"
+          ],
+          "sfx": [
+            "printing press",
+            "typewriter",
+            "crowd"
+          ],
+          "text": "MILLIONS JOIN · 60,000 JAILED",
+          "transition": "cut",
+          "render": "html",
+          "framing": {
+            "zoom": [
+              1.02,
+              1.14
+            ],
+            "x": [
+              50,
+              48
+            ],
+            "y": [
+              50,
+              51
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "Dharasana",
+      "start": 148,
+      "duration": 26,
+      "purpose": "Show the cost without exploiting suffering.",
+      "narration": [
+        {
+          "text": "The Raj answered with lathis. At Dharasana, volunteers walked into the clubs and did not raise a hand.",
+          "source": "dharasana"
+        },
+        {
+          "text": "The world saw the choice the Empire made. The story reached 1,350 newspapers.",
+          "source": "dharasana"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S06-A",
+          "plate": "dharasana-line",
+          "camera": "wide, locked, then a slow push",
+          "visual": "A line of unarmed volunteers in white faces a line of police in khaki. The space between them is empty and bright. Dust. A dropped cap. No gore.",
+          "vfx": [
+            "dust",
+            "heat shimmer",
+            "a single falling cap"
+          ],
+          "sfx": [
+            "wind",
+            "a whistle",
+            "dull impacts implied off-screen",
+            "silence"
+          ],
+          "text": "DHARASANA · MAY 1930",
+          "transition": "cut to black",
+          "render": "blender",
+          "framing": {
+            "zoom": [
+              1.02,
+              1.1
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "The bargain",
+      "start": 174,
+      "duration": 22,
+      "purpose": "Refuse the simple victory narrative.",
+      "narration": [
+        {
+          "text": "In March 1931, Gandhi and Irwin signed a pact. Over 90,000 political prisoners were released.",
+          "source": "gandhi-irwin"
+        },
+        {
+          "text": "The Raj did not abolish the salt tax. The movement did not win everything. It won something harder to take away: a nation had seen its own power.",
+          "source": "gandhi-irwin"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S07-A",
+          "plate": "prison-gate",
+          "camera": "wide, symmetrical, slow pull-back",
+          "visual": "A prison gate opens. Light spills out. A crowd waits in silence. The gate is huge; the people are small.",
+          "vfx": [
+            "dust in the light",
+            "gate shadow"
+          ],
+          "sfx": [
+            "iron hinge",
+            "footsteps",
+            "a crowd exhaling"
+          ],
+          "text": "5 MARCH 1931",
+          "transition": "cut",
+          "render": "blender",
+          "framing": {
+            "zoom": [
+              1.02,
+              1.12
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              51
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "The after",
+      "start": 196,
+      "duration": 14,
+      "purpose": "Land the idea and the title.",
+      "narration": [
+        {
+          "text": "The Empire had armies. It had no answer to a man picking up salt.",
+          "source": "salt-march"
+        }
+      ],
+      "shots": [
+        {
+          "id": "S08-A",
+          "plate": "end-title",
+          "camera": "locked, graphic",
+          "visual": "The salt crystal from the opening returns, now on a black field. It turns slowly. The title SALT resolves beside it. Subtitle: The Empire's Smallest Fear.",
+          "vfx": [
+            "single dust mote",
+            "slow rotation"
+          ],
+          "sfx": [
+            "the low drone resolves",
+            "one clean salt tap"
+          ],
+          "text": "SALT · THE EMPIRE'S SMALLEST FEAR",
+          "transition": "fade to black",
+          "render": "title",
+          "framing": {
+            "zoom": [
+              1,
+              1.04
+            ],
+            "x": [
+              50,
+              50
+            ],
+            "y": [
+              50,
+              50
+            ]
+          }
+        }
+      ]
+    }
+  ],
+  "deliverables": {
+    "master": "out/film/salt/salt-master.mp4",
+    "trailer": "out/film/salt/salt-trailer.mp4",
+    "captions": "out/film/salt/salt.srt",
+    "thumbnail": "out/film/salt/salt-thumb.jpg",
+    "plates": "out/film/salt/plates/",
+    "adobe": "out/film/salt/adobe/"
+  }
+}

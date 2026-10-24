@@ -1,0 +1,126 @@
+name: LLM Smoke Test
+
+# The run title shows the model tag — with several smokes in flight, the
+# plain "LLM Smoke Test" titles made runs indistinguishable (2026-10-18).
+# NOTE: this concurrency group keeps only ONE pending run — a newer dispatch
+# CANCELS an older pending one (it is NOT queued behind it). Never fire two
+# smokes back to back; wait for the pending one to go active first.
+run-name: 'LLM Smoke: ${{ inputs.model }}'
+
+# Dispatch-only verdict on the local-LLM layer: install Ollama, pull the
+# requested model (input "model"; default is the FAST tier qwen3:4b — the
+# fleet default; pass qwen3.5:9b to smoke the heavy tier), run ONE call
+# with think:false, print PASS/FAIL in ~15 minutes.
+#
+# Built after the 2026-10-17 post-mortem: Question Quality #15 and the Site
+# Agent run wedged for hours because the model's default thinking mode streams
+# at a fraction of a token per second on the 4-vCPU runner, so generation calls
+# died inside 90-minute curl timeouts with content still empty. The agents now
+# send think:false (scripts/site-agent.js, scripts/llm-autofix.js); this
+# workflow is how that fix gets verified cheaply instead of on the next
+# multi-hour agent run. Exit 2 means the daemon rejected the flag.
+#
+# Fast-tier runs restore ~/.ollama/models from the shared Actions cache
+# (same key family as site-agent / llm-autofix) — only the first run pays
+# the download.
+on:
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'Ollama model tag to smoke. Default = fast tier (fleet default); use qwen3.5:9b for the heavy tier.'
+        required: false
+        default: 'qwen3:4b'
+
+concurrency:
+  group: llm-smoke
+  # false: verification runs must never cancel each other mid-flight — we
+  # queue 4b and 9b smokes back to back (the 4b seeds the fast cache class).
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    timeout-minutes: 75
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Same swap as site-agent/llm-autofix. Only the 17GB heavy model needs
+      # it (it nearly fills the 16GB runner); harmless for the fast tier.
+      - name: Create swap (16GB — same as site-agent)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # Model cache: one entry per size class (repo budget 10GB) — "fast" for
+      # small models (~2.5GB), "mid" for qwen3.5:9b (~6.6GB). 17GB heavy
+      # models skip this step entirely.
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3:4b', '27b') && !contains(inputs.model || 'qwen3:4b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3:4b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3:4b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          # Heavy-model best practice: keep the kernel from paging model pages
+          # out under memory pressure (the 27B-era death spiral was swap thrash).
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+
+      - name: Pull and warm model (${{ inputs.model || 'qwen3:4b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3:4b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          du -sh /home/runner/.ollama/models 2>/dev/null || true
+          echo "Warming $MODEL_INPUT so the smoke call is not measuring cold load..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warmup done"
+
+      - name: Smoke — think:false answers directly
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3:4b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+          SMOKE_CAP_MIN: '35'
+        run: node scripts/llm-smoke-test.js

@@ -1,0 +1,123 @@
+{
+  "schema": "vlymbooq.production.v1",
+  "film": "jallianwala-bagh",
+  "title": "JALLIANWALA BAGH",
+  "subtitle": "The Garden the Empire Could Not Bury",
+  "status": "50-cut preview live · 1080 master in render",
+  "updated": "2026-10-23",
+  "intro": "A film about 13 April 1919, built from a notice, a wall, a watch, a well and a report. No stock footage. No bodies. No paid APIs. Every frame is assembled on free GitHub Actions hardware.",
+  "stats": [
+    { "value": "50", "label": "cuts", "note": "13 in the rejected first cut" },
+    { "value": "9", "label": "scenes", "note": "one argument per scene" },
+    { "value": "39", "label": "sourced lines", "note": "every line carries a source id" },
+    { "value": "9", "label": "procedural sets", "note": "modelled and lit in Blender" },
+    { "value": "8", "label": "transition families", "note": "whip, mask, match, dip, flash" },
+    { "value": "0", "label": "paid APIs", "note": "Piper, Blender, Chromium, ffmpeg" }
+  ],
+  "firstCut": {
+    "label": "First cut",
+    "shots": 13,
+    "duration": "2:32",
+    "status": "Rejected",
+    "note": "Two static plates per scene, long holds and sparse lower-thirds. It read as a narrated slideshow, not a film."
+  },
+  "currentCut": {
+    "label": "Investigative cut",
+    "shots": 50,
+    "duration": "3:06",
+    "status": "Preview live · 1080 in render",
+    "note": "A 3.7-second average shot, a cold open, full-screen figures, evidence inserts, a layered score and burned-in captions."
+  },
+  "transitionFamilies": [
+    { "name": "Whip", "count": 12, "use": "Across connected spaces: notice to wall, watch to wall, wall to gate." },
+    { "name": "Match", "count": 9, "use": "Same object, new scale: the notice, the report, the well, the watch." },
+    { "name": "Flash", "count": 11, "use": "Date, order and casualty cards. Used as punctuation, never as decoration." },
+    { "name": "Dip", "count": 9, "use": "The silence before the firing and the gaps between argument." },
+    { "name": "Mask", "count": 4, "use": "The wall and the report revealed as evidence, edge first." },
+    { "name": "Crossfade", "count": 3, "use": "Only where two images belong to the same thought." },
+    { "name": "Hard cut", "count": 2, "use": "The cold open and the title. No softening." }
+  ],
+  "pipeline": [
+    {
+      "step": "01",
+      "title": "Source lock",
+      "body": "The storyboard is a JSON contract. Every narration line names a source. The validator refuses unsourced lines, missing shots and filler before a runner is allowed to render.",
+      "path": "data/films/jallianwala-bagh.json"
+    },
+    {
+      "step": "02",
+      "title": "Procedural sets",
+      "body": "Blender 4.2 builds the notice, wall, gate, watch, well, report, lamp and memorial as still plates. No stock images. No generated faces.",
+      "path": "scripts/film/blender/jallianwala_scenes.py"
+    },
+    {
+      "step": "03",
+      "title": "Narration",
+      "body": "Piper reads the script locally with en_US-lessac-medium. No cloud narration, no per-word billing, no API key in the repository.",
+      "path": "scripts/film/build-film.js"
+    },
+    {
+      "step": "04",
+      "title": "Camera and type",
+      "body": "Chromium drives the timeline frame by frame: push-ins, pans, match cuts, mask wipes, impact cards and captions. The camera is code, so every frame is repeatable.",
+      "path": "js/film.js"
+    },
+    {
+      "step": "05",
+      "title": "Score and master",
+      "body": "ffmpeg synthesises the drone, clock, heartbeat and sub impacts, mixes the narration, burns the SRT into the master and encodes the MP4.",
+      "path": "scripts/film/build-film.js"
+    },
+    {
+      "step": "06",
+      "title": "Free CI",
+      "body": "The render runs on GitHub-hosted Ubuntu CPU. No GPU. No paid runner. The owner's machine writes the code; it does not render the film.",
+      "path": ".github/workflows/film.yml"
+    }
+  ],
+  "iterations": [
+    {
+      "date": "2026-10-23",
+      "title": "The first cut was rejected",
+      "body": "13 shots, 152 seconds, static plates and no burned captions. The note was blunt: it feels like a regular video. It was not shipped as the final film."
+    },
+    {
+      "date": "2026-10-23",
+      "title": "The sets were fixed before the edit",
+      "body": "The wall, gate, well and notice were rebuilt. Bad compositions were removed. The empty threshold became a plate of its own so the aftermath could be shown without reconstructing the killing."
+    },
+    {
+      "date": "2026-10-23",
+      "title": "The cut became an investigation",
+      "body": "The storyboard moved to 50 shots across nine scenes: the order, the garden, the exits, the ten minutes, the count, the well, the inquiry and the argument. Figures became full-frame cards. Transitions became part of the argument."
+    },
+    {
+      "date": "2026-10-23",
+      "title": "The 1080 master is gated",
+      "body": "The previous 1080 render was cancelled because it used the rejected edit. A new master is only published after the investigative cut passes review."
+    }
+  ],
+  "credits": [
+    { "role": "Direction, research, edit", "name": "Renjith" },
+    { "role": "Production system", "name": "vlymbooq · OpenCode" },
+    { "role": "Procedural sets", "name": "Blender 4.2 LTS" },
+    { "role": "Narration", "name": "Piper · en_US-lessac-medium" },
+    { "role": "Camera, typography, transitions", "name": "Chromium + film.js" },
+    { "role": "Score, captions, encode", "name": "ffmpeg" }
+  ],
+  "rules": [
+    "No bodies, no blood, no reconstructed killing. The wall, the well and the record carry the violence.",
+    "No number on screen without a source or an explicit attribution.",
+    "No stock footage and no generated faces. Every set is procedural.",
+    "No paid API keys. The pipeline must run on free CI.",
+    "If the edit is weak, the render does not ship."
+  ],
+  "links": {
+    "film": "film.html?film=jallianwala-bagh",
+    "gallery": "films.html",
+    "argument": "debates.html?film=jallianwala-bagh",
+    "repository": "https://github.com/renj-arch/dimsred",
+    "workflow": "https://github.com/renj-arch/dimsred/actions/workflows/film.yml",
+    "runsApi": "https://api.github.com/repos/renj-arch/dimsred/actions/workflows/film.yml/runs?per_page=4"
+  }
+}

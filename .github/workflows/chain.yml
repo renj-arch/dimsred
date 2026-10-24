@@ -1,0 +1,165 @@
+name: Agent Chain
+
+# GitHub throttles scheduled workflows on busy public repos: the hourly cron
+# on site-agent.yml actually delivered runs every 3-5 hours, and half of them
+# died at the 120-min cap from wedge timeouts. "Continuous" must not depend on
+# the schedule service. This chain fires when a Site Agent run COMPLETES and
+# dispatches the next one immediately — back-to-back cycles with no gap beyond
+# a model pull. The 6-hour seed cron is a dead-man switch: if the chain
+# ever breaks (API failure, workflow disabled), it restarts the loop.
+#
+# Off switch: repo variable AGENT_CHAIN = "off" (Settings > Variables) stops
+# all future dispatches — the loop drains and stays stopped.
+#
+# The idle check prevents a second run entering site-agent's concurrency group
+# (cancel-in-progress: true would kill an in-progress run mid-publish).
+#
+# MainsFresh refill (2026-10-18): site-agent dispatches default to the fast
+# tier (qwen3:4b), so this chain also dispatches the MainsFresh pass (one
+# pool item per run) when the mains-fresh pool's lastAttempt is older than
+# ~20h. The refill runs on the MID tier qwen3.5:9b — the 17GB 27B proved
+# un-runnable on the 4-vCPU runner (cold load blew every first-byte budget
+# and each restart re-paid it). meta.lastAttempt is written on EVERY
+# attempt (success or not), so a failed attempt throttles the next refill
+# just the same.
+#
+# Coder lane (2026-10-19): MetaLearn is the one agent that writes repair
+# CODE (it synthesizes a detector function, validates it, stages it for the
+# next pass). That is the work 4B models fail at, so it left fast rotations;
+# this chain dispatches it alone on qwen2.5-coder:14b whenever the browser
+# test reports .html page issues no known rule handles, throttled to once
+# per 12h by the attempt marker the agent writes (data/metalearn.json).
+# When the staged detector fixes the page, the next browser-test rewrite
+# clears the pattern and the cadence stops by itself.
+
+on:
+  workflow_run:
+    workflows: ["Site Agent"]
+    types: [completed]
+  schedule:
+    - cron: '0 */6 * * *'
+
+concurrency:
+  group: agent-chain
+  cancel-in-progress: false
+
+permissions:
+  actions: write
+
+jobs:
+  chain:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Dispatch next Site Agent run (only when idle)
+        if: vars.AGENT_CHAIN != 'off'
+        env:
+          # PAT, not GITHUB_TOKEN, for the dispatch: runs started with
+          # GITHUB_TOKEN never fire workflow_run events, so the chain died
+          # after its first hop and only the 6h seed revived it (observed
+          # 2026-10-17: the 03:05 chain-dispatched run finished 07:00 and no
+          # successor appeared until the next seed). A PAT dispatch chains.
+          GH_TOKEN: ${{ secrets.PAT }}
+        run: |
+          REPO="${{ github.repository }}"
+          BUSY=$(curl -s -H "Authorization: token $GH_TOKEN" \
+            "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/runs?status=in_progress" \
+            | jq -r '.total_count')
+          if [ "$BUSY" != "0" ] && [ "$BUSY" != "null" ]; then
+            echo "site-agent already running ($BUSY in progress) — not dispatching"
+            exit 0
+          fi
+          # Pick the dispatch: fast-tier normal pass by default; a heavy
+          # MainsFresh refill when the frozen pool's last attempt is stale.
+          # Safe defaults on any fetch/parse hiccup: with no readable state
+          # the pool is treated as stale (boot case — first ever refill).
+          INPUTS='{"ref":"main"}'
+          MAINS=$(curl -sf "https://raw.githubusercontent.com/$REPO/main/data/mains-fresh.json" || true)
+          LAST=$(echo "$MAINS" | jq -r '.meta.lastAttempt.at // ""' 2>/dev/null || true)
+          LREASON=$(echo "$MAINS" | jq -r '.meta.lastAttempt.reason // ""' 2>/dev/null || true)
+          COUNT=$(echo "$MAINS" | jq -r '.items | length' 2>/dev/null || true)
+          [ -n "$COUNT" ] || COUNT=0
+          AGE_OK=0
+          if [ -n "$LAST" ] && [ "$LAST" != "null" ]; then
+            NOW=$(date -u +%s)
+            THEN=$(date -u -d "$LAST" +%s 2>/dev/null || echo 0)
+            if [ "$THEN" -gt 0 ] && [ $((NOW - THEN)) -lt 72000 ]; then
+              # A shipped attempt throttles the refill for 20h. A FAILED one
+              # (unparseable, validation, no output) only counts as fresh for
+              # 30 minutes — one chain cycle or so: the first ever refill
+              # failed with 'unparseable output' and still froze the pool
+              # until the next day. A failed attempt must not lock the refill
+              # out, but must not starve normal passes either.
+              if echo "$LREASON" | grep -q '^shipped'; then AGE_OK=1
+              elif [ $((NOW - THEN)) -lt 1800 ]; then AGE_OK=1
+              fi
+            fi
+          fi
+          if [ "$AGE_OK" = "0" ]; then
+            INPUTS='{"ref":"main","inputs":{"agent_only":"mainsfresh","model":"qwen3.5:9b"}}'
+            echo "mains-fresh: lastAttempt='$LAST' ($LREASON) pool=$COUNT — dispatching MainsFresh refill (qwen3.5:9b)"
+          else
+            # Heavy content cadence (2026-10-18): the agents that write
+            # user-visible content pools (MockPapers, BankFigures,
+            # ExamPatterns, Invention) are heavy-tier only, so fast passes
+            # skip them and nothing else dispatched them — three of their
+            # pools sat at zero forever. Drive them from the same
+            # agent-written timestamp the refill uses: data/inventions.json
+            # meta.lastAttempt is written on EVERY attempt (shipped or
+            # rejected), so a completed heavy pass throttles this for 6h.
+            INV=$(curl -sf "https://raw.githubusercontent.com/$REPO/main/data/inventions.json" || true)
+            LAST2=$(echo "$INV" | jq -r '.meta.lastAttempt.at // ""' 2>/dev/null || true)
+            HEAVY_OK=0
+            if [ -n "$LAST2" ] && [ "$LAST2" != "null" ]; then
+              NOW2=$(date -u +%s)
+              THEN2=$(date -u -d "$LAST2" +%s 2>/dev/null || echo 0)
+              if [ "$THEN2" -gt 0 ] && [ $((NOW2 - THEN2)) -lt 21600 ]; then HEAVY_OK=1; fi
+            fi
+            if [ "$HEAVY_OK" = "0" ]; then
+              INPUTS='{"ref":"main","inputs":{"agent_only":"mockpapers,bankfigures,exampatterns,invention","model":"qwen3.5:9b"}}'
+              echo "heavy content: inventions lastAttempt='$LAST2' — dispatching heavy content pass (qwen3.5:9b)"
+            else
+              # Self-repair cadence: see the header note. NEED counts only
+              # real .html page issues (display-name rows like "Homepage"
+              # have no file to patch and are ignored here, same as in the
+              # agent). Safe defaults: unreadable state -> NEED=0 -> normal.
+              BT=$(curl -sf "https://raw.githubusercontent.com/$REPO/main/data/browser-test.json" || true)
+              NEED=$(echo "$BT" | jq -r '[.issues[]? | select(((.page // "") | test("\\.html$"; "i")) and ((((.msg // "") + " " + (.type // "")) | test("failed to load|unexpected token|placeholder|broken link|defer|404|net::|failed to fetch|graph-core|exam.*hub"; "i")) | not))] | length' 2>/dev/null || true)
+              case "$NEED" in ''|*[!0-9]*) NEED=0;; esac
+              ML=$(curl -sf "https://raw.githubusercontent.com/$REPO/main/data/metalearn.json" || true)
+              MLLAST=$(echo "$ML" | jq -r '.lastAttempt.at // ""' 2>/dev/null || true)
+              MLOK=0
+              if [ -n "$MLLAST" ] && [ "$MLLAST" != "null" ]; then
+                NOW3=$(date -u +%s)
+                THEN3=$(date -u -d "$MLLAST" +%s 2>/dev/null || echo 0)
+                if [ "$THEN3" -gt 0 ] && [ $((NOW3 - THEN3)) -lt 43200 ]; then MLOK=1; fi
+              fi
+              if [ "$NEED" -gt 0 ] && [ "$MLOK" = "0" ]; then
+                INPUTS='{"ref":"main","inputs":{"agent_only":"metalearn","model":"qwen2.5-coder:14b"}}'
+                echo "self-repair: $NEED .html pattern(s); last coder attempt='$MLLAST' - dispatching MetaLearn on qwen2.5-coder:14b"
+              else
+                echo "mains-fresh: lastAttempt='$LAST' ($LREASON) pool=$COUNT — fresh; heavy content fresh; normal fast dispatch"
+              fi
+            fi
+          fi
+          CODE=$(curl -s -o /tmp/resp.json -w '%{http_code}' -X POST \
+            -H "Authorization: token $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/dispatches" \
+            -d "$INPUTS")
+          echo "dispatch HTTP $CODE (PAT)"
+          if [ "$CODE" != "204" ]; then
+            # Dead PAT: dispatch anyway with GITHUB_TOKEN so work continues.
+            # This run's completion will NOT re-fire the chain — the 6h seed
+            # cron is the backstop until the PAT is renewed.
+            echo "PAT dispatch failed — falling back to GITHUB_TOKEN"
+            cat /tmp/resp.json 2>/dev/null || true
+            CODE=$(curl -s -o /tmp/resp2.json -w '%{http_code}' -X POST \
+              -H "Authorization: token ${{ github.token }}" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/$REPO/actions/workflows/site-agent.yml/dispatches" \
+              -d "$INPUTS")
+            echo "fallback dispatch HTTP $CODE"
+            if [ "$CODE" != "204" ]; then cat /tmp/resp2.json; exit 1; fi
+          fi
+          echo "next Site Agent run dispatched"

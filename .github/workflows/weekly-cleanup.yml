@@ -1,0 +1,47 @@
+name: Weekly Stale Paper Cleanup
+
+on:
+  schedule:
+    - cron: '0 3 * * 0'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# Prevent pile-ups: periodic content jobs must not queue behind each
+# other — the newest run wins.
+concurrency:
+  group: weekly-cleanup
+  cancel-in-progress: true
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run stale paper cleanup
+        id: cleanup
+        run: node scripts/cleanup-stale-papers.js
+
+      - name: Commit and push if changes
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add -A
+          git diff --staged --quiet || git commit -m "Weekly stale paper cleanup $(date +'%Y-%m-%d')"
+          for i in 1 2 3; do
+            git pull --rebase --autostash 2>/dev/null || true
+            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            sleep 5
+          done

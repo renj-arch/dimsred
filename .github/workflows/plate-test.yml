@@ -1,0 +1,99 @@
+name: Plate test
+
+# A cheap iteration loop for the procedural Blender plates. The full film
+# workflow installs Chromium and Piper and builds a master; this one only
+# renders stills, so a lighting or geometry mistake can be seen in minutes.
+# It is manual-only and never publishes anything.
+
+on:
+  workflow_dispatch:
+    inputs:
+      film:
+        description: Film storyboard id
+        required: true
+        default: jallianwala-bagh
+        type: string
+      only:
+        description: Optional single plate name (e.g. watch)
+        required: false
+        default: ''
+        type: string
+      width:
+        description: Width in pixels
+        required: true
+        default: '960'
+        type: string
+      height:
+        description: Height in pixels
+        required: true
+        default: '540'
+        type: string
+      samples:
+        description: Cycles samples
+        required: true
+        default: '12'
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: plate-test-${{ github.ref }}-${{ inputs.film }}-${{ inputs.only }}
+  cancel-in-progress: false
+
+jobs:
+  plates:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    env:
+      FILM: ${{ inputs.film }}
+      ONLY: ${{ inputs.only }}
+      WIDTH: ${{ inputs.width }}
+      HEIGHT: ${{ inputs.height }}
+      SAMPLES: ${{ inputs.samples }}
+      BLENDER: /opt/blender-4.2.3-linux-x64/blender
+
+    steps:
+      - name: Checkout (skip the giant question bank)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Install Blender runtime libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            libxi6 libxxf86vm1 libxfixes3 libxkbcommon0 libsm6 libice6 \
+            libgl1 libegl1 libgomp1 libx11-6 libxext6 libxrender1
+
+      - name: Install Blender 4.2.3 LTS
+        run: |
+          curl -fL --retry 3 -o /tmp/blender.tar.xz \
+            https://download.blender.org/release/Blender4.2/blender-4.2.3-linux-x64.tar.xz
+          tar -xf /tmp/blender.tar.xz -C /opt
+          "$BLENDER" --version | head -n 3
+
+      - name: Render plates
+        run: |
+          set -euo pipefail
+          args=(
+            --film "$FILM"
+            --out-dir "out/plates/$FILM"
+            --width "$WIDTH"
+            --height "$HEIGHT"
+            --samples "$SAMPLES"
+          )
+          if [ -n "$ONLY" ]; then
+            args+=(--only "$ONLY")
+          fi
+          node scripts/film/render-plates.js "${args[@]}"
+
+      - name: Upload plates
+        uses: actions/upload-artifact@v4
+        with:
+          name: plates-${{ inputs.film }}
+          path: out/plates/${{ inputs.film }}
+          if-no-files-found: error

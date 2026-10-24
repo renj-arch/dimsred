@@ -1,0 +1,254 @@
+# Train the page's own writer model from the answers the page itself produced.
+#
+# Triggered automatically when ask.html syncs new training data to the
+# `training-data` branch (via the visitor's fine-grained PAT -- the only manual
+# step in the whole loop), weekly (to catch drift), or by hand (workflow_dispatch
+# with force=true to ignore the delta gate). The job fine-tunes Qwen2.5-0.5B on
+# the free 4-core runner (public repo), converts the merged weights to MLC
+# q4f16_1 -- the exact quantization format WebLLM loads -- and force-pushes the
+# result to the `writer-model` branch, where raw.githubusercontent.com serves
+# the files with CORS. The page's ensureMine() discovers them on next load and
+# adds a "Mine" option to the model picker. No server, no registry, no cost:
+# inference runs in the visitor's browser via WebLLM/WebGPU; this workflow is
+# only the factory.
+#
+# The `writer-model` branch contains a literal `resolve/main/` directory
+# because WebLLM's model-URL resolver appends `resolve/main/` to any GitHub raw
+# URL that does not already contain one -- so
+#   https://raw.githubusercontent.com/OWNER/REPO/writer-model/
+# resolves files as
+#   https://raw.githubusercontent.com/OWNER/REPO/writer-model/resolve/main/FILE
+# which is exactly where the files live on the branch.
+
+name: Train Writer Model
+
+on:
+  push:
+    branches: [training-data]
+  schedule:
+    - cron: '17 3 * * 1'   # weekly, off-peak; the gate skips it if nothing new
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Train even if fewer than 15 new records'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+# Training must never be cancelled mid-run (the next push would just start
+# another), but two runs must not fight over the writer-model branch either.
+concurrency:
+  group: train-writer
+  cancel-in-progress: false
+
+env:
+  RAW: https://raw.githubusercontent.com/${{ github.repository }}
+  DATA_BRANCH: training-data
+  MODEL_BRANCH: writer-model
+
+jobs:
+  train:
+    # ubuntu-latest on a public repo is 4 vCPU / 16 GB, free and unlimited.
+    runs-on: ubuntu-latest
+    timeout-minutes: 340
+    steps:
+      # Only train/ is needed -- the repo carries ~8.5 GB of evidence data that
+      # must never be checked out here. Dataset and version manifest are fetched
+      # by raw URL instead of checking out those branches (training-data may
+      # inherit the full main tree; writer-model's tree is ~400 MB of weights).
+      # PAT, not GITHUB_TOKEN: the audit summary is committed to main below, and
+      # a GITHUB_TOKEN push would not reach Cloudflare's Pages integration (the
+      # thing that actually deploys the site), so improve.html's fault panel
+      # would go stale silently.
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: train
+          fetch-depth: 1
+          token: ${{ secrets.PAT }}
+
+      - name: Fetch training data and gate the run
+        id: gate
+        env:
+          FORCE: ${{ inputs.force == true || inputs.force == 'true' }}
+        run: |
+          set -e
+          # Cache-buster: raw.githubusercontent caches briefly; never train stale.
+          if ! curl -fsSL "$RAW/$DATA_BRANCH/ask-training.jsonl?t=$(date +%s)" \
+              -o ask-training.jsonl; then
+            echo "No dataset on $DATA_BRANCH yet."
+            echo "run=false" >> "$GITHUB_OUTPUT"
+            echo "hasData=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "hasData=true" >> "$GITHUB_OUTPUT"
+          RECORDS=$(wc -l < ask-training.jsonl | tr -d ' ')
+          PREV=$(curl -fsSL "$RAW/$MODEL_BRANCH/version.json?t=$(date +%s)" 2>/dev/null \
+            | python3 -c "import sys,json; print(json.load(sys.stdin).get('records',0))" \
+            2>/dev/null || true)
+          PREV=$(printf '%s' "$PREV" | tr -cd '0-9')
+          PREV=${PREV:-0}
+          echo "records: $RECORDS   previous model trained on: $PREV"
+          if [ "$FORCE" = "true" ]; then RUN=true; REASON="forced";
+          elif [ "$RECORDS" -lt 20 ]; then RUN=false; REASON="only $RECORDS records, need 20 for a first model";
+          elif [ "$PREV" -eq 0 ]; then RUN=true; REASON="first model";
+          elif [ $((RECORDS - PREV)) -ge 15 ]; then RUN=true; REASON="$((RECORDS - PREV)) new records";
+          else RUN=false; REASON="only $((RECORDS - PREV)) new records, need 15"; fi
+          echo "gate: $REASON (run=$RUN)"
+          echo "run=$RUN" >> "$GITHUB_OUTPUT"
+          echo "records=$RECORDS" >> "$GITHUB_OUTPUT"
+
+      # Contamination gate before any CPU-hour is spent: identical repeats and
+      # time-split eval leakage FAIL the run (a poisoned dataset must never
+      # reach the model); thin answers and conflicting re-asks only warn. Runs
+      # whenever the dataset exists, even when the delta gate skips training,
+      # so problems surface on the weekly cron too. continue-on-error so the
+      # summary still reaches main below; the Fail-if step re-raises after.
+      - name: Audit training data for contamination
+        id: audit
+        if: steps.gate.outputs.hasData == 'true'
+        continue-on-error: true
+        run: node train/audit.js ask-training.jsonl
+
+      # Commit the machine-readable audit summary to main so improve.html's
+      # fault panel shows training faults alongside coverage faults. Best-effort
+      # push (retried), never a job failure: the audit's own verdict is raised
+      # by the step after this one.
+      - name: Publish audit summary to main
+        if: steps.gate.outputs.hasData == 'true'
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/train-audit.json 2>/dev/null || echo "no audit summary file (audit crashed before writing)"
+          if git diff --staged --quiet; then
+            echo "Audit summary unchanged"
+          else
+            git commit -m "Training data audit $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+            for i in 1 2 3; do
+              git pull --rebase 2>/dev/null && git push 2>/dev/null && { echo "summary pushed"; break; } || echo "push attempt $i failed, retrying..."
+              sleep 5
+            done || echo "summary push failed (non-fatal)"
+          fi
+
+      - name: Fail if the audit failed
+        if: steps.audit.outcome == 'failure'
+        run: |
+          echo "Training data audit FAILED — see the summary above and improve.html's fault panel."
+          exit 1
+
+      - name: Set up Python
+        if: steps.gate.outputs.run == 'true'
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install training + conversion deps
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          set -e
+          pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
+          pip install --quiet transformers peft accelerate datasets
+          # MLC conversion (safetensors -> q4f16_1 param shards + the JSON the
+          # browser reads). The PyPI distribution was renamed: plain `mlc-llm`
+          # is NOT published anymore (verified 404 — that is exactly what
+          # killed #2-#4 before a single CPU-hour was spent). The wheels index
+          # carries the CPU build as `mlc-llm-cpu` / `mlc-llm-nightly-cpu`
+          # (py3-none-manylinux_2_28, no Python-version tag). Conversion is
+          # CPU-only math -- no GPU on this runner.
+          #
+          # `mlc-llm-cpu` alone is NOT enough: it declares no tvm dependency
+          # (verified — its METADATA Requires-Dist list has no tvm entry) yet
+          # does `from tvm import register_global_func` at package init. That
+          # is exactly how run #6 died: ModuleNotFoundError: No module named
+          # 'tvm'. The provider is the matching runtime wheel `mlc-ai-cpu` on
+          # the same index (verified: it ships top-level tvm/__init__.py).
+          # Install the pair, with a fallback to the nightly pair.
+          pip install --quiet --pre mlc-ai-cpu mlc-llm-cpu -f https://mlc.ai/wheels \
+            || pip install --quiet --pre mlc-ai-nightly-cpu mlc-llm-nightly-cpu -f https://mlc.ai/wheels
+          # The wheels ship the Python package but NO console script (their
+          # dist-info has no entry_points at all — that is what left run #5
+          # dying with "mlc_llm: command not found" AFTER a clean install).
+          # The CLI lives in mlc_llm/__main__.py, so `python -m mlc_llm` is
+          # the entrypoint; the convert step below uses it directly. The
+          # import chain pulls mlc_llm/__init__.py -> tvm, so these checks
+          # fail fast HERE (before any CPU-hour) if the runtime is missing.
+          python -c "import tvm; print('tvm', tvm.__version__)"
+          python -m mlc_llm --help > /dev/null
+          df -h /
+
+      - name: Fine-tune (CPU)
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          # Budget: ~30-60 s/step on 4 vCPU for a 0.5B at seq 1536. 120 records
+          # x 2 epochs = 240 steps = 2-4 h, inside the 340-minute cap. The most
+          # recent 120 records are the freshest style; older ones are still in
+          # the JSONL for future runs (the gate keeps retraining cumulative).
+          python train/finetune.py \
+            --data ask-training.jsonl \
+            --base Qwen/Qwen2.5-0.5B-Instruct \
+            --out adapter \
+            --merged-out merged \
+            --max-samples 120 \
+            --epochs 2 \
+            --seq 1536
+
+      - name: Convert to MLC q4f16_1
+        if: steps.gate.outputs.run == 'true'
+        run: |
+          set -e
+          # `python -m mlc_llm` because the wheel ships no console script.
+          python -m mlc_llm convert_weight merged --quantization q4f16_1 -o mlc
+          python -m mlc_llm gen_config merged --quantization q4f16_1 --conv-template qwen2 -o mlc
+          # WebLLM 0.2.86 reads mlc-chat-config.json + tensor-cache.json +
+          # params_shard_*.bin + tokenizer files, all resolved relative to the
+          # model URL. Fail loudly here rather than publishing a tree the
+          # browser cannot load.
+          test -f mlc/mlc-chat-config.json
+          test -f mlc/tensor-cache.json
+          ls mlc/params_shard_*.bin > /dev/null
+          # gen_config copies the tokenizer, but the page's loader also probes
+          # for these by name -- copy from the merged checkpoint if missing.
+          for f in tokenizer.json tokenizer_config.json vocab.json merges.txt special_tokens_map.json; do
+            if [ ! -f "mlc/$f" ] && [ -f "merged/$f" ]; then cp "merged/$f" mlc/; fi
+          done
+          ls -la mlc | head -30
+
+      - name: Publish to the writer-model branch
+        if: steps.gate.outputs.run == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RECORDS: ${{ steps.gate.outputs.records }}
+        run: |
+          set -e
+          mkdir -p publish/resolve/main
+          cp -r mlc/. publish/resolve/main/
+          python3 - "$RECORDS" <<'PY'
+          import datetime, json, pathlib, sys
+          records = int(sys.argv[1])
+          pathlib.Path("publish/version.json").write_text(json.dumps({
+              "model_id": "vlymbooq-writer-0.5B",
+              "base": "Qwen/Qwen2.5-0.5B-Instruct",
+              "quant": "q4f16_1",
+              "conv_template": "qwen2",
+              "vram_required_MB": 944.62,
+              "context_window_size": 4096,
+              "records": records,
+              "trainedAt": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+              "run_id": "${{ github.run_id }}",
+          }, indent=2) + "\n")
+          PY
+          # Orphan single-commit branch, force-pushed: the weights are build
+          # artefacts, not history. Same pattern as the corpus branch.
+          cd publish
+          git init -q -b "$MODEL_BRANCH"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -q -m "writer model: $RECORDS records, q4f16_1"
+          git push -q --force \
+            "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" \
+            "$MODEL_BRANCH"
+          echo "published $RECORDS-record model to $MODEL_BRANCH"
