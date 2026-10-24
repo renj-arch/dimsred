@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-23T17:54:01.425Z",
-  "cursor": 14,
-  "count": 92,
+  "updatedAt": "2026-10-24T15:26:10.025Z",
+  "cursor": 17,
+  "count": 109,
   "lastAttempt": {
-   "at": "2026-10-23T17:54:01.425Z",
-   "reason": "added 10"
+   "at": "2026-10-24T15:26:10.025Z",
+   "reason": "added 7"
   }
  },
  "items": [
@@ -837,6 +837,159 @@
    "h": "Actual Output divided by Standard Output.",
    "s": "Efficiency is calculated as (Actual Output / Standard Output) × 100. Substituting the values: (90 / 100) × 100 = 90%. This indicates the worker achieved 90% of the expected standard production rate for the given time period.",
    "at": "2026-10-23"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Define the function of a governor in a steam turbine and explain why it is critical for maintaining synchronous speed with the electrical grid.",
+   "a": "The governor controls steam inlet valve opening to keep turbine speed constant despite load changes.",
+   "h": "Identify the device that regulates steam admission to maintain constant rotational speed.",
+   "s": "A governor senses variations in turbine shaft speed caused by fluctuations in electrical load. It automatically adjusts the throttle valve or nozzles to admit more or less steam, ensuring the generator maintains synchronous speed with the grid frequency.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Calculate the actual power output of a steam turbine if the enthalpy drop across the stage is 150 kJ/kg, the mass flow rate is 20 kg/s, and the mechanical efficiency is 85%.",
+   "a": "25.5 kW (Calculated as 20 * 150 * 0.85)",
+   "h": "Use Power = m * Δh * η_mech.",
+   "s": "The theoretical power available is the product of mass flow rate and enthalpy drop (20 kg/s * 150 kJ/kg = 3000 kW). Accounting for mechanical losses via the efficiency factor (0.85), the actual output power is 2550 kW or 2.55 MW.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Explain why a condenser is essential in a steam power plant cycle and describe its effect on turbine exhaust pressure.",
+   "a": "The condenser maintains low exhaust pressure (vacuum) to maximize enthalpy drop and thermal efficiency.",
+   "h": "Relate vacuum creation to the expansion ratio and work extraction potential.",
+   "s": "By converting exhaust steam into water at very low pressure, the condenser creates a vacuum at the turbine exit. This large pressure difference between inlet and outlet allows the steam to expand further, extracting significantly more work from the fluid compared to discharging directly to atmospheric pressure.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Describe the phenomenon of 'surging' in a steam turbine and identify one operational condition that typically triggers it.",
+   "a": "Surging is unstable flow causing vibration and noise, often triggered by operating at very high back pressures or low loads.",
+   "h": "Relate flow reversal or instability to low-pressure stage operation.",
+   "s": "Surging occurs when the steam flow through the turbine becomes unstable, leading to flow reversal and violent pressure oscillations. This is frequently triggered when the turbine operates at very low loads with high exhaust back pressure, disrupting the smooth expansion process in the final stages.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Calculate the blade velocity ratio for maximum efficiency in an impulse turbine stage if the nozzle angle is 20 degrees, assuming negligible friction losses.",
+   "a": "0.94 (Calculated as cos(20°)/2)",
+   "h": "Use the condition for maximum efficiency: u/V1 = cos(α)/2.",
+   "s": "For a simple impulse turbine stage with symmetrical blades and negligible friction, the condition for maximum diagram efficiency is when the blade velocity ratio (u/V1) equals cos(α)/2. Given a nozzle angle α of 20 degrees, cos(20°) ≈ 0.94. Therefore, the optimal blade velocity ratio is 0.94 / 2 = 0.47.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Differentiate between a reaction turbine and an impulse turbine based on the distribution of pressure drop across the moving and fixed blades.",
+   "a": "In an impulse turbine, all pressure drop occurs in the nozzle; in a reaction turbine, pressure drops occur in both stationary and moving blades.",
+   "h": "Compare where enthalpy drop occurs: only in nozzles vs. both stator and rotor.",
+   "s": "An impulse turbine expands steam entirely in the nozzles (stationary blades), converting pressure energy to kinetic energy before it hits the moving blades. In contrast, a reaction turbine has partial expansion occurring within the moving blades themselves, meaning pressure drops across both the fixed and moving rows of blades.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Calculate the dryness fraction of steam leaving a throttle valve if 1 kg of wet steam (x=0.9) at 15 bar expands to 0.2 bar with no heat transfer, assuming enthalpy remains constant.",
+   "a": "Cannot be calculated without steam table data for specific enthalpies at given pressures and initial dryness fraction.",
+   "h": "Apply isenthalpic expansion principle: h_in = h_out.",
+   "s": "This problem requires looking up specific enthalpy values from steam tables. The enthalpy of the wet steam at 15 bar (h_in) must equal the enthalpy at 0.2 bar (h_out). Without the specific h_f and h_fg values for these pressures, a numerical answer cannot be derived strictly from textbook constants provided in the prompt without external lookup. However, conceptually, the dryness fraction will change due to the pressure drop.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Explain the purpose of a reheater in a modern steam power plant and its impact on the moisture content at turbine exhaust.",
+   "a": "Reheating increases the average temperature of heat addition and reduces moisture content at turbine exhaust.",
+   "h": "Relate reheat to reducing wetness in low-pressure stages.",
+   "s": "A reheater returns partially expanded steam from the high-pressure turbine back to the boiler for further heating before entering the low-pressure turbine. This process raises the steam's temperature, ensuring that when it expands further in the LP stages, it remains drier, preventing excessive erosion of blades caused by high moisture content.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Define 'governing' in the context of a steam turbine and distinguish between throttle governing and nozzle governing methods.",
+   "a": "Throttle governing varies steam pressure at all nozzles; Nozzle governing opens/closes specific nozzle valves to vary mass flow.",
+   "h": "Compare control mechanisms: varying inlet pressure vs. varying number of active nozzles.",
+   "s": "Governing is the process of controlling power output by regulating steam admission. In throttle governing, a valve upstream reduces the pressure of steam entering all nozzles simultaneously. In nozzle governing, individual nozzle valves are opened or closed sequentially to admit steam into only a portion of the blades, maintaining higher inlet pressure but varying mass flow.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Steam Turbines",
+   "q": "Calculate the specific volume change if 1 kg of steam expands isentropically from 10 bar (s=6.5 kJ/kgK) to 1 bar, assuming it ends up as wet steam with x=0.9 at 1 bar.",
+   "a": "Requires steam table lookup for v_f and v_fg at 1 bar; Answer format: v_final = v_f(1bar) + 0.9 * v_fg(1bar).",
+   "h": "Use v = v_f + x * v_fg from steam tables at final pressure.",
+   "s": "To find the specific volume, one must consult steam tables for the saturated liquid (v_f) and saturated vapor (v_g) specific volumes at 1 bar. The specific volume of wet steam is calculated using the formula v = v_f + x(v_g - v_f), where x is the dryness fraction.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Define 'Foaming' in a boiler and state one primary cause related to feedwater quality.",
+   "a": "Accumulation of suspended solids (impurities) in the boiler water due to low blowdown rates or poor feedwater treatment.",
+   "h": "Identify the accumulation of impurities that reduces heat transfer efficiency.",
+   "s": "Foaming is the formation of a thick layer of bubbles on the water surface, often caused by high concentrations of dissolved salts and suspended solids. This condition leads to carryover of water into the steam line, disrupting the quality of steam supplied to turbines or engines.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "A boiler drum has a diameter of 2 meters. If the maximum allowable hoop stress is 80 MPa and the permissible tensile strength of the plate material is 150 MPa with a safety factor of 1.5, calculate the maximum safe working pressure.",
+   "a": "3.46 MPa",
+   "h": "Use the thin-shell formula for hoop stress: σ = (P * D) / (2 * t).",
+   "s": "Using the thin-shell formula for hoop stress σ = (P * D) / (2 * t), we rearrange to find P = (2 * σ * t) / D. Substituting σ = 80 MPa, t = 10 mm (0.01 m), and D = 1.5 m gives P = (2 * 80 * 0.01) / 1.5 = 1.6 / 1.5 ≈ 1.07 MPa. Wait, let's recalculate carefully: P = (2 * 80 N/mm² * 10 mm) / 1500 mm = 1600 / 1500 = 1.067 MPa. Correct answer is 1.07 MPa.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Explain the function of a 'Gauge Glass' in a water-tube boiler and describe what it indicates if the glass appears completely white or opaque.",
+   "a": "The gauge glass indicates the water level in the drum. If it appears completely white or opaque, it signifies that there is no water present in the lower section of the glass (indicating low water level) or that the connection pipes are blocked by scale/air, preventing visibility.",
+   "h": "It is a visual indicator for water level; opacity implies air or steam blockage.",
+   "s": "A gauge glass allows operators to visually monitor the water level inside the boiler drum to prevent dry firing. When the glass looks white or opaque instead of showing a clear meniscus, it typically means the water has receded below the sight glass (low water level) or the connections are blocked by air bubbles and scale, requiring immediate investigation.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "What is the primary purpose of an 'Economizer' installed at the inlet of a boiler furnace?",
+   "a": "To preheat the feedwater using the waste heat from the flue gases before they enter the economizer and exit via the chimney.",
+   "h": "Think about heat recovery from exhaust gases before they enter the chimney.",
+   "s": "An economizer is a heat exchanger located between the boiler drum outlet and the chimney. It utilizes the thermal energy of hot flue gases to raise the temperature of the incoming feedwater, reducing the fuel consumption required in the furnace to generate steam.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Define 'Carryover' (or priming) in a boiler system and list two common causes.",
+   "a": "Carryover is the phenomenon where water droplets or impurities are carried over with the steam into the superheater or turbine. Common causes include high dissolved solids (foaming), excessive drum agitation, or a sudden rise in load causing rapid boiling.",
+   "h": "Relate it to the movement of water droplets into the steam line.",
+   "s": "Carryover occurs when the boiler water surface becomes turbulent or foamy, allowing water droplets to be entrained in the rising steam stream. This leads to wet steam entering the superheater, which can cause severe scaling and damage to superheater tubes due to localized overheating as the water evaporates instantly.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "In a Cochran boiler, identify the orientation of the fire tubes relative to the shell axis.",
+   "a": "The fire tubes in a Cochran boiler are arranged vertically within the cylindrical shell.",
+   "h": "Visualize the classic vertical cylindrical shape of this boiler type.",
+   "s": "The Cochran boiler is a vertical fire-tube boiler where the combustion chamber and fire tubes are oriented vertically. This compact design allows for high steam generation rates in a small footprint, making it suitable for marine applications and smaller industrial plants.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "What is the function of an 'Air Preheater' in a modern boiler installation?",
+   "a": "To preheat the combustion air supplied to the furnace using waste heat from the outgoing flue gases, thereby improving combustion efficiency and reducing fuel consumption.",
+   "h": "Consider the interaction between flue gases and incoming combustion air.",
+   "s": "An air preheater transfers heat from the hot flue gases exiting the boiler to the cold air entering the furnace for combustion. By raising the temperature of the combustion air, the flame temperature increases, leading to more complete burning of fuel and a reduction in the overall amount of fuel needed.",
+   "at": "2026-10-24"
   }
  ]
 }
