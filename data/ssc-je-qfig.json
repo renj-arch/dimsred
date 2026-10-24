@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-24T00:16:51.602Z",
-  "cursor": 45,
-  "built": 42
+  "updatedAt": "2026-10-24T08:08:14.603Z",
+  "cursor": 48,
+  "built": 45
  },
  "figs": {
   "87926696": {
@@ -255,6 +255,24 @@
   "6d990a1e": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"8\" stroke-dasharray=\"4,4\"/><text x=\"55\" y=\"65\">Bending Moment</text><path d=\"M 70 80 Q 90 100 110 80\" fill=\"none\" stroke=\"#222\"/><path d=\"M 70 80 L 110 80\" stroke-dasharray=\"2,2\"/><text x=\"85\" y=\"95\">Bending</text><text x=\"95\" y=\"95\">(M)</text><text x=\"55\" y=\"135\">Torsion Moment</text><path d=\"M 70 120 L 110 120\" fill=\"none\" stroke=\"#222\"/><path d=\"M 70 120 Q 90 140 110 120\" fill=\"none\" stroke=\"#222\"/><text x=\"85\" y=\"135\">Torsion</text><text x=\"95\" y=\"135\">(T)</text><path d=\"M 70 80 L 70 120 M 110 80 L 110 120\" stroke-dasharray=\"4,2\"/><circle cx=\"160\" cy=\"110\" r=\"35\" fill=\"none\" stroke=\"#222\"/><text x=\"145\" y=\"100\">Resultant</text><text x=\"145\" y=\"115\">Moment (Te)</text><path d=\"M 160 75 L 160 145 M 125 110 L 195 110\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"85\">√(M² + T²)</text></svg>",
    "n": "what is the equivalent twisting moment for combined bending and torsion?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "a383859a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Equivalent Bending Moment (Me)</text><path d=\"M 40 60 L 320 60\"/><text x=\"170\" y=\"50\" text-anchor=\"middle\">Bending Moment M</text><path d=\"M 40 80 L 320 80\"/><text x=\"170\" y=\"70\" text-anchor=\"middle\">Torsion T</text><path d=\"M 40 100 L 320 100\"/><text x=\"170\" y=\"90\" text-anchor=\"middle\">Equivalent Me</text><circle cx=\"60\" cy=\"60\" r=\"5\" fill=\"#222\"/><circle cx=\"60\" cy=\"80\" r=\"5\" fill=\"#222\"/><circle cx=\"60\" cy=\"100\" r=\"5\" fill=\"#222\"/><path d=\"M 40 60 L 60 60 M 60 80 L 60 100\"/><text x=\"30\" y=\"70\" text-anchor=\"end\">+√(M² + T²)</text><line x1=\"280\" y1=\"55\" x2=\"320\" y2=\"55\" stroke-dasharray=\"4,2\"/><line x1=\"280\" y1=\"95\" x2=\"320\" y2=\"95\" stroke-dasharray=\"4,2\"/><text x=\"290\" y=\"65\" text-anchor=\"start\">M</text><text x=\"290\" y=\"105\" text-anchor=\"start\">Me</text></svg>",
+   "n": "write the expression for the equivalent bending moment.",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "ef011245": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Allowable Shear Stress (τ)</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><text x=\"30\" y=\"50\">Lower Limit</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"70\">τ_allow = min(0.18 Sut, 0.30 Syt)</text><circle cx=\"180\" cy=\"40\" r=\"3\"/><circle cx=\"180\" cy=\"60\" r=\"3\"/><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"60\"/><text x=\"175\" y=\"55\">ASME Code</text><rect x=\"40\" y=\"80\" width=\"280\" height=\"10\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Material Properties (Sut, Syt)</text></svg>",
+   "n": "what allowable shear stress does the asme code prescribe for shaft design?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "740d9ba3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Shaft Cross-Section</text><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"5\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"110\" r=\"60\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"130\" text-anchor=\"middle\">Solid Shaft</text><rect x=\"90\" y=\"70\" width=\"80\" height=\"40\" fill=\"#222\"/><line x1=\"150\" y1=\"110\" x2=\"150\" y2=\"110\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"60\">Keyway</text><text x=\"170\" y=\"60\">(Stress Raiser)</text><rect x=\"40\" y=\"180\" width=\"280\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/><line x1=\"40\" y1=\"190\" x2=\"105\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"70\" y=\"205\">~80% Strength</text><line x1=\"105\" y1=\"190\" x2=\"165\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"135\" y=\"205\">-25-30%</text><line x1=\"165\" y1=\"190\" x2=\"280\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"220\" y=\"205\">~70% Strength</text></svg>",
+   "n": "how much does a keyway reduce the strength of a shaft?",
    "sub": "design",
    "at": "2026-10-24"
   }
