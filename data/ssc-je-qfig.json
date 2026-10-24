@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-23T17:49:10.717Z",
-  "cursor": 42,
-  "built": 39
+  "updatedAt": "2026-10-24T00:16:51.602Z",
+  "cursor": 45,
+  "built": 42
  },
  "figs": {
   "87926696": {
@@ -239,6 +239,24 @@
    "n": "write the torsion equation for a solid circular shaft.",
    "sub": "design",
    "at": "2026-10-23"
+  },
+  "364fc394": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Torsion of Hollow Shaft</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"180\" cy=\"60\" r=\"50\"/><circle cx=\"180\" cy=\"60\" r=\"30\" stroke-dasharray=\"4,2\"/><text x=\"190\" y=\"70\">d₀ (Outer)</text><text x=\"190\" y=\"90\">dᵢ (Inner)</text><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"130\"/><text x=\"170\" y=\"145\">τ</text><text x=\"170\" y=\"165\">T</text><text x=\"170\" y=\"185\">J</text><text x=\"170\" y=\"205\">C</text></svg>",
+   "n": "write the torsion equation for a hollow shaft.",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "346cf496": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"325\" y=\"105\">Torque (T)</text><circle cx=\"90\" cy=\"100\" r=\"6\"/><circle cx=\"310\" cy=\"100\" r=\"6\"/><line x1=\"90\" y1=\"100\" x2=\"90\" y2=\"50\"/><line x1=\"90\" y1=\"100\" x2=\"90\" y2=\"150\"/><text x=\"75\" y=\"45\">Angular Speed (ω)</text><text x=\"85\" y=\"165\">Power (P)</text><path d=\"M 90 50 L 310 50 M 90 150 L 310 150\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"70\">Shaft</text><text x=\"180\" y=\"180\">Formula: P = T × ω</text></svg>",
+   "n": "write the formula for power transmitted by a shaft.",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "6d990a1e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"8\" stroke-dasharray=\"4,4\"/><text x=\"55\" y=\"65\">Bending Moment</text><path d=\"M 70 80 Q 90 100 110 80\" fill=\"none\" stroke=\"#222\"/><path d=\"M 70 80 L 110 80\" stroke-dasharray=\"2,2\"/><text x=\"85\" y=\"95\">Bending</text><text x=\"95\" y=\"95\">(M)</text><text x=\"55\" y=\"135\">Torsion Moment</text><path d=\"M 70 120 L 110 120\" fill=\"none\" stroke=\"#222\"/><path d=\"M 70 120 Q 90 140 110 120\" fill=\"none\" stroke=\"#222\"/><text x=\"85\" y=\"135\">Torsion</text><text x=\"95\" y=\"135\">(T)</text><path d=\"M 70 80 L 70 120 M 110 80 L 110 120\" stroke-dasharray=\"4,2\"/><circle cx=\"160\" cy=\"110\" r=\"35\" fill=\"none\" stroke=\"#222\"/><text x=\"145\" y=\"100\">Resultant</text><text x=\"145\" y=\"115\">Moment (Te)</text><path d=\"M 160 75 L 160 145 M 125 110 L 195 110\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"85\">√(M² + T²)</text></svg>",
+   "n": "what is the equivalent twisting moment for combined bending and torsion?",
+   "sub": "design",
+   "at": "2026-10-24"
   }
  }
 }
