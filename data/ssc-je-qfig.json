@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-24T08:08:14.603Z",
-  "cursor": 48,
-  "built": 45
+  "updatedAt": "2026-10-24T15:21:16.301Z",
+  "cursor": 51,
+  "built": 48
  },
  "figs": {
   "87926696": {
@@ -273,6 +273,24 @@
   "740d9ba3": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Shaft Cross-Section</text><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"5\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"110\" r=\"60\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"130\" text-anchor=\"middle\">Solid Shaft</text><rect x=\"90\" y=\"70\" width=\"80\" height=\"40\" fill=\"#222\"/><line x1=\"150\" y1=\"110\" x2=\"150\" y2=\"110\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"60\">Keyway</text><text x=\"170\" y=\"60\">(Stress Raiser)</text><rect x=\"40\" y=\"180\" width=\"280\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/><line x1=\"40\" y1=\"190\" x2=\"105\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"70\" y=\"205\">~80% Strength</text><line x1=\"105\" y1=\"190\" x2=\"165\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"135\" y=\"205\">-25-30%</text><line x1=\"165\" y1=\"190\" x2=\"280\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"220\" y=\"205\">~70% Strength</text></svg>",
    "n": "how much does a keyway reduce the strength of a shaft?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "b6386f9c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"axes\">\n<line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\" />\n<line x1=\"40\" y1=\"200\" x2=\"360\" y2=\"200\" />\n</g>\n<g id=\"curve\">\n<path d=\"M 50 180 C 90 170, 110 120, 140 100 S 220 60, 280 50\" />\n</g>\n<g id=\"labels\">\n<text x=\"35\" y=\"195\">Deflection (y)</text>\n<text x=\"320\" y=\"205\">Rotational Speed (ω)</text>\n<circle cx=\"140\" cy=\"100\" r=\"3\" fill=\"#222\" />\n<text x=\"145\" y=\"95\">Natural Freq.</text>\n</g>\n<g id=\"whirling-zone\">\n<line x1=\"100\" y1=\"180\" x2=\"100\" y2=\"60\" stroke-dasharray=\"4\" />\n<text x=\"95\" y=\"120\">Whirling Speed</text>\n</g>\n<g id=\"shaft-schematic\">\n<path d=\"M 30 180 L 330 180\" stroke-width=\"6\" />\n<circle cx=\"140\" cy=\"100\" r=\"25\" fill=\"none\" stroke=\"#222\" stroke-dasharray=\"2\" />\n</g>\n</svg>",
+   "n": "what is the critical or whirling speed of a shaft?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "15964cae": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\" />\n <circle cx=\"180\" cy=\"110\" r=\"60\" />\n <path d=\"M 120 50 L 120 170 M 240 50 L 240 170 M 180 50 L 180 170\" stroke-dasharray=\"3,3\" />\n <line x1=\"180\" y1=\"50\" x2=\"180\" y2=\"110\" />\n <rect x=\"160\" y=\"90\" width=\"40\" height=\"30\" rx=\"5\" />\n <text x=\"180\" y=\"107\" text-anchor=\"middle\">KEY</text>\n <line x1=\"120\" y1=\"110\" x2=\"160\" y2=\"90\" stroke-dasharray=\"3,3\" />\n <line x1=\"240\" y1=\"110\" x2=\"200\" y2=\"90\" stroke-dasharray=\"3,3\" />\n <text x=\"180\" y=\"45\" text-anchor=\"middle\">SHAFT</text>\n <text x=\"180\" y=\"190\" text-anchor=\"middle\">HUB</text>\n</svg>",
+   "n": "what is a key and what does it do?",
+   "sub": "design",
+   "at": "2026-10-24"
+  },
+  "4c639ec5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Shaft Diameter d</text><circle cx=\"180\" cy=\"45\" r=\"30\"/><line x1=\"150\" y1=\"75\" x2=\"210\" y2=\"75\" stroke-dasharray=\"4,2\"/><rect x=\"160\" y=\"80\" width=\"40\" height=\"20\"/><text x=\"180\" y=\"98\" text-anchor=\"middle\">Width b = d/4</text><text x=\"180\" y=\"115\" text-anchor=\"middle\">Thickness t = d/6</text><line x1=\"150\" y1=\"75\" x2=\"150\" y2=\"95\" stroke-dasharray=\"4,2\"/><line x1=\"210\" y1=\"75\" x2=\"210\" y2=\"95\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"135\" text-anchor=\"middle\">Key Proportions</text></svg>",
+   "n": "give the standard proportions of a rectangular sunk key for a shaft of diameter d.",
    "sub": "design",
    "at": "2026-10-24"
   }

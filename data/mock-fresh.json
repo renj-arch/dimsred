@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-24T08:13:04.540Z",
-  "cursor": 16,
-  "count": 102,
+  "updatedAt": "2026-10-24T15:26:10.025Z",
+  "cursor": 17,
+  "count": 109,
   "lastAttempt": {
-   "at": "2026-10-24T08:13:04.540Z",
-   "reason": "added 10"
+   "at": "2026-10-24T15:26:10.025Z",
+   "reason": "added 7"
   }
  },
  "items": [
@@ -926,6 +926,69 @@
    "a": "Requires steam table lookup for v_f and v_fg at 1 bar; Answer format: v_final = v_f(1bar) + 0.9 * v_fg(1bar).",
    "h": "Use v = v_f + x * v_fg from steam tables at final pressure.",
    "s": "To find the specific volume, one must consult steam tables for the saturated liquid (v_f) and saturated vapor (v_g) specific volumes at 1 bar. The specific volume of wet steam is calculated using the formula v = v_f + x(v_g - v_f), where x is the dryness fraction.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Define 'Foaming' in a boiler and state one primary cause related to feedwater quality.",
+   "a": "Accumulation of suspended solids (impurities) in the boiler water due to low blowdown rates or poor feedwater treatment.",
+   "h": "Identify the accumulation of impurities that reduces heat transfer efficiency.",
+   "s": "Foaming is the formation of a thick layer of bubbles on the water surface, often caused by high concentrations of dissolved salts and suspended solids. This condition leads to carryover of water into the steam line, disrupting the quality of steam supplied to turbines or engines.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "A boiler drum has a diameter of 2 meters. If the maximum allowable hoop stress is 80 MPa and the permissible tensile strength of the plate material is 150 MPa with a safety factor of 1.5, calculate the maximum safe working pressure.",
+   "a": "3.46 MPa",
+   "h": "Use the thin-shell formula for hoop stress: σ = (P * D) / (2 * t).",
+   "s": "Using the thin-shell formula for hoop stress σ = (P * D) / (2 * t), we rearrange to find P = (2 * σ * t) / D. Substituting σ = 80 MPa, t = 10 mm (0.01 m), and D = 1.5 m gives P = (2 * 80 * 0.01) / 1.5 = 1.6 / 1.5 ≈ 1.07 MPa. Wait, let's recalculate carefully: P = (2 * 80 N/mm² * 10 mm) / 1500 mm = 1600 / 1500 = 1.067 MPa. Correct answer is 1.07 MPa.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Explain the function of a 'Gauge Glass' in a water-tube boiler and describe what it indicates if the glass appears completely white or opaque.",
+   "a": "The gauge glass indicates the water level in the drum. If it appears completely white or opaque, it signifies that there is no water present in the lower section of the glass (indicating low water level) or that the connection pipes are blocked by scale/air, preventing visibility.",
+   "h": "It is a visual indicator for water level; opacity implies air or steam blockage.",
+   "s": "A gauge glass allows operators to visually monitor the water level inside the boiler drum to prevent dry firing. When the glass looks white or opaque instead of showing a clear meniscus, it typically means the water has receded below the sight glass (low water level) or the connections are blocked by air bubbles and scale, requiring immediate investigation.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "What is the primary purpose of an 'Economizer' installed at the inlet of a boiler furnace?",
+   "a": "To preheat the feedwater using the waste heat from the flue gases before they enter the economizer and exit via the chimney.",
+   "h": "Think about heat recovery from exhaust gases before they enter the chimney.",
+   "s": "An economizer is a heat exchanger located between the boiler drum outlet and the chimney. It utilizes the thermal energy of hot flue gases to raise the temperature of the incoming feedwater, reducing the fuel consumption required in the furnace to generate steam.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Define 'Carryover' (or priming) in a boiler system and list two common causes.",
+   "a": "Carryover is the phenomenon where water droplets or impurities are carried over with the steam into the superheater or turbine. Common causes include high dissolved solids (foaming), excessive drum agitation, or a sudden rise in load causing rapid boiling.",
+   "h": "Relate it to the movement of water droplets into the steam line.",
+   "s": "Carryover occurs when the boiler water surface becomes turbulent or foamy, allowing water droplets to be entrained in the rising steam stream. This leads to wet steam entering the superheater, which can cause severe scaling and damage to superheater tubes due to localized overheating as the water evaporates instantly.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "In a Cochran boiler, identify the orientation of the fire tubes relative to the shell axis.",
+   "a": "The fire tubes in a Cochran boiler are arranged vertically within the cylindrical shell.",
+   "h": "Visualize the classic vertical cylindrical shape of this boiler type.",
+   "s": "The Cochran boiler is a vertical fire-tube boiler where the combustion chamber and fire tubes are oriented vertically. This compact design allows for high steam generation rates in a small footprint, making it suitable for marine applications and smaller industrial plants.",
+   "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "What is the function of an 'Air Preheater' in a modern boiler installation?",
+   "a": "To preheat the combustion air supplied to the furnace using waste heat from the outgoing flue gases, thereby improving combustion efficiency and reducing fuel consumption.",
+   "h": "Consider the interaction between flue gases and incoming combustion air.",
+   "s": "An air preheater transfers heat from the hot flue gases exiting the boiler to the cold air entering the furnace for combustion. By raising the temperature of the combustion air, the flame temperature increases, leading to more complete burning of fuel and a reduction in the overall amount of fuel needed.",
    "at": "2026-10-24"
   }
  ]
