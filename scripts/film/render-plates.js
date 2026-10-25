@@ -55,6 +55,7 @@ const FILMS = {
       'gauge': 'gauge',
       'valve': 'valve',
       'flare': 'flare',
+      'flare-cold': 'flare-cold',
       'control-panel': 'control-panel',
       'pipe-corridor': 'pipe-corridor',
       'company-sign': 'company-sign',

@@ -516,9 +516,12 @@ def scene_valve(samples, width, height, out):
     render(samples, width, height, out)
 
 
-def scene_flare(samples, width, height, out):
+def _scene_flare(samples, width, height, out, lit=True):
     reset()
-    night_sky((0.22, 0.065, 0.014), (0.001, 0.003, 0.009))
+    if lit:
+        night_sky((0.22, 0.065, 0.014), (0.001, 0.003, 0.009))
+    else:
+        night_sky((0.075, 0.032, 0.012), (0.001, 0.002, 0.007))
     plane("Ground", (0, 0, 0), 70, concrete("FlareGround", (0.080, 0.075, 0.064)))
     st = steel("FlareSteel", (0.115, 0.120, 0.122))
     # A taller lattice tower, braced on both faces so it reads as structure.
@@ -536,24 +539,31 @@ def scene_flare(samples, width, height, out):
     pipe_run("FlareRiser", [(-0.6, 0.0, 0.0), (-0.6, 0.0, 12.0), (0.0, 0.0, 12.0),
                             (0.0, 0.0, 16.2)], 0.30, rust())
     cylinder("FlareTip", (0, 0, 16.7), 0.36, 1.0, rust(), vertices=24)
-    # a large, wind-bent flame: three cones, not a single candle
-    for i, (dx, dz, r, h) in enumerate(((0.0, 16.9, 0.56, 4.2), (0.35, 17.8, 0.34, 3.2),
-                                       (-0.22, 18.6, 0.20, 2.4))):
-        bpy.ops.mesh.primitive_cone_add(
-            vertices=28, radius1=r, radius2=0.0, depth=h,
-            location=(dx, 0.0, dz + h / 2), rotation=(0, 0.18, 0)
-        )
-        obj = bpy.context.object
-        obj.name = f"FlareFlame-{i}"
-        smooth(obj)
-        assign(obj, emission(f"FlareFlameMat-{i}", (1.0, 0.38 - i * 0.05, 0.045), 22.0 - i * 4))
-    sphere("FlareCore", (0, 0, 18.4), 0.34,
-           emission("FlareCoreMat", (1.0, 0.84, 0.44), 36.0), segments=18, rings=12)
-    point_lamp("FlareLight", (0, 0, 18.6), 1200, (1.0, 0.36, 0.07), 1.3)
+    if lit:
+        # a large, wind-bent flame: three cones, not a single candle
+        for i, (dx, dz, r, h) in enumerate(((0.0, 16.9, 0.56, 4.2), (0.35, 17.8, 0.34, 3.2),
+                                           (-0.22, 18.6, 0.20, 2.4))):
+            bpy.ops.mesh.primitive_cone_add(
+                vertices=28, radius1=r, radius2=0.0, depth=h,
+                location=(dx, 0.0, dz + h / 2), rotation=(0, 0.18, 0)
+            )
+            obj = bpy.context.object
+            obj.name = f"FlareFlame-{i}"
+            smooth(obj)
+            assign(obj, emission(f"FlareFlameMat-{i}", (1.0, 0.38 - i * 0.05, 0.045), 22.0 - i * 4))
+        sphere("FlareCore", (0, 0, 18.4), 0.34,
+               emission("FlareCoreMat", (1.0, 0.84, 0.44), 36.0), segments=18, rings=12)
+        point_lamp("FlareLight", (0, 0, 18.6), 1200, (1.0, 0.36, 0.07), 1.3)
+    else:
+        # The offline stack is a hard silhouette. A cold rim on the mouth of
+        # the tip makes it read as metal, never as a low flame.
+        cylinder("FlareColdMouth", (0, 0, 17.2), 0.38, 0.06,
+                 steel("FlareColdMouthMat", (0.16, 0.17, 0.18)), vertices=24)
     # aircraft warning lights on the tower
     for i, z in enumerate((6.0, 11.0, 15.0)):
         sphere(f"FlareWarning-{i}", (2.45, 0.0, z), 0.10,
-               emission(f"FlareWarningMat-{i}", (1.0, 0.06, 0.015), 4.0), segments=12, rings=8)
+               emission(f"FlareWarningMat-{i}", (1.0, 0.06, 0.015), 4.0 if lit else 1.1),
+               segments=12, rings=8)
     # pipework and tanks in the foreground, lit just enough to frame the tower
     storage_tank("FlareTank-A", -8.0, 9.0, 2.4, 5.0, paint("FlareTankPaint", (0.085, 0.105, 0.098)),
                  rust("FlareTankBand"))
@@ -563,15 +573,31 @@ def scene_flare(samples, width, height, out):
     for i, x in enumerate((-10, -4, 3, 10)):
         cube(f"FlareLampPost-{i}", (x, 2.0, 1.5), (0.08, 0.08, 3.0), st)
         sphere(f"FlareLampGlow-{i}", (x, 2.0, 3.0), 0.13,
-               emission(f"FlareLampMat-{i}", (1.0, 0.48, 0.14), 3.0), segments=12, rings=8)
-        point_lamp(f"FlareLamp-{i}", (x, 2.0, 3.0), 55, (1.0, 0.44, 0.12), 0.18)
-    dust(100, seed=52, zmax=8.0, ymax=24)
+               emission(f"FlareLampMat-{i}", (1.0, 0.48, 0.14), 3.0 if lit else 1.6),
+               segments=12, rings=8)
+        point_lamp(f"FlareLamp-{i}", (x, 2.0, 3.0), 55 if lit else 24,
+                   (1.0, 0.44, 0.12), 0.18)
+    if lit:
+        dust(100, seed=52, zmax=8.0, ymax=24)
     camera((7.0, -21.0, 2.5), (0.0, 0.0, 9.5), lens=26, fstop=4.5)
-    bpy.context.scene.view_settings.exposure = -0.30
-    area("TowerRim", (-7.0, -5.0, 11.0), (0, 0, 8.0), 900, 5.0, (0.26, 0.42, 0.70))
-    area("TowerSodium", (8.0, 2.0, 8.0), (0, 0, 8.0), 650, 4.0, (1.0, 0.44, 0.12))
-    area("BaseFill", (0.0, -8.0, 2.0), (0, 0, 3.0), 220, 4.0, (0.44, 0.56, 0.70))
+    bpy.context.scene.view_settings.exposure = -0.30 if lit else -1.15
+    if lit:
+        area("TowerRim", (-7.0, -5.0, 11.0), (0, 0, 8.0), 900, 5.0, (0.26, 0.42, 0.70))
+        area("TowerSodium", (8.0, 2.0, 8.0), (0, 0, 8.0), 650, 4.0, (1.0, 0.44, 0.12))
+        area("BaseFill", (0.0, -8.0, 2.0), (0, 0, 3.0), 220, 4.0, (0.44, 0.56, 0.70))
+    else:
+        area("TowerRim", (-7.0, -5.0, 11.0), (0, 0, 8.0), 360, 5.0, (0.24, 0.38, 0.66))
+        area("TowerSodium", (8.0, 2.0, 8.0), (0, 0, 8.0), 150, 4.0, (1.0, 0.40, 0.10))
+        area("BaseFill", (0.0, -8.0, 2.0), (0, 0, 3.0), 70, 4.0, (0.36, 0.48, 0.64))
     render(samples, width, height, out)
+
+
+def scene_flare(samples, width, height, out):
+    _scene_flare(samples, width, height, out, lit=True)
+
+
+def scene_flare_cold(samples, width, height, out):
+    _scene_flare(samples, width, height, out, lit=False)
 
 
 def scene_control_panel(samples, width, height, out):
@@ -1606,6 +1632,7 @@ SCENES = {
     "gauge": scene_gauge,
     "valve": scene_valve,
     "flare": scene_flare,
+    "flare-cold": scene_flare_cold,
     "control-panel": scene_control_panel,
     "pipe-corridor": scene_pipe_corridor,
     "company-sign": scene_company_sign,

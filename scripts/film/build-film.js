@@ -644,7 +644,18 @@ function startServer(root) {
 }
 
 async function launchChromium(chromium) {
-  const args = ['--disable-dev-shm-usage', '--force-color-profile=srgb', '--font-render-hinting=none'];
+  const args = [
+    '--disable-dev-shm-usage',
+    '--force-color-profile=srgb',
+    '--font-render-hinting=none',
+    // The page updates every captured frame. Without a full compositor flush,
+    // Chromium can screenshot a half-repainted tiled surface: the previous
+    // frame remains in some tiles and the text appears twice. That looked like
+    // a duplicate-title bug in the first 24 fps draft. These two flags plus the
+    // double-rAF settle below force the new surface before the screenshot.
+    '--run-all-compositor-stages-before-draw',
+    '--disable-gpu'
+  ];
   const bundled = chromium.executablePath();
   if (bundled && fs.existsSync(bundled)) {
     return chromium.launch({ headless: true, executablePath: bundled, args });
@@ -682,8 +693,12 @@ async function renderFrames(timeline, opts) {
   const total = Math.ceil(timeline.duration * opts.captureFps);
   for (let f = 0; f < total; f++) {
     const t = f / opts.captureFps;
-    const changed = await page.evaluate((time) => window.renderFilmAt(time), t);
-    if (changed) await page.waitForTimeout(25);
+    await page.evaluate((time) => window.renderFilmAt(time), t);
+    // Wait for two full paints, then a beat for the raster tiles to settle.
+    // A fixed 25 ms wait was not enough at 24 fps on the GitHub runner.
+    await page.evaluate(() => new Promise((resolve) => {
+      requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 12)));
+    }));
     await page.screenshot({
       path: path.join(framesDir, `frame-${String(f + 1).padStart(6, '0')}.jpg`),
       type: 'jpeg',
