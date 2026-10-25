@@ -237,49 +237,93 @@ function buildTimeline(film, tts, opts) {
     const spoken = narration.reduce((sum, l) => sum + l.duration, 0);
     const lineTotal = spoken + gap * Math.max(0, narration.length - 1);
     const scripted = Number(scene.duration) || 0;
+    // A scene can hold the picture before the voice arrives. `narrationStart`
+    // is measured from the scene's first frame, so an opening title card can
+    // sit in silence instead of carrying a caption it was never meant to share.
+    const hasNarrationStart = Number.isFinite(Number(scene.narrationStart));
+    const narrationStart = hasNarrationStart ? Math.max(0, Number(scene.narrationStart)) : lead;
+    // A shot marked `hold` keeps an exact length (a title card, an end card).
+    // The remaining shots divide the rest of the scene by weight.
+    const holds = (scene.shots || []).map((s) => Math.max(0, Number(s.hold) || 0));
+    const fixedTotal = holds.reduce((a, b) => a + b, 0);
+    const postHold = Number(scene.hold) || 0;
     const duration = narration.length
       ? (tight
         ? Math.max(Number(scene.minDuration) || 0,
-          lead + lineTotal + tail + (Number(scene.hold) || 0))
-        : Math.max(scripted, spoken + gap * narration.length + 0.9))
-      : Math.max(scripted, Number(scene.minDuration) || 0);
+          fixedTotal,
+          narrationStart + lineTotal + tail + postHold)
+        : Math.max(scripted, fixedTotal,
+          spoken + gap * narration.length + 0.9 + postHold,
+          hasNarrationStart ? narrationStart + lineTotal + tail : 0))
+      : Math.max(scripted, Number(scene.minDuration) || 0, fixedTotal + postHold);
     const start = cursor;
     cursor += duration;
 
-    const weights = (scene.shots || []).map((s) => Number(s.weight) || 1);
-    const weightTotal = weights.reduce((a, b) => a + b, 0) || 1;
-    let local = 0;
-    const shots = (scene.shots || []).map((shot, hi) => {
-      const d = hi === (scene.shots.length - 1)
-        ? duration - local
-        : (duration * weights[hi]) / weightTotal;
-      const out = {
-        id: shot.id,
-        plate: shot.plate,
-        render: shot.render,
-        camera: shot.camera,
-        visual: shot.visual,
-        sfx: shot.sfx || [],
-        text: shot.text || '',
-        impact: !!shot.impact,
-        impactSub: shot.impactSub || '',
-        cardKicker: shot.cardKicker || '',
-        cardLines: Array.isArray(shot.cardLines) ? shot.cardLines : undefined,
-        cardSub: shot.cardSub || '',
-        transition: shot.transition || 'cut',
-        framing: shot.framing || { zoom: [1.02, 1.08], x: [50, 50], y: [50, 50] },
-        start: start + local,
-        duration: Math.max(0.1, d)
-      };
-      local += out.duration;
-      return out;
-    });
-
-    let nlocal = lead;
+    let nlocal = narrationStart;
     narration.forEach((line) => {
       line.start = start + nlocal;
       line.end = line.start + line.duration;
       nlocal += line.duration + gap;
+    });
+
+    const shotsDef = scene.shots || [];
+    // A shot may name the narration line it belongs to. That anchors the cut
+    // to the voice, so an impact number lands on the sentence that says it
+    // instead of drifting a beat late. Shots that do not name a line divide
+    // the silence around their neighbours by weight.
+    const anchors = shotsDef.map((shot) => {
+      const n = Number(shot.narrationLine);
+      return Number.isInteger(n) && n >= 1 && n <= narration.length ? n - 1 : -1;
+    });
+    const segments = [];
+    let segment = { start: 0, end: duration, shots: [] };
+    shotsDef.forEach((shot, hi) => {
+      if (anchors[hi] >= 0) {
+        const at = Math.max(segment.start, Math.min(duration, narration[anchors[hi]].start - start));
+        segment.end = at;
+        if (segment.shots.length) segments.push(segment);
+        segment = { start: at, end: duration, shots: [] };
+      }
+      segment.shots.push(hi);
+    });
+    if (segment.shots.length) segments.push(segment);
+
+    const shots = [];
+    segments.forEach((seg) => {
+      const segHolds = seg.shots.map((hi) => holds[hi]);
+      const segFixed = segHolds.reduce((a, b) => a + b, 0);
+      const segWeights = seg.shots.map((hi) => (holds[hi] ? 0 : Number(shotsDef[hi].weight) || 1));
+      const segWeightTotal = segWeights.reduce((a, b) => a + b, 0);
+      const mobileTime = Math.max(0, (seg.end - seg.start) - segFixed);
+      let local = seg.start;
+      seg.shots.forEach((hi, k) => {
+        const shot = shotsDef[hi];
+        const d = holds[hi] || (segWeightTotal > 0 ? (mobileTime * segWeights[k]) / segWeightTotal : 0);
+        shots[hi] = {
+          id: shot.id,
+          plate: shot.plate,
+          render: shot.render,
+          camera: shot.camera,
+          visual: shot.visual,
+          sfx: shot.sfx || [],
+          text: shot.text || '',
+          impact: !!shot.impact,
+          impactSub: shot.impactSub || '',
+          cardKicker: shot.cardKicker || '',
+          cardLines: Array.isArray(shot.cardLines) ? shot.cardLines : undefined,
+          cardSub: shot.cardSub || '',
+          transition: shot.transition || 'cut',
+          framing: shot.framing || { zoom: [1.02, 1.08], x: [50, 50], y: [50, 50] },
+          start: start + local,
+          duration: Math.max(0.1, d)
+        };
+        local += d;
+      });
+      // The last shot in the segment absorbs rounding so the cut lands on the
+      // next anchor, not a frame before or after it.
+      const last = seg.shots[seg.shots.length - 1];
+      const consumed = seg.shots.reduce((sum, hi) => sum + shots[hi].duration, 0);
+      shots[last].duration = Math.max(0.1, shots[last].duration + (seg.end - seg.start) - consumed);
     });
 
     return {
@@ -595,10 +639,19 @@ function writeSrt(timeline, opts) {
       });
     });
   });
-  const body = cues.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text}\n`).join('\n');
+  // Cues are sampled from disjoint word ranges, but the old 0.4s legibility
+  // floor could push a short cue into its successor. Trim each cue before the
+  // next one starts and leave a visible gap, so two captions never share a
+  // frame and no cue boundary is a zero-gap butt join.
+  for (let i = 0; i < cues.length - 1; i++) {
+    const latest = cues[i + 1].start - 0.06;
+    if (cues[i].end > latest) cues[i].end = latest;
+  }
+  const visible = cues.filter((c) => c.end - c.start >= 0.12);
+  const body = visible.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text}\n`).join('\n');
   const file = path.join(opts.work, `${opts.film}.srt`);
   fs.writeFileSync(file, body, 'utf8');
-  console.log(`captions: ${file} (${cues.length} cues)`);
+  console.log(`captions: ${file} (${visible.length} cues, ${cues.length - visible.length} collapsed)`);
   return file;
 }
 

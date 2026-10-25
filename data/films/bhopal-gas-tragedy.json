@@ -77,6 +77,7 @@
       "title": "The city",
       "start": 0,
       "duration": 8,
+      "narrationStart": 3.4,
       "purpose": "Open on a sleeping city, then land the date and the title without a lecture.",
       "narration": [
         {
@@ -93,6 +94,7 @@
           "id": "S01-A",
           "plate": "title",
           "render": "title",
+          "hold": 3.2,
           "camera": "locked title card, grain and a slow push",
           "visual": "The title arrives over a black field with a thin sodium line, holding just long enough to read.",
           "sfx": [
@@ -233,6 +235,7 @@
           "id": "S02-E",
           "plate": "flare",
           "render": "blender",
+          "narrationLine": 3,
           "camera": "upward tilt, the flare against the sky",
           "visual": "The flare stack burns above the tank farm, a thin orange line in the dark.",
           "sfx": [
@@ -443,6 +446,7 @@
           "id": "S04-E",
           "plate": "siren",
           "render": "blender",
+          "narrationLine": 5,
           "camera": "low, the siren horn against the sky",
           "visual": "A rooftop siren, horn pointed at the city, moon behind it; the pole and braces read as a skeleton.",
           "sfx": [
@@ -483,22 +487,45 @@
       "shots": [
         {
           "id": "S05-A",
-          "plate": "hospital-corridor",
+          "plate": "newspaper-desk",
           "render": "blender",
-          "camera": "slow push down the empty corridor",
-          "visual": "A hospital corridor at night: fluorescent tubes, an empty stretcher, a curtain, no patient.",
+          "narrationLine": 1,
+          "camera": "overhead, the front page fills the frame",
+          "visual": "A newspaper desk under a brass lamp: the word BHOPAL, a typewriter, a telephone, a cup, a cigarette.",
           "sfx": [
-            "a trolley wheel",
-            "a fluorescent buzz",
-            "a distant pump"
+            "typewriter keys",
+            "paper",
+            "a telephone ringing once"
           ],
+          "text": "2,259",
+          "impact": true,
+          "impactSub": "OFFICIAL IMMEDIATE DEATHS",
           "transition": "cut",
-          "weight": 2
+          "weight": 3
         },
         {
           "id": "S05-B",
+          "plate": "archive",
+          "render": "blender",
+          "narrationLine": 2,
+          "camera": "push between shelves to the reading table",
+          "visual": "Archive shelves and boxes; one open file on a table under a green lamp.",
+          "sfx": [
+            "paper",
+            "a drawer",
+            "a fan"
+          ],
+          "text": "3,787",
+          "impact": true,
+          "impactSub": "MADHYA PRADESH, 1991",
+          "transition": "whip-left",
+          "weight": 2
+        },
+        {
+          "id": "S05-C",
           "plate": "clinic-window",
           "render": "blender",
+          "narrationLine": 3,
           "camera": "three-quarter on the window and oxygen cylinder",
           "visual": "A clinic room lit by a moonlit window and one bulb: an oxygen cylinder, a chair, a bottle, a curtain.",
           "sfx": [
@@ -510,43 +537,10 @@
           "weight": 2
         },
         {
-          "id": "S05-C",
-          "plate": "newspaper-desk",
-          "render": "blender",
-          "camera": "overhead, the front page fills the frame",
-          "visual": "A newspaper desk under a brass lamp: the word BHOPAL, a typewriter, a telephone, a cup, a cigarette.",
-          "sfx": [
-            "typewriter keys",
-            "paper",
-            "a telephone ringing once"
-          ],
-          "text": "2,259",
-          "impact": true,
-          "impactSub": "OFFICIAL IMMEDIATE DEATHS",
-          "transition": "whip-left",
-          "weight": 3
-        },
-        {
           "id": "S05-D",
-          "plate": "archive",
-          "render": "blender",
-          "camera": "push between shelves to the reading table",
-          "visual": "Archive shelves and boxes; one open file on a table under a green lamp.",
-          "sfx": [
-            "paper",
-            "a drawer",
-            "a fan"
-          ],
-          "text": "3,787",
-          "impact": true,
-          "impactSub": "MADHYA PRADESH, 1991",
-          "transition": "match",
-          "weight": 2
-        },
-        {
-          "id": "S05-E",
           "plate": "memorial-wall",
           "render": "blender",
+          "narrationLine": 4,
           "camera": "low, the wall of plaques and marigolds",
           "visual": "A stone memorial wall with brass plaques, marigolds and candles; the names are abstract, not invented.",
           "sfx": [
@@ -557,7 +551,7 @@
           "text": "500,000+",
           "impact": true,
           "impactSub": "PEOPLE EXPOSED",
-          "transition": "dip",
+          "transition": "match",
           "weight": 3
         }
       ]
@@ -593,22 +587,9 @@
       "shots": [
         {
           "id": "S06-A",
-          "plate": "courtroom",
-          "render": "blender",
-          "camera": "wide from the aisle, the empty bench",
-          "visual": "A wooden courtroom, empty: the bench, the witness box, the clerk's table, the scales, the fan.",
-          "sfx": [
-            "a ceiling fan",
-            "a door closing",
-            "paper"
-          ],
-          "transition": "cut",
-          "weight": 2
-        },
-        {
-          "id": "S06-B",
           "plate": "court-ledger",
           "render": "blender",
+          "narrationLine": 1,
           "camera": "overhead, the amount is the subject",
           "visual": "An open ledger under a lamp: SETTLEMENT, $470,000,000, 1989, a stamp, a pen, a gavel.",
           "sfx": [
@@ -619,13 +600,28 @@
           "text": "$470,000,000",
           "impact": true,
           "impactSub": "1989 SETTLEMENT",
-          "transition": "match",
+          "transition": "cut",
           "weight": 3
+        },
+        {
+          "id": "S06-B",
+          "plate": "courtroom",
+          "render": "blender",
+          "camera": "wide from the aisle, the empty bench",
+          "visual": "A wooden courtroom, empty: the bench, the witness box, the clerk's table, the scales, the fan.",
+          "sfx": [
+            "a ceiling fan",
+            "a door closing",
+            "paper"
+          ],
+          "transition": "match",
+          "weight": 2
         },
         {
           "id": "S06-C",
           "plate": "archive",
           "render": "blender",
+          "narrationLine": 2,
           "camera": "slow push along the files",
           "visual": "Archive boxes and files, the paper trail of a case that outlived the hearing.",
           "sfx": [
@@ -639,22 +635,9 @@
         },
         {
           "id": "S06-D",
-          "plate": "company-sign",
-          "render": "blender",
-          "camera": "hold, the sign in the sodium light",
-          "visual": "The company sign again, rust running from its bolts; the name is the same, the ownership is not.",
-          "sfx": [
-            "wind",
-            "a distant truck",
-            "metal ticking"
-          ],
-          "transition": "whip-right",
-          "weight": 2
-        },
-        {
-          "id": "S06-E",
           "plate": "newspaper-desk",
           "render": "blender",
+          "narrationLine": 3,
           "camera": "close on the headline and the date",
           "visual": "The newspaper again, the date 1984 beside a stack of later clippings.",
           "sfx": [
@@ -664,6 +647,36 @@
           ],
           "text": "NO EXTRADITION",
           "transition": "cut",
+          "weight": 2
+        },
+        {
+          "id": "S06-E",
+          "plate": "courtroom",
+          "render": "blender",
+          "narrationLine": 4,
+          "camera": "low from the clerk's table, the bench in shadow",
+          "visual": "The courtroom from the clerk's table: an empty bench, the scales, the fan turning above the room.",
+          "sfx": [
+            "a ceiling fan",
+            "a chair",
+            "paper"
+          ],
+          "transition": "match",
+          "weight": 2
+        },
+        {
+          "id": "S06-F",
+          "plate": "company-sign",
+          "render": "blender",
+          "narrationLine": 5,
+          "camera": "hold, the sign in the sodium light",
+          "visual": "The company sign again, rust running from its bolts; the name is the same, the ownership is not.",
+          "sfx": [
+            "wind",
+            "a distant truck",
+            "metal ticking"
+          ],
+          "transition": "whip-right",
           "weight": 2
         }
       ]
@@ -843,6 +856,7 @@
       "title": "The claims",
       "start": 123,
       "duration": 9,
+      "hold": 2.8,
       "purpose": "Close on a sentence, not a spectacle.",
       "narration": [
         {
@@ -874,6 +888,7 @@
           "id": "S09-B",
           "plate": "title",
           "render": "title",
+          "hold": 2.8,
           "camera": "locked, the title returns as an end card",
           "visual": "The title card returns over black with the date and a single line of source text.",
           "sfx": [

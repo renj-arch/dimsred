@@ -87,6 +87,10 @@ function validate(file) {
     }
     cursor = Number(scene.start) + Number(scene.duration);
 
+    if (scene.narrationStart != null && !(Number(scene.narrationStart) >= 0)) {
+      warn(`${where}: narrationStart must be zero or a positive number of seconds`);
+    }
+    if (scene.hold != null && !(Number(scene.hold) >= 0)) warn(`${where}: hold must be zero or positive`);
     if (!Array.isArray(scene.narration) || !scene.narration.length) warn(`${where}: narration is empty`);
     for (const line of scene.narration || []) {
       narrationLines++;
@@ -112,6 +116,13 @@ function validate(file) {
       if (!shot.render) warn(`${where}/${shot.id}: render is required`);
       if (!Array.isArray(shot.sfx) || !shot.sfx.length) warn(`${where}/${shot.id}: at least one sound cue is required`);
       if (shot.render === 'blender' && !shot.plate) warn(`${where}/${shot.id}: Blender shot needs a plate`);
+      if (shot.hold != null && !(Number(shot.hold) > 0)) warn(`${where}/${shot.id}: hold must be a positive number of seconds`);
+      if (shot.narrationLine != null) {
+        const n = Number(shot.narrationLine);
+        if (!Number.isInteger(n) || n < 1 || n > (scene.narration || []).length) {
+          warn(`${where}/${shot.id}: narrationLine must point at one of the scene's narration lines`);
+        }
+      }
       if (shot.framing) {
         if (!Array.isArray(shot.framing.zoom) || shot.framing.zoom.length !== 2) {
           warn(`${where}/${shot.id}: framing.zoom must be [start,end]`);

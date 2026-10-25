@@ -328,8 +328,8 @@ def scene_tank_farm(samples, width, height, out):
         cube(f"HorizonBlock-{i}", (x, 30.0, h / 2), (3.2, 2.0, h),
              principled(f"HorizonMat-{i}", (0.008, 0.009, 0.010), roughness=0.95))
     dust(100, seed=21, zmax=6.0, ymax=28)
-    camera((-3.0, -9.0, 3.2), (1.0, 14.0, 5.5), lens=33, fstop=5.0)
-    bpy.context.scene.view_settings.exposure = -0.35
+    camera((-3.0, -16.0, 4.0), (0.0, 16.0, 5.2), lens=28, fstop=5.0)
+    bpy.context.scene.view_settings.exposure = -0.30
     area("MoonFill", (-14.0, -6.0, 12.0), (0, 14.0, 4.0), 1300, 8.0, (0.30, 0.46, 0.72))
     area("SodiumWash", (9.0, 1.0, 7.0), (0, 12.0, 3.0), 900, 6.0, (1.0, 0.46, 0.13))
     area("TankFill", (2.0, -2.0, 4.0), (0, 12.0, 3.0), 320, 5.0, (0.44, 0.56, 0.70))
@@ -749,9 +749,9 @@ def scene_city_rooftops(samples, width, height, out):
     # A dense, layered roofscape. The near row is darker; the far rows are
     # lighter and cooler, which gives the eye a distance to travel.
     rows = (
-        (14.0, 6, 7.0, 15.0, (0.070, 0.062, 0.052)),
-        (25.0, 7, 9.0, 19.0, (0.085, 0.076, 0.064)),
-        (38.0, 8, 11.0, 24.0, (0.100, 0.092, 0.080)),
+        (14.0, 6, 7.0, 12.0, (0.070, 0.062, 0.052)),
+        (25.0, 7, 8.0, 15.0, (0.085, 0.076, 0.064)),
+        (38.0, 8, 9.0, 17.0, (0.100, 0.092, 0.080)),
     )
     for row, (base_y, count, min_h, max_h, color) in enumerate(rows):
         for i in range(count):
@@ -800,18 +800,18 @@ def scene_city_rooftops(samples, width, height, out):
     # A minaret and the plant's flare break the skyline; both are landmarks,
     # not decoration.
     plaster = plaster_material("MinaretPlaster", (0.22, 0.18, 0.12))
-    cylinder("MinaretBase", (13.0, 21.0, 8.0), 0.58, 16.0, plaster, vertices=20)
-    cylinder("MinaretBalcony", (13.0, 21.0, 13.0), 1.05, 0.28, plaster, vertices=20)
-    cylinder("MinaretTop", (13.0, 21.0, 16.7), 0.20, 5.2, plaster, vertices=16)
-    sphere("MinaretDome", (13.0, 21.0, 19.5), 0.48,
+    cylinder("MinaretBase", (13.0, 30.0, 10.0), 0.58, 20.0, plaster, vertices=20)
+    cylinder("MinaretBalcony", (13.0, 30.0, 16.0), 1.05, 0.28, plaster, vertices=20)
+    cylinder("MinaretTop", (13.0, 30.0, 20.0), 0.20, 6.0, plaster, vertices=16)
+    sphere("MinaretDome", (13.0, 30.0, 23.4), 0.48,
            principled("DomeMat", (0.070, 0.095, 0.090), roughness=0.38, metallic=0.55),
            segments=24, rings=14)
-    sphere("MinaretLight", (13.0, 21.0, 18.1), 0.10,
+    sphere("MinaretLight", (13.0, 30.0, 21.7), 0.10,
            emission("MinaretLightGlow", (0.18, 0.62, 0.32), 3.0), segments=12, rings=8)
-    cylinder("HorizonFlare", (30.0, 39.0, 10.0), 0.18, 20.0, steel("HorizonFlareSteel"), vertices=12)
-    sphere("HorizonFlareTip", (30.0, 39.0, 20.1), 0.36,
+    cylinder("HorizonFlare", (28.0, 48.0, 12.0), 0.18, 24.0, steel("HorizonFlareSteel"), vertices=12)
+    sphere("HorizonFlareTip", (28.0, 48.0, 24.1), 0.40,
            emission("HorizonFlareGlow", (1.0, 0.40, 0.07), 9.0), segments=16, rings=10)
-    point_lamp("HorizonFlareLight", (30.0, 39.0, 20.0), 80, (1.0, 0.38, 0.06), 0.5)
+    point_lamp("HorizonFlareLight", (28.0, 48.0, 24.0), 90, (1.0, 0.38, 0.06), 0.5)
 
     # Foreground roof: water tank, laundry, pots, string lights.
     tank_z = roof_z + 0.55
@@ -854,8 +854,8 @@ def scene_city_rooftops(samples, width, height, out):
     for i in range(7):
         point_lamp(f"StreetGlow-{i}", (-15.0 + i * 5.0, 12.0, 1.2), 26,
                    (1.0, 0.40, 0.10), 0.35)
-    camera((-0.6, -11.5, roof_z + 1.8), (-0.6, 18.0, 8.2), lens=32, fstop=5.0)
-    bpy.context.scene.view_settings.exposure = -0.15
+    camera((-0.6, -11.5, roof_z + 1.8), (-0.6, 18.0, 8.2), lens=28, fstop=5.0)
+    bpy.context.scene.view_settings.exposure = -0.10
     area("MoonFill", (-18.0, -3.0, 18.0), (0, 18.0, 7.0), 1800, 12.0, (0.30, 0.45, 0.72))
     area("CitySodium", (16.0, 2.0, 12.0), (0, 20.0, 6.0), 1400, 9.0, (1.0, 0.44, 0.12))
     area("ForegroundFill", (0.0, -12.0, 11.0), (0, -1.0, roof_z + 1.0), 480, 6.0, (0.44, 0.54, 0.68))
@@ -1488,28 +1488,33 @@ def scene_siren(samples, width, height, out):
     plane("Roof", (0, 0, 0), 12, concrete("SirenRoof", (0.070, 0.065, 0.058)))
     cube("SirenParapet", (0, 0.8, 0.35), (8.0, 0.3, 0.7), concrete("SirenParapet", (0.09, 0.082, 0.07)))
     st = steel("SirenSteel", (0.08, 0.085, 0.085))
-    cylinder("SirenPole", (0, 1.5, 2.2), 0.10, 4.4, st, vertices=12)
+    cylinder("SirenPole", (-0.35, 1.5, 2.2), 0.10, 4.4, st, vertices=12)
     for i in range(3):
-        cube(f"SirenBrace-{i}", (0, 1.2 - i * 0.18, 1.0 + i * 1.2), (0.06, 1.0, 0.06), st,
+        cube(f"SirenBrace-{i}", (-0.35, 1.2 - i * 0.18, 1.0 + i * 1.2), (0.06, 1.0, 0.06), st,
              rot=(0.6, 0, 0))
-    # the horn: a flared cone with a small motor housing
-    bpy.ops.mesh.primitive_cone_add(vertices=32, radius1=0.12, radius2=0.72,
-                                  depth=1.0, location=(0, 2.0, 4.55),
-                                  rotation=(math.pi / 2, 0, 0.60))
+    # The horn is an open flared bell, mounted clear of the pole so the mouth
+    # reads from the camera. A solid cone with a capped wide end looks like a
+    # dish, which is exactly what the first draft did.
+    bpy.ops.mesh.primitive_cone_add(
+        vertices=40, radius1=0.11, radius2=0.58, depth=1.15,
+        end_fill_type='NOTHING', location=(0.55, 2.0, 4.55),
+        rotation=(0, math.pi / 2, 0)
+    )
     horn = bpy.context.object
     horn.name = "SirenHorn"
     smooth(horn)
-    assign(horn, grime("SirenHornMat", (0.14, 0.125, 0.100), 0.62, 0.42))
-    cylinder("SirenMotor", (0, 2.62, 4.55), 0.20, 0.30, st,
-             rot=(math.pi / 2, 0, 0), vertices=20)
+    assign(horn, grime("SirenHornMat", (0.16, 0.145, 0.115), 0.58, 0.45))
+    cylinder("SirenMotor", (-0.09, 2.0, 4.55), 0.155, 0.30, st,
+             rot=(0, math.pi / 2, 0), vertices=24)
+    cube("SirenBracket", (-0.22, 1.75, 4.55), (0.10, 0.55, 0.09), st)
     bpy.ops.mesh.primitive_torus_add(
-        major_radius=0.66, minor_radius=0.035, major_segments=32, minor_segments=6,
-        location=(0, 2.48, 4.55), rotation=(math.pi / 2, 0, 0.60)
+        major_radius=0.59, minor_radius=0.035, major_segments=40, minor_segments=7,
+        location=(1.13, 2.0, 4.55), rotation=(0, math.pi / 2, 0)
     )
     assign(bpy.context.object, rust("SirenRimRust"))
-    sphere("SirenBeacon", (0, 2.62, 4.86), 0.09,
+    sphere("SirenBeacon", (-0.09, 2.0, 4.79), 0.08,
            emission("SirenBeaconGlow", (1.0, 0.05, 0.01), 5.0), segments=12, rings=8)
-    point_lamp("SirenBeaconLight", (0, 2.62, 4.86), 16, (1.0, 0.06, 0.01), 0.12)
+    point_lamp("SirenBeaconLight", (-0.09, 2.0, 4.79), 16, (1.0, 0.06, 0.01), 0.12)
     # distant city, kept low and soft so the horn owns the frame
     rng = random.Random(411)
     for i in range(18):
@@ -1518,11 +1523,12 @@ def scene_siren(samples, width, height, out):
         cube(f"SirenCity-{i}", (x, 10.0 + (i % 3) * 2.0, h / 2), (1.6, 2.4, h),
              principled(f"SirenCityMat-{i}", (0.020, 0.019, 0.017), 0.96))
     dust(50, seed=412, zmax=4.0, ymax=14)
-    camera((5.0, -9.0, 1.8), (0, 2.0, 3.8), lens=45, fstop=3.0)
+    camera((6.5, -8.0, 2.2), (0.2, 2.0, 4.1), lens=42, fstop=3.0)
     bpy.context.scene.view_settings.exposure = -0.25
     area("Moon", (-4.0, 1.0, 6.0), (0, 2.0, 3.8), 360, 5.0, (0.34, 0.46, 0.68))
     area("HornWarm", (1.0, 1.0, 2.0), (0, 2.0, 4.2), 220, 2.0, (1.0, 0.46, 0.14))
     area("HornRim", (4.0, 3.0, 5.0), (0, 2.0, 4.2), 300, 2.0, (0.40, 0.54, 0.74))
+    area("HornFace", (4.2, -1.0, 6.2), (0.8, 2.0, 4.5), 260, 2.2, (0.55, 0.64, 0.80))
     area("RoofFill", (3.0, 0.0, 1.0), (0, 1.5, 1.0), 80, 2.0, (1.0, 0.46, 0.14))
     render(samples, width, height, out)
 
