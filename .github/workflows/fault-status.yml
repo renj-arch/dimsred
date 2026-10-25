@@ -55,7 +55,7 @@ jobs:
             data/site-audit.json
             data/autofix-log.json
             data/agent-log.json
-          sparse-checkout-cone: false
+          sparse-checkout-cone-mode: false
           token: ${{ secrets.PAT }}
 
       - uses: actions/setup-node@v4
@@ -65,18 +65,18 @@ jobs:
       # Regenerate the syllabus-gap + PYQ-pattern reports from the live sources
       # so the board always reflects current coverage, not a stale commit.
       - name: Find syllabus gaps
-        run: node scripts/gap-finder.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/gap-finder.js
 
       - name: Analyze PYQ patterns
-        run: node scripts/pyq-analyze.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/pyq-analyze.js
 
       - name: Audit site pages
-        run: node scripts/site-audit.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/site-audit.js
 
       - name: Build fault report (incl. pipeline status)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/fault-report.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/fault-report.js
 
       # Self-healing hand for the corpus-growth chain. GitHub job caps and
       # concurrency groups cancel long fill runs without a next run being
@@ -88,7 +88,7 @@ jobs:
       - name: Restart stalled fill chain (fill-watchdog)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node scripts/fill-watchdog.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/fill-watchdog.js
 
       - name: Publish board to improve.html
         run: |

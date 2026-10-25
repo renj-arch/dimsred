@@ -171,7 +171,7 @@ jobs:
           INVENT_DEADLINE_MIN: '110'
           INVENT_NUM_CTX: '4096'
           INVENT_NUM_PREDICT: '1200'
-        run: node scripts/invent-questions.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/invent-questions.js
 
       # Incremental saves mean even a timeout keeps every question invented
       # so far — publish whatever landed. Nothing staged -> ci-push exits 0.

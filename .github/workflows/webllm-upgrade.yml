@@ -46,7 +46,7 @@ jobs:
           node-version: 22
 
       - name: Sync + validate WebLLM models
-        run: node scripts/update-webllm-models.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/update-webllm-models.js
 
       - name: Publish
         env:

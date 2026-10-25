@@ -32,7 +32,7 @@ jobs:
 
       - name: Run stale paper cleanup
         id: cleanup
-        run: node scripts/cleanup-stale-papers.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/cleanup-stale-papers.js
 
       - name: Commit and push if changes
         run: |

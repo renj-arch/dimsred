@@ -58,9 +58,9 @@ jobs:
           git config user.email "bot@vlymbooq.qzz.io"
 
       - name: Fetch Wikipedia categories
-        run: node scripts/wikipedia-fetch.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/wikipedia-fetch.js
       - name: Fetch Wikidata SPARQL
-        run: node scripts/wikidata-multi-fetch.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/wikidata-multi-fetch.js
 
       - uses: actions/upload-artifact@v4
         with:
@@ -84,13 +84,13 @@ jobs:
       - run: npm install
 
       - name: Generate static data
-        run: node scripts/create-static-data.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/create-static-data.js
 
       - name: Rebuild river pts lookup
-        run: node scripts/extract-river-lookup.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/extract-river-lookup.js
 
       - name: Enrich river entries with flow paths
-        run: node scripts/enrich-river-pts.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/enrich-river-pts.js
 
       - name: Fill all parts 1-10
         run: |
@@ -132,7 +132,7 @@ jobs:
           path: data/
 
       - name: Fill wiki data (part 11)
-        run: node scripts/fill-globe-part11.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/fill-globe-part11.js
 
       - uses: actions/upload-artifact@v4
         with:
@@ -166,15 +166,15 @@ jobs:
           path: .
 
       - name: Fetch contemporaries
-        run: node scripts/fetch-contemporaries.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/fetch-contemporaries.js
       - name: Insert contemporaries
-        run: node scripts/insert-contemporaries.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/insert-contemporaries.js
       - name: Escape apostrophes
-        run: node scripts/fix-apostrophes.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/fix-apostrophes.js
       - name: Deduplicate globe entries
-        run: node scripts/dedup-globe.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/dedup-globe.js
       - name: Recompute total entry count from data
-        run: node scripts/recount-globe.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/recount-globe.js
 
       - name: Stamp build time
         run: |

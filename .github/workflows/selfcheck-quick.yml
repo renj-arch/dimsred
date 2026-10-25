@@ -74,7 +74,7 @@ jobs:
 
       # Rule-based repair only — no Ollama, no model pull, seconds of work.
       - name: Run selfcheck-only (no model)
-        run: node scripts/site-agent.js --selfcheck-only
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/site-agent.js --selfcheck-only
 
       - name: Publish selfcheck repairs
         env:
