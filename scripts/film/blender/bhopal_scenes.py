@@ -1489,9 +1489,12 @@ def scene_siren(samples, width, height, out):
     cube("SirenParapet", (0, 0.8, 0.35), (8.0, 0.3, 0.7), concrete("SirenParapet", (0.09, 0.082, 0.07)))
     st = steel("SirenSteel", (0.08, 0.085, 0.085))
     cylinder("SirenPole", (-0.35, 1.5, 2.2), 0.10, 4.4, st, vertices=12)
-    for i in range(3):
-        cube(f"SirenBrace-{i}", (-0.35, 1.2 - i * 0.18, 1.0 + i * 1.2), (0.06, 1.0, 0.06), st,
-             rot=(0.6, 0, 0))
+    cylinder("SirenBase", (-0.35, 1.5, 0.05), 0.30, 0.10, st, vertices=16)
+    # Braces must land on the roof. The first cut had three diagonal cubes
+    # floating beside the pole, which read as broken geometry rather than a
+    # support. Two limbs now meet the pole and the roof plate.
+    limb("SirenBrace-L", (-0.35, 1.5, 0.62), (-1.18, 1.5, 0.02), 0.035, st, vertices=8)
+    limb("SirenBrace-R", (-0.35, 1.5, 0.62), (0.48, 1.5, 0.02), 0.035, st, vertices=8)
     # The horn is an open flared bell, mounted clear of the pole so the mouth
     # reads from the camera. A solid cone with a capped wide end looks like a
     # dish, which is exactly what the first draft did.
