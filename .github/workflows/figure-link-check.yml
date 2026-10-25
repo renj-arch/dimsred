@@ -62,7 +62,7 @@ jobs:
           node-version: 22
 
       - name: Check external figure links
-        run: node scripts/check-figure-links.js --json "$RUNNER_TEMP/figure-link-report.json"
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/check-figure-links.js --json "$RUNNER_TEMP/figure-link-report.json"
 
       - name: Add summary
         if: always()

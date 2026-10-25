@@ -159,7 +159,7 @@ jobs:
         env:
           OLLAMA_MODEL: ${{ env.MODEL }}
           OLLAMA_HOST: http://127.0.0.1:11434
-        run: node scripts/llm-autofix.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/llm-autofix.js
 
       - name: Publish fixes
         # always(): a fixer step that was capped or died still gets whatever

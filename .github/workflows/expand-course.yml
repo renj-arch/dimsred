@@ -149,7 +149,7 @@ jobs:
           OLLAMA_HOST: http://127.0.0.1:11434
           EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '5' }}
           EXPAND_DEADLINE_MIN: '75'
-        run: node scripts/expand-course.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
 
       - name: Regenerate exactly the filled lesson pages
         if: always()

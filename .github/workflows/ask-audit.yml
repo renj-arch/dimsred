@@ -97,7 +97,7 @@ jobs:
       # The audit exits nonzero on any unexpected verdict, so a regression
       # blocks the merge rather than being noticed later in a live answer.
       - name: Retrieval audit
-        run: node scripts/ask-audit.js -v
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/ask-audit.js -v
 
       # The retrieval engine can pass every assertion in ask-audit.js and still
       # leave the page dead on arrival: boot() runs inline in ask.html and a
@@ -105,7 +105,7 @@ jobs:
       # only requires the library. This check loads the seven libraries and
       # executes the page's own inline script, which is what actually broke.
       - name: Ask page boot
-        run: node scripts/check-ask-page-boot.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/check-ask-page-boot.js
 
       # Only suites that need nothing but the index belong here. This workflow
       # checks out data/ask-index.json plus the node shards and a handful of

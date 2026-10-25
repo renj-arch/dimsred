@@ -152,7 +152,7 @@ jobs:
           OD_ID: ${{ inputs.request_id }}
           OD_KIND: ${{ inputs.kind }}
           OD_PAYLOAD: ${{ inputs.payload }}
-        run: node scripts/on-demand-generate.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/on-demand-generate.js
 
       # Even a failed generation writes {status:"failed", ...} so the browser
       # stops polling with a real reason instead of timing out silently.

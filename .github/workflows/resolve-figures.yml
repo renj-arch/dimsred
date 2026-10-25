@@ -68,7 +68,7 @@ jobs:
           # stops the commit below from publishing those.
           RESOLVE_DELAY_MS: ${{ github.event.inputs.delay_ms || '400' }}
           RESOLVE_REPORT: figure-resolution-report.txt
-        run: node scripts/resolve-all-figures.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/resolve-all-figures.js
 
       - name: Commit resolved figures if changed
         run: |

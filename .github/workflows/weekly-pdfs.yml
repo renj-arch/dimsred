@@ -77,11 +77,11 @@ jobs:
 
       - name: Build practice papers (if not already built)
         if: steps.exam.outputs.name != 'skip'
-        run: node scripts/generate-papers.js ${{ steps.exam.outputs.name }}
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-papers.js ${{ steps.exam.outputs.name }}
 
       - name: Generate calendar data
         if: steps.exam.outputs.name != 'skip'
-        run: node scripts/generate-calendar-data.js ${{ steps.exam.outputs.name }}
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-calendar-data.js ${{ steps.exam.outputs.name }}
 
       - name: Build weekly PDF
         if: steps.exam.outputs.name != 'skip'
@@ -89,7 +89,7 @@ jobs:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           HUGGINGFACE_API_KEY: ${{ secrets.HUGGINGFACE_API_KEY }}
-        run: node scripts/build-weekly-pdf.js ${{ steps.exam.outputs.name }}
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-weekly-pdf.js ${{ steps.exam.outputs.name }}
 
       - name: Clean up PDFs older than 4 weeks
         run: find pdfs -name "weekly-*.pdf" -mtime +27 -delete

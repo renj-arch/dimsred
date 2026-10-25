@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-25T13:24:09.296Z",
-  "cursor": 57,
-  "built": 54
+  "updatedAt": "2026-10-25T22:09:50.862Z",
+  "cursor": 60,
+  "built": 57
  },
  "figs": {
   "87926696": {
@@ -327,6 +327,24 @@
   "db36ddfe": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Shaft</text><rect x=\"40\" y=\"80\" width=\"280\" height=\"20\"/><text x=\"170\" y=\"105\">Key</text><line x1=\"340\" y1=\"90\" x2=\"360\" y2=\"90\" stroke-dasharray=\"4,2\"/><text x=\"345\" y=\"95\">d</text><path d=\"M 80 90 L 80 110 L 100 110 L 100 90 Z\"/><text x=\"75\" y=\"105\">t</text><line x1=\"100\" y1=\"90\" x2=\"340\" y2=\"90\"/><text x=\"230\" y=\"85\">l</text><path d=\"M 100 90 L 100 110 M 100 90 L 120 90\" stroke-dasharray=\"4,2\"/><text x=\"115\" y=\"105\">T (Torque)</text><line x1=\"340\" y1=\"140\" x2=\"360\" y2=\"140\" stroke-dasharray=\"4,2\"/><text x=\"345\" y=\"145\">d</text><path d=\"M 80 140 L 80 160 L 100 160 L 100 140 Z\"/><text x=\"75\" y=\"155\">t</text><line x1=\"100\" y1=\"140\" x2=\"340\" y2=\"140\"/><text x=\"230\" y=\"135\">l</text><path d=\"M 100 140 L 100 160 M 100 140 L 120 140\" stroke-dasharray=\"4,2\"/><text x=\"115\" y=\"155\">T (Torque)</text><text x=\"180\" y=\"30\">Crushing Area = t × l</text><text x=\"180\" y=\"190\">σc = 4T / (t × l × d)</text></svg>",
    "n": "write the crushing stress formula for a key carrying torque t.",
+   "sub": "design",
+   "at": "2026-10-25"
+  },
+  "6906108a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Shaft Couplings</text><g id=\"rigid\"><rect x=\"40\" y=\"60\" width=\"80\" height=\"60\" rx=\"5\"/><circle cx=\"80\" cy=\"90\" r=\"15\" fill=\"#222\"/><line x1=\"80\" y1=\"105\" x2=\"80\" y2=\"145\" stroke-width=\"3\"/><text x=\"105\" y=\"110\">Rigid</text><text x=\"105\" y=\"125\">(No Gap)</text><text x=\"105\" y=\"140\">(Aligned)</text></g><g id=\"flexible\"><rect x=\"180\" y=\"60\" width=\"80\" height=\"60\" rx=\"5\"/><circle cx=\"220\" cy=\"90\" r=\"15\" fill=\"#222\"/><path d=\"M 220 105 Q 235 120 220 135\" stroke-width=\"3\"/><text x=\"245\" y=\"110\">Flexible</text><text x=\"245\" y=\"125\">(Gap Allowed)</text><text x=\"245\" y=\"140\">(Misaligned)</text></g><line x1=\"80\" y1=\"160\" x2=\"80\" y2=\"175\" stroke-dasharray=\"3,3\"/><line x1=\"220\" y1=\"160\" x2=\"220\" y2=\"175\" stroke-dasharray=\"3,3\"/></svg>",
+   "n": "into which two broad classes are shaft couplings divided?",
+   "sub": "design",
+   "at": "2026-10-25"
+  },
+  "914504bd": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"280\" height=\"60\" /><path d=\"M 100 100 L 100 140 M 260 100 L 260 140\" stroke-dasharray=\"4,2\" /><path d=\"M 100 100 L 100 80 M 260 100 L 260 120\" stroke-dasharray=\"4,2\" /><text x=\"135\" y=\"95\" text-anchor=\"middle\">Shaft A</text><text x=\"225\" y=\"95\" text-anchor=\"middle\">Shaft B</text><text x=\"180\" y=\"70\" text-anchor=\"middle\">Muff (Sleeve)</text><text x=\"180\" y=\"160\" text-anchor=\"middle\">Keyed Connection</text></svg>",
+   "n": "describe a muff (sleeve) coupling.",
+   "sub": "design",
+   "at": "2026-10-25"
+  },
+  "47cde014": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Left Shaft -->\n  <rect x=\"20\" y=\"80\" width=\"40\" height=\"60\" rx=\"5\" />\n  <text x=\"35\" y=\"115\" text-anchor=\"middle\">Shaft</text>\n  \n  <!-- Key (Left) -->\n  <rect x=\"60\" y=\"92\" width=\"8\" height=\"36\" fill=\"#222\" />\n  \n  <!-- Left Flange -->\n  <circle cx=\"100\" cy=\"110\" r=\"45\" stroke-width=\"1.5\" />\n  <text x=\"90\" y=\"105\">Flange</text>\n  \n  <!-- Right Shaft -->\n  <rect x=\"280\" y=\"80\" width=\"40\" height=\"60\" rx=\"5\" />\n  <text x=\"295\" y=\"115\" text-anchor=\"middle\">Shaft</text>\n  \n  <!-- Key (Right) -->\n  <rect x=\"320\" y=\"92\" width=\"8\" height=\"36\" fill=\"#222\" />\n  \n  <!-- Right Flange -->\n  <circle cx=\"340\" cy=\"110\" r=\"45\" stroke-width=\"1.5\" />\n  <text x=\"330\" y=\"105\">Flange</text>\n  \n  <!-- Bolts (Shear) -->\n  <circle cx=\"170\" cy=\"80\" r=\"2\" fill=\"#222\" />\n  <circle cx=\"170\" cy=\"140\" r=\"2\" fill=\"#222\" />\n  <circle cx=\"195\" cy=\"80\" r=\"2\" fill=\"#222\" />\n  <circle cx=\"195\" cy=\"140\" r=\"2\" fill=\"#222\" />\n  <circle cx=\"230\" cy=\"80\" r=\"2\" fill=\"#222\" />\n  <circle cx=\"230\" cy=\"140\" r=\"2\" fill=\"#222\" />\n  \n  <!-- Shear Force Arrows -->\n  <line x1=\"170\" y1=\"80\" x2=\"170\" y2=\"65\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\" />\n  <line x1=\"195\" y1=\"80\" x2=\"195\" y2=\"65\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\" />\n  <line x1=\"230\" y1=\"80\" x2=\"230\" y2=\"65\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\" />\n  \n  <!-- Labels -->\n  <text x=\"170\" y=\"55\" text-anchor=\"middle\">Bolts</text>\n  <text x=\"170\" y=\"200\" text-anchor=\"middle\">Torque Flow:</text>\n  <text x=\"170\" y=\"215\" text-anchor=\"middle\">Shaft → Key → Flange → Bolts</text>\n  \n  <!-- Arrow Marker Definition -->\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\">\n      <polygon points=\"0 0, 10 3, 0 6\" fill=\"#222\" />\n    </marker>\n  </defs>\n</svg>",
+   "n": "how does a flanged coupling transmit torque?",
    "sub": "design",
    "at": "2026-10-25"
   }

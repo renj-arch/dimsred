@@ -69,7 +69,7 @@ jobs:
       - name: Run browser test (20 pages + quiz flows)
         env:
           SITE_URL: http://127.0.0.1:8080
-        run: node scripts/browser-test.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/browser-test.js
 
       - name: Stop server
         if: always()

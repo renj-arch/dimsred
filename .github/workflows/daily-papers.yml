@@ -82,23 +82,23 @@ jobs:
 
       - name: Generate procedural questions (no AI)
         if: steps.batch.outputs.exams != 'skip'
-        run: node scripts/generate-daily-questions.js ${{ steps.batch.outputs.exams }} --count=15
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-daily-questions.js ${{ steps.batch.outputs.exams }} --count=15
 
       - name: Build practice paper
         if: steps.batch.outputs.exams != 'skip'
-        run: node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
 
       - name: Generate calendar data
         if: steps.batch.outputs.exams != 'skip'
-        run: node scripts/generate-calendar-data.js ${{ steps.batch.outputs.exams }}
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-calendar-data.js ${{ steps.batch.outputs.exams }}
 
       - name: Update sitemap
         if: steps.batch.outputs.exams != 'skip'
-        run: node scripts/generate-sitemap.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-sitemap.js
 
       - name: Build topic index for micro-tests
         if: steps.batch.outputs.exams != 'skip'
-        run: node scripts/build-topic-index.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-topic-index.js
 
       - name: Ping search engines
         if: steps.batch.outputs.exams != 'skip'
