@@ -516,7 +516,7 @@ function writeBridgeTrack(events, duration, file) {
   });
   let peak = 0;
   for (let i = 0; i < samples.length; i++) peak = Math.max(peak, Math.abs(samples[i]));
-  const scale = peak > 0.82 ? 0.82 / peak : 1;
+  const scale = peak > 0 ? 0.82 / peak : 1;
   for (let i = 0; i < samples.length; i++) samples[i] *= scale;
   writeWav16(file, samples, rate);
   console.log(`sound bridges: ${events.length} events · peak ${(peak * scale).toFixed(2)}`);

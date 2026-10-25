@@ -293,40 +293,50 @@
     if (irisRing) irisRing.style.opacity = '0';
     if (wipeEdge) wipeEdge.style.opacity = '0';
     if (fog) fog.style.opacity = '0';
+    if (ghost) {
+      ghost.style.opacity = '0';
+      ghost.style.transform = 'none';
+      ghost.style.clipPath = 'none';
+      ghost.style.maskImage = 'none';
+      ghost.style.webkitMaskImage = 'none';
+      ghost.style.filter = 'none';
+    }
     if (kind === 'dip') {
       dip.style.opacity = String(Math.sin(Math.PI * p));
-      if (ghost) ghost.style.opacity = '0';
       return;
     }
     if (!ghost) return;
-    if (duration <= 0 || !ghostActive) {
-      ghost.style.opacity = '0';
-      return;
-    }
+    if (duration <= 0 || !ghostActive) return;
     if (kind === 'iris') {
       var origin = Array.isArray(spec.origin) ? spec.origin : [50, 50];
-      var radius = e * 78;
+      var stageW = stage.clientWidth || window.innerWidth || 1920;
+      var stageH = stage.clientHeight || window.innerHeight || 1080;
+      var ox = (origin[0] / 100) * stageW;
+      var oy = (origin[1] / 100) * stageH;
+      var radiusPx = Math.max(0.2, e * 0.78 * stageW);
+      var inner = Math.max(0, radiusPx - 1);
+      var mask = 'radial-gradient(circle ' + radiusPx.toFixed(1) + 'px at ' +
+        ox.toFixed(1) + 'px ' + oy.toFixed(1) + 'px, transparent 0, transparent ' +
+        inner.toFixed(1) + 'px, #000 ' + radiusPx.toFixed(1) + 'px, #000 100%)';
+      media.style.clipPath = 'circle(' + radiusPx.toFixed(1) + 'px at ' +
+        ox.toFixed(1) + 'px ' + oy.toFixed(1) + 'px)';
       ghost.style.opacity = p < 1 ? '1' : '0';
-      ghost.style.clipPath = 'none';
-      ghost.style.transform = 'none';
-      ghost.style.filter = 'none';
-      media.style.clipPath = 'circle(' + radius.toFixed(2) + '% at ' + origin[0] + '% ' + origin[1] + '%)';
+      ghost.style.maskImage = mask;
+      ghost.style.webkitMaskImage = mask;
       if (irisRing) {
-        irisRing.style.left = origin[0] + '%';
-        irisRing.style.top = origin[1] + '%';
-        irisRing.style.width = (radius * 2).toFixed(2) + '%';
-        irisRing.style.height = (radius * 2).toFixed(2) + 'vw';
+        irisRing.style.left = ox.toFixed(1) + 'px';
+        irisRing.style.top = oy.toFixed(1) + 'px';
+        irisRing.style.width = (radiusPx * 2).toFixed(1) + 'px';
+        irisRing.style.height = (radiusPx * 2).toFixed(1) + 'px';
         irisRing.style.opacity = p < 0.98 ? String(0.82 * (1 - p * 0.35)) : '0';
       }
     } else if (kind === 'paper-wipe') {
       var direction = spec.direction || (/left/i.test(kind) ? 'left' : 'right');
       var edge = e * 100;
-      ghost.style.opacity = p < 1 ? '1' : '0';
-      ghost.style.clipPath = 'none';
-      ghost.style.transform = 'none';
-      ghost.style.filter = 'none';
+      ghost.style.opacity = p < 0.999 ? '1' : '0';
       if (direction === 'right') {
         media.style.clipPath = 'inset(0 0 0 ' + (100 - edge).toFixed(2) + '%)';
+        ghost.style.clipPath = 'inset(0 ' + edge.toFixed(2) + '% 0 0)';
         wipeEdge.style.left = (100 - edge).toFixed(2) + '%';
         wipeEdge.style.right = 'auto';
         wipeEdge.style.top = '0';
@@ -335,6 +345,7 @@
         wipeEdge.style.height = 'auto';
       } else if (direction === 'down') {
         media.style.clipPath = 'inset(0 0 ' + (100 - edge).toFixed(2) + '% 0)';
+        ghost.style.clipPath = 'inset(' + edge.toFixed(2) + '% 0 0 0)';
         wipeEdge.style.left = '0';
         wipeEdge.style.right = '0';
         wipeEdge.style.top = edge.toFixed(2) + '%';
@@ -343,6 +354,7 @@
         wipeEdge.style.height = '0.55vw';
       } else if (direction === 'up') {
         media.style.clipPath = 'inset(' + (100 - edge).toFixed(2) + '% 0 0 0)';
+        ghost.style.clipPath = 'inset(0 0 ' + edge.toFixed(2) + '% 0)';
         wipeEdge.style.left = '0';
         wipeEdge.style.right = '0';
         wipeEdge.style.top = (100 - edge).toFixed(2) + '%';
@@ -351,6 +363,7 @@
         wipeEdge.style.height = '0.55vw';
       } else {
         media.style.clipPath = 'inset(0 ' + (100 - edge).toFixed(2) + '% 0 0)';
+        ghost.style.clipPath = 'inset(0 0 0 ' + edge.toFixed(2) + '%)';
         wipeEdge.style.left = edge.toFixed(2) + '%';
         wipeEdge.style.right = 'auto';
         wipeEdge.style.top = '0';
@@ -361,9 +374,7 @@
       if (wipeEdge) wipeEdge.style.opacity = p < 0.98 ? '0.92' : '0';
     } else if (kind === 'dissolve') {
       ghost.style.opacity = String(1 - e);
-      ghost.style.clipPath = 'none';
       ghost.style.transform = 'scale(1.01)';
-      ghost.style.filter = 'none';
       if (fog) {
         fog.style.opacity = String(Math.sin(Math.PI * p) * 0.68);
         fog.style.transform = 'translateX(' + ((p - 0.5) * 5).toFixed(2) + 'vw) scale(' +
@@ -372,31 +383,22 @@
     } else if (kind === 'whip-left' || kind === 'whip-right') {
       var dir = kind === 'whip-left' ? -1 : 1;
       ghost.style.opacity = p < 1 ? '1' : '0';
-      ghost.style.clipPath = 'none';
       ghost.style.transform = 'translateX(' + (dir * e * 100).toFixed(3) + '%) scale(1.04)';
       ghost.style.filter = 'blur(' + (e * 16).toFixed(2) + 'px)';
       media.style.transform = 'translateX(' + (-dir * (1 - e) * 100).toFixed(3) + '%) scale(1.03)';
       media.style.filter = 'blur(' + ((1 - e) * 13).toFixed(2) + 'px)';
     } else if (kind === 'match-cut') {
       ghost.style.opacity = String(1 - e);
-      ghost.style.clipPath = 'none';
       ghost.style.transform = 'scale(' + (1 + e * 0.035).toFixed(4) + ')';
-      ghost.style.filter = 'none';
     } else if (/mask/i.test(kind)) {
       var fromLeft = /left/i.test(kind);
       ghost.style.opacity = p < 1 ? '1' : '0';
-      ghost.style.transform = 'none';
-      ghost.style.filter = 'none';
       ghost.style.clipPath = fromLeft
         ? 'inset(0 0 0 ' + (e * 100).toFixed(2) + '%)'
         : 'inset(0 ' + (e * 100).toFixed(2) + '% 0 0)';
     } else if (/cross|match/i.test(kind)) {
       ghost.style.opacity = String(1 - e);
-      ghost.style.clipPath = 'none';
       ghost.style.transform = 'scale(' + (1 + e * 0.02).toFixed(4) + ')';
-      ghost.style.filter = 'none';
-    } else {
-      ghost.style.opacity = '0';
     }
   }
 
@@ -438,15 +440,19 @@
     if (!timeline) throw new Error('timeline not ready');
     t = Math.max(0, Math.min(Number(t) || 0, timeline.duration - 0.001));
     var changed = false;
-    var scene = timeline.scenes[timeline.scenes.length - 1];
+    // Hold the last shot that has started. A scene has a short narration lead
+    // before its first shot; the old scene-based lookup fell back to the last
+    // shot of the incoming scene during that lead, which corrupted both the
+    // frame and the outgoing ghost on the next cut.
+    var scene = timeline.scenes[0];
+    var shot = scene.shots[0];
     for (var i = 0; i < timeline.scenes.length; i++) {
       var s = timeline.scenes[i];
-      if (t >= s.start && t < s.start + s.duration) { scene = s; break; }
-    }
-    var shot = scene.shots[scene.shots.length - 1];
-    for (var j = 0; j < scene.shots.length; j++) {
-      var h = scene.shots[j];
-      if (t >= h.start && t < h.start + h.duration) { shot = h; break; }
+      for (var j = 0; j < s.shots.length; j++) {
+        var h = s.shots[j];
+        if (t >= h.start) { scene = s; shot = h; }
+        else break;
+      }
     }
     if (!currentShot || currentShot.id !== shot.id) { setShot(scene, shot); changed = true; }
 

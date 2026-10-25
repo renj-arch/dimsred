@@ -1208,6 +1208,15 @@ def scene_court_ledger(samples, width, height, out):
          dark_wood("LedgerStampWood"), rot=(0, 0, -0.2))
     cylinder("LedgerStampHandle", (1.28, 0.52, 0.17), 0.055, 0.14,
              dark_wood("LedgerStampWood"), vertices=16)
+    # A circular court seal on the page. The edit iris opens from this mark,
+    # not from an empty sheet: the paper becomes the seal becomes the court.
+    seal = principled("LedgerSealRed", (0.46, 0.030, 0.020), 0.58)
+    cylinder("LedgerSealDisc", (0.52, -0.34, 0.045), 0.165, 0.0025, seal, vertices=48)
+    bpy.ops.mesh.primitive_torus_add(major_radius=0.128, minor_radius=0.007,
+                                     major_segments=48, minor_segments=8,
+                                     location=(0.52, -0.34, 0.048))
+    assign(bpy.context.object, seal)
+    text_obj("LedgerSealYear", "1989", (0.52, -0.34, 0.050), 0.038, mat=seal, align="CENTER")
     cube("LedgerPen", (-0.42, -0.62, 0.052), (0.40, 0.025, 0.016),
          principled("LedgerPenInk", (0.012, 0.010, 0.008), 0.35), rot=(0, 0, 0.55))
     cube("GavelHead", (1.58, -0.38, 0.12), (0.42, 0.14, 0.14),
