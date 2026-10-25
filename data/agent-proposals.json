@@ -1,17 +1,57 @@
 {
  "meta": {
-  "generatedAt": "2026-10-24T06:35:11.849Z",
+  "generatedAt": "2026-10-25T07:00:02.933Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 18,
+  "count": 22,
   "lastAttempt": {
-   "at": "2026-10-24T06:35:11.849Z",
+   "at": "2026-10-25T07:00:02.933Z",
    "ok": true,
-   "count": 1,
-   "dropped": 4
+   "count": 4,
+   "dropped": 1
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvnh9yph-1",
+   "at": "2026-10-25T07:00:02.933Z",
+   "title": "Seed Main Bank from Invented Pool",
+   "why": "The main page relies on a frozen batch of 9 items, while the 'Invented' pool contains 69 questions across difficulty levels.",
+   "idea": "Modify the static HTML loader to automatically pull the top 10-15 questions from data/invented.json and inject them into the main bank container if the hand-authored count is low, ensuring fresh content appears without manual intervention.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvnh9yph-2",
+   "at": "2026-10-25T07:00:02.933Z",
+   "title": "Robust Tutor Lane Output Parser",
+   "why": "The digest shows recent failures where the model output lacked a JSON array or generated fewer than 3 valid questions, causing lane breaks.",
+   "idea": "Update the Node.js script in the GitHub Actions workflow to wrap the LLM call response in a strict try-catch block that attempts to extract the first valid JSON object from unstructured text before failing, and retries the generation with a system prompt fix if the count is under 3.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvnh9yph-3",
+   "at": "2026-10-25T07:00:02.933Z",
+   "title": "Activate Daily Wiki Fill Pipeline",
+   "why": "The fault board lists 'Corpus fill run in progress' for daily-wiki-fill tasks, indicating the automated content generation pipeline is stalled or not running.",
+   "idea": "Add a GitHub Actions cron job that triggers the Node script to fetch new topics from an RSS feed or predefined list and calls the local Ollama model to generate questions, writing results directly to data/wiki.json.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvnh9yph-4",
+   "at": "2026-10-25T07:00:02.933Z",
+   "title": "Auto-Resolve Low-Priority Faults",
+   "why": "The agent log shows the Site Agent ran 15 times fixing 342 items, yet 67 faults remain unchanged on the board.",
+   "idea": "Create a lightweight GitHub Action step that parses data/fault-board.json, filters for 'info' or 'warn' severity items older than 24 hours, and automatically executes the corresponding fix script to clear them from the list.",
+   "effort": "small",
+   "risk": "medium",
+   "status": "new"
+  },
   {
    "id": "prp-mvm0y5ii-1",
    "at": "2026-10-24T06:35:11.849Z",

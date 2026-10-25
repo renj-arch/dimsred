@@ -1,53 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-23T18:03:49.327Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (39 total)",
-       "text": "How can stress concentration be reduced? | What is a shaft? | Write the torsion equation for a solid circular shaft."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Industrial Engineering (92 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-23T18:27:50.168Z",
    "model": "qwen3:4b",
    "totalFixes": 340,
@@ -2214,8 +2167,50 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-25T07:00:02.933Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 4,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 4
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Seed Main Bank from Invented Pool",
+       "detail": "The main page relies on a frozen batch of 9 items, while the 'Invented' pool contains 69 questions across difficulty levels.",
+       "text": "Modify the static HTML loader to automatically pull the top 10-15 questions from data/invented.json and inject them into the main bank container if the hand-authored count is low, ensuring fresh content appears without manual intervention."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Robust Tutor Lane Output Parser",
+       "detail": "The digest shows recent failures where the model output lacked a JSON array or generated fewer than 3 valid questions, causing lane breaks.",
+       "text": "Update the Node.js script in the GitHub Actions workflow to wrap the LLM call response in a strict try-catch block that attempts to extract the first valid JSON object from unstructured text before failing, and retries the generation with a system prompt fix if the count is under 3."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Activate Daily Wiki Fill Pipeline",
+       "detail": "The fault board lists 'Corpus fill run in progress' for daily-wiki-fill tasks, indicating the automated content generation pipeline is stalled or not running.",
+       "text": "Add a GitHub Actions cron job that triggers the Node script to fetch new topics from an RSS feed or predefined list and calls the local Ollama model to generate questions, writing results directly to data/wiki.json."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Auto-Resolve Low-Priority Faults",
+       "detail": "The agent log shows the Site Agent ran 15 times fixing 342 items, yet 67 faults remain unchanged on the board.",
+       "text": "Create a lightweight GitHub Action step that parses data/fault-board.json, filters for 'info' or 'warn' severity items older than 24 hours, and automatically executes the corresponding fix script to clear them from the list."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-25T06:36:40.276Z",
+ "lastRun": "2026-10-25T07:00:02.933Z",
  "model": "qwen3:4b"
 }
