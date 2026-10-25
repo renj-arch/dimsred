@@ -1,233 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-23T12:35:56.733Z",
-   "model": "qwen3:4b",
-   "totalFixes": 275,
-   "byAgent": [
-    {
-     "agent": "graphnotes",
-     "count": 0
-    },
-    {
-     "agent": "architect",
-     "count": 1
-    },
-    {
-     "agent": "foresight",
-     "count": 2
-    },
-    {
-     "agent": "questions",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 32
-    },
-    {
-     "agent": "selfcheck",
-     "count": 1
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 29
-    },
-    {
-     "agent": "a11y",
-     "count": 210
-    },
-    {
-     "agent": "code",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "architect",
-     "fixes": [
-      {
-       "kind": "info",
-       "page": "ideas",
-       "fix": "Architect: proposal \"Exam-style pencil-outline figures inside Ask answers\" — model output unparseable, retry next run"
-      }
-     ]
-    },
-    {
-     "agent": "foresight",
-     "fixes": [
-      {
-       "page": "3d-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      },
-      {
-       "page": "test-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      }
-     ]
-    },
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/ask-audit.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/browser-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-lectures.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/daily-globe-fill.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/daily-papers.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/daily-pib-feed.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/expand-course.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/fault-status.yml",
-       "fix": "Added memory limit to node steps"
-      }
-     ]
-    },
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "archive.html",
-       "fix": "Added skip-to-content link"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-23T13:21:49.592Z",
    "model": "qwen3:4b",
    "totalFixes": 342,
@@ -2528,8 +2301,44 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-25T03:16:37.435Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (51 total)",
+       "text": "Describe a Woodruff key. | What is a saddle key? | What is a feather key?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-24T21:28:05.668Z",
+ "lastRun": "2026-10-25T03:16:37.435Z",
  "model": "qwen3.5:9b"
 }

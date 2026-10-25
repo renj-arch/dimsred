@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-24T15:21:16.301Z",
-  "cursor": 51,
-  "built": 48
+  "updatedAt": "2026-10-25T02:57:35.423Z",
+  "cursor": 54,
+  "built": 51
  },
  "figs": {
   "87926696": {
@@ -293,6 +293,24 @@
    "n": "give the standard proportions of a rectangular sunk key for a shaft of diameter d.",
    "sub": "design",
    "at": "2026-10-24"
+  },
+  "819b8930": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Shaft -->\n  <circle cx=\"180\" cy=\"110\" r=\"70\"/>\n  <!-- Recess in shaft (semicircular cut) -->\n  <path d=\"M 110 40 L 180 110 A 70 70 0 0 1 250 40 Z\" stroke-dasharray=\"3,3\"/>\n  <!-- Woodruff Key (semicircular disc) -->\n  <path d=\"M 110 40 L 180 110 A 70 70 0 0 1 250 40 Z\" fill=\"none\" stroke-width=\"3\"/>\n  <!-- Key label -->\n  <text x=\"180\" y=\"95\" text-anchor=\"middle\">Woodruff</text>\n  <text x=\"180\" y=\"107\" text-anchor=\"middle\">Key (Semicircular)</text>\n  <!-- Shaft label -->\n  <text x=\"260\" y=\"110\">Shaft</text>\n  <text x=\"260\" y=\"125\">with milled recess</text>\n  <!-- Self-aligning hint arrow -->\n  <line x1=\"140\" y1=\"35\" x2=\"140\" y2=\"55\" stroke-width=\"1\"/>\n  <polygon points=\"140,35 136,48 144,48\" fill=\"#222\"/>\n  <text x=\"130\" y=\"47\">Self-aligning</text>\n</svg>",
+   "n": "describe a woodruff key.",
+   "sub": "design",
+   "at": "2026-10-25"
+  },
+  "b805bbbb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Shaft -->\n  <rect x=\"80\" y=\"90\" width=\"200\" height=\"40\" rx=\"5\"/>\n  <text x=\"180\" y=\"135\" text-anchor=\"middle\">Shaft</text>\n  <!-- Saddle Key (Hollow, fits over circumference) -->\n  <path d=\"M 120 90 Q 140 60 160 90 L 160 130 Q 140 160 120 130 Z\"/>\n  <path d=\"M 180 90 Q 200 60 220 90 L 220 130 Q 200 160 180 130 Z\"/>\n  <!-- Keyway on Hub (No keyway on shaft) -->\n  <path d=\"M 140 90 L 140 130 M 220 90 L 220 130\" stroke-dasharray=\"2,2\"/>\n  <!-- Torque arrows -->\n  <path d=\"M 100 110 Q 80 100 70 120\" fill=\"none\" stroke-width=\"1\"/>\n  <path d=\"M 260 110 Q 280 100 290 120\" fill=\"none\" stroke-width=\"1\"/>\n  <!-- Labels -->\n  <text x=\"50\" y=\"135\">Hub</text>\n  <text x=\"340\" y=\"135\">Torque</text>\n  <text x=\"280\" y=\"60\">Friction Surface</text>\n  <text x=\"180\" y=\"180\" text-anchor=\"middle\">No Keyway in Shaft</text>\n</svg>",
+   "n": "what is a saddle key?",
+   "sub": "design",
+   "at": "2026-10-25"
+  },
+  "bb9889cf": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"100\" height=\"40\"/><rect x=\"160\" y=\"80\" width=\"100\" height=\"40\"/><line x1=\"140\" y1=\"90\" x2=\"160\" y2=\"90\" stroke-dasharray=\"2,2\"/><text x=\"135\" y=\"75\" font-size=\"12\">Shaft</text><text x=\"165\" y=\"75\" font-size=\"12\">Hub</text><rect x=\"140\" y=\"80\" width=\"20\" height=\"40\"/><text x=\"135\" y=\"95\" font-size=\"12\">Feather Key</text><line x1=\"160\" y1=\"120\" x2=\"160\" y2=\"140\" stroke-dasharray=\"2,2\"/><text x=\"150\" y=\"135\" font-size=\"12\">Sliding Allowed</text><text x=\"150\" y=\"155\" font-size=\"12\">(Axial Motion)</text></svg>",
+   "n": "what is a feather key?",
+   "sub": "design",
+   "at": "2026-10-25"
   }
  }
 }
