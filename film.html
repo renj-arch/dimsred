@@ -22,6 +22,14 @@
   #media { z-index:0; overflow:hidden; }
   #ghost { position:absolute; inset:0; z-index:2; overflow:hidden; background:#000 center/cover no-repeat;
     opacity:0; pointer-events:none; will-change:transform,opacity,clip-path,filter; }
+  #irisRing, #wipeEdge, #fog { position:absolute; pointer-events:none; opacity:0; z-index:3; }
+  #irisRing { border:2px solid rgba(236,190,118,.62); border-radius:50%;
+    box-shadow:0 0 24px rgba(236,190,118,.38), inset 0 0 24px rgba(236,190,118,.16);
+    transform:translate(-50%,-50%); will-change:width,height,opacity; }
+  #wipeEdge { background:linear-gradient(90deg, rgba(26,18,10,0), rgba(239,220,184,.92), rgba(26,18,10,0));
+    box-shadow:0 0 26px rgba(239,220,184,.68); will-change:left,right,top,bottom,opacity; }
+  #fog { inset:-12%; background:radial-gradient(62% 56% at 50% 56%, rgba(205,216,206,.30), rgba(156,174,166,.13) 45%, transparent 72%);
+    filter:blur(22px); mix-blend-mode:screen; will-change:transform,opacity; }
   #dip { position:absolute; inset:0; z-index:5; background:#000; opacity:0; pointer-events:none; }
   #mapLayer { z-index:1; }
   #titleLayer { z-index:1; }
@@ -243,6 +251,9 @@
 <div id="stage">
   <div id="media" class="hidden"></div>
   <div id="ghost"></div>
+  <div id="irisRing"></div>
+  <div id="wipeEdge"></div>
+  <div id="fog"></div>
   <div id="mapLayer" class="hidden"></div>
   <div id="titleLayer" class="hidden"></div>
   <div id="atmos"><span class="shaft"></span><span class="glow"></span></div>

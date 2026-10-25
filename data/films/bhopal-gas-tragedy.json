@@ -102,7 +102,13 @@
             "a distant train",
             "a single metal tick"
           ],
-          "transition": "flash",
+          "transition": {
+            "type": "flash-frame",
+            "frames": 2,
+            "sound": "title-tone",
+            "audioDuration": 0.9,
+            "reason": "One frame of sodium light opens the film; the title then holds in silence."
+          },
           "weight": 2
         },
         {
@@ -117,7 +123,11 @@
             "low industrial hum"
           ],
           "text": "2 DECEMBER 1984",
-          "transition": "cut",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The date lands on the city; a dissolve between a title and a place would soften the fact."
+          },
           "weight": 3,
           "framing": {
             "zoom": [
@@ -172,12 +182,16 @@
             "a bicycle freewheel",
             "transformer hum"
           ],
-          "transition": "cut",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The title gives way to the plant gate whole; the place arrives without a reveal."
+          },
           "weight": 2,
           "framing": {
             "zoom": [
               1.02,
-              1.10
+              1.1
             ],
             "x": [
               50,
@@ -200,7 +214,11 @@
             "a valve release",
             "low compressor"
           ],
-          "transition": "whip-right",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The gate opens onto the tank farm; the scale jumps on a hard cut."
+          },
           "weight": 3
         },
         {
@@ -214,7 +232,11 @@
             "a distant forklift"
           ],
           "text": "UNION CARBIDE INDIA LIMITED",
-          "transition": "match",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The company name arrives as a statement after the tanks, not as a decorative wipe."
+          },
           "weight": 2
         },
         {
@@ -228,7 +250,11 @@
             "metal expansion",
             "footsteps on grating"
           ],
-          "transition": "crossfade",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The pipe corridor continues the plant interior; the cut keeps the factory one system."
+          },
           "weight": 2
         },
         {
@@ -246,7 +272,11 @@
           "text": "42 TONNES OF MIC",
           "impact": true,
           "impactSub": "TANK 610",
-          "transition": "cut",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The flare lands with forty-two tonnes; the number is the cut."
+          },
           "weight": 3
         }
       ]
@@ -282,6 +312,32 @@
       "shots": [
         {
           "id": "S03-A",
+          "plate": "valve",
+          "render": "blender",
+          "camera": "low three-quarter on the handwheel",
+          "visual": "A corroded handwheel and a tagged valve, lit by one work lamp, pipework running into the dark.",
+          "sfx": [
+            "a chain against metal",
+            "a drip",
+            "distant steam"
+          ],
+          "transition": {
+            "type": "iris",
+            "frames": 8,
+            "origin": [
+              50,
+              50
+            ],
+            "sound": "valve-ring",
+            "audioDuration": 0.7,
+            "reason": "The flare ring becomes the handwheel rim; the same circle now controls the flow."
+          },
+          "weight": 2,
+          "narrationLine": 1,
+          "text": "THE VALVE"
+        },
+        {
+          "id": "S03-B",
           "plate": "gauge",
           "render": "blender",
           "camera": "macro, the needle in the red",
@@ -292,37 +348,36 @@
             "room tone"
           ],
           "text": "PRESSURE",
-          "transition": "cut",
-          "weight": 2
-        },
-        {
-          "id": "S03-B",
-          "plate": "valve",
-          "render": "blender",
-          "camera": "low three-quarter on the handwheel",
-          "visual": "A corroded handwheel and a tagged valve, lit by one work lamp, pipework running into the dark.",
-          "sfx": [
-            "a chain against metal",
-            "a drip",
-            "distant steam"
-          ],
-          "transition": "whip-left",
-          "weight": 2
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The handwheel gives way to the gauge that measures what the valve let in."
+          },
+          "weight": 2,
+          "narrationLine": 2
         },
         {
           "id": "S03-C",
-          "plate": "control-panel",
+          "plate": "clock",
           "render": "blender",
-          "camera": "slow push across the analog panel",
-          "visual": "A wall of dials, switches and one red warning lamp; an empty chair and a logbook.",
+          "camera": "close on the wall clock, hands at 00:45",
+          "visual": "A wall clock reads 00:45 above a logbook; the minute hand is the only moving thing in the room.",
           "sfx": [
-            "fluorescent hum",
-            "a relay click",
-            "a pen on paper"
+            "clock tick",
+            "a phone off the hook",
+            "a low hum"
           ],
-          "text": "THE PANEL",
-          "transition": "crossfade",
-          "weight": 3
+          "text": "00:45",
+          "transition": {
+            "type": "match-cut",
+            "frames": 0,
+            "anchor": "gauge-needle",
+            "sound": "clock-tick",
+            "audioDuration": 0.5,
+            "reason": "The gauge needle and the clock minute hand read the same angle; the cut lands on the tick."
+          },
+          "weight": 2,
+          "narrationLine": 3
         },
         {
           "id": "S03-D",
@@ -336,23 +391,33 @@
             "silence"
           ],
           "text": "FLARE OFFLINE",
-          "transition": "cut",
-          "weight": 2
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The clock time gives way to the unlit flare; the failure is now a fact."
+          },
+          "weight": 2,
+          "narrationLine": 4
         },
         {
           "id": "S03-E",
-          "plate": "clock",
+          "plate": "control-panel",
           "render": "blender",
-          "camera": "close on the wall clock, hands at 00:45",
-          "visual": "A wall clock reads 00:45 above a logbook; the minute hand is the only moving thing in the room.",
+          "camera": "slow push across the analog panel",
+          "visual": "A wall of dials, switches and one red warning lamp; an empty chair and a logbook.",
           "sfx": [
-            "clock tick",
-            "a phone off the hook",
-            "a low hum"
+            "fluorescent hum",
+            "a relay click",
+            "a pen on paper"
           ],
-          "text": "00:45",
-          "transition": "dip",
-          "weight": 2
+          "text": "THE PANEL",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The empty panel holds the last line; no warning came from it."
+          },
+          "weight": 3,
+          "narrationLine": 5
         }
       ]
     },
@@ -397,7 +462,14 @@
             "metal groaning"
           ],
           "text": "THE RELEASE",
-          "transition": "cut",
+          "transition": {
+            "type": "dissolve",
+            "frames": 12,
+            "sound": "gas-haze",
+            "audioLead": 0.1,
+            "audioDuration": 1.2,
+            "reason": "Vapour crosses the frame; the dissolve is the gas, not a scene change."
+          },
           "weight": 2
         },
         {
@@ -411,7 +483,13 @@
             "a distant shout",
             "running feet"
           ],
-          "transition": "whip-right",
+          "transition": {
+            "type": "dissolve",
+            "frames": 12,
+            "sound": "gas-haze-2",
+            "audioDuration": 1,
+            "reason": "The haze continues through the pipe corridor; same gas, same low light."
+          },
           "weight": 2
         },
         {
@@ -425,7 +503,11 @@
             "a door slamming",
             "coughing far away"
           ],
-          "transition": "match",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The gas reaches the street; cut to the lamp before the dissolve can become a habit."
+          },
           "weight": 3
         },
         {
@@ -439,7 +521,11 @@
             "a baby crying",
             "wind"
           ],
-          "transition": "crossfade",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The roofscape shows the scale; a hard cut keeps the city from becoming wallpaper."
+          },
           "weight": 3
         },
         {
@@ -455,7 +541,14 @@
             "a low drone"
           ],
           "text": "NO PUBLIC WARNING",
-          "transition": "cut",
+          "transition": {
+            "type": "whip-right",
+            "frames": 7,
+            "sound": "siren",
+            "audioLead": 0.65,
+            "audioDuration": 1.4,
+            "reason": "The city alarm turns the frame; the siren is already in the air before the horn arrives."
+          },
           "weight": 2
         }
       ]
@@ -500,7 +593,13 @@
           "text": "2,259",
           "impact": true,
           "impactSub": "OFFICIAL IMMEDIATE DEATHS",
-          "transition": "cut",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "number-smash",
+            "audioDuration": 0.5,
+            "reason": "2,259 lands on the last syllable; no fade, no flash, no cushion."
+          },
           "weight": 3
         },
         {
@@ -518,7 +617,13 @@
           "text": "3,787",
           "impact": true,
           "impactSub": "MADHYA PRADESH, 1991",
-          "transition": "whip-left",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "number-stamp",
+            "audioDuration": 0.5,
+            "reason": "3,787 lands like a stamp on the file."
+          },
           "weight": 2
         },
         {
@@ -533,8 +638,17 @@
             "a clock",
             "night air"
           ],
-          "transition": "crossfade",
-          "weight": 2
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "number-bell",
+            "audioDuration": 0.9,
+            "reason": "8,000 lands with the clinic's count; the hard cut refuses consolation."
+          },
+          "weight": 2,
+          "text": "8,000",
+          "impact": true,
+          "impactSub": "SURVIVORS' CLINICS · FIRST WEEKS"
         },
         {
           "id": "S05-D",
@@ -551,7 +665,13 @@
           "text": "500,000+",
           "impact": true,
           "impactSub": "PEOPLE EXPOSED",
-          "transition": "match",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "match-strike",
+            "audioDuration": 0.5,
+            "reason": "The clinic gives way to the memorial wall; the exposed count is the bridge."
+          },
           "weight": 3
         }
       ]
@@ -600,7 +720,14 @@
           "text": "$470,000,000",
           "impact": true,
           "impactSub": "1989 SETTLEMENT",
-          "transition": "cut",
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 8,
+            "direction": "left",
+            "sound": "paper",
+            "audioDuration": 0.6,
+            "reason": "The ledger edge wipes the frame; the settlement arrives as paper."
+          },
           "weight": 3
         },
         {
@@ -614,7 +741,17 @@
             "a door closing",
             "paper"
           ],
-          "transition": "match",
+          "transition": {
+            "type": "iris",
+            "frames": 8,
+            "origin": [
+              50,
+              46
+            ],
+            "sound": "seal-ring",
+            "audioDuration": 0.7,
+            "reason": "The stamp's circular seal opens onto the courtroom scales; the law takes over the page."
+          },
           "weight": 2
         },
         {
@@ -630,7 +767,11 @@
             "a fan"
           ],
           "text": "THE CLAIMS",
-          "transition": "crossfade",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The courtroom gives way to the archive; the case outlives the hearing."
+          },
           "weight": 2
         },
         {
@@ -646,7 +787,14 @@
             "a low room tone"
           ],
           "text": "NO EXTRADITION",
-          "transition": "cut",
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 8,
+            "direction": "right",
+            "sound": "paper-2",
+            "audioDuration": 0.6,
+            "reason": "The newspaper edge wipes the frame; the headline is the next document."
+          },
           "weight": 2
         },
         {
@@ -661,7 +809,11 @@
             "a chair",
             "paper"
           ],
-          "transition": "match",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The conviction lands on a hard cut; two years is not a transition."
+          },
           "weight": 2
         },
         {
@@ -676,7 +828,11 @@
             "a distant truck",
             "metal ticking"
           ],
-          "transition": "whip-right",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The sign returns without a flourish; the name is still there."
+          },
           "weight": 2
         }
       ]
@@ -697,29 +853,34 @@
           "source": "bhopal"
         },
         {
-          "text": "Groundwater near the site is still contaminated.",
-          "source": "bhopal"
-        },
-        {
           "text": "Survivors still carry the exposure in their bodies.",
           "source": "pmc"
+        },
+        {
+          "text": "Groundwater near the site is still contaminated.",
+          "source": "bhopal"
         }
       ],
       "shots": [
         {
           "id": "S07-A",
-          "plate": "water-tap",
+          "plate": "hospital-corridor",
           "render": "blender",
-          "camera": "low, the tap and the bucket",
-          "visual": "A corroded standpipe and tap above a bucket, a toxic-looking puddle, barrels and a warning sign.",
+          "camera": "hold at the end of the corridor",
+          "visual": "The corridor recedes into fluorescent light; the stretcher is still empty.",
           "sfx": [
-            "a drip",
-            "a bucket",
-            "a distant dog"
+            "a trolley",
+            "fluorescent hum",
+            "a low drone"
           ],
-          "text": "DO NOT DRINK",
-          "transition": "cut",
-          "weight": 3
+          "text": "AFTERMATH",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The corridor is empty; the cut refuses to fill it."
+          },
+          "weight": 3,
+          "narrationLine": 1
         },
         {
           "id": "S07-B",
@@ -733,8 +894,13 @@
             "a fridge hum"
           ],
           "text": "THE SAMPLE",
-          "transition": "crossfade",
-          "weight": 2
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The jar is the next object in the chain: water, sample, body."
+          },
+          "weight": 2,
+          "narrationLine": 2
         },
         {
           "id": "S07-C",
@@ -747,23 +913,34 @@
             "a clock",
             "a curtain"
           ],
-          "transition": "match",
-          "weight": 2
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The clinic holds the exposure; no effect is needed."
+          },
+          "weight": 2,
+          "narrationLine": 3,
+          "text": ""
         },
         {
           "id": "S07-D",
-          "plate": "hospital-corridor",
+          "plate": "water-tap",
           "render": "blender",
-          "camera": "hold at the end of the corridor",
-          "visual": "The corridor recedes into fluorescent light; the stretcher is still empty.",
+          "camera": "low, the tap and the bucket",
+          "visual": "A corroded standpipe and tap above a bucket, a toxic-looking puddle, barrels and a warning sign.",
           "sfx": [
-            "a trolley",
-            "fluorescent hum",
-            "a low drone"
+            "a drip",
+            "a bucket",
+            "a distant dog"
           ],
-          "text": "THE BODY",
-          "transition": "dip",
-          "weight": 3
+          "text": "DO NOT DRINK",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The tap is the last object before the flame; the drip is the bridge."
+          },
+          "weight": 3,
+          "narrationLine": 4
         }
       ]
     },
@@ -794,20 +971,6 @@
       "shots": [
         {
           "id": "S08-A",
-          "plate": "memorial-wall",
-          "render": "blender",
-          "camera": "low, the plaques and the word BHOPAL",
-          "visual": "The memorial wall: brass plaques, marigolds, candles, the word BHOPAL and the year 1984.",
-          "sfx": [
-            "a match",
-            "a bell",
-            "wind"
-          ],
-          "transition": "cut",
-          "weight": 2
-        },
-        {
-          "id": "S08-B",
           "plate": "memorial-flame",
           "render": "blender",
           "camera": "macro, the flame inside the glass ring",
@@ -817,8 +980,35 @@
             "room tone",
             "a distant chant"
           ],
-          "transition": "crossfade",
-          "weight": 2
+          "transition": {
+            "type": "match-cut",
+            "frames": 2,
+            "anchor": "water-flame",
+            "sound": "water-flame",
+            "audioDuration": 1.4,
+            "reason": "The tap drip and the memorial flame share a vertical shape and screen position; the drip sound carries into the flame."
+          },
+          "weight": 2,
+          "narrationLine": 1
+        },
+        {
+          "id": "S08-B",
+          "plate": "memorial-wall",
+          "render": "blender",
+          "camera": "low, the plaques and the word BHOPAL",
+          "visual": "The memorial wall: brass plaques, marigolds, candles, the word BHOPAL and the year 1984.",
+          "sfx": [
+            "a match",
+            "a bell",
+            "wind"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The flame gives way to the wall; memory is a place, not a glow."
+          },
+          "weight": 2,
+          "narrationLine": 2
         },
         {
           "id": "S08-C",
@@ -831,8 +1021,13 @@
             "a train",
             "wind"
           ],
-          "transition": "match",
-          "weight": 2
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The city returns; the plant is still on the horizon."
+          },
+          "weight": 2,
+          "narrationLine": 3
         },
         {
           "id": "S08-D",
@@ -846,8 +1041,13 @@
             "a low hum"
           ],
           "text": "THE RECORD",
-          "transition": "cut",
-          "weight": 3
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The record closes the scene; the argument stays open."
+          },
+          "weight": 3,
+          "narrationLine": 4
         }
       ]
     },
@@ -881,7 +1081,11 @@
             "a low tone"
           ],
           "text": "THE GAS LASTED ONE NIGHT",
-          "transition": "cut",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The last scene returns to the flame without an effect."
+          },
           "weight": 2
         },
         {
@@ -896,10 +1100,74 @@
             "silence"
           ],
           "text": "THE CLAIMS HAVE LASTED FOUR DECADES",
-          "transition": "dip",
+          "transition": {
+            "type": "dip",
+            "frames": 6,
+            "sound": "end-tone",
+            "audioDuration": 1.2,
+            "reason": "The film closes to black; the only dip is the end."
+          },
           "weight": 3
         }
       ]
     }
-  ]
+  ],
+  "edit": {
+    "grammar": "mechanical-causality",
+    "captureFps": 24,
+    "signature": [
+      "needle match: gauge needle to clock hand",
+      "valve iris: handwheel rim to flare ring to court seal",
+      "number smash: hard cuts on 2,259 / 3,787 / 8,000",
+      "water/flame match: tap drip to memorial flame",
+      "gas haze: dissolve only where gas is the subject",
+      "siren whip: horn to street lamp with a pre-lapped siren",
+      "paper edge: ledger and newspaper wipe the frame"
+    ],
+    "transitionDefaults": {
+      "hard-cut": 0,
+      "match-cut": 0,
+      "iris": 8,
+      "paper-wipe": 8,
+      "dissolve": 12,
+      "whip-right": 7,
+      "flash-frame": 2,
+      "dip": 6
+    },
+    "forbidden": [
+      "dip-to-black inside the film",
+      "default crossfade",
+      "whip between static plates",
+      "flash on every impact"
+    ],
+    "acts": [
+      {
+        "id": "I",
+        "scenes": [
+          "S01",
+          "S02",
+          "S03"
+        ],
+        "signature": "the instrument chain"
+      },
+      {
+        "id": "II",
+        "scenes": [
+          "S04",
+          "S05",
+          "S06"
+        ],
+        "signature": "gas, paper, verdict"
+      },
+      {
+        "id": "III",
+        "scenes": [
+          "S07",
+          "S08",
+          "S09"
+        ],
+        "signature": "water into flame"
+      }
+    ]
+  }
 }

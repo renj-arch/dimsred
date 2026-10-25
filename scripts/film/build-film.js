@@ -214,6 +214,47 @@ function generateTts(lines, opts) {
   };
 }
 
+function defaultTransitionFrames(type) {
+  const defaults = {
+    'hard-cut': 0,
+    'smash-cut': 0,
+    'match-cut': 0,
+    'whip-left': 6,
+    'whip-right': 6,
+    'iris': 8,
+    'paper-wipe': 8,
+    'mask-wipe': 8,
+    'dissolve': 12,
+    'flash-frame': 2,
+    'dip': 6
+  };
+  return defaults[type] == null ? 0 : defaults[type];
+}
+
+function resolveTransitions(film, opts) {
+  const transitions = new Map();
+  film.scenes.forEach((scene) => {
+    (scene.shots || []).forEach((shot) => {
+      const raw = shot.transition == null ? 'hard-cut' : shot.transition;
+      let spec;
+      if (typeof raw === 'string') {
+        spec = { type: raw, frames: defaultTransitionFrames(raw), reason: '', sound: null };
+      } else {
+        spec = Object.assign({}, raw);
+        spec.type = String(spec.type || 'hard-cut');
+        spec.frames = Math.max(0, Math.round(Number(spec.frames) || 0));
+        spec.reason = String(spec.reason || '').trim();
+        spec.sound = spec.sound ? String(spec.sound) : null;
+        spec.audioLead = Math.max(0, Number(spec.audioLead) || 0);
+        spec.audioDuration = Math.max(0, Number(spec.audioDuration) || 0);
+      }
+      spec.duration = spec.frames / opts.fps;
+      transitions.set(shot.id, spec);
+    });
+  });
+  return transitions;
+}
+
 function buildTimeline(film, tts, opts) {
   let lineIndex = 0;
   let cursor = 0;
@@ -224,6 +265,7 @@ function buildTimeline(film, tts, opts) {
   const lead = tight ? 0.14 : 0.45;
   const gap = tight ? 0.14 : 0.28;
   const tail = tight ? 0.22 : 0.9;
+  const transitions = resolveTransitions(film, opts);
   const scenes = film.scenes.map((scene, si) => {
     const narration = (scene.narration || []).map((line) => {
       const duration = Number(tts.durations[lineIndex]) || 1.2;
@@ -299,6 +341,9 @@ function buildTimeline(film, tts, opts) {
       seg.shots.forEach((hi, k) => {
         const shot = shotsDef[hi];
         const d = holds[hi] || (segWeightTotal > 0 ? (mobileTime * segWeights[k]) / segWeightTotal : 0);
+        const transitionSpec = transitions.get(shot.id) || {
+          type: 'hard-cut', frames: 0, duration: 0, reason: 'Base cut.', sound: null
+        };
         shots[hi] = {
           id: shot.id,
           plate: shot.plate,
@@ -312,7 +357,8 @@ function buildTimeline(film, tts, opts) {
           cardKicker: shot.cardKicker || '',
           cardLines: Array.isArray(shot.cardLines) ? shot.cardLines : undefined,
           cardSub: shot.cardSub || '',
-          transition: shot.transition || 'cut',
+          transition: transitionSpec.type,
+          transitionSpec,
           framing: shot.framing || { zoom: [1.02, 1.08], x: [50, 50], y: [50, 50] },
           start: start + local,
           duration: Math.max(0.1, d)
@@ -342,6 +388,7 @@ function buildTimeline(film, tts, opts) {
     title: film.title,
     subtitle: film.subtitle,
     pacing: film.pacing || 'standard',
+    edit: film.edit || null,
     fps: opts.fps,
     captureFps: opts.captureFps,
     width: opts.width,
@@ -357,6 +404,122 @@ function writeTimeline(timeline, opts) {
   fs.writeFileSync(file, JSON.stringify(timeline, null, 2) + '\n');
   console.log(`timeline: ${timeline.duration.toFixed(1)}s · ${timeline.scenes.length} scenes · ${timeline.scenes.reduce((n, s) => n + s.shots.length, 0)} shots`);
   return file;
+}
+
+function noiseAt(i) {
+  const x = Math.sin(i * 12.9898 + 78.233) * 43758.5453;
+  return (x - Math.floor(x)) * 2 - 1;
+}
+
+function synthBridge(name, t, duration) {
+  const tau = Math.PI * 2;
+  const attack = Math.min(1, t / 0.008);
+  const release = Math.min(1, Math.max(0, (duration - t) / 0.025));
+  const env = attack * release;
+  if (env <= 0) return 0;
+  switch (name) {
+    case 'title-tone':
+      return (Math.sin(tau * 46 * t) * 0.50 + Math.sin(tau * 92 * t) * 0.14) * Math.exp(-1.1 * t) * env;
+    case 'valve-ring':
+    case 'seal-ring': {
+      const click = noiseAt(Math.floor(t * 48000)) * Math.exp(-95 * t);
+      const ring = Math.sin(tau * 1400 * t) * Math.exp(-8 * t) +
+        Math.sin(tau * 2100 * t) * 0.40 * Math.exp(-11 * t);
+      return (click * 0.30 + ring * 0.22) * env;
+    }
+    case 'clock-tick':
+      return (Math.sin(tau * 2400 * t) * Math.exp(-55 * t) +
+        Math.sin(tau * 1200 * t) * 0.40 * Math.exp(-30 * t)) * 0.35 * env;
+    case 'gas-haze':
+    case 'gas-haze-2': {
+      const n = noiseAt(Math.floor(t * 48000));
+      const swell = 0.4 + 0.6 * Math.sin(Math.PI * Math.min(1, t / Math.max(0.1, duration)));
+      return (n * 0.10 + Math.sin(tau * 70 * t) * 0.10) * swell * env;
+    }
+    case 'siren': {
+      const f = 620 + 260 * Math.sin(tau * 0.9 * t);
+      return (Math.sin(tau * f * t) * 0.18 + Math.sin(tau * f * 1.5 * t) * 0.05) * env;
+    }
+    case 'number-smash':
+      return (noiseAt(Math.floor(t * 48000)) * Math.exp(-120 * t) * 0.45 +
+        Math.sin(tau * 90 * t) * Math.exp(-35 * t) * 0.35) * env;
+    case 'number-stamp':
+      return (Math.sin(tau * 75 * t) * Math.exp(-28 * t) * 0.45 +
+        noiseAt(Math.floor(t * 48000)) * Math.exp(-80 * t) * 0.25) * env;
+    case 'number-bell':
+      return (Math.sin(tau * 520 * t) * 0.22 + Math.sin(tau * 780 * t) * 0.12 +
+        Math.sin(tau * 1040 * t) * 0.06) * Math.exp(-2.2 * t) * env;
+    case 'match-strike':
+      return (noiseAt(Math.floor(t * 48000)) * Math.exp(-60 * t) * 0.35 +
+        Math.sin(tau * 180 * t) * Math.exp(-20 * t) * 0.18) * env;
+    case 'paper':
+    case 'paper-2': {
+      const n = noiseAt(Math.floor(t * 48000));
+      return n * (0.5 + 0.5 * Math.sin(tau * 1800 * t)) * 0.22 * env;
+    }
+    case 'water-flame': {
+      let out = 0;
+      [0, 0.32].forEach((at) => {
+        const u = t - at;
+        if (u >= 0) {
+          out += Math.sin(tau * 1500 * u) * Math.exp(-28 * u) * 0.35 +
+            Math.sin(tau * 420 * u) * Math.exp(-16 * u) * 0.12;
+        }
+      });
+      const v = t - 0.45;
+      if (v >= 0) out += noiseAt(Math.floor(t * 48000)) * 0.09 * Math.min(1, v / 0.25) * Math.exp(-1.2 * v);
+      return out * env;
+    }
+    case 'end-tone':
+      return (Math.sin(tau * 55 * t) * 0.22 + Math.sin(tau * 110 * t) * 0.08) * Math.exp(-0.5 * t) * env;
+    default:
+      return noiseAt(Math.floor(t * 48000)) * Math.exp(-20 * t) * 0.12 * env;
+  }
+}
+
+function writeWav16(file, samples, sampleRate) {
+  const dataBytes = samples.length * 2 * 2;
+  const buf = Buffer.alloc(44 + dataBytes);
+  buf.write('RIFF', 0);
+  buf.writeUInt32LE(36 + dataBytes, 4);
+  buf.write('WAVE', 8);
+  buf.write('fmt ', 12);
+  buf.writeUInt32LE(16, 16);
+  buf.writeUInt16LE(1, 20);
+  buf.writeUInt16LE(2, 22);
+  buf.writeUInt32LE(sampleRate, 24);
+  buf.writeUInt32LE(sampleRate * 4, 28);
+  buf.writeUInt16LE(4, 32);
+  buf.writeUInt16LE(16, 34);
+  buf.write('data', 36);
+  buf.writeUInt32LE(dataBytes, 40);
+  for (let i = 0; i < samples.length; i++) {
+    const v = Math.max(-1, Math.min(1, samples[i]));
+    const s = v < 0 ? Math.round(v * 32768) : Math.round(v * 32767);
+    buf.writeInt16LE(s, 44 + i * 4);
+    buf.writeInt16LE(s, 46 + i * 4);
+  }
+  fs.writeFileSync(file, buf);
+}
+
+function writeBridgeTrack(events, duration, file) {
+  const rate = 48000;
+  const samples = new Float32Array(Math.ceil(duration * rate) + 1);
+  events.forEach((event) => {
+    const start = Math.max(0, Math.round(event.at * rate));
+    const length = Math.max(0.05, Number(event.duration) || 0.6);
+    const end = Math.min(samples.length, start + Math.round(length * rate));
+    for (let i = start; i < end; i++) {
+      const t = (i - start) / rate;
+      samples[i] += synthBridge(event.audio, t, length) * (event.gain == null ? 1 : event.gain);
+    }
+  });
+  let peak = 0;
+  for (let i = 0; i < samples.length; i++) peak = Math.max(peak, Math.abs(samples[i]));
+  const scale = peak > 0.82 ? 0.82 / peak : 1;
+  for (let i = 0; i < samples.length; i++) samples[i] *= scale;
+  writeWav16(file, samples, rate);
+  console.log(`sound bridges: ${events.length} events · peak ${(peak * scale).toFixed(2)}`);
 }
 
 function makeBed(timeline, file) {
@@ -383,6 +546,24 @@ function makeBed(timeline, file) {
     '-f', 'lavfi', '-i', `anoisesrc=color=pink:amplitude=0.35:sample_rate=48000:duration=${d}`
   ];
   if (hits.length) args.push('-i', hitFile);
+  const bridgeEvents = [];
+  timeline.scenes.forEach((s) => s.shots.forEach((h) => {
+    const spec = h.transitionSpec;
+    if (!spec || !spec.sound) return;
+    bridgeEvents.push({
+      at: Math.max(0, h.start - (Number(spec.audioLead) || 0)),
+      audio: spec.sound,
+      duration: Number(spec.audioDuration) || 0.6,
+      gain: 0.9
+    });
+  }));
+  let bridgeInput = -1;
+  const bridgeFile = path.join(path.dirname(file), 'bridges.wav');
+  if (bridgeEvents.length) {
+    writeBridgeTrack(bridgeEvents, timeline.duration, bridgeFile);
+    args.push('-i', bridgeFile);
+    bridgeInput = 5 + (hits.length ? 1 : 0);
+  }
   const filters = [
     '[0:a]volume=0.050,lowpass=f=100[a0]',
     '[1:a]lowpass=f=430,volume=0.065[a1]',
@@ -399,6 +580,10 @@ function makeBed(timeline, file) {
       filters.push(`[h${i}]adelay=${ms}|${ms},volume=0.62[hb${i}]`);
       labels.push(`[hb${i}]`);
     });
+  }
+  if (bridgeInput >= 0) {
+    filters.push(`[${bridgeInput}:a]volume=0.9[br]`);
+    labels.push('[br]');
   }
   filters.push(`${labels.join('')}amix=inputs=${labels.length}:normalize=0,` +
     `alimiter=limit=0.92,afade=t=in:st=0:d=2.2,` +
@@ -652,7 +837,151 @@ function writeSrt(timeline, opts) {
   const file = path.join(opts.work, `${opts.film}.srt`);
   fs.writeFileSync(file, body, 'utf8');
   console.log(`captions: ${file} (${visible.length} cues, ${cues.length - visible.length} collapsed)`);
-  return file;
+  return { file, cues: visible };
+}
+
+function checkEdit(timeline, film, cues, opts) {
+  const errors = [];
+  const warnings = [];
+  const shots = [];
+  timeline.scenes.forEach((s) => s.shots.forEach((h) => shots.push(Object.assign({ scene: s.id }, h))));
+  const total = shots.length;
+  const effectCounts = {};
+  const ranges = {
+    'match-cut': [0, 2],
+    'iris': [7, 10],
+    'paper-wipe': [6, 10],
+    'dissolve': [8, 14],
+    'whip-left': [5, 8],
+    'whip-right': [5, 8],
+    'flash-frame': [1, 2],
+    'dip': [4, 6]
+  };
+  shots.forEach((h, i) => {
+    const spec = h.transitionSpec || {};
+    const type = spec.type || h.transition || 'hard-cut';
+    if (!spec.reason || String(spec.reason).trim().length < 12) {
+      errors.push(`${h.id}: transition needs a one-sentence reason`);
+    }
+    if (type !== 'hard-cut') {
+      effectCounts[type] = (effectCounts[type] || 0) + 1;
+      if (!spec.sound) errors.push(`${h.id}: ${type} needs a sound bridge`);
+    }
+    const range = ranges[type];
+    if (range && (spec.frames < range[0] || spec.frames > range[1])) {
+      errors.push(`${h.id}: ${type} is ${spec.frames} frames; allowed ${range[0]}-${range[1]}`);
+    }
+    if (type === 'hard-cut' && spec.frames !== 0) errors.push(`${h.id}: hard-cut must be zero frames`);
+    if (type === 'dip' && i !== total - 1) errors.push(`${h.id}: dip is only allowed on the final cut`);
+    if (type === 'flash-frame' && i !== 0) errors.push(`${h.id}: flash-frame is only allowed on the opening cut`);
+    if (type === 'dissolve' && !/gas|vapou?r|haze|smoke|cloud/i.test(spec.reason)) {
+      errors.push(`${h.id}: dissolve is only allowed where gas, vapour or haze is the subject`);
+    }
+    if (type === 'iris' && !/circle|ring|seal|handwheel|rim/i.test(spec.reason)) {
+      errors.push(`${h.id}: iris needs a circular object in the reason`);
+    }
+    if (type === 'paper-wipe' && !/paper|ledger|newspaper|page|document/i.test(spec.reason)) {
+      errors.push(`${h.id}: paper-wipe needs a paper object in the reason`);
+    }
+    if ((type === 'whip-left' || type === 'whip-right') && !/siren|turn|motion|whip|air/i.test(spec.reason)) {
+      errors.push(`${h.id}: whip needs motion or a siren in the reason`);
+    }
+    if (spec.frames > 0 && Math.abs(Number(spec.duration) - spec.frames / timeline.fps) > 1e-9) {
+      errors.push(`${h.id}: transition duration is not frame-accurate`);
+    }
+  });
+  Object.keys(effectCounts).forEach((type) => {
+    if (effectCounts[type] > 2) errors.push(`${type} appears ${effectCounts[type]} times; the maximum is 2`);
+  });
+  const titleShots = shots.filter((h) => h.render === 'title');
+  for (let i = 0; i < cues.length; i++) {
+    const cue = cues[i];
+    if (cue.end - cue.start < 0.12) errors.push(`caption cue ${i + 1} is shorter than 0.12s`);
+    if (i < cues.length - 1 && cue.end > cues[i + 1].start - 0.02) {
+      errors.push(`caption cue ${i + 1} overlaps or zero-gaps cue ${i + 2}`);
+    }
+    titleShots.forEach((h) => {
+      if (cue.start < h.start + h.duration && cue.end > h.start) {
+        errors.push(`caption cue ${i + 1} collides with title ${h.id}`);
+      }
+    });
+  }
+  shots.filter((h) => h.impact && /\d/.test(h.text)).forEach((h) => {
+    let best = 0;
+    cues.forEach((cue) => {
+      best = Math.max(best, Math.min(cue.end, h.start + h.duration) - Math.max(cue.start, h.start));
+    });
+    if (best < 0.2) errors.push(`${h.id}: impact ${h.text} needs a caption on screen for at least 0.2s`);
+  });
+  const collisions = [];
+  shots.forEach((h) => {
+    const spec = h.transitionSpec || {};
+    if (!spec.duration || h.transition === 'hard-cut') return;
+    cues.forEach((cue) => {
+      const overlap = Math.min(cue.end, h.start + spec.duration) - Math.max(cue.start, h.start);
+      if (overlap > 0.001) {
+        collisions.push({
+          shot: h.id,
+          type: h.transition,
+          cue: cue.text.replace(/\n/g, ' '),
+          overlap: Number(overlap.toFixed(3))
+        });
+      }
+    });
+  });
+  collisions.forEach((c) => {
+    if (c.overlap > 0.55) errors.push(`${c.shot}: ${c.type} runs under a caption for ${c.overlap}s`);
+  });
+  const manifest = {
+    schema: 'vlymbooq.edit-manifest.v1',
+    film: timeline.film,
+    fps: timeline.fps,
+    grammar: (film.edit && film.edit.grammar) || 'unknown',
+    signature: (film.edit && film.edit.signature) || [],
+    acts: (film.edit && film.edit.acts) || [],
+    shots: shots.map((h) => ({
+      id: h.id,
+      scene: h.scene,
+      start: Number(h.start.toFixed(3)),
+      duration: Number(h.duration.toFixed(3)),
+      plate: h.plate,
+      render: h.render,
+      text: h.text || '',
+      impact: !!h.impact,
+      transition: {
+        type: h.transition,
+        frames: (h.transitionSpec && h.transitionSpec.frames) || 0,
+        duration: Number((((h.transitionSpec && h.transitionSpec.duration) || 0)).toFixed(4)),
+        reason: (h.transitionSpec && h.transitionSpec.reason) || '',
+        sound: (h.transitionSpec && h.transitionSpec.sound) || null,
+        audioLead: (h.transitionSpec && h.transitionSpec.audioLead) || 0,
+        audioDuration: (h.transitionSpec && h.transitionSpec.audioDuration) || 0
+      }
+    })),
+    effectCounts,
+    captionChecks: {
+      cues: cues.length,
+      titleOverlaps: 0,
+      transitionCaptionOverlaps: collisions,
+      statementBand: 'top 16.5vh to about 35vh',
+      impactBand: 'centred on 50vh',
+      captionBand: 'bottom 8.5vh (MarginV 42, two lines)'
+    }
+  };
+  fs.writeFileSync(path.join(opts.work, 'edit-manifest.json'), JSON.stringify(manifest, null, 2) + '\n');
+  fs.writeFileSync(path.join(opts.work, 'edit-qc.json'), JSON.stringify({
+    ok: errors.length === 0, errors, warnings, effectCounts, collisions
+  }, null, 2) + '\n');
+  console.log(`edit: ${shots.length} cuts · effects ${Object.keys(effectCounts).map((k) => `${k}×${effectCounts[k]}`).join(', ') || 'none'}`);
+  if (collisions.length) {
+    console.log(`edit: ${collisions.length} caption/transition overlaps, longest ${Math.max(...collisions.map((c) => c.overlap)).toFixed(2)}s`);
+  }
+  if (errors.length) {
+    console.error('FAIL edit QC');
+    errors.forEach((e) => console.error(`  - ${e}`));
+    throw new Error('edit QC failed');
+  }
+  return manifest;
 }
 
 function mmss(sec) {
@@ -760,12 +1089,13 @@ async function main() {
   const timeline = buildTimeline(film, tts, opts);
   writeTimeline(timeline, opts);
   printTimeline(timeline);
+  const srt = opts.srt ? writeSrt(timeline, opts) : { file: '', cues: [] };
+  checkEdit(timeline, film, srt.cues, opts);
   if (opts.dryRun) return;
 
   const audio = buildAudio(timeline, tts, opts);
   const frames = await renderFrames(timeline, opts);
-  const srt = opts.srt ? writeSrt(timeline, opts) : '';
-  encode(frames, audio, timeline, opts, srt);
+  encode(frames, audio, timeline, opts, srt.file);
   if (opts.thumbnail) await makeThumbnail(timeline, opts);
   if (opts.metadata) writeMetadata(timeline, film, opts);
   writeScript(timeline, film, opts);

@@ -54,6 +54,24 @@ function validate(file) {
     warn('style.rules needs at least three concrete rules');
   }
   if (!film.toolchain || typeof film.toolchain !== 'object') warn('toolchain is required');
+  if (!film.edit || typeof film.edit !== 'object') {
+    warn('edit grammar is required (docs/film-editing.md)');
+  } else {
+    if (!film.edit.grammar) warn('edit.grammar is required');
+    if (!Array.isArray(film.edit.signature) || film.edit.signature.length < 3) {
+      warn('edit.signature needs at least three moves');
+    }
+    if (film.edit.captureFps != null && Number(film.edit.captureFps) < 24) {
+      warn('edit.captureFps must be at least 24 for transition timing');
+    }
+  }
+
+  const TRANSITIONS = new Set([
+    'hard-cut', 'smash-cut', 'match-cut', 'whip-left', 'whip-right', 'iris',
+    'paper-wipe', 'mask-wipe', 'dissolve', 'flash-frame', 'shutter',
+    'speed-ramp', 'l-cut', 'j-cut', 'frame-burn', 'light-leak', 'object-wipe',
+    'dust-wipe', 'page-turn', 'scanline', 'dip'
+  ]);
 
   const sources = new Map();
   if (!Array.isArray(film.sources) || !film.sources.length) warn('sources is required');
@@ -127,6 +145,31 @@ function validate(file) {
         if (!Array.isArray(shot.framing.zoom) || shot.framing.zoom.length !== 2) {
           warn(`${where}/${shot.id}: framing.zoom must be [start,end]`);
         }
+      }
+      const tr = shot.transition;
+      if (tr == null) {
+        warn(`${where}/${shot.id}: transition is required (use a transition object)`);
+      } else if (typeof tr === 'string') {
+        if (!TRANSITIONS.has(tr)) warn(`${where}/${shot.id}: unknown transition ${tr}`);
+      } else if (typeof tr === 'object') {
+        if (!tr.type || !TRANSITIONS.has(tr.type)) {
+          warn(`${where}/${shot.id}: transition.type must be a known type`);
+        }
+        const frames = Number(tr.frames);
+        if (!Number.isInteger(frames) || frames < 0 || frames > 18) {
+          warn(`${where}/${shot.id}: transition.frames must be an integer from 0 to 18`);
+        }
+        if (!tr.reason || String(tr.reason).trim().length < 12) {
+          warn(`${where}/${shot.id}: transition needs a one-sentence reason`);
+        }
+        if (tr.type !== 'hard-cut' && !tr.sound) {
+          warn(`${where}/${shot.id}: ${tr.type} needs a sound bridge`);
+        }
+        if (tr.type === 'dip' && shot.id !== film.scenes[film.scenes.length - 1].shots.slice(-1)[0].id) {
+          warn(`${where}/${shot.id}: dip is only allowed on the final shot`);
+        }
+      } else {
+        warn(`${where}/${shot.id}: transition must be a string or object`);
       }
     }
   });

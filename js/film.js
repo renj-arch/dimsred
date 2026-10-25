@@ -24,6 +24,9 @@
   var flash = el('flash');
   var ghost = el('ghost');
   var dip = el('dip');
+  var irisRing = el('irisRing');
+  var wipeEdge = el('wipeEdge');
+  var fog = el('fog');
   var ghostActive = false;
   var atmos = el('atmos');
   var motes = el('motes');
@@ -235,11 +238,15 @@
     routeEl.style.strokeDashoffset = String(routeLen);
   }
 
-  function transitionDuration(kind) {
+  function transitionDuration(kind, shot) {
+    var spec = shot && shot.transitionSpec;
+    if (spec && Number.isFinite(Number(spec.duration))) return Math.max(0, Number(spec.duration));
     var tight = timeline && timeline.pacing === 'tight';
+    if (/hard|smash|number|cut/i.test(kind)) return 0;
     if (/whip/i.test(kind)) return tight ? 0.22 : 0.36;
-    if (/mask/i.test(kind)) return tight ? 0.30 : 0.52;
-    if (/cross|match/i.test(kind)) return tight ? 0.34 : 0.62;
+    if (/iris|paper/i.test(kind)) return tight ? 0.30 : 0.42;
+    if (/mask|dissolve|cross/i.test(kind)) return tight ? 0.34 : 0.52;
+    if (/match/i.test(kind)) return tight ? 0.08 : 0.10;
     if (/dip/i.test(kind)) return tight ? 0.24 : 0.52;
     return tight ? 0.10 : 0.22;
   }
@@ -247,8 +254,12 @@
   function prepareGhost(previous, shot) {
     if (!ghost) return;
     var kind = String(shot.transition || 'cut');
-    var keepsFrame = previous && previous.render === 'blender' && shot.render === 'blender' &&
-      /whip|mask|cross|match|dip/i.test(kind);
+    var spec = shot.transitionSpec || {};
+    var wantsGhost;
+    if (spec.frames != null) wantsGhost = Number(spec.frames) > 0;
+    else wantsGhost = /whip|mask|cross|match|dip|iris|paper|dissolve/i.test(kind);
+    if (kind === 'dip' || kind === 'flash-frame' || kind === 'hard-cut') wantsGhost = false;
+    var keepsFrame = wantsGhost && previous && previous.render === 'blender' && shot.render === 'blender';
     if (!keepsFrame) {
       ghostActive = false;
       ghost.style.opacity = '0';
@@ -268,25 +279,109 @@
 
   function applyTransition(shot, local) {
     var kind = String(shot.transition || 'cut');
-    var p = clamp(local / transitionDuration(kind));
+    var spec = shot.transitionSpec || {};
+    var duration = transitionDuration(kind, shot);
+    var p = duration > 0 ? clamp(local / duration) : 1;
     var e = smooth(p);
     media.style.transform = '';
     media.style.filter = '';
     media.style.opacity = '1';
+    media.style.clipPath = 'none';
+    media.style.maskImage = 'none';
+    media.style.webkitMaskImage = 'none';
     dip.style.opacity = '0';
+    if (irisRing) irisRing.style.opacity = '0';
+    if (wipeEdge) wipeEdge.style.opacity = '0';
+    if (fog) fog.style.opacity = '0';
+    if (kind === 'dip') {
+      dip.style.opacity = String(Math.sin(Math.PI * p));
+      if (ghost) ghost.style.opacity = '0';
+      return;
+    }
     if (!ghost) return;
-    if (!ghostActive) {
+    if (duration <= 0 || !ghostActive) {
       ghost.style.opacity = '0';
       return;
     }
-    if (/whip/i.test(kind)) {
-      var dir = /left/i.test(kind) ? -1 : 1;
+    if (kind === 'iris') {
+      var origin = Array.isArray(spec.origin) ? spec.origin : [50, 50];
+      var radius = e * 78;
+      ghost.style.opacity = p < 1 ? '1' : '0';
+      ghost.style.clipPath = 'none';
+      ghost.style.transform = 'none';
+      ghost.style.filter = 'none';
+      media.style.clipPath = 'circle(' + radius.toFixed(2) + '% at ' + origin[0] + '% ' + origin[1] + '%)';
+      if (irisRing) {
+        irisRing.style.left = origin[0] + '%';
+        irisRing.style.top = origin[1] + '%';
+        irisRing.style.width = (radius * 2).toFixed(2) + '%';
+        irisRing.style.height = (radius * 2).toFixed(2) + 'vw';
+        irisRing.style.opacity = p < 0.98 ? String(0.82 * (1 - p * 0.35)) : '0';
+      }
+    } else if (kind === 'paper-wipe') {
+      var direction = spec.direction || (/left/i.test(kind) ? 'left' : 'right');
+      var edge = e * 100;
+      ghost.style.opacity = p < 1 ? '1' : '0';
+      ghost.style.clipPath = 'none';
+      ghost.style.transform = 'none';
+      ghost.style.filter = 'none';
+      if (direction === 'right') {
+        media.style.clipPath = 'inset(0 0 0 ' + (100 - edge).toFixed(2) + '%)';
+        wipeEdge.style.left = (100 - edge).toFixed(2) + '%';
+        wipeEdge.style.right = 'auto';
+        wipeEdge.style.top = '0';
+        wipeEdge.style.bottom = '0';
+        wipeEdge.style.width = '0.55vw';
+        wipeEdge.style.height = 'auto';
+      } else if (direction === 'down') {
+        media.style.clipPath = 'inset(0 0 ' + (100 - edge).toFixed(2) + '% 0)';
+        wipeEdge.style.left = '0';
+        wipeEdge.style.right = '0';
+        wipeEdge.style.top = edge.toFixed(2) + '%';
+        wipeEdge.style.bottom = 'auto';
+        wipeEdge.style.width = 'auto';
+        wipeEdge.style.height = '0.55vw';
+      } else if (direction === 'up') {
+        media.style.clipPath = 'inset(' + (100 - edge).toFixed(2) + '% 0 0 0)';
+        wipeEdge.style.left = '0';
+        wipeEdge.style.right = '0';
+        wipeEdge.style.top = (100 - edge).toFixed(2) + '%';
+        wipeEdge.style.bottom = 'auto';
+        wipeEdge.style.width = 'auto';
+        wipeEdge.style.height = '0.55vw';
+      } else {
+        media.style.clipPath = 'inset(0 ' + (100 - edge).toFixed(2) + '% 0 0)';
+        wipeEdge.style.left = edge.toFixed(2) + '%';
+        wipeEdge.style.right = 'auto';
+        wipeEdge.style.top = '0';
+        wipeEdge.style.bottom = '0';
+        wipeEdge.style.width = '0.55vw';
+        wipeEdge.style.height = 'auto';
+      }
+      if (wipeEdge) wipeEdge.style.opacity = p < 0.98 ? '0.92' : '0';
+    } else if (kind === 'dissolve') {
+      ghost.style.opacity = String(1 - e);
+      ghost.style.clipPath = 'none';
+      ghost.style.transform = 'scale(1.01)';
+      ghost.style.filter = 'none';
+      if (fog) {
+        fog.style.opacity = String(Math.sin(Math.PI * p) * 0.68);
+        fog.style.transform = 'translateX(' + ((p - 0.5) * 5).toFixed(2) + 'vw) scale(' +
+          (1.02 + 0.04 * Math.sin(Math.PI * p)).toFixed(3) + ')';
+      }
+    } else if (kind === 'whip-left' || kind === 'whip-right') {
+      var dir = kind === 'whip-left' ? -1 : 1;
       ghost.style.opacity = p < 1 ? '1' : '0';
       ghost.style.clipPath = 'none';
       ghost.style.transform = 'translateX(' + (dir * e * 100).toFixed(3) + '%) scale(1.04)';
-      ghost.style.filter = 'blur(' + (e * 10).toFixed(2) + 'px)';
+      ghost.style.filter = 'blur(' + (e * 16).toFixed(2) + 'px)';
       media.style.transform = 'translateX(' + (-dir * (1 - e) * 100).toFixed(3) + '%) scale(1.03)';
-      media.style.filter = 'blur(' + ((1 - e) * 9).toFixed(2) + 'px)';
+      media.style.filter = 'blur(' + ((1 - e) * 13).toFixed(2) + 'px)';
+    } else if (kind === 'match-cut') {
+      ghost.style.opacity = String(1 - e);
+      ghost.style.clipPath = 'none';
+      ghost.style.transform = 'scale(' + (1 + e * 0.035).toFixed(4) + ')';
+      ghost.style.filter = 'none';
     } else if (/mask/i.test(kind)) {
       var fromLeft = /left/i.test(kind);
       ghost.style.opacity = p < 1 ? '1' : '0';
@@ -298,11 +393,8 @@
     } else if (/cross|match/i.test(kind)) {
       ghost.style.opacity = String(1 - e);
       ghost.style.clipPath = 'none';
-      ghost.style.transform = 'scale(' + (1 + e * (kind.match(/match/i) ? 0.06 : 0.015)).toFixed(4) + ')';
+      ghost.style.transform = 'scale(' + (1 + e * 0.02).toFixed(4) + ')';
       ghost.style.filter = 'none';
-    } else if (/dip/i.test(kind)) {
-      ghost.style.opacity = '0';
-      dip.style.opacity = String(Math.sin(Math.PI * p));
     } else {
       ghost.style.opacity = '0';
     }
@@ -427,7 +519,11 @@
     }
 
     var flashAlpha = 0;
-    if (/flash/i.test(shot.transition || '')) flashAlpha = clamp(1 - shotLocal / 0.22) * 0.92;
+    if (/flash/i.test(shot.transition || '')) {
+      var flashDuration = shot.transitionSpec && shot.transitionSpec.duration
+        ? shot.transitionSpec.duration : 0.22;
+      flashAlpha = clamp(1 - shotLocal / flashDuration) * 0.92;
+    }
     flash.style.opacity = String(flashAlpha);
     applyTransition(shot, shotLocal);
 
@@ -474,9 +570,13 @@
     flash.style.opacity = '0';
     if (ghost) ghost.style.opacity = '0';
     if (dip) dip.style.opacity = '0';
+    if (irisRing) irisRing.style.opacity = '0';
+    if (wipeEdge) wipeEdge.style.opacity = '0';
+    if (fog) fog.style.opacity = '0';
     ghostActive = false;
     media.style.transform = '';
     media.style.filter = '';
+    media.style.clipPath = 'none';
     var posterSize = film && /^\d+(\.\d+)?(vw|vh|px|rem)$/.test(String(film.posterTitleSize || ''))
       ? ' style="font-size:' + film.posterTitleSize + '"' : '';
     var overlay = document.createElement('div');
@@ -499,9 +599,13 @@
     flash.style.opacity = '0';
     if (ghost) ghost.style.opacity = '0';
     if (dip) dip.style.opacity = '0';
+    if (irisRing) irisRing.style.opacity = '0';
+    if (wipeEdge) wipeEdge.style.opacity = '0';
+    if (fog) fog.style.opacity = '0';
     ghostActive = false;
     media.style.transform = '';
     media.style.filter = '';
+    media.style.clipPath = 'none';
     var base = film || FALLBACK[filmId] || FALLBACK['salt-march'];
     if (base && base.titleLines) {
       document.title = base.titleLines.join(' ') + ' — ' + (base.subtitle || 'A vlymbooq film');
