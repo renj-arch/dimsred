@@ -680,12 +680,18 @@ def scene_pipe_corridor(samples, width, height, out):
     cube("CorridorLampArm", (4.8, 3.8, 4.1), (0.12, 2.5, 0.12), st)
     sphere("CorridorLamp", (4.8, 2.55, 4.0), 0.16,
            emission("CorridorLampGlow", (1.0, 0.47, 0.13), 4.0), segments=16, rings=10)
-    point_lamp("CorridorLight", (4.8, 2.55, 3.9), 120, (1.0, 0.46, 0.13), 0.25)
+    point_lamp("CorridorLight", (4.8, 2.55, 3.9), 280, (1.0, 0.46, 0.13), 0.30)
+    # A second lamp at the far end gives the rack a vanishing point.
+    cylinder("FarPipeLampPost", (-3.6, 17.0, 2.0), 0.07, 4.0, st, vertices=8)
+    sphere("FarPipeLamp", (-3.6, 17.0, 4.0), 0.13,
+           emission("FarPipeLampGlow", (1.0, 0.47, 0.13), 3.0), segments=12, rings=8)
+    point_lamp("FarPipeLight", (-3.6, 17.0, 3.9), 120, (1.0, 0.46, 0.13), 0.25)
     dust(80, seed=63, zmax=5.0, ymax=20)
     camera((-1.4, -6.5, 1.35), (0.4, 10.0, 2.7), lens=32, fstop=4.0)
-    bpy.context.scene.view_settings.exposure = -1.05
-    area("Key", (-3.0, -2.0, 4.5), (0, 6.0, 2.0), 210, 2.4, (0.32, 0.48, 0.70))
-    area("SodiumRim", (4.0, 4.0, 4.4), (0, 8.0, 2.5), 200, 2.0, (1.0, 0.44, 0.12))
+    bpy.context.scene.view_settings.exposure = -0.30
+    area("Key", (-3.0, -2.0, 4.5), (0, 6.0, 2.0), 520, 3.0, (0.32, 0.48, 0.70))
+    area("SodiumRim", (4.0, 4.0, 4.4), (0, 8.0, 2.5), 500, 2.6, (1.0, 0.44, 0.12))
+    area("Fill", (0.0, -3.0, 1.5), (0, 8.0, 1.5), 180, 3.0, (0.38, 0.48, 0.62))
     render(samples, width, height, out)
 
 
@@ -698,7 +704,7 @@ def scene_company_sign(samples, width, height, out):
     # rust streaks run from the bolts; the sign is part of the wall, not a card
     board = steel("SignBoard", (0.045, 0.060, 0.055))
     cube("CompanyBoard", (0, 2.30, 2.35), (7.2, 0.12, 1.75), board)
-    ink = grime("CompanyInk", (0.50, 0.42, 0.28), roughness=0.72, metallic=0.15)
+    ink = grime("CompanyInk", (0.68, 0.55, 0.34), roughness=0.62, metallic=0.22)
     text_obj("CompanyLine1", "UNION CARBIDE", (-3.1, 2.23, 2.68), 0.30,
              rot=(math.pi / 2, 0, 0), mat=ink, align="LEFT")
     text_obj("CompanyLine2", "INDIA LIMITED", (-3.1, 2.23, 2.22), 0.22,
@@ -721,91 +727,138 @@ def scene_company_sign(samples, width, height, out):
            emission("SignLampGlow", (1.0, 0.48, 0.14), 4.0), segments=16, rings=10)
     point_lamp("SignLight", (5.4, 2.2, 4.45), 100, (1.0, 0.45, 0.12), 0.25)
     camera((1.8, -6.8, 2.2), (-0.4, 2.2, 2.35), lens=45, fstop=3.2)
-    bpy.context.scene.view_settings.exposure = -0.85
-    area("Key", (-2.0, -3.0, 4.8), (0, 2.2, 2.3), 250, 2.0, (0.56, 0.68, 0.82))
-    area("Warm", (4.0, 0.0, 3.0), (0, 2.2, 2.2), 120, 1.0, (1.0, 0.48, 0.16))
+    bpy.context.scene.view_settings.exposure = -0.30
+    area("Key", (-2.0, -3.0, 4.8), (0, 2.2, 2.3), 520, 2.8, (0.56, 0.68, 0.82))
+    area("Warm", (4.0, 0.0, 3.0), (0, 2.2, 2.2), 260, 1.6, (1.0, 0.48, 0.16))
+    area("Fill", (0.0, -4.0, 1.5), (0, 2.2, 1.5), 140, 2.0, (0.40, 0.50, 0.64))
     render(samples, width, height, out)
 
 
 def scene_city_rooftops(samples, width, height, out):
     reset()
-    night_sky((0.24, 0.085, 0.026), (0.002, 0.004, 0.012))
-    # The camera stands on a roof, behind a parapet. The city is a mid-ground
-    # horizon, not a wall of black blocks pressed against the lens.
-    plane("ForegroundRoof", (0, -4.0, 0.0), 50, concrete("RoofConcrete", (0.085, 0.076, 0.064)))
-    cube("Parapet", (0, 1.8, 0.52), (20.0, 0.40, 1.04),
-         concrete("ParapetConcrete", (0.105, 0.094, 0.078)))
-    cube("ParapetCap", (0, 1.8, 1.08), (20.2, 0.52, 0.10), rust("ParapetRust"))
+    night_sky((0.20, 0.072, 0.022), (0.001, 0.003, 0.010))
+    roof_z = 5.6
+    # The camera is on the roof, behind a parapet. The city rises to meet the
+    # horizon, so the frame has a foreground, a middle and a distance.
+    plane("ForegroundRoof", (0, -7.0, roof_z), 42, concrete("RoofConcrete", (0.095, 0.085, 0.070)))
+    cube("Parapet", (0, -1.9, roof_z + 0.55), (24.0, 0.38, 1.10),
+         concrete("ParapetConcrete", (0.125, 0.110, 0.090)))
+    cube("ParapetCap", (0, -1.9, roof_z + 1.15), (24.2, 0.52, 0.12), rust("ParapetRust"))
     rng = random.Random(77)
-    for row in range(3):
-        for i in range(7):
-            x = -21.0 + i * 7.0 + rng.uniform(-1.4, 1.4)
-            y = 15.0 + row * 8.0 + rng.uniform(-1.0, 1.0)
-            h = 3.2 + rng.uniform(0.0, 5.2)
-            w = 4.0 + rng.uniform(0.0, 2.4)
-            d = 5.0 + rng.uniform(0.0, 2.0)
-            cube(f"CityBlock-{row}-{i}", (x, y, h / 2), (w, d, h),
-                 principled(f"CityBlockMat-{row}-{i}", (0.024, 0.022, 0.019), roughness=0.94))
-            cube(f"CityLip-{row}-{i}", (x, y, h + 0.09), (w + 0.18, d + 0.12, 0.18),
-                 principled(f"CityLipMat-{row}-{i}", (0.040, 0.035, 0.028), roughness=0.92))
-            # a few small, warm windows on the face toward the camera
-            for k in range(3):
-                for level in range(2):
-                    if rng.random() < 0.72:
-                        wx = x - w * 0.30 + k * w * 0.30
-                        wz = 1.0 + level * 1.25 + rng.uniform(-0.12, 0.12)
+
+    # A dense, layered roofscape. The near row is darker; the far rows are
+    # lighter and cooler, which gives the eye a distance to travel.
+    rows = (
+        (14.0, 6, 7.0, 15.0, (0.070, 0.062, 0.052)),
+        (25.0, 7, 9.0, 19.0, (0.085, 0.076, 0.064)),
+        (38.0, 8, 11.0, 24.0, (0.100, 0.092, 0.080)),
+    )
+    for row, (base_y, count, min_h, max_h, color) in enumerate(rows):
+        for i in range(count):
+            x = -24.0 + i * (48.0 / (count - 1)) + rng.uniform(-1.7, 1.7)
+            y = base_y + rng.uniform(-1.4, 1.4)
+            h = min_h + rng.uniform(0.0, max_h - min_h)
+            w = 4.6 + rng.uniform(0.0, 2.8)
+            d = 5.4 + rng.uniform(0.0, 2.2)
+            block_mat = principled(f"CityBlockMat-{row}-{i}", color, roughness=0.92)
+            cube(f"CityBlock-{row}-{i}", (x, y, h / 2), (w, d, h), block_mat)
+            cube(f"CityLip-{row}-{i}", (x, y, h + 0.10), (w + 0.22, d + 0.16, 0.20),
+                 principled(f"CityLipMat-{row}-{i}", (color[0] * 1.6, color[1] * 1.5, color[2] * 1.4), 0.9))
+            # A facade grid, not three floating windows on a black slab.
+            cols = 4 + (row > 0)
+            levels = max(3, int(h / 2.2))
+            for k in range(cols):
+                for level in range(levels):
+                    if rng.random() < 0.48:
+                        wx = x - w * 0.39 + k * (w * 0.78 / max(1, cols - 1))
+                        wz = 1.0 + level * (h - 1.6) / max(1, levels - 1)
+                        warm = rng.random() < 0.82
+                        wcol = (0.95, 0.48, 0.15) if warm else (0.34, 0.48, 0.62)
                         cube(f"CityWindow-{row}-{i}-{k}-{level}",
-                             (wx, y - d / 2 - 0.025, wz),
-                             (0.20, 0.02, 0.28),
-                             emission(f"CityWindowMat-{row}-{i}-{k}-{level}",
-                                      (0.95, 0.48, 0.15), 1.0))
+                             (wx, y - d / 2 - 0.026, wz),
+                             (0.22, 0.02, 0.30),
+                             emission(f"CityWindowMat-{row}-{i}-{k}-{level}", wcol, 0.85))
+            # rooftop clutter: tank, stairwell, antenna, washing line
+            if i % 3 != 1:
+                cylinder(f"RoofTank-{row}-{i}", (x + w * 0.22, y - d * 0.16, h + 0.58),
+                         0.42, 0.95, principled(f"RoofTankMat-{row}-{i}",
+                                              (0.030, 0.028, 0.023), 0.82),
+                         vertices=20)
+                cylinder(f"RoofTankCap-{row}-{i}", (x + w * 0.22, y - d * 0.16, h + 1.08),
+                         0.45, 0.10, rust(f"RoofTankCapMat-{row}-{i}"), vertices=20)
             if i % 2 == 0:
-                cylinder(f"RoofTank-{row}-{i}", (x + w * 0.24, y - d * 0.18, h + 0.62),
-                         0.48, 1.0, principled(f"RoofTankMat-{row}-{i}",
-                                              (0.020, 0.018, 0.015), 0.85),
-                         vertices=16)
-    # a minaret, a water tower and a distant flare break the skyline
-    cylinder("MinaretBase", (12.0, 26.0, 6.0), 0.62, 12.0,
-             plaster_material("MinaretPlaster", (0.16, 0.13, 0.090)), vertices=16)
-    cylinder("MinaretBalcony", (12.0, 26.0, 9.2), 1.05, 0.30,
-             plaster_material("MinaretBalconyPlaster", (0.14, 0.11, 0.078)), vertices=16)
-    cylinder("MinaretTop", (12.0, 26.0, 13.2), 0.20, 4.0,
-             plaster_material("MinaretTopPlaster", (0.16, 0.13, 0.090)), vertices=12)
-    sphere("MinaretDome", (12.0, 26.0, 15.2), 0.46,
-           principled("DomeMat", (0.065, 0.085, 0.080), roughness=0.42, metallic=0.5),
-           segments=20, rings=12)
-    # foreground water tank, antenna and laundry, close enough to read
-    cylinder("WaterTank", (-6.2, 3.2, 1.55), 1.05, 2.0,
-             principled("WaterTankMat", (0.030, 0.030, 0.027), roughness=0.72, metallic=0.25),
-             vertices=24)
-    cylinder("WaterTankCap", (-6.2, 3.2, 2.62), 1.08, 0.12, rust("WaterTankRust"), vertices=24)
+                cube(f"Stairwell-{row}-{i}", (x - w * 0.20, y + d * 0.10, h + 0.55),
+                     (1.2, 1.4, 1.1), principled(f"StairwellMat-{row}-{i}",
+                                                (color[0] * 1.4, color[1] * 1.3, color[2] * 1.2), 0.9))
+            if i % 2 == 1:
+                limb(f"RoofMast-{row}-{i}", (x - w * 0.24, y, h),
+                     (x - w * 0.24, y, h + 2.2), 0.035, steel(f"RoofMastMat-{row}-{i}"), vertices=6)
+                for k in range(3):
+                    cube(f"RoofMastBar-{row}-{i}-{k}", (x - w * 0.24, y, h + 0.9 + k * 0.48),
+                         (0.85, 0.025, 0.025), steel(f"RoofMastMat-{row}-{i}"))
+
+    # A minaret and the plant's flare break the skyline; both are landmarks,
+    # not decoration.
+    plaster = plaster_material("MinaretPlaster", (0.22, 0.18, 0.12))
+    cylinder("MinaretBase", (13.0, 21.0, 8.0), 0.58, 16.0, plaster, vertices=20)
+    cylinder("MinaretBalcony", (13.0, 21.0, 13.0), 1.05, 0.28, plaster, vertices=20)
+    cylinder("MinaretTop", (13.0, 21.0, 16.7), 0.20, 5.2, plaster, vertices=16)
+    sphere("MinaretDome", (13.0, 21.0, 19.5), 0.48,
+           principled("DomeMat", (0.070, 0.095, 0.090), roughness=0.38, metallic=0.55),
+           segments=24, rings=14)
+    sphere("MinaretLight", (13.0, 21.0, 18.1), 0.10,
+           emission("MinaretLightGlow", (0.18, 0.62, 0.32), 3.0), segments=12, rings=8)
+    cylinder("HorizonFlare", (30.0, 39.0, 10.0), 0.18, 20.0, steel("HorizonFlareSteel"), vertices=12)
+    sphere("HorizonFlareTip", (30.0, 39.0, 20.1), 0.36,
+           emission("HorizonFlareGlow", (1.0, 0.40, 0.07), 9.0), segments=16, rings=10)
+    point_lamp("HorizonFlareLight", (30.0, 39.0, 20.0), 80, (1.0, 0.38, 0.06), 0.5)
+
+    # Foreground roof: water tank, laundry, pots, string lights.
+    tank_z = roof_z + 0.55
+    cylinder("WaterTank", (-5.8, -3.6, tank_z + 1.25), 1.05, 2.5,
+             principled("WaterTankMat", (0.035, 0.035, 0.031), roughness=0.68, metallic=0.30),
+             vertices=28)
+    cylinder("WaterTankCap", (-5.8, -3.6, tank_z + 2.56), 1.10, 0.14, rust("WaterTankRust"), vertices=28)
+    for band_z in (0.55, 1.35, 2.15):
+        cylinder(f"WaterTankBand-{band_z}", (-5.8, -3.6, tank_z + band_z), 1.07, 0.06,
+                 rust("WaterTankRust"), vertices=28)
     tank_leg_steel = steel("TankLegSteel")
     for i in range(4):
-        cube(f"TankLeg-{i}", (-6.2 + (-0.62 + (i % 2) * 1.24), 3.2 + (-0.62 + (i // 2) * 1.24), 0.48),
-             (0.10, 0.10, 0.96), tank_leg_steel)
-    cylinder("Antenna", (4.8, 4.0, 2.8), 0.035, 5.6, steel("AntennaSteel"), vertices=8)
-    for i in range(4):
-        cube(f"AntennaBar-{i}", (4.8, 4.0, 2.3 + i * 0.82), (1.25, 0.03, 0.03), steel("AntennaSteel"))
-    for i in range(6):
-        cube(f"Laundry-{i}", (-1.8 + i * 0.44, 3.1, 2.45 + (i % 2) * 0.10),
-             (0.30, 0.02, 0.36), principled(f"LaundryMat-{i}", (0.23, 0.18, 0.13), 0.9),
-             rot=(0, 0, 0.05 * (i % 2)))
-    # a practical bulb on the foreground roof, so the parapet has an edge
-    cylinder("RoofBulbPost", (7.0, 2.6, 1.5), 0.05, 3.0, steel("RoofBulbSteel"), vertices=8)
-    sphere("RoofBulb", (7.0, 2.6, 3.05), 0.10,
-           emission("RoofBulbGlow", (1.0, 0.52, 0.18), 2.4), segments=12, rings=8)
-    point_lamp("RoofBulbLight", (7.0, 2.6, 3.0), 28, (1.0, 0.48, 0.14), 0.18)
-    # the moon and the plant's flare sit on the horizon
-    sphere("Moon", (-16.0, 34.0, 18.0), 0.85,
-           emission("MoonGlow", (0.62, 0.74, 0.90), 2.0), segments=24, rings=16)
-    cylinder("HorizonFlare", (22.0, 38.0, 7.0), 0.16, 14.0, steel("HorizonFlareSteel"), vertices=12)
-    sphere("HorizonFlareTip", (22.0, 38.0, 14.1), 0.22,
-           emission("HorizonFlareGlow", (1.0, 0.38, 0.06), 8.0), segments=12, rings=8)
-    camera((10.0, -18.0, 7.2), (-1.0, 12.0, 3.6), lens=38, fstop=5.0)
-    bpy.context.scene.view_settings.exposure = -0.45
-    area("MoonFill", (-14.0, -4.0, 14.0), (0, 16.0, 4.0), 1200, 9.0, (0.34, 0.48, 0.72))
-    area("CitySodium", (8.0, 4.0, 8.0), (0, 18.0, 3.0), 850, 7.0, (1.0, 0.44, 0.12))
-    area("ForegroundFill", (6.0, -8.0, 9.0), (0, 3.0, 1.0), 520, 5.0, (0.40, 0.50, 0.66))
+        lx = -5.8 - 0.68 + (i % 2) * 1.36
+        ly = -3.6 - 0.68 + (i // 2) * 1.36
+        cube(f"TankLeg-{i}", (lx, ly, roof_z + 0.28), (0.11, 0.11, 0.56), tank_leg_steel)
+    cylinder("LaundryPostL", (4.6, -2.2, roof_z + 1.15), 0.045, 2.3,
+             steel("LaundrySteel"), vertices=8)
+    cylinder("LaundryPostR", (9.2, -2.2, roof_z + 1.15), 0.045, 2.3,
+             steel("LaundrySteel"), vertices=8)
+    cube("LaundryLine", (6.9, -2.2, roof_z + 2.20), (4.8, 0.018, 0.018), steel("LaundrySteel"))
+    for i in range(5):
+        cube(f"LaundryCloth-{i}", (5.3 + i * 0.78, -2.18, roof_z + 1.75),
+             (0.42, 0.024, 0.72), principled(f"LaundryMat-{i}",
+                                           (0.30, 0.24, 0.17), 0.92))
+    for i, x in enumerate((-10.5, -8.0, -6.5, 7.0, 9.5, 11.5)):
+        cylinder(f"StringPost-{i}", (x, -1.9, roof_z + 0.95), 0.028, 1.9,
+                 steel("StringSteel"), vertices=6)
+        sphere(f"StringBulb-{i}", (x, -1.9, roof_z + 1.90), 0.055,
+               emission(f"StringBulbGlow-{i}", (1.0, 0.55, 0.20), 2.8), segments=10, rings=6)
+        if i % 2 == 0:
+            point_lamp(f"StringLight-{i}", (x, -1.9, roof_z + 1.9), 8,
+                       (1.0, 0.50, 0.16), 0.12)
+    for i, (x, y) in enumerate(((-2.8, -3.2), (-2.0, -3.5), (2.6, -3.4), (3.4, -3.0))):
+        cylinder(f"Pot-{i}", (x, y, roof_z + 0.18), 0.20, 0.36,
+                 rust(f"PotMat-{i}"), vertices=12)
+        sphere(f"Plant-{i}", (x, y, roof_z + 0.52), 0.28,
+               principled(f"PlantMat-{i}", (0.055, 0.11, 0.045), 0.9), segments=12, rings=8)
+
+    # The plant is a distant orange smudge; the city is a field of windows.
+    for i in range(7):
+        point_lamp(f"StreetGlow-{i}", (-15.0 + i * 5.0, 12.0, 1.2), 26,
+                   (1.0, 0.40, 0.10), 0.35)
+    camera((-0.6, -11.5, roof_z + 1.8), (-0.6, 18.0, 8.2), lens=32, fstop=5.0)
+    bpy.context.scene.view_settings.exposure = -0.15
+    area("MoonFill", (-18.0, -3.0, 18.0), (0, 18.0, 7.0), 1800, 12.0, (0.30, 0.45, 0.72))
+    area("CitySodium", (16.0, 2.0, 12.0), (0, 20.0, 6.0), 1400, 9.0, (1.0, 0.44, 0.12))
+    area("ForegroundFill", (0.0, -12.0, 11.0), (0, -1.0, roof_z + 1.0), 480, 6.0, (0.44, 0.54, 0.68))
     render(samples, width, height, out)
 
 
