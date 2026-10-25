@@ -34,6 +34,7 @@ The owner should not have to run a render, upload a file or babysit a queue.
 | `scripts/film/autopilot.js` | slate validation and dispatch |
 | `data/film-slate.json` | agent-owned topic slate |
 | `docs/film-runbook.md` | exact operating loop and acceptance gates |
+| `docs/film-editing.md` | transition vocabulary, per-film edit grammar and edit QC gate |
 
 ## The production loop
 
@@ -42,9 +43,12 @@ The owner should not have to run a render, upload a file or babysit a queue.
 2. Preview plates on CI with `plate-test.yml`; download the artifact. **Look at
    every plate at full size.** Do not judge a new run from an old artifact.
 3. Fix the scene source, not the PNG. Re-run only the cheap plate preview.
-4. Render a draft with `film.yml`; inspect the MP4, captions and audio.
-5. Render the final 1080p/24fps master; verify the file specs and watch it.
-6. Publish deliberately: final MP4/SRT/thumbnail, manifest entry, gallery still
+4. Author the per-film edit grammar in `docs/film-editing.md` before the
+   draft: 3-6 signature transitions, a reason for each, and sound bridges.
+5. Render a draft with `film.yml`; inspect the MP4, captions, audio and every
+   transition at 24 fps. A generic transition is a defect.
+6. Render the final 1080p/24fps master; verify the file specs and watch it.
+7. Publish deliberately: final MP4/SRT/thumbnail, manifest entry, gallery still
    and status, then verify the live routes.
 
 The exact commands, quality rubric and publishing checklist are in
