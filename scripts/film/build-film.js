@@ -354,6 +354,7 @@ function buildTimeline(film, tts, opts) {
           text: shot.text || '',
           impact: !!shot.impact,
           impactSub: shot.impactSub || '',
+          impactShift: shot.impactShift || '',
           cardKicker: shot.cardKicker || '',
           cardLines: Array.isArray(shot.cardLines) ? shot.cardLines : undefined,
           cardSub: shot.cardSub || '',

@@ -292,7 +292,12 @@
     dip.style.opacity = '0';
     if (irisRing) irisRing.style.opacity = '0';
     if (wipeEdge) wipeEdge.style.opacity = '0';
-    if (fog) fog.style.opacity = '0';
+    if (fog) {
+      fog.style.opacity = '0';
+      fog.style.background = '';
+      fog.style.filter = '';
+      fog.style.mixBlendMode = '';
+    }
     if (ghost) {
       ghost.style.opacity = '0';
       ghost.style.transform = 'none';
@@ -373,12 +378,34 @@
       }
       if (wipeEdge) wipeEdge.style.opacity = p < 0.98 ? '0.92' : '0';
     } else if (kind === 'dissolve') {
-      ghost.style.opacity = String(1 - e);
-      ghost.style.transform = 'scale(1.01)';
-      if (fog) {
-        fog.style.opacity = String(Math.sin(Math.PI * p) * 0.68);
-        fog.style.transform = 'translateX(' + ((p - 0.5) * 5).toFixed(2) + 'vw) scale(' +
-          (1.02 + 0.04 * Math.sin(Math.PI * p)).toFixed(3) + ')';
+      if (spec.throughFog) {
+        // Gas is the subject: the outgoing plate goes under a real cloud, the
+        // cut happens inside the cloud, and the new plate emerges. This is not
+        // a crossfade of two unrelated compositions.
+        var haze = Math.sin(Math.PI * p);
+        ghost.style.opacity = p < 0.5 ? '1' : '0';
+        ghost.style.transform = 'scale(1.01)';
+        if (fog) {
+          var a1 = (0.96 * haze).toFixed(3);
+          var a2 = (0.80 * haze).toFixed(3);
+          var a3 = (0.56 * haze).toFixed(3);
+          fog.style.background = 'radial-gradient(82% 82% at 50% 52%, ' +
+            'rgba(198,206,192,' + a1 + '), rgba(154,166,154,' + a2 + ') 54%, ' +
+            'rgba(108,122,114,' + a3 + ') 100%)';
+          fog.style.opacity = '1';
+          fog.style.filter = 'blur(30px)';
+          fog.style.mixBlendMode = 'screen';
+          fog.style.transform = 'translateX(' + ((p - 0.5) * 4).toFixed(2) +
+            'vw) scale(' + (1.06 + 0.06 * haze).toFixed(3) + ')';
+        }
+      } else {
+        ghost.style.opacity = String(1 - e);
+        ghost.style.transform = 'scale(1.01)';
+        if (fog) {
+          fog.style.opacity = String(Math.sin(Math.PI * p) * 0.68);
+          fog.style.transform = 'translateX(' + ((p - 0.5) * 5).toFixed(2) + 'vw) scale(' +
+            (1.02 + 0.04 * Math.sin(Math.PI * p)).toFixed(3) + ')';
+        }
       }
     } else if (kind === 'whip-left' || kind === 'whip-right') {
       var dir = kind === 'whip-left' ? -1 : 1;
@@ -500,9 +527,11 @@
     var outS = smooth((shot.duration - shotLocal) / (tight ? 0.28 : 0.50));
     var statementAlpha = shot.text && shot.render !== 'title' ? Math.min(inS, outS) : 0;
     if (shot.impact) {
-      var pop = smooth(Math.min(1, shotLocal / 0.34));
-      statementAlpha = Math.min(pop, outS);
-      statement.style.transform = 'translateY(-50%) scale(' + (0.84 + 0.16 * pop).toFixed(4) + ')';
+      // A number lands on the cut. It is fully present on the first frame,
+      // not faded in: the edit is a hard number cut, not a title animation.
+      statementAlpha = outS;
+      statement.style.transform = 'translateX(' + (shot.impactShift || '0') +
+        ') translateY(-50%) scale(1)';
     } else {
       statement.style.transform = 'translateY(' + ((1 - inS) * 12).toFixed(2) + 'px)';
     }
