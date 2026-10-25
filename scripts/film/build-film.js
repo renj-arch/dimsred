@@ -587,7 +587,7 @@ function makeBed(timeline, file) {
     labels.push('[br]');
   }
   filters.push(`${labels.join('')}amix=inputs=${labels.length}:normalize=0,` +
-    `alimiter=limit=0.92,afade=t=in:st=0:d=2.2,` +
+    `alimiter=limit=0.90:level=false,afade=t=in:st=0:d=2.2,` +
     `afade=t=out:st=${Math.max(0, timeline.duration - 3.5)}:d=3.5[out]`);
   args.push('-filter_complex', filters.join(';'), '-map', '[out]', '-ac', '2', '-ar', '48000',
     '-t', d, '-c:a', 'pcm_s16le', file);
@@ -613,7 +613,7 @@ function buildAudio(timeline, tts, opts) {
   const labels = ['[bed]'].concat(lines.map((_, i) => `[n${i}]`)).join('');
   filters.push(
     `${labels}amix=inputs=${lines.length + 1}:normalize=0,` +
-    `alimiter=limit=0.94,afade=t=in:st=0:d=0.6,` +
+    `alimiter=limit=0.89:level=false,afade=t=in:st=0:d=0.6,` +
     `afade=t=out:st=${Math.max(0, timeline.duration - 2.5)}:d=2.5[a]`
   );
   args.push('-filter_complex', filters.join(';'), '-map', '[a]', '-t', timeline.duration.toFixed(3),
