@@ -102,7 +102,7 @@ jobs:
               echo "SAMPLES=16" >> "$GITHUB_ENV"
               echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
               echo "CRF=20" >> "$GITHUB_ENV"
-              echo "VIDEO_BITRATE=2200k" >> "$GITHUB_ENV"
+              echo "VIDEO_BITRATE=3500k" >> "$GITHUB_ENV"
               echo "PRESET=medium" >> "$GITHUB_ENV"
               echo "OUT_NAME=${FILM}-draft.mp4" >> "$GITHUB_ENV"
               ;;
@@ -111,8 +111,8 @@ jobs:
               echo "HEIGHT=1080" >> "$GITHUB_ENV"
               echo "SAMPLES=32" >> "$GITHUB_ENV"
               echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
-              echo "CRF=18" >> "$GITHUB_ENV"
-              echo "VIDEO_BITRATE=4500k" >> "$GITHUB_ENV"
+              echo "CRF=16" >> "$GITHUB_ENV"
+              echo "VIDEO_BITRATE=12000k" >> "$GITHUB_ENV"
               echo "PRESET=slow" >> "$GITHUB_ENV"
               echo "OUT_NAME=${FILM}-master.mp4" >> "$GITHUB_ENV"
               ;;
@@ -154,6 +154,22 @@ jobs:
             --skip-plates \
             --tts piper \
             --voice en_US-lessac-medium
+
+      - name: Refuse a starved master
+        if: inputs.quality == 'final'
+        run: |
+          set -euo pipefail
+          FILE="out/film/$FILM/$OUT_NAME"
+          RATE=$(ffprobe -v error -select_streams v:0 \
+            -show_entries stream=bit_rate -of csv=p=0 "$FILE")
+          SIZE=$(stat -c%s "$FILE")
+          echo "master ${SIZE} bytes, video ${RATE} bps"
+          # A 1080p film of grainy plates cannot honestly encode below this.
+          # 40324105535 came in at 738 kbps with 14 KB frames behind it.
+          if [ "${RATE:-0}" -lt 2500000 ]; then
+            echo "::error::master video bitrate ${RATE} bps is below the 2.5 Mbps floor; the frames are probably degraded again"
+            exit 1
+          fi
 
       - name: Upload film artefact
         uses: actions/upload-artifact@v4

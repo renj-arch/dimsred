@@ -731,11 +731,29 @@ async function renderFrames(timeline, opts) {
   ctx.imageSmoothingQuality = 'high';
   const total = Math.ceil(timeline.duration * opts.captureFps);
   console.log(`canvas: ${opts.captureFps} fps · ${opts.width}x${opts.height} · ${timeline.duration.toFixed(1)}s`);
+
+  /*
+   * The quality argument is not trusted until it is proved. @napi-rs/canvas
+   * 1.0.13 silently ignores the 0-1 quality number and writes every frame at
+   * its default, which shipped 14 KB frames for a 1080p film, starved the
+   * encoder to 738 kbps and turned the plates into macroblocks while the
+   * ffmpeg captions stayed sharp. Draw one real frame, encode it twice and
+   * refuse to continue unless quality actually changes the bytes.
+   */
+  drawFrame(ctx, film, timeline, list, 0, opts.width, opts.height, images);
+  const lowQ = await canvas.encode('jpeg', 50);
+  const highQ = await canvas.encode('jpeg', 92);
+  if (highQ.length < lowQ.length * 1.3) {
+    throw new Error('JPEG encoder ignored its quality argument ' +
+      `(q92 ${highQ.length} bytes vs q50 ${lowQ.length} bytes)`);
+  }
+  console.log(`  frame quality: q92 ${(highQ.length / 1024).toFixed(0)} KB, q50 ${(lowQ.length / 1024).toFixed(0)} KB`);
+
   for (let f = 0; f < total; f++) {
     const t = f / opts.captureFps;
     drawFrame(ctx, film, timeline, list, t, opts.width, opts.height, images);
     const file = path.join(framesDir, `frame-${String(f + 1).padStart(6, '0')}.jpg`);
-    await fsp.writeFile(file, canvas.toBuffer('image/jpeg', 0.92));
+    await fsp.writeFile(file, await canvas.encode('jpeg', 92));
     if (f % 120 === 0 || f === total - 1) {
       console.log(`  frame ${f + 1}/${total}  ${t.toFixed(1)}s`);
     }
@@ -753,7 +771,7 @@ async function renderPoster(film, timeline, opts) {
   const images = await loadPlateImages(timeline, platesDir);
   const canvas = renderPosterFrame(film, timeline, images, 1280, 720);
   const file = path.join(opts.work, `${opts.film}-thumb.jpg`);
-  await fsp.writeFile(file, canvas.toBuffer('image/jpeg', 0.94));
+  await fsp.writeFile(file, await canvas.encode('jpeg', 92));
   console.log(`thumbnail: ${file}`);
   return file;
 }

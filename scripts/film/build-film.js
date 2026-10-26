@@ -621,6 +621,12 @@ async function renderFrames(timeline, opts) {
   return renderCanvasFrames(timeline, opts);
 }
 
+function doubleRate(rate) {
+  const m = String(rate).match(/^(\d+(?:\.\d+)?)([kKmM])?$/);
+  if (!m) return rate;
+  return `${Math.round(Number(m[1]) * 2)}${m[2] || ''}`;
+}
+
 function encode(framesDir, audio, timeline, opts, subtitleFile) {
   const pattern = path.join(framesDir, 'frame-%06d.jpg');
   const args = [
@@ -642,11 +648,17 @@ function encode(framesDir, audio, timeline, opts, subtitleFile) {
     '-preset', opts.preset
   );
   if (opts.videoBitrate) {
-    // Dark, slow-moving plates can fool CRF into a starved 200 kbps stream.
-    // A target bitrate keeps the gradients and caption edges intact.
-    args.push('-b:v', opts.videoBitrate, '-x264-params', 'aq-mode=3:aq-strength=1.0');
+    // CRF anchors the quality; the bitrate is only a ceiling. A plain -b:v
+    // target made x264 undershoot to 738 kbps on this dark, slow film and the
+    // encoder then crushed the plates while the ffmpeg captions stayed sharp.
+    args.push(
+      '-crf', String(opts.crf),
+      '-maxrate', opts.videoBitrate,
+      '-bufsize', doubleRate(opts.videoBitrate),
+      '-x264-params', 'aq-mode=3:aq-strength=1.1'
+    );
   } else {
-    args.push('-crf', String(opts.crf));
+    args.push('-crf', String(opts.crf), '-x264-params', 'aq-mode=3:aq-strength=1.1');
   }
   args.push(
     '-pix_fmt', 'yuv420p',
