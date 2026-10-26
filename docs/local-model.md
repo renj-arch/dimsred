@@ -59,12 +59,17 @@ Bhopal scene S02:
 | --- | --- |
 | model load | about 60 s from the 12.29 GB file |
 | prompt | 25–50 t/s depending on runner contention |
-| decode | 7.1–7.5 t/s |
+| decode | 7.1–8.0 t/s |
 | wall clock, one scene | 111–147 s including load |
 | peak RSS | 12.6–13.6 GB of 16 GB |
-| answer | three well-formed shots, allowed plates, ledger-only facts |
+| answer | four shots, allowed plates, ledger-only facts, holds summing to the scene |
 
-Seven tokens a second is enough for a 500-token shot list. A dense 40B at 4 bits
+The passing run is `40350321795`: scene S02 came back as four Blender shots
+(`plant-gate`, `tank-farm`, `control-panel`, `valve`) holding 3.5, 4.5, 4 and 3
+seconds, exactly the 15 seconds the scene asked for, every transition a hard
+cut, and the audit returned zero problems and zero warnings.
+
+Eight tokens a second is enough for a 500-token shot list. A dense 40B at 4 bits
 would not fit this machine at all, which is why the MoE layout, not the
 parameter count alone, is the reason this model is here.
 
