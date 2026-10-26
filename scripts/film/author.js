@@ -377,7 +377,8 @@ function narrationPrompt(film, scene, rows) {
     ledger,
     '',
     'Return this JSON shape exactly:',
-    '{"lines":[{"row":"L03","text":"one spoken sentence"}]}'
+    '{"lines":[{"row":"L03","text":"one spoken sentence"}]}',
+    'Finish the closing brace and stop. Nothing follows the object.'
   ].join('\n');
 }
 
@@ -417,7 +418,9 @@ function auditLines(lines, rows, scene, usedTexts) {
   }
   for (const line of lines) {
     const text = normalize(line && line.text);
-    const row = byId.get(String(line && line.row));
+    const cited = String((line && line.row) || '').trim().toUpperCase();
+    const rowId = cited.replace(/^L0*(\d+)$/, (_, n) => `L${n.padStart(2, '0')}`);
+    const row = byId.get(rowId);
     if (!row) {
       problems.push(`line cites unknown ledger row ${JSON.stringify(line && line.row)}: ${text}`);
       continue;
@@ -472,6 +475,142 @@ function pickGrammar(corpus, topic) {
 function plateName(archetype, counts) {
   counts[archetype] = (counts[archetype] || 0) + 1;
   return `${archetype}-${String(counts[archetype]).padStart(2, '0')}`;
+}
+
+/*
+ * The argument map, from the same ledger. Every point is a verbatim row, not
+ * a paraphrase, so a reader can follow the point back to the page it came
+ * from. The questions are the film's four arguments; the rows decide which
+ * side of each they can actually support.
+ */
+const FOR = /\b(necessary|stability|security|threat|law and order|defen[cs]e|defended|justif|integrity|discipline|supported|national interest|upheld|valid)\b/i;
+const AGAINST = /\b(liberty|freedom|rights|arbitrary|unconstitutional|censor|detain|arrest|critic|oppos|condemn|misuse|excess|torture|silence|illegal|invalid)\b/i;
+
+function stancePool(ledger, pattern, exclude, limit = 16) {
+  const out = [];
+  for (const row of ledger) {
+    if (exclude.has(row.id)) continue;
+    if (!pattern.test(row.text)) continue;
+    out.push(row);
+    if (out.length >= limit) break;
+  }
+  return out;
+}
+
+function pickStance(pool, offset, count = 2) {
+  const out = [];
+  for (let i = 0; i < count; i++) out.push(pool[(offset + i) % pool.length]);
+  return out;
+}
+
+function buildDebates(film, topic, ledger, corpus, plans) {
+  const sources = (corpus.sources || []).map((s) => ({
+    id: s.id,
+    title: s.title || s.id,
+    publisher: s.kind === 'wikipedia' ? 'Wikipedia' : (s.title || s.id),
+    url: s.url
+  }));
+  if (sources.length < 5) {
+    throw new Error(`the argument map needs at least five sources; the slate lists ${sources.length} for ${topic.id}`);
+  }
+
+  const dated = ledger
+    .filter((row) => /\b(1[5-9]\d{2}|20\d{2})\b/.test(row.text))
+    .sort((a, b) => Number((a.text.match(/\b(1[5-9]\d{2}|20\d{2})\b/) || [])[1])
+      - Number((b.text.match(/\b(1[5-9]\d{2}|20\d{2})\b/) || [])[1]));
+  const context = [];
+  const used = new Set();
+  const seenYears = new Set();
+  for (const row of dated) {
+    const year = (row.text.match(/\b(1[5-9]\d{2}|20\d{2})\b/) || [])[1];
+    if (seenYears.has(year)) continue;
+    seenYears.add(year);
+    used.add(row.id);
+    const scene = plans.find((p) => p.lines.some((l) => l.row.id === row.id));
+    context.push({
+      year: Number(year),
+      title: `${year} — ${scene ? scene.title : 'The record'}`,
+      text: row.text,
+      source: row.source
+    });
+    if (context.length >= 6) break;
+  }
+  if (context.length < 5) {
+    throw new Error(`only ${context.length} dated events in the ledger; the argument map needs five`);
+  }
+
+  const templates = [
+    {
+      scene: plans[1],
+      question: `Was ${plans[1].title.toLowerCase()} necessary?`,
+      hook: `The government called it stability; the record shows what it cost.`,
+      stakes: `If the order was necessary, the cost is a price; if it was not, the cost is the charge.`,
+      uncomfortable: `Both sides can cite the same night; the difference is who they believe was counted.`,
+      whatWouldChange: `A contemporaneous security assessment that named a specific threat, not a general one.`
+    },
+    {
+      scene: plans[2],
+      question: `Did ${plans[2].title.toLowerCase()} stay inside the law?`,
+      hook: `A proclamation is a sentence; the arrests, censors and tribunals are the grammar.`,
+      stakes: `A legal emergency and a legal cover are hard to tell apart from inside the machinery.`,
+      uncomfortable: `The courts that could have checked the order were part of the order's design.`,
+      whatWouldChange: `A court ruling that struck the order down while it was still in force.`
+    },
+    {
+      scene: plans[4],
+      question: `Who paid for ${plans[4].title.toLowerCase()}?`,
+      hook: `The figures in the record are official; the people behind them are not.`,
+      stakes: `A count can be accurate and still be a way of not looking.`,
+      uncomfortable: `The film can show the register; it cannot show the cell.`,
+      whatWouldChange: `A verified register of every person detained, with dates and outcomes.`
+    },
+    {
+      scene: plans[6],
+      question: `What did ${plans[6].title.toLowerCase()} settle?`,
+      hook: `An inquiry writes the first draft of the argument, not its last word.`,
+      stakes: `If the record is complete, the debate is about judgment; if it is not, it is about the record.`,
+      uncomfortable: `The commission had the power to recommend, not the power to punish.`,
+      whatWouldChange: `A prosecution that survived the change of government.`
+    }
+  ];
+
+  const debates = templates.map((template, i) => {
+    const poolFor = stancePool(ledger, FOR, used);
+    const poolAgainst = stancePool(ledger, AGAINST, used);
+    if (poolFor.length < 2 || poolAgainst.length < 2) {
+      throw new Error(
+        `the argument map found ${poolFor.length} for and ${poolAgainst.length} against rows; ` +
+        'two of each are needed before a debate can be sourced'
+      );
+    }
+    const forRows = pickStance(poolFor, i * 2);
+    const againstRows = pickStance(poolAgainst, i * 2);
+    const point = (row) => ({ claim: row.text, source: row.source });
+    const cited = [...new Set([...forRows, ...againstRows].map((row) => row.source))];
+    return {
+      id: `D${i + 1}`,
+      anchor: template.scene.id,
+      question: template.question,
+      hook: template.hook,
+      stakes: template.stakes,
+      uncomfortable: template.uncomfortable,
+      whatWouldChange: template.whatWouldChange,
+      caseFor: forRows.map(point),
+      caseAgainst: againstRows.map(point),
+      sources: cited.length >= 2 ? cited : sources.slice(0, 2).map((s) => s.id)
+    };
+  });
+
+  return {
+    schema: 'vlymbooq.debates.v1',
+    film: film.id,
+    title: film.title,
+    subtitle: film.subtitle,
+    sources,
+    context,
+    debates,
+    generated: new Date().toISOString()
+  };
 }
 
 /*
@@ -631,8 +770,11 @@ function main() {
   }
   const corpus = readJson(corpusFile);
   corpus.__file = corpusFile;
-  if (!corpus.sources || corpus.sources.length < 2) {
-    throw new Error('the corpus needs at least two readable sources before a film can be authored');
+  if (!corpus.sources || corpus.sources.length < 5) {
+    throw new Error(
+      `the corpus has ${(corpus.sources || []).length} readable sources; a film needs at least five ` +
+      'so its argument map has more than one page behind it'
+    );
   }
 
   const ledger = buildLedger(corpus);
@@ -796,6 +938,10 @@ function main() {
     rows: ledger
   });
 
+  const debatesFile = path.join(FILMS, `${filmId}-debates.json`);
+  const debates = buildDebates(film, topic, ledger, corpus, plans);
+  writeJson(debatesFile, debates);
+
   const check = spawnSync(process.execPath, [path.join(__dirname, 'validate-film.js'), outFile], {
     encoding: 'utf8',
     cwd: ROOT
@@ -806,6 +952,16 @@ function main() {
     throw new Error('the authored storyboard did not pass the gate; nothing was marked ready');
   }
 
+  const argumentsCheck = spawnSync(process.execPath, [path.join(__dirname, 'validate-debates.js'), debatesFile], {
+    encoding: 'utf8',
+    cwd: ROOT
+  });
+  process.stdout.write(argumentsCheck.stdout || '');
+  process.stderr.write(argumentsCheck.stderr || '');
+  if (argumentsCheck.status !== 0) {
+    throw new Error('the authored argument map did not pass the gate; nothing was marked ready');
+  }
+
   topic.status = 'storyboard';
   slate.updated = new Date().toISOString().slice(0, 10);
   writeJson(SLATE, slate);
@@ -813,6 +969,7 @@ function main() {
   console.log(`\n[author] ${filmId}: ${film.scenes.length} scenes · ${built.total}s · ${ledger.length} ledger rows`);
   console.log(`[author] ${path.relative(ROOT, outFile)}`);
   console.log(`[author] ${path.relative(ROOT, path.join(FILMS, `${filmId}-sets.json`))}`);
+  console.log(`[author] ${path.relative(ROOT, debatesFile)}`);
 }
 
 try {

@@ -25,21 +25,44 @@ function capabilities(bin) {
   return { has: (flag) => !help || help.includes(flag) };
 }
 
-/* The last balanced object in the output: models like to preface it with prose. */
+/* The first complete object in the output: models like to preface it with prose. */
 function extractJson(text) {
   if (!text) return null;
-  const end = text.lastIndexOf('}');
-  if (end === -1) return null;
-  for (let start = text.indexOf('{'); start !== -1 && start < end; start = text.indexOf('{', start + 1)) {
-    const slice = text.slice(start, end + 1);
-    try {
-      const value = JSON.parse(slice);
-      if (value && typeof value === 'object') return value;
-    } catch {
-      /* keep widening */
+  let depth = 0;
+  let start = -1;
+  let inString = false;
+  let escaped = false;
+  let fallback = null;
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+    if (inString) {
+      if (escaped) escaped = false;
+      else if (ch === '\\') escaped = true;
+      else if (ch === '"') inString = false;
+      continue;
+    }
+    if (ch === '"') { inString = true; continue; }
+    if (ch === '{') {
+      if (depth === 0) start = i;
+      depth++;
+    } else if (ch === '}' && depth > 0) {
+      depth--;
+      if (depth === 0 && start !== -1) {
+        const slice = text.slice(start, i + 1);
+        try {
+          const value = JSON.parse(slice);
+          if (value && typeof value === 'object') {
+            if (Array.isArray(value.lines) || Array.isArray(value.shots)) return value;
+            if (!fallback) fallback = value;
+          }
+        } catch {
+          /* keep scanning: a malformed candidate may be followed by a good one */
+        }
+        start = -1;
+      }
     }
   }
-  return null;
+  return fallback;
 }
 
 function ask({
@@ -74,6 +97,10 @@ function ask({
     if (value !== null) common.push(value);
   }
   const noConversation = ['-no-cnv', '--no-conversation'].find(cap.has);
+  // b11890 sometimes emits an end token in the middle of a JSON object. With
+  // the model's own stop suppressed, the object gets finished and the parser
+  // takes the first complete answer instead of a truncated one.
+  const ignoreEos = cap.has('--ignore-eos');
 
   const promptFile = path.join(dir, `prompt-${label}.txt`);
   const flatFile = path.join(dir, `flat-${label}.txt`);
@@ -99,7 +126,13 @@ function ask({
   }
   attempts.push({
     label: 'flat',
-    args: [...common, ...(noConversation ? [noConversation] : []), '-f', flatFile],
+    args: [...common, ...(noConversation ? [noConversation] : []), ...(ignoreEos ? ['--ignore-eos'] : []), '-f', flatFile],
+  });
+  // One more flat sample. A truncated object is a sampling accident, not a
+  // reason to fail a scene; the audit still decides whether the answer is true.
+  attempts.push({
+    label: 'flat2',
+    args: [...common, ...(noConversation ? [noConversation] : []), ...(ignoreEos ? ['--ignore-eos'] : []), '-f', flatFile],
   });
 
   const failures = [];
