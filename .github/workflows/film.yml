@@ -2,7 +2,7 @@ name: Film pipeline
 
 # Every frame is generated on a GitHub-hosted CPU runner. Nothing is rendered
 # on the owner's machine. The free runner has no GPU, so the film is built from
-# high-quality Blender stills plus frame-accurate motion graphics in Chromium;
+# high-quality Blender stills plus frame-accurate motion graphics on a Skia canvas;
 # ffmpeg then encodes the master and Piper supplies the narration.
 #
 # Manual runs only: a full master is expensive, and a broken storyboard should
@@ -81,9 +81,6 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
-      - name: Install Chromium for frame capture
-        run: npx playwright install --with-deps chromium
-
       - name: Install Piper
         run: |
           python3 -m pip install --upgrade pip
@@ -136,7 +133,7 @@ jobs:
             --height "$HEIGHT" \
             --samples "$SAMPLES"
 
-      - name: Build film (map, Piper, Chromium frames, ffmpeg)
+      - name: Build film (map, Piper, Skia frames, ffmpeg)
         run: |
           node scripts/film/build-film.js \
             --film "$FILM" \
@@ -184,8 +181,8 @@ jobs:
 
             - Blender 4.2.3 LTS (Cycles CPU)
             - Piper local narration
-            - Chromium frame capture
-            - ffmpeg H.264/AAC master
+            - Skia canvas compositor
+            - ffmpeg H.264/AAC master with burned captions
 
             Download the MP4, SRT and thumbnail below. YouTube upload remains a
             deliberate owner action.

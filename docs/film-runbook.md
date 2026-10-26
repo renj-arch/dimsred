@@ -60,7 +60,7 @@ gh workflow run film.yml --ref film-ci \
 Download `film-jallianwala-bagh-draft` and inspect:
 
 - duration is the storyboard duration (Jallianwala: 152 s);
-- 1280×720, 12 fps capture rendered into a 24 fps container;
+- 1280x720, 24 fps Skia canvas frames rendered into a 24 fps container;
 - voice is audible, no clipped words, no missing line;
 - SRT timings match the spoken lines;
 - every scene change has a purpose; no accidental black frame;

@@ -7,7 +7,7 @@
  *   2. render 3D plates with Blender (CPU / Cycles)
  *   3. draw the route map from public-domain Natural Earth data
  *   4. narrate with Piper
- *   5. drive film.html frame by frame in headless Chromium
+ *   5. composite the timeline on a deterministic Skia canvas
  *   6. encode with ffmpeg, write SRT, thumbnail, metadata and a YouTube brief
  *
  * No frame is rendered on the owner's machine. No paid API is called.
@@ -18,26 +18,10 @@
 const fs = require('fs');
 const fsp = fs.promises;
 const path = require('path');
-const http = require('http');
 const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const OUT_ROOT = path.join(ROOT, 'out', 'film');
-const MIME = {
-  '.html': 'text/html; charset=utf-8',
-  '.js': 'text/javascript; charset=utf-8',
-  '.css': 'text/css; charset=utf-8',
-  '.json': 'application/json; charset=utf-8',
-  '.svg': 'image/svg+xml',
-  '.png': 'image/png',
-  '.jpg': 'image/jpeg',
-  '.jpeg': 'image/jpeg',
-  '.webp': 'image/webp',
-  '.woff2': 'font/woff2',
-  '.wav': 'audio/wav',
-  '.mp4': 'video/mp4',
-  '.txt': 'text/plain; charset=utf-8'
-};
 
 function parse(argv) {
   const o = {
@@ -622,96 +606,12 @@ function buildAudio(timeline, tts, opts) {
   return audio;
 }
 
-function startServer(root) {
-  const server = http.createServer((req, res) => {
-    let urlPath = '/';
-    try { urlPath = decodeURIComponent(String(req.url || '/').split('?')[0]); } catch (e) {}
-    if (urlPath === '/') urlPath = '/index.html';
-    const unsafe = path.posix.normalize(urlPath);
-    const file = path.join(root, unsafe.replace(/^(\.\.\/)+/, '').replace(/^\/+/, ''));
-    if (!file.startsWith(root)) { res.writeHead(403); res.end('forbidden'); return; }
-    fs.stat(file, (err, stat) => {
-      if (err || !stat.isFile()) { res.writeHead(404); res.end('not found'); return; }
-      const type = MIME[path.extname(file).toLowerCase()] || 'application/octet-stream';
-      res.writeHead(200, { 'Content-Type': type, 'Cache-Control': 'no-store', 'Content-Length': stat.size });
-      fs.createReadStream(file).pipe(res);
-    });
-  });
-  return new Promise((resolve, reject) => {
-    server.on('error', reject);
-    server.listen(0, '127.0.0.1', () => resolve({ server, url: `http://127.0.0.1:${server.address().port}` }));
-  });
-}
-
-async function launchChromium(chromium) {
-  const args = [
-    '--disable-dev-shm-usage',
-    '--force-color-profile=srgb',
-    '--font-render-hinting=none',
-    // The page updates every captured frame. Without a full compositor flush,
-    // Chromium can screenshot a half-repainted tiled surface: the previous
-    // frame remains in some tiles and the text appears twice. That looked like
-    // a duplicate-title bug in the first 24 fps draft. These two flags plus the
-    // double-rAF settle below force the new surface before the screenshot.
-    '--run-all-compositor-stages-before-draw',
-    '--disable-gpu'
-  ];
-  const bundled = chromium.executablePath();
-  if (bundled && fs.existsSync(bundled)) {
-    return chromium.launch({ headless: true, executablePath: bundled, args });
-  }
-  const channels = [process.env.PLAYWRIGHT_CHANNEL, 'chrome', 'msedge'].filter(Boolean);
-  let lastError;
-  for (const channel of channels) {
-    try { return await chromium.launch({ headless: true, channel, args }); }
-    catch (e) { lastError = e; }
-  }
-  throw new Error(`No usable Chromium. Run: npx playwright install chromium\n${lastError ? lastError.message : ''}`);
-}
-
 async function renderFrames(timeline, opts) {
-  const { chromium } = require('playwright');
-  const framesDir = path.join(opts.work, 'frames');
-  fs.rmSync(framesDir, { recursive: true, force: true });
-  fs.mkdirSync(framesDir, { recursive: true });
-
-  const local = await startServer(ROOT);
-  const browser = await launchChromium(chromium);
-  const page = await browser.newPage({ viewport: { width: opts.width, height: opts.height }, deviceScaleFactor: 1 });
-  const pageErrors = [];
-  page.on('pageerror', (e) => pageErrors.push(e.message));
-  page.on('console', (m) => { if (m.type() === 'error') console.log('  browser:', m.text()); });
-  const timelineRel = path.relative(ROOT, path.join(opts.work, 'timeline.json')).replace(/\\/g, '/');
-  const url = `${local.url}/film.html?film=${encodeURIComponent(opts.film)}&timeline=${encodeURIComponent(timelineRel)}&capture=1`;
-  console.log(`capture: ${opts.captureFps} fps · ${opts.width}x${opts.height} · ${timeline.duration.toFixed(1)}s`);
-  await page.goto(url, { waitUntil: 'domcontentloaded', timeout: 120000 });
-  await page.waitForFunction(() => window.FILM_READY === true || !!window.FILM_ERROR, null, { timeout: 120000 });
-  const filmError = await page.evaluate(() => window.FILM_ERROR || '');
-  if (filmError) throw new Error(`film page error: ${filmError}`);
-  if (pageErrors.length) throw new Error(`film page console errors: ${pageErrors.slice(0, 3).join(' | ')}`);
-
-  const total = Math.ceil(timeline.duration * opts.captureFps);
-  for (let f = 0; f < total; f++) {
-    const t = f / opts.captureFps;
-    await page.evaluate((time) => window.renderFilmAt(time), t);
-    // Wait for two full paints, then a beat for the raster tiles to settle.
-    // A fixed 25 ms wait was not enough at 24 fps on the GitHub runner.
-    await page.evaluate(() => new Promise((resolve) => {
-      requestAnimationFrame(() => requestAnimationFrame(() => setTimeout(resolve, 12)));
-    }));
-    await page.screenshot({
-      path: path.join(framesDir, `frame-${String(f + 1).padStart(6, '0')}.jpg`),
-      type: 'jpeg',
-      quality: opts.jpegQuality,
-      animations: 'disabled'
-    });
-    if (f % 120 === 0 || f === total - 1) {
-      console.log(`  frame ${f + 1}/${total}  ${t.toFixed(1)}s`);
-    }
-  }
-  await browser.close();
-  local.server.close();
-  return framesDir;
+  // The canvas compositor is deterministic and does not depend on a browser's
+  // tiled compositor. It draws the same timeline and plate images that the
+  // validator and preview page use.
+  const { renderFrames: renderCanvasFrames } = require('./render-canvas');
+  return renderCanvasFrames(timeline, opts);
 }
 
 function encode(framesDir, audio, timeline, opts, subtitleFile) {
@@ -749,21 +649,8 @@ function encode(framesDir, audio, timeline, opts, subtitleFile) {
 }
 
 async function makeThumbnail(timeline, opts) {
-  const { chromium } = require('playwright');
-  const local = await startServer(ROOT);
-  const browser = await launchChromium(chromium);
-  const page = await browser.newPage({ viewport: { width: 1280, height: 720 }, deviceScaleFactor: 1 });
-  const timelineRel = path.relative(ROOT, path.join(opts.work, 'timeline.json')).replace(/\\/g, '/');
-  await page.goto(`${local.url}/film.html?film=${encodeURIComponent(opts.film)}&poster=1&timeline=${encodeURIComponent(timelineRel)}`, { waitUntil: 'domcontentloaded', timeout: 120000 });
-  await page.waitForFunction(() => window.FILM_READY === true || !!window.FILM_ERROR, null, { timeout: 120000 });
-  const filmError = await page.evaluate(() => window.FILM_ERROR || '');
-  if (filmError) throw new Error(`thumbnail page error: ${filmError}`);
-  const file = path.join(opts.work, `${opts.film}-thumb.jpg`);
-  await page.screenshot({ path: file, type: 'jpeg', quality: 92, animations: 'disabled' });
-  await browser.close();
-  local.server.close();
-  console.log(`thumbnail: ${file}`);
-  return file;
+  const { renderPoster } = require('./render-canvas');
+  return renderPoster(loadFilm(opts), timeline, opts);
 }
 
 function srtTime(sec) {

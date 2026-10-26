@@ -27,7 +27,7 @@ The owner should not have to run a render, upload a file or babysit a queue.
 | `scripts/film/blender/<id>_scenes.py` | procedural Blender plates |
 | `scripts/film/render-plates.js` | plate-name → Blender scene mapping |
 | `js/film.js`, `film.html` | deterministic timeline and motion layers |
-| `scripts/film/build-film.js` | Piper, Chromium capture, ffmpeg, SRT, metadata |
+| `scripts/film/build-film.js` | Piper, Skia canvas compositor, ffmpeg, SRT, metadata |
 | `.github/workflows/film.yml` | full draft/final render |
 | `.github/workflows/plate-test.yml` | cheap stills-only preview |
 | `.github/workflows/film-autopilot.yml` | scheduled selector; dispatches only ready films |

@@ -12,7 +12,7 @@ machine. The workflow is `.github/workflows/film.yml`; the storyboard is
 | 3D plates | Blender 4.2.3 LTS, Cycles CPU | `out/film/<film>/plates/*.png` |
 | Route map | Node + Natural Earth TopoJSON | `out/film/<film>/map.json` |
 | Narration | Piper, local ONNX voice | one WAV per line + durations |
-| Motion graphics | headless Chromium, 12/24 fps | JPEG frames |
+| Motion graphics | Skia 2D canvas, 24 fps | JPEG frames |
 | Master | ffmpeg | H.264/AAC MP4, SRT, thumbnail, metadata |
 
 Nothing is sent to a paid API. Nothing is rendered on the owner's device. The
@@ -29,7 +29,9 @@ on a standard GitHub-hosted runner:
 - **EmberGen** needs a GPU and a paid licence; free runners have no GPU.
 - **After Effects / Premiere** do not run on GitHub Actions.
 
-The automated master is therefore Blender + Chromium + Piper + ffmpeg. The
+The automated master is therefore Blender + Skia canvas + Piper + ffmpeg.
+The canvas compositor replaced headless-browser screenshots after Chromium's
+tiled raster surface duplicated plates and text across tile boundaries. The
 storyboard still records the optional Cascadeur/EmberGen/Adobe roles so a human
 finisher can take the same plates, camera notes and sound cues into those tools
 later. The pipeline never pretends those steps ran.
