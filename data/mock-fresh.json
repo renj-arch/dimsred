@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-24T15:26:10.025Z",
-  "cursor": 0,
-  "count": 109,
+  "updatedAt": "2026-10-26T04:55:00.109Z",
+  "cursor": 1,
+  "count": 120,
   "lastAttempt": {
-   "at": "2026-10-25T22:15:59.635Z",
-   "reason": "nothing"
+   "at": "2026-10-26T04:55:00.109Z",
+   "reason": "added 11"
   }
  },
  "items": [
@@ -990,6 +990,105 @@
    "h": "Consider the interaction between flue gases and incoming combustion air.",
    "s": "An air preheater transfers heat from the hot flue gases exiting the boiler to the cold air entering the furnace for combustion. By raising the temperature of the combustion air, the flame temperature increases, leading to more complete burning of fuel and a reduction in the overall amount of fuel needed.",
    "at": "2026-10-24"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "Define the modulus of resilience for a material and state its SI unit.",
+   "a": "The modulus of resilience is the maximum energy per unit volume that can be absorbed without permanent deformation; SI unit is Joule per cubic meter (J/m³).",
+   "h": "It is the area under the stress-strain curve up to the elastic limit.",
+   "s": "Modulus of resilience represents the strain energy stored in a material within its elastic region. It is calculated as the integral of stress with respect to strain from zero to the yield point, making it a measure of a material's ability to absorb energy elastically.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "A steel bar of length 2 m and cross-sectional area 400 mm² is subjected to an axial tensile load of 80 kN. If Young's modulus (E) for steel is 200 GPa, calculate the elongation in millimeters.",
+   "a": "The elongation is 4 mm.",
+   "h": "Use Hooke's Law: δ = (PL)/(AE).",
+   "s": "Using the formula for axial deformation δ = PL/AE, where P=80 kN, L=2 m, A=400 mm² (converted to 4×10⁻⁴ m²), and E=200 GPa. Substituting the values yields an elongation of 2 mm.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "Explain the difference between a 'hollow shaft' and a 'thin-walled tube' in the context of torsion.",
+   "a": "A hollow shaft is any circular shaft with a central hole, whereas a thin-walled tube is a specific subset where the wall thickness is less than one-tenth of the mean radius, allowing simplified shear stress calculations.",
+   "h": "Hollow shafts can be thick or thin; thin-walled tubes specifically satisfy t/r < 0.1.",
+   "s": "In torsion analysis, the distinction matters for calculating shear stress distribution. For thin-walled tubes, we assume uniform shear flow across the thickness, while for thick hollow shafts, the variation of shear stress from the inner to outer radius must be considered using the polar moment of inertia formula.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "A simply supported beam of span 6 m carries a central point load of 10 kN. Determine the maximum bending moment in Newton-meters.",
+   "a": "The maximum bending moment is 75 N·m (or 75000 N·mm).",
+   "h": "For a central point load on a simply supported beam, M_max = WL/4.",
+   "s": "For a simply supported beam with a central point load, the maximum bending moment occurs at mid-span and is given by WL/4. With W=10 kN (10,000 N) and L=6 m, the calculation is (10,000 × 6) / 4 = 15,000 N·m.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "Define 'shear center' for a thin-walled open section like a channel or angle.",
+   "a": "The shear center is the specific point in the cross-section of an open thin-walled member (like a C-channel or angle) where an applied transverse force produces pure bending without inducing any torsional rotation.",
+   "h": "It is the point through which a transverse load must pass to cause bending without twisting.",
+   "s": "In asymmetric or open sections, shear stresses do not pass through the centroid. The shear center is the locus of points where the resultant shear force acts to prevent twisting. Applying load anywhere else causes both bending and torsion.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "Calculate the strain energy stored in a spring with stiffness k = 150 N/mm when compressed by 20 mm.",
+   "a": "The strain energy is 30 Joules.",
+   "h": "Use U = ½ kx², ensuring consistent units (N and m).",
+   "s": "Given k=150 N/mm = 150,000 N/m and x=20 mm = 0.02 m. Using U = ½ kx², we get U = 0.5 × 150,000 × (0.02)² = 75,000 × 0.0004 = 30 J.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "What is the relationship between Poisson's ratio (ν) and the bulk modulus (K) for an isotropic material in terms of Young's modulus (E)?",
+   "a": "K = E / [3(1 - 2ν)].",
+   "h": "Recall the formula connecting K, E, and ν.",
+   "s": "For an isotropic elastic material, the bulk modulus is related to Young's modulus and Poisson's ratio by the equation K = E / [3(1 - 2ν)]. This relationship arises from the definition of volumetric strain under hydrostatic stress conditions.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "A cantilever beam of length L has a uniformly distributed load w over its entire length. What is the slope at the free end?",
+   "a": "The slope at the free end is wL³ / (6EI).",
+   "h": "Integrate the moment equation or use standard formulas for UDL on cantilever.",
+   "s": "For a cantilever beam with a uniformly distributed load w, the bending moment varies quadratically. Integrating the curvature equation M/EI twice and applying boundary conditions (zero slope and deflection at fixed end) yields the maximum slope at the free end as θ = wL³ / 6EI.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "Define 'factor of safety' in design against yielding.",
+   "a": "Factor of Safety = Yield Strength / Allowable Stress (or Working Stress).",
+   "h": "Ratio of material strength to working stress.",
+   "s": "The factor of safety is a ratio used to ensure structural integrity under uncertainty. It is defined as the quotient of the ultimate or yield strength of the material divided by the maximum allowable or working stress expected in service.",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "In a state of pure shear, what are the principal stresses?",
+   "a": "The principal stresses are +τ and -τ (where τ is the applied shear stress).",
+   "h": "Principal planes occur at 45°; principal stresses are equal and opposite.",
+   "s": "Under pure shear, the Mohr's circle has its center at the origin. The principal stresses act on planes inclined at 45° to the original axes and have magnitudes equal to the maximum shear stress but with opposite signs: one tensile (+τ) and one compressive (-τ).",
+   "at": "2026-10-26"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Strength of Materials",
+   "q": "Why does a column fail by buckling before reaching its yield strength if its slenderness ratio is high?",
+   "a": "High slenderness ratios lead to elastic instability (buckling) at loads significantly lower than the material's yield limit.",
+   "h": "Buckling is an instability phenomenon governed by Euler's critical load.",
+   "s": "When a column has a high slenderness ratio, it becomes slender enough that lateral deflections amplify under axial load, creating a moment that causes sudden lateral collapse. This buckling failure occurs in the elastic range, well before the compressive stress reaches the material's yield point.",
+   "at": "2026-10-26"
   }
  ]
 }
