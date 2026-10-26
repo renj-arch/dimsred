@@ -48,8 +48,41 @@ The exact upstream model is `Qwen/Qwen3.6-35B-A3B` @
 | IQ4_XS | 17.73 GB | pages from disk | quality probe, not a default |
 | Q4_K_M | 22.13 GB | no | needs 32 GB+ or a 24 GB GPU |
 
-A film is authored once, so decode speed is not the constraint. Four tokens per
-second is fine when the alternative is a model that changes under you.
+A film is authored once, so decode speed is not the constraint.
+
+## Measured on the free runner
+
+`ubuntu-latest`, 4 vCPU, 16 GB, no GPU, Q2_K_XL, 8192 context, 900 token budget,
+Bhopal scene S02:
+
+| what | measured |
+| --- | --- |
+| model load | about 60 s from the 12.29 GB file |
+| prompt | 25–50 t/s depending on runner contention |
+| decode | 7.1–7.5 t/s |
+| wall clock, one scene | 111–147 s including load |
+| peak RSS | 12.6–13.6 GB of 16 GB |
+| answer | three well-formed shots, allowed plates, ledger-only facts |
+
+Seven tokens a second is enough for a 500-token shot list. A dense 40B at 4 bits
+would not fit this machine at all, which is why the MoE layout, not the
+parameter count alone, is the reason this model is here.
+
+## Known runtime defect
+
+`llama-cli` b11890 fails to start the grammar sampler for this JSON schema:
+
+```
+common_sampler_init: error initializing grammar sampler for grammar: ...
+send_error: task id = 0, error: Failed to initialize samplers: std::exception
+```
+
+and it still exits 0, so a naive runner reads an empty answer as success. The
+runner therefore asks once with `-sys`/`--json-schema` and, when the sampler
+never starts, asks again with the schema and the chat template replaced by one
+flat prompt in Qwen chat markers. The audit decides either way, and the report
+records `runtime.grammar: true|false` so a future build that fixes the sampler
+is visible in the evidence.
 
 ## What the model is allowed to do
 
