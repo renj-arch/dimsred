@@ -613,7 +613,7 @@ function buildAudio(timeline, tts, opts) {
   const labels = ['[bed]'].concat(lines.map((_, i) => `[n${i}]`)).join('');
   filters.push(
     `${labels}amix=inputs=${lines.length + 1}:normalize=0,` +
-    `alimiter=limit=0.89:level=false,afade=t=in:st=0:d=0.6,` +
+    `alimiter=limit=0.84:level=false,afade=t=in:st=0:d=0.6,` +
     `afade=t=out:st=${Math.max(0, timeline.duration - 2.5)}:d=2.5[a]`
   );
   args.push('-filter_complex', filters.join(';'), '-map', '[a]', '-t', timeline.duration.toFixed(3),
