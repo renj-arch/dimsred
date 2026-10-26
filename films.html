@@ -4,7 +4,7 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Films — history told as an argument | vlymbooq</title>
-<meta name="description" content="Short, sourced cinematic histories from vlymbooq: the Salt March and Jallianwala Bagh, each with an open argument map." />
+<meta name="description" content="Short, sourced cinematic histories from vlymbooq: Bhopal, Jallianwala Bagh and the Salt March, each with an open argument map." />
 <style>
   :root{
     --bg:#070707; --panel:#0f0d0a; --panel2:#16110c; --bone:#f2e6d0;
@@ -62,6 +62,17 @@
   .art.bagh .big{font-size:clamp(52px,7vw,112px);letter-spacing:-.05em;line-height:.86;bottom:1.2em;text-align:left;left:28px}
   .art.bagh .small{position:absolute;left:28px;bottom:1.6em;z-index:2;font-size:.62rem;letter-spacing:.24em;
     text-transform:uppercase;color:rgba(242,230,208,.55)}
+  .art.bhopal{background:
+    radial-gradient(45% 45% at 50% 34%,rgba(214,161,74,.18),transparent 66%),
+    radial-gradient(80% 80% at 50% 110%,rgba(20,63,71,.55),transparent 72%),
+    linear-gradient(165deg,#101b18,#070b09 72%,#040505)}
+  .art.bhopal:before{content:"";position:absolute;left:50%;top:21%;width:33%;aspect-ratio:1;z-index:0;
+    transform:translateX(-50%);border-radius:50%;border:10px solid rgba(214,161,74,.18);
+    box-shadow:0 0 0 2px rgba(0,0,0,.6),inset 0 0 0 8px rgba(0,0,0,.45),0 0 55px rgba(214,161,74,.10)}
+  .art.bhopal .big{font-size:clamp(52px,7.2vw,116px);letter-spacing:-.06em;line-height:.86;bottom:1.12em;
+    text-align:center;left:0;right:0}
+  .art.bhopal .small{position:absolute;left:0;right:0;bottom:1.7em;z-index:2;text-align:center;
+    font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,230,208,.55)}
   .copy{padding:38px 40px 40px}
   .copy .status{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
   .copy h2{font-family:var(--serif);font-size:clamp(34px,4vw,56px);line-height:.94;letter-spacing:-.04em;margin:0 0 14px}
@@ -86,6 +97,7 @@
     .art.bagh .big{left:22px}
     .art.bagh .small{left:22px}
     .art.bagh:before{right:8%;top:12%;width:40%;height:66%}
+    .art.bhopal:before{top:15%;width:42%}
   }
 </style>
 </head>
@@ -106,7 +118,28 @@
 </div>
 
 <main class="wrap">
-  <article class="card">
+  <article class="card" data-film="bhopal-gas-tragedy">
+    <div class="art bhopal">
+      <div class="grain"></div>
+      <div class="num">Film 03 · 1984</div>
+      <div class="big">BHOPAL</div>
+      <div class="small">The Night the City Woke</div>
+    </div>
+    <div class="copy">
+      <div class="status">Draft QC · 1080 master in render</div>
+      <h2>Bhopal: The Night the City Woke</h2>
+      <p>A pesticide plant vented methyl isocyanate over Bhopal at midnight. The gas lasted one night; the argument over who counted has lasted four decades.</p>
+      <p>Built from a valve, a gauge, a clock, a ledger, a tap and a flame. No bodies, no reconstructed killing, no stock footage.</p>
+      <div class="meta">9 scenes · 37 shots · 2:00.9 · 5 sources</div>
+      <div class="actions">
+        <a class="btn strong" href="watch.html?film=bhopal-gas-tragedy">Enter the film &rarr;</a>
+        <a class="btn" href="bhopal-production.html">Inside the making &rarr;</a>
+        <a class="btn" href="debates.html?film=bhopal-gas-tragedy">Open the argument</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="card" data-film="jallianwala-bagh">
     <div class="art bagh">
       <div class="grain"></div>
       <div class="num">Film 02 · 1919</div>
@@ -114,20 +147,20 @@
       <div class="small">Jallianwala Bagh · Amritsar</div>
     </div>
     <div class="copy">
-      <div class="status">50-cut preview live · 1080 master in render</div>
+      <div class="status">Final · 1080p master on release</div>
       <h2>Jallianwala Bagh</h2>
       <p>A walled garden, a banned meeting, and a general who decided that the Empire's authority was worth more than the people in front of him.</p>
       <p>The film is built from objects: a typed notice, a wall, a stopped watch, a well, a report, a flame. It never reconstructs the killing.</p>
       <div class="meta">9 scenes · 50 shots · 3:06 · 4 sources</div>
       <div class="actions">
-        <a class="btn strong" href="film.html?film=jallianwala-bagh">Enter the film &rarr;</a>
+        <a class="btn strong" href="watch.html?film=jallianwala-bagh">Enter the film &rarr;</a>
         <a class="btn" href="production.html?film=jallianwala-bagh">Inside the making &rarr;</a>
         <a class="btn" href="debates.html?film=jallianwala-bagh">Open the argument</a>
       </div>
     </div>
   </article>
 
-  <article class="card">
+  <article class="card" data-film="salt-march">
     <div class="art salt">
       <div class="grain"></div>
       <div class="num">Film 01 · 1930</div>
@@ -140,13 +173,13 @@
       <p>The pilot film. A 3D animatic about the smallest tax and the largest question: who has the right to decide what a country may do with its own ground?</p>
       <div class="meta">8 scenes · 13 shots · 3:30 · 11 sources</div>
       <div class="actions">
-        <a class="btn strong" href="film.html?film=salt-march">Enter the film &rarr;</a>
+        <a class="btn strong" href="watch.html?film=salt-march">Enter the film &rarr;</a>
         <a class="btn" href="debates.html?film=salt-march">Open the argument</a>
       </div>
     </div>
   </article>
 
-  <p class="note"><b>How these are made.</b> Blender renders the sets, Piper reads the narration, Chromium captures the camera moves, and ffmpeg encodes the film - all on free GitHub Actions, none on the owner's machine. The argument maps are separate, sourced pages. A film is allowed to be beautiful. It is not allowed to invent a fact. <a href="production.html?film=jallianwala-bagh" style="color:var(--gold)">See the Jallianwala Bagh production dossier &rarr;</a></p>
+  <p class="note"><b>How these are made.</b> Blender renders the sets, Piper reads the narration, Skia draws the camera moves, and ffmpeg encodes the film - all on free GitHub Actions, none on the owner's machine. The argument maps are separate, sourced pages. A film is allowed to be beautiful. It is not allowed to invent a fact. <a href="bhopal-production.html" style="color:var(--gold)">See the Bhopal production dossier &rarr;</a> <a href="production.html?film=jallianwala-bagh" style="color:var(--gold)">See the Jallianwala Bagh dossier &rarr;</a></p>
 </main>
 
 <footer class="wrap">
