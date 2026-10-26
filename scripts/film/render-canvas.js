@@ -740,12 +740,22 @@ async function renderFrames(timeline, opts) {
    * ffmpeg captions stayed sharp. Draw one real frame, encode it twice and
    * refuse to continue unless quality actually changes the bytes.
    */
-  drawFrame(ctx, film, timeline, list, 0, opts.width, opts.height, images);
-  const lowQ = await canvas.encode('jpeg', 50);
-  const highQ = await canvas.encode('jpeg', 92);
+  const probe = createCanvas(256, 144);
+  const probeCtx = probe.getContext('2d');
+  const noise = probeCtx.createImageData(256, 144);
+  for (let i = 0; i < noise.data.length; i += 4) {
+    const v = (i * 2654435761) >>> 0;
+    noise.data[i] = v & 0xff;
+    noise.data[i + 1] = (v >>> 8) & 0xff;
+    noise.data[i + 2] = (v >>> 16) & 0xff;
+    noise.data[i + 3] = 255;
+  }
+  probeCtx.putImageData(noise, 0, 0);
+  const lowQ = await probe.encode('jpeg', 50);
+  const highQ = await probe.encode('jpeg', 92);
   if (highQ.length < lowQ.length * 1.3) {
     throw new Error('JPEG encoder ignored its quality argument ' +
-      `(q92 ${highQ.length} bytes vs q50 ${lowQ.length} bytes)`);
+      `(q92 ${highQ.length} bytes vs q50 ${lowQ.length} bytes on a noise probe)`);
   }
   console.log(`  frame quality: q92 ${(highQ.length / 1024).toFixed(0)} KB, q50 ${(lowQ.length / 1024).toFixed(0)} KB`);
 
@@ -757,6 +767,20 @@ async function renderFrames(timeline, opts) {
     if (f % 120 === 0 || f === total - 1) {
       console.log(`  frame ${f + 1}/${total}  ${t.toFixed(1)}s`);
     }
+  }
+
+  /*
+   * The probe proves the encoder honours quality; this proves the film got the
+   * bytes. The silent-default failure averaged 14 KB a frame at 1080p, so a
+   * floor well below a dark film and well above the broken encoder catches it.
+   */
+  const bytes = fs.readdirSync(framesDir)
+    .reduce((n, name) => n + fs.statSync(path.join(framesDir, name)).size, 0);
+  const average = bytes / total;
+  console.log(`  frames: ${(bytes / 1048576).toFixed(1)} MB, ${(average / 1024).toFixed(0)} KB average`);
+  if (average < 30 * 1024) {
+    throw new Error(`frames averaged only ${(average / 1024).toFixed(0)} KB at ${opts.width}x${opts.height}; ` +
+      'the JPEG writer is falling back to its default quality');
   }
   return framesDir;
 }
