@@ -171,6 +171,23 @@ jobs:
             exit 1
           fi
 
+      - name: Independent QC
+        run: |
+          set -euo pipefail
+          FLOOR=1200000
+          if [ "$QUALITY" = "final" ]; then FLOOR=2500000; fi
+          node scripts/film/qc-film.js \
+            --film "$FILM" \
+            --file "out/film/$FILM/$OUT_NAME" \
+            --work "out/film/$FILM" \
+            --expect-width "$WIDTH" \
+            --expect-height "$HEIGHT" \
+            --min-bitrate "$FLOOR" \
+            --max-true-peak -1.0 \
+            --srt "out/film/$FILM/$FILM.srt" \
+            --poster "out/film/$FILM/$FILM-thumb.jpg" \
+            --out-dir "out/film/$FILM/qc"
+
       - name: Upload film artefact
         uses: actions/upload-artifact@v4
         with:
@@ -188,6 +205,8 @@ jobs:
             out/film/${{ inputs.film }}/edit-manifest.json
             out/film/${{ inputs.film }}/edit-qc.json
             out/film/${{ inputs.film }}/map.json
+            out/film/${{ inputs.film }}/qc/qc.json
+            out/film/${{ inputs.film }}/qc/*.png
             out/film/${{ inputs.film }}/plates/*.png
 
       - name: Publish film release
@@ -219,4 +238,6 @@ jobs:
             out/film/${{ inputs.film }}/edit-manifest.json
             out/film/${{ inputs.film }}/edit-qc.json
             out/film/${{ inputs.film }}/map.json
+            out/film/${{ inputs.film }}/qc/qc.json
+            out/film/${{ inputs.film }}/qc/*.png
             out/film/${{ inputs.film }}/plates/*.png

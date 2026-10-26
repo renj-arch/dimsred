@@ -806,5 +806,6 @@ module.exports = {
   renderPosterFrame,
   drawFrame,
   loadPlateImages,
-  loadFilmData
+  loadFilmData,
+  flattenShots
 };
