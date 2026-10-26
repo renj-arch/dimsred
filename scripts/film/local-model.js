@@ -145,28 +145,43 @@ function buildSchema(plates) {
   };
 }
 
+/*
+ * llama-cli can echo the prompt before it answers, and a prompt may itself
+ * carry braces. Walk every opening brace and take the first balanced object
+ * that actually holds a shot list instead of trusting the first `{`.
+ */
 function extractJson(text) {
-  const first = text.indexOf('{');
-  if (first === -1) throw new Error('No JSON object in model output');
-  let depth = 0;
-  let inString = false;
-  let escaped = false;
-  for (let i = first; i < text.length; i += 1) {
-    const ch = text[i];
-    if (inString) {
-      if (escaped) escaped = false;
-      else if (ch === '\\') escaped = true;
-      else if (ch === '"') inString = false;
-      continue;
-    }
-    if (ch === '"') inString = true;
-    else if (ch === '{') depth += 1;
-    else if (ch === '}') {
-      depth -= 1;
-      if (depth === 0) return JSON.parse(text.slice(first, i + 1));
+  let lastError = null;
+  for (let first = text.indexOf('{'); first !== -1; first = text.indexOf('{', first + 1)) {
+    let depth = 0;
+    let inString = false;
+    let escaped = false;
+    for (let i = first; i < text.length; i += 1) {
+      const ch = text[i];
+      if (inString) {
+        if (escaped) escaped = false;
+        else if (ch === '\\') escaped = true;
+        else if (ch === '"') inString = false;
+        continue;
+      }
+      if (ch === '"') inString = true;
+      else if (ch === '{') depth += 1;
+      else if (ch === '}') {
+        depth -= 1;
+        if (depth === 0) {
+          try {
+            const parsed = JSON.parse(text.slice(first, i + 1));
+            if (parsed && Array.isArray(parsed.shots)) return parsed;
+          } catch (err) {
+            lastError = err;
+          }
+          break;
+        }
+      }
     }
   }
-  throw new Error('Unbalanced JSON in model output');
+  if (lastError) throw new Error(`no shot list in the answer (${lastError.message})`);
+  throw new Error('No JSON object in model output');
 }
 
 function perf(stderr) {
@@ -265,26 +280,55 @@ function main() {
   const has = (flag) => !help || help.includes(flag);
   const pick = (names) => names.find(has) || null;
 
-  const args = [
+  const quality = [];
+  if (has('--temp')) quality.push('--temp', '0.35');
+  if (has('--top-p')) quality.push('--top-p', '0.9');
+  if (has('--top-k')) quality.push('--top-k', '40');
+  if (has('--repeat-penalty')) quality.push('--repeat-penalty', '1.05');
+  if (has('--seed')) quality.push('--seed', '424242');
+  if (has('--no-warmup')) quality.push('--no-warmup');
+  const noConversation = pick(['-no-cnv', '--no-conversation']);
+
+  const common = [
     '-m', model,
-    '-sys', system,
-    '-f', promptFile,
     '-n', String(tokens),
     '-c', String(ctx),
     '-t', String(threads),
+    ...quality,
   ];
-  if (has('--temp')) args.push('--temp', '0.35');
-  if (has('--top-p')) args.push('--top-p', '0.9');
-  if (has('--top-k')) args.push('--top-k', '40');
-  if (has('--repeat-penalty')) args.push('--repeat-penalty', '1.05');
-  if (has('--seed')) args.push('--seed', '424242');
-  if (has('--jinja')) args.push('--jinja');
-  if (has('--no-warmup')) args.push('--no-warmup');
-  const noConversation = pick(['-no-cnv', '--no-conversation']);
-  if (noConversation) args.push(noConversation);
 
-  const base = args.slice();
-  const schemaArgs = has('--json-schema') ? ['--json-schema', JSON.stringify(schema)] : [];
+  /*
+   * Attempt one uses the chat template plus constrained decoding, which is the
+   * fastest path to a schema-shaped answer when the runtime supports it. On
+   * b11890 the grammar sampler refuses to start for this schema
+   * (common_sampler_init throws) and llama-cli still exits 0, so attempt two
+   * drops the template and the grammar and completes one flat prompt. The
+   * audit, not the decoder, decides whether the answer is usable.
+   */
+  const flatFile = path.join(OUT, `flat-${sceneId}.txt`);
+  fs.writeFileSync(flatFile, `${system}\n\n${prompt}`);
+
+  const attempts = [];
+  if (has('--json-schema')) {
+    attempts.push({
+      label: 'grammar',
+      args: [
+        ...common,
+        '-sys', system,
+        '-f', promptFile,
+        ...(has('--jinja') ? ['--jinja'] : []),
+        '--json-schema', JSON.stringify(schema),
+      ],
+    });
+  }
+  attempts.push({
+    label: 'flat',
+    args: [
+      ...common,
+      ...(noConversation ? [noConversation] : []),
+      '-f', flatFile,
+    ],
+  });
 
   const spawnOptions = {
     cwd: ROOT,
@@ -293,28 +337,54 @@ function main() {
     env: { ...process.env },
   };
 
-  const started = Date.now();
-  let usedSchema = schemaArgs.length > 0;
-  let run = spawnSync(bin, base.concat(schemaArgs), spawnOptions);
-  if (run.status !== 0 && /Failed to initialize samplers/i.test(run.stderr || '')) {
-    // The schema-to-grammar sampler can fail to start on this build. The prompt
-    // is strict and the output is audited, so fall back rather than lose the run.
-    console.warn('local-model: grammar sampler failed; retrying without constrained decoding');
-    usedSchema = false;
-    run = spawnSync(bin, base, spawnOptions);
+  const failures = [];
+  let result = null;
+  let run = null;
+  let wallMs = 0;
+  let usedSchema = false;
+
+  for (const attempt of attempts) {
+    const attemptStart = Date.now();
+    const res = spawnSync(bin, attempt.args, spawnOptions);
+    wallMs += Date.now() - attemptStart;
+    fs.writeFileSync(path.join(OUT, `stderr-${sceneId}-${attempt.label}.log`), res.stderr || '');
+    fs.writeFileSync(path.join(OUT, `raw-${sceneId}-${attempt.label}.txt`), res.stdout || '');
+    if (res.error) throw res.error;
+
+    if (/Failed to initialize samplers/i.test(res.stderr || '')) {
+      failures.push(`${attempt.label}: the sampler never started`);
+      continue;
+    }
+    if (res.status !== 0) {
+      failures.push(`${attempt.label}: exited ${res.status}`);
+      continue;
+    }
+
+    let parsed = null;
+    try {
+      parsed = extractJson(res.stdout || '');
+    } catch (err) {
+      failures.push(`${attempt.label}: ${err.message}`);
+      continue;
+    }
+    if (!parsed || !Array.isArray(parsed.shots) || parsed.shots.length === 0) {
+      failures.push(`${attempt.label}: the answer carries no shots`);
+      continue;
+    }
+
+    result = parsed;
+    run = res;
+    usedSchema = attempt.label === 'grammar';
+    break;
   }
-  const wallMs = Date.now() - started;
+
+  if (!result) {
+    throw new Error(`the local model produced no usable shot list (${failures.join('; ')}). See out/local-model/`);
+  }
 
   fs.writeFileSync(path.join(OUT, `stderr-${sceneId}.log`), run.stderr || '');
   fs.writeFileSync(path.join(OUT, `raw-${sceneId}.txt`), run.stdout || '');
 
-  if (run.error) throw run.error;
-  if (run.status !== 0) {
-    throw new Error(`${bin} exited ${run.status}. See out/local-model/stderr-${sceneId}.log`);
-  }
-
-  const text = run.stdout || '';
-  const result = extractJson(text);
   const measured = perf(run.stderr || '');
   const auditResult = audit(result, film, scene, previousShot, plates);
 
