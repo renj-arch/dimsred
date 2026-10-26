@@ -111,28 +111,58 @@ function parse(argv) {
   return o;
 }
 
+/*
+ * A film either brings its own scene file (the three bespoke films do) or a
+ * sets file that points at the stock archetypes. The sets file carries the
+ * palette and one entry per plate, so re-dressing a film never touches Python.
+ */
+function loadSetMap(filmId) {
+  const setsFile = path.join(ROOT, 'data', 'films', `${filmId}-sets.json`);
+  if (!fs.existsSync(setsFile)) return null;
+  const sets = JSON.parse(fs.readFileSync(setsFile, 'utf8'));
+  if (!sets.plates || typeof sets.plates !== 'object') {
+    throw new Error(`${path.relative(ROOT, setsFile)} has no plates map`);
+  }
+  const map = new Map();
+  for (const [plate, entry] of Object.entries(sets.plates)) {
+    if (!entry || !entry.scene) throw new Error(`plate ${plate} has no scene in ${path.relative(ROOT, setsFile)}`);
+    map.set(plate, {
+      scene: entry.scene,
+      params: { ...(entry.params || {}), palette: sets.palette || {} }
+    });
+  }
+  return { script: sets.script || 'stock_sets.py', map, palette: sets.palette || {} };
+}
+
 function main() {
   const opts = parse(process.argv.slice(2));
   const filmPath = path.join(ROOT, 'data', 'films', `${opts.film}.json`);
   if (!fs.existsSync(filmPath)) throw new Error(`Film not found: ${filmPath}`);
   const film = JSON.parse(fs.readFileSync(filmPath, 'utf8'));
   const config = FILMS[opts.film];
-  if (!config) throw new Error(`No Blender scene set registered for film ${opts.film}`);
-  const blenderScript = path.join(__dirname, 'blender', config.script);
+  const sets = config ? null : loadSetMap(opts.film);
+  if (!config && !sets) {
+    throw new Error(`No Blender scene set registered for film ${opts.film} (add data/films/${opts.film}-sets.json)`);
+  }
+  const blenderScript = path.join(__dirname, 'blender', config ? config.script : sets.script);
   if (!fs.existsSync(blenderScript)) throw new Error(`Blender script not found: ${blenderScript}`);
+  const lookup = (plate) => config
+    ? { scene: config.scenes[plate], params: null }
+    : sets.map.get(plate);
   fs.mkdirSync(opts.outDir, { recursive: true });
 
   const plates = new Map();
   for (const scene of film.scenes || []) {
     for (const shot of scene.shots || []) {
       if (shot.render !== 'blender') continue;
-      if (!config.scenes[shot.plate]) throw new Error(`No Blender scene mapped for plate ${shot.plate} in ${opts.film}`);
-      plates.set(shot.plate, config.scenes[shot.plate]);
+      const entry = lookup(shot.plate);
+      if (!entry || !entry.scene) throw new Error(`No Blender scene mapped for plate ${shot.plate} in ${opts.film}`);
+      plates.set(shot.plate, entry);
     }
   }
   const wanted = opts.only
-    ? [{ plate: opts.only, scene: config.scenes[opts.only] }]
-    : [...plates].map(([plate, scene]) => ({ plate, scene }));
+    ? [{ plate: opts.only, ...lookup(opts.only) }]
+    : [...plates].map(([plate, entry]) => ({ plate, ...entry }));
   if (!wanted.length) throw new Error('No Blender plates requested');
 
   const blenderCheck = spawnSync(opts.blender, ['--version'], { encoding: 'utf8' });
@@ -141,14 +171,15 @@ function main() {
   }
   console.log(blenderCheck.stdout.split('\n')[0]);
 
-  for (const { plate, scene } of wanted) {
+  for (const { plate, scene, params } of wanted) {
     if (!scene) throw new Error(`No Blender scene mapped for plate ${plate}`);
     const out = path.join(opts.outDir, `${plate}.png`);
     if (fs.existsSync(out) && !opts.force) {
       console.log(`[skip] ${plate} already exists`);
       continue;
     }
-    console.log(`\n[blender] ${plate} ← scene ${scene}  ${opts.width}x${opts.height} @ ${opts.samples} samples`);
+    const paramArgs = params ? ['--params', JSON.stringify(params)] : [];
+    console.log(`\n[blender] ${plate} ← scene ${scene}${params ? ` (${JSON.stringify(params)})` : ''}  ${opts.width}x${opts.height} @ ${opts.samples} samples`);
     const result = spawnSync(
       opts.blender,
       [
@@ -159,7 +190,8 @@ function main() {
         '--out', out,
         '--width', String(opts.width),
         '--height', String(opts.height),
-        '--samples', String(opts.samples)
+        '--samples', String(opts.samples),
+        ...paramArgs
       ],
       { stdio: 'inherit', cwd: ROOT, timeout: 2 * 60 * 60 * 1000 }
     );
