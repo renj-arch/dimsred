@@ -29,7 +29,7 @@ jobs:
         with:
           node-version: 22
       - name: Fetch & update all time-sensitive GK data
-        run: node scripts/update-all-gk.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/update-all-gk.js
       - name: Verify syntax
         run: |
           node -e "

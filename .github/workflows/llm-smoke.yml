@@ -123,4 +123,4 @@ jobs:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3:4b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
           SMOKE_CAP_MIN: '35'
-        run: node scripts/llm-smoke-test.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/llm-smoke-test.js

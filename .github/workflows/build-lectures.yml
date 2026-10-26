@@ -46,7 +46,7 @@ jobs:
           node-version: 22
 
       - name: Compile lectures
-        run: node scripts/build-lectures.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-lectures.js
 
       - name: Publish
         env:

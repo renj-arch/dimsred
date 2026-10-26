@@ -47,7 +47,7 @@ jobs:
           node-version: 22
 
       - name: Build the page index
-        run: node scripts/build-search-index.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-search-index.js
 
       - name: Publish the index
         env:

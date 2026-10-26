@@ -161,7 +161,7 @@ jobs:
           OLLAMA_HOST: http://127.0.0.1:11434
           INVENT_PER_SLOT: ${{ github.event.inputs.per_slot || '2' }}
           INVENT_DEADLINE_MIN: '110'
-        run: node scripts/invent-questions.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/invent-questions.js
 
       # Incremental saves mean even a timeout keeps every question invented
       # so far — publish whatever landed. Nothing staged -> ci-push exits 0.

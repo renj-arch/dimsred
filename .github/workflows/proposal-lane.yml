@@ -135,7 +135,7 @@ jobs:
           OLLAMA_MODEL: qwen3.5:9b
           OLLAMA_HOST: http://127.0.0.1:11434
           PROPOSAL_DEADLINE_MIN: '30'
-        run: node scripts/proposal-lane.js
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/proposal-lane.js
 
       - name: Publish proposals
         if: always()
