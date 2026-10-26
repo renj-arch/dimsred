@@ -1012,9 +1012,11 @@ async function main() {
   if (opts.dryRun) return;
 
   const audio = buildAudio(timeline, tts, opts);
+  // Render the poster before the frame loop. Skia's glyph cache can be in a
+  // bad state after thousands of frames, and a tiled poster is not publishable.
+  if (opts.thumbnail) await makeThumbnail(timeline, opts);
   const frames = await renderFrames(timeline, opts);
   encode(frames, audio, timeline, opts, srt.file);
-  if (opts.thumbnail) await makeThumbnail(timeline, opts);
   if (opts.metadata) writeMetadata(timeline, film, opts);
   writeScript(timeline, film, opts);
   console.log('\nDONE');
