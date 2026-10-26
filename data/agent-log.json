@@ -1,48 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-25T17:00:06.977Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 242423 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 3 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-25T17:23:59.471Z",
    "model": "qwen3:4b",
    "totalFixes": 272,
@@ -2120,8 +2078,50 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-26T07:06:04.150Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 4,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 4
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix broken link to RBI Grade B Practice Set 12",
+       "detail": "Browser test identified a broken link on the Homepage pointing to 'rbi/papers/practice-set-12.html' which returns a 404 or invalid path.",
+       "text": "Locate the HTML source of the homepage, find the anchor tag containing 'practice-set-12', and update its href to point to a valid existing file in the data/ directory (e.g., rename or create a matching practice set) or remove it if no equivalent exists."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Expand Single-Click Practice Sets Corpus",
+       "detail": "Currently only two exam sets (ssc-je, ssc-je-production) are available for single-click practice, limiting utility for users seeking other topics.",
+       "text": "Modify the daily-wiki-fill or agent workflow to automatically generate new practice set JSON files for high-frequency topics found in the 'Invented' pool and add them to the single-click selection list."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Improve Tutor Questions Lane Output Parsing",
+       "detail": "Recent failures show the tutor lane sometimes returns non-JSON text or insufficient question counts (e.g., only 2 of 5 valid questions), causing partial results.",
+       "text": "Update the Node.js script in the GitHub Actions workflow to use a more robust regex-based parser that extracts JSON arrays from free-form LLM output and retries generation if the count is below the threshold."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Add 'Next' Button Visibility Check to Homepage",
+       "detail": "Browser tests flagged 'flow-skipped on Homepage' due to a missing visible Next button, preventing users from exercising the quiz flow immediately upon load.",
+       "text": "Inspect the homepage HTML structure for the quiz container and ensure the 'Next' button is rendered inside the main content area with valid accessibility attributes (aria-label) so it is not skipped by assistive technologies or screen readers."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-26T06:11:23.863Z",
+ "lastRun": "2026-10-26T07:06:04.150Z",
  "model": "qwen3.5:9b"
 }
