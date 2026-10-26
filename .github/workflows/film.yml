@@ -271,3 +271,25 @@ jobs:
             --film "$FILM" \
             --stage "$STAGE" \
             --message "film: publish $FILM (run ${{ github.run_number }})"
+
+      # A commit on main is not a film a viewer can open. The mirror turns main
+      # into the live branch and Cloudflare builds it; until the index is served
+      # from the live domain this step stays red, because "it is on the branch"
+      # is exactly the state that looked finished while a viewer saw nothing.
+      - name: Confirm the film is live
+        if: ${{ inputs.release == true && inputs.quality == 'final' && inputs.publish == true }}
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
+          FILM: ${{ inputs.film }}
+        run: |
+          set -euo pipefail
+          gh workflow run slim-live.yml --ref main || true
+          for i in $(seq 1 24); do
+            if curl -fsS "https://vlymbooq.qzz.io/data/film-watch.json?t=$(date +%s)" | grep -q "\"$FILM\""; then
+              echo "live: https://vlymbooq.qzz.io/watch?film=$FILM"
+              exit 0
+            fi
+            sleep 30
+          done
+          echo "::error title=Film not live::The film is committed to main, but data/film-watch.json has not reached the live domain in 12 minutes."
+          exit 1
