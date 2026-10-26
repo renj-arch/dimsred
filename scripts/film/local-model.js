@@ -282,15 +282,27 @@ function main() {
   if (has('--no-warmup')) args.push('--no-warmup');
   const noConversation = pick(['-no-cnv', '--no-conversation']);
   if (noConversation) args.push(noConversation);
-  if (has('--json-schema')) args.push('--json-schema', JSON.stringify(schema));
 
-  const started = Date.now();
-  const run = spawnSync(bin, args, {
+  const base = args.slice();
+  const schemaArgs = has('--json-schema') ? ['--json-schema', JSON.stringify(schema)] : [];
+
+  const spawnOptions = {
     cwd: ROOT,
     encoding: 'utf8',
     maxBuffer: 64 * 1024 * 1024,
     env: { ...process.env },
-  });
+  };
+
+  const started = Date.now();
+  let usedSchema = schemaArgs.length > 0;
+  let run = spawnSync(bin, base.concat(schemaArgs), spawnOptions);
+  if (run.status !== 0 && /Failed to initialize samplers/i.test(run.stderr || '')) {
+    // The schema-to-grammar sampler can fail to start on this build. The prompt
+    // is strict and the output is audited, so fall back rather than lose the run.
+    console.warn('local-model: grammar sampler failed; retrying without constrained decoding');
+    usedSchema = false;
+    run = spawnSync(bin, base, spawnOptions);
+  }
   const wallMs = Date.now() - started;
 
   fs.writeFileSync(path.join(OUT, `stderr-${sceneId}.log`), run.stderr || '');
@@ -316,7 +328,7 @@ function main() {
       source: process.env.LM_SOURCE || null,
       build: process.env.LM_BUILD || null,
     },
-    runtime: { threads, context: ctx, tokensRequested: tokens, wallMs },
+    runtime: { threads, context: ctx, tokensRequested: tokens, wallMs, grammar: usedSchema },
     measured,
     audit: auditResult,
     ok: auditResult.problems.length === 0,
