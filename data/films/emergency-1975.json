@@ -1,0 +1,1859 @@
+{
+  "schema": "vlymbooq.film.v1",
+  "id": "emergency-1975",
+  "topicId": "emergency-1975",
+  "title": "The Emergency",
+  "titleLines": [
+    "THE EMERGENCY"
+  ],
+  "titleSize": "11.6vw",
+  "subtitle": "A Newspaper With a Blank Column",
+  "posterPlate": "wall-01",
+  "posterTitleSize": "10.0vw",
+  "posterMeta": "CENSORSHIP AS AN OBJECT THE BLANK SPACE WHERE THE NEWS SHOULD ",
+  "logline": "The Emergency. A democracy suspended in the name of stability; the debate over civil liberty, federalism and memory remains live.",
+  "targetDuration": 269,
+  "aspect": "16:9",
+  "fps": 24,
+  "voice": "en_US-lessac-medium",
+  "pacing": "tight",
+  "style": {
+    "genre": "cinematic 3D documentary",
+    "look": "ink black, newsprint cream, sodium amber, one stamp of red; paper grain, ruling lines, dust in a hard side light",
+    "rules": [
+      "Show the object before the explanation: the page, the register, the lamp, the gate.",
+      "No bodies, no blood, no reconstruction of violence. The aftermath carries it.",
+      "One idea per shot. The camera pushes, reveals or holds; it never drifts.",
+      "Cut on the voice. Do not park on a plate after the narration has stopped.",
+      "Every number is an official figure or explicitly attributed to a source."
+    ]
+  },
+  "toolchain": {
+    "blender": {
+      "version": "4.2 LTS",
+      "role": "procedural sets from the stock archetype library, hero stills, camera moves",
+      "automation": "scripts/film/blender/stock_sets.py"
+    },
+    "tts": "Piper en_US-lessac-medium, local ONNX voice",
+    "capture": "Skia 2D canvas at 24 fps",
+    "encode": "ffmpeg H.264/AAC"
+  },
+  "sources": [
+    {
+      "id": "en-wikipedia-org-wiki-the-emergency-india",
+      "title": "The Emergency (India)",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/The_Emergency_(India)"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-shah-commission",
+      "title": "Shah Commission",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Shah_Commission"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-indira-gandhi",
+      "title": "Indira Gandhi",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Indira_Gandhi"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-forty-second-amendment-of-",
+      "title": "Forty-second Amendment of the Constitution of India",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Forty-second_Amendment_of_the_Constitution_of_India"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-janata-party",
+      "title": "Janata Party",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Janata_Party"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "title": "The object",
+      "purpose": "Open on one thing the film can hold, then land the title without a lecture.",
+      "start": 0,
+      "duration": 36.6,
+      "narration": [
+        {
+          "text": "A state of emergency declared on 25 June 1975 suspended basic civil liberties across India.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L02",
+          "quote": "Officially issued by president Fakhruddin Ali Ahmed under Article 352 of the Constitution of India because of a prevailing \"Internal Disturbance\", the Emergency were in effect from 25 June 1975 and ended on 21 March 1977."
+        },
+        {
+          "text": "Prime Minister Indira Gandhi ruled by decree during the twenty-one month period lasting until March 1977.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L01",
+          "quote": "The Emergency in India was a 21 month period from 1975 to 1977 when prime minister Indira Gandhi declared a state of emergency across India by citing internal and external threats to the country."
+        },
+        {
+          "text": "Mrs Indira Gandhi called elections for March after releasing all political prisoners on 23 January 1977.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L42",
+          "quote": "On 23 January 1977, Mrs Indira Gandhi called elections for March and released all political prisoners."
+        },
+        {
+          "text": "Morarji Desai became the first non-Congress prime minister following the 1977 general election victory.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L139",
+          "quote": "In the 1977 general election, the party defeated the Congress (R) and JP leader Morarji Desai became the first non-Congress prime minister in independent modern India's history."
+        },
+        {
+          "text": "The Shah Commission was appointed in 1977 to inquire into excesses committed during the Indian Emergency.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L41",
+          "quote": "Shah Commission was a commission of inquiry appointed by Government of India in 1977 to inquire into all the excesses committed in the Indian Emergency (1975 - 77)."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S01-A",
+          "plate": "title",
+          "render": "title",
+          "hold": 3.2,
+          "camera": "locked title card, grain and a slow push",
+          "visual": "The title arrives over a black field with one thin rule of light and holds just long enough to read.",
+          "sfx": [
+            "low room tone",
+            "a single metal tick"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "title-tone",
+            "audioDuration": 0.9,
+            "reason": "The film opens from black; the title is the first image and needs no transition."
+          },
+          "weight": 2
+        },
+        {
+          "id": "S01-B",
+          "plate": "wall-01",
+          "render": "blender",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "slow push, lens 35, eye height",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the object, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S01-C",
+          "plate": "night-01",
+          "render": "blender",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "locked wide, lens 28, slightly below the object",
+          "visual": "A street at night: wet stone, one sodium lamp, shuttered fronts, no people in the pool of light. The set is dressed for the object, not reused from another film.",
+          "sfx": [
+            "night insects",
+            "a dog barks once",
+            "low city hum"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S01-D",
+          "plate": "wall-01",
+          "render": "blender",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "slow tilt up, lens 50, from the table edge",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the object, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 9,
+            "sound": "paper drag",
+            "reason": "The paper-wipe carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S01-E",
+          "plate": "night-01",
+          "render": "blender",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "slow lateral track, lens 40, parallax on the foreground",
+          "visual": "A street at night: wet stone, one sodium lamp, shuttered fronts, no people in the pool of light. The set is dressed for the object, not reused from another film.",
+          "sfx": [
+            "night insects",
+            "a dog barks once",
+            "low city hum"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S01-F",
+          "plate": "wall-01",
+          "render": "blender",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "locked macro, lens 85, breathing room on the left",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the object, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        }
+      ],
+      "narrationStart": 3.4
+    },
+    {
+      "id": "S02",
+      "title": "The order",
+      "purpose": "Show the decision, who made it, and the words it was made in.",
+      "start": 36.6,
+      "duration": 31,
+      "narration": [
+        {
+          "text": "President Fakhruddin Ali Ahmed declared a state of internal emergency on the night of 25 June 1975.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L20",
+          "quote": "After resolving a procedural matter, President Fakhruddin Ali Ahmed declared a state of internal emergency upon the prime minister's advice on the night of 25 June 1975, just a few minutes before the clock struck midnight."
+        },
+        {
+          "text": "Indira Gandhi proposed the final decision to impose an emergency upon the prime minister's advice.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L04",
+          "quote": "The final decision to impose an emergency was proposed by Indira Gandhi, agreed upon by the President of India, and ratified by the Cabinet and the Parliament from July to August 1975."
+        },
+        {
+          "text": "The proclamation occurred just minutes before the clock struck midnight on that specific date.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L20",
+          "quote": "After resolving a procedural matter, President Fakhruddin Ali Ahmed declared a state of internal emergency upon the prime minister's advice on the night of 25 June 1975, just a few minutes before the clock struck midnight."
+        },
+        {
+          "text": "The Cabinet and Parliament ratified the emergency measures from July to August 1975.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L04",
+          "quote": "The final decision to impose an emergency was proposed by Indira Gandhi, agreed upon by the President of India, and ratified by the Cabinet and the Parliament from July to August 1975."
+        },
+        {
+          "text": "Justice Jagmohanlal Sinha found the prime minister guilty on 12 June 1975.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L15",
+          "quote": "On 12 June 1975, Justice Jagmohanlal Sinha of the Allahabad High Court found the prime minister guilty on the charge of misuse of government machinery for her election campaign."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S02-A",
+          "plate": "room-01",
+          "render": "blender",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "slow tilt up, lens 50, from the table edge",
+          "visual": "A bare room with one chair and one lamp; the light stops at the table and the corners stay black. The set is dressed for the order, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "clock tick",
+            "a door settles"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S02-B",
+          "plate": "desk-01",
+          "render": "blender",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "slow lateral track, lens 40, parallax on the foreground",
+          "visual": "A desk under a low lamp: a spread page, a pen, a glass of water, the rest of the room out of focus. The set is dressed for the order, not reused from another film.",
+          "sfx": [
+            "lamp hum",
+            "pen on paper",
+            "a chair takes weight"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 9,
+            "sound": "paper drag",
+            "reason": "The paper-wipe carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S02-C",
+          "plate": "room-01",
+          "render": "blender",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "locked macro, lens 85, breathing room on the left",
+          "visual": "A bare room with one chair and one lamp; the light stops at the table and the corners stay black. The set is dressed for the order, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "clock tick",
+            "a door settles"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S02-D",
+          "plate": "desk-01",
+          "render": "blender",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "slow pull back, lens 32, the room taking the object",
+          "visual": "A desk under a low lamp: a spread page, a pen, a glass of water, the rest of the room out of focus. The set is dressed for the order, not reused from another film.",
+          "sfx": [
+            "lamp hum",
+            "pen on paper",
+            "a chair takes weight"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S02-E",
+          "plate": "room-01",
+          "render": "blender",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "slow push, lens 35, eye height",
+          "visual": "A bare room with one chair and one lamp; the light stops at the table and the corners stay black. The set is dressed for the order, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "clock tick",
+            "a door settles"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "page-turn",
+            "frames": 10,
+            "sound": "single page turn",
+            "reason": "The page-turn carries the eye from the last plate into this one without stopping the voice."
+          }
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "The machine",
+      "purpose": "Explain how the decision reached ordinary life: the law, the police, the press.",
+      "start": 67.6,
+      "duration": 31,
+      "narration": [
+        {
+          "text": "Parliament passed the 24th Amendment in 1971 to nullify a specific judicial judgement.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L07",
+          "quote": "To nullify this judgement, Parliament, dominated by the Gandhi-led Congress, passed the 24th Amendment in 1971."
+        },
+        {
+          "text": "Raj Narain filed a legal writ alleging electoral malpractice against Indira Gandhi in 1971.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L136",
+          "quote": "Raj Narain, a Socialist, had filed a legal writ alleging electoral malpractice against Indira Gandhi in 1971."
+        },
+        {
+          "text": "The Allahabad High Court found her guilty of corrupt electoral practices on 12 June 1975.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L137",
+          "quote": "On 12 June 1975, Allahabad High Court found her guilty of using corrupt electoral practices in her 1971 election victory over Narain in the Rae Bareli constituency."
+        },
+        {
+          "text": "Police arrested Rajan in Kerala on 1 March 1976, leading to his death in custody.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L25",
+          "quote": "Rajan of the Regional Engineering College, Calicut, was arrested by the police in Kerala on 1 March 1976, tortured in custody until he died and then his body was disposed of and was never recovered."
+        },
+        {
+          "text": "The state arrested 30,000 to 40,000 workers after a one-day strike in January 1976.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L29",
+          "quote": "Worker demonstrations during the emergency were subject to heavy state repression, such as when the AITUC organised a one-day strike to protest the slashing of bonuses in January 1976, to which the state responded by arresting 30,000-40,000 workers."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S03-A",
+          "plate": "wall-02",
+          "render": "blender",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "locked macro, lens 85, breathing room on the left",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the machine, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 9,
+            "sound": "paper drag",
+            "reason": "The paper-wipe carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S03-B",
+          "plate": "corridor-01",
+          "render": "blender",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "slow pull back, lens 32, the room taking the object",
+          "visual": "A concrete corridor receding into darkness, doors on one side, a line of light under the last one. The set is dressed for the machine, not reused from another film.",
+          "sfx": [
+            "wet footsteps",
+            "a bolt slides",
+            "fluorescent buzz"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S03-C",
+          "plate": "wall-02",
+          "render": "blender",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "slow push, lens 35, eye height",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the machine, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S03-D",
+          "plate": "corridor-01",
+          "render": "blender",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "locked wide, lens 28, slightly below the object",
+          "visual": "A concrete corridor receding into darkness, doors on one side, a line of light under the last one. The set is dressed for the machine, not reused from another film.",
+          "sfx": [
+            "wet footsteps",
+            "a bolt slides",
+            "fluorescent buzz"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "page-turn",
+            "frames": 10,
+            "sound": "single page turn",
+            "reason": "The page-turn carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S03-E",
+          "plate": "wall-02",
+          "render": "blender",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "slow tilt up, lens 50, from the table edge",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the machine, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "The turn",
+      "purpose": "Find the night or morning when it became undeniable.",
+      "start": 98.6,
+      "duration": 33,
+      "narration": [
+        {
+          "text": "The first major split occurred in July 1979 when Narain formed his own social-democratic Janata Party.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L142",
+          "quote": "The first major split occurred in July 1979 when Narain formed his own social-democratic Janata Party (Secular)."
+        },
+        {
+          "text": "The Indian National Congress bifurcated in 1969 over the issue of leadership for Indira Gandhi.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L145",
+          "quote": "However, the Indian National Congress bifurcated in 1969 over the issue of the leadership of Indira Gandhi, the daughter of India's first prime minister Jawaharlal Nehru."
+        },
+        {
+          "text": "The first interim report submitted on 11 March 1978 dealt with press censorship during the Emergency.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L46",
+          "quote": "The first interim report was submitted on 11 March 1978, dealing with the lead-up to the declaration of the Emergency and the way in which the press was prevented from speaking out."
+        },
+        {
+          "text": "During the emergency, 34,988 people were arrested under MISA, and 75,818 people were arrested under DISIR.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L23",
+          "quote": "During the emergency, 34,988 people were arrested under MISA, and 75,818 people were arrested under DISIR."
+        },
+        {
+          "text": "The INC lost the 1977 election in the midst of massive anti-incumbency sentiment.",
+          "source": "en-wikipedia-org-wiki-indira-gandhi",
+          "ledger": "L68",
+          "quote": "Following the Emergency, the INC lost the 1977 election in the midst of massive anti-incumbency sentiment - the first such loss for the INC in the history of the Republic of India."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S04-A",
+          "plate": "night-02",
+          "render": "blender",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "slow push, lens 35, eye height",
+          "visual": "A street at night: wet stone, one sodium lamp, shuttered fronts, no people in the pool of light. The set is dressed for the turn, not reused from another film.",
+          "sfx": [
+            "night insects",
+            "a dog barks once",
+            "low city hum"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S04-B",
+          "plate": "desk-02",
+          "render": "blender",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "locked wide, lens 28, slightly below the object",
+          "visual": "A desk under a low lamp: a spread page, a pen, a glass of water, the rest of the room out of focus. The set is dressed for the turn, not reused from another film.",
+          "sfx": [
+            "lamp hum",
+            "pen on paper",
+            "a chair takes weight"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S04-C",
+          "plate": "gate-01",
+          "render": "blender",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "slow tilt up, lens 50, from the table edge",
+          "visual": "A heavy gate and a wall in the rain, the frame filling with bars as the camera comes closer. The set is dressed for the turn, not reused from another film.",
+          "sfx": [
+            "rain on metal",
+            "chain link",
+            "a gate hinge"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "page-turn",
+            "frames": 10,
+            "sound": "single page turn",
+            "reason": "The page-turn carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S04-D",
+          "plate": "night-02",
+          "render": "blender",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "slow lateral track, lens 40, parallax on the foreground",
+          "visual": "A street at night: wet stone, one sodium lamp, shuttered fronts, no people in the pool of light. The set is dressed for the turn, not reused from another film.",
+          "sfx": [
+            "night insects",
+            "a dog barks once",
+            "low city hum"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S04-E",
+          "plate": "desk-02",
+          "render": "blender",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "locked macro, lens 85, breathing room on the left",
+          "visual": "A desk under a low lamp: a spread page, a pen, a glass of water, the rest of the room out of focus. The set is dressed for the turn, not reused from another film.",
+          "sfx": [
+            "lamp hum",
+            "pen on paper",
+            "a chair takes weight"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "iris",
+            "frames": 8,
+            "sound": "lamp click",
+            "reason": "The iris carries the eye from the last plate into this one without stopping the voice."
+          }
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "The cost",
+      "purpose": "Count what it took, in the terms the record uses, without inventing a figure.",
+      "start": 131.6,
+      "duration": 24.7,
+      "narration": [
+        {
+          "text": "Teens like sixteen-year-old Dilip Sharma faced imprisonment for over eleven months.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L26",
+          "quote": "Many cases where teens were arrested and imprisoned have come to light, one such example is of Dilip Sharma who, at age 16, was arrested and imprisoned for over 11 months."
+        },
+        {
+          "text": "The sterilization program reached 8.3 million procedures in 1976-1977, mostly forced.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L37",
+          "quote": "In 1976-1977, the program led to 8.3 million sterilisations, most of them forced, up from 2.7 million the previous year."
+        },
+        {
+          "text": "Chasnala coal mine flooded on 27 December 1975, killing 375 miners.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L30",
+          "quote": "These terrible workplace conditions led to the deadliest mining disaster in Indian history on 27 December 1975, at Chasnala coal mine near Dhanbad which claimed the lives of 375 miners due to more than 100 million gallons of water flooding the mine."
+        },
+        {
+          "text": "The 1977 election drew 60% turnout from over 320 million voters.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L151",
+          "quote": "The 1977 election drew a turnout of 60% from an electorate of more than 320 million."
+        },
+        {
+          "text": "Only 3.8 million taxpayers existed in the country at that time.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L33",
+          "quote": "There were only 3.8 million (38 lakh) taxpayers in the country at the time."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S05-A",
+          "plate": "corridor-02",
+          "render": "blender",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "slow tilt up, lens 50, from the table edge",
+          "visual": "A concrete corridor receding into darkness, doors on one side, a line of light under the last one. The set is dressed for the cost, not reused from another film.",
+          "sfx": [
+            "wet footsteps",
+            "a bolt slides",
+            "fluorescent buzz"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S05-B",
+          "plate": "object-01",
+          "render": "blender",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "slow lateral track, lens 40, parallax on the foreground",
+          "visual": "One object on a dark plinth, lit from the side, its shadow longer than the object itself. The set is dressed for the cost, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "a single metal tick",
+            "breath of cloth"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "page-turn",
+            "frames": 10,
+            "sound": "single page turn",
+            "reason": "The page-turn carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S05-C",
+          "plate": "corridor-02",
+          "render": "blender",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "locked macro, lens 85, breathing room on the left",
+          "visual": "A concrete corridor receding into darkness, doors on one side, a line of light under the last one. The set is dressed for the cost, not reused from another film.",
+          "sfx": [
+            "wet footsteps",
+            "a bolt slides",
+            "fluorescent buzz"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S05-D",
+          "plate": "object-01",
+          "render": "blender",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "slow pull back, lens 32, the room taking the object",
+          "visual": "One object on a dark plinth, lit from the side, its shadow longer than the object itself. The set is dressed for the cost, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "a single metal tick",
+            "breath of cloth"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "iris",
+            "frames": 8,
+            "sound": "lamp click",
+            "reason": "The iris carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S05-E",
+          "plate": "corridor-02",
+          "render": "blender",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "slow push, lens 35, eye height",
+          "visual": "A concrete corridor receding into darkness, doors on one side, a line of light under the last one. The set is dressed for the cost, not reused from another film.",
+          "sfx": [
+            "wet footsteps",
+            "a bolt slides",
+            "fluorescent buzz"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "The argument",
+      "purpose": "Put the dispute on the table: who defended it, who fought it, and on what ground.",
+      "start": 156.3,
+      "duration": 40.8,
+      "narration": [
+        {
+          "text": "The Supreme Court bench restricted Parliament's amendment power by stating it could not alter the basic structure of the Constitution.",
+          "source": "en-wikipedia-org-wiki-the-emergency-india",
+          "ledger": "L10",
+          "quote": "With a wafer-thin majority of 7 to 6, the bench of the Supreme Court restricted Parliament's amendment power by stating it could not be used to alter the \"basic structure\" of the Constitution."
+        },
+        {
+          "text": "The amendment to article 368 prevented any constitutional amendment from being called in question in any Court on any ground.",
+          "source": "en-wikipedia-org-wiki-forty-second-amendment-of-",
+          "ledger": "L113",
+          "quote": "The amendment to article 368, prevented any constitutional amendment from being \"called in question in any Court on any ground\"."
+        },
+        {
+          "text": "The Shah Commission report stated that arrest decisions were based on political considerations intended to favor the ruling party.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L48",
+          "quote": "In Chapter XV of the 26 April 1978 Interim Report the Commission said: \"The decision to arrest and release certain persons were entirely on political considerations which were intended to be favourable to the ruling party."
+        },
+        {
+          "text": "Noorani contended the government tried to pressure courts to support its stance, noting Justice Shah opposed this influence.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L53",
+          "quote": "Noorani contended that by 1970, the government had commenced trying to exert pressure on the courts to support the government's stance in various matters, and that Justice Shah had been against this. == References == Citations Also see"
+        },
+        {
+          "text": "The 42nd amendment deprived citizens of direct access to the Supreme Court except when Union law violated fundamental rights.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L149",
+          "quote": "The most controversial issue was the 42nd amendment to the Constitution of India, which deprived citizens of direct access to the Supreme Court, except when violation of the fundamental rights resulted from Union law."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S06-A",
+          "plate": "room-02",
+          "render": "blender",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "locked macro, lens 85, breathing room on the left",
+          "visual": "A bare room with one chair and one lamp; the light stops at the table and the corners stay black. The set is dressed for the argument, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "clock tick",
+            "a door settles"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "page-turn",
+            "frames": 10,
+            "sound": "single page turn",
+            "reason": "The page-turn carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S06-B",
+          "plate": "wall-03",
+          "render": "blender",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "slow pull back, lens 32, the room taking the object",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the argument, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S06-C",
+          "plate": "room-02",
+          "render": "blender",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "slow push, lens 35, eye height",
+          "visual": "A bare room with one chair and one lamp; the light stops at the table and the corners stay black. The set is dressed for the argument, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "clock tick",
+            "a door settles"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "iris",
+            "frames": 8,
+            "sound": "lamp click",
+            "reason": "The iris carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S06-D",
+          "plate": "wall-03",
+          "render": "blender",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "locked wide, lens 28, slightly below the object",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the argument, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S06-E",
+          "plate": "room-02",
+          "render": "blender",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "slow tilt up, lens 50, from the table edge",
+          "visual": "A bare room with one chair and one lamp; the light stops at the table and the corners stay black. The set is dressed for the argument, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "clock tick",
+            "a door settles"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "The record",
+      "purpose": "Show what was written down, and what the writing left out.",
+      "start": 197.1,
+      "duration": 29.8,
+      "narration": [
+        {
+          "text": "The commission reported by 31 December 1977 after receiving an extension to 30 June 1978.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L43",
+          "quote": "The commission was to report by 31 December 1977, but was later given an extension to 30 June 1978."
+        },
+        {
+          "text": "Oral evidence from witnesses began on 29 September 1977 during the inquiry proceedings.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L45",
+          "quote": "Starting on 29 September 1977 the commission began hearing oral evidence of witnesses."
+        },
+        {
+          "text": "The final report issued on 6 August 1978 covered prison conditions and torture.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L47",
+          "quote": "The final report was issued on 6 August 1978 and covered prison conditions, torture and family planning atrocities."
+        },
+        {
+          "text": "No trials occurred because the Supreme Court found special courts were not legally constituted.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L50",
+          "quote": "After Indira Gandhi returned to power in a landslide election victory in January 1980, the Supreme Court found that the special courts were not legally constituted, so no trials were conducted."
+        },
+        {
+          "text": "Indira Gandhi called the Shah commission biased in a 1978 TV Eye interview.",
+          "source": "en-wikipedia-org-wiki-shah-commission",
+          "ledger": "L52",
+          "quote": "In an interview with TV Eye in 1978, Indira Gandhi responded that the Shah commission had been biased and its findings were untrue."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S07-A",
+          "plate": "desk-03",
+          "render": "blender",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "slow push, lens 35, eye height",
+          "visual": "A desk under a low lamp: a spread page, a pen, a glass of water, the rest of the room out of focus. The set is dressed for the record, not reused from another film.",
+          "sfx": [
+            "lamp hum",
+            "pen on paper",
+            "a chair takes weight"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S07-B",
+          "plate": "wall-04",
+          "render": "blender",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "locked wide, lens 28, slightly below the object",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the record, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "iris",
+            "frames": 8,
+            "sound": "lamp click",
+            "reason": "The iris carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S07-C",
+          "plate": "desk-03",
+          "render": "blender",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "slow tilt up, lens 50, from the table edge",
+          "visual": "A desk under a low lamp: a spread page, a pen, a glass of water, the rest of the room out of focus. The set is dressed for the record, not reused from another film.",
+          "sfx": [
+            "lamp hum",
+            "pen on paper",
+            "a chair takes weight"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S07-D",
+          "plate": "wall-04",
+          "render": "blender",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "slow lateral track, lens 40, parallax on the foreground",
+          "visual": "A wall of pasted paper in raking light: edges lifting, ruling lines, one sheet missing from the run. The set is dressed for the record, not reused from another film.",
+          "sfx": [
+            "paper flex",
+            "distant traffic",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S07-E",
+          "plate": "desk-03",
+          "render": "blender",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "locked macro, lens 85, breathing room on the left",
+          "visual": "A desk under a low lamp: a spread page, a pen, a glass of water, the rest of the room out of focus. The set is dressed for the record, not reused from another film.",
+          "sfx": [
+            "lamp hum",
+            "pen on paper",
+            "a chair takes weight"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 9,
+            "sound": "paper drag",
+            "reason": "The paper-wipe carries the eye from the last plate into this one without stopping the voice."
+          }
+        }
+      ]
+    },
+    {
+      "id": "S08",
+      "title": "The return",
+      "purpose": "Return to the opening object, changed by everything between.",
+      "start": 226.9,
+      "duration": 42.1,
+      "narration": [
+        {
+          "text": "The Janata Party's victory proved fleeting as the Congress returned to power in the 1980 general election.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L141",
+          "quote": "JP's success was short-lived and, in the 1980 general election, the Congress (I) was returned to power."
+        },
+        {
+          "text": "Gandhi called for elections in May 1977 after receiving distorted information from her party supporters.",
+          "source": "en-wikipedia-org-wiki-forty-second-amendment-of-",
+          "ledger": "L132",
+          "quote": "Encouraged by these positive signs and distorted and biased information from her party supporters, Gandhi called for elections in May 1977."
+        },
+        {
+          "text": "The Janata Morcha won the Gujarat Vidhan Sabha elections on 11 June 1975 before the Emergency ended.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L146",
+          "quote": "The Janata Morcha won the elections for the Vidhan Sabha (State Legislature) of the state of Gujarat on 11 June 1975."
+        },
+        {
+          "text": "Opposition leaders joined to form the Janata Party when the Emergency was lifted and a new election called in 1977.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L138",
+          "quote": "When the Emergency was lifted and a new election called in 1977, opposition leaders joined to form the JP."
+        },
+        {
+          "text": "Hindu nationalists regrouped shortly after the 1980 election to form the Bharatiya Janata Party as a successor to the Bharatiya Jana Sangh.",
+          "source": "en-wikipedia-org-wiki-janata-party",
+          "ledger": "L143",
+          "quote": "Shortly after the 1980 election, Hindu nationalists regrouped in the Bharatiya Janata Party, meant as a successor to the Bharatiya Jana Sangh."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S08-A",
+          "plate": "object-02",
+          "render": "blender",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "slow tilt up, lens 50, from the table edge",
+          "visual": "One object on a dark plinth, lit from the side, its shadow longer than the object itself. The set is dressed for the return, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "a single metal tick",
+            "breath of cloth"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "iris",
+            "frames": 8,
+            "sound": "lamp click",
+            "reason": "The iris carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S08-B",
+          "plate": "flame-01",
+          "render": "blender",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "slow lateral track, lens 40, parallax on the foreground",
+          "visual": "A single flame behind glass, the only warm thing in a cold room, reflected once in the black. The set is dressed for the return, not reused from another film.",
+          "sfx": [
+            "low flame",
+            "glass tick",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S08-C",
+          "plate": "object-02",
+          "render": "blender",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "locked macro, lens 85, breathing room on the left",
+          "visual": "One object on a dark plinth, lit from the side, its shadow longer than the object itself. The set is dressed for the return, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "a single metal tick",
+            "breath of cloth"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              49,
+              50
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S08-D",
+          "plate": "flame-01",
+          "render": "blender",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "slow pull back, lens 32, the room taking the object",
+          "visual": "A single flame behind glass, the only warm thing in a cold room, reflected once in the black. The set is dressed for the return, not reused from another film.",
+          "sfx": [
+            "low flame",
+            "glass tick",
+            "room tone"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              50,
+              51
+            ],
+            "y": [
+              50,
+              51
+            ]
+          },
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 9,
+            "sound": "paper drag",
+            "reason": "The paper-wipe carries the eye from the last plate into this one without stopping the voice."
+          }
+        },
+        {
+          "id": "S08-E",
+          "plate": "object-02",
+          "render": "blender",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "slow push, lens 35, eye height",
+          "visual": "One object on a dark plinth, lit from the side, its shadow longer than the object itself. The set is dressed for the return, not reused from another film.",
+          "sfx": [
+            "room tone",
+            "a single metal tick",
+            "breath of cloth"
+          ],
+          "framing": {
+            "zoom": [
+              1.03,
+              1.09
+            ],
+            "x": [
+              51,
+              49
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "sound": "line onset",
+            "reason": "The cut lands on the first word of the line so the figure and the voice arrive together."
+          }
+        },
+        {
+          "id": "S08-F",
+          "plate": "flame-01",
+          "render": "blender",
+          "hold": 3.2,
+          "weight": 2,
+          "camera": "slow pull back, lens 32, the room taking the flame",
+          "visual": "A single flame behind glass, the only warm thing in a cold room, reflected once in the black. The room is otherwise black.",
+          "sfx": [
+            "low flame",
+            "room tone"
+          ],
+          "transition": {
+            "type": "dip",
+            "frames": 8,
+            "sound": "flame out",
+            "reason": "The last image is allowed to go dark; this is the only dip in the film."
+          }
+        }
+      ],
+      "hold": 3.2
+    }
+  ],
+  "edit": {
+    "grammar": "paper-ledger",
+    "captureFps": 24,
+    "signature": [
+      "blank-column reveal: the censored space moves before the camera does",
+      "page-turn wipe: a printed edge carries the next set in",
+      "stamp match: a rubber stamp lands where the last shot cut",
+      "register rule: horizontal ruling lines become cell bars",
+      "lamp iris: a reading lamp closes to a circle on the page",
+      "paper stack: sheets rise into frame to bury the object"
+    ],
+    "transitionDefaults": {
+      "hard-cut": 0,
+      "paper-wipe": 9,
+      "page-turn": 10,
+      "dissolve": 12,
+      "iris": 8,
+      "match-cut": 0,
+      "object-wipe": 8
+    },
+    "forbidden": [
+      "default crossfade",
+      "dip-to-black inside the film",
+      "whip between static plates",
+      "flash on every impact"
+    ],
+    "acts": [
+      {
+        "id": "I",
+        "scenes": [
+          "S01",
+          "S02",
+          "S03"
+        ],
+        "signature": "the object, the order, the machine"
+      },
+      {
+        "id": "II",
+        "scenes": [
+          "S04",
+          "S05",
+          "S06"
+        ],
+        "signature": "the turn, the cost, the argument"
+      },
+      {
+        "id": "III",
+        "scenes": [
+          "S07",
+          "S08"
+        ],
+        "signature": "the record, the return"
+      }
+    ]
+  }
+}
