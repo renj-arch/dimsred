@@ -145,6 +145,7 @@ jobs:
             data/films/${{ inputs.film }}.json
             data/films/${{ inputs.film }}-ledger.json
             data/films/${{ inputs.film }}-sets.json
+            data/films/${{ inputs.film }}-debates.json
             out/author/
             out/research/${{ inputs.film }}/
             out/author-${{ inputs.film }}.time.log
@@ -157,7 +158,7 @@ jobs:
           git config user.name "vlymbooq"
           git config user.email "vlymbooq@users.noreply.github.com"
           git add "data/films/$FILM.json" "data/films/$FILM-ledger.json" \
-                  "data/films/$FILM-sets.json" data/film-slate.json
+                  "data/films/$FILM-sets.json" "data/films/$FILM-debates.json" data/film-slate.json
           if git diff --cached --quiet; then
             echo "nothing new to commit"
             exit 0
