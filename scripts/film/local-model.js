@@ -282,7 +282,7 @@ function main() {
   if (has('--no-warmup')) args.push('--no-warmup');
   const noConversation = pick(['-no-cnv', '--no-conversation']);
   if (noConversation) args.push(noConversation);
-  if (has('--json-schema')) args.push('--json-schema', schemaFile);
+  if (has('--json-schema')) args.push('--json-schema', JSON.stringify(schema));
 
   const started = Date.now();
   const run = spawnSync(bin, args, {
