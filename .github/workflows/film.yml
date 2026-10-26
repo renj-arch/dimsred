@@ -102,6 +102,8 @@ jobs:
               echo "SAMPLES=16" >> "$GITHUB_ENV"
               echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
               echo "CRF=20" >> "$GITHUB_ENV"
+              echo "VIDEO_BITRATE=2200k" >> "$GITHUB_ENV"
+              echo "PRESET=medium" >> "$GITHUB_ENV"
               echo "OUT_NAME=${FILM}-draft.mp4" >> "$GITHUB_ENV"
               ;;
             final)
@@ -110,6 +112,8 @@ jobs:
               echo "SAMPLES=32" >> "$GITHUB_ENV"
               echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
               echo "CRF=18" >> "$GITHUB_ENV"
+              echo "VIDEO_BITRATE=4500k" >> "$GITHUB_ENV"
+              echo "PRESET=slow" >> "$GITHUB_ENV"
               echo "OUT_NAME=${FILM}-master.mp4" >> "$GITHUB_ENV"
               ;;
             *)
@@ -144,6 +148,8 @@ jobs:
             --fps 24 \
             --capture-fps "$CAPTURE_FPS" \
             --crf "$CRF" \
+            --video-bitrate "$VIDEO_BITRATE" \
+            --preset "$PRESET" \
             --samples "$SAMPLES" \
             --skip-plates \
             --tts piper \

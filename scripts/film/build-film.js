@@ -33,6 +33,7 @@ function parse(argv) {
     fps: 24,
     captureFps: 24,
     crf: 18,
+    videoBitrate: '',
     preset: 'veryfast',
     voice: 'en_US-lessac-medium',
     tts: 'piper',
@@ -59,6 +60,7 @@ function parse(argv) {
     else if (a === '--fps') o.fps = Number(next());
     else if (a === '--capture-fps') o.captureFps = Number(next());
     else if (a === '--crf') o.crf = Number(next());
+    else if (a === '--video-bitrate') o.videoBitrate = next();
     else if (a === '--preset') o.preset = next();
     else if (a === '--voice') o.voice = next();
     else if (a === '--tts') o.tts = next();
@@ -76,6 +78,8 @@ function parse(argv) {
   --fps <n>             Output fps (default 24)
   --capture-fps <n>     Browser capture rate (default 24; 12 for a draft)
   --crf <n>             x264 quality (default 18)
+  --video-bitrate <rate> x264 target bitrate, e.g. 4M; overrides CRF
+  --preset <name>       x264 preset (default veryfast)
   --samples <n>         Blender samples for plates (default 32)
   --skip-plates         Use plates rendered by a previous step
   --tts piper|none      Narration (default piper)
@@ -96,6 +100,9 @@ function parse(argv) {
   }
   if (!(o.fps >= 15 && o.fps <= 60)) throw new Error('--fps must be 15..60');
   if (!(o.captureFps >= 8 && o.captureFps <= 60)) throw new Error('--capture-fps must be 8..60');
+  if (o.videoBitrate && !/^\d+(?:[kKmM])?$/.test(o.videoBitrate)) {
+    throw new Error('--video-bitrate must look like 2500k or 4M');
+  }
   if (!o.work) o.work = path.join(OUT_ROOT, o.film);
   if (!o.out) o.out = path.join(o.work, `${o.film}-master.mp4`);
   return o;
@@ -632,8 +639,16 @@ function encode(framesDir, audio, timeline, opts, subtitleFile) {
   }
   args.push(
     '-c:v', 'libx264',
-    '-preset', opts.preset,
-    '-crf', String(opts.crf),
+    '-preset', opts.preset
+  );
+  if (opts.videoBitrate) {
+    // Dark, slow-moving plates can fool CRF into a starved 200 kbps stream.
+    // A target bitrate keeps the gradients and caption edges intact.
+    args.push('-b:v', opts.videoBitrate, '-x264-params', 'aq-mode=3:aq-strength=1.0');
+  } else {
+    args.push('-crf', String(opts.crf));
+  }
+  args.push(
     '-pix_fmt', 'yuv420p',
     '-r', String(opts.fps),
     '-c:a', 'aac',
