@@ -31,8 +31,10 @@ function arg(name, fallback) {
 }
 
 async function fetchText(file) {
-  const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${file}`;
-  const res = await fetch(url, { headers: { 'User-Agent': 'vlymbooq-site-publish' } });
+  // raw.githubusercontent caches for a few minutes; a publish that reads a
+  // stale index would drop the film published just before it.
+  const url = `https://raw.githubusercontent.com/${REPO}/${BRANCH}/${file}?t=${Date.now()}`;
+  const res = await fetch(url, { headers: { 'User-Agent': 'vlymbooq-site-publish', 'Cache-Control': 'no-cache' } });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`could not read ${file} from ${BRANCH}: ${res.status}`);
   return res.text();
