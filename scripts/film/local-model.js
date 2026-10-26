@@ -105,7 +105,7 @@ function buildPrompt(film, scene, previousShot, plates) {
     'CONTRACT:',
     `- id: ${scene.id}-A, ${scene.id}-B, ... one letter per shot, in order.`,
     '- plate: one name from ALLOWED PLATES, used at most twice.',
-    `- render: ${RENDERERS.join(' | ')}.`,
+    `- render: ${RENDERERS.join(' | ')}. Use title only for the title plate and blender for every other built plate.`,
     '- hold: seconds, 1 to 12. The holds must add up to the scene length.',
     '- camera: one movement, never "drifts".',
     '- visual: what the frame shows, one idea.',
@@ -246,6 +246,9 @@ function audit(result, film, scene, previousShot, plates) {
     if (!/^S\d{2}-[A-Z]$/.test(shot.id || '')) problems.push(`shot ${i} id ${shot.id} is not Sxx-A`);
     if (!plates.includes(shot.plate) && shot.plate !== 'title') problems.push(`shot ${shot.id} plate ${shot.plate} is not a film plate`);
     if (!RENDERERS.includes(shot.render)) problems.push(`shot ${shot.id} render ${shot.render} is unknown`);
+    if ((shot.plate === 'title') !== (shot.render === 'title')) {
+      warnings.push(`shot ${shot.id} pairs plate ${shot.plate} with render ${shot.render}`);
+    }
     if (!TRANSITIONS.includes(shot.transition.type)) problems.push(`shot ${shot.id} transition ${shot.transition.type} is unknown`);
     if (shot.transition.type === 'dip') problems.push(`shot ${shot.id} uses dip inside the film`);
     if (!shot.transition.reason || shot.transition.reason.length < 12) {
@@ -253,8 +256,16 @@ function audit(result, film, scene, previousShot, plates) {
     }
     total += Number(shot.hold) || 0;
   });
-  if (previousShot && shots[0] && shots[0].transition.type === previousShot.transition.type) {
-    problems.push(`scene opens by repeating the previous ${previousShot.transition.type}`);
+  /*
+   * Repeating a designed transition back-to-back reads as a tic, but a hard cut
+   * is the default grammar: two hard cuts in a row are just a cut.
+   */
+  if (previousShot && shots[0]) {
+    const before = previousShot.transition.type;
+    const now = shots[0].transition.type;
+    if (before === now && now !== 'hard-cut') {
+      problems.push(`scene opens by repeating the previous ${now}`);
+    }
   }
   const drift = Math.abs(total - Number(scene.duration));
   if (drift > 1.5) warnings.push(`holds total ${total}s against a ${scene.duration}s scene`);
