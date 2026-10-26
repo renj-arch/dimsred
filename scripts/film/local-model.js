@@ -95,6 +95,25 @@ function buildPrompt(film, scene, previousShot, plates) {
     'A shot is one idea the camera can hold. Show the object before the explanation.',
     'Hold each shot no longer than the line it carries. Cut on the voice.',
     'Never cut from a title straight into a dissolve. Never use dip inside the film.',
+    '',
+    'ANSWER WITH EXACTLY THIS SHAPE, no prose before or after, no code fence:',
+    '{"scene":"' + scene.id + '","shots":[{"id":"' + scene.id + '-A","plate":"tank-farm",'
+      + '"render":"blender","hold":3.5,"camera":"slow push in","visual":"what fills the frame",'
+      + '"sfx":["low hum","valve clank"],"transition":{"type":"hard-cut","frames":0,'
+      + '"reason":"why this cut follows"},' + '"weight":2}]}',
+    '',
+    'CONTRACT:',
+    `- id: ${scene.id}-A, ${scene.id}-B, ... one letter per shot, in order.`,
+    '- plate: one name from ALLOWED PLATES, used at most twice.',
+    `- render: ${RENDERERS.join(' | ')}.`,
+    '- hold: seconds, 1 to 12. The holds must add up to the scene length.',
+    '- camera: one movement, never "drifts".',
+    '- visual: what the frame shows, one idea.',
+    '- sfx: one to four concrete sounds.',
+    `- transition.type: ${TRANSITIONS.join(' | ')}.`,
+    '- transition.frames: 0 to 24. transition.reason: why this cut follows, at least 12 characters.',
+    '- weight: 1 to 4, how hard the shot lands.',
+    '- Every visual must restate only what the FACT LEDGER says. Invent no number, date, name or quote.',
   ];
   return lines.join('\n');
 }
@@ -152,6 +171,7 @@ function buildSchema(plates) {
  */
 function extractJson(text) {
   let lastError = null;
+  let best = null;
   for (let first = text.indexOf('{'); first !== -1; first = text.indexOf('{', first + 1)) {
     let depth = 0;
     let inString = false;
@@ -171,7 +191,7 @@ function extractJson(text) {
         if (depth === 0) {
           try {
             const parsed = JSON.parse(text.slice(first, i + 1));
-            if (parsed && Array.isArray(parsed.shots)) return parsed;
+            if (parsed && Array.isArray(parsed.shots)) best = parsed;
           } catch (err) {
             lastError = err;
           }
@@ -180,12 +200,20 @@ function extractJson(text) {
       }
     }
   }
+  // The answer comes after any reasoning, so the last shot list is the real one.
+  if (best) return best;
   if (lastError) throw new Error(`no shot list in the answer (${lastError.message})`);
   throw new Error('No JSON object in model output');
 }
 
 function perf(stderr) {
   const out = {};
+  // Current llama-cli prints one summary line: [ Prompt: 50.0 t/s | Generation: 7.1 t/s ]
+  const summary = stderr.match(/\[\s*Prompt:\s*([\d.]+)\s*t\/s\s*\|\s*Generation:\s*([\d.]+)\s*t\/s\s*\]/);
+  if (summary) {
+    out.promptTokensPerSecond = Number(summary[1]);
+    out.genTokensPerSecond = Number(summary[2]);
+  }
   const evalMatch = stderr.match(/eval time\s*=\s*([\d.]+)\s*ms\s*\/\s*(\d+)\s*runs\s*\([^)]*?([\d.]+)\s*tokens per second\)/);
   const promptMatch = stderr.match(/prompt eval time\s*=\s*([\d.]+)\s*ms\s*\/\s*(\d+)\s*tokens\s*\([^)]*?([\d.]+)\s*tokens per second\)/);
   if (evalMatch) {
@@ -287,6 +315,8 @@ function main() {
   if (has('--repeat-penalty')) quality.push('--repeat-penalty', '1.05');
   if (has('--seed')) quality.push('--seed', '424242');
   if (has('--no-warmup')) quality.push('--no-warmup');
+  // A thinking model burns the whole budget on prose before it answers.
+  if (has('--reasoning-budget')) quality.push('--reasoning-budget', '0');
   const noConversation = pick(['-no-cnv', '--no-conversation']);
 
   const common = [
@@ -306,7 +336,19 @@ function main() {
    * audit, not the decoder, decides whether the answer is usable.
    */
   const flatFile = path.join(OUT, `flat-${sceneId}.txt`);
-  fs.writeFileSync(flatFile, `${system}\n\n${prompt}`);
+  fs.writeFileSync(
+    flatFile,
+    [
+      '<|im_start|>system',
+      system,
+      '<|im_end|>',
+      '<|im_start|>user',
+      prompt,
+      '<|im_end|>',
+      '<|im_start|>assistant',
+      '',
+    ].join('\n'),
+  );
 
   const attempts = [];
   if (has('--json-schema')) {
@@ -317,6 +359,7 @@ function main() {
         '-sys', system,
         '-f', promptFile,
         ...(has('--jinja') ? ['--jinja'] : []),
+        ...(has('--chat-template-kwargs') ? ['--chat-template-kwargs', '{"enable_thinking":false}'] : []),
         '--json-schema', JSON.stringify(schema),
       ],
     });
@@ -385,7 +428,7 @@ function main() {
   fs.writeFileSync(path.join(OUT, `stderr-${sceneId}.log`), run.stderr || '');
   fs.writeFileSync(path.join(OUT, `raw-${sceneId}.txt`), run.stdout || '');
 
-  const measured = perf(run.stderr || '');
+  const measured = perf(`${run.stderr || ''}${run.stdout || ''}`);
   const auditResult = audit(result, film, scene, previousShot, plates);
 
   const report = {
