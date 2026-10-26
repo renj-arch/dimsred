@@ -197,12 +197,13 @@ function drawGhost(ctx, img, W, H, scale = 1.01, alpha = 1, dx = 0, blur = 0) {
 }
 
 function drawTitleBackdrop(ctx, W, H) {
-  ctx.fillStyle = '#050505';
-  ctx.fillRect(0, 0, W, H);
-  const g = ctx.createRadialGradient(W * 0.5, H * 0.47, 0, W * 0.5, H * 0.47, W * 0.68);
-  g.addColorStop(0, 'rgba(214,161,74,0.16)');
-  g.addColorStop(0.38, 'rgba(120,82,40,0.06)');
-  g.addColorStop(1, 'rgba(0,0,0,0)');
+  // A pure black card with a barely-there vertical lift. An earlier radial
+  // gold glow banded badly at preview bitrates and read as a grey cloud
+  // behind the title. The type and the rule carry the card instead.
+  const g = ctx.createLinearGradient(0, 0, 0, H);
+  g.addColorStop(0, '#070606');
+  g.addColorStop(0.55, '#050505');
+  g.addColorStop(1, '#030303');
   ctx.fillStyle = g;
   ctx.fillRect(0, 0, W, H);
 }
@@ -489,11 +490,14 @@ function flattenShots(timeline) {
   return list;
 }
 
-function shotAt(list, scene, t) {
+function shotAt(list, t) {
+  // A scene lead is silent picture: hold the last shot that has actually
+  // started, even when it belongs to the previous scene. Returning the first
+  // shot of the whole film here made every scene lead flash the title card.
   let found = list[0];
   for (const item of list) {
-    if (item.scene === scene && t >= item.shot.start - 1e-9) found = item;
-    if (item.scene === scene && t < item.shot.start - 1e-9) break;
+    if (t >= item.shot.start - 1e-9) found = item;
+    else break;
   }
   return found;
 }
@@ -660,7 +664,7 @@ function drawFrame(ctx, film, timeline, list, t, W, H, images) {
   ctx.fillRect(0, 0, W, H);
 
   const scene = findScene(timeline, t);
-  const item = shotAt(list, scene, t);
+  const item = shotAt(list, t);
   const idx = list.indexOf(item);
   const previous = idx > 0 ? list[idx - 1] : null;
   drawTransition(ctx, item, previous, t, W, H, images);
