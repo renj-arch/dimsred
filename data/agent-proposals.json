@@ -1,17 +1,57 @@
 {
  "meta": {
-  "generatedAt": "2026-10-25T07:00:02.933Z",
+  "generatedAt": "2026-10-26T07:06:04.150Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 22,
+  "count": 26,
   "lastAttempt": {
-   "at": "2026-10-25T07:00:02.933Z",
+   "at": "2026-10-26T07:06:04.150Z",
    "ok": true,
    "count": 4,
    "dropped": 1
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvowxk3a-1",
+   "at": "2026-10-26T07:06:04.150Z",
+   "title": "Fix broken link to RBI Grade B Practice Set 12",
+   "why": "Browser test identified a broken link on the Homepage pointing to 'rbi/papers/practice-set-12.html' which returns a 404 or invalid path.",
+   "idea": "Locate the HTML source of the homepage, find the anchor tag containing 'practice-set-12', and update its href to point to a valid existing file in the data/ directory (e.g., rename or create a matching practice set) or remove it if no equivalent exists.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvowxk3a-2",
+   "at": "2026-10-26T07:06:04.150Z",
+   "title": "Expand Single-Click Practice Sets Corpus",
+   "why": "Currently only two exam sets (ssc-je, ssc-je-production) are available for single-click practice, limiting utility for users seeking other topics.",
+   "idea": "Modify the daily-wiki-fill or agent workflow to automatically generate new practice set JSON files for high-frequency topics found in the 'Invented' pool and add them to the single-click selection list.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvowxk3a-3",
+   "at": "2026-10-26T07:06:04.150Z",
+   "title": "Improve Tutor Questions Lane Output Parsing",
+   "why": "Recent failures show the tutor lane sometimes returns non-JSON text or insufficient question counts (e.g., only 2 of 5 valid questions), causing partial results.",
+   "idea": "Update the Node.js script in the GitHub Actions workflow to use a more robust regex-based parser that extracts JSON arrays from free-form LLM output and retries generation if the count is below the threshold.",
+   "effort": "medium",
+   "risk": "medium",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvowxk3a-4",
+   "at": "2026-10-26T07:06:04.150Z",
+   "title": "Add 'Next' Button Visibility Check to Homepage",
+   "why": "Browser tests flagged 'flow-skipped on Homepage' due to a missing visible Next button, preventing users from exercising the quiz flow immediately upon load.",
+   "idea": "Inspect the homepage HTML structure for the quiz container and ensure the 'Next' button is rendered inside the main content area with valid accessibility attributes (aria-label) so it is not skipped by assistive technologies or screen readers.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvnh9yph-1",
    "at": "2026-10-25T07:00:02.933Z",
