@@ -21,6 +21,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          # The pipeline lives on film-ci: it carries the current slate, the
+          # local writer, QC gate and site publish step. A scheduled workflow
+          # can only be defined on the default branch, but it can check out the
+          # branch it dispatches, so both halves agree on one tree.
+          ref: film-ci
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -48,10 +54,11 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run film.yml \
-            --ref main \
+            --ref film-ci \
             -f film='${{ steps.choose.outputs.film }}' \
             -f quality=final \
-            -f release=true
+            -f release=true \
+            -f publish=true
 
       - name: Report research queue
         if: steps.choose.outputs.kind != 'ready'

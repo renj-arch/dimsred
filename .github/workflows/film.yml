@@ -29,6 +29,11 @@ on:
         required: true
         default: false
         type: boolean
+      publish:
+        description: Put the 720p preview, captions and poster on the site (final only)
+        required: true
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -241,3 +246,28 @@ jobs:
             out/film/${{ inputs.film }}/qc/qc.json
             out/film/${{ inputs.film }}/qc/*.png
             out/film/${{ inputs.film }}/plates/*.png
+
+      # The only step that touches the public site. It runs after QC and after
+      # the release, so a film that failed either one never reaches a viewer.
+      # It commits one 720p preview (under the 25 MiB Pages ceiling), the
+      # poster, WebVTT captions and the index entry; the mirror workflow then
+      # deploys main.
+      - name: Publish to the site
+        if: ${{ inputs.release == true && inputs.quality == 'final' && inputs.publish == true }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.PAT }}
+          FILM: ${{ inputs.film }}
+        run: |
+          set -euo pipefail
+          STAGE="out/site-stage"
+          node scripts/film/publish-film.js \
+            --film "$FILM" \
+            --work "out/film/$FILM" \
+            --stage "$STAGE" \
+            --master-url "https://github.com/${{ github.repository }}/releases/tag/film-${FILM}-final-${{ github.run_number }}" \
+            --status "Final - 1080p master on release" \
+            --making "production.html?film=$FILM"
+          node scripts/film/site-publish.js \
+            --film "$FILM" \
+            --stage "$STAGE" \
+            --message "film: publish $FILM (run ${{ github.run_number }})"
