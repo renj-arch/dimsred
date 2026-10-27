@@ -295,6 +295,30 @@
                 <span class="region-chip" data-val="india" onclick="setRegionFilter('india')">🇮🇳 India</span>
                 <span class="region-chip" data-val="world" onclick="setRegionFilter('world')">🌍 World</span>
             </div>
+            <div id="relevanceFilterRow" style="display:flex;gap:6px;align-items:center;justify-content:center;margin-top:4px;flex-wrap:wrap">
+                <span style="font-size:.7em;color:var(--text-muted)">Relevance:</span>
+                <label style="font-size:.7em;color:var(--text-sec);cursor:pointer"><input type="checkbox" id="relHigh" checked onchange="applyRelevanceFilter()" style="accent-color:var(--red);margin-right:2px"> High</label>
+                <label style="font-size:.7em;color:var(--text-sec);cursor:pointer"><input type="checkbox" id="relMedium" checked onchange="applyRelevanceFilter()" style="accent-color:var(--amber);margin-right:2px"> Medium</label>
+                <label style="font-size:.7em;color:var(--text-sec);cursor:pointer"><input type="checkbox" id="relLow" onchange="applyRelevanceFilter()" style="accent-color:var(--cyan);margin-right:2px"> Low</label>
+            </div>
+            <script>function applyRelevanceFilter(){
+                if(!window.state || !state.questions) return;
+                var allowed = [];
+                var high = document.getElementById('relHigh').checked;
+                var med = document.getElementById('relMedium').checked;
+                var low = document.getElementById('relLow').checked;
+                var fullPool = state._fullPool || state.questions.slice();
+                state.questions = fullPool.filter(function(q){
+                    var r = q.relevance || 'medium';
+                    if(r==='high') return high;
+                    if(r==='medium') return med;
+                    return low;
+                });
+                state.idx = 0;
+                state._fullPool = fullPool;
+                if(state.questions.length>0 && window.showQuestion) showQuestion();
+                else if(state.restartFn) state.restartFn();
+            }</script>
             <div id="timeFilterRow" style="display:none;gap:6px;align-items:center;justify-content:center;margin-top:4px;flex-wrap:wrap">
                 <span style="font-size:.7em;color:var(--text-muted)">Period:</span>
                 <span class="period-chip active" data-val="all" onclick="setTimeFilter('all')">All Time</span>
