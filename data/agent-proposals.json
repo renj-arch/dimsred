@@ -1,17 +1,37 @@
 {
  "meta": {
-  "generatedAt": "2026-10-26T07:06:04.150Z",
+  "generatedAt": "2026-10-27T08:07:35.592Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 26,
+  "count": 28,
   "lastAttempt": {
-   "at": "2026-10-26T07:06:04.150Z",
+   "at": "2026-10-27T08:07:35.592Z",
    "ok": true,
-   "count": 4,
-   "dropped": 1
+   "count": 2,
+   "dropped": 2
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvqekj3c-1",
+   "at": "2026-10-27T08:07:35.592Z",
+   "title": "Fix Tutor Lane JSON Parsing Robustness",
+   "why": "Recent failures show the tutor lane sometimes outputs non-JSON text or incomplete arrays (only 2 of 5 questions), causing generation stops.",
+   "idea": "Update the Node.js parsing script for the owner-on-demand lane to wrap LLM output in a try-catch block, attempt regex-based JSON extraction if raw response fails, and retry with a system prompt enforcing strict JSON formatting before logging a failure.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvqekj3c-2",
+   "at": "2026-10-27T08:07:35.592Z",
+   "title": "Polish Homepage Quiz Flow Interaction",
+   "why": "Browser tests flagged that the quiz flow is skipped on the homepage due to a missing visible Next button, preventing users from exercising the full practice set experience immediately upon load.",
+   "idea": "Inject a small JavaScript snippet into the main HTML template that programmatically checks for the 'Next' button's visibility; if hidden or absent, auto-trigger the next question logic and display a subtle toast notification confirming the flow has been restored to the user.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvowxk3a-1",
    "at": "2026-10-26T07:06:04.150Z",
