@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-27T01:21:39.207Z",
-  "cursor": 72,
-  "built": 69
+  "updatedAt": "2026-10-27T11:13:20.075Z",
+  "cursor": 75,
+  "built": 71
  },
  "figs": {
   "87926696": {
@@ -417,6 +417,18 @@
   "184b0822": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"60\" width=\"80\" height=\"10\" rx=\"2\"/><rect x=\"140\" y=\"60\" width=\"80\" height=\"10\" rx=\"2\"/><line x1=\"120\" y1=\"70\" x2=\"120\" y2=\"90\" stroke-width=\"3\"/><text x=\"55\" y=\"55\" font-weight=\"bold\">Plate Edge</text><text x=\"185\" y=\"55\" font-weight=\"bold\">Rivet Head</text><path d=\"M 120 70 Q 140 60 160 70\" stroke-dasharray=\"4,2\"/><path d=\"M 120 90 Q 140 100 160 90\" stroke-dasharray=\"4,2\"/><text x=\"105\" y=\"80\">Caulking</text><text x=\"175\" y=\"80\">Fullering</text><text x=\"135\" y=\"110\" text-anchor=\"middle\">Sealed Joint</text></svg>",
    "n": "what is caulking and fullering in riveted joints?",
+   "sub": "design",
+   "at": "2026-10-27"
+  },
+  "409cfbc1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Fillet Weld Shear Strength</text><path d=\"M40,100 L320,100\"/><path d=\"M60,70 L340,70\"/><path d=\"M40,130 L320,130\"/><path d=\"M60,70 L40,100\"/><path d=\"M60,70 L340,70\"/><path d=\"M340,70 L320,100\"/><path d=\"M340,130 L320,100\"/><path d=\"M340,130 L60,130\"/><path d=\"M60,130 L40,100\"/><path d=\"M50,70 L50,130\" stroke-dasharray=\"2,2\"/><text x=\"45\" y=\"95\">Throat (t)</text><path d=\"M40,100 L60,70\" stroke-dasharray=\"2,2\"/><text x=\"80\" y=\"85\">s</text><path d=\"M320,100 L340,70\" stroke-dasharray=\"2,2\"/><text x=\"330\" y=\"95\">l</text><path d=\"M60,70 L340,70\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"65\">Load P (Shear)</text><path d=\"M20,100 L40,100\"/><text x=\"10\" y=\"105\">P</text></svg>",
+   "n": "write the strength equation of a fillet weld loaded in shear.",
+   "sub": "design",
+   "at": "2026-10-27"
+  },
+  "562206d0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" /><path d=\"M 60 70 L 300 70\" /><path d=\"M 60 90 L 300 90\" /><path d=\"M 60 110 L 300 110\" /><path d=\"M 60 130 L 300 130\" /><path d=\"M 60 70 L 60 130\" /><path d=\"M 300 70 L 300 130\" /><path d=\"M 60 95 L 300 95\" /><path d=\"M 60 105 L 300 105\" /><path d=\"M 80 40 L 280 40\" /><path d=\"M 80 40 L 80 180\" /><path d=\"M 280 40 L 280 180\" /><path d=\"M 80 180 L 280 180\" /><text x=\"170\" y=\"65\">Parent Plate</text><text x=\"170\" y=\"195\">Throat Area = t × l</text><text x=\"35\" y=\"100\">Tension Force P</text><text x=\"320\" y=\"100\">→</text></svg>",
+   "n": "how is a butt weld designed in tension?",
    "sub": "design",
    "at": "2026-10-27"
   }
