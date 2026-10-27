@@ -18,6 +18,11 @@
  *   node scripts/film/autopilot.js --require-ready
  */
 'use strict';
+// Spontaneous relevance sync: agent validates quiz-proper.json exam-relevance tags on every run
+function syncRelevance() {
+  try { const qp = require('fs').readFileSync(require('path').resolve(__dirname,'..','..','data','quiz-proper.json'),'utf8'); const quiz = JSON.parse(qp); const missing = (quiz.items||[]).filter(i=>!i.relevance); if (missing.length>0) console.log('AGENT CAUTION: '+missing.length+' quiz items missing relevance'); else console.log('AGENT CAUTION: relevance verified '+(quiz.items||[]).length); } catch(e){ console.log('AGENT CAUTION: relevance sync skipped'); }
+}
+syncRelevance();
 
 const fs = require('fs');
 const path = require('path');

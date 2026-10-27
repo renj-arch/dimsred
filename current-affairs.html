@@ -51,6 +51,10 @@
         .q-card .q-progress{height:3px;background:rgba(255,255,255,.06);border-radius:100px;margin-bottom:16px;overflow:hidden}
         .q-card .q-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .3s}
         .q-card .q-cat-tag{display:inline-block;padding:2px 10px;border-radius:100px;background:rgba(34,211,238,.08);color:var(--cyan);font-size:.68em;font-weight:600;margin-bottom:8px}
+.q-card .q-yield{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.65em;font-weight:700;margin-left:6px;border:1px solid transparent}
+.q-yield.high-yield{background:rgba(239,68,68,.12);color:#ef4444;border-color:rgba(239,68,68,.25)}
+.q-yield.exam-relevant{background:rgba(245,158,11,.12);color:#f59e0b;border-color:rgba(245,158,11,.25)}
+.q-yield.low-priority{background:rgba(148,163,184,.12);color:#94a3b8;border-color:rgba(148,163,184,.25)}
         .q-card .q-text{font-size:1.1em;font-weight:700;line-height:1.6;margin-bottom:18px;font-family:'JetBrains Mono',monospace}
         .q-card .q-hint{font-size:.75em;color:var(--text-muted);margin-bottom:14px;cursor:pointer;user-select:none}
         .q-card .q-hint .hint-text{display:none;margin-top:4px;color:var(--purple);font-size:.92em}
@@ -6216,6 +6220,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('qProgress').style.width = ((state.idx / Math.max(state.questions.length, 1)) * 100) + '%';
                 var catLabel = q._wikiCat ? q._wikiCat.replace(/_/g, ' ') : (q.subject ? q.subject + (q.subTopic ? ' — ' + q.subTopic : '') : state.categoryName);
                 document.getElementById('catTag').textContent = catLabel;
+  var rel = (state.current && state.current.relevance) ? state.current.relevance : '';
+  var yEl = document.getElementById('yieldTag'); if(!yEl){ yEl = document.createElement('span'); yEl.id='yieldTag'; yEl.className='q-yield'; document.getElementById('catTag').parentNode.insertBefore(yEl, document.getElementById('catTag').nextSibling); }
+  if(rel==='high'){ yEl.textContent='high-yield'; yEl.className='q-yield high-yield'; yEl.style.display='inline-block'; } else if(rel==='medium'){ yEl.textContent='exam-relevant'; yEl.className='q-yield exam-relevant'; yEl.style.display='inline-block'; } else if(rel==='low'){ yEl.textContent='low-priority'; yEl.className='q-yield low-priority'; yEl.style.display='inline-block'; } else { yEl.style.display='none'; }
                 var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
                 if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">→ ' + q.a + '</div>';
                 if (q.fact || q.solution) displayText += '<div style="font-size:.85em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
@@ -6246,6 +6253,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('qNum').textContent = 'Q ' + ((state.baseIdx || 0) + state.idx + 1);
                 document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
                 document.getElementById('catTag').textContent = state.categoryName;
+  var rel = (state.current && state.current.relevance) ? state.current.relevance : ''; var yEl = document.getElementById('yieldTag'); if(yEl){ if(rel==='high'){ yEl.textContent='high-yield'; yEl.className='q-yield high-yield'; yEl.style.display='inline-block'; } else if(rel==='medium'){ yEl.textContent='exam-relevant'; yEl.className='q-yield exam-relevant'; yEl.style.display='inline-block'; } else if(rel==='low'){ yEl.textContent='low-priority'; yEl.className='q-yield low-priority'; yEl.style.display='inline-block'; } else { yEl.style.display='none'; } }
                 var pd = q.pubDate || q._pubDate;
                 var yearStr = pd ? ' (' + pd.slice(0,4) + ')' : '';
                 document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr + _yieldChipHtml(q);
