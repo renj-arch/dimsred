@@ -58,7 +58,8 @@ const SCENES = [
     title: 'The object',
     purpose: 'Open on one thing the film can hold, then land the title without a lecture.',
     ask: 'Name the single object or place this film will keep returning to.',
-    keywords: ['newspaper', 'column', 'register', 'notice', 'order', 'prison', 'delhi', '1975', '1977'],
+    keywords: ['newspaper', 'newspapers', 'press', 'censor', 'censorship', 'column', 'blank', 'editor', 'editorial', 'journalist', 'publication', 'expression', 'obituary', 'times of india'],
+    exclude: ['aandhi', 'kissa kurzi', 'nasbandi', 'bhindranwale', 'jagat narain'],
     plates: ['wall', 'night']
   },
   {
@@ -66,7 +67,8 @@ const SCENES = [
     title: 'The order',
     purpose: 'Show the decision, who made it, and the words it was made in.',
     ask: 'State what was proclaimed or decided, by whom, and on what date.',
-    keywords: ['proclaimed', 'proclamation', 'declared', 'president', 'prime minister', 'government', 'emergency', 'order', 'announced'],
+    keywords: ['proclaim a state of emergency', 'proclaimed a state of emergency', 'emergency was proclaimed', 'issue the proclamation', 'declared a state of emergency', 'declare a state of emergency', 'internal emergency', 'article 352', 'ratified', 'ordinance', 'ordinances'],
+    exclude: ['article 356', 'american policy', 'future government', 'nationalisation of several major banks'],
     plates: ['room', 'desk']
   },
   {
@@ -74,31 +76,34 @@ const SCENES = [
     title: 'The machine',
     purpose: 'Explain how the decision reached ordinary life: the law, the police, the press.',
     ask: 'Describe the mechanism — the rule, the agency, the censor — that carried the order into daily life.',
-    keywords: ['act', 'amendment', 'law', 'powers', 'arrest', 'detain', 'censorship', 'police', 'press', 'magistrate', 'warrant'],
+    keywords: ['misa', 'maintenance of internal security', 'defence of india', 'dir', 'arrest', 'arrested', 'detain', 'detained', 'detention', 'police', 'warrant', 'magistrate', 'censor', 'censorship', 'preventive', 'ban', 'banned'],
     plates: ['wall', 'corridor']
   },
   {
     id: 'S04',
-    title: 'The turn',
-    purpose: 'Find the night or morning when it became undeniable.',
-    ask: 'Show the moment the order became visible: the first arrests, the first blank page, the first raid.',
-    keywords: ['night', 'morning', 'first', 'arrested', 'raid', 'searched', 'taken', 'midnight', 'dawn', 'thousands'],
-    plates: ['night', 'desk', 'gate']
-  },
-  {
-    id: 'S05',
     title: 'The cost',
     purpose: 'Count what it took, in the terms the record uses, without inventing a figure.',
     ask: 'Give the human count the sources actually report: prisoners, months, families, deaths.',
-    keywords: ['prisoners', 'detained', 'arrested', 'died', 'killed', 'thousands', 'lakh', 'million', 'days', 'months', 'families'],
+    keywords: ['prisoners', 'prisoner', 'detained', 'arrested', 'families', 'died', 'custody', 'torture', 'sterilisation', 'sterilization', 'months', 'lakh', 'thousands', 'prison', 'detention', 'forced'],
+    exclude: ['released all political prisoners', 'called elections', 'prisoners of war', 'pakistani', 'the strike was brutally suppressed', 'class a prisoners', 'class b prisoners', 'class a and b', 'electricity to all major newspapers', 'continuation of the emergency'],
     plates: ['corridor', 'object']
+  },
+  {
+    id: 'S05',
+    title: 'The turn',
+    purpose: 'Find the moment the order broke: the election, the release, the first page printed again.',
+    ask: 'Show the turn: the election that was called, the prisoners who came out, the press that printed again.',
+    keywords: ['election', 'elections', 'released', 'general election', 'janata', 'verdict', 'defeated', 'poll', 'vote', 'restored', 'returned'],
+    exclude: ['gujarat', 'vidhan sabha', 'election commission', '1989', 'jebamani', 'may 1977', 'political science review', '1980', 'won the next election by a landslide', '1971', 'privy purse', 'medak', 'repeal the 42nd', 'postponed elections', 'elections were postponed', 'authority to rule by decree', 'temple complex', 'lost 172 seats', 'shastri', '1967', 'resisted merging'],
+    plates: ['desk', 'room', 'gate']
   },
   {
     id: 'S06',
     title: 'The argument',
     purpose: 'Put the dispute on the table: who defended it, who fought it, and on what ground.',
     ask: 'State the argument for and against, in the words the record attributes to each side.',
-    keywords: ['argued', 'said', 'critics', 'support', 'opposed', 'defended', 'court', 'commission', 'constitution', 'opposition'],
+    keywords: ['argued', 'argues', 'critic', 'critics', 'criticised', 'criticized', 'controversial', 'opposition', 'opposed', 'defended', 'defend', 'justif', 'support', 'supreme court', 'basic structure', 'unconstitutional', 'arbitrary', 'contended', 'controversy'],
+    exclude: ['goongi goodiya', 'nationalisation of the banks', 'land ownership', 'method of selection', 'rival congress leaders', 'justice shah had already spoken', 'confusing investigation with inquiry', 'form a united', 'electricity to all major newspapers', 'raids were conducted', 'disadvantaged sections', 'machiavellian', 'sought an accommodation'],
     plates: ['room', 'wall']
   },
   {
@@ -106,16 +111,19 @@ const SCENES = [
     title: 'The record',
     purpose: 'Show what was written down, and what the writing left out.',
     ask: 'Describe the inquiry, report or testimony — what it found and what it refused to find.',
-    keywords: ['report', 'found', 'evidence', 'inquiry', 'commission', 'testimony', 'records', 'reportedly', 'concluded', 'terms of reference'],
+    keywords: ['report', 'commission', 'inquiry', 'evidence', 'testimony', 'witness', 'concluded', 'terms of reference', 'proceedings', 'tribunal', 'trial', 'interim report', 'final report'],
+    exclude: ['desai government proceeded'],
     plates: ['desk', 'wall']
   },
   {
     id: 'S08',
     title: 'The return',
-    purpose: 'Return to the opening object, changed by everything between.',
-    ask: 'Close on the object again: what the election, the release or the memorial did and did not settle.',
-    keywords: ['election', 'released', 'restored', 'later', 'memorial', 'remains', 'since', 'anniversary', 'returned', 'verdict'],
-    plates: ['object', 'flame']
+    purpose: 'Return to the opening object: what survived, what was withdrawn, what is still on the record.',
+    ask: 'Close on the object again: the return to power, the report in the library, the blank column that is still blank.',
+    keywords: ['returned to power', 'landslide', 'special courts', 'report', 'copy', 'library', 'republished', 'memorial', 'anniversary', 'legacy', 'blank editorial', 'press'],
+    exclude: ['1967', 'bangladesh', 'tata told a reporter', 'first interim report', 'second interim report', 'final report', 'commission was to report', 'commission concluded', 'scathing', 'wikileaks', '1971'],
+    reuse: true,
+    plates: ['object', 'flame', 'desk']
   }
 ];
 
@@ -283,9 +291,10 @@ function normalize(text) {
 
 /*
  * The ledger is the only place a fact may come from. A row is a whole
- * sentence, kept verbatim, with the source it came from. Sentences without a
- * digit are dropped: dates and figures are what a narration line is most
- * likely to get wrong, so those are exactly the rows worth checking.
+ * sentence, kept verbatim, with the source it came from. Numbers are what a
+ * narration line is most likely to get wrong, so every figure in a line is
+ * checked against the row that supports it. Rows without a figure are still
+ * allowed: the press and the argument live in sentences that have no date.
  */
 function buildLedger(corpus, maxPerSource = 40) {
   const rows = [];
@@ -301,10 +310,39 @@ function buildLedger(corpus, maxPerSource = 40) {
       .split(/(?<=[.!?])\s+(?=[A-Z0-9"'“])/)
       .map((s) => s.replace(/^\[\d+\]\s*/, '').trim())
       .filter((s) => s.length >= 55 && s.length <= 260)
-      .filter((s) => /\d/.test(s))
+      .filter((s) => !s.includes('==='))
+      .filter((s) => !/\b[A-Z]\.$/.test(s))
+      .filter((s) => !/^\d+[–-]\d+\s+/.test(s))
+      .filter((s) => !/\b(film|novel|documentary|protagonist|booker prize|adaptation)\b/i.test(s))
+      .filter((s) => !/(University Press|[A-Z][a-z]+ UP|Penguin|Routledge|HarperCollins|ISBN)/i.test(s))
+      .filter((s) => !/\b(Abhinav Publications|Publications Division|Publishing House)\b/.test(s))
+      .filter((s) => (s.match(/"/g) || []).length % 2 === 0)
+      .filter((s) => !/\b(Vol\.|pp\.|ISBN|doi:|Retrieved|Archived)\b/.test(s))
+      .filter((s) => !/^(This included|This was|These were|It was|They were|He |She |His |Her )/.test(s))
       .filter((s) => !/^(see also|references|external links|bibliography|citations)/i.test(s));
-    let kept = 0;
-    for (const sentence of sentences) {
+    /*
+     * Keep two kinds of row: sentences that name something a scene is about,
+     * and sentences with a figure (the spine of the record). The first kind
+     * is not sampled: a press sentence in the middle of a long article is
+     * exactly the row the opening needs, and a stride would drop it.
+     */
+    const entries = sentences.map((sentence, index) => ({ sentence, index }));
+    const sceneWords = SCENES.flatMap((scene) => scene.keywords);
+    const relevant = entries.filter(({ sentence }) => {
+      const lower = sentence.toLowerCase();
+      return sceneWords.some((word) => lower.includes(word));
+    });
+    const numeric = entries.filter(({ sentence }) => /\d/.test(sentence));
+    const pick = (list, cap) => {
+      const stride = Math.max(1, Math.ceil(list.length / cap));
+      const out = [];
+      for (let i = 0; i < list.length && out.length < cap; i += stride) out.push(list[i]);
+      return out;
+    };
+    const chosen = new Map();
+    for (const entry of relevant.slice(0, 400)) chosen.set(entry.index, entry);
+    for (const entry of pick(numeric, 60)) chosen.set(entry.index, entry);
+    for (const { sentence } of [...chosen.values()].sort((a, b) => a.index - b.index)) {
       const key = sentence.toLowerCase();
       if (seen.has(key)) continue;
       seen.add(key);
@@ -315,41 +353,105 @@ function buildLedger(corpus, maxPerSource = 40) {
         url: source.url,
         text: sentence
       });
-      kept++;
-      if (kept >= maxPerSource) break;
     }
   }
   return rows;
 }
 
-function scoreRow(row, scene) {
-  const lower = row.text.toLowerCase();
-  let score = 0;
-  for (const word of scene.keywords) {
-    if (lower.includes(word)) score += 2;
+/*
+ * A row is on topic only if it names one of the things in the film's own
+ * title. Dates are not a topic: the Chasnala mine flood happened during the
+ * Emergency and is not part of its argument. Without this filter a scene will
+ * happily quote any sentence with a year in it.
+ */
+const TITLE_STOP = new Set([
+  'the', 'a', 'an', 'and', 'or', 'but', 'of', 'in', 'on', 'at', 'to', 'for',
+  'from', 'with', 'by', 'as', 'is', 'was', 'were', 'be', 'been', 'being',
+  'its', 'it', 'this', 'that', 'these', 'those', 'his', 'her', 'their', 'our',
+  'your', 'my', 'new', 'first', 'last', 'after', 'before', 'during', 'into',
+  'over', 'under', 'between', 'about', 'against', 'not', 'no', 'india', 'indian'
+]);
+
+function subjectTokens(topic) {
+  const words = String(topic.title || '').toLowerCase().match(/[a-z][a-z-]{3,}/g) || [];
+  return [...new Set(words.filter((w) => !TITLE_STOP.has(w)))];
+}
+
+/* The article the film is named after is allowed to speak more broadly. */
+function primarySourceIds(corpus, topic) {
+  const words = subjectTokens(topic);
+  let best = 0;
+  let ids = new Set();
+  for (const source of corpus.sources || []) {
+    const title = String(source.title || '').toLowerCase();
+    const hits = words.filter((word) => title.includes(word)).length;
+    if (hits > best) {
+      best = hits;
+      ids = new Set([source.id]);
+    } else if (hits === best && hits > 0) {
+      ids.add(source.id);
+    }
   }
-  if (/\b(19|18|20)\d{2}\b/.test(row.text)) score += 1;
-  if (/\b\d[\d,.]*\b/.test(row.text)) score += 1;
+  return ids;
+}
+
+function keywordPatterns(scene) {
+  return scene.keywords.map((word) => {
+    const escaped = word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    /*
+     * A short stem must end in a real inflection, not any continuation:
+     * "press" may become "pressed" or "presses" but not "pressure", and
+     * "act" may not become "actual". Longer words match as prefixes.
+     */
+    const tail = word.length <= 6 ? '(s|es|ed|ing|ning|ied|ised|ized|ned)?(?![a-z])' : '';
+    return new RegExp(`(^|[^a-z0-9])${escaped}${tail}`);
+  });
+}
+
+function scoreRow(row, scene, subject, primary, patterns) {
+  const lower = row.text.toLowerCase();
+  if (scene.exclude && scene.exclude.some((phrase) => lower.includes(phrase))) return null;
+  let sceneHits = 0;
+  for (const pattern of patterns) {
+    if (pattern.test(lower)) sceneHits++;
+  }
+  const subjectHits = subject.filter((token) => lower.includes(token)).length;
+  if (!sceneHits && !subjectHits) return null;
+  let score = sceneHits * 10 + Math.min(subjectHits, 2) * 2;
+  if (primary.has(row.source)) score += 3;
   if (row.text.length > 220) score -= 1;
-  return score;
+  return { score, sceneHits };
 }
 
 /*
- * Give the model the rows most likely to belong to this scene's job. It is
- * asked to choose one row per line, so the row text is the fact; the line is
- * only the sentence that carries it.
+ * Give the model the rows that belong to this scene's job. The scene must be
+ * carried by rows that match its own keywords; a couple of on-topic rows may
+ * fill the tail, but they can never replace the scene. If the corpus cannot
+ * support the job, the scene fails here, before a word is written.
  */
-function candidatesFor(scene, ledger, used) {
-  const fresh = ledger.filter((row) => !used.has(row.id));
+const MIN_FOCUSED = Number(process.env.AUTHOR_MIN_FOCUSED || 5);
+
+function candidatesFor(scene, ledger, used, subject, primary) {
+  const fresh = scene.reuse ? ledger : ledger.filter((row) => !used.has(row.id));
+  const patterns = keywordPatterns(scene);
   const ranked = fresh
-    .map((row) => ({ row, score: scoreRow(row, scene) }))
+    .map((row) => {
+      const scored = scoreRow(row, scene, subject, primary, patterns);
+      return scored ? { row, ...scored } : null;
+    })
+    .filter(Boolean)
     .sort((a, b) => b.score - a.score || a.row.id.localeCompare(b.row.id));
-  const chosen = ranked.filter((r) => r.score > 0).slice(0, 14).map((r) => r.row);
-  for (const { row } of ranked) {
-    if (chosen.length >= 14) break;
-    if (!chosen.includes(row)) chosen.push(row);
+  const focused = ranked.filter((entry) => entry.sceneHits > 0);
+  const filler = ranked.filter((entry) => entry.sceneHits === 0);
+  if (process.env.AUTHOR_DEBUG) {
+    console.error(`${scene.id} focused ${focused.length}: ${focused.map((entry) => entry.row.id).join(',')}`);
   }
-  return chosen.slice(0, 14);
+  if (focused.length < MIN_FOCUSED) {
+    throw new Error(
+      `${scene.id} has only ${focused.length} rows that match its own keywords; the corpus does not support "${scene.ask}"`
+    );
+  }
+  return [...focused.slice(0, 10), ...filler.slice(0, 1)].map((entry) => entry.row);
 }
 
 function narrationPrompt(film, scene, rows) {
@@ -372,6 +474,9 @@ function narrationPrompt(film, scene, rows) {
     '  "probably", "this film", "the story of".',
     '- Do not write a question. Do not end every line the same way.',
     '- Do not repeat a line from an earlier scene.',
+    '- Write about the object or action in JOB. A row is not usable just because',
+    '  it carries a date.',
+    '- At most one line may begin with a year. The date is evidence, not the sentence.',
     '',
     'LEDGER',
     ledger,
@@ -752,8 +857,9 @@ function main() {
   }
   const stub = !!arg('stub', false);
   const force = !!arg('force', false);
+  const diagnose = !!arg('diagnose', false);
   const outFile = path.join(FILMS, `${filmId}.json`);
-  if (fs.existsSync(outFile) && !force) {
+  if (!diagnose && fs.existsSync(outFile) && !force) {
     throw new Error(`${path.relative(ROOT, outFile)} exists; pass --force to author it again`);
   }
 
@@ -783,6 +889,8 @@ function main() {
   }
 
   const grammar = pickGrammar(corpus, topic);
+  const subject = subjectTokens(topic);
+  const primary = primarySourceIds(corpus, topic);
   const palette = grammar.grammar === 'paper-ledger'
     ? { paper: '#e6dcc4', ink: '#0b0a08', sodium: '#ffb24d', accent: '#a8342a' }
     : grammar.grammar === 'mechanical-causality'
@@ -794,8 +902,25 @@ function main() {
   const usedTexts = new Set();
   const plans = [];
 
+  if (diagnose) {
+    const dump = path.join(ROOT, 'out', 'author', filmId, 'diagnose-ledger.json');
+    fs.mkdirSync(path.dirname(dump), { recursive: true });
+    fs.writeFileSync(dump, `${JSON.stringify(ledger, null, 2)}\n`);
+    console.log(
+      `[author] ${filmId}: ${ledger.length} ledger rows, subject ${subject.join(', ')}, primary ${[...primary].join(', ') || 'none'}`
+    );
+    for (const scene of SCENES) {
+      const rows = candidatesFor(scene, ledger, new Set(), subject, primary);
+      console.log(`\n${scene.id} ${scene.title}: ${rows.length} rows shown`);
+      for (const row of rows) {
+        console.log(`  ${row.id} [${row.source.slice(-24)}] ${row.text.slice(0, 150)}`);
+      }
+    }
+    return;
+  }
+
   for (const scene of SCENES) {
-    const rows = candidatesFor(scene, ledger, used);
+    const rows = candidatesFor(scene, ledger, used, subject, primary);
     if (rows.length < 5) throw new Error(`not enough ledger rows left for ${scene.id}`);
     let lines;
     if (stub) {
@@ -865,16 +990,35 @@ function main() {
   const mainTitle = titleParts[0].trim();
   const subtitle = (titleParts[1] || topic.angle || '').trim().replace(/\.$/, '');
 
+  /* A title that runs off the frame is a failed title. Balance it and size it. */
+  const titleWords = mainTitle.toUpperCase().split(/\s+/).filter(Boolean);
+  let titleLines;
+  if (titleWords.length === 1 || mainTitle.length <= 15) {
+    titleLines = [titleWords.join(' ')];
+  } else {
+    let best = null;
+    for (let i = 1; i < titleWords.length; i++) {
+      const a = titleWords.slice(0, i).join(' ');
+      const b = titleWords.slice(i).join(' ');
+      const score = Math.max(a.length, b.length);
+      if (!best || score < best.score) best = { a, b, score };
+    }
+    titleLines = [best.a, best.b];
+  }
+  const longestTitle = Math.max(...titleLines.map((line) => line.length));
+  const titleSize = `${Math.min(11.6, 88 / (0.62 * longestTitle)).toFixed(1)}vw`;
+  const posterTitleSize = `${Math.min(9.6, 78 / (0.62 * longestTitle)).toFixed(1)}vw`;
+
   const film = {
     schema: 'vlymbooq.film.v1',
     id: filmId,
     topicId: filmId,
     title: mainTitle,
-    titleLines: [mainTitle.toUpperCase()],
-    titleSize: '11.6vw',
+    titleLines,
+    titleSize,
     subtitle,
     posterPlate: plans[0].plateNames[plans[0].plates[0]],
-    posterTitleSize: mainTitle.length > 16 ? '7.4vw' : '10.0vw',
+    posterTitleSize,
     posterMeta: String(topic.angle || topic.why || '')
       .toUpperCase()
       .replace(/[^A-Z0-9 ]/g, ' ')
