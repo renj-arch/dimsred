@@ -22,6 +22,7 @@ const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const OUT_ROOT = path.join(ROOT, 'out', 'film');
+const { repairFilm } = require('./repair-edit');
 
 function parse(argv) {
   const o = {
@@ -148,8 +149,13 @@ function checkTools(opts) {
 function loadFilm(opts) {
   const file = path.join(ROOT, 'data', 'films', `${opts.film}.json`);
   if (!fs.existsSync(file)) throw new Error(`Film not found: ${file}`);
-  const film = readJson(file);
-  if (!film.scenes || !film.scenes.length) throw new Error('film has no scenes');
+  const original = readJson(file);
+  if (!original.scenes || !original.scenes.length) throw new Error('film has no scenes');
+  const { film, repairs } = repairFilm(original);
+  if (repairs.length) {
+    console.log(`edit repair: ${repairs.length} mechanical transition fix(es)`);
+    repairs.forEach((repair) => console.log(`  · ${repair}`));
+  }
   return film;
 }
 
