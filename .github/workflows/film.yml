@@ -293,3 +293,23 @@ jobs:
           done
           echo "::error title=Film not live::The film is committed to main, but data/film-watch.json has not reached the live domain in 12 minutes."
           exit 1
+
+      # The slate is the autopilot's memory. A film that is live but still says
+      # storyboard would be authored and rendered again next week.
+      - name: Mark the film published in the slate
+        if: ${{ inputs.release == true && inputs.quality == 'final' && inputs.publish == true }}
+        env:
+          FILM: ${{ inputs.film }}
+        run: |
+          set -euo pipefail
+          node scripts/film/slate-publish.js \
+            --film "$FILM" --release "film-${FILM}-final-${{ github.run_number }}"
+          git config user.name "vlymbooq"
+          git config user.email "vlymbooq@users.noreply.github.com"
+          git add data/film-slate.json
+          if git diff --cached --quiet; then
+            echo "slate already marks $FILM published"
+            exit 0
+          fi
+          git commit -m "slate: $FILM is published"
+          git push
