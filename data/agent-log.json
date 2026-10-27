@@ -1933,47 +1933,75 @@
    ]
   },
   {
-   "at": "2026-10-27T11:26:28.786Z",
+   "at": "2026-10-27T11:59:01.844Z",
+   "model": "batiai/qwen3.8-27b:iq3",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "archive-writer",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "archive-writer",
+     "fixes": [
+      {
+       "page": "archive (Banking & Financial System / Banking & Financial System)",
+       "fix": "Explained \"Errors that can occur may be mechanical (such as card transport mechanisms; keypads; hard \"",
+       "text": "VERDICT: The missing word is communications. WHY: Banking systems rely on data transmission between branches, ATMs, and servers. Failures in this data flow are distinct from hardware or software bugs. TRAPS: Do not confuse this with 'communication' (singular) or 'connectivity'. The option 'communicat' is a truncated form of the correct noun. HOOK: Think of the bank as a body: mechanical is the skeleton, software is the brain, and communications are the nerves. Exam-day trap: If you see 'network'"
+      },
+      {
+       "page": "archive (Banking & Financial System / Banking & Financial System)",
+       "fix": "Explained \"According to the ATM Industry Association (ATMIA), as of 2015, there were close to _____ A\"",
+       "text": "VERDICT: The correct figure is 3.5 million. WHY: ATMIA data from 2015 pegged global ATM infrastructure at this scale, reflecting peak physical cash access before digital shifts. TRAPS: Do not confuse this with India's domestic count (approx. 200,000) or older 2010 estimates. HOOK: Remember 3.5 million as the 'digital cash ceiling' of 2015; examiners love testing specific global banking stats against regional data."
+      },
+      {
+       "page": "archive (Banking & Financial System / Banking & Financial System)",
+       "fix": "Explained \"In _____, Armenian-American inventor Luther Simjian invented an automated deposit machine \"",
+       "text": "1) VERDICT: 1960. 2) WHY: Luther Simjian filed his US patent for an automated deposit machine on 30 June 1960. It accepted coins, cash, and cheques but lacked cash dispensing. 3) TRAPS: Do not confuse the filing year (1960) with the grant year (1963). Also, note it was a deposit-only device, not a full ATM. 4) HOOK: Remember 'Simjian 1960' as the first step in ATM evolution. Exam trap: Questions often mix up filing vs. grant dates; always prioritize the filing year for invention timelines."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-27T12:49:52.780Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
+     "agent": "foresight",
      "count": 0
     },
     {
-     "agent": "invention",
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
      "count": 0
     }
    ],
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "questions",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (71 total)",
-       "text": "What is the throat thickness of a fillet weld with leg size s? | Write the strength equation of a fillet weld loaded in shear. | How is a butt weld designed in tension?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
+       "page": "data/questions",
+       "fix": "Found 241175 thin subtopics (< 15 questions)"
+      },
       {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Machine Design (157 in pool)",
-       "text": "Machine Design"
+       "page": "data/questions",
+       "fix": "Merged 3 overlapping subtopics into correct categories"
       }
      ]
     }
