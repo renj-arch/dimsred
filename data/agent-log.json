@@ -2067,16 +2067,20 @@
    ]
   },
   {
-   "at": "2026-10-26T23:05:10.786Z",
-   "model": "qwen3:4b",
-   "totalFixes": 249,
+   "at": "2026-10-26T23:25:05.429Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "features",
+     "agent": "foresight",
      "count": 0
     },
     {
-     "agent": "proposals",
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
      "count": 0
     },
     {
@@ -2086,184 +2090,19 @@
     {
      "agent": "wikisyllabus",
      "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 10
-    },
-    {
-     "agent": "selfcheck",
-     "count": 0
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 29
-    },
-    {
-     "agent": "a11y",
-     "count": 209
-    },
-    {
-     "agent": "code",
-     "count": 1
     }
    ],
    "details": [
     {
-     "agent": "workflows",
+     "agent": "questions",
      "fixes": [
       {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added memory limit to node steps"
+       "page": "data/questions",
+       "fix": "Found 241165 thin subtopics (< 15 questions)"
       },
       {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/film-autopilot.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/local-model.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/plate-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/slim-live.yml",
-       "fix": "Added pull+push retry loop"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-anabelian-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    },
-    {
-     "agent": "code",
-     "fixes": [
-      {
-       "page": "films.html",
-       "fix": "Converted dead link to text: bhopal-production.html"
+       "page": "data/questions",
+       "fix": "Merged 3 overlapping subtopics into correct categories"
       }
      ]
     }
