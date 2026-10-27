@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-26T18:06:09.083Z",
-  "cursor": 69,
-  "built": 66
+  "updatedAt": "2026-10-27T01:21:39.207Z",
+  "cursor": 72,
+  "built": 69
  },
  "figs": {
   "87926696": {
@@ -401,6 +401,24 @@
    "n": "write the crushing strength of a riveted joint.",
    "sub": "design",
    "at": "2026-10-26"
+  },
+  "279f6159": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><circle cx=\"100\" cy=\"100\" r=\"18\"/><circle cx=\"160\" cy=\"100\" r=\"18\"/><circle cx=\"220\" cy=\"100\" r=\"18\"/><text x=\"95\" y=\"85\" text-anchor=\"middle\">d</text><text x=\"155\" y=\"85\" text-anchor=\"middle\">d</text><text x=\"215\" y=\"85\" text-anchor=\"middle\">d</text><text x=\"340\" y=\"105\" text-anchor=\"start\">Solid Plate Strength (P₀)</text><line x1=\"60\" y1=\"120\" x2=\"60\" y2=\"140\"/><line x1=\"58\" y1=\"140\" x2=\"322\" y2=\"140\"/><line x1=\"320\" y1=\"120\" x2=\"320\" y2=\"140\"/><text x=\"65\" y=\"130\">Pₜ (Tearing)</text><circle cx=\"100\" cy=\"100\" r=\"18\"/><line x1=\"100\" y1=\"118\" x2=\"100\" y2=\"142\"/><line x1=\"100\" y1=\"142\" x2=\"320\" y2=\"142\"/><line x1=\"320\" y1=\"118\" x2=\"320\" y2=\"142\"/><text x=\"105\" y=\"130\">Pₛ (Shear)</text><circle cx=\"100\" cy=\"100\" r=\"18\"/><line x1=\"100\" y1=\"118\" x2=\"100\" y2=\"142\"/><line x1=\"100\" y1=\"142\" x2=\"320\" y2=\"142\"/><line x1=\"320\" y1=\"118\" x2=\"320\" y2=\"142\"/><text x=\"105\" y=\"130\">P꜀ (Crushing)</text><rect x=\"260\" y=\"70\" width=\"70\" height=\"30\" fill=\"#eee\" stroke=\"#222\"/><text x=\"265\" y=\"87\" text-anchor=\"middle\">η = min(Pₜ, Pₛ, P꜀) / P₀</text></svg>",
+   "n": "define the efficiency of a riveted joint.",
+   "sub": "design",
+   "at": "2026-10-27"
+  },
+  "87e837ae": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Riveted Joint Failure Modes</text><rect x=\"40\" y=\"60\" width=\"80\" height=\"100\" stroke-dasharray=\"3,3\"/><text x=\"80\" y=\"90\" text-anchor=\"middle\">Tearing</text><path d=\"M 60 120 L 100 120 L 100 140 L 60 140 Z\" fill=\"#222\"/><text x=\"80\" y=\"155\" text-anchor=\"middle\">Tear</text><rect x=\"140\" y=\"60\" width=\"80\" height=\"100\" stroke-dasharray=\"3,3\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\">Shearing</text><path d=\"M 160 120 L 200 120 L 200 140 L 160 140 Z\" fill=\"#222\"/><text x=\"180\" y=\"155\" text-anchor=\"middle\">Shear</text><rect x=\"240\" y=\"60\" width=\"80\" height=\"100\" stroke-dasharray=\"3,3\"/><text x=\"280\" y=\"90\" text-anchor=\"middle\">Crushing</text><path d=\"M 260 120 L 300 120 L 300 140 L 260 140 Z\" fill=\"#222\"/><text x=\"280\" y=\"155\" text-anchor=\"middle\">Crush</text><rect x=\"40\" y=\"170\" width=\"280\" height=\"35\" stroke-dasharray=\"3,3\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Design Strength = min(Tearing, Shearing, Crushing)</text></svg>",
+   "n": "which failure mode decides the design strength of a riveted joint?",
+   "sub": "design",
+   "at": "2026-10-27"
+  },
+  "184b0822": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"60\" width=\"80\" height=\"10\" rx=\"2\"/><rect x=\"140\" y=\"60\" width=\"80\" height=\"10\" rx=\"2\"/><line x1=\"120\" y1=\"70\" x2=\"120\" y2=\"90\" stroke-width=\"3\"/><text x=\"55\" y=\"55\" font-weight=\"bold\">Plate Edge</text><text x=\"185\" y=\"55\" font-weight=\"bold\">Rivet Head</text><path d=\"M 120 70 Q 140 60 160 70\" stroke-dasharray=\"4,2\"/><path d=\"M 120 90 Q 140 100 160 90\" stroke-dasharray=\"4,2\"/><text x=\"105\" y=\"80\">Caulking</text><text x=\"175\" y=\"80\">Fullering</text><text x=\"135\" y=\"110\" text-anchor=\"middle\">Sealed Joint</text></svg>",
+   "n": "what is caulking and fullering in riveted joints?",
+   "sub": "design",
+   "at": "2026-10-27"
   }
  }
 }
