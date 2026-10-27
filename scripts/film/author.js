@@ -442,7 +442,6 @@ function candidatesFor(scene, ledger, used, subject, primary) {
     .filter(Boolean)
     .sort((a, b) => b.score - a.score || a.row.id.localeCompare(b.row.id));
   const focused = ranked.filter((entry) => entry.sceneHits > 0);
-  const filler = ranked.filter((entry) => entry.sceneHits === 0);
   if (process.env.AUTHOR_DEBUG) {
     console.error(`${scene.id} focused ${focused.length}: ${focused.map((entry) => entry.row.id).join(',')}`);
   }
@@ -451,7 +450,9 @@ function candidatesFor(scene, ledger, used, subject, primary) {
       `${scene.id} has only ${focused.length} rows that match its own keywords; the corpus does not support "${scene.ask}"`
     );
   }
-  return [...focused.slice(0, 10), ...filler.slice(0, 1)].map((entry) => entry.row);
+  // Never pad a scene with a row that does not match it. The filler line was
+  // what let a chronology sentence into the cost scene of the Emergency film.
+  return focused.slice(0, 10).map((entry) => entry.row);
 }
 
 function narrationPrompt(film, scene, rows) {
@@ -474,6 +475,12 @@ function narrationPrompt(film, scene, rows) {
     '  "probably", "this film", "the story of".',
     '- Do not write a question. Do not end every line the same way.',
     '- Do not repeat a line from an earlier scene.',
+    '- Put the five lines in chronological or cause-and-effect order. The scene',
+    '  must move forward; never step back to a date already passed.',
+    '- Every line must add a new fact. Do not restate the same event twice in',
+    '  different words, and do not open with a summary of the scene.',
+    '- A paraphrase may shorten its row. It may not add a reason, motive or',
+    '  consequence that the row does not contain.',
     '- Write about the object or action in JOB. A row is not usable just because',
     '  it carries a date.',
     '- At most one line may begin with a year. The date is evidence, not the sentence.',
@@ -719,12 +726,54 @@ function buildDebates(film, topic, ledger, corpus, plans) {
 }
 
 /*
+ * Effects are a budget, not a cycle. The edit QC allows each named effect at
+ * most twice, and an iris must name the circular thing it closes on. A film
+ * with five paper-wipes and five irises reads like a template; two of each,
+ * placed where the plate earns them, reads like an edit.
+ */
+function plannedTransition(archetype, li, effects) {
+  if (archetype === 'wall_surface' && effects['paper-wipe'] < 2) {
+    effects['paper-wipe'] += 1;
+    return {
+      type: 'paper-wipe',
+      reason: 'The newspaper page drags across the cut and the wall of print arrives.'
+    };
+  }
+  if (archetype === 'paper_desk' && li === 0 && effects['page-turn'] < 2) {
+    effects['page-turn'] += 1;
+    return {
+      type: 'page-turn',
+      reason: 'A single page turns into the desk under the lamp.'
+    };
+  }
+  if (archetype === 'gate' && effects.iris < 2) {
+    effects.iris += 1;
+    return {
+      type: 'iris',
+      reason: 'The gate handwheel closes to a ring as the scene turns.'
+    };
+  }
+  if (archetype === 'flame' && effects.iris < 2) {
+    effects.iris += 1;
+    return {
+      type: 'iris',
+      reason: 'The candle rim closes to a ring around the flame.'
+    };
+  }
+  return {
+    type: 'hard-cut',
+    reason: 'The cut lands on the first word of the line so the figure and the voice arrive together.'
+  };
+}
+
+/*
  * A shot is a plate plus the line it belongs to. No duration is written on
  * the shot: the renderer cuts on the voice, which is the only timing that
  * cannot drift when the TTS voice is slower or faster than the estimate.
  */
 function buildScenes(film, plans, grammar, counts, sets) {
   let start = 0;
+  const effects = { 'paper-wipe': 0, 'page-turn': 0, iris: 0 };
   const scenes = plans.map((plan, si) => {
     const narrated = plan.lines.map((line) => ({
       text: line.text,
@@ -771,8 +820,9 @@ function buildScenes(film, plans, grammar, counts, sets) {
           }
         };
       }
-      const type = grammar.cycle[(si + li) % grammar.cycle.length];
-      const cut = type === 'hard-cut' || type === 'match-cut';
+      const planned = plannedTransition(archetype, li, effects);
+      const type = planned.type;
+      const cut = type === 'hard-cut';
       shots.push({
         id: id(),
         plate,
@@ -791,9 +841,7 @@ function buildScenes(film, plans, grammar, counts, sets) {
           type,
           frames: cut ? 0 : grammar.transitionDefaults[type] || 8,
           sound: cut ? 'line onset' : grammar.sounds[type] || 'room tone',
-          reason: cut
-            ? 'The cut lands on the first word of the line so the figure and the voice arrive together.'
-            : `The ${type} carries the eye from the last plate into this one without stopping the voice.`
+          reason: planned.reason
         }
       });
     });
@@ -819,7 +867,7 @@ function buildScenes(film, plans, grammar, counts, sets) {
         sfx: ['low flame', 'room tone'],
         transition: {
           type: 'dip',
-          frames: 8,
+          frames: 5,
           sound: 'flame out',
           reason: 'The last image is allowed to go dark; this is the only dip in the film.'
         }

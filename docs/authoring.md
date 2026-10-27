@@ -56,8 +56,8 @@ and a short exclusion list for rows that mention the words but belong to
 another scene.
 
 A row is scored on how many of the scene's keywords it matches. The model is
-given the ten best rows plus at most one on-topic row, and returns exactly five
-lines, each naming one row:
+given the ten best rows — never an off-topic filler row — and returns exactly
+five lines, each naming one row:
 
 ```json
 {"lines":[{"row":"L07","text":"..."}]}
@@ -69,6 +69,16 @@ The audit is stricter than the shot audit:
 - the line must be 7–22 words, no second person, no hedges;
 - every number in the line must occur in the row's text;
 - no line may repeat an earlier line.
+
+The prompt also requires the five lines to move forward in chronology or cause
+and effect, to add a new fact on each line, and to avoid adding a reason or
+consequence the row does not contain. A paraphrase may shorten its row; it may
+not extend it.
+
+After an editor repairs a line in the storyboard, run
+`node scripts/film/audit-storyboard.js <film>`; it re-checks the committed file
+against the ledger, including the verbatim quote, the source, the word count
+and every number.
 
 A failed answer is sent back once with the exact failures named. A second
 failure stops the authoring run. Nothing is silently dropped.
