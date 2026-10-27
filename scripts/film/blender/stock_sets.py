@@ -610,7 +610,7 @@ def scene_flame_source(samples, width, height, out, params):
     cylinder("FlameBase", (0, 0.35, 0.045), 0.20, 0.09, aged_brass(), vertices=32)
     cylinder("FlameCup", (0, 0.35, 0.135), 0.13, 0.09,
              principled("FlameCupMat", (0.10, 0.07, 0.04), roughness=0.35, metallic=0.55), vertices=28)
-    wax = principled("FlameWax", (0.72, 0.62, 0.44), roughness=0.55)
+    wax = principled("FlameWax", (0.62, 0.46, 0.28), roughness=0.55)
     cylinder("Candle", (0, 0.35, 0.34), 0.095, 0.40, wax, vertices=36)
     cylinder("CandleTop", (0, 0.35, 0.545), 0.088, 0.012,
              principled("CandleTopMat", (0.58, 0.46, 0.30), roughness=0.7), vertices=32)
@@ -636,7 +636,6 @@ def scene_flame_source(samples, width, height, out, params):
     bpy.context.scene.view_settings.exposure = -0.75
     area("ColdRim", (1.4, 1.0, 1.3), (0.0, 0.35, 0.55), 45, 0.9, (0.30, 0.46, 0.66))
     area("GlassEdge", (-1.2, 0.8, 1.0), (0.0, 0.35, 0.55), 12, 0.7, (0.55, 0.40, 0.28))
-    dust(count=24, seed=29, zmax=1.1, ymax=1.6)
     render(samples, width, height, out)
 
 
