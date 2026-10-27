@@ -1,53 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-26T18:17:29.813Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (66 total)",
-       "text": "Write the tearing strength of a riveted plate per pitch length. | Write the shearing strength of a rivet. | Write the crushing strength of a riveted joint."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Thermodynamics (137 in pool)",
-       "text": "Thermodynamics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-26T19:06:39.288Z",
    "model": "qwen3:4b",
    "totalFixes": 250,
@@ -2568,8 +2521,50 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-27T05:51:25.911Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 241165 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 3 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-27T04:23:14.948Z",
- "model": "qwen3:4b"
+ "lastRun": "2026-10-27T05:51:25.911Z",
+ "model": "qwen3.5:9b"
 }
