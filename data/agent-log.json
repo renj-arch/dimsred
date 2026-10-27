@@ -1,48 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-26T23:25:05.429Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 241165 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 3 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-26T23:43:44.648Z",
    "model": "qwen3:4b",
    "totalFixes": 250,
@@ -2278,8 +2236,31 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-27T16:38:58.382Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-27T15:50:50.286Z",
+ "lastRun": "2026-10-27T16:38:58.382Z",
  "model": "qwen3:4b"
 }
