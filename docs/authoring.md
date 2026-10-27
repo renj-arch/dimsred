@@ -31,17 +31,33 @@ corpus.json ──► ledger.json ──► narration (lines + row ids) ──�
 ### 1. Ledger (deterministic, no model)
 
 For each source in `corpus.json`, `author.js` splits the fetched text into
-sentences and keeps those with a digit (55–260 characters, de-duplicated, at
-most 40 per source). Each row records `{id, source, sourceTitle, url, text}`.
-The text is verbatim, so the fact a line rests on can be read without trusting
-the model. The ledger is written to `data/films/<id>-ledger.json` as evidence.
+sentences (55–260 characters, de-duplicated) and keeps two kinds of row:
+
+- every sentence that names something one of the eight scenes is about (the
+  press, an arrest, the report), capped at 400 per source;
+- a numeric spine: up to 60 sentences per source that carry a figure.
+
+The second kind is what makes a claim checkable; the first is what keeps the
+film out of a chronology of dates. Each row records
+`{id, source, sourceTitle, url, text}`. The text is verbatim, so the fact a
+line rests on can be read without trusting the model. The ledger is written to
+`data/films/<id>-ledger.json` as evidence.
+
+Run `node scripts/film/author.js --film <id> --diagnose` to print the rows each
+scene would see and write `out/author/<id>/diagnose-ledger.json`, without
+loading the model. A scene that cannot find five rows of its own fails here,
+before the model writes a word.
 
 ### 2. Narration (local model, one call per scene)
 
-The model is given 14 ledger rows per scene, chosen by the scene's job
-(`the object`, `the order`, `the machine`, `the turn`, `the cost`,
-`the argument`, `the record`, `the return`). It returns exactly five lines,
-each naming one row:
+The scenes are `the object`, `the order`, `the machine`, `the cost`, `the
+turn`, `the argument`, `the record`, `the return`. Each has its own keywords
+and a short exclusion list for rows that mention the words but belong to
+another scene.
+
+A row is scored on how many of the scene's keywords it matches. The model is
+given the ten best rows plus at most one on-topic row, and returns exactly five
+lines, each naming one row:
 
 ```json
 {"lines":[{"row":"L07","text":"..."}]}
@@ -86,7 +102,7 @@ chooses a cut.
 | `exterior_night` | a wet street, a lamp, shuttered fronts |
 | `gate` | a barred gate, a lock, a wall in the rain |
 | `plinth_object` | one object on a plinth: register, paper, notice, lamp, jar |
-| `flame_source` | a flame behind glass in a cold room |
+| `flame_source` | a candle on a dark table, the only warm thing in the room |
 
 A film supplies `data/films/<id>-sets.json`, written by the author:
 
@@ -113,10 +129,10 @@ author.yml ──► data/films/<id>.json + sets + ledger + slate (committed)
      └─ gate passes ──► film.yml (quality=final, release=true, publish=true)
 ```
 
-`author.yml` is manual while the writer is being exercised. Once its output has
-been read once, the weekly autopilot should pick a `research` topic, run the
-author, and dispatch the render only when the storyboard validates. A topic
-that fails the ledger audit stays `research`; it does not render.
+`author.yml` is manual while the writer is being exercised. The autopilot
+dispatches it for a `research` topic with `render=false`; a storyboard that
+validates can then be dispatched to `film.yml` by hand once it has been read.
+A topic that fails the ledger audit stays `research`; it does not render.
 
 ## What still needs a person
 

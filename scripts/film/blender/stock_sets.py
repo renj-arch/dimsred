@@ -589,7 +589,7 @@ def scene_plinth_object(samples, width, height, out, params):
 
     bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0.55, 1.05))
     focus = bpy.context.object
-    camera((-1.25, -2.85, 1.35), (0.0, 0.55, 1.02), lens=58, fstop=2.0, focus=focus)
+    camera((-0.95, -2.30, 1.30), (0.0, 0.55, 1.02), lens=72, fstop=1.9, focus=focus)
     bpy.context.scene.view_settings.exposure = -0.95
     area("HardKey", (-2.2, -1.0, 2.3), (0.0, 0.55, 1.0), 330, 0.7, (1.0, 0.66, 0.34))
     area("Rim", (1.9, 0.9, 1.9), (0.0, 0.55, 1.0), 90, 1.2, (0.34, 0.50, 0.68))
@@ -598,32 +598,45 @@ def scene_plinth_object(samples, width, height, out, params):
 
 
 def scene_flame_source(samples, width, height, out, params):
-    """A flame behind glass: the only warm thing in a cold room."""
+    """A candle on a dark table: the only warm thing in the room."""
     p = palette(params)
     reset()
     dark_world((0.0003, 0.0003, 0.0003))
 
     plane("FlameTable", (0, 0, 0), 6, dark_wood())
-    cube("FlameBack", (0, 2.2, 1.4), (6.0, 0.12, 2.8), plaster_material("FlameBackMat", scaled(p["paper"], 0.42)))
-    cylinder("FlameBase", (0, 0.35, 0.10), 0.22, 0.20, aged_brass(), vertices=32)
-    cylinder("FlameCup", (0, 0.35, 0.22), 0.14, 0.06,
-             principled("FlameCupMat", (0.10, 0.07, 0.04), roughness=0.4, metallic=0.5), vertices=28)
-    # glass chimney: thin, tall, slightly reflective
-    cylinder("Chimney", (0, 0.35, 0.62), 0.155, 0.70,
-             principled("ChimneyMat", (0.40, 0.46, 0.44), roughness=0.04, transmission=0.92), vertices=36)
-    flame("TableFlame", (0, 0.35, 0.24), scale=2.6)
-    bpy.ops.object.light_add(type="POINT", location=(0, 0.35, 0.55))
-    warm = bpy.context.object
-    warm.data.energy = 16
-    warm.data.color = (1.0, 0.46, 0.14)
-    warm.data.shadow_soft_size = 0.05
+    cube("FlameBack", (0, 2.2, 1.4), (6.0, 0.12, 2.8), plaster_material("FlameBackMat", scaled(p["paper"], 0.28)))
 
-    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0.35, 0.7))
+    # brass holder, then a real candle with a visible wax column
+    cylinder("FlameBase", (0, 0.35, 0.045), 0.20, 0.09, aged_brass(), vertices=32)
+    cylinder("FlameCup", (0, 0.35, 0.135), 0.13, 0.09,
+             principled("FlameCupMat", (0.10, 0.07, 0.04), roughness=0.35, metallic=0.55), vertices=28)
+    wax = principled("FlameWax", (0.72, 0.62, 0.44), roughness=0.55)
+    cylinder("Candle", (0, 0.35, 0.34), 0.095, 0.40, wax, vertices=36)
+    cylinder("CandleTop", (0, 0.35, 0.545), 0.088, 0.012,
+             principled("CandleTopMat", (0.58, 0.46, 0.30), roughness=0.7), vertices=32)
+    cylinder("Wick", (0, 0.35, 0.568), 0.006, 0.045,
+             ink_material("WickMat", (0.02, 0.015, 0.01)), vertices=8)
+    flame("TableFlame", (0, 0.35, 0.575), scale=1.05)
+
+    bpy.ops.object.light_add(type="POINT", location=(0, 0.35, 0.62))
+    warm = bpy.context.object
+    warm.data.energy = 9
+    warm.data.color = (1.0, 0.46, 0.14)
+    warm.data.shadow_soft_size = 0.035
+    # the wax itself glows a little around the wick
+    bpy.ops.object.light_add(type="AREA", location=(0, 0.35, 0.50))
+    halo = bpy.context.object
+    halo.data.energy = 2.2
+    halo.data.size = 0.16
+    halo.data.color = (1.0, 0.58, 0.24)
+
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0, 0.35, 0.52))
     focus = bpy.context.object
-    camera((0.75, -2.35, 1.05), (0.0, 0.35, 0.72), lens=64, fstop=2.0, focus=focus)
-    bpy.context.scene.view_settings.exposure = -1.15
-    area("ColdRim", (1.8, 1.0, 1.6), (0.0, 0.35, 0.7), 70, 1.0, (0.30, 0.46, 0.66))
-    area("GlassEdge", (-1.4, 0.9, 1.2), (0.0, 0.35, 0.7), 22, 0.8, (0.55, 0.40, 0.28))
+    camera((0.42, -1.72, 0.66), (0.0, 0.35, 0.50), lens=82, fstop=2.0, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.75
+    area("ColdRim", (1.4, 1.0, 1.3), (0.0, 0.35, 0.55), 45, 0.9, (0.30, 0.46, 0.66))
+    area("GlassEdge", (-1.2, 0.8, 1.0), (0.0, 0.35, 0.55), 12, 0.7, (0.55, 0.40, 0.28))
+    dust(count=24, seed=29, zmax=1.1, ymax=1.6)
     render(samples, width, height, out)
 
 
