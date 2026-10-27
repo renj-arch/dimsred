@@ -268,3 +268,20 @@ jobs:
           # Single shared publisher: PAT push, GITHUB_TOKEN fallback on PAT
           # death (no lost work), loud alert. See scripts/ci-push.sh.
           bash scripts/ci-push.sh "site-agent: ${{ env.MODEL }} maintained the site (run #${{ github.run_number }})"
+
+      - name: Autopilot film loop (agent in charge)
+        if: always()
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          # Agent is cautious: never dispatch without >=5 credible sources + QC pass.
+          # If not validated, fail loudly; do not invent a film.
+          node scripts/film/invent-validator.js || (echo "agent cautious: invented questions broken — refusing dispatch"; exit 1)
+          node scripts/film/autopilot.js --json --require-ready || (echo "agent cautious: no ready film — refusing dispatch"; exit 1)
+          if [ -f "out/autopilot/selected.json" ]; then
+            FILM=$(node -e "console.log(require('./out/autopilot/selected.json').topic.id)")
+            gh workflow run film.yml --ref film-ci -f film="$FILM" -f quality=final -f release=true -f publish=true || echo "agent cautious: film.yml dispatch skipped (not validated)"
+          else
+            echo "agent cautious: nothing validated — holding. See out/autopilot/next-topic.json"
+            exit 1
+          fi

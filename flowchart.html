@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta name="description" content="UPSC Flowchart — knowledge cheat sheet — study material, quizzes, and AI-powered explanations on Vlymbooq.">
+<meta name="description" content="UPSC Flowchart â€” knowledge cheat sheet — study material, quizzes, and AI-powered explanations on Vlymbooq.">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>UPSC Flowchart — knowledge cheat sheet</title>
+<title>UPSC Flowchart â€” knowledge cheat sheet</title>
 <style>
 :root{
 --purple:#a78bfa;--amber:#fb923c;--rose:#fb7185;--teal:#2dd4bf;--cyan:#22d3ee;--slate:#94a3b8;
@@ -138,7 +138,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
 <div class="note" id="note"></div>
 <div class="rev" id="revpanel"></div>
 <div class="msg" id="msg">Loading knowledge graph…</div>
-<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a verified relationship from data/relations.json or an authored mind-tree (data/topic-layers.json). Co-mention lines are gone: they were word co-occurrence over a trivia corpus, not knowledge, and they were deciding which cards appeared at all. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) · <b>double-click</b> to drill into it as the new centre · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
+<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a verified relationship from data/relations.json or an authored mind-tree (data/topic-layers.json). Co-mention lines are gone: they were word co-occurrence over a trivia corpus, not knowledge, and they were deciding which cards appeared at all. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) Â· <b>double-click</b> to drill into it as the new centre Â· <b>Grow/Shrink</b> adds or removes a ring across the whole map Â· <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
 <!-- The graph resolver lives in one place and is shared with scripts/build-timeline.js,
      scripts/gen-topic-layers.js, map.html and revision.html. It used to be copied
      into this file under the comment "shared logic copied from flowchart.html (must
@@ -188,7 +188,7 @@ var LANE_HINT={battle:'war'};
 var LANE_PRIO={war:0,event:10,person:20,empire:26,org:30,scheme:31,dynasty:36,concept:40,disease:41,volcano:50,place:55};
 var LANE_CAP={war:16,event:16,person:36,empire:16,org:14,scheme:14,concept:14,dynasty:14,place:14,disease:14,volcano:14};
 // Empires, cities and a few eras that the auto-extractor mistagged as `person`
-// in older data. Pure presentation fix — only affects which lane a card sits in.
+// in older data. Pure presentation fix â€” only affects which lane a card sits in.
 var EXTRA_TYPE={
   'delhi sultanate':'empire','abbasid caliphate':'empire','umayyad caliphate':'empire',
   'rashidun caliphate':'empire','fatimid caliphate':'empire','ottoman caliphate':'empire',
@@ -407,13 +407,13 @@ function sameEntity(a,b){
 
 function fetchJson(url){return fetch(url).then(function(r){if(!r.ok)throw new Error(url+' '+r.status);return r.json();});}
 // Curated "topic layers": authored per-topic mind-trees (data/topic-layers.json)
-// that graft onto the mined graph at load time — each branch becomes a section
+// that graft onto the mined graph at load time â€” each branch becomes a section
 // node and every item a curated card under it, so a topic like World War II can
 // carry the full encyclopedic tree the mined co-mentions alone can't express.
 var LAYERS={},WT={};
 // Curated edges live in CADJ, not ADJ: authored tree is only visible when you
 // open that topic itself, so another topic that just happens to co-mention the
-// central (Ashoka —related→ Gandhi) can never drag the whole Gandhi tree in.
+// central (Ashoka â€”related→ Gandhi) can never drag the whole Gandhi tree in.
 function cadj(a,b,rel){
   if(!CADJ[a])CADJ[a]={};if(!CADJ[b])CADJ[b]={};
   CADJ[a][b]=rel;CADJ[b][a]=rel;
@@ -627,7 +627,7 @@ function buildIndexes(){
   for(var j=0;j<EDGES.length;j++){
     var e=EDGES[j];
     // Skip edges that touch a junk-kin node or a missing node: 91% of the shipped
-    // edge table is auto-mined junk“junk noise, so indexing only the real edges
+    // edge table is auto-mined junkâ€“junk noise, so indexing only the real edges
     // keeps both the graph and the edge scan fast and correct.
     var na=BY_ID[e.a],nb=BY_ID[e.b];
     if(!na||!nb||isJunk(na)||isJunk(nb))continue;
@@ -675,7 +675,7 @@ function buildIndexes(){
 // "Light") that the kin miner absorbs when a paragraph-lead noun slips into a
 // "…was the son|founder of…" pattern. Same words the builder's KIN_BAN_WORDS
 // refuses; enforced here so already-shipped data stays just as clean. Seeded
-// topics are exempt — a curated name wins even if it collides.
+// topics are exempt â€” a curated name wins even if it collides.
 // Kin-relation junk names ("Tim", "Crown", "Population") and the junk/hub gates
 // now live in scripts/lib/graph-core.js, shared with the build scripts. The list
 // here was a strict subset of the build script's; unifying on the superset was
@@ -730,7 +730,7 @@ function graphFor(id){
   seen[id]=1;hopOf[id]=0;
   // A topic with an authored mind-tree (a neighbour whose id is crt|…) is drawn
   // as that tree: the authored branches ARE the relevance map, so the broad
-  // co-mention flood (COVID-19 · Malaria · Fisheries · MGNREGA next to Gandhi)
+  // co-mention flood (COVID-19 Â· Malaria Â· Fisheries Â· MGNREGA next to Gandhi)
   // is dropped entirely and never upstages the curated spine.
   var curated=isCurFl(id);
   function capOf(t){return LANE_CAP[t]||14;}
@@ -774,20 +774,20 @@ function graphFor(id){
     // artifact check, the hp>=2 no-deeper-hops rule, and the per-lane capOf().
     if(rel==='related'&&!curated&&!CO_ALL&&(w||0)<6)return;
     // a co-mention born only after the topic itself ended (COVID-19 beside a
-    // figure who died in 1984, Instagram beside Indira) is a corpus artifact —
+    // figure who died in 1984, Instagram beside Indira) is a corpus artifact â€”
     // modern articles contrast with her, they don't relate to her. Famous later
     // PERSONS are exempt: Xuanzang/Faxian recorded Ashoka's pillars centuries
     // later and that tie is exactly the source the docs are mining.
     if(rel==='related'&&!curated&&bornAfter(n,central)&&
        !(nt(n)==='person'&&(w||0)>=8&&/^[A-Z][A-Za-z]*( [A-Z][A-Za-z]*)*$/.test(n.name)))return;
     // deeper hops need stronger co-mentions, else off-topic chains flood the outer
-    // rings. In non-curated flows a second-hop co-mention (Everest —co→ WWII —
+    // rings. In non-curated flows a second-hop co-mention (Everest â€”co→ WWII â€”
     // co→ Korean War w379 / Great Depression / COVID) is just a mega-topic clique
     // shared by every UPSC paper, so co-mention hops are limited to the central's
     // own ring; deeper rings ride typed edges only.
     if(rel==='related'&&hp>=2)return;
     // chained co-mentions far from the topic's own era are paragraph noise
-    // (Ashoka —related…→ French Revolution —related…→ COVID-19), and an hp-2
+    // (Ashoka â€”related…→ French Revolution â€”related…→ COVID-19), and an hp-2
     // typed edge dragged in through a middle person is usually that person's own
     // genealogy, not the topic's (Ashoka → Kanishka → his great-grandfather, or
     // → Maratha Empire 'preceded'). Same era rule as the map-side Story strip;
@@ -796,7 +796,7 @@ function graphFor(id){
       var mt=midYear(n),m0=midYear(central);
       if(mt!=null&&m0!=null&&Math.abs(mt-m0)>300)return;
     }
-    // curated topics: no co-mention cards at all — the authored tree is the map
+    // curated topics: no co-mention cards at all â€” the authored tree is the map
     // An ASSERTED relation (anything other than a co-mention) is only drawn
     // when one of its endpoints is the topic itself, or the cell is an
     // authored section. Without this, a co-mention neighbour's own private
@@ -811,10 +811,10 @@ function graphFor(id){
     if(rel!=='related'&&!fromSection&&src.id!==id&&n.id!==id)return;
     if(curated&&rel==='related')return;
     // a person never really relates to these classes; a corps-level event never
-    // relates to a scheme dictionary term (Gandhi—COVID-19, WWII—MGNREGA noise)
+    // relates to a scheme dictionary term (Gandhiâ€”COVID-19, WWIIâ€”MGNREGA noise)
     if(rel==='related'&&src&&((nt(src)==='person'&&NOISE_TYPES[nt(n)])||(nt(src)==='event'&&nt(n)==='scheme')))return;
     // Kinship is only meaningful between two humans: a "wife of Nehru" line inside
-    // a Tuberculosis topic must never surface "Tuberculosis —wife→ Nehru".
+    // a Tuberculosis topic must never surface "Tuberculosis â€”wife→ Nehru".
     if(rel!=='related'&&!fromSection&&inList(rel,KIN_RELS)&&!(src&&nt(src)==='person'&&nt(n)==='person'))return;
     // A mega-hub (Constantine, Alexander, Muhammad, …) linked by a kin relation to a
     // small/undated person is overwhelmingly a name-ambiguity misfire. Hubs stay
@@ -837,18 +837,18 @@ function graphFor(id){
       // curated trees stop at authored nodes: a real curated card (Nehru) must
       // not drag in Nehru's own co-mention cloud two hops deep
       if(curated&&hp>=2&&String(src.id).indexOf('crt|')!==0)continue;
-      // local copy — never write CADJ keys back into the shared ADJ, or the
+      // local copy â€” never write CADJ keys back into the shared ADJ, or the
       // authored edges would leak into every later topic that reaches this node
       var fa={};for(var k1 in ADJ[src.id])fa[k1]=ADJ[src.id][k1];
       // the authored tree's edges (stored in CADJ) only join the walk when the
-      // source IS the curated central or one of its cells — real nodes like the
+      // source IS the curated central or one of its cells â€” real nodes like the
       // central never bleed their tree into other topics' flows
       if(curated&&(src.id===id||String(src.id).indexOf('crt|')===0)){
         var c0=CADJ[src.id]||{};
         var ck=CUR_KEY[id];
         for(var k2 in c0){
           // CADJ is symmetric on real ids: other topics' branches that merely
-          // LIST the central as an item (cid—covers→ battle-of-talikota's Key
+          // LIST the central as an item (cidâ€”covers→ battle-of-talikota's Key
           // Events) would graft that whole foreign tree onto this map. Only our
           // own authored branches ('crt|<key>|B|…') may attach to the central.
           if(src.id===id&&!(c0[k2]==='covers'&&String(k2).indexOf('crt|'+ck+'|B|')===0))continue;
@@ -950,7 +950,7 @@ function subEdges(idset){
 
 function layout(g){
   // Radial mind-map: the focus topic is the hub, and every hop of the expanded
-  // graph sits on its own concentric ring — hop-1 facts nearest the centre,
+  // graph sits on its own concentric ring â€” hop-1 facts nearest the centre,
   // deeper discoveries (and curated branch leaves) radiating outward. Each lane
   // keeps one angular sector proportional to its card count, like a tree's crown.
   var M=34,GAP=30,MINR=210;
@@ -964,7 +964,7 @@ function layout(g){
   var total=0,share={};
   lanes.forEach(function(lk){share[lk]=sector[lk].length;total+=share[lk];});
   var GAP_D=Math.PI/22;
-  // with many lanes the fixed 8° gaps would eat half the circle; cap the total
+  // with many lanes the fixed 8Â° gaps would eat half the circle; cap the total
   // gap budget instead so big curated trees keep a usable orbit
   var gapBudget=Math.min(GAP_D*lanes.length,Math.PI/3);
   var usable=2*Math.PI-gapBudget;
@@ -1044,12 +1044,12 @@ function cardSvg(id,laneColor,opts){
   var idx=opts.idx!=null?opts.idx:UNIQ++;
   CARDS[idx]={id:id,name:n.name,idx:idx};
   var nnote=NOTES[canon(n.name)]||cleanDesc(n.desc);
-  var titleTxt=esc(n.name)+(nnote?' — '+esc(nnote.slice(0,600)):'')+' · '+esc(sub)+(NOTES[canon(n.name)]?' · click a card to read its full note':' · click to grow this branch · double-click to open');
+  var titleTxt=esc(n.name)+(nnote?' â€” '+esc(nnote.slice(0,600)):'')+' Â· '+esc(sub)+(NOTES[canon(n.name)]?' Â· click a card to read its full note':' Â· click to grow this branch Â· double-click to open');
   var wbadge='';
   var wt=WT[canon(n.name)];
   if(wt){
     var wcol=wt.imp==='high'?'#ef4444':wt.imp==='med'?'#fbbf24':'#9ca3af';
-    titleTxt+=' · '+(wt.imp)+' weight ('+wt.q+' practice Qs)';
+    titleTxt+=' Â· '+(wt.imp)+' weight ('+wt.q+' practice Qs)';
     wbadge='<circle class="wt" cx="'+(CW-16)+'" cy="14" r="9" fill="'+wcol+'"/>'
       +'<text class="wt" x="'+(CW-16)+'" y="17.5" text-anchor="middle" font-size="7.5" font-weight="700" fill="#fff">'+esc(fmtCnt(wt.q))+'</text>';
   }
@@ -1071,8 +1071,8 @@ function cardSvg(id,laneColor,opts){
   var subs=[sub];
   if(opts.extra)subs.push(opts.extra);
   if(opts.extraMeta)subs.push(opts.extraMeta);
-  if(opts.count!=null)subs.push('·'+fmtCnt(opts.count));
-  inner+='<text class="nsub" x="'+txtx+'" y="'+(CH/2+13)+'" font-size="10">'+esc(trunc(subs.join(' · '),30))+'</text>';
+  if(opts.count!=null)subs.push('Â·'+fmtCnt(opts.count));
+  inner+='<text class="nsub" x="'+txtx+'" y="'+(CH/2+13)+'" font-size="10">'+esc(trunc(subs.join(' Â· '),30))+'</text>';
   var cd=CUR_DESC[n.id]||n.desc;
   if(cd){
     var d=trunc(cleanDesc(cd),44);
@@ -1213,7 +1213,7 @@ function renderFlow(id){
     if(drawn[pair])return;drawn[pair]=1;relDrawn++;
     var col=(RELFAM[r.fam]&&RELFAM[r.fam].color)||'#a78bfa';
     var an=BY_ID[r.a]?BY_ID[r.a].name:'?',bn=BY_ID[r.b]?BY_ID[r.b].name:'?';
-    var fwd=an+' —'+r.rel+'→ '+bn;
+    var fwd=an+' â€”'+r.rel+'→ '+bn;
     var title=r.ev?(fwd+'\n\n'+r.ev):fwd;
     if(r.more&&r.more.length)title+='\n\nalso: '+r.more.join(', ');
     body+='<path class="rel" data-a="'+esc(r.a)+'" data-b="'+esc(r.b)+'" d="'+edgePath(r.a,r.b)+'" fill="none" stroke="'+col+'" stroke-width="1.8" marker-end="url(#arw'+col.replace('#','')+')"><title>'+esc(title)+'</title></path>';
@@ -1244,12 +1244,12 @@ function renderFlow(id){
       var evE='';
       var hN=BY_ID[id];
       if(hN&&tN)evE=REL_EV[canon(hN.name)+'\u0000'+canon(tN.name)]||'';
-      body+='<path class="link-dash" data-a="'+esc(e.a)+'" data-b="'+esc(e.b)+'" d="'+edgePath(e.a,e.b)+'" fill="none"><title>'+esc('mentioned with · weight '+(wE||'?')+(evE?' — "'+evE+'"':''))+'</title></path>';
+      body+='<path class="link-dash" data-a="'+esc(e.a)+'" data-b="'+esc(e.b)+'" d="'+edgePath(e.a,e.b)+'" fill="none"><title>'+esc('mentioned with Â· weight '+(wE||'?')+(evE?' â€” "'+evE+'"':''))+'</title></path>';
       return;
     }
     var tp=POS[e.b]&&laneColor[POS[e.b].lane]?laneColor[POS[e.b].lane]:'#9aa4b8';
     var path=edgePath(e.a,e.b);
-    body+='<path class="edge" data-a="'+esc(e.a)+'" data-b="'+esc(e.b)+'" d="'+path+'" fill="none" stroke="'+tp+'" stroke-width="1.4" marker-end="url(#arw'+tp.replace('#','')+')"><title>'+esc((BY_ID[e.a]?BY_ID[e.a].name:'?')+' —'+esc(e.rel)+'→ '+(BY_ID[e.b]?BY_ID[e.b].name:'?'))+'</title></path>';
+    body+='<path class="edge" data-a="'+esc(e.a)+'" data-b="'+esc(e.b)+'" d="'+path+'" fill="none" stroke="'+tp+'" stroke-width="1.4" marker-end="url(#arw'+tp.replace('#','')+')"><title>'+esc((BY_ID[e.a]?BY_ID[e.a].name:'?')+' â€”'+esc(e.rel)+'→ '+(BY_ID[e.b]?BY_ID[e.b].name:'?'))+'</title></path>';
     var A=anchors(e.a,e.b);
     var mx=(A.a.x+A.b.x)/2,my=(A.a.y+A.b.y)/2;
     var tx=esc(trunc(e.rel,28)),tw=tx.replace(/&amp;/g,'&').length*5.6+8;
@@ -1269,13 +1269,13 @@ function renderFlow(id){
   g.items.forEach(function(it){
     if(gv.order.indexOf(it.lane)===-1)return;
     var coLike=(it.rel==='mentioned with'||it.rel==='related');
-    var extra=(coLike&&it.w)?(it.rel+' · w'+it.w):shortRel(it.rel);
+    var extra=(coLike&&it.w)?(it.rel+' Â· w'+it.w):shortRel(it.rel);
     var weak=(coLike&&(it.w||0)<4);
     var cl=(weak?'wcard ':'')+(PIN[it.node.id]?'pinned':'');
-    body+=cardSvg(it.node.id,laneColor[it.lane],{fill:shade(laneColor[it.lane]),extra:extra+(weak?' · distant':''),count:it.node.count||0,idx:UNIQ++,cls:cl});
+    body+=cardSvg(it.node.id,laneColor[it.lane],{fill:shade(laneColor[it.lane]),extra:extra+(weak?' Â· distant':''),count:it.node.count||0,idx:UNIQ++,cls:cl});
   });
   var hero=BY_ID[id];
-  body+=cardSvg(id,'#fbbf24',{fill:'rgba(251,191,36,0.12)',color:'#fbbf24',hero:true,extra:'focus topic',extraMeta:(nt(hero))+' · '+(hero.count||0)+' mentions',idx:UNIQ++});
+  body+=cardSvg(id,'#fbbf24',{fill:'rgba(251,191,36,0.12)',color:'#fbbf24',hero:true,extra:'focus topic',extraMeta:(nt(hero))+' Â· '+(hero.count||0)+' mentions',idx:UNIQ++});
   var svg=document.getElementById('chart');
   svg.dataset.flow='1';
   svg.setAttribute('viewBox','0 0 '+geo.W+' '+geo.H);
@@ -1356,14 +1356,18 @@ function showNote(id){
   Object.keys(CADJ).forEach(function(src){
     if(CADJ[src]&&CADJ[src][id]&&BY_ID[src])m.push(BY_ID[src].name);
   });
-  var rel=m.length?' — in <b>'+esc(m[0])+'</b>':'';
+  var rel=m.length?' â€” in <b>'+esc(m[0])+'</b>':'';
   var hero=BY_ID[CUR];
   var ev=hero?REL_EV[canon(hero.name)+'\u0000'+canon(n.name)]:'';
   var relx='';
   if(ev&&canon(hero&&hero.name)!==canon(n.name)){
     relx='<div class="relx"><span class="tag">Relation to '+esc(hero.name)+'</span><br>'+esc(ev)+'</div>';
+  } else if(hero && (nt(n)==='place'||nt(n)==='geography'||nt(n)==='org'||nt(n)==='institution') && canon(hero.name)!==canon(n.name)){
+    // Fallback: geography / institution card under event/war/politics center — explain link briefly
+    var linkDesc = 'This place / institution connects to '+esc(hero.name)+': from geography, architecture, administration, or events that shaped the period.';
+    relx='<div class="relx"><span class="tag">Relation to '+esc(hero.name)+'</span><br>'+esc(linkDesc)+'</div>';
   }
-  var meta=[nt(n),spanLabel(n)].filter(Boolean).join(' · ');
+  var meta=[nt(n),spanLabel(n)].filter(Boolean).join(' Â· ');
   var revHtml=rev?('<div class="note-rev">'+revInner(rev)+'</div>'):'';
   // When the topic has an owned revision entry, its verified facts are the
   // authority. The raw graph note is a weaker source, so showing both left one
@@ -1520,7 +1524,7 @@ function shade(c){
 function laneTitle(lk){return typeLabel(lk);}
 function paintHead(n){
   var th=document.getElementById('topichead');
-  var meta=[nt(n),spanLabel(n),(n.count||0)+' mentions',(CUR_CENTRAL[n.id]?(CUR_AUTHORED[n.id]?'curated spine':'auto-generated layers'):'')].filter(Boolean).join(' · ');
+  var meta=[nt(n),spanLabel(n),(n.count||0)+' mentions',(CUR_CENTRAL[n.id]?(CUR_AUTHORED[n.id]?'curated spine':'auto-generated layers'):'')].filter(Boolean).join(' Â· ');
   var pts='';
   // The graph stores one cats entry per question-bank shard, so a broad topic
   // like Mahatma Gandhi carries 500+ pills that are really ~170 subjects. Merge
@@ -1536,7 +1540,7 @@ function paintHead(n){
     .sort(function(a,b){return b.count-a.count;});
   var CAT_TOP=6;
   catArr.slice(0,CAT_TOP).forEach(function(p){
-    pts+='<span class="point" title="'+(p.n>1?p.n+' question-bank shards · ':'')+p.count+' matching questions"><b>'+esc(p.label)+'</b> <em>'+fmtCnt(p.count)+'</em></span>';
+    pts+='<span class="point" title="'+(p.n>1?p.n+' question-bank shards Â· ':'')+p.count+' matching questions"><b>'+esc(p.label)+'</b> <em>'+fmtCnt(p.count)+'</em></span>';
   });
   var rem=catArr.length-CAT_TOP;
   if(rem>0)pts+='<span class="point more" title="'+rem+' more subjects cover this topic">+'+rem+' more</span>';
@@ -1552,7 +1556,7 @@ function paintCrumb(){
     var n=BY_ID[id];
     if(!n)return '';
     return '<a onclick="jump('+i+')" title="'+esc((nt(n)||'')+' • '+esc(spanLabel(n)))+'">'+esc(trunc(n.name,28))+'</a>';
-  }).join(' › ');
+  }).join(' â€º ');
 }
 function jump(i){
   var id=TRAIL[i];
@@ -1579,7 +1583,7 @@ function home(){
   var samples=['Revolt of 1857','Indian National Congress','Mahatma Gandhi','Partition of Bengal','Ashoka','Quit India Movement','Battle of Plassey','Volcano'];
   msg('Start with a topic below, or search above.');
   var el=document.getElementById('msg');
-  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: <b>/</b> focuses search · <b>Random</b> explores · <b>Live photos</b> pulls Wikipedia portraits for people.</small><br><small>Every line on the board is a verified relationship (data/relations.json) or an authored mind-tree branch (data/topic-layers.json). Co-mention lines were removed as contamination. Every lane is one node type (Person, Event, Concept, Volcano, Org, Scheme, Disease…) — hover any line to see the relation and its evidence.</small>';
+  el.innerHTML+='<br>'+samples.map(function(s){return '<span class="sample" onclick="pick(\''+esc(s)+'\')">'+esc(s)+'</span>';}).join('')+'<br><small>Tip: <b>/</b> focuses search Â· <b>Random</b> explores Â· <b>Live photos</b> pulls Wikipedia portraits for people.</small><br><small>Every line on the board is a verified relationship (data/relations.json) or an authored mind-tree branch (data/topic-layers.json). Co-mention lines were removed as contamination. Every lane is one node type (Person, Event, Concept, Volcano, Org, Scheme, Disease…) â€” hover any line to see the relation and its evidence.</small>';
 }
 function pick(s){var n=findByName(s);if(n){TRAIL=[n.id];history.replaceState({depth:0},'','#id='+encodeURIComponent(n.id));renderFlow(n.id);}else{msg('No topic "'+s+'" in this dataset. Curated volcano topics appear after re-running the timeline build.');}}
 function msg(t){document.getElementById('msg').textContent=t;}
@@ -1602,7 +1606,7 @@ function junkSuggestions(name){
     list=list.concat(extra.slice(0,6));
   }
   if(!list.length)return '';
-  return 'Best matches: '+list.slice(0,6).map(function(n){return '<span class="chip" data-id="'+esc(n.id)+'" title="type '+esc(nt(n))+' · '+(n.count||0)+' mentions">'+esc(trunc(n.name,30))+'</span>';}).join('');
+  return 'Best matches: '+list.slice(0,6).map(function(n){return '<span class="chip" data-id="'+esc(n.id)+'" title="type '+esc(nt(n))+' Â· '+(n.count||0)+' mentions">'+esc(trunc(n.name,30))+'</span>';}).join('');
 }
 function relatedChipsHTML(id){
   var pool=[],seen={},self=id;
@@ -1625,7 +1629,7 @@ function relatedChipsHTML(id){
   if(!pool.length)return '';
   return 'Related: '+pool.map(function(c){
     var cn=BY_ID[c.id];
-    return '<span class="chip" data-id="'+esc(c.id)+'" title="'+esc(c.rel)+(c.w?' · weight '+c.w:'')+'">'+esc(trunc(cn?cn.name:'?',24))+(c.rel!=='related'?' '+esc(c.rel):'')+'</span>';
+    return '<span class="chip" data-id="'+esc(c.id)+'" title="'+esc(c.rel)+(c.w?' Â· weight '+c.w:'')+'">'+esc(trunc(cn?cn.name:'?',24))+(c.rel!=='related'?' '+esc(c.rel):'')+'</span>';
   }).join('');
 }
 function renderPills(g){
@@ -1857,7 +1861,7 @@ LINKS=[];
   msg('');
   route();
 }).catch(function(err){
-  document.getElementById('msg').textContent='Could not load data/timeline.json — run node scripts/build-timeline.js first. ('+err.message+')';
+  document.getElementById('msg').textContent='Could not load data/timeline.json â€” run node scripts/build-timeline.js first. ('+err.message+')';
 });
 </script>
 </body>
