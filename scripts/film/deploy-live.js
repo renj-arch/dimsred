@@ -61,10 +61,24 @@ async function main() {
       `https://github.com/${REPO}.git`, dir]);
   }
 
-  run('npx', ['--yes', 'wrangler', 'pages', 'deploy', '.', '--project-name', PROJECT,
-    '--branch', BRANCH, '--commit-dirty=true'], { cwd: dir });
-
-  if (verifyFile) await verify(verifyFile);
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      run('npx', ['--yes', 'wrangler', 'pages', 'deploy', '.', '--project-name', PROJECT,
+        '--branch', BRANCH, '--commit-dirty=true'], { cwd: dir });
+      if (verifyFile) await verify(verifyFile);
+      console.log('deploy-live: succeed attempt ' + attempt);
+      return;
+    } catch (err) {
+      console.error('deploy-live: attempt ' + attempt + ' failed: ' + err.message);
+      if (attempt < 3) {
+        const wait = 12000 * attempt;
+        console.log('  retry in ' + (wait / 1000) + 's');
+        await new Promise((r) => setTimeout(r, wait));
+        continue;
+      }
+      throw err;
+    }
+  }
 }
 
 main().catch((err) => {
