@@ -55,6 +55,21 @@ jobs:
       - run: node scripts/fetch-pib-rss.js
       - run: node scripts/update-pib-archive.js
 
+      # Free news RSS -> Current Affairs. The wiki miners only read Wikipedia,
+      # which for Indian current affairs is often a week behind and sometimes
+      # never covers a story at all (the 'Thuli' mascot campaign has no article
+      # anywhere in English Wikipedia). This reads Google News + Bing News +
+      # publisher feeds and writes headline-derived Q/A straight into
+      # data/questions/current-affairs.json, so the baseline every chunk starts
+      # from already contains this week's facts.
+      # continue-on-error: a news outage must never cost a whole harvest.
+      - name: Mine free news into Current Affairs
+        continue-on-error: true
+        env:
+          NEWS_CA_DAYS: 21
+          NEWS_CA_MAX_NEW: 160
+        run: node scripts/fetch-news-ca.js
+
       - run: node scripts/rebuild-quiz-json.js
 
       - uses: actions/upload-artifact@v4
@@ -426,54 +441,23 @@ jobs:
       - name: Validate Mains answer bank
         run: node scripts/validate-mains.js
 
-      # 6h-cap guard: the timeline rebuild takes ~3h. Only start it when
-      # 3h20m + a 10m commit/dispatch tail still remains before the job's
-      # 350-minute cap; otherwise DEFER it — finalize still commits the
-      # harvested questions below, and the build-timeline.yml run that is
-      # always self-dispatched at the end of this job rebuilds timeline +
-      # Ask index + mind-tree on a fresh clock. This is the difference between
-      # "deferred and continued" and GitHub killing the job at 6h with nothing
-      # committed.
-      - name: Rebuild timeline map from question data
-        continue-on-error: true
-        run: |
-          NOW=$(date +%s)
-          ELAPSED=$(( NOW - FINALIZE_START ))
-          REMAINING=$(( 350*60 - ELAPSED ))
-          NEEDED=$(( 3*3600 + 1200 + 600 ))
-          if [ "$REMAINING" -ge "$NEEDED" ]; then
-            echo "Timeline guard: ${REMAINING}s remain >= ${NEEDED}s needed — running"
-            echo "TIMELINE_DEFERRED=" >> "$GITHUB_ENV"
-            NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
-          else
-            echo "Timeline guard: only ${REMAINING}s remain < ${NEEDED}s needed — DEFERRED to self-dispatched build-timeline.yml"
-            echo "TIMELINE_DEFERRED=1" >> "$GITHUB_ENV"
-          fi
-
-      # Rebuild the Ask engine's retrieval index from the fresh timeline nodes.
-      # It was generated exactly once and never rebuilt, so ask.html served a
-      # frozen index while the corpus grew. Reads timeline.nodes.*.json, which
-      # the step above just produced; if that was skipped/failed, so is this.
+      # Timeline and Ask index are NOT rebuilt here any more. build-timeline.yml
+      # owns both, on its own fresh clock, and this job always self-dispatches
+      # it at the end.
       #
-      # NOTE: this is the TIMELINE index (data/ask-index.json plus its
-      # data/ask-index-nodes.*.json shards, which `git add -A` below stages) only.
-      # It does NOT build the question-bank tables under data/ask-qb/ — those have
-      # their own builders and their own workflow (build-ask-qb.yml,
-      # self-dispatched below). Running this step alone leaves the question bank
-      # stale.
-      # Skipped when the timeline guard deferred: this index reads the node
-      # parts the step above produces, so rebuilding it against old nodes
-      # would just hide the staleness. build-timeline.yml runs both steps
-      # unconditionally on its fresh clock, so nothing stays stale either way.
-      - name: Rebuild Ask engine index
-        if: ${{ env.TIMELINE_DEFERRED != '1' }}
-        continue-on-error: true
-        run: |
-          NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-ask-index.js || echo "ask index rebuild skipped/failed — questions still committed"
+      # Why: the guard below used to allow the rebuild when ~5h remained, and
+      # the rebuild takes ~3h. That left a few minutes for hashing and packing
+      # ~9 GB of data/, and the commit step then ran past the job timeout.
+      # Run #40447089924 is the proof: Ask index ran 22:05 -> 01:11, and the
+      # commit step was still stuck at 01:12 when the run was cancelled, losing
+      # every harvested question. Finalize's only job is to land the harvest it
+      # just downloaded, as fast as possible.
+      - name: Defer timeline + Ask index to build-timeline.yml
+        run: echo "Timeline + Ask index deferred to the self-dispatched build-timeline.yml"
 
       # Per-category low-count coverage report. Runs AFTER classify (merged
       # data is already routed into the right categories) and BEFORE commit
-      # so data/wiki-coverage.json is staged by `git add -A` below and lands
+      # so data/wiki-coverage.json is staged below and lands
       # on main after every run. Never blocks: the script exits 0 even when
       # it fails; thresholds come from COVERAGE_LOW_MIN/COVERAGE_CRITICAL_MIN.
       - name: Category coverage report
@@ -515,9 +499,27 @@ jobs:
           rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
+          # Cheap packs on purpose. This tree is ~9 GB of JSON that compresses
+          # well but slowly; default zlib settings spent the whole timeout here.
+          # Compression level 1 with no delta window turns a multi-minute pack
+          # into a fast stream, and gc stays out of the way.
+          git config core.compression 1
+          git config pack.window 0
+          git config pack.depth 0
+          git config gc.auto 0
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
-          git add -A
+          # Scoped staging, not `git add -A`. Everything this job writes lives
+          # under data/ (questions, timeline, ask index, coverage, faults) plus
+          # the root archive.html copy. Walking the whole worktree used to pick
+          # up every stray artifact and made the add step both slow and
+          # unpredictable.
+          git add -A -- data archive.html
+          UNEXPECTED=$(git status --porcelain | grep -v -E '^(.. )?(data/|archive\.html)' | head -20 || true)
+          if [ -n "$UNEXPECTED" ]; then
+            echo "NOT staged (outside data/ + archive.html):"
+            echo "$UNEXPECTED"
+          fi
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
