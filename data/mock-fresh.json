@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-27T11:19:29.915Z",
-  "cursor": 7,
-  "count": 157,
+  "updatedAt": "2026-10-28T18:09:56.601Z",
+  "cursor": 9,
+  "count": 167,
   "lastAttempt": {
-   "at": "2026-10-28T03:05:48.029Z",
-   "reason": "nothing"
+   "at": "2026-10-28T18:09:56.601Z",
+   "reason": "added 10"
   }
  },
  "items": [
@@ -1422,6 +1422,96 @@
    "h": "Recall that efficiency depends on the ratio of work done to load vs. work input; friction opposes motion.",
    "s": "The efficiency of a screw jack is directly related to the mechanical advantage provided by the thread geometry minus losses due to friction. A high coefficient of friction increases the resistance torque required to lift the load, thereby increasing the input work and reducing the overall efficiency of the machine.",
    "at": "2026-10-27"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Define the term 'Coefficient of Performance' (COP) for a refrigeration cycle and explain why it is dimensionless.",
+   "a": "COP = Q_L / W_net (Dimensionless)",
+   "h": "Ratio of desired cooling effect to work input",
+   "s": "The COP is defined as the ratio of the heat absorbed from the low-temperature reservoir (cooling effect, Q_L) to the net work input required by the compressor (W_net). Since both numerator and denominator represent energy quantities with the same units (e.g., Joules), they cancel out, making the COP a dimensionless quantity that indicates the efficiency of the refrigeration cycle.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "A vapor-compression refrigeration system uses R-134a as the working fluid. If the enthalpy at the evaporator inlet is 250 kJ/kg and at the evaporator outlet is 380 kJ/kg, calculate the specific cooling capacity.",
+   "a": "130 kJ/kg",
+   "h": "Difference in enthalpy across the evaporator",
+   "s": "The specific cooling capacity (q_in) is calculated as the difference between the enthalpy of the refrigerant leaving the evaporator (h_out) and entering it (h_in). Using the given values: q_in = h_out - h_in = 380 kJ/kg - 250 kJ/kg = 130 kJ/kg.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "In a simple vapor-compression cycle, why is a throttling valve used instead of an isentropic expansion turbine to reduce pressure from the condenser to the evaporator?",
+   "a": "Isenthalpic process (h1 = h2) with significant entropy increase",
+   "h": "Throttling is compact and low-cost despite entropy generation",
+   "s": "A throttling valve is used because it is a simple, compact, and inexpensive device that reduces pressure effectively. Although this process is irreversible and increases entropy (reducing the theoretical COP compared to an ideal turbine), the work output from a small expansion turbine is negligible compared to the compressor work, making the efficiency gain insignificant for most practical applications.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "A room air conditioner operates on a reversed Carnot cycle between a low temperature of 270 K and a high temperature of 300 K. Calculate the theoretical maximum COP.",
+   "a": "9.0",
+   "h": "Carnot COP = T_L / (T_H - T_L)",
+   "s": "For a reversed Carnot cycle, the maximum theoretical COP depends only on the absolute temperatures of the heat reservoirs. Using the formula COP_max = T_L / (T_H - T_L), where T_L = 270 K and T_H = 300 K: COP = 270 / (300 - 270) = 270 / 30 = 9.0.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Explain the function of a capillary tube in a domestic refrigerator compared to an expansion valve in large systems.",
+   "a": "Creates a pressure drop via fixed restriction (no moving parts)",
+   "h": "Fixed orifice for small capacity; no moving parts",
+   "s": "A capillary tube acts as a fixed-orifice throttling device that relies on the length and internal diameter of the tube to create a pressure drop. Unlike an expansion valve which has moving parts to modulate flow based on superheat, the capillary tube is simple, cheap, and suitable for small refrigeration loads where precise flow control is not critical.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "If the relative humidity of air entering a cooling coil is 60% and the dew point temperature is 18°C, what happens to the moisture content of the air as it passes over the coil if the coil surface temperature is 12°C?",
+   "a": "Moisture content decreases (dehumidification occurs)",
+   "h": "Air cools below dew point causing condensation",
+   "s": "When air passes over a cooling coil whose surface temperature (12°C) is lower than the air's dew point temperature (18°C), the air cools until it reaches saturation. Any further cooling causes water vapor to condense on the coil surface, thereby reducing the absolute humidity (moisture content) of the air stream while its relative humidity approaches 100% before dropping again as it leaves the coil.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Define 'Degree of Superheat' in the context of a refrigeration system and state why it is critical at the compressor inlet.",
+   "a": "T_actual_vapor - T_saturation_pressure",
+   "h": "Difference between actual vapor temp and saturation temp",
+   "s": "The degree of superheat is the difference between the actual temperature of the refrigerant vapor at the compressor inlet and its saturation temperature at that pressure. It is critical because it ensures that only vapor (no liquid droplets) enters the compressor, preventing 'slugging' or liquid slugging which can cause catastrophic mechanical damage to the compressor valves and cylinders.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "What is the primary purpose of an air filter in a central air conditioning system?",
+   "a": "Protects evaporator coil from dirt buildup and maintains heat transfer efficiency",
+   "h": "Removes particulates to protect coils and maintain airflow",
+   "s": "The primary purpose of an air filter is to remove dust, pollen, and other particulate matter from the supply air before it reaches the cooling coil. This protection prevents the formation of a dirty film on the evaporator coil fins, which would otherwise insulate the coil and significantly reduce its heat transfer efficiency, leading to higher energy consumption and potential freezing.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "In a psychrometric process where moist air is heated by passing over a heating coil with no moisture added or removed, how do the specific humidity and relative humidity change?",
+   "a": "Specific Humidity: Constant; Relative Humidity: Decreases",
+   "h": "Specific humidity constant; Relative humidity decreases",
+   "s": "During sensible heating, no moisture is added or removed from the air stream, so the specific humidity (absolute moisture content) remains constant. However, as the dry-bulb temperature of the air increases, its capacity to hold moisture increases, causing the relative humidity (the ratio of actual vapor pressure to saturation vapor pressure) to decrease significantly.",
+   "at": "2026-10-28"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Why is a 'suction line accumulator' installed in refrigeration systems operating with flooded evaporators or low-temperature applications?",
+   "a": "Separates liquid refrigerant from vapor before compressor suction",
+   "h": "Prevents liquid slugging by storing excess flash gas/liquid",
+   "s": "A suction line accumulator is installed to separate any liquid refrigerant that may flash into the suction line due to pressure drops or flooding in the evaporator. It allows this liquid to settle at the bottom while only saturated vapor passes through the outlet valve to the compressor, thereby preventing dangerous liquid slugging which could destroy the compressor.",
+   "at": "2026-10-28"
   }
  ]
 }
