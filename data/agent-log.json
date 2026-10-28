@@ -1,48 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-27T18:53:07.697Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 241165 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 3 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-27T21:20:05.824Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 0,
@@ -1661,8 +1619,55 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-28T18:18:56.828Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (82 total)",
+       "text": "How do you compute the nominal tensile stress in a threaded bolt? | Why is the stress concentration at a thread harmful in fatigue? | How is an eccentrically loaded bolted bracket analysed?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Refrigeration & Air Conditioning (167 in pool)",
+       "text": "Refrigeration & Air Conditioning"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-28T17:54:41.330Z",
- "model": "qwen3:4b"
+ "lastRun": "2026-10-28T18:18:56.828Z",
+ "model": "qwen3.5:9b"
 }
