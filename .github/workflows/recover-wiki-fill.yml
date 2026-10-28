@@ -271,11 +271,10 @@ jobs:
             [ -f "$f" ] && cp "$f" "$RUNNER_TEMP/quiz.json${f##*quiz.json}"
           done
 
-      - name: Rebuild timeline map from question data
-        continue-on-error: true
-        timeout-minutes: 25
-        run: |
-          NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+      # Timeline + Ask index belong to build-timeline.yml, dispatched at the end.
+      # A 25-minute rebuild here only ever ate the commit's time budget.
+      - name: Defer timeline to build-timeline.yml
+        run: echo "Timeline rebuild deferred to build-timeline.yml"
 
       - name: Commit and push recovered wiki data
         if: steps.list.outputs.recoverable == 'true'
@@ -284,7 +283,7 @@ jobs:
         run: |
           if [ "${{ inputs.dry-run || 'false' }}" = "true" ]; then
             echo "DRY RUN — would have committed and pushed. Showing pending changes:"
-            git add -A ':!chunks' ':!chunk-src' ':!baseline'
+            git add -A -- data archive.html
             git diff --cached --stat | tail -20
             git reset -q
             exit 0
@@ -294,9 +293,17 @@ jobs:
           rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
+          # Cheap packs: default zlib settings on ~9 GB of JSON are what made
+          # these commits crawl. See daily-wiki-fill.yml for the same settings.
+          git config core.compression 1
+          git config pack.window 0
+          git config pack.depth 0
+          git config gc.auto 0
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
-          git add -A ':!chunks' ':!chunk-src' ':!baseline'
+          # Scoped staging so scratch dirs (chunks/, checkpoints/, baseline/)
+          # can never reach the commit.
+          git add -A -- data archive.html
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
@@ -324,6 +331,7 @@ jobs:
             # to end the chain silently — the corpus then sat still even
             # though the salvage itself had succeeded.
             if [ "$PUSHED" = "1" ]; then
+              gh workflow run build-timeline.yml 2>/dev/null && echo "Dispatched build-timeline.yml" || echo "Timeline dispatch failed (non-fatal)"
               gh workflow run daily-wiki-fill.yml 2>/dev/null && echo "Self-dispatched next Wiki Fill" || echo "Self-dispatch failed (non-fatal)"
             fi
           fi
