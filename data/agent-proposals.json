@@ -1,17 +1,37 @@
 {
  "meta": {
-  "generatedAt": "2026-10-27T08:07:35.592Z",
+  "generatedAt": "2026-10-28T11:26:11.010Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 28,
+  "count": 30,
   "lastAttempt": {
-   "at": "2026-10-27T08:07:35.592Z",
+   "at": "2026-10-28T11:26:11.010Z",
    "ok": true,
    "count": 2,
-   "dropped": 2
+   "dropped": 3
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvs13rr6-1",
+   "at": "2026-10-28T11:26:11.010Z",
+   "title": "Fix tutor lane output parsing robustness",
+   "why": "Recent failures in the 'tutor-questions' lane show issues like 'no JSON array in model output' and generating only 2 of 5 valid questions, causing incomplete practice sets.",
+   "idea": "Modify the Node.js script processing the Ollama response to include a regex extraction step that finds JSON-like blocks within text responses and a retry loop if the count is below the minimum threshold.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvs13rr6-2",
+   "at": "2026-10-28T11:26:11.010Z",
+   "title": "Auto resolve low priority faults on fault board",
+   "why": "The fault board lists 68 unchanged faults including info-level items like 'Site Agent ran' and 'Corpus fill run in progress' which may be transient or already handled.",
+   "idea": "Implement a GitHub Action that scans data/fault-board.json, identifies items marked as 'info' or with no critical impact, and automatically updates their status to 'resolved' or 'monitoring' after a delay.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvqekj3c-1",
    "at": "2026-10-27T08:07:35.592Z",

@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-28T02:52:39.651Z",
-  "cursor": 81,
-  "built": 76
+  "updatedAt": "2026-10-28T11:38:19.163Z",
+  "cursor": 84,
+  "built": 79
  },
  "figs": {
   "87926696": {
@@ -459,6 +459,24 @@
   "2cd49e22": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Load</text><line x1=\"60\" y1=\"180\" x2=\"60\" y2=\"40\" stroke-dasharray=\"3,3\"/><text x=\"45\" y=\"105\" text-anchor=\"end\">Proof Load</text><path d=\"M 60 40 L 140 40 L 140 80 L 220 80 L 220 40\"/><text x=\"135\" y=\"30\" text-anchor=\"middle\">Yield Strength</text><path d=\"M 60 40 L 140 40 L 140 100 L 220 100 L 220 40\"/><text x=\"135\" y=\"115\" text-anchor=\"middle\">Ultimate Strength</text><path d=\"M 60 40 L 140 40 L 140 120 L 220 120 L 220 40\"/><text x=\"135\" y=\"135\" text-anchor=\"middle\">Fracture</text><rect x=\"60\" y=\"40\" width=\"80\" height=\"40\" fill=\"#eee\" stroke=\"#222\"/><text x=\"100\" y=\"70\" text-anchor=\"middle\">Elastic Region</text><text x=\"100\" y=\"85\" text-anchor=\"middle\">(No Permanent Set)</text></svg>",
    "n": "what is the proof load of a bolt?",
+   "sub": "design",
+   "at": "2026-10-28"
+  },
+  "70b10200": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"195\">Torque (T)</text><circle cx=\"180\" cy=\"160\" r=\"5\"/><line x1=\"175\" y1=\"155\" x2=\"185\" y2=\"155\"/><text x=\"170\" y=\"145\">T</text><circle cx=\"310\" cy=\"160\" r=\"5\"/><line x1=\"305\" y1=\"155\" x2=\"315\" y2=\"155\"/><text x=\"300\" y=\"145\">K·F·d</text><circle cx=\"40\" cy=\"160\" r=\"5\"/><line x1=\"35\" y1=\"155\" x2=\"45\" y2=\"155\"/><text x=\"30\" y=\"145\">0</text><path d=\"M 80 180 L 80 160 L 120 160 L 120 140 L 160 140 L 160 120 L 200 120 L 200 100 L 240 100 L 240 80 L 280 80\"/><text x=\"70\" y=\"135\">T = K F d</text><rect x=\"290\" y=\"60\" width=\"50\" height=\"30\" rx=\"3\"/><text x=\"295\" y=\"82\">Bolted Joint</text></svg>",
+   "n": "write the empirical torque–tension equation for a bolted joint.",
+   "sub": "design",
+   "at": "2026-10-28"
+  },
+  "1a586f20": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"140\" /><rect x=\"140\" y=\"40\" width=\"80\" height=\"140\" /><text x=\"60\" y=\"75\" text-anchor=\"middle\">Bolt (kb)</text><text x=\"200\" y=\"75\" text-anchor=\"middle\">Members (km)</text><polyline points=\"60,120 140,120\" stroke-dasharray=\"4\" /><text x=\"100\" y=\"135\" text-anchor=\"middle\">Gap</text><polyline points=\"180,40 180,180\" stroke-dasharray=\"4\" /><text x=\"195\" y=\"115\" text-anchor=\"middle\">Load P</text><path d=\"M 60,40 L 220,40\" stroke-width=\"3\" /><text x=\"140\" y=\"30\" text-anchor=\"middle\">External Load</text><line x1=\"60\" y1=\"150\" x2=\"60\" y2=\"180\" /><line x1=\"140\" y1=\"150\" x2=\"140\" y2=\"180\" /><text x=\"55\" y=\"170\" text-anchor=\"end\">Fb</text><text x=\"135\" y=\"170\" text-anchor=\"start\">Fm</text><line x1=\"60\" y1=\"190\" x2=\"220\" y2=\"190\" /><text x=\"140\" y=\"205\" text-anchor=\"middle\">kb/(kb+km)</text></svg>",
+   "n": "how is the external load shared between a bolt and the clamped members?",
+   "sub": "design",
+   "at": "2026-10-28"
+  },
+  "8b5e5167": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"10\" y1=\"100\" x2=\"350\" y2=\"100\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Bolt Axis</text><circle cx=\"180\" cy=\"100\" r=\"4\"/><path d=\"M 160 100 L 160 130 M 200 100 L 200 130 M 240 100 L 240 130\" stroke-dasharray=\"2,2\"/><text x=\"155\" y=\"125\">d (Bolt Dia)</text><path d=\"M 160 100 L 160 170 M 200 100 L 200 170 M 240 100 L 240 170\"/><text x=\"155\" y=\"195\">0.8 d (Nut Height)</text><path d=\"M 160 130 L 240 130\" stroke-dasharray=\"2,2\"/><text x=\"190\" y=\"135\">Engaged Threads</text><rect x=\"10\" y=\"180\" width=\"340\" height=\"30\" rx=\"5\"/><text x=\"180\" y=\"205\" text-anchor=\"middle\">Recommended: Nut Height ≈ 0.8 × Bolt Diameter (d)</text></svg>",
+   "n": "what is the recommended length of thread engagement in a nut?",
    "sub": "design",
    "at": "2026-10-28"
   }
