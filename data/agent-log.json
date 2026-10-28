@@ -1,36 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-27T08:07:35.592Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "proposals",
-     "count": 2
-    }
-   ],
-   "details": [
-    {
-     "agent": "proposals",
-     "fixes": [
-      {
-       "kind": "proposal",
-       "fix": "Fix Tutor Lane JSON Parsing Robustness",
-       "detail": "Recent failures show the tutor lane sometimes outputs non-JSON text or incomplete arrays (only 2 of 5 questions), causing generation stops.",
-       "text": "Update the Node.js parsing script for the owner-on-demand lane to wrap LLM output in a try-catch block, attempt regex-based JSON extraction if raw response fails, and retry with a system prompt enforcing strict JSON formatting before logging a failure."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Polish Homepage Quiz Flow Interaction",
-       "detail": "Browser tests flagged that the quiz flow is skipped on the homepage due to a missing visible Next button, preventing users from exercising the full practice set experience immediately upon load.",
-       "text": "Inject a small JavaScript snippet into the main HTML template that programmatically checks for the 'Next' button's visibility; if hidden or absent, auto-trigger the next question logic and display a subtle toast notification confirming the flow has been restored to the user."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-27T11:59:01.844Z",
    "model": "batiai/qwen3.8-27b:iq3",
    "totalFixes": 3,
@@ -1640,8 +1610,44 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-10-28T03:17:53.009Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (76 total)",
+       "text": "What is the difference between a transverse and a parallel fillet weld? | Why are bolts in a joint tightened with an initial preload? | What is the proof load of a bolt?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-28T01:20:07.810Z",
+ "lastRun": "2026-10-28T03:17:53.009Z",
  "model": "qwen3.5:9b"
 }
