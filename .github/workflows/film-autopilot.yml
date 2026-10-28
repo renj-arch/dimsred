@@ -1,11 +1,10 @@
 name: Film autopilot
 
-# The agent maintains data/film-slate.json. This job chooses the next topic,
-# validates that its sourced storyboard is complete, and dispatches the normal
-# film pipeline. A topic that is still only researched is handed to the
-# authoring pass, which writes and validates the storyboard on the same runner
-# and dispatches the render itself. If no brief exists it stops with a research
-# note instead of inventing a film. That failure mode is deliberate.
+# The agent maintains data/film-slate.json. This job picks the next validated
+# storyboard for rendering, and when nothing is ready it dispatches the
+# authoring pass with film=invent: the local 35B model proposes a brand-new
+# topic, appends it to the slate, researches its sources, writes the
+# storyboard, and renders. No topic is chosen by hand.
 
 on:
   schedule:
@@ -62,21 +61,15 @@ jobs:
             -f release=true \
             -f publish=true
 
-      - name: Report research queue
-        if: steps.choose.outputs.kind != 'ready' && steps.choose.outputs.film == ''
-        run: |
-          echo "::notice title=No topic in the queue::Add the next sourced brief to data/film-slate.json."
-          echo "Nothing was authored and nothing was rendered."
-
-      - name: Dispatch authoring pass
-        if: steps.choose.outputs.kind != 'ready' && steps.choose.outputs.film != ''
+      - name: Dispatch authoring pass (invent a new topic)
+        if: steps.choose.outputs.kind != 'ready'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "::notice title=Authoring ${{ steps.choose.outputs.film }}::${{ steps.choose.outputs.title }}"
+          echo "::notice title=Agent inventing a new topic::No validated film is ready; the model will propose the next one."
           gh workflow run author.yml \
             --ref film-ci \
-            -f film='${{ steps.choose.outputs.film }}' \
+            -f film='invent' \
             -f render=true \
             -f stub=false
 
