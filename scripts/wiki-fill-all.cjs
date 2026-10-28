@@ -966,7 +966,13 @@ const CATEGORIES = [
     'National Commission for Backward Classes',
     'Anti-defection law (India)','Tenth Schedule to the Constitution of India',
     'Basic structure doctrine','Judicial review in India',
-    'Public Interest Litigation in India','Writ jurisdiction in India'
+    'Public Interest Litigation in India','Writ jurisdiction in India',
+    // Handpicked exam-core additions: high syllabus weight, currently thin.
+    'Standing committee (India)','Sixth Schedule to the Constitution of India',
+    'Article 356','President\'s rule','National Emergency',
+    'Gram Nyayalaya','National Legal Services Authority',
+    'Cabinet Secretary of India','Chief Secretary (India)',
+    'Zonal council','National Development Council (India)'
   ]},
   // ───────── Indian Economy ─────────
   { name:'Indian Economy', wikiCat:'Economy_of_India', topics:[
@@ -995,7 +1001,11 @@ const CATEGORIES = [
     'Cooperative movement in India','Public sector undertakings in India',
     'Disinvestment in India','Privatisation in India',
     'Special economic zones of India','Export processing zones of India',
-    'International trade of India','World Trade Organization and India'
+    'International trade of India','World Trade Organization and India',
+    // Handpicked exam-core additions: UPSC economy, currently thin.
+    'Insolvency and Bankruptcy Code, 2016','External commercial borrowing',
+    'Masala bonds','Participatory note','Digital rupee',
+    'PM Gati Shakti','Base erosion and profit shifting'
   ]},
   // ───────── Labour Law & Industrial Relations (UPSC EPFO APFC/EO) ─────────
   { name:'Labour Law & Industrial Relations', wikiCat:'Indian_labour_law', topics:[
@@ -1149,7 +1159,11 @@ const CATEGORIES = [
     'Defence Research and Development Organisation',
     'Ordnance Factories Board','Bharat Electronics Limited',
     'Mazagon Dock Shipbuilders Limited','Cochin Shipyard',
-    'Indian Ordnance Factories','Military history of India'
+    'Indian Ordnance Factories','Military history of India',
+    // Handpicked exam-core additions: exercise names are a recurring prelims ask.
+    'Yudh Abhyas','Varuna (naval exercise)','Exercise Garuda',
+    'Integrated Theatre Command (India)','Andaman and Nicobar Command',
+    'Department of Military Affairs'
   ]},
   // ───────── Environment, Ecology & Climate ─────────
   { name:'Environment & Ecology', wikiCat:'Environment_of_India', topics:[
@@ -1195,7 +1209,11 @@ const CATEGORIES = [
     'Invasive species in India','Alien species in India',
     'Environmental Impact Assessment in India',
     'National Green Tribunal','Ministry of Environment, Forest and Climate Change',
-    'Central Pollution Control Board','State Pollution Control Board'
+    'Central Pollution Control Board','State Pollution Control Board',
+    // Handpicked exam-core additions: climate-policy vocabulary and missions.
+    'Global Stocktake','High Seas Treaty','Green hydrogen',
+    '2023 United Nations Climate Change Conference',
+    '2022 United Nations Climate Change Conference'
   ]},
   // ───────── International Relations ─────────
   { name:'International Relations', wikiCat:'Foreign_relations_of_India', topics:[
@@ -1249,7 +1267,9 @@ const CATEGORIES = [
     'Climate change diplomacy','Environmental diplomacy',
     'Hydro-diplomacy','Water conflicts between India and Pakistan',
     'Indus Waters Treaty','India–Bangladesh water disputes',
-    'Teesta River water dispute','Kishanganga Hydroelectric Project'
+    'Teesta River water dispute','Kishanganga Hydroelectric Project',
+    // Handpicked exam-core additions: groupings and doctrines asked every year.
+    'I2U2 Group','Vaccine Maitri','Indo-Pacific'
   ]},
   // ───────── Indian Society & Social Issues ─────────
   { name:'Indian Society', wikiCat:'Society_of_India', topics:[
@@ -1444,7 +1464,11 @@ const CATEGORIES = [
     'Victoria Cross','George Cross','Medal of Honor',
     'Order of the British Empire','L\u00e9gion d\'honneur',
     'Order of the Rising Sun','Order of Australia',
-    'List of civil awards and decorations of India'
+    'List of civil awards and decorations of India',
+    // Handpicked exam-core additions: gallantry and arts awards missing from the list.
+    'Shaurya Chakra','Kirti Chakra','Vir Chakra','Maha Vir Chakra',
+    'National Bravery Award','Sangeet Natak Akademi Award',
+    'Saraswati Samman'
   ]},
   // ───────── Government Schemes ─────────
   { name:'Govt Schemes', wikiCat:'Government_schemes_in_India', topics:[
