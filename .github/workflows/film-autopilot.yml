@@ -116,14 +116,8 @@ jobs:
             -f release=true \
             -f publish=true
 
-      - name: Report research queue
-        if: steps.choose.outputs.kind != 'ready' && steps.choose.outputs.film == ''
-        run: |
-          echo "::notice title=No topic in the queue::Add the next sourced brief to data/film-slate.json."
-          echo "Nothing was authored and nothing was rendered."
-
       - name: Dispatch authoring pass
-        if: steps.choose.outputs.kind != 'ready' && steps.choose.outputs.film != ''
+        if: steps.choose.outputs.kind == 'research'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -131,6 +125,21 @@ jobs:
           gh workflow run author.yml \
             --ref film-ci \
             -f film='${{ steps.choose.outputs.film }}' \
+            -f render=true \
+            -f stub=false
+
+      # An empty slate is not a stop condition. One run invents a topic with the
+      # local model, probes its sources, authors the storyboard and dispatches
+      # the render, so the next slot always has something in flight.
+      - name: Invent the next topic
+        if: steps.choose.outputs.kind == 'invent'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "::notice title=Slate empty::Inventing and authoring one sourced topic."
+          gh workflow run author.yml \
+            --ref film-ci \
+            -f film=invent \
             -f render=true \
             -f stub=false
 
