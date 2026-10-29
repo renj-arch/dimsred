@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-28T18:05:10.997Z",
-  "cursor": 87,
-  "built": 82
+  "updatedAt": "2026-10-29T06:18:21.164Z",
+  "cursor": 90,
+  "built": 85
  },
  "figs": {
   "87926696": {
@@ -497,6 +497,24 @@
    "n": "how is an eccentrically loaded bolted bracket analysed?",
    "sub": "design",
    "at": "2026-10-28"
+  },
+  "af982545": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Thread Profile -->\n  <path d=\"M20,100 L40,80 L60,100 L80,80 L100,100 L120,80 L140,100 L160,80 L180,100 L200,80 L220,100 L240,80 L260,100 L280,80 L300,100 L320,80 L340,100\" />\n  <!-- Lead Arrow (Axial advance per rev) -->\n  <line x1=\"50\" y1=\"60\" x2=\"50\" y2=\"140\" stroke-dasharray=\"4\" />\n  <text x=\"38\" y=\"105\">Lead</text>\n  <!-- Pitch Arrow (Distance between threads) -->\n  <line x1=\"170\" y1=\"60\" x2=\"170\" y2=\"140\" stroke-dasharray=\"4\" />\n  <text x=\"158\" y=\"105\">Pitch</text>\n  <!-- Axis -->\n  <line x1=\"0\" y1=\"100\" x2=\"360\" y2=\"100\" />\n  <text x=\"-10\" y=\"105\">Axial Direction</text>\n</svg>",
+   "n": "define lead and pitch of a screw thread.",
+   "sub": "design",
+   "at": "2026-10-29"
+  },
+  "d4d7b130": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Torque Components</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"55\" x2=\"40\" y2=\"65\"/><line x1=\"320\" y1=\"55\" x2=\"320\" y2=\"65\"/><text x=\"35\" y=\"75\">W</text><circle cx=\"180\" cy=\"60\" r=\"4\"/><path d=\"M 180 60 L 180 160\"/><line x1=\"180\" y1=\"160\" x2=\"180\" y2=\"165\"/><line x1=\"180\" y1=\"160\" x2=\"175\" y2=\"165\"/><text x=\"190\" y=\"145\">T</text><path d=\"M 180 60 L 230 100\"/><line x1=\"230\" y1=\"100\" x2=\"230\" y2=\"105\"/><line x1=\"230\" y1=\"100\" x2=\"225\" y2=\"105\"/><text x=\"240\" y=\"95\">Friction</text><path d=\"M 180 60 L 230 70\"/><line x1=\"230\" y1=\"70\" x2=\"230\" y2=\"75\"/><line x1=\"230\" y1=\"70\" x2=\"225\" y2=\"75\"/><text x=\"240\" y=\"65\">Helix</text><path d=\"M 180 60 L 230 90\"/><line x1=\"230\" y1=\"90\" x2=\"230\" y2=\"95\"/><line x1=\"230\" y1=\"90\" x2=\"225\" y2=\"95\"/><text x=\"240\" y=\"85\">Load</text><path d=\"M 180 60 L 230 80\"/><line x1=\"230\" y1=\"80\" x2=\"230\" y2=\"85\"/><line x1=\"230\" y1=\"80\" x2=\"225\" y2=\"85\"/><text x=\"240\" y=\"75\">Mean Dia</text></svg>",
+   "n": "what is the torque required to raise a load w using a square-threaded power screw?",
+   "sub": "design",
+   "at": "2026-10-29"
+  },
+  "a38de9a0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"180\" height=\"140\" stroke-dasharray=\"4,2\"/><text x=\"130\" y=\"65\" text-anchor=\"middle\">Thread</text><path d=\"M 70 90 L 290 90\"/><path d=\"M 70 90 L 70 180\"/><path d=\"M 290 90 L 290 180\"/><circle cx=\"70\" cy=\"90\" r=\"3\" fill=\"#222\"/><circle cx=\"290\" cy=\"90\" r=\"3\" fill=\"#222\"/><path d=\"M 70 180 L 290 180\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"195\" text-anchor=\"middle\">Load W</text><path d=\"M 130 180 L 130 160\"/><circle cx=\"130\" cy=\"160\" r=\"4\" fill=\"#222\"/><path d=\"M 130 160 L 130 140\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"135\" text-anchor=\"middle\">Torque T</text><path d=\"M 130 140 L 130 120\"/><circle cx=\"130\" cy=\"120\" r=\"2\" fill=\"#222\"/><path d=\"M 130 120 L 130 100\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"95\" text-anchor=\"middle\">Mean</text><text x=\"130\" y=\"85\" text-anchor=\"middle\">Diameter</text><path d=\"M 70 90 L 290 90\" stroke-dasharray=\"4,2\"/><text x=\"130\" y=\"105\" text-anchor=\"middle\">π dm + μ l</text><path d=\"M 70 90 L 290 90\" stroke-dasharray=\"4,2\"/><text x=\"130\" y=\"80\" text-anchor=\"middle\">π μ dm − l</text></svg>",
+   "n": "what is the torque required to lower a load on a square thread?",
+   "sub": "design",
+   "at": "2026-10-29"
   }
  }
 }
