@@ -1,17 +1,27 @@
 {
  "meta": {
-  "generatedAt": "2026-10-28T11:26:11.010Z",
+  "generatedAt": "2026-10-29T07:48:22.040Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 30,
+  "count": 31,
   "lastAttempt": {
-   "at": "2026-10-28T11:26:11.010Z",
+   "at": "2026-10-29T07:48:22.040Z",
    "ok": true,
-   "count": 2,
-   "dropped": 3
+   "count": 1,
+   "dropped": 4
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvt8ric8-1",
+   "at": "2026-10-29T07:48:22.040Z",
+   "title": "Auto-Resolve Low Priority Faults on Board",
+   "why": "The fault board contains 46 warnings and 12 critical items, including missing figures and coverage info. The site agent has run recently but often with rule-based logic yielding 0 fixes.",
+   "idea": "Implement a lightweight Node.js script that scans the `fault-board.json` for 'info' or 'warn' level faults (excluding critical ones) and automatically generates HTML snippets or placeholder text to address coverage gaps. This script runs as part of the GitHub Actions post-build step to keep the fault board clean without heavy LLM intervention.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvs13rr6-1",
    "at": "2026-10-28T11:26:11.010Z",

@@ -1,18 +1,32 @@
 name: Film autopilot
 
-# The agent maintains data/film-slate.json. This job picks the next validated
-# storyboard for rendering, and when nothing is ready it dispatches the
-# authoring pass with film=invent: the local 35B model proposes a brand-new
-# topic, appends it to the slate, researches its sources, writes the
-# storyboard, and renders. No topic is chosen by hand.
+# The agent maintains data/film-slate.json. This job chooses the next topic,
+# validates that its sourced storyboard is complete, and dispatches the normal
+# film pipeline. A topic that is still only researched is handed to the
+# authoring pass, which writes and validates the storyboard on the same runner
+# and dispatches the render itself. A finished film dispatches this workflow
+# again, so production runs back-to-back until the daily cap is reached. When
+# the slate has no brief left, the authoring pass invents and source-locks one
+# instead of stopping.
 
 on:
   schedule:
-    - cron: '0 4 * * 1'
+    # Safety slots. The primary trigger is repository_dispatch from a finished
+    # film, which starts the next one immediately. These two slots restart the
+    # chain if it stopped on a failure or the cap rolled over at midnight.
+    - cron: '0 0,12 * * *'
+  repository_dispatch:
+    types: [film-finished]
   workflow_dispatch:
 
+# Runs are serialised: a chained run and a safety slot must never choose and
+# claim the same topic at the same time.
+concurrency:
+  group: film-autopilot
+  cancel-in-progress: false
+
 permissions:
-  contents: read
+  contents: write
   actions: write
 
 jobs:
@@ -34,6 +48,27 @@ jobs:
         with:
           node-version: '22'
 
+      # A render that died left the topic at "rendering". Return it to the
+      # queue after seven hours (film.yml has a six-hour job limit) so one bad
+      # night cannot freeze the slate forever.
+      - name: Reclaim stale render leases
+        run: |
+          set -euo pipefail
+          git config user.name "vlymbooq"
+          git config user.email "vlymbooq@users.noreply.github.com"
+          node scripts/film/claim-topic.js --reap
+          if git diff --quiet -- data/film-slate.json; then
+            exit 0
+          fi
+          git add data/film-slate.json
+          git commit -m "slate: reclaim stale render leases"
+          for i in 1 2 3; do
+            git push origin "HEAD:film-ci" && exit 0
+            git fetch origin film-ci
+            git rebase --autostash "origin/film-ci"
+          done
+          exit 1
+
       - name: Choose next film
         id: choose
         run: |
@@ -49,6 +84,27 @@ jobs:
           "
           cat out/autopilot/pick.json
 
+      # Claim before dispatch. A film takes hours; without this the next slot
+      # would see the same "ready" topic and render it a second time.
+      - name: Claim the selected film
+        if: steps.choose.outputs.kind == 'ready'
+        run: |
+          set -euo pipefail
+          git config user.name "vlymbooq"
+          git config user.email "vlymbooq@users.noreply.github.com"
+          node scripts/film/claim-topic.js --claim '${{ steps.choose.outputs.film }}'
+          git add data/film-slate.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "slate: claim ${{ steps.choose.outputs.film }} for render"
+          for i in 1 2 3; do
+            git push origin "HEAD:film-ci" && exit 0
+            git fetch origin film-ci
+            git rebase --autostash "origin/film-ci"
+          done
+          exit 1
+
       - name: Dispatch validated film
         if: steps.choose.outputs.kind == 'ready'
         env:
@@ -61,17 +117,37 @@ jobs:
             -f release=true \
             -f publish=true
 
-      - name: Dispatch authoring pass (invent a new topic)
-        if: steps.choose.outputs.kind != 'ready'
+      - name: Dispatch authoring pass
+        if: steps.choose.outputs.kind == 'research'
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo "::notice title=Agent inventing a new topic::No validated film is ready; the model will propose the next one."
+          echo "::notice title=Authoring ${{ steps.choose.outputs.film }}::${{ steps.choose.outputs.title }}"
           gh workflow run author.yml \
             --ref film-ci \
-            -f film='invent' \
+            -f film='${{ steps.choose.outputs.film }}' \
             -f render=true \
             -f stub=false
+
+      # An empty slate is not a stop condition. One run invents a topic with the
+      # local model, probes its sources, authors the storyboard and dispatches
+      # the render, so the next slot always has something in flight.
+      - name: Invent the next topic
+        if: steps.choose.outputs.kind == 'invent'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "::notice title=Slate empty::Inventing and authoring one sourced topic."
+          gh workflow run author.yml \
+            --ref film-ci \
+            -f film=invent \
+            -f render=true \
+            -f stub=false
+
+      - name: Daily cap reached
+        if: steps.choose.outputs.kind == 'cap'
+        run: |
+          echo "::notice title=Daily cap reached::The queue resumes at 00:00 UTC."
 
       - name: Upload selection
         if: always()

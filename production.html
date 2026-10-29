@@ -399,24 +399,11 @@
     <div class="iterations" id="iterationList"></div>
   </section>
 
-  <section class="section wrap" id="build">
-    <div class="section-head">
-      <div class="no">07 / BUILD LOG</div>
-      <div>
-        <span class="tag">Live from GitHub Actions</span>
-        <h2>The render is public.</h2>
-        <p>Recent Film pipeline runs, read from the public GitHub API. A cancelled run is part of the record: the old 1080 master was stopped because it used the rejected edit.</p>
-      </div>
-    </div>
-    <div class="build-log" id="buildLog"></div>
-    <p class="build-note">Source: <a href="https://github.com/renj-arch/dimsred/actions/workflows/film.yml" target="_blank" rel="noopener">github.com/renj-arch/dimsred/actions/workflows/film.yml</a></p>
-  </section>
-
   <section class="section wrap" id="credits">
     <div class="section-head">
-      <div class="no">08 / CREDITS</div>
+      <div class="no">07 / CREDITS</div>
       <div>
-        <span class="tag">Made in the open</span>
+        <span class="tag">The production record</span>
         <h2>Who did what.</h2>
       </div>
     </div>
@@ -438,7 +425,7 @@
 <footer>
   <div class="wrap">
     <span>vlymbooq · a film in the making</span>
-    <span><a href="films.html">All films</a> · <a href="film.html?film=jallianwala-bagh">Watch</a> · <a href="https://github.com/renj-arch/dimsred" target="_blank" rel="noopener">Source</a></span>
+    <span><a href="films.html">All films</a> &middot; <a href="film.html?film=jallianwala-bagh">Watch</a></span>
   </div>
 </footer>
 
@@ -628,35 +615,6 @@
     }
   }
 
-  function renderBuildLog(prod){
-    var el = $('buildLog');
-    if (!el) return;
-    var api = (prod && prod.links && prod.links.runsApi) || '';
-    if (!api) return;
-    el.innerHTML = '<div class="build"><span class="state live">reading</span><span class="what">Fetching the public build log…</span><span class="when">GitHub</span></div>';
-    fetch(api, { headers: { 'Accept': 'application/vnd.github+json' } })
-      .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-      .then(function(data){
-        var runs = (data && data.workflow_runs) || [];
-        if (!runs.length) throw new Error('no runs');
-        el.innerHTML = runs.map(function(run){
-          var status = run.status === 'in_progress' ? 'running' : (run.conclusion || run.status || 'unknown');
-          var cls = /success/.test(status) ? 'ok' : (/in_progress|queued|running/.test(status) ? 'live' : (/cancel|fail/.test(status) ? 'bad' : ''));
-          var when = run.created_at ? new Date(run.created_at).toLocaleDateString('en-GB', { day: '2-digit', month: 'short' }) : '';
-          var title = (run.head_commit && run.head_commit.message ? run.head_commit.message.split('\n')[0] : 'Film pipeline') +
-            ' · #' + run.run_number;
-          return '<a class="build" href="' + esc(run.html_url) + '" target="_blank" rel="noopener">' +
-            '<span class="state ' + cls + '">' + esc(status) + '</span>' +
-            '<span class="what">' + esc(title) + '<small>' + esc(run.event || 'workflow_dispatch') + ' · ' + esc(run.head_branch || '') + '</small></span>' +
-            '<span class="when">' + esc(when) + '</span></a>';
-        }).join('');
-      })
-      .catch(function(){
-        el.innerHTML = '<div class="build"><span class="state bad">unavailable</span>' +
-          '<span class="what">The public API did not answer. The workflow log is still public.<small>GitHub Actions</small></span>' +
-          '<span class="when"><a href="https://github.com/renj-arch/dimsred/actions/workflows/film.yml" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none">open</a></span></div>';
-      });
-  }
 
   Promise.all([
     fetchJson('data/films/jallianwala-bagh.json'),
@@ -675,7 +633,6 @@
     renderPipeline(prod);
     renderIterations(prod);
     renderCredits(prod);
-    renderBuildLog(prod);
   }).catch(function(err){
     console.error(err);
     var status = $('statusText');
