@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-29T13:52:17.611Z",
-  "cursor": 93,
-  "built": 88
+  "updatedAt": "2026-10-29T22:07:06.554Z",
+  "cursor": 96,
+  "built": 91
  },
  "figs": {
   "87926696": {
@@ -531,6 +531,24 @@
   "8356dc76": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Friction Angle φ</text><line x1=\"40\" y1=\"20\" x2=\"80\" y2=\"20\"/><text x=\"90\" y=\"20\">Helix Angle α</text><line x1=\"110\" y1=\"20\" x2=\"150\" y2=\"20\"/><polygon points=\"40,20 80,20 60,40\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"35\" y=\"55\">φ < α</text><text x=\"105\" y=\"55\">Overhauling</text><polygon points=\"110,20 150,20 130,40\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"80\" y1=\"40\" x2=\"110\" y2=\"40\"/><text x=\"90\" y=\"60\">Load lowers itself</text><rect x=\"160\" y=\"10\" width=\"180\" height=\"150\" rx=\"5\" stroke=\"#222\"/><line x1=\"170\" y1=\"25\" x2=\"330\" y2=\"25\"/><line x1=\"170\" y1=\"195\" x2=\"330\" y2=\"195\"/><text x=\"165\" y=\"15\">Normal Force N</text><text x=\"165\" y=\"185\">Friction Force f</text><line x1=\"170\" y1=\"40\" x2=\"330\" y2=\"40\" stroke-dasharray=\"4,2\"/><text x=\"340\" y=\"45\">φ</text><line x1=\"170\" y1=\"60\" x2=\"330\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"340\" y=\"65\">α</text><polygon points=\"170,40 330,40 250,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><polygon points=\"170,60 330,60 250,100\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"240\" y=\"95\">Resultant R</text><line x1=\"250\" y1=\"80\" x2=\"330\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"340\" y=\"70\">α - φ</text><text x=\"20\" y=\"130\">Free Body Diagram of Screw Thread</text></svg>",
    "n": "when is a power screw overhauling?",
+   "sub": "design",
+   "at": "2026-10-29"
+  },
+  "fc98862b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"5\"/><text x=\"50\" y=\"70\">Collar</text><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"110\" r=\"40\" fill=\"none\"/><text x=\"155\" y=\"105\">r1</text><text x=\"235\" y=\"105\">r2</text><line x1=\"140\" y1=\"110\" x2=\"180\" y2=\"110\"/><line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"150\"/><circle cx=\"180\" cy=\"150\" r=\"3\" fill=\"#222\"/><text x=\"165\" y=\"145\">W</text><line x1=\"180\" y1=\"150\" x2=\"180\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"170\" y=\"205\">μc × W × (r1+r2)/2</text><text x=\"160\" y=\"220\">Tc =</text></svg>",
+   "n": "write the collar friction torque of a power screw.",
+   "sub": "design",
+   "at": "2026-10-29"
+  },
+  "1bc38848": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Square Thread</text><path d=\"M40,40 L80,40 L90,60 L70,60 Z M80,70 L90,90 L70,90 Z M80,100 L90,120 L70,120 Z\"/><text x=\"35\" y=\"140\">Normal Force N</text><line x1=\"60\" y1=\"140\" x2=\"60\" y2=\"180\"/><path d=\"M40,140 L90,140 L90,180 L40,180 Z\" fill=\"#222\" opacity=\"0.1\" stroke=\"none\"/><text x=\"50\" y=\"175\">Friction f_s</text><path d=\"M40,40 L90,40 L90,140 L40,140 Z\" fill=\"#222\" opacity=\"0.1\" stroke=\"none\"/><text x=\"180\" y=\"20\">V-Thread</text><path d=\"M160,40 L200,40 L210,60 L190,60 Z M200,70 L210,90 L190,90 Z M200,100 L210,120 L190,120 Z\"/><text x=\"155\" y=\"140\">Normal Force N / cos(θ/2)</text><line x1=\"180\" y1=\"140\" x2=\"180\" y2=\"180\"/><path d=\"M160,140 L210,140 L210,180 L160,180 Z\" fill=\"#222\" opacity=\"0.1\" stroke=\"none\"/><text x=\"170\" y=\"175\">Friction f_s / cos(θ/2)</text><path d=\"M160,40 L210,40 L210,140 L160,140 Z\" fill=\"#222\" opacity=\"0.1\" stroke=\"none\"/><text x=\"300\" y=\"20\">Comparison</text><line x1=\"310\" y1=\"50\" x2=\"310\" y2=\"60\"/><line x1=\"310\" y1=\"90\" x2=\"310\" y2=\"100\"/><line x1=\"310\" y1=\"140\" x2=\"310\" y2=\"150\"/><text x=\"315\" y=\"55\">Less Friction</text><text x=\"315\" y=\"95\">More Friction</text><text x=\"315\" y=\"145\">Worst Case</text></svg>",
+   "n": "why are square threads more efficient than v or triangular threads?",
+   "sub": "design",
+   "at": "2026-10-29"
+  },
+  "783680d2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Square Thread Profile -->\n  <path d=\"M40,10 L80,10 L80,210 L40,210 Z\" />\n  <path d=\"M100,10 L140,10 L140,210 L100,210 Z\" />\n  <path d=\"M160,10 L200,10 L200,210 L160,210 Z\" />\n  <text x=\"50\" y=\"20\" text-anchor=\"middle\">Square</text>\n  <text x=\"50\" y=\"35\" text-anchor=\"middle\">90° Angle</text>\n  \n  <!-- ACME Thread Profile -->\n  <path d=\"M240,10 L260,20 L260,200 L240,210 Z\" />\n  <path d=\"M280,10 L300,20 L300,200 L280,210 Z\" />\n  <path d=\"M320,10 L340,20 L340,200 L320,210 Z\" />\n  <text x=\"250\" y=\"20\" text-anchor=\"middle\">ACME</text>\n  <text x=\"250\" y=\"35\" text-anchor=\"middle\">~29° Angle</text>\n  \n  <!-- Comparison Labels -->\n  <line x1=\"80\" y1=\"210\" x2=\"80\" y2=\"230\" stroke-width=\"1.5\"/>\n  <text x=\"70\" y=\"245\" text-anchor=\"end\">High Efficiency</text>\n  \n  <line x1=\"260\" y1=\"210\" x2=\"260\" y2=\"230\" stroke-width=\"1.5\"/>\n  <text x=\"250\" y=\"245\" text-anchor=\"end\">Stronger & Easier to Machine</text>\n</svg>",
+   "n": "compare square and trapezoidal (acme) threads for a power screw.",
    "sub": "design",
    "at": "2026-10-29"
   }
