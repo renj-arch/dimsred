@@ -1,48 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-29T06:49:35.171Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 237620 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 3 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-29T07:03:19.590Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 0,
@@ -1755,8 +1713,32 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-29T15:20:39.405Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvtox5nw (gs3, 15 marks): Critically examine the tension between bureaucratic autonomy and accountability when a senior officer instructs a junior",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-29T15:07:58.716Z",
- "model": "qwen3:4b"
+ "lastRun": "2026-10-29T15:20:39.405Z",
+ "model": "qwen3.5:9b"
 }
