@@ -205,7 +205,7 @@ jobs:
           exit 1
 
       - name: Re-dispatch the film
-        if: ${{ (steps.repair.outputs.status == 'repaired' || steps.repair.outputs.status == 'retry') && inputs.dry_run != true }}
+        if: ${{ (steps.repair.outputs.status == 'repaired' || steps.repair.outputs.status == 'retry') && steps.context.outputs.source != 'log' && inputs.dry_run != true }}
         run: |
           set -euo pipefail
           NEXT=$(( ${{ steps.context.outputs.attempt }} + 1 ))
@@ -219,11 +219,16 @@ jobs:
 
       # Exhausted, creative or unresolved failures become one issue per film.
       # Repeated failures comment on the open issue instead of opening a new one.
+      #
+      # A failure whose film id came only from the log predates the run-context
+      # artifact, so its quality, release and publish inputs are unknown. Never
+      # guess those: withhold the re-dispatch and ask for a manual one.
       - name: Open or update a repair issue
-        if: ${{ always() && inputs.dry_run != true && steps.repair.outputs.status != 'repaired' && steps.repair.outputs.status != 'retry' }}
+        if: ${{ always() && inputs.dry_run != true && (steps.context.outputs.source == 'log' || (steps.repair.outputs.status != 'repaired' && steps.repair.outputs.status != 'retry')) }}
         env:
           FILM: ${{ steps.context.outputs.film }}
           STATUS: ${{ steps.repair.outputs.status }}
+          SOURCE: ${{ steps.context.outputs.source }}
         run: |
           set -euo pipefail
           mkdir -p out/repair
@@ -255,6 +260,23 @@ jobs:
             SEARCH="[film-repair] unresolved failed run in:title"
           fi
 
+          if [ "$SOURCE" = "log" ]; then
+            if [ -n "$FILM" ]; then
+              TITLE="[film-repair] $FILM: needs a manual re-dispatch"
+            fi
+            cat >> out/repair/issue.md <<'NOTE'
+
+          ## Automatic re-dispatch withheld
+
+          This failed run has no run-context artifact, so the lane knows the film
+          id but not whether the run was a draft or a final, or whether it was
+          meant to publish. It will not guess those inputs and risk downgrading a
+          final master. Re-dispatch `film.yml` by hand with the film id and the
+          intended quality, release and publish inputs. Any plate repair above is
+          already committed.
+          NOTE
+          fi
+
           EXISTING=$(gh issue list --state open --search "$SEARCH" --json number --jq '.[0].number' || true)
           if [ -n "$EXISTING" ]; then
             gh issue comment "$EXISTING" --body-file out/repair/issue.md
@@ -266,10 +288,12 @@ jobs:
           # A failure that needs a human must not be re-rendered every seven
           # hours by the autopilot's stale-lease reaper. Block the topic. The
           # stale-log case is exempt: it means the plate map is already valid
-          # and the failed run predates the fix.
+          # and the failed run predates the fix. A log-only failure is also
+          # exempt: blocking it would make the manual re-dispatch fail its own
+          # --ensure claim, and the issue already asks for that re-dispatch.
           BLOCK=false
-          if [ "$STATUS" = "exhausted" ] || [ "$STATUS" = "crash" ]; then BLOCK=true; fi
-          if [ "$STATUS" = "issue" ] && [ -f out/repair/report.json ]; then
+          if [ "$SOURCE" != "log" ] && { [ "$STATUS" = "exhausted" ] || [ "$STATUS" = "crash" ]; }; then BLOCK=true; fi
+          if [ "$SOURCE" != "log" ] && [ "$STATUS" = "issue" ] && [ -f out/repair/report.json ]; then
             STALE=$(node -p "require('./out/repair/report.json').reason.includes('stale')" 2>/dev/null || echo false)
             if [ "$STALE" != "true" ]; then BLOCK=true; fi
           fi

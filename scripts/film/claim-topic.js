@@ -10,14 +10,16 @@
  *
  *   node scripts/film/claim-topic.js --reap
  *   node scripts/film/claim-topic.js --claim salt-march
+ *   node scripts/film/claim-topic.js --ensure salt-march
  *   node scripts/film/claim-topic.js --release salt-march
  *   node scripts/film/claim-topic.js --block salt-march --reason "QC rejected the master"
  *   node scripts/film/claim-topic.js --unblock salt-march
  *
- * --block is the circuit breaker for the repair lane. A blocked topic is not
- * ready and cannot be claimed, so the autopilot stops spending runners on a
- * failure that needs a human or a creative fix. --unblock returns it to the
- * queue after the fix is committed.
+ * --ensure is what the film pipeline itself calls at the top of a final run. A
+ * manual final render used to leave the topic at "ready", so the autopilot
+ * could dispatch a duplicate while the first render was still in Blender.
+ * --ensure is idempotent: a fresh "rendering" lease is left alone, a ready or
+ * published topic is claimed, and a blocked topic is refused.
  *
  * --reap returns a lease older than the render timeout to the queue. film.yml
  * has a six-hour job cap, so a seven-hour lease cannot belong to a live run.
@@ -109,6 +111,40 @@ function main() {
     return;
   }
 
+  const ensureId = at('--ensure');
+  if (ensureId) {
+    const topic = topics.find((t) => t.id === ensureId);
+    if (!topic) {
+      process.stderr.write(`ensure failed: ${ensureId} is not on the slate\n`);
+      process.exitCode = 2;
+      return;
+    }
+    if (topic.status === 'blocked') {
+      process.stderr.write(`ensure failed: ${ensureId} is blocked: ${topic.blockedReason || 'repair lane stopped'}\n`);
+      process.exitCode = 2;
+      return;
+    }
+    const started = Date.parse(topic.renderStartedAt || '');
+    const fresh = Number.isFinite(started) && started > Date.now() - LEASE_HOURS * 3600 * 1000;
+    if (topic.status === 'rendering' && fresh) {
+      process.stdout.write(`already rendering ${ensureId}\n`);
+      return;
+    }
+    if (!['ready', 'published', 'rendering'].includes(topic.status)) {
+      process.stderr.write(`ensure failed: ${ensureId} is ${topic.status}, not ready\n`);
+      process.exitCode = 2;
+      return;
+    }
+    topic.status = 'rendering';
+    topic.renderStartedAt = new Date().toISOString();
+    topic.renderAttempts = (Number(topic.renderAttempts) || 0) + 1;
+    delete topic.blockedAt;
+    delete topic.blockedReason;
+    writeSlate(slate, slateFile);
+    process.stdout.write(`claimed ${ensureId} for this run\n`);
+    return;
+  }
+
   const releaseId = at('--release');
   if (releaseId) {
     const topic = topics.find((t) => t.id === releaseId);
@@ -132,6 +168,10 @@ function main() {
     if (!topic) {
       process.stderr.write(`block failed: ${blockId} is not on the slate\n`);
       process.exitCode = 2;
+      return;
+    }
+    if (topic.status === 'blocked') {
+      process.stdout.write(`already blocked ${blockId}\n`);
       return;
     }
     topic.status = 'blocked';
@@ -160,7 +200,7 @@ function main() {
     return;
   }
 
-  process.stderr.write('usage: --reap | --claim <id> | --release <id> | --block <id> [--reason text] | --unblock <id>\n');
+  process.stderr.write('usage: --reap | --claim <id> | --ensure <id> | --release <id> | --block <id> [--reason text] | --unblock <id>\n');
   process.exitCode = 2;
 }
 
