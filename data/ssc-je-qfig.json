@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-29T22:07:06.554Z",
-  "cursor": 96,
-  "built": 91
+  "updatedAt": "2026-10-30T06:46:25.189Z",
+  "cursor": 99,
+  "built": 94
  },
  "figs": {
   "87926696": {
@@ -551,6 +551,24 @@
    "n": "compare square and trapezoidal (acme) threads for a power screw.",
    "sub": "design",
    "at": "2026-10-29"
+  },
+  "2635cc6e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"180\" height=\"140\" rx=\"5\"/><text x=\"130\" y=\"70\" text-anchor=\"middle\">Spring Cross-Section</text><circle cx=\"130\" cy=\"110\" r=\"60\" stroke-dasharray=\"4,2\"/><line x1=\"130\" y1=\"50\" x2=\"130\" y2=\"170\"/><line x1=\"70\" y1=\"110\" x2=\"190\" y2=\"110\"/><circle cx=\"130\" cy=\"110\" r=\"4\" fill=\"#222\"/><text x=\"135\" y=\"115\">d (Wire Diameter)</text><text x=\"70\" y=\"105\">D - d</text><text x=\"190\" y=\"105\">D + d</text><text x=\"130\" y=\"185\" text-anchor=\"middle\">Mean Coil Diameter D = 2r</text><line x1=\"70\" y1=\"140\" x2=\"190\" y2=\"140\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"160\" text-anchor=\"middle\">D</text></svg>",
+   "n": "define the spring index c of a helical spring.",
+   "sub": "design",
+   "at": "2026-10-30"
+  },
+  "a847526": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Endurance Limit Calculation</text><rect x=\"40\" y=\"50\" width=\"280\" height=\"140\" stroke-dasharray=\"4\"/><text x=\"60\" y=\"75\">Se&#39; (Ideal)</text><line x1=\"60\" y1=\"75\" x2=\"100\" y2=\"75\"/><text x=\"115\" y=\"80\">x</text><line x1=\"100\" y1=\"75\" x2=\"320\" y2=\"75\"/><text x=\"340\" y=\"80\">Se (Corrected)</text><rect x=\"100\" y=\"95\" width=\"60\" height=\"20\" rx=\"5\"/><text x=\"115\" y=\"112\">Ka</text><line x1=\"160\" y1=\"105\" x2=\"220\" y2=\"105\"/><text x=\"235\" y=\"110\">x</text><rect x=\"220\" y=\"95\" width=\"60\" height=\"20\" rx=\"5\"/><text x=\"235\" y=\"112\">Kb</text><line x1=\"280\" y1=\"105\" x2=\"340\" y2=\"105\"/><text x=\"355\" y=\"110\">x</text><rect x=\"100\" y=\"125\" width=\"60\" height=\"20\" rx=\"5\"/><text x=\"115\" y=\"142\">Kc</text><line x1=\"160\" y1=\"135\" x2=\"220\" y2=\"135\"/><text x=\"235\" y=\"140\">x</text><rect x=\"220\" y=\"125\" width=\"60\" height=\"20\" rx=\"5\"/><text x=\"235\" y=\"142\">Kd</text><line x1=\"280\" y1=\"135\" x2=\"340\" y2=\"135\"/><text x=\"355\" y=\"140\">x</text><rect x=\"100\" y=\"155\" width=\"60\" height=\"20\" rx=\"5\"/><text x=\"115\" y=\"172\">Ke</text><line x1=\"160\" y1=\"165\" x2=\"220\" y2=\"165\"/><text x=\"235\" y=\"170\">x</text><rect x=\"220\" y=\"155\" width=\"60\" height=\"20\" rx=\"5\"/><text x=\"235\" y=\"172\">Km</text><line x1=\"280\" y1=\"165\" x2=\"340\" y2=\"165\"/><text x=\"355\" y=\"170\">= Se</text></svg>",
+   "n": "write the corrected endurance limit using the marin modifying factors.",
+   "sub": "design",
+   "at": "2026-10-30"
+  },
+  "d43fdce6": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Kb</text><text x=\"10\" y=\"40\">(size factor)</text><line x1=\"30\" y1=\"60\" x2=\"30\" y2=\"180\"/><text x=\"5\" y=\"90\">~1.0</text><text x=\"5\" y=\"170\">~0.85</text><line x1=\"20\" y1=\"90\" x2=\"340\" y2=\"90\"/><line x1=\"20\" y1=\"170\" x2=\"340\" y2=\"170\"/><line x1=\"80\" y1=\"60\" x2=\"80\" y2=\"180\"/><text x=\"75\" y=\"195\">D ≈ 8 mm</text><line x1=\"80\" y1=\"90\" x2=\"340\" y2=\"90\"/><text x=\"350\" y=\"95\">40–50 mm</text><path d=\"M 80 60 Q 150 100 340 170\" fill=\"none\"/><text x=\"180\" y=\"120\">Diameter increases &rarr;</text></svg>",
+   "n": "how does the size factor kb vary with shaft diameter?",
+   "sub": "design",
+   "at": "2026-10-30"
   }
  }
 }
