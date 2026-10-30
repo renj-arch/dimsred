@@ -1,1488 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-29T09:37:05.884Z",
-   "model": "qwen3:4b",
-   "totalFixes": 255,
-   "byAgent": [
-    {
-     "agent": "graphnotes",
-     "count": 3
-    },
-    {
-     "agent": "architect",
-     "count": 1
-    },
-    {
-     "agent": "foresight",
-     "count": 2
-    },
-    {
-     "agent": "questions",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 10
-    },
-    {
-     "agent": "selfcheck",
-     "count": 0
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 29
-    },
-    {
-     "agent": "a11y",
-     "count": 209
-    },
-    {
-     "agent": "code",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "graphnotes",
-     "fixes": [
-      {
-       "page": "data/topic-layers.json",
-       "fix": "GraphNotes dropped junk card \"The Bill\" from indira gandhi (denylisted non-entity)"
-      },
-      {
-       "page": "data/topic-layers.json",
-       "fix": "GraphNotes dropped junk card \"Television\" from indira gandhi (denylisted non-entity)"
-      },
-      {
-       "page": "data/topic-layers.json",
-       "fix": "GraphNotes dropped junk card \"Sports\" from indira gandhi (denylisted non-entity)"
-      }
-     ]
-    },
-    {
-     "agent": "architect",
-     "fixes": [
-      {
-       "kind": "info",
-       "page": "ideas",
-       "fix": "Architect: proposal \"Exam-style pencil-outline figures inside Ask answers\" — model output unparseable, retry next run"
-      }
-     ]
-    },
-    {
-     "agent": "foresight",
-     "fixes": [
-      {
-       "page": "3d-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      },
-      {
-       "page": "test-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      }
-     ]
-    },
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/film-autopilot.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/local-model.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/plate-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/slim-live.yml",
-       "fix": "Added pull+push retry loop"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-anabelian-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    },
-    {
-     "agent": "code",
-     "fixes": [
-      {
-       "page": "films.html",
-       "fix": "Converted dead link to text: bhopal-production.html"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-29T10:08:38.431Z",
-   "model": "qwen3:4b",
-   "totalFixes": 250,
-   "byAgent": [
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "figures",
-     "count": 0
-    },
-    {
-     "agent": "flowcharts",
-     "count": 0
-    },
-    {
-     "agent": "mindmaps",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 10
-    },
-    {
-     "agent": "selfcheck",
-     "count": 0
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 29
-    },
-    {
-     "agent": "a11y",
-     "count": 210
-    },
-    {
-     "agent": "code",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/film-autopilot.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/local-model.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/plate-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/slim-live.yml",
-       "fix": "Added pull+push retry loop"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "archive.html",
-       "fix": "Added skip-to-content link"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    },
-    {
-     "agent": "code",
-     "fixes": [
-      {
-       "page": "films.html",
-       "fix": "Converted dead link to text: bhopal-production.html"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-29T12:13:48.801Z",
-   "model": "qwen3:4b",
-   "totalFixes": 249,
-   "byAgent": [
-    {
-     "agent": "features",
-     "count": 0
-    },
-    {
-     "agent": "proposals",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 10
-    },
-    {
-     "agent": "selfcheck",
-     "count": 0
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 29
-    },
-    {
-     "agent": "a11y",
-     "count": 209
-    },
-    {
-     "agent": "code",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/film-autopilot.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/local-model.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/plate-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/slim-live.yml",
-       "fix": "Added pull+push retry loop"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-anabelian-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    },
-    {
-     "agent": "code",
-     "fixes": [
-      {
-       "page": "films.html",
-       "fix": "Converted dead link to text: bhopal-production.html"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-29T12:21:03.354Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
-   "at": "2026-10-29T12:26:41.024Z",
-   "model": "qwen3:4b",
-   "totalFixes": 251,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 2
-    },
-    {
-     "agent": "questions",
-     "count": 0
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "figures",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 10
-    },
-    {
-     "agent": "selfcheck",
-     "count": 0
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 29
-    },
-    {
-     "agent": "a11y",
-     "count": 209
-    },
-    {
-     "agent": "code",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "foresight",
-     "fixes": [
-      {
-       "page": "3d-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      },
-      {
-       "page": "test-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      }
-     ]
-    },
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/film-autopilot.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/local-model.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/plate-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/slim-live.yml",
-       "fix": "Added pull+push retry loop"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-anabelian-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    },
-    {
-     "agent": "code",
-     "fixes": [
-      {
-       "page": "films.html",
-       "fix": "Converted dead link to text: bhopal-production.html"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-29T13:38:12.836Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 241017 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 3 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-29T14:16:39.642Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 1
-    }
-   ],
-   "details": []
-  },
-  {
-   "at": "2026-10-29T14:24:13.809Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (88 total)",
-       "text": "Write the efficiency equation of a power screw for raising a load. | State the condition for a self-locking power screw. | When is a power screw overhauling?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-29T14:34:01.454Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
-   "at": "2026-10-29T15:07:58.716Z",
-   "model": "qwen3:4b",
-   "totalFixes": 320,
-   "byAgent": [
-    {
-     "agent": "features",
-     "count": 0
-    },
-    {
-     "agent": "proposals",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 10
-    },
-    {
-     "agent": "selfcheck",
-     "count": 1
-    },
-    {
-     "agent": "seo",
-     "count": 48
-    },
-    {
-     "agent": "perf",
-     "count": 51
-    },
-    {
-     "agent": "a11y",
-     "count": 209
-    },
-    {
-     "agent": "code",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/film-autopilot.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/local-model.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/plate-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/slim-live.yml",
-       "fix": "Added pull+push retry loop"
-      }
-     ]
-    },
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      }
-     ]
-    },
-    {
-     "agent": "seo",
-     "fixes": [
-      {
-       "page": "animal-husbandry-dairy-figures.html",
-       "fix": "Added meta description"
-      },
-      {
-       "page": "animal-husbandry-dairy-figures.html",
-       "fix": "Added viewport meta"
-      },
-      {
-       "page": "applied-sciences-figures.html",
-       "fix": "Added meta description"
-      },
-      {
-       "page": "applied-sciences-figures.html",
-       "fix": "Added viewport meta"
-      },
-      {
-       "page": "ayurveda-traditional-medicine-figures.html",
-       "fix": "Added meta description"
-      },
-      {
-       "page": "ayurveda-traditional-medicine-figures.html",
-       "fix": "Added viewport meta"
-      },
-      {
-       "page": "computer-it-figures.html",
-       "fix": "Added meta description"
-      },
-      {
-       "page": "computer-it-figures.html",
-       "fix": "Added viewport meta"
-      },
-      {
-       "page": "courts-cases-verdicts-figures.html",
-       "fix": "Added meta description"
-      },
-      {
-       "page": "courts-cases-verdicts-figures.html",
-       "fix": "Added viewport meta"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "animal-husbandry-dairy-figures.html",
-       "fix": "Added lazy loading to images"
-      },
-      {
-       "page": "applied-sciences-figures.html",
-       "fix": "Added lazy loading to images"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ayurveda-traditional-medicine-figures.html",
-       "fix": "Added lazy loading to images"
-      },
-      {
-       "page": "computer-it-figures.html",
-       "fix": "Added lazy loading to images"
-      },
-      {
-       "page": "courts-cases-verdicts-figures.html",
-       "fix": "Added lazy loading to images"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-anabelian-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    },
-    {
-     "agent": "code",
-     "fixes": [
-      {
-       "page": "films.html",
-       "fix": "Converted dead link to text: bhopal-production.html"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-29T15:20:39.405Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvtox5nw (gs3, 15 marks): Critically examine the tension between bureaucratic autonomy and accountability when a senior officer instructs a junior",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-29T15:25:34.718Z",
-   "model": "qwen3:4b",
-   "totalFixes": 252,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 2
-    },
-    {
-     "agent": "questions",
-     "count": 0
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "figures",
-     "count": 0
-    },
-    {
-     "agent": "workflows",
-     "count": 10
-    },
-    {
-     "agent": "selfcheck",
-     "count": 1
-    },
-    {
-     "agent": "seo",
-     "count": 0
-    },
-    {
-     "agent": "perf",
-     "count": 29
-    },
-    {
-     "agent": "a11y",
-     "count": 209
-    },
-    {
-     "agent": "code",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "foresight",
-     "fixes": [
-      {
-       "page": "3d-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      },
-      {
-       "page": "test-globe.html",
-       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
-      }
-     ]
-    },
-    {
-     "agent": "workflows",
-     "fixes": [
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/author.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-figures.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/build-timeline.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/film-autopilot.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/local-model.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/plate-test.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added memory limit to node steps"
-      },
-      {
-       "page": ".github/workflows/promote-mains.yml",
-       "fix": "Added pull+push retry loop"
-      },
-      {
-       "page": ".github/workflows/slim-live.yml",
-       "fix": "Added pull+push retry loop"
-      }
-     ]
-    },
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      }
-     ]
-    },
-    {
-     "agent": "perf",
-     "fixes": [
-      {
-       "page": "3d-globe-test.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "3d-globe.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "ask.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "ask.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "current-affairs.html",
-       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      },
-      {
-       "page": "flowchart.html",
-       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
-       "kind": "perf-warn"
-      },
-      {
-       "page": "improve.html",
-       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
-       "kind": "perf-note"
-      }
-     ]
-    },
-    {
-     "agent": "a11y",
-     "fixes": [
-      {
-       "page": "current-affairs.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "dashboard.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-abstract-algebra.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-acoustics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-actuarial-science.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-additive-combinatorics.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-affine-grassmannians.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-algebraic-topology.html",
-       "fix": "Added role/tabindex to clickable divs"
-      },
-      {
-       "page": "lesson-anabelian-geometry.html",
-       "fix": "Added role/tabindex to clickable divs"
-      }
-     ]
-    },
-    {
-     "agent": "code",
-     "fixes": [
-      {
-       "page": "films.html",
-       "fix": "Converted dead link to text: bhopal-production.html"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-29T16:59:49.079Z",
    "model": "qwen3:4b",
    "totalFixes": 250,
@@ -2143,8 +661,1394 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-29T19:46:09.235Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-29T22:27:17.769Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (91 total)",
+       "text": "Write the collar friction torque of a power screw. | Why are square threads more efficient than V or triangular threads? | Compare square and trapezoidal (ACME) threads for a power screw."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T01:25:32.640Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T02:12:08.929Z",
+   "model": "qwen3:4b",
+   "totalFixes": 323,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 2
+    },
+    {
+     "agent": "questions",
+     "count": 0
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "figures",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 10
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 48
+    },
+    {
+     "agent": "perf",
+     "count": 51
+    },
+    {
+     "agent": "a11y",
+     "count": 210
+    },
+    {
+     "agent": "code",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "foresight",
+     "fixes": [
+      {
+       "page": "3d-globe.html",
+       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
+      },
+      {
+       "page": "test-globe.html",
+       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
+      }
+     ]
+    },
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/film-autopilot.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/local-model.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/plate-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/slim-live.yml",
+       "fix": "Added pull+push retry loop"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "seo",
+     "fixes": [
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "courts-cases-verdicts-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "courts-cases-verdicts-figures.html",
+       "fix": "Added viewport meta"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "courts-cases-verdicts-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "archive.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    },
+    {
+     "agent": "code",
+     "fixes": [
+      {
+       "page": "films.html",
+       "fix": "Converted dead link to text: bhopal-production.html"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T05:42:45.192Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T06:25:58.619Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 235274 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 2 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T06:54:43.106Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (94 total)",
+       "text": "Define the spring index C of a helical spring. | Write the corrected endurance limit using the Marin modifying factors. | How does the size factor Kb vary with shaft diameter?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T07:53:21.344Z",
+   "model": "qwen3:4b",
+   "totalFixes": 325,
+   "byAgent": [
+    {
+     "agent": "graphnotes",
+     "count": 0
+    },
+    {
+     "agent": "architect",
+     "count": 1
+    },
+    {
+     "agent": "foresight",
+     "count": 2
+    },
+    {
+     "agent": "questions",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 11
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 48
+    },
+    {
+     "agent": "perf",
+     "count": 51
+    },
+    {
+     "agent": "a11y",
+     "count": 210
+    },
+    {
+     "agent": "code",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "architect",
+     "fixes": [
+      {
+       "kind": "info",
+       "page": "ideas",
+       "fix": "Architect: proposal \"Exam-style pencil-outline figures inside Ask answers\" — model output unparseable, retry next run"
+      }
+     ]
+    },
+    {
+     "agent": "foresight",
+     "fixes": [
+      {
+       "page": "3d-globe.html",
+       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
+      },
+      {
+       "page": "test-globe.html",
+       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
+      }
+     ]
+    },
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/film-autopilot.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/film-repair.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/local-model.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/plate-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added pull+push retry loop"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "seo",
+     "fixes": [
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added viewport meta"
+      },
+      {
+       "page": "courts-cases-verdicts-figures.html",
+       "fix": "Added meta description"
+      },
+      {
+       "page": "courts-cases-verdicts-figures.html",
+       "fix": "Added viewport meta"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "courts-cases-verdicts-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "archive.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    },
+    {
+     "agent": "code",
+     "fixes": [
+      {
+       "page": "films.html",
+       "fix": "Converted dead link to text: bhopal-production.html"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T08:10:26.660Z",
+   "model": "qwen3:4b",
+   "totalFixes": 251,
+   "byAgent": [
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "figures",
+     "count": 0
+    },
+    {
+     "agent": "flowcharts",
+     "count": 0
+    },
+    {
+     "agent": "mindmaps",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 11
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 29
+    },
+    {
+     "agent": "a11y",
+     "count": 209
+    },
+    {
+     "agent": "code",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/film-autopilot.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/film-repair.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/local-model.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/plate-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added pull+push retry loop"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "improve.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-anabelian-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    },
+    {
+     "agent": "code",
+     "fixes": [
+      {
+       "page": "films.html",
+       "fix": "Converted dead link to text: bhopal-production.html"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T09:32:45.945Z",
+   "model": "qwen3:4b",
+   "totalFixes": 251,
+   "byAgent": [
+    {
+     "agent": "features",
+     "count": 0
+    },
+    {
+     "agent": "proposals",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 11
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 29
+    },
+    {
+     "agent": "a11y",
+     "count": 209
+    },
+    {
+     "agent": "code",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/film-autopilot.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/film-repair.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/local-model.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/plate-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added pull+push retry loop"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "improve.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-anabelian-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    },
+    {
+     "agent": "code",
+     "fixes": [
+      {
+       "page": "films.html",
+       "fix": "Converted dead link to text: bhopal-production.html"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T10:41:37.083Z",
+   "model": "qwen3:4b",
+   "totalFixes": 252,
+   "byAgent": [
+    {
+     "agent": "practicesets",
+     "count": 0
+    },
+    {
+     "agent": "mainsupdates",
+     "count": 0
+    },
+    {
+     "agent": "graphnotes",
+     "count": 0
+    },
+    {
+     "agent": "architect",
+     "count": 1
+    },
+    {
+     "agent": "workflows",
+     "count": 11
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 29
+    },
+    {
+     "agent": "a11y",
+     "count": 209
+    },
+    {
+     "agent": "code",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "architect",
+     "fixes": [
+      {
+       "kind": "info",
+       "page": "ideas",
+       "fix": "Architect: proposal \"Exam-style pencil-outline figures inside Ask answers\" — model output unparseable, retry next run"
+      }
+     ]
+    },
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/film-autopilot.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/film-repair.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/local-model.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/plate-test.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/promote-mains.yml",
+       "fix": "Added pull+push retry loop"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "WARNING: 2 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "flowchart.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "improve.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-additive-combinatorics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-affine-grassmannians.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-algebraic-topology.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-anabelian-geometry.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    },
+    {
+     "agent": "code",
+     "fixes": [
+      {
+       "page": "films.html",
+       "fix": "Converted dead link to text: bhopal-production.html"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-30T12:51:40.923Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-10-29T17:51:42.085Z",
+ "lastRun": "2026-10-30T12:51:40.923Z",
  "model": "qwen3:4b"
 }

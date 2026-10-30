@@ -1,0 +1,109 @@
+{
+  "schema": "vlymbooq.production.v1",
+  "film": "salt-march",
+  "title": "SALT",
+  "subtitle": "The Empire's Smallest Fear",
+  "status": "Final · 1080p master on release",
+  "updated": "2026-10-30",
+  "hero": {
+    "when": "Salt March · 1930",
+    "proof": "Proof of work · Film 02",
+    "lede": "Not a slideshow with narration. A <b>40-line sourced film</b> built from 81 procedural plates, eight chapters and a host track that may only repeat what the record already says.",
+    "poster": "media/films/salt-march/poster.jpg",
+    "posterAlt": "Salt film poster: white salt crystals under a dark sky.",
+    "stamp": "Final · 1080p master on release",
+    "caption": "The Empire's Smallest Fear",
+    "title": "SALT",
+    "intro": "In 1930 the Raj taxed the one thing every Indian could gather for free. One man picked up a handful of salt, and the Empire discovered a weapon it could not arrest.",
+    "status": "Final · 1080p master on release",
+    "description": "The production dossier for SALT: 40 sourced lines, 81 procedural plates, eight chapters and a host track that may only restate the record. Every frame assembled on free CI."
+  },
+  "intro": "A film about 1930, built from a tax act, a handful of salt, a march, a gate and a pact. No stock footage. No paid APIs. Every frame is assembled on free GitHub Actions hardware.",
+  "cutHeading": "Forty lines became eighty-one plates.",
+  "cutBody": "The first plate map could not place a single shot. The rebuilt map gives every narration line two plates from two different sets, with eight authored chapters and a cut roughly every three seconds. The storyboard below is the same file the render validates.",
+  "closingNote": "The first plate map was rejected. The 1080 master is the one that has to earn the release.",
+  "stats": [
+    { "value": "40", "label": "scenes", "note": "one argument per scene" },
+    { "value": "81", "label": "plates", "note": "two shots per line, eight chapters" },
+    { "value": "40", "label": "sourced lines", "note": "every line carries a source id" },
+    { "value": "5", "label": "sources", "note": "verified live before authoring" },
+    { "value": "33", "label": "host lines", "note": "restatements, attitudes, bickering" },
+    { "value": "0", "label": "paid APIs", "note": "Piper, Blender, Chromium, ffmpeg" }
+  ],
+  "pipeline": [
+    {
+      "step": "01",
+      "title": "Source lock",
+      "body": "The topic is rejected unless it has a human stake, a concrete noun, a turn and a reason to tell it now. Every narration line is tied to a source id before a plate is designed.",
+      "path": "scripts/film/validate-film.js"
+    },
+    {
+      "step": "02",
+      "title": "Storyboard",
+      "body": "Forty lines become forty scenes. Each line gets two shots from two different sets, an authored chapter, a camera move and a transition with a reason.",
+      "path": "data/films/salt-march.json"
+    },
+    {
+      "step": "03",
+      "title": "Procedural sets",
+      "body": "Blender builds the salt crust, the village, the Dharasana gate, the office, the archive and the evidence tables. Each plate carries its own seed, framing and tone.",
+      "path": "scripts/film/blender/salt_scenes.py"
+    },
+    {
+      "step": "04",
+      "title": "Camera and type",
+      "body": "Chromium drives the timeline frame by frame: push-ins, pans, hard cuts, the series card, captions and the lower-third host strip. The camera is code, so every frame is repeatable.",
+      "path": "js/film.js"
+    },
+    {
+      "step": "05",
+      "title": "Score and master",
+      "body": "ffmpeg synthesises the bed, mixes the narration and host voices, burns the SRT into the master and encodes the MP4. Hard cuts carry silence, not a click.",
+      "path": "scripts/film/build-film.js"
+    },
+    {
+      "step": "06",
+      "title": "Free CI",
+      "body": "The render runs on GitHub-hosted Ubuntu CPU. No GPU. No paid runner. The owner's machine writes the code; it does not render the film.",
+      "path": ".github/workflows/film.yml"
+    }
+  ],
+  "iterations": [
+    {
+      "date": "2026-10-29",
+      "title": "The plate map failed before a frame was rendered",
+      "body": "The first final dispatch stopped with FAIL No Blender scene mapped for plate object-01 in salt-march. The fix was not a fallback: all 81 plates were mapped to a semantically matching set, with a per-plate Blender script."
+    },
+    {
+      "date": "2026-10-30",
+      "title": "The draft exposed invented host lines",
+      "body": "The first host track claimed a court stood for the tax and that the Salt Act was written for them. Neither fact is in the narration, so both were removed. The rebuilt track has 33 lines: sourced restatements, attitudes and bickering, with no duplicate button."
+    },
+    {
+      "date": "2026-10-30",
+      "title": "A blurred plate was replaced",
+      "body": "One march plate focused on an empty point at the camera, so the whole frame rendered as a smear. The camera now focuses on the march itself, and the plate opens on a readable line of figures."
+    },
+    {
+      "date": "2026-10-30",
+      "title": "The master was gated, then released",
+      "body": "The 720p draft passed independent QC before the 1080p master was attempted. The final cut keeps the 40 sourced lines, the 33 host lines and the hard-cut grammar, and ships with a 720p site preview."
+    }
+  ],
+  "credits": [
+    { "role": "Direction, code, edit", "name": "vlymbooq" },
+    { "role": "Research and source lock", "name": "vlymbooq" },
+    { "role": "Sets and plates", "name": "Blender procedural sets" },
+    { "role": "Voices", "name": "Piper TTS" },
+    { "role": "Render", "name": "GitHub Actions CPU" },
+    { "role": "Score", "name": "Synthesised in ffmpeg" }
+  ],
+  "rules": [
+    "No paid APIs. Piper, Blender, Chromium and ffmpeg run on free CI.",
+    "Every narration line carries a source id; a missing source fails the render.",
+    "Hosts may only restate a sourced fact, express an attitude, or bicker. They may not invent a fact.",
+    "No actor likeness, no stock footage, no external photo, mesh or texture.",
+    "The dead stay off screen. The film shows the record, not the bodies.",
+    "A hard cut carries silence. No recurring click between narration lines."
+  ]
+}

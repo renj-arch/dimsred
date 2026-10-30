@@ -1,17 +1,27 @@
 {
  "meta": {
-  "generatedAt": "2026-10-29T07:48:22.040Z",
+  "generatedAt": "2026-10-30T07:52:06.074Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 31,
+  "count": 32,
   "lastAttempt": {
-   "at": "2026-10-29T07:48:22.040Z",
+   "at": "2026-10-30T07:52:06.074Z",
    "ok": true,
    "count": 1,
-   "dropped": 4
+   "dropped": 3
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvuoc5ve-1",
+   "at": "2026-10-30T07:52:06.074Z",
+   "title": "Fix tutor lane generation count and parsing",
+   "why": "Recent failures show 'tutor-questions' often returning only 2 of 5 valid questions or failing to output a JSON array, causing incomplete practice sessions.",
+   "idea": "Update the Node.js script handling the 'tutor-questions' on-demand request to enforce a strict JSON schema validation. If the LLM returns fewer than 3 valid questions or invalid text, the script should retry generation with a prompt adjustment (e.g., 'Ensure you output exactly 5 JSON objects') before failing, ensuring users always get a complete set.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvt8ric8-1",
    "at": "2026-10-29T07:48:22.040Z",
