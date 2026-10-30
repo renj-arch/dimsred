@@ -172,13 +172,14 @@ jobs:
           set -euo pipefail
           ATTEMPT="${{ steps.context.outputs.attempt }}"
           STATUS="crash"
-          if node scripts/film/repair.js \
+          node scripts/film/repair.js \
             --film "${{ steps.context.outputs.film }}" \
             --attempt "$ATTEMPT" \
             --log out/repair/failed.log \
             --report out/repair/report.json \
             --issue out/repair/issue.md \
-            --apply; then
+            --apply || true
+          if [ -f out/repair/report.json ]; then
             STATUS=$(node -p "require('./out/repair/report.json').status")
           fi
           echo "status=$STATUS" >> "$GITHUB_OUTPUT"
@@ -234,7 +235,11 @@ jobs:
               echo "- Film: \`${FILM:-unresolved}\`"
               echo "- Status: \`${STATUS:-unresolved}\`"
               echo
-              echo "The repair lane could not read a run-context artifact or a film id from the log. Re-dispatch this workflow manually with the film id and the failed run id."
+              if [ -z "$FILM" ]; then
+                echo "The repair lane could not resolve a film id from the run-context artifact, the manual inputs or the log. Re-dispatch this workflow with the film id and the failed run id."
+              else
+                echo "The repair script stopped before it could produce a report. The film or its plate map is missing or unreadable, so this needs a creative or human fix. The lane did not edit narration, sources, host dialogue or workflow code."
+              fi
               echo
               echo '```text'
               tail -n 40 out/repair/failed.log 2>/dev/null || true
