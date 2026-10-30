@@ -1,42 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-29T14:24:13.809Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (88 total)",
-       "text": "Write the efficiency equation of a power screw for raising a load. | State the condition for a self-locking power screw. | When is a power screw overhauling?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-29T14:34:01.454Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -1661,8 +1625,32 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-30T07:52:06.074Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix tutor lane generation count and parsing",
+       "detail": "Recent failures show 'tutor-questions' often returning only 2 of 5 valid questions or failing to output a JSON array, causing incomplete practice sessions.",
+       "text": "Update the Node.js script handling the 'tutor-questions' on-demand request to enforce a strict JSON schema validation. If the LLM returns fewer than 3 valid questions or invalid text, the script should retry generation with a prompt adjustment (e.g., 'Ensure you output exactly 5 JSON objects') before failing, ensuring users always get a complete set."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-30T06:54:43.106Z",
+ "lastRun": "2026-10-30T07:52:06.074Z",
  "model": "qwen3.5:9b"
 }
