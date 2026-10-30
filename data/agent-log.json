@@ -1,29 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-30T01:25:32.640Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-30T02:12:08.929Z",
    "model": "qwen3:4b",
    "totalFixes": 323,
@@ -2291,8 +2268,50 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-30T23:01:06.364Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 233404 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 2 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-30T22:05:16.658Z",
- "model": "qwen3:4b"
+ "lastRun": "2026-10-30T23:01:06.364Z",
+ "model": "qwen3.5:9b"
 }
