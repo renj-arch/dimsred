@@ -534,6 +534,8 @@ jobs:
                   git commit --no-edit 2>/dev/null || true
                 }
               fi
+              # Guard: prevent question count regression below critical thresholds
+              node scripts/guard-question-count.js || { echo "Question count guard failed — aborting push"; exit 1; }
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
               sleep 5
             done || true
