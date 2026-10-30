@@ -52,6 +52,11 @@ on:
         required: false
         default: film-ci
         type: string
+      dry_run:
+        description: Diagnose only; never commit, dispatch or open an issue
+        required: false
+        default: false
+        type: boolean
 
 permissions:
   contents: write
@@ -173,7 +178,7 @@ jobs:
           echo "repair status $STATUS"
 
       - name: Commit the plate repair
-        if: ${{ steps.repair.outputs.status == 'repaired' }}
+        if: ${{ steps.repair.outputs.status == 'repaired' && inputs.dry_run != true }}
         run: |
           set -euo pipefail
           git config user.name "vlymbooq-repair"
@@ -192,7 +197,7 @@ jobs:
           exit 1
 
       - name: Re-dispatch the film
-        if: ${{ steps.repair.outputs.status == 'repaired' || steps.repair.outputs.status == 'retry' }}
+        if: ${{ (steps.repair.outputs.status == 'repaired' || steps.repair.outputs.status == 'retry') && inputs.dry_run != true }}
         run: |
           set -euo pipefail
           NEXT=$(( ${{ steps.context.outputs.attempt }} + 1 ))
@@ -207,7 +212,7 @@ jobs:
       # Exhausted, creative or unresolved failures become one issue per film.
       # Repeated failures comment on the open issue instead of opening a new one.
       - name: Open or update a repair issue
-        if: ${{ always() && steps.repair.outputs.status != 'repaired' && steps.repair.outputs.status != 'retry' }}
+        if: ${{ always() && inputs.dry_run != true && steps.repair.outputs.status != 'repaired' && steps.repair.outputs.status != 'retry' }}
         env:
           FILM: ${{ steps.context.outputs.film }}
           STATUS: ${{ steps.repair.outputs.status }}
