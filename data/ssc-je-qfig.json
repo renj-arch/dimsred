@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-30T06:46:25.189Z",
-  "cursor": 99,
-  "built": 94
+  "updatedAt": "2026-10-30T20:11:30.953Z",
+  "cursor": 102,
+  "built": 97
  },
  "figs": {
   "87926696": {
@@ -567,6 +567,24 @@
   "d43fdce6": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Kb</text><text x=\"10\" y=\"40\">(size factor)</text><line x1=\"30\" y1=\"60\" x2=\"30\" y2=\"180\"/><text x=\"5\" y=\"90\">~1.0</text><text x=\"5\" y=\"170\">~0.85</text><line x1=\"20\" y1=\"90\" x2=\"340\" y2=\"90\"/><line x1=\"20\" y1=\"170\" x2=\"340\" y2=\"170\"/><line x1=\"80\" y1=\"60\" x2=\"80\" y2=\"180\"/><text x=\"75\" y=\"195\">D ≈ 8 mm</text><line x1=\"80\" y1=\"90\" x2=\"340\" y2=\"90\"/><text x=\"350\" y=\"95\">40–50 mm</text><path d=\"M 80 60 Q 150 100 340 170\" fill=\"none\"/><text x=\"180\" y=\"120\">Diameter increases &rarr;</text></svg>",
    "n": "how does the size factor kb vary with shaft diameter?",
+   "sub": "design",
+   "at": "2026-10-30"
+  },
+  "c2df98f5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Reliability Factor (K<sub>e</sub>) vs Survival Probability</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"65\" text-anchor=\"end\">50%</text><text x=\"35\" y=\"185\" text-anchor=\"end\">99.9%</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><text x=\"170\" y=\"195\" text-anchor=\"middle\">K<sub>e</sub> = 1.0</text><circle cx=\"100\" cy=\"60\" r=\"3\" fill=\"#222\"/><line x1=\"80\" y1=\"60\" x2=\"120\" y2=\"60\"/><text x=\"125\" y=\"65\">0.897</text><circle cx=\"140\" cy=\"85\" r=\"3\" fill=\"#222\"/><line x1=\"120\" y1=\"85\" x2=\"160\" y2=\"85\"/><text x=\"165\" y=\"90\">0.814</text><circle cx=\"200\" cy=\"130\" r=\"3\" fill=\"#222\"/><line x1=\"180\" y1=\"130\" x2=\"220\" y2=\"130\"/><text x=\"225\" y=\"135\">0.702</text><polyline points=\"40,60 100,60 140,85 200,130 320,180\" stroke-dasharray=\"4,2\"/></svg>",
+   "n": "what reliability factor ke is used in the marin equation?",
+   "sub": "design",
+   "at": "2026-10-30"
+  },
+  "81d61a8e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"325\" y=\"185\">σ</text><text x=\"325\" y=\"197\">m</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"20\" y=\"45\">σ</text><text x=\"20\" y=\"57\">a</text><polygon points=\"40,180 320,180 320,40 40,40\" fill=\"none\" stroke=\"#222\"/><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"40\"/><text x=\"175\" y=\"115\">Goodman Line</text><circle cx=\"160\" cy=\"100\" r=\"3\"/><line x1=\"157\" y1=\"97\" x2=\"163\" y2=\"103\"/><text x=\"140\" y=\"95\">n = 1</text><text x=\"140\" y=\"108\">÷ [(σa/Se)</text><text x=\"140\" y=\"120\">+ (σm/Sut)]</text></svg>",
+   "n": "how is the factor of safety found for a fluctuating-stress design?",
+   "sub": "design",
+   "at": "2026-10-30"
+  },
+  "bc2b1102": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\" />\n <line x1=\"40\" y1=\"90\" x2=\"40\" y2=\"110\" />\n <line x1=\"320\" y1=\"90\" x2=\"320\" y2=\"110\" />\n <circle cx=\"180\" cy=\"100\" r=\"35\" />\n <text x=\"145\" y=\"75\">Nominal</text>\n <text x=\"145\" y=\"90\">Stress &lt;--&gt;</text>\n <text x=\"180\" y=\"205\">Kt = 3</text>\n <line x1=\"160\" y1=\"100\" x2=\"160\" y2=\"140\" />\n <line x1=\"200\" y1=\"100\" x2=\"200\" y2=\"140\" />\n</svg>",
+   "n": "what is the stress concentration factor of a circular hole in an infinitely wide plate?",
    "sub": "design",
    "at": "2026-10-30"
   }
