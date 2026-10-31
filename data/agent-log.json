@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T06:19:49.353Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults and severe content gaps (no papers, questions, or syllabus), so the priority is to generate foundational assets. BankFigures must run first to fix broken figure references blocking study flow. MetaLearn should follow to synthesize fresh syllabus-aligned material since files are missing. Invention is queued last as it requires existing content to build upon, and its zero output in recent runs suggests it needs prior inputs before contributing.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (112 total)",
-       "text": "What is a zig-zag riveted joint? | Why is a double-strap butt joint better than a lap joint for boilers? | What is the function of a gasket at a bolted flange joint?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T11:29:45.182Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -645,8 +605,36 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T15:43:22.965Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "Flowchart",
+       "fix": "Runtime: missing ) after argument list",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T15:42:07.414Z",
+ "lastRun": "2026-10-31T15:43:22.965Z",
  "model": "qwen3.5:9b"
 }
