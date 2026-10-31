@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T15:53:01.121Z",
-  "cursor": 156,
-  "built": 150
+  "updatedAt": "2026-10-31T16:22:21.602Z",
+  "cursor": 159,
+  "built": 153
  },
  "figs": {
   "11434945": {
@@ -903,6 +903,24 @@
   "315ed069": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Mould Cavity -->\n  <path d=\"M40,80 L100,80 L100,140 L40,140 Z\" />\n  <text x=\"70\" y=\"115\" text-anchor=\"middle\">Mould</text>\n  <!-- Shrinkage Void -->\n  <circle cx=\"90\" cy=\"120\" r=\"8\" stroke-dasharray=\"3,3\" />\n  <text x=\"90\" y=\"135\" text-anchor=\"middle\" font-size=\"10\">Shrinkage</text>\n  <!-- Riser Reservoir -->\n  <rect x=\"120\" y=\"60\" width=\"40\" height=\"60\" />\n  <text x=\"140\" y=\"95\" text-anchor=\"middle\">Riser</text>\n  <!-- Molten Metal in Riser -->\n  <path d=\"M130,60 L150,60 L150,80 L130,80 Z\" />\n  <text x=\"140\" y=\"75\" text-anchor=\"middle\">Liquid</text>\n  <!-- Feeding Arrow -->\n  <line x1=\"120\" y1=\"90\" x2=\"100\" y2=\"130\" stroke-width=\"2\" />\n  <polygon points=\"100,130 115,128 115,134\" fill=\"#222\" />\n  <text x=\"115\" y=\"122\">Feeds</text>\n  <!-- Label -->\n  <text x=\"20\" y=\"20\">Function: Feeds shrinkage</text>\n</svg>",
    "n": "what is the function of risers in a casting?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "cf1446ad": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Sand Reclamation Cycle</text><rect x=\"40\" y=\"40\" width=\"60\" height=\"60\" rx=\"5\"/><text x=\"70\" y=\"75\" text-anchor=\"middle\">Used Sand</text><path d=\"M 100 40 L 100 20\" stroke-width=\"2\"/><circle cx=\"100\" cy=\"20\" r=\"8\"/><text x=\"92\" y=\"15\" text-anchor=\"middle\">Screening</text><rect x=\"110\" y=\"40\" width=\"60\" height=\"60\" rx=\"5\"/><text x=\"140\" y=\"75\" text-anchor=\"middle\">Cleaned Sand</text><path d=\"M 170 40 L 170 20\" stroke-width=\"2\"/><circle cx=\"170\" cy=\"20\" r=\"8\"/><text x=\"162\" y=\"15\" text-anchor=\"middle\">Re-use</text><rect x=\"230\" y=\"40\" width=\"60\" height=\"60\" rx=\"5\"/><text x=\"260\" y=\"75\" text-anchor=\"middle\">New Sand Mix</text><path d=\"M 290 40 L 290 20\" stroke-width=\"2\"/><circle cx=\"290\" cy=\"20\" r=\"8\"/><text x=\"282\" y=\"15\" text-anchor=\"middle\">Mold</text><path d=\"M 350 40 L 350 160\" stroke-width=\"2\"/><circle cx=\"350\" cy=\"160\" r=\"8\"/><text x=\"342\" y=\"175\" text-anchor=\"middle\">Waste Removal</text><path d=\"M 350 160 L 350 180\" stroke-width=\"2\"/><circle cx=\"350\" cy=\"180\" r=\"8\"/><text x=\"342\" y=\"195\" text-anchor=\"middle\">Disposal</text></svg>",
+   "n": "why is a sand reclamation plant used in a foundry?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "fd438b95": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"50\" y=\"40\" width=\"80\" height=\"140\" stroke-dasharray=\"2,2\"/><text x=\"90\" y=\"170\" text-anchor=\"middle\">Solidifying Metal</text><circle cx=\"130\" cy=\"100\" r=\"15\"/><text x=\"130\" y=\"104\" text-anchor=\"middle\">Gas Bubble</text><path d=\"M 130 85 Q 160 120 190 85\" stroke-dasharray=\"2,2\"/><text x=\"170\" y=\"100\" text-anchor=\"middle\">Entrapped Gas</text><text x=\"240\" y=\"110\" text-anchor=\"end\">Rounded Cavity (Blowhole)</text></svg>",
+   "n": "what causes the defect blowhole in castings?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "936eb12": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Thick Section Casting -->\n  <rect x=\"40\" y=\"40\" width=\"100\" height=\"80\" />\n  <text x=\"90\" y=\"75\" text-anchor=\"middle\">Thick\nSection</text>\n  \n  <!-- Shrinkage Cavity -->\n  <rect x=\"60\" y=\"60\" width=\"20\" height=\"20\" fill=\"#333\" opacity=\"0.8\" />\n  <circle cx=\"70\" cy=\"70\" r=\"10\" stroke=\"#222\" fill=\"none\"/>\n  <text x=\"70\" y=\"65\" text-anchor=\"middle\">Cavity</text>\n  \n  <!-- Riser (Feeder) -->\n  <rect x=\"140\" y=\"40\" width=\"40\" height=\"80\" />\n  <text x=\"160\" y=\"75\" text-anchor=\"middle\">Riser</text>\n  \n  <!-- Liquid Metal Flow (Stopped) -->\n  <path d=\"M 130 90 L 120 90 L 120 100 L 130 100\" stroke-dasharray=\"4\" />\n  <text x=\"125\" y=\"95\" text-anchor=\"middle\">No Feed</text>\n  \n  <!-- Labels -->\n  <text x=\"20\" y=\"180\">Solidification Direction</text>\n  <path d=\"M 30 170 L 60 170\" stroke=\"#222\" marker-end=\"url(#arrow)\"/>\n  <circle cx=\"45\" cy=\"170\" r=\"2\" fill=\"#222\"/>\n</svg>",
+   "n": "what is a shrinkage cavity in a casting?",
    "sub": "production",
    "at": "2026-10-31"
   }
