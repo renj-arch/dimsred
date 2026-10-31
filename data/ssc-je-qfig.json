@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T12:37:41.371Z",
-  "cursor": 129,
-  "built": 124
+  "updatedAt": "2026-10-31T13:11:29.407Z",
+  "cursor": 132,
+  "built": 127
  },
  "figs": {
   "11434945": {
@@ -747,6 +747,24 @@
   "e38ec934": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\">Tension (Force)</text><circle cx=\"40\" cy=\"100\" r=\"3\"/><text x=\"35\" y=\"90\">T1</text><circle cx=\"320\" cy=\"100\" r=\"3\"/><text x=\"315\" y=\"90\">T2</text><path d=\"M 40 100 Q 180 60 320 100\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"70\" text-anchor=\"middle\">Wrap Angle θ</text><path d=\"M 40 100 L 40 160 M 320 100 L 320 160\" stroke-dasharray=\"2,2\"/><text x=\"35\" y=\"180\">Friction</text><text x=\"315\" y=\"180\">Friction</text><line x1=\"40\" y1=\"170\" x2=\"320\" y2=\"170\"/><text x=\"180\" y=\"190\" text-anchor=\"middle\">Resultant Force</text></svg>",
    "n": "state the tension ratio of a band brake.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "f6ebaac0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><circle cx=\"180\" cy=\"110\" r=\"90\" /><path d=\"M180 20 L180 200 M130 110 L230 110\" stroke-dasharray=\"4,4\" /><path d=\"M180 110 L160 145 M180 110 L200 145\" /><text x=\"170\" y=\"140\">Band</text><text x=\"190\" y=\"140\">Friction</text><path d=\"M30 110 L60 110 M30 110 L30 150\" /><text x=\"20\" y=\"115\">Lever Force</text><text x=\"20\" y=\"155\">Applied</text><path d=\"M300 110 L330 110 M300 110 L300 150\" /><text x=\"320\" y=\"115\">Anchor</text><text x=\"320\" y=\"155\">Fixed</text><path d=\"M180 110 Q160 90 180 70 M180 110 Q200 90 180 70\" /><text x=\"165\" y=\"65\">Tight Side</text><text x=\"215\" y=\"65\">Loose Side</text><path d=\"M180 110 L140 130 M180 110 L220 130\" /><text x=\"130\" y=\"145\">Self-Energizing</text><text x=\"210\" y=\"145\">Non-Energizing</text></svg>",
+   "n": "why do band brakes give different torques for the two directions of rotation?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "819c60b5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><circle cx=\"180\" cy=\"110\" r=\"70\" /><text x=\"180\" y=\"100\" text-anchor=\"middle\">r</text><path d=\"M 250 110 L 340 110\" stroke-dasharray=\"4,4\" /><text x=\"260\" y=\"125\" text-anchor=\"start\">F</text><path d=\"M 250 110 L 250 180\" stroke-dasharray=\"4,4\" /><text x=\"235\" y=\"145\" text-anchor=\"end\">μR</text><path d=\"M 180 180 L 180 110\" stroke-width=\"2\" /><text x=\"170\" y=\"145\" text-anchor=\"end\">Normal Reaction R</text></svg>",
+   "n": "write the retarding torque of a simple shoe (block) brake.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "51b9303": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"40\" /><text x=\"80\" y=\"70\" text-anchor=\"middle\">L</text><line x1=\"60\" y1=\"60\" x2=\"100\" y2=\"60\" stroke=\"#222\" /><text x=\"50\" y=\"45\" text-anchor=\"end\">Diameter D</text><line x1=\"60\" y1=\"40\" x2=\"60\" y2=\"80\" stroke=\"#222\" /><text x=\"110\" y=\"60\" text-anchor=\"middle\">Load W</text><path d=\"M 130 60 L 170 60\" stroke-dasharray=\"4,2\" /><text x=\"150\" y=\"50\" text-anchor=\"middle\">Projected Area</text><text x=\"150\" y=\"80\" text-anchor=\"middle\">= L × D</text><text x=\"150\" y=\"110\" text-anchor=\"middle\">p = W / (L × D)</text></svg>",
+   "n": "write the bearing pressure on a journal bearing.",
    "sub": "design",
    "at": "2026-10-31"
   }
