@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-30T20:11:30.953Z",
-  "cursor": 102,
-  "built": 97
+  "updatedAt": "2026-10-31T05:08:23.804Z",
+  "cursor": 105,
+  "built": 100
  },
  "figs": {
   "87926696": {
@@ -587,6 +587,24 @@
    "n": "what is the stress concentration factor of a circular hole in an infinitely wide plate?",
    "sub": "design",
    "at": "2026-10-30"
+  },
+  "bbc7e119": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Stress</text><text x=\"10\" y=\"35\">Concentration</text><line x1=\"40\" y1=\"25\" x2=\"320\" y2=\"25\" stroke-dasharray=\"4\"/><text x=\"180\" y=\"15\" text-anchor=\"middle\">Stress Intensity (σ)</text><path d=\"M 40 25 L 60 100 L 80 190\" fill=\"none\" stroke=\"#222\"/><text x=\"30\" y=\"110\" text-anchor=\"end\">Sharp Tip</text><path d=\"M 40 25 L 140 25 L 140 190 L 40 190 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"80\" y=\"110\" text-anchor=\"middle\">Small Radius</text><path d=\"M 160 25 L 320 25 L 320 190 L 160 190 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"240\" y=\"110\" text-anchor=\"middle\">Large Radius</text><path d=\"M 160 25 L 180 100 L 200 190\" fill=\"none\" stroke=\"#222\"/><text x=\"190\" y=\"110\" text-anchor=\"end\">Blunt Tip</text><path d=\"M 40 25 L 320 25\" stroke-dasharray=\"4\"/><text x=\"180\" y=\"45\" text-anchor=\"middle\">Distance from Notch</text></svg>",
+   "n": "how does the sharpness of a notch or fillet tip affect kt?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "ec7f31a2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"80\" width=\"120\" height=\"40\"/>\n <path d=\"M 40 100 L 160 100\"/>\n <path d=\"M 40 90 L 160 90\"/>\n <path d=\"M 40 110 L 160 110\"/>\n <circle cx=\"120\" cy=\"95\" r=\"3\"/>\n <text x=\"117\" y=\"88\">Stress Peak</text>\n <rect x=\"180\" y=\"80\" width=\"140\" height=\"40\"/>\n <path d=\"M 180 100 L 320 100\"/>\n <path d=\"M 180 90 L 320 90\"/>\n <path d=\"M 180 110 L 320 110\"/>\n <circle cx=\"260\" cy=\"95\" r=\"3\"/>\n <text x=\"257\" y=\"88\">Relief Groove</text>\n <text x=\"45\" y=\"130\">Shoulder</text>\n <text x=\"200\" y=\"130\">Annular Channel</text>\n <text x=\"265\" y=\"130\">Stress Spread</text>\n <text x=\"180\" y=\"205\">Relief Groove Concept</text>\n</svg>",
+   "n": "what is a relief groove and what does it achieve?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "1579fbc0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"80\" y=\"40\" width=\"200\" height=\"140\" /><text x=\"180\" y=\"70\" text-anchor=\"middle\">Shaft Diameter (d)</text><line x1=\"180\" y1=\"65\" x2=\"180\" y2=\"155\" stroke-dasharray=\"4,3\" /><text x=\"195\" y=\"100\" text-anchor=\"start\">Key Width (b)</text><rect x=\"170\" y=\"75\" width=\"20\" height=\"60\" fill=\"#222\" opacity=\"0.2\" /><text x=\"185\" y=\"110\" text-anchor=\"middle\">Key Thickness (t)</text><line x1=\"190\" y1=\"75\" x2=\"190\" y2=\"135\" stroke-dasharray=\"4,3\" /><text x=\"205\" y=\"100\" text-anchor=\"start\">Shaft Radius (d/2)</text><line x1=\"180\" y1=\"65\" x2=\"260\" y2=\"65\" stroke-dasharray=\"4,3\" /><text x=\"270\" y=\"70\" text-anchor=\"end\">= d</text><text x=\"270\" y=\"95\" text-anchor=\"end\">= 4t = 4b</text></svg>",
+   "n": "give the proportions of a square key.",
+   "sub": "design",
+   "at": "2026-10-31"
   }
  }
 }
