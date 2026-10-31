@@ -75,6 +75,9 @@ console.log('\n--- a weak topic is prioritised ---');
   assert(st.status === 'weak', 'status is weak', st.status);
   assert(Math.abs(st.accuracy - 0.3) < 1e-9, 'accuracy is 30%', st.accuracy);
   assert(st.mastery < 0.5, 'mastery stays below 50%', st.mastery);
+  assert(p.summary.weak === 1 && p.summary.due === 0,
+    'a weak topic is not also counted as due',
+    'weak=' + p.summary.weak + ' due=' + p.summary.due);
 
   const plan = AE.buildPlan(p, { limit: 3 });
   assert(plan[0].kind === 'weak' && plan[0].topic === 'Mathematics',

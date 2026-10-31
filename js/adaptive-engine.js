@@ -244,9 +244,7 @@
         papers: papers.length,
         weak: topicList.filter(function (st) { return st.status === 'weak'; }).length,
         strong: topicList.filter(function (st) { return st.status === 'strong'; }).length,
-        due: topicList.filter(function (st) {
-          return st.attempts > 0 && st.dueIn !== null && st.dueIn <= 0;
-        }).length,
+        due: topicList.filter(function (st) { return st.status === 'due'; }).length,
         lastActivity: topicList.reduce(function (latest, st) {
           if (!st.lastSeen) return latest;
           return !latest || st.lastSeen > latest ? st.lastSeen : latest;
