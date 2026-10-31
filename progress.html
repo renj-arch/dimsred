@@ -37,6 +37,8 @@ a{color:var(--text);text-decoration:none}
 .rec-list{list-style:none;padding:0}
 .rec-list li{padding:10px 14px;background:var(--bg-hover);border-radius:8px;margin-bottom:8px;font-size:.9em;color:var(--text-sec)}
 .rec-list li:hover{background:rgba(139,92,246,.1);color:var(--text)}
+.rec-list a{display:block;color:inherit}
+.section-note{font-size:.78em;color:var(--text-muted);margin:-8px 0 16px}
 .empty-state{text-align:center;padding:40px;color:var(--text-muted)}
 .empty-state p{margin-bottom:16px}
 .btn{display:inline-block;padding:10px 20px;background:var(--purple);color:#fff;border-radius:8px;font-weight:600;font-size:.9em;transition:all .2s}
@@ -68,6 +70,7 @@ a{color:var(--text);text-decoration:none}
 
   <div class="section">
     <h2>Subject Progress</h2>
+    <p class="section-note">Each bar fills as you explore pages within a subject (100% at 5 pages).</p>
     <div id="subjectProgress"></div>
   </div>
 
@@ -88,22 +91,28 @@ a{color:var(--text);text-decoration:none}
   var tracker = window.ProgressTracker;
   if (!tracker) return;
 
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
   var summary = tracker.getSummary();
   document.getElementById('statPages').textContent = summary.totalPages;
   document.getElementById('statStreak').textContent = summary.streak;
-  document.getElementById('statSubjects').textContent = summary.subjects.length;
+  document.getElementById('statSubjects').textContent = summary.studySubjects.length;
   document.getElementById('statVisits').textContent = summary.totalVisits;
 
-  // Subject progress
+  // Subject progress — utility pages (dashboard, progress) are excluded.
   var container = document.getElementById('subjectProgress');
-  if (summary.subjects.length === 0) {
+  if (summary.studySubjects.length === 0) {
     container.innerHTML = '<div class="empty-state"><p>No subjects explored yet. Start studying!</p><a href="index.html" class="btn">Start Learning</a></div>';
   } else {
     var html = '';
-    summary.subjects.forEach(function(s) {
+    summary.studySubjects.forEach(function(s) {
       var pct = Math.min(100, Math.round((s.pagesVisited / 5) * 100));
       html += '<div class="progress-row">';
-      html += '<span class="progress-label">' + s.name + '</span>';
+      html += '<span class="progress-label">' + esc(s.name) + '</span>';
       html += '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
       html += '<span class="progress-count">' + s.pagesVisited + '</span>';
       html += '</div>';
@@ -111,30 +120,28 @@ a{color:var(--text);text-decoration:none}
     container.innerHTML = html;
   }
 
-  // Recommendations
+  // Recommendations — each is a real destination, not inert text.
   var recs = tracker.getRecommendations(8);
   var recContainer = document.getElementById('recList');
   if (recs.length === 0) {
     recContainer.innerHTML = '<li>All subjects explored! Keep revising.</li>';
   } else {
-    recContainer.innerHTML = recs.map(function(r) { return '<li>' + r + '</li>'; }).join('');
+    recContainer.innerHTML = recs.map(function(r) {
+      return '<li><a href="' + esc(r.href) + '">' + esc(r.name) + '</a></li>';
+    }).join('');
   }
 
   // Recent visits
-  var data = tracker.getData();
-  var pages = Object.keys(data.pages).sort(function(a, b) {
-    return new Date(data.pages[b].lastVisit) - new Date(data.pages[a].lastVisit);
-  }).slice(0, 10);
+  var pages = tracker.getRecentPages(10);
   var recentContainer = document.getElementById('recentVisits');
   if (pages.length === 0) {
     recentContainer.innerHTML = '<div class="empty-state"><p>No visits recorded yet.</p></div>';
   } else {
     var rhtml = '';
     pages.forEach(function(p) {
-      var info = data.pages[p];
       rhtml += '<div class="progress-row">';
-      rhtml += '<span class="progress-label">' + p.replace('.html', '') + '</span>';
-      rhtml += '<span style="font-size:.8em;color:var(--text-muted)">' + info.subject + ' · ' + info.visits + ' visit(s)</span>';
+      rhtml += '<span class="progress-label">' + esc(p.page.replace('.html', '')) + '</span>';
+      rhtml += '<span style="font-size:.8em;color:var(--text-muted)">' + esc(p.subject) + ' · ' + p.visits + ' visit(s)</span>';
       rhtml += '</div>';
     });
     recentContainer.innerHTML = rhtml;

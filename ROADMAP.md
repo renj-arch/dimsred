@@ -81,6 +81,18 @@ Unified search across all content types with provenance links.
   - Created `progress.html` (dedicated progress dashboard)
   - Integrated tracker into `index.html` and `dashboard.html`
   - Added navigation links to progress page
+  - Follow-up fixes caught by `scripts/lib/progress-tracker.test.js`:
+    - Visit is now recorded synchronously, so the dashboard shows today's page
+      on first paint instead of 0.
+    - Directory URLs (`/cgl/`, `/rbi/`) keyed as `index.html` and collapsed into
+      one page; now keyed by site-relative path.
+    - Subject registry rewritten from one table; removed the dead `/lda/` target
+      and the wrong `/ssc-je/` directory (`ssc-je.html` is a page).
+    - Recommendations are links with a real destination, not inert text.
+    - Dashboard/Progress excluded from "subjects explored".
+    - Monotonic visit sequence makes "recent pages" deterministic on tied
+      timestamps.
+  - Added `npm run test-progress` (18 assertions).
 - 2026-10-31: Completed Phase 2 — Knowledge Graph Explorer
   - Created `scripts/build-knowledge-graph.js` and `data/knowledge-graph.json`
   - Created `knowledge-graph.html` (search, radial neighbourhood, pan, type filter)
