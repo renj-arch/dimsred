@@ -2,6 +2,18 @@
 <html lang="en">
 <head>
 <meta charset="utf-8" />
+<script>
+(function () {
+  var map = {
+    'salt-march': 'salt-march-production.html',
+    'the-vatican-archives': 'the-vatican-archives-production.html',
+    'emergency-1975': 'emergency-1975-production.html',
+    'bhopal-gas-tragedy': 'bhopal-gas-tragedy-production.html'
+  };
+  var id = new URLSearchParams(location.search).get('film');
+  if (id && map[id]) location.replace(map[id] + location.hash);
+})();
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Proof of work — Jallianwala Bagh | vlymbooq</title>
 <meta name="description" content="The production dossier for Jallianwala Bagh: 50 cuts, 9 procedural sets, 39 sourced lines, a rejected first cut and the free-CI pipeline that renders every frame." />
@@ -262,7 +274,7 @@
       <a href="#sets">The sets</a>
       <a href="#sources">Sources</a>
       <a href="#transparency">Transparency</a>
-      <a href="film.html?film=jallianwala-bagh" id="navWatch">Watch</a>
+      <a href="watch.html?film=jallianwala-bagh" id="navWatch">Watch</a>
     </nav>
   </div>
 </header>
@@ -287,7 +299,7 @@
         <h2 id="filmTitle">JALLIANWALA BAGH</h2>
         <p id="filmIntro">A walled garden, a banned meeting, a general who chose punishment. The film follows the notice, the wall, the watch, the well and the report.</p>
         <div class="actions">
-          <a class="btn strong" href="film.html?film=jallianwala-bagh" id="watchLink">Watch the cut →</a>
+          <a class="btn strong" href="watch.html?film=jallianwala-bagh" id="watchLink">Watch the cut →</a>
           <a class="btn" href="debates.html?film=jallianwala-bagh" id="argumentLink">Open the argument</a>
         </div>
         <dl class="receipt" id="receipt"></dl>
@@ -436,8 +448,8 @@
 
 <footer>
   <div class="wrap">
-    <span>vlymbooq · a film in the making</span>
-    <span><a href="films.html">All films</a> &middot; <a href="film.html?film=jallianwala-bagh" id="footerWatch">Watch</a></span>
+    <span>vlymbooq · production dossiers</span>
+    <span><a href="films.html">All films</a> &middot; <a href="salt-march-production.html">Salt</a> &middot; <a href="the-vatican-archives-production.html">Vatican</a> &middot; <a href="emergency-1975-production.html">Emergency</a> &middot; <a href="bhopal-gas-tragedy-production.html">Bhopal</a> &middot; <a href="watch.html?film=jallianwala-bagh" id="footerWatch">Watch</a></span>
   </div>
 </footer>
 
@@ -657,11 +669,11 @@
       poster.alt = hero.posterAlt || '';
     }
     var watch = $('watchLink');
-    if (watch) watch.href = 'film.html?film=' + encodeURIComponent(FILM);
+    if (watch) watch.href = 'watch.html?film=' + encodeURIComponent(FILM);
     var navWatch = $('navWatch');
-    if (navWatch) navWatch.href = 'film.html?film=' + encodeURIComponent(FILM);
+    if (navWatch) navWatch.href = 'watch.html?film=' + encodeURIComponent(FILM);
     var footerWatch = $('footerWatch');
-    if (footerWatch) footerWatch.href = 'film.html?film=' + encodeURIComponent(FILM);
+    if (footerWatch) footerWatch.href = 'watch.html?film=' + encodeURIComponent(FILM);
     var argument = $('argumentLink');
     if (argument) argument.href = 'debates.html?film=' + encodeURIComponent(FILM);
     document.title = hero.title + ' | vlymbooq production';
