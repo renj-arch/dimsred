@@ -1,11 +1,23 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T05:08:23.804Z",
-  "cursor": 105,
-  "built": 100
+  "updatedAt": "2026-10-31T05:27:41.168Z",
+  "cursor": 108,
+  "built": 103
  },
  "figs": {
+  "11434945": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Left Hub -->\n  <circle cx=\"80\" cy=\"110\" r=\"40\"/>\n  <path d=\"M 40 110 L 60 110 M 40 90 L 40 130 M 60 90 L 60 130\" stroke-width=\"2\"/>\n  <!-- Right Hub -->\n  <circle cx=\"280\" cy=\"110\" r=\"40\"/>\n  <path d=\"M 240 110 L 260 110 M 240 90 L 240 130 M 260 90 L 260 130\" stroke-width=\"2\"/>\n  <!-- Sleeve (Internal Teeth) -->\n  <path d=\"M 120 110 Q 180 50 240 110 T 120 110\" fill=\"none\" stroke-dasharray=\"3,2\"/>\n  <!-- Meshing Gear Teeth Representation -->\n  <path d=\"M 100 110 L 115 95 M 115 125 L 100 140\" stroke-width=\"1.8\"/>\n  <path d=\"M 130 110 L 145 95 M 145 125 L 130 140\" stroke-width=\"1.8\"/>\n  <path d=\"M 160 110 L 175 95 M 175 125 L 160 140\" stroke-width=\"1.8\"/>\n  <path d=\"M 190 110 L 205 95 M 205 125 L 190 140\" stroke-width=\"1.8\"/>\n  <path d=\"M 220 110 L 235 95 M 235 125 L 220 140\" stroke-width=\"1.8\"/>\n  <!-- Labels -->\n  <text x=\"40\" y=\"60\" text-anchor=\"middle\">Input Shaft</text>\n  <text x=\"300\" y=\"60\" text-anchor=\"middle\">Output Shaft</text>\n  <text x=\"180\" y=\"200\" text-anchor=\"middle\">Flexible Sleeve</text>\n  <text x=\"180\" y=\"190\" text-anchor=\"middle\">(Internal Teeth)</text>\n  <text x=\"180\" y=\"40\" text-anchor=\"middle\">Meshing Gear Teeth</text>\n</svg>",
+   "n": "what is a gear coupling and where is it used?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "86873829": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"40\" text-anchor=\"middle\">SINGLE KEY (Point Load)</text>\n <rect x=\"80\" y=\"60\" width=\"200\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/>\n <line x1=\"100\" y1=\"70\" x2=\"100\" y2=\"90\" stroke=\"#222\" stroke-width=\"3\"/>\n <text x=\"105\" y=\"85\">KEY</text>\n <rect x=\"80\" y=\"100\" width=\"200\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/>\n <line x1=\"100\" y1=\"110\" x2=\"100\" y2=\"130\" stroke=\"#222\" stroke-width=\"3\"/>\n <text x=\"105\" y=\"125\">KEY</text>\n <rect x=\"80\" y=\"140\" width=\"200\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/>\n <line x1=\"100\" y1=\"150\" x2=\"100\" y2=\"170\" stroke=\"#222\" stroke-width=\"3\"/>\n <text x=\"105\" y=\"165\">KEY</text>\n <rect x=\"80\" y=\"180\" width=\"200\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/>\n <line x1=\"100\" y1=\"190\" x2=\"100\" y2=\"210\" stroke=\"#222\" stroke-width=\"3\"/>\n <text x=\"105\" y=\"205\">KEY</text>\n <text x=\"180\" y=\"205\" text-anchor=\"middle\">SPLINES (Distributed Load)</text>\n</svg>",
+   "n": "when are splines preferred over a single key?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
   "87926696": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Stress (σ)</text><line x1=\"40\" y1=\"30\" x2=\"320\" y2=\"30\"/><line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"190\"/><line x1=\"320\" y1=\"30\" x2=\"320\" y2=\"190\"/><text x=\"180\" y=\"205\" text-anchor=\"middle\">Cycles (N)</text><polyline points=\"40,190 320,190\" stroke-dasharray=\"4,2\"/><text x=\"280\" y=\"175\">Specified Life</text><circle cx=\"260\" cy=\"110\" r=\"3\" fill=\"#222\"/><line x1=\"250\" y1=\"107\" x2=\"270\" y2=\"107\"/><text x=\"245\" y=\"102\">Fatigue Strength</text><path d=\"M 40 190 L 320 190 L 320 30 L 40 30 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"180\" y=\"150\" text-anchor=\"middle\">S-N Curve</text></svg>",
    "n": "define fatigue strength.",
@@ -603,6 +615,12 @@
   "1579fbc0": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"80\" y=\"40\" width=\"200\" height=\"140\" /><text x=\"180\" y=\"70\" text-anchor=\"middle\">Shaft Diameter (d)</text><line x1=\"180\" y1=\"65\" x2=\"180\" y2=\"155\" stroke-dasharray=\"4,3\" /><text x=\"195\" y=\"100\" text-anchor=\"start\">Key Width (b)</text><rect x=\"170\" y=\"75\" width=\"20\" height=\"60\" fill=\"#222\" opacity=\"0.2\" /><text x=\"185\" y=\"110\" text-anchor=\"middle\">Key Thickness (t)</text><line x1=\"190\" y1=\"75\" x2=\"190\" y2=\"135\" stroke-dasharray=\"4,3\" /><text x=\"205\" y=\"100\" text-anchor=\"start\">Shaft Radius (d/2)</text><line x1=\"180\" y1=\"65\" x2=\"260\" y2=\"65\" stroke-dasharray=\"4,3\" /><text x=\"270\" y=\"70\" text-anchor=\"end\">= d</text><text x=\"270\" y=\"95\" text-anchor=\"end\">= 4t = 4b</text></svg>",
    "n": "give the proportions of a square key.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "827cf6af": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Flange Coupling Cross-Section</text><rect x=\"40\" y=\"30\" width=\"100\" height=\"60\" rx=\"5\"/><rect x=\"220\" y=\"30\" width=\"100\" height=\"60\" rx=\"5\"/><circle cx=\"80\" cy=\"60\" r=\"15\" fill=\"#ddd\" stroke=\"#222\"/><circle cx=\"280\" cy=\"60\" r=\"15\" fill=\"#ddd\" stroke=\"#222\"/><line x1=\"80\" y1=\"45\" x2=\"95\" y2=\"75\" stroke-width=\"3\"/><line x1=\"280\" y1=\"45\" x2=\"265\" y2=\"75\" stroke-width=\"3\"/><text x=\"70\" y=\"65\" text-anchor=\"end\">Bolt</text><text x=\"98\" y=\"65\" text-anchor=\"start\">Shear Pin Action</text><line x1=\"80\" y1=\"75\" x2=\"95\" y2=\"45\" stroke-width=\"3\"/><line x1=\"280\" y1=\"75\" x2=\"265\" y2=\"45\" stroke-width=\"3\"/><text x=\"290\" y=\"65\" text-anchor=\"end\">Bolt</text><text x=\"262\" y=\"65\" text-anchor=\"start\">Shear Pin Action</text><line x1=\"80\" y1=\"75\" x2=\"140\" y2=\"75\" stroke-width=\"1.5\"/><line x1=\"220\" y1=\"75\" x2=\"280\" y2=\"75\" stroke-width=\"1.5\"/><text x=\"135\" y=\"85\" text-anchor=\"end\">Torque</text><text x=\"225\" y=\"85\" text-anchor=\"start\">Torque</text><line x1=\"40\" y1=\"90\" x2=\"40\" y2=\"110\" stroke-width=\"1.5\"/><line x1=\"220\" y1=\"90\" x2=\"220\" y2=\"110\" stroke-width=\"1.5\"/><text x=\"35\" y=\"100\" text-anchor=\"end\">Flange</text><text x=\"215\" y=\"100\" text-anchor=\"start\">Flange</text></svg>",
+   "n": "why are flange-coupling bolts made as fitted (turned) bolts?",
    "sub": "design",
    "at": "2026-10-31"
   }
