@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T15:42:07.414Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address broken figures immediately as they are likely causing critical failures. MainsFresh should generate fresh material to keep content current, while MetaLearn can tackle syllabus gaps if files are missing or incomplete. Invention is deferred due to zero output in recent runs and pending ideas being low priority compared to faults.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (147 total)",
-       "text": "What metal is most widely used for die casting and why? | Why is a pattern made oversize on the finished dimensions? | What is draft on a pattern and how much is usual?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T16:11:10.721Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -723,8 +683,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T20:33:27.526Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "BankFigures is the only agent producing fixes; it must run first to clear critical faults and figure gaps. MainsFresh and ExamPatterns have produced zero for two+ runs and are starved of input, so they move last despite their high priority in the goal list. Invention and MetaLearn also show 0 output recently but will follow the primary fixers.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (190 total)",
+       "text": "What is the purpose of an offset on a shearing blade? | Name the three elements of a turning cut. | How is a taper turned on a lathe?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwuz4ki (gs3, 15 marks): Critically examine the statement that 'Space is no longer a domain for exploration but a contested arena for strategic c",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T20:00:25.276Z",
+ "lastRun": "2026-10-31T20:33:27.526Z",
  "model": "qwen3.5:9b"
 }
