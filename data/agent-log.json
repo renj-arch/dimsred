@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T15:22:38.544Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures must run first to fix broken diagrams. Mainsfresh is required next to generate fresh daily content for unfinished syllabus sections. Metalearn should follow to synthesize new study strategies from the corrected figures and mains content, addressing pending ideas. Invention will be last as it produces new ventures only after core maintenance gaps are reduced.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (144 total)",
-       "text": "Give the ratios of the Renard preferred number series. | What does the BIS (ISI) mark certify? | What do ergonomic and aesthetic design consider?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T15:42:07.414Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -723,8 +678,41 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T19:57:38.714Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "Flowchart",
+       "fix": "Runtime: missing ) after argument list",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T19:43:21.260Z",
+ "lastRun": "2026-10-31T19:57:38.714Z",
  "model": "qwen3.5:9b"
 }
