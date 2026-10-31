@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T17:01:01.895Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Prioritizing the 81 open faults and 79 figure gaps as critical standing goals; BankFigures must immediately address the missing figures driving the gap count. MainsFresh should tackle content freshness to counteract the lack of papers/questions in the file state. MetaLearn is scheduled last despite zero output recently, as it requires fresh inputs from other agents before it can generate value again.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (158 total)",
-       "text": "What is flash on a casting? | What is metal penetration in a sand mould? | Name the principal types of melting furnaces used in a foundry."
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwndxz9 (gs3, 15 marks): Critically examine the role of soil organic carbon (SOC) in achieving India's net-zero targets. In your answer, discuss ",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T17:16:51.416Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -716,8 +665,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T22:15:53.300Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must be prioritized to fix broken visual content immediately. Since MetaLearn and Invention have produced zero fixes for three consecutive runs, they are moved to the end of the execution order as per the starvation rule, while BankFigures addresses the most urgent structural defects first.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (201 total)",
+       "text": "What is the hole-basis system of fits? | What is the difference between trueing and dressing a grinding wheel? | What are glazing and loading of a grinding wheel?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T21:55:26.011Z",
+ "lastRun": "2026-10-31T22:15:53.300Z",
  "model": "qwen3.5:9b"
 }
