@@ -117,6 +117,7 @@ h1{font-size:24px;margin:6px 0 8px}
 </div>
 
 <script src="scripts/lib/ask-llm.js"></script>
+<script src="scripts/lib/ask-figures.js"></script>
 <script src="js/owner-runner.js?v=20261019b"></script>
 <script>
 'use strict';
@@ -359,6 +360,14 @@ document.addEventListener('click', function (e) {
       box.hidden = showing;
       open.textContent = showing ? 'Show the model answer' : 'Hide the model answer';
       open.className = showing ? 'btn' : 'btn sec';
+      // Figures: attach syllabus sketches (maps, charts, architecture) to the
+      // answer so theory and diagram are studied together. The shared library
+      // matches on the question text; a dead hotlink removes its own card.
+      if (!showing && window.VlymbooqAskFigures) {
+        var section = box.closest ? box.closest('.q') : null;
+        var h2 = section && section.querySelector('h2');
+        try { VlymbooqAskFigures.decorate(box, h2 ? h2.textContent : ''); } catch (e) {}
+      }
     }
   }
 });
