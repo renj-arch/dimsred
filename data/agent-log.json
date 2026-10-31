@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T15:22:38.544Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures must run first to fix broken diagrams. Mainsfresh is required next to generate fresh daily content for unfinished syllabus sections. Metalearn should follow to synthesize new study strategies from the corrected figures and mains content, addressing pending ideas. Invention will be last as it produces new ventures only after core maintenance gaps are reduced.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (144 total)",
-       "text": "Give the ratios of the Renard preferred number series. | What does the BIS (ISI) mark certify? | What do ergonomic and aesthetic design consider?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T15:42:07.414Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -723,8 +678,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T20:00:25.276Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing figures immediately as unfinished standing goals. MainsFresh is required to generate fresh daily material since papers, questions, sidecar, and syllabus files are absent. MetaLearn should follow to synthesize new content from these gaps, while Invention can be queued last to explore new ideas once core maintenance is underway.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (187 total)",
+       "text": "How is the clearance between punch and die set in a blanking die? | What is springback in sheet forming? | Write the force relation for blanking a sheet."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T19:43:21.260Z",
+ "lastRun": "2026-10-31T20:00:25.276Z",
  "model": "qwen3.5:9b"
 }

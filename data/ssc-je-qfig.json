@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T19:34:08.651Z",
-  "cursor": 192,
-  "built": 184
+  "updatedAt": "2026-10-31T19:51:37.326Z",
+  "cursor": 195,
+  "built": 187
  },
  "figs": {
   "11434945": {
@@ -1107,6 +1107,24 @@
   "88a91409": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"25\" text-anchor=\"middle\">Metal Flow Stress vs Temperature</text>\n <line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" />\n <text x=\"330\" y=\"170\">Low Temp (Cold)</text>\n <text x=\"330\" y=\"155\">High Temp (Hot)</text>\n <line x1=\"40\" y1=\"160\" x2=\"40\" y2=\"40\" />\n <text x=\"25\" y=\"90\">Flow Stress</text>\n <path d=\"M 80 160 L 120 160 L 120 80 L 160 80 L 160 40\" />\n <path d=\"M 80 160 L 120 160 L 120 100 L 160 100 L 160 40\" stroke-dasharray=\"4,2\" />\n <text x=\"95\" y=\"130\">Cold Work</text>\n <text x=\"175\" y=\"130\">Hot Work</text>\n <rect x=\"80\" y=\"140\" width=\"80\" height=\"20\" fill=\"#eee\" />\n <rect x=\"160\" y=\"140\" width=\"80\" height=\"20\" fill=\"#eee\" />\n <text x=\"120\" y=\"157\">High Stress</text>\n <text x=\"200\" y=\"157\">Low Stress (Easy Flow)</text>\n <line x1=\"340\" y1=\"80\" x2=\"360\" y2=\"80\" stroke-dasharray=\"4,2\" />\n <text x=\"345\" y=\"85\">Die Opening</text>\n</svg>",
    "n": "why is extrusion usually done hot?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "4531158e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"5\"/><text x=\"50\" y=\"70\">Sheet Metal</text><path d=\"M 60 90 L 300 90\" stroke-dasharray=\"4,2\"/><text x=\"170\" y=\"85\">Workpiece</text><rect x=\"60\" y=\"100\" width=\"240\" height=\"60\" fill=\"#eee\"/><text x=\"180\" y=\"130\">Die Opening</text><rect x=\"60\" y=\"100\" width=\"240\" height=\"50\" fill=\"#ddd\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"125\">Punch Opening</text><line x1=\"60\" y1=\"150\" x2=\"300\" y2=\"150\" stroke-width=\"1\"/><text x=\"170\" y=\"145\">Burnished Band</text><text x=\"170\" y=\"160\">Fracture Zone</text><line x1=\"60\" y1=\"180\" x2=\"300\" y2=\"180\" stroke-width=\"1\"/><text x=\"170\" y=\"195\">Clearance (Die &gt; Punch)</text></svg>",
+   "n": "how is the clearance between punch and die set in a blanking die?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "552ec79a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"80\" width=\"120\" height=\"40\" rx=\"5\" />\n <path d=\"M60 90 L100 90 L100 100 L60 100 Z\" fill=\"#222\" opacity=\"0.2\" />\n <text x=\"80\" y=\"75\" text-anchor=\"middle\">Original Shape</text>\n <path d=\"M40 130 Q100 90 160 130\" stroke-width=\"2\" fill=\"none\" />\n <path d=\"M40 130 L160 130\" stroke-dasharray=\"4,2\" />\n <text x=\"80\" y=\"155\" text-anchor=\"middle\">Formed Shape</text>\n <path d=\"M170 130 Q230 90 290 130\" stroke-width=\"2\" fill=\"none\" />\n <path d=\"M170 130 L290 130\" stroke-dasharray=\"4,2\" />\n <text x=\"230\" y=\"155\" text-anchor=\"middle\">Springback</text>\n <text x=\"80\" y=\"190\" text-anchor=\"middle\">Elastic Recovery</text>\n</svg>",
+   "n": "what is springback in sheet forming?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "de6779a3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"sheet\">\n<path d=\"M20,40 L340,40 L340,180 L20,180 Z\"/>\n</g>\n<g id=\"die_cutting_line\">\n<line x1=\"50\" y1=\"40\" x2=\"50\" y2=\"180\"/>\n<line x1=\"100\" y1=\"40\" x2=\"100\" y2=\"180\"/>\n<line x1=\"150\" y1=\"40\" x2=\"150\" y2=\"180\"/>\n<line x1=\"200\" y1=\"40\" x2=\"200\" y2=\"180\"/>\n<line x1=\"250\" y1=\"40\" x2=\"250\" y2=\"180\"/>\n<line x1=\"300\" y1=\"40\" x2=\"300\" y2=\"180\"/>\n</g>\n<g id=\"labels\">\n<text x=\"320\" y=\"60\">Perimeter (L)</text>\n<text x=\"320\" y=\"90\">Thickness (t)</text>\n<text x=\"320\" y=\"120\">Shear Strength (S)</text>\n</g>\n<g id=\"formula\">\n<rect x=\"50\" y=\"190\" width=\"260\" height=\"20\" fill=\"#eee\" stroke=\"#222\"/>\n<text x=\"70\" y=\"208\">P = S × L × t</text>\n</g>\n</svg>",
+   "n": "write the force relation for blanking a sheet.",
    "sub": "production",
    "at": "2026-10-31"
   }
