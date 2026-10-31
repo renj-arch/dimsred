@@ -299,6 +299,12 @@ var SEED = {
   constitutionalPosts: { type: 'concept', level: 3, list: [
     'Vice President of India', 'Speaker of the Lok Sabha', 'Lokpal'
   ]},
+  // Constitutional schedules / articles: UPSC core topics that are authored
+  // definitions rather than person lifespans, so they anchor on 1950 (the
+  // Constitution's enactment year) rather than being mined from question text.
+  constitutionalProvisions: { type: 'concept', level: 3, list: [
+    'Sixth Schedule'
+  ]},
   canon: { type: 'concept', level: 3, list: [
     'Tipiṭaka (Pali Canon)'
   ]},
@@ -1107,7 +1113,7 @@ var MANUAL_SPANS = {
   'Twitter': [2006, 2026], 'Instagram': [2010, 2026], 'YouTube': [2005, 2026], 'Bitcoin': [2009, 2026],
   'Cryptocurrency': [2009, 2026],
   'Life Insurance Corporation of India': [1956, 2026], 'Export-Import Bank of India': [1982, 2026],
-  'Central Industrial Security Force': [1969, 2026], 'Lokpal': [2013, 2026],
+  'Central Industrial Security Force': [1969, 2026], 'Lokpal': [2013, 2026], 'Sixth Schedule': [1950, 2026],
   'Vice President of India': [1952, 2026], 'Speaker of the Lok Sabha': [1952, 2026],
   'MGNREGA': [2005, 2026], 'Railway Budget': [1924, 2016], 'Blue Revolution': [1970, 2026],
   'El Niño': [1900, 2026], 'La Niña': [1900, 2026],
@@ -1624,6 +1630,10 @@ var TOPIC_DESCS = {
   'Vice President of India': 'ex-officio Chairman of the Rajya Sabha',
   'Speaker of the Lok Sabha': 'presiding officer of the Lok Sabha',
   'Lokpal': 'anti-corruption ombudsman for the central government',
+  // constitutionalProvisions — verbatim Wikipedia leads so Ask can quote them.
+  // Source: Wikipedia, "Sixth Schedule to the Constitution of India"
+  // (pageid 75412116, rev 1375176453, 16 Sep 2026).
+  'Sixth Schedule': 'The Sixth Schedule to the Constitution of India provides measures of autonomy and self-governance to the Scheduled Tribes in the hill regions of Northeast India',
   // canon
   'Tipi\u1e6daka (Pali Canon)': 'canonical scriptures of Theravada Buddhism',
   // empires
@@ -4974,7 +4984,28 @@ var nodeParts = [], curPart = [], curBytes = 0, nodeJson = '';
     return allEdges.filter(function (e) { return !bad.get(e); });
   }
   edges = sanitizeLineage(edges);
-  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, links: links, edges: edges };
+  // Shard links array to stay under Cloudflare Pages 25 MiB per-file limit.
+  // Current links array is ~23 MiB; split into chunks well under the cap.
+  var LINKS_PART_BYTES = 8 * 1024 * 1024;
+  var linkParts = [], curLinkPart = [], curLinkBytes = 0, linkJson = '';
+  for (var lnk of links) {
+    linkJson = JSON.stringify(lnk);
+    curLinkBytes += linkJson.length;
+    if (curLinkBytes > LINKS_PART_BYTES && curLinkPart.length) {
+      linkParts.push(curLinkPart);
+      curLinkPart = [];
+      curLinkBytes = linkJson.length;
+    }
+    curLinkPart.push(lnk);
+  }
+  if (curLinkPart.length) linkParts.push(curLinkPart);
+  var linkPartSizes = [];
+  for (var li = 0; li < linkParts.length; li++) {
+    var linkPartFile = path.join(TIMELINE_DIR, 'timeline-links.' + li + '.json');
+    fs.writeFileSync(linkPartFile, JSON.stringify(linkParts[li]));
+    linkPartSizes.push(fs.statSync(linkPartFile).size);
+  }
+  var out = { builtAt: new Date().toISOString(), eras: ERAS, nodesParts: nodeParts.length, linksParts: linkParts.length, edges: edges };
   fs.writeFileSync(OUT, JSON.stringify(out));
   var withSpan = nodes.filter(function (n) { return n.span; }).length;
   console.log('Wrote ' + OUT);
