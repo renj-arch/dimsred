@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T02:26:02.118Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-10-31T05:01:11.066Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -608,8 +596,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T14:33:04.833Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content creation. BankFigures is the only agent with recent output; MetaLearn, MockPapers, and ExamPatterns have produced zero fixes in the last two runs and should be deprioritized to avoid wasting inference on likely starved agents. MainsFresh will target the remaining critical faults since papers are absent.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (136 total)",
+       "text": "Write the Lewis equation for gear tooth bending. | What does the Buckingham dynamic load equation add to a gear design? | Write the centrifugal (hoop) stress in a flywheel rim."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T14:12:59.463Z",
+ "lastRun": "2026-10-31T14:33:04.833Z",
  "model": "qwen3.5:9b"
 }
