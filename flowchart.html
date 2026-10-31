@@ -582,13 +582,21 @@ function curateRelations(topics){
 function loadData(){
   return fetchJson('data/timeline.json').then(function(t){
     if(Array.isArray(t.nodes))return t;
-    var urls=[];
-    for(var i=0;i<(t.nodesParts||0);i++)urls.push('data/timeline.nodes.'+i+'.json');
-    return Promise.all(urls.map(fetchJson)).then(function(parts){
-      var all=[];
-      for(var p of parts)all=all.concat(p);
-      t.nodes=all;
-      return t;
+    var nodeUrls=[];
+    for(var i=0;i<(t.nodesParts||0);i++)nodeUrls.push('data/timeline.nodes.'+i+'.json');
+    var linkUrls=[];
+    for(var i=0;i<(t.linksParts||0);i++)linkUrls.push('data/timeline-links.'+i+'.json');
+    return Promise.all(nodeUrls.map(fetchJson)).then(function(nodeParts){
+      var allNodes=[];
+      for(var p of nodeParts)allNodes=allNodes.concat(p);
+      t.nodes=allNodes;
+      if(linkUrls.length===0)return t;
+      return Promise.all(linkUrls.map(fetchJson)).then(function(linkParts){
+        var allLinks=[];
+        for(var p of linkParts)allLinks=allLinks.concat(p);
+        t.links=allLinks;
+        return t;
+      });
     });
   });
 }
@@ -1072,7 +1080,7 @@ function cardSvg(id,laneColor,opts){
   if(opts.extra)subs.push(opts.extra);
   if(opts.extraMeta)subs.push(opts.extraMeta);
   if(opts.count!=null)subs.push('·'+fmtCnt(opts.count));
-  inner+='<text class="nsub" x="'+txtx+'" y="'+(CH/2+13)+'" font-size="10">'+esc(trunc(subs.join(' · '),30))+'</text>';
+  inner+='<text class="nsub" x="'+txtx+'" y="'+(CH/2+13)+'" font-size="10">'+esc(trunc(subs.join(' · '),36))+'</text>';
   var cd=CUR_DESC[n.id]||n.desc;
   if(cd){
     var d=trunc(cleanDesc(cd),44);
@@ -1272,7 +1280,9 @@ function renderFlow(id){
     var extra=(coLike&&it.w)?(it.rel+' · w'+it.w):shortRel(it.rel);
     var weak=(coLike&&(it.w||0)<4);
     var cl=(weak?'wcard ':'')+(PIN[it.node.id]?'pinned':'');
-    body+=cardSvg(it.node.id,laneColor[it.lane],{fill:shade(laneColor[it.lane]),extra:extra+(weak?' · distant':''),count:it.node.count||0,idx:UNIQ++,cls:cl});
+    // Compute detailed relationship to center for display on card
+    var relToCenter = getRelationshipToCenter(id, it.node.id, it.rel, it.w);
+    body+=cardSvg(it.node.id,laneColor[it.lane],{fill:shade(laneColor[it.lane]),extra:extra+(weak?' · distant':''),count:it.node.count||0,idx:UNIQ++,cls:cl,rel:relToCenter});
   });
   var hero=BY_ID[id];
   body+=cardSvg(id,'#fbbf24',{fill:'rgba(251,191,36,0.12)',color:'#fbbf24',hero:true,extra:'focus topic',extraMeta:(nt(hero))+' · '+(hero.count||0)+' mentions',idx:UNIQ++});
@@ -1314,6 +1324,25 @@ function renderFlow(id){
   window.scrollTo(0,0);
 }
 function shortRel(r){return trunc(r,30);}
+// Get detailed relationship from center to target card
+function getRelationshipToCenter(centerId, targetId, defaultRel, weight){
+  var center=BY_ID[centerId], target=BY_ID[targetId];
+  if(!center||!target)return defaultRel||'related';
+  var fa=ADJ[centerId]||{}, ca=CADJ[centerId]||{};
+  // Check typed relations first (authored > mined)
+  var rel=fa[targetId]||ca[targetId];
+  if(rel){
+    // Add direction and evidence if available
+    var dir=fa[targetId]? '→' : '⇄';
+    var ev=REL_EV[canon(center.name)+'\u0000'+canon(target.name)];
+    return dir+' '+rel+(ev?' · "'+ev.slice(0,40)+'..."':'');
+  }
+  // Fall back to co-mention with weight
+  if(defaultRel==='related'||defaultRel==='mentioned with'){
+    return 'co-mentioned · w'+(weight||'?');
+  }
+  return defaultRel;
+}
 function attachEdgeHovers(svg){
   var ps=[].slice.call(svg.querySelectorAll('.edge,.rel,.link-dash'));
   for(var i=0;i<ps.length;i++){
@@ -1782,7 +1811,6 @@ document.addEventListener('keydown',function(e){
   if(!editing&&e.altKey&&e.key==='ArrowLeft'){history.back();}
   if(!editing&&e.altKey&&e.key==='ArrowRight'){history.forward();}
 });
-var pinTimer=null;
 document.getElementById('chart').addEventListener('click',function(ev){
   var t=ev.target;
   while(t&&t!==this&&t.getAttribute&&t.getAttribute('data-idx')==null)t=t.parentNode;
@@ -1791,26 +1819,19 @@ document.getElementById('chart').addEventListener('click',function(ev){
   if(!el||(' '+el.className.baseVal+' ').indexOf(' hero ')!==-1)return;
   var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
   if(!id)return;
-  showNote(id);
-  // single click grows that card's branch in place (pin it so its subtree keeps
-  // expanding outward); double-click navigates into it (see dblclick handler).
-  // The re-render is deferred ~230ms so a double-click navigates before the
-  // card table is rebuilt underneath the pending second click target.
-  clearTimeout(pinTimer);
-  pinTimer=setTimeout(function(){
-    if(PIN[id])delete PIN[id];else PIN[id]=1;
-    if(CUR)renderFlow(CUR);
-  },230);
+  // Single click: navigate to this card (make it the center element)
+  // Related cards will surround it with detailed relationships shown
+  navigate(id,true);
 });
+// Double-click: show detailed note for this card (kept for deep reading)
 document.getElementById('chart').addEventListener('dblclick',function(ev){
-  clearTimeout(pinTimer);
   var t=ev.target;
   while(t&&t!==this&&t.getAttribute&&t.getAttribute('data-idx')==null)t=t.parentNode;
   if(!t||t===this)return;
-  var el=document.querySelector('#chart .ncard[data-idx="'+t.getAttribute('data-idx')+'"]');
+  var el=document.querySelector('#chart .ncard[data-idx="'+t.getAttribute('data-idx")+'"]');
   if(!el||(' '+el.className.baseVal+' ').indexOf(' hero ')!==-1)return;
   var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
-  if(id)navigate(id,true);
+  if(id)showNote(id);
 });
 document.getElementById('bGrw').onclick=function(){
   if(FLOW_HOP>=4)return;

@@ -29,9 +29,9 @@ on:
         required: false
         default: ''
       model:
-        description: 'Ollama model tag. Default = fast tier (qwen3:4b); use qwen3.5:9b for heavy agents (MainsFresh).'
+        description: 'Ollama model tag. Default = mid tier (qwen3.5:9b — 6.6GB, fits RAM with swap); use qwen3:4b for ultra-fast runs.'
         required: false
-        default: 'qwen3:4b'
+        default: 'qwen3.5:9b'
 
 concurrency:
   group: site-agent
@@ -61,6 +61,8 @@ jobs:
             js
             /*.html
             figures
+            languages
+            guides
             .github/workflows
             data/faults.json
             data/browser-test.json
@@ -117,25 +119,25 @@ jobs:
 
       # Model cache: the Ollama blob store is content-addressed, so ONE entry
       # serves every model of a size class. Two classes (repo budget 10GB):
-      # "fast" for small models (~2.5GB), "mid" for qwen3.5:9b (~6.6GB).
+      # "mid" for qwen3.5:9b (~6.6GB, DEFAULT), "fast" for qwen3:4b (~2.5GB).
       # 17GB heavy models AND the ~9GB coder model (qwen2.5-coder:14b, the
       # MetaLearn code lane) skip this step entirely and re-pull: neither
       # fits the 10GB repo cache budget. continue-on-error: a cache hiccup
       # must never fail a run.
       - name: Cache Ollama models
-        if: ${{ !contains(inputs.model || 'qwen3:4b', '27b') && !contains(inputs.model || 'qwen3:4b', '22b') && !contains(inputs.model || 'qwen3:4b', 'coder') }}
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') && !contains(inputs.model || 'qwen3.5:9b', 'coder') }}
         continue-on-error: true
         uses: actions/cache@v4
         with:
           path: /home/runner/.ollama/models
-          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3:4b', '9b') && 'mid-v1' || 'fast-v2' }}
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
           restore-keys: |
-            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3:4b', '9b') && 'mid-' || 'fast-' }}
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
 
       # EXACT same start as llm-autofix: no env vars, no flash-attn, no q8.
       # KEEP_ALIVE=60m: without it Ollama unloads the model after 5 min
       # idle, and the NEXT agent pays a full reload (minutes). Public-repo
-      # runners are 4 vCPU / 16GB RAM so fast-tier models fit fully in RAM.
+      # runners are 4 vCPU / 16GB RAM so mid-tier models (9b) fit fully in RAM.
       - name: Start Ollama server
         run: |
           # Same as llm-smoke: stop the kernel from paging model weights out
@@ -160,9 +162,9 @@ jobs:
       # proof may also OOM the server on exit after loading 17GB. Do what
       # llm-autofix does: just pull, warn if down, and let the script's
       # cold-start ping (via Node fetch) be the real proof.
-      - name: Pull model (${{ inputs.model || 'qwen3:4b' }})
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
         env:
-          MODEL_INPUT: ${{ inputs.model || 'qwen3:4b' }}
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
         run: |
           # Community quant tags (user/model:tag) allowed since 2026-10-18 —
           # e.g. batiai/qwen3.8-27b:iq3 (11GB — fits the 16GB runner's RAM;
@@ -175,7 +177,7 @@ jobs:
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
           # Warm the model into RAM now so the agent's cold-start ping finds
           # it resident instead of paying the cold load itself. Seconds on the
-          # fast tier, minutes on a heavy model.
+          # mid tier (9b), minutes on a heavy model.
           echo "Warming $MODEL_INPUT into RAM..."
           ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
           echo "Warmup done"
@@ -201,19 +203,21 @@ jobs:
       # generation works. Browser tests can run in their own workflow.
       - name: Run site agent (single pass — same shape as llm-autofix)
         env:
-          OLLAMA_MODEL: ${{ inputs.model || 'qwen3:4b' }}
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           # Manual dispatches can pin the agent set (e.g. a practice-set run
           # for one exam). Empty on normal runs -> full rotation.
           AGENT_ONLY: ${{ github.event.inputs.agent_only }}
           # 127.0.0.1 NOT localhost: Node fetch on this runner resolves
           # localhost to ::1 (IPv6) and Ollama listens IPv4-only → instant
+          # 127.0.0.1 NOT localhost: Node fetch on this runner resolves
+          # localhost to ::1 (IPv6) and Ollama listens IPv4-only → instant
           # "fetch failed" while curl/ollama-CLI (IPv4) work. Run #56:
           # CLI proof succeeded, Node fetch failed in <1s.
           OLLAMA_HOST: http://127.0.0.1:11434
-          # Run the next 4 agents per run. All 19 take too long for one job;
-          # rotation + the Agent Chain gives every capability a turn.
-          # AGENT_LIMIT=3 still overrides (fixed slice) if ever set.
-          AGENT_ROTATE: '4'
+          # Run the next 6 agents per run (increased from 4 for mid-tier 9b model).
+          # All 19 take too long for one job; rotation + the Agent Chain gives
+          # every capability a turn. AGENT_LIMIT=3 still overrides if ever set.
+          AGENT_ROTATE: '6'
           # Single pass, not --loop.
           AGENT_MAX_CYCLES: '1'
           # Wall-clock guard: stop starting LLM work 120 min in so the job's

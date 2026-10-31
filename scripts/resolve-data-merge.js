@@ -18,6 +18,7 @@ const fs = require('fs');
 const path = require('path');
 
 const SHARED = ['current-affairs.json', 'pib-archive.json'];
+const QUESTIONS_PREFIX = 'data/questions/';
 
 function norm(s) {
   return String(s || '')
@@ -84,20 +85,55 @@ function readStage(file) {
   return JSON.stringify(ours);
 }
 
+function readStageQuestions(file) {
+  // Question files are arrays of question objects: [{question, answer, options, ...}, ...]
+  // Union-merge by (question||answer) key
+  const ours = JSON.parse(execSync('git show :2:' + file, { maxBuffer: 512 * 1024 * 1024 }).toString());
+  const theirs = JSON.parse(execSync('git show :3:' + file, { maxBuffer: 512 * 1024 * 1024 }).toString());
+  if (!Array.isArray(ours) || !Array.isArray(theirs)) {
+    console.warn('Question file not an array, falling back to ours:', file);
+    return JSON.stringify(ours);
+  }
+  const seen = new Set();
+  const merged = [];
+  // Add ours first
+  for (const q of ours) {
+    const k = norm(q.question || q.text) + '||' + norm(q.answer || q.entity || q.correct);
+    if (!seen.has(k)) {
+      seen.add(k);
+      merged.push(q);
+    }
+  }
+  // Add theirs (new questions)
+  for (const q of theirs) {
+    const k = norm(q.question || q.text) + '||' + norm(q.answer || q.entity || q.correct);
+    if (!seen.has(k)) {
+      seen.add(k);
+      merged.push(q);
+    }
+  }
+  console.log('  Union: ours=' + ours.length + ' + theirs=' + theirs.length + ' -> merged=' + merged.length);
+  return JSON.stringify(merged);
+}
+
 function main() {
   const conflicted = execSync('git diff --name-only --diff-filter=U')
     .toString().split('\n').filter(s => s.trim());
   if (conflicted.length === 0) { console.log('No conflicts to resolve.'); return; }
   for (const rel of conflicted) {
     const base = path.basename(rel);
-    if (SHARED.indexOf(base) === -1) {
+    if (SHARED.indexOf(base) === -1 && !rel.startsWith(QUESTIONS_PREFIX)) {
       console.log('Non-data conflict — keeping local (ours) version: ' + rel);
       execSync('git checkout --ours -- ' + rel);
       execSync('git add ' + JSON.stringify(rel));
       continue;
     }
-    console.log('Union-merging ' + rel + ' (keeping both sides, deduped)');
-    fs.writeFileSync(rel, readStage(rel));
+    if (rel.startsWith(QUESTIONS_PREFIX)) {
+      console.log('Union-merging questions file ' + rel + ' (keeping both sides, deduped by q||a)');
+    } else {
+      console.log('Union-merging ' + rel + ' (keeping both sides, deduped)');
+    }
+    fs.writeFileSync(rel, readStageQuestions(rel));
     execSync('git add ' + JSON.stringify(rel));
   }
   console.log('Conflict resolution complete.');

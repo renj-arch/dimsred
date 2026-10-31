@@ -758,12 +758,31 @@ async function agentA11Y() {
       fixes.push({ page: page, fix: 'Added alt attributes to images' });
     }
 
-    // Add role="button" and tabindex to clickable divs/spans without them
-    // (common pattern in this site's quiz cards)
-    if (/<div[^>]+onclick(?![^>]+role=)[^>]*>/i.test(html)) {
-      html = html.replace(/<div([^>]+)onclick=/gi, '<div role="button" tabindex="0"$1onclick=');
+    // Collapse the duplicated attribute runs earlier versions of this agent
+    // created (they prepended the pair without checking for an existing one,
+    // so a page touched N times carried N copies).
+    var dupRun = /role="button"[ \t\r\n]+tabindex="0"(?:[ \t\r\n]+role="button"[ \t\r\n]+tabindex="0")+/g;
+    if (dupRun.test(html)) {
+      html = html.replace(dupRun, 'role="button" tabindex="0"');
       changed = true;
-      fixes.push({ page: page, fix: 'Added role/tabindex to clickable divs' });
+      fixes.push({ page: page, fix: 'Collapsed duplicated role/tabindex attributes' });
+    }
+
+    // Add role="button" and tabindex to clickable divs that lack them.
+    // Idempotent: a div that already carries either attribute is left alone,
+    // so repeated runs can never stack another copy.
+    var roleAdded = 0;
+    html = html.replace(/<div([^>]*)>/gi, function (tag, attrs) {
+      if (!/\bonclick\s*=/i.test(attrs)) return tag;
+      var hasRole = /\brole\s*=/i.test(attrs);
+      var hasTab = /\btabindex\s*=/i.test(attrs);
+      if (hasRole && hasTab) return tag;
+      roleAdded++;
+      return '<div' + (hasRole ? '' : ' role="button"') + (hasTab ? '' : ' tabindex="0"') + attrs + '>';
+    });
+    if (roleAdded) {
+      changed = true;
+      fixes.push({ page: page, fix: 'Added role/tabindex to ' + roleAdded + ' clickable div(s)' });
     }
 
     // Ensure skip-to-content link exists on pages with <main> or <nav>

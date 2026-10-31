@@ -135,6 +135,13 @@ jobs:
           # deploy while the site kept serving its last good build. Never
           # deploy it.
 
+          # Collapse the duplicated `role="button" tabindex="0"` runs the old
+          # A11Y rule stacked on pages (see scripts/clean-dup-attrs.js). The
+          # source is cleaned run-by-run by the agent; this keeps the deployed
+          # bytes clean immediately for pages the agent has not revisited yet.
+          node scripts/clean-dup-attrs.js .
+          git add -A -- '*.html' 2>/dev/null || true
+
           TREE=$(git write-tree)
 
           # Cloudflare Pages rejects ANY asset over 25 MiB (26214400 bytes) by

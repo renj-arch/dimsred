@@ -21,7 +21,7 @@ env:
   NODE_OPTIONS: --max-old-space-size=12288
 
 jobs:
-  # ── Setup: prepare baseline quiz.json, PIB feeds ──
+  # ΓöÇΓöÇ Setup: prepare baseline quiz.json, PIB feeds ΓöÇΓöÇ
   setup:
     runs-on: ubuntu-latest
     steps:
@@ -78,10 +78,10 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ── Wiki chunks: 27 runners, capped at 20 in parallel ──
+  # ΓöÇΓöÇ Wiki chunks: 27 runners, capped at 20 in parallel ΓöÇΓöÇ
   # Each chunk is bounded by its discovery budgets (LINK_BUDGET limits how many
   # linked pages a single category may traverse per run at ~2.5s/request and
-  # concurrency 2 — worst case a 200k budget would run ~70h). Linked pages are
+  # concurrency 2 ΓÇö worst case a 200k budget would run ~70h). Linked pages are
   # persisted to the link pool and re-mined next run, so the caps only spread
   # discovery across runs, never drop data. Timeout lifted to the GitHub-hosted
   # runner max (360 min) as headroom on top of the cut link budget.
@@ -170,13 +170,13 @@ jobs:
           WIKI_FILL_DISCOVERY_BUDGET_PCT: 45
           WIKI_FILL_DELAY_MS: 2500
           # Self-stop budget: 300 min leaves 60 min of headroom before the runner's
-          # 360-min hard timeout. Run #508 proved 330 was too tight — the
+          # 360-min hard timeout. Run #508 proved 330 was too tight ΓÇö the
           # link-following loop only respected the discovery budget, ate the
           # remaining window, and chunks were killed at the 360-min cap before
           # upload-artifact ran, losing the merged data. The script now also
           # enforces TIME_BUDGET inside the link-traversal loops (not just the
           # discovery budget), so a chunk always exits cleanly (code 0) with time
-          # to upload — never killed mid-run by the runner timeout. Raised 280->300
+          # to upload ΓÇö never killed mid-run by the runner timeout. Raised 280->300
           # so the 17 added wiki categories get a fuller generation slot.
           WIKI_FILL_TIME_BUDGET_MIN: 300
 
@@ -191,7 +191,7 @@ jobs:
       # Runs when the run is manually cancelled mid-chunk. GitHub does not
       # expose the *canceller* in the github.* context (only actor/actor_id =
       # triggerer), so record which account started this run here and point to
-      # Settings → Security log → Actions, the only place the canceller's user
+      # Settings ΓåÆ Security log ΓåÆ Actions, the only place the canceller's user
       # id is authoritatively recorded.
       - name: Cancellation receipt
         if: cancelled()
@@ -199,12 +199,12 @@ jobs:
           echo "## Run cancelled" >> "$GITHUB_STEP_SUMMARY"
           echo "- Run #${{ github.run_number }} (id ${{ github.run_id }}), chunk ${{ matrix.chunk }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- Started by: \`${{ github.actor }}\` (user id ${{ github.actor_id }})" >> "$GITHUB_STEP_SUMMARY"
-          echo "- To confirm WHO cancelled: GitHub Security log (Settings → Security log → Actions) records the cancelling user id — the Actions context/api do not expose it." >> "$GITHUB_STEP_SUMMARY"
+          echo "- To confirm WHO cancelled: GitHub Security log (Settings ΓåÆ Security log ΓåÆ Actions) records the cancelling user id ΓÇö the Actions context/api do not expose it." >> "$GITHUB_STEP_SUMMARY"
 
-  # ── Merge: combine all chunk outputs ──
+  # ΓöÇΓöÇ Merge: combine all chunk outputs ΓöÇΓöÇ
   merge:
     needs: wiki-chunks
-    # Merge whatever chunks succeeded — a failed/timed-out chunk must not throw
+    # Merge whatever chunks succeeded ΓÇö a failed/timed-out chunk must not throw
     # away the rest (run #434). merge-chunks.js skips missing chunks and no-ops
     # cleanly when there are none.
     # NOT `always()`: when the run is manually cancelled GitHub re-evaluates
@@ -224,10 +224,10 @@ jobs:
 
       - run: npm install
 
-      # ── Baseline FIRST, then chunks ONE AT A TIME ──
+      # ΓöÇΓöÇ Baseline FIRST, then chunks ONE AT A TIME ΓöÇΓöÇ
       # Run #458 died with "No space left on device": all 27 unzipped chunks
       # (~25 GB) landed on disk before the baseline restore ran. Pulling the
-      # baseline while disk is empty, then download→merge→free per chunk,
+      # baseline while disk is empty, then downloadΓåÆmergeΓåÆfree per chunk,
       # caps peak usage at roughly one chunk (~1 GB). merge-chunks.js deletes
       # each quiz-chunk-* file as it consumes it.
       - name: Download baseline data
@@ -246,7 +246,7 @@ jobs:
             elif [ -f "baseline/data/questions/$f" ]; then
               cp "baseline/data/questions/$f" "preserve-feed/$f" && echo "preserved $f from baseline"
             else
-              echo "note: $f not found — skipping preserve"
+              echo "note: $f not found ΓÇö skipping preserve"
             fi
           done
 
@@ -258,13 +258,13 @@ jobs:
           elif [ -d baseline ] && [ -n "$(ls -A baseline 2>/dev/null)" ]; then
             rm -rf data && cp -r baseline data && echo "restored from baseline (flat layout)"
           else
-            echo "WARNING: no baseline artifact — merging over checkout data/"
+            echo "WARNING: no baseline artifact ΓÇö merging over checkout data/"
             mkdir -p data
           fi
           rm -rf baseline
           df -h / || true
 
-      - name: Merge chunks incrementally (download, collect, free — repeat, then finalize once)
+      - name: Merge chunks incrementally (download, collect, free ΓÇö repeat, then finalize once)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -275,12 +275,12 @@ jobs:
           # chunks/.merge-state and deletes the chunk, so each chunk costs one
           # chunk read instead of a full quiz.json pass. The single finalize
           # below then rebuilds quiz.json exactly once. Missing numbers are
-          # tolerated — chunks run with fail-fast: false and some may be absent.
+          # tolerated ΓÇö chunks run with fail-fast: false and some may be absent.
           for i in $(seq 1 40); do
             if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" "^chunk-${i}$" chunks; then
               node scripts/merge-chunks.js collect || echo "WARNING: collect errored for chunk $i (continuing)"
             else
-              echo "chunk-$i not produced this run — skipping"
+              echo "chunk-$i not produced this run ΓÇö skipping"
             fi
             find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
             df -h / | tail -1
@@ -293,7 +293,7 @@ jobs:
           find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
           # Single full rebuild of quiz.json from the accumulated state. This is
           # the one pass that actually materializes the run's data, so its
-          # failure must fail the job — continuing would commit the un-merged
+          # failure must fail the job ΓÇö continuing would commit the un-merged
           # baseline as if it were a completed fill.
           node scripts/merge-chunks.js finalize
           rc=$?
@@ -308,7 +308,7 @@ jobs:
             if [ -f "preserve-feed/$f" ]; then
               cp "preserve-feed/$f" "data/questions/$f" && echo "re-applied $f"
             else
-              echo "note: no preserved $f — leaving merged version"
+              echo "note: no preserved $f ΓÇö leaving merged version"
             fi
           done
           rm -rf preserve-feed
@@ -317,7 +317,7 @@ jobs:
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
 
-      # Auto-route newly generated sub-topics to their correct category (✓-ticking
+      # Auto-route newly generated sub-topics to their correct category (Γ£ô-ticking
       # them) so fresh wiki content lands in the right place. 0 moves when clean.
       - name: Classify new sub-topics into correct categories
         run: node scripts/classify-global.cjs
@@ -335,8 +335,8 @@ jobs:
 
       # The archive tail used to run inline in this job. When the merge phase ran
       # long (~5h), build-archive-single.js outlived merge's default 360-minute
-      # GitHub-hosted job ceiling and GitHub cancelled the whole job (run #519 —
-      # no artifact uploaded → finalize skipped). Archive building now runs in
+      # GitHub-hosted job ceiling and GitHub cancelled the whole job (run #519 ΓÇö
+      # no artifact uploaded ΓåÆ finalize skipped). Archive building now runs in
       # its own job (`archive`) below with a fresh time budget.
       - uses: actions/upload-artifact@v4
         with:
@@ -344,7 +344,7 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ── Archive tail: build archive.html + indexes in a dedicated job ──
+  # ΓöÇΓöÇ Archive tail: build archive.html + indexes in a dedicated job ΓöÇΓöÇ
   # Split out of `merge` (run #519: build-archive-single.js hit merge's default
   # 6h cap and cancelled the job before `merged` was uploaded). This job gets a
   # fresh 360-min budget and re-uploads the final payload under `merged`.
@@ -354,7 +354,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # build-archive-single.js streams every unique question as NDJSON into
-      # /tmp (~6-8GB) on top of the ~5GB merged-raw download — runner default
+      # /tmp (~6-8GB) on top of the ~5GB merged-raw download ΓÇö runner default
       # free space is not enough (Feed Fill #25 died with ENOSPC at flushCat).
       - name: Free runner disk space (archive build needs ~20GB)
         run: |
@@ -394,7 +394,7 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ── Finalize: commit wiki data, advance progress, chain to feed workflow ──
+  # ΓöÇΓöÇ Finalize: commit wiki data, advance progress, chain to feed workflow ΓöÇΓöÇ
   finalize:
     needs: [archive]
     # `!cancelled()` (not `always()`): a manual cancel must also stop an already
@@ -436,7 +436,7 @@ jobs:
       # continue-on-error: a reader who believes a model answer is an official
       # key will reproduce it in the hall. Placed before the heavy rebuilds so
       # it fails in seconds. Cost of a genuine failure is one stalled chain,
-      # not lost data — the run does not advance its progress marker, so the
+      # not lost data ΓÇö the run does not advance its progress marker, so the
       # next run re-harvests the same range once the bank is fixed.
       - name: Validate Mains answer bank
         run: node scripts/validate-mains.js
@@ -464,12 +464,12 @@ jobs:
         run: node scripts/wiki-coverage-report.js
 
       # Fold the coverage report (and any training-audit results already on
-      # main) into data/faults.json — the "Detected faults" panel on
+      # main) into data/faults.json ΓÇö the "Detected faults" panel on
       # improve.html, with prefilled correction actions. GITHUB_TOKEN lets the
       # report attach pipeline status (latest run per workflow). Reporting
       # only: the script always exits 0.
       # Lineage coverage audit: cheap shard/edge census (no miner re-run).
-      # Replaced the old "missing lineage" theory — wiring is confirmed
+      # Replaced the old "missing lineage" theory ΓÇö wiring is confirmed
       # (miner -> timeline edges -> map lineage tab); this tracks yield.
       - name: Lineage coverage audit
         continue-on-error: true
@@ -485,7 +485,7 @@ jobs:
       # WH-questions (never trained as blanks). PAT, not GITHUB_TOKEN: a
       # GITHUB_TOKEN push would not trigger train-writer's on.push, so the
       # model would never see the batch. The +15 delta gate then retrains the
-      # writer model automatically — the site teaches itself from its own
+      # writer model automatically ΓÇö the site teaches itself from its own
       # corpus while the owner's answers/improve records steer quality.
       - name: Self-train bootstrap (corpus -> training-data)
         continue-on-error: true
@@ -523,12 +523,12 @@ jobs:
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
+            git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') ΓÇö run #${{ github.run_number }}"
             for i in 1 2 3; do
               if git pull --rebase 2>/dev/null; then
                 echo "Rebased cleanly"
               else
-                echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
+                echo "Rebase conflict ΓÇö aborting and union-merging to keep BOTH runs' data."
                 git rebase --abort
                 git fetch origin main 2>/dev/null
                 git merge --no-edit origin/main 2>/dev/null || {
@@ -536,6 +536,8 @@ jobs:
                   git commit --no-edit 2>/dev/null || true
                 }
               fi
+              # Guard: prevent question count regression below critical thresholds
+              node scripts/guard-question-count.js || { echo "Question count guard failed - aborting push"; exit 1; }
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
               sleep 5
             done || true
@@ -576,14 +578,14 @@ jobs:
             # steps were removed in the same change.
             # The Ask question-bank tables (data/ask-qb/) are a SEPARATE artifact
             # from the timeline index rebuilt in `finalize`, and nothing used to
-            # rebuild them, so they went stale on every fill — run #560 left
+            # rebuild them, so they went stale on every fill ΓÇö run #560 left
             # 3,74,175 records invisible. Its own workflow (not a step here) so the
             # ~838 MB build gets a fresh runner and a full disk instead of risking
             # the job that commits the question data. Its daily cron backstops the
             # non-fatal dispatch above.
             gh workflow run build-ask-qb.yml 2>/dev/null && echo "Self-dispatched Ask Question-Bank Build" || echo "Ask Q/B dispatch failed (non-fatal)"
           else
-            echo "No wiki data changes — chain ends here"
+            echo "No wiki data changes ΓÇö chain ends here"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
