@@ -1912,8 +1912,32 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T11:29:45.182Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Improve Fault Board Triage for Info Items",
+       "detail": "The fault board lists 14 info items including 'Corpus fill run in progress' and 'Site Agent ran 15 times', which clutter the view and distract from critical errors like the recent tutor-questions failures.",
+       "text": "Update the static HTML rendering logic to automatically hide or collapse 'info' level faults (like agent runs or pipeline status) after a set time or if they appear frequently, keeping only 'critical' and 'warn' faults visible by default."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T06:19:49.353Z",
+ "lastRun": "2026-10-31T11:29:45.182Z",
  "model": "qwen3.5:9b"
 }
