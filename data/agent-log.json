@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T17:35:51.817Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures must run first to fix broken visual data. mainsfresh is next to ensure daily fresh content delivery. metalearn produced 0 fixes for two consecutive runs, so it is scheduled last as a low-priority filler once critical queues are addressed.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (164 total)",
-       "text": "What is the duty cycle of a resistance welding machine? | What does TIG (GTAW) welding mean and for which metals is it used? | What does MIG (GMAW) welding mean and where is it preferred?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwomqkm (gs3, 15 marks): Critically examine the statement that 'strategic autonomy' for India is no longer a viable option in the Indo-Pacific er",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T17:47:02.702Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -670,8 +619,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T23:07:17.514Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures must lead to resolve the 81 open faults where figures are missing. Since MockPapers produced 0 in the last two runs, it is moved to the end of the queue despite being a high-priority agent for unfinished standing goals like incomplete papers. MetaLearn and Invention follow to address pending ideas and ensure content freshness, while MainsFresh is skipped as no mains-specific gaps were flagged in the current state.",
+    "actions": [
+     "BankFigures",
+     "ExamPatterns",
+     "MetaLearn",
+     "Invention",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (207 total)",
+       "text": "Explain electrochemical machining (ECM). | What is ultrasonic machining (USM)? | How does laser beam machining (LBM) remove metal?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "8 fresh mock questions on Machine Design (205 in pool)",
+       "text": "Machine Design"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T22:45:28.898Z",
+ "lastRun": "2026-10-31T23:07:17.514Z",
  "model": "qwen3.5:9b"
 }
