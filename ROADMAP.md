@@ -11,7 +11,7 @@ Transform vlymbooq into a genuinely useful, innovative and technically sophistic
 | F002 | Knowledge Graph Explorer | Done | High |
 | F003 | Adaptive Learning Engine | Done | High |
 | F004 | Examination Intelligence | Planned | Medium |
-| F005 | Research Discovery System | Planned | Medium |
+| F005 | Research Discovery System | Done | High |
 
 ## Phase 1: Study Progress Tracker (Current)
 
@@ -78,13 +78,27 @@ No mock exam analytics or error pattern analysis.
 ### Solution
 Mock exam simulator with detailed analytics and error pattern detection.
 
-## Phase 5: Research Discovery System (Planned)
+## Phase 5: Research Discovery System (Done)
 
 ### Problem
-No way to search across facts, sources, and current affairs.
+No way to search across facts, sources, and current affairs. `search.html` only
+covered static pages; the 2,292 linked corpus topics behind the knowledge graph
+were invisible to it.
 
 ### Solution
-Unified search across all content types with provenance links.
+Unified discovery across the page index and the corpus topic graph.
+
+### Implementation
+- `scripts/build-knowledge-graph.js` now also writes `data/topic-search.json`
+  (2,292 topics, ~520 KB, descriptions clipped to 140 chars) and keeps each
+  node's source `sid` so results can deep-link.
+- `search.html` lazy-loads that file on the first query and renders a "Corpus
+  topics" group above page results. Each topic opens
+  `map.html#id=<encoded source id>`, which the map already resolves.
+- Search failures degrade silently: page results still render if the topic file
+  is unavailable.
+- `scripts/lib/topic-search.test.js` pins the data contract and the page script
+  parse (`npm run test-topic-search`).
 
 ## Progress Log
 
@@ -117,3 +131,7 @@ Unified search across all content types with provenance links.
   - Added micro-test deep links (`?exam=&topic=&n=`) so plan actions start a test
   - Paper results stay exam-level; only micro-tests carry topic attribution
   - Added `npm run test-adaptive` (42 assertions)
+- 2026-10-31: Completed Phase 5 — Unified corpus search
+  - `build-knowledge-graph.js` also emits `data/topic-search.json`
+  - `search.html` shows corpus topics and deep-links them into the map
+  - Added `npm run test-topic-search` (13 assertions)

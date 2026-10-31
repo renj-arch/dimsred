@@ -94,7 +94,8 @@ jobs:
 
       # The knowledge graph is derived from the Ask index's `links` table, so it
       # must rebuild after build-ask-index.js and before the commit step. It is a
-      # closed 2,292-node relation, small enough to ship as one asset.
+      # closed 2,292-node relation, small enough to ship as one asset. The same
+      # pass writes data/topic-search.json, the compact list search.html uses.
       - name: Rebuild knowledge graph
         run: node scripts/build-knowledge-graph.js
 
@@ -151,6 +152,7 @@ jobs:
             data/ask-index.json \
             'data/ask-index-nodes.*.json' \
             data/knowledge-graph.json \
+            data/topic-search.json \
             data/topic-layers.json
           if git diff --staged --quiet; then
             echo "No timeline changes to commit"

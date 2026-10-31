@@ -75,7 +75,10 @@ function main() {
       type: r[2],
       cat: cat,
       desc: r[4],
-      src: i
+      src: i,
+      // The original timeline id, needed to deep-link a search result into
+      // map.html#id=<id>. The numeric index above is internal to this graph.
+      sid: r[0]
     });
   });
 
@@ -131,6 +134,32 @@ function main() {
   console.log('wrote ' + path.relative(ROOT, dest) + ' — ' +
     outNodes.length + ' nodes, ' + outLinks.length + ' links, ' +
     Math.round(fs.statSync(dest).size / 1024) + ' KB');
+
+  // Compact companion for search.html: the same 2,292 nodes without the link
+  // table or full descriptions, so the search page can lazy-load it instead of
+  // pulling the whole graph. Descriptions are clipped to 140 chars: enough to
+  // match a concept, not the whole sentence.
+  var searchOut = {
+    meta: {
+      builtAt: out.meta.builtAt,
+      count: outNodes.length,
+      note: 'Corpus topics for search.html. Links resolve to map.html#id=<i>.'
+    },
+    topics: outNodes.map(function (n) {
+      return {
+        i: n.sid,
+        n: n.name,
+        t: n.type,
+        c: n.cat,
+        d: String(n.desc || '').slice(0, 140)
+      };
+    })
+  };
+  var searchDest = path.join(DATA, 'topic-search.json');
+  fs.writeFileSync(searchDest, JSON.stringify(searchOut));
+  console.log('wrote ' + path.relative(ROOT, searchDest) + ' — ' +
+    searchOut.topics.length + ' topics, ' +
+    Math.round(fs.statSync(searchDest).size / 1024) + ' KB');
 }
 
 main();
