@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T18:20:21.644Z",
-  "cursor": 180,
-  "built": 172
+  "updatedAt": "2026-10-31T18:34:42.727Z",
+  "cursor": 183,
+  "built": 175
  },
  "figs": {
   "11434945": {
@@ -1035,6 +1035,24 @@
   "cf22d03c": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"140\" height=\"40\" rx=\"10\" /><path d=\"M 100 90 L 160 90\" stroke-dasharray=\"3,3\" /><text x=\"105\" y=\"75\" text-anchor=\"middle\">Rounded</text><text x=\"105\" y=\"88\" text-anchor=\"middle\">Strong Die</text><path d=\"M 40 120 L 180 120\" stroke-dasharray=\"3,3\" /><path d=\"M 40 160 Q 90 175 140 160 T 240 160\" fill=\"none\" /><text x=\"20\" y=\"100\">Avoid</text><text x=\"20\" y=\"130\">Sharp Corners</text><text x=\"20\" y=\"175\">Use Radii</text></svg>",
    "n": "how should forging dies be arranged to extend their life?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "7a61352b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Forged Workpiece -->\n  <path d=\"M40,60 L100,60 L100,160 L40,160 Z\" />\n  <!-- Overflowing Metal (Lap) -->\n  <path d=\"M100,70 Q130,85 120,110 T90,120\" fill=\"none\" stroke-dasharray=\"4,2\" />\n  <!-- Folded Over Section -->\n  <path d=\"M120,110 L110,130 L100,160\" fill=\"none\" />\n  <!-- Scale Seam Trapped -->\n  <rect x=\"95\" y=\"115\" width=\"20\" height=\"4\" stroke-dasharray=\"2,2\" opacity=\"0.7\" />\n  <!-- Labels -->\n  <text x=\"65\" y=\"85\">Main Body</text>\n  <text x=\"135\" y=\"95\">Overflowing Metal</text>\n  <text x=\"105\" y=\"145\">Folded Lap</text>\n  <text x=\"105\" y=\"175\">Trapped Scale Seam</text>\n  <!-- Arrow indicating defect location -->\n  <line x1=\"90\" y1=\"125\" x2=\"110\" y2=\"125\" stroke-width=\"1\" />\n</svg>",
+   "n": "what is the defect lap in a forging?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "7a0440e6": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"4\"/><text x=\"180\" y=\"70\" text-anchor=\"middle\">Forging Die Closure</text><path d=\"M 60 90 L 300 90\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"85\" text-anchor=\"middle\">Surface of Stock</text><circle cx=\"100\" cy=\"90\" r=\"3\" fill=\"#222\"/><circle cx=\"140\" cy=\"90\" r=\"3\" fill=\"#222\"/><circle cx=\"260\" cy=\"90\" r=\"3\" fill=\"#222\"/><text x=\"95\" y=\"80\">Cold/Scale</text><text x=\"135\" y=\"80\">Gap</text><text x=\"255\" y=\"80\">Fused Metal</text><path d=\"M 60 140 L 300 140\"/><text x=\"180\" y=\"155\" text-anchor=\"middle\">Weld Line (Ideal)</text><path d=\"M 95 120 Q 115 135 140 120 T 180 125 T 220 115 T 260 120\" fill=\"none\" stroke-width=\"2\"/><text x=\"180\" y=\"170\" text-anchor=\"middle\">Cold Shut (Fold)</text><path d=\"M 95 120 L 140 120 L 140 135 L 95 125 Z\" fill=\"none\" stroke-dasharray=\"2,2\"/><text x=\"110\" y=\"125\">Unfused</text></svg>",
+   "n": "what is a cold shut in forging?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "a5023801": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Ring Rolling Process</text><path d=\"M40,60 L100,60 L100,140 L40,140 Z\" stroke-dasharray=\"4,2\"/><path d=\"M320,60 L260,60 L260,140 L320,140 Z\"/><path d=\"M100,60 Q180,110 260,60\" fill=\"none\" stroke-width=\"2\"/><path d=\"M100,140 Q180,90 260,140\" fill=\"none\" stroke-width=\"2\"/><circle cx=\"180\" cy=\"100\" r=\"5\"/><text x=\"175\" y=\"105\">Driven Rolls</text><path d=\"M30,80 L40,80 L40,90 L30,90 Z\"/><text x=\"25\" y=\"85\">Original Ring</text><path d=\"M330,80 L320,80 L320,90 L330,90 Z\"/><text x=\"335\" y=\"85\">Expanded Diameter</text><path d=\"M100,60 L140,60 L140,70 L100,70 Z\" fill=\"#222\" opacity=\"0.1\"/><text x=\"115\" y=\"65\" font-size=\"10\">Wall Thinned</text><path d=\"M220,60 L260,60 L260,70 L220,70 Z\" fill=\"#222\" opacity=\"0.1\"/><text x=\"235\" y=\"65\" font-size=\"10\">Wall Thinned</text><path d=\"M40,80 Q180,100 320,80\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Circumference Grows</text></svg>",
+   "n": "what is ring rolling?",
    "sub": "production",
    "at": "2026-10-31"
   }
