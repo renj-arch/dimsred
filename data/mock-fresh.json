@@ -1,11 +1,11 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-31T12:20:16.972Z",
-  "cursor": 19,
-  "count": 187,
+  "updatedAt": "2026-10-31T12:50:32.483Z",
+  "cursor": 0,
+  "count": 197,
   "lastAttempt": {
-   "at": "2026-10-31T12:20:16.972Z",
+   "at": "2026-10-31T12:50:32.483Z",
    "reason": "added 10"
   }
  },
@@ -1691,6 +1691,96 @@
    "a": "Surge occurs when the compressor cannot maintain stable airflow, causing reverse flow and violent oscillations. It is triggered by operating at very low rotational speeds or extremely high back pressures (low mass flow).",
    "h": "Surge is a flow instability occurring at low mass flow rates and high pressure ratios.",
    "s": "Surge is a dangerous aerodynamic instability where the airflow through the compressor reverses direction periodically. This happens when the pressure rise capability of the compressor exceeds the system's demand, typically at low mass flow rates and high pressure ratios. Operational triggers include sudden load rejection or operating near the surge line on the compressor map.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Define the 'Heat Rate' of a thermal power plant and state its typical unit of measurement.",
+   "a": "The ratio of heat energy input (in kJ) to electrical energy output (in kWh), typically expressed in kJ/kWh or kcal/kWh.",
+   "h": "Relate heat input to electrical output in standard units.",
+   "s": "Heat rate is a measure of the thermal efficiency of a power plant. A lower heat rate indicates higher efficiency, meaning less fuel is required to generate one unit of electricity.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "A coal-fired boiler receives 10^6 kg/h of coal with a calorific value of 4500 kcal/kg. If the steam generation rate is 80 t/h and the feedwater enthalpy is 320 kJ/kg while steam enthalpy is 3350 kJ/kg, calculate the boiler efficiency assuming the heating value conversion factor is 1 kcal = 4.1868 kJ.",
+   "a": "Approximately 79.2%",
+   "h": "Apply the energy balance equation: (Heat absorbed by water / Heat supplied by coal) * 100.",
+   "s": "First, calculate total heat supplied by coal: 10^6 kg/h * 4500 kcal/kg * 4.1868 kJ/kcal = 1.884e10 kJ/h. Next, calculate heat absorbed by water: 80,000 kg/h * (3350 - 320) kJ/kg = 2.44e9 kJ/h. Efficiency = (2.44e9 / 1.884e10) * 100 ≈ 79.2%.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Explain the concept of 'Load Factor' in a power plant and derive its relationship with 'Capacity Factor' when the plant runs continuously at full capacity.",
+   "a": "Load Factor = (Average Load / Maximum Demand) * 100. If a plant runs at full capacity constantly, Capacity Factor equals Load Factor; otherwise, Capacity Factor is always less than or equal to Load Factor.",
+   "h": "Compare average load over time to maximum possible output over the same period.",
+   "s": "Load factor measures how consistently a plant operates relative to its peak demand, while capacity factor compares actual generation to maximum possible generation over a period. They are identical only if the plant's maximum demand matches its installed capacity and it runs at that capacity 100% of the time.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "In a Rankine cycle power plant, why is superheating of steam performed before it enters the turbine? Provide one primary thermodynamic reason.",
+   "a": "To increase the dryness fraction (reduce moisture content) of the steam at the turbine exit, thereby preventing blade erosion and improving cycle efficiency.",
+   "h": "Consider the moisture content of steam at the turbine exhaust.",
+   "s": "Superheating raises the temperature of steam above its saturation point. This ensures that when the steam expands in the turbine, it remains mostly vapor rather than condensing into water droplets, which would damage turbine blades and reduce work output.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "A hydroelectric power plant has a reservoir with a surface area of 50 hectares and a head of 120 m. If the overall efficiency (turbine-generator) is 85% and the density of water is 1000 kg/m³, calculate the theoretical power available if the water level drops by 1 meter per hour.",
+   "a": "Approximately 4.96 MW",
+   "h": "Use potential energy change per unit time: Power = ρ * g * A * h_drop_rate * η.",
+   "s": "The power generated depends on the rate of water flow and the head. The volume of water dropping 1 meter per hour from a 50-hectare area is 500,000 cubic meters per hour, which converts to approximately 138.9 cubic meters per second. Using the formula P = ηρgQH, where Q is flow rate and H is head, the output power is calculated as roughly 140 MW.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "What is the primary function of a 'Feedwater Heater' in a modern thermal power plant cycle?",
+   "a": "To increase the average temperature at which heat is added to the working fluid, thereby improving the overall Rankine cycle efficiency.",
+   "h": "Identify the component that utilizes extracted steam to preheat boiler feedwater.",
+   "s": "Feedwater heaters use steam extracted from intermediate stages of the turbine to preheat the water before it enters the boiler. This reduces the amount of fuel needed in the boiler to generate steam and minimizes thermal stresses on boiler tubes.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Define 'Cavitation' in the context of hydraulic turbines and state one condition that promotes its occurrence.",
+   "a": "The formation of vapor bubbles in a liquid due to local pressure falling below the vapor pressure, typically occurring at the suction side of the runner or draft tube.",
+   "h": "Relate pressure drop at turbine blades to vapor pressure of water.",
+   "s": "Cavitation happens when the pressure at any point on the turbine blade drops below the saturation pressure of water at that temperature. These bubbles collapse violently upon entering higher-pressure regions, causing pitting and noise.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "In a nuclear power plant, what is the role of the 'Moderator' in the reactor core?",
+   "a": "To slow down fast neutrons produced by fission to thermal energies, increasing the probability of further fission reactions with U-235 nuclei.",
+   "h": "Identify the material responsible for slowing down neutrons.",
+   "s": "Fast neutrons released during fission have low probabilities of causing further fission in U-235. The moderator (like heavy water or graphite) collides with these neutrons, reducing their speed to 'thermal' speeds where the fission cross-section is much higher.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Calculate the specific steam consumption (in kg/kWh) for a turbine producing 100 MW of power if it consumes 60 tonnes of steam per hour.",
+   "a": "600 kg/kWh",
+   "h": "Divide mass flow rate by power output, ensuring unit consistency (tonnes to kg, MW to kW).",
+   "s": "Specific steam consumption is the mass of steam required to generate one kWh of electricity. Given 300 tonnes/hour (300,000 kg/h) for 100 MW (100,000 kW), SSC = 300,000 / 100,000 = 3.0 kg/kWh.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "What is the main environmental advantage of a combined cycle power plant over a simple cycle gas turbine plant?",
+   "a": "It achieves significantly higher thermal efficiency (up to 60%) by utilizing exhaust heat from the gas turbine to generate steam for a bottoming steam turbine.",
+   "h": "Identify the waste heat recovery mechanism involving steam generation.",
+   "s": "In a combined cycle, the hot exhaust gases from the gas turbine are not released directly but passed through a Heat Recovery Steam Generator (HRSG). This generates steam that drives a steam turbine, extracting additional work from what would otherwise be waste heat.",
    "at": "2026-10-31"
   }
  ]
