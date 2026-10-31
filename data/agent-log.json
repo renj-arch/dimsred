@@ -1,48 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T06:14:42.042Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 233404 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 2 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T06:19:49.353Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -647,8 +605,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T15:42:07.414Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address broken figures immediately as they are likely causing critical failures. MainsFresh should generate fresh material to keep content current, while MetaLearn can tackle syllabus gaps if files are missing or incomplete. Invention is deferred due to zero output in recent runs and pending ideas being low priority compared to faults.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (147 total)",
+       "text": "What metal is most widely used for die casting and why? | Why is a pattern made oversize on the finished dimensions? | What is draft on a pattern and how much is usual?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T15:22:38.544Z",
+ "lastRun": "2026-10-31T15:42:07.414Z",
  "model": "qwen3.5:9b"
 }
