@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T17:16:51.416Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity and content depth. BankFigures is the primary agent for resolving figure gaps, while MainsFresh addresses critical faults; both produced output in the last run so they are active. MetaLearn produced zero fixes in the last two runs and should be placed last as it may be starved of inputs or require a fresh prompt cycle.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (161 total)",
-       "text": "What is investment (lost wax) casting? | What is shell moulding? | How is lost foam casting done?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwnyamu (gs3, 15 marks): Critically examine the statement that 'Digital Sovereignty' is essential for India's strategic autonomy in the Indo-Paci",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T17:35:51.817Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -681,8 +630,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T22:45:28.898Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing figures immediately as unfinished standing goals. MockPapers should follow to tackle incomplete exam papers, a priority over new invention ideas. MetaLearn is scheduled last despite zero recent output because it has not produced critical faults in the last two runs, suggesting it may be starved of inputs rather than broken.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (204 total)",
+       "text": "How is a grinding wheel selected for a job? | What does the number 46 mean in a grinding wheel marking? | Describe electrical discharge machining (EDM)."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T22:23:54.032Z",
+ "lastRun": "2026-10-31T22:45:28.898Z",
  "model": "qwen3.5:9b"
 }
