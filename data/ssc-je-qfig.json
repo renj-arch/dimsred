@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T07:20:21.123Z",
-  "cursor": 120,
-  "built": 115
+  "updatedAt": "2026-10-31T11:31:14.260Z",
+  "cursor": 123,
+  "built": 118
  },
  "figs": {
   "11434945": {
@@ -693,6 +693,24 @@
   "1377a89c": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"330\" y=\"105\">NUT</text><path d=\"M 40 100 L 60 80 L 70 90 L 80 80 L 90 90 L 100 80 L 110 90 L 120 80 L 130 90 L 140 80 L 150 90 L 160 80 L 170 90 L 180 80 L 190 90 L 200 80 L 210 90 L 220 80 L 230 90 L 240 80 L 250 90 L 260 80 L 270 90 L 280 80 L 290 90 L 300 80 L 310 90 L 320 80\"/><text x=\"50\" y=\"75\">ACME THREAD</text><path d=\"M 40 100 L 60 120 L 70 110 L 80 120 L 90 110 L 100 120 L 110 110 L 120 120 L 130 110 L 140 120 L 150 110 L 160 120 L 170 110 L 180 120 L 190 110 L 200 120 L 210 110 L 220 120 L 230 110 L 240 120 L 250 110 L 260 120 L 270 110 L 280 120 L 290 110 L 300 120 L 310 110 L 320 120\"/><text x=\"50\" y=\"145\">SCREW</text><path d=\"M 60 80 L 60 120 M 70 90 L 70 110 M 80 80 L 80 120 M 90 90 L 90 110 M 100 80 L 100 120 M 110 90 L 110 110 M 120 80 L 120 120 M 130 90 L 130 110 M 140 80 L 140 120 M 150 90 L 150 110 M 160 80 L 160 120 M 170 90 L 170 110 M 180 80 L 180 120 M 190 90 L 190 110 M 200 80 L 200 120 M 210 90 L 210 110 M 220 80 L 220 120 M 230 90 L 230 110 M 240 80 L 240 120 M 250 90 L 250 110 M 260 80 L 260 120 M 270 90 L 270 110 M 280 80 L 280 120 M 290 90 L 290 110 M 300 80 L 300 120\"/><text x=\"50\" y=\"165\">TRAPEZOIDAL</text><text x=\"50\" y=\"180\">(29°)</text></svg>",
    "n": "which thread form is used for machine-tool lead screws?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "b6116611": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Screw Shaft (Loaded Strut) -->\n  <line x1=\"180\" y1=\"20\" x2=\"180\" y2=\"180\" />\n  <text x=\"170\" y=\"90\" text-anchor=\"end\">Screw</text>\n  \n  <!-- Threaded Nut -->\n  <path d=\"M165 40 L195 40 L195 55 L180 65 L165 55 Z\" />\n  <path d=\"M165 70 L195 70 L195 85 L180 95 L165 85 Z\" />\n  <text x=\"170\" y=\"35\" text-anchor=\"end\">Nut</text>\n  \n  <!-- Collar -->\n  <rect x=\"140\" y=\"160\" width=\"80\" height=\"20\" rx=\"5\" />\n  <text x=\"170\" y=\"195\" text-anchor=\"middle\">Collar</text>\n  \n  <!-- Load Arrow -->\n  <path d=\"M180 20 L180 0 M180 0 L165 -10 M180 0 L195 -10\" stroke-width=\"3\" />\n  <text x=\"170\" y=\"-5\" text-anchor=\"end\">Load</text>\n\n  <!-- Shear/Bearing Zones (Threads) -->\n  <line x1=\"165\" y1=\"40\" x2=\"195\" y2=\"40\" />\n  <line x1=\"165\" y1=\"70\" x2=\"195\" y2=\"70\" />\n  <text x=\"205\" y=\"45\" text-anchor=\"start\">Shear/Bearing</text>\n\n  <!-- Base Plate -->\n  <rect x=\"130\" y=\"185\" width=\"100\" height=\"15\" rx=\"2\" />\n  <text x=\"170\" y=\"205\" text-anchor=\"middle\">Base Plate</text>\n\n  <!-- Handle Torque Indicator -->\n  <circle cx=\"300\" cy=\"110\" r=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" />\n  <line x1=\"300\" y1=\"70\" x2=\"340\" y2=\"90\" stroke-width=\"2\" />\n  <text x=\"310\" y=\"80\">Torque</text>\n\n  <!-- Strut Buckling Zone -->\n  <path d=\"M160 20 Q180 50 200 20\" fill=\"none\" stroke-dasharray=\"4,2\" />\n  <text x=\"170\" y=\"35\" text-anchor=\"middle\">Buckling Check</text>\n</svg>",
+   "n": "what checks are made in the design of a screw jack?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "3077e495": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Helical Spring Cross-Section</text><path d=\"M 100 110 L 100 130 M 100 110 A 20 20 0 0 1 100 130\" fill=\"none\" stroke-width=\"4\"/><circle cx=\"100\" cy=\"115\" r=\"5\" fill=\"#222\"/><text x=\"90\" y=\"105\">r</text><text x=\"108\" y=\"105\">R</text><text x=\"115\" y=\"120\">Wire</text><path d=\"M 30 140 L 60 140 M 30 160 L 60 160 M 30 170 L 60 170 M 30 180 L 60 180\"/><text x=\"25\" y=\"145\">Mean Dia</text><text x=\"25\" y=\"165\">D = 2R</text><text x=\"25\" y=\"185\">C = D/2r</text><path d=\"M 270 140 L 300 140 M 270 160 L 300 160 M 270 170 L 300 170 M 270 180 L 300 180\"/><text x=\"295\" y=\"145\">Curvature</text><text x=\"295\" y=\"165\">Effect</text><text x=\"295\" y=\"185\">Shear</text><path d=\"M 130 100 L 130 170 M 130 100 L 230 100\"/><text x=\"140\" y=\"160\">Wahl Factor K</text><text x=\"140\" y=\"185\">K = (4C-1)/(4C-4) + 0.615/C</text></svg>",
+   "n": "write the wahl factor used in helical spring design.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "d7dd3352": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">Displacement (mm)</text>\n <line x1=\"40\" y1=\"30\" x2=\"320\" y2=\"30\" />\n <line x1=\"40\" y1=\"190\" x2=\"320\" y2=\"190\" />\n <line x1=\"40\" y1=\"190\" x2=\"40\" y2=\"30\" />\n <text x=\"35\" y=\"105\" text-anchor=\"end\">0</text>\n <text x=\"35\" y=\"35\" text-anchor=\"end\">A</text>\n <text x=\"35\" y=\"185\" text-anchor=\"end\">-A</text>\n <path d=\"M 40 90 Q 180 20 320 90\" />\n <path d=\"M 40 90 L 320 90\" stroke-dasharray=\"4,2\" />\n <circle cx=\"180\" cy=\"90\" r=\"3\" fill=\"#222\" />\n <text x=\"175\" y=\"85\">Resonance</text>\n <path d=\"M 40 110 Q 180 160 320 110\" />\n <circle cx=\"180\" cy=\"110\" r=\"3\" fill=\"#222\" />\n <text x=\"175\" y=\"105\">Damped</text>\n <text x=\"20\" y=\"110\">Frequency match</text>\n</svg>",
+   "n": "what is surging in a spring and how is it reduced?",
    "sub": "design",
    "at": "2026-10-31"
   }
