@@ -1832,70 +1832,42 @@
    ]
   },
   {
-   "at": "2026-10-31T05:44:04.808Z",
+   "at": "2026-10-31T06:14:42.042Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
+     "agent": "foresight",
+     "count": 0
     },
     {
-     "agent": "metalearn",
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
      "count": 0
     }
    ],
-   "plan": {
-    "reasoning": "The site has 80 open faults and 79 figure gaps, indicating a severe backlog in content generation and error repair. The last two runs produced zero output for MockPapers, ExamPatterns, Invention, and MetaLearn agents, suggesting they are currently starved of inputs or blocked by missing source files (papers, questions, syllabus) rather than being broken. Since the 'filesPresent' status is false for all critical assets, no content generation agent can execute successfully until those files are up",
-    "actions": [
-     "BankFigures",
-     "MetaLearn"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "questions",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (106 total)",
-       "text": "What are the primary and secondary shear stresses on an eccentrically loaded wel | Why is the size of a fillet weld quoted by leg length s and not by throat? | What permissible shear stress is used in fillet weld design?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-31T05:55:20.865Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults (23) and massive gaps in figures (79), papers, questions, syllabus, and ideas. BankFigures is the only agent producing results recently but is clearly overwhelmed; it must run first to stop the bleeding on open faults. Since filesPresent are all false, we cannot generate MockPapers or ExamPatterns yet until BankFigures populates the data layers. Invention is starved (0 output for 2+ runs) and should be last to avoid wasting budget on a cold agent while critical gaps ",
-    "actions": [
-     "BankFigures",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
+       "page": "data/questions",
+       "fix": "Found 233404 thin subtopics (< 15 questions)"
+      },
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (109 total)",
-       "text": "How is a full-penetration butt weld designed in tension? | State the Unwin formula for the diameter of a rivet. | Write the tearing efficiency of a riveted joint."
+       "page": "data/questions",
+       "fix": "Merged 2 overlapping subtopics into correct categories"
       }
      ]
     }
