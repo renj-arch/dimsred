@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T16:59:04.611Z",
-  "cursor": 165,
-  "built": 158
+  "updatedAt": "2026-10-31T17:11:04.616Z",
+  "cursor": 168,
+  "built": 161
  },
  "figs": {
   "11434945": {
@@ -951,6 +951,24 @@
   "4ee8a85b": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g>\n<!-- Sand Mould Structure -->\n<path d=\"M40,40 L320,40 L320,180 L40,180 Z\"/>\n<!-- Sand Grains (Represented as small circles) -->\n<circle cx=\"60\" cy=\"60\" r=\"3\"/><circle cx=\"75\" cy=\"55\" r=\"3\"/><circle cx=\"90\" cy=\"62\" r=\"3\"/>\n<circle cx=\"60\" cy=\"80\" r=\"3\"/><circle cx=\"75\" cy=\"85\" r=\"3\"/><circle cx=\"90\" cy=\"78\" r=\"3\"/>\n<circle cx=\"60\" cy=\"100\" r=\"3\"/><circle cx=\"75\" cy=\"105\" r=\"3\"/><circle cx=\"90\" cy=\"98\" r=\"3\"/>\n<circle cx=\"60\" cy=\"120\" r=\"3\"/><circle cx=\"75\" cy=\"125\" r=\"3\"/><circle cx=\"90\" cy=\"118\" r=\"3\"/>\n<!-- Pores (Spaces between grains) -->\n<path d=\"M65,65 L85,55 L95,65 Z\" fill=\"none\" stroke-dasharray=\"2,2\" opacity=\"0.6\"/>\n<path d=\"M65,85 L85,75 L95,85 Z\" fill=\"none\" stroke-dasharray=\"2,2\" opacity=\"0.6\"/>\n<path d=\"M65,105 L85,95 L95,105 Z\" fill=\"none\" stroke-dasharray=\"2,2\" opacity=\"0.6\"/>\n<!-- Liquid Metal Penetration -->\n<path d=\"M40,180 Q70,190 100,180 T130,180 L130,160 L130,40 L120,40\" fill=\"none\" stroke=\"#222\"/>\n<!-- Label for Penetration -->\n<text x=\"115\" y=\"110\" text-anchor=\"middle\">Liquid Metal</text>\n<text x=\"115\" y=\"125\" text-anchor=\"middle\">Penetrates Pores</text>\n<!-- Bonding Effect -->\n<line x1=\"130\" y1=\"40\" x2=\"130\" y2=\"180\" stroke-dasharray=\"2,2\" opacity=\"0.5\"/>\n<text x=\"145\" y=\"110\" text-anchor=\"middle\">Bonds Sand</text>\n<!-- Mould Surface -->\n<line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" stroke-width=\"2\"/>\n<text x=\"180\" y=\"195\" text-anchor=\"middle\">Mould Surface</text>\n</g>\n</svg>",
    "n": "what is metal penetration in a sand mould?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "18401f6b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Investment (Lost Wax) Casting</text><rect x=\"40\" y=\"40\" width=\"60\" height=\"80\" fill=\"#ddd\" stroke=\"#222\"/><path d=\"M 50 40 L 90 40 L 90 120 L 50 120 Z\" fill=\"#fff\" stroke=\"#222\"/><text x=\"70\" y=\"80\" text-anchor=\"middle\">Wax Pattern</text><path d=\"M 130 40 Q 160 20 190 40 L 250 40 Q 280 20 310 40 L 310 120 Q 280 140 250 120 L 190 120 Q 160 140 130 120 Z\" fill=\"#ddd\" stroke=\"#222\"/><text x=\"220\" y=\"80\" text-anchor=\"middle\">Ceramic Shell</text><path d=\"M 130 120 L 190 120 Q 250 140 310 120 L 310 160 L 130 160 Z\" fill=\"#fff\" stroke=\"#222\"/><text x=\"220\" y=\"145\" text-anchor=\"middle\">Melted Wax</text><path d=\"M 40 170 L 320 170 L 320 200 L 40 200 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Final Metal Casting</text></svg>",
+   "n": "what is investment (lost wax) casting?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "e4fccf29": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Hot Pattern -->\n  <rect x=\"80\" y=\"40\" width=\"60\" height=\"40\" rx=\"5\"/>\n  <text x=\"90\" y=\"60\" text-anchor=\"middle\">Hot</text>\n  <text x=\"90\" y=\"75\" text-anchor=\"middle\">Pattern</text>\n  <!-- Resin Bonded Sand Shell -->\n  <path d=\"M 40,80 L 120,80 L 120,120 L 40,120 Z\" fill=\"none\" stroke-width=\"3\"/>\n  <text x=\"50\" y=\"95\">Shell</text>\n  <text x=\"50\" y=\"110\">(Resin-Bonded Sand)</text>\n  <!-- Heat Source -->\n  <circle cx=\"280\" cy=\"110\" r=\"30\"/>\n  <path d=\"M 280,110 L 250,90 M 280,110 L 250,130 M 280,110 L 310,90 M 280,110 L 310,130\" stroke-width=\"2\"/>\n  <text x=\"300\" y=\"110\">Heat</text>\n  <!-- Process Arrow -->\n  <path d=\"M 140,100 L 240,100\" stroke-dasharray=\"4,2\"/>\n  <text x=\"180\" y=\"95\" text-anchor=\"middle\">Bakes On</text>\n</svg>",
+   "n": "what is shell moulding?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "eb88420c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"325\" y=\"185\">Molten Metal</text><path d=\"M 60 180 L 60 100 Q 90 40 180 40 Q 270 40 300 100 L 300 180\"/><path d=\"M 60 100 L 60 40\"/><path d=\"M 300 100 L 300 40\"/><text x=\"25\" y=\"90\">Polystyrene Foam Pattern</text><text x=\"180\" y=\"35\">Vaporises into Gas</text><circle cx=\"180\" cy=\"40\" r=\"3\"/><line x1=\"60\" y1=\"180\" x2=\"180\" y2=\"180\"/><path d=\"M 180 180 L 180 100 Q 150 40 90 40 Q 30 40 0 100 L 0 180\"/><path d=\"M 180 100 L 180 40\"/><path d=\"M 0 100 L 0 40\"/><text x=\"-25\" y=\"90\">Sand Mold</text><text x=\"90\" y=\"35\">Cavity Formed</text><circle cx=\"90\" cy=\"40\" r=\"3\"/><line x1=\"60\" y1=\"180\" x2=\"240\" y2=\"180\"/><path d=\"M 240 180 L 240 100 Q 270 40 330 40 Q 390 40 410 100 L 410 180\"/><path d=\"M 240 100 L 240 40\"/><path d=\"M 410 100 L 410 40\"/><text x=\"395\" y=\"90\">Solid Metal Casting</text><text x=\"330\" y=\"35\">Pattern Replaced</text><circle cx=\"330\" cy=\"40\" r=\"3\"/></svg>",
+   "n": "how is lost foam casting done?",
    "sub": "production",
    "at": "2026-10-31"
   }

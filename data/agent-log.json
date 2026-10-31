@@ -1,73 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T12:26:53.686Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) indicate immediate content decay; BankFigures is the top priority to fix broken visuals. MockPapers must follow to address the missing papers file status, while MainsFresh handles recent exam pattern updates. MetaLearn should run last as it produced zero fixes in the previous two runs, likely waiting for inputs from prior agents.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (121 total)",
-       "text": "How does shot peening improve a helical spring? | Write the torque of a single-surface plate clutch under uniform wear. | Write the torque of a single-surface plate clutch under uniform pressure."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Gas Turbines (187 in pool)",
-       "text": "Gas Turbines"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwdlegj (gs3, 15 marks): Critically examine the potential of India's National Green Hydrogen Mission to transform the country into a global hydro",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T13:00:56.527Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -726,8 +659,59 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T17:16:51.416Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity and content depth. BankFigures is the primary agent for resolving figure gaps, while MainsFresh addresses critical faults; both produced output in the last run so they are active. MetaLearn produced zero fixes in the last two runs and should be placed last as it may be starved of inputs or require a fresh prompt cycle.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (161 total)",
+       "text": "What is investment (lost wax) casting? | What is shell moulding? | How is lost foam casting done?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwnyamu (gs3, 15 marks): Critically examine the statement that 'Digital Sovereignty' is essential for India's strategic autonomy in the Indo-Paci",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T17:01:01.895Z",
+ "lastRun": "2026-10-31T17:16:51.416Z",
  "model": "qwen3.5:9b"
 }
