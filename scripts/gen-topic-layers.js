@@ -13,15 +13,17 @@
 // Each branch takes the top-N strongest items (by weight), deduped by canon.
 var fs = require('fs');
 var path = require('path');
+var TL_LINKS = require('./lib/timeline-links.js');
 var ROOT = path.resolve(__dirname, '..');
 var out = path.join(ROOT, 'data', 'topic-layers.json');
 
 var tl = JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'timeline.json'), 'utf8'));
+var links = TL_LINKS.loadLinks(tl, path.join(ROOT, 'data'));
 var nodes = [];
 for (var p = 0; p < tl.nodesParts; p++) {
   nodes = nodes.concat(JSON.parse(fs.readFileSync(path.join(ROOT, 'data', 'timeline.nodes.' + p + '.json'), 'utf8')));
 }
-console.log('nodes:', nodes.length, 'edges:', tl.edges.length, 'links:', tl.links.length);
+console.log('nodes:', nodes.length, 'edges:', tl.edges.length, 'links:', links.length);
 
 // ---- graph resolver: single implementation, shared with flowchart.html ----
 // The copies of these functions used to live here under the comment "shared
@@ -143,7 +145,7 @@ tl.edges.forEach(function (e) {
 
 // index weighted co-mention links
 var ladj = {};
-tl.links.forEach(function (l) {
+links.forEach(function (l) {
   (ladj[l.a] = ladj[l.a] || {})[l.b] = (ladj[l.a][l.b] || 0) + (l.w || 0);
   (ladj[l.b] = ladj[l.b] || {})[l.a] = (ladj[l.b][l.a] || 0) + (l.w || 0);
 });

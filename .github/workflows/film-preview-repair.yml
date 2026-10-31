@@ -1,0 +1,118 @@
+name: Film preview repair
+
+# The watch page streams media/films/<id>/preview.mp4. Two final previews were
+# encoded from a truncated intermediate (Emergency stopped at 105 s of 246 s,
+# Bhopal at 37 s of 121 s), so the page looked like the film ended early.
+#
+# This workflow re-encodes the full 720p preview from the 1080p release master
+# on a GitHub runner, commits it to main and asks the live mirror to deploy.
+# It never touches the owner's machine and never re-renders the film.
+
+on:
+  workflow_dispatch:
+    inputs:
+      films:
+        description: 'Comma-separated film ids, or "all"'
+        required: true
+        default: 'emergency-1975,bhopal-gas-tragedy'
+        type: string
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: film-preview-repair
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - name: Checkout (skip the giant question bank)
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          token: ${{ secrets.PAT || github.token }}
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - name: Re-encode full 720p previews from release masters
+        env:
+          GH_TOKEN: ${{ github.token }}
+          FILMS: ${{ inputs.films }}
+        run: |
+          set -euo pipefail
+          if [ "$FILMS" = "all" ]; then
+            FILMS=$(node -e "console.log(require('./data/film-watch.json').films.map(function(f){return f.id}).join(','))")
+          fi
+
+          IFS=',' read -ra IDS <<< "$FILMS"
+          for raw in "${IDS[@]}"; do
+            id=$(echo "$raw" | tr -d '[:space:]')
+            [ -n "$id" ] || continue
+
+            tag=$(node -e "var f=require('./data/film-watch.json').films.filter(function(x){return x.id===process.argv[1]})[0]; if(!f||!f.master||f.master.indexOf('/tag/')===-1){console.error('no release for '+process.argv[1]);process.exit(2)} console.log(f.master.split('/tag/').pop())" "$id")
+            asset=$(gh release view "$tag" --repo "$GITHUB_REPOSITORY" --json assets --jq '.assets[].name' | grep -- '-master\.mp4$' | head -n1 || true)
+            [ -n "$asset" ] || { echo "No *-master.mp4 asset in $tag" >&2; exit 1; }
+
+            dir="/tmp/film-masters/$id"
+            mkdir -p "$dir"
+            echo "Downloading $asset from $tag"
+            gh release download "$tag" --repo "$GITHUB_REPOSITORY" --pattern "$asset" --dir "$dir" --clobber
+            master="$dir/$asset"
+            [ -s "$master" ] || { echo "Master download failed: $master" >&2; exit 1; }
+
+            master_dur=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$master")
+            out="media/films/$id/preview.mp4"
+            mkdir -p "$(dirname "$out")"
+
+            echo "Encoding $id: ${master_dur}s master -> 720p preview"
+            ffmpeg -hide_banner -loglevel error -y -i "$master" \
+              -map 0:v:0 -map 0:a:0? -sn -dn \
+              -vf "scale=-2:720:flags=lanczos" \
+              -c:v libx264 -preset medium -crf 27 -maxrate 480k -bufsize 960k \
+              -profile:v high -level 4.0 -pix_fmt yuv420p \
+              -c:a aac -b:a 80k -ac 2 \
+              -movflags +faststart \
+              "$out"
+
+            prev_dur=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$out")
+            size=$(stat -c%s "$out")
+            limit=$((24 * 1024 * 1024))
+            echo "$id preview: ${prev_dur}s, $size bytes"
+            awk -v a="$master_dur" -v b="$prev_dur" 'BEGIN { d=a-b; if (d<0) d=-d; if (d>1.5) { printf "duration mismatch: master %.3fs vs preview %.3fs\n", a, b > "/dev/stderr"; exit 1 } }'
+            if [ "$size" -gt "$limit" ]; then
+              echo "Preview for $id is $size bytes, over the 24 MiB guard limit" >&2
+              exit 1
+            fi
+          done
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add media/films
+          if git diff --cached --quiet; then
+            echo "No preview changed"
+            exit 0
+          fi
+
+          git commit -m "Films: restore full 720p previews from release masters"
+          pushed=0
+          for attempt in 1 2 3; do
+            if git push origin HEAD:main; then pushed=1; break; fi
+            echo "Push rejected (attempt $attempt); rebasing on main"
+            git pull --rebase origin main
+          done
+          [ "$pushed" -eq 1 ] || { echo "Could not push preview repair" >&2; exit 1; }
+
+          gh workflow run slim-live.yml --repo "$GITHUB_REPOSITORY" --ref main
+          echo "Dispatched Slim live mirror"

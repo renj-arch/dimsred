@@ -21,6 +21,7 @@
 var fs = require('fs');
 var path = require('path');
 var ask = require('./lib/ask-core.js');
+var TL_LINKS = require('./lib/timeline-links.js');
 
 var ROOT = path.resolve(__dirname, '..');
 var OUT = path.join(ROOT, 'data', 'ask-index.json');
@@ -123,13 +124,15 @@ nodes.push([nd.id, nd.name, nd.type || '', (nd.cats && nd.cats[0] && nd.cats[0].
   });
 
   // ── pass 2: co-occurrence adjacency ───────────────────────────────────────
-  // timeline.json links are {a,b,w}. Only links whose *both* endpoints survived
-  // the filter are useful: a link to a node with no quotable text contributes
-  // a neighbour that can never become evidence.
+  // timeline links are {a,b,w}, sharded into data/timeline-links.*.json. Only
+  // links whose *both* endpoints survived the filter are useful: a link to a
+  // node with no quotable text contributes a neighbour that can never become
+  // evidence.
   var tlPath = path.join(ROOT, 'data', 'timeline.json');
   var tl = JSON.parse(fs.readFileSync(tlPath, 'utf8'));
+  var tlinks = TL_LINKS.loadLinks(tl, path.join(ROOT, 'data'));
   var pairs = {};
-  (tl.links || []).forEach(function (l) {
+  tlinks.forEach(function (l) {
     var a = byId[l.a], b = byId[l.b];
     if (a === undefined || b === undefined || a === b) return;
     var ka = a + ':' + b, kb = b + ':' + a;
