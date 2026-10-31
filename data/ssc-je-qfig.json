@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T19:12:40.029Z",
-  "cursor": 189,
-  "built": 181
+  "updatedAt": "2026-10-31T19:34:08.651Z",
+  "cursor": 192,
+  "built": 184
  },
  "figs": {
   "11434945": {
@@ -1089,6 +1089,24 @@
   "a0047afa": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" stroke-dasharray=\"4,2\"/><path d=\"M 60 70 L 300 70 L 300 150 L 60 150 Z\" fill=\"#ddd\" opacity=\"0.5\"/><path d=\"M 60 70 Q 90 40 120 70 T 180 70 T 240 70 T 300 70\" stroke-dasharray=\"2,2\"/><path d=\"M 60 150 Q 90 180 120 150 T 180 150 T 240 150 T 300 150\" stroke-dasharray=\"2,2\"/><path d=\"M 60 70 L 60 150 M 300 70 L 300 150\"/><text x=\"80\" y=\"90\" text-anchor=\"middle\">Surface</text><text x=\"80\" y=\"140\" text-anchor=\"middle\">Core</text><text x=\"180\" y=\"200\" text-anchor=\"middle\">Splitting (Alligatoring)</text><text x=\"340\" y=\"95\" font-size=\"10\">Less extension</text><text x=\"340\" y=\"145\" font-size=\"10\">More extension</text></svg>",
    "n": "what is the defect called alligatoring in rolling?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "b21c2903": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Billet (Initial Area A0) -->\n  <rect x=\"40\" y=\"40\" width=\"80\" height=\"80\" />\n  <text x=\"80\" y=\"65\" text-anchor=\"middle\">A0</text>\n  \n  <!-- Extrusion Direction Arrow -->\n  <path d=\"M 120 100 L 240 100\" stroke-width=\"3\" marker-end=\"url(#arrow)\" />\n  \n  <!-- Extruded Bar (Final Area Af) -->\n  <rect x=\"200\" y=\"40\" width=\"80\" height=\"80\" />\n  <text x=\"240\" y=\"65\" text-anchor=\"middle\">Af</text>\n  \n  <!-- Labels -->\n  <text x=\"130\" y=\"125\" text-anchor=\"middle\">Direction of flow</text>\n  <text x=\"80\" y=\"145\" text-anchor=\"middle\">Billet Area (A0)</text>\n  <text x=\"240\" y=\"145\" text-anchor=\"middle\">Product Area (Af)</text>\n  \n  <!-- Formula -->\n  <text x=\"180\" y=\"190\" text-anchor=\"middle\" font-weight=\"bold\">R = A0 ÷ Af</text>\n  \n  <!-- Arrow Marker Definition -->\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"5\" refY=\"5\" orient=\"auto\">\n      <path d=\"M 0 0 L 10 5 L 0 10 z\" />\n    </marker>\n  </defs>\n</svg>",
+   "n": "write the extrusion ratio of a direct extrusion.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "a404dcdd": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"40\" text-anchor=\"middle\">Extruded Bar Cross-Section</text>\n <rect x=\"40\" y=\"60\" width=\"280\" height=\"100\" stroke=\"#222\" fill=\"none\"/>\n <path d=\"M 90 110 L 130 70 M 130 70 L 170 110 M 170 110 L 210 70 M 210 70 L 250 110\" stroke=\"#222\" fill=\"none\"/>\n <path d=\"M 90 110 L 130 70 M 130 70 L 170 110 M 170 110 L 210 70 M 210 70 L 250 110\" stroke-dasharray=\"4,2\" fill=\"none\"/>\n <text x=\"180\" y=\"160\" text-anchor=\"middle\">V-Shaped Cracks</text>\n <text x=\"180\" y=\"190\" text-anchor=\"middle\">(Brittle Core Tearing)</text>\n</svg>",
+   "n": "describe the defect chevron (fir tree) cracking in extrusion.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "88a91409": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"25\" text-anchor=\"middle\">Metal Flow Stress vs Temperature</text>\n <line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" />\n <text x=\"330\" y=\"170\">Low Temp (Cold)</text>\n <text x=\"330\" y=\"155\">High Temp (Hot)</text>\n <line x1=\"40\" y1=\"160\" x2=\"40\" y2=\"40\" />\n <text x=\"25\" y=\"90\">Flow Stress</text>\n <path d=\"M 80 160 L 120 160 L 120 80 L 160 80 L 160 40\" />\n <path d=\"M 80 160 L 120 160 L 120 100 L 160 100 L 160 40\" stroke-dasharray=\"4,2\" />\n <text x=\"95\" y=\"130\">Cold Work</text>\n <text x=\"175\" y=\"130\">Hot Work</text>\n <rect x=\"80\" y=\"140\" width=\"80\" height=\"20\" fill=\"#eee\" />\n <rect x=\"160\" y=\"140\" width=\"80\" height=\"20\" fill=\"#eee\" />\n <text x=\"120\" y=\"157\">High Stress</text>\n <text x=\"200\" y=\"157\">Low Stress (Easy Flow)</text>\n <line x1=\"340\" y1=\"80\" x2=\"360\" y2=\"80\" stroke-dasharray=\"4,2\" />\n <text x=\"345\" y=\"85\">Die Opening</text>\n</svg>",
+   "n": "why is extrusion usually done hot?",
    "sub": "production",
    "at": "2026-10-31"
   }
