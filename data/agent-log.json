@@ -1,72 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T13:00:56.527Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures agent is active but metalearn has produced zero output for 2+ runs so it must be queued last. Mainsfresh just completed a fix, so it should run again immediately to address remaining open faults. The plan prioritizes clearing critical infrastructure gaps before attempting new inventions or meta-learning.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (124 total)",
-       "text": "Write the torque of a cone clutch under uniform wear. | Write the torque of a centrifugal clutch with n shoes. | State the tension ratio of a band brake."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Power Plant Engineering (197 in pool)",
-       "text": "Power Plant Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T13:27:24.047Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -710,8 +644,59 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T17:35:51.817Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures must run first to fix broken visual data. mainsfresh is next to ensure daily fresh content delivery. metalearn produced 0 fixes for two consecutive runs, so it is scheduled last as a low-priority filler once critical queues are addressed.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (164 total)",
+       "text": "What is the duty cycle of a resistance welding machine? | What does TIG (GTAW) welding mean and for which metals is it used? | What does MIG (GMAW) welding mean and where is it preferred?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwomqkm (gs3, 15 marks): Critically examine the statement that 'strategic autonomy' for India is no longer a viable option in the Indo-Pacific er",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T17:16:51.416Z",
+ "lastRun": "2026-10-31T17:35:51.817Z",
  "model": "qwen3.5:9b"
 }

@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T17:11:04.616Z",
-  "cursor": 168,
-  "built": 161
+  "updatedAt": "2026-10-31T17:27:15.642Z",
+  "cursor": 171,
+  "built": 164
  },
  "figs": {
   "11434945": {
@@ -969,6 +969,24 @@
   "eb88420c": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"325\" y=\"185\">Molten Metal</text><path d=\"M 60 180 L 60 100 Q 90 40 180 40 Q 270 40 300 100 L 300 180\"/><path d=\"M 60 100 L 60 40\"/><path d=\"M 300 100 L 300 40\"/><text x=\"25\" y=\"90\">Polystyrene Foam Pattern</text><text x=\"180\" y=\"35\">Vaporises into Gas</text><circle cx=\"180\" cy=\"40\" r=\"3\"/><line x1=\"60\" y1=\"180\" x2=\"180\" y2=\"180\"/><path d=\"M 180 180 L 180 100 Q 150 40 90 40 Q 30 40 0 100 L 0 180\"/><path d=\"M 180 100 L 180 40\"/><path d=\"M 0 100 L 0 40\"/><text x=\"-25\" y=\"90\">Sand Mold</text><text x=\"90\" y=\"35\">Cavity Formed</text><circle cx=\"90\" cy=\"40\" r=\"3\"/><line x1=\"60\" y1=\"180\" x2=\"240\" y2=\"180\"/><path d=\"M 240 180 L 240 100 Q 270 40 330 40 Q 390 40 410 100 L 410 180\"/><path d=\"M 240 100 L 240 40\"/><path d=\"M 410 100 L 410 40\"/><text x=\"395\" y=\"90\">Solid Metal Casting</text><text x=\"330\" y=\"35\">Pattern Replaced</text><circle cx=\"330\" cy=\"40\" r=\"3\"/></svg>",
    "n": "how is lost foam casting done?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "e0b752df": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Time</text><line x1=\"10\" y1=\"20\" x2=\"350\" y2=\"20\"/><text x=\"340\" y=\"20\">t</text><text x=\"10\" y=\"210\">Duty Cycle (ON)</text><text x=\"10\" y=\"220\">Time Base</text><line x1=\"10\" y1=\"210\" x2=\"10\" y2=\"20\"/><line x1=\"15\" y1=\"20\" x2=\"15\" y2=\"210\"/><rect x=\"30\" y=\"40\" width=\"80\" height=\"160\" fill=\"#222\" opacity=\"0.1\"/><text x=\"70\" y=\"120\" text-anchor=\"middle\">Welding</text><text x=\"70\" y=\"135\" text-anchor=\"middle\">Current ON</text><rect x=\"120\" y=\"40\" width=\"80\" height=\"160\" fill=\"#222\" opacity=\"0.1\"/><text x=\"160\" y=\"120\" text-anchor=\"middle\">Cooling</text><text x=\"160\" y=\"135\" text-anchor=\"middle\">Current OFF</text><line x1=\"190\" y1=\"40\" x2=\"190\" y2=\"20\"/><text x=\"200\" y=\"20\">t + t</text><text x=\"200\" y=\"35\">Total Time</text></svg>",
+   "n": "what is the duty cycle of a resistance welding machine?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "c89eac0b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">TIG Welding Process</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"180\" cy=\"60\" r=\"3\"/><path d=\"M 175 60 L 180 55 L 185 60 Z\"/><text x=\"180\" y=\"45\" text-anchor=\"middle\">Tungsten Electrode</text><path d=\"M 40 60 L 40 140 M 320 60 L 320 140\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"95\" text-anchor=\"end\">Argon Shield Gas</text><text x=\"315\" y=\"95\" text-anchor=\"start\">Argon Shield Gas</text><path d=\"M 40 140 L 80 160 M 280 140 L 320 160\"/><path d=\"M 80 160 L 180 180 L 280 160\" fill=\"#222\" stroke=\"none\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Aluminium / Stainless Steel</text><text x=\"180\" y=\"210\" text-anchor=\"middle\">Thin Sections</text></svg>",
+   "n": "what does tig (gtaw) welding mean and for which metals is it used?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "8dd6ed86": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">MIG (GMAW) Welding</text>\n <line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/>\n <rect x=\"50\" y=\"70\" width=\"80\" height=\"80\"/>\n <rect x=\"230\" y=\"70\" width=\"80\" height=\"80\"/>\n <line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"140\"/>\n <line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"140\"/>\n <path d=\"M 180 60 L 180 140\"/>\n <circle cx=\"180\" cy=\"140\" r=\"5\"/>\n <text x=\"175\" y=\"155\">Gas Shield</text>\n <line x1=\"180\" y1=\"145\" x2=\"180\" y2=\"165\" stroke-dasharray=\"3,3\"/>\n <path d=\"M 180 165 L 180 195\"/>\n <text x=\"175\" y=\"210\">Consumable Wire</text>\n <line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\" stroke-dasharray=\"3,3\"/>\n <text x=\"60\" y=\"185\">Base Metal</text>\n <text x=\"290\" y=\"185\">Joint</text>\n</svg>",
+   "n": "what does mig (gmaw) welding mean and where is it preferred?",
    "sub": "production",
    "at": "2026-10-31"
   }
