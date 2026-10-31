@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T18:59:38.812Z",
-  "cursor": 186,
-  "built": 178
+  "updatedAt": "2026-10-31T19:12:40.029Z",
+  "cursor": 189,
+  "built": 181
  },
  "figs": {
   "11434945": {
@@ -1071,6 +1071,24 @@
   "bf00c4bd": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Roll Arrangement Types</text><g id=\"two-high\"><path d=\"M40,60 L320,60 M40,70 L320,70\"/><circle cx=\"40\" cy=\"65\" r=\"10\"/><circle cx=\"320\" cy=\"65\" r=\"10\"/><text x=\"20\" y=\"68\">Work Roll</text><text x=\"310\" y=\"68\">Work Roll</text></g><g id=\"three-high\"><path d=\"M40,60 L320,60 M40,90 L320,90 M40,120 L320,120\"/><circle cx=\"40\" cy=\"65\" r=\"8\"/><circle cx=\"40\" cy=\"95\" r=\"8\"/><circle cx=\"40\" cy=\"125\" r=\"8\"/><text x=\"20\" y=\"68\">Work</text><text x=\"20\" y=\"100\">Back-Up</text><text x=\"20\" y=\"132\">Work</text></g><g id=\"four-high\"><path d=\"M40,60 L320,60 M40,90 L320,90 M40,120 L320,120 M40,150 L320,150\"/><circle cx=\"40\" cy=\"65\" r=\"8\"/><circle cx=\"40\" cy=\"95\" r=\"8\"/><circle cx=\"40\" cy=\"125\" r=\"8\"/><circle cx=\"40\" cy=\"155\" r=\"8\"/><text x=\"20\" y=\"68\">Work</text><text x=\"20\" y=\"100\">Back-Up</text><text x=\"20\" y=\"132\">Work</text><text x=\"20\" y=\"165\">Back-Up</text></g><g id=\"cluster\"><path d=\"M40,60 L320,60 M40,90 L320,90 M40,120 L320,120 M40,150 L320,150\"/><circle cx=\"40\" cy=\"65\" r=\"8\"/><circle cx=\"40\" cy=\"95\" r=\"8\"/><circle cx=\"40\" cy=\"125\" r=\"8\"/><circle cx=\"40\" cy=\"155\" r=\"8\"/><text x=\"20\" y=\"68\">Small Work</text><text x=\"20\" y=\"100\">Back-Up</text><text x=\"20\" y=\"132\">Work</text><text x=\"20\" y=\"165\">Back-Up</text></g><g id=\"planetary\"><path d=\"M40,60 L320,60 M40,90 L320,90 M40,120 L320,120 M40,150 L320,150\"/><circle cx=\"40\" cy=\"65\" r=\"8\"/><circle cx=\"40\" cy=\"95\" r=\"8\"/><circle cx=\"40\" cy=\"125\" r=\"8\"/><circle cx=\"40\" cy=\"155\" r=\"8\"/><text x=\"20\" y=\"68\">Work</text><text x=\"20\" y=\"100\">Back-Up</text><text x=\"20\" y=\"132\">Work</text><text x=\"20\" y=\"165\">Back-Up</text></g><text x=\"180\" y=\"190\" text-anchor=\"middle\">(Simplified Schematic)</text></svg>",
    "n": "name the principal types of rolling mills.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "d5e867f3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Rolls -->\n  <circle cx=\"40\" cy=\"110\" r=\"35\" />\n  <circle cx=\"320\" cy=\"110\" r=\"35\" />\n  <!-- Roll Surface with Groove (Pass) -->\n  <path d=\"M 60 110 L 80 95 L 100 110 L 120 95 L 140 110 L 160 95 L 180 110\" fill=\"none\" stroke-width=\"3\" />\n  <path d=\"M 180 110 L 200 95 L 220 110 L 240 95 L 260 110 L 280 95 L 300 110\" fill=\"none\" stroke-width=\"3\" />\n  <!-- Billet -->\n  <rect x=\"70\" y=\"85\" width=\"220\" height=\"40\" rx=\"5\" />\n  <!-- Arrows indicating flow -->\n  <path d=\"M 100 100 L 90 115 M 120 100 L 110 115 M 140 100 L 130 115\" stroke-width=\"1.5\" />\n  <path d=\"M 200 100 L 190 115 M 220 100 L 210 115 M 240 100 L 230 115\" stroke-width=\"1.5\" />\n  <!-- Labels -->\n  <text x=\"50\" y=\"80\">Roll Surface</text>\n  <text x=\"65\" y=\"75\">Groove Profile</text>\n  <text x=\"295\" y=\"80\">Roll Surface</text>\n  <text x=\"310\" y=\"75\">Groove Profile</text>\n  <text x=\"140\" y=\"160\">Hot Billet</text>\n  <text x=\"280\" y=\"160\">Final Section</text>\n  <text x=\"190\" y=\"40\">Pass Direction</text>\n</svg>",
+   "n": "what is a roll pass?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "6ab3e10a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <path d=\"M40,80 L100,80 L100,140 L40,140 Z\" />\n <path d=\"M320,80 L360,80 L360,140 L320,140 Z\" />\n <path d=\"M100,80 L140,80 L140,140 L100,140 Z\" />\n <path d=\"M320,80 L360,80 L360,140 L320,140 Z\" />\n <path d=\"M140,80 L180,80 L180,140 L140,140 Z\" />\n <path d=\"M320,80 L360,80 L360,140 L320,140 Z\" />\n <path d=\"M180,80 L220,80 L220,140 L180,140 Z\" />\n <path d=\"M220,80 L260,80 L260,140 L220,140 Z\" />\n <path d=\"M260,80 L300,80 L300,140 L260,140 Z\" />\n <path d=\"M300,80 L340,80 L340,140 L300,140 Z\" />\n <path d=\"M340,80 L380,80 L380,140 L340,140 Z\" />\n <text x=\"65\" y=\"70\">Edge</text>\n <text x=\"295\" y=\"70\">Edge</text>\n <text x=\"115\" y=\"160\">Rolled Plate</text>\n <text x=\"340\" y=\"160\">Tears open</text>\n <text x=\"280\" y=\"95\">Stretched edges split</text>\n</svg>",
+   "n": "name the defect edge cracking in hot rolling.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "a0047afa": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" stroke-dasharray=\"4,2\"/><path d=\"M 60 70 L 300 70 L 300 150 L 60 150 Z\" fill=\"#ddd\" opacity=\"0.5\"/><path d=\"M 60 70 Q 90 40 120 70 T 180 70 T 240 70 T 300 70\" stroke-dasharray=\"2,2\"/><path d=\"M 60 150 Q 90 180 120 150 T 180 150 T 240 150 T 300 150\" stroke-dasharray=\"2,2\"/><path d=\"M 60 70 L 60 150 M 300 70 L 300 150\"/><text x=\"80\" y=\"90\" text-anchor=\"middle\">Surface</text><text x=\"80\" y=\"140\" text-anchor=\"middle\">Core</text><text x=\"180\" y=\"200\" text-anchor=\"middle\">Splitting (Alligatoring)</text><text x=\"340\" y=\"95\" font-size=\"10\">Less extension</text><text x=\"340\" y=\"145\" font-size=\"10\">More extension</text></svg>",
+   "n": "what is the defect called alligatoring in rolling?",
    "sub": "production",
    "at": "2026-10-31"
   }

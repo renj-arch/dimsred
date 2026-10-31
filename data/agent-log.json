@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T14:57:06.674Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must lead to fix broken visuals immediately. Since MockPapers and ExamPatterns produced zero fixes in the last two runs, they will be placed at the end of the queue to prevent starving them further while we address critical infrastructure first. MainsFresh is included to ensure daily content freshness alongside the critical repairs.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (139 total)",
-       "text": "Write the energy stored by a flywheel. | What does the Winkler–Bach theory assume for a curved beam? | Write Lame's equation for the hoop stress at the bore of a thick cylinder."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T15:08:08.267Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -718,8 +673,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T19:21:51.144Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing figures immediately as they block content utility. MainsFresh is required to generate fresh daily material since papers/questions are absent from files. MetaLearn produced zero fixes in the last two runs, so it will be placed last to avoid starving its potential inputs while prioritizing high-impact gaps.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (181 total)",
+       "text": "What is a roll pass? | Name the defect edge cracking in hot rolling. | What is the defect called alligatoring in rolling?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T19:02:21.612Z",
+ "lastRun": "2026-10-31T19:21:51.144Z",
  "model": "qwen3.5:9b"
 }
