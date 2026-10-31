@@ -1711,7 +1711,31 @@
    ]
   },
   {
-   "at": "2026-10-31T07:40:15.898Z",
+   "at": "2026-10-31T11:29:45.182Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Improve Fault Board Triage for Info Items",
+       "detail": "The fault board lists 14 info items including 'Corpus fill run in progress' and 'Site Agent ran 15 times', which clutter the view and distract from critical errors like the recent tutor-questions failures.",
+       "text": "Update the static HTML rendering logic to automatically hide or collapse 'info' level faults (like agent runs or pipeline status) after a set time or if they appear frequently, keeping only 'critical' and 'warn' faults visible by default."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-31T11:37:45.529Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
    "byAgent": [
@@ -1726,19 +1750,14 @@
     {
      "agent": "metalearn",
      "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
     }
    ],
    "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of addressing both simultaneously based on available tools. MockPapers must follow to generate fresh exam content, as files are currently missing. Invention agents have produced zero fixes for two consecutive runs and will be placed last to avoid starving them unnecessarily while prioritizing critical gaps.",
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visual content. MockPapers should follow immediately to address the critical need for fresh exam practice material while figures stabilize. MetaLearn is scheduled last as it has produced zero fixes in the last two runs, indicating a potential input starvation rather than a failure, so it will be deprioritized until primary gaps are closed.",
     "actions": [
      "BankFigures",
      "MockPapers",
-     "MetaLearn",
-     "Invention"
+     "MetaLearn"
     ]
    },
    "details": [
@@ -1748,8 +1767,32 @@
       {
        "page": "data/ssc-je-qfig.json",
        "kind": "figure",
-       "fix": "3 bank figure(s) added (115 total)",
-       "text": "Define the gasket factors y and m used in flange design. | To what extent are bolts in a preloaded joint normally tightened? | Which thread form is used for machine-tool lead screws?"
+       "fix": "3 bank figure(s) added (118 total)",
+       "text": "What checks are made in the design of a screw jack? | Write the Wahl factor used in helical spring design. | What is surging in a spring and how is it reduced?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-31T11:59:30.825Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwcm6tk (gs3, 15 marks): Critically examine the statement that sovereign debt restructuring is a necessary evolution in global financial governan",
+       "model": "qwen3.5:9b (local)"
       }
      ]
     }
