@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Study Progress — vlymbooq</title>
+<meta name="description" content="Track your study progress across all subjects and exams on vlymbooq.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{--bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--radius:12px}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:var(--text);text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800}
+.brand-text{background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.greeting{font-size:1.8em;font-weight:800;margin-bottom:4px}
+.greeting-sub{color:var(--text-muted);font-size:.9em;margin-bottom:32px}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
+.stat-value{font-size:2.2em;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.8em;color:var(--text-muted);margin-top:4px}
+.section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.section h2{font-size:1.2em;font-weight:700;margin-bottom:16px}
+.progress-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.progress-label{width:160px;font-size:.85em;color:var(--text-sec);flex-shrink:0}
+.progress-track{flex:1;height:8px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:4px;transition:width .5s}
+.progress-count{width:40px;text-align:right;font-size:.8em;color:var(--text-muted)}
+.rec-list{list-style:none;padding:0}
+.rec-list li{padding:10px 14px;background:var(--bg-hover);border-radius:8px;margin-bottom:8px;font-size:.9em;color:var(--text-sec)}
+.rec-list li:hover{background:rgba(139,92,246,.1);color:var(--text)}
+.rec-list a{display:block;color:inherit}
+.section-note{font-size:.78em;color:var(--text-muted);margin:-8px 0 16px}
+.empty-state{text-align:center;padding:40px;color:var(--text-muted)}
+.empty-state p{margin-bottom:16px}
+.btn{display:inline-block;padding:10px 20px;background:var(--purple);color:#fff;border-radius:8px;font-weight:600;font-size:.9em;transition:all .2s}
+.btn:hover{background:#8b5cf6;transform:translateY(-1px)}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="brand-text">vlymbooq</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="progress.html" class="active">Progress</a>
+      <a href="search.html">Search</a>
+    </div>
+  </div>
+</nav>
+<div class="container">
+  <h1 class="greeting">Study Progress</h1>
+  <p class="greeting-sub">Track your learning journey across all subjects and exams</p>
+
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-value" id="statPages">0</div><div class="stat-label">Pages Visited</div></div>
+    <div class="stat-card"><div class="stat-value" id="statStreak">0</div><div class="stat-label">Day Streak</div></div>
+    <div class="stat-card"><div class="stat-value" id="statSubjects">0</div><div class="stat-label">Subjects Explored</div></div>
+    <div class="stat-card"><div class="stat-value" id="statVisits">0</div><div class="stat-label">Total Visits</div></div>
+  </div>
+
+  <div class="section">
+    <h2>Subject Progress</h2>
+    <p class="section-note">Each bar fills as you explore pages within a subject (100% at 5 pages).</p>
+    <div id="subjectProgress"></div>
+  </div>
+
+  <div class="section">
+    <h2>Recommended Next</h2>
+    <ul class="rec-list" id="recList"></ul>
+  </div>
+
+  <div class="section">
+    <h2>Recent Visits</h2>
+    <div id="recentVisits"></div>
+  </div>
+</div>
+
+<script src="js/progress-tracker.js"></script>
+<script>
+(function() {
+  var tracker = window.ProgressTracker;
+  if (!tracker) return;
+
+  function esc(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  var summary = tracker.getSummary();
+  document.getElementById('statPages').textContent = summary.totalPages;
+  document.getElementById('statStreak').textContent = summary.streak;
+  document.getElementById('statSubjects').textContent = summary.studySubjects.length;
+  document.getElementById('statVisits').textContent = summary.totalVisits;
+
+  // Subject progress — utility pages (dashboard, progress) are excluded.
+  var container = document.getElementById('subjectProgress');
+  if (summary.studySubjects.length === 0) {
+    container.innerHTML = '<div class="empty-state"><p>No subjects explored yet. Start studying!</p><a href="index.html" class="btn">Start Learning</a></div>';
+  } else {
+    var html = '';
+    summary.studySubjects.forEach(function(s) {
+      var pct = Math.min(100, Math.round((s.pagesVisited / 5) * 100));
+      html += '<div class="progress-row">';
+      html += '<span class="progress-label">' + esc(s.name) + '</span>';
+      html += '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%"></div></div>';
+      html += '<span class="progress-count">' + s.pagesVisited + '</span>';
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  }
+
+  // Recommendations — each is a real destination, not inert text.
+  var recs = tracker.getRecommendations(8);
+  var recContainer = document.getElementById('recList');
+  if (recs.length === 0) {
+    recContainer.innerHTML = '<li>All subjects explored! Keep revising.</li>';
+  } else {
+    recContainer.innerHTML = recs.map(function(r) {
+      return '<li><a href="' + esc(r.href) + '">' + esc(r.name) + '</a></li>';
+    }).join('');
+  }
+
+  // Recent visits
+  var pages = tracker.getRecentPages(10);
+  var recentContainer = document.getElementById('recentVisits');
+  if (pages.length === 0) {
+    recentContainer.innerHTML = '<div class="empty-state"><p>No visits recorded yet.</p></div>';
+  } else {
+    var rhtml = '';
+    pages.forEach(function(p) {
+      rhtml += '<div class="progress-row">';
+      rhtml += '<span class="progress-label">' + esc(p.page.replace('.html', '')) + '</span>';
+      rhtml += '<span style="font-size:.8em;color:var(--text-muted)">' + esc(p.subject) + ' · ' + p.visits + ' visit(s)</span>';
+      rhtml += '</div>';
+    });
+    recentContainer.innerHTML = rhtml;
+  }
+})();
+</script>
+</body>
+</html>
