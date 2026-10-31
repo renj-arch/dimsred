@@ -17,6 +17,8 @@ var SRC = path.join(ROOT, 'data', 'figure-published.json');
 var OUT = path.join(ROOT, 'data', 'ask-figures.json');
 var PER_TOPIC = 3;
 
+var FT = require('./lib/figure-topics.js');
+
 var pub = JSON.parse(fs.readFileSync(SRC, 'utf8'));
 var files = pub.files || {};
 var byTopic = {};
@@ -27,6 +29,10 @@ Object.keys(files).forEach(function (id) {
   if (!/\.(jpe?g|png|webp|svg|gif)$/i.test(f)) return;
   var t = String(e.topic).trim();
   if (!t) return;
+  // Sport, cinema, award shows and commemorative days are not GS content.
+  // The gallery has a full audit of this list; Mains/Ask must not attach those
+  // pictures to a syllabus answer just because a word overlapped.
+  if (!FT.keep(t)) return;
   (byTopic[t] = byTopic[t] || []).push(f);
 });
 

@@ -30,6 +30,7 @@ var fs = require('fs');
 var path = require('path');
 var FR = require('./lib/figure-resolve.js');
 var BULK = require('./lib/figure-bulk.js');
+var FT = require('./lib/figure-topics.js');
 
 var ROOT = path.join(__dirname, '..');
 var CAND = path.join(ROOT, 'data', 'figure-candidates.json');
@@ -144,7 +145,22 @@ function main() {
   (state.order || []).forEach(function (k) { claimed[k] = 1; });
 
   var added = 0, rejected = { dup: 0, scope: 0, people: 0, words: 0, format: 0, prov: 0 };
-  var newOrder = (state.order || []).slice();
+  // Two different things happen here:
+  //   - state.order is the published corpus. Off-syllabus topics (sport,
+  //     cinema, award shows, commemorative days) are dropped from it so the
+  //     gallery and every downstream projection stop carrying them.
+  //   - displayOrder is what the gallery shows: at most DISPLAY_PER_TOPIC
+  //     figures per topic. The corpus may keep more for future matching, but
+  //     a 30,000-image wall is not a study tool.
+  // FIGURE_GALLERY_ONLY=1 re-renders the gallery from published state without
+  // harvesting or rewriting figure-published.json.
+  var GALLERY_ONLY = process.env.FIGURE_GALLERY_ONLY === '1';
+  var DISPLAY_PER_TOPIC = parseInt(process.env.PUBLISH_DISPLAY_PER_TOPIC || '30', 10);
+  var newOrder = (state.order || []).filter(function (k) {
+    var e = state.files[k];
+    return e && FT.keep(e.topic);
+  });
+  var droppedOffTopic = (state.order || []).length - newOrder.length;
 
   // Per-topic accounting, so the coverage audit can say WHY a topic has no
   // figures instead of only that it has none. A topic that was never attempted,
@@ -154,9 +170,10 @@ function main() {
   var REASONS = ['dup', 'scope', 'people', 'words', 'format', 'prov'];
   var stats = state.topicStats || {};
 
-  topics.forEach(function (topic) {
+  if (!GALLERY_ONLY) topics.forEach(function (topic) {
     var entry = cand[topic];
     if (!entry || !entry.files) return;
+    if (!FT.keep(topic)) return;
     var fileSeed = entry.fileSeed || {};
     var taken = 0;
 
@@ -185,14 +202,32 @@ function main() {
     });
   });
 
-  state.topicStats = stats;
-  state.order = newOrder;
-  fs.writeFileSync(PUBLISHED, JSON.stringify(state, null, 1));
+  if (!GALLERY_ONLY) {
+    state.topicStats = stats;
+    state.order = newOrder;
+    fs.writeFileSync(PUBLISHED, JSON.stringify(state, null, 1));
+  }
+
+  // Cap the gallery view per topic. The published order is append-ordered, so
+  // the first N per topic are the ones that have been in the library longest
+  // and have survived every previous correction pass.
+  var displayOrder = [];
+  if (DISPLAY_PER_TOPIC > 0) {
+    var shown = {};
+    newOrder.forEach(function (k) {
+      var e = state.files[k];
+      if (!e) return;
+      shown[e.topic] = (shown[e.topic] || 0) + 1;
+      if (shown[e.topic] <= DISPLAY_PER_TOPIC) displayOrder.push(k);
+    });
+  } else {
+    displayOrder = newOrder.slice();
+  }
 
   // ---- paginate ----
   if (!fs.existsSync(OUTDIR)) fs.mkdirSync(OUTDIR, { recursive: true });
   var pages = [];
-  for (var i = 0; i < newOrder.length; i += PER_PAGE) pages.push(newOrder.slice(i, i + PER_PAGE));
+  for (var i = 0; i < displayOrder.length; i += PER_PAGE) pages.push(displayOrder.slice(i, i + PER_PAGE));
 
   var css = 'body{font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:#0f1115;color:#e8eaed;margin:0;padding:24px}'
     + '.wrap{max-width:1400px;margin:0 auto}h1{font-size:24px;margin:0 0 4px}'
@@ -271,7 +306,7 @@ function main() {
   // Each topic now gets its own page holding all of its figures, and both the
   // index card and every per-figure topic link point at it.
   var byTopicKeys = {};
-  newOrder.forEach(function (k) {
+  displayOrder.forEach(function (k) {
     var t = state.files[k].topic;
     (byTopicKeys[t] = byTopicKeys[t] || []).push(k);
   });
@@ -333,7 +368,7 @@ function main() {
 
   // ---- index ----
   var byTopic = {};
-  newOrder.forEach(function (k) {
+  displayOrder.forEach(function (k) {
     var t = state.files[k].topic;
     byTopic[t] = (byTopic[t] || 0) + 1;
   });
@@ -342,16 +377,33 @@ function main() {
     + '<meta name="viewport" content="width=device-width,initial-scale=1">'
     + '<title>UPSC Figures Index</title><style>' + css + '</style></head><body><div class="wrap">'
     + '<h1>UPSC Figures Index</h1>'
-    + '<p class="meta">' + newOrder.length.toLocaleString('en-US') + ' distinct figures across ' + pages.length
-    + ' pages &#183; ' + topicList.length + ' topics &#183; from Wikimedia Commons</p>'
+    + '<p class="meta">' + displayOrder.length.toLocaleString('en-US') + ' curated figures across ' + pages.length
+    + ' pages &#183; ' + topicList.length + ' syllabus topics &#183; from Wikimedia Commons'
+    + (droppedOffTopic ? ' &#183; ' + droppedOffTopic.toLocaleString('en-US') + ' off-syllabus images excluded' : '') + '</p>'
     + '<div class="nav">';
   pages.forEach(function (_, pi) {
     idx += '<a href="page-' + String(pi + 1).padStart(3, '0') + '.html">page ' + (pi + 1) + '</a> ';
   });
-  idx += '</div><h2 style="font-size:16px;margin:24px 0 10px">Topics</h2><div class="grid">';
+  idx += '</div>';
+  // Group by GS paper so the index reads like a syllabus, not a dump. Topics
+  // that match no bucket are kept under "Other" rather than hidden: an
+  // unfamiliar but on-syllabus topic must not disappear because a regex missed.
+  var groups = {};
   topicList.forEach(function (t) {
-    idx += '<a class="card tcard" id="' + topicSlug(t) + '" href="topic-' + topicSlug(t) + '.html">'
-      + '<div class="cap"><b>' + esc(t) + '</b><br>' + byTopic[t].toLocaleString('en-US') + ' figures</div></a>';
+    var g = FT.subject(t);
+    (groups[g] = groups[g] || []).push(t);
+  });
+  ['Polity & Governance', 'Economy & Infrastructure', 'Geography & Climate',
+   'Environment & Ecology', 'History & Culture', 'Science & Technology',
+   'Society & Social Justice', 'International Relations', 'Agriculture & Rural',
+   'Health & Medicine', 'Other'].forEach(function (g) {
+    if (!groups[g] || !groups[g].length) return;
+    idx += '<h2 style="font-size:16px;margin:24px 0 10px">' + esc(g) + '</h2><div class="grid">';
+    groups[g].forEach(function (t) {
+      idx += '<a class="card tcard" id="' + topicSlug(t) + '" href="topic-' + topicSlug(t) + '.html">'
+        + '<div class="cap"><b>' + esc(t) + '</b><br>' + byTopic[t].toLocaleString('en-US') + ' figures</div></a>';
+    });
+    idx += '</div>';
   });
   // The curated per-subject packs live at the repo root as <subject>-figures.html
   // and are built by scripts/build-subject-figures.js, a different pipeline from
@@ -390,8 +442,10 @@ function main() {
   idx += '</div></body></html>';
   fs.writeFileSync(path.join(OUTDIR, 'index.html'), idx);
 
-  console.log('published ' + newOrder.length + ' distinct figures'
-    + ' (' + added + ' new this run) across ' + pages.length + ' pages of ' + PER_PAGE);
+  console.log('gallery: ' + displayOrder.length + ' figures across ' + pages.length + ' pages'
+    + ' (' + topicList.length + ' topics, capped at ' + DISPLAY_PER_TOPIC + '/topic)');
+  console.log('corpus: ' + newOrder.length + ' published' + (added ? ', ' + added + ' added this run' : '')
+    + (droppedOffTopic ? ', ' + droppedOffTopic + ' off-syllabus excluded' : ''));
   console.log('topics with figures: ' + topicList.length);
   console.log('curated packs linked: ' + packs.length);
   console.log('rejected: ' + JSON.stringify(rejected));
