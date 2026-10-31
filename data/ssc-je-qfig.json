@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T05:55:20.862Z",
-  "cursor": 114,
-  "built": 109
+  "updatedAt": "2026-10-31T06:09:58.759Z",
+  "cursor": 117,
+  "built": 112
  },
  "figs": {
   "11434945": {
@@ -657,6 +657,24 @@
   "28533b": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"100\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"100\"/><text x=\"35\" y=\"75\">p</text><text x=\"315\" y=\"75\">p</text><line x1=\"40\" y1=\"80\" x2=\"160\" y2=\"80\" stroke-dasharray=\"4,2\"/><line x1=\"160\" y1=\"60\" x2=\"160\" y2=\"100\"/><text x=\"155\" y=\"75\">d</text><text x=\"165\" y=\"75\">p-d</text><path d=\"M 40 80 L 160 80 L 160 120 L 320 120 L 320 80 Z\" fill=\"#ddd\" stroke=\"#222\"/><text x=\"50\" y=\"135\">Tearing</text><text x=\"50\" y=\"150\">of plate</text></svg>",
    "n": "write the tearing efficiency of a riveted joint.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "a9c1089b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Plate -->\n  <rect x=\"40\" y=\"60\" width=\"280\" height=\"60\"/>\n  <!-- Rivet Holes (Top Row) -->\n  <circle cx=\"90\" cy=\"70\" r=\"8\"/>\n  <circle cx=\"150\" cy=\"70\" r=\"8\"/>\n  <circle cx=\"210\" cy=\"70\" r=\"8\"/>\n  <!-- Rivet Holes (Bottom Row - Staggered) -->\n  <circle cx=\"120\" cy=\"110\" r=\"8\"/>\n  <circle cx=\"180\" cy=\"110\" r=\"8\"/>\n  <circle cx=\"240\" cy=\"110\" r=\"8\"/>\n  <!-- Labels -->\n  <text x=\"95\" y=\"60\">Top Row</text>\n  <text x=\"125\" y=\"130\">Bottom Row</text>\n  <text x=\"20\" y=\"115\">Staggered Zig-Zag Joint</text>\n</svg>",
+   "n": "what is a zig-zag riveted joint?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "8b36d042": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Lap Joint (Bad)</text><rect x=\"40\" y=\"35\" width=\"280\" height=\"60\" /><path d=\"M 40 75 L 320 75\" /><path d=\"M 40 95 L 320 95\" /><text x=\"180\" y=\"105\" text-anchor=\"middle\">Eccentric Load</text><line x1=\"160\" y1=\"105\" x2=\"160\" y2=\"120\" stroke-dasharray=\"4\" /><circle cx=\"160\" cy=\"120\" r=\"3\" fill=\"#222\" /><path d=\"M 160 120 L 160 150\" /><text x=\"175\" y=\"165\" text-anchor=\"middle\">Bending Moment</text><line x1=\"180\" y1=\"165\" x2=\"195\" y2=\"165\" stroke-dasharray=\"4\" /><circle cx=\"180\" cy=\"165\" r=\"3\" fill=\"#222\" /><path d=\"M 180 165 L 180 180\" /><text x=\"175\" y=\"195\" text-anchor=\"middle\">Single Shear</text><line x1=\"160\" y1=\"195\" x2=\"160\" y2=\"210\" stroke-dasharray=\"4\" /><circle cx=\"160\" cy=\"210\" r=\"3\" fill=\"#222\" /><path d=\"M 160 210 L 160 220\" /><text x=\"180\" y=\"235\" text-anchor=\"middle\">Double-Strap Butt Joint (Good)</text><rect x=\"40\" y=\"240\" width=\"280\" height=\"60\" /><path d=\"M 40 280 L 320 280\" /><path d=\"M 40 300 L 320 300\" /><path d=\"M 40 320 L 320 320\" /><text x=\"180\" y=\"335\" text-anchor=\"middle\">Aligned Plates</text><line x1=\"160\" y1=\"335\" x2=\"160\" y2=\"350\" stroke-dasharray=\"4\" /><circle cx=\"160\" cy=\"350\" r=\"3\" fill=\"#222\" /><path d=\"M 160 350 L 160 370\" /><text x=\"175\" y=\"385\" text-anchor=\"middle\">Double Shear</text><line x1=\"180\" y1=\"385\" x2=\"195\" y2=\"385\" stroke-dasharray=\"4\" /><circle cx=\"180\" cy=\"385\" r=\"3\" fill=\"#222\" /><path d=\"M 180 385 L 180 400\" /><text x=\"175\" y=\"415\" text-anchor=\"middle\">No Bending</text><line x1=\"160\" y1=\"415\" x2=\"160\" y2=\"430\" stroke-dasharray=\"4\" /><circle cx=\"160\" cy=\"430\" r=\"3\" fill=\"#222\" /><path d=\"M 160 430 L 160 440\" /></svg>",
+   "n": "why is a double-strap butt joint better than a lap joint for boilers?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "954f93f9": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Flange Joint Cross-Section</text><rect x=\"40\" y=\"30\" width=\"60\" height=\"140\" fill=\"#eee\"/><rect x=\"160\" y=\"30\" width=\"60\" height=\"140\" fill=\"#eee\"/><path d=\"M 100 50 L 260 50 M 100 80 L 260 80 M 100 110 L 260 110 M 100 140 L 260 140\" stroke-dasharray=\"4,2\"/><path d=\"M 100 50 Q 130 70 160 50\" fill=\"#ffcc00\"/><text x=\"130\" y=\"65\" text-anchor=\"middle\">Gasket</text><path d=\"M 40 20 L 40 180 M 220 20 L 220 180\" stroke-width=\"3\"/><text x=\"20\" y=\"95\">Bolt Load</text><text x=\"250\" y=\"95\">Bolt Load</text><path d=\"M 40 180 L 220 180\" stroke-dasharray=\"4,2\"/><text x=\"130\" y=\"205\" text-anchor=\"middle\">Leakage Prevented</text></svg>",
+   "n": "what is the function of a gasket at a bolted flange joint?",
    "sub": "design",
    "at": "2026-10-31"
   }
