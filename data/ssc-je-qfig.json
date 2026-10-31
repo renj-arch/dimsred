@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T05:27:41.168Z",
-  "cursor": 108,
-  "built": 103
+  "updatedAt": "2026-10-31T05:44:04.806Z",
+  "cursor": 111,
+  "built": 106
  },
  "figs": {
   "11434945": {
@@ -621,6 +621,24 @@
   "827cf6af": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Flange Coupling Cross-Section</text><rect x=\"40\" y=\"30\" width=\"100\" height=\"60\" rx=\"5\"/><rect x=\"220\" y=\"30\" width=\"100\" height=\"60\" rx=\"5\"/><circle cx=\"80\" cy=\"60\" r=\"15\" fill=\"#ddd\" stroke=\"#222\"/><circle cx=\"280\" cy=\"60\" r=\"15\" fill=\"#ddd\" stroke=\"#222\"/><line x1=\"80\" y1=\"45\" x2=\"95\" y2=\"75\" stroke-width=\"3\"/><line x1=\"280\" y1=\"45\" x2=\"265\" y2=\"75\" stroke-width=\"3\"/><text x=\"70\" y=\"65\" text-anchor=\"end\">Bolt</text><text x=\"98\" y=\"65\" text-anchor=\"start\">Shear Pin Action</text><line x1=\"80\" y1=\"75\" x2=\"95\" y2=\"45\" stroke-width=\"3\"/><line x1=\"280\" y1=\"75\" x2=\"265\" y2=\"45\" stroke-width=\"3\"/><text x=\"290\" y=\"65\" text-anchor=\"end\">Bolt</text><text x=\"262\" y=\"65\" text-anchor=\"start\">Shear Pin Action</text><line x1=\"80\" y1=\"75\" x2=\"140\" y2=\"75\" stroke-width=\"1.5\"/><line x1=\"220\" y1=\"75\" x2=\"280\" y2=\"75\" stroke-width=\"1.5\"/><text x=\"135\" y=\"85\" text-anchor=\"end\">Torque</text><text x=\"225\" y=\"85\" text-anchor=\"start\">Torque</text><line x1=\"40\" y1=\"90\" x2=\"40\" y2=\"110\" stroke-width=\"1.5\"/><line x1=\"220\" y1=\"90\" x2=\"220\" y2=\"110\" stroke-width=\"1.5\"/><text x=\"35\" y=\"100\" text-anchor=\"end\">Flange</text><text x=\"215\" y=\"100\" text-anchor=\"start\">Flange</text></svg>",
    "n": "why are flange-coupling bolts made as fitted (turned) bolts?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "152a615d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Eccentric Load P</text><line x1=\"100\" y1=\"40\" x2=\"260\" y2=\"40\" stroke-width=\"3\"/><polygon points=\"100,40 105,35 95,35\" fill=\"#222\"/><polygon points=\"260,40 255,35 265,35\" fill=\"#222\"/><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"90\" stroke-dasharray=\"4\"/><text x=\"170\" y=\"85\">e</text><circle cx=\"180\" cy=\"90\" r=\"3\" fill=\"#222\"/><line x1=\"180\" y1=\"90\" x2=\"180\" y2=\"140\" stroke-dasharray=\"4\"/><text x=\"170\" y=\"135\">r</text><circle cx=\"180\" cy=\"140\" r=\"3\" fill=\"#222\"/><line x1=\"100\" y1=\"90\" x2=\"260\" y2=\"90\" stroke-dasharray=\"4\"/><text x=\"175\" y=\"105\">J</text><rect x=\"80\" y=\"150\" width=\"200\" height=\"50\" rx=\"3\"/><line x1=\"110\" y1=\"165\" x2=\"110\" y2=\"195\" stroke-width=\"2\"/><text x=\"100\" y=\"180\">τ&#x2032; (Primary)</text><line x1=\"240\" y1=\"165\" x2=\"240\" y2=\"195\" stroke-width=\"2\"/><text x=\"230\" y=\"180\">τ&#x2032;&#x2033; (Secondary)</text><line x1=\"110\" y1=\"195\" x2=\"240\" y2=\"165\" stroke-width=\"2\"/><text x=\"175\" y=\"180\">τ (Resultant)</text></svg>",
+   "n": "what are the primary and secondary shear stresses on an eccentrically loaded weld group?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "cea425cd": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Fillet Weld Cross-Section</text><polygon points=\"40,100 100,60 160,100\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"40\" y1=\"100\" x2=\"40\" y2=\"130\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"160\" y1=\"100\" x2=\"160\" y2=\"130\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"30\" y=\"145\">Leg (s)</text><text x=\"170\" y=\"145\">Leg (s)</text><line x1=\"80\" y1=\"60\" x2=\"80\" y2=\"90\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"100\" y1=\"60\" x2=\"130\" y2=\"90\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"70\" y=\"85\">Throat (t)</text><text x=\"140\" y=\"85\">= 0.707 s</text><line x1=\"35\" y1=\"95\" x2=\"165\" y2=\"95\" stroke=\"#222\" stroke-width=\"1.5\" stroke-dasharray=\"4,2\"/><text x=\"100\" y=\"108\" text-anchor=\"middle\">Weld Axis</text><rect x=\"180\" y=\"30\" width=\"160\" height=\"160\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"260\" y=\"70\">Shop Measurement</text><text x=\"260\" y=\"95\">Direct: Leg (s)</text><text x=\"260\" y=\"120\">Derived: Throat (t)</text></svg>",
+   "n": "why is the size of a fillet weld quoted by leg length s and not by throat?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "867c0072": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Weld Throat Plane</text><path d=\"M40,100 L120,100\" stroke-dasharray=\"4,2\"/><path d=\"M240,100 L320,100\" stroke-dasharray=\"4,2\"/><line x1=\"120\" y1=\"85\" x2=\"120\" y2=\"115\"/><line x1=\"240\" y1=\"85\" x2=\"240\" y2=\"115\"/><text x=\"100\" y=\"95\">Base Metal</text><text x=\"260\" y=\"95\">Base Metal</text><path d=\"M120,100 L130,110 M240,100 L230,110\" stroke-width=\"3\"/><text x=\"180\" y=\"140\" text-anchor=\"middle\">Shear Stress (τ)</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">≈ 0.3 × Sut</text></svg>",
+   "n": "what permissible shear stress is used in fillet weld design?",
    "sub": "design",
    "at": "2026-10-31"
   }
