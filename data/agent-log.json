@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T17:47:02.702Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults and massive gaps in figures, questions, and syllabus data, while the last three runs starved MetaLearn (0 fixes). As the owner, I must prioritize filling content gaps (BankFigures for missing visuals, MainsFresh for fresh exam material) before addressing broken pages or generating new ideas. MetaLearn will be placed last to recover from starvation once critical content needs are met.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (166 total)",
-       "text": "Decode electrode designation E6013. | What is special about an E7018 electrode? | Why must low-hydrogen electrodes be stored in heated cabinets?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwp148c (gs3, 15 marks): Critically examine the statement that 'strategic autonomy' for India in the Indo-Pacific era requires balancing multipol",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T18:10:15.832Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -680,8 +629,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T23:25:38.504Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visuals blocking study flow. MockPapers should follow immediately to address the 81 open faults, as incomplete papers are a primary user blocker. MetaLearn is scheduled last because it has produced zero fixes in the last two runs and likely requires new input data before it can contribute effectively.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (210 total)",
+       "text": "How does abrasive jet machining (AJM) cut materials? | Name the six standard angles of a single-point tool in the ASA system. | How do the ORS angles differ from the ASA set?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "7 fresh mock questions on Production Technology (212 in pool)",
+       "text": "Production Technology"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T23:07:17.514Z",
+ "lastRun": "2026-10-31T23:25:38.504Z",
  "model": "qwen3.5:9b"
 }

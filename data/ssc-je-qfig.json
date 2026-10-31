@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T22:56:45.330Z",
-  "cursor": 216,
-  "built": 207
+  "updatedAt": "2026-10-31T23:14:50.399Z",
+  "cursor": 219,
+  "built": 210
  },
  "figs": {
   "11434945": {
@@ -1245,6 +1245,24 @@
   "6b617c42": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Laser Beam -->\n  <line x1=\"10\" y1=\"40\" x2=\"10\" y2=\"180\" />\n  <polygon points=\"10,40 30,55 10,70\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <text x=\"-5\" y=\"60\" font-size=\"10\">LASER</text>\n  \n  <!-- Material Block -->\n  <rect x=\"30\" y=\"80\" width=\"140\" height=\"80\" stroke=\"#222\" fill=\"none\"/>\n  <line x1=\"30\" y1=\"160\" x2=\"170\" y2=\"160\" />\n  \n  <!-- Vaporized Spot -->\n  <circle cx=\"100\" cy=\"140\" r=\"8\" fill=\"#222\" opacity=\"0.3\"/>\n  <circle cx=\"100\" cy=\"140\" r=\"4\" fill=\"#222\"/>\n  \n  <!-- Assist Gas Flow -->\n  <path d=\"M 170 140 L 280 140\" stroke-dasharray=\"2,2\" stroke-width=\"1\"/>\n  <text x=\"230\" y=\"155\">ASSIST GAS</text>\n  \n  <!-- Removed Material -->\n  <path d=\"M 170 140 L 280 140 L 280 160 L 170 160 Z\" fill=\"#222\" opacity=\"0.5\"/>\n  \n  <!-- Labels -->\n  <text x=\"90\" y=\"75\">MELTED/</text>\n  <text x=\"90\" y=\"88\">EVAPORATED</text>\n  <text x=\"210\" y=\"145\">SPOT REMOVED</text>\n</svg>",
    "n": "how does laser beam machining (lbm) remove metal?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "30794a64": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Abrasive Jet Machining (AJM)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"40\" cy=\"60\" r=\"3\"/><circle cx=\"80\" cy=\"60\" r=\"3\"/><circle cx=\"120\" cy=\"60\" r=\"3\"/><circle cx=\"160\" cy=\"60\" r=\"3\"/><circle cx=\"200\" cy=\"60\" r=\"3\"/><circle cx=\"240\" cy=\"60\" r=\"3\"/><circle cx=\"280\" cy=\"60\" r=\"3\"/><text x=\"35\" y=\"55\">Air + Grit</text><path d=\"M 40 60 L 320 60\" stroke-dasharray=\"4,2\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"100\"/><circle cx=\"320\" cy=\"80\" r=\"5\"/><text x=\"325\" y=\"85\">Workpiece</text><path d=\"M 320 100 L 320 140\" stroke-dasharray=\"4,2\"/><line x1=\"320\" y1=\"140\" x2=\"280\" y2=\"140\"/><circle cx=\"290\" cy=\"140\" r=\"5\"/><text x=\"275\" y=\"145\">Eroded Surface</text><path d=\"M 320 60 L 320 140\" stroke=\"#222\" stroke-width=\"1.5\"/><circle cx=\"320\" cy=\"80\" r=\"6\" fill=\"#222\"/><circle cx=\"320\" cy=\"95\" r=\"4\" fill=\"#222\"/><circle cx=\"320\" cy=\"105\" r=\"3\" fill=\"#222\"/><circle cx=\"320\" cy=\"115\" r=\"2\" fill=\"#222\"/><text x=\"325\" y=\"85\">Impact</text><text x=\"325\" y=\"100\">Erosion</text></svg>",
+   "n": "how does abrasive jet machining (ajm) cut materials?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "e52f0db3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Single Point Tool (ASA System)</text><path d=\"M180 40 L180 160\"/><path d=\"M180 40 L120 120\"/><path d=\"M180 40 L240 120\"/><path d=\"M120 120 L180 160\"/><path d=\"M240 120 L180 160\"/><text x=\"135\" y=\"115\">Side Rake</text><text x=\"135\" y=\"175\">Back Rake</text><text x=\"225\" y=\"115\">End Relief</text><text x=\"225\" y=\"175\">Side Relief</text><text x=\"90\" y=\"140\" text-anchor=\"end\">Side Cutting Edge</text><text x=\"270\" y=\"140\" text-anchor=\"start\">End Cutting Edge</text></svg>",
+   "n": "name the six standard angles of a single-point tool in the asa system.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "87caea2a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\" font-weight=\"bold\">ORS vs ASA Reference Planes</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"55\">Cutting Edge Plane</text><polygon points=\"80,60 120,60 110,90 70,90\" fill=\"#222\" stroke=\"none\"/><text x=\"95\" y=\"85\">ORS Origin (Edge)</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"30\" y=\"95\">Shank Plane</text><polygon points=\"80,100 120,100 110,130 70,130\" fill=\"#222\" stroke=\"none\"/><text x=\"95\" y=\"125\">ASA Origin (Shank)</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"30\" y=\"135\">Cutting Edge Plane</text><polygon points=\"80,140 120,140 110,170 70,170\" fill=\"#222\" stroke=\"none\"/><text x=\"95\" y=\"165\">ORS Origin (Edge)</text></svg>",
+   "n": "how do the ors angles differ from the asa set?",
    "sub": "production",
    "at": "2026-10-31"
   }
