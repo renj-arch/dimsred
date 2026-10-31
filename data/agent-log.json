@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T13:27:24.047Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. MetaLearn produced 0 fixes in the last two runs, so it is scheduled last to avoid wasting budget on a stalled agent while others tackle high-priority gaps.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (127 total)",
-       "text": "Why do band brakes give different torques for the two directions of rotation? | Write the retarding torque of a simple shoe (block) brake. | Write the bearing pressure on a journal bearing."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T13:34:27.955Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -695,8 +645,59 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T17:47:02.702Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical faults and massive gaps in figures, questions, and syllabus data, while the last three runs starved MetaLearn (0 fixes). As the owner, I must prioritize filling content gaps (BankFigures for missing visuals, MainsFresh for fresh exam material) before addressing broken pages or generating new ideas. MetaLearn will be placed last to recover from starvation once critical content needs are met.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (166 total)",
+       "text": "Decode electrode designation E6013. | What is special about an E7018 electrode? | Why must low-hydrogen electrodes be stored in heated cabinets?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwp148c (gs3, 15 marks): Critically examine the statement that 'strategic autonomy' for India in the Indo-Pacific era requires balancing multipol",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T17:35:51.817Z",
+ "lastRun": "2026-10-31T17:47:02.702Z",
  "model": "qwen3.5:9b"
 }

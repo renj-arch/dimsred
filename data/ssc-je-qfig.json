@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T17:27:15.642Z",
-  "cursor": 171,
-  "built": 164
+  "updatedAt": "2026-10-31T17:44:30.969Z",
+  "cursor": 174,
+  "built": 166
  },
  "figs": {
   "11434945": {
@@ -987,6 +987,18 @@
   "8dd6ed86": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">MIG (GMAW) Welding</text>\n <line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/>\n <rect x=\"50\" y=\"70\" width=\"80\" height=\"80\"/>\n <rect x=\"230\" y=\"70\" width=\"80\" height=\"80\"/>\n <line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"140\"/>\n <line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"140\"/>\n <path d=\"M 180 60 L 180 140\"/>\n <circle cx=\"180\" cy=\"140\" r=\"5\"/>\n <text x=\"175\" y=\"155\">Gas Shield</text>\n <line x1=\"180\" y1=\"145\" x2=\"180\" y2=\"165\" stroke-dasharray=\"3,3\"/>\n <path d=\"M 180 165 L 180 195\"/>\n <text x=\"175\" y=\"210\">Consumable Wire</text>\n <line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\" stroke-dasharray=\"3,3\"/>\n <text x=\"60\" y=\"185\">Base Metal</text>\n <text x=\"290\" y=\"185\">Joint</text>\n</svg>",
    "n": "what does mig (gmaw) welding mean and where is it preferred?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "24caf670": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">E-60-1-3</text><line x1=\"40\" y1=\"70\" x2=\"320\" y2=\"70\"/><text x=\"30\" y=\"65\">Arc Welding Electrode</text><circle cx=\"90\" cy=\"70\" r=\"5\"/><text x=\"100\" y=\"74\">E (Electrode)</text><line x1=\"90\" y1=\"70\" x2=\"130\" y2=\"70\"/><circle cx=\"130\" cy=\"70\" r=\"5\"/><text x=\"140\" y=\"74\">60 (ksi Tensile)</text><line x1=\"130\" y1=\"70\" x2=\"170\" y2=\"70\"/><circle cx=\"170\" cy=\"70\" r=\"5\"/><text x=\"180\" y=\"74\">1 (All Positions)</text><line x1=\"170\" y1=\"70\" x2=\"210\" y2=\"70\"/><circle cx=\"210\" cy=\"70\" r=\"5\"/><text x=\"220\" y=\"74\">3 (Coating Type)</text><line x1=\"210\" y1=\"70\" x2=\"250\" y2=\"70\"/><circle cx=\"250\" cy=\"70\" r=\"5\"/><text x=\"260\" y=\"74\">Rutile</text></svg>",
+   "n": "decode electrode designation e6013.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "17cfb749": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Weld Bead Cross-Section</text><path d=\"M20,120 L340,120\" stroke-dasharray=\"4,2\"/><path d=\"M20,120 L60,80 L100,100 L140,70 L180,90 L220,60 L260,85 L300,55 L340,75\" fill=\"none\"/><path d=\"M20,120 L60,80\" stroke-dasharray=\"2,2\"/><path d=\"M340,120 L300,55\" stroke-dasharray=\"2,2\"/><text x=\"30\" y=\"95\">Base Metal</text><text x=\"330\" y=\"95\">Base Metal</text><text x=\"180\" y=\"145\" text-anchor=\"middle\">E7018 Electrode</text><path d=\"M60,80 L100,100 L140,70 L180,90 L220,60 L260,85 L300,55\" stroke-width=\"1\"/><rect x=\"170\" y=\"110\" width=\"20\" height=\"10\" fill=\"#222\"/><text x=\"180\" y=\"125\" text-anchor=\"middle\">Low Hydrogen</text><text x=\"170\" y=\"135\" text-anchor=\"middle\">Coating Layer</text><path d=\"M160,100 L190,100 L180,110 Z\" fill=\"#222\"/><text x=\"170\" y=\"105\" text-anchor=\"middle\">Crack Free</text></svg>",
+   "n": "what is special about an e7018 electrode?",
    "sub": "production",
    "at": "2026-10-31"
   }
