@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T21:15:04.223Z",
-  "cursor": 204,
-  "built": 195
+  "updatedAt": "2026-10-31T21:45:32.327Z",
+  "cursor": 207,
+  "built": 198
  },
  "figs": {
   "11434945": {
@@ -1173,6 +1173,24 @@
   "7bca992": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Workpiece -->\n  <rect x=\"40\" y=\"80\" width=\"100\" height=\"40\" />\n  <!-- Cutter (Cylindrical with teeth) -->\n  <path d=\"M 140 60 L 150 20 L 160 60 L 170 30 L 180 60 L 190 30 L 200 60 L 210 30 L 220 60 L 230 30 L 240 60\" fill=\"none\" stroke-width=\"2\"/>\n  <path d=\"M 140 60 L 140 120\" />\n  <path d=\"M 240 60 L 240 120\" />\n  <!-- Teeth on periphery -->\n  <circle cx=\"180\" cy=\"60\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <circle cx=\"190\" cy=\"30\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <circle cx=\"200\" cy=\"60\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <circle cx=\"210\" cy=\"30\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <circle cx=\"220\" cy=\"60\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <!-- Cutting Action -->\n  <path d=\"M 140 120 L 140 80\" stroke-dasharray=\"2,2\" />\n  <path d=\"M 240 120 L 240 80\" stroke-dasharray=\"2,2\" />\n  <!-- Labels -->\n  <text x=\"95\" y=\"70\">Workpiece</text>\n  <text x=\"130\" y=\"50\">Cylindrical Cutter</text>\n  <text x=\"165\" y=\"140\">Slab Milling Action</text>\n  <text x=\"250\" y=\"70\">Flat Surface</text>\n</svg>",
    "n": "what is slab milling?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "2d3f6258": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"80\" height=\"80\" stroke-dasharray=\"4,4\"/><text x=\"80\" y=\"135\" text-anchor=\"middle\">Workpiece</text><circle cx=\"160\" cy=\"120\" r=\"5\" fill=\"#222\"/><text x=\"160\" y=\"110\" text-anchor=\"middle\">Centre Punch</text><circle cx=\"160\" cy=\"120\" r=\"8\" stroke-width=\"1.5\"/><text x=\"160\" y=\"135\" text-anchor=\"middle\">Spot Drill</text><path d=\"M140 120 L180 120\" stroke-dasharray=\"2,2\"/><text x=\"160\" y=\"100\" text-anchor=\"middle\">Twist Drill</text><circle cx=\"160\" cy=\"120\" r=\"12\" stroke-width=\"1.5\"/><text x=\"160\" y=\"140\" text-anchor=\"middle\">Ream to Size</text><path d=\"M120 80 L120 160\" stroke-dasharray=\"2,2\"/><text x=\"110\" y=\"125\" text-anchor=\"end\">Sequence:</text></svg>",
+   "n": "name the standard sequence of drilling an accurate hole.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "d780f2e7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Drill:</text><path d=\"M40,40 L80,40 L90,60 L70,60 Z\"/><circle cx=\"70\" cy=\"50\" r=\"3\"/><line x1=\"40\" y1=\"40\" x2=\"100\" y2=\"40\"/><text x=\"100\" y=\"45\">Rough</text><text x=\"100\" y=\"60\">Oversize</text><path d=\"M120,40 L160,40 L170,60 L150,60 Z\"/><circle cx=\"150\" cy=\"50\" r=\"3\"/><line x1=\"120\" y1=\"40\" x2=\"180\" y2=\"40\"/><text x=\"180\" y=\"45\">Drifted</text><text x=\"180\" y=\"60\">Hole</text><line x1=\"10\" y1=\"90\" x2=\"350\" y2=\"90\" stroke-dasharray=\"4,2\"/><text x=\"10\" y=\"100\">Reamer:</text><path d=\"M40,110 L80,110 L90,130 L70,130 Z\"/><circle cx=\"70\" cy=\"120\" r=\"3\"/><line x1=\"40\" y1=\"110\" x2=\"100\" y2=\"110\"/><text x=\"100\" y=\"115\">Trim</text><text x=\"100\" y=\"130\">Allowance</text><path d=\"M120,110 L160,110 L170,130 L150,130 Z\"/><circle cx=\"150\" cy=\"120\" r=\"3\"/><line x1=\"120\" y1=\"110\" x2=\"180\" y2=\"110\"/><text x=\"180\" y=\"115\">Exact</text><text x=\"180\" y=\"130\">Round</text><text x=\"10\" y=\"160\">Result:</text><rect x=\"40\" y=\"140\" width=\"280\" height=\"30\"/><text x=\"50\" y=\"160\">Smooth, Precise Hole</text></svg>",
+   "n": "why is reaming used instead of drilling for a precise hole?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "5e5eb267": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">ISO Tolerance Zone (H7)</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\"/><line x1=\"40\" y1=\"160\" x2=\"40\" y2=\"50\"/><line x1=\"320\" y1=\"160\" x2=\"320\" y2=\"50\"/><text x=\"335\" y=\"165\">Basic Size</text><text x=\"335\" y=\"45\">Upper Limit</text><text x=\"35\" y=\"175\">Lower Limit (0)</text><path d=\"M 40 160 L 40 160\" stroke-dasharray=\"4,2\"/><path d=\"M 320 160 L 320 160\" stroke-dasharray=\"4,2\"/><rect x=\"40\" y=\"160\" width=\"280\" height=\"-10\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Hole Profile (Zero Lower Deviation)</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" stroke-width=\"3\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">H7 Tolerance Band</text></svg>",
+   "n": "what does the designation h7 mean?",
    "sub": "production",
    "at": "2026-10-31"
   }

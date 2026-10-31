@@ -1,52 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T16:51:26.300Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to stabilize the site; BankFigures is the only agent fixing content today and must lead. MainsFresh should follow to generate fresh daily material while MetaLearn and Invention are starved (0 fixes in last 3 runs) and will be scheduled later if gaps remain.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (156 total)",
-       "text": "Describe the defect hot tear. | What is a misrun casting? | What is a cold shut in a casting?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwn1luj (gs3, 15 marks): Critically examine the statement: 'The Indo-Pacific region has emerged as a new geopolitical frontier where economic int",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T17:01:01.895Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -722,8 +676,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T21:55:26.011Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual assets. Since papers/syllabus files are missing, MetaLearn is next to generate foundational study materials. Invention should follow to create fresh content for unfinished goals. ExamPatterns and MainsFresh are deferred as they require existing paper/question data which we are currently generating.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (198 total)",
+       "text": "Name the standard sequence of drilling an accurate hole. | Why is reaming used instead of drilling for a precise hole? | What does the designation H7 mean?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T21:33:11.162Z",
+ "lastRun": "2026-10-31T21:55:26.011Z",
  "model": "qwen3.5:9b"
 }
