@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T16:36:17.322Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. Since papers/syllabus files are missing, MetaLearn is needed next to generate foundational content (papers/questions) before we can build MockPapers or ExamPatterns. MainsFresh should follow to ensure daily fresh material. Invention agents have produced 0 for the last two runs and will be placed last as per rules, even though pending ideas exist.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (153 total)",
-       "text": "Why is a sand reclamation plant used in a foundry? | What causes the defect blowhole in castings? | What is a shrinkage cavity in a casting?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwm5g8u (gs3, 15 marks): The International Seabed Authority (ISA) is finalizing regulations for deep-sea mining. Critically examine the ecologica",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T16:51:26.300Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -728,8 +672,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T21:33:11.162Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visual references. Since papers/syllabus files are missing, MetaLearn is queued next to generate foundational study materials. Invention follows to create fresh content for unfinished goals, while ExamPatterns and MainsFresh address remaining question banks and daily freshness needs respectively.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (195 total)",
+       "text": "Write the milling time equation. | Explain up-milling and down-milling. | What is slab milling?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T21:02:29.842Z",
+ "lastRun": "2026-10-31T21:33:11.162Z",
  "model": "qwen3.5:9b"
 }

@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T20:52:08.291Z",
-  "cursor": 201,
-  "built": 192
+  "updatedAt": "2026-10-31T21:15:04.223Z",
+  "cursor": 204,
+  "built": 195
  },
  "figs": {
   "11434945": {
@@ -1155,6 +1155,24 @@
   "3c550971": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Total Cost per Piece</text><polyline points=\"40,200 320,200\"/><polyline points=\"40,200 40,40\"/><text x=\"35\" y=\"195\" font-size=\"10\">$V_{opt}$</text><text x=\"35\" y=\"45\" font-size=\"10\">Min Cost</text><polyline points=\"280,200 280,170\"/><polyline points=\"280,170 260,170\"/><polyline points=\"260,170 260,40\"/><polyline points=\"260,40 320,40\"/><text x=\"255\" y=\"185\" font-size=\"10\">Machining</text><text x=\"255\" y=\"145\" font-size=\"10\">Tool</text><text x=\"255\" y=\"105\" font-size=\"10\">Change</text><polyline points=\"320,200 320,170\"/><polyline points=\"320,170 340,170\"/><polyline points=\"340,170 340,40\"/><polyline points=\"340,40 320,40\"/><text x=\"335\" y=\"185\" font-size=\"10\">High Speed</text><text x=\"335\" y=\"145\" font-size=\"10\">Low Speed</text></svg>",
    "n": "what is the economics criterion in machining?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "7c473132": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Cutter</text><path d=\"M40,40 L80,40 L90,30 L100,40 L140,40\"/><circle cx=\"90\" cy=\"30\" r=\"5\"/><line x1=\"140\" y1=\"40\" x2=\"160\" y2=\"40\"/><text x=\"170\" y=\"45\">L (Job)</text><path d=\"M160,40 L180,40\"/><line x1=\"180\" y1=\"40\" x2=\"200\" y2=\"40\"/><text x=\"205\" y=\"45\">A (Approach)</text><path d=\"M200,40 L260,40\"/><line x1=\"260\" y1=\"40\" x2=\"280\" y2=\"40\"/><text x=\"285\" y=\"45\">f (Feed)</text><path d=\"M280,40 L300,40\"/><line x1=\"300\" y1=\"40\" x2=\"320\" y2=\"40\"/><text x=\"325\" y=\"45\">N (Speed)</text><path d=\"M320,40 L340,40\"/><line x1=\"340\" y1=\"40\" x2=\"360\" y2=\"40\"/><text x=\"365\" y=\"45\">T (Time)</text><path d=\"M10,80 L10,180 L350,180 L350,80 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"110\" text-anchor=\"middle\">Total Path</text><text x=\"180\" y=\"140\" text-anchor=\"middle\">= L + A</text><text x=\"180\" y=\"170\" text-anchor=\"middle\">Time = (L+A) / (f × N)</text></svg>",
+   "n": "write the milling time equation.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "daf10728": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"up-milling\">\n<path d=\"M40,180 L120,180 L120,100 L40,100 Z\"/>\n<line x1=\"40\" y1=\"180\" x2=\"120\" y2=\"180\" stroke-dasharray=\"2,2\"/>\n<text x=\"35\" y=\"195\">Work</text>\n<path d=\"M120,100 L160,40\"/>\n<line x1=\"160\" y1=\"40\" x2=\"160\" y2=\"180\" stroke-dasharray=\"2,2\"/>\n<text x=\"175\" y=\"105\">Tool</text>\n<path d=\"M120,100 L135,90\"/>\n<line x1=\"135\" y1=\"90\" x2=\"160\" y2=\"40\"/>\n<text x=\"140\" y=\"85\">Chip</text>\n<text x=\"50\" y=\"140\">Zero to Max</text>\n<text x=\"170\" y=\"140\">Feed Direction</text>\n</g>\n<g id=\"down-milling\" transform=\"translate(0, 60)\">\n<path d=\"M200,180 L280,180 L280,100 L200,100 Z\"/>\n<line x1=\"200\" y1=\"180\" x2=\"280\" y2=\"180\" stroke-dasharray=\"2,2\"/>\n<text x=\"195\" y=\"195\">Work</text>\n<path d=\"M280,100 L320,40\"/>\n<line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\" stroke-dasharray=\"2,2\"/>\n<text x=\"335\" y=\"105\">Tool</text>\n<path d=\"M280,100 L295,90\"/>\n<line x1=\"295\" y1=\"90\" x2=\"320\" y2=\"40\"/>\n<text x=\"300\" y=\"85\">Chip</text>\n<text x=\"210\" y=\"140\">Max to Zero</text>\n<text x=\"340\" y=\"140\">Feed Direction</text>\n</g>\n<text x=\"180\" y=\"205\" text-anchor=\"middle\">Comparison: Chip Thickness Growth</text>\n</svg>",
+   "n": "explain up-milling and down-milling.",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "7bca992": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Workpiece -->\n  <rect x=\"40\" y=\"80\" width=\"100\" height=\"40\" />\n  <!-- Cutter (Cylindrical with teeth) -->\n  <path d=\"M 140 60 L 150 20 L 160 60 L 170 30 L 180 60 L 190 30 L 200 60 L 210 30 L 220 60 L 230 30 L 240 60\" fill=\"none\" stroke-width=\"2\"/>\n  <path d=\"M 140 60 L 140 120\" />\n  <path d=\"M 240 60 L 240 120\" />\n  <!-- Teeth on periphery -->\n  <circle cx=\"180\" cy=\"60\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <circle cx=\"190\" cy=\"30\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <circle cx=\"200\" cy=\"60\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <circle cx=\"210\" cy=\"30\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <circle cx=\"220\" cy=\"60\" r=\"5\" fill=\"none\" stroke-width=\"1.5\"/>\n  <!-- Cutting Action -->\n  <path d=\"M 140 120 L 140 80\" stroke-dasharray=\"2,2\" />\n  <path d=\"M 240 120 L 240 80\" stroke-dasharray=\"2,2\" />\n  <!-- Labels -->\n  <text x=\"95\" y=\"70\">Workpiece</text>\n  <text x=\"130\" y=\"50\">Cylindrical Cutter</text>\n  <text x=\"165\" y=\"140\">Slab Milling Action</text>\n  <text x=\"250\" y=\"70\">Flat Surface</text>\n</svg>",
+   "n": "what is slab milling?",
    "sub": "production",
    "at": "2026-10-31"
   }
