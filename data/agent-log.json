@@ -1711,45 +1711,24 @@
    ]
   },
   {
-   "at": "2026-10-31T07:40:15.898Z",
+   "at": "2026-10-31T11:29:45.182Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
    "byAgent": [
     {
-     "agent": "bankfigures",
+     "agent": "proposals",
      "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of addressing both simultaneously based on available tools. MockPapers must follow to generate fresh exam content, as files are currently missing. Invention agents have produced zero fixes for two consecutive runs and will be placed last to avoid starving them unnecessarily while prioritizing critical gaps.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "proposals",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (115 total)",
-       "text": "Define the gasket factors y and m used in flange design. | To what extent are bolts in a preloaded joint normally tightened? | Which thread form is used for machine-tool lead screws?"
+       "kind": "proposal",
+       "fix": "Improve Fault Board Triage for Info Items",
+       "detail": "The fault board lists 14 info items including 'Corpus fill run in progress' and 'Site Agent ran 15 times', which clutter the view and distract from critical errors like the recent tutor-questions failures.",
+       "text": "Update the static HTML rendering logic to automatically hide or collapse 'info' level faults (like agent runs or pipeline status) after a set time or if they appear frequently, keeping only 'critical' and 'warn' faults visible by default."
       }
      ]
     }
