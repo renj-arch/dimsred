@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T11:37:45.529Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visual content. MockPapers should follow immediately to address the critical need for fresh exam practice material while figures stabilize. MetaLearn is scheduled last as it has produced zero fixes in the last two runs, indicating a potential input starvation rather than a failure, so it will be deprioritized until primary gaps are closed.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (118 total)",
-       "text": "What checks are made in the design of a screw jack? | Write the Wahl factor used in helical spring design. | What is surging in a spring and how is it reduced?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T11:59:30.825Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -693,8 +653,54 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T16:51:26.300Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to stabilize the site; BankFigures is the only agent fixing content today and must lead. MainsFresh should follow to generate fresh daily material while MetaLearn and Invention are starved (0 fixes in last 3 runs) and will be scheduled later if gaps remain.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (156 total)",
+       "text": "Describe the defect hot tear. | What is a misrun casting? | What is a cold shut in a casting?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwn1luj (gs3, 15 marks): Critically examine the statement: 'The Indo-Pacific region has emerged as a new geopolitical frontier where economic int",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T16:36:17.322Z",
+ "lastRun": "2026-10-31T16:51:26.300Z",
  "model": "qwen3.5:9b"
 }
