@@ -1,30 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T11:59:30.825Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwcm6tk (gs3, 15 marks): Critically examine the statement that sovereign debt restructuring is a necessary evolution in global financial governan",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T12:26:53.686Z",
    "model": "qwen3.5:9b",
    "totalFixes": 3,
@@ -699,8 +675,59 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T17:01:01.895Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Prioritizing the 81 open faults and 79 figure gaps as critical standing goals; BankFigures must immediately address the missing figures driving the gap count. MainsFresh should tackle content freshness to counteract the lack of papers/questions in the file state. MetaLearn is scheduled last despite zero output recently, as it requires fresh inputs from other agents before it can generate value again.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (158 total)",
+       "text": "What is flash on a casting? | What is metal penetration in a sand mould? | Name the principal types of melting furnaces used in a foundry."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwndxz9 (gs3, 15 marks): Critically examine the role of soil organic carbon (SOC) in achieving India's net-zero targets. In your answer, discuss ",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T16:51:26.300Z",
+ "lastRun": "2026-10-31T17:01:01.895Z",
  "model": "qwen3.5:9b"
 }
