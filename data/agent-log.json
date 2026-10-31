@@ -1,53 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-30T20:28:09.711Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (97 total)",
-       "text": "What reliability factor Ke is used in the Marin equation? | How is the factor of safety found for a fluctuating-stress design? | What is the stress concentration factor of a circular hole in an infinitely wide"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Industrial Engineering (177 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-30T21:04:30.992Z",
    "model": "qwen3:4b",
    "totalFixes": 325,
@@ -2191,8 +2144,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T05:55:20.865Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical faults (23) and massive gaps in figures (79), papers, questions, syllabus, and ideas. BankFigures is the only agent producing results recently but is clearly overwhelmed; it must run first to stop the bleeding on open faults. Since filesPresent are all false, we cannot generate MockPapers or ExamPatterns yet until BankFigures populates the data layers. Invention is starved (0 output for 2+ runs) and should be last to avoid wasting budget on a cold agent while critical gaps ",
+    "actions": [
+     "BankFigures",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (109 total)",
+       "text": "How is a full-penetration butt weld designed in tension? | State the Unwin formula for the diameter of a rivet. | Write the tearing efficiency of a riveted joint."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T05:44:04.808Z",
+ "lastRun": "2026-10-31T05:55:20.865Z",
  "model": "qwen3.5:9b"
 }
