@@ -1,42 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T05:18:53.681Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (100 total)",
-       "text": "How does the sharpness of a notch or fillet tip affect Kt? | What is a relief groove and what does it achieve? | Give the proportions of a square key."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T05:35:51.456Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -653,8 +617,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T15:08:08.267Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "BankFigures is the only agent producing output (fixes) in recent runs; it must be prioritized to clear critical figure gaps and open faults. MainsFresh has produced zero fixes for two consecutive runs, indicating a potential input starvation or processing bottleneck; it should run last to avoid wasting budget on agents that aren't currently moving the mission needle. The strategy focuses on exhausting the high-impact BankFigures agent before attempting to revive or bypass the stalled MainsFresh.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (142 total)",
+       "text": "What is autofrettage and how does it strengthen a thick cylinder? | List the design allowances required for sand casting. | What shapes are avoided in drop forging design?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T14:57:06.674Z",
+ "lastRun": "2026-10-31T15:08:08.267Z",
  "model": "qwen3.5:9b"
 }
