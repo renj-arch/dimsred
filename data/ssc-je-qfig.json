@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T17:44:30.969Z",
-  "cursor": 174,
-  "built": 166
+  "updatedAt": "2026-10-31T17:57:32.063Z",
+  "cursor": 177,
+  "built": 169
  },
  "figs": {
   "11434945": {
@@ -999,6 +999,24 @@
   "17cfb749": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Weld Bead Cross-Section</text><path d=\"M20,120 L340,120\" stroke-dasharray=\"4,2\"/><path d=\"M20,120 L60,80 L100,100 L140,70 L180,90 L220,60 L260,85 L300,55 L340,75\" fill=\"none\"/><path d=\"M20,120 L60,80\" stroke-dasharray=\"2,2\"/><path d=\"M340,120 L300,55\" stroke-dasharray=\"2,2\"/><text x=\"30\" y=\"95\">Base Metal</text><text x=\"330\" y=\"95\">Base Metal</text><text x=\"180\" y=\"145\" text-anchor=\"middle\">E7018 Electrode</text><path d=\"M60,80 L100,100 L140,70 L180,90 L220,60 L260,85 L300,55\" stroke-width=\"1\"/><rect x=\"170\" y=\"110\" width=\"20\" height=\"10\" fill=\"#222\"/><text x=\"180\" y=\"125\" text-anchor=\"middle\">Low Hydrogen</text><text x=\"170\" y=\"135\" text-anchor=\"middle\">Coating Layer</text><path d=\"M160,100 L190,100 L180,110 Z\" fill=\"#222\"/><text x=\"170\" y=\"105\" text-anchor=\"middle\">Crack Free</text></svg>",
    "n": "what is special about an e7018 electrode?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "504ad390": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Heat Input (kJ/mm)</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"195\">Energy</text><text x=\"35\" y=\"170\">per unit</text><text x=\"35\" y=\"145\">length</text><line x1=\"60\" y1=\"120\" x2=\"60\" y2=\"80\"/><line x1=\"55\" y1=\"80\" x2=\"65\" y2=\"80\"/><line x1=\"65\" y1=\"80\" x2=\"65\" y2=\"120\"/><text x=\"30\" y=\"100\">Q = (V × I) / S</text><text x=\"30\" y=\"90\">(Voltage × Current)</text><text x=\"30\" y=\"80\">÷ Travel Speed</text></svg>",
+   "n": "what is the heat input in arc welding?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "cb39ad8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Weld Angular Distortion Prevention</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"30\" y=\"55\">Neutral Axis (Balanced)</text><polygon points=\"80,60 120,40 160,60 120,80\" fill=\"none\" stroke=\"#222\"/><text x=\"100\" y=\"70\" text-anchor=\"middle\">Preset Bend</text><line x1=\"120\" y1=\"40\" x2=\"120\" y2=\"80\" stroke-dasharray=\"2,2\"/><polygon points=\"300,60 340,40 340,80 300,60\" fill=\"none\" stroke=\"#222\"/><text x=\"315\" y=\"70\" text-anchor=\"end\">Clamp/Back-to-Back Tack</text><line x1=\"200\" y1=\"110\" x2=\"200\" y2=\"160\" stroke-dasharray=\"4,2\"/><polygon points=\"180,110 220,90 260,110 220,130\" fill=\"none\" stroke=\"#222\"/><text x=\"200\" y=\"175\" text-anchor=\"middle\">Weld Shrinkage Force</text><line x1=\"200\" y1=\"160\" x2=\"200\" y2=\"190\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Restraint</text></svg>",
+   "n": "how is angular distortion prevented in a weld?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "bf9cc04d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Temperature vs Time</text><line x1=\"20\" y1=\"180\" x2=\"340\" y2=\"180\"/><line x1=\"20\" y1=\"180\" x2=\"20\" y2=\"40\"/><text x=\"15\" y=\"165\">Time</text><text x=\"345\" y=\"170\">T=Ambient</text><text x=\"15\" y=\"35\">High T</text><path d=\"M 30 180 L 80 180 L 90 120 L 100 180 L 140 180 L 150 100 L 160 180 L 200 180\"/><text x=\"130\" y=\"170\">Slow Cooling (Preheat)</text><path d=\"M 30 180 L 80 180 L 90 140 L 100 180 L 140 180 L 150 160 L 160 180 L 200 180\"/><text x=\"130\" y=\"170\">Fast Cooling (No Preheat)</text><circle cx=\"95\" cy=\"120\" r=\"3\" fill=\"#222\"/><text x=\"75\" y=\"125\">Hydrogen</text><circle cx=\"145\" cy=\"160\" r=\"3\" fill=\"#222\"/><text x=\"125\" y=\"165\">Brittle Zone</text></svg>",
+   "n": "why is preheat used before welding thick or hardenable steels?",
    "sub": "production",
    "at": "2026-10-31"
   }
