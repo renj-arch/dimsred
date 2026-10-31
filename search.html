@@ -58,7 +58,7 @@ h1{font-size:24px;margin:6px 0 8px}
     <h1>Search the whole site</h1>
     <div class="sub">Every exam hub, course lesson, figure and guide — plus the 2,292 linked corpus topics that open on the knowledge map. Instant: both indexes load once.</div>
     <div class="sbox"><input id="q" type="search" placeholder="Try: data interpretation · percentage · flow chart · polity…" autocomplete="off" autofocus></div>
-    <div class="meta" id="meta">Loading the page index…</div>
+    <div class="meta" id="meta" aria-live="polite">Loading the page index…</div>
   </header>
   <div class="res" id="res"></div>
   <div class="note" id="note">
@@ -93,12 +93,16 @@ h1{font-size:24px;margin:6px 0 8px}
     loading = true;
     metaEl.textContent = 'Loading the page index…';
     var bust = '?t=' + Date.now();
-    fetch(RAW + bust, { cache: 'no-store' })
+    // Local first: this file is committed and served by the same CDN as the
+    // page, so it is one fast request. The raw.githubusercontent fallback only
+    // matters if the deployed copy is missing (e.g. a partial deploy); fetching
+    // raw first used to add a cross-origin round trip to every search.
+    fetch(LOCAL + bust, { cache: 'no-store' })
       .then(function (r) { return r.ok ? r.json() : null; })
       .catch(function () { return null; })
       .then(function (j) {
         if (j && j.entries) return j;
-        return fetch(LOCAL + bust, { cache: 'no-store' })
+        return fetch(RAW + bust, { cache: 'no-store' })
           .then(function (r) { return r.ok ? r.json() : null; })
           .catch(function () { return null; });
       })
