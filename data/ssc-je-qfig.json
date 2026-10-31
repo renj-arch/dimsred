@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T13:45:38.329Z",
-  "cursor": 135,
-  "built": 130
+  "updatedAt": "2026-10-31T14:02:47.455Z",
+  "cursor": 138,
+  "built": 133
  },
  "figs": {
   "11434945": {
@@ -783,6 +783,24 @@
   "853bc6b5": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Journal Bearing</text><rect x=\"40\" y=\"50\" width=\"280\" height=\"100\" rx=\"5\"/><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\" stroke-width=\"2\"/><circle cx=\"180\" cy=\"70\" r=\"40\" fill=\"none\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Shaft</text><rect x=\"60\" y=\"110\" width=\"240\" height=\"30\" rx=\"2\"/><text x=\"180\" y=\"130\" text-anchor=\"middle\">Bearing Housing</text><line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"110\" stroke-dasharray=\"4,2\"/><text x=\"155\" y=\"90\" text-anchor=\"middle\">L</text><text x=\"185\" y=\"90\" text-anchor=\"middle\">D</text><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\" stroke-dasharray=\"4,2\"/><text x=\"280\" y=\"65\" text-anchor=\"end\">L ÷ D ≈ 1.0</text><line x1=\"60\" y1=\"110\" x2=\"300\" y2=\"110\" stroke-dasharray=\"4,2\"/><text x=\"280\" y=\"105\" text-anchor=\"end\">L ÷ D ≈ 0.5</text><text x=\"180\" y=\"160\" text-anchor=\"middle\">Square Bearings (L/D = 1)</text></svg>",
    "n": "what length-to-diameter ratio is used for journal bearings?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "eb10f49e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">ISO Rating Life (L10)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"65\">N</text><text x=\"325\" y=\"65\">Revolutions</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><text x=\"45\" y=\"175\">L10</text><text x=\"45\" y=\"95\">Life</text><path d=\"M 40 180 L 320 60\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"130\" text-anchor=\"middle\">L10 = (C/P)^p × 10⁶</text><text x=\"180\" y=\"150\" text-anchor=\"middle\">p = 3 (Ball), 10/3 (Roller)</text></svg>",
+   "n": "write the iso rating life of a rolling bearing.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "1c884449": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Combined Load Calculation</text><rect x=\"40\" y=\"50\" width=\"280\" height=\"160\" rx=\"5\"/><text x=\"50\" y=\"75\">Radial (Fr)</text><line x1=\"60\" y1=\"85\" x2=\"300\" y2=\"85\" stroke=\"#222\"/><line x1=\"60\" y1=\"80\" x2=\"60\" y2=\"195\" stroke=\"#222\"/><text x=\"45\" y=\"105\">X</text><text x=\"310\" y=\"85\">Fr</text><line x1=\"60\" y1=\"85\" x2=\"60\" y2=\"195\" stroke=\"#222\"/><text x=\"45\" y=\"175\">Y</text><text x=\"310\" y=\"195\">Fa</text><line x1=\"300\" y1=\"85\" x2=\"300\" y2=\"195\" stroke=\"#222\"/><text x=\"310\" y=\"105\">Fr</text><text x=\"310\" y=\"175\">Fa</text><line x1=\"60\" y1=\"85\" x2=\"300\" y2=\"85\" stroke=\"#222\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">P = X·Fr + Y·Fa</text><rect x=\"30\" y=\"115\" width=\"300\" height=\"60\" fill=\"#eee\" opacity=\"0.5\" stroke=\"#222\"/><text x=\"40\" y=\"140\">Equivalent Dynamic Load P</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\" stroke=\"#222\"/><text x=\"50\" y=\"165\">Resultant Vector Sum</text></svg>",
+   "n": "write the equivalent dynamic load of a bearing carrying combined loads.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "766417fb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"80\" /><circle cx=\"120\" cy=\"120\" r=\"30\" /><path d=\"M 90 120 L 150 120\" /><path d=\"M 120 90 L 120 150\" /><text x=\"100\" y=\"60\" text-anchor=\"middle\">Raceway</text><text x=\"145\" y=\"130\" text-anchor=\"middle\">Contact</text><text x=\"80\" y=\"130\" text-anchor=\"end\">Dent/Brinell</text><text x=\"160\" y=\"130\" text-anchor=\"start\">Limit</text><text x=\"40\" y=\"200\" text-anchor=\"middle\">Static Load Rating (Co)</text></svg>",
+   "n": "when is the static load rating co of a bearing used?",
    "sub": "design",
    "at": "2026-10-31"
   }
