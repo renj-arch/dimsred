@@ -1127,33 +1127,133 @@
    ]
   },
   {
-   "at": "2026-10-31T12:03:36.434Z",
-   "model": "batiai/qwen3.8-27b:iq3",
+   "at": "2026-10-31T12:26:53.686Z",
+   "model": "qwen3.5:9b",
    "totalFixes": 3,
    "byAgent": [
     {
-     "agent": "archive-writer",
-     "count": 3
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
     }
    ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) indicate immediate content decay; BankFigures is the top priority to fix broken visuals. MockPapers must follow to address the missing papers file status, while MainsFresh handles recent exam pattern updates. MetaLearn should run last as it produced zero fixes in the previous two runs, likely waiting for inputs from prior agents.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
    "details": [
     {
-     "agent": "archive-writer",
+     "agent": "bankfigures",
      "fixes": [
       {
-       "page": "archive (Women & Society / Women & Society)",
-       "fix": "Explained \"What do you know about The Citroën GS Camargue?\"",
-       "text": "1) VERDICT: The Citroën GS Camargue is a concept car based on the Citroën GS, presented as a three-door hatchback with 2+2 seating. 2) WHY: It was designed to showcase Citroën's design language and practicality, blending the GS's platform with a sporty, compact hatchback form. 3) TRAPS: Do not confuse it with production models; it is strictly a concept. Do not misidentify the seating as 2+3; the 2+2 layout is specific to this design. 4) HOOK: Remember 'GS' for the base and 'Camargue' for the rug"
-      },
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (121 total)",
+       "text": "How does shot peening improve a helical spring? | Write the torque of a single-surface plate clutch under uniform wear. | Write the torque of a single-surface plate clutch under uniform pressure."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
       {
-       "page": "archive (Women & Society / Women & Society)",
-       "fix": "Explained \"It was designed by the Italian company Bertone and presented in _____ at the Geneva Motor \"",
-       "text": "1) VERDICT: 1972. 2) WHY: Bertone, the legendary Italian design house, unveiled this landmark vehicle at the Geneva Motor Show in 1972, marking a pivotal moment in automotive history. 3) TRAPS: Do not confuse this with later Bertone concepts or other years; the prompt specifically ties the design to Bertone and the venue to Geneva. 4) HOOK: Remember 'Bertone 1972 Geneva' as a single block. Exam trap: If options include 1970 or 1975, eliminate them immediately—Bertone's Geneva debut in this conte"
-      },
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Gas Turbines (187 in pool)",
+       "text": "Gas Turbines"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
       {
-       "page": "archive (Women & Society / Women & Society)",
-       "fix": "Explained \"Historically, this was the first collaboration between _____ and Citroën, which later prod\"",
-       "text": "VERDICT: The answer is Bertone. WHY: Bertone, the Italian design house, partnered with Citroën on the GS Camargue, marking their first collaboration. This partnership laid the groundwork for the highly successful BX and other subsequent models. TRAPS: Do not confuse this with Pininfarina or other Italian firms; the specific historical link to the GS Camargue points uniquely to Bertone. HOOK: Remember the GS Camargue as the 'first handshake' between Bertone and Citroën. Exam trap: If you see 'fir"
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwdlegj (gs3, 15 marks): Critically examine the potential of India's National Green Hydrogen Mission to transform the country into a global hydro",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-10-31T13:00:56.527Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures agent is active but metalearn has produced zero output for 2+ runs so it must be queued last. Mainsfresh just completed a fix, so it should run again immediately to address remaining open faults. The plan prioritizes clearing critical infrastructure gaps before attempting new inventions or meta-learning.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (124 total)",
+       "text": "Write the torque of a cone clutch under uniform wear. | Write the torque of a centrifugal clutch with n shoes. | State the tension ratio of a band brake."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Power Plant Engineering (197 in pool)",
+       "text": "Power Plant Engineering"
       }
      ]
     }

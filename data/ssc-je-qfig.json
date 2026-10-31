@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T11:31:14.260Z",
-  "cursor": 123,
-  "built": 118
+  "updatedAt": "2026-10-31T12:37:41.371Z",
+  "cursor": 129,
+  "built": 124
  },
  "figs": {
   "11434945": {
@@ -711,6 +711,42 @@
   "d7dd3352": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">Displacement (mm)</text>\n <line x1=\"40\" y1=\"30\" x2=\"320\" y2=\"30\" />\n <line x1=\"40\" y1=\"190\" x2=\"320\" y2=\"190\" />\n <line x1=\"40\" y1=\"190\" x2=\"40\" y2=\"30\" />\n <text x=\"35\" y=\"105\" text-anchor=\"end\">0</text>\n <text x=\"35\" y=\"35\" text-anchor=\"end\">A</text>\n <text x=\"35\" y=\"185\" text-anchor=\"end\">-A</text>\n <path d=\"M 40 90 Q 180 20 320 90\" />\n <path d=\"M 40 90 L 320 90\" stroke-dasharray=\"4,2\" />\n <circle cx=\"180\" cy=\"90\" r=\"3\" fill=\"#222\" />\n <text x=\"175\" y=\"85\">Resonance</text>\n <path d=\"M 40 110 Q 180 160 320 110\" />\n <circle cx=\"180\" cy=\"110\" r=\"3\" fill=\"#222\" />\n <text x=\"175\" y=\"105\">Damped</text>\n <text x=\"20\" y=\"110\">Frequency match</text>\n</svg>",
    "n": "what is surging in a spring and how is it reduced?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "e6bf52bb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"100\" height=\"40\" rx=\"5\"/><path d=\"M 70 90 Q 85 60 100 90 T 130 90\" stroke-dasharray=\"2,2\"/><circle cx=\"70\" cy=\"90\" r=\"3\"/><circle cx=\"100\" cy=\"90\" r=\"3\"/><circle cx=\"130\" cy=\"90\" r=\"3\"/><path d=\"M 45 80 L 125 80 M 45 90 L 125 90 M 45 100 L 125 100\" stroke-dasharray=\"2,2\"/><text x=\"30\" y=\"110\">Surface</text><text x=\"30\" y=\"125\">Layer</text><path d=\"M 160 80 Q 175 40 190 80 T 220 80\" stroke-dasharray=\"2,2\"/><circle cx=\"160\" cy=\"80\" r=\"3\"/><circle cx=\"190\" cy=\"80\" r=\"3\"/><circle cx=\"220\" cy=\"80\" r=\"3\"/><path d=\"M 155 70 L 225 70 M 155 80 L 225 80 M 155 90 L 225 90\" stroke-dasharray=\"2,2\"/><text x=\"140\" y=\"110\">Bulk</text><text x=\"140\" y=\"125\">Material</text><path d=\"M 250 80 Q 265 40 280 80 T 310 80\" stroke-dasharray=\"2,2\"/><circle cx=\"250\" cy=\"80\" r=\"3\"/><circle cx=\"280\" cy=\"80\" r=\"3\"/><circle cx=\"310\" cy=\"80\" r=\"3\"/><path d=\"M 245 70 L 315 70 M 245 80 L 315 80 M 245 90 L 315 90\" stroke-dasharray=\"2,2\"/><text x=\"230\" y=\"110\">Crack</text><text x=\"230\" y=\"125\">Growth</text><path d=\"M 40 140 L 320 140 M 180 140 L 180 190\" stroke-dasharray=\"2,2\"/><text x=\"160\" y=\"205\">Residual Compression</text><text x=\"160\" y=\"220\">Blocks Crack</text></svg>",
+   "n": "how does shot peening improve a helical spring?",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "8ee9d0f5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">r₁</text><ellipse cx=\"180\" cy=\"60\" rx=\"80\" ry=\"10\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"75\" text-anchor=\"middle\">R = (r₁ + r₂)/2</text><ellipse cx=\"180\" cy=\"90\" rx=\"60\" ry=\"10\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\">r₂</text><path d=\"M 100 60 L 100 40 M 260 60 L 260 40\" stroke-dasharray=\"2,2\"/><text x=\"135\" y=\"50\" text-anchor=\"middle\">μ × W</text><text x=\"135\" y=\"90\" text-anchor=\"middle\">T = μW R</text></svg>",
+   "n": "write the torque of a single-surface plate clutch under uniform wear.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "2a1fdd8d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Clutch Disc Cross-Section</text><path d=\"M40,60 L320,60\"/><path d=\"M40,70 Q180,120 320,70\"/><path d=\"M40,80 Q180,120 320,80\"/><circle cx=\"180\" cy=\"60\" r=\"15\"/><circle cx=\"180\" cy=\"80\" r=\"15\"/><text x=\"170\" y=\"55\">r₁</text><text x=\"170\" y=\"95\">r₂</text><text x=\"240\" y=\"65\">Inner</text><text x=\"240\" y=\"85\">Outer</text><path d=\"M320,60 L320,80 M340,60 L340,80\"/><text x=\"325\" y=\"75\" text-anchor=\"start\">Friction Surface</text><path d=\"M180,60 L180,80\"/><text x=\"190\" y=\"75\" text-anchor=\"start\">Uniform Pressure</text></svg>",
+   "n": "write the torque of a single-surface plate clutch under uniform pressure.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "35d3015a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,100 L80,40 L120,100 L160,40 L200,100 L240,40 L280,100 L320,40\" stroke-dasharray=\"4,2\"/><path d=\"M40,100 L280,100\"/><text x=\"50\" y=\"90\" text-anchor=\"start\">Inner</text><text x=\"270\" y=\"90\" text-anchor=\"end\">Outer</text><text x=\"330\" y=\"45\" text-anchor=\"end\">Top</text><text x=\"330\" y=\"145\" text-anchor=\"end\">Bottom</text><circle cx=\"180\" cy=\"70\" r=\"2\"/><circle cx=\"180\" cy=\"150\" r=\"2\"/><line x1=\"180\" y1=\"68\" x2=\"180\" y2=\"152\"/><text x=\"185\" y=\"110\">R (Mean)</text><polygon points=\"340,40 340,180 360,110\" fill=\"none\" stroke=\"#222\"/><text x=\"345\" y=\"100\">α</text><text x=\"345\" y=\"130\">sin α</text><text x=\"10\" y=\"110\">Torque T ∝ 1/sin α</text></svg>",
+   "n": "write the torque of a cone clutch under uniform wear.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "d4074606": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Centrifugal Clutch Shoe</text><circle cx=\"180\" cy=\"90\" r=\"40\"/><path d=\"M 140 90 L 140 130 M 220 90 L 220 130 M 180 50 L 180 90\"/><circle cx=\"140\" cy=\"130\" r=\"10\"/><circle cx=\"220\" cy=\"130\" r=\"10\"/><path d=\"M 140 130 Q 180 160 220 130\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">Friction Radius R</text><line x1=\"180\" y1=\"175\" x2=\"180\" y2=\"190\"/><circle cx=\"180\" cy=\"190\" r=\"3\" fill=\"#222\"/><path d=\"M 140 130 L 140 160 M 220 130 L 220 160\" stroke-dasharray=\"2,2\"/><text x=\"155\" y=\"185\">Spring Fs</text><text x=\"230\" y=\"185\">Spring Fs</text></svg>",
+   "n": "write the torque of a centrifugal clutch with n shoes.",
+   "sub": "design",
+   "at": "2026-10-31"
+  },
+  "e38ec934": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\">Tension (Force)</text><circle cx=\"40\" cy=\"100\" r=\"3\"/><text x=\"35\" y=\"90\">T1</text><circle cx=\"320\" cy=\"100\" r=\"3\"/><text x=\"315\" y=\"90\">T2</text><path d=\"M 40 100 Q 180 60 320 100\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"70\" text-anchor=\"middle\">Wrap Angle θ</text><path d=\"M 40 100 L 40 160 M 320 100 L 320 160\" stroke-dasharray=\"2,2\"/><text x=\"35\" y=\"180\">Friction</text><text x=\"315\" y=\"180\">Friction</text><line x1=\"40\" y1=\"170\" x2=\"320\" y2=\"170\"/><text x=\"180\" y=\"190\" text-anchor=\"middle\">Resultant Force</text></svg>",
+   "n": "state the tension ratio of a band brake.",
    "sub": "design",
    "at": "2026-10-31"
   }
