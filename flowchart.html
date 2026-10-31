@@ -1828,7 +1828,7 @@ document.getElementById('chart').addEventListener('dblclick',function(ev){
   var t=ev.target;
   while(t&&t!==this&&t.getAttribute&&t.getAttribute('data-idx')==null)t=t.parentNode;
   if(!t||t===this)return;
-  var el=document.querySelector('#chart .ncard[data-idx="'+t.getAttribute('data-idx")+'"]');
+  var el=document.querySelector('#chart .ncard[data-idx="'+t.getAttribute('data-idx')+'"]');
   if(!el||(' '+el.className.baseVal+' ').indexOf(' hero ')!==-1)return;
   var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
   if(id)showNote(id);

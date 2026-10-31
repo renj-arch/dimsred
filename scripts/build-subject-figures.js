@@ -346,7 +346,10 @@ function subjectPage(subj) {
   }
   var counts = subj.figs.length + ' figures (' + handN + ' hand-picked, ' + resN + ' auto-resolved' +
     (legacyN ? ', ' + legacyN + ' auto-suggested' : '') + ')';
-  return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>' + esc(subj.name) + ' Figures (UPSC)</title>' +
+  return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<meta name="description" content="' + esc(subj.name) + ' figures for UPSC — diagrams, maps and visual revision notes on vlymbooq.">' +
+    '<title>' + esc(subj.name) + ' Figures (UPSC)</title>' +
     '<style>' + CSS + '</style></head><body>' +
     '<section class="page"><header><span class="num">GS Figures \u00b7 ' + esc(subj.name) + ' \u00b7 UPSC</span>' +
     '<h1>' + esc(subj.name) + ' \u2014 Suggested Figures</h1>' +
@@ -374,7 +377,10 @@ function indexPage(all) {
     return '<li><a href="' + esc(s.slug) + '-figures.html">' + esc(s.name) +
       '</a> \u2014 ' + s.figs.length + ' figures' + (prov ? ' \u00b7 ' + esc(prov) : '') + '</li>';
   }).join('');
-  return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><title>UPSC Subject Figures \u2014 Index</title>' +
+  return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<meta name="description" content="Index of UPSC subject-wise figure packs — printable diagrams, maps and visual revision notes on vlymbooq.">' +
+    '<title>UPSC Subject Figures \u2014 Index</title>' +
     '<style>' + CSS + '</style></head><body>' +
     '<section class="page"><header><span class="num">GS \u00b7 All Subjects \u00b7 UPSC</span>' +
     '<h1>UPSC Subject Figures \u2014 Index</h1>' +

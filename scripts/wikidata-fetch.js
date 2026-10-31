@@ -85,7 +85,7 @@ function cleanText(s) {
   return s
     .replace(/\s+\.\s*(\d)/g, '.$1')        // "1,456. 3" → "1,456.3"
     .replace(/(\d)\s+km2/g, '$1 km²')        // "123 km2" → "123 km²"
-    .replace(/�/g, '')                         // remove unicode replacement chars
+    .replace(/\uFFFD/g, '')                         // remove unicode replacement chars
     .replace(/\s{2,}/g, ' ')                   // collapse multiple spaces
     .replace(/^[,.\s]+|[,.\s]+$/g, '')          // trim leading/trailing punctuation
     .trim();
@@ -180,8 +180,8 @@ function assessQuality(e) {
   if (e.sub && e.sub.length > 5) score += 2;
   if (e.la && e.ln && e.la !== 0 && e.ln !== 0) score += 1;
   if (e.desc && !isBoilerplate(e.desc) && !isMostlyBoilerplate(e.desc)) score += 2;
-  if (e.desc && e.desc.includes('�')) score -= 3;
-  if (e.fact && e.fact.includes('�')) score -= 3;
+  if (e.desc && e.desc.includes('\uFFFD')) score -= 3;
+  if (e.fact && e.fact.includes('\uFFFD')) score -= 3;
   if (e.desc && isMostlyBoilerplate(e.desc)) score -= 2;
   if (score >= 6) return 'good';
   if (score >= 2) return 'low';
@@ -202,7 +202,7 @@ function shouldSkipAutoEntry(e) {
   if (!e.desc || e.desc.length < 20 || /^[,.\s]*$/.test(e.desc)) return true;
   if (!e.fact || e.fact.length < 15 || /^[,.\s]*$/.test(e.fact)) return true;
   if (!e.sub || e.sub.length < 3) return true;
-  if (e.sub.includes('�') || e.desc.includes('�')) return true;
+  if (e.sub.includes('\uFFFD') || e.desc.includes('\uFFFD')) return true;
   return false;
 }
 
@@ -216,8 +216,8 @@ function validate(entries) {
     if (!e.fact || e.fact.length < 15) issues.push(`✗ ${e.n}: fact too short (${(e.fact||'').length} chars)`);
     if (!e.sub) issues.push(`✗ ${e.n}: missing sub`);
     if (e.desc && isMostlyBoilerplate(e.desc)) issues.push(`⚠ ${e.n}: desc is mostly boilerplate`);
-    if (e.desc && e.desc.includes('�')) issues.push(`✗ ${e.n}: unicode corruption in desc`);
-    if (e.fact && e.fact.includes('�')) issues.push(`✗ ${e.n}: unicode corruption in fact`);
+    if (e.desc && e.desc.includes('\uFFFD')) issues.push(`✗ ${e.n}: unicode corruption in desc`);
+    if (e.fact && e.fact.includes('\uFFFD')) issues.push(`✗ ${e.n}: unicode corruption in fact`);
     if (e._quality === 'poor') issues.push(`⚠ ${e.n}: overall quality poor`);
     if (e._src === 'auto' && e._quality === 'low') issues.push(`⚡ ${e.n}: quality low — consider adding to globe-manual.json`);
   }
@@ -360,7 +360,7 @@ async function main() {
       if (!e.desc || e.desc.length < 20) reasons.push('desc too short (' + (e.desc?.length||0) + ' chars)');
       if (!e.fact || e.fact.length < 15) reasons.push('fact too short (' + (e.fact?.length||0) + ' chars)');
       if (!e.sub) reasons.push('missing sub');
-      if (e.sub && e.sub.includes('�')) reasons.push('corrupted sub');
+      if (e.sub && e.sub.includes('\uFFFD')) reasons.push('corrupted sub');
       console.log('    • ' + e.n + ' — ' + reasons.join(', '));
     }
   }

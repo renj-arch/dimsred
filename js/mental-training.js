@@ -1293,7 +1293,7 @@ function generateClassificationQuestion(diff) {
     timeLimit: diff <= 1 ? 15 : (diff <= 3 ? 12 : 10),
     type: 'pattern',
     patternLabel: 'Classification',
-    techniqueLabel: 'Classification: check divisibility, category, symmetry � 3 share a rule, 1 breaks it',
+    techniqueLabel: 'Classification: check divisibility, category, symmetry — 3 share a rule, 1 breaks it',
     drillLine1: data.expl,
     drillLine2: 'The rule is: ' + data.expl.split(' except')[0],
     solution: data.expl

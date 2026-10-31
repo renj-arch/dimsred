@@ -890,6 +890,8 @@ async function main() {
   }
 
   var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+    '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+    '<meta name="description" content="GS Geography figures for UPSC Mains — diagrams, maps and visual revision notes on vlymbooq.">' +
     '<title>GS Geography Figures (UPSC Mains)</title>' +
     '<style>' +
     'body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;background:#e5e7eb;color:#111827}' +

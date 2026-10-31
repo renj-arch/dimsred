@@ -260,6 +260,7 @@ function main() {
 
     var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
       + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+      + '<meta name="description" content="UPSC figures, page ' + (pi + 1) + ' of ' + pages.length + ' — curated diagrams, maps and charts for general studies revision on vlymbooq.">'
       + '<title>UPSC Figures page ' + (pi + 1) + '</title><style>' + css + '</style></head><body><div class="wrap">'
       + '<h1>UPSC Figures &#8212; page ' + (pi + 1) + ' of ' + pages.length + '</h1>'
       + '<p class="meta">' + keys.length + ' figures &#183; distinct images from Wikimedia Commons &#183; filtered for topic relevance and country</p>'
@@ -340,6 +341,7 @@ function main() {
 
     var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
       + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+      + '<meta name="description" content="Visual study figures and diagrams on ' + esc(t) + ' for UPSC and competitive exam revision on vlymbooq.">'
       + '<title>' + esc(t) + ' figures</title><style>' + css + '</style></head><body><div class="wrap">'
       + '<h1>' + esc(t) + '</h1>'
       + '<p class="meta">' + keys.length.toLocaleString('en-US') + ' figures &#183; distinct images from Wikimedia Commons</p>'
@@ -375,6 +377,7 @@ function main() {
   var topicList = Object.keys(byTopic).sort(function (a, b) { return byTopic[b] - byTopic[a]; });
   var idx = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">'
     + '<meta name="viewport" content="width=device-width,initial-scale=1">'
+    + '<meta name="description" content="Index of curated UPSC figures — diagrams, maps and charts across every general studies topic on vlymbooq.">'
     + '<title>UPSC Figures Index</title><style>' + css + '</style></head><body><div class="wrap">'
     + '<h1>UPSC Figures Index</h1>'
     + '<p class="meta">' + displayOrder.length.toLocaleString('en-US') + ' curated figures across ' + pages.length

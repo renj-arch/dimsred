@@ -102,7 +102,7 @@ function head(exam, examDir, examName, title, desc, canonical, extra, depth) {
   h += '        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}\n';
   if (extra) h += extra;
   h += '    </style>\n</head>\n<body>\n';
-  h += '    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/community.html">Community</a><a href="../index.html">' + examName + '</a><a href="index.html" class="active">Course</a></div></div></nav>\n';
+  h += '    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../index.html">' + examName + '</a><a href="' + (depth >= 3 ? '../index.html' : 'index.html') + '" class="active">Course</a></div></div></nav>\n';
   h += '    <div class="container">\n';
   return h;
 }

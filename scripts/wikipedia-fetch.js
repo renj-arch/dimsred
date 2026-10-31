@@ -184,7 +184,7 @@ async function wikiSummary(title) {
 // ====== SHARED TEXT UTILITIES (from wikidata-multi-fetch) ======
 function cleanText(s) {
   if (!s) return '';
-  return s.replace(/\s+\.\s*(\d)/g, '.$1').replace(/(\d)\s+km2/g, '$1 km²').replace(/�/g, '').replace(/\s{2,}/g, ' ').replace(/^[,.\s]+|[,.\s]+$/g, '').trim();
+  return s.replace(/\s+\.\s*(\d)/g, '.$1').replace(/(\d)\s+km2/g, '$1 km²').replace(/\uFFFD/g, '').replace(/\s{2,}/g, ' ').replace(/^[,.\s]+|[,.\s]+$/g, '').trim();
 }
 function sentenceScore(s) {
   let score = 0;
