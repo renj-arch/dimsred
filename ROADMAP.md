@@ -9,7 +9,7 @@ Transform vlymbooq into a genuinely useful, innovative and technically sophistic
 |----|---------|--------|----------|
 | F001 | Study Progress Tracker | Done | High |
 | F002 | Knowledge Graph Explorer | Done | High |
-| F003 | Adaptive Learning Engine | Planned | Medium |
+| F003 | Adaptive Learning Engine | Done | High |
 | F004 | Examination Intelligence | Planned | Medium |
 | F005 | Research Discovery System | Planned | Medium |
 
@@ -48,13 +48,27 @@ Interactive graph explorer over the Ask index's co-mention relation.
   `cat` field, which is too noisy to present as a subject label.
 - Wired into `build-timeline.yml` (rebuild + commit) and `generate-sitemap.js`.
 
-## Phase 3: Adaptive Learning Engine (Planned)
+## Phase 3: Adaptive Learning Engine (Done)
 
 ### Problem
 No personalized recommendations based on performance.
 
 ### Solution
-Track quiz scores per topic, identify weak areas, generate revision paths.
+A plan computed from the practice results the site already stores, with no
+server, no new tracking, and no generated content.
+
+### Implementation
+- `js/adaptive-engine.js` — pure logic:
+  - merges `microtest_results` (exam + topic) with `studypro_results` (paper
+    level only; papers have no section breakdown, so they never claim a topic)
+  - mastery = Laplace-smoothed accuracy x a 30-day recency half-life (floored)
+  - review intervals grow with accuracy and repeat attempts (2-42 days)
+  - `buildPlan()` ranks weak topics, then overdue reviews, then unstarted
+    topics; every action deep-links to `micro-test.html?exam=&topic=&n=`
+- `adaptive.html` — plan, per-exam mastery bars, and mistakes-by-section.
+- `js/micro-test.js` — honours the deep link and selects the nearest offered
+  question count.
+- `scripts/lib/adaptive-engine.test.js` — 42 assertions (`npm run test-adaptive`).
 
 ## Phase 4: Examination Intelligence (Planned)
 
@@ -98,3 +112,8 @@ Unified search across all content types with provenance links.
   - Created `knowledge-graph.html` (search, radial neighbourhood, pan, type filter)
   - Hooked graph rebuild into `build-timeline.yml`
   - Added both new pages to the sitemap generator (CI regenerates the full sitemap)
+- 2026-10-31: Completed Phase 3 — Adaptive Learning Engine
+  - Created `js/adaptive-engine.js` and `adaptive.html`
+  - Added micro-test deep links (`?exam=&topic=&n=`) so plan actions start a test
+  - Paper results stay exam-level; only micro-tests carry topic attribution
+  - Added `npm run test-adaptive` (42 assertions)

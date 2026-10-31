@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Adaptive Study Plan — Practise What Matters | vlymbooq</title>
+<meta name="description" content="A study plan built from your own practice history: weak topics first, spaced review when due, then new ground. Every action links straight to a test.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#09090b;--bg-card:#111113;--bg-hover:#18181b;--border:rgba(255,255,255,.07);
+  --text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;
+  --purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--rose:#fb7185;--cyan:#22d3ee;
+  --radius:12px;
+}
+html{scroll-behavior:smooth}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+a{color:inherit;text-decoration:none}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800}
+.brand-text{background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+.nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:var(--text-sec);transition:all .2s;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.12)}
+.container{max-width:1100px;margin:0 auto;padding:24px}
+.greeting{font-size:1.8em;font-weight:800;margin-bottom:4px}
+.greeting-sub{color:var(--text-muted);font-size:.9em;margin-bottom:32px;max-width:70ch;line-height:1.5}
+.stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;margin-bottom:32px}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;text-align:center}
+.stat-value{font-size:2.2em;font-weight:800;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:.8em;color:var(--text-muted);margin-top:4px}
+.stat-card.warn .stat-value{background:linear-gradient(135deg,var(--amber),var(--rose));-webkit-background-clip:text;background-clip:text}
+.section{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:24px}
+.section-head{display:flex;align-items:baseline;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.section h2{font-size:1.2em;font-weight:700}
+.section-note{font-size:.78em;color:var(--text-muted);margin-bottom:18px;line-height:1.5}
+.plan-list{display:flex;flex-direction:column;gap:10px}
+.plan-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-hover);border:1px solid transparent;border-radius:10px;transition:border-color .2s}
+.plan-card:hover{border-color:rgba(167,139,250,.35)}
+.kind{font-size:.66em;font-weight:700;letter-spacing:.06em;text-transform:uppercase;padding:4px 9px;border-radius:100px;white-space:nowrap}
+.kind.weak{background:rgba(251,113,133,.14);color:var(--rose)}
+.kind.review{background:rgba(245,158,11,.14);color:var(--amber)}
+.kind.new{background:rgba(34,211,238,.12);color:var(--cyan)}
+.plan-main{flex:1;min-width:0}
+.plan-topic{font-weight:700;font-size:.95em;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.plan-exam{font-size:.72em;font-weight:600;color:var(--text-muted);background:rgba(255,255,255,.05);padding:2px 7px;border-radius:100px}
+.plan-reason{font-size:.8em;color:var(--text-sec);margin-top:3px;line-height:1.45}
+.plan-btn{flex-shrink:0;font-size:.8em;font-weight:700;padding:9px 16px;border-radius:8px;background:var(--purple);color:#0b0b0d;white-space:nowrap}
+.plan-btn:hover{background:#8b5cf6}
+.empty-state{text-align:center;padding:36px 20px;color:var(--text-muted);font-size:.92em;line-height:1.6}
+.empty-state .btn{display:inline-block;margin-top:16px;padding:10px 20px;background:var(--purple);color:#fff;border-radius:8px;font-weight:600;font-size:.9em}
+.exam-block{margin-bottom:26px}
+.exam-block:last-child{margin-bottom:0}
+.exam-title{font-size:.95em;font-weight:700;margin-bottom:12px;display:flex;align-items:center;gap:10px}
+.exam-title .count{font-size:.72em;font-weight:600;color:var(--text-muted)}
+.topic-row{display:flex;align-items:center;gap:12px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.035)}
+.topic-row:last-child{border-bottom:none}
+.topic-name{width:210px;flex-shrink:0;font-size:.85em;color:var(--text-sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.topic-track{flex:1;height:7px;background:rgba(255,255,255,.06);border-radius:4px;overflow:hidden}
+.topic-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--purple),var(--emerald))}
+.topic-fill.weak{background:linear-gradient(90deg,var(--rose),var(--amber))}
+.topic-fill.new{background:rgba(255,255,255,.08)}
+.topic-state{width:112px;flex-shrink:0;text-align:right;font-size:.72em;font-weight:600;color:var(--text-muted)}
+.topic-state.weak{color:var(--rose)}
+.topic-state.strong{color:var(--emerald)}
+.topic-state.due{color:var(--amber)}
+.topic-state.review{color:var(--amber)}
+.error-row{display:flex;align-items:center;gap:12px;padding:9px 0;border-bottom:1px solid rgba(255,255,255,.035);font-size:.86em}
+.error-row:last-child{border-bottom:none}
+.error-section{flex:1;color:var(--text-sec);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.error-exam{font-size:.75em;color:var(--text-muted)}
+.error-count{font-weight:700;color:var(--rose);font-size:.85em}
+.footnote{font-size:.75em;color:var(--text-muted);line-height:1.6;margin-top:18px;padding-top:14px;border-top:1px solid var(--border)}
+.footnote a{color:var(--purple)}
+@media(max-width:720px){
+  .container{padding:16px}
+  .plan-card{flex-wrap:wrap}
+  .plan-btn{width:100%;text-align:center}
+  .topic-name{width:120px}
+  .topic-state{width:86px}
+  .greeting{font-size:1.45em}
+}
+</style>
+</head>
+<body>
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="index.html" class="brand"><span class="brand-text">vlymbooq</span></a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="dashboard.html">Dashboard</a>
+      <a href="progress.html">Progress</a>
+      <a href="knowledge-graph.html">Graph</a>
+      <a href="adaptive.html" class="active">Adaptive</a>
+      <a href="search.html">Search</a>
+    </div>
+  </div>
+</nav>
+
+<div class="container">
+  <h1 class="greeting">Adaptive Study Plan</h1>
+  <p class="greeting-sub">Built from your own practice history. Weak topics come first, then anything due for review, then new ground. Every action opens the exact micro-test for that topic.</p>
+
+  <div class="stats-grid" id="statsGrid">
+    <div class="stat-card"><div class="stat-value" id="statTopics">0</div><div class="stat-label">Topics Practised</div></div>
+    <div class="stat-card"><div class="stat-value" id="statAccuracy">—</div><div class="stat-label">Micro-test Accuracy</div></div>
+    <div class="stat-card warn"><div class="stat-value" id="statDue">0</div><div class="stat-label">Due for Review</div></div>
+    <div class="stat-card warn"><div class="stat-value" id="statWeak">0</div><div class="stat-label">Weak Areas</div></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>Your Plan</h2><span class="section-note" style="margin:0" id="planMeta"></span></div>
+    <p class="section-note">Ranked by how much the evidence says you need it. The list updates after every test.</p>
+    <div class="plan-list" id="planList"></div>
+  </div>
+
+  <div class="section">
+    <div class="section-head"><h2>Topic Mastery</h2><span class="section-note" style="margin:0" id="masteryMeta"></span></div>
+    <p class="section-note">Mastery blends accuracy with recency: old results decay, and a single lucky answer never counts as mastery.</p>
+    <div id="masteryList"></div>
+  </div>
+
+  <div class="section" id="errorsSection" style="display:none">
+    <div class="section-head"><h2>Mistakes by Section</h2><a href="mistakes.html" class="section-note" style="margin:0;color:var(--purple)">Review all mistakes →</a></div>
+    <p class="section-note">From full paper practice, which records sections rather than topics.</p>
+    <div id="errorList"></div>
+  </div>
+
+  <p class="footnote">Nothing here is generated content: the plan is arithmetic over the results already stored in your browser. Practice data stays in this device's localStorage. <a href="progress.html">See pages visited →</a></p>
+</div>
+
+<script src="js/adaptive-engine.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function readJson(key, fallback) {
+    try {
+      var raw = localStorage.getItem(key);
+      return raw ? JSON.parse(raw) : fallback;
+    } catch (e) { return fallback; }
+  }
+
+  function pct(x) {
+    return x == null ? '—' : Math.round(x * 100) + '%';
+  }
+
+  function daysAgo(date) {
+    if (!date) return '';
+    var days = Math.round((Date.now() - new Date(date).getTime()) / 86400000);
+    if (days <= 0) return 'today';
+    return days === 1 ? 'yesterday' : days + ' days ago';
+  }
+
+  function stateLabel(st) {
+    if (st.status === 'new') return 'Not started';
+    if (st.status === 'weak') return 'Needs work';
+    if (st.status === 'strong') return 'Strong';
+    if (st.status === 'due') return 'Due now';
+    if (st.status === 'review') return 'Review';
+    return 'Learning';
+  }
+
+  function stateClass(st) {
+    if (st.status === 'weak') return 'weak';
+    if (st.status === 'strong') return 'strong';
+    if (st.status === 'due' || st.status === 'review') return 'due';
+    return '';
+  }
+
+  function kindLabel(kind) {
+    if (kind === 'weak') return 'Needs work';
+    if (kind === 'review') return 'Review due';
+    return 'New topic';
+  }
+
+  var engine = window.AdaptiveEngine;
+  if (!engine) return;
+
+  var micro = readJson('microtest_results', []);
+  var papers = readJson('studypro_results', []);
+  var wrong = readJson('studypro_wrong', []);
+
+  fetch('data/topic-index.json')
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (index) {
+      render(engine.buildProfile({
+        micro: Array.isArray(micro) ? micro : [],
+        papers: Array.isArray(papers) ? papers : [],
+        wrong: Array.isArray(wrong) ? wrong : [],
+        topics: (index && index.exams) || {}
+      }));
+    })
+    .catch(function (e) {
+      document.getElementById('planList').innerHTML =
+        '<div class="empty-state">Could not load the topic index: ' + esc(e.message) + '</div>';
+    });
+
+  function render(profile) {
+    var s = profile.summary;
+
+    document.getElementById('statTopics').textContent = s.topicsPractised;
+    document.getElementById('statAccuracy').textContent = pct(s.microAccuracy);
+    document.getElementById('statDue').textContent = s.due;
+    document.getElementById('statWeak').textContent = s.weak;
+    document.getElementById('planMeta').textContent = s.topicsTotal + ' topics in the syllabus';
+    document.getElementById('masteryMeta').textContent =
+      s.attempts ? s.attempts + ' attempt' + (s.attempts === 1 ? '' : 's') : '';
+
+    // Plan
+    var planEl = document.getElementById('planList');
+    var plan = engine.buildPlan(profile, { limit: 8 });
+    if (!plan.length) {
+      planEl.innerHTML = '<div class="empty-state">No topics are available to plan yet.' +
+        '<a class="btn" href="micro-test.html">Open a micro-test</a></div>';
+    } else {
+      planEl.innerHTML = plan.map(function (a) {
+        return '<div class="plan-card">' +
+          '<span class="kind ' + esc(a.kind) + '">' + esc(kindLabel(a.kind)) + '</span>' +
+          '<div class="plan-main">' +
+            '<div class="plan-topic">' + esc(a.topic) +
+              '<span class="plan-exam">' + esc(a.examName) + '</span></div>' +
+            '<div class="plan-reason">' + esc(a.reason) + '</div>' +
+          '</div>' +
+          '<a class="plan-btn" href="' + esc(a.href) + '">Practise →</a>' +
+        '</div>';
+      }).join('');
+    }
+
+    // Mastery by exam
+    var masteryEl = document.getElementById('masteryList');
+    var groups = {};
+    profile.topics.forEach(function (st) {
+      if (!groups[st.exam]) groups[st.exam] = { name: st.examName, topics: [] };
+      groups[st.exam].topics.push(st);
+    });
+    var keys = Object.keys(groups).sort(function (a, b) {
+      return groups[a].name.localeCompare(groups[b].name);
+    });
+    if (!keys.length) {
+      masteryEl.innerHTML = '<div class="empty-state">The topic index is empty.</div>';
+    } else {
+      masteryEl.innerHTML = keys.map(function (key) {
+        var g = groups[key];
+        var rows = g.topics.map(function (st) {
+          var m = st.mastery == null ? 0 : Math.round(st.mastery * 100);
+          var fillClass = st.status === 'new' ? 'new' : st.status === 'weak' ? 'weak' : '';
+          var meta = st.attempts
+            ? st.attempts + ' attempt' + (st.attempts === 1 ? '' : 's') + ' · ' + daysAgo(st.lastSeen)
+            : (st.available || 0) + ' questions';
+          return '<div class="topic-row" title="' + esc(meta) + '">' +
+            '<span class="topic-name">' + esc(st.topic) + '</span>' +
+            '<span class="topic-track"><span class="topic-fill ' + fillClass + '" style="width:' + m + '%"></span></span>' +
+            '<span class="topic-state ' + stateClass(st) + '">' + esc(stateLabel(st)) + '</span>' +
+          '</div>';
+        }).join('');
+        return '<div class="exam-block"><div class="exam-title">' + esc(g.name) +
+          '<span class="count">' + g.topics.length + ' topics</span></div>' + rows + '</div>';
+      }).join('');
+    }
+
+    // Mistakes by section
+    var errors = profile.errors || [];
+    if (errors.length) {
+      document.getElementById('errorsSection').style.display = '';
+      document.getElementById('errorList').innerHTML = errors.slice(0, 8).map(function (e) {
+        return '<div class="error-row">' +
+          '<span class="error-section">' + esc(e.section) + '</span>' +
+          '<span class="error-exam">' + esc(e.exam) + '</span>' +
+          '<span class="error-count">' + e.count + '</span>' +
+        '</div>';
+      }).join('');
+    }
+  }
+})();
+</script>
+</body>
+</html>

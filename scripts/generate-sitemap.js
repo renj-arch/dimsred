@@ -23,6 +23,7 @@ var staticPages = [
   { loc: '/premium.html', priority: '0.7' },
   { loc: '/badges.html', priority: '0.5' },
   { loc: '/knowledge-graph.html', priority: '0.8' },
+  { loc: '/adaptive.html', priority: '0.8' },
   { loc: '/progress.html', priority: '0.7' },
   { loc: '/ask.html', priority: '0.8' },
   { loc: '/map.html', priority: '0.7' },
