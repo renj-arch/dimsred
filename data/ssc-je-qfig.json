@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T23:14:50.399Z",
-  "cursor": 219,
-  "built": 210
+  "updatedAt": "2026-10-31T23:34:55.734Z",
+  "cursor": 222,
+  "built": 213
  },
  "figs": {
   "11434945": {
@@ -1263,6 +1263,24 @@
   "87caea2a": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\" font-weight=\"bold\">ORS vs ASA Reference Planes</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"55\">Cutting Edge Plane</text><polygon points=\"80,60 120,60 110,90 70,90\" fill=\"#222\" stroke=\"none\"/><text x=\"95\" y=\"85\">ORS Origin (Edge)</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"30\" y=\"95\">Shank Plane</text><polygon points=\"80,100 120,100 110,130 70,130\" fill=\"#222\" stroke=\"none\"/><text x=\"95\" y=\"125\">ASA Origin (Shank)</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"30\" y=\"135\">Cutting Edge Plane</text><polygon points=\"80,140 120,140 110,170 70,170\" fill=\"#222\" stroke=\"none\"/><text x=\"95\" y=\"165\">ORS Origin (Edge)</text></svg>",
    "n": "how do the ors angles differ from the asa set?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "7c12ce8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,180 L140,180 L140,120 Q140,80 100,60 Q60,40 40,80 Z\"/><text x=\"75\" y=\"110\" text-anchor=\"middle\">Crater Wear</text><path d=\"M140,120 L220,120 L220,180 L140,180 Z\" fill=\"#222\"/><text x=\"175\" y=\"160\" text-anchor=\"middle\">Tool Base</text><path d=\"M140,120 L140,40\" stroke-dasharray=\"3,3\"/><text x=\"125\" y=\"80\" text-anchor=\"end\">Rake Face</text></svg>",
+   "n": "what is crater wear on a cutting tool?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "41e57b0d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"180\" height=\"120\" /><path d=\"M 60 100 L 240 100 L 240 140 L 60 140 Z\" /><path d=\"M 60 100 L 60 140\" stroke-dasharray=\"4,2\" /><path d=\"M 240 100 L 240 140\" stroke-dasharray=\"4,2\" /><text x=\"75\" y=\"95\">Cutting Edge</text><text x=\"235\" y=\"95\">Tip</text><text x=\"65\" y=\"105\">Flank Face</text><text x=\"245\" y=\"105\">Rake Face</text><path d=\"M 220 100 L 220 130\" stroke-width=\"3\" /><text x=\"210\" y=\"125\">Wear Land</text><text x=\"210\" y=\"140\">(Limit)</text><text x=\"70\" y=\"180\">Flank Wear</text><text x=\"190\" y=\"180\">Criterion</text></svg>",
+   "n": "what is flank wear and why is it the accepted tool-life criterion?",
+   "sub": "production",
+   "at": "2026-10-31"
+  },
+  "f9ae87cf": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,180 L140,80 L240,180 Z\" /><path d=\"M140,80 L160,70 L180,90\" stroke-dasharray=\"3,3\" /><text x=\"155\" y=\"65\">BUE</text><text x=\"120\" y=\"195\">Work Material</text><text x=\"245\" y=\"195\">Chip</text><text x=\"45\" y=\"110\">Tool Edge</text><path d=\"M30,180 L40,180\" /><path d=\"M30,170 L40,170\" /></svg>",
+   "n": "what is built-up edge (bue) in machining?",
    "sub": "production",
    "at": "2026-10-31"
   }

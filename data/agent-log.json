@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T18:10:15.832Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults and massive gaps in figures, papers, questions, syllabus, and sidecars; the last three runs show MetaLearn consistently producing zero fixes while BankFigures and MainsFresh deliver steady results, so I will prioritize the unfinished standing goals (figures, papers, questions, syllabus) using BankFigures and MainsFresh first, then address pending ideas with Invention, and finally deploy MetaLearn to catch up on any remaining meta-learning tasks after the high-impact ",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (169 total)",
-       "text": "What is the heat input in arc welding? | How is angular distortion prevented in a weld? | Why is preheat used before welding thick or hardenable steels?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T18:22:52.268Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -690,8 +645,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T23:51:57.698Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent producing output recently, so it leads. MockPapers has produced 0 in the last two runs but holds unfinished standing goals (papers=false), so it follows BankFigures to clear that backlog. ExamPatterns and Invention are next as they address remaining gaps and pending ideas. MetaLearn goes last as it has been inactive for multiple runs and may be starved of inputs.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (213 total)",
+       "text": "What is crater wear on a cutting tool? | What is flank wear and why is it the accepted tool-life criterion? | What is built-up edge (BUE) in machining?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Engineering Mechanics (222 in pool)",
+       "text": "Engineering Mechanics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T23:25:38.504Z",
+ "lastRun": "2026-10-31T23:51:57.698Z",
  "model": "qwen3.5:9b"
 }
