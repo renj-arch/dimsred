@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T06:19:49.353Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults and severe content gaps (no papers, questions, or syllabus), so the priority is to generate foundational assets. BankFigures must run first to fix broken figure references blocking study flow. MetaLearn should follow to synthesize fresh syllabus-aligned material since files are missing. Invention is queued last as it requires existing content to build upon, and its zero output in recent runs suggests it needs prior inputs before contributing.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (112 total)",
-       "text": "What is a zig-zag riveted joint? | Why is a double-strap butt joint better than a lap joint for boilers? | What is the function of a gasket at a bolted flange joint?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T11:29:45.182Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -645,8 +605,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-10-31T16:11:10.721Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures must lead to fix broken visuals immediately. mainsfresh is essential for daily content freshness but has produced zero output in the last two runs, so it will be scheduled later in the queue after critical infrastructure is stabilized. The remaining agents (metalearn, invention) have also been idle recently and will follow once the primary gaps are addressed.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (150 total)",
+       "text": "What is a core print? | Name the runner and the gate in a mould. | What is the function of risers in a casting?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvwl8kaw (gs3, 15 marks): India's recent launch of the Aditya-L1 mission has raised concerns regarding orbital debris and collision risks. Critica",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T15:42:07.414Z",
+ "lastRun": "2026-10-31T16:11:10.721Z",
  "model": "qwen3.5:9b"
 }
