@@ -52,14 +52,49 @@ function loadScript(src, cb){
 function loadIndex(){
   if (location.protocol === 'file:') {
     loadScript('data/topic-index.js', function(err){
-      if (!err && window.__topicIndex) { exams = window.__topicIndex.exams; renderExamGrid(); }
+      if (!err && window.__topicIndex) { exams = window.__topicIndex.exams; renderExamGrid(); applyDeepLink(); }
     });
     return;
   }
   fetch('data/topic-index.json?' + Date.now())
     .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
-    .then(function(d){ exams = d.exams; renderExamGrid(); })
+    .then(function(d){ exams = d.exams; renderExamGrid(); applyDeepLink(); })
     .catch(function(){});
+}
+
+// Deep link from the adaptive plan:
+//   micro-test.html?exam=cgl&topic=Mathematics&n=10
+// Selects the exam, topic and nearest offered question count so the plan's
+// "Practise" action lands ready to start instead of on the exam grid.
+function applyDeepLink(){
+  if (typeof URLSearchParams === 'undefined') return;
+  var params = new URLSearchParams(location.search);
+  var exam = params.get('exam');
+  var topic = params.get('topic');
+  var wanted = parseInt(params.get('n'), 10);
+  if (!exam || !exams[exam]) return;
+
+  selectExam(exam);
+  if (!topic) return;
+
+  var sections = exams[exam].sections || [];
+  var found = null;
+  for (var i = 0; i < sections.length; i++) {
+    if (sections[i].name === topic) { found = sections[i]; break; }
+  }
+  if (!found) return;
+
+  selectTopic(topic);
+  if (!isFinite(wanted) || wanted <= 0) return;
+
+  var options = [];
+  qsa('.count-btn').forEach(function (b) { options.push(parseInt(b.dataset.count, 10)); });
+  var pick = null;
+  options.forEach(function (o) {
+    if (o <= wanted && (pick === null || o > pick)) pick = o;
+  });
+  if (pick === null && options.length) pick = Math.min.apply(null, options);
+  if (pick !== null) selectCount(pick);
 }
 
 function renderExamGrid(){

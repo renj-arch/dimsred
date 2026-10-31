@@ -27,8 +27,11 @@ h1{font-size:24px;margin:6px 0 8px}
 .meta{font-size:12.5px;color:var(--text-muted);margin:8px 4px;min-height:18px}
 .meta a{color:var(--purple);font-weight:600;text-decoration:none}
 .res{margin-top:8px}
+.group-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin:18px 4px 6px;display:flex;align-items:baseline;gap:8px}
+.group-label span{font-size:9.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--text-muted);opacity:.8}
 .hit{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin:8px 0;text-decoration:none;color:var(--text)}
 .hit:hover{border-color:rgba(167,139,250,.45)}
+.hit.topic{border-left:2px solid var(--cyan)}
 .hit .t{font-weight:700;font-size:14.5px}
 .hit .t mark{background:rgba(167,139,250,.35);color:inherit;border-radius:3px;padding:0 2px}
 .hit .u{font-size:11.5px;color:var(--text-muted);font-family:monospace;margin-top:2px}
@@ -53,13 +56,13 @@ h1{font-size:24px;margin:6px 0 8px}
 <div class="wrap">
   <header class="hd">
     <h1>Search the whole site</h1>
-    <div class="sub">Every exam hub, course lesson, figure and guide in one box. Instant — the whole index is one small file that loads once.</div>
+    <div class="sub">Every exam hub, course lesson, figure and guide — plus the 2,292 linked corpus topics that open on the knowledge map. Instant: both indexes load once.</div>
     <div class="sbox"><input id="q" type="search" placeholder="Try: data interpretation · percentage · flow chart · polity…" autocomplete="off" autofocus></div>
     <div class="meta" id="meta">Loading the page index…</div>
   </header>
   <div class="res" id="res"></div>
   <div class="note" id="note">
-    <b>Looking for a specific question?</b> The <a href="archive.html">archive</a> has its own question search (whole words, filters), and <a href="ask.html">ask</a> answers a question directly. This box searches <b>pages</b> — courses, figures, hubs, guides.
+    <b>Looking for a specific question?</b> The <a href="archive.html">archive</a> has its own question search (whole words, filters), and <a href="ask.html">ask</a> answers a question directly. This box searches <b>pages and corpus topics</b> — courses, figures, hubs, guides, and the linked concepts behind the knowledge map.
   </div>
 </div>
 <script>
@@ -71,8 +74,11 @@ h1{font-size:24px;margin:6px 0 8px}
   var noteEl = document.getElementById('note');
   var entries = null;
   var loading = false;
+  var topics = null;          // corpus topics from data/topic-search.json
+  var topicsRequested = false;
   var RAW = 'https://raw.githubusercontent.com/renj-arch/dimsred/main/data/search-index.json';
   var LOCAL = 'data/search-index.json';
+  var TOPICS = 'data/topic-search.json';
 
   function norm(s) { return String(s == null ? '' : s).toLowerCase(); }
   function esc(s) {
@@ -109,6 +115,44 @@ h1{font-size:24px;margin:6px 0 8px}
       });
   }
 
+  function loadTopics() {
+    // Lazy: the corpus topics file is ~500 KB and is only worth fetching once
+    // the user actually searches. Failure is silent — page results still work.
+    if (topicsRequested) return;
+    topicsRequested = true;
+    fetch(TOPICS + '?t=' + Date.now())
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        topics = (j && Array.isArray(j.topics)) ? j.topics : [];
+        if (qEl.value.trim().length >= 2) run();
+      })
+      .catch(function () { topics = []; });
+  }
+
+  function humanCat(c) {
+    return String(c || '').replace(/-/g, ' ').replace(/\b\w/g, function (m) { return m.toUpperCase(); });
+  }
+
+  // Topic scoring is separate from page scoring: a topic's name is its identity,
+  // so name matches dominate, and a description hit only keeps it in the list.
+  function topicScore(tp, tokens, full) {
+    var n = norm(tp.n), d = norm(tp.d), c = norm(tp.c), ty = norm(tp.t);
+    var hay = n + ' ' + d + ' ' + c + ' ' + ty;
+    var s = 0;
+    for (var i = 0; i < tokens.length; i++) {
+      var tok = tokens[i];
+      if (hay.indexOf(tok) === -1) return -1;
+      s += 1;
+      if (n.indexOf(tok) >= 0) s += 16;
+      if (n.indexOf(tok) === 0) s += 10;
+      if (d.indexOf(tok) >= 0) s += 3;
+      if (c.indexOf(tok) >= 0) s += 3;
+    }
+    if (n === full) s += 40;
+    else if (n.indexOf(full) === 0) s += 22;
+    return s;
+  }
+
   function highlight(text, tokens) {
     var out = esc(text);
     if (!tokens || !tokens.length) return out;
@@ -136,8 +180,9 @@ h1{font-size:24px;margin:6px 0 8px}
   }
 
   function run() {
-    if (!entries) { if (qEl.value.trim()) loadIndex(); return; }
     var q = qEl.value.trim();
+    if (q.length >= 2) loadTopics();
+    if (!entries) { if (q) loadIndex(); return; }
     if (q.length < 2) {
       resEl.innerHTML = '';
       noteEl.style.display = 'none';
@@ -153,21 +198,60 @@ h1{font-size:24px;margin:6px 0 8px}
     }
     hits.sort(function (a, b) { return b.s - a.s; });
     var top = hits.slice(0, 60);
-    if (!top.length) {
+
+    // Corpus topics (the 2,292 linked nodes behind the knowledge map). These
+    // cover subjects that have no static page — the page index alone cannot
+    // find them.
+    var topicHits = [];
+    if (topics && topics.length) {
+      for (var j = 0; j < topics.length; j++) {
+        var ts = topicScore(topics[j], tokens, full);
+        if (ts >= 0) topicHits.push({ s: ts, tp: topics[j] });
+      }
+      topicHits.sort(function (a, b) { return b.s - a.s; });
+      topicHits = topicHits.slice(0, 8);
+    }
+
+    if (!top.length && !topicHits.length) {
       resEl.innerHTML = '';
-      metaEl.textContent = 'No page matched “' + q + '” — try fewer or different words.';
+      metaEl.textContent = 'No match for “' + q + '” — try fewer or different words.';
       noteEl.style.display = 'block';
       return;
     }
-    metaEl.textContent = hits.length + ' page(s) matched “' + q + '”' + (hits.length > 60 ? ' — showing the best 60' : '');
-    resEl.innerHTML = top.map(function (h) {
-      var e = h.e;
-      return '<a class="hit" href="' + esc(e.u) + '">' +
-        '<div class="t">' + highlight(e.t, tokens) + '<span class="chip">' + esc(e.c) + '</span></div>' +
-        '<div class="u">/' + esc(e.u) + '</div>' +
-        (e.d ? '<div class="d">' + highlight(e.d, tokens) + '</div>' : '') +
-        '</a>';
-    }).join('');
+
+    var parts = [];
+    if (topicHits.length) {
+      parts.push('<div class="group-label">Corpus topics <span>open on the knowledge map</span></div>');
+      parts.push(topicHits.map(function (h) {
+        var tp = h.tp;
+        return '<a class="hit topic" href="map.html#id=' + encodeURIComponent(tp.i) + '">' +
+          '<div class="t">' + highlight(tp.n, tokens) +
+            '<span class="chip">' + esc(tp.t) + '</span></div>' +
+          '<div class="u">' + esc(humanCat(tp.c)) + ' · knowledge map</div>' +
+          (tp.d ? '<div class="d">' + highlight(tp.d, tokens) + '</div>' : '') +
+          '</a>';
+      }).join(''));
+    }
+    if (top.length) {
+      if (topicHits.length) {
+        parts.push('<div class="group-label">Pages <span>lessons, figures, exam hubs</span></div>');
+      }
+      parts.push(top.map(function (h) {
+        var e = h.e;
+        return '<a class="hit" href="' + esc(e.u) + '">' +
+          '<div class="t">' + highlight(e.t, tokens) + '<span class="chip">' + esc(e.c) + '</span></div>' +
+          '<div class="u">/' + esc(e.u) + '</div>' +
+          (e.d ? '<div class="d">' + highlight(e.d, tokens) + '</div>' : '') +
+          '</a>';
+      }).join(''));
+    }
+    resEl.innerHTML = parts.join('');
+
+    var bits = [];
+    if (topicHits.length) bits.push(topicHits.length + ' topic' + (topicHits.length === 1 ? '' : 's'));
+    if (hits.length) bits.push(hits.length + ' page' + (hits.length === 1 ? '' : 's'));
+    metaEl.textContent = bits.join(' · ') + ' matched “' + q + '”' +
+      (hits.length > 60 ? ' — showing the best 60 pages' : '');
     noteEl.style.display = 'none';
   }
 

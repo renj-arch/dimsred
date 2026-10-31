@@ -99,6 +99,13 @@ data/questions/state-tracker.json
 # allowlisted too or the page would answer with the refusal paths only.
 !data/ask-index.json
 !data/ask-index-nodes.*.json
+# knowledge-graph.html fetches this compact graph at runtime. It is derived from
+# the Ask index's `links` relation by scripts/build-knowledge-graph.js, so it
+# must deploy with the index. Without the un-ignore, slim-live (which builds
+# from the git index) would publish a graph page that 404s its data.
+!data/knowledge-graph.json
+# search.html lazy-loads this compact topic list (same builder, no link table).
+!data/topic-search.json
 # Ask's question-bank routing tables. The browser needs these to decide which
 # corpus shards a question routes to: the manifest and directory are tiny, the
 # entity table is 10.4 MB, and the concept table is measured category evidence.

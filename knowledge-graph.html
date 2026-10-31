@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Knowledge Graph — Explore Connections | vlymbooq</title>
+<meta name="description" content="Explore how topics connect across subjects. Interactive knowledge graph of 2,292 linked topics with verbatim source sentences.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#09090b;--bg-card:#111113;--bg-elev:#18181b;--border:rgba(255,255,255,.08);
+  --text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;
+  --purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--rose:#fb7185;
+  --radius:12px;
+}
+html,body{height:100%}
+body{font-family:'Inter',-apple-system,sans-serif;background:var(--bg);color:var(--text);overflow:hidden}
+a{color:inherit;text-decoration:none}
+.nav{position:fixed;top:0;left:0;right:0;z-index:20;padding:10px 18px;background:rgba(9,9,11,.9);backdrop-filter:blur(14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px}
+.brand-text{background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap;margin-left:auto}
+.nav-links a{padding:6px 12px;border-radius:100px;font-size:.78em;font-weight:500;color:var(--text-sec);white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.05)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.12)}
+
+.search-wrap{position:relative;flex:1;min-width:200px;max-width:420px}
+.search-wrap input{width:100%;padding:9px 14px;border-radius:100px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);font:inherit;font-size:13px;outline:none}
+.search-wrap input:focus{border-color:rgba(167,139,250,.5)}
+.search-results{position:absolute;top:calc(100% + 6px);left:0;right:0;background:var(--bg-elev);border:1px solid var(--border);border-radius:10px;max-height:320px;overflow:auto;display:none;z-index:30;box-shadow:0 12px 32px rgba(0,0,0,.5)}
+.search-results.open{display:block}
+.search-results button{display:block;width:100%;text-align:left;padding:9px 13px;background:none;border:none;border-bottom:1px solid rgba(255,255,255,.04);color:var(--text);font:inherit;font-size:12.5px;cursor:pointer}
+.search-results button:hover{background:rgba(167,139,250,.1)}
+.search-results .cat{color:var(--text-muted);font-size:10.5px;margin-left:6px}
+
+.stage{position:fixed;inset:0;top:54px;display:flex}
+.canvas-wrap{flex:1;position:relative;overflow:hidden;background:radial-gradient(circle at 50% 45%,rgba(167,139,250,.06),transparent 60%)}
+svg#graph{width:100%;height:100%;display:block;touch-action:none;cursor:grab}
+svg#graph:active{cursor:grabbing}
+.edge{stroke:rgba(167,139,250,.18);stroke-width:1}
+.edge.hot{stroke:rgba(52,211,153,.55);stroke-width:2}
+.node-circle{stroke-width:1.5;cursor:pointer;transition:r .15s,filter .15s}
+.node-circle.center{stroke:#fff;stroke-width:2.5;filter:drop-shadow(0 0 14px rgba(167,139,250,.6))}
+.node-label{font-size:10.5px;fill:var(--text-sec);pointer-events:none;text-anchor:middle;font-weight:500}
+.node-label.center{fill:var(--text);font-size:14px;font-weight:700}
+.node-group:hover .node-circle{filter:drop-shadow(0 0 10px rgba(255,255,255,.35))}
+.node-group:hover .node-label{fill:var(--text)}
+
+.panel{width:340px;flex-shrink:0;background:var(--bg-card);border-left:1px solid var(--border);display:flex;flex-direction:column;overflow:hidden}
+.panel-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.back-btn{background:rgba(255,255,255,.06);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:6px 10px;font:inherit;font-size:12px;cursor:pointer;white-space:nowrap}
+.back-btn:disabled{opacity:.35;cursor:default}
+.panel-body{padding:16px;overflow:auto;flex:1}
+.node-name{font-size:1.15em;font-weight:800;line-height:1.3;margin-bottom:6px}
+.node-meta{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.chip{font-size:10px;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple);font-weight:600}
+.chip.type{background:rgba(52,211,153,.1);color:var(--emerald)}
+.node-desc{font-size:13px;line-height:1.65;color:var(--text-sec);border-left:2px solid rgba(167,139,250,.35);padding-left:12px;margin-bottom:16px}
+.desc-note{font-size:10.5px;color:var(--text-muted);margin-top:6px}
+.neighbor-head{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-muted);font-weight:700;margin-bottom:8px}
+.neighbor-list{list-style:none}
+.neighbor-list li{margin-bottom:2px}
+.neighbor-list button{display:flex;width:100%;align-items:center;gap:8px;padding:7px 9px;border-radius:7px;background:none;border:none;color:var(--text-sec);font:inherit;font-size:12.5px;text-align:left;cursor:pointer}
+.neighbor-list button:hover{background:rgba(255,255,255,.05);color:var(--text)}
+.neighbor-list .n-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.neighbor-list .n-w{font-size:10px;color:var(--text-muted);background:rgba(255,255,255,.05);padding:2px 6px;border-radius:100px}
+.neighbor-list .dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.cat-filter{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;gap:6px;flex-wrap:wrap;max-height:96px;overflow:auto}
+.cat-chip{font-size:10.5px;padding:3px 9px;border-radius:100px;background:rgba(255,255,255,.05);border:1px solid transparent;color:var(--text-sec);cursor:pointer;font-family:inherit}
+.cat-chip.on{background:rgba(167,139,250,.16);border-color:rgba(167,139,250,.4);color:var(--text)}
+.hint{padding:10px 16px;font-size:11px;color:var(--text-muted);line-height:1.5;border-top:1px solid var(--border)}
+.status{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);text-align:center;color:var(--text-muted);font-size:13px;z-index:5}
+.status.hidden{display:none}
+.legend{position:absolute;left:14px;bottom:14px;display:flex;gap:10px;flex-wrap:wrap;max-width:70%;font-size:10.5px;color:var(--text-muted);background:rgba(9,9,11,.7);padding:7px 11px;border-radius:8px;border:1px solid var(--border);backdrop-filter:blur(8px)}
+.legend span{display:flex;align-items:center;gap:5px}
+.legend i{width:8px;height:8px;border-radius:50%;display:inline-block}
+
+@media(max-width:820px){
+  .panel{position:fixed;left:0;right:0;bottom:0;top:auto;width:100%;max-height:46vh;border-left:none;border-top:1px solid var(--border);border-radius:16px 16px 0 0;box-shadow:0 -12px 40px rgba(0,0,0,.6);transition:transform .25s}
+  .panel.collapsed{transform:translateY(calc(100% - 52px))}
+  .canvas-wrap{padding-bottom:52px}
+  .nav{padding:8px 12px;gap:8px}
+  .nav-links{display:none}
+  .search-wrap{max-width:none}
+  .legend{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="index.html" class="brand"><span class="brand-text">vlymbooq</span></a>
+  <div class="search-wrap">
+    <input id="search" type="search" placeholder="Search a topic — e.g. Sixth Schedule, Bhopal, Ashoka…" autocomplete="off" aria-label="Search topics">
+    <div class="search-results" id="searchResults" role="listbox"></div>
+  </div>
+  <div class="nav-links">
+    <a href="map.html">🗺 Map</a>
+    <a href="flowchart.html">🌳 Flowchart</a>
+    <a href="ask.html">💬 Ask</a>
+    <a href="knowledge-graph.html" class="active">🕸 Graph</a>
+    <a href="adaptive.html">🎯 Adaptive</a>
+  </div>
+</nav>
+
+<div class="stage">
+  <div class="canvas-wrap">
+    <div class="status" id="status">Loading knowledge graph…</div>
+    <svg id="graph" viewBox="0 0 1000 800" preserveAspectRatio="xMidYMid meet" aria-label="Knowledge graph"></svg>
+    <div class="legend" id="legend"></div>
+  </div>
+
+  <aside class="panel" id="panel">
+    <div class="panel-head">
+      <button class="back-btn" id="backBtn" disabled>← Back</button>
+      <span style="font-size:11px;color:var(--text-muted)" id="trail">Start</span>
+    </div>
+    <div class="cat-filter" id="catFilter"></div>
+    <div class="panel-body" id="panelBody">
+      <div class="node-name" id="nodeName">Pick a topic</div>
+      <div class="node-meta" id="nodeMeta"></div>
+      <div class="node-desc" id="nodeDesc">Search a topic above, or tap a connected node to explore the graph.</div>
+      <div class="neighbor-head" id="neighborHead">Connections</div>
+      <ul class="neighbor-list" id="neighborList"></ul>
+    </div>
+    <div class="hint">Every connection is a corpus co-mention; every sentence is verbatim source text. This graph shows relationships, not generated facts.</div>
+  </aside>
+</div>
+
+<script>
+(function () {
+  'use strict';
+
+  var NS = 'http://www.w3.org/2000/svg';
+  var W = 1000, H = 800;
+  var COLORS = ['#a78bfa','#34d399','#f59e0b','#22d3ee','#fb7185','#c084fc','#4ade80','#fbbf24','#38bdf8','#f472b6','#a3e635','#e879f9'];
+  var TYPE_COLORS = {
+    concept: '#a78bfa', person: '#34d399', event: '#f59e0b', org: '#22d3ee',
+    place: '#fb7185', disease: '#f472b6', scheme: '#a3e635', volcano: '#e879f9'
+  };
+  var typeColor = {};
+  var typeIndex = 0;
+
+  var state = {
+    nodes: [], links: [],
+    byId: {}, adj: {},
+    types: {},
+    center: null,
+    history: [],
+    activeType: null // null = all
+  };
+
+  var svg = document.getElementById('graph');
+  var statusEl = document.getElementById('status');
+  var panel = document.getElementById('panel');
+  var searchEl = document.getElementById('search');
+  var resultsEl = document.getElementById('searchResults');
+  var backBtn = document.getElementById('backBtn');
+  var trailEl = document.getElementById('trail');
+  var catFilterEl = document.getElementById('catFilter');
+  var legendEl = document.getElementById('legend');
+
+  function el(name, attrs) {
+    var n = document.createElementNS(NS, name);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    return n;
+  }
+
+  function colorFor(type) {
+    if (typeColor[type]) return typeColor[type];
+    if (TYPE_COLORS[type]) return TYPE_COLORS[type];
+    typeColor[type] = COLORS[typeIndex % COLORS.length];
+    typeIndex++;
+    return typeColor[type];
+  }
+
+  function humanType(t) {
+    return String(t || 'concept').replace(/\b\w/g, function (m) { return m.toUpperCase(); });
+  }
+
+  function hexA(hex, a) {
+    var h = String(hex).replace('#', '');
+    if (h.length === 3) h = h[0] + h[0] + h[1] + h[1] + h[2] + h[2];
+    var n = parseInt(h, 16);
+    return 'rgba(' + ((n >> 16) & 255) + ',' + ((n >> 8) & 255) + ',' + (n & 255) + ',' + a + ')';
+  }
+
+  function load() {
+    fetch('data/knowledge-graph.json')
+      .then(function (r) {
+        if (!r.ok) throw new Error('HTTP ' + r.status);
+        return r.json();
+      })
+      .then(function (data) {
+        state.nodes = data.nodes || [];
+        state.links = data.links || [];
+        state.types = {};
+        state.nodes.forEach(function (n) {
+          state.byId[n.id] = n;
+          state.adj[n.id] = [];
+          state.types[n.type] = (state.types[n.type] || 0) + 1;
+          colorFor(n.type);
+        });
+        state.links.forEach(function (l) {
+          if (state.adj[l.s] && state.adj[l.t]) {
+            state.adj[l.s].push({ id: l.t, w: l.w });
+            state.adj[l.t].push({ id: l.s, w: l.w });
+          }
+        });
+        // sort neighbors by weight, strongest first
+        Object.keys(state.adj).forEach(function (k) {
+          state.adj[k].sort(function (a, b) { return b.w - a.w; });
+        });
+        statusEl.classList.add('hidden');
+        renderCatFilter();
+        renderLegend();
+        initPan();
+        // Start from a curated subject-shaped entry point, not the raw
+        // highest-degree node (which is a country hub and a dull first paint).
+        var starter = (data.starters && data.starters.length)
+          ? data.starters[Math.floor(Math.random() * data.starters.length)]
+          : null;
+        if (starter === null) {
+          var best = null;
+          state.nodes.forEach(function (n) {
+            var deg = state.adj[n.id].length;
+            if (!best || deg > best.deg) best = { id: n.id, deg: deg };
+          });
+          starter = best ? best.id : null;
+        }
+        if (starter !== null) focus(starter, true);
+      })
+      .catch(function (e) {
+        statusEl.textContent = 'Could not load the knowledge graph: ' + e.message;
+      });
+  }
+
+  function renderCatFilter() {
+    var order = ['concept', 'person', 'event', 'org', 'place', 'disease', 'scheme', 'volcano'];
+    var top = Object.keys(state.types).sort(function (a, b) {
+      var ai = order.indexOf(a); var bi = order.indexOf(b);
+      if (ai === -1) ai = 99;
+      if (bi === -1) bi = 99;
+      return ai - bi || state.types[b] - state.types[a];
+    });
+    catFilterEl.innerHTML = '';
+    var all = document.createElement('button');
+    all.className = 'cat-chip on';
+    all.textContent = 'All';
+    all.onclick = function () {
+      state.activeType = null;
+      renderCatFilter();
+      if (state.center !== null) focus(state.center, true);
+    };
+    catFilterEl.appendChild(all);
+    top.forEach(function (c) {
+      var b = document.createElement('button');
+      b.className = 'cat-chip' + (state.activeType === c ? ' on' : '');
+      b.textContent = humanType(c);
+      b.title = state.types[c] + ' topics';
+      b.style.borderColor = state.activeType === c ? colorFor(c) : 'transparent';
+      b.onclick = function () {
+        state.activeType = state.activeType === c ? null : c;
+        renderCatFilter();
+        if (state.center !== null) focus(state.center, true);
+      };
+      catFilterEl.appendChild(b);
+    });
+  }
+
+  function renderLegend() {
+    var order = ['concept', 'person', 'event', 'org', 'place'];
+    var types = order.filter(function (t) { return state.types[t]; });
+    legendEl.innerHTML = types.map(function (t) {
+      return '<span><i style="background:' + colorFor(t) + '"></i>' + humanType(t) + '</span>';
+    }).join('');
+  }
+
+  function visibleNeighbors(id) {
+    var ns = state.adj[id] || [];
+    if (!state.activeType) return ns;
+    return ns.filter(function (n) {
+      var node = state.byId[n.id];
+      return node && node.type === state.activeType;
+    });
+  }
+
+  function focus(id, reset) {
+    if (reset) state.history = [];
+    else if (state.center !== null && state.center !== id) state.history.push(state.center);
+    state.center = id;
+    resetView();
+    draw();
+    renderPanel();
+    backBtn.disabled = state.history.length === 0;
+    trailEl.textContent = state.history.length
+      ? state.history.length + ' step' + (state.history.length > 1 ? 's' : '') + ' deep'
+      : 'Start';
+  }
+
+  function draw() {
+    // clear graph, keep defs if any
+    while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+    var centerId = state.center;
+    if (centerId === null) return;
+    var center = state.byId[centerId];
+    if (!center) return;
+
+    var neighbors = visibleNeighbors(centerId);
+    var maxN = 24;
+    var shown = neighbors.slice(0, maxN);
+
+    var cx = W / 2, cy = H / 2;
+    var rInner = 150;
+
+    // edge layer
+    var edgesG = el('g', {});
+    svg.appendChild(edgesG);
+    var nodesG = el('g', {});
+    svg.appendChild(nodesG);
+
+    // layout neighbors in a ring (two rings if many)
+    var positions = [];
+    var ringCount = shown.length <= 12 ? 1 : 2;
+    if (ringCount === 1) {
+      shown.forEach(function (n, i) {
+        var ang = (i / Math.max(shown.length, 1)) * Math.PI * 2 - Math.PI / 2;
+        var r = rInner + 130;
+        positions.push({ x: cx + Math.cos(ang) * r * 1.15, y: cy + Math.sin(ang) * r });
+      });
+    } else {
+      var half = Math.ceil(shown.length / 2);
+      var rings = [shown.slice(0, half), shown.slice(half)];
+      rings.forEach(function (ring, ri) {
+        var r = ri === 0 ? rInner + 100 : rInner + 230;
+        ring.forEach(function (n, i) {
+          var ang = (i / Math.max(ring.length, 1)) * Math.PI * 2 - Math.PI / 2 + (ri * Math.PI / Math.max(ring.length, 1));
+          positions.push({ x: cx + Math.cos(ang) * r * 1.15, y: cy + Math.sin(ang) * r });
+        });
+      });
+    }
+
+    // draw edges
+    shown.forEach(function (n, i) {
+      var p = positions[i];
+      if (!p) return;
+      var line = el('line', {
+        x1: cx, y1: cy, x2: p.x, y2: p.y,
+        'class': 'edge' + (n.w >= 4 ? ' hot' : '')
+      });
+      line.dataset.target = n.id;
+      edgesG.appendChild(line);
+    });
+
+    // center node
+    var centerColor = colorFor(center.type);
+    var cg = el('g', { 'class': 'node-group' });
+    var cc = el('circle', {
+      cx: cx, cy: cy, r: 18,
+      fill: centerColor, 'fill-opacity': '0.9',
+      'class': 'node-circle center'
+    });
+    cg.appendChild(cc);
+    var cl = el('text', {
+      x: cx, y: cy + 40, 'class': 'node-label center'
+    });
+    cl.textContent = center.name.length > 40 ? center.name.slice(0, 37) + '…' : center.name;
+    cg.appendChild(cl);
+    nodesG.appendChild(cg);
+
+    // neighbor nodes
+    shown.forEach(function (n, i) {
+      var node = state.byId[n.id];
+      var p = positions[i];
+      if (!node || !p) return;
+      var g = el('g', { 'class': 'node-group' });
+      var rad = 6 + Math.min(10, Math.sqrt(n.w) * 1.6);
+      var circle = el('circle', {
+        cx: p.x, cy: p.y, r: rad,
+        fill: colorFor(node.type), 'fill-opacity': '0.85',
+        stroke: 'rgba(255,255,255,.25)', 'class': 'node-circle'
+      });
+      circle.addEventListener('click', function (e) {
+        e.stopPropagation();
+        focus(n.id, false);
+      });
+      g.appendChild(circle);
+      var label = el('text', {
+        x: p.x, y: p.y + rad + 14, 'class': 'node-label'
+      });
+      var name = node.name;
+      label.textContent = name.length > 26 ? name.slice(0, 24) + '…' : name;
+      var title = el('title', {});
+      title.textContent = node.name + ' — ' + humanType(node.type) + ' · weight ' + n.w;
+      g.appendChild(title);
+      g.appendChild(label);
+      nodesG.appendChild(g);
+    });
+
+    // pan support is installed once (see initPan below); draw() must not add
+    // listeners, or each redraw stacks another identical handler on the SVG.
+  }
+
+  // Install pointer-drag panning exactly once. The transform is applied to the
+  // SVG viewBox, so it composes with the layout instead of moving nodes.
+  var panState = { dragging: false, startX: 0, startY: 0, vbX: 0, vbY: 0, vb: null };
+  function initPan() {
+    panState.vb = { x: 0, y: 0, w: W, h: H };
+    function toSvg(evt) {
+      var pt = svg.createSVGPoint();
+      pt.x = evt.clientX; pt.y = evt.clientY;
+      return pt.matrixTransform(svg.getScreenCTM().inverse());
+    }
+    svg.addEventListener('pointerdown', function (e) {
+      if (e.target.tagName === 'circle') return;
+      panState.dragging = true;
+      var p = toSvg(e);
+      panState.startX = p.x; panState.startY = p.y;
+      panState.vbX = panState.vb.x; panState.vbY = panState.vb.y;
+      try { svg.setPointerCapture(e.pointerId); } catch (err) { /* older browsers */ }
+    });
+    svg.addEventListener('pointermove', function (e) {
+      if (!panState.dragging) return;
+      var p = toSvg(e);
+      panState.vb.x = panState.vbX - (p.x - panState.startX);
+      panState.vb.y = panState.vbY - (p.y - panState.startY);
+      svg.setAttribute('viewBox', panState.vb.x + ' ' + panState.vb.y + ' ' + panState.vb.w + ' ' + panState.vb.h);
+    });
+    svg.addEventListener('pointerup', function () { panState.dragging = false; });
+    svg.addEventListener('pointercancel', function () { panState.dragging = false; });
+    svg.addEventListener('dblclick', resetView);
+  }
+
+  function resetView() {
+    panState.vb = { x: 0, y: 0, w: W, h: H };
+    svg.setAttribute('viewBox', '0 0 ' + W + ' ' + H);
+  }
+
+  function renderPanel() {
+    var id = state.center;
+    if (id === null) return;
+    var node = state.byId[id];
+    if (!node) return;
+
+    document.getElementById('nodeName').textContent = node.name;
+    var meta = document.getElementById('nodeMeta');
+    meta.innerHTML = '<span class="chip" style="background:' + hexA(colorFor(node.type), .14) + ';color:' + colorFor(node.type) + '">' + humanType(node.type) + '</span>' +
+      '<span class="chip" style="background:rgba(255,255,255,.05);color:var(--text-sec)">' +
+      state.adj[id].length + ' connections</span>';
+    document.getElementById('nodeDesc').textContent = node.desc || '(no description)';
+    document.getElementById('neighborHead').textContent =
+      'Connections (' + visibleNeighbors(id).length + ')';
+
+    var list = document.getElementById('neighborList');
+    list.innerHTML = '';
+    visibleNeighbors(id).slice(0, 40).forEach(function (n) {
+      var nn = state.byId[n.id];
+      if (!nn) return;
+      var li = document.createElement('li');
+      var b = document.createElement('button');
+      b.innerHTML = '<span class="dot" style="background:' + colorFor(nn.type) + '"></span>' +
+        '<span class="n-name">' + escapeHtml(nn.name) + '</span>' +
+        '<span class="n-w">' + n.w + '</span>';
+      b.onclick = function () { focus(n.id, false); };
+      li.appendChild(b);
+      list.appendChild(li);
+    });
+    if (list.children.length === 0) {
+      list.innerHTML = '<li style="font-size:12px;color:var(--text-muted);padding:6px 9px">No connections in this category.</li>';
+    }
+
+    // On mobile keep the panel partly visible after a selection
+    if (window.matchMedia('(max-width:820px)').matches) {
+      panel.classList.remove('collapsed');
+    }
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  // Search
+  var searchTimer = null;
+  searchEl.addEventListener('input', function () {
+    clearTimeout(searchTimer);
+    var q = searchEl.value.trim().toLowerCase();
+    if (q.length < 2) {
+      resultsEl.classList.remove('open');
+      return;
+    }
+    searchTimer = setTimeout(function () {
+      var hits = [];
+      for (var i = 0; i < state.nodes.length && hits.length < 30; i++) {
+        var n = state.nodes[i];
+        var name = n.name.toLowerCase();
+        if (name.indexOf(q) !== -1) {
+          var score = name.indexOf(q) === 0 ? 0 : 1;
+          hits.push({ n: n, score: score });
+        }
+      }
+      hits.sort(function (a, b) {
+        return a.score - b.score || a.n.name.length - b.n.name.length;
+      });
+      if (!hits.length) {
+        resultsEl.innerHTML = '<div style="padding:12px;font-size:12px;color:var(--text-muted)">No topic matches. The graph holds the 2,292 most-linked topics.</div>';
+        resultsEl.classList.add('open');
+        return;
+      }
+      resultsEl.innerHTML = '';
+      hits.slice(0, 24).forEach(function (h) {
+        var b = document.createElement('button');
+        b.innerHTML = escapeHtml(h.n.name) + '<span class="cat">' + humanType(h.n.type) + '</span>';
+        b.onclick = function () {
+          resultsEl.classList.remove('open');
+          searchEl.value = '';
+          focus(h.n.id, true);
+        };
+        resultsEl.appendChild(b);
+      });
+      resultsEl.classList.add('open');
+    }, 120);
+  });
+
+  document.addEventListener('click', function (e) {
+    if (!resultsEl.contains(e.target) && e.target !== searchEl) {
+      resultsEl.classList.remove('open');
+    }
+  });
+
+  backBtn.addEventListener('click', function () {
+    if (!state.history.length) return;
+    var prev = state.history.pop();
+    state.center = prev;
+    draw();
+    renderPanel();
+    backBtn.disabled = state.history.length === 0;
+    trailEl.textContent = state.history.length
+      ? state.history.length + ' step' + (state.history.length > 1 ? 's' : '') + ' deep'
+      : 'Start';
+  });
+
+  // Mobile panel toggle: tap the panel head to collapse/expand
+  panel.querySelector('.panel-head').addEventListener('click', function (e) {
+    if (e.target === backBtn) return;
+    panel.classList.toggle('collapsed');
+  });
+
+  load();
+})();
+</script>
+</body>
+</html>

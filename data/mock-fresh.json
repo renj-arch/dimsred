@@ -1,11 +1,11 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-30T20:17:44.159Z",
-  "cursor": 15,
-  "count": 177,
+  "updatedAt": "2026-10-31T12:50:32.483Z",
+  "cursor": 1,
+  "count": 197,
   "lastAttempt": {
-   "at": "2026-10-31T05:13:51.711Z",
+   "at": "2026-10-31T13:17:07.251Z",
    "reason": "nothing"
   }
  },
@@ -1602,6 +1602,186 @@
    "h": "Ratio of total task time to sum of cycle times; losses due to precedence constraints.",
    "s": "Line Balancing Efficiency measures how well work elements are distributed among stations in an assembly line. It is calculated as the ratio of total task time to the product of the number of stations and cycle time. In practice, it is rarely 100% because tasks have specific sequence dependencies (precedence constraints) that prevent perfect balancing, leading to unavoidable idle time at some stations.",
    "at": "2026-10-30"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Define the term 'compressor work ratio' in a gas turbine cycle and explain its significance regarding the compressor's operating range.",
+   "a": "The compressor work ratio is defined as the ratio of compressor work input to the total heat supplied to the cycle (or sometimes compressor work to turbine work output).",
+   "h": "Relate compressor work to total heat input and expansion work.",
+   "s": "In a gas turbine, the compressor work ratio indicates how much of the energy added by combustion is consumed just to compress the air. A higher ratio implies less net work available for shaft output, often signaling an approaching stall or surge limit in the compressor's operating range.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Calculate the mass flow rate of air through a gas turbine engine if the inlet area is 0.5 m², the air density at inlet is 1.2 kg/m³, and the axial velocity is 180 m/s.",
+   "a": "108 kg/s",
+   "h": "Use the continuity equation: Mass Flow = Density × Area × Velocity.",
+   "s": "Given: Inlet Area (A) = 0.5 m², Density (ρ) = 1.2 kg/m³, Velocity (V) = 180 m/s. Using the continuity equation ṁ = ρAV, we get ṁ = 1.2 × 0.5 × 180 = 108 kg/s.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "In a simple Brayton cycle, if the pressure ratio is increased while keeping the maximum temperature constant, what happens to the thermal efficiency and the back work ratio? Explain physically.",
+   "a": "Thermal efficiency increases; Back Work Ratio (compressor work / turbine work) increases.",
+   "h": "Recall that efficiency increases with pressure ratio, but compressor work grows faster than turbine work initially.",
+   "s": "Increasing the pressure ratio in an ideal Brayton cycle raises the thermal efficiency because the average temperature of heat addition increases. However, since compressor work scales with the square root of the pressure ratio while turbine work benefits less from higher pressures at fixed T_max, the back work ratio (fraction of output used to drive the compressor) increases.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "A gas turbine operates with a maximum cycle temperature of 1200 K and an ambient temperature of 300 K. If the compressor efficiency is 85% and the turbine efficiency is 90%, describe qualitatively how these component efficiencies affect the actual thermal efficiency compared to the ideal cycle.",
+   "a": "The actual thermal efficiency will be significantly lower than the ideal Brayton cycle efficiency calculated with infinite component efficiencies.",
+   "h": "Real components have losses; lower efficiency reduces the net work output for the same heat input.",
+   "s": "In real cycles, compressor inefficiency raises the exit temperature (reducing the temperature difference available for expansion), and turbine inefficiency lowers the work extracted. Both effects reduce the net work output for a given heat input, thereby lowering the actual thermal efficiency compared to the ideal case.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "What is the primary function of a 'stator' in an axial flow gas turbine compressor stage?",
+   "a": "To convert kinetic energy into pressure energy (diffuser action) before air enters the next rotor.",
+   "h": "Distinguish between rotating blades and stationary vanes in an axial compressor.",
+   "s": "In an axial flow compressor, the rotor adds energy to the air as kinetic energy. The stator (stationary vanes) acts as a diffuser, slowing down the air and converting this kinetic energy into static pressure rise before it enters the next rotor stage.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "A gas turbine exhaust nozzle has an exit area of 2 m². If the exhaust gas density is 0.4 kg/m³ and the exhaust velocity is 350 m/s, calculate the thrust force generated assuming atmospheric pressure at the exit equals ambient pressure.",
+   "a": "280 kN",
+   "h": "Thrust = Mass Flow × Velocity + (Pe - Pa) × Ae. Since pressures are equal, only momentum term remains.",
+   "s": "Mass flow rate ṁ = ρ × A × V = 0.4 kg/m³ × 2 m² × 350 m/s = 280 kg/s. The thrust force is given by F = ṁV + (Pe - Pa)Ae. Since the exit pressure equals ambient pressure, the pressure thrust term is zero. Therefore, Thrust = 280 kg/s × 350 m/s = 98,000 N or 98 kN.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Explain why regeneration is used in a gas turbine cycle and how it improves the thermal efficiency without changing the maximum cycle temperature.",
+   "a": "It reduces the amount of fuel required to raise the working fluid to the maximum cycle temperature.",
+   "h": "Regeneration uses hot exhaust to preheat compressed air before combustion.",
+   "s": "Regeneration involves passing the compressed air from the compressor through a heat exchanger (regenerator) that is heated by the turbine exhaust gases. This preheats the air entering the combustion chamber, reducing the quantity of fuel needed to reach the peak temperature T_max. Since less fuel is burned for the same power output (or same T_max), the overall thermal efficiency improves.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "In a two-shaft gas turbine configuration, what component connects the compressor and the generator directly, bypassing the turbine shaft?",
+   "a": "The compressor is connected to its own shaft (often via a gearbox or direct drive), while the turbine drives the generator on a separate shaft; there is no direct mechanical link between the compressor and the generator shaft.",
+   "h": "Identify the mechanical arrangement in a two-shaft layout.",
+   "s": "In a two-shaft configuration, the low-pressure turbine drives the compressor on one shaft, and the high-pressure turbine drives the generator on a separate shaft. This allows independent control of compressor speed (for stability) and generator speed (for grid frequency), unlike single-shaft designs where all components rotate at the same speed.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Calculate the specific heat ratio (γ) for air if the isentropic expansion efficiency of a turbine stage is 0.85, the inlet temperature is 1000 K, the exit static temperature is 700 K, and the actual work output per unit mass is 300 kJ/kg.",
+   "a": "Approximately 1.4 (Standard value for air)",
+   "h": "Use the relation between isentropic work, actual work, and temperatures for an ideal gas.",
+   "s": "Given γ = 1.4 and cp = 1.005 kJ/kg·K for air. The inlet temperature T1 = 1200 K and isentropic exit temperature T2s = 600 K. The ideal (isentropic) work output ws = cp(T1 - T2s) = 1.005 × (1200 - 600) = 1.005 × 600 = 603 kJ/kg.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Describe the phenomenon of 'surge' in a gas turbine compressor and list two operational conditions that typically trigger it.",
+   "a": "Surge occurs when the compressor cannot maintain stable airflow, causing reverse flow and violent oscillations. It is triggered by operating at very low rotational speeds or extremely high back pressures (low mass flow).",
+   "h": "Surge is a flow instability occurring at low mass flow rates and high pressure ratios.",
+   "s": "Surge is a dangerous aerodynamic instability where the airflow through the compressor reverses direction periodically. This happens when the pressure rise capability of the compressor exceeds the system's demand, typically at low mass flow rates and high pressure ratios. Operational triggers include sudden load rejection or operating near the surge line on the compressor map.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Define the 'Heat Rate' of a thermal power plant and state its typical unit of measurement.",
+   "a": "The ratio of heat energy input (in kJ) to electrical energy output (in kWh), typically expressed in kJ/kWh or kcal/kWh.",
+   "h": "Relate heat input to electrical output in standard units.",
+   "s": "Heat rate is a measure of the thermal efficiency of a power plant. A lower heat rate indicates higher efficiency, meaning less fuel is required to generate one unit of electricity.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "A coal-fired boiler receives 10^6 kg/h of coal with a calorific value of 4500 kcal/kg. If the steam generation rate is 80 t/h and the feedwater enthalpy is 320 kJ/kg while steam enthalpy is 3350 kJ/kg, calculate the boiler efficiency assuming the heating value conversion factor is 1 kcal = 4.1868 kJ.",
+   "a": "Approximately 79.2%",
+   "h": "Apply the energy balance equation: (Heat absorbed by water / Heat supplied by coal) * 100.",
+   "s": "First, calculate total heat supplied by coal: 10^6 kg/h * 4500 kcal/kg * 4.1868 kJ/kcal = 1.884e10 kJ/h. Next, calculate heat absorbed by water: 80,000 kg/h * (3350 - 320) kJ/kg = 2.44e9 kJ/h. Efficiency = (2.44e9 / 1.884e10) * 100 ≈ 79.2%.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Explain the concept of 'Load Factor' in a power plant and derive its relationship with 'Capacity Factor' when the plant runs continuously at full capacity.",
+   "a": "Load Factor = (Average Load / Maximum Demand) * 100. If a plant runs at full capacity constantly, Capacity Factor equals Load Factor; otherwise, Capacity Factor is always less than or equal to Load Factor.",
+   "h": "Compare average load over time to maximum possible output over the same period.",
+   "s": "Load factor measures how consistently a plant operates relative to its peak demand, while capacity factor compares actual generation to maximum possible generation over a period. They are identical only if the plant's maximum demand matches its installed capacity and it runs at that capacity 100% of the time.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "In a Rankine cycle power plant, why is superheating of steam performed before it enters the turbine? Provide one primary thermodynamic reason.",
+   "a": "To increase the dryness fraction (reduce moisture content) of the steam at the turbine exit, thereby preventing blade erosion and improving cycle efficiency.",
+   "h": "Consider the moisture content of steam at the turbine exhaust.",
+   "s": "Superheating raises the temperature of steam above its saturation point. This ensures that when the steam expands in the turbine, it remains mostly vapor rather than condensing into water droplets, which would damage turbine blades and reduce work output.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "A hydroelectric power plant has a reservoir with a surface area of 50 hectares and a head of 120 m. If the overall efficiency (turbine-generator) is 85% and the density of water is 1000 kg/m³, calculate the theoretical power available if the water level drops by 1 meter per hour.",
+   "a": "Approximately 4.96 MW",
+   "h": "Use potential energy change per unit time: Power = ρ * g * A * h_drop_rate * η.",
+   "s": "The power generated depends on the rate of water flow and the head. The volume of water dropping 1 meter per hour from a 50-hectare area is 500,000 cubic meters per hour, which converts to approximately 138.9 cubic meters per second. Using the formula P = ηρgQH, where Q is flow rate and H is head, the output power is calculated as roughly 140 MW.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "What is the primary function of a 'Feedwater Heater' in a modern thermal power plant cycle?",
+   "a": "To increase the average temperature at which heat is added to the working fluid, thereby improving the overall Rankine cycle efficiency.",
+   "h": "Identify the component that utilizes extracted steam to preheat boiler feedwater.",
+   "s": "Feedwater heaters use steam extracted from intermediate stages of the turbine to preheat the water before it enters the boiler. This reduces the amount of fuel needed in the boiler to generate steam and minimizes thermal stresses on boiler tubes.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Define 'Cavitation' in the context of hydraulic turbines and state one condition that promotes its occurrence.",
+   "a": "The formation of vapor bubbles in a liquid due to local pressure falling below the vapor pressure, typically occurring at the suction side of the runner or draft tube.",
+   "h": "Relate pressure drop at turbine blades to vapor pressure of water.",
+   "s": "Cavitation happens when the pressure at any point on the turbine blade drops below the saturation pressure of water at that temperature. These bubbles collapse violently upon entering higher-pressure regions, causing pitting and noise.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "In a nuclear power plant, what is the role of the 'Moderator' in the reactor core?",
+   "a": "To slow down fast neutrons produced by fission to thermal energies, increasing the probability of further fission reactions with U-235 nuclei.",
+   "h": "Identify the material responsible for slowing down neutrons.",
+   "s": "Fast neutrons released during fission have low probabilities of causing further fission in U-235. The moderator (like heavy water or graphite) collides with these neutrons, reducing their speed to 'thermal' speeds where the fission cross-section is much higher.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Calculate the specific steam consumption (in kg/kWh) for a turbine producing 100 MW of power if it consumes 60 tonnes of steam per hour.",
+   "a": "600 kg/kWh",
+   "h": "Divide mass flow rate by power output, ensuring unit consistency (tonnes to kg, MW to kW).",
+   "s": "Specific steam consumption is the mass of steam required to generate one kWh of electricity. Given 300 tonnes/hour (300,000 kg/h) for 100 MW (100,000 kW), SSC = 300,000 / 100,000 = 3.0 kg/kWh.",
+   "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "What is the main environmental advantage of a combined cycle power plant over a simple cycle gas turbine plant?",
+   "a": "It achieves significantly higher thermal efficiency (up to 60%) by utilizing exhaust heat from the gas turbine to generate steam for a bottoming steam turbine.",
+   "h": "Identify the waste heat recovery mechanism involving steam generation.",
+   "s": "In a combined cycle, the hot exhaust gases from the gas turbine are not released directly but passed through a Heat Recovery Steam Generator (HRSG). This generates steam that drives a steam turbine, extracting additional work from what would otherwise be waste heat.",
+   "at": "2026-10-31"
   }
  ]
 }
