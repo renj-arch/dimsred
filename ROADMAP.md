@@ -12,6 +12,7 @@ Transform vlymbooq into a genuinely useful, innovative and technically sophistic
 | F003 | Adaptive Learning Engine | Done | High |
 | F004 | Examination Intelligence | Planned | Medium |
 | F005 | Research Discovery System | Done | High |
+| F006 | Site Integrity Audit | Done | High |
 
 ## Phase 1: Study Progress Tracker (Current)
 
@@ -100,6 +101,68 @@ Unified discovery across the page index and the corpus topic graph.
 - `scripts/lib/topic-search.test.js` pins the data contract and the page script
   parse (`npm run test-topic-search`).
 
+## Phase 6: Site-wide Integrity Audit (Done)
+
+### Problem
+Failures that a Windows working copy hides were reaching production: 88 HTML
+files committed as git tree listings, hundreds of broken internal links,
+duplicate ids, inline scripts that no longer parsed, missing metadata, and
+content corrupted by PDF extraction and lossy encoding. Content corruption is
+especially dangerous here because a wrong symbol silently changes an answer.
+
+### Solution
+A tracked-file auditor that runs before deploy, plus deterministic repairs
+driven by scans of the deployed tree rather than by hand-editing pages.
+
+### Implementation
+- `scripts/audit-site.js` audits the files Git tracks (what actually deploys),
+  not the working tree, so sparse/partial clones do not produce false 404s.
+  It checks broken and case-mismatched internal links, directory URLs without
+  `index.html`, duplicate ids, inline and external classic script parse errors,
+  title/description/viewport, image alt text, U+FFFD replacement characters,
+  mixed superscript/ASCII exponents, and UTF-16 data assets.
+- Script tags are preserved by the markup mask, so `<script src>` is now
+  link-checked and parsed. That caught `ldc/papers/practice-set-06.html`
+  loading `../../js/main.js`, which does not exist; it now uses its exam's
+  `../js/main.js` like every sibling paper.
+- Six SSC JE banks (`js/ssc-je-extra*.js`, `mechanical`, `thermo-fluids`) were
+  stored as UTF-16LE with a BOM. They are now UTF-8, syntax-checked, and
+  guarded by the external-script parse check.
+- `scripts/lib/audit-site.test.js` runs the real CLI against a throwaway git
+  repo with one page per failure class (39 assertions, `npm run test-audit`).
+- Content repairs, all scanned and diff-reviewed:
+  - restored 88 pages that were committed as tree listings;
+  - reversed CP1252-to-UTF-8 mojibake including C1 control bytes, preserving
+    genuine operators such as `Â` in quantum mechanics;
+  - repaired the corpus lists as well as the pages: `topics.txt` (83,655
+    double-encoded lines) and `wiki_coverage.txt` now carry real accents, and
+    the `expand-content` LCM template no longer emits `2_*3` corruption;
+  - repaired lossy `?`/`×`/`v`/`p`/`O`/`_` substitutions contextually, never by
+    blanket replacement, so legitimate series placeholders, percentages,
+    cross products and chemical formulae stay intact;
+  - regenerated all 26 JEE Maths chapter pages from the repaired generator
+    instead of editing derived HTML;
+  - fixed shared course-practice data at the source and propagated it to the
+    26 generated lesson pages, including a wrong answer key (80013: 40 m).
+
+### Result
+`npm run audit-site` reports 1,244 HTML pages with zero findings across every
+hard-failure class.
+
+### Known defects (explicitly accepted for now)
+These pages contain PDF-extraction or generated-content corruption that cannot
+be reconstructed from the repository. They are not silently passed: a rewrite
+is required, and the audit does not claim they are clean.
+- `cgl/papers/13-sep-2025-s2.html` - lost fraction bars and operators.
+- `cgl/papers/12-sep-2025-s3.html` - lost fraction bars and operators.
+- `cgl/course/reasoning/lesson-coding-decoding.html` - rambling generated
+  reasoning rather than a worked solution.
+- `cgl/course/reasoning/lesson-analogy.html` - same, plus `?` placeholders in
+  worked steps.
+
+The sitemap is generated in CI because a partial clone cannot enumerate every
+deployed URL locally.
+
 ## Progress Log
 
 - 2026-10-31: Created roadmap and feature registry
@@ -135,3 +198,11 @@ Unified discovery across the page index and the corpus topic graph.
   - `build-knowledge-graph.js` also emits `data/topic-search.json`
   - `search.html` shows corpus topics and deep-links them into the map
   - Added `npm run test-topic-search` (13 assertions)
+- 2026-11-01: Completed Phase 6 — Site-wide integrity audit
+  - Added `npm run audit-site` over the tracked deploy tree, with external
+    script parsing and lossy-content checks; current run is 0 findings
+  - Added `npm run test-audit` (39 assertions, one fixture per failure class)
+  - Repaired 88 tree-listing pages, mojibake across 99 pages plus both corpus
+    lists, lossy math in 25+ papers and lessons, all 26 generated JEE Maths
+    chapters, the shared course-practice bank and its generator templates
+  - Recorded four known-bad pages as rewrite targets instead of masking them
