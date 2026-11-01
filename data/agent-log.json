@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T04:02:05.385Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent producing fixes recently, so it leads. MockPapers must be prioritized next as files are absent and previous runs show zero output for this goal. Invention and MetaLearn follow to address pending ideas and syllabus gaps, while MainsFresh is deferred due to consecutive zero-fixes in recent runs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (232 total)",
-       "text": "Write the sine-bar relationship. | What are Johansson (slip) gauges and how are they used? | Name the main types of comparators."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Industrial Engineering (243 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T04:30:25.927Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -725,8 +669,74 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T09:35:52.404Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "BankFigures is the primary bottleneck with 79 gaps and has been active in recent runs; it must lead to address critical content depth. MockPapers follows immediately as it also produced fixes recently and addresses the lack of exam files (papers/questions). ExamPatterns should be included next to diversify output since it hasn't fixed anything yet, potentially needing a fresh input cycle. Invention is added fourth to tackle pending ideas before starving agents. MetaLearn and MainsFresh are moved",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (270 total)",
+       "text": "What do the codes G00, G01, G02 and G03 mean? | What are M codes in a CNC program? | What is the difference between absolute and incremental programming?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvxmxbgz (gs3, 15 marks): Critically examine the statement that 'water security is no longer just a domestic issue but a matter of national strate",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T09:10:14.957Z",
+ "lastRun": "2026-11-01T09:35:52.404Z",
  "model": "qwen3.5:9b"
 }
