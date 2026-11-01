@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T10:35:21.567Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visuals. MockPapers should follow immediately to address the lack of question files, as they are currently false. MainsFresh is needed next for fresh daily material since papers are missing. Exampatterns will be last because it produced 0 fixes in the previous two runs and likely needs data from BankFigures/MockPapers first.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (276 total)",
-       "text": "Distinguish open-loop and closed-loop CNC control. | What is backlash in a machine drive? | What is DNC?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T11:17:36.945Z",
    "model": "batiai/qwen3.8-27b:iq3",
    "totalFixes": 3,
@@ -788,8 +748,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T19:56:56.413Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visuals blocking content consumption. MainsFresh is next to generate fresh daily material, addressing the 'fresh every day' owner goal while queueing for pending ideas later. MetaLearn should follow to synthesize new patterns from fixed figures and fresh mains, ensuring depth without duplication. ExamPatterns and MockPapers are deferred as they require stable figure data first; Invention ",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (316 total)",
+       "text": "Why is a bottoming tap used in a blind hole? | What is a die and how is an external thread cut with it? | Why should a rod end be chamfered before die threading?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T19:26:52.451Z",
+ "lastRun": "2026-11-01T19:56:56.413Z",
  "model": "qwen3.5:9b"
 }
