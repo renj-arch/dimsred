@@ -67,7 +67,7 @@ const SCENES = [
     title: 'The order',
     purpose: 'Show the decision, who made it, and the words it was made in.',
     ask: 'State what was proclaimed or decided, by whom, and on what date.',
-    keywords: ['proclaim a state of emergency', 'proclaimed a state of emergency', 'emergency was proclaimed', 'issue the proclamation', 'declared a state of emergency', 'declare a state of emergency', 'internal emergency', 'article 352', 'ratified', 'ordinance', 'ordinances'],
+    keywords: ['proclaim a state of emergency', 'proclaimed a state of emergency', 'emergency was proclaimed', 'issue the proclamation', 'declared a state of emergency', 'declare a state of emergency', 'internal emergency', 'article 352', 'ratified', 'ordinance', 'ordinances', 'war cabinet', 'cabinet decision', 'shipping decision', 'denial of', 'refused', 'diverted', 'ordered', 'directed', 'mandated', 'authorized', 'decreed', 'proclamation', 'directive', 'instruction', 'command'],
     exclude: ['article 356', 'american policy', 'future government', 'nationalisation of several major banks'],
     plates: ['room', 'desk']
   },
