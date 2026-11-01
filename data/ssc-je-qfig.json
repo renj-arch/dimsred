@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T20:08:24.180Z",
-  "cursor": 336,
-  "built": 319
+  "updatedAt": "2026-11-01T20:32:59.152Z",
+  "cursor": 339,
+  "built": 322
  },
  "figs": {
   "11434945": {
@@ -1917,6 +1917,24 @@
   "8a57e880": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Surface with high spots -->\n  <path d=\"M10,100 Q40,80 70,90 T130,90 T190,80 T250,90 T310,80\" stroke-width=\"3\"/>\n  <!-- High spots -->\n  <circle cx=\"60\" cy=\"85\" r=\"4\" fill=\"#222\"/>\n  <circle cx=\"120\" cy=\"85\" r=\"4\" fill=\"#222\"/>\n  <circle cx=\"200\" cy=\"85\" r=\"4\" fill=\"#222\"/>\n  <!-- Scraper tool -->\n  <rect x=\"30\" y=\"110\" width=\"260\" height=\"10\" stroke-width=\"1.5\"/>\n  <line x1=\"30\" y1=\"110\" x2=\"30\" y2=\"140\" stroke-width=\"1.5\"/>\n  <!-- Action arrows -->\n  <path d=\"M60,100 L60,85\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M120,100 L120,85\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M200,100 L200,85\" stroke-dasharray=\"2,2\"/>\n  <!-- Labels -->\n  <text x=\"35\" y=\"60\">Scraper</text>\n  <text x=\"35\" y=\"170\">Surface</text>\n  <text x=\"290\" y=\"60\">High spots removed</text>\n  <text x=\"180\" y=\"205\">True bearing surface</text>\n</svg>",
    "n": "what is the use of a scraper?",
+   "sub": "workshop",
+   "at": "2026-11-01"
+  },
+  "cc24436e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Surface Plate Base -->\n  <rect x=\"40\" y=\"80\" width=\"280\" height=\"80\"/>\n  <text x=\"180\" y=\"160\" text-anchor=\"middle\">Surface Plate (Reference Flat)</text>\n  \n  <!-- Workpiece on Plate -->\n  <rect x=\"60\" y=\"90\" width=\"40\" height=\"30\"/>\n  <text x=\"80\" y=\"115\" text-anchor=\"middle\">Workpiece</text>\n  \n  <!-- Dial Indicator Setup -->\n  <circle cx=\"280\" cy=\"130\" r=\"5\"/>\n  <path d=\"M 275 130 L 295 130\" stroke-width=\"2\"/>\n  <path d=\"M 280 125 L 280 135\" stroke-width=\"2\"/>\n  <text x=\"280\" y=\"145\" text-anchor=\"middle\">Dial Indicator</text>\n  \n  <!-- Measurement Line -->\n  <line x1=\"100\" y1=\"120\" x2=\"270\" y2=\"120\" stroke-dasharray=\"4\"/>\n  <text x=\"185\" y=\"110\" text-anchor=\"middle\">Checking Flatness</text>\n</svg>",
+   "n": "what is a surface plate used for?",
+   "sub": "workshop",
+   "at": "2026-11-01"
+  },
+  "c7794e94": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Workpiece Surface</text><rect x=\"40\" y=\"40\" width=\"280\" height=\"160\"/><path d=\"M 60 60 L 300 60\" stroke-dasharray=\"4,2\"/><path d=\"M 60 90 L 300 90\"/><path d=\"M 60 120 L 300 120\"/><circle cx=\"180\" cy=\"70\" r=\"5\" fill=\"#222\"/><text x=\"185\" y=\"74\">Scriber Tip</text><path d=\"M 160 70 L 190 70\" stroke-width=\"3\"/><circle cx=\"180\" cy=\"70\" r=\"5\" fill=\"#222\"/><path d=\"M 160 70 L 190 70\" stroke-width=\"3\"/><rect x=\"140\" y=\"100\" width=\"40\" height=\"40\" fill=\"#222\" opacity=\"0.5\"/><text x=\"160\" y=\"118\" text-anchor=\"middle\">Marking Blue</text><path d=\"M 140 140 L 200 140\" stroke-width=\"3\"/><circle cx=\"180\" cy=\"140\" r=\"5\" fill=\"#222\"/><text x=\"185\" y=\"144\">Scratched Line</text><path d=\"M 160 140 L 190 140\" stroke-width=\"3\"/><circle cx=\"180\" cy=\"170\" r=\"2\" fill=\"#222\"/><circle cx=\"185\" cy=\"170\" r=\"2\" fill=\"#222\"/><text x=\"160\" y=\"185\">Clear Contrast</text><path d=\"M 140 170 L 200 170\" stroke-width=\"3\"/></svg>",
+   "n": "what are a scriber and marking-blue used for?",
+   "sub": "workshop",
+   "at": "2026-11-01"
+  },
+  "19005ad0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"20\" width=\"80\" height=\"10\" rx=\"2\"/><line x1=\"120\" y1=\"30\" x2=\"120\" y2=\"190\" stroke-width=\"3\"/><line x1=\"120\" y1=\"190\" x2=\"280\" y2=\"190\" stroke-width=\"2\"/><line x1=\"40\" y1=\"190\" x2=\"120\" y2=\"190\" stroke-width=\"2\"/><rect x=\"115\" y=\"180\" width=\"10\" height=\"10\" rx=\"2\"/><text x=\"130\" y=\"205\" text-anchor=\"middle\">Base</text><text x=\"125\" y=\"170\" text-anchor=\"middle\">Scribe</text><text x=\"125\" y=\"140\" text-anchor=\"middle\">Vernier Scale</text><text x=\"125\" y=\"80\" text-anchor=\"middle\">Main Scale</text><text x=\"125\" y=\"30\" text-anchor=\"middle\">Scribing Tip</text><text x=\"305\" y=\"105\" text-anchor=\"middle\">Height Measurement</text></svg>",
+   "n": "what is a vernier height gauge?",
    "sub": "workshop",
    "at": "2026-11-01"
   }
