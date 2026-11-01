@@ -134,7 +134,7 @@ function genGKQs(s) {
 
 function genMathsQs(s) {
   return [
-    q(s,'LCM of 12, 18 and 24?',[['a','36',false],['b','48',false],['c','72',true],['d','96',false]],'12=2_*3, 18=2*3_, 24=2_*3. LCM=2_*3_=72.'),
+    q(s,'LCM of 12, 18 and 24?',[['a','36',false],['b','48',false],['c','72',true],['d','96',false]],'12=2²·3, 18=2·3², 24=2³·3. LCM=2³·3²=72.'),
     q(s+1,'Train 150 m passes pole in 5 sec. Speed in km/h?',[['a','90',false],['b','108',true],['c','120',false],['d','72',false]],'Speed=150/5=30 m/s. 30*18/5=108 km/h.'),
     q(s+2,'20% profit on CP of `500. SP?',[['a','550',false],['b','600',true],['c','620',false],['d','580',false]],'SP=500*120/100=600.'),
     q(s+3,'SI on `10,000 at 8% for 3 years?',[['a','2000',false],['b','2400',true],['c','2800',false],['d','3000',false]],'SI=10000*8*3/100=2400.'),

@@ -50,22 +50,22 @@ var MATH_CHAPTERS = [
     {t:"Which is an even function?",p:"Even-Odd",o:[{l:"A",v:"f(x)=x^2",c:true},{l:"B",v:"f(x)=x^3"},{l:"C",v:"f(x)=x"},{l:"D",v:"f(x)=x+1"}],s:"f(-x)=f(x). x^2 is even."},
     {t:"Range of f(x)=x^2+1:",p:"Range",o:[{l:"A",v:"[1,inf)",c:true},{l:"B",v:"(0,inf)"},{l:"C",v:"R"},{l:"D",v:"[0,inf)"}],s:"x^2>=0 => x^2+1>=1. Range=[1,inf)."},
     {t:"If R={(1,1),(2,2),(3,3)} on {1,2,3}, it is:",p:"Types of Relations",o:[{l:"A",v:"Reflexive",c:true},{l:"B",v:"Symmetric"},{l:"C",v:"Transitive"},{l:"D",v:"All of these"}],s:"Each element relates to itself => reflexive."},
-    {t:"f:R?R, f(x)=2x+3. f is:",p:"Types of Functions",o:[{l:"A",v:"Bijective",c:true},{l:"B",v:"Only 1-1"},{l:"C",v:"Only onto"},{l:"D",v:"Neither"}],s:"f is linear with slope?0 => 1-1 and onto."},
+    {t:"f:R→R, f(x)=2x+3. f is:",p:"Types of Functions",o:[{l:"A",v:"Bijective",c:true},{l:"B",v:"Only 1-1"},{l:"C",v:"Only onto"},{l:"D",v:"Neither"}],s:"f is linear with slope ≠ 0 => 1-1 and onto."},
     {t:"f(x)=x^3, f^{-1}(x)=",p:"Inverse",o:[{l:"A",v:"x^{1/3}",c:true},{l:"B",v:"x^3"},{l:"C",v:"3x"},{l:"D",v:"x/3"}],s:"y=x^3 => x=y^{1/3} => f^{-1}(x)=x^{1/3}."},
     {t:"Domain of sqrt(x-1):",p:"Domain",o:[{l:"A",v:"[1,inf)",c:true},{l:"B",v:"R"},{l:"C",v:"(1,inf)"},{l:"D",v:"[0,inf)"}],s:"x-1>=0 => x>=1."},
     {t:"If f(x)=x^2 and g(x)=2x, (gof)(x)=",p:"Composite",o:[{l:"A",v:"2x^2",c:true},{l:"B",v:"4x^2"},{l:"C",v:"(2x)^2"},{l:"D",v:"2x"}],s:"(gof)(x)=g(f(x))=g(x^2)=2x^2."}
   ]},
   {num:3,name:"Trigonometric Functions",q:[
-    {t:"sin(pi/6)=",p:"Trig Values",o:[{l:"A",v:"1/2",c:true},{l:"B",v:"sqrt3/2"},{l:"C",v:"1/sqrt2"},{l:"D",v:"1"}],s:"sin30=1/2."},
-    {t:"cos(2pi/3)=",p:"Trig Values",o:[{l:"A",v:"-1/2",c:true},{l:"B",v:"1/2"},{l:"C",v:"-sqrt3/2"},{l:"D",v:"sqrt3/2"}],s:"cos120=-cos60=-1/2."},
+    {t:"sin(π/6) =",p:"Trig Values",o:[{l:"A",v:"1/2",c:true},{l:"B",v:"sqrt3/2"},{l:"C",v:"1/sqrt2"},{l:"D",v:"1"}],s:"sin30=1/2."},
+    {t:"cos(2π/3) =",p:"Trig Values",o:[{l:"A",v:"-1/2",c:true},{l:"B",v:"1/2"},{l:"C",v:"-sqrt3/2"},{l:"D",v:"sqrt3/2"}],s:"cos120=-cos60=-1/2."},
     {t:"If sin t=3/5, t acute, tan t=",p:"Trig Identities",o:[{l:"A",v:"3/4",c:true},{l:"B",v:"4/3"},{l:"C",v:"3/5"},{l:"D",v:"5/3"}],s:"cos t=4/5. tan=3/4."},
     {t:"Period of sin 3x:",p:"Period",o:[{l:"A",v:"2pi/3",c:true},{l:"B",v:"pi/3"},{l:"C",v:"2pi"},{l:"D",v:"pi"}],s:"T=2pi/|a|=2pi/3."},
     {t:"Always true identity:",p:"Identities",o:[{l:"A",v:"sin^2+cos^2=1",c:true},{l:"B",v:"sin^2-cos^2=1"},{l:"C",v:"sin+cos=1"},{l:"D",v:"sec^2-tan^2=0"}],s:"Pythagorean: sin^2+cos^2=1."},
     {t:"sin(pi/2 + x)=",p:"Compound Angles",o:[{l:"A",v:"cos x",c:true},{l:"B",v:"-cos x"},{l:"C",v:"sin x"},{l:"D",v:"-sin x"}],s:"sin(90°+x)=cos x."},
-    {t:"Value of sin 15°:",p:"Compound Angles",o:[{l:"A",v:"(sqrt6-sqrt2)/4",c:true},{l:"B",v:"(sqrt6+sqrt2)/4"},{l:"C",v:"1/2"},{l:"D",v:"sqrt3/2"}],s:"sin15=sin(45-30)=sin45cos30-cos45sin30=(v6-v2)/4."},
-    {t:"cos2? in terms of sin?:",p:"Double Angle",o:[{l:"A",v:"1-2sin^2?",c:true},{l:"B",v:"2sin^2?-1"},{l:"C",v:"2cos^2?-1"},{l:"D",v:"cos^2?-sin^2?"}],s:"cos2? = 1-2sin^2?."},
-    {t:"sec^2? - tan^2? =",p:"Identities",o:[{l:"A",v:"1",c:true},{l:"B",v:"0"},{l:"C",v:"-1"},{l:"D",v:"sec?"}],s:"sec^2? = 1+tan^2? => sec^2?-tan^2?=1."},
-    {t:"General solution sin? = 0:",p:"Trig Equations",o:[{l:"A",v:"?=np",c:true},{l:"B",v:"?=2np"},{l:"C",v:"?=(2n+1)p/2"},{l:"D",v:"?=np/2"}],s:"sin?=0 => ?=np where n?Z."}
+    {t:"Value of sin 15°:",p:"Compound Angles",o:[{l:"A",v:"(sqrt6-sqrt2)/4",c:true},{l:"B",v:"(sqrt6+sqrt2)/4"},{l:"C",v:"1/2"},{l:"D",v:"sqrt3/2"}],s:"sin15°=sin(45°-30°)=sin45°cos30°-cos45°sin30°=(√6-√2)/4."},
+    {t:"cos 2θ in terms of sin θ:",p:"Double Angle",o:[{l:"A",v:"1-2sin²θ",c:true},{l:"B",v:"2sin²θ-1"},{l:"C",v:"2cos²θ-1"},{l:"D",v:"cos²θ-sin²θ"}],s:"cos 2θ = 1-2sin²θ."},
+    {t:"sec²θ - tan²θ =",p:"Identities",o:[{l:"A",v:"1",c:true},{l:"B",v:"0"},{l:"C",v:"-1"},{l:"D",v:"sec θ"}],s:"sec²θ = 1+tan²θ => sec²θ - tan²θ = 1."},
+    {t:"General solution sin θ = 0:",p:"Trig Equations",o:[{l:"A",v:"θ=nπ",c:true},{l:"B",v:"θ=2nπ"},{l:"C",v:"θ=(2n+1)π/2"},{l:"D",v:"θ=nπ/2"}],s:"sin θ = 0 => θ = nπ where n ∈ ℤ."}
   ]},
   {num:4,name:"Complex Numbers and Quadratic Equations",q:[
     {t:"i^105 equals (i^2=-1):",p:"Complex Numbers",o:[{l:"A",v:"i",c:true},{l:"B",v:"-i"},{l:"C",v:"1"},{l:"D",v:"-1"}],s:"i^105=i^(104+1)=i^104*i=(i^4)^26*i=1*i=i."},
@@ -77,7 +77,7 @@ var MATH_CHAPTERS = [
     {t:"(1+i)^2 =",p:"Complex Numbers",o:[{l:"A",v:"2i",c:true},{l:"B",v:"2"},{l:"C",v:"-2"},{l:"D",v:"-2i"}],s:"(1+i)^2 = 1+2i+i^2 = 1+2i-1 = 2i."},
     {t:"D>0 means roots are:",p:"Discriminant",o:[{l:"A",v:"Real & distinct",c:true},{l:"B",v:"Real & equal"},{l:"C",v:"Imaginary"},{l:"D",v:"Complex"}],s:"D>0 => two distinct real roots."},
     {t:"Sum of roots of ax^2+bx+c=0:",p:"Quadratic",o:[{l:"A",v:"-b/a",c:true},{l:"B",v:"b/a"},{l:"C",v:"c/a"},{l:"D",v:"-c/a"}],s:"Sum = -b/a."},
-    {t:"Arg(1+i) =",p:"Argument",o:[{l:"A",v:"pi/4",c:true},{l:"B",v:"pi/2"},{l:"C",v:"0"},{l:"D",v:"pi"}],s:"tan?=1/1=1 => ?=p/4."}
+    {t:"Arg(1+i) =",p:"Argument",o:[{l:"A",v:"pi/4",c:true},{l:"B",v:"pi/2"},{l:"C",v:"0"},{l:"D",v:"pi"}],s:"tan θ = 1/1 = 1 => θ = π/4."}
   ]},
   {num:5,name:"Linear Inequalities",q:[
     {t:"Solution of 2x-3>5:",p:"Linear Inequalities",o:[{l:"A",v:"x>4",c:true},{l:"B",v:"x>1"},{l:"C",v:"x>2"},{l:"D",v:"x>3"}],s:"2x>8 => x>4."},
@@ -121,8 +121,8 @@ var MATH_CHAPTERS = [
     {t:"Sum of 1^2+2^2+...+n^2:",p:"Series",o:[{l:"A",v:"n(n+1)(2n+1)/6",c:true},{l:"B",v:"n(n+1)/2"},{l:"C",v:"n^2(n+1)^2/4"},{l:"D",v:"n(n+1)(n+2)/6"}],s:"Sum of squares = n(n+1)(2n+1)/6."},
     {t:"AP: a=2,d=3, Sum of 5 terms:",p:"AP",o:[{l:"A",v:"40",c:true},{l:"B",v:"30"},{l:"C",v:"35"},{l:"D",v:"45"}],s:"S5 = 5/2(4+4*3) = 2.5(16) = 40."},
     {t:"GP: a=3,r=2, 4th term:",p:"GP",o:[{l:"A",v:"24",c:true},{l:"B",v:"12"},{l:"C",v:"48"},{l:"D",v:"96"}],s:"T4 = 3x2^3 = 3x8 = 24."},
-    {t:"AM of a and b:",p:"Means",o:[{l:"A",v:"(a+b)/2",c:true},{l:"B",v:"(a-b)/2"},{l:"C",v:"2ab/(a+b)"},{l:"D",v:"v(ab)"}],s:"Arithmetic mean = (a+b)/2."},
-    {t:"GM of 4 and 9:",p:"Means",o:[{l:"A",v:"6",c:true},{l:"B",v:"36"},{l:"C",v:"6.5"},{l:"D",v:"13/2"}],s:"GM = √(4×9) = v36 = 6."},
+    {t:"AM of a and b:",p:"Means",o:[{l:"A",v:"(a+b)/2",c:true},{l:"B",v:"(a-b)/2"},{l:"C",v:"2ab/(a+b)"},{l:"D",v:"√(ab)"}],s:"Arithmetic mean = (a+b)/2."},
+    {t:"GM of 4 and 9:",p:"Means",o:[{l:"A",v:"6",c:true},{l:"B",v:"36"},{l:"C",v:"6.5"},{l:"D",v:"13/2"}],s:"GM = √(4×9) = √36 = 6."},
     {t:"Sum of AP: 1+3+5+...+(2n-1):",p:"AP",o:[{l:"A",v:"n^2",c:true},{l:"B",v:"n(n+1)/2"},{l:"C",v:"n(n+1)"},{l:"D",v:"2n-1"}],s:"Sum of first n odd numbers = n^2."}
   ]},
   {num:9,name:"Straight Lines",q:[
@@ -131,7 +131,7 @@ var MATH_CHAPTERS = [
     {t:"Line slope 2 through (1,3):",p:"Equation",o:[{l:"A",v:"y-3=2(x-1)",c:true},{l:"B",v:"y+3=2(x+1)"},{l:"C",v:"y-1=2(x-3)"},{l:"D",v:"y=2x+3"}],s:"Point-slope: y-3=2(x-1)."},
     {t:"Perpendicular lines have:",p:"Angle",o:[{l:"A",v:"m1*m2=-1",c:true},{l:"B",v:"m1=m2"},{l:"C",v:"m1*m2=1"},{l:"D",v:"m1+m2=0"}],s:"Perpendicular => m1*m2=-1."},
     {t:"x-intercept of 3x+4y=12:",p:"Intercepts",o:[{l:"A",v:"4",c:true},{l:"B",v:"3"},{l:"C",v:"12"},{l:"D",v:"-4"}],s:"Put y=0: 3x=12 => x=4."},
-    {t:"Distance from (0,0) to 3x+4y=5:",p:"Distance",o:[{l:"A",v:"1",c:true},{l:"B",v:"5"},{l:"C",v:"1/5"},{l:"D",v:"5/v7"}],s:"|0+0-5|/v(9+16)=5/5=1."},
+    {t:"Distance from (0,0) to 3x+4y=5:",p:"Distance",o:[{l:"A",v:"1",c:true},{l:"B",v:"5"},{l:"C",v:"1/5"},{l:"D",v:"5/√7"}],s:"|0+0-5|/√(9+16)=5/5=1."},
     {t:"Angle between y=x and x-axis:",p:"Angle",o:[{l:"A",v:"45°",c:true},{l:"B",v:"30°"},{l:"C",v:"60°"},{l:"D",v:"90°"}],s:"y=x has slope 1 => angle = 45°."},
     {t:"Line through (0,0) and (1,1):",p:"Equation",o:[{l:"A",v:"y=x",c:true},{l:"B",v:"y=-x"},{l:"C",v:"y=2x"},{l:"D",v:"y=x+1"}],s:"Slope=1, passing through origin => y=x."},
     {t:"Foot of perpendicular from (0,0) to x+y=1:",p:"Perpendicular",o:[{l:"A",v:"(0.5,0.5)",c:true},{l:"B",v:"(1,0)"},{l:"C",v:"(0,1)"},{l:"D",v:"(0.5,1.5)"}],s:"Foot = point where line and perpendicular meet."},
@@ -169,7 +169,7 @@ var MATH_CHAPTERS = [
     {t:"If each value increased by 5, mean:",p:"Mean",o:[{l:"A",v:"Increases by 5",c:true},{l:"B",v:"5 times"},{l:"C",v:"Same"},{l:"D",v:"Decreases by 5"}],s:"Mean increases by the same constant."},
     {t:"Mode of 1,2,2,3,4,4,4,5:",p:"Mode",o:[{l:"A",v:"4",c:true},{l:"B",v:"2"},{l:"C",v:"3"},{l:"D",v:"5"}],s:"4 appears 3 times => mode = 4."},
     {t:"Range of 2,8,5,12,3:",p:"Range",o:[{l:"A",v:"10",c:true},{l:"B",v:"9"},{l:"C",v:"12"},{l:"D",v:"6"}],s:"Max=12, Min=2, Range=10."},
-    {t:"If variance=4, SD=",p:"SD",o:[{l:"A",v:"2",c:true},{l:"B",v:"4"},{l:"C",v:"16"},{l:"D",v:"8"}],s:"SD = vvariance = v4 = 2."},
+    {t:"If variance=4, SD=",p:"SD",o:[{l:"A",v:"2",c:true},{l:"B",v:"4"},{l:"C",v:"16"},{l:"D",v:"8"}],s:"SD = √variance = √4 = 2."},
     {t:"If each value ×2, variance:",p:"Variance",o:[{l:"A",v:"×4",c:true},{l:"B",v:"×2"},{l:"C",v:"Same"},{l:"D",v:"×√2"}],s:"Variance multiplies by k² = 4."}
   ]},
   {num:13,name:"Probability",q:[
@@ -201,7 +201,7 @@ var MATH_CHAPTERS = [
     {t:"sec^{-1}(2) =",p:"Inverse Trig",o:[{l:"A",v:"pi/3",c:true},{l:"B",v:"pi/6"},{l:"C",v:"pi/4"},{l:"D",v:"pi/2"}],s:"sec(pi/3)=2 => sec^{-1}(2)=pi/3."},
     {t:"tan^{-1}(-1) =",p:"Inverse Trig",o:[{l:"A",v:"-pi/4",c:true},{l:"B",v:"pi/4"},{l:"C",v:"3pi/4"},{l:"D",v:"-pi/3"}],s:"tan(-pi/4)=-1 => tan^{-1}(-1)=-pi/4."},
     {t:"sin^{-1}(-1/2) =",p:"Inverse Trig",o:[{l:"A",v:"-pi/6",c:true},{l:"B",v:"pi/6"},{l:"C",v:"-pi/3"},{l:"D",v:"pi/3"}],s:"sin^{-1}(-1/2) = -pi/6."},
-    {t:"Range of cos^{-1}x:",p:"Range",o:[{l:"A",v:"[0,pi]",c:true},{l:"B",v:"[-pi/2,pi/2]"},{l:"C",v:"[0,pi/2]"},{l:"D",v:"(-pi/2,pi/2)"}],s:"Principal range of cos^{-1}x is [0,p]."}
+    {t:"Range of cos^{-1}x:",p:"Range",o:[{l:"A",v:"[0,pi]",c:true},{l:"B",v:"[-pi/2,pi/2]"},{l:"C",v:"[0,pi/2]"},{l:"D",v:"(-pi/2,pi/2)"}],s:"Principal range of cos^{-1}x is [0,π]."}
   ]},
   {num:16,name:"Matrices",q:[
     {t:"Order of A = [[1,2],[3,4]]:",p:"Basics",o:[{l:"A",v:"2x2",c:true},{l:"B",v:"2x4"},{l:"C",v:"4x2"},{l:"D",v:"1x4"}],s:"2 rows, 2 columns => 2x2."},
@@ -220,8 +220,8 @@ var MATH_CHAPTERS = [
     {t:"Area of triangle (0,0),(3,0),(0,4):",p:"Application",o:[{l:"A",v:"6",c:true},{l:"B",v:"12"},{l:"C",v:"3"},{l:"D",v:"24"}],s:"Area = 1/2|det| = 1/2x12=6."},
     {t:"For 3×3 matrix, det exists if:",p:"Properties",o:[{l:"A",v:"Always defined",c:true},{l:"B",v:"Only if symmetric"},{l:"C",v:"Only if invertible"},{l:"D",v:"Only if I-A=0"}],s:"Determinant defined for all square matrices."},
     {t:"|A^T| =",p:"Properties",o:[{l:"A",v:"|A|",c:true},{l:"B",v:"0"},{l:"C",v:"-|A|"},{l:"D",v:"|A|^2"}],s:"|A^T| = |A|."},
-    {t:"If |A| ? 0, A is:",p:"Inverse",o:[{l:"A",v:"Non-singular",c:true},{l:"B",v:"Singular"},{l:"C",v:"Symmetric"},{l:"D",v:"Zero matrix"}],s:"Non-singular means det ? 0."},
-    {t:"A^{-1} = adj(A)/|A| when:",p:"Inverse",o:[{l:"A",v:"|A| ? 0",c:true},{l:"B",v:"|A| = 0"},{l:"C",v:"A is symmetric"},{l:"D",v:"A is diagonal"}],s:"Inverse exists only when |A| ? 0."}
+    {t:"If |A| ≠ 0, A is:",p:"Inverse",o:[{l:"A",v:"Non-singular",c:true},{l:"B",v:"Singular"},{l:"C",v:"Symmetric"},{l:"D",v:"Zero matrix"}],s:"Non-singular means det ≠ 0."},
+    {t:"A^{-1} = adj(A)/|A| when:",p:"Inverse",o:[{l:"A",v:"|A| ≠ 0",c:true},{l:"B",v:"|A| = 0"},{l:"C",v:"A is symmetric"},{l:"D",v:"A is diagonal"}],s:"Inverse exists only when |A| ≠ 0."}
   ]},
   {num:18,name:"Continuity and Differentiability",q:[
     {t:"f(x)=|x| at x=0:",p:"Continuity",o:[{l:"A",v:"Continuous, not diff",c:true},{l:"B",v:"Continuous and diff"},{l:"C",v:"Not continuous"},{l:"D",v:"Neither"}],s:"|x| continuous at 0. LHD=-1, RHD=1 => not differentiable."},
@@ -229,8 +229,8 @@ var MATH_CHAPTERS = [
     {t:"If y=ln(sin x), dy/dx=",p:"Chain Rule",o:[{l:"A",v:"cot x",c:true},{l:"B",v:"tan x"},{l:"C",v:"sec x"},{l:"D",v:"cosec x"}],s:"dy/dx = (1/sin x)cos x = cot x."},
     {t:"d(tan^{-1}x)/dx =",p:"Differentiation",o:[{l:"A",v:"1/(1+x^2)",c:true},{l:"B",v:"1/(1-x^2)"},{l:"C",v:"x/(1+x^2)"},{l:"D",v:"1/(x^2-1)"}],s:"d(tan^{-1}x)/dx = 1/(1+x^2)."},
     {t:"f(x) = x^2 at x=2 is:",p:"Continuity",o:[{l:"A",v:"Continuous & diff.",c:true},{l:"B",v:"Not continuous"},{l:"C",v:"Continuous not diff."},{l:"D",v:"Neither"}],s:"x^2 is polynomial => everywhere continuous and diff."},
-    {t:"d(sin^{-1}x)/dx =",p:"Differentiation",o:[{l:"A",v:"1/v(1-x^2)",c:true},{l:"B",v:"1/(1+x^2)"},{l:"C",v:"-1/v(1-x^2)"},{l:"D",v:"1/v(x^2-1)"}],s:"d(sin^{-1}x)/dx = 1/v(1-x^2)."},
-    {t:"Differentiable implies:",p:"Relationship",o:[{l:"A",v:"Continuous",c:true},{l:"B",v:"Discontinuous"},{l:"C",v:"Increasing"},{l:"D",v:"Decreasing"}],s:"Differentiability ? continuity."},
+    {t:"d(sin^{-1}x)/dx =",p:"Differentiation",o:[{l:"A",v:"1/√(1-x^2)",c:true},{l:"B",v:"1/(1+x^2)"},{l:"C",v:"-1/√(1-x^2)"},{l:"D",v:"1/√(x^2-1)"}],s:"d(sin^{-1}x)/dx = 1/√(1-x^2)."},
+    {t:"Differentiable implies:",p:"Relationship",o:[{l:"A",v:"Continuous",c:true},{l:"B",v:"Discontinuous"},{l:"C",v:"Increasing"},{l:"D",v:"Decreasing"}],s:"Differentiability ⇒ continuity."},
     {t:"f(x)=x^3, f'(0)=",p:"Differentiation",o:[{l:"A",v:"0",c:true},{l:"B",v:"3"},{l:"C",v:"1"},{l:"D",v:"-3"}],s:"f'(x)=3x^2, f'(0)=0."}
   ]},
   {num:19,name:"Applications of Derivatives",q:[
@@ -238,10 +238,10 @@ var MATH_CHAPTERS = [
     {t:"f increasing means f'(x):",p:"Monotonicity",o:[{l:"A",v:">0",c:true},{l:"B",v:"<0"},{l:"C",v:"=0"},{l:"D",v:"<=0"}],s:"f'(x)>0 for increasing function."},
     {t:"dA/dr for circle area at r=5:",p:"Rate of Change",o:[{l:"A",v:"10pi",c:true},{l:"B",v:"25pi"},{l:"C",v:"5pi"},{l:"D",v:"20pi"}],s:"A=pi r^2, dA/dr=2pi r. At r=5: 10pi."},
     {t:"f(x)=x^3 is:",p:"Monotonicity",o:[{l:"A",v:"Strictly increasing",c:true},{l:"B",v:"Strictly decreasing"},{l:"C",v:"Constant"},{l:"D",v:"Neither"}],s:"f'(x)=3x^2>=0 with equality only at x=0. Strictly increasing."},
-    {t:"Normal slope = -1/f'(x0) if:",p:"Normal",o:[{l:"A",v:"f'(x0) ? 0",c:true},{l:"B",v:"f'(x0)=0"},{l:"C",v:"Always"},{l:"D",v:"Never"}],s:"Normal slope = -1/f'(x0) when f'(x0) ? 0."},
+    {t:"Normal slope = -1/f'(x0) if:",p:"Normal",o:[{l:"A",v:"f'(x0) ≠ 0",c:true},{l:"B",v:"f'(x0)=0"},{l:"C",v:"Always"},{l:"D",v:"Never"}],s:"Normal slope = -1/f'(x0) when f'(x0) ≠ 0."},
     {t:"f(x)=x^2 has minimum at:",p:"Maxima-Minima",o:[{l:"A",v:"x=0",c:true},{l:"B",v:"x=1"},{l:"C",v:"x=-1"},{l:"D",v:"x=2"}],s:"f'(x)=2x=0 => x=0. f''(0)=2>0 => minima."},
     {t:"Max value of -x^2+4x+5:",p:"Maxima-Minima",o:[{l:"A",v:"9",c:true},{l:"B",v:"5"},{l:"C",v:"7"},{l:"D",v:"11"}],s:"f'(x)=-2x+4=0 => x=2. f(2)=-4+8+5=9."},
-    {t:"f(x)=sin x is increasing in:",p:"Monotonicity",o:[{l:"A",v:"(-pi/2,pi/2)",c:true},{l:"B",v:"(pi/2,3pi/2)"},{l:"C",v:"(0,pi)"},{l:"D",v:"(-pi,0)"}],s:"f'(x)=cos x>0 => x?(-p/2,p/2)."}
+    {t:"f(x)=sin x is increasing in:",p:"Monotonicity",o:[{l:"A",v:"(-pi/2,pi/2)",c:true},{l:"B",v:"(pi/2,3pi/2)"},{l:"C",v:"(0,pi)"},{l:"D",v:"(-pi,0)"}],s:"f'(x)=cos x>0 => x ∈ (-π/2, π/2)."}
   ]},
   {num:20,name:"Integrals",q:[
     {t:"int 2x dx =",p:"Indefinite",o:[{l:"A",v:"x^2+C",c:true},{l:"B",v:"2x^2+C"},{l:"C",v:"x^2/2+C"},{l:"D",v:"x+C"}],s:"int 2x dx = 2.x^2/2+C = x^2+C."},
@@ -250,19 +250,19 @@ var MATH_CHAPTERS = [
     {t:"int_{-1}^{1} x^3 dx =",p:"Definite",o:[{l:"A",v:"0",c:true},{l:"B",v:"1/2"},{l:"C",v:"1"},{l:"D",v:"-1/2"}],s:"x^3 is odd => integral over symmetric limits = 0."},
     {t:"int sec^2 x dx =",p:"Indefinite",o:[{l:"A",v:"tan x+C",c:true},{l:"B",v:"sec x+C"},{l:"C",v:"-cot x+C"},{l:"D",v:"cosec x+C"}],s:"d(tan x)/dx = sec^2 x."},
     {t:"int_0^1 e^x dx =",p:"Definite",o:[{l:"A",v:"e-1",c:true},{l:"B",v:"e"},{l:"C",v:"1"},{l:"D",v:"e+1"}],s:"[e^x]_0^1 = e-1."},
-    {t:"int (1/x) dx =",p:"Indefinite",o:[{l:"A",v:"ln|x|+C",c:true},{l:"B",v:"e^x+C"},{l:"C",v:"1/x^2+C"},{l:"D",v:"x+C"}],s:"?(1/x)dx = ln|x| + C."},
-    {t:"d/dx [?_0^x t^2 dt] =",p:"Fundamental",o:[{l:"A",v:"x^2",c:true},{l:"B",v:"2x"},{l:"C",v:"0"},{l:"D",v:"x^2/2"}],s:"By FTC, d/dx(?_a^x f(t)dt)=f(x)=x^2."},
-    {t:"?_0^{p/2} sin x dx =",p:"Definite",o:[{l:"A",v:"1",c:true},{l:"B",v:"0"},{l:"C",v:"2"},{l:"D",v:"-1"}],s:"[-cos x]_0^{p/2} = 0-(-1)=1."},
-    {t:"? cos^2 x dx =",p:"Indefinite",o:[{l:"A",v:"(x+sin2x/2)/2+C",c:true},{l:"B",v:"sin^2 x+C"},{l:"C",v:"x/2+C"},{l:"D",v:"sin x cos x+C"}],s:"cos^2x=(1+cos2x)/2 => ?=x/2+sin2x/4+C."}
+    {t:"int (1/x) dx =",p:"Indefinite",o:[{l:"A",v:"ln|x|+C",c:true},{l:"B",v:"e^x+C"},{l:"C",v:"1/x^2+C"},{l:"D",v:"x+C"}],s:"∫(1/x) dx = ln|x| + C."},
+    {t:"d/dx [∫_0^x t² dt] =",p:"Fundamental",o:[{l:"A",v:"x^2",c:true},{l:"B",v:"2x"},{l:"C",v:"0"},{l:"D",v:"x^2/2"}],s:"By FTC, d/dx(∫_a^x f(t) dt) = f(x) = x²."},
+    {t:"∫_0^{π/2} sin x dx =",p:"Definite",o:[{l:"A",v:"1",c:true},{l:"B",v:"0"},{l:"C",v:"2"},{l:"D",v:"-1"}],s:"[-cos x]_0^{π/2} = 0-(-1) = 1."},
+    {t:"∫ cos²x dx =",p:"Indefinite",o:[{l:"A",v:"(x+sin2x/2)/2+C",c:true},{l:"B",v:"sin^2 x+C"},{l:"C",v:"x/2+C"},{l:"D",v:"sin x cos x+C"}],s:"cos²x=(1+cos 2x)/2 => ∫ = x/2 + sin 2x/4 + C."}
   ]},
   {num:21,name:"Applications of Integrals",q:[
     {t:"Area bounded by y=x, x-axis, x=0, x=1:",p:"Area",o:[{l:"A",v:"1/2",c:true},{l:"B",v:"1"},{l:"C",v:"2"},{l:"D",v:"3/2"}],s:"Area = int_0^1 x dx = 1/2."},
     {t:"Area of circle x^2+y^2=a^2:",p:"Area",o:[{l:"A",v:"pi a^2",c:true},{l:"B",v:"2pi a^2"},{l:"C",v:"pi a^2/2"},{l:"D",v:"pi a^2/4"}],s:"Area of circle = pi a^2."},
     {t:"Area bounded by y^2=4x and x=1, y>=0:",p:"Area",o:[{l:"A",v:"4/3",c:true},{l:"B",v:"8/3"},{l:"C",v:"2/3"},{l:"D",v:"16/3"}],s:"Area = int_0^1 2sqrt x dx = 4/3."},
-    {t:"Area between y=x and y=x^2:",p:"Area",o:[{l:"A",v:"1/6",c:true},{l:"B",v:"1/3"},{l:"C",v:"1/2"},{l:"D",v:"1"}],s:"Intersect at x=0,1. Area=?_0^1 (x-x^2)dx = 1/6."},
+    {t:"Area between y=x and y=x^2:",p:"Area",o:[{l:"A",v:"1/6",c:true},{l:"B",v:"1/3"},{l:"C",v:"1/2"},{l:"D",v:"1"}],s:"Intersect at x=0,1. Area=∫_0^1 (x-x²) dx = 1/6."},
     {t:"Area of region {(x,y): y=0, y=x, x=1}:",p:"Area",o:[{l:"A",v:"1/2",c:true},{l:"B",v:"1"},{l:"C",v:"1/4"},{l:"D",v:"1/3"}],s:"Area under y=x from 0 to 1 = 1/2."},
-    {t:"?_0^1 x^2 dx =",p:"Area",o:[{l:"A",v:"1/3",c:true},{l:"B",v:"1/2"},{l:"C",v:"1"},{l:"D",v:"1/4"}],s:"[x^3/3]_0^1 = 1/3."},
-    {t:"Area between y=1 and x-axis from x=0 to x=1:",p:"Area",o:[{l:"A",v:"1",c:true},{l:"B",v:"1/2"},{l:"C",v:"0"},{l:"D",v:"2"}],s:"?_0^1 1 dx = 1."}
+    {t:"∫_0^1 x² dx =",p:"Area",o:[{l:"A",v:"1/3",c:true},{l:"B",v:"1/2"},{l:"C",v:"1"},{l:"D",v:"1/4"}],s:"[x^3/3]_0^1 = 1/3."},
+    {t:"Area between y=1 and x-axis from x=0 to x=1:",p:"Area",o:[{l:"A",v:"1",c:true},{l:"B",v:"1/2"},{l:"C",v:"0"},{l:"D",v:"2"}],s:"∫_0^1 1 dx = 1."}
   ]},
   {num:22,name:"Differential Equations",q:[
     {t:"Order of (y''')^2 + (y'')^3 + y = 0:",p:"Order",o:[{l:"A",v:"3",c:true},{l:"B",v:"2"},{l:"C",v:"1"},{l:"D",v:"6"}],s:"Highest derivative is y''', order=3."},
@@ -271,7 +271,7 @@ var MATH_CHAPTERS = [
     {t:"Degree of (y')^2 + y = 0:",p:"Degree",o:[{l:"A",v:"2",c:true},{l:"B",v:"1"},{l:"C",v:"0"},{l:"D",v:"3"}],s:"Power of highest derivative y' is 2."},
     {t:"dy/dx = -y/x, general solution:",p:"Solution",o:[{l:"A",v:"xy = C",c:true},{l:"B",v:"x+y = C"},{l:"C",v:"x^2+y^2=C"},{l:"D",v:"y/x = C"}],s:"Separate: dy/y = -dx/x => ln|y|=-ln|x|+C => xy=C."},
     {t:"Order of d^2y/dx^2 + dy/dx = 0:",p:"Order",o:[{l:"A",v:"2",c:true},{l:"B",v:"1"},{l:"C",v:"0"},{l:"D",v:"3"}],s:"Highest derivative is d^2y/dx^2 (order 2)."},
-    {t:"Integrating factor for dy/dx + Py = Q:",p:"Linear DE",o:[{l:"A",v:"e^{?Pdx}",c:true},{l:"B",v:"e^{?Qdx}"},{l:"C",v:"?Pdx"},{l:"D",v:"e^{-?Pdx}"}],s:"IF = e^{?Pdx}."},
+    {t:"Integrating factor for dy/dx + Py = Q:",p:"Linear DE",o:[{l:"A",v:"e^{∫Pdx}",c:true},{l:"B",v:"e^{∫Qdx}"},{l:"C",v:"∫Pdx"},{l:"D",v:"e^{-∫Pdx}"}],s:"IF = e^{∫Pdx}."},
     {t:"y = Ce^{kx} satisfies:",p:"Solution",o:[{l:"A",v:"dy/dx = ky",c:true},{l:"B",v:"dy/dx = -ky"},{l:"C",v:"dy/dx = k"},{l:"D",v:"dy/dx = y"}],s:"d/dx(Ce^{kx}) = kCe^{kx} = ky."}
   ]},
   {num:23,name:"Vector Algebra",q:[
@@ -279,7 +279,7 @@ var MATH_CHAPTERS = [
     {t:"|i+j| =",p:"Magnitude",o:[{l:"A",v:"sqrt2",c:true},{l:"B",v:"1"},{l:"C",v:"2"},{l:"D",v:"0"}],s:"sqrt(1^2+1^2)=sqrt2."},
     {t:"a.b=0 means vectors are:",p:"Orthogonality",o:[{l:"A",v:"Perpendicular",c:true},{l:"B",v:"Parallel"},{l:"C",v:"Collinear"},{l:"D",v:"Equal"}],s:"Dot product zero => perpendicular."},
     {t:"|a|=3,|b|=4,a.b=0, |axb| =",p:"Cross Product",o:[{l:"A",v:"12",c:true},{l:"B",v:"0"},{l:"C",v:"7"},{l:"D",v:"5"}],s:"|axb| = |a||b|sin90 = 3x4x1=12."},
-    {t:"If a = i+j+k, |a| =",p:"Magnitude",o:[{l:"A",v:"v3",c:true},{l:"B",v:"1"},{l:"C",v:"3"},{l:"D",v:"v2"}],s:"|a| = v(1+1+1) = v3."},
+    {t:"If a = i+j+k, |a| =",p:"Magnitude",o:[{l:"A",v:"√3",c:true},{l:"B",v:"1"},{l:"C",v:"3"},{l:"D",v:"√2"}],s:"|a| = √(1+1+1) = √3."},
     {t:"a×b = 0 means:",p:"Cross Product",o:[{l:"A",v:"Parallel",c:true},{l:"B",v:"Perpendicular"},{l:"C",v:"Unit vectors"},{l:"D",v:"Zero vectors"}],s:"|a×b|=0 => parallel or one is zero."},
     {t:"(i×j).k =",p:"Triple Product",o:[{l:"A",v:"1",c:true},{l:"B",v:"0"},{l:"C",v:"-1"},{l:"D",v:"i"}],s:"i×j=k => k·k=1."},
     {t:"Volume of parallelepiped =",p:"Triple Product",o:[{l:"A",v:"|[abc]|",c:true},{l:"B",v:"[abc]"},{l:"C",v:"|a||b||c|"},{l:"D",v:"a·(b×c)"}],s:"Volume = |a·(b×c)| = |[abc]|."}
@@ -291,7 +291,7 @@ var MATH_CHAPTERS = [
     {t:"Angle between (1,0,0) and (0,1,0):",p:"Angle",o:[{l:"A",v:"90 deg",c:true},{l:"B",v:"0 deg"},{l:"C",v:"45 deg"},{l:"D",v:"60 deg"}],s:"x-axis and y-axis => angle = 90 deg."},
     {t:"Equation of xy-plane:",p:"Plane",o:[{l:"A",v:"z=0",c:true},{l:"B",v:"x=0"},{l:"C",v:"y=0"},{l:"D",v:"x+y=0"}],s:"xy-plane: all points have z=0."},
     {t:"DC satisfy:",p:"DC",o:[{l:"A",v:"l^2+m^2+n^2=1",c:true},{l:"B",v:"l+m+n=1"},{l:"C",v:"l^2+m^2+n^2=0"},{l:"D",v:"l+m+n=0"}],s:"Direction cosines: l²+m²+n²=1."},
-    {t:"Distance from (0,0,0) to x+y+z=v3:",p:"Distance",o:[{l:"A",v:"1",c:true},{l:"B",v:"v3"},{l:"C",v:"3"},{l:"D",v:"1/v3"}],s:"|0+0+0-v3|/v(1+1+1) = v3/v3 = 1."},
+    {t:"Distance from (0,0,0) to x+y+z=√3:",p:"Distance",o:[{l:"A",v:"1",c:true},{l:"B",v:"√3"},{l:"C",v:"3"},{l:"D",v:"1/√3"}],s:"|0+0+0-√3|/√(1+1+1) = √3/√3 = 1."},
     {t:"Line (x-1)/2=(y-2)/3=(z-3)/4, DR:",p:"DR",o:[{l:"A",v:"(2,3,4)",c:true},{l:"B",v:"(1,2,3)"},{l:"C",v:"(3,5,7)"},{l:"D",v:"(2,3,4)"}],s:"Direction ratios: (2,3,4) from denominators."}
   ]},
   {num:25,name:"Linear Programming",q:[
@@ -310,8 +310,8 @@ var MATH_CHAPTERS = [
     {t:"Mean of B(n,p):",p:"Binomial",o:[{l:"A",v:"np",c:true},{l:"B",v:"npq"},{l:"C",v:"sqrt(npq)"},{l:"D",v:"nq"}],s:"Mean of binomial = np."},
     {t:"E(X)=5, E(X^2)=30, Var(X)=",p:"Variance",o:[{l:"A",v:"5",c:true},{l:"B",v:"30"},{l:"C",v:"25"},{l:"D",v:"6"}],s:"Var(X)=E(X^2)-[E(X)]^2=30-25=5."},
     {t:"P(A|B) = P(AnB)/P(B) if:",p:"Conditional",o:[{l:"A",v:"P(B)>0",c:true},{l:"B",v:"P(B)<0"},{l:"C",v:"P(A)>0"},{l:"D",v:"A and B independent"}],s:"Conditional probability defined when P(B)>0."},
-    {t:"Variance of B(n,p):",p:"Binomial",o:[{l:"A",v:"npq",c:true},{l:"B",v:"np"},{l:"C",v:"v(npq)"},{l:"D",v:"nq"}],s:"Variance of binomial = npq."},
-    {t:"P(A?B) for mutually exclusive:",p:"Addition",o:[{l:"A",v:"P(A)+P(B)",c:true},{l:"B",v:"P(A)P(B)"},{l:"C",v:"P(A)+P(B)-P(AnB)"},{l:"D",v:"P(A)/P(B)"}],s:"Mutually exclusive => P(AnB)=0 => P(A?B)=P(A)+P(B)."},
+    {t:"Variance of B(n,p):",p:"Binomial",o:[{l:"A",v:"npq",c:true},{l:"B",v:"np"},{l:"C",v:"√(npq)"},{l:"D",v:"nq"}],s:"Variance of binomial = npq."},
+    {t:"P(A∪B) for mutually exclusive:",p:"Addition",o:[{l:"A",v:"P(A)+P(B)",c:true},{l:"B",v:"P(A)P(B)"},{l:"C",v:"P(A)+P(B)-P(A∩B)"},{l:"D",v:"P(A)/P(B)"}],s:"Mutually exclusive => P(A∩B)=0 => P(A∪B)=P(A)+P(B)."},
     {t:"Three coins tossed, P(all heads):",p:"Probability",o:[{l:"A",v:"1/8",c:true},{l:"B",v:"1/4"},{l:"C",v:"1/2"},{l:"D",v:"3/8"}],s:"P(HHH) = (1/2)³ = 1/8."}
   ]}
 ];
