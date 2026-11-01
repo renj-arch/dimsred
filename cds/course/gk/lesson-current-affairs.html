@@ -1923,5 +1923,11 @@
         try{var done=JSON.parse(localStorage.getItem("cds-course-done")||"[]");if(done.indexOf(lessonSlug)!==-1){document.getElementById("complete-btn").textContent="\u2713 Completed!";document.getElementById("complete-btn").style.opacity="0.6"}}catch(e){}
         </script>
     </div>
+<!-- static-quiz-handlers -->
+<script src="../../../js/quiz-static.js"></script>
+<script>
+function selectOption(el, idx, verdict) { return QuizStatic.answer(el, verdict === 'correct'); }
+</script>
+<!-- /static-quiz-handlers -->
 </body>
 </html>
