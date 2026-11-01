@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T14:13:20.334Z",
-  "cursor": 303,
-  "built": 287
+  "updatedAt": "2026-11-01T14:54:35.834Z",
+  "cursor": 306,
+  "built": 290
  },
  "figs": {
   "11434945": {
@@ -1725,6 +1725,24 @@
   "61a0cfcb": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Resistance Welding: Heat &amp; Pressure</text><rect x=\"60\" y=\"40\" width=\"80\" height=\"80\" stroke-dasharray=\"2,2\"/><circle cx=\"100\" cy=\"70\" r=\"15\" fill=\"#222\"/><path d=\"M 60 40 L 140 40\" stroke-width=\"3\"/><text x=\"100\" y=\"95\" text-anchor=\"middle\">Workpieces</text><text x=\"100\" y=\"115\" text-anchor=\"middle\">(Contact Heat)</text><path d=\"M 60 120 L 60 40\" stroke-width=\"3\"/><path d=\"M 140 120 L 140 40\" stroke-width=\"3\"/><text x=\"50\" y=\"80\" text-anchor=\"end\">Electrode</text><text x=\"150\" y=\"80\" text-anchor=\"start\">Electrode</text><rect x=\"220\" y=\"40\" width=\"80\" height=\"80\" stroke-dasharray=\"2,2\"/><circle cx=\"260\" cy=\"70\" r=\"15\" fill=\"#222\"/><path d=\"M 220 40 L 300 40\" stroke-width=\"3\"/><text x=\"260\" y=\"95\" text-anchor=\"middle\">Workpieces</text><text x=\"260\" y=\"115\" text-anchor=\"middle\">(Flash/Projection)</text><path d=\"M 220 120 L 220 40\" stroke-width=\"3\"/><path d=\"M 300 120 L 300 40\" stroke-width=\"3\"/><text x=\"210\" y=\"80\" text-anchor=\"end\">Electrode</text><text x=\"310\" y=\"80\" text-anchor=\"start\">Electrode</text><rect x=\"60\" y=\"150\" width=\"240\" height=\"40\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">Process Types: Spot, Seam, Projection, Flash Butt, Upset Butt</text></svg>",
    "n": "name the resistance welding processes.",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "99628d08": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Butted Plates -->\n  <rect x=\"40\" y=\"80\" width=\"140\" height=\"40\" stroke-dasharray=\"2,2\"/>\n  <rect x=\"180\" y=\"80\" width=\"140\" height=\"40\" stroke-dasharray=\"2,2\"/>\n  <!-- Joint Line -->\n  <line x1=\"160\" y1=\"60\" x2=\"160\" y2=\"100\" stroke-width=\"3\"/>\n  <!-- Rotating Tool Probe -->\n  <circle cx=\"160\" cy=\"80\" r=\"15\"/>\n  <line x1=\"160\" y1=\"65\" x2=\"160\" y2=\"40\" stroke-width=\"3\"/>\n  <!-- Rotation Arrow -->\n  <path d=\"M140 70 A20 20 0 0 1 180 70\" fill=\"none\" stroke-dasharray=\"4,2\"/>\n  <!-- Welded Region (Plastic State) -->\n  <rect x=\"155\" y=\"75\" width=\"10\" height=\"30\" fill=\"#ddd\" opacity=\"0.5\"/>\n  <!-- Labels -->\n  <text x=\"80\" y=\"120\">Plate A</text>\n  <text x=\"220\" y=\"120\">Plate B</text>\n  <text x=\"140\" y=\"35\">Rotating Probe</text>\n  <text x=\"190\" y=\"35\">(Solid State)</text>\n  <text x=\"80\" y=\"160\">Butted Edges</text>\n</svg>",
+   "n": "what is friction stir welding?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "78ec5f9c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Thick Plates -->\n  <rect x=\"20\" y=\"40\" width=\"80\" height=\"140\" />\n  <rect x=\"260\" y=\"40\" width=\"80\" height=\"140\" />\n  <!-- Gap between plates -->\n  <line x1=\"100\" y1=\"40\" x2=\"100\" y2=\"180\" stroke-width=\"1\" />\n  <!-- Slag Pool (Molten) -->\n  <path d=\"M90,60 L110,60 L115,170 L85,170 Z\" opacity=\"0.3\" />\n  <!-- Wire Feeding -->\n  <line x1=\"40\" y1=\"20\" x2=\"40\" y2=\"180\" stroke-dasharray=\"2,2\" />\n  <circle cx=\"40\" cy=\"180\" r=\"3\" fill=\"#222\" />\n  <!-- Electric Current Path -->\n  <path d=\"M95,60 Q100,170 105,60\" stroke-width=\"2\" opacity=\"0.5\" />\n  <!-- Labels -->\n  <text x=\"30\" y=\"25\" text-anchor=\"end\">Wire</text>\n  <text x=\"100\" y=\"55\" text-anchor=\"middle\">Molten Slag</text>\n  <text x=\"100\" y=\"185\" text-anchor=\"middle\">Deep Joint</text>\n  <text x=\"30\" y=\"195\" text-anchor=\"end\">Thick Plates</text>\n  <text x=\"240\" y=\"195\" text-anchor=\"start\">Thick Plates</text>\n  <text x=\"180\" y=\"115\" text-anchor=\"middle\">Electric Heat</text>\n</svg>",
+   "n": "what is electro-slag welding?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "a4c9322b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Electron Beam Path -->\n  <path d=\"M80,100 L140,100\" stroke-dasharray=\"4,2\"/>\n  <circle cx=\"140\" cy=\"100\" r=\"3\" fill=\"#222\"/>\n  <!-- Workpiece -->\n  <rect x=\"150\" y=\"80\" width=\"60\" height=\"40\" stroke-width=\"1.5\"/>\n  <text x=\"175\" y=\"95\">Workpiece</text>\n  <!-- Weld Zone (Deep & Narrow) -->\n  <path d=\"M200,100 L230,100 L230,140 L200,140 Z\" fill=\"none\" stroke-width=\"1.5\"/>\n  <text x=\"215\" y=\"125\">Deep Narrow</text>\n  <!-- Vacuum Chamber -->\n  <rect x=\"0\" y=\"0\" width=\"360\" height=\"220\" fill=\"none\" stroke=\"#222\" stroke-dasharray=\"2,4\"/>\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">Vacuum Chamber</text>\n  <!-- Labels -->\n  <text x=\"90\" y=\"60\" font-weight=\"bold\">Focused Electron Beam</text>\n  <text x=\"240\" y=\"60\">Low Distortion</text>\n</svg>",
+   "n": "what is electron beam welding and its special feature?",
    "sub": "production",
    "at": "2026-11-01"
   }

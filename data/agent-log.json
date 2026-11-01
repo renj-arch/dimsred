@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T07:11:46.636Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address broken visuals immediately while MockPapers tackles the critical content holes. MetaLearn and MainsFresh are starved (0 fixes in last 3 runs), so they move to the end of the queue to process remaining low-priority items or catch up on unfinished goals without blocking high-impact repairs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (253 total)",
-       "text": "How does selective laser sintering (SLS) work? | What is direct metal laser sintering (DMLS)? | How does binder jetting work?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T07:22:58.019Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -695,8 +650,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T15:22:28.125Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the primary fixer for figures, while MockPapers addresses critical content holes. MainsFresh is required because filesPresent shows zero current materials, indicating a severe backlog of fresh content generation. MetaLearn and Invention are deferred to the end of the queue as per rules since they produced 0 fixes in the last two runs (starved of inputs). The order prioritizes high-impact gap filling before attem",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (290 total)",
+       "text": "What is friction stir welding? | What is electro-slag welding? | What is electron beam welding and its special feature?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T14:43:11.781Z",
+ "lastRun": "2026-11-01T15:22:28.125Z",
  "model": "qwen3.5:9b"
 }
