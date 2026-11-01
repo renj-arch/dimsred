@@ -32,7 +32,7 @@ A localStorage-based progress tracking system that:
 - `progress.html` — dedicated progress dashboard
 - Integration into `dashboard.html`
 
-## Phase 2: Knowledge Graph Explorer (Done)
+## Phase 2: Knowledge Graph Explorer (Superseded)
 
 ### Problem
 Topics are siloed across subjects. Users can't see how concepts connect.
@@ -48,6 +48,11 @@ Interactive graph explorer over the Ask index's co-mention relation.
 - Colours and filters use `type` (concept/person/event/org/place), not the source
   `cat` field, which is too noisy to present as a subject label.
 - Wired into `build-timeline.yml` (rebuild + commit) and `generate-sitemap.js`.
+- **Superseded:** `knowledge-graph.html` was removed because it duplicated
+  `flowchart.html` with a weaker graph and two pages drifted apart. The build
+  script and `data/knowledge-graph.json` remain only until the last
+  `search.html` consumer moves to `data/topic-search.json`; `flowchart.html` is
+  the single visualization page.
 
 ## Phase 3: Adaptive Learning Engine (Done)
 
@@ -163,6 +168,56 @@ is required, and the audit does not claim they are clean.
 The sitemap is generated in CI because a partial clone cannot enumerate every
 deployed URL locally.
 
+## Phase 7: Verified flowchart and course-question data (Done)
+
+### Problem
+`flowchart.html` lost the opening `<script>` of its main block and the closing
+`</script>` at EOF, so ~1,800 lines of JavaScript rendered as page text and the
+graph never initialised. A literal `}););` also broke the inline script. The
+relationship dialog could never open: an inline `display:none` outranked the
+`.on` class, and the code called `.forEach()` on the string values stored in
+`ADJ`/`CADJ`. Single click and double click fought over the same card.
+
+Separately, "Course Lessons" in the current-affairs quiz scraped `.q-card`
+markup from eight hardcoded lesson URLs. Those pages do not render questions as
+static cards (they embed `var practiceQs` arrays), five of the URLs did not
+exist, and `_generateStaticQuestions()` checked an empty pool before its async
+course XHR completed. The content-source checkboxes also mapped course
+questions to Generators first because they carry `_wikiCat='course-lesson'`.
+
+### Implementation
+- Restored both inline script tags, fixed the syntax error, and added a
+  regression check that parses every inline block and asserts public handlers
+  are declared at brace depth 0 (parsing alone misses the swallowed-function
+  class of bug).
+- Removed the inline `display:none`; the base `.rel-dialog` rule hides the
+  dialog and `.rel-dialog.on` shows it. Relationship rendering now normalises
+  strings, arrays and objects, deduplicates ADJ/CADJ pairs, and names the
+  authored branch an item belongs to.
+- Single click opens the relationship dialog after a 220 ms deferral; a
+  double click cancels it and opens the full note, so the overlay cannot eat
+  the second click.
+- Rebuilt the search datalist on every index rebuild instead of appending the
+  same 6,000 options again.
+- Added `scripts/build-course-questions.js`, which extracts all 290 lesson
+  `practiceQs` banks (10,450 raw questions) and applies deterministic gates:
+  one correct option, non-empty text/options, no duplicate options, no
+  ambiguous "not in options"/"closest"/"most likely" solutions, and one copy of
+  each question. It writes `data/course-questions.json` (1,363 questions,
+  ~402 KB).
+- `_loadCourseStaticQuestions()` now fetches that one manifest with a hard
+  timeout and one callback; `_generateStaticQuestions(done)` waits for it.
+- `_passesContentFilter()` resolves each question to exactly one source
+  (PIB/CA, Course, Archive, Generators) before reading the checkbox, so the
+  four toggles are independent.
+
+### Verification
+- jsdom sweep renders all 566 topic trees (including 32 authored mind-trees)
+  with 0 crashes; all 32 authored trees open the relationship dialog with
+  non-empty content, and single/double click behaviour is asserted.
+- `site-data` 35 assertions, `site-ui` 43, `exam-scope` 32, `quiz-handlers` 21;
+  `audit-site` reports 0 findings.
+
 ## Progress Log
 
 - 2026-10-31: Created roadmap and feature registry
@@ -229,3 +284,32 @@ deployed URL locally.
     `scripts/film/research.js`). research.js confirms 5/5 readable, 0 failed;
     author.js passes the source-count gate (full authoring/render requires
     LM_MODEL, which runs in GitHub Actions).
+- 2026-11-01: Flowchart repaired and DOM-tested
+  - Restored the missing opening/closing `<script>` tags and removed the
+    `}););` syntax error; the page no longer renders JavaScript as text.
+  - Fixed the relationship dialog (`display` precedence, ADJ/CADJ string
+    normalisation, authored-branch context, dedupe) and separated single-click
+    (dialog) from double-click (note).
+  - Added a jsdom sweep: 566 trees render with 0 crashes; 32 authored trees
+    pass 130 click/dialog/lane assertions. `site-ui` adds 43 assertions.
+- 2026-11-01: Course question manifest and source filters
+  - `scripts/build-course-questions.js` extracts 10,450 raw MCQs from 290
+    lesson banks and ships 1,363 unique, quality-gated questions in
+    `data/course-questions.json`.
+  - `current-affairs.html` loads the one manifest, waits for it before showing
+    Static GK, and maps each question to exactly one content-source checkbox.
+  - `site-data` now pins the manifest contract (35 assertions total).
+- 2026-11-01: Revision panel and wiki-fill pipeline
+  - `data/revision-content.json` is generated from the authored mind-trees and
+    shown by the flowchart Revision panel instead of the weaker raw note.
+  - `daily-wiki-fill.yml` splits git operations out of the matrix job and caps
+    `max-parallel` at 8; the expander is resumable and no longer races the
+    finalize commit.
+  - Removed `knowledge-graph.html` and its navigation links; `flowchart.html`
+    is the single visualization page.
+- 2026-11-01: Film author pipeline
+  - `bengal-famine-1943` now has five readable sources; modelling moved from
+    the 35B model (download failed at ~84%) to Qwen2.5-7B Q5_K_M with retries.
+  - S02 passes the five-line gate; S04 still fails the strict ledger audit on
+    the 7B CPU runner, so the film stays unpublished until QC passes. This is
+    fail-closed, not a relaxed gate.
