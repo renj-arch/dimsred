@@ -138,7 +138,7 @@ function decodeEntities(s) {
 }
 
 // UTF-8 text that was once decoded as windows-1252 shows up as mojibake
-// ("âˆš" for "√", "â‚‚" for "₂", "Clâ‚‚" for "Cl₂"). Reverse it by decoding
+// ("√" for "√", "₂" for "₂", "Cl₂" for "Cl₂"). Reverse it by decoding
 // each mojibake *run* back to UTF-8. Decoding run-by-run (instead of the whole
 // string) keeps genuine characters like "•" or "é" — which map to high bytes —
 // from poisoning the decode.

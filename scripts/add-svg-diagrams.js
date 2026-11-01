@@ -144,13 +144,13 @@ svgTag(260, 280,
   '<line x1="130" y1="140" x2="130" y2="60" stroke="#34d399" stroke-width="3" stroke-linecap="round"/>' +
   '<line x1="130" y1="140" x2="210" y2="140" stroke="#a78bfa" stroke-width="2" stroke-linecap="round"/>' +
   '<path d="M130 140 A40 40 0 0 1 170 140" fill="none" stroke="#f59e0b" stroke-width="2" stroke-dasharray="4,3"/>' +
-  '<text x="155" y="150" fill="#f59e0b" font-size="10" font-family="Inter">90Â°</text>'
+  '<text x="155" y="150" fill="#f59e0b" font-size="10" font-family="Inter">90°</text>'
 ) + '</div>');
 
 // ===== QUANT DIAGRAMS =====
 
 // Geometry - triangle diagram
-addDiagram('quant/geometry-trigo', '<div class="diagram-box"><div class="diagram-caption">Right triangle with labeled sides and trigonometric ratios (sin Î¸ = opposite/hypotenuse, cos Î¸ = adjacent/hypotenuse, tan Î¸ = opposite/adjacent)</div>' +
+addDiagram('quant/geometry-trigo', '<div class="diagram-box"><div class="diagram-caption">Right triangle with labeled sides and trigonometric ratios (sin θ = opposite/hypotenuse, cos θ = adjacent/hypotenuse, tan θ = opposite/adjacent)</div>' +
 svgTag(360, 280,
   '<polygon points="50,230 300,230 50,50" fill="rgba(167,139,250,.08)" stroke="#a78bfa" stroke-width="2"/>' +
   '<rect x="48" y="228" width="6" height="6" fill="#a78bfa" rx="1"/>' +
@@ -163,7 +163,7 @@ svgTag(360, 280,
 
   '<text x="190" y="110" fill="#f87171" font-size="11" font-family="Inter">Hypotenuse</text>' +
 
-  '<text x="55" y="90" fill="#fafafa" font-size="11" font-family="Inter">Î¸</text>' +
+  '<text x="55" y="90" fill="#fafafa" font-size="11" font-family="Inter">θ</text>' +
   '<path d="M60,220 Q90,200 90,185" fill="none" stroke="#fafafa" stroke-width="1.5"/>' +
 
   '<text x="65" y="222" fill="#fafafa" font-size="9" font-family="Inter">C</text>' +
@@ -172,14 +172,14 @@ svgTag(360, 280,
 ) + '</div>');
 
 // Mensuration - 3D shapes
-addDiagram('quant/mensuration', '<div class="diagram-box"><div class="diagram-caption">Common 3D shapes: cylinder (volume = Ï€rÂ²h), cone (volume = â…“Ï€rÂ²h), sphere (volume = â‚„â‚ƒÏ€rÂ³)</div>' +
+addDiagram('quant/mensuration', '<div class="diagram-box"><div class="diagram-caption">Common 3D shapes: cylinder (volume = πr²h), cone (volume = ⅓πr²h), sphere (volume = ₄₃πr³)</div>' +
 svgTag(560, 220,
   // Cylinder
   '<ellipse cx="100" cy="50" rx="50" ry="15" fill="rgba(96,165,250,.15)" stroke="#60a5fa" stroke-width="1.5"/>' +
   '<rect x="50" y="50" width="100" height="120" fill="rgba(96,165,250,.05)" stroke="#60a5fa" stroke-width="1.5"/>' +
   '<ellipse cx="100" cy="170" rx="50" ry="15" fill="rgba(96,165,250,.1)" stroke="#60a5fa" stroke-width="1.5"/>' +
   '<text x="100" y="205" fill="#60a5fa" font-size="10" text-anchor="middle" font-family="Inter">Cylinder</text>' +
-  '<text x="100" y="218" fill="#a1a1aa" font-size="9" text-anchor="middle" font-family="Inter">V = Ï€rÂ²h</text>' +
+  '<text x="100" y="218" fill="#a1a1aa" font-size="9" text-anchor="middle" font-family="Inter">V = πr²h</text>' +
   '<line x1="100" y1="170" x2="100" y2="195" stroke="#52525b" stroke-width="1"/>' +
   '<text x="55" y="115" fill="#a1a1aa" font-size="9" text-anchor="middle" font-family="Inter" transform="rotate(-90,55,115)">h</text>' +
   '<text x="130" y="190" fill="#a1a1aa" font-size="9" font-family="Inter">r</text>' +
@@ -189,13 +189,13 @@ svgTag(560, 220,
   '<line x1="240" y1="40" x2="290" y2="170" stroke="#34d399" stroke-width="1.5"/>' +
   '<ellipse cx="240" cy="170" rx="50" ry="14" fill="rgba(52,211,153,.1)" stroke="#34d399" stroke-width="1.5"/>' +
   '<text x="240" y="205" fill="#34d399" font-size="10" text-anchor="middle" font-family="Inter">Cone</text>' +
-  '<text x="240" y="218" fill="#a1a1aa" font-size="9" text-anchor="middle" font-family="Inter">V = â…“Ï€rÂ²h</text>' +
+  '<text x="240" y="218" fill="#a1a1aa" font-size="9" text-anchor="middle" font-family="Inter">V = ⅓πr²h</text>' +
 
   // Sphere
   '<circle cx="400" cy="110" r="65" fill="rgba(167,139,250,.1)" stroke="#a78bfa" stroke-width="1.5"/>' +
   '<ellipse cx="400" cy="110" rx="65" ry="20" fill="none" stroke="rgba(255,255,255,.1)" stroke-width="1"/>' +
   '<text x="400" y="205" fill="#a78bfa" font-size="10" text-anchor="middle" font-family="Inter">Sphere</text>' +
-  '<text x="400" y="218" fill="#a1a1aa" font-size="9" text-anchor="middle" font-family="Inter">V = â‚„â‚ƒÏ€rÂ³</text>' +
+  '<text x="400" y="218" fill="#a1a1aa" font-size="9" text-anchor="middle" font-family="Inter">V = ₄₃πr³</text>' +
   '<text x="430" y="100" fill="#a1a1aa" font-size="9" font-family="Inter">r</text>'
 ) + '</div>');
 
@@ -224,9 +224,9 @@ svgTag(480, 260,
   '<text x="305" y="165" fill="#a78bfa" font-size="10" font-family="Inter">Refracted ray</text>' +
 
   '<path d="M200,40 Q220,50 230,55" fill="none" stroke="#fafafa" stroke-width="1"/>' +
-  '<text x="180" y="55" fill="#fafafa" font-size="10" font-family="Inter">Î¸áµ¢</text>' +
+  '<text x="180" y="55" fill="#fafafa" font-size="10" font-family="Inter">θᵢ</text>' +
   '<path d="M245,42 Q255,50 260,55" fill="none" stroke="#fafafa" stroke-width="1"/>' +
-  '<text x="265" y="60" fill="#fafafa" font-size="10" font-family="Inter">Î¸áµ£</text>'
+  '<text x="265" y="60" fill="#fafafa" font-size="10" font-family="Inter">θᵣ</text>'
 ) + '</div>');
 
 // Mechanics - free body diagram
@@ -251,7 +251,7 @@ svgTag(420, 300,
   '<text x="275" y="195" fill="#f59e0b" font-size="10" font-family="Inter">f (friction)</text>' +
 
   '<path d="M70,250 Q120,230 150,210" fill="none" stroke="#fafafa" stroke-width="1.5"/>' +
-  '<text x="100" y="255" fill="#fafafa" font-size="10" font-family="Inter">Î¸</text>'
+  '<text x="100" y="255" fill="#fafafa" font-size="10" font-family="Inter">θ</text>'
 ) + '</div>');
 
 // Electrostatics - circuit diagram
@@ -337,13 +337,13 @@ svgTag(300, 340,
   '<text x="150" y="78" fill="#f59e0b" font-size="7" text-anchor="middle" font-family="Inter">A=T</text>' +
 
   '<line x1="100" y1="125" x2="200" y2="125" stroke="#a78bfa" stroke-width="2"/>' +
-  '<text x="150" y="128" fill="#a78bfa" font-size="7" text-anchor="middle" font-family="Inter">Gâ‰¡C</text>' +
+  '<text x="150" y="128" fill="#a78bfa" font-size="7" text-anchor="middle" font-family="Inter">G≡C</text>' +
 
   '<line x1="100" y1="175" x2="200" y2="175" stroke="#f59e0b" stroke-width="2"/>' +
   '<text x="150" y="178" fill="#f59e0b" font-size="7" text-anchor="middle" font-family="Inter">T=A</text>' +
 
   '<line x1="100" y1="225" x2="200" y2="225" stroke="#a78bfa" stroke-width="2"/>' +
-  '<text x="150" y="228" fill="#a78bfa" font-size="7" text-anchor="middle" font-family="Inter">Câ‰¡G</text>' +
+  '<text x="150" y="228" fill="#a78bfa" font-size="7" text-anchor="middle" font-family="Inter">C≡G</text>' +
 
   '<line x1="100" y1="275" x2="200" y2="275" stroke="#f59e0b" stroke-width="2"/>' +
   '<text x="150" y="278" fill="#f59e0b" font-size="7" text-anchor="middle" font-family="Inter">A=T</text>' +
