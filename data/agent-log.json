@@ -1,61 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T06:31:51.363Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (248 total)",
-       "text": "How does magnetic particle inspection work and what does it find? | What does a liquid-penetrant test detect? | What can eddy-current testing measure?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Power Plant Engineering (274 in pool)",
-       "text": "Power Plant Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T06:51:38.563Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -689,8 +634,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T13:57:25.361Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity and content depth. The 'mainsfresh' agent produced 0 fixes in the last two runs, so it must be queued last despite its name implying freshness; we will prioritize agents with recent output or higher impact on critical metrics. We start by addressing the most severe broken pages (critical faults), then move to filling missing figures, and finally tackle pending ideas once stability is restored.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (284 total)",
+       "text": "How does gas cutting work? | What is plasma arc cutting? | Name the two main transfer modes of MIG welding."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "1 fresh mock questions on Engineering Mathematics (335 in pool)",
+       "text": "Engineering Mathematics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T13:39:10.630Z",
+ "lastRun": "2026-11-01T13:57:25.361Z",
  "model": "qwen3.5:9b"
 }
