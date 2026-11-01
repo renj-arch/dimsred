@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-01T09:03:27.083Z",
-  "cursor": 8,
-  "count": 314,
+  "updatedAt": "2026-11-01T09:55:13.067Z",
+  "cursor": 9,
+  "count": 324,
   "lastAttempt": {
-   "at": "2026-11-01T09:26:44.965Z",
-   "reason": "nothing"
+   "at": "2026-11-01T09:55:13.067Z",
+   "reason": "added 10"
   }
  },
  "items": [
@@ -2834,6 +2834,96 @@
    "a": "8 N·m",
    "h": "Use Newton's second law for rotation: τ = Iα.",
    "s": "Torque (τ) is directly proportional to the moment of inertia (I) and angular acceleration (α). Calculation: τ = 2 kg·m² × 4 rad/s² = 8 N·m.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Define the term 'Coefficient of Performance' (COP) for a refrigeration cycle and explain its relationship with the Carnot COP.",
+   "a": "COP = Q_L / W_net; COP_Carnot = T_L / (T_H - T_L).",
+   "h": "COP is the ratio of cooling effect to work input; compare with Carnot limits.",
+   "s": "The Coefficient of Performance (COP) for a refrigeration cycle is defined as the ratio of the heat absorbed from the low-temperature reservoir (cooling effect) to the net work input required. For an ideal Carnot refrigerator, the maximum possible COP depends only on the absolute temperatures of the hot and cold reservoirs, given by T_L / (T_H - T_L). Real cycles always have a lower COP than the Carnot COP due to irreversibilities like friction and non-isentropic compression.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "A vapor-compression refrigeration system uses R-134a. If the evaporator pressure is 2 bar and the condenser pressure is 10 bar, calculate the theoretical maximum COP assuming isentropic compression and ideal heat exchangers (use standard saturation properties: h_g at 2 bar ≈ 251 kJ/kg, h_f at 10 bar ≈ 134 kJ/kg, s_g at 2 bar ≈ 0.92 kJ/kg-K, s_f+ x*s_fg at 10 bar requires interpolation or assume standard table values leading to h_2s ≈ 275 kJ/kg and h_3 = h_4 = 134 kJ/kg).",
+   "a": "COP ≈ 1.86 (based on standard property interpolation for given pressures).",
+   "h": "Use enthalpy values from R-134a tables for isentropic compression and throttling.",
+   "s": "For an ideal vapor-compression cycle, the cooling effect is h_1 - h_4 and work input is h_2s - h_1. Using R-134a properties at 2 bar (saturation) and 10 bar (condensation), h_1 ≈ 251 kJ/kg, h_4 = h_3 ≈ 134 kJ/kg, and assuming isentropic compression yields h_2s ≈ 275 kJ/kg. The COP is calculated as (h_1 - h_4) / (h_2s - h_1). Note: Exact values depend on specific refrigerant tables used.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Explain the function of a capillary tube in a domestic refrigerator and list two disadvantages compared to an expansion valve.",
+   "a": "Function: Throttling device; Disadvantages: No flow control, sensitive to oil accumulation.",
+   "h": "Capillary tube acts as a fixed restriction; disadvantages include lack of regulation.",
+   "s": "A capillary tube serves as a simple, low-cost throttling device that reduces refrigerant pressure from the condenser to the evaporator while maintaining a constant flow rate. Its two main disadvantages are that it cannot adjust to varying load conditions (unlike an expansion valve) and it is prone to clogging if oil accumulates or if non-condensable gases enter the system.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "In a psychrometric process, air enters a cooling coil at 30°C dry bulb temperature and 50% relative humidity. The coil surface temperature is 12°C. Determine the state of the air leaving the coil if the apparatus dew point (ADP) is 8°C.",
+   "a": "Air leaves at approximately 12°C dry bulb and 100% relative humidity (saturated).",
+   "h": "Air leaves saturated at ADP; check if DBT > ADP.",
+   "s": "When air passes over a cooling coil, it follows a process line towards the saturation curve. If the coil surface temperature is below the dew point of the incoming air, condensation occurs. The air leaving the coil typically reaches a state very close to saturation at a temperature slightly above or equal to the apparatus dew point (ADP), depending on contact efficiency.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Calculate the tonnage of refrigeration required to cool 500 kg of water from 30°C to 5°C in 2 hours, given the specific heat of water is 4.18 kJ/kg·K.",
+   "a": "≈ 2.07 TR.",
+   "h": "Q = m*C_p*ΔT; convert kJ/min to TR (1 TR ≈ 210 kJ/min).",
+   "s": "The total heat to be removed is Q = m * C_p * ΔT = 500 kg * 4.18 kJ/kg·K * 25 K = 52,250 kJ. The time duration is 2 hours (120 minutes). The required cooling rate is 52,250 kJ / 120 min ≈ 435.42 kJ/min. Since 1 Ton of Refrigeration (TR) is equivalent to 210 kJ/min, the required capacity is 435.42 / 210 ≈ 2.07 TR.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Describe the phenomenon of 'frost formation' on an evaporator coil and how it affects system performance.",
+   "a": "Frost forms when coil temp < dew point and < 0°C; reduces efficiency.",
+   "h": "Frost acts as insulation; reduces heat transfer coefficient.",
+   "s": "Frost forms on the evaporator coil when the surface temperature is below both the dew point of the air and 0°C. This frost layer acts as a thermal insulator, significantly increasing the thermal resistance between the refrigerant and the air, thereby reducing the heat transfer coefficient and lowering the overall cooling capacity of the system.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "In a centrifugal chiller, what happens to the discharge pressure if the speed of the impeller is increased by 10%?",
+   "a": "Discharge pressure increases by approximately 21%.",
+   "h": "Pressure varies with square of speed (affinity laws).",
+   "s": "According to the affinity laws for centrifugal compressors/chillers, the head (pressure rise) developed is proportional to the square of the impeller speed. Therefore, if the speed increases by 10%, the discharge pressure increases by approximately (1.1)^2 - 1 = 21%.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "What is the primary function of a liquid-suction heat exchanger in a vapor-compression refrigeration system?",
+   "a": "Subcools condenser outlet liquid and superheates compressor inlet vapor.",
+   "h": "Subcools liquid and superheats vapor; improves efficiency.",
+   "s": "A liquid-suction heat exchanger transfers heat from the low-pressure suction gas to the high-pressure liquid line. This subcools the liquid refrigerant before it enters the expansion valve (increasing its enthalpy drop) and superheats the vapor entering the compressor (preventing liquid slugging), thereby improving system safety and often overall COP.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Calculate the relative humidity of air if the partial pressure of water vapor is 1.5 kPa and the saturation pressure at that temperature is 3.0 kPa.",
+   "a": "Relative Humidity = 50%.",
+   "h": "RH = (p_v / p_sat) * 100.",
+   "s": "Relative humidity is defined as the ratio of the actual partial pressure of water vapor to the saturation pressure of water vapor at the same temperature, expressed as a percentage. Using the given values: RH = (1.5 kPa / 3.0 kPa) * 100 = 50%.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Refrigeration & Air Conditioning",
+   "q": "Explain why the condenser in an air-conditioning system is often placed on the roof or outside the building.",
+   "a": "To reject waste heat to the cooler ambient environment efficiently.",
+   "h": "Rejects heat to ambient; needs airflow and space.",
+   "s": "The condenser rejects the heat absorbed from the cooled space plus the work input as waste heat. Placing it outside or on the roof allows direct exposure to ambient air for effective convective cooling and prevents the hot exhaust air from being recirculated back into the conditioned space, which would drastically reduce efficiency.",
    "at": "2026-11-01"
   }
  ]
