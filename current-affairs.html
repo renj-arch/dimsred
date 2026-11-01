@@ -8179,13 +8179,26 @@ function prevQuestion() {
             ];
             var allQ = [];
             var loaded = 0;
+            var failed = 0;
+            var timeoutId = setTimeout(function() {
+                if (loaded + failed === lessonUrls.length) {
+                    cb(allQ);
+                }
+            }, 15000); // 15 second timeout
+            
+            function checkDone() {
+                if (loaded + failed === lessonUrls.length) {
+                    if (timeoutId) clearTimeout(timeoutId);
+                    cb(allQ);
+                }
+            }
+            
             lessonUrls.forEach(function(url) {
                 var xhr = new XMLHttpRequest();
                 xhr.onload = function() {
                     loaded++;
                     if (xhr.status === 200) {
                         var html = xhr.responseText;
-                        // Extract quiz cards from the lesson HTML
                         var qCards = html.match(/<div class="q-card"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/g);
                         if (qCards) {
                             qCards.forEach(function(card) {
@@ -8207,19 +8220,20 @@ function prevQuestion() {
                             });
                         }
                     }
-                    if (loaded === lessonUrls.length) {
-                        cb(allQ);
-                    }
+                    checkDone();
+                };
+                xhr.onerror = function() {
+                    failed++;
+                    checkDone();
+                };
+                xhr.ontimeout = function() {
+                    failed++;
+                    checkDone();
                 };
                 xhr.open('GET', url + '?t=' + Date.now(), true);
+                xhr.timeout = 10000; // 10 second timeout per request
                 xhr.send();
             });
-            var checkDone = setInterval(function() {
-                if (loaded === lessonUrls.length) {
-                    clearInterval(checkDone);
-                    cb(allQ);
-                }
-            }, 100);
         }
         
 
