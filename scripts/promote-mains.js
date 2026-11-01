@@ -102,6 +102,9 @@ const promoted = {
   reviewedAt: new Date().toISOString(),
   quality: { score: qa.score, words: qa.words, targetWords: qa.targetWords, anchors: qa.anchors }
 };
+if (item.subject) promoted.subject = String(item.subject).slice(0, 80);
+if (item.lang) promoted.lang = String(item.lang).slice(0, 12);
+if (item.task) promoted.task = String(item.task).slice(0, 40);
 
 bank.questions.push(promoted);
 bank.meta = bank.meta || {};

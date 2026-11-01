@@ -10,9 +10,9 @@
 // It cannot judge whether an argument is brilliant. It can stop the obvious
 // weak items, and the owner still reads every promoted answer.
 
-const DIRECTIVE = /\b(discuss|examine|critically|evaluate|analyse|analyze|elucidate|comment|explain|compare|contrast|assess|justify|what|why|how|to what extent|bring out|highlight)\b/i;
-const CONCLUSION = /\b(way forward|conclusion|outlook|recommendation|resolution|takeaway|epilogue|what should change|the road ahead)\b/i;
-const INTRO = /\b(introduction|context|background|significance|overview|setting the scene|why it matters)\b/i;
+const DIRECTIVE = /\b(discuss|examine|critically|evaluate|analyse|analyze|elucidate|comment|explain|compare|contrast|assess|justify|what|why|how|to what extent|bring out|highlight|write|summarise|summarize|precis|translate|draft)\b|(?:लिखिए|लिखें|सारांश|अनुवाद|विवेचना|व्याख्या)/i;
+const CONCLUSION = /\b(way forward|conclusion|outlook|recommendation|resolution|takeaway|epilogue|summary|precis|what should change|the road ahead)\b|(?:निष्कर्ष|सारांश|उपसंहार)/i;
+const INTRO = /\b(introduction|context|background|significance|overview|setting the scene|why it matters)\b|(?:भूमिका|प्रस्तावना|परिचय)/i;
 const META = /\b(as an ai|as a language model|i cannot|i think|in this answer|this answer will|let me (?:explain|write|answer)|here(?:'s| is) (?:the|my|a) (?:answer|response|json))\b/i;
 const PLACEHOLDER = /(\[insert|tbd|todo|lorem ipsum|xxx)/i;
 const ANCHOR = /\b(article\s+\d+[a-z]?|section\s+\d+|act\s+\d{4}|committee|commission|court|tribunal|scheme|yojana|mission|policy|agreement|convention|treaty|fund|index|report|survey|census|budget|gst|rbi|sebi|niti aayog|supreme court|high court|parliament|constitution)\b/gi;
@@ -27,6 +27,8 @@ function targetWords(marks) {
   if (m === 10) return 150;
   if (m === 15) return 250;
   if (m === 20) return 300;
+  if (m === 25) return 375;
+  if (m === 30) return 450;
   if (m === 125) return 1000;
   if (m === 250) return 2000;
   return 200;
@@ -69,11 +71,15 @@ function assess(item) {
   const anchors = countAnchors(body + ' ' + (item.laws || []).join(' '));
   const values = countValues(body);
 
-  if (q.length < 40 || q.length > 700) failures.push('question must be 40–700 characters');
+  const paper = String(item.paper || '');
+  const isEssay = paper === 'essay';
+  const isLanguage = /^lang-/.test(paper);
+  const maxQ = isLanguage ? 1000 : 900;
+  if (q.length < 40 || q.length > maxQ) failures.push('question must be 40–' + maxQ + ' characters');
   if (/[<>]/.test(q)) failures.push('question contains markup');
-  if (item.paper !== 'essay' && !DIRECTIVE.test(q)) failures.push('question has no directive word (Discuss / Examine / Evaluate / What / Why…)');
-  if (!/\b(10|15|20|125|250)\s*marks?\b/i.test(q)) warnings.push('question does not state the marks');
-  if (!/\b\d{3,4}\s*words?\b/i.test(q)) warnings.push('question does not state the word limit');
+  if (!isEssay && !isLanguage && !DIRECTIVE.test(q)) failures.push('question has no directive word (Discuss / Examine / Evaluate / What / Why…)');
+  if (!/\b(10|15|20|25|30|125|250)\s*(?:marks?|अंक)\b/i.test(q)) warnings.push('question does not state the marks');
+  if (!/\b\d{3,4}\s*(?:words?|शब्द)\b/i.test(q)) warnings.push('question does not state the word limit');
   if (META.test(q + ' ' + body)) failures.push('contains model/meta text');
   if (PLACEHOLDER.test(q + ' ' + body)) failures.push('contains a placeholder');
 
@@ -102,7 +108,7 @@ function assess(item) {
     warnings.push('answer is long: ' + total + ' words (target ' + target + ')');
   }
 
-  if (item.paper !== 'essay' && anchors < 2 && !(item.paper === 'gs4' && values >= 2)) {
+  if (!isEssay && !isLanguage && anchors < 2 && !(paper === 'gs4' && values >= 2)) {
     failures.push('needs at least two checkable anchors (act, case, committee, scheme, report…) or, for GS4, two named ethical values');
   }
   if (!Array.isArray(item.marksGuide) || item.marksGuide.length < 3) failures.push('needs at least 3 examiner-reward points');
