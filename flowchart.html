@@ -197,7 +197,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
   </div>
 </div>
 
-<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a verified relationship from data/relations.json or an authored mind-tree (data/topic-layers.json). Co-mention lines are gone: they were word co-occurrence over a trivia corpus, not knowledge, and they were deciding which cards appeared at all. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to open its relationship dialog (with a <b>Make Center</b> button to drill in) · <b>double-click</b> to read the full note · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
+<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with a hand-authored mind-tree (data/topic-layers.json) &mdash; for example the freedom struggle &mdash; so one focus carries its own Phases/People/Geography structure. Only hand-written trees are drawn: the machine-generated co-mention entries in the same file are ignored, because word co-occurrence is not knowledge. Every arrow is therefore a verified relationship from data/relations.json or an authored mind-tree. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to open its relationship dialog (with a <b>Make Center</b> button to drill in) · <b>double-click</b> to read the full note · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
 <!-- The graph resolver lives in one place and is shared with scripts/build-timeline.js,
      scripts/gen-topic-layers.js, map.html and revision.html. It used to be copied
      into this file under the comment "shared logic copied from flowchart.html (must
@@ -504,8 +504,9 @@ function sameEntity(a,b){
 function fetchJson(url){return fetch(url).then(function(r){if(!r.ok)throw new Error(url+' '+r.status);return r.json();});}
 // Curated "topic layers": authored per-topic mind-trees (data/topic-layers.json)
 // that graft onto the mined graph at load time — each branch becomes a section
-// node and every item a curated card under it, so a topic like World War II can
-// carry the full encyclopedic tree the mined co-mentions alone can't express.
+// node and every item a curated card under it, so a topic like the freedom
+// struggle can carry the full encyclopedic tree the mined co-mentions alone
+// cannot express. Machine-generated entries are skipped in curate() below.
 var LAYERS={},WT={};
 // Curated edges live in CADJ, not ADJ: authored tree is only visible when you
 // open that topic itself, so another topic that just happens to co-mention the
@@ -533,21 +534,25 @@ var NOTES={};
 // free (keyed by card name only), so this is what lets a card's note explain why
 // it belongs on the topic it's currently being viewed under.
 var REL_EV={};
-// Whether a layered topic is hand-authored or machine-generated. Only 6 of the
-// 594 entries in data/topic-layers.json are authored; the other 588 carry _gen:true.
-// Both get the layered layout, but only a real one may claim to be curated -- the
-// badge used to read "curated spine" on all 594, which handed machine-generated
-// co-mention buckets the same authority as a hand-written tree.
-var CUR_AUTHORED={};
+// Only hand-authored mind-trees are drawn. data/topic-layers.json also carries
+// machine-generated entries (`_gen:true`): co-mention buckets whose "branches"
+// are People & Leaders / Geography & Places and whose items are "mentioned
+// with" counts and no authored explanation. They used to get the same layered
+// layout as a real tree, which dressed word co-occurrence up as structure and
+// gave a junk entry more authority than an honest empty card. They are now
+// skipped at load: a topic with no authored tree falls back to the verified
+// graph, and a topic with no verified edge says so instead of drawing noise.
+var GEN_SKIPPED=0;
 function curate(layers){
   LAYER_SO=0;
+  GEN_SKIPPED=0;
   Object.keys(layers||{}).forEach(function(key){
     var topic=layers[key];
     if(!topic||!topic.branches||!topic.branches.length)return;
+    if(topic._gen){GEN_SKIPPED++;return;}
     var central=findByName(key);
     if(!central||isJunk(central))return;
     CUR_CENTRAL[central.id]=1;
-    CUR_AUTHORED[central.id]=topic._gen?0:1;
     CUR_KEY[central.id]=key;
     function addBranch(parentId,br,bi,path){
       var bid='crt|'+key+'|B|'+path;
@@ -1774,7 +1779,7 @@ function shade(c){
 function laneTitle(lk){return typeLabel(lk);}
 function paintHead(n){
   var th=document.getElementById('topichead');
-  var meta=[nt(n),spanLabel(n),(n.count||0)+' mentions',(CUR_CENTRAL[n.id]?(CUR_AUTHORED[n.id]?'curated spine':'auto-generated layers'):'')].filter(Boolean).join(' · ');
+  var meta=[nt(n),spanLabel(n),(n.count||0)+' mentions',(CUR_CENTRAL[n.id]?'curated spine':'')].filter(Boolean).join(' · ');
   var pts='';
   // The graph stores one cats entry per question-bank shard, so a broad topic
   // like Mahatma Gandhi carries 500+ pills that are really ~170 subjects. Merge
