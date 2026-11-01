@@ -61,8 +61,14 @@ jobs:
             exit 0
           fi
           git commit -m "Mains: promote ${{ inputs.id }} to the reviewed bank"
-          git pull --rebase origin main
-          git push origin HEAD:main
+          pushed=0
+          for attempt in 1 2 3; do
+            git pull --rebase origin main 2>/dev/null || true
+            if git push origin HEAD:main; then pushed=1; break; fi
+            echo "Push rejected (attempt $attempt); retrying in 5s..."
+            sleep 5
+          done
+          [ "$pushed" -eq 1 ] || { echo "Could not push promoted mains item" >&2; exit 1; }
 
       - name: Summary
         if: always()
