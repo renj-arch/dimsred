@@ -206,3 +206,26 @@ deployed URL locally.
     lists, lossy math in 25+ papers and lessons, all 26 generated JEE Maths
     chapters, the shared course-practice bank and its generator templates
   - Recorded four known-bad pages as rewrite targets instead of masking them
+- 2026-11-01: Quiz exam-scope ground check (replaces blind "High relevance")
+  - Added `js/exam-scope.js`: a deterministic, auditable exam-specific vs
+    out-of-exam classifier. Explicit `examScope`/`relevance` metadata wins;
+    otherwise a specific syllabus anchor (grounded in `data/upsc-topics.json`
+    and `data/pyq-patterns.json`) is required. Broad subject words alone no
+    longer stamp an item "high"; biographies, foreign legal trivia and
+    off-syllabus material are out or review, each with explicit reasons.
+  - Wired `ExamScope.annotate()` into both archive loaders in
+    `current-affairs.html` and into `_renderRelevanceTag` / the relevance
+    filter so missing tiers default to `low`, never `medium`.
+  - Added `scripts/lib/exam-scope.test.js` (32 assertions, `npm run
+    test-exam-scope`) covering the reported Addison Brown bar-exam item
+    (out/low), a Fundamental Rights item (exam/high), and the off-syllabus
+    guard (cricket/film are out).
+  - `npm run audit-site` reports 1,244 HTML pages with zero findings; all test
+    suites pass (audit 39, ui 15, data 27, quiz-handlers 21, exam-scope 32).
+- 2026-11-01: Film source gate for bengal-famine-1943
+  - Expanded `data/film-slate.json` bengal-famine-1943 sources from 2 to 5
+    (added Winston Churchill, British India, World War II), satisfying the
+    authoring gate of at least five readable sources (`scripts/film/author.js`,
+    `scripts/film/research.js`). research.js confirms 5/5 readable, 0 failed;
+    author.js passes the source-count gate (full authoring/render requires
+    LM_MODEL, which runs in GitHub Actions).
