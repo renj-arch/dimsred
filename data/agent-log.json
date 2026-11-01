@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T15:22:28.125Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the primary fixer for figures, while MockPapers addresses critical content holes. MainsFresh is required because filesPresent shows zero current materials, indicating a severe backlog of fresh content generation. MetaLearn and Invention are deferred to the end of the queue as per rules since they produced 0 fixes in the last two runs (starved of inputs). The order prioritizes high-impact gap filling before attem",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (290 total)",
-       "text": "What is friction stir welding? | What is electro-slag welding? | What is electron beam welding and its special feature?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T16:01:14.380Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -813,8 +763,36 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T22:47:37.331Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T22:38:46.519Z",
+ "lastRun": "2026-11-01T22:47:37.331Z",
  "model": "qwen3.5:9b"
 }
