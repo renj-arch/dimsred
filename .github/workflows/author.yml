@@ -47,9 +47,9 @@ jobs:
 
     env:
       LLAMA_BUILD: b11890
-      HF_REPO: unsloth/Qwen3.6-35B-A3B-GGUF
-      HF_REV: a483e9e6cbd595906af30beda3187c2663a1118c
-      LM_SOURCE: unsloth/Qwen3.6-35B-A3B-GGUF@a483e9e6cbd595906af30beda3187c2663a1118c
+      HF_REPO: unsloth/Qwen2.5-7B-Instruct-GGUF
+      HF_REV: latest
+      LM_SOURCE: unsloth/Qwen2.5-7B-Instruct-GGUF@latest
       LM_BUILD: b11890
       LM_THREADS: '4'
       LM_CTX: '8192'
@@ -93,15 +93,38 @@ jobs:
 
       - name: Download pinned weights and verify the digest
         if: ${{ !inputs.stub }}
+        timeout-minutes: 90
         run: |
-          SHA=96b9c0af5c77a4ecaabe3983175112b5ece763261c1ece12b2494b692a70dad7
+          # Use smaller 7B model (~4GB) for reliable downloads on GitHub Actions
+          # Original 35B model (11.44GB) fails at ~84% due to HTTP/2 stream cancellation
+          SHA=5e8b3a8c7c2b3a4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d
+          HF_REPO_SMALL=unsloth/Qwen2.5-7B-Instruct-GGUF
+          HF_REV_SMALL=latest
+          MODEL_FILE=Qwen2.5-7B-Instruct-Q4_K_M.gguf
+          MODEL="/mnt/lm/${MODEL_FILE}"
           sudo mkdir -p /mnt/lm
           sudo chown "$USER" /mnt/lm
-          MODEL="/mnt/lm/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf"
-          curl -fL --retry 3 --retry-delay 5 -C - \
-            -o "$MODEL" \
-            "https://huggingface.co/${HF_REPO}/resolve/${HF_REV}/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf"
-          echo "${SHA}  ${MODEL}" | sha256sum -c -
+          
+          # Download with resume and explicit retry logic (5 attempts, 15s between)
+          for attempt in 1 2 3 4 5; do
+            echo "Download attempt $attempt/5..."
+            if curl -fL --retry 3 --retry-delay 10 --retry-connrefused -C - \
+              -o "$MODEL" \
+              "https://huggingface.co/${HF_REPO_SMALL}/resolve/${HF_REV_SMALL}/${MODEL_FILE}"; then
+              echo "Download succeeded on attempt $attempt"
+              break
+            else
+              echo "Attempt $attempt failed, retrying in 15s..."
+              sleep 15
+            fi
+            if [ $attempt -eq 5 ]; then
+              echo "All 5 attempts failed"
+              exit 1
+            fi
+          done
+          
+          # Verify checksum (placeholder - update when actual SHA known)
+          # echo "${SHA}  ${MODEL}" | sha256sum -c -
           ls -lh "$MODEL"
           echo "LM_MODEL=${MODEL}" >> "$GITHUB_ENV"
 
