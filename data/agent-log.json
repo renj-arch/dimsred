@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T18:48:51.447Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual data. MainsFresh is required immediately since papers, questions, sidecar, and syllabus files are all missing, indicating a complete content rebuild is needed before any new ideas or meta-learning can occur. MetaLearn has produced zero fixes in the last three runs and should be placed last as per starvation protocol, even though it hasn't been broken yet.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (175 total)",
-       "text": "What is the defect lap in a forging? | What is a cold shut in forging? | What is ring rolling?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwqvnb9 (gs3, 15 marks): Critically examine the effectiveness of India's National Clean Air Programme (NCAP) in addressing urban particulate matt",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T19:02:21.612Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -685,8 +624,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T01:05:27.233Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults and figure gaps are the highest priority; BankFigures must address the 79 missing figures immediately to prevent broken content. MockPapers should follow to generate fresh exam materials since files are currently absent. Invention and MetaLearn agents have produced zero fixes in recent runs and will be placed last as they likely require standing goals or new inputs before contributing.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (218 total)",
+       "text": "Why is a free-cutting steel better machinable? | What is the purpose of a cutting fluid? | Name the main cutting tool materials in order of increasing hot hardness."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T00:22:18.480Z",
+ "lastRun": "2026-11-01T01:05:27.233Z",
  "model": "qwen3.5:9b"
 }

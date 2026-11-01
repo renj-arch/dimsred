@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T00:02:59.062Z",
-  "cursor": 225,
-  "built": 215
+  "updatedAt": "2026-11-01T00:35:56.046Z",
+  "cursor": 228,
+  "built": 218
  },
  "figs": {
   "11434945": {
@@ -1293,6 +1293,24 @@
   "1bfe1a68": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Machinability Concept</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"50\">Workpiece</text><rect x=\"40\" y=\"60\" width=\"280\" height=\"10\"/><line x1=\"40\" y1=\"70\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"70\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"195\">Tool</text><polygon points=\"320,60 320,100 340,100\" fill=\"#222\"/><line x1=\"340\" y1=\"100\" x2=\"340\" y2=\"180\"/><text x=\"350\" y=\"195\">Chip</text><path d=\"M 320 70 Q 360 100 340 130\" stroke=\"#222\" fill=\"none\"/><text x=\"330\" y=\"105\">Easy Chipping</text><line x1=\"80\" y1=\"190\" x2=\"280\" y2=\"190\"/><text x=\"70\" y=\"210\">Long Tool Life</text><circle cx=\"180\" cy=\"190\" r=\"5\"/><text x=\"175\" y=\"205\">Fixed Speed</text></svg>",
    "n": "define machinability.",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "7b64b4b5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Free-Cutting Steel</text><rect x=\"40\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><rect x=\"120\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><rect x=\"200\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><text x=\"55\" y=\"70\">Tool Tip</text><text x=\"55\" y=\"95\">Cutting Edge</text><text x=\"55\" y=\"120\">Chip Break</text><text x=\"55\" y=\"145\">Short Chip</text><line x1=\"100\" y1=\"80\" x2=\"160\" y2=\"80\"/><line x1=\"100\" y1=\"90\" x2=\"160\" y2=\"90\"/><line x1=\"100\" y1=\"100\" x2=\"160\" y2=\"100\"/><line x1=\"100\" y1=\"110\" x2=\"160\" y2=\"110\"/><line x1=\"100\" y1=\"120\" x2=\"160\" y2=\"120\"/><text x=\"175\" y=\"95\">MnS Inclusion</text><text x=\"175\" y=\"120\">Lubricates &amp; Breaks Chip</text><path d=\"M 240 60 Q 280 30 320 60\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"250\" y=\"45\">Long Chip (Plain Steel)</text><text x=\"290\" y=\"70\">Short Chip (Free-Cutting)</text></svg>",
+   "n": "why is a free-cutting steel better machinable?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "b0e29c73": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Cutting Fluid Functions</text><rect x=\"40\" y=\"40\" width=\"100\" height=\"120\" rx=\"5\"/><text x=\"90\" y=\"65\" text-anchor=\"middle\" font-weight=\"bold\">Tool &amp; Work</text><path d=\"M 60 70 L 60 140\" stroke-dasharray=\"3,3\"/><text x=\"50\" y=\"105\" text-anchor=\"end\">Cooling</text><path d=\"M 140 70 L 140 140\" stroke-dasharray=\"3,3\"/><text x=\"150\" y=\"105\" text-anchor=\"start\">Lubricate</text><rect x=\"220\" y=\"40\" width=\"100\" height=\"60\" rx=\"5\"/><path d=\"M 240 70 L 300 70 L 300 90 L 240 90 Z\" fill=\"#222\" opacity=\"0.2\"/><text x=\"280\" y=\"85\" text-anchor=\"middle\">Chip Flow</text><path d=\"M 240 100 L 300 100 L 300 120 L 240 120 Z\" fill=\"#222\" opacity=\"0.2\"/><text x=\"280\" y=\"115\" text-anchor=\"middle\">Wash Swarf</text><rect x=\"40\" y=\"170\" width=\"100\" height=\"40\" rx=\"5\"/><path d=\"M 60 180 L 60 200 M 90 180 L 90 200\" stroke-dasharray=\"3,3\"/><text x=\"75\" y=\"195\" text-anchor=\"middle\">Clean Finish</text></svg>",
+   "n": "what is the purpose of a cutting fluid?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "8540aa2e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Hot Hardness vs Speed</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"55\" x2=\"40\" y2=\"180\"/><text x=\"35\" y=\"65\">Low</text><text x=\"35\" y=\"175\">High</text><text x=\"25\" y=\"65\">Speed</text><text x=\"330\" y=\"65\">Speed</text><path d=\"M 40 180 L 100 120 L 160 80 L 220 60\" stroke-dasharray=\"4,2\"/><path d=\"M 40 175 L 320 65\"/><text x=\"95\" y=\"115\">High-speed</text><text x=\"165\" y=\"85\">Cemented</text><text x=\"225\" y=\"65\">Ceramics</text><text x=\"245\" y=\"65\">CBN &amp; Diamond</text><rect x=\"30\" y=\"190\" width=\"300\" height=\"20\" fill=\"#eee\"/><text x=\"180\" y=\"205\" text-anchor=\"middle\">Order of increasing hot hardness</text></svg>",
+   "n": "name the main cutting tool materials in order of increasing hot hardness.",
    "sub": "production",
    "at": "2026-11-01"
   }
