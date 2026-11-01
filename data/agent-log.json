@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T07:45:21.652Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual assets. MockPapers is next because file presence is false, indicating a complete lack of exam content to study. MetaLearn will follow to generate fresh daily material once core structure exists. Invention should be last as it requires stable inputs and has produced zero fixes in recent runs, so it gets starved per protocol.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (258 total)",
-       "text": "How do layer height and infill affect an FDM part? | What post-processing is common after an AM build? | How many degrees of freedom does a typical industrial robot have?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T07:53:47.499Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -704,8 +659,75 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T16:21:20.338Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical gaps in papers and questions (filesPresent are false) and high figure/question counts. BankFigures is the only agent producing output recently; others have been zero for multiple runs. I will prioritize BankFigures to generate foundational content, then deploy MockPapers and ExamPatterns to address the massive backlog of missing exam materials, followed by MainsFresh for daily updates. MetaLearn and Invention are deprioritized as they have produced no value in recent runs.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (296 total)",
+       "text": "Name the strip defects wavy edge and centre buckle. | What is the limiting drawing ratio in deep drawing? | What is the work of the blank holder in deep drawing?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "6 fresh mock questions on Boilers (351 in pool)",
+       "text": "Boilers"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvy1er0x (gs3, 15 marks): Critically examine the strategic imperative of India's push for securing critical mineral supply chains, particularly in",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T16:01:14.380Z",
+ "lastRun": "2026-11-01T16:21:20.338Z",
  "model": "qwen3.5:9b"
 }
