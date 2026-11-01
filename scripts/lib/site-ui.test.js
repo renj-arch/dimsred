@@ -177,6 +177,41 @@ console.log('\n--- flowchart inline scripts are attached, parsed and visible-tex
     'relationship lookup reads authored CADJ edges, not only ADJ');
 })();
 
+// ---------------------------------------------------------------------------
+// Flowchart draws only hand-authored mind-trees.
+//
+// data/topic-layers.json carries 32 authored trees and 534 machine-generated
+// co-mention buckets (`_gen:true`). The page used to give both the layered
+// layout, so "People & Leaders / Geography & Places" wrappers around
+// "mentioned with" counts looked like authored structure. The load path must
+// skip `_gen` entries outright; a topic with no authored tree falls back to the
+// verified graph or an honest empty state.
+console.log('\n--- flowchart draws only authored mind-trees ---');
+(function () {
+  const html = read('flowchart.html');
+  assert(/if\(topic\._gen\)\{GEN_SKIPPED\+\+;return;\}/.test(html),
+    'generated topic-layers entries are skipped at load');
+  assert(html.indexOf('auto-generated layers') === -1,
+    'no card can be labelled as auto-generated layers any more');
+  assert(/Only hand-written trees are drawn/.test(html),
+    'the footer states the authored-only rule');
+
+  const layers = JSON.parse(read('data/topic-layers.json'));
+  const authored = Object.keys(layers).filter(function (k) {
+    return layers[k] && !layers[k]._gen && (layers[k].branches || []).length;
+  });
+  assert(authored.length >= 30, 'the authored tree bank is still present',
+    'found ' + authored.length);
+  let emptyBranch = 0;
+  authored.forEach(function (k) {
+    (layers[k].branches || []).forEach(function (b) {
+      if (!String(b.title || '').trim() || !(b.items || []).length) emptyBranch++;
+    });
+  });
+  assert(emptyBranch === 0, 'every authored branch has a title and items',
+    emptyBranch + ' empty branches');
+})();
+
 console.log('\n--- current-affairs inline functions stay at top level ---');
 (function () {
   const html = read('current-affairs.html');
