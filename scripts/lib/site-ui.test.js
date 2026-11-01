@@ -75,5 +75,204 @@ console.log('\n--- the map timeframe panel can be opened and closed ---');
   assert(html.indexOf('onclick="closeTimeframe()"') !== -1, 'the close control is wired to closeTimeframe()');
 })();
 
+// ---------------------------------------------------------------------------
+// Inline-script integrity.
+//
+// flowchart.html once lost the opening <script> of its main block and the
+// closing </script> at EOF. The page still "validated" (the audit only parses
+// script blocks) while ~1,800 lines of JavaScript rendered as page text and
+// none of the graph code ran. A missing closing brace in current-affairs.html
+// was even worse: putting it at EOF made the file parse, but it left
+// `_generateStaticQuestions` open so the following ~300 functions became local
+// to it and unreachable from onclick handlers.
+//
+// These tests parse every inline block and assert that the public functions are
+// declared at brace depth 0 -- parsing alone cannot catch the second bug.
+function inlineScripts(html) {
+  const out = [];
+  const re = /<script\b([^>]*)>([\s\S]*?)<\/script\s*>/gi;
+  let m;
+  while ((m = re.exec(html))) {
+    if (/\bsrc\s*=/i.test(m[1] || '')) continue;
+    if (!m[2].trim()) continue;
+    out.push({ code: m[2], line: html.slice(0, m.index).split(/\r?\n/).length });
+  }
+  return out;
+}
+
+function parses(code) {
+  try { new Function(code); return true; } catch (e) { return false; }
+}
+
+// Per-character brace depth, ignoring comments and string/template literals.
+// The repository has no parser dependency in CI, so this is deliberately small;
+// it only has to be right for the scripts it is pointed at.
+function depthMap(js) {
+  const depths = new Int32Array(js.length);
+  let depth = 0, i = 0, mode = 'code';
+  while (i < js.length) {
+    depths[i] = depth;
+    const c = js[i], n = js[i + 1];
+    if (mode === 'line') { if (c === '\n') mode = 'code'; i++; continue; }
+    if (mode === 'block') { if (c === '*' && n === '/') { mode = 'code'; i += 2; } else i++; continue; }
+    if (mode !== 'code') {
+      if (c === '\\') { i += 2; continue; }
+      if (c === mode) mode = 'code';
+      i++; continue;
+    }
+    if (c === '/' && n === '/') { mode = 'line'; i += 2; continue; }
+    if (c === '/' && n === '*') { mode = 'block'; i += 2; continue; }
+    if (c === "'" || c === '"' || c === '`') { mode = c; i++; continue; }
+    if (c === '{') depth++;
+    else if (c === '}') depth--;
+    i++;
+  }
+  return { depths: depths, endDepth: depth };
+}
+
+function depthOfFunction(js, name) {
+  const map = depthMap(js);
+  const re = new RegExp('(?:async\\s+)?function\\s+' + name + '\\b', 'g');
+  let m, depth = null;
+  while ((m = re.exec(js))) {
+    const d = map.depths[m.index];
+    if (depth === null || d < depth) depth = d;
+  }
+  return depth;
+}
+
+function visibleText(html) {
+  return html
+    .replace(/<script\b[^>]*>[\s\S]*?<\/script\s*>/gi, ' ')
+    .replace(/<style\b[^>]*>[\s\S]*?<\/style\s*>/gi, ' ')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/&[a-z#0-9]+;/gi, ' ');
+}
+
+console.log('\n--- flowchart inline scripts are attached, parsed and visible-text clean ---');
+(function () {
+  const html = read('flowchart.html');
+  const blocks = inlineScripts(html);
+  assert(blocks.length >= 2, 'flowchart.html has both inline script blocks', 'found ' + blocks.length);
+  blocks.forEach(function (b) {
+    assert(parses(b.code), 'flowchart.html inline block at line ' + b.line + ' parses');
+  });
+  const text = visibleText(html);
+  assert(text.indexOf('function showRelationshipDialog') === -1,
+    'no JavaScript source is rendered as page text');
+  assert(text.indexOf('Relationship Dialog listeners') === -1,
+    'the relationship-dialog listener source is not visible');
+
+  const base = rule(html, '.rel-dialog');
+  const open = rule(html, '.rel-dialog.on');
+  assert(base !== null && /display\s*:\s*none\b/.test(base),
+    'relationship dialog base rule hides it', 'base rule: ' + base);
+  assert(open !== null && /display\s*:\s*flex\b/.test(open),
+    '.rel-dialog.on shows the dialog', 'on rule: ' + open);
+  assert(!/id="relDialog"[^>]*style="[^"]*display\s*:/.test(html),
+    'no inline display on #relDialog can outrank .on');
+  assert(/function\s+isCardNeighbour\b/.test(html) && /_cardClickTimer/.test(html),
+    'single click and double click are disambiguated');
+  assert(/CADJ\[CUR\]/.test(html) && /CADJ\[branchId\]/.test(html),
+    'relationship lookup reads authored CADJ edges, not only ADJ');
+})();
+
+console.log('\n--- current-affairs inline functions stay at top level ---');
+(function () {
+  const html = read('current-affairs.html');
+  const blocks = inlineScripts(html);
+  const block = blocks.filter(function (b) { return b.code.indexOf('function _generateStaticQuestions') !== -1; })[0];
+  assert(!!block, 'current-affairs.html has the inline quiz script');
+  if (!block) return;
+  assert(parses(block.code), 'current-affairs.html inline quiz script parses');
+  assert(depthMap(block.code).endDepth === 0,
+    'inline quiz script braces balance exactly',
+    'end depth: ' + depthMap(block.code).endDepth);
+  ['_generateStaticQuestions', '_loadCourseStaticQuestions', 'startStaticGk',
+   'startCategoryQuiz', 'toggleUpscOnly'].forEach(function (name) {
+    assert(depthOfFunction(block.code, name) === 0,
+      name + ' is declared at top level',
+      'depth: ' + depthOfFunction(block.code, name));
+  });
+})();
+
+// ---------------------------------------------------------------------------
+// Content-source checkboxes.
+//
+// The filter used to test the Generators branch before Course Lessons. Course
+// questions carry `_wikiCat='course-lesson'`, `type='mcq'` and `source='course'`,
+// so they matched Generators first: unticking Generators hid course questions
+// and unticking Course Lessons changed nothing. Exercise the extracted function
+// against a fake DOM so the source mapping stays one-to-one.
+function extractNamedFunction(js, name) {
+  const start = js.indexOf('function ' + name + '(');
+  if (start === -1) return null;
+  const brace = js.indexOf('{', start);
+  if (brace === -1) return null;
+  let depth = 0, i = brace, mode = 'code';
+  for (; i < js.length; i++) {
+    const c = js[i], n = js[i + 1];
+    if (mode === 'line') { if (c === '\n') mode = 'code'; continue; }
+    if (mode === 'block') { if (c === '*' && n === '/') { mode = 'code'; i++; } continue; }
+    if (mode !== 'code') {
+      if (c === '\\') { i++; continue; }
+      if (c === mode) mode = 'code';
+      continue;
+    }
+    if (c === '/' && n === '/') { mode = 'line'; i++; continue; }
+    if (c === '/' && n === '*') { mode = 'block'; i++; continue; }
+    if (c === '"' || c === "'" || c === '`') { mode = c; continue; }
+    if (c === '{') depth++;
+    else if (c === '}') { depth--; if (depth === 0) return js.slice(start, i + 1); }
+  }
+  return null;
+}
+
+console.log('\n--- content-source checkboxes map to exactly one source ---');
+(function () {
+  const html = read('current-affairs.html');
+  const src = extractNamedFunction(html, '_passesContentFilter');
+  assert(!!src, '_passesContentFilter() is defined');
+  if (!src) return;
+  const boxes = {};
+  const doc = {
+    getElementById: function (id) { return { checked: boxes[id] !== false }; }
+  };
+  let filter;
+  try {
+    filter = new Function('document', src + '\nreturn _passesContentFilter;')(doc);
+  } catch (e) {
+    assert(false, '_passesContentFilter() can be evaluated', e.message);
+    return;
+  }
+  const course = { q: 'x', a: 'y', source: 'course', _src: 'course', _wikiCat: 'course-lesson', type: 'mcq', subject: 'General Awareness' };
+  const pib = { q: 'x', a: 'y', source: 'pib', type: 'mcq' };
+  const gen = { q: 'x', a: 'y', type: 'mcq', _wikiCat: 'politics' };
+  const archive = { q: 'x', a: 'y', source: 'archive', type: 'mcq', _wikiCat: 'history' };
+
+  boxes.courseToggle = true; boxes.genToggle = false;
+  assert(filter(course) === true, 'course question survives with Course on and Generators off');
+  boxes.courseToggle = false; boxes.genToggle = true;
+  assert(filter(course) === false, 'course question is hidden when Course is off even if Generators is on');
+  boxes.courseToggle = true; boxes.genToggle = true;
+  assert(filter(course) === true, 'course question survives with both on');
+
+  boxes.pibToggle = false;
+  assert(filter(pib) === false, 'PIB question respects the PIB checkbox');
+  boxes.pibToggle = true;
+  assert(filter(pib) === true, 'PIB question returns when PIB is enabled');
+
+  boxes.genToggle = false;
+  assert(filter(gen) === false, 'generator question respects the Generators checkbox');
+  boxes.genToggle = true;
+  assert(filter(gen) === true, 'generator question returns when Generators is enabled');
+
+  boxes.archiveToggle = false;
+  assert(filter(archive) === false, 'archive question respects the Archive checkbox');
+  boxes.archiveToggle = true;
+  assert(filter(archive) === true, 'archive question returns when Archive is enabled');
+})();
+
+
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

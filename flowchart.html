@@ -8,8 +8,8 @@
 <style>
 :root{
 --purple:#a78bfa;--amber:#fb923c;--rose:#fb7185;--teal:#2dd4bf;--cyan:#22d3ee;--slate:#94a3b8;
---red:#ef4444;--green:#34d399;--gold:#fbbf24;
---bg:#0f1117;--bg2:#161a24;--line:#2a3040;--txt:#e5e9f0;--txt2:#9aa4b8}
+--red:#ef4444;--green:#34d399;--emerald:#34d399;--gold:#fbbf24;--muted:#9aa4b8;
+--bg:#0f1117;--bg2:#161a24;--bg-card:#161a24;--line:#2a3040;--border:#2a3040;--txt:#e5e9f0;--txt2:#9aa4b8}
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;background:radial-gradient(1200px 700px at 70% -10%,#1c2333 0%,var(--bg) 55%);color:var(--txt)}
 header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:8px;padding:10px 14px;background:rgba(15,17,23,.92);backdrop-filter:blur(6px);border-bottom:1px solid var(--line);flex-wrap:wrap}
@@ -22,9 +22,9 @@ header h1 b{color:var(--purple)}
 .searchbar{flex:1 1 240px;max-width:430px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:7px 11px;font-size:13px;outline:none}
 
 /* Relationship Dialog Styles */
-.rel-dialog{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;display:none}
+.rel-dialog{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:none;align-items:center;justify-content:center;padding:20px}
 .rel-dialog.on{display:flex}
-.rel-dialog .panel{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;max-width:560px;max-height:80vh;overflow:auto;color:var(--txt)}
+.rel-dialog .panel{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;width:100%;max-width:560px;max-height:80vh;overflow:auto;color:var(--txt)}
 .rel-dialog .head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg-card);z-index:1}
 .rel-dialog .title{font-size:16px;font-weight:800;color:var(--txt)}
 .rel-dialog .close{background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:4px;line-height:1}
@@ -34,7 +34,7 @@ header h1 b{color:var(--purple)}
 .rel-dialog .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--cyan);margin-bottom:8px}
 .rel-dialog .rel-line{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:12.5px}
 .rel-dialog .rel-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple);white-space:nowrap}
-.rel-dialog .rel-desc{flex:1;font-size:12.5px;color:var(--txt);line-height:1.5}
+.rel-dialog .rel-desc{flex:1;min-width:0;overflow-wrap:anywhere;font-size:12.5px;color:var(--txt);line-height:1.5}
 .rel-dialog .entity-name{font-weight:600;color:var(--txt)}
 .rel-dialog .source-badge{font-size:9.5px;color:var(--txt2);background:var(--bg);border:1px solid var(--line);border-radius:100px;padding:2px 8px;margin-top:4px;display:inline-block}
 .rel-dialog .center-info{display:flex;align-items:center;gap:10px;padding:12px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:10px;margin-bottom:16px}
@@ -170,8 +170,8 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
     <p style="color:var(--txt2);margin:0 0 16px;font-size:.9em;line-height:1.6">This is a <b>verified knowledge map</b> built from 10,000+ UPSC-relevant topics and 100,000+ typed relationships. Every arrow represents a <b>real, sourced connection</b> — not a word coincidence.</p>
     <div style="background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:10px;padding:14px;margin-bottom:16px;font-size:.85em;line-height:1.7;color:var(--txt)">
       <b style="color:var(--purple)">🔍 Search</b> any topic (e.g. "World War II", "Article 356", "Gandhi")<br>
-      <b style="color:var(--emerald)">👆 Single-click</b> a card to expand its connections in place<br>
-      <b style="color:var(--amber)">👆👆 Double-click</b> a card to make it the new centre<br>
+      <b style="color:var(--emerald)">👆 Single-click</b> a card to open its relationship dialog<br>
+      <b style="color:var(--amber)">👆👆 Double-click</b> a card to read its full note<br>
       <b style="color:var(--cyan)">📏 Grow/Shrink</b> adds/removes a ring around the centre<br>
       <b style="color:var(--rose)">🎯 UPSC weight</b> red/amber/grey dot = high/medium/low question relevance
     </div>
@@ -183,7 +183,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
   </div>
 </div>
 <!-- Relationship Dialog -->
-<div id="relDialog" class="rel-dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center;padding:20px">
+<div id="relDialog" class="rel-dialog" style="position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;align-items:center;justify-content:center;padding:20px">
   <div class="panel" style="background:var(--bg-card);border:1px solid var(--line);border-radius:16px;max-width:560px;max-height:80vh;overflow:auto;color:var(--txt)">
     <div class="head" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg-card);z-index:1">
       <span class="title" style="font-size:16px;font-weight:800;color:var(--txt)">Relationship</span>
@@ -197,7 +197,7 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
   </div>
 </div>
 
-<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a verified relationship from data/relations.json or an authored mind-tree (data/topic-layers.json). Co-mention lines are gone: they were word co-occurrence over a trivia corpus, not knowledge, and they were deciding which cards appeared at all. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) · <b>double-click</b> to drill into it as the new centre · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
+<footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a verified relationship from data/relations.json or an authored mind-tree (data/topic-layers.json). Co-mention lines are gone: they were word co-occurrence over a trivia corpus, not knowledge, and they were deciding which cards appeared at all. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to open its relationship dialog (with a <b>Make Center</b> button to drill in) · <b>double-click</b> to read the full note · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
 <!-- The graph resolver lives in one place and is shared with scripts/build-timeline.js,
      scripts/gen-topic-layers.js, map.html and revision.html. It used to be copied
      into this file under the comment "shared logic copied from flowchart.html (must
@@ -289,6 +289,7 @@ try{CO_ALL=localStorage.getItem('fc_coall')==='1';}catch(e){CO_ALL=false;}
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && overlay.style.display!=='none') hide(); });
 })();
 </script>
+<script>
   // Relationship Dialog listeners
   document.getElementById('relClose').addEventListener('click', hideRelationshipDialog);
   document.getElementById('relCloseBtn').addEventListener('click', hideRelationshipDialog);
@@ -763,6 +764,9 @@ function buildIndexes(){
   // state instead of a fabricated graph.
   var names=Object.keys(BY_NAME).sort(function(a,b){return (NAME_CNT[b]||0)-(NAME_CNT[a]||0);});
   var dl=document.getElementById('topiclist'),frag=document.createDocumentFragment();
+  // buildIndexes() runs again after curate() and after relations load; without
+  // clearing, the datalist accumulated the same 6,000 options three times.
+  dl.innerHTML='';
   for(var m=0;m<names.length&&m<6000;m++){
     var best=BY_NAME[names[m]].slice().sort(byProminence)[0];
     if(!best||isJunk(best)||((best.count||0)<2&&!best.cur))continue;
@@ -1147,7 +1151,7 @@ function cardSvg(id,laneColor,opts){
   var idx=opts.idx!=null?opts.idx:UNIQ++;
   CARDS[idx]={id:id,name:n.name,idx:idx};
   var nnote=NOTES[canon(n.name)]||cleanDesc(n.desc);
-  var titleTxt=esc(n.name)+(nnote?' — '+esc(nnote.slice(0,600)):'')+' · '+esc(sub)+(NOTES[canon(n.name)]?' · click a card to read its full note':' · click to grow this branch · double-click to open');
+  var titleTxt=esc(n.name)+(nnote?' — '+esc(nnote.slice(0,600)):'')+' · '+esc(sub)+' · click for relationships · double-click for the full note';
   var wbadge='';
   var wt=WT[canon(n.name)];
   if(wt){
@@ -1503,31 +1507,58 @@ function showNote(id){
   el.scrollIntoView({block:'nearest'});
 }
 function showRelationshipDialog(branchId) {
-  if (!CUR || !ADJ[CUR]) return;
+  if (!CUR) return;
   var center = BY_ID[CUR];
   var branch = BY_ID[branchId];
   if (!center || !branch) return;
 
-  // Find the relationship between center and branch
+  // Find the relationship between center and branch. ADJ stores mined typed
+  // edges as a single relation string; CADJ stores authored tree edges the same
+  // way. Both are normalised here -- the old code called .forEach() on a string,
+  // which threw a TypeError before the dialog could open.
   var rels = [];
-  if (CADJ[CUR] && CADJ[CUR][branchId]) {
-    CADJ[CUR][branchId].forEach(function(e) {
+  function pushRel(value, desc, source, weight) {
+    if (!value) return;
+    if (Array.isArray(value)) {
+      value.forEach(function(v) { pushRel(v, desc, source, weight); });
+      return;
+    }
+    if (typeof value === 'object') {
       rels.push({
-        type: e.rel || 'related to',
-        desc: e.desc || '',
-        source: e.src || 'graph',
-        weight: e.w || 0
+        type: value.rel || value.type || 'related to',
+        desc: value.desc || value.ev || desc || '',
+        source: value.src || source || 'graph',
+        weight: value.w != null ? value.w : (weight || 0)
       });
+      return;
+    }
+    rels.push({ type: String(value), desc: desc || '', source: source || 'graph', weight: weight || 0 });
+  }
+
+  if (ADJ[CUR] && ADJ[CUR][branchId]) pushRel(ADJ[CUR][branchId], '', 'graph', 10);
+  if (ADJ[branchId] && ADJ[branchId][CUR]) pushRel(ADJ[branchId][CUR], '', 'graph', 10);
+  if (CADJ[CUR] && CADJ[CUR][branchId]) pushRel(CADJ[CUR][branchId], '', 'authored', 20);
+  if (CADJ[branchId] && CADJ[branchId][CUR]) pushRel(CADJ[branchId][CUR], '', 'authored', 20);
+
+  // An authored item hangs off a named branch ("Causes", "Chronology", ...).
+  // Saying which branch it belongs to is the relationship the user is after,
+  // and it is true even when the item has no direct edge to the central node.
+  // Item nodes are shared graph nodes, so they carry no `section` of their own;
+  // read the section off the branch node they are attached to in CADJ.
+  var sectionName = branch.section || '';
+  if (!sectionName && CADJ[branchId]) {
+    Object.keys(CADJ[branchId]).some(function(k) {
+      var n = BY_ID[k];
+      if (n && n.section) { sectionName = n.section; return true; }
+      return false;
     });
   }
-  if (CADJ[branchId] && CADJ[branchId][CUR]) {
-    CADJ[branchId][CUR].forEach(function(e) {
-      rels.push({
-        type: e.rel || 'related to',
-        desc: e.desc || '',
-        source: e.src || 'graph',
-        weight: e.w || 0
-      });
+  if (sectionName) {
+    rels.push({
+      type: sectionName,
+      desc: 'Authored branch of ' + center.name,
+      source: 'curated',
+      weight: 50
     });
   }
 
@@ -1541,6 +1572,15 @@ function showRelationshipDialog(branchId) {
       weight: 99
     });
   }
+
+  // Deduplicate identical type+description pairs (ADJ and CADJ often agree).
+  var seenRel = {};
+  rels = rels.filter(function(r) {
+    var k = (r.type || '') + '\u0000' + (r.desc || '');
+    if (seenRel[k]) return false;
+    seenRel[k] = 1;
+    return true;
+  });
 
   // Sort by weight
   rels.sort(function(a, b) { return (b.weight || 0) - (a.weight || 0); });
@@ -1996,6 +2036,23 @@ document.addEventListener('keydown',function(e){
   if(!editing&&e.altKey&&e.key==='ArrowLeft'){history.back();}
   if(!editing&&e.altKey&&e.key==='ArrowRight'){history.forward();}
 });
+// A single click opens the relationship dialog; a double click opens the full
+// note. Opening the dialog on the first click of a double click put a full-screen
+// overlay in front of the card, so the second click hit the overlay and the
+// double click never reached the card. Defer the single-click action briefly and
+// cancel it when a dblclick arrives.
+var _cardClickTimer=null;
+function isCardNeighbour(id){
+  if(!CUR||!id)return false;
+  if(ADJ[CUR]&&ADJ[CUR][id])return true;
+  if(CADJ[CUR]&&CADJ[CUR][id])return true;
+  if(CADJ[id]&&CADJ[id][CUR])return true;
+  // Curated items attach to a branch node, not to the central topic, so the
+  // adjacency checks above miss them. Every card drawn in the current flow is
+  // a branch of this centre and deserves the relationship dialog.
+  if(LASTG&&LASTG.idset&&LASTG.idset[id])return true;
+  return false;
+}
 document.getElementById('chart').addEventListener('click',function(ev){
   var t=ev.target;
   while(t&&t!==this&&t.getAttribute&&t.getAttribute('data-idx')==null)t=t.parentNode;
@@ -2004,23 +2061,23 @@ document.getElementById('chart').addEventListener('click',function(ev){
   if(!el||(' '+el.className.baseVal+' ').indexOf(' hero ')!==-1)return;
   var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
   if(!id)return;
-  // Single click: if this is a branch (neighbor of center), show relationship dialog
-  // If it's already the center or not a neighbor, navigate
-  if(CUR && ADJ[CUR] && ADJ[CUR].some(function(n){return n.id===id;})) {
-    showRelationshipDialog(id);
-  } else {
-    navigate(id,true);
+  clearTimeout(_cardClickTimer);
+  if(isCardNeighbour(id)){
+    _cardClickTimer=setTimeout(function(){ showRelationshipDialog(id); },220);
+  }else{
+    _cardClickTimer=setTimeout(function(){ navigate(id,true); },220);
   }
-}););
+});
 // Double-click: show detailed note for this card (kept for deep reading)
 document.getElementById('chart').addEventListener('dblclick',function(ev){
+  clearTimeout(_cardClickTimer);
   var t=ev.target;
   while(t&&t!==this&&t.getAttribute&&t.getAttribute('data-idx')==null)t=t.parentNode;
   if(!t||t===this)return;
   var el=document.querySelector('#chart .ncard[data-idx="'+t.getAttribute('data-idx')+'"]');
   if(!el||(' '+el.className.baseVal+' ').indexOf(' hero ')!==-1)return;
   var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
-  if(id)showNote(id);
+  if(id){hideRelationshipDialog();showNote(id);}
 });
 document.getElementById('bGrw').onclick=function(){
   if(FLOW_HOP>=4)return;
@@ -2070,5 +2127,6 @@ LINKS=[];
   document.getElementById('msg').textContent='Could not load data/timeline.json — run node scripts/build-timeline.js first. ('+err.message+')';
 });
 
+</script>
 </body>
 </html>

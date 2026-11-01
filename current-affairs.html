@@ -344,17 +344,28 @@
                 var wikiCat = (q._wikiCat || '').toLowerCase();
                 var subject = (q.subject || '').toLowerCase();
                 var type = (q.type || '').toLowerCase();
-                // PIB/CA Feed items
-                if (usePib && (src === 'pib' || src === 'news' || src === 'current affairs' || subject === 'pib releases' || subject === 'current affairs')) return true;
-                // Archive items (from data/questions/... files)
-                if (useArchive && (src === 'wiki' || src === 'archive' || subject === 'archive')) return true;
-                // Generators (wiki-based synthetic questions)
-                if (useGen && (wikiCat || src === 'generator' || type === 'mcq' || type === 'qa')) return true;
-                // Course Lessons (static MCQ from lesson pages)
-                if (useCourse && (src === 'course' || src === 'lesson' || subject.includes('lesson'))) return true;
-                // Default: allow if no specific source detected (backward compat)
-                if (!src && !wikiCat && !subject) return true;
-                return false;
+                // Resolve every question to exactly one source before testing the
+                // checkboxes. The old order let the Generators branch win for
+                // course questions, because they carry _wikiCat='course-lesson'
+                // and type='mcq'; unticking Generators then hid Course Lessons too,
+                // and unticking Course Lessons changed nothing.
+                if (src === 'pib' || src === 'news' || src === 'current affairs' ||
+                    subject === 'pib releases' || subject === 'current affairs') {
+                    return usePib;
+                }
+                if (src === 'course' || src === 'lesson' ||
+                    wikiCat === 'course-lesson' || subject.indexOf('lesson') !== -1) {
+                    return useCourse;
+                }
+                if (src === 'wiki' || src === 'archive' || subject === 'archive') {
+                    return useArchive;
+                }
+                if (wikiCat || src === 'generator' || type === 'mcq' || type === 'qa') {
+                    return useGen;
+                }
+                // No source signal: keep the old backward-compatible behaviour so
+                // hand-written questions without tags are not silently dropped.
+                return true;
             }
             // Apply content filter to state.questions in-place
             function _applyContentFilter() {
@@ -8085,17 +8096,19 @@ function prevQuestion() {
                 _loadArchiveIntoState(function() {
                     _isRestarting = false;
                     _updateArchiveProgress();
-                    _generateStaticQuestions();
-                    if (state.questions.length > 0) showQuestion();
-                    else document.getElementById('qText').innerHTML = 'No questions loaded.';
+                    _generateStaticQuestions(function() {
+                        if (state.questions.length > 0) showQuestion();
+                        else document.getElementById('qText').innerHTML = 'No questions loaded.';
+                    });
                 });
             } else {
-                _generateStaticQuestions();
-                if (state.questions.length > 0) showQuestion();
-                else document.getElementById('qText').innerHTML = 'No static GK loaded.';
+                _generateStaticQuestions(function() {
+                    if (state.questions.length > 0) showQuestion();
+                    else document.getElementById('qText').innerHTML = 'No static GK loaded.';
+                });
             }
         }
-        function _generateStaticQuestions() {
+        function _generateStaticQuestions(done) {
             var allCats = Object.keys(GK_GENERATORS).filter(function(k) { return typeof GK_GENERATORS[k] === 'function' && k !== 'sebi' && k !== 'scjudgments' && k !== 'rbi' && k !== 'isro' && k !== 'mea'; });
             shuffleArray(allCats);
             var added = 0;
@@ -8105,25 +8118,24 @@ function prevQuestion() {
                 if (eq.q) existingSet[eq.q] = true;
                 if (eq.a) existingSet[eq.a] = true;
             }
-            // Load static MCQs from course lesson pages (8 lessons, 149 questions)
-            var useCourse = document.getElementById('courseToggle')?.checked !== false;
-            if (useCourse) {
-                _loadCourseStaticQuestions(function(courseQs) {
-                    courseQs.forEach(function(q) {
-                        if (q.q && q.a && !existingSet[q.q] && !existingSet[q.a]) {
-                            q._src = 'course';
-                            q._wikiCat = 'course-lesson';
-                            existingSet[q.q] = true;
-                            existingSet[q.a] = true;
-                            state.questions.push(q);
-                            added++;
-                        }
-                    });
-                    _continueGeneration();
+            // Always load the course manifest into the pool; the checkbox filter
+            // decides whether the questions are shown. Loading it conditionally
+            // meant ticking "Course Lessons" after Static GK started could not
+            // surface a single question, because the pool had already been built.
+            _loadCourseStaticQuestions(function(courseQs) {
+                courseQs.forEach(function(q) {
+                    if (q.q && q.a && !existingSet[q.q] && !existingSet[q.a]) {
+                        q._src = 'course';
+                        q.source = 'course';
+                        q._wikiCat = 'course-lesson';
+                        existingSet[q.q] = true;
+                        existingSet[q.a] = true;
+                        state.questions.push(q);
+                        added++;
+                    }
                 });
-            } else {
                 _continueGeneration();
-            }
+            });
             function _continueGeneration() {
                 // No artificial cap — keep round-robin until every generator is
                 // exhausted (several consecutive passes add nothing new), with only
@@ -8162,78 +8174,52 @@ function prevQuestion() {
             }
             // Apply content source filter (Archive, Course, Generators, PIB/CA)
             _applyContentFilter();
+            if (typeof done === 'function') done();
+        }
         }
         
-        // Load static MCQs from course lesson pages (8 lessons, 149 questions)
-        // These are embedded in HTML files like cgl/course/.../lesson-*.html
+        // Load static MCQs from the build-time course manifest.
+        //
+        // The lesson pages never rendered their practice questions as `.q-card`
+        // markup: each page carries a `var practiceQs = [...]` array and draws it
+        // in the browser. Scraping eight hardcoded lesson URLs therefore loaded
+        // zero questions even though 290 lesson pages hold 10,000+ authored MCQs.
+        // scripts/build-course-questions.js extracts, de-duplicates and
+        // quality-gates every bank into data/course-questions.json, and this
+        // loader makes one request instead of 269.
         function _loadCourseStaticQuestions(cb) {
-            var lessonUrls = [
-                'cgl/course/reasoning/lesson-coding-decoding.html',
-                'cgl/course/reasoning/lesson-analogy.html',
-                'cgl/course/reasoning/lesson-series.html',
-                'cgl/course/reasoning/lesson-classification.html',
-                'cgl/course/quant/lesson-number-system.html',
-                'cgl/course/quant/lesson-algebra.html',
-                'cgl/course/quant/lesson-geometry.html',
-                'cgl/course/english/lesson-spotting-errors.html'
-            ];
-            var allQ = [];
-            var loaded = 0;
-            var failed = 0;
-            var timeoutId = setTimeout(function() {
-                if (loaded + failed === lessonUrls.length) {
-                    cb(allQ);
-                }
-            }, 15000); // 15 second timeout
-            
-            function checkDone() {
-                if (loaded + failed === lessonUrls.length) {
-                    if (timeoutId) clearTimeout(timeoutId);
-                    cb(allQ);
-                }
+            var finished = false;
+            function finish(list) {
+                if (finished) return;
+                finished = true;
+                cb(list || []);
             }
-            
-            lessonUrls.forEach(function(url) {
-                var xhr = new XMLHttpRequest();
-                xhr.onload = function() {
-                    loaded++;
-                    if (xhr.status === 200) {
-                        var html = xhr.responseText;
-                        var qCards = html.match(/<div class="q-card"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/g);
-                        if (qCards) {
-                            qCards.forEach(function(card) {
-                                var qMatch = card.match(/<div class="q-text"[^>]*>([\s\S]*?)<\/div>/);
-                                var aMatch = card.match(/<div class="q-soln"[^>]*>([\s\S]*?)<\/div>/);
-                                var optMatches = card.matchAll(/<div class="q-opt"[^>]*>([\s\S]*?)<\/div>/g);
-                                if (qMatch && aMatch) {
-                                    var q = qMatch[1].replace(/<[^>]+>/g, '').trim();
-                                    var a = aMatch[1].replace(/<[^>]+>/g, '').replace(/^Answer:?\s*/i, '').trim();
-                                    var opts = [];
-                                    for (var om of optMatches) {
-                                        var opt = om[1].replace(/<[^>]+>/g, '').trim();
-                                        if (opt) opts.push(opt);
-                                    }
-                                    if (q && a) {
-                                        allQ.push({q: q, a: a, opts: opts, _src: 'course', subject: 'Course Lesson', type: 'mcq'});
-                                    }
-                                }
-                            });
-                        }
+            var timer = setTimeout(function() { finish([]); }, 15000);
+            var xhr = new XMLHttpRequest();
+            xhr.onload = function() {
+                clearTimeout(timer);
+                if (xhr.status !== 200) { finish([]); return; }
+                try {
+                    var data = JSON.parse(xhr.responseText);
+                    var list = (data && data.questions) || [];
+                    for (var i = 0; i < list.length; i++) {
+                        var q = list[i];
+                        if (!q || !q.q || !q.a) continue;
+                        // Normalise to the shape the quiz renderer expects.
+                        q.source = 'course';
+                        q._src = 'course';
+                        q.subject = q.subject || 'Course Lesson';
+                        q.type = 'mcq';
+                        if (!q.opts || !q.opts.length) q.opts = [];
                     }
-                    checkDone();
-                };
-                xhr.onerror = function() {
-                    failed++;
-                    checkDone();
-                };
-                xhr.ontimeout = function() {
-                    failed++;
-                    checkDone();
-                };
-                xhr.open('GET', url + '?t=' + Date.now(), true);
-                xhr.timeout = 10000; // 10 second timeout per request
-                xhr.send();
-            });
+                    finish(list);
+                } catch (e) { finish([]); }
+            };
+            xhr.onerror = function() { clearTimeout(timer); finish([]); };
+            xhr.ontimeout = function() { clearTimeout(timer); finish([]); };
+            xhr.open('GET', 'data/course-questions.json?t=' + Date.now(), true);
+            xhr.timeout = 15000;
+            xhr.send();
         }
         
 
@@ -9460,8 +9446,6 @@ var fact = q.fact || q.solution || q.explanation || '';
             showQuestion();
         }
         
-    }
-    
     </script>
     <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>

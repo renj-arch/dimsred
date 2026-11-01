@@ -135,6 +135,46 @@ async function checkShardLoader(file, fetcherName, loaderName) {
   const badStarters = (kg.starters || []).filter(function (id) { return !ids.has(id); });
   assert(badStarters.length === 0, 'every starter is a real node', badStarters.join(', '));
 
+  // -------------------------------------------------------------------------
+  // Course question manifest.
+  //
+  // current-affairs.html used to scrape `.q-card` markup from eight hardcoded
+  // lesson URLs. Those URLs were largely stale and the lesson pages never
+  // rendered static cards anyway -- they embed `var practiceQs` arrays -- so
+  // the "Course Lessons" checkbox loaded nothing. The build now extracts the
+  // arrays into data/course-questions.json, and this suite pins the shape the
+  // quiz depends on.
+  console.log('\n--- course question manifest ---');
+  const course = readJson('data/course-questions.json');
+  assert(Array.isArray(course.questions), 'course manifest has a questions array');
+  const cqs = course.questions || [];
+  assert(course.total === cqs.length, 'manifest total matches the array length',
+    course.total + ' declared, ' + cqs.length + ' actual');
+  assert(cqs.length > 1000, 'manifest carries more than 1,000 questions', String(cqs.length));
+  const badShape = cqs.filter(function (q) {
+    return !q || typeof q.q !== 'string' || !q.q.trim() ||
+      typeof q.a !== 'string' || !q.a.trim() ||
+      !Array.isArray(q.opts) || q.opts.length < 2 ||
+      q.source !== 'course';
+  });
+  assert(badShape.length === 0, 'every course question has text, one answer, options and a course source',
+    badShape.length + ' malformed');
+  const badAnswer = cqs.filter(function (q) {
+    return !q.opts || q.opts.indexOf(q.a) === -1;
+  });
+  assert(badAnswer.length === 0, 'every answer appears in its options',
+    badAnswer.length + ' missing');
+  const badDupes = cqs.filter(function (q) {
+    return q.opts && new Set(q.opts).size !== q.opts.length;
+  });
+  assert(badDupes.length === 0, 'no question repeats an option', badDupes.length + ' with duplicates');
+  const ambiguous = cqs.filter(function (q) {
+    return /not in options|closest|most likely|i'?ll go with|let me recompute|not consistent/i.test(q.q + ' ' + q.a);
+  });
+  assert(ambiguous.length === 0, 'ambiguous/guessing questions are not shipped', String(ambiguous.length));
+  const texts = new Set(cqs.map(function (q) { return String(q.q).toLowerCase().replace(/\s+/g, ' ').trim(); }));
+  assert(texts.size === cqs.length, 'course questions are unique', (cqs.length - texts.size) + ' duplicates');
+
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
   process.exit(fail ? 1 : 0);
 })();
