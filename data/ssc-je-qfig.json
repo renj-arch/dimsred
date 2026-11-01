@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T07:02:33.386Z",
-  "cursor": 267,
-  "built": 253
+  "updatedAt": "2026-11-01T07:19:24.255Z",
+  "cursor": 270,
+  "built": 255
  },
  "figs": {
   "11434945": {
@@ -1521,6 +1521,18 @@
   "4237764b": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/>\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\"/>\n  <!-- Z-Axis (Height) -->\n  <path d=\"M 40 200 L 40 20\" stroke-width=\"2\"/>\n  <text x=\"35\" y=\"180\">Height</text>\n  <!-- Layers (Z-axis steps) -->\n  <line x1=\"60\" y1=\"180\" x2=\"300\" y2=\"180\" stroke-width=\"1.5\"/>\n  <line x1=\"60\" y1=\"140\" x2=\"300\" y2=\"140\" stroke-width=\"1.5\"/>\n  <line x1=\"60\" y1=\"100\" x2=\"300\" y2=\"100\" stroke-width=\"1.5\"/>\n  <line x1=\"60\" y1=\"60\" x2=\"300\" y2=\"60\" stroke-width=\"1.5\"/>\n  <!-- Powder Layer -->\n  <path d=\"M 60 180 L 300 180 L 300 190 Q 180 205 60 190 Z\" stroke-width=\"1.5\"/>\n  <text x=\"180\" y=\"195\">Powder Layer</text>\n  <!-- Laser Beam -->\n  <line x1=\"140\" y1=\"170\" x2=\"140\" y2=\"160\" stroke-width=\"3\"/>\n  <circle cx=\"140\" cy=\"155\" r=\"8\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <text x=\"130\" y=\"145\">Laser</text>\n  <!-- Fusion Zone -->\n  <circle cx=\"140\" cy=\"155\" r=\"6\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <text x=\"135\" y=\"148\">Fusion</text>\n  <!-- Resulting Part -->\n  <path d=\"M 60 180 L 300 180 L 300 190 Q 180 205 60 190 Z\" stroke-width=\"1.5\"/>\n  <text x=\"180\" y=\"215\">Part</text>\n  <!-- Title -->\n  <text x=\"180\" y=\"20\">DMLS Process</text>\n</svg>",
    "n": "what is direct metal laser sintering (dmls)?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "2ecb9dac": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Directed Energy Deposition (DED)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"180\" cy=\"60\" r=\"5\"/><path d=\"M 175 60 L 180 55 L 185 60\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"45\" text-anchor=\"middle\">Focused Beam / Arc</text><path d=\"M 180 60 L 180 180\"/><rect x=\"170\" y=\"180\" width=\"20\" height=\"30\"/><text x=\"185\" y=\"215\" text-anchor=\"middle\">Powder / Wire Feed</text><path d=\"M 180 180 L 180 200\"/><rect x=\"175\" y=\"200\" width=\"10\" height=\"15\" fill=\"#222\"/><text x=\"185\" y=\"230\" text-anchor=\"middle\">Deposited Layer</text><path d=\"M 40 60 L 40 190\"/><rect x=\"30\" y=\"190\" width=\"20\" height=\"10\" fill=\"#222\"/><text x=\"40\" y=\"215\" text-anchor=\"middle\">Base Part</text><path d=\"M 320 60 L 320 190\"/><rect x=\"310\" y=\"190\" width=\"20\" height=\"10\" fill=\"#222\"/><text x=\"330\" y=\"215\" text-anchor=\"middle\">Base Part</text><path d=\"M 40 60 L 320 60 M 40 190 L 320 190\" stroke-dasharray=\"4,2\"/></svg>",
+   "n": "what is directed energy deposition (ded)?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "f2b62a1e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Build Plate -->\n  <rect x=\"40\" y=\"180\" width=\"280\" height=\"20\"/>\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">Build Plate</text>\n  \n  <!-- Layer N (Completed) -->\n  <rect x=\"60\" y=\"140\" width=\"100\" height=\"10\"/>\n  <text x=\"110\" y=\"135\" text-anchor=\"middle\">Layer N</text>\n  \n  <!-- Overhang Feature (Needs Support) -->\n  <path d=\"M 60 120 L 160 120 L 160 80 L 60 80 Z\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <text x=\"110\" y=\"105\" text-anchor=\"middle\">Overhang</text>\n  \n  <!-- Support Structure -->\n  <path d=\"M 60 120 L 60 80 M 160 120 L 160 80\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <rect x=\"60\" y=\"80\" width=\"100\" height=\"40\" fill=\"none\" stroke=\"#222\" stroke-dasharray=\"3,3\"/>\n  <text x=\"110\" y=\"95\" text-anchor=\"middle\">Support Scaffold</text>\n  \n  <!-- Labels -->\n  <text x=\"20\" y=\"145\">Without support:</text>\n  <text x=\"20\" y=\"165\">Sags/Warps</text>\n  <text x=\"20\" y=\"190\">With support:</text>\n  <text x=\"20\" y=\"210\">Holds shape</text>\n</svg>",
+   "n": "why are support structures needed in some am processes?",
    "sub": "production",
    "at": "2026-11-01"
   }

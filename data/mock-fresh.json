@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-01T06:51:38.556Z",
-  "cursor": 2,
-  "count": 284,
+  "updatedAt": "2026-11-01T07:22:58.018Z",
+  "cursor": 3,
+  "count": 293,
   "lastAttempt": {
-   "at": "2026-11-01T07:07:50.363Z",
-   "reason": "nothing"
+   "at": "2026-11-01T07:22:58.018Z",
+   "reason": "added 9"
   }
  },
  "items": [
@@ -2564,6 +2564,87 @@
    "a": "Bending Moment = 0; Location: At the free end of the cantilever.",
    "h": "Bending moment is zero at the free end where no external couple or reaction exists.",
    "s": "For a cantilever beam fixed at one end and free at the other, the internal bending moment must balance any external moments. Since there are no external loads or reactions applied beyond the free tip, the bending moment at the free end itself is zero, increasing linearly towards the fixed support.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Define the term 'adiabatic process' and state the condition under which it occurs in an ideal gas.",
+   "a": "An adiabatic process is one where there is no transfer of heat (Q=0) between the system and its surroundings, typically occurring when the process happens very rapidly or the system is perfectly insulated.",
+   "h": "Recall that adiabatic implies no heat exchange with surroundings.",
+   "s": "In an adiabatic process for an ideal gas, the change in internal energy is equal to the work done by or on the system. Since Q=0, the first law of thermodynamics simplifies to dU = -dW, leading to the relation TV^(γ-1) = constant.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "A rigid tank contains 5 kg of air at an initial pressure of 2 bar and temperature of 300 K. The air is heated until its temperature reaches 600 K. Calculate the final pressure assuming air behaves as an ideal gas with γ=1.4.",
+   "a": "Final Pressure = 4 bar",
+   "h": "Use the ideal gas relation for a constant volume process (P/T = constant).",
+   "s": "For a rigid tank, volume remains constant. Using the relation P1/T1 = P2/T2, we substitute P1=2 bar, T1=300 K, and T2=600 K. Solving for P2 gives P2 = P1 * (T2/T1) = 2 * (600/300) = 4 bar.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "A Carnot engine operates between two heat reservoirs at temperatures 500 K and 300 K. If the engine absorbs 1000 kJ of heat from the source, calculate the work done by the engine.",
+   "a": "Work Done = 400 kJ",
+   "h": "Carnot efficiency depends only on absolute temperatures: η = 1 - T_L/T_H.",
+   "s": "First, calculate the efficiency of the Carnot engine using η = 1 - (300/500) = 0.4 or 40%. Work done is then calculated as W = η * Q_in = 0.4 * 1000 kJ = 400 kJ.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "What is the Clausius Inequality? Write its mathematical form and explain what it implies about reversible versus irreversible cycles.",
+   "a": "The Clausius Inequality states that for any thermodynamic cycle, the cyclic integral of heat transfer divided by temperature is less than or equal to zero (∮ δQ/T ≤ 0). The equality holds for reversible cycles, while the inequality (<) holds for irreversible cycles.",
+   "h": "Think of entropy change around a cycle: ∮ dQ/T ≤ 0.",
+   "s": "This inequality is a mathematical statement of the Second Law of Thermodynamics. It defines entropy as a property and distinguishes between idealized reversible processes (where entropy generation is zero) and real-world irreversible processes (where entropy increases due to friction, heat transfer across finite temperature differences, etc.).",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Define 'Isentropic Efficiency' for a turbine and provide the formula relating actual work output to isentropic work output.",
+   "a": "Isentropic Efficiency (η_t) = (Actual Work Output) / (Isentropic Work Output).",
+   "h": "Efficiency compares actual performance to an ideal reversible adiabatic process.",
+   "s": "For a turbine, isentropic efficiency measures how closely the actual expansion approximates an ideal reversible adiabatic (isentropic) expansion. It accounts for irreversibilities like friction and turbulence which cause the actual exit enthalpy to be higher than the isentropic exit enthalpy, resulting in less work output.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "Explain the difference between a 'closed system' and an 'open system' in thermodynamics with one example of each.",
+   "a": "A closed system (control mass) allows energy transfer but no mass transfer across its boundary (e.g., a sealed piston-cylinder device). An open system (control volume) allows both energy and mass to cross its boundary (e.g., a steam turbine or nozzle).",
+   "h": "Closed: mass stays; Open: mass flows. Think of a piston-cylinder vs. a steam turbine.",
+   "s": "The distinction is crucial for applying the First Law of Thermodynamics correctly. Closed systems use changes in internal energy, while open systems require accounting for flow work and enthalpy changes due to mass entering and leaving the control volume.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "A heat engine receives 200 kJ/s of heat from a source at 500 K and rejects heat to a sink at 300 K. If the actual power output is 50 kW, calculate the Second Law efficiency.",
+   "a": "Second Law Efficiency = 80%",
+   "h": "First find Carnot efficiency, then compare actual thermal efficiency to it.",
+   "s": "Second law efficiency measures how effectively an engine utilizes the available energy from the heat source relative to the theoretical maximum limit imposed by the Second Law of Thermodynamics.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "State the Kelvin-Planck statement of the Second Law of Thermodynamics.",
+   "a": "The Kelvin-Planck statement says: It is impossible for any device that operates in a thermodynamic cycle to receive heat from a single thermal reservoir and produce a net amount of work.",
+   "h": "No engine can be 100% efficient; some heat must be rejected.",
+   "s": "This implies that no heat engine can have a thermal efficiency of 100%. Every heat engine must reject some waste heat to a lower temperature sink, which is why perpetual motion machines of the second kind are impossible.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Thermodynamics",
+   "q": "What happens to the entropy of an isolated system during any spontaneous process?",
+   "a": "The entropy of an isolated system increases (ΔS > 0) during any spontaneous irreversible process and remains constant (ΔS = 0) only if the process is reversible.",
+   "h": "Entropy always increases in nature for isolated systems.",
+   "s": "According to the Second Law of Thermodynamics, the total entropy of an isolated system can never decrease over time. This principle dictates the direction of natural processes, moving them towards a state of thermodynamic equilibrium where entropy is maximized.",
    "at": "2026-11-01"
   }
  ]

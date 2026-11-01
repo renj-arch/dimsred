@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T00:22:18.480Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address both immediately as it is the only agent producing fixes in recent runs. MockPapers should follow to convert fixed figures into complete exam papers, addressing the 'papers: false' file state. Exampatterns and Invention are deferred this run because they produced zero fixes for two consecutive runs (starved of input from missing papers/questions) per the rule to move them last. MetaLearn is skipped as it is no",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (215 total)",
-       "text": "Write Taylor's tool-life equation. | What does tool life mean as used in Taylor's work? | Define machinability."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T01:05:27.233Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -745,8 +710,54 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T07:22:58.019Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the backlog; BankFigures must address the 79 missing figures first as they block content consumption. MockPapers should follow to generate fresh exam simulations, directly reducing critical faults. Invention is deferred this run since unfinished standing goals (figures/papers) take precedence over new ideas.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (255 total)",
+       "text": "What is directed energy deposition (DED)? | What is the STL file in additive manufacturing? | Why are support structures needed in some AM processes?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Thermodynamics (293 in pool)",
+       "text": "Thermodynamics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T07:11:46.636Z",
+ "lastRun": "2026-11-01T07:22:58.019Z",
  "model": "qwen3.5:9b"
 }
