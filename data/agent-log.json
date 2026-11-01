@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T14:43:11.781Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; mainsfresh produced zero fixes in the last two runs so it is starved and moved to the end of the queue while bankfigures and mockpapers address the highest-priority broken content first.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (287 total)",
-       "text": "What is manual metal arc (SMAW, stick) welding? | What is the difference between brazing and soldering? | Name the resistance welding processes."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Industrial Engineering (345 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T15:22:28.125Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -832,8 +771,50 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T22:38:46.519Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 233193 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 2 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T21:56:52.803Z",
+ "lastRun": "2026-11-01T22:38:46.519Z",
  "model": "qwen3.5:9b"
 }
