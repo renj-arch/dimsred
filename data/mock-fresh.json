@@ -1,24 +1,15 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-01T16:18:53.767Z",
-  "cursor": 17,
-  "count": 351,
+  "updatedAt": "2026-11-01T16:41:30.593Z",
+  "cursor": 18,
+  "count": 360,
   "lastAttempt": {
-   "at": "2026-11-01T16:18:53.767Z",
-   "reason": "added 6"
+   "at": "2026-11-01T16:41:30.593Z",
+   "reason": "added 10"
   }
  },
  "items": [
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "Define Young's Modulus and state its SI unit.",
-   "a": "Young's Modulus (E) = Longitudinal Stress / Longitudinal Strain; SI Unit: Pascal (Pa) or N/m².",
-   "h": "Young's Modulus is the ratio of longitudinal stress to longitudinal strain within the elastic limit.",
-   "s": "Young's Modulus measures the stiffness of a solid material. It is defined as the constant of proportionality between tensile stress and tensile strain in the linear elastic region of the stress-strain curve.",
-   "at": "2026-10-19"
-  },
   {
    "ex": "ssc-je",
    "sub": "Strength of Materials",
@@ -3167,6 +3158,96 @@
    "a": "The feed check valve prevents the backflow of high-pressure water or steam from the boiler drum into the feed pump when the pump stops or fails. This protects the feed pump from damage due to reverse rotation or hydraulic shock and maintains system pressure integrity.",
    "h": "Identify the valve that prevents backflow of high-pressure steam/water into the low-pressure pump.",
    "s": "Without a check valve, the high pressure inside the boiler would push water backward through the piping into the suction side of the feed pump. This could cause the pump to run in reverse, leading to mechanical seizure, cavitation, or seal failure upon restart.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "Define the term 'clearance volume' in a reciprocating air compressor and explain its primary effect on the volumetric efficiency.",
+   "a": "The clearance volume is the space between the piston and cylinder head at TDC; it reduces volumetric efficiency by causing re-expansion of trapped air.",
+   "h": "Identify the space remaining in the cylinder when the piston reaches Top Dead Centre (TDC) with valves closed.",
+   "s": "Clearance volume is the dead space left in the cylinder when the piston is at its highest position. During the suction stroke, this trapped high-pressure air expands before fresh air can enter, reducing the effective suction capacity and thus lowering volumetric efficiency.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "A single-stage reciprocating compressor delivers 0.2 m³/min of free air at 1 bar. If the compression follows a polytropic process (n=1.3) from 1 bar to 6 bar, calculate the work done per minute assuming ideal gas behavior.",
+   "a": "Approximately 4.65 kJ/min (assuming standard temperature 300K and air properties).",
+   "h": "Use the polytropic work formula W = (n/(n-1)) * R * T1 * [(P2/P1)^((n-1)/n) - 1] multiplied by mass flow rate derived from volume.",
+   "s": "First, determine the mass flow rate using the ideal gas law at inlet conditions. Then apply the polytropic work formula for a compressor: W = (n/(n-1)) * m * R * T1 * [(P2/P1)^((n-1)/n) - 1]. Substituting P1=1 bar, P2=6 bar, n=1.3, and standard inlet temperature yields the work per minute.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "Why are multi-stage compressors preferred over single-stage compressors for high-pressure applications? Explain the role of intercooling in this context.",
+   "a": "Multi-stage compressors reduce the final discharge temperature and work input by splitting compression into stages with intercooling between them.",
+   "h": "Consider the relationship between compression ratio, discharge temperature, and mechanical stress on components.",
+   "s": "Compressing air to high pressures in a single stage results in excessively high discharge temperatures, which can damage lubricants and seals. Multi-stage compression allows the air to be cooled back to near inlet temperature after each stage (intercooling), reducing the work required for subsequent stages and preventing overheating.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "In an axial flow compressor, what is the function of the stator blades located between rotor rows?",
+   "a": "Stator blades act as diffusers to convert kinetic energy into pressure energy and guide the flow for the next rotor stage.",
+   "h": "Distinguish between rotating and stationary components in terms of energy addition versus flow management.",
+   "s": "While rotor blades add energy by accelerating the air, stator blades are stationary. They slow down the high-velocity air leaving the rotor, thereby increasing its static pressure (diffusion effect) and straightening the flow path for the subsequent rotor.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "Calculate the isothermal efficiency of a compressor if the indicated work done during actual compression (polytropic, n=1.35) is 20 kJ/kg and the theoretical isothermal work required is 15 kJ/kg.",
+   "a": "75%",
+   "h": "Efficiency is the ratio of minimum theoretical work to actual work performed.",
+   "s": "Isothermal efficiency is defined as the ratio of the ideal minimum work (isothermal work) to the actual work done. Therefore, Efficiency = (Isothermal Work / Actual Work) * 100 = (15 kJ/kg / 20 kJ/kg) * 100 = 75%.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "What is the primary purpose of a 'surge line' on a compressor performance map, and what happens if the operating point crosses it to the left?",
+   "a": "The surge line indicates the limit of stable operation; crossing it causes flow reversal and violent oscillations known as 'surge'.",
+   "h": "Relate mass flow rate and pressure ratio to stability limits in centrifugal compressors.",
+   "s": "On a compressor map, the surge line separates stable operation from unstable operation at low mass flow rates. If the operating point moves left of this line (low flow, high pressure), the airflow cannot overcome the internal resistance, leading to flow separation in the impeller and sudden reversal of flow, causing mechanical damage.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "Explain why a centrifugal compressor is generally unsuitable for compressing gases with very high molecular weight compared to an axial or reciprocating compressor.",
+   "a": "Centrifugal compressors rely on inertia; high molecular weight (dense) gases result in lower specific volume changes per stage, making them less efficient or requiring larger machines compared to lighter gases.",
+   "h": "Recall the relationship between gas density, impeller tip speed, and pressure rise in centrifugal compressors.",
+   "s": "The pressure rise in a centrifugal compressor depends on the density of the gas and the tip speed of the impeller. For a given rotational speed, heavier gases (high molecular weight) do not gain as much velocity head relative to their mass, often resulting in lower specific work output per stage compared to lighter gases like air or hydrogen.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "Define 'slip factor' in the context of a centrifugal compressor and state whether it is greater than, less than, or equal to unity.",
+   "a": "The slip factor is always less than unity (less than 1).",
+   "h": "Consider the difference between theoretical fluid velocity at impeller exit and actual velocity due to leakage and friction.",
+   "s": "Slip factor is the ratio of actual tangential velocity of the fluid leaving the impeller to the ideal tangential velocity. Due to clearance gaps between impeller vanes and casing, as well as friction, the fluid does not follow the vane angle perfectly, resulting in a lower actual velocity than theoretical, hence the factor is < 1.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "What is the function of an after-cooler installed at the outlet of a reciprocating air compressor?",
+   "a": "An after-cooler reduces the temperature of compressed air to near ambient, condensing moisture and increasing the density of the delivered air for storage or use.",
+   "h": "Identify the component that handles the heat generated during compression and its effect on gas density.",
+   "s": "Compression raises the air temperature significantly. An after-cooler removes this sensible heat before the air enters the receiver or storage tank. This cooling process also condenses water vapor present in the hot air, preventing corrosion and ensuring dry air delivery.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Air Compressors",
+   "q": "In a rotary vane compressor, what is the typical shape of the housing (casing) required to maintain constant volume compression?",
+   "a": "The housing typically has an elliptical or crescent-shaped cross-section with a sliding cylinder block inside.",
+   "h": "Visualize the path of the piston/vanes as they move outward against centrifugal force or spring pressure.",
+   "s": "Unlike reciprocating compressors with cylindrical cylinders, rotary vane compressors use a rotor with vanes that slide in and out. To ensure the volume decreases as the vanes move outward (compression), the casing is shaped like an ellipse or a circle with a crescent cutout, allowing the compression ratio to vary slightly or remain constant depending on design.",
    "at": "2026-11-01"
   }
  ]

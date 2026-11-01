@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T16:12:57.418Z",
-  "cursor": 312,
-  "built": 296
+  "updatedAt": "2026-11-01T16:33:50.464Z",
+  "cursor": 315,
+  "built": 299
  },
  "figs": {
   "11434945": {
@@ -1779,6 +1779,24 @@
   "fada1dcd": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Die -->\n  <path d=\"M40,180 L320,180 L320,90 L40,90 Z\" />\n  <!-- Punch -->\n  <path d=\"M180,20 L180,90\" stroke-dasharray=\"4,2\" />\n  <!-- Blank (initially flat) -->\n  <path d=\"M40,90 Q180,50 320,90\" fill=\"none\" stroke-width=\"2\" />\n  <!-- Flange region -->\n  <text x=\"60\" y=\"75\">Flange</text>\n  <!-- Blank Holder Plate -->\n  <rect x=\"40\" y=\"180\" width=\"280\" height=\"10\" fill=\"#ddd\" stroke=\"#222\" />\n  <text x=\"180\" y=\"205\">Blank Holder</text>\n  <!-- Force Arrow -->\n  <line x1=\"180\" y1=\"190\" x2=\"180\" y2=\"210\" stroke-width=\"2\" />\n  <circle cx=\"180\" cy=\"210\" r=\"3\" fill=\"#222\" />\n  <!-- Label -->\n  <text x=\"175\" y=\"225\">Presses Down</text>\n  <!-- Wrinkling prevention note -->\n  <text x=\"40\" y=\"165\">Prevents Wrinkling</text>\n</svg>",
    "n": "what is the work of the blank holder in deep drawing?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "a31985c4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Punch -->\n  <line x1=\"80\" y1=\"40\" x2=\"280\" y2=\"40\" />\n  <text x=\"180\" y=\"30\" text-anchor=\"middle\">Punch</text>\n  \n  <!-- Die -->\n  <line x1=\"80\" y1=\"180\" x2=\"280\" y2=\"180\" />\n  <text x=\"180\" y=\"195\" text-anchor=\"middle\">Die</text>\n  \n  <!-- Gap -->\n  <line x1=\"80\" y1=\"100\" x2=\"280\" y2=\"100\" />\n  <text x=\"180\" y=\"95\" text-anchor=\"middle\">Gap</text>\n  \n  <!-- Cup Before Ironing (Thicker) -->\n  <path d=\"M 100 40 L 100 100 Q 180 120 260 100 L 260 40\" />\n  \n  <!-- Cup After Ironing (Thinner, Uniform) -->\n  <path d=\"M 100 45 L 100 95 Q 180 115 260 95 L 260 45\" stroke-dasharray=\"4\" />\n  \n  <!-- Arrows indicating reduction -->\n  <path d=\"M 100 40 L 100 35\" marker-end=\"url(#arrow)\"/>\n  <path d=\"M 260 40 L 260 35\" marker-end=\"url(#arrow)\"/>\n  \n  <!-- Labels -->\n  <text x=\"180\" y=\"210\" text-anchor=\"middle\">Ironing: Reducing wall thickness</text>\n  <text x=\"180\" y=\"225\" text-anchor=\"middle\">to uniform thin wall</text>\n  \n  <!-- Arrowhead definition -->\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"5\" refY=\"5\" orient=\"auto\">\n      <polygon points=\"0 0, 10 5, 0 10\" />\n    </marker>\n  </defs>\n</svg>",
+   "n": "what is ironing in sheet forming?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "1243bb0f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Deep Drawing Force</text><path d=\"M40,60 L320,60\"/><path d=\"M40,60 L40,160\"/><path d=\"M320,60 L320,160\"/><path d=\"M80,60 Q180,140 280,60\" fill=\"none\" stroke-width=\"2\"/><text x=\"280\" y=\"55\">Blank</text><text x=\"75\" y=\"175\">Cup</text><path d=\"M30,160 L330,160\"/><text x=\"180\" y=\"190\" text-anchor=\"middle\">Wall Tension (π·d·t)</text><text x=\"20\" y=\"105\" text-anchor=\"end\">Flow Stress</text><text x=\"340\" y=\"105\" text-anchor=\"start\">(Sut)</text></svg>",
+   "n": "write the force to draw a cup in deep drawing.",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "a1c48394": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Gear Hobbing: Rolling Cut</text><rect x=\"40\" y=\"50\" width=\"280\" height=\"140\" rx=\"5\"/><circle cx=\"180\" cy=\"110\" r=\"60\" stroke-dasharray=\"4 2\"/><path d=\"M 180 50 L 180 170\"/><text x=\"195\" y=\"110\">Gear Blank</text><rect x=\"230\" y=\"40\" width=\"30\" height=\"80\" fill=\"#ddd\" stroke=\"#222\"/><path d=\"M 260 40 L 270 40 L 275 100 L 265 100 Z\"/><path d=\"M 230 80 L 260 80 L 265 120 L 235 120 Z\"/><path d=\"M 230 120 L 260 120 L 265 160 L 235 160 Z\"/><text x=\"240\" y=\"60\">Hob (Screw Tool)</text><text x=\"240\" y=\"90\">Gashes</text><text x=\"240\" y=\"120\">Cutting Teeth</text><text x=\"240\" y=\"150\">Rolling Motion</text><path d=\"M 260 40 L 280 60 M 260 80 L 280 100 M 260 120 L 280 140\" stroke-dasharray=\"2 2\"/><text x=\"290\" y=\"95\">Rotation</text></svg>",
+   "n": "what is gear hobbing?",
    "sub": "production",
    "at": "2026-11-01"
   }
