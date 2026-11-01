@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T09:10:14.957Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; MainsFresh produced 0 fixes in the last two runs so it must be deprioritized until standing goals are addressed. BankFigures and MockPapers have shown recent productivity, so they lead the sequence to clear high-impact content gaps before attempting new inventions or meta-learning tasks.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (267 total)",
-       "text": "Why must clamps in a fixture act against the locators, not the work alone? | What is numerically controlled (NC) machining? | What does CNC add to NC?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Engineering Mechanics (314 in pool)",
-       "text": "Engineering Mechanics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T09:35:52.404Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -792,8 +731,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T18:06:03.504Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual data. MockPapers and MainsFresh follow immediately to address the 81 open faults and generate fresh content, as files are currently missing. MetaLearn is scheduled last because it produced zero fixes in the last two runs, indicating it needs input from upstream agents before it can contribute.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (308 total)",
+       "text": "Name the single-cut and double-cut file. | Why are soft materials and thin edges filed with a coarse single-cut file? | Describe the half-round file."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T17:50:30.132Z",
+ "lastRun": "2026-11-01T18:06:03.504Z",
  "model": "qwen3.5:9b"
 }

@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T17:34:00.185Z",
-  "cursor": 321,
-  "built": 305
+  "updatedAt": "2026-11-01T17:59:17.846Z",
+  "cursor": 324,
+  "built": 308
  },
  "figs": {
   "11434945": {
@@ -1833,6 +1833,24 @@
   "fdd4ec3e": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- File Body -->\n  <rect x=\"40\" y=\"80\" width=\"280\" height=\"20\" rx=\"3\" />\n  <!-- Handle -->\n  <path d=\"M 340 90 L 360 105 L 360 115 L 340 130 L 320 115 L 320 105 Z\" />\n  <!-- Handle Grip -->\n  <path d=\"M 320 95 Q 340 85 360 95\" stroke-width=\"2\" fill=\"none\" />\n  <path d=\"M 320 115 Q 340 125 360 115\" stroke-width=\"2\" fill=\"none\" />\n  <!-- Teeth Section A: Coarse -->\n  <g transform=\"translate(60, 80)\">\n    <line x1=\"0\" y1=\"0\" x2=\"40\" y2=\"-10\" />\n    <line x1=\"0\" y1=\"0\" x2=\"45\" y2=\"10\" />\n    <line x1=\"0\" y1=\"0\" x2=\"38\" y2=\"-12\" />\n    <line x1=\"0\" y1=\"0\" x2=\"42\" y2=\"12\" />\n  </g>\n  <!-- Teeth Section B: Fine -->\n  <g transform=\"translate(150, 80)\">\n    <line x1=\"0\" y1=\"0\" x2=\"30\" y2=\"-4\" />\n    <line x1=\"0\" y1=\"0\" x2=\"32\" y2=\"4\" />\n    <line x1=\"0\" y1=\"0\" x2=\"28\" y2=\"-5\" />\n    <line x1=\"0\" y1=\"0\" x2=\"34\" y2=\"5\" />\n  </g>\n  <!-- Teeth Section C: Double Cut -->\n  <g transform=\"translate(240, 80)\">\n    <line x1=\"0\" y1=\"0\" x2=\"35\" y2=\"-7\" />\n    <line x1=\"0\" y1=\"0\" x2=\"35\" y2=\"7\" />\n    <line x1=\"0\" y1=\"0\" x2=\"33\" y2=\"-8\" />\n    <line x1=\"0\" y1=\"0\" x2=\"33\" y2=\"8\" />\n  </g>\n  <!-- Labels -->\n  <text x=\"55\" y=\"70\">Coarse Cut</text>\n  <text x=\"155\" y=\"70\">Fine Cut</text>\n  <text x=\"245\" y=\"70\">Double Cut</text>\n  <text x=\"300\" y=\"60\">Handle</text>\n  <text x=\"300\" y=\"150\">Body</text>\n</svg>",
    "n": "what is a file and how are files classified?",
+   "sub": "workshop",
+   "at": "2026-11-01"
+  },
+  "1cd65475": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Single Cut File -->\n  <text x=\"40\" y=\"30\">Single-Cut</text>\n  <rect x=\"40\" y=\"35\" width=\"140\" height=\"60\" stroke=\"#222\" fill=\"none\"/>\n  <line x1=\"40\" y1=\"45\" x2=\"180\" y2=\"45\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <line x1=\"40\" y1=\"60\" x2=\"180\" y2=\"60\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <line x1=\"40\" y1=\"75\" x2=\"180\" y2=\"75\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <text x=\"60\" y=\"90\">One direction</text>\n  <text x=\"60\" y=\"105\">Smooth finish</text>\n  \n  <!-- Double Cut File -->\n  <text x=\"240\" y=\"30\">Double-Cut</text>\n  <rect x=\"240\" y=\"35\" width=\"80\" height=\"60\" stroke=\"#222\" fill=\"none\"/>\n  <!-- First set of teeth -->\n  <line x1=\"240\" y1=\"45\" x2=\"320\" y2=\"45\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <line x1=\"240\" y1=\"60\" x2=\"320\" y2=\"60\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Second crossing set of teeth -->\n  <line x1=\"240\" y1=\"55\" x2=\"280\" y2=\"75\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <line x1=\"260\" y1=\"45\" x2=\"300\" y2=\"65\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <text x=\"250\" y=\"90\">Two directions</text>\n  <text x=\"250\" y=\"105\">Fast removal</text>\n</svg>",
+   "n": "name the single-cut and double-cut file.",
+   "sub": "workshop",
+   "at": "2026-11-01"
+  },
+  "e53130a5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- File Teeth Representation -->\n  <path d=\"M10,10 L20,20 M30,10 L40,20 M50,10 L60,20 M70,10 L80,20 M90,10 L100,20 M110,10 L120,20 M130,10 L140,20 M150,10 L160,20\" stroke-width=\"1.5\"/>\n  <path d=\"M10,30 L20,40 M30,30 L40,40 M50,30 L60,40 M70,30 L80,40 M90,30 L100,40 M110,30 L120,40 M130,30 L140,40 M150,30 L160,40\" stroke-width=\"1.5\"/>\n  <!-- Material Swarf (Chips) -->\n  <path d=\"M180,60 Q190,70 200,60 T220,60\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M180,70 Q190,80 200,70 T220,70\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M180,80 Q190,90 200,80 T220,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- File Body -->\n  <rect x=\"170\" y=\"40\" width=\"60\" height=\"40\" rx=\"5\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Labeling -->\n  <text x=\"30\" y=\"15\" font-weight=\"bold\">Single-Cut Teeth</text>\n  <text x=\"180\" y=\"65\">Soft Swarf</text>\n  <text x=\"180\" y=\"95\">Clears Easily</text>\n  <text x=\"230\" y=\"15\" font-weight=\"bold\">No Clogging</text>\n</svg>",
+   "n": "why are soft materials and thin edges filed with a coarse single-cut file?",
+   "sub": "workshop",
+   "at": "2026-11-01"
+  },
+  "d52b51e5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Half-Round File</text><path d=\"M40,100 L160,100 L160,140 Q180,160 200,140 L200,100 L320,100\" fill=\"none\" stroke-width=\"2\"/><path d=\"M40,100 L40,140\" stroke-width=\"2\"/><path d=\"M200,140 Q180,160 160,140\" fill=\"none\" stroke-width=\"2\"/><text x=\"55\" y=\"95\">Flat Face</text><text x=\"55\" y=\"145\">Flat Side</text><text x=\"175\" y=\"155\">Curved Face</text><text x=\"230\" y=\"155\">Round Side</text><text x=\"280\" y=\"95\">Handle Grip</text><path d=\"M320,100 L340,100\" stroke-width=\"1.5\"/><path d=\"M320,140 L340,140\" stroke-width=\"1.5\"/></svg>",
+   "n": "describe the half-round file.",
    "sub": "workshop",
    "at": "2026-11-01"
   }
