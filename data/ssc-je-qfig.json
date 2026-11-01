@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T05:51:06.771Z",
-  "cursor": 258,
-  "built": 245
+  "updatedAt": "2026-11-01T06:09:07.658Z",
+  "cursor": 261,
+  "built": 248
  },
  "figs": {
   "11434945": {
@@ -1473,6 +1473,24 @@
   "8389d4ca": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Weld Joint Cross Section -->\n  <path d=\"M40,80 L140,40 L220,80 L320,40 L360,80 L360,140 L40,140 Z\" />\n  <!-- Weld Pool / Fusion Zone -->\n  <path d=\"M140,40 L220,80 L260,80 L260,120 L180,120 L180,80 Z\" fill=\"#ddd\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Defects -->\n  <circle cx=\"170\" cy=\"90\" r=\"3\" fill=\"none\" stroke=\"#222\"/>\n  <text x=\"164\" y=\"88\" font-size=\"10\">Porosity</text>\n  <rect x=\"200\" y=\"100\" width=\"15\" height=\"3\" fill=\"none\" stroke=\"#222\"/>\n  <text x=\"204\" y=\"98\" font-size=\"10\">Slag</text>\n  <line x1=\"250\" y1=\"70\" x2=\"260\" y2=\"80\" stroke-dasharray=\"2,2\"/>\n  <text x=\"245\" y=\"75\" font-size=\"10\">Lack of Fusion</text>\n  <!-- X-Ray Beam -->\n  <line x1=\"360\" y1=\"110\" x2=\"380\" y2=\"110\" stroke-dasharray=\"4,2\"/>\n  <text x=\"375\" y=\"105\" font-size=\"10\">X-Ray</text>\n  <!-- Film -->\n  <rect x=\"360\" y=\"80\" width=\"20\" height=\"60\" fill=\"#eee\" stroke=\"#222\"/>\n  <text x=\"370\" y=\"115\" font-size=\"10\">Film</text>\n  <!-- Density Changes -->\n  <path d=\"M380,90 L380,100 L390,100 L390,90 Z\" fill=\"#ddd\" stroke=\"#222\"/>\n  <text x=\"375\" y=\"95\" font-size=\"10\">Dark Spots</text>\n</svg>",
    "n": "what does radiography reveal in a weld?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "71735f5c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<path d=\"M40,80 L100,80 L100,40 L140,40 L140,80 L200,80 L200,140 L160,140 L160,80 L100,80\"/>\n<circle cx=\"100\" cy=\"80\" r=\"3\" fill=\"#222\"/>\n<line x1=\"100\" y1=\"80\" x2=\"100\" y2=\"40\" stroke-dasharray=\"2,2\"/>\n<line x1=\"100\" y1=\"80\" x2=\"160\" y2=\"80\" stroke-dasharray=\"2,2\"/>\n<path d=\"M100,40 L105,30 L110,40 Z\"/>\n<text x=\"90\" y=\"30\">Flux</text>\n<text x=\"100\" y=\"65\">Concentrated</text>\n<rect x=\"120\" y=\"80\" width=\"20\" height=\"2\" fill=\"#222\"/>\n<text x=\"115\" y=\"95\">Crack</text>\n<circle cx=\"140\" cy=\"130\" r=\"15\" stroke=\"#222\" fill=\"none\"/>\n<circle cx=\"138\" cy=\"128\" r=\"2\" fill=\"#222\"/>\n<circle cx=\"142\" cy=\"128\" r=\"2\" fill=\"#222\"/>\n<text x=\"125\" y=\"145\">Iron Dust</text>\n<text x=\"130\" y=\"160\">Trapped</text>\n<line x1=\"160\" y1=\"80\" x2=\"160\" y2=\"140\" stroke-dasharray=\"2,2\"/>\n<text x=\"175\" y=\"105\">Flux Leakage</text>\n</svg>",
+   "n": "how does magnetic particle inspection work and what does it find?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "4ef68c2b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Crack -->\n  <path d=\"M 80 140 L 90 130 L 100 140 L 110 130 L 120 140 L 130 135\" stroke-width=\"3\"/>\n  <!-- Developer -->\n  <path d=\"M 70 145 L 140 145 L 140 165 L 70 165 Z\" fill=\"#222\" opacity=\"0.1\" stroke-width=\"1.5\"/>\n  <!-- Dye in crack -->\n  <path d=\"M 80 140 L 90 130 L 100 140 L 110 130 L 120 140 L 130 135\" fill=\"#222\" opacity=\"0.6\" stroke-width=\"1.5\"/>\n  <!-- Labels -->\n  <text x=\"105\" y=\"185\">Crack</text>\n  <text x=\"75\" y=\"165\">Developer</text>\n  <text x=\"135\" y=\"165\">Dye (Capillary Action)</text>\n  <!-- Surface -->\n  <line x1=\"0\" y1=\"140\" x2=\"360\" y2=\"140\" stroke-width=\"2\"/>\n</svg>",
+   "n": "what does a liquid-penetrant test detect?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "79be868e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Coil -->\n  <path d=\"M40,80 Q60,60 80,80 T120,80 T160,80 T200,80 T240,80\" stroke-width=\"3\"/>\n  <circle cx=\"120\" cy=\"80\" r=\"40\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Workpiece -->\n  <rect x=\"60\" y=\"100\" width=\"240\" height=\"80\" rx=\"5\"/>\n  <!-- Flaw (Crack) -->\n  <path d=\"M100,140 L110,135 L120,140 L130,135 L140,140\" stroke-width=\"1.5\"/>\n  <!-- Eddy Current Paths (Distorted near flaw) -->\n  <path d=\"M80,120 Q90,110 100,120 T120,120 T140,120 T160,120\" fill=\"none\" stroke=\"#222\" opacity=\"0.5\"/>\n  <path d=\"M80,130 Q90,125 100,130 T120,130 T140,130 T160,130\" fill=\"none\" stroke=\"#222\" opacity=\"0.5\"/>\n  <!-- Labels -->\n  <text x=\"20\" y=\"70\">Coil</text>\n  <text x=\"80\" y=\"200\">Workpiece</text>\n  <text x=\"140\" y=\"200\">Flaw (Crack)</text>\n  <text x=\"250\" y=\"70\">Impedance Change</text>\n</svg>",
+   "n": "what can eddy-current testing measure?",
    "sub": "production",
    "at": "2026-11-01"
   }

@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T23:07:17.514Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures must lead to resolve the 81 open faults where figures are missing. Since MockPapers produced 0 in the last two runs, it is moved to the end of the queue despite being a high-priority agent for unfinished standing goals like incomplete papers. MetaLearn and Invention follow to address pending ideas and ensure content freshness, while MainsFresh is skipped as no mains-specific gaps were flagged in the current state.",
-    "actions": [
-     "BankFigures",
-     "ExamPatterns",
-     "MetaLearn",
-     "Invention",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (207 total)",
-       "text": "Explain electrochemical machining (ECM). | What is ultrasonic machining (USM)? | How does laser beam machining (LBM) remove metal?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Machine Design (205 in pool)",
-       "text": "Machine Design"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T23:25:38.504Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -767,8 +706,63 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T06:31:51.363Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (248 total)",
+       "text": "How does magnetic particle inspection work and what does it find? | What does a liquid-penetrant test detect? | What can eddy-current testing measure?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Power Plant Engineering (274 in pool)",
+       "text": "Power Plant Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T05:56:29.974Z",
+ "lastRun": "2026-11-01T06:31:51.363Z",
  "model": "qwen3.5:9b"
 }
