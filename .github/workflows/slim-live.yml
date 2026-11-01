@@ -110,6 +110,17 @@ jobs:
           git checkout -q FETCH_HEAD
           echo "checked out $(git ls-files | wc -l) paths"
 
+      # Cheap contracts that catch the class of bug where a page ships but its
+      # data loader cannot read the deployed files. map.html sat broken behind
+      # "data/timeline.json not found" because its shard merger referenced an
+      # undefined accumulator; these suites execute the real loaders, so the
+      # deploy stops here instead of publishing a blank page.
+      - name: Page data and UI regression suites
+        run: |
+          set -euo pipefail
+          node scripts/lib/site-data.test.js
+          node scripts/lib/site-ui.test.js
+
       - name: Rebuild slim live tree (orphan root)
         run: |
           set -euo pipefail

@@ -1259,12 +1259,12 @@ function loadTimelineData() {
     for (var i = 0; i < (t.linksParts || 0); i++) linkUrls.push('data/timeline-links.' + i + '.json');
     return Promise.all(nodeUrls.map(fetchTimelineJson)).then(function (nodeParts) {
       var allNodes = [];
-      for (var p of nodeParts) allNodes = all.concat(p);
+      for (var p of nodeParts) allNodes = allNodes.concat(p);
       t.nodes = allNodes;
       if (linkUrls.length === 0) return t;
       return Promise.all(linkUrls.map(fetchTimelineJson)).then(function (linkParts) {
         var allLinks = [];
-        for (var p of linkParts) allLinks = all.concat(p);
+        for (var p of linkParts) allLinks = allLinks.concat(p);
         t.links = allLinks;
         return t;
       });
@@ -1347,8 +1347,14 @@ loadTimelineData().then(function (t) {
   }
   window.addEventListener('hashchange', hashRoute);
   if (location.hash) hashRoute();
-}).catch(function () {
-  document.getElementById('canvas').innerHTML = '<div class="loading">data/timeline.json not found — run <code>node scripts/build-timeline.js</code>.</div>';
+}).catch(function (e) {
+  // Any failure in the shard loader used to be reported as "timeline.json not
+  // found", which sent people to rebuild data that was already deployed. Show
+  // the real cause, and only suggest the rebuild for an actual fetch failure.
+  var msg = e && e.message ? e.message : String(e || 'unknown error');
+  if (window.console) console.error('Timeline load failed:', e);
+  document.getElementById('canvas').innerHTML = '<div class="loading">Could not load the timeline data (' + esc(msg) + '). '
+    + 'Run <code>node scripts/build-timeline.js</code> if the data files are missing, then reload.</div>';
 });
 </script>
 </body>
