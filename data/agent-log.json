@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T19:02:21.612Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. BankFigures is the only agent producing output recently; it must lead to clear critical faults. MainsFresh should follow to generate fresh material for any remaining syllabus gaps or question needs. Invention and MetaLearn have produced zero fixes in the last two runs and will be placed last to avoid starving them if inputs arrive later.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (178 total)",
-       "text": "What is the essential difference of rotary forging? | What is drop forging and its advantage over hammering plate? | Name the principal types of rolling mills."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T19:21:51.144Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -669,8 +634,52 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T01:49:18.208Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (221 total)",
+       "text": "Name the three types of chips formed in machining. | Why is a chip breaker used on a lathe tool? | Write the surface finish of a turned surface in terms of nose radius and feed."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T01:05:27.233Z",
+ "lastRun": "2026-11-01T01:49:18.208Z",
  "model": "qwen3.5:9b"
 }
