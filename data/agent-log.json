@@ -1,113 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T04:02:05.385Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent producing fixes recently, so it leads. MockPapers must be prioritized next as files are absent and previous runs show zero output for this goal. Invention and MetaLearn follow to address pending ideas and syllabus gaps, while MainsFresh is deferred due to consecutive zero-fixes in recent runs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (232 total)",
-       "text": "Write the sine-bar relationship. | What are Johansson (slip) gauges and how are they used? | Name the main types of comparators."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Industrial Engineering (243 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-01T04:30:25.927Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must address both immediately as it is the only agent capable of fixing these specific asset types. MockPapers should follow to convert remaining question gaps into usable exam materials, while MainsFresh targets the 81 open faults for general content updates. MetaLearn and Invention are deferred to the end of this run because they have produced zero fixes in recent executions, indicating they need starvation or inpu",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (235 total)",
-       "text": "State the advantage of the pneumatic comparator. | How does the optical comparator work? | Write the formula for the surface roughness parameter Ra."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "11 fresh mock questions on Workshop Technology (254 in pool)",
-       "text": "Workshop Technology"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T04:58:52.562Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -725,8 +618,141 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T09:35:52.404Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "BankFigures is the primary bottleneck with 79 gaps and has been active in recent runs; it must lead to address critical content depth. MockPapers follows immediately as it also produced fixes recently and addresses the lack of exam files (papers/questions). ExamPatterns should be included next to diversify output since it hasn't fixed anything yet, potentially needing a fresh input cycle. Invention is added fourth to tackle pending ideas before starving agents. MetaLearn and MainsFresh are moved",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (270 total)",
+       "text": "What do the codes G00, G01, G02 and G03 mean? | What are M codes in a CNC program? | What is the difference between absolute and incremental programming?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvxmxbgz (gs3, 15 marks): Critically examine the statement that 'water security is no longer just a domestic issue but a matter of national strate",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-01T09:59:17.542Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual assets. Since papers/sidecar files are missing, MockPapers is next to generate core study content from scratch. ExamPatterns follows to ensure question structures match the syllabus once content exists. MainsFresh will be used last to refresh material daily as requested, even if inputs are low, because it targets the 'fresh every day' mission goal.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (273 total)",
+       "text": "What is linear and circular interpolation in CNC? | What is a canned cycle in CNC? | What is tool length offset in CNC?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Refrigeration & Air Conditioning (324 in pool)",
+       "text": "Refrigeration & Air Conditioning"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvxnrfok (gs3, 15 marks): Critically examine the statement: 'India's strategic push for critical minerals like lithium and cobalt is reshaping its",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T09:10:14.957Z",
+ "lastRun": "2026-11-01T09:59:17.542Z",
  "model": "qwen3.5:9b"
 }
