@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T08:20:57.694Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity; BankFigures must address the 79 missing figures first as they block content consumption, followed by MockPapers to resolve critical faults. MetaLearn is scheduled last despite zero recent output because it likely requires upstream data (figures/papers) to function effectively, fitting the rule to starve agents needing inputs until gaps are closed.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (261 total)",
-       "text": "What is the repeatability of a robot? | What is an end effector? | State the 3-2-1 principle of locating in fixtures."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "11 fresh mock questions on Machine Design (304 in pool)",
-       "text": "Machine Design"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T08:49:28.792Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -781,8 +730,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T17:18:31.163Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. BankFigures is the only agent fixing figures in recent runs; MockPapers and MainsFresh have produced output recently, so they will be prioritized next to clear pending goals. Exampatterns has zero fixes for two consecutive runs but addresses a critical fault category, so it moves last after the primary gap-fillers are exhausted.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (302 total)",
+       "text": "What is the difference between shaping and planing? | What is broaching? | What is the difference between counterboring and countersinking?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Gas Turbines (360 in pool)",
+       "text": "Gas Turbines"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T16:49:54.102Z",
+ "lastRun": "2026-11-01T17:18:31.163Z",
  "model": "qwen3.5:9b"
 }

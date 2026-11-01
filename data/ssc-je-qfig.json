@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T16:33:50.464Z",
-  "cursor": 315,
-  "built": 299
+  "updatedAt": "2026-11-01T17:04:04.802Z",
+  "cursor": 318,
+  "built": 302
  },
  "figs": {
   "11434945": {
@@ -1797,6 +1797,24 @@
   "a1c48394": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Gear Hobbing: Rolling Cut</text><rect x=\"40\" y=\"50\" width=\"280\" height=\"140\" rx=\"5\"/><circle cx=\"180\" cy=\"110\" r=\"60\" stroke-dasharray=\"4 2\"/><path d=\"M 180 50 L 180 170\"/><text x=\"195\" y=\"110\">Gear Blank</text><rect x=\"230\" y=\"40\" width=\"30\" height=\"80\" fill=\"#ddd\" stroke=\"#222\"/><path d=\"M 260 40 L 270 40 L 275 100 L 265 100 Z\"/><path d=\"M 230 80 L 260 80 L 265 120 L 235 120 Z\"/><path d=\"M 230 120 L 260 120 L 265 160 L 235 160 Z\"/><text x=\"240\" y=\"60\">Hob (Screw Tool)</text><text x=\"240\" y=\"90\">Gashes</text><text x=\"240\" y=\"120\">Cutting Teeth</text><text x=\"240\" y=\"150\">Rolling Motion</text><path d=\"M 260 40 L 280 60 M 260 80 L 280 100 M 260 120 L 280 140\" stroke-dasharray=\"2 2\"/><text x=\"290\" y=\"95\">Rotation</text></svg>",
    "n": "what is gear hobbing?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "43d2f880": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Shaping: Tool moves, Work fixed -->\n  <rect x=\"40\" y=\"40\" width=\"80\" height=\"120\" stroke-dasharray=\"2,2\"/>\n  <text x=\"80\" y=\"35\" text-anchor=\"middle\">Work</text>\n  <path d=\"M 120 60 L 160 60\" stroke-width=\"3\"/>\n  <circle cx=\"140\" cy=\"50\" r=\"5\" fill=\"#222\"/>\n  <path d=\"M 135 50 L 135 70 M 145 50 L 145 70\" stroke-width=\"1\"/>\n  <text x=\"165\" y=\"65\">Tool</text>\n  <path d=\"M 120 60 L 120 180\" stroke-dasharray=\"2,2\"/>\n  <text x=\"115\" y=\"140\" text-anchor=\"end\">Fixed</text>\n  <path d=\"M 160 60 L 240 60\" stroke-width=\"3\"/>\n  <text x=\"245\" y=\"75\">Motion</text>\n  \n  <!-- Planing: Work moves, Tool fixed -->\n  <rect x=\"180\" y=\"40\" width=\"80\" height=\"120\" stroke-dasharray=\"2,2\"/>\n  <text x=\"220\" y=\"35\" text-anchor=\"middle\">Work</text>\n  <path d=\"M 260 60 L 260 180\" stroke-width=\"3\"/>\n  <circle cx=\"270\" cy=\"50\" r=\"5\" fill=\"#222\"/>\n  <path d=\"M 265 50 L 265 70 M 275 50 L 275 70\" stroke-width=\"1\"/>\n  <text x=\"290\" y=\"65\">Tool</text>\n  <text x=\"285\" y=\"140\" text-anchor=\"start\">Fixed</text>\n  <path d=\"M 260 60 L 180 60\" stroke-dasharray=\"2,2\"/>\n  <text x=\"175\" y=\"75\" text-anchor=\"end\">Motion</text>\n</svg>",
+   "n": "what is the difference between shaping and planing?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "234dc185": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Workpiece -->\n  <rect x=\"40\" y=\"80\" width=\"140\" height=\"40\"/>\n  <text x=\"110\" y=\"115\" text-anchor=\"middle\">Workpiece</text>\n  \n  <!-- Finished profile outline (dashed) -->\n  <path d=\"M 60 120 L 180 120\" stroke-dasharray=\"4,2\"/>\n  \n  <!-- Broach Tool -->\n  <rect x=\"50\" y=\"70\" width=\"160\" height=\"10\"/>\n  <text x=\"130\" y=\"85\" text-anchor=\"middle\">Broach</text>\n  \n  <!-- Teeth on broach -->\n  <circle cx=\"60\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  <circle cx=\"70\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  <circle cx=\"80\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  <circle cx=\"90\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  <circle cx=\"100\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  <circle cx=\"110\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  <circle cx=\"120\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  <circle cx=\"130\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  <circle cx=\"140\" cy=\"75\" r=\"2\" fill=\"#222\"/>\n  \n  <!-- Cutting action lines -->\n  <line x1=\"60\" y1=\"85\" x2=\"60\" y2=\"95\" stroke-dasharray=\"2,2\"/>\n  <line x1=\"70\" y1=\"85\" x2=\"70\" y2=\"95\" stroke-dasharray=\"2,2\"/>\n  <line x1=\"80\" y1=\"85\" x2=\"80\" y2=\"95\" stroke-dasharray=\"2,2\"/>\n  \n  <!-- Direction arrow -->\n  <path d=\"M 200 90 L 320 90\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <text x=\"260\" y=\"85\">Push/Pull</text>\n  \n  <!-- Arrow marker definition -->\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\">\n      <polygon points=\"0 0, 10 3, 0 6\" fill=\"#222\"/>\n    </marker>\n  </defs>\n</svg>",
+   "n": "what is broaching?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "8fd7a947": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Counterboring: Flat Step -->\n  <path d=\"M40,80 L100,80 L100,120 L40,120 Z\" fill=\"none\"/>\n  <circle cx=\"70\" cy=\"100\" r=\"35\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M40,80 L70,60 L100,80 L100,120 L70,140 L40,120 Z\" fill=\"none\"/>\n  <text x=\"50\" y=\"135\">Flat Step</text>\n  <text x=\"50\" y=\"150\">(Cap Screw)</text>\n  \n  <!-- Countersinking: Cone -->\n  <path d=\"M200,80 L260,80 L260,120 L200,120 Z\" fill=\"none\"/>\n  <circle cx=\"230\" cy=\"100\" r=\"35\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M200,80 L230,60 L260,80 L260,120 L230,140 L200,120 Z\" fill=\"none\"/>\n  <text x=\"210\" y=\"135\">Conical Mouth</text>\n  <text x=\"210\" y=\"150\">(Flush Head)</text>\n  \n  <!-- Labels -->\n  <text x=\"20\" y=\"20\">Counterboring</text>\n  <text x=\"180\" y=\"20\">Countersinking</text>\n</svg>",
+   "n": "what is the difference between counterboring and countersinking?",
    "sub": "production",
    "at": "2026-11-01"
   }
