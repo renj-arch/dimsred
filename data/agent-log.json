@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T18:22:52.268Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures must address the 79 missing figures first as they block content completeness. MainsFresh is required to generate fresh exam questions since filesPresent shows no papers or questions exist, addressing the 'pendingIdeas' queue. MetaLearn has produced zero fixes for the last two runs and should be placed last in the queue per rules, even though it currently has no specific unfinished goal assigned.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (172 total)",
-       "text": "What is PWHT and what does it achieve? | Why is the flash trimmed off in normal die forging? | How should forging dies be arranged to extend their life?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwqb6ui (gs3, 15 marks): Critically examine the concept of 'Loss and Damage' finance under the UNFCCC, focusing on the transition from adaptation",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T18:48:51.447Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -701,8 +650,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T00:22:18.480Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address both immediately as it is the only agent producing fixes in recent runs. MockPapers should follow to convert fixed figures into complete exam papers, addressing the 'papers: false' file state. Exampatterns and Invention are deferred this run because they produced zero fixes for two consecutive runs (starved of input from missing papers/questions) per the rule to move them last. MetaLearn is skipped as it is no",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (215 total)",
+       "text": "Write Taylor's tool-life equation. | What does tool life mean as used in Taylor's work? | Define machinability."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-10-31T23:51:57.698Z",
+ "lastRun": "2026-11-01T00:22:18.480Z",
  "model": "qwen3.5:9b"
 }

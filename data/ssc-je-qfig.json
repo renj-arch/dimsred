@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-10-31T23:34:55.734Z",
-  "cursor": 222,
-  "built": 213
+  "updatedAt": "2026-11-01T00:02:59.062Z",
+  "cursor": 225,
+  "built": 215
  },
  "figs": {
   "11434945": {
@@ -1283,6 +1283,18 @@
    "n": "what is built-up edge (bue) in machining?",
    "sub": "production",
    "at": "2026-10-31"
+  },
+  "ff69a75e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Time (minutes)</text><line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><polyline points=\"40,200 180,160 320,200\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"200\" y=\"195\" text-anchor=\"middle\">Cutting Time</text><text x=\"45\" y=\"100\" text-anchor=\"end\">Wear Limit</text><line x1=\"38\" y1=\"100\" x2=\"40\" y2=\"100\" stroke-dasharray=\"2,2\"/><circle cx=\"180\" cy=\"160\" r=\"3\" fill=\"#222\"/><text x=\"175\" y=\"155\" text-anchor=\"end\">Start</text><text x=\"185\" y=\"155\" text-anchor=\"start\">End (Tool Life)</text></svg>",
+   "n": "what does tool life mean as used in taylor's work?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "1bfe1a68": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Machinability Concept</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"50\">Workpiece</text><rect x=\"40\" y=\"60\" width=\"280\" height=\"10\"/><line x1=\"40\" y1=\"70\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"70\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"195\">Tool</text><polygon points=\"320,60 320,100 340,100\" fill=\"#222\"/><line x1=\"340\" y1=\"100\" x2=\"340\" y2=\"180\"/><text x=\"350\" y=\"195\">Chip</text><path d=\"M 320 70 Q 360 100 340 130\" stroke=\"#222\" fill=\"none\"/><text x=\"330\" y=\"105\">Easy Chipping</text><line x1=\"80\" y1=\"190\" x2=\"280\" y2=\"190\"/><text x=\"70\" y=\"210\">Long Tool Life</text><circle cx=\"180\" cy=\"190\" r=\"5\"/><text x=\"175\" y=\"205\">Fixed Speed</text></svg>",
+   "n": "define machinability.",
+   "sub": "production",
+   "at": "2026-11-01"
   }
  }
 }
