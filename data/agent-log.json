@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T06:51:38.563Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/syllabus files are missing, MetaLearn should immediately generate foundational study materials to fill these voids. MockPapers and ExamPatterns will follow once core content exists to ensure zero-broken-page status. Invention is deferred as we prioritize fixing existing gaps over new ideas.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MockPapers",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (251 total)",
-       "text": "Name the three principal families of additive manufacturing by material feeding. | What is FDM and for what is it used? | What is SLA and how does it work?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Strength of Materials (284 in pool)",
-       "text": "Strength of Materials"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T07:11:46.636Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -690,8 +634,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T14:43:11.781Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; mainsfresh produced zero fixes in the last two runs so it is starved and moved to the end of the queue while bankfigures and mockpapers address the highest-priority broken content first.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (287 total)",
+       "text": "What is manual metal arc (SMAW, stick) welding? | What is the difference between brazing and soldering? | Name the resistance welding processes."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Industrial Engineering (345 in pool)",
+       "text": "Industrial Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T13:57:25.361Z",
+ "lastRun": "2026-11-01T14:43:11.781Z",
  "model": "qwen3.5:9b"
 }

@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-01T13:52:29.825Z",
-  "cursor": 13,
-  "count": 335,
+  "updatedAt": "2026-11-01T14:22:14.130Z",
+  "cursor": 14,
+  "count": 345,
   "lastAttempt": {
-   "at": "2026-11-01T13:52:29.825Z",
-   "reason": "added 1"
+   "at": "2026-11-01T14:22:14.130Z",
+   "reason": "added 10"
   }
  },
  "items": [
@@ -3023,6 +3023,96 @@
    "a": "±1",
    "h": "A matrix Q is orthogonal if QᵀQ = I; its determinant is always +1 or -1.",
    "s": "An orthogonal matrix represents a rotation or reflection in space, preserving lengths and angles. By definition, the inverse equals the transpose. The determinant of such a matrix must be either 1 (pure rotation) or -1 (rotation with reflection).",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "Define 'Line Balancing Efficiency' in the context of an assembly line and explain its significance in reducing idle time.",
+   "a": "Line Balancing Efficiency = (Sum of Task Times) / (Number of Stations × Cycle Time) × 100%",
+   "h": "Ratio of total task time to cycle time multiplied by number of stations.",
+   "s": "It measures how effectively the work is distributed among assembly line stations. A higher efficiency indicates less idle time and better utilization of labor and resources, directly impacting production output.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "A worker performs a task in 20 minutes with a performance rating of 120%. Calculate the Standard Time if the Allowance Factor is 15%.",
+   "a": "Standard Time = 24 minutes",
+   "h": "Adjust observed time by rating to get Normal Time, then add allowance.",
+   "s": "Normal Time = Observed Time × (Performance Rating / 100) = 20 × 1.20 = 24 minutes. Standard Time = Normal Time × (1 + Allowance Factor) = 24 × 1.15 = 27.6 minutes.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "In a Job Shop layout, what is the primary advantage over a Product Layout regarding production flexibility?",
+   "a": "High Flexibility in handling diverse product designs and batch sizes.",
+   "h": "Job shop allows handling varied products on same equipment.",
+   "s": "A Job Shop layout groups similar machines together (functional grouping), allowing the same equipment to process different types of parts. This provides high flexibility to accommodate changes in product mix, unlike a Product Layout which is rigid for mass production of a single item.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "Calculate the Economic Order Quantity (EOQ) if Annual Demand (D) is 10,000 units, Ordering Cost (S) is ₹500 per order, and Holding Cost (H) is ₹20 per unit per year.",
+   "a": "707.11 units",
+   "h": "Formula: sqrt(2DS/H).",
+   "s": "Using the EOQ formula: Q = √[(2 × 10,000 × 500) / 20] = √[10,000,000 / 20] = √500,000 ≈ 707.11 units.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "What is the term for the technique that involves breaking down a complex job into smaller elements and timing each element to determine standard time?",
+   "a": "Time Study (or Work Sampling/MTM depending on context, but Time Study fits best here).",
+   "h": "Method of analyzing work by dividing it into small parts.",
+   "s": "Time Study is the classical industrial engineering technique where a stopwatch is used to record the time taken for each element of a job after defining standard methods. It helps in establishing performance standards and setting piece-rate wages.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "In Material Requirements Planning (MRP), if the Gross Requirement for an item is 100 units, Safety Stock is 10 units, and On-hand Inventory is 20 units, what is the Net Requirement?",
+   "a": "90 units",
+   "h": "Gross Req minus On-hand, ensuring minimum safety stock is met.",
+   "s": "Net Requirement = Max(0, Gross Requirement + Safety Stock - On-hand Inventory). Here, we need to cover the demand plus maintain safety stock. If we assume the calculation is simply covering the gap: 100 (demand) - 20 (on hand) = 80. To ensure 10 safety stock remains, we order 90 units (leaving 10). So Net Requirement = Gross - OnHand + SafetyStock adjustment if onhand < gross+ss. Standard logic: Net Req = Gross - OnHand. If result is negative, zero. Then add Safety Stock if current inventory doesn't meet it. Simplest interpretation for exam: Need 100, have 20, need to order 80 to reach 100. But safety stock implies we want 10 left. So Order = 100 - 20 + 10 = 90.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "Define 'Critical Path' in Project Management and state what determines the minimum project duration.",
+   "a": "The sum of durations of activities on the longest path through the network diagram.",
+   "h": "Longest sequence of dependent activities.",
+   "s": "The Critical Path is the sequence of project activities that adds up to the total project schedule duration. Any delay in an activity on this path will directly delay the entire project completion date, making it the determinant of the minimum project duration.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "What is the primary function of a 'Gantt Chart' in production planning?",
+   "a": "To visualize the schedule of tasks, their durations, and progress against a timeline.",
+   "h": "Visual timeline showing start and end dates of tasks.",
+   "s": "A Gantt chart provides a bar diagram that illustrates the start and finish dates of elements of a project. It is primarily used for scheduling, monitoring progress, and identifying delays in production or construction projects.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "In Facility Layout design, which arrangement minimizes material handling costs for an assembly line producing a single product continuously?",
+   "a": "Product Layout (or Line Layout).",
+   "h": "Arrangement based on flow of materials.",
+   "s": "A Product Layout arranges machines and workstations in the sequence of operations required to produce a specific product. This minimizes material handling distance and time, making it ideal for continuous mass production of a single item.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Industrial Engineering",
+   "q": "Calculate the Utilization of a machine if it operates for 400 hours in a month with a total available time of 720 hours.",
+   "a": "55.56%",
+   "h": "(Operating Time / Available Time) × 100.",
+   "s": "Machine Utilization = (Actual Operating Hours / Total Available Hours) × 100. Substituting values: (400 / 720) × 100 ≈ 55.56%. This metric indicates the percentage of time the machine is actively producing versus being idle.",
    "at": "2026-11-01"
   }
  ]
