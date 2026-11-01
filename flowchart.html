@@ -232,7 +232,7 @@ var HIDDEN={};try{HIDDEN=JSON.parse(localStorage.getItem('fc_hidden')||'{}')||{}
 var REV={},REV_BY_CANON={},CUR_REV=null,REV_SHOW=false;
 try{var _rs=localStorage.getItem('fc_rev');REV_SHOW=_rs===null?true:_rs==='1';}catch(e){REV_SHOW=true;}
 var RAND_POOL=[];
-function fmtCnt(n){n=n||0;if(n>=1000000)return (n/1000000).toFixed(1)+'M';if(n>=1000)return (n/1000).toFixed(1)+'k';if(n>=100)return Math.round(n/10)*10+'+';return String(n);}
+function fmtCnt(n){n=n||0;if(n>=1000000)return (n/1000000).toFixed(1)+'M';if(n>=1000)return (n/1000).toFixed(1)+'k';if(n>=100)return Math.round(n/10)*10+'+';return String(n);};
 
 var TYPE_COLOR={
   person:'#a78bfa',event:'#fb923c',disease:'#fb7185',scheme:'#2dd4bf',org:'#22d3ee',concept:'#94a3b8',
@@ -2069,6 +2069,6 @@ LINKS=[];
 }).catch(function(err){
   document.getElementById('msg').textContent='Could not load data/timeline.json — run node scripts/build-timeline.js first. ('+err.message+')';
 });
-</script>
+
 </body>
 </html>
