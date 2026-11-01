@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T02:16:35.450Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to resolve broken visual assets blocking content consumption. Once figures are stable, MockPapers should address the zeroed output from previous runs to rebuild core study material. ExamPatterns and MainsFresh follow to diversify gaps while Invention/MetaLearn remain last as they have produced zero fixes recently and can be starved without immediate impact.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (224 total)",
-       "text": "How are cutting forces measured in machining research? | Name the three common grinding machines. | What is honing?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T02:56:28.665Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -724,8 +679,38 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-01T08:18:49.848Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Implement Retry Logic for On-Demand Lanes",
+       "detail": "The digest shows recent failures in 'mental-batch' (transport timeout) and 'tutor-questions' (invalid JSON output), causing requests to fail immediately.",
+       "text": "Modify the Node.js scripts handling on-demand lanes to catch specific error patterns (e.g., non-JSON responses, timeout exceptions). If a failure occurs, automatically retry the request with adjusted parameters (e.g., lower temperature for tutor questions) up to 3 times before marking it as failed in the log."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Auto-Resolve Low-Priority Fault Board Items",
+       "detail": "The fault board lists 14 info items and 23 critical/44 warn items, with the site agent already running fixes for bankfigures and mockpapers.",
+       "text": "Develop a cron job or GitHub Action that scans data/faults.json. For items tagged as 'info' or specific 'warn' categories (like broken links in non-critical paths), automatically trigger the relevant fix script or update the JSON status to 'resolved' if the underlying issue is known to be transient, reducing manual noise."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T07:53:47.499Z",
+ "lastRun": "2026-11-01T08:18:49.848Z",
  "model": "qwen3.5:9b"
 }
