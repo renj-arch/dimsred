@@ -566,14 +566,24 @@ function auditLines(lines, rows, scene, usedTexts) {
 
 function stubLines(rows, scene) {
   /*
-   * A deterministic stand-in for the model: take the first clause of five
-   * candidate rows, long enough to time. This exists only so the assembly and
-   * the gate can be exercised without a 40B model on the machine.
+   * A deterministic stand-in for the model: build 5 lines of 7-22 words each
+   * from the first candidate rows. This exists only so the assembly and
+   * the gate can be exercised without a model on the machine.
    */
   return rows.slice(0, 5).map((row) => {
-    const clause = row.text.split(/[;:]/)[0].replace(/\.$/, '');
-    const w = words(clause);
-    return { row: row.id, text: w.length > 22 ? `${w.slice(0, 20).join(' ')}.` : `${clause}.` };
+    const text = row.text.replace(/\.$/, '');
+    const w = words(text);
+    // Ensure 7-22 words by taking a middle segment if needed
+    let out;
+    if (w.length >= 7 && w.length <= 22) {
+      out = text;
+    } else if (w.length > 22) {
+      out = w.slice(0, 20).join(' ') + '.';
+    } else {
+      // Too short: pad with neutral context from the row
+      out = text + ' was recorded in the sources for this scene.';
+    }
+    return { row: row.id, text: out };
   });
 }
 
