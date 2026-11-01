@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T23:51:57.698Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent producing output recently, so it leads. MockPapers has produced 0 in the last two runs but holds unfinished standing goals (papers=false), so it follows BankFigures to clear that backlog. ExamPatterns and Invention are next as they address remaining gaps and pending ideas. MetaLearn goes last as it has been inactive for multiple runs and may be starved of inputs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (213 total)",
-       "text": "What is crater wear on a cutting tool? | What is flank wear and why is it the accepted tool-life criterion? | What is built-up edge (BUE) in machining?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Engineering Mechanics (222 in pool)",
-       "text": "Engineering Mechanics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T00:22:18.480Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -756,8 +700,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T07:11:46.636Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address broken visuals immediately while MockPapers tackles the critical content holes. MetaLearn and MainsFresh are starved (0 fixes in last 3 runs), so they move to the end of the queue to process remaining low-priority items or catch up on unfinished goals without blocking high-impact repairs.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (253 total)",
+       "text": "How does selective laser sintering (SLS) work? | What is direct metal laser sintering (DMLS)? | How does binder jetting work?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T06:51:38.563Z",
+ "lastRun": "2026-11-01T07:11:46.636Z",
  "model": "qwen3.5:9b"
 }
