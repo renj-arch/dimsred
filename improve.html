@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="Improve Vlymbooq — Figures, Flowcharts, Pages — study material, quizzes, and AI-powered explanations on Vlymbooq.">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow, noarchive">
+<title>Improve Vlymbooq — Figures, Flowcharts, Pages</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--rose:#fb7185;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+header.hd{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+.num{font-size:11px;letter-spacing:.14em;color:var(--text-sec);text-transform:uppercase}
+h1{font-size:24px;margin:6px 0 8px}
+.disc{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--text-sec);line-height:1.6}
+.disc b{display:block;margin-bottom:3px;letter-spacing:.05em;text-transform:uppercase;font-size:10.5px;color:var(--purple)}
+.meta{font-size:12.5px;color:var(--text-sec);margin-top:10px}
+.form-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px 22px;margin:14px 0}
+.field{margin-bottom:14px}
+.field label{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-sec);display:block;margin-bottom:6px}
+.field label small{font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted);margin-left:6px}
+.field input,.field textarea{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;font-family:inherit;background:var(--bg);color:var(--text);outline:none}
+.field textarea{resize:vertical;min-height:70px}
+.field input:focus,.field textarea:focus{border-color:var(--purple)}
+.btn{border:1px solid var(--purple);background:var(--purple);color:#fff;border-radius:100px;padding:10px 22px;font-size:13px;font-weight:700;cursor:pointer;white-space:nowrap}
+.btn:hover{background:#8b7cf7}
+.btn:disabled{opacity:.5;cursor:not-allowed}
+.ok{background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.4);border-radius:12px;padding:14px 16px;font-size:13px;color:var(--emerald);margin:14px 0}
+.err{background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.4);border-radius:10px;padding:14px 16px;font-size:13px;color:var(--rose);margin:14px 0}
+.list-head{font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-sec);margin:26px 0 8px}
+.records{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px}
+.records p{margin:0 0 8px;font-size:12.5px;color:var(--text-sec);line-height:1.55}
+.records .empty{color:var(--text-muted);margin:0}
+.records a{color:var(--purple);text-decoration:none;font-weight:600}
+.records a:hover{text-decoration:underline}
+.foot{font-size:12px;color:var(--text-muted);margin-top:10px;line-height:1.6}
+/* Private gate: page hidden until the owner unlocks on this device */
+html.locked .nav,html.locked .wrap{display:none!important}
+#gateOverlay{display:none;position:fixed;inset:0;z-index:999;background:var(--bg);align-items:center;justify-content:center;padding:24px}
+html.locked #gateOverlay{display:flex}
+.gate-box{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:28px 26px;max-width:360px;width:100%;text-align:center}
+.gate-box h2{font-size:17px;margin:10px 0 4px}
+.gate-box p{font-size:12.5px;color:var(--text-sec);margin:0 0 16px}
+.gate-box input{width:100%;border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:14px;background:var(--bg);color:var(--text);text-align:center;margin-bottom:12px}
+.gate-box input:focus{border-color:var(--purple);outline:none}
+.gate-box button{width:100%;border:1px solid var(--purple);background:var(--purple);color:#fff;border-radius:100px;padding:10px;font-size:13px;font-weight:700;cursor:pointer}
+.gate-box button:hover{background:#8b7cf7}
+.gate-err{color:var(--rose);font-size:12px;min-height:16px;margin-top:8px}
+</style>
+</head>
+<body>
+<script>
+/* Owner-only gate. The passcode never ships — only its SHA-256. Unlock is
+   remembered per device in localStorage. This stops visitors; true privacy
+   (hiding the data files too) is Cloudflare Access on the owner's email. */
+(function(){
+  var H='0f1c261ad35c7ab626348281fd7e51841840f4463302a1d23948779b88bb1b19';
+  try{ if(localStorage.getItem('improve_key')===H){document.documentElement.classList.add('unlocked');return;} }catch(e){}
+  document.documentElement.classList.add('locked');
+})();
+</script>
+<div id="gateOverlay">
+  <div class="gate-box">
+    <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="var(--purple)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+    <h2>Private board</h2>
+    <p>Owner only. Enter the passcode once per device.</p>
+    <input id="gatePass" type="password" autocomplete="off" placeholder="passcode" onkeydown="if(event.key==='Enter')document.getElementById('gateBtn').click()">
+    <button id="gateBtn">Unlock</button>
+    <div class="gate-err" id="gateErr"></div>
+  </div>
+</div>
+<script>
+(function(){
+  var H='0f1c261ad35c7ab626348281fd7e51841840f4463302a1d23948779b88bb1b19';
+  async function sha(s){
+    var b=await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));
+    return Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,'0')}).join('');
+  }
+  document.getElementById('gateBtn').addEventListener('click',async function(){
+    var v=document.getElementById('gatePass').value.trim();
+    var err=document.getElementById('gateErr');
+    if(!v){err.textContent='Enter the passcode.';return;}
+    var h=await sha(v);
+    if(h===H){
+      try{localStorage.setItem('improve_key',H);}catch(e){}
+      document.documentElement.classList.remove('locked');
+      document.documentElement.classList.add('unlocked');
+    }else{
+      err.textContent='Wrong passcode.';
+      document.getElementById('gatePass').value='';
+    }
+  });
+})();
+</script>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a href="archive.html">Archive</a><a href="map.html">Map</a>
+                <a href="figures/index.html">Figures</a><a href="ask.html">Ask</a><a class="active" href="improve.html">Improve</a><a href="about.html">About</a></div></div></nav>
+<div class="wrap">
+  <header class="hd">
+    <div class="num">Vlymbooq &middot; Zero-AI Retrieval &middot; UPSC</div>
+    <h1>Improve figures &amp; pages</h1>
+    <div class="disc">
+      <b>How this works</b>
+      Found a wrong flowchart step, a stale figure caption, a broken explanation on any page? Record the correction here: what the page says now, what is wrong, and how it should read. Each correction joins the same training stream as Ask answers. When <b>15 more records</b> (answers + corrections together) have accumulated, the Train Writer Model workflow retrains <b>your own model</b> automatically &mdash; no schedule, no buttons. Corrections stay on this machine until auto-sync is enabled. <b>Privacy:</b> this page is public and its board shows operational status only (never credentials); a PAT, if you add one, stays in this browser, is scoped to this single repo, and is sent only to api.github.com &mdash; remove it anytime with &ldquo;Forget PAT&rdquo;.
+    </div>
+    <div class="meta" id="meta"></div>
+    <a id="export-data" style="display:none;cursor:pointer" title="Download every recorded correction and answer as JSONL"></a>
+    <a id="sync-data" style="display:none;cursor:pointer;margin-left:12px" title="Push the recorded corrections to the repo so the Train Writer Model workflow can train on them. Uses a fine-grained PAT stored only in this browser."></a>
+    <span id="sync-status" style="display:none;margin-left:8px;opacity:.75"></span>
+    <span id="forget-token" style="display:none;cursor:pointer;margin-left:8px;color:var(--text-muted);font-size:12px;text-decoration:underline" title="Remove the GitHub PAT stored in this browser (use on shared computers)"></span>
+  </header>
+
+  <!-- Auto-detected faults, published nightly by the wiki-fill coverage step
+       and by the training audit. Anything a script can fix without a human is
+       already fixed silently (sub-topic re-filing, dedup, cleanup); what is
+       listed here still needs a decision — each entry prefills the form below. -->
+  <div class="list-head">Detected faults <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; checked nightly &middot; auto-fixed where safe</span></div>
+  <div class="records" id="faults"><p class="empty">Checking the latest fault report&hellip;</p></div>
+
+  <div class="form-box">
+    <div class="field">
+      <label for="target">Page or figure <small>filename, URL path, or a short name</small></label>
+      <input id="target" type="text" placeholder="e.g. figures/dpi-flow.html — Flowchart: DPDP enforcement">
+    </div>
+    <div class="field">
+      <label for="current">What the page says now <small>paste the current caption, step text, or paragraph — kept verbatim as the source fact</small></label>
+      <textarea id="current" placeholder="e.g. Step 3: Data Protection Board fines the data fiduciary."></textarea>
+    </div>
+    <div class="field">
+      <label for="issue">What is wrong</label>
+      <textarea id="issue" placeholder="e.g. The Board cannot impose fines under the DPDP Act; adjudication rests with the Data Protection Board only after the 2023 amendments, and this step conflates the two."></textarea>
+    </div>
+    <div class="field">
+      <label for="fix">How it should read <small>the corrected text — this is what your model learns to write</small></label>
+      <textarea id="fix" placeholder="e.g. Step 3: The Data Protection Board of India adjudicates complaints and may impose penalties as prescribed by the DPDP Act, 2023."></textarea>
+    </div>
+    <button class="btn" id="record">Record correction</button>
+  </div>
+
+  <div id="out"></div>
+
+  <div class="list-head">Local capture</div>
+  <div class="records">
+    <p id="counts"></p>
+    <p class="foot">Corrections are stored in this browser only (localStorage) until you enable auto-sync above. They travel with your Ask answers in one JSONL file — one model, trained on both jobs. <a href="ask.html">Ask questions on the Ask page &rarr;</a></p>
+  </div>
+</div>
+
+<script src="scripts/lib/ask-dataset.js"></script>
+<script>
+'use strict';
+
+function el(id) { return document.getElementById(id); }
+
+function esc(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+}
+
+// The board: fetches data/faults.json (written by scripts/fault-report.js in
+// the nightly wiki-fill finalize and every 6 h by fault-status.yml) and
+// renders three sections — what changed since the previous check, the full
+// fault list, and the latest run of every pipeline. Each fault with an action
+// gets a Prefill button that drops it into the form below. Absence of the file
+// is normal before the first run, so it degrades to a note, not an error.
+function renderFaults() {
+  var box = el('faults');
+  fetch('data/faults.json').then(function (r) {
+    if (!r.ok) throw new Error('HTTP ' + r.status);
+    return r.json();
+  }).then(function (data) {
+    var actionable = [];
+    var faults = data.faults || [];
+    var ideas = data.ideas || [];
+
+    function stamp(t) {
+      return t ? esc(String(t).slice(0, 16).replace('T', ' ')) + 'Z' : 'unknown time';
+    }
+    function rel(t) {
+      var d = (Date.now() - new Date(t).getTime()) / 1000;
+      if (!isFinite(d) || d < 0) return '';
+      if (d < 120) return 'just now';
+      if (d < 3600) return Math.round(d / 60) + 'm ago';
+      if (d < 86400) return Math.round(d / 3600) + 'h ago';
+      return Math.round(d / 86400) + 'd ago';
+    }
+    function faultRow(x, badge) {
+      var color = x.severity === 'critical' ? 'var(--rose)'
+        : x.severity === 'warn' ? 'var(--amber)'
+        : x.severity === 'idea' ? 'var(--purple)' : 'var(--cyan)';
+      var s = '<div style="border-left:3px solid ' + color + ';padding:8px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0">' +
+        '<b style="color:' + color + ';font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">' +
+        esc(x.severity) + ' &middot; ' + esc(x.kind) + (badge || '') + '</b>' +
+        '<div style="font-size:13px;margin-top:3px">' + esc(x.title) + '</div>';
+      if (x.detail) s += '<div style="font-size:12px;color:var(--text-sec);margin-top:2px">' + esc(x.detail) + '</div>';
+      if (x.action) {
+        actionable.push(x.action);
+        s += '<button class="btn" style="margin-top:8px;font-size:11.5px;padding:5px 14px" data-act="' + (actionable.length - 1) + '">Prefill correction</button>';
+      }
+      return s + '</div>';
+    }
+    function runRow(r) {
+      var running = r.status !== 'completed';
+      var color = running ? 'var(--cyan)'
+        : r.conclusion === 'success' ? 'var(--emerald)'
+        : r.conclusion === 'failure' ? 'var(--rose)'
+        : r.conclusion === 'cancelled' || r.conclusion === 'skipped' ? 'var(--text-muted)'
+        : 'var(--amber)';
+      var state = running ? r.status : (r.conclusion || r.status);
+      var name = r.url
+        ? '<a href="' + esc(r.url) + '" target="_blank" rel="noopener">' + esc(r.workflow) + '</a>'
+        : esc(r.workflow);
+      return '<div style="border-left:3px solid ' + color + ';padding:6px 12px;margin:6px 0;background:var(--bg);border-radius:0 8px 8px 0;font-size:12.5px">' +
+        '<span style="color:' + color + ';font-weight:700">' + esc(state) + '</span> &middot; ' + name +
+        (r.at ? ' <span style="color:var(--text-muted)">' + rel(r.at) + '</span>' : '') + '</div>';
+    }
+
+    var html = '';
+
+    // 1. What changed since the previous report.
+    var ch = data.changes || {};
+    html += '<div class="list-head" style="margin-top:4px">Changes since last check</div>';
+    if (ch.firstReport) {
+      html += '<p style="font-size:12.5px;color:var(--text-muted)">First report (' + stamp(data.generatedAt) +
+        ') &mdash; everything below is current.</p>';
+    } else {
+      if (ch.resolved && ch.resolved.length) {
+        html += ch.resolved.map(function (r) {
+          return '<div style="border-left:3px solid var(--emerald);padding:6px 12px;margin:6px 0;background:var(--bg);border-radius:0 8px 8px 0;font-size:12.5px;color:var(--emerald)">&check; resolved &middot; ' + esc(r.title) + '</div>';
+        }).join('');
+      }
+      if (ch.new && ch.new.length) {
+        html += ch.new.map(function (x) { return faultRow(x, ' &middot; <span style="color:var(--rose)">NEW</span>'); }).join('');
+      } else if (!(ch.resolved && ch.resolved.length)) {
+        html += '<p style="font-size:12.5px;color:var(--text-muted)">No new faults since the last check' +
+          (ch.unchanged ? ' (' + ch.unchanged + ' unchanged)' : '') + '.</p>';
+      }
+    }
+
+    // 2. The full fault list.
+    html += '<div class="list-head" style="margin-top:18px">All current faults</div>';
+    html += '<p>' + stamp(data.generatedAt) +
+      ' &middot; <b style="color:var(--rose)">' + ((data.counts && data.counts.critical) || 0) + ' critical</b>' +
+      ' &middot; <b style="color:var(--amber)">' + ((data.counts && data.counts.warn) || 0) + ' warning</b>' +
+      ' &middot; ' + ((data.counts && data.counts.info) || 0) + ' info</p>';
+    html += faults.length
+      ? faults.map(function (x) { return faultRow(x, ''); }).join('')
+      : '<p class="empty">No faults detected.</p>';
+
+    // 3. Pipeline health — latest run of every workflow.
+    if (data.runs && data.runs.length) {
+      html += '<div class="list-head" style="margin-top:18px">Pipelines</div>' +
+        data.runs.map(runRow).join('');
+    }
+
+    // 4. Automatic work the system did on its own (bot/data commits).
+    if (data.actions && data.actions.length) {
+      html += '<div class="list-head" style="margin-top:18px">What the system did recently</div>' +
+        data.actions.map(function (a) {
+          var url = 'https://github.com/renj-arch/dimsred/commit/' + encodeURIComponent(a.sha || '');
+          return '<div style="font-size:12.5px;padding:4px 12px;color:var(--text-sec)">' +
+            '<span style="color:var(--text-muted)">' + esc(a.at || '') + '</span> &middot; ' +
+            '<a href="' + esc(url) + '" target="_blank" rel="noopener">' + esc(String(a.subject || '').slice(0, 120)) + '</a></div>';
+        }).join('');
+    }
+
+    // 5. Auto-fixes by the local model (llm-autofix.js → data/autofix-log.json).
+    // The model reads the fault board and fixes weak content on its own.
+    fetch('data/autofix-log.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (af) {
+      if (!af || !af.fixes || !af.fixes.length) return;
+      var recent = af.fixes.slice(-8).reverse();
+      var section = '<div class="list-head" style="margin-top:18px">What the model fixed <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; local LLM auto-fixer</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(af.lastRun) + ' &middot; ' + af.fixes.length + ' total fix(es) &middot; model: ' + esc(af.model || 'auto') + ' &middot; runs every 6h</p>';
+      section += recent.map(function (f) {
+        var kindColor = f.kind === 'figure' ? 'var(--purple)'
+          : f.kind === 'questions' ? 'var(--emerald)'
+          : f.kind === 'caption' ? 'var(--cyan)' : 'var(--amber)';
+        return '<div style="border-left:3px solid ' + kindColor + ';padding:6px 12px;margin:6px 0;background:var(--bg);border-radius:0 8px 8px 0;font-size:12.5px">' +
+          '<b style="color:' + kindColor + ';font-size:10.5px;letter-spacing:.05em;text-transform:uppercase">' + esc(f.kind) + '</b>' +
+          '<div style="margin-top:2px">' + esc(f.detail || '') + '</div>' +
+          (f.model ? '<span style="color:var(--text-muted);font-size:11px">by ' + esc(f.model) + '</span>' : '') +
+          (f.text ? '<details style="margin-top:4px"><summary style="cursor:pointer;font-size:11px;color:var(--cyan)">show what was written</summary><pre style="white-space:pre-wrap;font-size:11px;color:var(--text-sec);background:rgba(255,255,255,.03);padding:8px;border-radius:6px;margin-top:4px;max-height:220px;overflow:auto">' + esc(f.text) + '</pre></details>' : '') +
+          '</div>';
+      }).join('');
+      box.innerHTML += section;
+    }).catch(function () { /* autofix log not yet published */ });
+
+    // 5b. Site Agent (site-agent.js → data/agent-log.json).
+    // Full-autonomy maintainer: SEO, A11Y, code, content, features,
+    // figures, flowcharts, mindmaps, proposals, prototypes.
+    fetch('data/agent-log.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (ag) {
+      if (!ag || !ag.runs || !ag.runs.length) return;
+      var last = ag.runs[ag.runs.length - 1];
+      var section = '<div class="list-head" style="margin-top:18px">Site Agent <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; full autonomy: SEO, A11Y, code, content, figures, proposals</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last run: ' + stamp(last.at) + ' &middot; ' + last.totalFixes + ' action(s) &middot; model: ' + esc(last.model || 'auto') + ' &middot; runs every 6h</p>';
+      if (last.plan && last.plan.reasoning) {
+        section += '<div style="margin:6px 0;padding:8px 12px;background:rgba(167,139,250,.06);border-left:3px solid var(--purple);border-radius:0 8px 8px 0;font-size:12px;color:var(--text-sec)">🧠 Agent plan: ' + esc(last.plan.reasoning) +
+          (last.plan.actions && last.plan.actions.length ? '<div style="margin-top:3px;font-size:11px;color:var(--text-muted)">→ ' + last.plan.actions.map(esc).join(' → ') + '</div>' : '') + '</div>';
+      }
+
+      var colors = { seo: 'var(--blue)', perf: 'var(--amber)', a11y: 'var(--purple)', code: 'var(--amber)', content: 'var(--emerald)', figures: 'var(--purple)', flowcharts: 'var(--cyan)', mindmaps: 'var(--emerald)', features: 'var(--cyan)', proposals: 'var(--amber)' };
+
+      // Count badges
+      if (last.byAgent && last.byAgent.length) {
+        section += last.byAgent.filter(function (a) { return a.count > 0; }).map(function (a) {
+          var c = colors[a.agent] || 'var(--text-muted)';
+          return '<span style="display:inline-block;margin:2px 6px;padding:2px 8px;background:var(--bg);border:1px solid ' + c + ';border-radius:10px;font-size:11px;color:' + c + '">' + esc(a.agent) + ': ' + a.count + '</span>';
+        }).join('');
+      }
+
+      // Full details: individual fixes, proposals, prototypes
+      if (last.details && last.details.length) {
+        last.details.forEach(function (group) {
+          var gc = colors[group.agent] || 'var(--text-muted)';
+          section += '<div style="margin-top:10px;padding:8px 12px;background:var(--bg);border-left:3px solid ' + gc + ';border-radius:0 8px 8px 0">';
+          section += '<b style="color:' + gc + ';font-size:11px;text-transform:uppercase;letter-spacing:.05em">' + esc(group.agent) + '</b>';
+          section += group.fixes.map(function (f) {
+            var icon = f.kind === 'proposal' ? '💡' : f.kind === 'prototype' ? '🛠' : f.kind === 'figure' ? '📊' : f.kind === 'flowchart' ? '📈' : f.kind === 'mindmap' ? '🧠' : f.kind === 'revision' ? '📝' : f.kind === 'comparison' ? '⚖' : f.kind === 'mnemonics' ? '🔤' : f.kind === 'study' ? '📖' : '✅';
+            return '<div style="margin:3px 0;font-size:12px;color:var(--text-sec)">' + icon + ' ' + esc(f.fix || '') +
+              (f.page ? ' <span style="color:var(--text-muted);font-size:10px">(' + esc(f.page) + ')</span>' : '') +
+              (f.detail ? '<div style="color:var(--text-muted);font-size:11px;margin-left:18px">' + esc(f.detail) + '</div>' : '') +
+              (f.text ? '<details style="margin:2px 0 2px 18px"><summary style="cursor:pointer;font-size:11px;color:var(--cyan)">show what was written</summary><pre style="white-space:pre-wrap;font-size:11px;color:var(--text-sec);background:rgba(255,255,255,.03);padding:8px;border-radius:6px;margin-top:4px;max-height:220px;overflow:auto">' + esc(f.text) + '</pre></details>' : '') + '</div>';
+          }).join('');
+          section += '</div>';
+        });
+      }
+
+      box.innerHTML += section;
+    }).catch(function () { /* agent log not yet published */ });
+
+    // 5b-2. Where the new content appears (static map, placed beside the agent
+    // log on purpose: this is the page a maintainer opens when asking "the
+    // agents ran — where do I actually see what they wrote?"). Every writer
+    // publishes to main; the slim live mirror deploys main to this site, and
+    // data/questions/* is proxy-served from main by the Pages Function
+    // (functions/data/questions/[[path]].js, 1 h cache).
+    (function () {
+      function row(icon, title, file, where) {
+        return '<div style="margin:6px 0;padding:8px 12px;background:var(--bg);border-left:3px solid var(--cyan);border-radius:0 8px 8px 0">' +
+          '<b style="font-size:12.5px">' + icon + ' ' + title + '</b>' +
+          '<div style="font-size:11px;color:var(--text-muted);margin:2px 0;font-family:monospace">' + file + '</div>' +
+          '<div style="font-size:12px;color:var(--text-sec)">' + where + '</div></div>';
+      }
+      var s = '<div class="list-head" style="margin-top:18px">📍 Where the new content appears <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; map of every writer pipeline &rarr; the page that serves its output</span></div>';
+      s += '<p style="font-size:12px;color:var(--text-muted)">Updates 2026-10-19. Content goes live after the next slim-mirror deploy (30-min tick, and right after each big writer finishes); <code>data/questions/*</code> is read straight off main by a Pages Function with a 1&nbsp;h cache, so the archive can be fresher than the deploy itself.</p>';
+      s += row('🧠', 'Invented exam questions (the question-setter agent)', 'data/invented/questions.json', '<a href="mental.html">mental.html</a> &rarr; the <b>&ldquo;Invented &mdash; fresh paper&rdquo;</b> arena: a full practice paper with timer, options and worked solutions. Two lanes write here &mdash; the 9b bulk lane (3&times;/day, ~9 per run) and the 27B quality lane (daily, ~3 per run) &mdash; and the pool now unions across runs, so no run can drop another run\'s questions. Each question also carries a <b>🎯 exam-relevance tag</b> (high-yield / exam-relevant / low priority + exam names) on its technique label &mdash; the setter\'s own honest assessment, not an official syllabus.');
+      s += row('💬', 'Archive Q&amp;A: new gap questions + model answers', 'data/archive-answers.json (+ data/questions/00-27b-archive.json)', '<a href="ask.html">ask.html</a> &rarr; ask a question that strongly matches an archived one and the finished model answer comes back first, with provenance. <a href="archive.html">archive.html</a> &rarr; browse category &rarr; subject &rarr; sub-topic; enriched items carry a <b>&ldquo;💡 Explanation&rdquo;</b> button holding that same model answer, plus an <b>exam-relevance chip</b> (high-yield / exam-relevant / low priority + exam names) &mdash; the same chip appears on the ask.html answer card. Written by the <b>27B quality lane</b> (daily &mdash; promoted from the 9b tier on 2026-10-18, single writer per file).');
+      s += row('📝', 'CI-converted proper MCQs', 'data/quiz-proper.json', '<a href="current-affairs.html">current-affairs.html</a> &rarr; the quiz serves the CI-converted MCQs before the fill-in-the-blank bank; tagged items show the exam-relevance chip above the question.');
+      s += row('⚡', 'Single-click practice sets', 'data/practice-sets/&lt;exam&gt;.json', '<a href="mega-test.html">mega-test.html?exam=&lt;exam&gt;</a> &rarr; an instant set built from that exam\'s bank, linked from each exam hub; tagged questions show the exam-relevance chip inside the explanation box.');
+      s += row('🧾', 'What every agent run did (with excerpts)', 'data/agent-log.json', 'This page &mdash; the Site Agent section above renders the latest run per agent, and &ldquo;show what was written&rdquo; opens the actual text a run produced. Q&amp;A runs also land in the sweep journal.');
+      s += row('🛠', 'Inventions / prototypes', 'data/inventions.json', 'lab.html is retired (it redirects to micro-test.html); shipped inventions surface through the agent-log excerpts above, and the file itself always carries meta.lastAttempt for the chain.');
+      s += row('🧠', 'Proposal lane — daily improvement ideas (for the owner)', 'data/agent-proposals.json', 'This page — the <b>&ldquo;Proposal lane&rdquo;</b> section below: 3&ndash;5 concrete suggestions the site\'s own model writes each morning from a factual digest of the site. The owner approves one by filing it as a GitHub issue (prefilled link); nothing is implemented automatically.');
+      box.innerHTML += s;
+    })();
+
+    // 5c. Browser Test results (browser-test.js → data/browser-test.json)
+    fetch('data/browser-test.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (bt) {
+      if (!bt || !bt.summary) return;
+      var s = bt.summary;
+      var section = '<div class="list-head" style="margin-top:18px">Browser Test <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; Playwright clicks every button, checks every link</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Tested: ' + stamp(bt.testedAt) + ' &middot; ' + s.total + ' pages &middot; ' +
+        '<span style="color:' + (s.passed === s.total ? 'var(--emerald)' : 'var(--red)') + '">' + s.passed + ' passed</span> &middot; ' +
+        '<span style="color:' + (s.failed > 0 ? 'var(--red)' : 'var(--emerald)') + '">' + s.failed + ' failed</span></p>';
+      if (s.consoleErrors > 0 || s.brokenLinks > 0 || s.brokenButtons > 0) {
+        section += '<div style="margin:8px 0;padding:8px 12px;background:rgba(239,68,68,.08);border:1px solid rgba(239,68,68,.2);border-radius:8px;font-size:12px">';
+        section += '⚠️ Found: ' + s.consoleErrors + ' console errors, ' + s.brokenLinks + ' broken links, ' + s.brokenButtons + ' broken buttons';
+        section += '</div>';
+      }
+      // Show issues grouped by type
+      var byType = {};
+      (bt.issues || []).forEach(function (i) { byType[i.type] = (byType[i.type] || 0) + 1; });
+      var typeIcons = { 'placeholder-link': '🔗', 'broken-link': '❌', 'console-error': '🐛', 'js-error': '💥', 'broken-tab': '📑', 'http-error': '📡', 'load-error': '⛔', 'broken-request': '📦', 'disabled-button': '🔘' };
+      section += Object.keys(byType).map(function (t) {
+        return '<span style="display:inline-block;margin:2px 6px;padding:2px 8px;background:var(--bg);border:1px solid var(--border);border-radius:10px;font-size:11px">' +
+          (typeIcons[t] || '•') + ' ' + esc(t) + ': ' + byType[t] + '</span>';
+      }).join('');
+      // Show first 10 issues
+      var topIssues = (bt.issues || []).slice(0, 10);
+      if (topIssues.length) {
+        section += '<div style="margin-top:8px">' + topIssues.map(function (i) {
+          return '<div style="margin:2px 0;font-size:11px;color:var(--text-muted)">' + (typeIcons[i.type] || '•') + ' ' +
+            '<b>' + esc(i.page || '') + '</b>: ' + esc(i.msg || '').substring(0, 120) + '</div>';
+        }).join('') + '</div>';
+      }
+      box.innerHTML += section;
+    }).catch(function () { /* browser test not yet published */ });
+
+    // 5d. Proposal Lane (scripts/proposal-lane.js → data/agent-proposals.json).
+    // Once a day the site's own model reads a factual digest of the site and
+    // writes 3–5 improvement proposals. The owner approves one by filing it
+    // as a GitHub issue (prefilled link) — nothing is built automatically.
+    fetch('data/agent-proposals.json').then(function (r) {
+      if (!r.ok) return null;
+      return r.json();
+    }).then(function (pp) {
+      if (!pp || !pp.proposals || !pp.proposals.length) return;
+      var recent = pp.proposals.slice(0, 6);
+      var section = '<div class="list-head" style="margin-top:18px">🧠 Proposal lane <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; the model\'s daily improvement ideas &mdash; nothing is built until the owner approves one</span></div>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last pass: ' + stamp(pp.generatedAt) + ' &middot; model: ' + esc((pp.meta && pp.meta.model) || 'the site\'s own model') + ' &middot; writes 3&ndash;5 ideas each morning on the build runner &middot; ' + pp.proposals.length + ' kept</p>';
+      if (pp.meta && pp.meta.lastAttempt && pp.meta.lastAttempt.ok === false) {
+        section += '<div style="margin:6px 0;padding:6px 12px;background:rgba(239,68,68,.08);border-left:3px solid var(--rose);border-radius:0 8px 8px 0;font-size:12px;color:var(--text-sec)">⚠️ The last pass failed (' + esc(String(pp.meta.lastAttempt.error || '').slice(0, 160)) + ') — these are the previous proposals.</div>';
+      }
+      section += recent.map(function (p) {
+        var effColor = p.effort === 'small' ? 'var(--emerald)' : p.effort === 'large' ? 'var(--amber)' : 'var(--cyan)';
+        var riskColor = p.risk === 'low' ? 'var(--emerald)' : p.risk === 'high' ? 'var(--rose)' : 'var(--amber)';
+        var issueUrl = 'https://github.com/renj-arch/dimsred/issues/new?title=' +
+          encodeURIComponent('[Proposal] ' + p.title) +
+          '&body=' + encodeURIComponent('From the site\'s Proposal Lane (' + (p.id || '') + ', ' + stamp(pp.generatedAt) + ').\n\n**Why:** ' + p.why + '\n\n**Idea:** ' + p.idea + '\n\n**Effort:** ' + p.effort + ' · **Risk:** ' + p.risk + '\n\n_The owner approved this suggestion from the site\'s improve page._');
+        return '<div style="border-left:3px solid var(--purple);padding:8px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0">' +
+          '<b style="font-size:13px">' + esc(p.title) + '</b>' +
+          '<span style="margin-left:6px;font-size:10px;color:' + effColor + ';border:1px solid ' + effColor + ';border-radius:8px;padding:1px 6px">effort: ' + esc(p.effort) + '</span>' +
+          '<span style="margin-left:4px;font-size:10px;color:' + riskColor + ';border:1px solid ' + riskColor + ';border-radius:8px;padding:1px 6px">risk: ' + esc(p.risk) + '</span>' +
+          '<div style="font-size:12px;color:var(--text-sec);margin-top:3px">' + esc(p.why) + '</div>' +
+          '<div style="font-size:12px;color:var(--text-sec);margin-top:2px">💡 ' + esc(p.idea) + '</div>' +
+          '<div style="margin-top:6px"><a class="btn" style="display:inline-block;font-size:11px;padding:4px 12px;text-decoration:none" href="' + esc(issueUrl) + '" target="_blank" rel="noopener">Approve &rarr; file as GitHub issue</a>' +
+          '<span style="font-size:10.5px;color:var(--text-muted);margin-left:8px">opens a prefilled issue &mdash; your to-do list; nothing builds itself</span></div>' +
+          '</div>';
+      }).join('');
+      box.innerHTML += section;
+    }).catch(function () { /* proposal lane has not run yet */ });
+
+
+    // 5e. Owner papers — the on-demand lane's recent results
+    // (scripts/on-demand-generate.js writes data/on-demand/index.json beside
+    // every result). Raw first: a paper must show up minutes after it lands,
+    // not after the mirror tick.
+    (function () {
+      var RAW_LIST = 'https://raw.githubusercontent.com/renj-arch/dimsred/main/data/on-demand/index.json';
+      fetch(RAW_LIST + '?t=' + Date.now(), { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .catch(function () { return null; })
+        .then(function (od) {
+          if (od && od.papers) return od;
+          return fetch('data/on-demand/index.json?t=' + Date.now(), { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : null; })
+            .catch(function () { return null; });
+        })
+        .then(function (od) {
+          if (!od || !od.papers || !od.papers.length) return;
+          var section = '<div class="list-head" style="margin-top:18px">📄 Recent papers <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; the owner lane writes these on GitHub\u2019s runners — newest first</span></div>';
+          section += '<p style="font-size:12px;color:var(--text-muted)">' + od.papers.length + ' kept &middot; last activity ' + stamp(od.generatedAt) + ' &middot; each paper is one on-demand request — the ⚙ pill routes generation to the runners, not your device</p>';
+          section += od.papers.slice(0, 15).map(function (p) {
+            var ok = p.status === 'done';
+            var color = ok ? 'var(--emerald)' : 'var(--rose)';
+            return '<div style="border-left:3px solid ' + color + ';padding:6px 12px;margin:6px 0;background:var(--bg);border-radius:0 8px 8px 0;font-size:12.5px">' +
+              '<b>' + esc(p.label || p.kind || 'request') + '</b> — ' +
+              '<span style="color:' + color + ';font-weight:700">' + esc(p.status || '') + '</span>' +
+              '<span style="color:var(--text-muted)"> &middot; ' + esc(String(p.model || '').split('/').pop()) + ' &middot; ' + stamp(p.finishedAt) + '</span>' +
+              (p.error ? '<div style="color:var(--rose);font-size:11.5px">' + esc(p.error) + '</div>' : '') +
+              '<div><a href="data/on-demand/' + encodeURIComponent(p.id) + '.json" target="_blank" rel="noopener" style="color:var(--purple);font-weight:600;font-size:11.5px">open the raw JSON</a>' +
+              '<span style="color:var(--text-muted);font-size:11px"> &middot; id ' + esc(p.id) + '</span></div>' +
+            '</div>';
+          }).join('');
+          box.innerHTML += section;
+        })
+        .catch(function () { /* on-demand index not published yet */ });
+    })();
+
+    if (ideas.length) {
+      html += '<div class="list-head" style="margin-top:18px">Ideas <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; adopt one into the form below</span></div>' +
+        ideas.map(function (x) { return faultRow(x, ''); }).join('');
+    }
+
+    box.innerHTML = html;
+    Array.prototype.forEach.call(box.querySelectorAll('[data-act]'), function (btn) {
+      btn.addEventListener('click', function () {
+        var a = actionable[+btn.getAttribute('data-act')];
+        if (!a) return;
+        el('target').value = a.target || '';
+        el('current').value = a.current || '';
+        el('issue').value = a.issue || '';
+        el('fix').value = a.fix || '';
+        var fb = document.querySelector('.form-box');
+        if (fb) fb.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        el('fix').focus();
+      });
+    });
+  }).catch(function () {
+    box.innerHTML = '<p class="empty">No fault report published yet &mdash; the nightly wiki-fill run writes one after its coverage check, and fault-status.yml refreshes it every 6 hours.</p>';
+  });
+}
+
+function show(kind, msg) {
+  var out = el('out');
+  out.innerHTML = '';
+  var div = document.createElement('div');
+  div.className = kind;
+  div.textContent = msg;
+  out.appendChild(div);
+}
+
+function counts() {
+  if (!window.VlymbooqAskDataset) return;
+  var all = VlymbooqAskDataset.all ? VlymbooqAskDataset.all() : [];
+  var nImp = 0, nAns = 0;
+  for (var i = 0; i < all.length; i++) {
+    if (all[i].kind === 'improve') nImp++; else nAns++;
+  }
+  el('counts').textContent = 'In this browser: ' + nImp + ' correction' + (nImp === 1 ? '' : 's') +
+    ' &middot; ' + nAns + ' answer' + (nAns === 1 ? '' : 's') +
+    ' &middot; the model retrains itself after 15 new records in total.';
+  updateExportLink();
+}
+
+// Same wiring as ask.html: the link appears only once there is something to
+// export, carries its count, and the sync control is driven by the dataset's
+// debounced push state.
+function updateExportLink() {
+  var link = el('export-data');
+  if (!link || !window.VlymbooqAskDataset) return;
+  var n = VlymbooqAskDataset.count();
+  if (n > 0) {
+    link.style.display = '';
+    link.textContent = 'Export training data (' + n + ' record' + (n === 1 ? '' : 's') + ')';
+  } else {
+    link.style.display = 'none';
+  }
+  updateSyncLink();
+}
+function updateSyncLink() {
+  var link = el('sync-data');
+  var status = el('sync-status');
+  if (!link || !status || !window.VlymbooqAskDataset) return;
+  var n = VlymbooqAskDataset.count();
+  if (!n) {
+    link.style.display = 'none';
+    status.style.display = 'none';
+    return;
+  }
+  var hasToken = !!VlymbooqAskDataset.getToken();
+  link.style.display = '';
+  link.textContent = hasToken ? 'Sync now' : 'Enable auto-sync (trains your model)';
+  var forget = el('forget-token');
+  if (forget) {
+    forget.style.display = hasToken ? '' : 'none';
+    forget.textContent = 'Forget PAT';
+  }
+  var s = VlymbooqAskDataset.syncStatus();
+  status.style.display = s ? '' : 'none';
+  if (s) {
+    status.textContent = s.ok
+      ? 'synced ' + (s.records || n) + ' records ✓'
+      : (s.reason === 'no-token' ? '' : 'sync failed: ' + s.reason);
+    if (!s.ok && s.reason === 'no-token') status.style.display = 'none';
+  }
+}
+
+el('record').addEventListener('click', function () {
+  var target = el('target').value.trim();
+  var current = el('current').value.trim();
+  var issue = el('issue').value.trim();
+  var fix = el('fix').value.trim();
+  if (!target || !current || !issue || !fix) {
+    show('err', 'All four fields are needed — the current text becomes the source fact and the correction becomes the trained answer, so both must be present.');
+    return;
+  }
+  if (fix.length < 20) {
+    show('err', 'The correction is too short to teach anything. Write the full corrected text.');
+    return;
+  }
+  if (!window.VlymbooqAskDataset) {
+    show('err', 'Storage module failed to load. Reload the page.');
+    return;
+  }
+  var ok = VlymbooqAskDataset.record({
+    kind: 'improve',
+    q: 'Fix "' + target + '": ' + issue,
+    subject: target,
+    facts: [{ sentence: current, entity: target }],
+    sections: [],
+    answer: fix,
+    model: 'human'
+  });
+  if (!ok) {
+    show('err', 'Could not record the correction.');
+    return;
+  }
+  show('ok', 'Recorded. Your model retrains itself once 15 new records (answers + corrections) have accumulated — nothing else to do.');
+  counts();
+});
+
+document.addEventListener('click', function (e) {
+  if (!e.target || !window.VlymbooqAskDataset) return;
+  if (e.target.id === 'export-data') {
+    VlymbooqAskDataset.download();
+    return;
+  }
+  if (e.target.id === 'forget-token') {
+    VlymbooqAskDataset.setToken('');
+    updateSyncLink();
+    show('ok', 'Stored PAT removed from this browser. Auto-sync is off until you enable it again.');
+    return;
+  }
+  if (e.target.id !== 'sync-data') return;
+  if (!VlymbooqAskDataset.getToken()) {
+    // One-time setup, deliberately manual: a fine-grained PAT for this repo
+    // only (Contents: Read and write). It is stored in this browser's
+    // localStorage and sent only to api.github.com.
+    var tok = window.prompt(
+      'Paste a fine-grained GitHub PAT for renj-arch/dimsred\n' +
+      '(repository access: this repo only, permission: Contents read & write).\n' +
+      'It stays in this browser and is sent only to api.github.com.');
+    if (!tok) return;
+    VlymbooqAskDataset.setToken(tok);
+  }
+  var st = el('sync-status');
+  if (st) { st.style.display = ''; st.textContent = 'syncing…'; }
+  VlymbooqAskDataset.syncNow().then(function () { updateSyncLink(); });
+});
+if (window.VlymbooqAskDataset && VlymbooqAskDataset.setSyncHook) {
+  VlymbooqAskDataset.setSyncHook(function () { updateSyncLink(); });
+}
+
+counts();
+renderFaults();
+</script>
+</body>
+</html>

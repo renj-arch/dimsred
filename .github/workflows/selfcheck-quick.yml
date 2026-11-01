@@ -1,0 +1,90 @@
+name: Selfcheck Quick
+
+# The agent's fast hands: instant rule-based repair with NO model.
+# Fixes page-breaking bugs that need zero inference (deferred-lib vs
+# inline-consumer ordering, dead links, placeholder links, missing assets)
+# in seconds — no 17GB model pull, no Ollama, no swap. Runs hourly so the
+# site heals itself continuously while the heavy LLM generation rotates
+# through the site-agent workflow. All commits come from this workflow's
+# own runs — the site is maintained by the agent itself.
+
+on:
+  schedule:
+    - cron: '15 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: selfcheck-quick
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  selfcheck:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # Depth 10, not 1: restoreStrippedScripts reads recent repair
+          # history (git log -- <page>) to re-add wrongly stripped tags.
+          # Depth 1 has no history, so the damage is invisible (run #3
+          # found nothing). 10 commits of html+scripts+js is seconds.
+          fetch-depth: 10
+          # Root HTML + exam hubs + scripts + js + logs. No data/questions
+          # (9GB), no figures, no model — finishes in ~1-2 min.
+          # js/ is small (~21MB) and MUST be present: without it every
+          # existence check lies and live script tags get stripped (run #2
+          # removed 37 working tags across 17 pages on exactly that lie).
+          # The 16 exam hubs (~31MB) are audited too — their navs and script
+          # refs had never been checked until now.
+          # ideas.json is the nav audit's idea board (dedicated-hub ideas
+          # for the builder agents); tiny, and published below.
+          sparse-checkout: |
+            scripts
+            js
+            /*.html
+            cgl
+            rbi
+            jee
+            neet
+            gate
+            agniveer
+            upsc
+            ibps-po
+            sbi-clerk
+            ssc-gd
+            ctet
+            nda
+            cds
+            clat
+            ldc
+            kerala-psc
+            data/agent-log.json
+            data/browser-test.json
+            data/ideas.json
+            data/mega-quiz.json
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Rule-based repair only — no Ollama, no model pull, seconds of work.
+      - name: Run selfcheck-only (no model)
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/site-agent.js --selfcheck-only
+
+      - name: Publish selfcheck repairs
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          # Quoted '*.html' is a recursive pathspec (root + hub subdirs);
+          # bare *.html would only match root pages and silently drop hub fixes.
+          git add -- '*.html' data/agent-log.json data/ideas.json 2>/dev/null || true
+          bash scripts/ci-push.sh "selfcheck: agent repaired pages itself (run #${{ github.run_number }})"

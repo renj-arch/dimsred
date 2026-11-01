@@ -1,0 +1,238 @@
+name: Question Quality
+
+# Runs the question-quality/generation agent against data/questions ONLY.
+# Separated from site-agent because data/questions is ~9GB: checking it out
+# alongside the full site caused 33-min "early EOF" failures and OOM'd the
+# heavy model. Here the checkout is questions-only and generation runs on a
+# clean machine on the MID tier qwen3.5:9b (2026-10-18 right-sizing: the
+# 17GB 27B cannot complete multi-call runs on the 4-vCPU runner — every
+# 27B run of this workflow died before its later steps).
+
+on:
+  schedule:
+    - cron: '10 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: question-quality
+  # false, NOT true: this pipeline publishes only at the very END (archive +
+  # quiz conversions + commit). cancel-in-progress killed 59 of the last 60
+  # runs mid-flight — the converter step never executed even once since it
+  # shipped on 2026-10-15. With false, a newer trigger waits (superseding any
+  # older pending run) instead of murdering the in-flight publish.
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/questions
+            data/papers.json
+            data/official-paper-sources.json
+            data/archive-answers.json
+            data/archive-taxonomy.json
+            data/pyq-patterns.json
+            data/wiki-syllabus-plan.json
+            data/agent-log.json
+            data/questions-report.json
+            data/quiz-proper.json
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # Swap kept as a safety net; the 9b tier fits RAM without it.
+      - name: Create swap (16GB safety net)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # outside the Actions cache. Run the service as the runner user,
+          # pointed at the runner home: models become cache-visible and owned
+          # by the same user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # Model cache: the "mid" entry is the qwen3.5:9b blob store (~6.6GB).
+      - name: Cache Ollama models (mid tier)
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-mid-v1
+          restore-keys: |
+            ollama-${{ runner.os }}-mid-
+
+      # EXACT same start as llm-autofix: no flash-attn, no q8 KV.
+      # KEEP_ALIVE=60m: without it Ollama unloads the model after 5 min idle
+      # and the next agent pays a full reload. Public-repo runners are
+      # 4 vCPU / 16GB RAM; the 9b tier fits RAM comfortably.
+      - name: Start Ollama server
+        run: |
+          # Same as llm-smoke: stop the kernel from paging model weights out
+          # under memory pressure.
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull qwen3.5:9b
+        run: |
+          ollama pull qwen3.5:9b
+          echo "MODEL=qwen3.5:9b" >> $GITHUB_ENV
+          ollama list
+          du -sh /home/runner/.ollama/models 2>/dev/null || true
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Warm the model into RAM now so the agent + writer calls start warm.
+          echo "Warming 9b into RAM..."
+          ollama run qwen3.5:9b "Reply with exactly: OK" 2>&1 | tail -3
+          # Verify residency — a silent warmup failure would surface minutes
+          # later as cold loads mid-run in the agent
+          curl -s http://127.0.0.1:11434/api/ps | grep -q qwen3.5 && echo "Warmup done (model resident)" || echo "WARNING: model NOT resident after warmup"
+
+      # Official papers supply line (ingestor needs no model — pure parsing).
+      # pip + pypdf are tiny; the runners already have python3.
+      - name: Setup Python PDF tools
+        run: pip install --quiet pypdf
+
+      # Discover official answer-key URLs (portal + archive strategies) for
+      # papers that have a QP but no key yet. Verified URLs only, else retry
+      # next run — never guessed.
+      - name: Discover official paper URLs
+        run: python3 scripts/discover-official-papers.py
+
+      # Ingest verified official papers (QP + key PDFs → key-joined questions
+      # with strict validation; anything uncertain is dropped, never faked)
+      # straight into data/papers.json. The Papers agent then enriches them
+      # with qwen3.5:9b explanations in the same run.
+      - name: Ingest official papers
+        run: python3 scripts/ingest-official-paper.py
+
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
+            nohup ollama serve > /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      - name: Run question-quality agent
+        # Safety net. Run #18's agent overran a 130-min deadline by ~52 min
+        # (an in-flight CPU stream cannot be interrupted mid-call) and the
+        # run then died in a later step with publish skipped. 165 = 110-min
+        # deadline + the observed overshoot + margin. If it still fires, the
+        # checkpoint publish below runs anyway (if: always()).
+        timeout-minutes: 165
+        env:
+          OLLAMA_MODEL: qwen3.5:9b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          # Signals site-agent.js to run ONLY the Questions+Content agents
+          AGENT_ONLY: questions
+          # Wall-clock deadline: the agent stops starting new LLM work past
+          # this point so the run still reaches its publish steps; skipped
+          # work rotates in next run.
+          AGENT_DEADLINE_MIN: '110'
+        run: node scripts/site-agent.js
+
+      # Checkpoint publish. Run #18 spent 6h and published NOTHING: the agent
+      # ran to 19:18, the (slow) archive-answers step burned the rest of the
+      # ceiling and the 6h job cap killed publish. Everything the agent has
+      # already written is committed here, before the slow LLM steps, so no
+      # timeout can erase it. always(): even a failed or step-capped agent
+      # still gets its partial output published.
+      - name: Publish agent fixes (checkpoint)
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
+          bash scripts/ci-push.sh "question-quality: agent fixes checkpoint (run #${{ github.run_number }})"
+
+      # Archive answers moved to the dedicated 27B quality lane
+      # (.github/workflows/archive-27b.yml, daily) on 2026-10-18 — tiered
+      # rollout: one pipeline at a time, user-visible content on the 27B.
+      # The move ALSO makes the sidecar single-writer on purpose: two writers
+      # racing on data/archive-answers.json could drop each other's entries
+      # (the exact failure class the invented pool hit today, where a merge
+      # kept one side's questions and dropped the other's). If that lane is
+      # ever disabled, re-enable this step — but then add an id-union merge
+      # for data/archive-answers.json to ci-push first, or keep only one
+      # writer active.
+
+      # 9b converts fill-blank fragments into proper MCQs for the quiz
+      # (current-affairs serves these first). The old 27B never reached this
+      # step — every run died earlier. Quota 6/run kept; raise once the tier
+      # proves itself.
+      - name: Convert proper quiz MCQs (9b)
+        timeout-minutes: 60
+        env:
+          OLLAMA_MODEL: qwen3.5:9b
+          OLLAMA_HOST: http://127.0.0.1:11434
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          MAX_CONVERT: '6'
+        run: node scripts/convert-quiz-proper.js
+
+      # Rebuild the mega quiz bank from the current corpus (fast, no model).
+      # Without this tracked + deployed, mega-test.html 404s live.
+      - name: Rebuild mega quiz bank
+        timeout-minutes: 10
+        run: node scripts/build-mega-quiz.js
+
+      # always(): even if a step above was capped or failed, this still
+      # commits and pushes everything already produced.
+      - name: Publish question fixes
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
+          bash scripts/ci-push.sh "question-quality: qwen3.5:9b improved questions (run #${{ github.run_number }})"

@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proof of work — SALT | vlymbooq</title>
+<meta name="description" content="SALT production dossier: 40 scenes, 0 shots, 5 sources, 6 frame studies, and the independent QC that gated the 1080 master." />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Proof of work — SALT" />
+<meta property="og:description" content="SALT production dossier: 40 scenes, 0 shots, 5 sources, 6 frame studies, and the independent QC that gated the 1080 master." />
+<meta property="og:image" content="media/films/salt-march/poster.jpg" />
+<style>
+:root{
+    --bg:#060606; --panel:#0d0b08; --panel2:#15100b; --bone:#f2e6d0;
+    --muted:rgba(242,230,208,.64); --faint:rgba(242,230,208,.38);
+    --gold:#d6a14a; --rust:#b14a2f; --teal:#143f47; --line:rgba(214,161,74,.2);
+    --serif:Georgia,"Liberation Serif","Times New Roman",serif;
+    --sans:"Liberation Sans",Arial,Helvetica,sans-serif;
+    --mono:"Cascadia Mono","Liberation Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--bone);font-family:var(--sans);line-height:1.6;
+    background-image:
+      radial-gradient(80% 45% at 50% -10%,rgba(214,161,74,.13),transparent 70%),
+      radial-gradient(40% 35% at 100% 20%,rgba(20,63,71,.2),transparent 70%),
+      radial-gradient(45% 40% at 0% 65%,rgba(177,74,47,.09),transparent 70%);
+    background-attachment:fixed;}
+  a{color:inherit}
+  ::selection{background:var(--gold);color:#17110a}
+  .grain{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 30px}
+  .top{border-bottom:1px solid rgba(255,255,255,.08);background:rgba(6,6,6,.78);backdrop-filter:blur(10px);
+    position:sticky;top:0;z-index:40}
+  .top .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-top:16px;padding-bottom:16px}
+  .brand{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .brand b{color:var(--gold)}
+  .top nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .top nav a{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--muted);
+    border:1px solid rgba(255,255,255,.12);padding:8px 12px;border-radius:999px}
+  .top nav a:hover{border-color:var(--gold);color:var(--bone)}
+
+  .hero{padding:76px 0 54px}
+  .eyebrow{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;
+    font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:26px}
+  .eyebrow span:last-child{color:var(--faint)}
+  h1{font-family:var(--serif);font-weight:900;font-size:clamp(64px,13.2vw,184px);line-height:.76;
+    letter-spacing:-.075em;margin:0;max-width:1050px}
+  h1 em{font-style:normal;color:var(--gold)}
+  .lede{font-family:var(--serif);font-size:clamp(20px,2.3vw,34px);line-height:1.15;letter-spacing:-.02em;
+    max-width:900px;margin:32px 0 0;color:rgba(242,230,208,.9)}
+  .lede b{color:var(--gold);font-weight:400}
+
+  .hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:34px;align-items:start;margin-top:48px}
+  .poster{margin:0;border:1px solid rgba(214,161,74,.25);background:#000;position:relative;overflow:hidden;
+    aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:flex-end}
+  .poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(.9)}
+  .poster:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(0,0,0,.82) 100%)}
+  .poster figcaption{position:relative;z-index:2;padding:20px 22px;font-size:.62rem;letter-spacing:.22em;
+    text-transform:uppercase;color:rgba(242,230,208,.72);display:flex;justify-content:space-between;gap:16px}
+  .poster .stamp{position:absolute;z-index:2;top:16px;left:16px;border:1px solid rgba(214,161,74,.55);
+    color:var(--gold);font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;padding:7px 9px;background:rgba(0,0,0,.38)}
+  .film-card{border-top:1px solid var(--gold);padding-top:20px;display:flex;flex-direction:column}
+  .status{display:inline-flex;align-items:center;gap:8px;font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:14px}
+  .status i{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);display:block}
+  .film-card h2{font-family:var(--serif);font-size:clamp(36px,4.4vw,64px);line-height:.9;letter-spacing:-.045em;margin:0 0 14px}
+  .film-card p{color:var(--muted);font-size:.95rem;margin:0 0 18px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 24px}
+  .btn{display:inline-block;text-decoration:none;border:1px solid rgba(242,230,208,.2);color:var(--bone);
+    padding:11px 15px;border-radius:999px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+  .btn:hover{border-color:var(--gold)}
+  .btn.strong{background:var(--gold);color:#17110a;border-color:var(--gold);font-weight:800}
+  .receipt{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid rgba(255,255,255,.1);margin-top:auto}
+  .receipt div{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+  .receipt div:nth-child(odd){padding-right:16px}
+  .receipt dt{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 3px}
+  .receipt dd{margin:0;font-size:.8rem;color:rgba(242,230,208,.9)}
+
+  .stats{border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(180deg,rgba(214,161,74,.035),transparent)}
+  .stats .wrap{display:grid;grid-template-columns:repeat(6,1fr);padding-top:0;padding-bottom:0}
+  .stat{padding:22px 18px 22px 0;border-right:1px solid rgba(255,255,255,.08)}
+  .stat:last-child{border-right:none;padding-right:0}
+  .stat b{display:block;font-family:var(--serif);font-size:clamp(30px,3.5vw,52px);line-height:.9;letter-spacing:-.04em;color:var(--bone)}
+  .stat span{display:block;font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-top:8px}
+  .stat small{display:block;color:var(--faint);font-size:.66rem;line-height:1.4;margin-top:6px}
+
+  .section{padding:72px 0;border-top:1px solid rgba(255,255,255,.08)}
+  .section:first-of-type{border-top:none}
+  .section-head{display:grid;grid-template-columns:84px 1fr;gap:24px;align-items:start;margin-bottom:34px}
+  .section-head .no{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;color:var(--gold);padding-top:8px}
+  .section-head h2{font-family:var(--serif);font-size:clamp(38px,5vw,70px);line-height:.9;letter-spacing:-.045em;margin:0 0 10px}
+  .section-head p{max-width:760px;color:var(--muted);margin:0;font-size:.95rem}
+  .section-head .tag{display:inline-block;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+    border:1px solid rgba(214,161,74,.3);padding:5px 8px;border-radius:999px;margin-bottom:10px}
+
+  .compare{display:grid;gap:18px;margin:8px 0 18px}
+  .bar-row{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:center}
+  .bar-label{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);line-height:1.5}
+  .bar-label b{display:block;color:var(--bone);font-size:.7rem;letter-spacing:.14em}
+  .bar-label span{color:var(--faint);font-size:.58rem}
+  .bar{height:38px;display:flex;gap:2px;align-items:stretch;background:rgba(255,255,255,.03);padding:3px;border:1px solid rgba(255,255,255,.08)}
+  .bar i{display:block;min-width:2px;height:100%;background:rgba(242,230,208,.14);position:relative}
+  .bar i.blender{background:linear-gradient(180deg,rgba(214,161,74,.9),rgba(155,100,35,.75))}
+  .bar i.html{background:linear-gradient(180deg,rgba(242,230,208,.85),rgba(160,145,118,.7))}
+  .bar i.title{background:linear-gradient(180deg,rgba(177,74,47,.95),rgba(110,38,25,.8))}
+  .bar.old i:nth-child(3n){opacity:.55}
+  .bar i:hover{outline:1px solid var(--bone);z-index:2}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 0;color:var(--faint);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend b{width:9px;height:9px;display:inline-block;background:var(--gold)}
+  .legend b.html{background:var(--bone)}
+  .legend b.title{background:var(--rust)}
+  .legend b.cut{background:rgba(242,230,208,.28)}
+
+  .scenes{display:grid;gap:0;margin-top:28px;border-top:1px solid rgba(255,255,255,.09)}
+  .scene{border-bottom:1px solid rgba(255,255,255,.09)}
+  .scene summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:52px 1fr auto auto;gap:16px;
+    align-items:center;padding:18px 0;color:var(--bone)}
+  .scene summary::-webkit-details-marker{display:none}
+  .scene summary .n{font-family:var(--mono);font-size:.66rem;color:var(--gold)}
+  .scene summary h3{font-family:var(--serif);font-size:clamp(22px,2.5vw,34px);line-height:1;letter-spacing:-.03em;margin:0;font-weight:400}
+  .scene summary .meta{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .scene summary .plus{font-family:var(--mono);color:var(--gold);font-size:1rem;transition:transform .2s}
+  .scene[open] summary .plus{transform:rotate(45deg)}
+  .scene-body{padding:0 0 24px 68px;display:grid;gap:16px}
+  .scene-purpose{margin:0;color:var(--muted);font-size:.9rem;max-width:840px}
+  .lines{margin:0;padding:0;list-style:none;display:grid;gap:5px}
+  .lines li{display:grid;grid-template-columns:1fr auto;gap:16px;padding:7px 0;border-top:1px solid rgba(255,255,255,.05);
+    color:rgba(242,230,208,.88);font-size:.86rem}
+  .lines li .src{color:var(--faint);font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;white-space:nowrap;text-align:right}
+  .lines li .txt{color:rgba(242,230,208,.88)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.12);padding:5px 7px;
+    font-family:var(--mono);font-size:.55rem;letter-spacing:.04em;color:var(--muted);background:rgba(255,255,255,.02)}
+  .chip b{color:var(--bone);font-weight:400}
+  .chip em{font-style:normal;color:var(--gold);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase}
+
+  .transition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .trans-card{border:1px solid rgba(255,255,255,.1);background:linear-gradient(160deg,var(--panel2),rgba(13,11,8,.7));
+    padding:20px;min-height:160px;position:relative;overflow:hidden}
+  .trans-card:before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--gold);opacity:.75}
+  .trans-card .count{font-family:var(--serif);font-size:40px;line-height:.9;letter-spacing:-.05em;color:var(--gold)}
+  .trans-card h3{margin:8px 0 8px;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone)}
+  .trans-card p{margin:0;color:var(--muted);font-size:.82rem}
+
+  .frame-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .frame{margin:0;border:1px solid rgba(255,255,255,.09);background:#000;position:relative;overflow:hidden}
+  .frame img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;filter:contrast(1.05) saturate(.88)}
+  .frame figcaption{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;font-size:.55rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--faint);border-top:1px solid rgba(255,255,255,.07)}
+  .frame figcaption b{color:var(--gold);font-weight:400}
+  .contact{margin:16px 0 0;border:1px solid rgba(255,255,255,.1);background:#000}
+  .contact img{display:block;width:100%;height:auto;filter:contrast(1.04)}
+  .contact figcaption{padding:12px 14px;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.08)}
+  .contact figcaption b{color:var(--rust);font-weight:400}
+
+  .source-list{border-top:1px solid rgba(255,255,255,.1)}
+  .source-row{display:grid;grid-template-columns:1fr 190px 70px;gap:20px;align-items:start;padding:16px 0;
+    border-bottom:1px solid rgba(255,255,255,.08)}
+  .source-row a{text-decoration:none;color:var(--bone);font-family:var(--serif);font-size:1.1rem;line-height:1.2}
+  .source-row a:hover{color:var(--gold)}
+  .source-row .pub{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+  .source-row .uses{font-family:var(--mono);font-size:.62rem;color:var(--gold);text-align:right;white-space:nowrap}
+
+  .pipeline-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .pipe{border-top:1px solid var(--gold);padding:18px 0 0;min-height:190px}
+  .pipe .step{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;color:var(--gold)}
+  .pipe h3{font-family:var(--serif);font-size:clamp(22px,2.2vw,30px);line-height:1;letter-spacing:-.03em;margin:14px 0 10px}
+  .pipe p{margin:0 0 14px;color:var(--muted);font-size:.84rem}
+  .pipe code{font-family:var(--mono);font-size:.58rem;color:rgba(242,230,208,.45);line-height:1.5;word-break:break-all}
+
+  .iterations{border-left:1px solid rgba(214,161,74,.32);margin-left:8px;padding-left:26px;display:grid;gap:26px}
+  .iter{position:relative}
+  .iter:before{content:"";position:absolute;left:-32px;top:7px;width:9px;height:9px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 0 5px rgba(214,161,74,.1)}
+  .iter .when{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+  .iter h3{font-family:var(--serif);font-size:clamp(24px,2.6vw,36px);line-height:1;letter-spacing:-.03em;margin:8px 0 8px}
+  .iter p{margin:0;color:var(--muted);font-size:.88rem;max-width:800px}
+
+  .build-log{border-top:1px solid rgba(255,255,255,.1)}
+  .build{display:grid;grid-template-columns:96px 1fr 132px;gap:18px;align-items:center;padding:13px 0;
+    border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none}
+  .build:hover{background:rgba(255,255,255,.025)}
+  .build .state{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .build .state.ok{color:#9cbf8e}
+  .build .state.live{color:var(--gold)}
+  .build .state.bad{color:#d9826c}
+  .build .what{font-size:.82rem;color:rgba(242,230,208,.86);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .build .what small{display:block;color:var(--faint);font-family:var(--mono);font-size:.55rem;margin-top:3px}
+  .build .when{font-family:var(--mono);font-size:.56rem;color:var(--faint);text-align:right;white-space:nowrap}
+  .build-note{color:var(--faint);font-size:.68rem;margin:12px 0 0}
+  .build-note a{color:var(--gold)}
+
+  .credits{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:start}
+  .credit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid rgba(255,255,255,.1)}
+  .credit{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .credit dt{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 4px}
+  .credit dd{margin:0;font-family:var(--serif);font-size:1.05rem;color:var(--bone);line-height:1.15}
+  .rules{margin:0;padding:0;list-style:none;border-top:1px solid rgba(255,255,255,.1)}
+  .rules li{padding:11px 0 11px 22px;border-bottom:1px solid rgba(255,255,255,.07);position:relative;color:var(--muted);font-size:.82rem}
+  .rules li:before{content:"—";position:absolute;left:0;color:var(--gold)}
+  .closing{margin-top:28px;border:1px solid rgba(214,161,74,.28);padding:22px 24px;background:
+    linear-gradient(110deg,rgba(214,161,74,.09),transparent 65%)}
+  .closing p{margin:0;font-family:var(--serif);font-size:clamp(20px,2.2vw,28px);line-height:1.25;letter-spacing:-.02em}
+  .closing a{color:var(--gold);text-decoration:none}
+
+  footer{border-top:1px solid rgba(255,255,255,.1);padding:26px 0 54px;color:var(--faint);font-size:.66rem}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--gold)}
+
+  @media(max-width:980px){
+    .hero-grid{grid-template-columns:1fr}
+    .poster{aspect-ratio:16/9}
+    .stats .wrap{grid-template-columns:repeat(3,1fr)}
+    .stat:nth-child(3){border-right:none}
+    .stat:nth-child(-n+3){border-bottom:1px solid rgba(255,255,255,.08)}
+    .transition-grid,.pipeline-grid{grid-template-columns:1fr 1fr}
+    .credits{grid-template-columns:1fr}
+  }
+  @media(max-width:720px){
+    .wrap{padding:0 18px}
+    .hero{padding:48px 0 36px}
+    .top nav{display:none}
+    .hero-grid{gap:24px}
+    .stats .wrap{grid-template-columns:1fr 1fr}
+    .stat{padding:16px 14px 16px 0}
+    .stat:nth-child(3){border-right:1px solid rgba(255,255,255,.08)}
+    .stat:nth-child(-n+4){border-bottom:1px solid rgba(255,255,255,.08)}
+    .section{padding:48px 0}
+    .section-head{grid-template-columns:1fr;gap:4px}
+    .section-head .no{padding-top:0}
+    .bar-row{grid-template-columns:1fr;gap:6px}
+    .scene summary{grid-template-columns:36px 1fr auto}
+    .scene summary .meta{display:none}
+    .scene-body{padding-left:0}
+    .scene-purpose{padding-left:36px}
+    .lines li{grid-template-columns:1fr;gap:2px}
+    .lines li .src{text-align:left}
+    .transition-grid,.pipeline-grid,.frame-strip{grid-template-columns:1fr}
+    .source-row{grid-template-columns:1fr auto}
+    .source-row .pub{grid-column:1;grid-row:2}
+    .source-row .uses{grid-column:2;grid-row:1 / span 2}
+    .build{grid-template-columns:74px 1fr}
+    .build .when{grid-column:2;text-align:left}
+    .credit-grid{grid-template-columns:1fr}
+    .contact figcaption{display:block}
+    .poster{aspect-ratio:16/9}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><b>vlymbooq</b> · production dossier</a>
+    <nav>
+      <a href="#cut">The cut</a>
+      <a href="#motion">Motion</a>
+      <a href="#frames">Frames</a>
+      <a href="#sources">Sources</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#record">Record</a>
+      <a href="films.html">All films</a>
+      <a href="watch.html?film=salt-march">Watch</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="hero wrap">
+    <div class="eyebrow">
+      <span>Salt March · 1930</span>
+      <span>Proof of work · run 38</span>
+    </div>
+    <h1>THE<br><em>MAKING</em></h1>
+    <p class="lede">A 5:04 film in 40 scenes and 82 shots, built from 10 procedural sets, 40 sourced lines and 7 authored transitions. Every frame rendered on free GitHub Actions hardware.</p>
+
+    <div class="hero-grid">
+      <figure class="poster">
+        <img src="media/films/salt-march/poster.jpg" alt="SALT film poster." />
+        <span class="stamp">Final · run 38</span>
+        <figcaption><span>The Empire&#39;s Smallest Fear</span><span>vlymbooq</span></figcaption>
+      </figure>
+      <div class="film-card">
+        <div class="status"><i></i><span>Final · 1080p master on release</span></div>
+        <h2>SALT</h2>
+        <p>In 1930, the British Raj taxed the one thing every Indian could gather for free. One man picked up a handful of salt, and the Empire discovered a weapon it could not arrest.</p>
+        <div class="actions">
+          <a class="btn strong" href="watch.html?film=salt-march">Watch the cut →</a>
+          <a class="btn" href="debates.html?film=salt-march">Open the argument</a>
+        </div>
+        <dl class="receipt">
+          <div><dt>Final runtime</dt><dd>5:04</dd></div>
+          <div><dt>Total frames</dt><dd>7,296</dd></div>
+          <div><dt>Capture</dt><dd>24 fps · 1920×1080</dd></div>
+          <div><dt>Sources</dt><dd>5</dd></div>
+          <div><dt>Release</dt><dd>run 38</dd></div>
+          <div><dt>Master</dt><dd>398 MiB</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+  <section class="stats" aria-label="Production statistics">
+    <div class="wrap">
+      <div class="stat"><b>5:04</b><span>final cut</span><small>1080p master on release</small></div>
+      <div class="stat"><b>40</b><span>scenes</span><small>one argument per scene</small></div>
+      <div class="stat"><b>82</b><span>shots</span><small>average 3.7s</small></div>
+      <div class="stat"><b>40</b><span>sourced lines</span><small>every line carries a source id</small></div>
+      <div class="stat"><b>10</b><span>procedural sets</span><small>81 Blender plates</small></div>
+      <div class="stat"><b>7</b><span>authored transitions</span><small>75 hard cuts</small></div>
+    </div>
+  </section>
+  <section class="section wrap" id="cut">
+    <div class="section-head">
+      <div class="no">01 / EDIT</div>
+      <div>
+        <span class="tag">The cut is the argument</span>
+        <h2>82 shots across 40 scenes.</h2>
+        <p>The final cut runs 5:04 at 24 fps; the average shot is 3.7 seconds. 75 of the 82 joins are hard cuts. The other 7 are authored transitions (page turn, paper wipe, iris, dip). The scene list below is generated from the release timeline, not the storyboard.</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="bar-row">
+        <div class="bar-label"><b>Final cut</b><span>82 shots · 5:00 · approved</span></div>
+        <div class="bar" aria-label="Final cut: 82 shots"><i class="title" style="flex:0 0 3.050%" title="S01-T · 9.2s · hard-cut" aria-label="S01-T · 9.2s · hard-cut"></i><i class="blender" style="flex:0 0 1.303%" title="S01-A · 3.9s · hard-cut" aria-label="S01-A · 3.9s · hard-cut"></i><i class="blender" style="flex:0 0 0.869%" title="S01-B · 2.6s · hard-cut" aria-label="S01-B · 2.6s · hard-cut"></i><i class="blender" style="flex:0 0 2.306%" title="S01-L2-A · 6.9s · hard-cut" aria-label="S01-L2-A · 6.9s · hard-cut"></i><i class="blender" style="flex:0 0 1.537%" title="S01-L2-B · 4.6s · hard-cut" aria-label="S01-L2-B · 4.6s · hard-cut"></i><i class="blender" style="flex:0 0 1.032%" title="S01-L3-A · 3.1s · hard-cut" aria-label="S01-L3-A · 3.1s · hard-cut"></i><i class="blender" style="flex:0 0 0.688%" title="S01-L3-B · 2.1s · hard-cut" aria-label="S01-L3-B · 2.1s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S01-L4-A · 2.8s · hard-cut" aria-label="S01-L4-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S01-L4-B · 1.8s · hard-cut" aria-label="S01-L4-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 3.583%" title="S02-A · 10.8s · hard-cut" aria-label="S02-A · 10.8s · hard-cut"></i><i class="blender" style="flex:0 0 2.389%" title="S02-B · 7.2s · hard-cut" aria-label="S02-B · 7.2s · hard-cut"></i><i class="blender" style="flex:0 0 1.748%" title="S02-L2-A · 5.3s · hard-cut" aria-label="S02-L2-A · 5.3s · hard-cut"></i><i class="blender" style="flex:0 0 1.165%" title="S02-L2-B · 3.5s · hard-cut" aria-label="S02-L2-B · 3.5s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S02-L3-A · 2.8s · hard-cut" aria-label="S02-L3-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S02-L3-B · 1.8s · hard-cut" aria-label="S02-L3-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S02-L4-A · 2.8s · hard-cut" aria-label="S02-L4-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S02-L4-B · 1.8s · hard-cut" aria-label="S02-L4-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S02-L5-A · 2.8s · hard-cut" aria-label="S02-L5-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S02-L5-B · 1.8s · hard-cut" aria-label="S02-L5-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 3.433%" title="S03-A · 10.3s · page-turn" aria-label="S03-A · 10.3s · page-turn"></i><i class="blender" style="flex:0 0 2.288%" title="S03-B · 6.9s · hard-cut" aria-label="S03-B · 6.9s · hard-cut"></i><i class="blender" style="flex:0 0 1.189%" title="S03-L2-A · 3.6s · hard-cut" aria-label="S03-L2-A · 3.6s · hard-cut"></i><i class="blender" style="flex:0 0 0.793%" title="S03-L2-B · 2.4s · hard-cut" aria-label="S03-L2-B · 2.4s · hard-cut"></i><i class="blender" style="flex:0 0 1.129%" title="S03-L3-A · 3.4s · hard-cut" aria-label="S03-L3-A · 3.4s · hard-cut"></i><i class="blender" style="flex:0 0 0.753%" title="S03-L3-B · 2.3s · hard-cut" aria-label="S03-L3-B · 2.3s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S03-L4-A · 2.8s · hard-cut" aria-label="S03-L4-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S03-L4-B · 1.8s · hard-cut" aria-label="S03-L4-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S03-L5-A · 2.8s · hard-cut" aria-label="S03-L5-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S03-L5-B · 1.8s · hard-cut" aria-label="S03-L5-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 3.472%" title="S04-A · 10.4s · hard-cut" aria-label="S04-A · 10.4s · hard-cut"></i><i class="blender" style="flex:0 0 2.315%" title="S04-B · 7.0s · hard-cut" aria-label="S04-B · 7.0s · hard-cut"></i><i class="blender" style="flex:0 0 1.317%" title="S04-L2-A · 4.0s · hard-cut" aria-label="S04-L2-A · 4.0s · hard-cut"></i><i class="blender" style="flex:0 0 0.878%" title="S04-L2-B · 2.6s · hard-cut" aria-label="S04-L2-B · 2.6s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S04-L3-A · 2.8s · paper-wipe" aria-label="S04-L3-A · 2.8s · paper-wipe"></i><i class="blender" style="flex:0 0 0.612%" title="S04-L3-B · 1.8s · hard-cut" aria-label="S04-L3-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S04-L4-A · 2.8s · paper-wipe" aria-label="S04-L4-A · 2.8s · paper-wipe"></i><i class="blender" style="flex:0 0 0.612%" title="S04-L4-B · 1.8s · hard-cut" aria-label="S04-L4-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S04-L5-A · 2.8s · hard-cut" aria-label="S04-L5-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S04-L5-B · 1.8s · hard-cut" aria-label="S04-L5-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S04-L6-A · 2.8s · hard-cut" aria-label="S04-L6-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S04-L6-B · 1.8s · hard-cut" aria-label="S04-L6-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S04-L7-A · 2.8s · hard-cut" aria-label="S04-L7-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S04-L7-B · 1.8s · hard-cut" aria-label="S04-L7-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 2.183%" title="S05-A · 6.6s · hard-cut" aria-label="S05-A · 6.6s · hard-cut"></i><i class="blender" style="flex:0 0 1.455%" title="S05-B · 4.4s · hard-cut" aria-label="S05-B · 4.4s · hard-cut"></i><i class="blender" style="flex:0 0 1.008%" title="S05-L2-A · 3.0s · hard-cut" aria-label="S05-L2-A · 3.0s · hard-cut"></i><i class="blender" style="flex:0 0 0.672%" title="S05-L2-B · 2.0s · hard-cut" aria-label="S05-L2-B · 2.0s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S05-L3-A · 2.8s · hard-cut" aria-label="S05-L3-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S05-L3-B · 1.8s · hard-cut" aria-label="S05-L3-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S05-L4-A · 2.8s · iris" aria-label="S05-L4-A · 2.8s · iris"></i><i class="blender" style="flex:0 0 0.612%" title="S05-L4-B · 1.8s · hard-cut" aria-label="S05-L4-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S05-L5-A · 2.8s · hard-cut" aria-label="S05-L5-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S05-L5-B · 1.8s · hard-cut" aria-label="S05-L5-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S05-L6-A · 2.8s · hard-cut" aria-label="S05-L6-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S05-L6-B · 1.8s · hard-cut" aria-label="S05-L6-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 3.346%" title="S06-A · 10.1s · hard-cut" aria-label="S06-A · 10.1s · hard-cut"></i><i class="blender" style="flex:0 0 2.231%" title="S06-B · 6.7s · hard-cut" aria-label="S06-B · 6.7s · hard-cut"></i><i class="blender" style="flex:0 0 1.319%" title="S06-L2-A · 4.0s · iris" aria-label="S06-L2-A · 4.0s · iris"></i><i class="blender" style="flex:0 0 0.879%" title="S06-L2-B · 2.6s · hard-cut" aria-label="S06-L2-B · 2.6s · hard-cut"></i><i class="blender" style="flex:0 0 1.182%" title="S06-L3-A · 3.6s · hard-cut" aria-label="S06-L3-A · 3.6s · hard-cut"></i><i class="blender" style="flex:0 0 0.788%" title="S06-L3-B · 2.4s · hard-cut" aria-label="S06-L3-B · 2.4s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S06-L4-A · 2.8s · hard-cut" aria-label="S06-L4-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S06-L4-B · 1.8s · hard-cut" aria-label="S06-L4-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S06-L5-A · 2.8s · hard-cut" aria-label="S06-L5-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S06-L5-B · 1.8s · hard-cut" aria-label="S06-L5-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S06-L6-A · 2.8s · hard-cut" aria-label="S06-L6-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S06-L6-B · 1.8s · hard-cut" aria-label="S06-L6-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 2.967%" title="S07-A · 8.9s · page-turn" aria-label="S07-A · 8.9s · page-turn"></i><i class="blender" style="flex:0 0 1.978%" title="S07-B · 5.9s · hard-cut" aria-label="S07-B · 5.9s · hard-cut"></i><i class="blender" style="flex:0 0 1.679%" title="S07-L2-A · 5.0s · hard-cut" aria-label="S07-L2-A · 5.0s · hard-cut"></i><i class="blender" style="flex:0 0 1.119%" title="S07-L2-B · 3.4s · hard-cut" aria-label="S07-L2-B · 3.4s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S07-L3-A · 2.8s · hard-cut" aria-label="S07-L3-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S07-L3-B · 1.8s · hard-cut" aria-label="S07-L3-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S07-L4-A · 2.8s · hard-cut" aria-label="S07-L4-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S07-L4-B · 1.8s · hard-cut" aria-label="S07-L4-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 1.749%" title="S08-A · 5.3s · hard-cut" aria-label="S08-A · 5.3s · hard-cut"></i><i class="blender" style="flex:0 0 1.166%" title="S08-B · 3.5s · hard-cut" aria-label="S08-B · 3.5s · hard-cut"></i><i class="blender" style="flex:0 0 0.919%" title="S08-L2-A · 2.8s · hard-cut" aria-label="S08-L2-A · 2.8s · hard-cut"></i><i class="blender" style="flex:0 0 0.612%" title="S08-L2-B · 1.8s · hard-cut" aria-label="S08-L2-B · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 2.296%" title="S08-L3-A · 6.9s · hard-cut" aria-label="S08-L3-A · 6.9s · hard-cut"></i><i class="blender" style="flex:0 0 1.531%" title="S08-L3-B · 4.6s · hard-cut" aria-label="S08-L3-B · 4.6s · hard-cut"></i><i class="blender" style="flex:0 0 1.065%" title="S08-L3-Z · 3.2s · dip" aria-label="S08-L3-Z · 3.2s · dip"></i></div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><b class="blender"></b> Blender set</span>
+      <span><b class="html"></b> Typographic card</span>
+      <span><b class="title"></b> Title card</span>
+    </div>
+<div class="scenes">
+<details class="scene" open><summary><span class="n">S01</span><h3>British Plinth</h3><span class="meta">3 shots · 19s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 1, line 1: Start with the mineral, then the argument for choosing it</p><ul class="lines"><li><span class="txt">Salt. The British Empire could tax almost anything; it chose the one thing the poorest Indian could gather for free.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S01-T</b> · title <em>hard-cut</em></span><span class="chip"><b>S01-A</b> · object-01 <em>hard-cut</em></span><span class="chip"><b>S01-B</b> · desk-01 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S01-L2</span><h3>Constitution Plinth</h3><span class="meta">2 shots · 12s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 1, line 2: Start with the mineral, then the argument for choosing it</p><ul class="lines"><li><span class="txt">A constitution could not be attacked directly; a tax on salt could.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S01-L2-A</b> · object-02 <em>hard-cut</em></span><span class="chip"><b>S01-L2-B</b> · corridor-01 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S01-L3</span><h3>Congress Desk</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 1, line 3: Start with the mineral, then the argument for choosing it</p><ul class="lines"><li><span class="txt">The Congress gave Gandhi the first act of civil disobedience, expecting his arrest.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S01-L3-A</b> · desk-02 <em>hard-cut</em></span><span class="chip"><b>S01-L3-B</b> · object-03 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S01-L4</span><h3>White Flowing Water Sample</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 1, line 4: Start with the mineral, then the argument for choosing it</p><ul class="lines"><li><span class="txt">The march was called the White Flowing River, for the khadi the marchers wore.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S01-L4-A</b> · desk-03 <em>hard-cut</em></span><span class="chip"><b>S01-L4-B</b> · night-01 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S02</span><h3>Salt Administrator&#39;s Office</h3><span class="meta">2 shots · 18s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 2, line 1: The Act, the depots, and why his own committee doubted the choice</p><ul class="lines"><li><span class="txt">The Salt Act of 1882 gave the Raj a monopoly on collection and manufacture. Salt was free on the coast. The law made it a crime to take it.</span><span class="src">Wikipedia · civil-disobedience</span></li></ul><div class="chips"><span class="chip"><b>S02-A</b> · office-01 <em>hard-cut</em></span><span class="chip"><b>S02-B</b> · index-01 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S02-L2</span><h3>British India Family Record</h3><span class="meta">2 shots · 9s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 2, line 2: The Act, the depots, and why his own committee doubted the choice</p><ul class="lines"><li><span class="txt">The tax was small at the till and enormous in a poor family&#39;s kitchen. By 1930 it was 8.2 percent of British India&#39;s tax revenue.</span><span class="src">Wikipedia · civil-disobedience</span></li></ul><div class="chips"><span class="chip"><b>S02-L2-A</b> · office-02 <em>hard-cut</em></span><span class="chip"><b>S02-L2-B</b> · wall-01 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S02-L3</span><h3>Even Nehru Card Catalogue</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 2, line 3: The Act, the depots, and why his own committee doubted the choice</p><ul class="lines"><li><span class="txt">Even Nehru was sceptical when Gandhi chose the salt tax.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S02-L3-A</b> · index-02 <em>hard-cut</em></span><span class="chip"><b>S02-L3-B</b> · office-03 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S02-L4</span><h3>Government Card Catalogue</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 2, line 4: The Act, the depots, and why his own committee doubted the choice</p><ul class="lines"><li><span class="txt">The Act limited all handling of salt to government depots.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S02-L4-A</b> · index-03 <em>hard-cut</em></span><span class="chip"><b>S02-L4-B</b> · flame-01 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S02-L5</span><h3>Campaign Family Record</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 2, line 5: The Act, the depots, and why his own committee doubted the choice</p><ul class="lines"><li><span class="txt">Gandhi called the salt campaign a poor man&#39;s struggle.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S02-L5-A</b> · office-04 <em>hard-cut</em></span><span class="chip"><b>S02-L5-B</b> · wall-02 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S03</span><h3>Protect Indian Desk</h3><span class="meta">2 shots · 17s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 3, line 1: The eleven demands, the press prepared in advance, and a Viceroy who would not meet him</p><ul class="lines"><li><span class="txt">On 2 March 1930, Gandhi wrote to the Viceroy with eleven demands. Abolish the salt tax. Cut military spending. Protect Indian cloth.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S03-A</b> · desk-04 <em>page-turn</em></span><span class="chip"><b>S03-B</b> · gate-01 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S03-L2</span><h3>Lord Irwin Map Table</h3><span class="meta">2 shots · 6s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 3, line 2: The eleven demands, the press prepared in advance, and a Viceroy who would not meet him</p><ul class="lines"><li><span class="txt">Lord Irwin was not impressed. He wrote to London that a salt campaign did not keep him awake at night.</span><span class="src">Wikipedia · civil-disobedience</span></li></ul><div class="chips"><span class="chip"><b>S03-L2-A</b> · map-01 <em>hard-cut</em></span><span class="chip"><b>S03-L2-B</b> · office-05 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S03-L3</span><h3>Included Desk</h3><span class="meta">2 shots · 6s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 3, line 3: The eleven demands, the press prepared in advance, and a Viceroy who would not meet him</p><ul class="lines"><li><span class="txt">The demands included land revenue relief, military cuts and a tariff on foreign cloth.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S03-L3-A</b> · desk-05 <em>hard-cut</em></span><span class="chip"><b>S03-L3-B</b> · night-02 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S03-L4</span><h3>Briefed Corridor</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 3, line 4: The eleven demands, the press prepared in advance, and a Viceroy who would not meet him</p><ul class="lines"><li><span class="txt">Gandhi briefed the world&#39;s press before he left the ashram.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S03-L4-A</b> · corridor-02 <em>hard-cut</em></span><span class="chip"><b>S03-L4-B</b> · flame-02 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S03-L5</span><h3>Ignored Letter</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 3, line 5: The eleven demands, the press prepared in advance, and a Viceroy who would not meet him</p><ul class="lines"><li><span class="txt">Irwin ignored the letter and refused to meet him before the march.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S03-L5-A</b> · office-06 <em>hard-cut</em></span><span class="chip"><b>S03-L5-B</b> · desk-06 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S04</span><h3>March Building</h3><span class="meta">2 shots · 17s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 4, line 1: Who walked, how old they were, how the villages received them, and how long the column became</p><ul class="lines"><li><span class="txt">On 12 March 1930, Gandhi left Sabarmati with 78 volunteers. They walked for 24 days, 387 kilometres, through 48 villages.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S04-A</b> · map-02 <em>hard-cut</em></span><span class="chip"><b>S04-B</b> · wall-03 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S04-L2</span><h3>Farmers Water Sample</h3><span class="meta">2 shots · 7s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 4, line 2: Who walked, how old they were, how the villages received them, and how long the column became</p><ul class="lines"><li><span class="txt">The line grew. Farmers, weavers, students, women. The world&#39;s press came to watch a man walk toward the sea.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S04-L2-A</b> · map-03 <em>hard-cut</em></span><span class="chip"><b>S04-L2-B</b> · night-03 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S04-L3</span><h3>Seventy-eight Wall Sheets</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 4, line 3: Who walked, how old they were, how the villages received them, and how long the column became</p><ul class="lines"><li><span class="txt">The seventy-eight marchers came from almost every region, caste and creed.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S04-L3-A</b> · wall-04 <em>paper-wipe</em></span><span class="chip"><b>S04-L3-B</b> · map-04 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S04-L4</span><h3>Between Wall Sheets</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 4, line 4: Who walked, how old they were, how the villages received them, and how long the column became</p><ul class="lines"><li><span class="txt">Most of them were between twenty and thirty years old.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S04-L4-A</b> · wall-05 <em>paper-wipe</em></span><span class="chip"><b>S04-L4-B</b> · gate-02 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S04-L5</span><h3>Cymbals Building</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 4, line 5: Who walked, how old they were, how the villages received them, and how long the column became</p><ul class="lines"><li><span class="txt">Villages met them with drums and cymbals as they passed.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S04-L5-A</b> · map-05 <em>hard-cut</em></span><span class="chip"><b>S04-L5-B</b> · wall-06 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S04-L6</span><h3>Villages Building</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 4, line 6: Who walked, how old they were, how the villages received them, and how long the column became</p><ul class="lines"><li><span class="txt">They asked the villages for food and water to wash with, nothing more.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S04-L6-A</b> · map-06 <em>hard-cut</em></span><span class="chip"><b>S04-L6-B</b> · gate-03 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S04-L7</span><h3>Kilometres Corridor</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 4, line 7: Who walked, how old they were, how the villages received them, and how long the column became</p><ul class="lines"><li><span class="txt">The column stretched at least three kilometres behind him.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S04-L7-A</b> · corridor-03 <em>hard-cut</em></span><span class="chip"><b>S04-L7-B</b> · flame-03 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S05</span><h3>April Plinth</h3><span class="meta">2 shots · 11s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 5, line 1: The handful of mud, the illegal salt, the telegrams and the greeting</p><ul class="lines"><li><span class="txt">At 8:30 on the morning of 6 April, Gandhi bent down and picked up a lump of salt.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S05-A</b> · object-04 <em>hard-cut</em></span><span class="chip"><b>S05-B</b> · corridor-04 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S05-L2</span><h3>Within Plinth</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 5, line 2: The handful of mud, the illegal salt, the telegrams and the greeting</p><ul class="lines"><li><span class="txt">The law was broken. Within weeks, millions joined. Over 60,000 were jailed.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S05-L2-A</b> · object-05 <em>hard-cut</em></span><span class="chip"><b>S05-L2-B</b> · map-07 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S05-L3</span><h3>Empire Plinth</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 5, line 3: The handful of mud, the illegal salt, the telegrams and the greeting</p><ul class="lines"><li><span class="txt">He raised a lump of salty mud and said he was shaking the Empire&#39;s foundations.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S05-L3-A</b> · object-06 <em>hard-cut</em></span><span class="chip"><b>S05-L3-B</b> · night-04 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S05-L4</span><h3>Followers Flame</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 5, line 4: The handful of mud, the illegal salt, the telegrams and the greeting</p><ul class="lines"><li><span class="txt">He boiled seawater into illegal salt and told his followers to do the same.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S05-L4-A</b> · flame-04 <em>iris</em></span><span class="chip"><b>S05-L4-B</b> · index-04 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S05-L5</span><h3>Jalalpur Room</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 5, line 5: The handful of mud, the illegal salt, the telegrams and the greeting</p><ul class="lines"><li><span class="txt">About seven hundred telegrams went out from the post office at Jalalpur.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S05-L5-A</b> · corridor-05 <em>hard-cut</em></span><span class="chip"><b>S05-L5-B</b> · office-07 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S05-L6</span><h3>Sarojini Naidu Plinth</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 5, line 6: The handful of mud, the illegal salt, the telegrams and the greeting</p><ul class="lines"><li><span class="txt">Sarojini Naidu saluted him at Dandi as a law breaker.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S05-L6-A</b> · object-07 <em>hard-cut</em></span><span class="chip"><b>S05-L6-B</b> · gate-04 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S06</span><h3>Dharasana Wall Sheets</h3><span class="meta">2 shots · 17s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 6, line 1: The arrest, the raid, the beatings and the instruction not to resist</p><ul class="lines"><li><span class="txt">Gandhi was arrested in a mango grove before the Dharasana raid began.</span><span class="src">Wikipedia · civil-disobedience</span></li></ul><div class="chips"><span class="chip"><b>S06-A</b> · wall-07 <em>hard-cut</em></span><span class="chip"><b>S06-B</b> · night-05 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S06-L2</span><h3>Dharasana Gate</h3><span class="meta">2 shots · 7s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 6, line 2: The arrest, the raid, the beatings and the instruction not to resist</p><ul class="lines"><li><span class="txt">The Raj answered with lathis. At Dharasana, volunteers walked into the clubs and did not raise a hand.</span><span class="src">Wikipedia · dharasana</span></li></ul><div class="chips"><span class="chip"><b>S06-L2-A</b> · gate-05 <em>iris</em></span><span class="chip"><b>S06-L2-B</b> · wall-08 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S06-L3</span><h3>Empire Gate</h3><span class="meta">2 shots · 6s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 6, line 3: The arrest, the raid, the beatings and the instruction not to resist</p><ul class="lines"><li><span class="txt">The world saw the choice the Empire made. The story reached 1,350 newspapers.</span><span class="src">Wikipedia · dharasana</span></li></ul><div class="chips"><span class="chip"><b>S06-L3-A</b> · gate-06 <em>hard-cut</em></span><span class="chip"><b>S06-L3-B</b> · flame-05 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S06-L4</span><h3>Kasturba Gate</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 6, line 4: The arrest, the raid, the beatings and the instruction not to resist</p><ul class="lines"><li><span class="txt">A retired judge of seventy-six led the raid with Kasturba beside him.</span><span class="src">Wikipedia · dharasana</span></li></ul><div class="chips"><span class="chip"><b>S06-L4-A</b> · gate-07 <em>hard-cut</em></span><span class="chip"><b>S06-L4-B</b> · index-05 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S06-L5</span><h3>Sarojini Naidu Gate</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 6, line 5: The arrest, the raid, the beatings and the instruction not to resist</p><ul class="lines"><li><span class="txt">Both were arrested, and Sarojini Naidu took command of the march.</span><span class="src">Wikipedia · dharasana</span></li></ul><div class="chips"><span class="chip"><b>S06-L5-A</b> · gate-08 <em>hard-cut</em></span><span class="chip"><b>S06-L5-B</b> · wall-09 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S06-L6</span><h3>Beaten Corridor</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 6, line 6: The arrest, the raid, the beatings and the instruction not to resist</p><ul class="lines"><li><span class="txt">She told them they would be beaten but must not raise a hand.</span><span class="src">Wikipedia · dharasana</span></li></ul><div class="chips"><span class="chip"><b>S06-L6-A</b> · corridor-06 <em>hard-cut</em></span><span class="chip"><b>S06-L6-B</b> · gate-09 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S07</span><h3>March Desk</h3><span class="meta">2 shots · 15s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 7, line 1: The pact, the terms, and the movement closed down by its own side</p><ul class="lines"><li><span class="txt">In March 1931, Gandhi and Irwin signed a pact. Over 90,000 political prisoners were released.</span><span class="src">Wikipedia · gandhi-irwin</span></li></ul><div class="chips"><span class="chip"><b>S07-A</b> · desk-07 <em>page-turn</em></span><span class="chip"><b>S07-B</b> · office-08 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S07-L2</span><h3>Everything Desk</h3><span class="meta">2 shots · 8s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 7, line 2: The pact, the terms, and the movement closed down by its own side</p><ul class="lines"><li><span class="txt">The Raj did not abolish the salt tax. The movement did not win everything. It won something harder to take away: a nation had seen its own power.</span><span class="src">Wikipedia · gandhi-irwin</span></li></ul><div class="chips"><span class="chip"><b>S07-L2-A</b> · desk-08 <em>hard-cut</em></span><span class="chip"><b>S07-L2-B</b> · night-06 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S07-L3</span><h3>1931 Administrator&#39;s Office</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 7, line 3: The pact, the terms, and the movement closed down by its own side</p><ul class="lines"><li><span class="txt">Gandhi was released in 1931 to meet Irwin on equal terms.</span><span class="src">Wikipedia · gandhi-irwin</span></li></ul><div class="chips"><span class="chip"><b>S07-L3-A</b> · office-09 <em>hard-cut</em></span><span class="chip"><b>S07-L3-B</b> · desk-09 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S07-L4</span><h3>1934 Flame</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 7, line 4: The pact, the terms, and the movement closed down by its own side</p><ul class="lines"><li><span class="txt">Congress ended satyagraha as official policy in 1934.</span><span class="src">Wikipedia · civil-disobedience</span></li></ul><div class="chips"><span class="chip"><b>S07-L4-A</b> · flame-06 <em>hard-cut</em></span><span class="chip"><b>S07-L4-B</b> · index-06 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S08</span><h3>Empire Family Record</h3><span class="meta">2 shots · 9s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 8, line 1: What the world took from it, and the concession inside the Empire itself</p><ul class="lines"><li><span class="txt">The Empire had armies. It had no answer to a man picking up salt.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S08-A</b> · wall-10 <em>hard-cut</em></span><span class="chip"><b>S08-B</b> · object-08 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S08-L2</span><h3>Gandhi Family Record</h3><span class="meta">2 shots · 5s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 8, line 2: What the world took from it, and the concession inside the Empire itself</p><ul class="lines"><li><span class="txt">Time magazine named Gandhi its Man of the Year for 1930.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S08-L2-A</b> · wall-11 <em>hard-cut</em></span><span class="chip"><b>S08-L2-B</b> · office-10 <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S08-L3</span><h3>England Flame</h3><span class="meta">3 shots · 15s · 1 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Chapter 8, line 3: What the world took from it, and the concession inside the Empire itself</p><ul class="lines"><li><span class="txt">A provincial governor conceded that England could hold India only by consent.</span><span class="src">Wikipedia · salt-march</span></li></ul><div class="chips"><span class="chip"><b>S08-L3-A</b> · flame-07 <em>hard-cut</em></span><span class="chip"><b>S08-L3-B</b> · night-07 <em>hard-cut</em></span><span class="chip"><b>S08-L3-Z</b> · night-07-b <em>dip</em></span></div></div></details>
+</div>
+  </section>
+  <section class="section wrap" id="motion">
+    <div class="section-head">
+      <div class="no">02 / MOTION</div>
+      <div>
+        <span class="tag">Transitions are cuts with intent</span>
+        <h2>The edit has a grammar.</h2>
+        <p>The grammar is paper-ledger. The signature moves are listed below. Transition counts come from the final edit manifest.</p>
+      </div>
+    </div>
+    <div class="chips" style="margin:0 0 18px"><span class="chip">document reveal: the page moves before the camera does</span><span class="chip">page-turn wipe: a printed edge carries the next set in</span><span class="chip">stamp match: a rubber stamp lands where the last shot cut</span><span class="chip">ruling lines: horizontal rules become the horizon of the next set</span></div>
+    <div class="transition-grid">
+      <article class="trans-card"><div class="count">2</div><h3>Page turn</h3><p>A page turns and the next set arrives on its back.</p></article>
+      <article class="trans-card"><div class="count">2</div><h3>Paper wipe</h3><p>A printed edge carries the next set into frame.</p></article>
+      <article class="trans-card"><div class="count">2</div><h3>Iris</h3><p>A lamp or valve closes to a circle, moving the eye to the next object.</p></article>
+      <article class="trans-card"><div class="count">1</div><h3>Dip</h3><p>A held gap between two arguments.</p></article>
+      <article class="trans-card"><div class="count">75</div><h3>Hard cut</h3><p>The default join. Used where softening would weaken the argument.</p></article>
+    </div>
+  </section>
+  <section class="section wrap" id="frames">
+    <div class="section-head">
+      <div class="no">03 / FRAMES</div>
+      <div>
+        <span class="tag">What the camera actually saw</span>
+        <h2>Final-cut frame studies.</h2>
+        <p>Six frames from the approved final cut, one from each of six scenes, plus a contact sheet of every scene frame. No stock footage; every set is procedural.</p>
+      </div>
+    </div>
+    <div class="frame-strip">
+      <figure class="frame"><img loading="lazy" src="media/films/salt-march/production/current-01.jpg" alt="Frame from scene 2, Constitution Plinth, in the approved final cut." /><figcaption><span>Constitution Plinth</span><b>01</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/salt-march/production/current-02.jpg" alt="Frame from scene 3, Congress Desk, in the approved final cut." /><figcaption><span>Congress Desk</span><b>02</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/salt-march/production/current-03.jpg" alt="Frame from scene 4, White Flowing Water Sample, in the approved final cut." /><figcaption><span>White Flowing Water Sample</span><b>03</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/salt-march/production/current-04.jpg" alt="Frame from scene 6, British India Family Record, in the approved final cut." /><figcaption><span>British India Family Record</span><b>04</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/salt-march/production/current-05.jpg" alt="Frame from scene 7, Even Nehru Card Catalogue, in the approved final cut." /><figcaption><span>Even Nehru Card Catalogue</span><b>05</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/salt-march/production/current-06.jpg" alt="Frame from scene 8, Government Card Catalogue, in the approved final cut." /><figcaption><span>Government Card Catalogue</span><b>06</b></figcaption></figure>
+    </div>
+    <figure class="contact">
+      <img loading="lazy" src="media/films/salt-march/production/contact-sheet.jpg" alt="Contact sheet of every scene frame in the approved final cut." />
+      <figcaption><span><b>Contact sheet:</b> Every scene frame, in order, from the approved final cut.</span><span>40 frames</span></figcaption>
+    </figure>
+  </section>
+  <section class="section wrap" id="sources">
+    <div class="section-head">
+      <div class="no">04 / EVIDENCE</div>
+      <div>
+        <span class="tag">No invented facts</span>
+        <h2>Every line has a source.</h2>
+        <p>The storyboard is validated before rendering. Each narration line carries a source id, and the render fails if the line, shot or source is missing. The counts below come from the final release timeline.</p>
+      </div>
+    </div>
+    <div class="source-list">
+      <div class="source-row"><a href="https://en.wikipedia.org/wiki/Salt_March" target="_blank" rel="noopener">Salt March</a><span class="pub">Wikipedia · accessed 2026-10-22</span><span class="uses">27 lines</span></div>
+      <div class="source-row"><a href="https://en.wikipedia.org/wiki/Civil_disobedience_movement" target="_blank" rel="noopener">Civil disobedience movement</a><span class="pub">Wikipedia · accessed 2026-10-22</span><span class="uses">5 lines</span></div>
+      <div class="source-row"><a href="https://en.wikipedia.org/wiki/Dharasana_Satyagraha" target="_blank" rel="noopener">Dharasana Satyagraha</a><span class="pub">Wikipedia · accessed 2026-10-22</span><span class="uses">5 lines</span></div>
+      <div class="source-row"><a href="https://en.wikipedia.org/wiki/Gandhi%E2%80%93Irwin_Pact" target="_blank" rel="noopener">Gandhi-Irwin Pact</a><span class="pub">Wikipedia · accessed 2026-10-22</span><span class="uses">3 lines</span></div>
+      <div class="source-row"><a href="https://en.wikipedia.org/wiki/Poona_Pact" target="_blank" rel="noopener">Poona Pact</a><span class="pub">Wikipedia · accessed 2026-10-22</span><span class="uses">0 lines</span></div>
+    </div>
+  </section>
+  <section class="section wrap" id="pipeline">
+    <div class="section-head">
+      <div class="no">05 / PIPELINE</div>
+      <div>
+        <span class="tag">Free CI, no paid keys</span>
+        <h2>Every frame is assembled on GitHub.</h2>
+        <p>Blender, Piper, Chromium and ffmpeg run on a free Ubuntu CPU runner. The owner&#39;s machine writes the code; it does not render the film. The pipeline is public, repeatable and allowed to fail loudly.</p>
+      </div>
+    </div>
+    <div class="pipeline-grid">
+      <article class="pipe"><div class="step">01</div><h3>Source lock</h3><p>The storyboard is a JSON contract. Every narration line names a source. The validator refuses unsourced lines, missing shots and filler before a runner is allowed to render.</p><code>release: film-salt-march-final-38 · timeline.json + metadata.json</code></article>
+      <article class="pipe"><div class="step">02</div><h3>Procedural sets</h3><p>Blender 4.2 builds the film&#39;s sets as still plates. No stock images.</p><code>scripts/film/render-plates.js</code></article>
+      <article class="pipe"><div class="step">03</div><h3>Narration</h3><p>Piper reads the script locally with en_US-lessac-medium. No cloud narration, no per-word billing, no API key in the repository.</p><code>scripts/film/build-film.js</code></article>
+      <article class="pipe"><div class="step">04</div><h3>Camera and type</h3><p>Chromium drives the timeline frame by frame: push-ins, pans, match cuts, mask wipes, impact cards and captions. The camera is code, so every frame is repeatable.</p><code>js/film.js</code></article>
+      <article class="pipe"><div class="step">05</div><h3>Score and master</h3><p>ffmpeg synthesises the score, mixes the narration, burns the SRT into the master and encodes the MP4.</p><code>scripts/film/build-film.js</code></article>
+      <article class="pipe"><div class="step">06</div><h3>Free CI</h3><p>The render runs on GitHub-hosted Ubuntu CPU. No GPU. No paid runner. The owner&#39;s machine writes the code; it does not render the film.</p><code>.github/workflows/film.yml</code></article>
+    </div>
+  </section>
+  <section class="section wrap" id="record">
+    <div class="section-head">
+      <div class="no">06 / RECORD</div>
+      <div>
+        <span class="tag">Measured, not asserted</span>
+        <h2>What the record shows.</h2>
+        <p>Each entry is taken from the release itself: the timeline, the edit manifest and the independent QC report. A dossier that only shows the final cut is a portfolio, not a process.</p>
+      </div>
+    </div>
+    <div class="iterations">
+      <article class="iter"><div class="when">2026-10-30</div><h3>Source lock</h3><p>40 narration lines across 5 sources. Every line in the final timeline resolves to a source in the release metadata; the validator refuses a line without one.</p></article>
+      <article class="iter"><div class="when">2026-10-30</div><h3>Final cut</h3><p>40 scenes, 82 shots, 5:04. Average shot 3.7s. 75 hard cuts and 7 authored transitions.</p></article>
+      <article class="iter"><div class="when">2026-10-30</div><h3>Independent QC</h3><p>Passed: -1.2 dBTP wanted no higher than -1; I -12.9 LUFS wanted -16.5 to -11; median 45.6 dB wanted at least 36 dB, worst 42.0 dB at S03-L3; 108 cues in salt-march.srt; median edge/interior 1.17 wanted at most 1.75.</p></article>
+      <article class="iter"><div class="when">2026-10-30</div><h3>Release</h3><p>Release film-salt-march-final-38 carries the 1080 master, SRT, thumbnail, timeline, edit manifest and script. The site deploys only the 720 preview.</p></article>
+    </div>
+  </section>
+  <section class="section wrap" id="build">
+    <div class="section-head">
+      <div class="no">07 / BUILD LOG</div>
+      <div>
+        <span class="tag">Live from GitHub Actions</span>
+        <h2>The render is public.</h2>
+        <p>Recent Film pipeline runs, read from the public GitHub API. The workflow log is part of the record.</p>
+      </div>
+    </div>
+    <div class="build-log" id="buildLog">
+      <div class="build"><span class="state live">reading</span><span class="what">Fetching the public build log…</span><span class="when">GitHub</span></div>
+    </div>
+    <p class="build-note">Source: <a href="https://github.com/renj-arch/dimsred/actions/workflows/film.yml" target="_blank" rel="noopener">github.com/renj-arch/dimsred/actions/workflows/film.yml</a></p>
+  </section>
+  <section class="section wrap" id="credits">
+    <div class="section-head">
+      <div class="no">08 / CREDITS</div>
+      <div>
+        <span class="tag">Made in the open</span>
+        <h2>Who did what.</h2>
+        <p>The same free, local toolchain on every film: no paid API, no GPU and no stock footage.</p>
+      </div>
+    </div>
+    <div class="credits">
+      <div>
+        <dl class="credit-grid">
+          <div class="credit"><dt>Direction, research, edit</dt><dd>Renjith</dd></div>
+          <div class="credit"><dt>Production system</dt><dd>vlymbooq · OpenCode</dd></div>
+          <div class="credit"><dt>Procedural sets</dt><dd>Blender 4.2 LTS</dd></div>
+          <div class="credit"><dt>Narration</dt><dd>Piper · en_US-lessac-medium</dd></div>
+          <div class="credit"><dt>Camera, typography, transitions</dt><dd>Chromium + film.js</dd></div>
+          <div class="credit"><dt>Score, captions, encode</dt><dd>ffmpeg</dd></div>
+        </dl>
+        <div class="closing">
+          <p>“If the edit is weak, the render does not ship.”</p>
+          <p style="margin-top:10px;font-family:var(--sans);font-size:.8rem;color:var(--muted)">The 1080 master is published only after independent QC passes and the release is attached.</p>
+        </div>
+      </div>
+      <div>
+        <ul class="rules">
+          <li>Every narration line carries a source id. The render fails if a line, shot or source is missing.</li>
+          <li>No number on screen without a source or an explicit attribution.</li>
+          <li>No stock footage. Every set is procedural.</li>
+          <li>No paid API keys. The pipeline runs on free CI.</li>
+          <li>If the edit is weak, the render does not ship.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>vlymbooq · production dossier · SALT</span>
+    <span>
+      <a href="production.html?film=jallianwala-bagh">Jallianwala</a> ·
+      <a href="salt-march-production.html">Salt</a> ·
+      <a href="the-vatican-archives-production.html">Vatican</a> ·
+      <a href="emergency-1975-production.html">Emergency</a> ·
+      <a href="bhopal-gas-tragedy-production.html">Bhopal</a> ·
+      <a href="films.html">All films</a> ·
+      <a href="https://github.com/renj-arch/dimsred" target="_blank" rel="noopener">Source</a>
+    </span>
+  </div>
+</footer>
+<script>
+(function(){
+  "use strict";
+  var el = document.getElementById("buildLog");
+  if (!el) return;
+  var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"\']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","\'":"&#39;"}[c]; }); };
+  fetch("https://api.github.com/repos/renj-arch/dimsred/actions/workflows/film.yml/runs?per_page=4", { headers: { "Accept": "application/vnd.github+json" } })
+    .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(function(data){
+      var runs = (data && data.workflow_runs) || [];
+      if (!runs.length) throw new Error("no runs");
+      el.innerHTML = runs.map(function(run){
+        var status = run.status === "in_progress" ? "running" : (run.conclusion || run.status || "unknown");
+        var cls = /success/.test(status) ? "ok" : (/in_progress|queued|running/.test(status) ? "live" : (/cancel|fail/.test(status) ? "bad" : ""));
+        var when = run.created_at ? new Date(run.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short" }) : "";
+        var title = (run.head_commit && run.head_commit.message ? run.head_commit.message.split("\n")[0] : "Film pipeline") + " · #" + run.run_number;
+        return '<a class="build" href="' + esc(run.html_url) + '" target="_blank" rel="noopener">' +
+          '<span class="state ' + cls + '">' + esc(status) + '</span>' +
+          '<span class="what">' + esc(title) + '<small>' + esc(run.event || "workflow_dispatch") + " · " + esc(run.head_branch || "") + '</small></span>' +
+          '<span class="when">' + esc(when) + '</span></a>';
+      }).join("");
+    })
+    .catch(function(){
+      el.innerHTML = '<div class="build"><span class="state bad">unavailable</span>' +
+        '<span class="what">The public API did not answer. The workflow log is still public.<small>GitHub Actions</small></span>' +
+        '<span class="when"><a href="https://github.com/renj-arch/dimsred/actions/workflows/film.yml" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none">open</a></span></div>';
+    });
+})();
+</script>
+</body>
+</html>

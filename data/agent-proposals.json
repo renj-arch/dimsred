@@ -1,0 +1,346 @@
+{
+ "meta": {
+  "generatedAt": "2026-10-31T11:29:45.182Z",
+  "model": "qwen3.5:9b",
+  "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
+  "count": 33,
+  "lastAttempt": {
+   "at": "2026-10-31T11:29:45.182Z",
+   "ok": true,
+   "count": 1,
+   "dropped": 3
+  }
+ },
+ "proposals": [
+  {
+   "id": "prp-mvwbjx0e-1",
+   "at": "2026-10-31T11:29:45.182Z",
+   "title": "Improve Fault Board Triage for Info Items",
+   "why": "The fault board lists 14 info items including 'Corpus fill run in progress' and 'Site Agent ran 15 times', which clutter the view and distract from critical errors like the recent tutor-questions failures.",
+   "idea": "Update the static HTML rendering logic to automatically hide or collapse 'info' level faults (like agent runs or pipeline status) after a set time or if they appear frequently, keeping only 'critical' and 'warn' faults visible by default.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvuoc5ve-1",
+   "at": "2026-10-30T07:52:06.074Z",
+   "title": "Fix tutor lane generation count and parsing",
+   "why": "Recent failures show 'tutor-questions' often returning only 2 of 5 valid questions or failing to output a JSON array, causing incomplete practice sessions.",
+   "idea": "Update the Node.js script handling the 'tutor-questions' on-demand request to enforce a strict JSON schema validation. If the LLM returns fewer than 3 valid questions or invalid text, the script should retry generation with a prompt adjustment (e.g., 'Ensure you output exactly 5 JSON objects') before failing, ensuring users always get a complete set.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvt8ric8-1",
+   "at": "2026-10-29T07:48:22.040Z",
+   "title": "Auto-Resolve Low Priority Faults on Board",
+   "why": "The fault board contains 46 warnings and 12 critical items, including missing figures and coverage info. The site agent has run recently but often with rule-based logic yielding 0 fixes.",
+   "idea": "Implement a lightweight Node.js script that scans the `fault-board.json` for 'info' or 'warn' level faults (excluding critical ones) and automatically generates HTML snippets or placeholder text to address coverage gaps. This script runs as part of the GitHub Actions post-build step to keep the fault board clean without heavy LLM intervention.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvs13rr6-1",
+   "at": "2026-10-28T11:26:11.010Z",
+   "title": "Fix tutor lane output parsing robustness",
+   "why": "Recent failures in the 'tutor-questions' lane show issues like 'no JSON array in model output' and generating only 2 of 5 valid questions, causing incomplete practice sets.",
+   "idea": "Modify the Node.js script processing the Ollama response to include a regex extraction step that finds JSON-like blocks within text responses and a retry loop if the count is below the minimum threshold.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvs13rr6-2",
+   "at": "2026-10-28T11:26:11.010Z",
+   "title": "Auto resolve low priority faults on fault board",
+   "why": "The fault board lists 68 unchanged faults including info-level items like 'Site Agent ran' and 'Corpus fill run in progress' which may be transient or already handled.",
+   "idea": "Implement a GitHub Action that scans data/fault-board.json, identifies items marked as 'info' or with no critical impact, and automatically updates their status to 'resolved' or 'monitoring' after a delay.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvqekj3c-1",
+   "at": "2026-10-27T08:07:35.592Z",
+   "title": "Fix Tutor Lane JSON Parsing Robustness",
+   "why": "Recent failures show the tutor lane sometimes outputs non-JSON text or incomplete arrays (only 2 of 5 questions), causing generation stops.",
+   "idea": "Update the Node.js parsing script for the owner-on-demand lane to wrap LLM output in a try-catch block, attempt regex-based JSON extraction if raw response fails, and retry with a system prompt enforcing strict JSON formatting before logging a failure.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvqekj3c-2",
+   "at": "2026-10-27T08:07:35.592Z",
+   "title": "Polish Homepage Quiz Flow Interaction",
+   "why": "Browser tests flagged that the quiz flow is skipped on the homepage due to a missing visible Next button, preventing users from exercising the full practice set experience immediately upon load.",
+   "idea": "Inject a small JavaScript snippet into the main HTML template that programmatically checks for the 'Next' button's visibility; if hidden or absent, auto-trigger the next question logic and display a subtle toast notification confirming the flow has been restored to the user.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvowxk3a-1",
+   "at": "2026-10-26T07:06:04.150Z",
+   "title": "Fix broken link to RBI Grade B Practice Set 12",
+   "why": "Browser test identified a broken link on the Homepage pointing to 'rbi/papers/practice-set-12.html' which returns a 404 or invalid path.",
+   "idea": "Locate the HTML source of the homepage, find the anchor tag containing 'practice-set-12', and update its href to point to a valid existing file in the data/ directory (e.g., rename or create a matching practice set) or remove it if no equivalent exists.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvowxk3a-2",
+   "at": "2026-10-26T07:06:04.150Z",
+   "title": "Expand Single-Click Practice Sets Corpus",
+   "why": "Currently only two exam sets (ssc-je, ssc-je-production) are available for single-click practice, limiting utility for users seeking other topics.",
+   "idea": "Modify the daily-wiki-fill or agent workflow to automatically generate new practice set JSON files for high-frequency topics found in the 'Invented' pool and add them to the single-click selection list.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvowxk3a-3",
+   "at": "2026-10-26T07:06:04.150Z",
+   "title": "Improve Tutor Questions Lane Output Parsing",
+   "why": "Recent failures show the tutor lane sometimes returns non-JSON text or insufficient question counts (e.g., only 2 of 5 valid questions), causing partial results.",
+   "idea": "Update the Node.js script in the GitHub Actions workflow to use a more robust regex-based parser that extracts JSON arrays from free-form LLM output and retries generation if the count is below the threshold.",
+   "effort": "medium",
+   "risk": "medium",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvowxk3a-4",
+   "at": "2026-10-26T07:06:04.150Z",
+   "title": "Add 'Next' Button Visibility Check to Homepage",
+   "why": "Browser tests flagged 'flow-skipped on Homepage' due to a missing visible Next button, preventing users from exercising the quiz flow immediately upon load.",
+   "idea": "Inspect the homepage HTML structure for the quiz container and ensure the 'Next' button is rendered inside the main content area with valid accessibility attributes (aria-label) so it is not skipped by assistive technologies or screen readers.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvnh9yph-1",
+   "at": "2026-10-25T07:00:02.933Z",
+   "title": "Seed Main Bank from Invented Pool",
+   "why": "The main page relies on a frozen batch of 9 items, while the 'Invented' pool contains 69 questions across difficulty levels.",
+   "idea": "Modify the static HTML loader to automatically pull the top 10-15 questions from data/invented.json and inject them into the main bank container if the hand-authored count is low, ensuring fresh content appears without manual intervention.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvnh9yph-2",
+   "at": "2026-10-25T07:00:02.933Z",
+   "title": "Robust Tutor Lane Output Parser",
+   "why": "The digest shows recent failures where the model output lacked a JSON array or generated fewer than 3 valid questions, causing lane breaks.",
+   "idea": "Update the Node.js script in the GitHub Actions workflow to wrap the LLM call response in a strict try-catch block that attempts to extract the first valid JSON object from unstructured text before failing, and retries the generation with a system prompt fix if the count is under 3.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvnh9yph-3",
+   "at": "2026-10-25T07:00:02.933Z",
+   "title": "Activate Daily Wiki Fill Pipeline",
+   "why": "The fault board lists 'Corpus fill run in progress' for daily-wiki-fill tasks, indicating the automated content generation pipeline is stalled or not running.",
+   "idea": "Add a GitHub Actions cron job that triggers the Node script to fetch new topics from an RSS feed or predefined list and calls the local Ollama model to generate questions, writing results directly to data/wiki.json.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvnh9yph-4",
+   "at": "2026-10-25T07:00:02.933Z",
+   "title": "Auto-Resolve Low-Priority Faults",
+   "why": "The agent log shows the Site Agent ran 15 times fixing 342 items, yet 67 faults remain unchanged on the board.",
+   "idea": "Create a lightweight GitHub Action step that parses data/fault-board.json, filters for 'info' or 'warn' severity items older than 24 hours, and automatically executes the corresponding fix script to clear them from the list.",
+   "effort": "small",
+   "risk": "medium",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvm0y5ii-1",
+   "at": "2026-10-24T06:35:11.849Z",
+   "title": "Fill low-coverage corpus categories",
+   "why": "The fault board flags 'Indian Aviation & Shipping' as critical (90 questions) and 'Engineering & Technical'/'Indian Literature' as warn-level low coverage.",
+   "idea": "Configure the GitHub Actions workflow to trigger a specific generation job for these three categories when they drop below thresholds, using the local Ollama model to batch-generate content specifically for these gaps.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvkuer8v-1",
+   "at": "2026-10-23T10:44:23.023Z",
+   "title": "Fix Tutor Questions Lane Generation Count",
+   "why": "Recent failures show the tutor-questions lane generating only 2 valid questions instead of the required 3, and sometimes failing to output a JSON array entirely.",
+   "idea": "Update the Node.js script for the 'tutor-questions' lane to wrap the LLM response in a strict template that guarantees at least 3 items, adding a fallback loop that retries generation until the count threshold is met or a max retry limit is reached.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvkuer8v-2",
+   "at": "2026-10-23T10:44:23.023Z",
+   "title": "Auto-Resolve Fault Board Info Items",
+   "why": "The fault board shows 14 info items and recent agent runs have successfully applied '270 fix(es)' to workflows, perf, and a11y issues.",
+   "idea": "Implement a lightweight cron job in the GitHub Actions schedule that scans the fault board JSON for 'info' severity items matching known patterns (like missing buttons or skipped flows) and automatically applies the corresponding HTML/JS patch from the agent's fix repository.",
+   "effort": "small",
+   "risk": "medium",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvj6bv6a-1",
+   "at": "2026-10-22T06:42:31.186Z",
+   "title": "Seed mains bank from Invented pool",
+   "why": "The main page shows only 9 hand-authored questions and a frozen batch, while the 'Invented' arena holds 43 questions ready for use.",
+   "idea": "Create a GitHub Action or Node script that periodically selects a random subset of questions from the 'invented pool' JSON data to populate the 'frozen AI batch' on the main page, increasing content availability without manual review.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvj6bv6a-2",
+   "at": "2026-10-22T06:42:31.186Z",
+   "title": "Parse tutor-questions lane robustness",
+   "why": "Recent failures show the model sometimes outputs non-array JSON or insufficient question counts (e.g., only 2 of 5 valid).",
+   "idea": "Update the request handler script to wrap the LLM output in a try-catch block that attempts to extract the first valid JSON array from the text response, and if the count is below the minimum threshold, automatically retry the generation with adjusted parameters or fallback logic.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvj6bv6a-3",
+   "at": "2026-10-22T06:42:31.186Z",
+   "title": "Auto-fix corpus fill pipeline",
+   "why": "The fault board indicates a 'Corpus fill run in progress' for daily-feed-fill #36, suggesting the automated filling mechanism is active but potentially stalled or needs monitoring.",
+   "idea": "Implement a lightweight watcher script that checks the status of the 'daily-feed-fill' process defined in the GitHub Actions workflow; if it runs longer than a set timeout without updating the corpus count, trigger a restart of the specific step to prevent silent hangs.",
+   "effort": "small",
+   "risk": "medium",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvj6bv6a-4",
+   "at": "2026-10-22T06:42:31.186Z",
+   "title": "Visualize fault board trends",
+   "why": "The fault board lists 11 critical and 45 warn items, but the current state only shows raw counts without context on which specific files or types are causing issues.",
+   "idea": "Add a simple HTML/JS dashboard on the main page that aggregates data from the fault board JSON to show a pie chart of fault types (critical/warn/info) and a list of the top 5 most frequent fault categories, helping owners prioritize fixes.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvhw2wnz-1",
+   "at": "2026-10-21T09:07:50.879Z",
+   "title": "Fix 'flow-skipped' on Homepage and Ask Engine",
+   "why": "Browser tests show flow is skipped on both pages due to missing visible Next buttons, preventing quiz flow exercise.",
+   "idea": "Update the static HTML templates for the homepage and ask-engine page to include an explicit 'Next Question' button that triggers the practice set logic. This ensures users can progress through questions without relying on accidental clicks or hidden interactions.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvhw2wnz-2",
+   "at": "2026-10-21T09:07:50.879Z",
+   "title": "Improve Tutor-Questions Lane Reliability",
+   "why": "Recent logs show failures in this lane: one returned no JSON array, another only generated 2 of 5 required questions. The model (qwen3:4b) is sensitive to output formatting or count constraints.",
+   "idea": "Refine the prompt sent to the local Ollama model for the 'tutor-questions' lane to strictly enforce a JSON array format and request a specific minimum count (e.g., 'generate exactly 5 questions'). Add a post-processing step in the Node script to parse the raw text, extract valid JSON if wrapped in markdown, and retry or fallback if the count is insufficient.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvhw2wnz-3",
+   "at": "2026-10-21T09:07:50.879Z",
+   "title": "Utilize Auto-Fix Mechanism for Fault Board Items",
+   "why": "The fault board lists 11 critical faults and mentions successful auto-fixes (e.g., creating figure pages); currently, these seem manual or sporadic rather than systematic.",
+   "idea": "Create a scheduled GitHub Action that scans the 'fault board' JSON data for items tagged as 'autofixable' (like missing figures) and automatically triggers the local AI model to generate the missing content, then updates the relevant HTML files without human intervention.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvgkexg5-1",
+   "at": "2026-10-20T10:53:30.197Z",
+   "title": "Recover failed tutor-questions lane",
+   "why": "The digest shows recent failures in 'tutor-questions' where the model output lacked a valid JSON array or generated insufficient questions (2 of 5).",
+   "idea": "Update the Node script parsing the Ollama response to wrap the raw text in a try-catch block. If the JSON parse fails, extract content between ```json and ``` markers; if question count is low, retry the generation with a higher temperature or different prompt phrasing before logging an error.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvgkexg5-2",
+   "at": "2026-10-20T10:53:30.197Z",
+   "title": "Activate daily-feed-fill pipeline",
+   "why": "The fault board lists 'daily-feed-fill #31' as a run in progress with 0 updates piped to the mains page, indicating a potential blockage or lack of post-processing.",
+   "idea": "Modify the GitHub Actions workflow for 'daily-feed-fill' to explicitly move generated items from the temporary processing bucket to the main content pool after generation, ensuring the 'news/file lanes' count reflects actual published updates.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvgkexg5-3",
+   "at": "2026-10-20T10:53:30.197Z",
+   "title": "Expand single-click practice sets",
+   "why": "Currently only 2 exam sets (ssc-je, ssc-je-production) exist. The site has a massive pool of 1309 tracked questions and an 'invented' pool with 50 items.",
+   "idea": "Create a new script to randomly sample 20-30 questions from the 'invented' pool or the main bank to generate a generic 'Daily Mix' practice set, which can be added to the single-click list without manual authoring.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvgkexg5-4",
+   "at": "2026-10-20T10:53:30.197Z",
+   "title": "Fix homepage quiz flow interaction",
+   "why": "Browser tests flagged 'flow-skipped on Homepage' where no visible Next button exists, preventing users from exercising the quiz flow.",
+   "idea": "Add a simple JavaScript event listener to the homepage that checks for a hidden or non-existent 'Next' button and programmatically triggers the next question logic if one is missing, ensuring the quiz state advances even without explicit UI clicks during initial loads.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvexxdcj-1",
+   "at": "2026-10-19T07:36:13.267Z",
+   "title": "Fix on-demand LLM output parsing",
+   "why": "The fault board shows a recent failure where 'tutor-questions' received 'no JSON array in the model output' at 2026-10-19T04:29, causing an item to fail.",
+   "idea": "Update the Node.js script that consumes Ollama responses to implement a robust parser that strips markdown code blocks (```json) and handles stream interruptions before attempting JSON.parse. This ensures that even if the model outputs text wrapping the JSON or truncates slightly, the system can extract the valid array.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvexxdcj-2",
+   "at": "2026-10-19T07:36:13.267Z",
+   "title": "Enable Homepage quiz flow interaction",
+   "why": "Browser tests report 'flow-skipped on Homepage' because there is no visible Next button, meaning the quiz exercise is not triggered when users first load the site.",
+   "idea": "Modify the main HTML template to conditionally render a 'Start Practice' button or auto-initialize the first available question from the 'invented pool' (13 items) if the user has not yet completed a session today. This ensures the quiz flow is exercised on every visit.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvexxdcj-3",
+   "at": "2026-10-19T07:36:13.267Z",
+   "title": "Expand single-click practice sets with AI batch",
+   "why": "The mains page currently holds only 'frozen AI batch 1 item(s)', while the invented pool contains 13 questions; the news/file lanes pipe 0 items.",
+   "idea": "Trigger a GitHub Action workflow to generate a new batch of questions using the local Ollama model (e.g., qwen3.5:9b) specifically for the 'mains' page, targeting topics from the existing 1308 tracked files, and update the single-click practice sets to include this fresh content.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvexxdcj-4",
+   "at": "2026-10-19T07:36:13.267Z",
+   "title": "Automate fault triage for 'Corpus fill' tasks",
+   "why": "The fault board lists 'daily-wiki-fill #607' and 'daily-feed-fill #29' as in-progress, contributing to the 10 critical faults.",
+   "idea": "Create a lightweight cron job or GitHub Action step that checks the status of these specific fill tasks. If they exceed a certain duration without completion, automatically append a debug log entry to data/agent-log.json requesting an Ollama retry or fallback to rule-based generation for those specific slots.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  }
+ ]
+}

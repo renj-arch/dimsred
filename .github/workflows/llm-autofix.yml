@@ -1,0 +1,198 @@
+name: LLM Auto-fix
+
+# The model fixes its own weak content: reads the fault board, asks a
+# local small model (the mechanical half of the model split — qwen3:4b /
+# lfm2.5:1.2b on Ollama, runner CPU) to generate questions for thin
+# categories, draw SVG figures for missing syllabus topics, and rewrite
+# broken captions. Results land in data/autofix-log.json and show on
+# improve.html as "what the model fixed".
+#
+# Fully free forever: Ollama runs the model locally on GitHub's runner.
+# No API keys, no rate limits, no paid services. The models are <=3.5GB,
+# so no swap is needed (the old 27B path needed 16GB of it); the writing
+# workflows (invent-questions, expand-course) keep the big model.
+
+on:
+  schedule:
+    - cron: '40 */6 * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: llm-autofix
+  # false: fixes publish in one ci-push at the very end. Scheduled + manual
+  # triggers must queue behind an in-flight run, never cancel it mid-stream
+  # (a cancelled run loses every fix it already generated).
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  autofix:
+    runs-on: ubuntu-latest
+    # 27B on runner CPU. Measured (#24): model pull takes 23 min, then the
+    # fixer ran 155+ min and was still working when the old 180-min cap hit —
+    # publish was skipped every time (4/4 runs, zero payoff). 340 leaves the
+    # fixer ~300 min; the step cap below plus publish (if: always()) mean
+    # whatever finished is still committed inside the job ceiling.
+    timeout-minutes: 340
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+          sparse-checkout: |
+            scripts
+            data/faults.json
+            data/figure-gaps.json
+            data/autofix-log.json
+            figures
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # No swap on purpose: the mechanical split runs 1.2B-4B models
+      # (<=3.5GB), which fit in RAM with room to spare. The 16GB swapfile
+      # only existed for the 17GB Qwen3.8-27B load, which autofix no longer
+      # pulls — the 27B stays in the writing workflows (invent-questions,
+      # expand-course). This also removes the ~1.5-min dd and the OOM-death
+      # class where the swap-thrashing model took the Ollama server with it.
+      - name: Report memory (no swap needed for small models)
+        run: free -h
+
+      # Install Ollama — free, open-source, runs models on CPU.
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # Model cache: one shared "fast" entry for the small-model chain
+      # (Ollama's blob store is content-addressed). First run stores the
+      # blobs; later runs restore instead of re-downloading.
+      # continue-on-error: a cache hiccup must never fail a run.
+      - name: Cache Ollama models
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-fast-v2
+          restore-keys: |
+            ollama-${{ runner.os }}-fast-
+
+      # Start Ollama server in background and wait until it responds.
+      # `ollama pull` above briefly starts the server, but it shuts down
+      # when the step ends — the fixer then sees "Ollama not reachable".
+      # KEEP_ALIVE=60m keeps the model loaded between calls. Public-repo
+      # runners are 4 vCPU / 16GB RAM so 27B nearly fits in RAM.
+      - name: Start Ollama server
+        run: |
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      # MECHANICAL WORK RUNS SMALL (the model split): autofix generates JSON
+      # fixes and captions — no long-form writing — so it runs on the fast
+      # small models: qwen3:4b first, then lfm2.5:1.2b, then qwen3.5:4b.
+      # All fit easily in RAM: no swap, no 20-min 17GB pull, and no OOM
+      # taking the server down mid-run (the "fetch failed" class that hit
+      # this workflow on the 27B). Writing-quality work stays in the mid
+      # tier (qwen3.5:9b): invent-questions and expand-course. First successful pull
+      # wins; a bad small-model reply still dies safely in the script's
+      # JSON validation (it applies no fix it cannot parse).
+      - name: Pull fast model (mechanical fixes)
+        run: |
+          MODEL=""
+          for m in qwen3:4b lfm2.5:1.2b qwen3.5:4b; do
+            echo "trying $m ..."
+            if ollama pull "$m"; then MODEL="$m"; break; fi
+          done
+          if [ -z "$MODEL" ]; then echo "no fast model could be pulled"; exit 1; fi
+          echo "MODEL=$MODEL" >> $GITHUB_ENV
+          echo "Using fast model: $MODEL"
+          ollama list
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Warm it: seconds for small models, and the first real call then
+          # never pays a cold load.
+          ollama run "$MODEL" "Reply with exactly: OK" 2>&1 | tail -2
+          echo "Warmup done"
+
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            nohup ollama serve >> /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      - name: Run auto-fixer (fast local model, zero API keys)
+        # 300 min was sized for the 27B on CPU. The fast model answers in
+        # seconds, so this normally finishes in minutes; the generous cap and
+        # the always() publish below still protect a stuck run.
+        timeout-minutes: 300
+        env:
+          OLLAMA_MODEL: ${{ env.MODEL }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/llm-autofix.js
+
+      - name: Publish fixes
+        # always(): a fixer step that was capped or died still gets whatever
+        # it wrote (figures/ and rewritten pages are written per-fix).
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          # Per-path adds (2026-10-19): git add is all-or-nothing per call —
+          # data/questions/ is NOT in this workflow's sparse checkout, so a
+          # caption-only run used to kill the WHOLE add (log + figures too)
+          # silently via 2>/dev/null. Same per-path pattern as site-agent.
+          for p in data/autofix-log.json figures data/questions; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          MODN=$(git diff --name-only | wc -l)
+          STAGEDN=$(git diff --cached --name-only | wc -l)
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "[publish] safety-net: $MODN modified tracked file(s) but nothing staged — retrying with -f"
+            git diff --name-only | while read -r f; do git add --sparse -f "$f" || echo "[publish] WARNING: could not stage $f"; done
+            MODN=$(git diff --name-only | wc -l)
+            STAGEDN=$(git diff --cached --name-only | wc -l)
+            echo "[publish] after safety-net: staged=$STAGEDN modified-left=$MODN"
+          fi
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "::error::fixer work exists but nothing could be staged (silent-loss class). Diagnostics:"
+            git diff --name-only | sed 's/^/  unpushed: /'
+            exit 1
+          fi
+          echo "[publish] staged: $STAGEDN file(s)"
+          bash scripts/ci-push.sh "auto-fix: ${{ env.MODEL }} fixed weak content (run #${{ github.run_number }})"

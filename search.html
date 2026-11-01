@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Search every page on Vlymbooq — exam hubs, course lessons, figures and guides — from one box. Runs in your browser on a page index rebuilt automatically.">
+<title>Search — Vlymbooq</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--rose:#fb7185;--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font:15px/1.65 -apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);text-decoration:none}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
+.wrap{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+header.hd{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:22px 24px;margin-bottom:14px}
+h1{font-size:24px;margin:6px 0 8px}
+.sub{font-size:13px;color:var(--text-sec)}
+.sbox{position:relative;margin:16px 0 4px}
+.sbox input{width:100%;border:1px solid var(--border);border-radius:100px;padding:14px 20px;font-size:16px;font-family:inherit;background:var(--card);color:var(--text);outline:none}
+.sbox input:focus{border-color:var(--purple)}
+.meta{font-size:12.5px;color:var(--text-muted);margin:8px 4px;min-height:18px}
+.meta a{color:var(--purple);font-weight:600;text-decoration:none}
+.res{margin-top:8px}
+.group-label{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--text-muted);margin:18px 4px 6px;display:flex;align-items:baseline;gap:8px}
+.group-label span{font-size:9.5px;font-weight:500;letter-spacing:0;text-transform:none;color:var(--text-muted);opacity:.8}
+.hit{display:block;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 16px;margin:8px 0;text-decoration:none;color:var(--text)}
+.hit:hover{border-color:rgba(167,139,250,.45)}
+.hit.topic{border-left:2px solid var(--cyan)}
+.hit .t{font-weight:700;font-size:14.5px}
+.hit .t mark{background:rgba(167,139,250,.35);color:inherit;border-radius:3px;padding:0 2px}
+.hit .u{font-size:11.5px;color:var(--text-muted);font-family:monospace;margin-top:2px}
+.hit .d{font-size:12.5px;color:var(--text-sec);margin-top:4px}
+.chip{display:inline-block;font-size:10px;font-weight:700;letter-spacing:.04em;border:1px solid var(--cyan);color:var(--cyan);border-radius:8px;padding:1px 7px;margin-left:8px;vertical-align:1px}
+.note{background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3);border-radius:8px;padding:12px 14px;font-size:12.5px;color:var(--text-sec);margin-top:18px;line-height:1.6;display:none}
+.note b{color:var(--text)}
+.note a{color:var(--purple);font-weight:600}
+</style>
+</head>
+<body>
+<a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><img src="logo.png" alt="vlymbooq" style="height:28px;width:28px;border-radius:6px" loading="lazy"><span class="brand-text">vlymbooq</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="archive.html">Archive</a>
+    <a class="active" href="search.html">🔍 Search</a>
+  </div>
+</div></nav>
+<div class="wrap">
+  <header class="hd">
+    <h1>Search the whole site</h1>
+    <div class="sub">Every exam hub, course lesson, figure and guide — plus the 2,292 linked corpus topics that open on the knowledge map. Instant: both indexes load once.</div>
+    <div class="sbox"><input id="q" type="search" placeholder="Try: data interpretation · percentage · flow chart · polity…" autocomplete="off" autofocus></div>
+    <div class="meta" id="meta">Loading the page index…</div>
+  </header>
+  <div class="res" id="res"></div>
+  <div class="note" id="note">
+    <b>Looking for a specific question?</b> The <a href="archive.html">archive</a> has its own question search (whole words, filters), and <a href="ask.html">ask</a> answers a question directly. This box searches <b>pages and corpus topics</b> — courses, figures, hubs, guides, and the linked concepts behind the knowledge map.
+  </div>
+</div>
+<script>
+(function () {
+  'use strict';
+  var qEl = document.getElementById('q');
+  var metaEl = document.getElementById('meta');
+  var resEl = document.getElementById('res');
+  var noteEl = document.getElementById('note');
+  var entries = null;
+  var loading = false;
+  var topics = null;          // corpus topics from data/topic-search.json
+  var topicsRequested = false;
+  var RAW = 'https://raw.githubusercontent.com/renj-arch/dimsred/main/data/search-index.json';
+  var LOCAL = 'data/search-index.json';
+  var TOPICS = 'data/topic-search.json';
+
+  function norm(s) { return String(s == null ? '' : s).toLowerCase(); }
+  function esc(s) {
+    return String(s == null ? '' : s)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+  function escRe(s) { return String(s).replace(/[.*+?^${}()|[\]\\]/g, '\\$&'); }
+
+  function loadIndex() {
+    if (entries || loading) return;
+    loading = true;
+    metaEl.textContent = 'Loading the page index…';
+    var bust = '?t=' + Date.now();
+    fetch(RAW + bust, { cache: 'no-store' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .catch(function () { return null; })
+      .then(function (j) {
+        if (j && j.entries) return j;
+        return fetch(LOCAL + bust, { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .catch(function () { return null; });
+      })
+      .then(function (j) {
+        loading = false;
+        if (!j || !Array.isArray(j.entries)) {
+          metaEl.innerHTML = 'The index could not be loaded — reload to retry, or browse <a href="archive.html">the archive</a>.';
+          return;
+        }
+        entries = j.entries;
+        metaEl.textContent = entries.length + ' pages indexed · rebuilt ' +
+          String(j.generatedAt || '').slice(0, 16).replace('T', ' ') + ' UTC';
+        run();
+      });
+  }
+
+  function loadTopics() {
+    // Lazy: the corpus topics file is ~500 KB and is only worth fetching once
+    // the user actually searches. Failure is silent — page results still work.
+    if (topicsRequested) return;
+    topicsRequested = true;
+    fetch(TOPICS + '?t=' + Date.now())
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) {
+        topics = (j && Array.isArray(j.topics)) ? j.topics : [];
+        if (qEl.value.trim().length >= 2) run();
+      })
+      .catch(function () { topics = []; });
+  }
+
+  function humanCat(c) {
+    return String(c || '').replace(/-/g, ' ').replace(/\b\w/g, function (m) { return m.toUpperCase(); });
+  }
+
+  // Topic scoring is separate from page scoring: a topic's name is its identity,
+  // so name matches dominate, and a description hit only keeps it in the list.
+  function topicScore(tp, tokens, full) {
+    var n = norm(tp.n), d = norm(tp.d), c = norm(tp.c), ty = norm(tp.t);
+    var hay = n + ' ' + d + ' ' + c + ' ' + ty;
+    var s = 0;
+    for (var i = 0; i < tokens.length; i++) {
+      var tok = tokens[i];
+      if (hay.indexOf(tok) === -1) return -1;
+      s += 1;
+      if (n.indexOf(tok) >= 0) s += 16;
+      if (n.indexOf(tok) === 0) s += 10;
+      if (d.indexOf(tok) >= 0) s += 3;
+      if (c.indexOf(tok) >= 0) s += 3;
+    }
+    if (n === full) s += 40;
+    else if (n.indexOf(full) === 0) s += 22;
+    return s;
+  }
+
+  function highlight(text, tokens) {
+    var out = esc(text);
+    if (!tokens || !tokens.length) return out;
+    var re = new RegExp('(' + tokens.map(escRe).join('|') + ')', 'gi');
+    return out.replace(re, '<mark>$1</mark>');
+  }
+
+  // Score one entry against the query. Every token must appear somewhere
+  // (AND search); title hits weigh far more than description or path hits.
+  function score(e, tokens, full) {
+    var t = norm(e.t), d = norm(e.d), u = norm(e.u), c = norm(e.c);
+    var hay = t + ' ' + d + ' ' + u + ' ' + c;
+    var s = 0;
+    for (var i = 0; i < tokens.length; i++) {
+      var tok = tokens[i];
+      if (hay.indexOf(tok) === -1) return -1;
+      s += 1;
+      if (t.indexOf(tok) >= 0) s += 14;
+      if (d.indexOf(tok) >= 0) s += 5;
+      if (c.indexOf(tok) >= 0) s += 4;
+      if (u.indexOf(tok) >= 0) s += 2;
+    }
+    if (full.length > 2 && t.indexOf(full) >= 0) s += 25;
+    return s;
+  }
+
+  function run() {
+    var q = qEl.value.trim();
+    if (q.length >= 2) loadTopics();
+    if (!entries) { if (q) loadIndex(); return; }
+    if (q.length < 2) {
+      resEl.innerHTML = '';
+      noteEl.style.display = 'none';
+      metaEl.textContent = entries.length + ' pages indexed · type to search';
+      return;
+    }
+    var tokens = q.toLowerCase().split(/\s+/).filter(Boolean).slice(0, 6);
+    var full = q.toLowerCase();
+    var hits = [];
+    for (var i = 0; i < entries.length; i++) {
+      var s = score(entries[i], tokens, full);
+      if (s >= 0) hits.push({ s: s, e: entries[i] });
+    }
+    hits.sort(function (a, b) { return b.s - a.s; });
+    var top = hits.slice(0, 60);
+
+    // Corpus topics (the 2,292 linked nodes behind the knowledge map). These
+    // cover subjects that have no static page — the page index alone cannot
+    // find them.
+    var topicHits = [];
+    if (topics && topics.length) {
+      for (var j = 0; j < topics.length; j++) {
+        var ts = topicScore(topics[j], tokens, full);
+        if (ts >= 0) topicHits.push({ s: ts, tp: topics[j] });
+      }
+      topicHits.sort(function (a, b) { return b.s - a.s; });
+      topicHits = topicHits.slice(0, 8);
+    }
+
+    if (!top.length && !topicHits.length) {
+      resEl.innerHTML = '';
+      metaEl.textContent = 'No match for “' + q + '” — try fewer or different words.';
+      noteEl.style.display = 'block';
+      return;
+    }
+
+    var parts = [];
+    if (topicHits.length) {
+      parts.push('<div class="group-label">Corpus topics <span>open on the knowledge map</span></div>');
+      parts.push(topicHits.map(function (h) {
+        var tp = h.tp;
+        return '<a class="hit topic" href="map.html#id=' + encodeURIComponent(tp.i) + '">' +
+          '<div class="t">' + highlight(tp.n, tokens) +
+            '<span class="chip">' + esc(tp.t) + '</span></div>' +
+          '<div class="u">' + esc(humanCat(tp.c)) + ' · knowledge map</div>' +
+          (tp.d ? '<div class="d">' + highlight(tp.d, tokens) + '</div>' : '') +
+          '</a>';
+      }).join(''));
+    }
+    if (top.length) {
+      if (topicHits.length) {
+        parts.push('<div class="group-label">Pages <span>lessons, figures, exam hubs</span></div>');
+      }
+      parts.push(top.map(function (h) {
+        var e = h.e;
+        return '<a class="hit" href="' + esc(e.u) + '">' +
+          '<div class="t">' + highlight(e.t, tokens) + '<span class="chip">' + esc(e.c) + '</span></div>' +
+          '<div class="u">/' + esc(e.u) + '</div>' +
+          (e.d ? '<div class="d">' + highlight(e.d, tokens) + '</div>' : '') +
+          '</a>';
+      }).join(''));
+    }
+    resEl.innerHTML = parts.join('');
+
+    var bits = [];
+    if (topicHits.length) bits.push(topicHits.length + ' topic' + (topicHits.length === 1 ? '' : 's'));
+    if (hits.length) bits.push(hits.length + ' page' + (hits.length === 1 ? '' : 's'));
+    metaEl.textContent = bits.join(' · ') + ' matched “' + q + '”' +
+      (hits.length > 60 ? ' — showing the best 60 pages' : '');
+    noteEl.style.display = 'none';
+  }
+
+  var tmr = null;
+  qEl.addEventListener('input', function () {
+    if (tmr) clearTimeout(tmr);
+    tmr = setTimeout(run, 120);
+  });
+  document.addEventListener('keydown', function (ev) {
+    if (ev.key === '/' && document.activeElement !== qEl) { ev.preventDefault(); qEl.focus(); }
+  });
+
+  // Shareable: /search.html?q=percentage
+  try {
+    var pre = new URLSearchParams(location.search).get('q');
+    if (pre) qEl.value = pre;
+  } catch (e) {}
+  loadIndex();
+})();
+</script>
+</body>
+</html>

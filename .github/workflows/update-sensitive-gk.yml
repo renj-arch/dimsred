@@ -1,0 +1,61 @@
+name: Update All Sensitive GK Data
+
+on:
+  schedule:
+    # Run weekly on Sunday midnight
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+# Explicit write for this workflow's own data commit only; the repo default
+# for every other workflow stays least-privilege read.
+permissions:
+  contents: write
+
+# Prevent pile-ups: periodic content jobs must not queue behind each
+# other — the newest run wins.
+concurrency:
+  group: sensitive-gk
+  cancel-in-progress: true
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch & update all time-sensitive GK data
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/update-all-gk.js
+      - name: Verify syntax
+        run: |
+          node -e "
+            const fs = require('fs');
+            const html = fs.readFileSync('current-affairs.html', 'utf8');
+            const matches = html.match(/<script>([\s\S]*?)<\/script>/g);
+            const scripts = matches.map(m => m.replace(/<\/?script>/g, '')).join('\n');
+            fs.writeFileSync('__temp_check.js', scripts);
+            require('child_process').execSync('node --check __temp_check.js', { stdio: 'pipe' });
+            new Function(scripts);
+            fs.unlinkSync('__temp_check.js');
+            console.log('Syntax verified: PASS');
+          "
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --quiet && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add current-affairs.html
+          git commit -m "chore: update time-sensitive GK data [auto]"
+          for i in 1 2 3; do
+            git pull --rebase --autostash 2>/dev/null || true
+            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            sleep 5
+          done

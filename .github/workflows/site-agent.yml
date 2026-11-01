@@ -1,0 +1,274 @@
+name: Site Agent
+
+# Infrastructure is an EXACT clone of llm-autofix.yml — the only workflow
+# that ever ran qwen3.8:27b on this runner (runs #10/#12 — the 27B has since been benched; see the tier notes below).
+# Do NOT add flash-attn, q8 KV, browser tests, warmups, or self-restarts:
+# every one of those "improvements" caused "fetch failed" on generation
+# (runs #44–#54: warmup loads, then every real call dies).
+#
+# Fully free: Ollama on the runner CPU, zero API keys.
+#
+# Model tiers (2026-10-18): the default dispatch is now the FAST tier
+# (qwen3:4b — ~3GB, stays fully in RAM, cached between runs; see the model
+# cache step and the tier gate in scripts/site-agent.js). The 27B is 17GB:
+# it only fits with swap, costs ~25 min per pull, and can never fit the
+# 10GB Actions cache — so heavy agents (MainsFresh — the mains-fresh pool)
+# run in their own dispatches (agent_only=mainsfresh, model=qwen3.5:9b),
+# which the Agent Chain refills once a day.
+
+on:
+  # NO hourly cron: GitHub throttles schedules here to a 3-5h effective
+  # cadence, and cancel-in-progress made each late scheduled run KILL an
+  # in-progress chained run mid-publish. The Agent Chain workflow now
+  # dispatches the next run the moment one completes (back-to-back cycles),
+  # with a 6h seed cron as dead-man switch. Manual runs still allowed here.
+  workflow_dispatch:
+    inputs:
+      agent_only:
+        description: 'Run only these agents (comma list, e.g. practicesets). Empty = normal rotation. MainsFresh is heavy-tier: pair it with model=qwen3.5:9b.'
+        required: false
+        default: ''
+      model:
+        description: 'Ollama model tag. Default = mid tier (qwen3.5:9b — 6.6GB, fits RAM with swap); use qwen3:4b for ultra-fast runs.'
+        required: false
+        default: 'qwen3.5:9b'
+
+concurrency:
+  group: site-agent
+  # false: the chained back-to-back runs above publish at the END (ci-push).
+  # A late-arriving trigger must WAIT — pending supersedes pending — not
+  # kill the in-progress run mid-publish (the same lesson chain.yml learned).
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    # Monitor-era runs: pull (20 min) + streamed LLM calls that legitimately
+    # take minutes each. 120 min cut publish off mid-run; 240 leaves room.
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          # data/questions (~9GB) is EXCLUDED — it caused 33-min checkouts
+          # that died with "early EOF" and OOM'd generation. Question work
+          # runs in question-quality.yml which checks out questions only.
+          sparse-checkout: |
+            scripts
+            js
+            /*.html
+            figures
+            languages
+            guides
+            .github/workflows
+            data/faults.json
+            data/browser-test.json
+            data/metalearn.json
+            data/agent-log.json
+            data/figure-gaps.json
+            data/topic-gaps.json
+            data/autofix-log.json
+            data/ideas.json
+            data/pyq-patterns.json
+            data/site-audit.json
+            data/practice-sets
+            data/topic-layers.json
+            data/mains-questions.json
+            data/mains-updates.json
+            data/mains-fresh.json
+            data/inventions.json
+            data/mock-fresh.json
+            data/ssc-je-qfig.json
+            data/exam-patterns.json
+          sparse-checkout-cone-mode: false
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # EXACT same swap as llm-autofix (kept as safety margin for the heavy tier).
+      # 24GB filled more disk and made paging worse, not better.
+      # (Only the heavy tier needs it; harmless on fast runs.)
+      - name: Create swap (16GB — same as proven llm-autofix)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # Model cache: the Ollama blob store is content-addressed, so ONE entry
+      # serves every model of a size class. Two classes (repo budget 10GB):
+      # "mid" for qwen3.5:9b (~6.6GB, DEFAULT), "fast" for qwen3:4b (~2.5GB).
+      # 17GB heavy models AND the ~9GB coder model (qwen2.5-coder:14b, the
+      # MetaLearn code lane) skip this step entirely and re-pull: neither
+      # fits the 10GB repo cache budget. continue-on-error: a cache hiccup
+      # must never fail a run.
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') && !contains(inputs.model || 'qwen3.5:9b', 'coder') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      # EXACT same start as llm-autofix: no env vars, no flash-attn, no q8.
+      # KEEP_ALIVE=60m: without it Ollama unloads the model after 5 min
+      # idle, and the NEXT agent pays a full reload (minutes). Public-repo
+      # runners are 4 vCPU / 16GB RAM so mid-tier models (9b) fit fully in RAM.
+      - name: Start Ollama server
+        run: |
+          # Same as llm-smoke: stop the kernel from paging model weights out
+          # under memory pressure (swap thrash is what killed the 18GB era).
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      # llm-autofix has NO proof call here — its script's first callLLM IS
+      # the proof. The ollama-run proof we added in #56 succeeded via CLI
+      # (IPv4) but the agent's Node fetch failed in the next step. The CLI
+      # proof may also OOM the server on exit after loading 17GB. Do what
+      # llm-autofix does: just pull, warn if down, and let the script's
+      # cold-start ping (via Node fetch) be the real proof.
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          # Community quant tags (user/model:tag) allowed since 2026-10-18 —
+          # e.g. batiai/qwen3.8-27b:iq3 (11GB — fits the 16GB runner's RAM;
+          # contains '27b' so the model cache step is skipped and it re-pulls).
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          echo "MODEL=$MODEL_INPUT" >> $GITHUB_ENV
+          echo "Using model: $MODEL_INPUT"
+          ollama list
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server still up" || echo "WARNING: server down after pull"
+          # Warm the model into RAM now so the agent's cold-start ping finds
+          # it resident instead of paying the cold load itself. Seconds on the
+          # mid tier (9b), minutes on a heavy model.
+          echo "Warming $MODEL_INPUT into RAM..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+          echo "Warmup done"
+
+      # Safety net: re-verify the server accepts a connection on IPv4 right
+      # before the agent runs. Restart if the pull left it dead. This uses
+      # curl (IPv4) — same path the agent will use after the 127.0.0.1 fix.
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            nohup ollama serve > /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      # No browser test before the model. Playwright + serve fragment memory
+      # and disk right before the model load; llm-autofix has none and
+      # generation works. Browser tests can run in their own workflow.
+      - name: Run site agent (single pass — same shape as llm-autofix)
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          # Manual dispatches can pin the agent set (e.g. a practice-set run
+          # for one exam). Empty on normal runs -> full rotation.
+          AGENT_ONLY: ${{ github.event.inputs.agent_only }}
+          # 127.0.0.1 NOT localhost: Node fetch on this runner resolves
+          # localhost to ::1 (IPv6) and Ollama listens IPv4-only → instant
+          # 127.0.0.1 NOT localhost: Node fetch on this runner resolves
+          # localhost to ::1 (IPv6) and Ollama listens IPv4-only → instant
+          # "fetch failed" while curl/ollama-CLI (IPv4) work. Run #56:
+          # CLI proof succeeded, Node fetch failed in <1s.
+          OLLAMA_HOST: http://127.0.0.1:11434
+          # Run the next 6 agents per run (increased from 4 for mid-tier 9b model).
+          # All 19 take too long for one job; rotation + the Agent Chain gives
+          # every capability a turn. AGENT_LIMIT=3 still overrides if ever set.
+          AGENT_ROTATE: '6'
+          # Single pass, not --loop.
+          AGENT_MAX_CYCLES: '1'
+          # Wall-clock guard: stop starting LLM work 120 min in so the job's
+          # publish step always runs (job cap 240; the heavy pull can eat 80).
+          # Skipped agents rotate in on the next run.
+          AGENT_DEADLINE_MIN: '120'
+          NODE_OPTIONS: '--max-old-space-size=2048'
+        run: node scripts/site-agent.js
+
+      - name: Publish agent work
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          # Per-path adds: git add is all-or-nothing per invocation, so ONE
+          # absent path (scripts/learned-fixes.js is written only by the
+          # SelfCheck agent, so it is usually not on disk) used to abort the
+          # whole add with the error hidden — every run from 2026-10-18
+          # 15:19 silently discarded its work this way ("nothing staged").
+          # The loop + visible warnings make that loss class impossible.
+          for p in data/agent-log.json data/autofix-log.json data/ideas.json data/browser-test.json data/metalearn.json data/practice-sets data/topic-layers.json data/mains-fresh.json data/mains-updates.json data/inventions.json data/mock-fresh.json data/ssc-je-qfig.json data/exam-patterns.json scripts/learned-fixes.js; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          for p in figures *.html prototype-*.html; do
+            if [ -e "$p" ]; then git add --sparse "$p" || echo "[publish] WARNING: could not stage $p"; fi
+          done
+          git status --porcelain --sparse | awk '/^\?\? .*\.html$/ {print $2}' | xargs -r git add --sparse 2>/dev/null || true
+          # Self-diagnosis: if this pass modified tracked files but staged
+          # NOTHING, the adds above were defeated (ignored path, bad glob —
+          # the class that silently discarded 20h of work on 2026-10-18).
+          # First try one self-repair (force-add each modified tracked file);
+          # if even that stages nothing, fail LOUDLY with diagnostics instead
+          # of the silent-green "nothing staged".
+          MODN=$(git diff --name-only | wc -l)
+          STAGEDN=$(git diff --cached --name-only | wc -l)
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "[publish] safety-net: $MODN modified tracked file(s) but nothing staged — retrying with -f"
+            git diff --name-only | while read -r f; do git add --sparse -f "$f" || echo "[publish] WARNING: could not stage $f"; done
+            MODN=$(git diff --name-only | wc -l)
+            STAGEDN=$(git diff --cached --name-only | wc -l)
+            echo "[publish] after safety-net: staged=$STAGEDN modified-left=$MODN"
+          fi
+          if [ "$STAGEDN" -eq 0 ] && [ "$MODN" -gt 0 ]; then
+            echo "::error::agent work exists but nothing could be staged — the silent-loss class (2026-10-18 incident). Diagnostics:"
+            git diff --name-only | sed 's/^/  unpushed: /'
+            exit 1
+          fi
+          echo "[publish] staged: $STAGEDN file(s)"
+          # Single shared publisher: PAT push, GITHUB_TOKEN fallback on PAT
+          # death (no lost work), loud alert. See scripts/ci-push.sh.
+          bash scripts/ci-push.sh "site-agent: ${{ env.MODEL }} maintained the site (run #${{ github.run_number }})"

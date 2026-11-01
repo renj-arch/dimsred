@@ -1,0 +1,177 @@
+name: Invent Questions
+
+# The site's own question-setter agent: qwen3.5:9b invents BRAND-NEW exam
+# questions — new mechanisms, new contexts, worked solutions — and publishes
+# them to data/invented/questions.json. mental.html serves them as
+# "Invented - fresh paper" practice.
+#
+# Nothing here is templated: each brief lists the styles/topics already used
+# so the agent keeps inventing fresh mechanisms instead of repeating, and a
+# 70% word-overlap filter (same rule as the rest of the site) drops any
+# accidental duplicate before it can be stored.
+#
+# Zero API keys: the model runs locally on the runner through Ollama.
+#
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b — the
+# bulk lane). The 27B is proven on this runner now (batiai/qwen3.8-27b:iq3,
+# trial 39136862076 on 2026-10-18: 3 accepted + published inside 110 min) and
+# runs its own once-a-day quality lane in invent-27b.yml — dispatch model=...
+# here only for experiments. Both lanes append to the same pool, and ci-push
+# unions the pool on merge so no run can drop another run's questions.
+
+on:
+  schedule:
+    - cron: '17 3,11,19 * * *'   # 3 batches a day, off :00
+  workflow_dispatch:
+    inputs:
+      per_slot:
+        description: 'Questions per section x difficulty (default 2 -> 24/run)'
+        required: false
+        default: '2'
+      model:
+        description: 'Ollama model tag. Default = mid tier (qwen3.5:9b); qwen3:4b is the cached fast tier.'
+        required: false
+        default: 'qwen3.5:9b'
+
+concurrency:
+  group: invent-questions
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  invent:
+    runs-on: ubuntu-latest
+    timeout-minutes: 160
+    steps:
+      - name: Free runner disk space (swap + 17GB model + repo)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/invented
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
+      - name: Create swap (16GB - same as proven llm-autofix)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # Model cache: one entry per size class (repo budget 10GB) — "fast" for
+      # small models, "mid" for qwen3.5:9b. Both current default tags are cacheable.
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          # Same as llm-smoke: stop the kernel from paging model weights out
+          # under memory pressure (swap thrash is what killed the 18GB era).
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          # Warm the model into RAM now so invention calls start warm.
+          echo "Warming $MODEL_INPUT..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+
+      # The 17GB warm-up load can take the server down on release. Run #3
+      # then logged "fetch failed" on EVERY call for 70+ minutes and invented
+      # nothing. llm-autofix and site-agent both restart the server right
+      # before their agent step; invent was the only writer workflow missing it.
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
+            nohup ollama serve >> /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      - name: Invent questions (${{ inputs.model || 'qwen3.5:9b' }} as exam setter)
+        # Hard stop at 120 min; the script's own 110-min deadline stops
+        # gracefully first. Run #2 logged 24/24 calls aborted at the old
+        # 4-min client timeout; run #5 then died at undici's hidden ~5-min
+        # headers timeout (fetch failed -> false "server down" -> restart
+        # loop that killed every cold load). Transport is now curl via spawn
+        # with watchdogs: 25 min of first-byte silence is patience, 12 min
+        # mid-stream silence is wedged, 95 min is the per-call cap.
+        timeout-minutes: 120
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+          INVENT_PER_SLOT: ${{ github.event.inputs.per_slot || '2' }}
+          INVENT_DEADLINE_MIN: '110'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/invent-questions.js
+
+      # Incremental saves mean even a timeout keeps every question invented
+      # so far — publish whatever landed. Nothing staged -> ci-push exits 0.
+      - name: Publish invented questions
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/invented/
+          bash scripts/ci-push.sh "invent: ${{ inputs.model || 'qwen3.5:9b' }} invented fresh exam questions (run #${{ github.run_number }})"

@@ -1,0 +1,194 @@
+name: Archive Answers (27B quality lane)
+
+# Promoted to the 27B on 2026-10-18 (tiered rollout: one pipeline at a time,
+# user-visible content moves to the quality lane first). The 9b writer step in
+# question-quality.yml is retired: this lane is the SINGLE writer of
+# data/archive-answers.json — the model answers users read in ask.html and as
+# "💡 Explanation" in archive.html. Single-writer on purpose: two writers
+# racing on the sidecar could drop each other's entries (the exact failure
+# class the invented pool hit today, where a merge kept one side and dropped
+# the other). Lower volume than the 9b quota is accepted; quality-first is the
+# point of the promotion.
+#
+# CPU economics (same as invent-27b.yml): ~20-30 min per answer plus a ~34-min
+# 17 GB pull (exceeds the 10 GB repo cache — deliberate re-pull). The writer
+# saves ATOMICALLY after EVERY accepted unit, so even a step-cap kill still
+# publishes everything already written (publish runs with always()).
+#
+# MODEL PINNING + TRIALS: identical pattern to invent-27b.yml — scheduled runs
+# are digest-pinned (upstream re-tags fail LOUD); dispatch with model=<tag> to
+# trial a candidate, then bump PINNED_DIGEST deliberately on evidence.
+on:
+  schedule:
+    - cron: '23 3 * * *'   # daily, off :00; runs parallel to the 01:37 invent lane (disjoint files)
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'TRIAL ONLY: model tag to test instead of the pinned default (scheduled runs ignore this)'
+        required: false
+        default: ''
+      max_write:
+        description: 'Enriched answers this run (default 3)'
+        required: false
+        default: '3'
+
+concurrency:
+  group: archive-27b
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  archive27b:
+    runs-on: ubuntu-latest
+    timeout-minutes: 195
+    steps:
+      - name: Free runner disk space (swap + 17GB model + ~9GB questions)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/questions
+            data/archive-answers.json
+            data/archive-taxonomy.json
+            data/pyq-patterns.json
+            data/agent-log.json
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create swap (16GB - same as the other 27B lane)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama (runner-home service, 27B-tuned env)
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # Same runner-home service as the other model workflows (models
+          # must live under the runner user), plus OLLAMA_NUM_PARALLEL=1:
+          # one slot keeps the whole 17 GB resident and never splits memory
+          # into parallel KV allocations on the 4-vCPU runner.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\nEnvironment=OLLAMA_NUM_PARALLEL=1\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # No model cache step on purpose: the iq3 weights (~17 GB) exceed the
+      # 10 GB repo cache budget, and a silent cache thrash would cost more
+      # runner time than the clean re-pull.
+
+      - name: Start Ollama server
+        run: |
+          # Keep the kernel from paging model weights out under pressure.
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull model (digest-pinned; trial dispatches may override)
+        env:
+          TRIAL_MODEL: ${{ github.event_name == 'workflow_dispatch' && inputs.model || '' }}
+        run: |
+          PINNED_MODEL='batiai/qwen3.8-27b:iq3'
+          # Registry manifest digest observed 2026-10-18 via:
+          #   curl -sI https://registry.ollama.ai/v2/batiai/qwen3.8-27b/manifests/iq3
+          # If the upstream tag moves, this step fails LOUD instead of silently
+          # running different weights. Read the current digest, trial the new
+          # build (dispatch input `model`), then bump the pin deliberately.
+          PINNED_DIGEST='abca93dece6899e6b1f4a98dfb8089c328fadc65a3df825d33ca5e39e0961d64'
+          MODEL_INPUT="${TRIAL_MODEL:-$PINNED_MODEL}"
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          if [ "$MODEL_INPUT" = "$PINNED_MODEL" ]; then
+            want="${PINNED_MODEL%%:*}"; tag="${PINNED_MODEL##*:}"
+            got=''
+            for i in 1 2 3; do
+              got=$(curl -fsSL -I "https://registry.ollama.ai/v2/${want}/manifests/${tag}" | tr -d '\r' | awk -F': ' 'tolower($1)=="ollama-content-digest" {print $2}' | head -1)
+              [ -n "$got" ] && break
+              sleep 3
+            done
+            got="${got#sha256:}"
+            if [ "$got" != "$PINNED_DIGEST" ]; then
+              echo "::error::DIGEST PIN REFUSED: ${PINNED_MODEL} upstream digest is '${got}', pinned '${PINNED_DIGEST}'."
+              echo "::error::A scheduled run must never silently change weights. Trial the new build first (dispatch with model=${PINNED_MODEL}), compare acceptance/parse/wall time, then bump PINNED_DIGEST deliberately."
+              exit 1
+            fi
+            echo "digest pin OK: $got"
+          else
+            echo "::warning::TRIAL MODEL: $MODEL_INPUT (digest pin not enforced for trials)"
+          fi
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          # Downstream steps (writer + publish message) read OLLAMA_MODEL.
+          echo "OLLAMA_MODEL=$MODEL_INPUT" >> "$GITHUB_ENV"
+          # Warm the model into RAM now so writer calls start warm.
+          echo "Warming $MODEL_INPUT..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+
+      - name: Ensure Ollama is up before agent
+        run: |
+          if ! curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+            echo "Server down before agent — restarting"
+            export OLLAMA_KEEP_ALIVE=60m
+            nohup ollama serve >> /tmp/ollama.log 2>&1 &
+            echo $! > /tmp/ollama.pid
+            for i in $(seq 1 60); do
+              curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+              sleep 1
+            done
+          fi
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      - name: Write archive answers (quality budget)
+        # ARCHIVE_DEADLINE_MIN = soft stop between units (clean exit through
+        # the final save + agent log). AGENT_DEADLINE_MIN = hard stop: callLLM
+        # refuses new prompts (site-agent.js). Step cap 125 min sits behind
+        # both; per-unit atomic saves make even that kill publishable.
+        # MAX_WRITE 3: ~20-30 min per answer on the 4-vCPU runner.
+        timeout-minutes: 125
+        env:
+          OLLAMA_HOST: http://127.0.0.1:11434
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          ARCHIVE_DEADLINE_MIN: '100'
+          AGENT_DEADLINE_MIN: '105'
+          MAX_WRITE: ${{ inputs.max_write || '3' }}
+          MAX_CREATE: '1'
+        run: node scripts/write-archive-answers.js
+
+      # always(): every accepted unit was saved atomically, so even a capped
+      # or failed step above still gets its partial output published.
+      - name: Publish archive answers
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add data/archive-answers.json data/archive-taxonomy.json data/agent-log.json data/questions/00-27b-archive.json 2>/dev/null || true
+          bash scripts/ci-push.sh "archive-27b: ${OLLAMA_MODEL:-batiai/qwen3.8-27b:iq3} wrote archive answers (run #${{ github.run_number }})"

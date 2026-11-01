@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>GATE Mock Test — Free Full-Length Practice | vlymbooq</title>
+    <meta name="description" content="Free GATE full-length mock test with 15 questions, 180 minute timer, and detailed solutions.">
+    <meta property="og:image" content="https://vlymbooq.qzz.io/logo.png">
+    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">
+    <link rel="icon" type="image/png" href="../../logo.png">
+    <link rel="canonical" href="https://vlymbooq.qzz.io/gate/mock-tests/mock-2026-10-25-gate.html">
+    <style>
+        @import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap");
+        *{margin:0;padding:0;box-sizing:border-box}
+        :root{--bg:#09090b;--bg-card:#111113;--bg-elevated:#0c0c0f;--border:rgba(255,255,255,.06);--text:#fafafa;--text-sec:#a1a1aa;--text-muted:#52525b;--emerald:#34d399;--radius:12px}
+        body{font-family:Inter,-apple-system,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+        a{color:var(--purple,#a78bfa);text-decoration:none}
+        .nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);-webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);border-bottom:1px solid var(--border)}
+        .nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:16px}
+        .brand{display:flex;align-items:center;gap:8px}
+        .brand-icon{width:28px;height:28px;border-radius:6px;flex-shrink:0}
+        .brand-text{font-weight:800;font-size:1.05em;background:linear-gradient(135deg,#6366f1,var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+        .nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+        .nav-links a{padding:7px 14px;border-radius:100px;font-size:.82em;font-weight:500;color:#a1a1aa;transition:all .2s;white-space:nowrap}
+        .nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+        .nav-links a.active{color:var(--text);background:rgba(255,255,255,.06)}
+        .container{max-width:1000px;margin:0 auto;padding:24px}
+        .btn{padding:8px 20px;border-radius:100px;font-weight:600;font-size:.82em;border:none;cursor:pointer}
+        .btn-primary{background:rgba(167,139,250,.15);color:#a78bfa}
+        .btn-primary:hover{background:rgba(167,139,250,.25)}
+        .btn-success{background:rgba(52,211,153,.15);color:#34d399}
+        .btn-success:hover{background:rgba(52,211,153,.25)}
+        .btn-danger{background:rgba(239,68,68,.15);color:#ef4444}
+        @media print{.nav{display:none}}
+    </style>
+</head>
+<body>
+    <nav class="nav"><div class="nav-inner"><a href="../../index.html" class="brand"><img src="../../logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="../../index.html">Home</a><a href="/gate/">GATE</a><a href="../course/index.html">Course</a><a href="index.html" class="active">Mock Tests</a></div></div></nav>
+    <div class="container" id="mt-intro">
+        <div style="text-align:center;max-width:600px;margin:40px auto">
+            <h1 style="font-size:1.8em;font-weight:900;margin-bottom:8px">GATE Mock Test</h1>
+            <div style="color:var(--text-sec);font-size:.9em;margin-bottom:24px;line-height:1.6">Full-length mock test with timer, section-wise navigation, and detailed solutions.</div>
+            <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:24px">
+                <span style="padding:6px 14px;border-radius:100px;background:rgba(255,255,255,.06);font-size:.82em">15 Questions</span>
+                <span style="padding:6px 14px;border-radius:100px;background:rgba(255,255,255,.06);font-size:.82em">23 Marks</span>
+                <span style="padding:6px 14px;border-radius:100px;background:rgba(255,255,255,.06);font-size:.82em">180 Minutes</span>
+                <span style="padding:6px 14px;border-radius:100px;background:rgba(255,255,255,.06);font-size:.82em">+1.54 per correct, -Variable per wrong</span>
+            </div>
+            <div style="text-align:left;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:24px">
+                <h3 style="font-size:.9em;font-weight:700;margin-bottom:8px">Instructions</h3>
+                <ul style="font-size:.82em;color:var(--text-sec);line-height:2;padding-left:20px">
+                    <li>The test has 2 sections with a total of 15 questions.</li>
+                    <li>You have 180 minutes to complete the test.</li>
+                    <li>Each question carries 1.54 marks. <span style="color:#ef4444">-1/3 mark for 1-mark MCQ, -2/3 for 2-mark MCQ (no negative for NAT)</span></li>
+                    <li>You can mark questions for review and navigate between sections.</li>
+                    <li>The test will auto-submit when time runs out.</li>
+                </ul>
+            </div>
+            <div style="display:flex;gap:10px;justify-content:center">
+                <button onclick="startMockTest()" class="btn btn-success" style="padding:12px 32px;font-size:1em">Start Test</button>
+                <a href="../index.html" class="btn btn-primary" style="padding:12px 24px;font-size:.9em">&#x2190; Back</a>
+            </div>
+        </div>
+    </div>
+    <div id="mt-root"></div>
+    <script>
+    window._mockTestData = {"examName":"GATE","totalQuestions":15,"totalMarks":23,"duration":180,"negativeMarking":"Variable","negativeMarkingDisplay":"-1/3 mark for 1-mark MCQ, -2/3 for 2-mark MCQ (no negative for NAT)","perQuestionMarks":1.54,"hasNegative":true,"sections":[{"name":"General Aptitude","count":10,"color":"#60a5fa"},{"name":"Core Subject","count":5,"color":"#a78bfa"}],"questions":[{"id":542,"q":10,"section":"General Aptitude","text":"Find the missing number: 2, 6, 12, 20, ?","options":[{"label":"A","text":"28","correct":false},{"label":"B","text":"24","correct":false},{"label":"C","text":"30","correct":true},{"label":"D","text":"36","correct":false}],"solution":"Pattern: 1x2=2, 2x3=6, 3x4=12, 4x5=20, 5x6=30."},{"id":468,"q":2,"section":"General Aptitude","text":"If 15 workers can build a wall in 8 days, how many workers are needed to build same wall in 6 days?","options":[{"label":"A","text":"12","correct":false},{"label":"B","text":"18","correct":false},{"label":"C","text":"20","correct":true},{"label":"D","text":"25","correct":false}],"solution":"M1D1 = M2D2 ? 15×8 = M2×6 ? M2 = 20."},{"id":513,"q":11,"section":"General Aptitude","text":"The number of diagonals in a pentagon is:","options":[{"label":"A","text":"3","correct":false},{"label":"B","text":"4","correct":false},{"label":"C","text":"5","correct":true},{"label":"D","text":"6","correct":false}],"solution":"n(n-3)/2 = 5(2)/2 = 5 diagonals."},{"id":512,"q":10,"section":"General Aptitude","text":"If the radius of a circle is doubled, the area becomes:","options":[{"label":"A","text":"Double","correct":false},{"label":"B","text":"Four times","correct":true},{"label":"C","text":"Eight times","correct":false},{"label":"D","text":"Same","correct":false}],"solution":"A  r^2. If r -> 2r, A -> 4A."},{"id":537,"q":5,"section":"General Aptitude","text":"If 5 men can build a wall in 12 days, how many days will 10 men take?","options":[{"label":"A","text":"24","correct":false},{"label":"B","text":"12","correct":false},{"label":"C","text":"6","correct":true},{"label":"D","text":"3","correct":false}],"solution":"MD = MD -> 5x12 = 10xD -> D = 6 days."},{"id":483,"q":11,"section":"General Aptitude","text":"Find the odd one out: 2, 4, 8, 16, 24, 32","options":[{"label":"A","text":"4","correct":false},{"label":"B","text":"8","correct":false},{"label":"C","text":"24","correct":true},{"label":"D","text":"32","correct":false}],"solution":"All others are powers of 2 (2, 2^2, 2, 2, 2). 24 is not a power of 2."},{"id":466,"q":2,"section":"General Aptitude","text":"The sum of ages of A and B is 45 years. 5 years from now, the ratio of their ages will be 4:5. Find the current age of A.","options":[{"label":"A","text":"15 years","correct":true},{"label":"B","text":"20 years","correct":false},{"label":"C","text":"25 years","correct":false},{"label":"D","text":"30 years","correct":false}],"solution":"Let A's age = x, B's age = 45-x. After 5 years: (x+5)/(50-x) = 4/5. 5x+25 = 200-4x. 9x = 175. x = 15."},{"id":540,"q":8,"section":"General Aptitude","text":"If a train running at 72 km/h crosses a pole in 10 s, the length of train is:","options":[{"label":"A","text":"100 m","correct":false},{"label":"B","text":"150 m","correct":false},{"label":"C","text":"200 m","correct":true},{"label":"D","text":"250 m","correct":false}],"solution":"Speed = 72x(5/18) = 20 m/s. Length = 20x10 = 200 m."},{"id":559,"q":12,"section":"General Aptitude","text":"Choose the correct spelling:","options":[{"label":"A","text":"Mischeivous","correct":false},{"label":"B","text":"Mischievious","correct":false},{"label":"C","text":"Mischievous","correct":true},{"label":"D","text":"Mischevous","correct":false}],"solution":"Correct spelling: Mischievous."},{"id":469,"q":2,"section":"General Aptitude","text":"The optimum depth of a canal is when:","options":[{"label":"A","text":"Width is minimum","correct":false},{"label":"B","text":"Hydraulic radius is maximum","correct":true},{"label":"C","text":"Wetted perimeter is maximum","correct":false},{"label":"D","text":"Velocity is minimum","correct":false}],"solution":"Most economical section: max hydraulic radius → min wetted perimeter."},{"id":509,"q":7,"section":"Core Subject","text":"In a computer network, what is the purpose of the router?","options":[{"label":"A","text":"To connect multiple devices within a network","correct":false},{"label":"B","text":"To connect multiple networks together","correct":true},{"label":"C","text":"To provide network security","correct":false},{"label":"D","text":"To provide network storage","correct":false}],"solution":"The purpose of the router in a computer network is to connect multiple networks together and route traffic between them."},{"id":494,"q":7,"section":"Core Subject","text":"In a control system, what is the purpose of the feedback loop?","options":[{"label":"A","text":"To increase the gain of the system","correct":false},{"label":"B","text":"To decrease the stability of the system","correct":false},{"label":"C","text":"To reduce the error between the desired output and the actual output","correct":true},{"label":"D","text":"To increase the noise in the system","correct":false}],"solution":"The purpose of the feedback loop in a control system is to reduce the error between the desired output and the actual output by continuously monitoring the output and adjusting the input to minimize the error."},{"id":538,"q":6,"section":"Core Subject","text":"In a microprocessor, what is the function of the Arithmetic Logic Unit (ALU)?","options":[{"label":"A","text":"To control the flow of data between registers","correct":false},{"label":"B","text":"To perform arithmetic and logical operations","correct":true},{"label":"C","text":"To store data temporarily","correct":false},{"label":"D","text":"To provide the clock signal","correct":false}],"solution":"The Arithmetic Logic Unit (ALU) in a microprocessor performs arithmetic operations such as addition, subtraction, multiplication, and division, as well as logical operations such as AND, OR, and NOT."},{"id":472,"q":2,"section":"Core Subject","text":"An ideal op-amp has infinite:","options":[{"label":"A","text":"Output impedance","correct":false},{"label":"B","text":"Input impedance","correct":true},{"label":"C","text":"Bandwidth","correct":false},{"label":"D","text":"Both Band C","correct":false}],"solution":"Ideal op-amp: infinite input impedance, zero output impedance, infinite gain."},{"id":555,"q":8,"section":"Core Subject","text":"In a CPU, what is the main function of the cache memory?","options":[{"label":"A","text":"To increase the size of the main memory","correct":false},{"label":"B","text":"To decrease the time taken to access the main memory","correct":true},{"label":"C","text":"To increase the speed of the CPU","correct":false},{"label":"D","text":"To decrease the power consumption of the CPU","correct":false}],"solution":"The main function of the cache memory in a CPU is to store frequently used data and instructions, which reduces the time taken to access the main memory."}]};
+    function startMockTest() {
+      document.getElementById("mt-intro").style.display = "none";
+      window._mockTest.init();
+    }
+    </script>
+    <script src="../../js/mock-test.js"></script>
+</body>
+</html>

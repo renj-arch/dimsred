@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Papers — DIMSRED</title>
+<meta name="description" content="Previous year papers with full explanations. Year-wise, exam-type tabs (Prelims/Mains/Interview/Sectional), subject filtering.">
+<link rel="stylesheet" href="css/style.css">
+<style>
+:root{--bg:#0a0e17;--card:#111827;--border:#1e293b;--accent:#3b82f6;--accent2:#8b5cf6;--text:#e2e8f0;--muted:#64748b;--green:#10b981;--red:#ef4444;--yellow:#f59e0b}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--text);line-height:1.6}
+.container{max-width:1200px;margin:0 auto;padding:20px}
+
+/* Header */
+.page-header{padding:30px 0;border-bottom:1px solid var(--border);margin-bottom:20px}
+.page-header h1{font-size:28px;margin-bottom:8px}
+.page-header p{color:var(--muted);font-size:14px}
+
+/* Tabs */
+.tabs{display:flex;gap:4px;margin-bottom:16px;border-bottom:1px solid var(--border);padding-bottom:8px;flex-wrap:wrap}
+.tab{padding:8px 16px;border-radius:8px 8px 0 0;cursor:pointer;font-size:13px;font-weight:500;color:var(--muted);border:1px solid transparent;border-bottom:none;transition:all .15s}
+.tab:hover{color:var(--text);background:rgba(59,130,246,.1)}
+.tab.active{color:var(--accent);background:rgba(59,130,246,.15);border-color:var(--border)}
+
+/* Year pills */
+.year-pills{display:flex;gap:6px;margin-bottom:16px;flex-wrap:wrap}
+.year-pill{padding:6px 14px;border-radius:20px;cursor:pointer;font-size:13px;color:var(--muted);border:1px solid var(--border);transition:all .15s}
+.year-pill:hover{color:var(--text);border-color:var(--accent)}
+.year-pill.active{color:#fff;background:var(--accent);border-color:var(--accent)}
+
+/* Paper grid */
+.paper-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:24px}
+.paper-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .15s}
+.paper-card:hover{border-color:var(--accent);transform:translateY(-2px)}
+.paper-card.selected{border-color:var(--accent);background:rgba(59,130,246,.1)}
+.paper-card .exam-badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600;background:rgba(139,92,246,.2);color:var(--accent2);margin-bottom:6px}
+.paper-card .paper-title{font-size:14px;font-weight:600;margin-bottom:4px}
+.paper-card .paper-meta{font-size:12px;color:var(--muted)}
+
+/* Question cards */
+.question-list{display:flex;flex-direction:column;gap:10px}
+.q-card{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;transition:border-color .15s}
+.q-card.answered{border-color:var(--green)}
+.q-number{display:inline-block;width:28px;height:28px;line-height:28px;text-align:center;border-radius:50%;background:rgba(59,130,246,.15);color:var(--accent);font-size:12px;font-weight:600;margin-right:10px}
+.q-subject-tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;background:rgba(16,185,129,.15);color:var(--green);margin-left:8px}
+.q-text{font-size:14px;margin:10px 0;line-height:1.7}
+.q-options{list-style:none;margin:10px 0;padding:0}
+.q-options li{padding:6px 10px;margin:4px 0;border-radius:6px;font-size:13px;background:rgba(255,255,255,.03);cursor:pointer;transition:background .1s}
+.q-options li:hover{background:rgba(59,130,246,.1)}
+.q-options li.correct{background:rgba(16,185,129,.2);color:var(--green);font-weight:600}
+.q-options li.wrong{background:rgba(239,68,68,.2);color:var(--red)}
+.q-actions{margin-top:10px}
+.q-btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer;font-size:12px;transition:all .15s}
+.q-btn:hover{border-color:var(--accent);color:var(--accent)}
+.q-btn:disabled{opacity:.5;cursor:default}
+.q-answer{margin-top:10px;padding:12px;border-radius:8px;background:rgba(16,185,129,.1);border:1px solid rgba(16,185,129,.3);display:none}
+.q-answer.show{display:block}
+.q-answer-label{font-size:12px;font-weight:600;color:var(--green);margin-bottom:6px}
+.q-explain{font-size:13px;line-height:1.7}
+.q-loader{display:none;margin-top:10px;color:var(--muted);font-size:12px}
+.q-loader.show{display:block}
+
+/* Answer All bar */
+.answer-all-bar{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 16px;margin-bottom:16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.progress-bar{flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;min-width:100px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--accent),var(--accent2));border-radius:3px;transition:width .3s;width:0}
+.progress-text{font-size:12px;color:var(--muted);white-space:nowrap}
+
+/* Stats row */
+.stats-row{display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap}
+.stat-box{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:10px 16px;text-align:center}
+.stat-value{font-size:20px;font-weight:700;color:var(--accent)}
+.stat-label{font-size:11px;color:var(--muted)}
+
+/* Empty state */
+.empty{padding:60px 20px;text-align:center;color:var(--muted)}
+.empty-icon{font-size:48px;margin-bottom:12px}
+.empty-text{font-size:14px}
+
+/* Loading */
+.loading{text-align:center;padding:40px;color:var(--muted)}
+.spinner{display:inline-block;width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* Responsive */
+@media(max-width:600px){
+  .container{padding:12px}
+  .page-header h1{font-size:22px}
+  .paper-grid{grid-template-columns:1fr}
+  .tabs{gap:2px}
+  .tab{padding:6px 10px;font-size:12px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <div class="page-header">
+    <h1>📚 Previous Year Papers</h1>
+    <p>Full questions with explanations. Year-wise, exam-type tabs, subject filtering.</p>
+  </div>
+
+  <!-- Exam type tabs -->
+  <div class="tabs" id="typeTabs">
+    <div class="tab active" data-type="Prelims">Prelims</div>
+    <div class="tab" data-type="Mains">Mains</div>
+    <div class="tab" data-type="Interview">Interview</div>
+    <div class="tab" data-type="Sectional">Sectional</div>
+    <div class="tab" data-type="All">All</div>
+  </div>
+
+  <!-- Year pills -->
+  <div class="year-pills" id="yearPills"></div>
+
+  <!-- Paper grid -->
+  <div class="paper-grid" id="paperGrid"></div>
+
+  <!-- Selected paper view -->
+  <div id="paperView" style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div>
+        <h2 id="paperTitle" style="font-size:18px"></h2>
+        <div id="paperMeta" style="font-size:12px;color:var(--muted)"></div>
+      </div>
+      <button class="q-btn" onclick="showPaperList()" style="padding:8px 16px">← All Papers</button>
+    </div>
+
+    <!-- Answer All bar -->
+    <div class="answer-all-bar">
+      <button class="q-btn" id="answerAllBtn" onclick="answerAll()" style="padding:8px 16px">▶ Answer All</button>
+      <button class="q-btn" onclick="resetAll()" style="padding:8px 16px">↺ Reset</button>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+      <div class="progress-text" id="progressText">0 / 0</div>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-box"><div class="stat-value" id="statTotal">0</div><div class="stat-label">Questions</div></div>
+      <div class="stat-box"><div class="stat-value" id="statAnswered" style="color:var(--green)">0</div><div class="stat-label">Answered</div></div>
+      <div class="stat-box"><div class="stat-value" id="statCorrect" style="color:var(--accent)">0</div><div class="stat-label">Correct</div></div>
+      <div class="stat-box"><div class="stat-value" id="statAccuracy" style="color:var(--yellow)">--</div><div class="stat-label">Accuracy</div></div>
+    </div>
+
+    <!-- Subject filter -->
+    <div style="margin-bottom:12px">
+      <select id="subjectFilter" onchange="filterBySubject()" style="padding:8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--text);font-size:13px">
+        <option value="">All Subjects</option>
+      </select>
+    </div>
+
+    <div class="question-list" id="questionList"></div>
+  </div>
+
+  <div class="empty" id="emptyState" style="display:none">
+    <div class="empty-icon">📭</div>
+    <div class="empty-text">No papers available for this filter.</div>
+  </div>
+
+  <div class="loading" id="loadingState">
+    <div class="spinner"></div>
+    <div style="margin-top:12px">Loading papers...</div>
+  </div>
+</div>
+
+<script src="scripts/lib/ask-core.js" defer></script>
+<script src="scripts/lib/ask-answer.js" defer></script>
+<script src="scripts/lib/ask-compose.js" defer></script>
+<script src="scripts/lib/ask-llm.js" defer></script>
+<script src="js/owner-runner.js?v=20261019b" defer></script>
+<script>
+var ALL_PAPERS = {};
+var currentType = 'Prelims';
+var currentYear = null;
+var currentPaper = null;
+var currentSubject = '';
+var answeredSet = new Set();
+var correctSet = new Set();
+
+// Initialize
+window.addEventListener('DOMContentLoaded', function() {
+  loadPapers();
+  setupTabs();
+});
+
+function setupTabs() {
+  document.querySelectorAll('#typeTabs .tab').forEach(function(tab) {
+    tab.addEventListener('click', function() {
+      document.querySelectorAll('#typeTabs .tab').forEach(function(t) { t.classList.remove('active'); });
+      tab.classList.add('active');
+      currentType = tab.dataset.type;
+      currentYear = null;
+      renderPaperGrid();
+    });
+  });
+}
+
+function deriveType(p) {
+  var id = String(p.id || '').toLowerCase() + ' ' + String(p.paper || '').toLowerCase();
+  if (/prelim|tier 1|cbt 1/.test(id)) return 'Prelims';
+  if (/mains|tier 2|cbt 2/.test(id)) return 'Mains';
+  if (/interview|personality/.test(id)) return 'Interview';
+  if (/sectional/.test(id)) return 'Sectional';
+  return 'Prelims';
+}
+
+function loadPapers() {
+  fetch('data/papers.json')
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      var list = Array.isArray(data) ? data : (data.papers || []);
+      ALL_PAPERS = {};
+      list.forEach(function(p) {
+        if (!p || !p.id) return;
+        var rec = Object.assign({}, p);
+        if (!rec.type) rec.type = deriveType(rec);
+        if (rec.cutoff && typeof rec.cutoff === 'object') {
+          rec.cutoff = rec.cutoff.general != null ? rec.cutoff.general : null;
+        }
+        if (!rec.subject && rec.paper) rec.subject = rec.paper;
+        ALL_PAPERS[p.id] = rec;
+      });
+      document.getElementById('loadingState').style.display = 'none';
+      renderYearPills();
+      renderPaperGrid();
+    })
+    .catch(function(e) {
+      document.getElementById('loadingState').style.display = 'none';
+      document.getElementById('emptyState').style.display = 'block';
+    });
+}
+
+function getPapersForFilter() {
+  var papers = Object.keys(ALL_PAPERS).map(function(k) { return Object.assign({ id: k }, ALL_PAPERS[k]); });
+  if (currentType !== 'All') {
+    papers = papers.filter(function(p) {
+      return p.type === currentType || (currentType === 'Prelims' && (p.type === 'Prelims' || p.type === 'Tier 1' || p.type === 'CBT 1'));
+    });
+  }
+  if (currentYear) {
+    papers = papers.filter(function(p) { return p.year === currentYear; });
+  }
+  return papers;
+}
+
+function renderYearPills() {
+  var years = new Set();
+  Object.keys(ALL_PAPERS).forEach(function(k) {
+    var p = ALL_PAPERS[k];
+    if (currentType === 'All' || p.type === currentType || (currentType === 'Prelims' && (p.type === 'Prelims' || p.type === 'Tier 1' || p.type === 'CBT 1'))) {
+      years.add(p.year);
+    }
+  });
+  var sorted = Array.from(years).sort(function(a,b) { return b - a; });
+  var el = document.getElementById('yearPills');
+  el.innerHTML = '<div role="button" tabindex="0" class="year-pill active" onclick="selectYear(null)">All Years</div>';
+  sorted.forEach(function(y) {
+    el.innerHTML += '<div role="button" tabindex="0" class="year-pill" onclick="selectYear(' + y + ')">' + y + '</div>';
+  });
+}
+
+function selectYear(y) {
+  currentYear = y;
+  document.querySelectorAll('#yearPills .year-pill').forEach(function(p) { p.classList.remove('active'); });
+  if (y === null) {
+    document.querySelector('#yearPills .year-pill').classList.add('active');
+  } else {
+    document.querySelectorAll('#yearPills .year-pill').forEach(function(p) {
+      if (p.textContent == y) p.classList.add('active');
+    });
+  }
+  renderPaperGrid();
+}
+
+function renderPaperGrid() {
+  var papers = getPapersForFilter();
+  var grid = document.getElementById('paperGrid');
+  if (papers.length === 0) {
+    grid.innerHTML = '';
+    document.getElementById('emptyState').style.display = 'block';
+    return;
+  }
+  document.getElementById('emptyState').style.display = 'none';
+  grid.innerHTML = '';
+  papers.forEach(function(p) {
+    var qCount = p.questions ? p.questions.length : (p.totalQ || '?');
+    var card = document.createElement('div');
+    card.className = 'paper-card';
+    card.innerHTML = '<div class="exam-badge">' + p.exam + '</div>' +
+      '<div class="paper-title">' + p.year + ' ' + p.type + (p.subject ? ' — ' + p.subject : '') + '</div>' +
+      '<div class="paper-meta">' + qCount + ' questions' + (p.cutoff ? ' · Cutoff: ' + p.cutoff : '') +
+      (p.official ? ' · <span style="color:#34d399">● official paper</span>' : '') + '</div>';
+    card.onclick = function() { openPaper(p.id); };
+    grid.appendChild(card);
+  });
+}
+
+function openPaper(paperId) {
+function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;'); }
+  currentPaper = ALL_PAPERS[paperId];
+  currentPaper.id = paperId;
+  answeredSet = new Set();
+  correctSet = new Set();
+  currentSubject = '';
+  document.getElementById('paperGrid').style.display = 'none';
+  document.getElementById('emptyState').style.display = 'none';
+  document.getElementById('paperView').style.display = 'block';
+  document.getElementById('paperTitle').textContent = currentPaper.year + ' ' + currentPaper.exam + ' ' + currentPaper.type;
+  document.getElementById('paperMeta').innerHTML = esc(currentPaper.subject || '') + ' · ' + (currentPaper.questions ? currentPaper.questions.length : 0) + ' questions' + (currentPaper.cutoff ? ' · Cutoff: ' + esc(String(currentPaper.cutoff)) : '') +
+    (currentPaper.official ? ' · <span style="color:#34d399">● official paper</span>' : '') +
+    (currentPaper.officialPdf ? ' · <a href="' + esc(currentPaper.officialPdf) + '" target="_blank" rel="noopener" style="color:#60a5fa">Official PDF</a>' : '');
+  buildSubjectFilter();
+  renderQuestions();
+  updateStats();
+}
+
+function showPaperList() {
+  document.getElementById('paperView').style.display = 'none';
+  document.getElementById('paperGrid').style.display = 'grid';
+}
+
+function buildSubjectFilter() {
+  var subjects = new Set();
+  if (currentPaper.questions) {
+    currentPaper.questions.forEach(function(q) { if (q.subject) subjects.add(q.subject); });
+  }
+  var sel = document.getElementById('subjectFilter');
+  sel.innerHTML = '<option value="">All Subjects</option>';
+  Array.from(subjects).sort().forEach(function(s) {
+    sel.innerHTML += '<option value="' + s + '">' + s + '</option>';
+  });
+}
+
+function filterBySubject() {
+  currentSubject = document.getElementById('subjectFilter').value;
+  renderQuestions();
+}
+
+function getFilteredQuestions() {
+  if (!currentPaper.questions) return [];
+  return currentPaper.questions.filter(function(q) {
+    return !currentSubject || q.subject === currentSubject;
+  });
+}
+
+function renderQuestions() {
+  var questions = getFilteredQuestions();
+  var list = document.getElementById('questionList');
+  list.innerHTML = '';
+  questions.forEach(function(q) {
+    var card = document.createElement('div');
+    card.className = 'q-card' + (answeredSet.has(q.n) ? ' answered' : '');
+    card.id = 'qcard-' + q.n;
+    var html = '<span class="q-number">' + q.n + '</span>';
+    if (q.subject) html += '<span class="q-subject-tag">' + q.subject + '</span>';
+    html += '<div class="q-text">' + q.q + '</div>';
+    if (q.options && q.options.length) {
+      html += '<ul class="q-options">';
+      q.options.forEach(function(opt, i) {
+        var letter = String.fromCharCode(65 + i);
+        html += '<li id="opt-' + q.n + '-' + i + '" onclick="selectOption(' + q.n + ',' + i + ')">' + letter + ') ' + opt + '</li>';
+      });
+      html += '</ul>';
+    }
+    html += '<div class="q-actions">';
+    html += '<button class="q-btn" id="btn-' + q.n + '" onclick="answerOne(' + q.n + ')">💡 Explain</button>';
+    html += '</div>';
+    html += '<div class="q-loader" id="loader-' + q.n + '"><span class="spinner" style="width:16px;height:16px;border-width:2px"></span> Generating explanation...</div>';
+    html += '<div class="q-answer" id="ans-' + q.n + '"></div>';
+    card.innerHTML = html;
+    list.appendChild(card);
+  });
+}
+
+function selectOption(num, idx) {
+  var q = currentPaper.questions.find(function(x) { return x.n === num; });
+  if (!q) return;
+  var options = document.querySelectorAll('#qcard-' + num + ' .q-options li');
+  options.forEach(function(o) { o.classList.remove('correct', 'wrong'); });
+  var correctIdx = q.answer ? q.answer.charCodeAt(0) - 65 : -1;
+  if (idx === correctIdx) {
+    options[idx].classList.add('correct');
+    correctSet.add(num);
+  } else {
+    options[idx].classList.add('wrong');
+    if (correctIdx >= 0 && options[correctIdx]) options[correctIdx].classList.add('correct');
+  }
+  answeredSet.add(num);
+  updateStats();
+}
+
+function answerOne(num) {
+  var q = currentPaper.questions.find(function(x) { return x.n === num; });
+  if (!q) return;
+  var ansDiv = document.getElementById('ans-' + num);
+  var loader = document.getElementById('loader-' + num);
+  var btn = document.getElementById('btn-' + num);
+  btn.disabled = true;
+  loader.classList.add('show');
+
+  if (q.explain) {
+    loader.classList.remove('show');
+    ansDiv.innerHTML = '<div class="q-answer-label">💡 Explanation</div><div class="q-explain">' + q.explain + '</div>';
+    ansDiv.classList.add('show');
+    document.getElementById('qcard-' + num).classList.add('answered');
+    btn.textContent = '✓ Explained';
+    answeredSet.add(num);
+    updateStats();
+    return;
+  }
+
+  var qText = q.q + (q.options ? '\nOptions: ' + q.options.map(function(o, i) {
+    return String.fromCharCode(65 + i) + ') ' + o;
+  }).join(' ') : '') + '\nCorrect answer: ' + q.answer;
+
+  tryExplain(qText, q.answer).then(function(explanation) {
+    loader.classList.remove('show');
+    ansDiv.innerHTML = '<div class="q-answer-label">💡 Explanation</div><div class="q-explain">' + explanation + '</div>';
+    ansDiv.classList.add('show');
+    document.getElementById('qcard-' + num).classList.add('answered');
+    btn.textContent = '✓ Explained';
+    answeredSet.add(num);
+    updateStats();
+  }).catch(function() {
+    loader.classList.remove('show');
+    ansDiv.innerHTML = '<div class="q-answer-label">Official Answer: ' + q.answer + '</div>' +
+      '<div class="q-explain">Official answer is <strong>' + q.answer + '</strong>.</div>';
+    ansDiv.classList.add('show');
+    btn.disabled = false;
+    btn.textContent = '💡 Retry';
+    answeredSet.add(num);
+    updateStats();
+  });
+}
+
+function tryExplain(qText, officialAnswer) {
+  return new Promise(function(resolve) {
+    if (typeof retrieve === 'function' && typeof compose === 'function') {
+      try {
+        var res = retrieve(null, qText, 5);
+        if (res && res.hits && res.hits.length) {
+          var composed = compose(qText, res);
+          if (composed && composed.text && composed.text.length > 20) {
+            resolve(composed.text);
+            return;
+          }
+        }
+      } catch (e) {}
+    }
+    if (typeof askLLMAnswer === 'function') {
+      try {
+        askLLMAnswer(qText).then(function(ans) {
+          if (ans && ans.text && ans.text.length > 20) resolve(ans.text);
+          else resolve('Official answer: <strong>' + officialAnswer + '</strong>');
+        }).catch(function() { resolve('Official answer: <strong>' + officialAnswer + '</strong>'); });
+        return;
+      } catch (e) {}
+    }
+    resolve('Official answer: <strong>' + officialAnswer + '</strong>');
+  });
+}
+
+function answerAll() {
+  var questions = getFilteredQuestions();
+  questions.forEach(function(q, i) {
+    setTimeout(function() { answerOne(q.n); }, i * 150);
+  });
+}
+
+function resetAll() {
+  answeredSet = new Set();
+  correctSet = new Set();
+  document.querySelectorAll('.q-card').forEach(function(c) { c.classList.remove('answered'); });
+  document.querySelectorAll('.q-answer').forEach(function(a) { a.classList.remove('show'); });
+  document.querySelectorAll('.q-btn').forEach(function(b) { if (b.id && b.id.startsWith('btn-')) { b.disabled = false; b.textContent = '💡 Explain'; } });
+  document.querySelectorAll('.q-options li').forEach(function(o) { o.classList.remove('correct', 'wrong'); });
+  updateStats();
+}
+
+function updateStats() {
+  var total = getFilteredQuestions().length;
+  var answered = answeredSet.size;
+  var correct = correctSet.size;
+  var accuracy = answered > 0 ? Math.round((correct / answered) * 100) + '%' : '--';
+  document.getElementById('statTotal').textContent = total;
+  document.getElementById('statAnswered').textContent = answered;
+  document.getElementById('statCorrect').textContent = correct;
+  document.getElementById('statAccuracy').textContent = accuracy;
+  document.getElementById('progressFill').style.width = (total > 0 ? (answered / total * 100) : 0) + '%';
+  document.getElementById('progressText').textContent = answered + ' / ' + total;
+}
+</script>
+</body>
+</html>

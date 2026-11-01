@@ -1,0 +1,192 @@
+name: Expand Course Content
+
+# The site's course-writing agent: qwen3.5:9b (Ollama on the runner) writes
+# the lesson bodies and practice MCQs that the exam courses are missing, and
+# ONLY those lesson pages are regenerated afterwards.
+#
+# Why the filtered regeneration matters: a full gen-course.js run would
+# rewrite every page of an exam with the raw generator template, reverting
+# per-page repairs (selfcheck's nav/head fixes) and one-off enrichments (NEET
+# biology practice blocks, UPSC's topic layers) that exist only in the
+# committed pages. So the expander records exactly which keys it filled and
+# which files those keys render to, and the workflow regenerates precisely
+# those files.
+#
+# Zero API keys: the model runs locally on the runner through Ollama. The
+# 70% word-overlap rule (same as the rest of the site) drops any accidental
+# duplicate before it can be stored.
+#
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b — the
+# mid tier). The 4b fast-tier trials decide whether it can go smaller; the
+# old 27B could not complete runs here, so nothing dispatches it anymore.
+
+on:
+  schedule:
+    - cron: '47 1,13 * * *'   # 2 batches a day, off :00
+  workflow_dispatch:
+    inputs:
+      per_run:
+        description: 'Lessons to write this run (default 5)'
+        required: false
+        default: '5'
+      model:
+        description: 'Ollama model tag. Default = mid tier (qwen3.5:9b); qwen3:4b is the cached fast tier.'
+        required: false
+        default: 'qwen3.5:9b'
+
+concurrency:
+  group: expand-course
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 150
+    steps:
+      - name: Free runner disk space (swap + 17GB model + repo)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            neet
+            jee
+            upsc
+            ibps-po
+            sbi-clerk
+            ssc-gd
+            ctet
+            gate
+            agniveer
+            rbi
+            cgl
+            nda
+            cds
+            clat
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
+      - name: Create swap (16GB - same as proven llm-autofix)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # Model cache: one entry per size class (repo budget 10GB) — "fast" for
+      # small models, "mid" for qwen3.5:9b. Both current default tags are cacheable.
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          # Same as llm-smoke: stop the kernel from paging model weights out
+          # under memory pressure (swap thrash is what killed the 18GB era).
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          # Warm the model into RAM now so lesson calls start warm.
+          echo "Warming $MODEL_INPUT..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+
+      - name: Write course lessons (${{ inputs.model || 'qwen3.5:9b' }} as teacher)
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+          EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '5' }}
+          EXPAND_DEADLINE_MIN: '75'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
+
+      - name: Regenerate exactly the filled lesson pages
+        if: always()
+        run: |
+          [ -f scripts/.course-touched.json ] || { echo "no touched file"; exit 0; }
+          KEYS=$(node -e "console.log(require('./scripts/.course-touched.json').keys.join(','))")
+          [ -n "$KEYS" ] || { echo "nothing filled this run"; exit 0; }
+          echo "Regenerating: $KEYS"
+          COURSE_ONLY_KEYS="$KEYS" node scripts/gen-course.js
+          node -e "const t=require('./scripts/.course-touched.json'); require('fs').writeFileSync('/tmp/course-files.txt', t.files.join('\n') + '\n')"
+          node scripts/normalize-course-pages.js $(cat /tmp/course-files.txt)
+          # Bulletproof guard: if regenerating a page would drop a large amount
+          # of content (hand-built sections that live only in the committed
+          # file), restore that page instead of publishing the loss.
+          RESTORED=0
+          while read -r f; do
+            [ -f "$f" ] || continue
+            DEL=$(git diff --numstat -- "$f" | awk '{print $2}' | head -1)
+            if [ -n "$DEL" ] && [ "$DEL" -gt 200 ]; then
+              echo "::warning::regen would drop $DEL line(s) from $f -- restored, committed content kept"
+              git checkout -- "$f"
+              RESTORED=$((RESTORED + 1))
+            fi
+          done < /tmp/course-files.txt
+          echo "guard: $RESTORED page(s) restored"
+
+      # Incremental saves mean even a timeout keeps every lesson written so
+      # far -- publish whatever landed. Nothing staged -> ci-push exits 0.
+      - name: Publish expanded lessons
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add scripts/course-data.json scripts/course-practice.json 2>/dev/null || true
+          if [ -f /tmp/course-files.txt ]; then xargs -a /tmp/course-files.txt git add; fi
+          rm -f scripts/.course-touched.json
+          bash scripts/ci-push.sh "course-expand: ${{ inputs.model || 'qwen3.5:9b' }} wrote new exam lessons (run #${{ github.run_number }})"
