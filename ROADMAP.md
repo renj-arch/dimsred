@@ -307,6 +307,32 @@ questions to Generators first because they carry `_wikiCat='course-lesson'`.
     finalize commit.
   - Removed `knowledge-graph.html` and its navigation links; `flowchart.html`
     is the single visualization page.
+- 2026-11-01: Mains coverage rebuilt around a shared planner
+  - Added `scripts/lib/mains-plan.js`: the least-covered paper (GS1-GS4, Essay,
+    Optional I/II, Indian Language, English) and least-covered optional subject
+    are chosen deterministically before the model is called. The prompt states
+    the paper, marks, subject and language as fixed facts, and the shape gate
+    rejects a reply that drifts to another paper, subject or script.
+  - `scripts/site-agent.js` now writes a batch (default 3, cap 90) per heavy
+    run and dedupes against the reviewed bank and the live pool; the
+    owner-runner lane (`on-demand-generate.js`) uses the same planner, and
+    promotion preserves `subject`, `lang` and `task`.
+  - `data/mains-questions.json` now has 19 hand-authored items covering all
+    nine papers, with `kind`, `guide` and `optionalSubjects` metadata. Every
+    item passes `scripts/lib/mains-quality.js`; the old weak GS4 essay item was
+    supplied with named values and the short essay was brought over its floor.
+  - `data/mains-fresh.json` was pruned from 36 GS3-only items to 12
+    quality-passing, non-duplicate items, with coverage and prune metadata so
+    the Agent Chain refills the pool. The new batch then rotates across papers.
+  - `mains.html` adds an optional-subject selector, a per-paper syllabus guide
+    (including the optional subject map), honest empty states, a fresh-batch
+    coverage line, and target-aware prompts. Generated replies are never
+    relabelled: an unknown paper, wrong paper, wrong subject or wrong language
+    is rejected instead of being shown as the selected paper.
+  - Added `npm run test-mains` (174 assertions) covering rotation, target
+    enforcement, optional/language validation, duplicate suppression, the
+    authored-bank quality floor, the fresh-pool contract and a DOM test of the
+    page's chips, subject filter, guide, generation guard and fresh coverage.
 - 2026-11-01: Film author pipeline
   - `bengal-famine-1943` now has five readable sources; modelling moved from
     the 35B model (download failed at ~84%) to Qwen2.5-7B Q5_K_M with retries.
