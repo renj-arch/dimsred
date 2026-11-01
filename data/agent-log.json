@@ -1,358 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T23:25:38.504Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visuals blocking study flow. MockPapers should follow immediately to address the 81 open faults, as incomplete papers are a primary user blocker. MetaLearn is scheduled last because it has produced zero fixes in the last two runs and likely requires new input data before it can contribute effectively.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (210 total)",
-       "text": "How does abrasive jet machining (AJM) cut materials? | Name the six standard angles of a single-point tool in the ASA system. | How do the ORS angles differ from the ASA set?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "7 fresh mock questions on Production Technology (212 in pool)",
-       "text": "Production Technology"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-10-31T23:51:57.698Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent producing output recently, so it leads. MockPapers has produced 0 in the last two runs but holds unfinished standing goals (papers=false), so it follows BankFigures to clear that backlog. ExamPatterns and Invention are next as they address remaining gaps and pending ideas. MetaLearn goes last as it has been inactive for multiple runs and may be starved of inputs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (213 total)",
-       "text": "What is crater wear on a cutting tool? | What is flank wear and why is it the accepted tool-life criterion? | What is built-up edge (BUE) in machining?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Engineering Mechanics (222 in pool)",
-       "text": "Engineering Mechanics"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-01T00:22:18.480Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address both immediately as it is the only agent producing fixes in recent runs. MockPapers should follow to convert fixed figures into complete exam papers, addressing the 'papers: false' file state. Exampatterns and Invention are deferred this run because they produced zero fixes for two consecutive runs (starved of input from missing papers/questions) per the rule to move them last. MetaLearn is skipped as it is no",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (215 total)",
-       "text": "Write Taylor's tool-life equation. | What does tool life mean as used in Taylor's work? | Define machinability."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-01T01:05:27.233Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults and figure gaps are the highest priority; BankFigures must address the 79 missing figures immediately to prevent broken content. MockPapers should follow to generate fresh exam materials since files are currently absent. Invention and MetaLearn agents have produced zero fixes in recent runs and will be placed last as they likely require standing goals or new inputs before contributing.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (218 total)",
-       "text": "Why is a free-cutting steel better machinable? | What is the purpose of a cutting fluid? | Name the main cutting tool materials in order of increasing hot hardness."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-01T01:49:18.208Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (221 total)",
-       "text": "Name the three types of chips formed in machining. | Why is a chip breaker used on a lathe tool? | Write the surface finish of a turned surface in terms of nose radius and feed."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-01T02:16:35.450Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to resolve broken visual assets blocking content consumption. Once figures are stable, MockPapers should address the zeroed output from previous runs to rebuild core study material. ExamPatterns and MainsFresh follow to diversify gaps while Invention/MetaLearn remain last as they have produced zero fixes recently and can be starved without immediate impact.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (224 total)",
-       "text": "How are cutting forces measured in machining research? | Name the three common grinding machines. | What is honing?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-01T02:56:28.665Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures is the only agent producing fixes recently, so it must lead. MockPapers and MainsFresh have produced zero output in the last two runs and should be placed at the end of the queue to allow them time to recover from potential starvation or input lag before being expected to generate content.",
-    "actions": [
-     "BankFigures",
-     "ExamPatterns",
-     "MetaLearn",
-     "Invention",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (226 total)",
-       "text": "What is lapping? | What is superfinishing? | What is precision and what is accuracy, and how do they differ?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "11 fresh mock questions on Heat Transfer (233 in pool)",
-       "text": "Heat Transfer"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T03:35:01.943Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -708,66 +356,366 @@
    ]
   },
   {
-   "at": "2026-11-01T05:57:56.501Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 64,
+   "at": "2026-11-01T06:31:51.363Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "selfcheck",
-     "count": 64
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
     }
    ],
    "details": [
     {
-     "agent": "selfcheck",
+     "agent": "bankfigures",
      "fixes": [
       {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      },
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (248 total)",
+       "text": "How does magnetic particle inspection work and what does it find? | What does a liquid-penetrant test detect? | What can eddy-current testing measure?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
       {
-       "page": "Flowchart",
-       "fix": "Runtime: missing ) after argument list",
-       "kind": "runtime"
-      },
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Power Plant Engineering (274 in pool)",
+       "text": "Power Plant Engineering"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-01T06:51:38.563Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/syllabus files are missing, MetaLearn should immediately generate foundational study materials to fill these voids. MockPapers and ExamPatterns will follow once core content exists to ensure zero-broken-page status. Invention is deferred as we prioritize fixing existing gaps over new ideas.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
       {
-       "page": "neet/chapters/chemistry-chapter-1-some-basic-concepts-of-chemistry.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (251 total)",
+       "text": "Name the three principal families of additive manufacturing by material feeding. | What is FDM and for what is it used? | What is SLA and how does it work?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
       {
-       "page": "neet/chapters/chemistry-chapter-10-s-block-elements.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Strength of Materials (284 in pool)",
+       "text": "Strength of Materials"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-01T07:11:46.636Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address broken visuals immediately while MockPapers tackles the critical content holes. MetaLearn and MainsFresh are starved (0 fixes in last 3 runs), so they move to the end of the queue to process remaining low-priority items or catch up on unfinished goals without blocking high-impact repairs.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
       {
-       "page": "neet/chapters/chemistry-chapter-11-p-block-elements-group-13-14.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (253 total)",
+       "text": "How does selective laser sintering (SLS) work? | What is direct metal laser sintering (DMLS)? | How does binder jetting work?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-01T07:22:58.019Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the backlog; BankFigures must address the 79 missing figures first as they block content consumption. MockPapers should follow to generate fresh exam simulations, directly reducing critical faults. Invention is deferred this run since unfinished standing goals (figures/papers) take precedence over new ideas.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
       {
-       "page": "neet/chapters/chemistry-chapter-12-organic-chemistry-some-basic-principles.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (255 total)",
+       "text": "What is directed energy deposition (DED)? | What is the STL file in additive manufacturing? | Why are support structures needed in some AM processes?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
       {
-       "page": "neet/chapters/chemistry-chapter-13-hydrocarbons.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Thermodynamics (293 in pool)",
+       "text": "Thermodynamics"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-01T07:45:21.652Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual assets. MockPapers is next because file presence is false, indicating a complete lack of exam content to study. MetaLearn will follow to generate fresh daily material once core structure exists. Invention should be last as it requires stable inputs and has produced zero fixes in recent runs, so it gets starved per protocol.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
       {
-       "page": "neet/chapters/chemistry-chapter-14-environmental-chemistry.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (258 total)",
+       "text": "How do layer height and infill affect an FDM part? | What post-processing is common after an AM build? | How many degrees of freedom does a typical industrial robot have?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-01T07:53:47.499Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-01T08:20:57.694Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity; BankFigures must address the 79 missing figures first as they block content consumption, followed by MockPapers to resolve critical faults. MetaLearn is scheduled last despite zero recent output because it likely requires upstream data (figures/papers) to function effectively, fitting the rule to starve agents needing inputs until gaps are closed.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
       {
-       "page": "neet/chapters/chemistry-chapter-15-solid-state.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (261 total)",
+       "text": "What is the repeatability of a robot? | What is an end effector? | State the 3-2-1 principle of locating in fixtures."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
       {
-       "page": "neet/chapters/chemistry-chapter-16-solutions.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "11 fresh mock questions on Machine Design (304 in pool)",
+       "text": "Machine Design"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-01T08:49:28.792Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; I will prioritize BankFigures to fix broken visual data immediately, followed by MockPapers to address incomplete exam materials. Since MainsFresh produced zero fixes in the last two runs, it is moved to the end of this sequence despite the lack of specific file inputs, as it may simply be awaiting new content generated by earlier agents.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (264 total)",
+       "text": "What are drill bushes and why are they used? | What is the difference between a jig and a fixture? | What is a veee locator used for?"
       }
      ]
     }
    ]
   }
  ],
- "lastRun": "2026-11-01T05:57:56.501Z",
+ "lastRun": "2026-11-01T08:49:28.792Z",
  "model": "qwen3.5:9b"
 }
