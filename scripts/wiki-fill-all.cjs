@@ -811,7 +811,32 @@ const CATEGORIES = [
     'Lothal','Harsha','Samudragupta','Kalidasa','Panini','Aryabhata',
     'Varahamihira','Charaka','Sushruta','Chanakya','Gautama Buddha',
     'Mahavira','Adi Shankara','Ramanuja','Guru Nanak','Basava',
-    'Meera','Tulsidas','Surdas','Mirabai','Nagarjuna','Moulinak (Moulinak)'
+    'Meera','Tulsidas','Surdas','Mirabai','Nagarjuna',
+    // UPSC high-yield ancient India topics with explicit date spans
+    'Nanda Empire','Mahajanapadas','Haryanka dynasty','Shishunaga dynasty',
+    'Ajatashatru','Bimbisara','Second urbanisation','Painted Grey Ware culture',
+    'Northern Black Polished Ware','Megalithic culture in South India',
+    'Brahmi script','Kharosthi script','Ashokan edicts','Patanjali (grammarian)',
+    'Buddhist councils','Jain councils','Vikramashila University',
+    'Chandragupta Maurya','Bindusara','Kunala','Dasharatha Maurya',
+    'Shunga Empire','Kanva dynasty','Indo-Greek Kingdom','Indo-Scythians',
+    'Indo-Parthian Kingdom','Vakataka dynasty','Pallava dynasty',
+    'Kadamba dynasty','Western Ganga dynasty','Kamarupa kingdom',
+    'Pratihara dynasty','Pala dynasty (Bengal)','Chandela dynasty',
+    'Paramara dynasty','Solanki dynasty','Gahadavala dynasty',
+    'Kakatiya dynasty','Hoysala Empire','Yadava dynasty',
+    'Chandragupta I','Chandragupta II','Kumaragupta I','Skandagupta',
+    'Gupta administration','Gupta coinage','Golden Age of India',
+    'Sanskrit literature','Kalidasa works','Puranas','Mahabharata',
+    'Ramayana','Upanishads','Vedanta','Mimamsa','Nyaya','Vaisheshika',
+    'Samkhya','Yoga (philosophy)','Charvaka','Ajivika','Lokayata',
+    'Ajivikas','Charvaka philosophy','Six Schools of Indian Philosophy',
+    'Bhakti movement','Alvars','Nayanars','Tamil literature',
+    'Sangam literature','Tolkappiyam','Silappatikaram','Manimekalai',
+    'Thirukkural','Tiruvalluvar','Ilango Adigal','Sattanar',
+    'Kamban','Ottakoothar','Pugazhendi','Auvaiyar',
+    'Sangam age','Early Cholas','Early Pandyas','Early Cheras',
+    'Karikala','Nedunjeliyan','Senguttuvan','Velir','Araiyar'
   ]},
   // ───────── Medieval & Modern India ─────────
   { name:'Medieval & Modern India', wikiCat:'Medieval_India', topics:[
