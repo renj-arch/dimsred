@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T14:54:35.834Z",
-  "cursor": 306,
-  "built": 290
+  "updatedAt": "2026-11-01T16:12:57.418Z",
+  "cursor": 312,
+  "built": 296
  },
  "figs": {
   "11434945": {
@@ -1743,6 +1743,42 @@
   "a4c9322b": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Electron Beam Path -->\n  <path d=\"M80,100 L140,100\" stroke-dasharray=\"4,2\"/>\n  <circle cx=\"140\" cy=\"100\" r=\"3\" fill=\"#222\"/>\n  <!-- Workpiece -->\n  <rect x=\"150\" y=\"80\" width=\"60\" height=\"40\" stroke-width=\"1.5\"/>\n  <text x=\"175\" y=\"95\">Workpiece</text>\n  <!-- Weld Zone (Deep & Narrow) -->\n  <path d=\"M200,100 L230,100 L230,140 L200,140 Z\" fill=\"none\" stroke-width=\"1.5\"/>\n  <text x=\"215\" y=\"125\">Deep Narrow</text>\n  <!-- Vacuum Chamber -->\n  <rect x=\"0\" y=\"0\" width=\"360\" height=\"220\" fill=\"none\" stroke=\"#222\" stroke-dasharray=\"2,4\"/>\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">Vacuum Chamber</text>\n  <!-- Labels -->\n  <text x=\"90\" y=\"60\" font-weight=\"bold\">Focused Electron Beam</text>\n  <text x=\"240\" y=\"60\">Low Distortion</text>\n</svg>",
    "n": "what is electron beam welding and its special feature?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "9ab90aee": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"25\" text-anchor=\"middle\">Back-Step Welding</text>\n <!-- Base Plate -->\n <rect x=\"40\" y=\"60\" width=\"280\" height=\"10\"/>\n <!-- First Segment (Forward) -->\n <path d=\"M 60 70 L 90 70\" stroke-dasharray=\"2,2\"/>\n <text x=\"75\" y=\"62\">Segment A</text>\n <!-- Second Segment (Reverse/Back) -->\n <path d=\"M 140 70 L 170 70\" stroke-dasharray=\"2,2\"/>\n <text x=\"155\" y=\"62\">Segment B</text>\n <!-- Third Segment (Forward again) -->\n <path d=\"M 220 70 L 250 70\" stroke-dasharray=\"2,2\"/>\n <text x=\"235\" y=\"62\">Segment C</text>\n <!-- Fourth Segment (Reverse/Back) -->\n <path d=\"M 300 70 L 330 70\" stroke-dasharray=\"2,2\"/>\n <text x=\"315\" y=\"62\">Segment D</text>\n <!-- Arrows indicating reverse steps -->\n <path d=\"M 90 85 L 90 95\" marker-end=\"url(#arrow)\"/>\n <path d=\"M 170 85 L 170 95\" marker-end=\"url(#arrow)\"/>\n <text x=\"90\" y=\"105\">Reverse Step</text>\n <!-- Shrinkage arrows balancing -->\n <path d=\"M 65 65 L 65 55\" stroke-width=\"1\"/>\n <path d=\"M 145 65 L 145 55\" stroke-width=\"1\"/>\n <text x=\"180\" y=\"125\" text-anchor=\"middle\">Balanced Shrinkage</text>\n</svg>",
+   "n": "what is back-step welding used for?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "668b6ff5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\" />\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\" />\n  <!-- Bars -->\n  <rect x=\"60\" y=\"140\" width=\"35\" height=\"60\" />\n  <text x=\"77\" y=\"125\">Grey Iron</text>\n  <text x=\"77\" y=\"195\">~1%</text>\n  \n  <rect x=\"110\" y=\"120\" width=\"35\" height=\"80\" />\n  <text x=\"127\" y=\"105\">Steel</text>\n  <text x=\"127\" y=\"195\">~2%</text>\n  \n  <rect x=\"160\" y=\"130\" width=\"35\" height=\"70\" />\n  <text x=\"177\" y=\"115\">Aluminium</text>\n  <text x=\"177\" y=\"195\">~1.5%</text>\n  \n  <rect x=\"210\" y=\"135\" width=\"35\" height=\"65\" />\n  <text x=\"227\" y=\"120\">Brass</text>\n  <text x=\"227\" y=\"195\">~1.25%</text>\n  \n  <!-- Title -->\n  <text x=\"180\" y=\"30\" text-anchor=\"middle\">Shrinkage Allowance (%)</text>\n</svg>",
+   "n": "give the patternmaker's shrinkage allowances for common cast metals.",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "acbe36f2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"RollingProcess\">\n  <!-- Metal Strip -->\n  <path d=\"M40,20 L80,20 L80,60 L40,60 Z\"/>\n  <path d=\"M360,20 L360,60 L320,60 L320,20 Z\"/>\n  <path d=\"M40,20 L320,20\"/>\n  <path d=\"M40,60 L320,60\"/>\n  \n  <!-- Rollers -->\n  <circle cx=\"150\" cy=\"110\" r=\"40\"/>\n  <circle cx=\"210\" cy=\"110\" r=\"40\"/>\n  \n  <!-- Deformation Zone (Narrowed Strip) -->\n  <path d=\"M90,60 L110,50 L130,50 L150,60 Z\" fill=\"#222\" opacity=\"0.1\"/>\n  <path d=\"M270,60 L250,50 L230,50 L210,60 Z\" fill=\"#222\" opacity=\"0.1\"/>\n  \n  <!-- Labels -->\n  <text x=\"45\" y=\"90\">Original</text>\n  <text x=\"325\" y=\"90\">Original</text>\n  <text x=\"180\" y=\"160\">Rollers</text>\n  <text x=\"100\" y=\"140\">Refined Gauge</text>\n  <text x=\"260\" y=\"140\">Refined Gauge</text>\n  <text x=\"35\" y=\"180\">Cold Rolling</text>\n  <text x=\"305\" y=\"180\">Cold Rolling</text>\n</g>\n</svg>",
+   "n": "why is cold rolling done on the strip, and what is its main disadvantage?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "e64edc3b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Roll Gap Profile (Tighter = Narrower)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"20\" y=\"70\">Edges</text><text x=\"340\" y=\"70\">Centre</text><path d=\"M 40 60 L 80 50 L 120 60 L 160 50 L 200 60 L 240 50 L 280 60 L 320 60\"/><text x=\"180\" y=\"45\" text-anchor=\"middle\">Centre Buckle (Tighter Edges)</text><path d=\"M 40 60 L 80 70 L 120 60 L 160 70 L 200 60 L 240 70 L 280 60 L 320 60\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Wavy Edge (Tighter Centre)</text><path d=\"M 40 60 L 80 45 L 120 60 L 160 75 L 200 60 L 240 45 L 280 60 L 320 60\"/><text x=\"180\" y=\"125\" text-anchor=\"middle\">Strip Profile</text><path d=\"M 40 140 Q 180 100 320 140\" fill=\"#222\" stroke=\"none\"/><text x=\"180\" y=\"165\" text-anchor=\"middle\">Flat Strip (Ideal)</text><path d=\"M 40 170 L 320 170\"/></svg>",
+   "n": "name the strip defects wavy edge and centre buckle.",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "6f5ab740": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Limiting Drawing Ratio</text><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><text x=\"30\" y=\"75\">Blank Diameter (D)</text><line x1=\"40\" y1=\"95\" x2=\"320\" y2=\"95\"/><text x=\"30\" y=\"100\">Punch Diameter (d)</text><polygon points=\"60,80 140,80 140,95 60,95\" fill=\"#222\" opacity=\"0.2\"/><line x1=\"140\" y1=\"80\" x2=\"140\" y2=\"95\" stroke-dasharray=\"2,2\"/><text x=\"135\" y=\"87\" text-anchor=\"end\">Limiting Ratio (DR)</text><polygon points=\"60,80 140,80 140,95 60,95\" fill=\"#222\" opacity=\"0.2\"/><line x1=\"140\" y1=\"80\" x2=\"320\" y2=\"80\"/><polygon points=\"140,80 140,95 320,95 320,80\" fill=\"#222\" opacity=\"0.2\"/><text x=\"230\" y=\"110\">Tearing Occurs</text><line x1=\"260\" y1=\"110\" x2=\"260\" y2=\"140\" stroke-dasharray=\"2,2\"/><polygon points=\"140,95 140,140 320,140 320,95\" fill=\"#222\" opacity=\"0.2\"/><text x=\"230\" y=\"160\">Safe Drawing Region</text><line x1=\"140\" y1=\"140\" x2=\"140\" y2=\"80\" stroke-dasharray=\"2,2\"/><polygon points=\"140,95 140,80 60,80 60,95\" fill=\"#222\" opacity=\"0.2\"/><text x=\"70\" y=\"130\">DR ≈ 2 (Steel)</text><line x1=\"60\" y1=\"130\" x2=\"140\" y2=\"130\" stroke-dasharray=\"2,2\"/></svg>",
+   "n": "what is the limiting drawing ratio in deep drawing?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "fada1dcd": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Die -->\n  <path d=\"M40,180 L320,180 L320,90 L40,90 Z\" />\n  <!-- Punch -->\n  <path d=\"M180,20 L180,90\" stroke-dasharray=\"4,2\" />\n  <!-- Blank (initially flat) -->\n  <path d=\"M40,90 Q180,50 320,90\" fill=\"none\" stroke-width=\"2\" />\n  <!-- Flange region -->\n  <text x=\"60\" y=\"75\">Flange</text>\n  <!-- Blank Holder Plate -->\n  <rect x=\"40\" y=\"180\" width=\"280\" height=\"10\" fill=\"#ddd\" stroke=\"#222\" />\n  <text x=\"180\" y=\"205\">Blank Holder</text>\n  <!-- Force Arrow -->\n  <line x1=\"180\" y1=\"190\" x2=\"180\" y2=\"210\" stroke-width=\"2\" />\n  <circle cx=\"180\" cy=\"210\" r=\"3\" fill=\"#222\" />\n  <!-- Label -->\n  <text x=\"175\" y=\"225\">Presses Down</text>\n  <!-- Wrinkling prevention note -->\n  <text x=\"40\" y=\"165\">Prevents Wrinkling</text>\n</svg>",
+   "n": "what is the work of the blank holder in deep drawing?",
    "sub": "production",
    "at": "2026-11-01"
   }
