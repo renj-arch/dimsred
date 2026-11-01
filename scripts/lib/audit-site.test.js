@@ -71,6 +71,9 @@ console.log('--- one page per failure class ---');
     'bad-case.html': HEAD + '<a href="case.html">lowercase target</a></body></html>',
     'dupe.html': HEAD + '<div id="x"></div><div id="x"></div></body></html>',
     'bad-script.html': HEAD + '<script>var x = ;</script></body></html>',
+    'broken.js': 'var x = ;\n',
+    'ext-script.html': HEAD + '<script src="broken.js" defer></script></body></html>',
+    'sup.html': HEAD + '<p>Distance 5 × 10' + '\u00b9' + '5 m and 6.022 × 10' + '\u00b2' + '\u00b0 mol⁻¹.</p></body></html>',
     'corrupt.html': HEAD + '<p>bad \uFFFD text</p></body></html>',
     'no-title.html': '<!DOCTYPE html><html><head></head><body><img src="index.html"></body></html>',
     'importmap.html': HEAD + '<script type="importmap">{"imports":</script></body></html>',
@@ -82,12 +85,23 @@ console.log('--- one page per failure class ---');
   });
   fs.writeFileSync(path.join(dir, 'untracked.html'),
     '<!DOCTYPE html><html><head></head><body><a href="missing.html">untracked</a></body></html>', 'utf8');
+  fs.writeFileSync(path.join(dir, 'utf16.json'), Buffer.concat([
+    Buffer.from([0xFF, 0xFE]),
+    Buffer.from('{"ok":true}', 'utf16le')
+  ]));
+  cp.spawnSync('git', ['add', 'utf16.json'], { cwd: dir });
   try {
     const r = run(dir);
     assert(count(r.out, 'Broken internal links') === 1, 'default mode audits only tracked files', JSON.stringify(count(r.out, 'Broken internal links')));
     assert(count(r.out, 'Case-only link mismatches') === 1, 'case-only mismatch is reported');
     assert(count(r.out, 'Duplicate ids') === 1, 'duplicate id is reported');
     assert(count(r.out, 'Inline script parse errors') === 1, 'unparseable inline script is reported');
+    assert(count(r.out, 'External script parse errors') === 1, 'unparseable external script is reported');
+    assert(/broken\.js\s+\(loaded by ext-script\.html\)/.test(r.out), 'external script error names file and page');
+    assert(count(r.out, 'Mixed superscript exponents') === 1, 'mixed superscript exponents are reported', JSON.stringify(count(r.out, 'Mixed superscript exponents')));
+    assert(/sup\.html\s+\(2\)/.test(r.out) && r.out.indexOf('10\u00b95') !== -1, 'mixed-superscript finding shows a sample');
+    assert(count(r.out, 'UTF-16 text assets') === 1, 'UTF-16 data asset is reported');
+    assert(/utf16\.json/.test(r.out), 'UTF-16 finding names the file');
     assert(count(r.out, 'Pages without <title>') === 1, 'missing title is reported');
     assert(count(r.out, 'Pages without meta description') === 1, 'missing description is reported');
     assert(count(r.out, 'Pages without viewport') === 1, 'missing viewport is reported');
@@ -128,8 +142,8 @@ console.log('\n--- a clean tree exits zero ---');
     const r = run(dir);
     assert(r.status === 0, 'clean site passes', 'exit ' + r.status + '\n' + r.out);
     ['Broken internal links', 'Case-only link mismatches', 'Duplicate ids', 'Inline script parse errors',
-      'Pages without <title>', 'Pages without meta description', 'Pages without viewport', 'Images without alt',
-      'Files with replacement characters'
+      'External script parse errors', 'Pages without <title>', 'Pages without meta description', 'Pages without viewport',
+      'Images without alt', 'Files with replacement characters', 'Mixed superscript exponents', 'UTF-16 text assets'
     ].forEach(function (label) {
       assert(count(r.out, label) === 0, 'clean site: ' + label + ' is zero', JSON.stringify(count(r.out, label)));
     });

@@ -7,9 +7,13 @@
 //   * directory URLs that are not backed by index.html
 //   * duplicate id attributes on a page
 //   * inline classic scripts that do not parse
+//   * external classic scripts referenced by a page that do not parse
 //   * missing title / description / viewport
 //   * images without alt text
 //   * UTF-8 replacement characters (U+FFFD), the signature of lossy encoding
+//   * mixed superscript/ASCII exponents, where a superscript run ends in an
+//     ASCII digit or degree sign (a lost superscript such as 10^15 or 10^20)
+//   * non-HTML text assets stored as UTF-16, which our UTF-8 tooling misreads
 //
 // By default it audits the files Git tracks (what actually deploys), using the
 // index as the source of truth for link targets. That matters in a sparse or
@@ -91,12 +95,20 @@ const findings = {
   caseMismatch: [],
   duplicateId: [],
   scriptError: [],
+  scriptFileError: [],
   missingTitle: [],
   missingDescription: [],
   missingViewport: [],
   noAlt: [],
-  replacementChars: []
+  replacementChars: [],
+  mixedSuperscript: [],
+  utf16Text: []
 };
+
+// Classic external scripts referenced by at least one page, mapped to the first
+// page that loads them. Parsing these catches banks that ship as UTF-16 or with
+// a syntax error while the page itself still renders.
+const referencedScripts = new Map();
 
 const TEXT_RE = /\.(?:html?|js|cjs|mjs|json|md|css|txt|xml|svg|csv|tsv|ya?ml|webmanifest)$/i;
 
@@ -179,8 +191,11 @@ function auditHtml(rel) {
 
   // Markup scan must ignore tags that only exist inside code samples: inline
   // scripts build <a> elements from strings, and those are not real links.
+  // Keep the opening <script ...> tag so its src can still be audited.
   const markup = html
-    .replace(/<script\b[^>]*>[\s\S]*?<\/script>/gi, maskBlock)
+    .replace(/<script\b([^>]*)>[\s\S]*?<\/script>/gi, function (whole, attrs) {
+      return '<script' + attrs + '>' + maskBlock(whole);
+    })
     .replace(/<style\b[^>]*>[\s\S]*?<\/style>/gi, maskBlock)
     .replace(/<!--[\s\S]*?-->/g, maskBlock);
 
@@ -198,7 +213,14 @@ function auditHtml(rel) {
     } else if (name === 'link') {
       checkLink(rel, attr(tag, 'href'), 'link');
     } else if (name === 'script') {
-      checkLink(rel, attr(tag, 'src'), 'script');
+      const src = attr(tag, 'src');
+      checkLink(rel, src, 'script');
+      const type = (attr(tag, 'type') || '').toLowerCase();
+      if (src && type !== 'module' && !/^(https?:|\/\/|data:|blob:)/i.test(src)) {
+        const target = resolveTarget(rel, src);
+        const hit = (candidatesFor(target) || []).filter(function (c) { return FILE_SET.has(c); })[0];
+        if (hit && /\.js$/i.test(hit) && !referencedScripts.has(hit)) referencedScripts.set(hit, rel);
+      }
     } else if (name === 'img') {
       checkLink(rel, attr(tag, 'src'), 'img');
       if (!/\balt\s*=/i.test(tag)) findings.noAlt.push({ file: rel, tag: tag.slice(0, 120) });
@@ -243,6 +265,22 @@ function auditHtml(rel) {
 
 HTML_FILES.forEach(auditHtml);
 
+// A referenced classic script that does not parse disables its feature without
+// touching the page markup, so check the files the pages actually load.
+Array.from(referencedScripts.keys()).sort().forEach(function (rel) {
+  let text;
+  try { text = decodeText(fs.readFileSync(path.join(ROOT, rel))); } catch (e) { return; }
+  try {
+    new vm.Script(text, { filename: rel });
+  } catch (e) {
+    findings.scriptFileError.push({
+      file: rel,
+      page: referencedScripts.get(rel),
+      error: String(e.message).split('\n')[0]
+    });
+  }
+});
+
 // Replacement characters are invisible in a browser but corrupt the meaning of
 // the text (Greek letters, degree signs, dashes). Decode UTF-16 with a BOM so
 // legacy files are not reported merely because they are not UTF-8.
@@ -261,14 +299,28 @@ function decodeText(buf) {
   return buf.toString('utf8');
 }
 
+function isUtf16(buf) {
+  return buf.length >= 2 &&
+    ((buf[0] === 0xFF && buf[1] === 0xFE) || (buf[0] === 0xFE && buf[1] === 0xFF));
+}
+
+// A superscript run that ends in ASCII is unambiguous corruption. The pattern
+// is built from escapes so this file does not flag itself.
+const MIXED_SUP_RE = new RegExp('10[\\u2070\\u00b9\\u00b2\\u00b3\\u2074-\\u2079](?:[0-9]|\\u00b0)', 'g');
+
 Array.from(FILE_SET).filter(function (f) {
   return TEXT_RE.test(f) && !isSkipped(f);
 }).sort().forEach(function (rel) {
   let buf;
   try { buf = fs.readFileSync(path.join(ROOT, rel)); } catch (e) { return; }
+  // HTML is decoded by the browser's BOM sniffing; data and script assets are
+  // read as UTF-8 by our generators, search index and tests.
+  if (isUtf16(buf) && !/\.html?$/i.test(rel)) findings.utf16Text.push(rel);
   const text = decodeText(buf);
   const count = (text.match(/\uFFFD/g) || []).length;
   if (count) findings.replacementChars.push({ file: rel, count: count });
+  const mixed = text.match(MIXED_SUP_RE);
+  if (mixed) findings.mixedSuperscript.push({ file: rel, count: mixed.length, sample: mixed[0] });
 });
 
 function uniqueBy(list, keyFn) {
@@ -294,11 +346,14 @@ console.log('Broken internal links'.padEnd(38) + uniqueBroken.length);
 console.log('Case-only link mismatches'.padEnd(38) + uniqueCase.length);
 console.log('Duplicate ids'.padEnd(38) + findings.duplicateId.length);
 console.log('Inline script parse errors'.padEnd(38) + findings.scriptError.length);
+console.log('External script parse errors'.padEnd(38) + findings.scriptFileError.length);
 console.log('Pages without <title>'.padEnd(38) + findings.missingTitle.length);
 console.log('Pages without meta description'.padEnd(38) + findings.missingDescription.length);
 console.log('Pages without viewport'.padEnd(38) + findings.missingViewport.length);
 console.log('Images without alt'.padEnd(38) + findings.noAlt.length);
 console.log('Files with replacement characters'.padEnd(38) + findings.replacementChars.length);
+console.log('Mixed superscript exponents'.padEnd(38) + findings.mixedSuperscript.length);
+console.log('UTF-16 text assets'.padEnd(38) + findings.utf16Text.length);
 
 function list(title, rows, render) {
   if (!rows.length) return;
@@ -320,12 +375,18 @@ list('Duplicate ids', findings.duplicateId, function (f) {
 list('Inline script errors', findings.scriptError, function (f) {
   return f.file + ':' + f.line + '  ' + f.error;
 });
+list('External script errors', findings.scriptFileError, function (f) {
+  return f.file + '  (loaded by ' + f.page + ')  ' + f.error;
+});
 list('Pages without meta description', findings.missingDescription, function (f) { return f; });
 list('Pages without viewport', findings.missingViewport, function (f) { return f; });
 list('Pages without <title>', findings.missingTitle, function (f) { return f; });
 list('Images without alt', findings.noAlt, function (f) { return f.file + '  ' + f.tag; });
 list('Files with replacement characters', findings.replacementChars, function (f) { return f.file + '  (' + f.count + ')'; });
+list('Mixed superscript exponents', findings.mixedSuperscript, function (f) { return f.file + '  (' + f.count + ')  ' + f.sample; });
+list('UTF-16 text assets', findings.utf16Text, function (f) { return f; });
 
 const hardFailures = uniqueBroken.length + uniqueCase.length + findings.scriptError.length +
-  findings.duplicateId.length + findings.replacementChars.length;
+  findings.scriptFileError.length + findings.duplicateId.length + findings.replacementChars.length +
+  findings.mixedSuperscript.length + findings.utf16Text.length;
 process.exit(hardFailures ? 1 : 0);
