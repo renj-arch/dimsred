@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T03:35:01.943Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in core study materials (papers, questions, syllabus) and a high backlog of faults; BankFigures is the only agent producing output recently, so it must lead to clear immediate wins. Since papers/files are missing, MockPapers should follow immediately to generate the foundational content needed for the exam-prep mission. Invention and MetaLearn will be queued last as they require existing materials to function effectively and have shown zero recent output.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (229 total)",
-       "text": "Why is calibration of measuring instruments necessary? | What is the cosine error in measurement? | State Abbe's principle of measurement."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T04:02:05.385Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -714,8 +664,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T09:10:14.957Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; MainsFresh produced 0 fixes in the last two runs so it must be deprioritized until standing goals are addressed. BankFigures and MockPapers have shown recent productivity, so they lead the sequence to clear high-impact content gaps before attempting new inventions or meta-learning tasks.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (267 total)",
+       "text": "Why must clamps in a fixture act against the locators, not the work alone? | What is numerically controlled (NC) machining? | What does CNC add to NC?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Engineering Mechanics (314 in pool)",
+       "text": "Engineering Mechanics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T08:49:28.792Z",
+ "lastRun": "2026-11-01T09:10:14.957Z",
  "model": "qwen3.5:9b"
 }
