@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T04:58:52.562Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to resolve broken visual assets blocking study flow. MockPapers should follow immediately to address the lack of question files, as incomplete papers are a high-priority standing goal. MainsFresh is next to ensure daily content freshness since no sidecar or syllabus files are present yet. Invention and MetaLearn are deferred to this run as they require prior data ingestion (papers/questions) which BankFigure",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (238 total)",
-       "text": "What instruments measure roundness and how? | How is limit gauging different from measuring? | Why do even-lobed workpieces pass a V-block roundness check incorrectly?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvxd13io (gs3, 15 marks): Critically examine the statement that 'Urban Heat Island (UHI) effect is an inescapable consequence of urbanization'. In",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T05:14:12.367Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -751,8 +700,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T10:35:21.567Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visuals. MockPapers should follow immediately to address the lack of question files, as they are currently false. MainsFresh is needed next for fresh daily material since papers are missing. Exampatterns will be last because it produced 0 fixes in the previous two runs and likely needs data from BankFigures/MockPapers first.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (276 total)",
+       "text": "Distinguish open-loop and closed-loop CNC control. | What is backlash in a machine drive? | What is DNC?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T09:59:17.542Z",
+ "lastRun": "2026-11-01T10:35:21.567Z",
  "model": "qwen3.5:9b"
 }
