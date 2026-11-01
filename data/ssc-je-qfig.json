@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T18:17:06.798Z",
-  "cursor": 327,
-  "built": 311
+  "updatedAt": "2026-11-01T18:43:52.739Z",
+  "cursor": 330,
+  "built": 313
  },
  "figs": {
   "11434945": {
@@ -1869,6 +1869,18 @@
   "9752e007": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Saw Frame (Simplified C-Shape) -->\n  <path d=\"M40,40 L40,180 L320,180 L320,40 L260,40 L260,180\" fill=\"none\"/>\n  <!-- Handle Area (Left) -->\n  <rect x=\"20\" y=\"50\" width=\"20\" height=\"100\" rx=\"5\"/>\n  <!-- Blade Body -->\n  <path d=\"M40,60 L310,60\" stroke-dasharray=\"5,5\"/>\n  <!-- Teeth Direction Indicator (Arrow pointing away from handle) -->\n  <polygon points=\"280,55 290,45 290,65\" fill=\"#222\"/>\n  <text x=\"270\" y=\"50\" font-weight=\"bold\">Teeth</text>\n  <!-- Cut Direction Arrow -->\n  <line x1=\"280\" y1=\"60\" x2=\"310\" y2=\"60\" stroke-width=\"2\"/>\n  <polygon points=\"310,55 315,45 315,65\" fill=\"#222\"/>\n  <text x=\"318\" y=\"58\">Push</text>\n  <!-- Tension Lines -->\n  <path d=\"M40,60 L30,60 M40,60 L40,70\" stroke-width=\"1\"/>\n  <path d=\"M320,60 L330,60 M320,60 L320,50\" stroke-width=\"1\"/>\n</svg>",
    "n": "how should a flexible hacksaw blade be fitted in the frame?",
+   "sub": "workshop",
+   "at": "2026-11-01"
+  },
+  "f9c08846": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Workpiece</text><path d=\"M 60 180 L 60 140 L 75 140 L 75 180 Z\"/><path d=\"M 285 180 L 285 140 L 300 140 L 300 180 Z\"/><line x1=\"60\" y1=\"140\" x2=\"75\" y2=\"140\"/><text x=\"67\" y=\"130\">Edge</text><path d=\"M 60 140 L 60 80 L 90 80 L 90 140 Z\" fill=\"#ddd\" stroke=\"#222\"/><path d=\"M 270 140 L 270 80 L 300 80 L 300 140 Z\" fill=\"#ddd\" stroke=\"#222\"/><line x1=\"60\" y1=\"80\" x2=\"90\" y2=\"80\"/><text x=\"75\" y=\"70\">Cutting</text><text x=\"75\" y=\"85\">Action</text><path d=\"M 30 40 L 60 10 L 90 40 Z\" fill=\"#ddd\" stroke=\"#222\"/><text x=\"60\" y=\"30\" text-anchor=\"middle\">Hammer</text><line x1=\"90\" y1=\"40\" x2=\"150\" y2=\"40\" stroke-dasharray=\"4,2\"/><text x=\"120\" y=\"50\">Force Direction</text><path d=\"M 30 160 L 60 190 L 90 160 Z\" fill=\"#ddd\" stroke=\"#222\"/><text x=\"60\" y=\"180\" text-anchor=\"middle\">Chisel</text><text x=\"60\" y=\"200\" text-anchor=\"middle\">Flat Face</text></svg>",
+   "n": "name the principal flat-chisel work in fitting.",
+   "sub": "workshop",
+   "at": "2026-11-01"
+  },
+  "275016de": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Hand Tap Progression</text><rect x=\"40\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><rect x=\"120\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><rect x=\"200\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><text x=\"70\" y=\"85\" text-anchor=\"middle\">Taper</text><text x=\"70\" y=\"115\" text-anchor=\"middle\">(Start)</text><path d=\"M 60 40 L 70 180\" stroke-dasharray=\"2,2\"/><text x=\"30\" y=\"100\" text-anchor=\"middle\">Shallow</text><text x=\"30\" y=\"130\" text-anchor=\"middle\">Cut</text><rect x=\"140\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><text x=\"170\" y=\"85\" text-anchor=\"middle\">Plug</text><text x=\"170\" y=\"115\" text-anchor=\"middle\">(Second)</text><path d=\"M 150 40 L 160 180\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"100\" text-anchor=\"middle\">Medium</text><text x=\"130\" y=\"130\" text-anchor=\"middle\">Cut</text><rect x=\"220\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><text x=\"250\" y=\"85\" text-anchor=\"middle\">Bottoming</text><text x=\"250\" y=\"115\" text-anchor=\"middle\">(Finish)</text><path d=\"M 230 40 L 240 180\" stroke-dasharray=\"2,2\"/><text x=\"210\" y=\"100\" text-anchor=\"middle\">Deep</text><text x=\"210\" y=\"130\" text-anchor=\"middle\">Cut</text></svg>",
+   "n": "name the three types of hand taps.",
    "sub": "workshop",
    "at": "2026-11-01"
   }

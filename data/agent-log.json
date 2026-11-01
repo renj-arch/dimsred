@@ -1,73 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T09:59:17.542Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual assets. Since papers/sidecar files are missing, MockPapers is next to generate core study content from scratch. ExamPatterns follows to ensure question structures match the syllabus once content exists. MainsFresh will be used last to refresh material daily as requested, even if inputs are low, because it targets the 'fresh every day' mission goal.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (273 total)",
-       "text": "What is linear and circular interpolation in CNC? | What is a canned cycle in CNC? | What is tool length offset in CNC?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Refrigeration & Air Conditioning (324 in pool)",
-       "text": "Refrigeration & Air Conditioning"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvxnrfok (gs3, 15 marks): Critically examine the statement: 'India's strategic push for critical minerals like lithium and cobalt is reshaping its",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T10:35:21.567Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -787,8 +720,76 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T19:26:52.451Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 4,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 3
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Prioritize BankFigures to address the critical 79 figure gaps and 23 critical faults, as these are foundational for exam prep. Follow with MockPapers to generate fresh practice material since papers are currently missing. Move MainsFresh next to ensure daily content freshness. Finally, assign MetaLearn to the last slot because it produced zero fixes in the last two runs, indicating it may be starved of inputs rather than broken.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (313 total)",
+       "text": "Name the principal flat-chisel work in fitting. | At what angle is a cold chisel ground for general work? | Name the three types of hand taps."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvy7a86u-ccsr (gs1, 15 marks): The decade of the 1930s marked a decisive shift in India's freedom struggle, transforming it from a petitionary movement",
+       "model": "qwen3.5:9b (local)"
+      },
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvy7tfi4-ojy6 (gs2, 15 marks): The Election Commission of India (ECI) is the guardian of free and fair elections, yet its powers are often debated in l",
+       "model": "qwen3.5:9b (local)"
+      },
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvy81cm9-uaus (gs4, 15 marks): As the District Magistrate during a severe cyclone, you receive conflicting reports: one suggests immediate evacuation o",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T18:32:24.665Z",
+ "lastRun": "2026-11-01T19:26:52.451Z",
  "model": "qwen3.5:9b"
 }
