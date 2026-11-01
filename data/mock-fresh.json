@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-10-31T23:41:53.517Z",
-  "cursor": 11,
-  "count": 222,
+  "updatedAt": "2026-11-01T02:51:48.087Z",
+  "cursor": 12,
+  "count": 233,
   "lastAttempt": {
-   "at": "2026-11-01T02:11:45.763Z",
-   "reason": "nothing"
+   "at": "2026-11-01T02:51:48.087Z",
+   "reason": "added 11"
   }
  },
  "items": [
@@ -2007,6 +2007,105 @@
    "h": "Take moments about the base; reaction at wall is horizontal, friction at floor is μR.",
    "s": "Resolving forces horizontally gives the wall reaction equal to the floor friction (μW). Taking moments about the base equates the moment of weight to the moment of the wall reaction. This derivation results in tan(θ) = 1/(2μ), meaning the ladder is more stable at larger angles.",
    "at": "2026-10-31"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "Define the physical mechanism of heat conduction in solids and state Fourier's Law equation, explaining the significance of thermal conductivity.",
+   "a": "Rate of heat transfer (Q/t) = -k * A * (dT/dx), where k is thermal conductivity, A is area, and dT/dx is the temperature gradient.",
+   "h": "Heat moves through stationary matter via molecular collisions; rate depends on temperature gradient and material property.",
+   "s": "Conduction occurs in solids due to lattice vibrations and free electron movement. Fourier's Law states that heat flows from high to low temperature at a rate proportional to the cross-sectional area and temperature gradient, with thermal conductivity (k) being the material-specific constant of proportionality.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "A copper rod 0.5 m long has ends maintained at 100°C and 20°C. If its diameter is 2 cm and k_copper = 380 W/(m·K), calculate the steady-state heat flow rate.",
+   "a": "1473.5 Watts",
+   "h": "Use Q = (k * A * ΔT) / L, converting diameter to radius for area calculation.",
+   "s": "First, calculate the cross-sectional area A = π*(0.01 m)^2 = 3.1416×10^-4 m². The temperature difference ΔT is 80 K and length L is 0.5 m. Substituting into Q = (380 * 3.1416×10^-4 * 80) / 0.5 yields approximately 1473.5 W.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "In forced convection over a flat plate, how does the Nusselt number (Nu) generally vary with the Reynolds number (Re) and Prandtl number (Pr)?",
+   "a": "Nu ∝ Re^0.5 Pr^0.33 (Laminar) or Nu ∝ Re^0.8 Pr^0.4 (Turbulent)",
+   "h": "For laminar flow over a flat plate, Nu ~ Re^0.5 * Pr^0.33; for turbulent, Nu ~ Re^0.8 * Pr^0.4.",
+   "s": "The Nusselt number represents the ratio of convective to conductive heat transfer. In forced convection, increasing fluid velocity increases Re, enhancing turbulence and boundary layer mixing, which significantly boosts heat transfer coefficients as captured by these empirical correlations.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "Define 'Critical Insulation Thickness' for a cylindrical pipe and explain why adding insulation might initially increase heat loss.",
+   "a": "r_critical = k_insulation / h_convection",
+   "h": "For cylinders, critical radius r_c = k/h; if outer radius < r_c, adding insulation increases surface area faster than it reduces conductivity resistance.",
+   "s": "In cylindrical geometry, adding insulation increases the conductive resistance but also increases the external surface area for convection. If the pipe's initial radius is smaller than the critical thickness (k/h), the increase in convective heat transfer due to larger area outweighs the gain in conductive resistance, leading to higher total heat loss.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "State Newton's Law of Cooling and identify the conditions under which it is valid for radiative heat exchange approximations.",
+   "a": "Rate of cooling ∝ Surface Area × Temperature Difference",
+   "h": "Q = h * A * (T_s - T_∞); valid when temperature difference is small or surface emissivity is low compared to convection.",
+   "s": "Newton's Law of Cooling states that the rate of heat loss of a body is directly proportional to the difference in temperatures between the body and its surroundings. While strictly for convection, it is sometimes used as a linearized approximation for radiation when (T_s^4 - T_∞^4) is expanded for small ΔT, or when combined with convective coefficients.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "In a heat exchanger operating in counter-flow arrangement, why is the Log Mean Temperature Difference (LMTD) always greater than that of parallel flow for the same inlet/outlet temperatures?",
+   "a": "LMTD_counter > LMTD_parallel",
+   "h": "Counter-flow maintains a more uniform temperature difference along the length compared to parallel flow.",
+   "s": "In counter-flow, the hot fluid exits near where the cold fluid enters, maintaining a larger and more constant temperature gradient along the entire heat exchanger length. In parallel flow, the fluids approach thermal equilibrium at the outlet, causing the temperature difference to drop sharply, resulting in a lower average (LMTD).",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "Define 'Black Body' radiation and state Planck's Law regarding spectral emissive power.",
+   "a": "E_λ(λ,T) = (C1 / λ^5) * [1 / (exp(C2 / λT) - 1)]",
+   "h": "An idealized object that absorbs all incident radiation; emits maximum possible energy at every wavelength.",
+   "s": "A black body is a theoretical perfect absorber and emitter of radiation. Planck's Law describes the spectral distribution of electromagnetic radiation emitted by a black body in thermal equilibrium, showing that energy density peaks at a specific wavelength inversely proportional to temperature.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "Calculate the equivalent thermal resistance for two plane walls (thickness L1=0.1m, k1=2 W/mK; L2=0.2m, k2=1 W/mK) placed in series with no contact resistance.",
+   "a": "R_eq = (L1/k1 + L2/k2) / A = 0.05/A + 0.2/A = 0.25/A K/W",
+   "h": "Resistances add up: R_total = L1/(k1*A) + L2/(k2*A).",
+   "s": "For plane walls in series, thermal resistances are additive because the same heat flux passes through both layers. The total resistance is the sum of individual resistances R1 = L1/(k1*A) and R2 = L2/(k2*A), resulting in a combined resistance dependent on the inverse of conductivity and thickness.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "What is the primary function of fins (extended surfaces) in heat transfer applications?",
+   "a": "Increase Surface Area for Convection",
+   "h": "To increase the effective surface area available for convection, thereby enhancing heat dissipation.",
+   "s": "Fins are attached to a hot surface to extend its area into the cooling fluid. Since convective resistance is often dominant, increasing the surface area allows more heat to be transferred from the solid to the fluid, effectively lowering the temperature of the base component.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "In boiling heat transfer, distinguish between 'Nucleate Boiling' and 'Film Boiling' based on the vapor layer formation.",
+   "a": "Nucleate (bubbles detach) vs. Film (vapor blanket insulates)",
+   "h": "Nucleate: bubbles form at sites; Film: continuous vapor blanket insulates the surface.",
+   "s": "In nucleate boiling, vapor bubbles form at nucleation sites on the heated surface and detach, providing efficient heat transfer. In film boiling, occurring at very high superheats, a stable continuous layer of vapor forms between the surface and liquid, acting as an insulator and drastically reducing heat transfer.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Heat Transfer",
+   "q": "State the Second Law of Thermodynamics implication for spontaneous heat flow direction.",
+   "a": "Heat flows High T → Low T",
+   "h": "Heat spontaneously flows from higher temperature to lower temperature; entropy of isolated system increases.",
+   "s": "The Second Law dictates that in an isolated system, processes occur such that total entropy increases. For heat transfer, this implies a spontaneous flow only occurs from a region of higher temperature to a region of lower temperature, never the reverse without external work input.",
+   "at": "2026-11-01"
   }
  ]
 }

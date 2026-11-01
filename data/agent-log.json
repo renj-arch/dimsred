@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T19:43:21.260Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of fixing these high-priority structural issues. MainsFresh must run to ensure daily content freshness, as no papers or questions are currently present. Invention and MetaLearn agents have produced zero fixes for two consecutive runs and will be starved last to prevent resource waste on likely stalled processes.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (184 total)",
-       "text": "Write the extrusion ratio of a direct extrusion. | Describe the defect chevron (fir tree) cracking in extrusion. | Why is extrusion usually done hot?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T20:00:25.276Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -673,8 +638,74 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T02:56:28.665Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures is the only agent producing fixes recently, so it must lead. MockPapers and MainsFresh have produced zero output in the last two runs and should be placed at the end of the queue to allow them time to recover from potential starvation or input lag before being expected to generate content.",
+    "actions": [
+     "BankFigures",
+     "ExamPatterns",
+     "MetaLearn",
+     "Invention",
+     "MockPapers",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (226 total)",
+       "text": "What is lapping? | What is superfinishing? | What is precision and what is accuracy, and how do they differ?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "11 fresh mock questions on Heat Transfer (233 in pool)",
+       "text": "Heat Transfer"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T02:16:35.450Z",
+ "lastRun": "2026-11-01T02:56:28.665Z",
  "model": "qwen3.5:9b"
 }

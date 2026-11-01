@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T02:02:04.930Z",
-  "cursor": 234,
-  "built": 224
+  "updatedAt": "2026-11-01T02:35:35.690Z",
+  "cursor": 237,
+  "built": 226
  },
  "figs": {
   "11434945": {
@@ -1347,6 +1347,18 @@
   "57552ad": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"180\" height=\"120\" rx=\"5\" /><path d=\"M 80 60 L 280 60\" stroke-dasharray=\"4,2\" /><path d=\"M 80 70 L 280 70\" stroke-dasharray=\"4,2\" /><path d=\"M 80 80 L 280 80\" stroke-dasharray=\"4,2\" /><path d=\"M 130 60 L 130 140\" stroke-dasharray=\"4,2\" /><path d=\"M 150 60 L 150 140\" stroke-dasharray=\"4,2\" /><path d=\"M 170 60 L 170 140\" stroke-dasharray=\"4,2\" /><circle cx=\"130\" cy=\"80\" r=\"3\" fill=\"#222\" /><circle cx=\"150\" cy=\"80\" r=\"3\" fill=\"#222\" /><circle cx=\"170\" cy=\"80\" r=\"3\" fill=\"#222\" /><text x=\"90\" y=\"45\">Bore</text><text x=\"90\" y=\"155\">Honing Stones</text><text x=\"290\" y=\"85\">Polishing Action</text><text x=\"290\" y=\"135\">Straightening</text></svg>",
    "n": "what is honing?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "139ad425": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"40\" text-anchor=\"middle\">LAPPING PROCESS</text>\n <!-- Workpiece -->\n <rect x=\"60\" y=\"70\" width=\"80\" height=\"40\" stroke=\"#222\" fill=\"none\"/>\n <text x=\"100\" y=\"95\" text-anchor=\"middle\">Workpiece</text>\n <!-- Lap Plate (Soft) -->\n <rect x=\"60\" y=\"120\" width=\"80\" height=\"40\" stroke=\"#222\" fill=\"none\"/>\n <text x=\"100\" y=\"145\" text-anchor=\"middle\">Soft Lap Plate</text>\n <!-- Loose Abrasive Particles -->\n <circle cx=\"90\" cy=\"75\" r=\"3\" fill=\"#222\" opacity=\"0.6\"/>\n <circle cx=\"100\" cy=\"80\" r=\"2.5\" fill=\"#222\" opacity=\"0.6\"/>\n <circle cx=\"110\" cy=\"78\" r=\"2.8\" fill=\"#222\" opacity=\"0.6\"/>\n <circle cx=\"95\" cy=\"130\" r=\"3\" fill=\"#222\" opacity=\"0.6\"/>\n <circle cx=\"105\" cy=\"135\" r=\"2.5\" fill=\"#222\" opacity=\"0.6\"/>\n <text x=\"100\" y=\"70\" text-anchor=\"middle\">Loose</text>\n <text x=\"100\" y=\"80\" text-anchor=\"middle\">Abrasive</text>\n <text x=\"100\" y=\"125\" text-anchor=\"middle\">Particles</text>\n <!-- Grinding Action Arrow -->\n <path d=\"M 140 90 L 160 90\" stroke=\"#222\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n <text x=\"150\" y=\"85\" text-anchor=\"middle\">Grinds Flat</text>\n <!-- Resulting Surface -->\n <path d=\"M 60 160 L 140 160 Q 150 170 160 160 L 240 160 Q 250 150 260 160 L 340 160\" stroke=\"#222\" fill=\"none\"/>\n <text x=\"200\" y=\"185\" text-anchor=\"middle\">Finest Surface</text>\n <!-- Arrowhead definition -->\n <defs>\n <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\">\n <polygon points=\"0 0, 10 3, 0 6\" fill=\"#222\"/>\n </marker>\n </defs>\n</svg>",
+   "n": "what is lapping?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "3aeaf18c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <text x=\"180\" y=\"30\" text-anchor=\"middle\">Surface before Superfinishing</text>\n  <!-- Rough surface profile -->\n  <path d=\"M10,100 L40,80 L60,90 L80,70 L100,85 L120,65 L140,75 L160,60 L180,70 L200,55 L220,65 L240,50 L260,60 L280,45 L300,55 L320,40 L340,50\" fill=\"none\" stroke=\"#222\"/>\n  <text x=\"180\" y=\"115\" text-anchor=\"middle\">Amorphous Smear Layer</text>\n  <!-- Oscillating tool path -->\n  <path d=\"M30,120 L70,110 L110,120 L150,110 L190,120 L230,110 L270,120 L310,110\" fill=\"none\" stroke=\"#222\" stroke-dasharray=\"4,2\"/>\n  <text x=\"180\" y=\"155\" text-anchor=\"middle\">Oscillating Fine Abrasive</text>\n  <!-- Resulting surface -->\n  <path d=\"M10,130 L40,128 L60,130 L80,129 L100,130 L120,129 L140,130 L160,129 L180,130 L200,129 L220,130 L240,129 L260,130 L280,129 L300,130 L320,129 L340,130\" fill=\"none\" stroke=\"#222\"/>\n  <text x=\"180\" y=\"175\" text-anchor=\"middle\">Mirror Finish (Long Life)</text>\n</svg>",
+   "n": "what is superfinishing?",
    "sub": "production",
    "at": "2026-11-01"
   }
