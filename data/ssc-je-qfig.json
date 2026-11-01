@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T04:40:33.510Z",
-  "cursor": 249,
-  "built": 238
+  "updatedAt": "2026-11-01T05:07:11.896Z",
+  "cursor": 252,
+  "built": 241
  },
  "figs": {
   "11434945": {
@@ -1431,6 +1431,24 @@
   "6d0fddb7": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- V-Block Wedges -->\n  <path d=\"M40,180 L100,100 L160,180 Z\" />\n  <path d=\"M260,180 L200,100 L140,180 Z\" />\n  <!-- Oval Workpiece -->\n  <ellipse cx=\"180\" cy=\"100\" rx=\"50\" ry=\"30\" />\n  <!-- Dial Indicator Base -->\n  <rect x=\"260\" y=\"170\" width=\"80\" height=\"40\" />\n  <!-- Dial Indicator Needle (showing zero deflection) -->\n  <line x1=\"290\" y1=\"170\" x2=\"320\" y2=\"150\" stroke-width=\"2\" />\n  <circle cx=\"320\" cy=\"150\" r=\"4\" fill=\"#222\" />\n  <!-- Labels -->\n  <text x=\"180\" y=\"90\" text-anchor=\"middle\">Oval Workpiece</text>\n  <text x=\"30\" y=\"140\">V-Block</text>\n  <text x=\"250\" y=\"195\">Dial Indicator (Zero Reading)</text>\n  <!-- Concept Arrow -->\n  <line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"40\" stroke-dasharray=\"4,2\" />\n</svg>",
    "n": "why do even-lobed workpieces pass a v-block roundness check incorrectly?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "6a68aa13": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Thread Accuracy Check</text><path d=\"M40 60 L100 60 L100 30 L140 30 L140 60 L200 60 L200 35 L180 35 L180 60\" fill=\"none\"/><path d=\"M30 70 L210 70\" stroke-dasharray=\"4,2\"/><text x=\"120\" y=\"55\" text-anchor=\"middle\">Pitch Diameter</text><text x=\"120\" y=\"85\" text-anchor=\"middle\">Effective Diameter</text><path d=\"M160 70 L190 70 L190 45 L170 45 L170 70 Z\" fill=\"none\"/><text x=\"165\" y=\"62\" text-anchor=\"middle\">Wire</text><path d=\"M30 85 L210 85\" stroke-dasharray=\"4,2\"/><text x=\"120\" y=\"105\" text-anchor=\"middle\">Major Diameter</text><text x=\"120\" y=\"135\" text-anchor=\"middle\">Minor Diameter</text><path d=\"M30 95 L210 95\" stroke-dasharray=\"4,2\"/><text x=\"120\" y=\"165\" text-anchor=\"middle\">Plug Gauge (Internal)</text><text x=\"120\" y=\"185\" text-anchor=\"middle\">Ring Gauge (External)</text></svg>",
+   "n": "how is the accuracy of a screw thread checked?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "98e3d22d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Three-Wire Method Setup</text><path d=\"M10,100 L350,100\" stroke-dasharray=\"4,2\"/><circle cx=\"100\" cy=\"100\" r=\"8\"/><circle cx=\"140\" cy=\"100\" r=\"8\"/><circle cx=\"180\" cy=\"100\" r=\"8\"/><circle cx=\"220\" cy=\"100\" r=\"8\"/><circle cx=\"260\" cy=\"100\" r=\"8\"/><circle cx=\"300\" cy=\"100\" r=\"8\"/><path d=\"M92,108 L108,108 M132,108 L148,108 M172,108 L188,108 M212,108 L228,108 M252,108 L268,108\"/><path d=\"M92,92 L108,92 M132,92 L148,92 M172,92 L188,92 M212,92 L228,92 M252,92 L268,92\"/><path d=\"M92,112 L108,112 M132,112 L148,112 M172,112 L188,112 M212,112 L228,112 M252,112 L268,112\"/><path d=\"M90,100 L100,100 M140,100 L150,100 M180,100 L190,100 M220,100 L230,100 M260,100 L270,100\"/><path d=\"M100,100 L140,100 M140,100 L180,100 M180,100 L220,100 M220,100 L260,100\"/><path d=\"M95,100 L105,100 M145,100 L155,100 M185,100 L195,100 M225,100 L235,100 M265,100 L275,100\"/><text x=\"40\" y=\"105\">M (Measuring Over)</text><circle cx=\"80\" cy=\"140\" r=\"10\"/><path d=\"M70,140 L90,140 M70,160 L90,160 M70,180 L90,180 M70,200 L90,200\"/><text x=\"35\" y=\"145\">d (Wire Diameter)</text><path d=\"M280,100 L300,100 M280,120 L300,120 M280,140 L300,140 M280,160 L300,160\"/><text x=\"275\" y=\"145\">P (Pitch)</text><path d=\"M100,100 L100,140 M140,100 L140,140 M180,100 L180,140 M220,100 L220,140\"/><text x=\"165\" y=\"190\">Effective Diameter E</text></svg>",
+   "n": "write the three-wire formula for the effective diameter of a thread.",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "29ed6dc6": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Gear Tooth Profile</text><path d=\"M40,100 Q70,60 100,100 T160,100\" fill=\"none\" stroke=\"#222\"/><circle cx=\"100\" cy=\"100\" r=\"3\" fill=\"#222\"/><text x=\"95\" y=\"95\">Tooth</text><path d=\"M40,100 L40,160 M100,100 L100,160 M160,100 L160,160\" stroke=\"#222\"/><line x1=\"40\" y1=\"160\" x2=\"160\" y2=\"160\" stroke=\"#222\"/><text x=\"105\" y=\"175\">Backlash</text><path d=\"M30,80 L30,120 M170,80 L170,120\" stroke=\"#222\"/><text x=\"25\" y=\"100\">Tooth Thickness</text><path d=\"M40,60 Q60,40 80,60 T120,60 T160,60\" fill=\"none\" stroke=\"#222\"/><text x=\"105\" y=\"55\">Base Pitch</text></svg>",
+   "n": "what is measured in gear metrology?",
    "sub": "production",
    "at": "2026-11-01"
   }
