@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T19:21:51.144Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing figures immediately as they block content utility. MainsFresh is required to generate fresh daily material since papers/questions are absent from files. MetaLearn produced zero fixes in the last two runs, so it will be placed last to avoid starving its potential inputs while prioritizing high-impact gaps.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (181 total)",
-       "text": "What is a roll pass? | Name the defect edge cracking in hot rolling. | What is the defect called alligatoring in rolling?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T19:43:21.260Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -678,8 +628,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T02:16:35.450Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to resolve broken visual assets blocking content consumption. Once figures are stable, MockPapers should address the zeroed output from previous runs to rebuild core study material. ExamPatterns and MainsFresh follow to diversify gaps while Invention/MetaLearn remain last as they have produced zero fixes recently and can be starved without immediate impact.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (224 total)",
+       "text": "How are cutting forces measured in machining research? | Name the three common grinding machines. | What is honing?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T01:49:18.208Z",
+ "lastRun": "2026-11-01T02:16:35.450Z",
  "model": "qwen3.5:9b"
 }
