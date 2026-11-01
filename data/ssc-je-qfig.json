@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T08:30:21.580Z",
-  "cursor": 279,
-  "built": 264
+  "updatedAt": "2026-11-01T08:59:44.902Z",
+  "cursor": 282,
+  "built": 267
  },
  "figs": {
   "11434945": {
@@ -11,6 +11,12 @@
    "n": "what is a gear coupling and where is it used?",
    "sub": "design",
    "at": "2026-10-31"
+  },
+  "33687437": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Clamp Force Direction</text><rect x=\"40\" y=\"40\" width=\"20\" height=\"160\" rx=\"2\"/><rect x=\"70\" y=\"40\" width=\"20\" height=\"160\" rx=\"2\"/><rect x=\"100\" y=\"40\" width=\"20\" height=\"160\" rx=\"2\"/><text x=\"35\" y=\"120\" text-anchor=\"end\">Work Part</text><text x=\"35\" y=\"190\" text-anchor=\"end\">Locators (Fixed)</text><path d=\"M 140 40 L 140 200\" stroke-dasharray=\"4,2\"/><circle cx=\"140\" cy=\"40\" r=\"3\"/><circle cx=\"140\" cy=\"200\" r=\"3\"/><text x=\"150\" y=\"120\" text-anchor=\"start\">Clamp</text><path d=\"M 260 40 L 260 200\" stroke-dasharray=\"4,2\"/><circle cx=\"260\" cy=\"40\" r=\"3\"/><circle cx=\"260\" cy=\"200\" r=\"3\"/><text x=\"270\" y=\"120\" text-anchor=\"start\">Incorrect</text><path d=\"M 280 40 L 280 200\" stroke-dasharray=\"4,2\"/><circle cx=\"280\" cy=\"40\" r=\"3\"/><circle cx=\"280\" cy=\"200\" r=\"3\"/><text x=\"290\" y=\"120\" text-anchor=\"start\">Distortion</text><path d=\"M 300 40 L 300 200\" stroke-dasharray=\"4,2\"/><circle cx=\"300\" cy=\"40\" r=\"3\"/><circle cx=\"300\" cy=\"200\" r=\"3\"/><text x=\"310\" y=\"120\" text-anchor=\"start\">No Support</text><path d=\"M 320 40 L 320 200\" stroke-dasharray=\"4,2\"/><circle cx=\"320\" cy=\"40\" r=\"3\"/><circle cx=\"320\" cy=\"200\" r=\"3\"/><text x=\"330\" y=\"120\" text-anchor=\"start\">Loose</text></svg>",
+   "n": "why must clamps in a fixture act against the locators, not the work alone?",
+   "sub": "production",
+   "at": "2026-11-01"
   },
   "44770959": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Real Part Silhouette -->\n  <path d=\"M40,80 L70,80 L70,40 L90,40 L90,60 L110,60 L110,30 L150,30 L150,80 L200,80 L200,120 L150,120 L150,140 L110,140 L110,160 L90,160 L90,140 L70,140 L70,80 Z\" stroke-width=\"1.5\"/>\n  <!-- Ideal Outline Overlay -->\n  <path d=\"M40,82 L70,82 L70,38 L90,38 L90,58 L110,58 L110,28 L150,28 L150,80 L200,80 L200,120 L150,120 L150,140 L110,140 L110,160 L90,160 L90,140 L70,140 L70,80 Z\" stroke-width=\"1.5\" stroke-dasharray=\"3,2\"/>\n  <!-- Projection Screen -->\n  <rect x=\"10\" y=\"10\" width=\"340\" height=\"200\" fill=\"none\" stroke=\"#222\" stroke-width=\"1\" opacity=\"0.3\"/>\n  <!-- Magnified Shadow on Screen -->\n  <path d=\"M50,90 L80,90 L80,50 L100,50 L100,70 L120,70 L120,40 L160,40 L160,90 L210,90 L210,130 L160,130 L160,150 L120,150 L120,170 L100,170 L100,150 L80,150 L80,90 Z\" stroke-width=\"1.5\"/>\n  <!-- Ideal Outline on Screen -->\n  <path d=\"M50,92 L80,92 L80,48 L100,48 L100,68 L120,68 L120,38 L160,38 L160,90 L210,90 L210,130 L160,130 L160,150 L120,150 L120,170 L100,170 L100,150 L80,150 L80,90 Z\" stroke-width=\"1.5\" stroke-dasharray=\"3,2\"/>\n  <!-- Light Source -->\n  <circle cx=\"20\" cy=\"20\" r=\"4\" fill=\"#222\"/>\n  <!-- Rays -->\n  <line x1=\"24\" y1=\"24\" x2=\"70\" y2=\"80\" stroke-width=\"1\" opacity=\"0.5\"/>\n  <line x1=\"24\" y1=\"24\" x2=\"160\" y2=\"90\" stroke-width=\"1\" opacity=\"0.5\"/>\n  <!-- Labels -->\n  <text x=\"30\" y=\"180\">Real Part</text>\n  <text x=\"170\" y=\"180\">Magnified Shadow</text>\n  <text x=\"260\" y=\"180\">Ideal Outline</text>\n  <text x=\"15\" y=\"30\">Light Source</text>\n  <text x=\"220\" y=\"30\">Screen</text>\n</svg>",
@@ -1587,6 +1593,18 @@
   "b5921be0": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Vee Block Outline -->\n  <path d=\"M40,80 L100,140 L160,80 L220,140 L280,80 L340,140 L340,160 L40,160 Z\" />\n  <!-- Vee Grooves -->\n  <path d=\"M100,140 L160,80\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M220,140 L280,80\" stroke-dasharray=\"2,2\"/>\n  <!-- Workpiece -->\n  <circle cx=\"200\" cy=\"110\" r=\"35\" />\n  <!-- Axis Line -->\n  <line x1=\"40\" y1=\"110\" x2=\"340\" y2=\"110\" stroke-dasharray=\"2,2\"/>\n  <!-- Labels -->\n  <text x=\"180\" y=\"65\" text-anchor=\"middle\">Vee Block</text>\n  <text x=\"200\" y=\"195\" text-anchor=\"middle\">Round Part</text>\n  <text x=\"345\" y=\"115\" text-anchor=\"start\">Axis</text>\n</svg>",
    "n": "what is a veee locator used for?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "b6f4d8df": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"80\" width=\"140\" height=\"80\" rx=\"5\"/>\n <line x1=\"60\" y1=\"90\" x2=\"200\" y2=\"90\" stroke-width=\"3\"/>\n <line x1=\"60\" y1=\"110\" x2=\"200\" y2=\"110\" stroke-width=\"3\"/>\n <line x1=\"60\" y1=\"130\" x2=\"200\" y2=\"130\" stroke-width=\"3\"/>\n <text x=\"55\" y=\"95\">X</text>\n <text x=\"55\" y=\"115\">Y</text>\n <text x=\"55\" y=\"135\">Z</text>\n <path d=\"M 200 90 L 260 90 M 200 110 L 260 110 M 200 130 L 260 130\"/>\n <rect x=\"260\" y=\"85\" width=\"40\" height=\"10\" rx=\"2\"/>\n <text x=\"265\" y=\"97\">NC CODE</text>\n <line x1=\"100\" y1=\"60\" x2=\"100\" y2=\"80\" stroke-width=\"3\"/>\n <rect x=\"80\" y=\"40\" width=\"40\" height=\"20\" rx=\"2\"/>\n <text x=\"90\" y=\"55\">PUNCH</text>\n <line x1=\"100\" y1=\"160\" x2=\"100\" y2=\"180\" stroke-width=\"3\"/>\n <rect x=\"80\" y=\"140\" width=\"40\" height=\"20\" rx=\"2\"/>\n <text x=\"90\" y=\"155\">CAM</text>\n <line x1=\"160\" y1=\"60\" x2=\"160\" y2=\"80\" stroke-width=\"3\"/>\n <rect x=\"140\" y=\"40\" width=\"40\" height=\"20\" rx=\"2\"/>\n <text x=\"150\" y=\"55\">MANUAL</text>\n <line x1=\"160\" y1=\"160\" x2=\"160\" y2=\"180\" stroke-width=\"3\"/>\n <rect x=\"140\" y=\"140\" width=\"40\" height=\"20\" rx=\"2\"/>\n <text x=\"150\" y=\"155\">NC</text>\n</svg>",
+   "n": "what is numerically controlled (nc) machining?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "a50921ea": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"60\" width=\"80\" height=\"60\" stroke-dasharray=\"4,2\"/>\n <text x=\"80\" y=\"95\" text-anchor=\"middle\">NC Controller</text>\n <path d=\"M 120 100 L 120 140 M 120 100 L 160 100\" stroke-width=\"3\"/>\n <rect x=\"120\" y=\"60\" width=\"80\" height=\"60\" stroke-dasharray=\"4,2\"/>\n <text x=\"160\" y=\"95\" text-anchor=\"middle\">CNC Controller</text>\n <circle cx=\"120\" cy=\"130\" r=\"12\"/>\n <circle cx=\"160\" cy=\"130\" r=\"12\"/>\n <path d=\"M 120 130 L 160 130\" stroke-width=\"2\"/>\n <text x=\"140\" y=\"150\" text-anchor=\"middle\">Computer</text>\n <text x=\"140\" y=\"170\" text-anchor=\"middle\">Brain / Memory</text>\n</svg>",
+   "n": "what does cnc add to nc?",
    "sub": "production",
    "at": "2026-11-01"
   }
