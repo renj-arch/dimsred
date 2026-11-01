@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T23:07:17.514Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures must lead to resolve the 81 open faults where figures are missing. Since MockPapers produced 0 in the last two runs, it is moved to the end of the queue despite being a high-priority agent for unfinished standing goals like incomplete papers. MetaLearn and Invention follow to address pending ideas and ensure content freshness, while MainsFresh is skipped as no mains-specific gaps were flagged in the current state.",
-    "actions": [
-     "BankFigures",
-     "ExamPatterns",
-     "MetaLearn",
-     "Invention",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (207 total)",
-       "text": "Explain electrochemical machining (ECM). | What is ultrasonic machining (USM)? | How does laser beam machining (LBM) remove metal?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Machine Design (205 in pool)",
-       "text": "Machine Design"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T23:25:38.504Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -767,8 +706,68 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T05:57:56.501Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 64,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 64
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "Flowchart",
+       "fix": "Runtime: missing ) after argument list",
+       "kind": "runtime"
+      },
+      {
+       "page": "neet/chapters/chemistry-chapter-1-some-basic-concepts-of-chemistry.html",
+       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+      },
+      {
+       "page": "neet/chapters/chemistry-chapter-10-s-block-elements.html",
+       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+      },
+      {
+       "page": "neet/chapters/chemistry-chapter-11-p-block-elements-group-13-14.html",
+       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+      },
+      {
+       "page": "neet/chapters/chemistry-chapter-12-organic-chemistry-some-basic-principles.html",
+       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+      },
+      {
+       "page": "neet/chapters/chemistry-chapter-13-hydrocarbons.html",
+       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+      },
+      {
+       "page": "neet/chapters/chemistry-chapter-14-environmental-chemistry.html",
+       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+      },
+      {
+       "page": "neet/chapters/chemistry-chapter-15-solid-state.html",
+       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+      },
+      {
+       "page": "neet/chapters/chemistry-chapter-16-solutions.html",
+       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T05:56:29.974Z",
+ "lastRun": "2026-11-01T05:57:56.501Z",
  "model": "qwen3.5:9b"
 }
