@@ -647,60 +647,55 @@
    ]
   },
   {
-   "at": "2026-11-01T05:57:56.501Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 64,
+   "at": "2026-11-01T06:31:51.363Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "selfcheck",
-     "count": 64
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
     }
    ],
    "details": [
     {
-     "agent": "selfcheck",
+     "agent": "bankfigures",
      "fixes": [
       {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      },
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (248 total)",
+       "text": "How does magnetic particle inspection work and what does it find? | What does a liquid-penetrant test detect? | What can eddy-current testing measure?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
       {
-       "page": "Flowchart",
-       "fix": "Runtime: missing ) after argument list",
-       "kind": "runtime"
-      },
-      {
-       "page": "neet/chapters/chemistry-chapter-1-some-basic-concepts-of-chemistry.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
-      {
-       "page": "neet/chapters/chemistry-chapter-10-s-block-elements.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
-      {
-       "page": "neet/chapters/chemistry-chapter-11-p-block-elements-group-13-14.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
-      {
-       "page": "neet/chapters/chemistry-chapter-12-organic-chemistry-some-basic-principles.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
-      {
-       "page": "neet/chapters/chemistry-chapter-13-hydrocarbons.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
-      {
-       "page": "neet/chapters/chemistry-chapter-14-environmental-chemistry.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
-      {
-       "page": "neet/chapters/chemistry-chapter-15-solid-state.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
-      },
-      {
-       "page": "neet/chapters/chemistry-chapter-16-solutions.html",
-       "fix": "Nav: \"NEET\" → /neet/ (was ../index.html)"
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Power Plant Engineering (274 in pool)",
+       "text": "Power Plant Engineering"
       }
      ]
     }

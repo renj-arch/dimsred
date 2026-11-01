@@ -250,8 +250,11 @@
 
             <button class="action-btn secondary" style="padding:14px;font-size:.95em;background:rgba(99,102,241,.12);color:var(--purple);border:1px solid rgba(99,102,241,.2);margin-bottom:6px" onclick="startStaticGk()">📚 Static GK — All 26 Categories</button>
             <div style="display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
-                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" style="accent-color:var(--purple);width:14px;height:14px"> 📚 Include Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
-                <button id="upscToggle" onclick="toggleUpscOnly()" title="Only UPSC-relevant topics — Polity, History, Geography, Economy, Environment, Science & Tech, IR, Ethics and related sub-topics (from upsc_sorted_topics.csv)" style="padding:3px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.72em;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit">🎯 UPSC only</button>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="archiveToggle" checked style="accent-color:var(--purple);width:14px;height:14px"> 📚 Archive <span id="archiveStatus" style="color:var(--emerald);font-size:.72em">loaded</span></label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="courseToggle" checked style="accent-color:var(--emerald);width:14px;height:14px"> 📖 Course Lessons</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="genToggle" checked style="accent-color:var(--cyan);width:14px;height:14px"> ⚡ Generators</label>
+                <label style="display:flex;align-items:center;gap:6px;font-size:.75em;color:var(--text-muted);cursor:pointer;user-select:none"><input type="checkbox" id="pibToggle" checked style="accent-color:var(--amber);width:14px;height:14px"> 📰 PIB/CA Feed</label>
+                <button id="upscToggle" onclick="toggleUpscOnly()" title="Only UPSC-relevant topics — uses deterministic exam-scope ground check (examScope=exam). Topics without syllabus anchors are excluded." style="padding:3px 12px;border-radius:100px;border:1px solid var(--border);background:transparent;color:var(--text-muted);font-size:.72em;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit">🎯 UPSC only</button>
             </div>
 
             <div style="margin:4px 0 8px;text-align:center;font-size:.78em;font-weight:700;color:var(--text-sec)">🎯 Pick one or more topics:</div>
@@ -327,6 +330,50 @@
                 if(state.questions.length>0 && window.showQuestion) showQuestion();
                 else if(state.restartFn) state.restartFn();
             }</script>
+            <script>
+            // Content source filter — central gate used by all question loaders.
+            // Reads the four checkboxes (Archive, Course Lessons, Generators, PIB/CA Feed)
+            // and returns true only if the question's source matches an enabled checkbox.
+            function _passesContentFilter(q) {
+                if (!q) return false;
+                var useArchive = document.getElementById('archiveToggle')?.checked !== false;
+                var useCourse = document.getElementById('courseToggle')?.checked !== false;
+                var useGen = document.getElementById('genToggle')?.checked !== false;
+                var usePib = document.getElementById('pibToggle')?.checked !== false;
+                var src = (q.source || q._src || '').toLowerCase();
+                var wikiCat = (q._wikiCat || '').toLowerCase();
+                var subject = (q.subject || '').toLowerCase();
+                var type = (q.type || '').toLowerCase();
+                // PIB/CA Feed items
+                if (usePib && (src === 'pib' || src === 'news' || src === 'current affairs' || subject === 'pib releases' || subject === 'current affairs')) return true;
+                // Archive items (from data/questions/... files)
+                if (useArchive && (src === 'wiki' || src === 'archive' || subject === 'archive')) return true;
+                // Generators (wiki-based synthetic questions)
+                if (useGen && (wikiCat || src === 'generator' || type === 'mcq' || type === 'qa')) return true;
+                // Course Lessons (static MCQ from lesson pages)
+                if (useCourse && (src === 'course' || src === 'lesson' || subject.includes('lesson'))) return true;
+                // Default: allow if no specific source detected (backward compat)
+                if (!src && !wikiCat && !subject) return true;
+                return false;
+            }
+            // Apply content filter to state.questions in-place
+            function _applyContentFilter() {
+                if (!window.state || !state.questions) return;
+                var fullPool = state._fullPool || state.questions.slice();
+                state.questions = fullPool.filter(_passesContentFilter);
+                state.idx = 0;
+                state._fullPool = fullPool;
+                if (state.questions.length > 0 && window.showQuestion) showQuestion();
+                else if (state.restartFn) state.restartFn();
+            }
+            // Attach to checkboxes
+            document.addEventListener('DOMContentLoaded', function() {
+                ['archiveToggle','courseToggle','genToggle','pibToggle'].forEach(function(id) {
+                    var el = document.getElementById(id);
+                    if (el) el.addEventListener('change', _applyContentFilter);
+                });
+            });
+            </script>
             <div id="timeFilterRow" style="display:none;gap:6px;align-items:center;justify-content:center;margin-top:4px;flex-wrap:wrap">
                 <span style="font-size:.7em;color:var(--text-muted)">Period:</span>
                 <span class="period-chip active" data-val="all" onclick="setTimeFilter('all')">All Time</span>
@@ -8058,28 +8105,48 @@ function prevQuestion() {
                 if (eq.q) existingSet[eq.q] = true;
                 if (eq.a) existingSet[eq.a] = true;
             }
-            // No artificial cap — keep round-robin until every generator is
-            // exhausted (several consecutive passes add nothing new), with only
-            // a high safety ceiling to guard against a pathological generator.
-            var emptyRounds = 0;
-            while (emptyRounds < 20 && added < 100000) {
-                var addedThisRound = 0;
-                for (var ci = 0; ci < allCats.length && added < 100000; ci++) {
-                    try {
-                        var q = GK_GENERATORS[allCats[ci]]();
-                        if (!q || !q.q || !q.a) continue;
-                        if (existingSet[q.q] || existingSet[q.a]) continue;
-                        if (_isSeen(q)) continue;
-                        if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
-                        existingSet[q.q] = true;
-                        existingSet[q.a] = true;
-                        q._wikiCat = allCats[ci];
-                        if (!q.subject) q.subject = GK_SUBJECT_MAP[allCats[ci]] || 'General Knowledge';
-                        state.questions.push(q);
-                        added++;
-                        addedThisRound++;
-                    } catch(e) {}
-                }
+            // Load static MCQs from course lesson pages (8 lessons, 149 questions)
+            var useCourse = document.getElementById('courseToggle')?.checked !== false;
+            if (useCourse) {
+                _loadCourseStaticQuestions(function(courseQs) {
+                    courseQs.forEach(function(q) {
+                        if (q.q && q.a && !existingSet[q.q] && !existingSet[q.a]) {
+                            q._src = 'course';
+                            q._wikiCat = 'course-lesson';
+                            existingSet[q.q] = true;
+                            existingSet[q.a] = true;
+                            state.questions.push(q);
+                            added++;
+                        }
+                    });
+                    _continueGeneration();
+                });
+            } else {
+                _continueGeneration();
+            }
+            function _continueGeneration() {
+                // No artificial cap — keep round-robin until every generator is
+                // exhausted (several consecutive passes add nothing new), with only
+                // a high safety ceiling to guard against a pathological generator.
+                var emptyRounds = 0;
+                while (emptyRounds < 20 && added < 100000) {
+                    var addedThisRound = 0;
+                    for (var ci = 0; ci < allCats.length && added < 100000; ci++) {
+                        try {
+                            var q = GK_GENERATORS[allCats[ci]]();
+                            if (!q || !q.q || !q.a) continue;
+                            if (existingSet[q.q] || existingSet[q.a]) continue;
+                            if (_isSeen(q)) continue;
+                            if (!q.fact) q.fact = q.q + ' ' + (q.a || '');
+                            existingSet[q.q] = true;
+                            existingSet[q.a] = true;
+                            q._wikiCat = allCats[ci];
+                            if (!q.subject) q.subject = GK_SUBJECT_MAP[allCats[ci]] || 'General Knowledge';
+                            state.questions.push(q);
+                            added++;
+                            addedThisRound++;
+                        } catch(e) {}
+                    }
                 if (addedThisRound > 0) emptyRounds = 0;
                 else emptyRounds++;
             }
@@ -8093,6 +8160,66 @@ function prevQuestion() {
             } else {
                 shuffleArray(state.questions);
             }
+            // Apply content source filter (Archive, Course, Generators, PIB/CA)
+            _applyContentFilter();
+        }
+        
+        // Load static MCQs from course lesson pages (8 lessons, 149 questions)
+        // These are embedded in HTML files like cgl/course/.../lesson-*.html
+        function _loadCourseStaticQuestions(cb) {
+            var lessonUrls = [
+                'cgl/course/reasoning/lesson-coding-decoding.html',
+                'cgl/course/reasoning/lesson-analogy.html',
+                'cgl/course/reasoning/lesson-series.html',
+                'cgl/course/reasoning/lesson-classification.html',
+                'cgl/course/quant/lesson-number-system.html',
+                'cgl/course/quant/lesson-algebra.html',
+                'cgl/course/quant/lesson-geometry.html',
+                'cgl/course/english/lesson-spotting-errors.html'
+            ];
+            var allQ = [];
+            var loaded = 0;
+            lessonUrls.forEach(function(url) {
+                var xhr = new XMLHttpRequest();
+                xhr.onload = function() {
+                    loaded++;
+                    if (xhr.status === 200) {
+                        var html = xhr.responseText;
+                        // Extract quiz cards from the lesson HTML
+                        var qCards = html.match(/<div class="q-card"[^>]*>([\s\S]*?)<\/div>\s*<\/div>/g);
+                        if (qCards) {
+                            qCards.forEach(function(card) {
+                                var qMatch = card.match(/<div class="q-text"[^>]*>([\s\S]*?)<\/div>/);
+                                var aMatch = card.match(/<div class="q-soln"[^>]*>([\s\S]*?)<\/div>/);
+                                var optMatches = card.matchAll(/<div class="q-opt"[^>]*>([\s\S]*?)<\/div>/g);
+                                if (qMatch && aMatch) {
+                                    var q = qMatch[1].replace(/<[^>]+>/g, '').trim();
+                                    var a = aMatch[1].replace(/<[^>]+>/g, '').replace(/^Answer:?\s*/i, '').trim();
+                                    var opts = [];
+                                    for (var om of optMatches) {
+                                        var opt = om[1].replace(/<[^>]+>/g, '').trim();
+                                        if (opt) opts.push(opt);
+                                    }
+                                    if (q && a) {
+                                        allQ.push({q: q, a: a, opts: opts, _src: 'course', subject: 'Course Lesson', type: 'mcq'});
+                                    }
+                                }
+                            });
+                        }
+                    }
+                    if (loaded === lessonUrls.length) {
+                        cb(allQ);
+                    }
+                };
+                xhr.open('GET', url + '?t=' + Date.now(), true);
+                xhr.send();
+            });
+            var checkDone = setInterval(function() {
+                if (loaded === lessonUrls.length) {
+                    clearInterval(checkDone);
+                    cb(allQ);
+                }
+            }, 100);
         }
         
 
