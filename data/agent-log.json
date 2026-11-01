@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T23:25:38.504Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visuals blocking study flow. MockPapers should follow immediately to address the 81 open faults, as incomplete papers are a primary user blocker. MetaLearn is scheduled last because it has produced zero fixes in the last two runs and likely requires new input data before it can contribute effectively.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (210 total)",
-       "text": "How does abrasive jet machining (AJM) cut materials? | Name the six standard angles of a single-point tool in the ASA system. | How do the ORS angles differ from the ASA set?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "7 fresh mock questions on Production Technology (212 in pool)",
-       "text": "Production Technology"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T23:51:57.698Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -761,8 +700,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T06:51:38.563Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/syllabus files are missing, MetaLearn should immediately generate foundational study materials to fill these voids. MockPapers and ExamPatterns will follow once core content exists to ensure zero-broken-page status. Invention is deferred as we prioritize fixing existing gaps over new ideas.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (251 total)",
+       "text": "Name the three principal families of additive manufacturing by material feeding. | What is FDM and for what is it used? | What is SLA and how does it work?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Strength of Materials (284 in pool)",
+       "text": "Strength of Materials"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T06:31:51.363Z",
+ "lastRun": "2026-11-01T06:51:38.563Z",
  "model": "qwen3.5:9b"
 }
