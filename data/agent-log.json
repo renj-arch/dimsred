@@ -1,39 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T11:17:36.945Z",
-   "model": "batiai/qwen3.8-27b:iq3",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "archive-writer",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "archive-writer",
-     "fixes": [
-      {
-       "page": "archive (Meteorology & Climate / Meteorology & Climate)",
-       "fix": "Explained \"San Jose, officially the City of San Jose (_____: Lungsod ng San Jose; Ilocano: Siudad ti \"",
-       "text": "1) VERDICT: The correct fill-in is Filipino. 2) WHY: The official name of Philippine cities follows the national language convention, where 'Lungsod' is the standard Filipino term for 'City'. While Ilocano and Pangasinan are regional languages spoken in Nueva Ecija, the primary official designation uses Filipino. 3) TRAPS: Do not confuse regional linguistic presence with official administrative nomenclature. The other options are specific regional dialects, not the national standard used in the "
-      },
-      {
-       "page": "archive (Meteorology & Climate / Meteorology & Climate)",
-       "fix": "Explained \"According to the _____ census, it has a population of 156,714 people, making it the second\"",
-       "text": "VERDICT: 2024. WHY: The specific population figure of 156,714 for this Nueva Ecija city is explicitly tied to the 2024 census data in the source text. TRAPS: Do not confuse this with older census years; the prompt’s precise number anchors it to the latest 2024 count. HOOK: Remember 2024 as the 'latest count' for this second-largest city. Exam trap: If options include 2020 or 2015, discard them immediately because the population figure is unique to the 2024 release."
-      },
-      {
-       "page": "archive (Meteorology & Climate / Meteorology & Climate)",
-       "fix": "Explained \"According to the 2024 census, it has a population of 156,714 people, making it the second \"",
-       "text": "VERDICT: Cabanatuan is the correct answer. WHY: Cabanatuan is the most populous city in Nueva Ecija, making the city in question (likely Palayan or similar, though the text specifies the second city) the runner-up. TRAPS: Confusing provincial capitals with population rankings; Cabanatuan is the capital and largest, while the second city is distinct. HOOK: Remember Cabanatuan as the 'C' for Capital and Crowd. Exam trap: Do not confuse population rank with geographic size; always verify census dat"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T13:03:47.618Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -788,8 +755,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T20:23:25.702Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing diagrams immediately as unfinished standing goals. MainsFresh is highly productive today (3 fixes in last run) and should continue filling content gaps while MetaLearn/ExamPatterns are starved (0 output for 2+ runs), so they will be scheduled later if inputs arrive. The plan prioritizes BankFigures first, followed by MainsFresh to maintain momentum on critical faults.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "MetaLearn",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (319 total)",
+       "text": "What is reaming and when is a hand reamer used? | What is the difference between a hand reamer and a machine reamer? | What is the use of a scraper?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T19:56:56.413Z",
+ "lastRun": "2026-11-01T20:23:25.702Z",
  "model": "qwen3.5:9b"
 }
