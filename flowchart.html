@@ -20,6 +20,29 @@ header h1 b{color:var(--purple)}
 .btn:disabled{opacity:.35;cursor:default}
 .btn.on{color:var(--cyan);border-color:var(--cyan);background:rgba(34,211,238,.08)}
 .searchbar{flex:1 1 240px;max-width:430px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;color:var(--txt);padding:7px 11px;font-size:13px;outline:none}
+
+/* Relationship Dialog Styles */
+.rel-dialog{position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px;display:none}
+.rel-dialog.on{display:flex}
+.rel-dialog .panel{background:var(--bg-card);border:1px solid var(--line);border-radius:16px;max-width:560px;max-height:80vh;overflow:auto;color:var(--txt)}
+.rel-dialog .head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg-card);z-index:1}
+.rel-dialog .title{font-size:16px;font-weight:800;color:var(--txt)}
+.rel-dialog .close{background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:4px;line-height:1}
+.rel-dialog .close:hover{color:var(--rose)}
+.rel-dialog .body{padding:16px;max-height:60vh;overflow-y:auto}
+.rel-dialog .section{margin-bottom:16px}
+.rel-dialog .section-title{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--cyan);margin-bottom:8px}
+.rel-dialog .rel-line{display:flex;align-items:center;gap:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--line);border-radius:8px;margin-bottom:6px;font-size:12.5px}
+.rel-dialog .rel-type{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:2px 8px;border-radius:100px;background:rgba(167,139,250,.12);color:var(--purple);white-space:nowrap}
+.rel-dialog .rel-desc{flex:1;font-size:12.5px;color:var(--txt);line-height:1.5}
+.rel-dialog .entity-name{font-weight:600;color:var(--txt)}
+.rel-dialog .source-badge{font-size:9.5px;color:var(--txt2);background:var(--bg);border:1px solid var(--line);border-radius:100px;padding:2px 8px;margin-top:4px;display:inline-block}
+.rel-dialog .center-info{display:flex;align-items:center;gap:10px;padding:12px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.2);border-radius:10px;margin-bottom:16px}
+.rel-dialog .center-avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,var(--purple),var(--emerald));display:flex;align-items:center;justify-content:center;font-weight:800;font-size:14px;color:#fff}
+.rel-dialog .center-name{font-weight:700;font-size:15px}
+.rel-dialog .center-type{font-size:11px;color:var(--txt2);text-transform:uppercase}
+.rel-dialog .actions{display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)}
+.rel-dialog .btn{flex:1}
 .searchbar:focus{border-color:var(--purple)}
 .crumb{margin:10px 14px 2px;font-size:12.5px;color:var(--txt2);overflow-x:auto;white-space:nowrap}
 .crumb a{color:var(--cyan);cursor:pointer;text-decoration:none}
@@ -159,6 +182,21 @@ footer{margin:18px 12px 26px;font-size:11.5px;color:var(--txt2);max-width:920px;
     </div>
   </div>
 </div>
+<!-- Relationship Dialog -->
+<div id="relDialog" class="rel-dialog" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.8);z-index:100;display:flex;align-items:center;justify-content:center;padding:20px">
+  <div class="panel" style="background:var(--bg-card);border:1px solid var(--line);border-radius:16px;max-width:560px;max-height:80vh;overflow:auto;color:var(--txt)">
+    <div class="head" style="display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg-card);z-index:1">
+      <span class="title" style="font-size:16px;font-weight:800;color:var(--txt)">Relationship</span>
+      <button class="close" id="relClose" style="background:none;border:none;color:var(--txt2);font-size:20px;cursor:pointer;padding:4px;line-height:1">&#10005;</button>
+    </div>
+    <div class="body" style="padding:16px;max-height:60vh;overflow-y:auto" id="relBody"></div>
+    <div class="actions" style="display:flex;gap:8px;margin-top:16px;padding-top:12px;border-top:1px solid var(--line)">
+      <button class="btn" id="relNavigate" style="flex:1;background:var(--purple);border-color:var(--purple);color:#fff">Make Center</button>
+      <button class="btn" id="relCloseBtn" style="flex:1;background:var(--bg2);border-color:var(--line)">Close</button>
+    </div>
+  </div>
+</div>
+
 <footer>Flowchart cheat sheet built from your timeline knowledge graph (data/timeline.json): typed relations between events, wars, people, institutions, geography, concepts and every other node type, plus mined person photos. Some topics are enriched with an authored mind-tree (data/topic-layers.json) so a single focus like World War II can carry its full Causes/Chronology/India/Holocaust/etc. structure. Every arrow is a verified relationship from data/relations.json or an authored mind-tree (data/topic-layers.json). Co-mention lines are gone: they were word co-occurrence over a trivia corpus, not knowledge, and they were deciding which cards appeared at all. A topic with no verified structure now says so instead of drawing a graph. <b>Single click</b> a card to grow that branch in place (it expands and you stay put) · <b>double-click</b> to drill into it as the new centre · <b>Grow/Shrink</b> adds or removes a ring across the whole map · <b>Live photos</b> pulls Wikipedia portraits for people without one. A <b>red/amber/grey dot</b> on a card is that topic's practice-question weight (high / medium / low); <b>Hide low</b> dims the low cards.</footer>
 <!-- The graph resolver lives in one place and is shared with scripts/build-timeline.js,
      scripts/gen-topic-layers.js, map.html and revision.html. It used to be copied
@@ -250,6 +288,22 @@ try{CO_ALL=localStorage.getItem('fc_coall')==='1';}catch(e){CO_ALL=false;}
   gotItBtn.addEventListener('click', hide);
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && overlay.style.display!=='none') hide(); });
 })();
+</script>
+  // Relationship Dialog listeners
+  document.getElementById('relClose').addEventListener('click', hideRelationshipDialog);
+  document.getElementById('relCloseBtn').addEventListener('click', hideRelationshipDialog);
+  document.getElementById('relNavigate').addEventListener('click', function() {
+    // The relNavigate button onclick is set dynamically in showRelationshipDialog
+  });
+  document.getElementById('relDialog').addEventListener('click', function(e) {
+    if (e.target === this) hideRelationshipDialog();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape' && document.getElementById('relDialog').classList.contains('on')) {
+      hideRelationshipDialog();
+    }
+  });
+;
 function coFloor(){return CO_ALL?CO_MIN:CO_FLOOR;}
 
 function esc(s){if(s&&typeof s==='object')s='';return String(s==null?'':s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
@@ -1448,6 +1502,96 @@ function showNote(id){
     +revHtml+nb;
   el.scrollIntoView({block:'nearest'});
 }
+function showRelationshipDialog(branchId) {
+  if (!CUR || !ADJ[CUR]) return;
+  var center = BY_ID[CUR];
+  var branch = BY_ID[branchId];
+  if (!center || !branch) return;
+
+  // Find the relationship between center and branch
+  var rels = [];
+  if (CADJ[CUR] && CADJ[CUR][branchId]) {
+    CADJ[CUR][branchId].forEach(function(e) {
+      rels.push({
+        type: e.rel || 'related to',
+        desc: e.desc || '',
+        source: e.src || 'graph',
+        weight: e.w || 0
+      });
+    });
+  }
+  if (CADJ[branchId] && CADJ[branchId][CUR]) {
+    CADJ[branchId][CUR].forEach(function(e) {
+      rels.push({
+        type: e.rel || 'related to',
+        desc: e.desc || '',
+        source: e.src || 'graph',
+        weight: e.w || 0
+      });
+    });
+  }
+
+  // Also check REL_EV for curated relationships
+  var evKey = canon(center.name) + '\u0000' + canon(branch.name);
+  if (REL_EV[evKey]) {
+    rels.push({
+      type: 'curated',
+      desc: REL_EV[evKey],
+      source: 'curated',
+      weight: 99
+    });
+  }
+
+  // Sort by weight
+  rels.sort(function(a, b) { return (b.weight || 0) - (a.weight || 0); });
+
+  // Build dialog content
+  var centerType = nt(center) || 'entity';
+  var branchType = nt(branch) || 'entity';
+
+  var html = '<div class="center-info">' +
+    '<div class="center-avatar">' + (center.name.charAt(0) || '?') + '</div>' +
+    '<div><div class="center-name">' + esc(center.name) + '</div>' +
+    '<div class="center-type">' + (centerType.charAt(0).toUpperCase() + centerType.slice(1)) + '</div></div></div>';
+
+  if (rels.length === 0) {
+    html += '<div class="section"><div class="section-title">Relationship</div>';
+    html += '<div class="rel-line"><span class="rel-type">No direct link</span>';
+    html += '<span class="rel-desc">No verified relationship found in the knowledge graph.</span></div></div>';
+  } else {
+    html += '<div class="section"><div class="section-title">Verified Relationships</div>';
+    rels.forEach(function(r) {
+      var sourceLabel = r.source === 'curated' ? 'curated' : (r.source === 'graph' ? 'graph' : r.source);
+      html += '<div class="rel-line">';
+      html += '<span class="rel-type">' + esc(sourceLabel) + '</span>';
+      html += '<span class="rel-desc"><span class="entity-name">' + esc(r.type) + '</span> — ' + esc(r.desc || 'Connected in the knowledge graph') + '</span>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  if (branch.desc) {
+    html += '<div class="section"><div class="section-title">About ' + esc(branch.name) + '</div>';
+    html += '<div class="rel-line"><span class="rel-desc">' + esc(branch.desc.slice(0, 300)) + (branch.desc.length > 300 ? '...' : '') + '</span></div></div>';
+  }
+
+  document.getElementById('relBody').innerHTML = html;
+
+  // Set up button handlers
+  document.getElementById('relNavigate').onclick = function() {
+    hideRelationshipDialog();
+    navigate(branchId, true);
+  };
+  document.getElementById('relCloseBtn').onclick = hideRelationshipDialog;
+
+  // Show dialog
+  document.getElementById('relDialog').classList.add('on');
+}
+
+function hideRelationshipDialog() {
+  document.getElementById('relDialog').classList.remove('on');
+}
+
 function closeNote(){
   var el=document.getElementById('note');
   if(el){el.className='note';el.innerHTML='';}
@@ -1860,10 +2004,14 @@ document.getElementById('chart').addEventListener('click',function(ev){
   if(!el||(' '+el.className.baseVal+' ').indexOf(' hero ')!==-1)return;
   var id=CARDS[t.getAttribute('data-idx')]?CARDS[t.getAttribute('data-idx')].id:null;
   if(!id)return;
-  // Single click: navigate to this card (make it the center element)
-  // Related cards will surround it with detailed relationships shown
-  navigate(id,true);
-});
+  // Single click: if this is a branch (neighbor of center), show relationship dialog
+  // If it's already the center or not a neighbor, navigate
+  if(CUR && ADJ[CUR] && ADJ[CUR].some(function(n){return n.id===id;})) {
+    showRelationshipDialog(id);
+  } else {
+    navigate(id,true);
+  }
+}););
 // Double-click: show detailed note for this card (kept for deep reading)
 document.getElementById('chart').addEventListener('dblclick',function(ev){
   var t=ev.target;
