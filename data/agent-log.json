@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T02:16:35.450Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to resolve broken visual assets blocking content consumption. Once figures are stable, MockPapers should address the zeroed output from previous runs to rebuild core study material. ExamPatterns and MainsFresh follow to diversify gaps while Invention/MetaLearn remain last as they have produced zero fixes recently and can be starved without immediate impact.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (224 total)",
-       "text": "How are cutting forces measured in machining research? | Name the three common grinding machines. | What is honing?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T02:56:28.665Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -724,8 +679,59 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-01T08:20:57.694Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity; BankFigures must address the 79 missing figures first as they block content consumption, followed by MockPapers to resolve critical faults. MetaLearn is scheduled last despite zero recent output because it likely requires upstream data (figures/papers) to function effectively, fitting the rule to starve agents needing inputs until gaps are closed.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (261 total)",
+       "text": "What is the repeatability of a robot? | What is an end effector? | State the 3-2-1 principle of locating in fixtures."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "11 fresh mock questions on Machine Design (304 in pool)",
+       "text": "Machine Design"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T07:53:47.499Z",
+ "lastRun": "2026-11-01T08:20:57.694Z",
  "model": "qwen3.5:9b"
 }
