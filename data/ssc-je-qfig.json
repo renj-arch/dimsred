@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T04:16:16.605Z",
-  "cursor": 246,
-  "built": 235
+  "updatedAt": "2026-11-01T04:40:33.510Z",
+  "cursor": 249,
+  "built": 238
  },
  "figs": {
   "11434945": {
@@ -1413,6 +1413,24 @@
   "988c7e0a": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <path d=\"M20,100 Q40,80 60,90 T100,90 T140,90 T180,90 T220,90 T260,90 T300,90\" />\n <path d=\"M20,100 Q40,120 60,110 T100,110 T140,110 T180,110 T220,110 T260,110 T300,110\" />\n <path d=\"M20,95 L20,105 M40,85 L40,115 M60,95 L60,105 M100,95 L100,105 M140,95 L140,105 M180,95 L180,105 M220,95 L220,105 M260,95 L260,105 M300,95 L300,105\" />\n <text x=\"10\" y=\"40\">y</text>\n <text x=\"340\" y=\"115\">x (Sampling Length)</text>\n <text x=\"320\" y=\"10\">Ra = Average Absolute Height</text>\n <text x=\"10\" y=\"180\">Profile Deviation</text>\n</svg>",
    "n": "write the formula for the surface roughness parameter ra.",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "5239c842": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Ideal Circle -->\n  <circle cx=\"180\" cy=\"110\" r=\"40\" />\n  <!-- Actual Part (Out of round) -->\n  <path d=\"M 140 70 A 40 40 0 1 1 220 70 L 220 150 A 40 40 0 1 1 140 150 Z\" />\n  <!-- Stylus -->\n  <line x1=\"180\" y1=\"110\" x2=\"180\" y2=\"30\" stroke-dasharray=\"2,2\" />\n  <circle cx=\"180\" cy=\"30\" r=\"3\" fill=\"#222\" />\n  <!-- Labels -->\n  <text x=\"175\" y=\"25\" text-anchor=\"middle\">Stylus</text>\n  <text x=\"180\" y=\"195\" text-anchor=\"middle\">Rotating Part</text>\n  <text x=\"235\" y=\"115\" text-anchor=\"start\">Actual Surface</text>\n  <text x=\"145\" y=\"75\" text-anchor=\"end\">Ideal Circle</text>\n</svg>",
+   "n": "what instruments measure roundness and how?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "2c348431": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Nominal Size</text><rect x=\"60\" y=\"70\" width=\"20\" height=\"60\"/><text x=\"70\" y=\"125\" text-anchor=\"middle\">GO</text><rect x=\"300\" y=\"70\" width=\"20\" height=\"60\"/><text x=\"310\" y=\"125\" text-anchor=\"middle\">NO-GO</text><line x1=\"80\" y1=\"100\" x2=\"90\" y2=\"100\" stroke-dasharray=\"4\"/><line x1=\"290\" y1=\"100\" x2=\"300\" y2=\"100\" stroke-dasharray=\"4\"/><text x=\"75\" y=\"115\">Accept</text><text x=\"295\" y=\"115\">Reject</text><text x=\"20\" y=\"180\">Limit Gauging (Pass/Fail)</text></svg>",
+   "n": "how is limit gauging different from measuring?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "6d0fddb7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- V-Block Wedges -->\n  <path d=\"M40,180 L100,100 L160,180 Z\" />\n  <path d=\"M260,180 L200,100 L140,180 Z\" />\n  <!-- Oval Workpiece -->\n  <ellipse cx=\"180\" cy=\"100\" rx=\"50\" ry=\"30\" />\n  <!-- Dial Indicator Base -->\n  <rect x=\"260\" y=\"170\" width=\"80\" height=\"40\" />\n  <!-- Dial Indicator Needle (showing zero deflection) -->\n  <line x1=\"290\" y1=\"170\" x2=\"320\" y2=\"150\" stroke-width=\"2\" />\n  <circle cx=\"320\" cy=\"150\" r=\"4\" fill=\"#222\" />\n  <!-- Labels -->\n  <text x=\"180\" y=\"90\" text-anchor=\"middle\">Oval Workpiece</text>\n  <text x=\"30\" y=\"140\">V-Block</text>\n  <text x=\"250\" y=\"195\">Dial Indicator (Zero Reading)</text>\n  <!-- Concept Arrow -->\n  <line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"40\" stroke-dasharray=\"4,2\" />\n</svg>",
+   "n": "why do even-lobed workpieces pass a v-block roundness check incorrectly?",
    "sub": "production",
    "at": "2026-11-01"
   }
