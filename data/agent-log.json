@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T05:43:37.334Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) indicate immediate content decay; BankFigures must address the 79 missing figures first as they are foundational to question validity. MockPapers should follow to ensure papers are complete, but since filesPresent shows false for all paper types, we prioritize fixing the underlying data sources (BankFigures) before generating new papers. MainsFresh is needed daily for fresh material, but given the high backlog of faults and gaps, it will be last in this ",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (243 total)",
-       "text": "What is a co-ordinate measuring machine (CMM)? | What is an optical flat and what does it measure? | State Taylor's (GO or NO-GO) principle of gauging."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T05:56:29.974Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -722,8 +682,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T13:03:47.618Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-01T11:17:36.945Z",
+ "lastRun": "2026-11-01T13:03:47.618Z",
  "model": "qwen3.5:9b"
 }
