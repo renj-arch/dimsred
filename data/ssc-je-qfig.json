@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T17:04:04.802Z",
-  "cursor": 318,
-  "built": 302
+  "updatedAt": "2026-11-01T17:34:00.185Z",
+  "cursor": 321,
+  "built": 305
  },
  "figs": {
   "11434945": {
@@ -1816,6 +1816,24 @@
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Counterboring: Flat Step -->\n  <path d=\"M40,80 L100,80 L100,120 L40,120 Z\" fill=\"none\"/>\n  <circle cx=\"70\" cy=\"100\" r=\"35\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M40,80 L70,60 L100,80 L100,120 L70,140 L40,120 Z\" fill=\"none\"/>\n  <text x=\"50\" y=\"135\">Flat Step</text>\n  <text x=\"50\" y=\"150\">(Cap Screw)</text>\n  \n  <!-- Countersinking: Cone -->\n  <path d=\"M200,80 L260,80 L260,120 L200,120 Z\" fill=\"none\"/>\n  <circle cx=\"230\" cy=\"100\" r=\"35\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M200,80 L230,60 L260,80 L260,120 L230,140 L200,120 Z\" fill=\"none\"/>\n  <text x=\"210\" y=\"135\">Conical Mouth</text>\n  <text x=\"210\" y=\"150\">(Flush Head)</text>\n  \n  <!-- Labels -->\n  <text x=\"20\" y=\"20\">Counterboring</text>\n  <text x=\"180\" y=\"20\">Countersinking</text>\n</svg>",
    "n": "what is the difference between counterboring and countersinking?",
    "sub": "production",
+   "at": "2026-11-01"
+  },
+  "18bce68": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Bolt: External Thread + Nut -->\n  <rect x=\"80\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\" />\n  <path d=\"M90 40 L110 40 M90 50 L110 50 M90 60 L110 60 M90 70 L110 70 M90 80 L110 80 M90 90 L110 90 M90 100 L110 100 M90 110 L110 110\" stroke-width=\"2\"/>\n  <path d=\"M85 40 L95 40 M85 50 L95 50 M85 60 L95 60 M85 70 L95 70 M85 80 L95 80 M85 90 L95 90 M85 100 L95 100 M85 110 L95 110\" stroke-width=\"2\"/>\n  <rect x=\"140\" y=\"60\" width=\"30\" height=\"20\" rx=\"2\" />\n  <path d=\"M140 70 L170 70 M140 80 L170 80 M140 90 L170 90\" stroke-width=\"1.5\"/>\n  <text x=\"120\" y=\"30\">Bolt</text>\n  <text x=\"165\" y=\"85\">Nut</text>\n  \n  <!-- Cap Screw: Internal Thread -->\n  <rect x=\"200\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\" />\n  <path d=\"M210 40 L230 40 M210 50 L230 50 M210 60 L230 60 M210 70 L230 70 M210 80 L230 80 M210 90 L230 90 M210 100 L230 100 M210 110 L230 110\" stroke-width=\"2\"/>\n  <path d=\"M205 40 L215 40 M205 50 L215 50 M205 60 L215 60 M205 70 L215 70 M205 80 L215 80 M205 90 L215 90 M205 100 L215 100 M205 110 L215 110\" stroke-width=\"2\"/>\n  <text x=\"180\" y=\"30\">Cap Screw</text>\n  <text x=\"245\" y=\"160\">Tapped Hole</text>\n  \n  <!-- Labels -->\n  <text x=\"100\" y=\"195\">Bolt + Nut</text>\n  <text x=\"220\" y=\"195\">Screw into Part</text>\n</svg>",
+   "n": "what is the difference between a bolt and a cap screw?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "a324566f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Major Diameter (D)</text><line x1=\"40\" y1=\"30\" x2=\"280\" y2=\"30\"/><text x=\"290\" y=\"35\">Minor Diameter</text><line x1=\"40\" y1=\"60\" x2=\"280\" y2=\"60\"/><path d=\"M 40 30 L 40 60 M 100 30 L 100 60 M 160 30 L 160 60 M 220 30 L 220 60\"/><text x=\"15\" y=\"45\">Tap Drill Size</text><line x1=\"15\" y1=\"45\" x2=\"35\" y2=\"45\"/><circle cx=\"180\" cy=\"45\" r=\"2\"/><text x=\"190\" y=\"48\">Drilled Diameter (D-p)</text><path d=\"M 280 30 L 280 60 M 280 30 L 280 60\"/><text x=\"295\" y=\"45\">Pitch (p)</text><line x1=\"280\" y1=\"30\" x2=\"310\" y2=\"30\"/><line x1=\"280\" y1=\"60\" x2=\"310\" y2=\"60\"/><rect x=\"285\" y=\"25\" width=\"25\" height=\"40\" stroke=\"#222\" fill=\"none\"/><text x=\"297\" y=\"50\">Thread</text><text x=\"10\" y=\"180\">Formula: D_drill = D_major - p</text></svg>",
+   "n": "write the tap-drill size for a metric thread.",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "fdd4ec3e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- File Body -->\n  <rect x=\"40\" y=\"80\" width=\"280\" height=\"20\" rx=\"3\" />\n  <!-- Handle -->\n  <path d=\"M 340 90 L 360 105 L 360 115 L 340 130 L 320 115 L 320 105 Z\" />\n  <!-- Handle Grip -->\n  <path d=\"M 320 95 Q 340 85 360 95\" stroke-width=\"2\" fill=\"none\" />\n  <path d=\"M 320 115 Q 340 125 360 115\" stroke-width=\"2\" fill=\"none\" />\n  <!-- Teeth Section A: Coarse -->\n  <g transform=\"translate(60, 80)\">\n    <line x1=\"0\" y1=\"0\" x2=\"40\" y2=\"-10\" />\n    <line x1=\"0\" y1=\"0\" x2=\"45\" y2=\"10\" />\n    <line x1=\"0\" y1=\"0\" x2=\"38\" y2=\"-12\" />\n    <line x1=\"0\" y1=\"0\" x2=\"42\" y2=\"12\" />\n  </g>\n  <!-- Teeth Section B: Fine -->\n  <g transform=\"translate(150, 80)\">\n    <line x1=\"0\" y1=\"0\" x2=\"30\" y2=\"-4\" />\n    <line x1=\"0\" y1=\"0\" x2=\"32\" y2=\"4\" />\n    <line x1=\"0\" y1=\"0\" x2=\"28\" y2=\"-5\" />\n    <line x1=\"0\" y1=\"0\" x2=\"34\" y2=\"5\" />\n  </g>\n  <!-- Teeth Section C: Double Cut -->\n  <g transform=\"translate(240, 80)\">\n    <line x1=\"0\" y1=\"0\" x2=\"35\" y2=\"-7\" />\n    <line x1=\"0\" y1=\"0\" x2=\"35\" y2=\"7\" />\n    <line x1=\"0\" y1=\"0\" x2=\"33\" y2=\"-8\" />\n    <line x1=\"0\" y1=\"0\" x2=\"33\" y2=\"8\" />\n  </g>\n  <!-- Labels -->\n  <text x=\"55\" y=\"70\">Coarse Cut</text>\n  <text x=\"155\" y=\"70\">Fine Cut</text>\n  <text x=\"245\" y=\"70\">Double Cut</text>\n  <text x=\"300\" y=\"60\">Handle</text>\n  <text x=\"300\" y=\"150\">Body</text>\n</svg>",
+   "n": "what is a file and how are files classified?",
+   "sub": "workshop",
    "at": "2026-11-01"
   }
  }
