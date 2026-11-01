@@ -493,57 +493,87 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.PAT }}
         run: node scripts/self-train-sample.js
 
-      - run: |
+      # Split into separate steps with timeouts to prevent hour-long hangs
+      - name: Clean git locks
+        timeout-minutes: 2
+        run: |
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           rm -rf .git/rebase-merge .git/rebase-apply 2>/dev/null
           rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
+
+      - name: Configure git
+        timeout-minutes: 1
+        run: |
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          # Cheap packs on purpose. This tree is ~9 GB of JSON that compresses
-          # well but slowly; default zlib settings spent the whole timeout here.
-          # Compression level 1 with no delta window turns a multi-minute pack
-          # into a fast stream, and gc stays out of the way.
           git config core.compression 1
           git config pack.window 0
           git config pack.depth 0
           git config gc.auto 0
+
+      - name: Checkout and reset
+        timeout-minutes: 2
+        run: |
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
-          # Scoped staging, not `git add -A`. Everything this job writes lives
-          # under data/ (questions, timeline, ask index, coverage, faults) plus
-          # the root archive.html copy. Walking the whole worktree used to pick
-          # up every stray artifact and made the add step both slow and
-          # unpredictable.
+
+      - name: Stage data files
+        timeout-minutes: 5
+        run: |
           git add -A -- data archive.html
           UNEXPECTED=$(git status --porcelain | grep -v -E '^(.. )?(data/|archive\.html)' | head -20 || true)
           if [ -n "$UNEXPECTED" ]; then
             echo "NOT staged (outside data/ + archive.html):"
             echo "$UNEXPECTED"
           fi
+
+      - name: Commit changes
+        timeout-minutes: 3
+        run: |
           if git diff --staged --quiet; then
             echo "No changes to commit"
-          else
-            git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') ΓÇö run #${{ github.run_number }}"
-            for i in 1 2 3; do
-              if git pull --rebase 2>/dev/null; then
-                echo "Rebased cleanly"
-              else
-                echo "Rebase conflict ΓÇö aborting and union-merging to keep BOTH runs' data."
-                git rebase --abort
-                git fetch origin main 2>/dev/null
-                git merge --no-edit origin/main 2>/dev/null || {
-                  node scripts/resolve-data-merge.js
-                  git commit --no-edit 2>/dev/null || true
-                }
-              fi
-              # Guard: prevent question count regression below critical thresholds
-              node scripts/guard-question-count.js || { echo "Question count guard failed - aborting push"; exit 1; }
-              git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
-              sleep 5
-            done || true
-            touch "$RUNNER_TEMP/changes-committed"
+            exit 0
           fi
+          git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') — run #{{ github.run_number }$'}'}"
 
+      - name: Pull and rebase with retries
+        timeout-minutes: 10
+        run: |
+          for i in 1 2 3; do
+            if git pull --rebase 2>/dev/null; then
+              echo "Rebased cleanly"
+              break
+            else
+              echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
+              git rebase --abort
+              git fetch origin main 2>/dev/null
+              git merge --no-edit origin/main 2>/dev/null || {
+                node scripts/resolve-data-merge.js
+                git commit --no-edit 2>/dev/null || true
+              }
+            fi
+          done
+
+      - name: Guard question count
+        timeout-minutes: 2
+        run: node scripts/guard-question-count.js || { echo "Question count guard failed - aborting push"; exit 1; }
+
+      - name: Push with retries
+        timeout-minutes: 10
+        run: |
+          for i in 1 2 3; do
+            if git push; then
+              echo "Push succeeded"
+              break
+            else
+              echo "Push attempt $i failed, retrying..."
+              sleep 5
+            fi
+          done
+
+      - name: Mark changes committed
+        timeout-minutes: 1
+        run: touch "$RUNNER_TEMP/changes-committed"
       - run: |
           if [ -f "$RUNNER_TEMP/changes-committed" ]; then
             echo "Wiki data committed; starting next run automatically"
