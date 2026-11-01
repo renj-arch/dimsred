@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T20:33:27.526Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "BankFigures is the only agent producing fixes; it must run first to clear critical faults and figure gaps. MainsFresh and ExamPatterns have produced zero for two+ runs and are starved of input, so they move last despite their high priority in the goal list. Invention and MetaLearn also show 0 output recently but will follow the primary fixers.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MainsFresh",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (190 total)",
-       "text": "What is the purpose of an offset on a shearing blade? | Name the three elements of a turning cut. | How is a taper turned on a lathe?"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwuz4ki (gs3, 15 marks): Critically examine the statement that 'Space is no longer a domain for exploration but a contested arena for strategic c",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T21:02:29.842Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -709,8 +648,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T04:02:05.385Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent producing fixes recently, so it leads. MockPapers must be prioritized next as files are absent and previous runs show zero output for this goal. Invention and MetaLearn follow to address pending ideas and syllabus gaps, while MainsFresh is deferred due to consecutive zero-fixes in recent runs.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (232 total)",
+       "text": "Write the sine-bar relationship. | What are Johansson (slip) gauges and how are they used? | Name the main types of comparators."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Industrial Engineering (243 in pool)",
+       "text": "Industrial Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T03:35:01.943Z",
+ "lastRun": "2026-11-01T04:02:05.385Z",
  "model": "qwen3.5:9b"
 }
