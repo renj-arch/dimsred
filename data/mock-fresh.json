@@ -1,12 +1,12 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-01T04:26:04.293Z",
-  "cursor": 18,
-  "count": 254,
+  "updatedAt": "2026-11-01T05:56:29.973Z",
+  "cursor": 19,
+  "count": 264,
   "lastAttempt": {
-   "at": "2026-11-01T05:34:42.730Z",
-   "reason": "nothing"
+   "at": "2026-11-01T05:56:29.973Z",
+   "reason": "added 10"
   }
  },
  "items": [
@@ -2294,6 +2294,96 @@
    "a": "Residual stress is the self-equilibrating stress remaining in a material after welding due to non-uniform heating and cooling; it causes distortion when these internal stresses exceed the yield strength of the material, forcing the structure to deform (warp) to relieve them.",
    "h": "Connect internal stresses locked during cooling to macroscopic deformation.",
    "s": "During welding, the heat-affected zone expands while cooling faster than the surrounding cold metal, creating tensile stresses in the weld and compressive stresses nearby. If these residual stresses are not relieved (e.g., by peening or post-weld heat treatment), they can cause the entire structure to warp or twist as the material yields plastically to redistribute the stress.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Define the term 'work ratio' in a gas turbine cycle and explain its significance regarding the net work output.",
+   "a": "Work Ratio = (Net Work Output) / (Compressor Work Input)",
+   "h": "Work ratio is the ratio of net work to compressor work.",
+   "s": "The work ratio is defined as the ratio of the net work output of the cycle to the work input required by the compressor. A higher work ratio indicates that a larger portion of the turbine's work is available for external use after driving the compressor, which generally leads to better thermal efficiency and stable operation.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Calculate the pressure ratio if the stagnation temperature at the compressor inlet is 300 K and at the exit is 500 K, assuming an isentropic compression process with a specific heat ratio (γ) of 1.4.",
+   "a": "Pressure Ratio ≈ 3.98",
+   "h": "Use the isentropic relation T2/T1 = (P2/P1)^((γ-1)/γ).",
+   "s": "Given T1 = 300 K, T2 = 500 K, and γ = 1.4. Using the isentropic relation for compression: (P2/P1) = (T2/T1)^(γ/(γ-1)). Substituting values: (P2/P1) = (500/300)^(1.4/0.4) = (5/3)^3.5 ≈ 3.98.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Why is a regenerator used in a gas turbine cycle, and how does it affect the thermal efficiency?",
+   "a": "Increases Thermal Efficiency by reducing fuel consumption for the same output.",
+   "h": "Regenerator recovers heat from exhaust to preheat compressed air.",
+   "s": "A regenerator is used to transfer heat from the hot turbine exhaust gases to the cooler air leaving the compressor. This preheats the combustion chamber inlet air, thereby reducing the amount of fuel required to reach the desired turbine inlet temperature, which directly increases the overall thermal efficiency of the cycle.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "In an axial flow gas turbine, if the blade speed is 300 m/s and the absolute velocity of gas at rotor exit is 450 m/s with a flow angle of 60° relative to the axial direction, calculate the power developed per kg/s of mass flow (neglecting inlet kinetic energy changes).",
+   "a": "Power ≈ 13.4 kW/kg/s (assuming tangential component calculation)",
+   "h": "Power = Mass Flow * Change in Tangential Velocity * Blade Speed.",
+   "s": "The power developed is given by the Euler turbine equation: W_dot = U * (V_theta1 - V_theta2). Assuming axial entry or focusing on the exit contribution for this specific prompt constraint, we calculate the work done based on the change in angular momentum. However, a more direct interpretation for 'power per kg/s' with given exit velocity and angle implies calculating the kinetic energy component contributing to work if inlet is idealized. Let's refine: Power = U * (V_w1 - V_w2). Without inlet swirl, we assume ideal impulse or focus on the exit state relative to zero swirl? To be precise for SSC JE: Work = U(V_u1 - V_u2). If we assume V_u1=0 (no pre-swirl), then Work = -U*V_u2. Magnitude of power per kg/s = U * V_exit * cos(theta). Power = 300 * 450 * cos(60°) = 300 * 450 * 0.5 = 67,500 J/kg/s = 67.5 kW/kg/s.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "What is the primary function of a diffuser in the compressor section of a gas turbine engine?",
+   "a": "Increases Static Pressure and Decreases Velocity.",
+   "h": "Diffuser converts kinetic energy into pressure energy.",
+   "s": "The primary function of a diffuser in the compressor section (or inlet) is to decelerate the high-velocity air entering the system, thereby converting its kinetic energy into static pressure. This increase in pressure is essential for maintaining the density required for efficient combustion and preventing flow separation.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Calculate the thermal efficiency of an ideal Brayton cycle if the pressure ratio is 6 and the specific heat ratio (γ) is 1.4.",
+   "a": "Thermal Efficiency ≈ 0.427 or 42.7%",
+   "h": "Use η = 1 - (1/r_p)^((γ-1)/γ).",
+   "s": "For an ideal Brayton cycle, thermal efficiency depends only on the pressure ratio and specific heat ratio. Using the formula η = 1 - (1/r_p)^((γ-1)/γ), where r_p = 6 and γ = 1.4: η = 1 - (1/6)^(0.4/1.4) = 1 - (0.1667)^0.2857 ≈ 1 - 0.573 = 0.427.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Explain the phenomenon of 'surging' in a centrifugal compressor and one method to prevent it.",
+   "a": "Prevention: Variable Inlet Guide Vanes (VIGV) or Surge Tanks.",
+   "h": "Surge is unstable reverse flow; prevented by variable inlet guide vanes.",
+   "s": "Surging in a centrifugal compressor occurs when the pressure rise exceeds the system's backpressure, causing a sudden reversal of airflow and violent oscillations. This unstable condition can damage blades and reduce efficiency. It is commonly prevented by using variable inlet guide vanes to adjust the angle of attack at low flow rates or by installing surge tanks to dampen pressure fluctuations.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Why are gas turbines often operated with intercooling in multi-stage compressors?",
+   "a": "Reduces Compressor Work Input and Increases Mass Flow Rate.",
+   "h": "Intercooling reduces work input and increases density.",
+   "s": "Intercooling is used between stages of a multi-stage compressor to cool the air after compression. This cooling reduces the specific volume of the air entering the next stage, which significantly lowers the total work required for compression compared to single-stage compression. Additionally, it allows more mass flow into the combustion chamber, increasing power output.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "What is the effect of increasing the turbine inlet temperature on the efficiency and material requirements of a gas turbine?",
+   "a": "Increases Efficiency; Requires High-Temperature Alloys/Cooling.",
+   "h": "Higher TIT increases efficiency but requires cooling alloys.",
+   "s": "Increasing the turbine inlet temperature generally improves the thermal efficiency of the Brayton cycle because the average temperature of heat addition rises. However, this necessitates the use of advanced high-temperature materials, ceramic coatings, and complex internal air-cooling systems for the turbine blades to withstand the extreme thermal stresses.",
+   "at": "2026-11-01"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Gas Turbines",
+   "q": "Define 'Specific Fuel Consumption' (SFC) in the context of a gas turbine and state its typical unit.",
+   "a": "Unit: kg/kWh or kg/MJ",
+   "h": "SFC is fuel mass per unit power output per hour.",
+   "s": "Specific Fuel Consumption (SFC) is defined as the rate of fuel consumption divided by the power output of the engine. It is a measure of the engine's efficiency in converting fuel energy into mechanical work, with lower values indicating better performance. The standard unit is kilograms per kilowatt-hour (kg/kWh).",
    "at": "2026-11-01"
   }
  ]
