@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T07:53:47.499Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-01T08:20:57.694Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -726,8 +714,75 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T16:49:54.102Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent producing output recently, so it leads. MockPapers and MainsFresh have zero output for two consecutive runs but are essential for content depth, so they follow to clear backlog without starving them entirely. ExamPatterns was active in the last run and should continue its cycle. Invention is deferred as unfinished standing goals take precedence over new ideas.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (299 total)",
+       "text": "What is ironing in sheet forming? | Write the force to draw a cup in deep drawing. | What is gear hobbing?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Air Compressors (360 in pool)",
+       "text": "Air Compressors"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mvy2fhd6 (gs3, 15 marks): Critically examine the geopolitical implications of India's push to secure critical minerals like lithium and cobalt. In",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T16:21:20.338Z",
+ "lastRun": "2026-11-01T16:49:54.102Z",
  "model": "qwen3.5:9b"
 }
