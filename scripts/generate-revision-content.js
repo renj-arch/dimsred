@@ -537,6 +537,67 @@ Object.keys(topicLayers).forEach(function (topicName) {
   var extra = gatherContextAndNeighbours(topicName, selectedId);
 
   var primaryFacts = cap(primary, 8);
+
+  // Check if this topic has an authored mind-tree (_gen: false)
+  var layer = topicLayers[topicName];
+  var isCurated = layer && layer._gen === false;
+  var curatedFacts = [];
+
+  if (isCurated) {
+    // Use authored branch items as primary facts
+    (layer.branches || []).forEach(function (branch) {
+      (branch.items || []).forEach(function (item) {
+        if (item.desc && item.desc.trim()) {
+          curatedFacts.push({
+            fact: item.desc.trim(),
+            role: 'primary',
+            factType: 'CORE_FACT',
+            subjectEntityId: selectedId,
+            objectEntityId: null,
+            sourceEntityId: selectedId,
+            source: 'authored-layer',
+            via: 'curated',
+            confidence: 1,
+            provenance: {
+              source: 'authored-layer',
+              sourceEntityId: selectedId,
+              subjectEntityId: selectedId,
+              objectEntityId: null,
+              extractor: 'topic-layers',
+              method: 'curated',
+              confidence: 1
+            }
+          });
+        }
+        if (item.ev && item.ev.trim()) {
+          curatedFacts.push({
+            fact: item.ev.trim(),
+            role: 'primary',
+            factType: 'EVIDENCE',
+            subjectEntityId: selectedId,
+            objectEntityId: null,
+            sourceEntityId: selectedId,
+            source: 'authored-layer',
+            via: 'curated',
+            confidence: 1,
+            provenance: {
+              source: 'authored-layer',
+              sourceEntityId: selectedId,
+              subjectEntityId: selectedId,
+              objectEntityId: null,
+              extractor: 'topic-layers',
+              method: 'curated',
+              confidence: 1
+            }
+          });
+        }
+      });
+    });
+  }
+
+  // Combine authored facts (first) with auto-generated facts
+  var combinedFacts = curatedFacts.concat(primary);
+  var primaryFacts = cap(combinedFacts, 8);
   var bullets = primaryFacts.map(function (f) { return '\u2022 ' + f.fact; });
   var facts = primaryFacts
     .filter(function (f) { return f.factType === 'DATE' || /\b(1[4-9]\d{2}|20[0-2]\d)\b/.test(f.fact); })
@@ -566,6 +627,7 @@ Object.keys(topicLayers).forEach(function (topicName) {
       contextCount: cap(extra.context, 5).length,
       neighbourCount: extra.neighbours.length
     },
+    curated: isCurated,
     generatedAt: new Date().toISOString()
   };
 
