@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T05:07:11.896Z",
-  "cursor": 252,
-  "built": 241
+  "updatedAt": "2026-11-01T05:24:11.052Z",
+  "cursor": 255,
+  "built": 243
  },
  "figs": {
   "11434945": {
@@ -1449,6 +1449,18 @@
   "29ed6dc6": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Gear Tooth Profile</text><path d=\"M40,100 Q70,60 100,100 T160,100\" fill=\"none\" stroke=\"#222\"/><circle cx=\"100\" cy=\"100\" r=\"3\" fill=\"#222\"/><text x=\"95\" y=\"95\">Tooth</text><path d=\"M40,100 L40,160 M100,100 L100,160 M160,100 L160,160\" stroke=\"#222\"/><line x1=\"40\" y1=\"160\" x2=\"160\" y2=\"160\" stroke=\"#222\"/><text x=\"105\" y=\"175\">Backlash</text><path d=\"M30,80 L30,120 M170,80 L170,120\" stroke=\"#222\"/><text x=\"25\" y=\"100\">Tooth Thickness</text><path d=\"M40,60 Q60,40 80,60 T120,60 T160,60\" fill=\"none\" stroke=\"#222\"/><text x=\"105\" y=\"55\">Base Pitch</text></svg>",
    "n": "what is measured in gear metrology?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "a5513e38": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\" />\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\" />\n  <!-- Workpiece -->\n  <path d=\"M60,180 L100,180 L100,120 L90,120 L90,80 L110,80 L110,40 L130,40 L130,80 L150,80 L150,120 L160,120 L160,180 Z\" />\n  <!-- Probe Arm -->\n  <line x1=\"200\" y1=\"200\" x2=\"200\" y2=\"40\" />\n  <line x1=\"200\" y1=\"40\" x2=\"130\" y2=\"40\" />\n  <!-- Probe Tip -->\n  <circle cx=\"130\" cy=\"40\" r=\"3\" fill=\"#222\" />\n  <!-- Labels -->\n  <text x=\"280\" y=\"195\">X Axis</text>\n  <text x=\"35\" y=\"105\">Y Axis</text>\n  <text x=\"165\" y=\"25\">Probe</text>\n  <text x=\"105\" y=\"185\">Workpiece</text>\n  <text x=\"45\" y=\"30\">CMM Coordinate System</text>\n</svg>",
+   "n": "what is a co-ordinate measuring machine (cmm)?",
+   "sub": "production",
+   "at": "2026-11-01"
+  },
+  "5d30407c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Taylor's Principle of Gauging</text><rect x=\"40\" y=\"60\" width=\"280\" height=\"100\" stroke-dasharray=\"4\"/><text x=\"50\" y=\"90\">GO GAUGE (Combined Fit)</text><path d=\"M 70 110 L 130 110\"/><circle cx=\"100\" cy=\"110\" r=\"15\"/><text x=\"95\" y=\"125\" text-anchor=\"middle\">All Dimensions</text><text x=\"60\" y=\"145\">Checks Feature</text><path d=\"M 70 130 L 130 130\"/><circle cx=\"100\" cy=\"130\" r=\"8\"/><text x=\"95\" y=\"145\" text-anchor=\"middle\">Fit Only</text><rect x=\"230\" y=\"60\" width=\"90\" height=\"100\" stroke-dasharray=\"4\"/><text x=\"275\" y=\"90\">NO-GO GAUGE (Single Size)</text><path d=\"M 260 110 L 310 110\"/><circle cx=\"285\" cy=\"110\" r=\"15\"/><text x=\"280\" y=\"125\" text-anchor=\"middle\">One Dimension</text><text x=\"240\" y=\"145\">Checks Limit</text><line x1=\"135\" y1=\"110\" x2=\"225\" y2=\"110\"/><line x1=\"135\" y1=\"130\" x2=\"225\" y2=\"130\"/></svg>",
+   "n": "state taylor's (go or no-go) principle of gauging.",
    "sub": "production",
    "at": "2026-11-01"
   }

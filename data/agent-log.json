@@ -1,30 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T22:23:54.032Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvwyx5m6 (gs3, 15 marks): Critically examine the strategic imperative of India's push for critical minerals like lithium and cobalt in light of gl",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T22:45:28.898Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -735,8 +711,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T05:43:37.334Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) indicate immediate content decay; BankFigures must address the 79 missing figures first as they are foundational to question validity. MockPapers should follow to ensure papers are complete, but since filesPresent shows false for all paper types, we prioritize fixing the underlying data sources (BankFigures) before generating new papers. MainsFresh is needed daily for fresh material, but given the high backlog of faults and gaps, it will be last in this ",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (243 total)",
+       "text": "What is a co-ordinate measuring machine (CMM)? | What is an optical flat and what does it measure? | State Taylor's (GO or NO-GO) principle of gauging."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T05:14:12.367Z",
+ "lastRun": "2026-11-01T05:43:37.334Z",
  "model": "qwen3.5:9b"
 }
