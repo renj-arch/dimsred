@@ -1,52 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T07:22:58.019Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the backlog; BankFigures must address the 79 missing figures first as they block content consumption. MockPapers should follow to generate fresh exam simulations, directly reducing critical faults. Invention is deferred this run since unfinished standing goals (figures/papers) take precedence over new ideas.",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (255 total)",
-       "text": "What is directed energy deposition (DED)? | What is the STL file in additive manufacturing? | Why are support structures needed in some AM processes?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Thermodynamics (293 in pool)",
-       "text": "Thermodynamics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T07:45:21.652Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -700,8 +654,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T16:01:14.380Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. MockPapers is next as papers are absent, directly addressing the 'papers: false' file state. MainsFresh follows to ensure daily fresh material while MetaLearn/Invention go last due to zero output in recent runs per rules.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (293 total)",
+       "text": "What is back-step welding used for? | Give the patternmaker's shrinkage allowances for common cast metals. | Why is cold rolling done on the strip, and what is its main disadvantage?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T15:22:28.125Z",
+ "lastRun": "2026-11-01T16:01:14.380Z",
  "model": "qwen3.5:9b"
 }
