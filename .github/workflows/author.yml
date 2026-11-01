@@ -95,11 +95,11 @@ jobs:
         if: ${{ !inputs.stub }}
         timeout-minutes: 90
         run: |
-          # 7B model (~4GB) for reliable downloads on GitHub Actions
+          # 7B Q5_K_M (~5GB) - higher quality for strict audit format
           # Original 35B model (11.44GB) fails at ~84% due to HTTP/2 stream cancellation
           HF_REPO=bartowski/Qwen2.5-7B-Instruct-GGUF
           HF_REV=8911e8a47f92bac19d6f5c64a2e2095bd2f7d031
-          MODEL_FILE=Qwen2.5-7B-Instruct-Q4_K_M.gguf
+          MODEL_FILE=Qwen2.5-7B-Instruct-Q5_K_M.gguf
           MODEL="/mnt/lm/${MODEL_FILE}"
           sudo mkdir -p /mnt/lm
           sudo chown "$USER" /mnt/lm

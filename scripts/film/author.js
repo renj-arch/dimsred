@@ -488,8 +488,10 @@ function narrationPrompt(film, scene, rows) {
     'LEDGER',
     ledger,
     '',
-    'Return this JSON shape exactly:',
-    '{"lines":[{"row":"L03","text":"one spoken sentence"}]}',
+    'CRITICAL: Your answer MUST be a single JSON object with exactly five lines.',
+    'Format: {"lines":[{"row":"L03","text":"your sentence here"}]}',
+    'No extra text, no markdown, no commentary. Just the JSON object.',
+    'If you write fewer than five lines, the answer is rejected.',
     'Finish the closing brace and stop. Nothing follows the object.'
   ].join('\n');
 }
@@ -990,7 +992,7 @@ function main() {
     } else {
       let feedback = '';
       let accepted = null;
-      for (let attempt = 1; attempt <= 2 && !accepted; attempt++) {
+      for (let attempt = 1; attempt <= 3 && !accepted; attempt++) {
         const prompt = narrationPrompt(
           { id: filmId, title: topic.title },
           scene,
@@ -1000,7 +1002,7 @@ function main() {
           system: SYSTEM,
           prompt,
           schema: SCHEMA,
-          tokens: 900,
+          tokens: 1200,
           outDir: path.join(ROOT, 'out', 'author', filmId),
           label: `${filmId}-${scene.id}-try${attempt}`
         });
@@ -1013,7 +1015,7 @@ function main() {
           console.error(`[author] ${scene.id} attempt ${attempt} rejected:\n  ${feedback.replace(/\n/g, '\n  ')}`);
         }
       }
-      if (!accepted) throw new Error(`${scene.id} did not produce five ledgers-backed lines after two attempts`);
+      if (!accepted) throw new Error(`${scene.id} did not produce five ledgers-backed lines after three attempts`);
       lines = accepted;
     }
 
