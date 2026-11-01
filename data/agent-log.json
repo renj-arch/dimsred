@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-10-31T20:00:25.276Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing figures immediately as unfinished standing goals. MainsFresh is required to generate fresh daily material since papers, questions, sidecar, and syllabus files are absent. MetaLearn should follow to synthesize new content from these gaps, while Invention can be queued last to explore new ideas once core maintenance is underway.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (187 total)",
-       "text": "How is the clearance between punch and die set in a blanking die? | What is springback in sheet forming? | Write the force relation for blanking a sheet."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-10-31T20:33:27.526Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -704,8 +659,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-01T03:35:01.943Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical gaps in core study materials (papers, questions, syllabus) and a high backlog of faults; BankFigures is the only agent producing output recently, so it must lead to clear immediate wins. Since papers/files are missing, MockPapers should follow immediately to generate the foundational content needed for the exam-prep mission. Invention and MetaLearn will be queued last as they require existing materials to function effectively and have shown zero recent output.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (229 total)",
+       "text": "Why is calibration of measuring instruments necessary? | What is the cosine error in measurement? | State Abbe's principle of measurement."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-01T02:56:28.665Z",
+ "lastRun": "2026-11-01T03:35:01.943Z",
  "model": "qwen3.5:9b"
 }
