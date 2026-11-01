@@ -1,17 +1,37 @@
 {
  "meta": {
-  "generatedAt": "2026-10-31T11:29:45.182Z",
+  "generatedAt": "2026-11-01T08:18:49.848Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 33,
+  "count": 35,
   "lastAttempt": {
-   "at": "2026-10-31T11:29:45.182Z",
+   "at": "2026-11-01T08:18:49.848Z",
    "ok": true,
-   "count": 1,
-   "dropped": 3
+   "count": 2,
+   "dropped": 2
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvxk68op-1",
+   "at": "2026-11-01T08:18:49.848Z",
+   "title": "Implement Retry Logic for On-Demand Lanes",
+   "why": "The digest shows recent failures in 'mental-batch' (transport timeout) and 'tutor-questions' (invalid JSON output), causing requests to fail immediately.",
+   "idea": "Modify the Node.js scripts handling on-demand lanes to catch specific error patterns (e.g., non-JSON responses, timeout exceptions). If a failure occurs, automatically retry the request with adjusted parameters (e.g., lower temperature for tutor questions) up to 3 times before marking it as failed in the log.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mvxk68op-2",
+   "at": "2026-11-01T08:18:49.848Z",
+   "title": "Auto-Resolve Low-Priority Fault Board Items",
+   "why": "The fault board lists 14 info items and 23 critical/44 warn items, with the site agent already running fixes for bankfigures and mockpapers.",
+   "idea": "Develop a cron job or GitHub Action that scans data/faults.json. For items tagged as 'info' or specific 'warn' categories (like broken links in non-critical paths), automatically trigger the relevant fix script or update the JSON status to 'resolved' if the underlying issue is known to be transient, reducing manual noise.",
+   "effort": "small",
+   "risk": "medium",
+   "status": "new"
+  },
   {
    "id": "prp-mvwbjx0e-1",
    "at": "2026-10-31T11:29:45.182Z",
