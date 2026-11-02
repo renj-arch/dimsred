@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T10:33:17.684Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of resolving these high-priority structural deficits. Since 'papers', 'questions', 'syllabus', and 'sidecar' files are absent, Invention must be prioritized to generate foundational content before MockPapers or ExamPatterns can function effectively. MetaLearn will run last as it requires existing content to optimize learning paths, and MainsFresh is deferred due to zero output in recent ru",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (395 total)",
-       "text": "Name the drilling machines used in the workshop. | At what angle is a twist drill point ground and why? | What is a bevel protractor and what does it measure?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T11:11:24.530Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -647,8 +597,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T18:12:53.286Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to stabilize the site's core integrity. The 'bankfigures' agent is active and effective, so it leads the queue to address the 79 missing visuals. Since 'mainsfresh' produced zero fixes in the last run, it will be placed later in the sequence to avoid wasting budget on a currently idle resource while we tackle high-priority gaps.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (425 total)",
+       "text": "What is personal protective equipment (PPE) used in the workshop? | What is a veneer and how is plywood made from it? | Name the common woodworking adhesives and their uses."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Materials & Metallurgy (360 in pool)",
+       "text": "Materials & Metallurgy"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T17:32:32.564Z",
+ "lastRun": "2026-11-02T18:12:53.286Z",
  "model": "qwen3.5:9b"
 }
