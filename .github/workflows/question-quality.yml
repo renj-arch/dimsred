@@ -36,6 +36,7 @@ jobs:
           sparse-checkout: |
             scripts
             data/questions
+            data/category-moves.json
             data/papers.json
             data/official-paper-sources.json
             data/archive-answers.json
@@ -153,6 +154,13 @@ jobs:
             done
           fi
           curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo "Server ready for agent" || echo "WARNING: server still down"
+
+      # Deterministic, reviewable category moves. Runs before the LLM so a bad
+      # declaration fails the job instead of letting a stale shard publish. The
+      # registry requires literal evidence and an existing target category;
+      # nothing is guessed from a title.
+      - name: Apply curated question-category moves
+        run: node scripts/apply-question-category-moves.js
 
       - name: Run question-quality agent
         # Safety net. Run #18's agent overran a 130-min deadline by ~52 min

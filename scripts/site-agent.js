@@ -2005,6 +2005,42 @@ async function agentForesight() {
 // ── AGENT: Question Quality (rule-based, no LLM needed) ──
 // Arranges subtopics into correct categories, creates new ones if needed,
 // and fixes poor questions (fill-in-the-blank) into proper Q&A.
+// Apply the curated category-move registry (data/category-moves.json).
+//
+// This is deliberately deterministic: the agent does not invent a category or
+// infer one from a title. A human/agent writes a move with source, target,
+// shard files and literal evidence; the library refuses the move if the
+// evidence is missing or the target category does not exist. data/questions is
+// only checked out in the Question Quality lane, so normal site passes report
+// "not checked out" and change nothing.
+async function agentQuestionCats() {
+  const fixes = [];
+  const root = path.resolve(__dirname, '..');
+  const registry = path.join(root, 'data', 'category-moves.json');
+  if (!fs.existsSync(registry)) return { agent: 'questioncats', fixes, skipped: 'no registry' };
+  try {
+    const out = require('./lib/question-category-moves').applyRegistry({ root: root });
+    if (out.skipped) {
+      console.log('agent: QuestionCats — ' + out.skipped);
+      return { agent: 'questioncats', fixes, skipped: out.skipped };
+    }
+    for (const item of out.applied) {
+      if (item.alreadyApplied) {
+        console.log('agent: QuestionCats — ' + item.id + ' already applied');
+        continue;
+      }
+      fixes.push({ page: item.id, fix: 'Moved ' + item.moved + ' question(s) from ' + item.from + ' to ' + item.to });
+      console.log('agent: QuestionCats — moved ' + item.moved + ' question(s) ' + item.from + ' -> ' + item.to);
+    }
+  } catch (e) {
+    // The dedicated workflow step re-runs the mover and fails the job, so a
+    // broken registry cannot be mistaken for a successful publish.
+    console.log('agent: QuestionCats FAILED — ' + e.message);
+    fixes.push({ page: 'data/category-moves.json', fix: 'FAILED: ' + e.message });
+  }
+  return { agent: 'questioncats', fixes };
+}
+
 async function agentQuestionQuality() {
   const fixes = [];
   const DIR = 'data/questions';
@@ -4056,6 +4092,7 @@ async function main() {
   ];
   const alwaysAgents = [
     ['Workflows', agentWorkflows],
+    ['QuestionCats', agentQuestionCats],
     ['SelfCheck', agentSelfCheck],
     ['SEO', agentSEO],
     ['Perf', agentPerf],
@@ -4090,7 +4127,7 @@ async function main() {
   // AGENT_ONLY=<comma list>: manual dispatch pinning (e.g. practicesets for a
   // one-off practice-set run). Empty/absent on normal runs -> full rotation.
   if (process.env.AGENT_ONLY === 'questions') {
-    agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content' || name === 'Papers' || name === 'WikiSyllabus');
+    agents = agents.filter(([name]) => name === 'Foresight' || name === 'QuestionCats' || name === 'Questions' || name === 'Content' || name === 'Papers' || name === 'WikiSyllabus');
   } else if (process.env.AGENT_ONLY && process.env.AGENT_ONLY.trim()) {
     const want = process.env.AGENT_ONLY.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
     const keep = agents.filter(([name]) => want.indexOf(name.toLowerCase()) !== -1);

@@ -333,6 +333,60 @@ questions to Generators first because they carry `_wikiCat='course-lesson'`.
     enforcement, optional/language validation, duplicate suppression, the
     authored-bank quality floor, the fresh-pool contract and a DOM test of the
     page's chips, subject filter, guide, generation guard and fresh coverage.
+- 2026-11-02: Map timeframe and zoom responsiveness
+  - `map.html` no longer re-filters and re-places all 557k timeline nodes on
+    every scroll tick. `render()` caches the placed rows in `_LAYOUT` and
+    `emitViewport()` binary-searches the sorted rows and writes only the
+    visible window (plus a 1,400 px buffer). The scroll handler debounces
+    `emitViewport()`, never `render()`.
+  - `scrollToPresent()` suppresses the scroll event its own assignment fires,
+    so zoom/focus jumps do not queue a second layout. `zoomBy()` labels the
+    window it is entering instead of the one it is leaving.
+  - The timeframe dialog paints a loading state first and appends 250 cards per
+    click (`TF_CHUNK`); full history is ~483k dated topics, so a single
+    `innerHTML` was freezing the page. Markdown export is capped at 2,000 rows
+    and says so, instead of silently truncating or hanging.
+- 2026-11-02: Curated question-category moves
+  - `data/category-moves.json` is the reviewable registry. Each move names the
+    source category, target category, source/target shard files and literal
+    evidence that must appear in the moved questions. A missing target category,
+    a changed shard, a subtopic collision or unmatched evidence fails closed.
+  - `scripts/lib/question-category-moves.js` validates and applies a whole
+    subtopic, clears stale `relevance`/`examScope` tags so `ExamScope` recomputes
+    from the corrected subject, and patches the matching timeline node. The
+    first move corrects ARP4761 from `Indian Languages` to
+    `Indian Aviation & Shipping` (16 questions) and drops the bogus year 1309
+    parsed from `14 CFR 25.1309`.
+  - `scripts/apply-question-category-moves.js` runs as a gate in
+    `.github/workflows/question-quality.yml`; `site-agent.js` also exposes a
+    `QuestionCats` rule lane. `current-affairs.html` applies the same registry at
+    display time so the 1-hour raw-GitHub shard cache cannot keep showing the
+    old label. `npm run test-category-moves` covers validation, evidence,
+    collisions, idempotence and the timeline patch.
+- 2026-11-02: Mains fresh-pool prune
+  - Removed four weak/duplicate items that blocked the deploy gate
+    (`ci-mvxnrfok`, `ci-mvy1er0x`, `ci-mvy2fhd6`, `ci-mvy63b6a`) and kept the
+    three newer items that had landed on `main` (GS1, GS2, GS4). The pool is 15
+    items, all passing `scripts/lib/mains-quality.js` and the duplicate check;
+    the reviewed bank remains 19 items across all nine papers. GS3 still
+    dominates at 12, so the next `MainsFresh` run targets the empty papers
+    (Essay, Optional I/II, languages) first.
+- 2026-11-02: Mind-tree authoring by the scheduled agent
+  - `flowchart.html` draws only hand-authored trees. Entries with `_gen:true`
+    (currently 534 of 566) are skipped at load; the earlier co-mention buckets
+    were duplicates, not explanations, and are no longer presented as answers.
+  - `agentGraphNotes` in `scripts/site-agent.js` upgrades one `_gen` tree per
+    rotating run: deterministic junk is removed first, then the model writes a
+    card description, a specific how-it-relates note and a typed verb. `_gen` is
+    dropped only when every remaining card has a real note and no junk remains,
+    which promotes that tree to authored authority. This is genuine authoring,
+    not relabelling: a tree with any bad note stays skipped.
+  - `scripts/merge-mindtree-proposals.js` is the batch path. It merges only
+    proposals marked `_agent:true` and `_verified:true`, refuses to change any
+    other top-level entry, and validates the new file before swapping it in.
+  - So yes, the scheduled agent can author the remaining trees itself, but at
+    one tree per GraphNotes turn plus model/QC limits. It will take many runs;
+    it never invents a relationship to make a tree look complete.
 - 2026-11-01: Film author pipeline
   - `bengal-famine-1943` now has five readable sources; modelling moved from
     the 35B model (download failed at ~84%) to Qwen2.5-7B Q5_K_M with retries.

@@ -236,6 +236,8 @@ function indexFor(list) {
 }
 
 var html = '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
+  '<meta name="viewport" content="width=device-width,initial-scale=1">' +
+  '<meta name="description" content="Printable GS Geography diagram pack for UPSC: topic-by-topic concept maps with typed evidence links and co-mention weights.">' +
   '<title>GS Geography Diagram Pack (UPSC)</title>' +
   '<style>' +
   'body{font-family:-apple-system,"Segoe UI",Roboto,Arial,sans-serif;margin:0;background:#e5e7eb;color:#111827}' +

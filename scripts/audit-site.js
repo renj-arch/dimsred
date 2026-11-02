@@ -46,12 +46,16 @@ const MAX = (function () {
 })();
 
 const SKIP_DIRS = new Set(['node_modules', '.git', 'live-dist', 'chunks', 'tmp', 'templates']);
-const SKIP_PATHS = [path.join('data', 'questions')];
+// data/questions is served by a Pages function, not deployed as a page. Keep
+// this in POSIX form: rel comes from git as "data/questions/x.json", so a
+// path.join() here became "data\\questions" on Windows and skipped nothing.
+const SKIP_PATHS = ['data/questions'];
 
 function isSkipped(rel) {
-  const parts = rel.split('/');
+  const posix = String(rel).split(path.sep).join('/');
+  const parts = posix.split('/');
   if (parts.some(function (p) { return SKIP_DIRS.has(p); })) return true;
-  return SKIP_PATHS.some(function (p) { return rel === p || rel.indexOf(p + '/') === 0; });
+  return SKIP_PATHS.some(function (p) { return posix === p || posix.indexOf(p + '/') === 0; });
 }
 
 function gitList(extraArgs) {
