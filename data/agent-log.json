@@ -1,78 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T18:32:24.665Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. MockPapers is next because filesPresent shows no papers exist, making it a standing goal. MainsFresh should follow to generate fresh daily material since filesPresent indicates no questions or syllabus yet. MetaLearn and ExamPatterns have produced 0 fixes in recent runs (last two/three), so they are moved to the end per starvation rules despite their low immediate output.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "MetaLearn",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (311 total)",
-       "text": "State the working principle and teeth of a hacksaw. | How is a hacksaw blade selected for the job? | How should a flexible hacksaw blade be fitted in the frame?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "11 fresh mock questions on Theory of Machines (360 in pool)",
-       "text": "Theory of Machines"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvy63b6a (gs3, 15 marks): With the increasing frequency of state-sponsored cyber attacks targeting power grids, banking systems, and healthcare ne",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T19:26:52.451Z",
    "model": "qwen3.5:9b",
    "totalFixes": 4,
@@ -670,8 +598,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T01:29:40.484Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visual data. Since MockPapers and ExamPatterns produced zero fixes in the last two runs, they will be placed later in the queue after critical infrastructure is stabilized, adhering to the rule of starving underperformers temporarily while addressing unfinished standing goals.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "ExamPatterns",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (345 total)",
+       "text": "What is a dowel joint? | State the strength and weakness of the plain butt joint. | What is a sash (frame) joint?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T01:03:33.669Z",
+ "lastRun": "2026-11-02T01:29:40.484Z",
  "model": "qwen3.5:9b"
 }
