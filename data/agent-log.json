@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T22:49:43.377Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-01T23:41:29.969Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -569,8 +557,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T04:31:57.199Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. Since papers and questions files are missing, MetaLearn should immediately generate fresh exam content to fill these voids. Invention is placed last as it requires stable inputs from previous agents.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (364 total)",
+       "text": "What is upsetting in smithing? | When is a blacksmith's set hammer used? | What is fullering?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T04:16:35.658Z",
+ "lastRun": "2026-11-02T04:31:57.199Z",
  "model": "qwen3.5:9b"
 }
