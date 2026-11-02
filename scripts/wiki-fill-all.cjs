@@ -5,7 +5,7 @@ const { readQuizQuestions, writeQuiz, iterQuizQuestions, createStreamingShardWri
 const WIKI_API = 'https://en.wikipedia.org/w/api.php';
 const QUIZ_PATH = process.env.QUIZ_PATH || 'data/quiz.json';
 const LINK_POOL_PATH = process.env.WIKI_LINK_POOL_PATH || path.join(path.dirname(QUIZ_PATH), 'wiki-link-pool.json');
-// Cache of Category:XXX member lists discovered by past chunk jobs. All 27 chunk
+// Cache of Category:XXX member lists discovered by past chunk jobs. All 10 chunk
 // jobs run in parallel and previously each independently re-fetched the members
 // of every category in CATEGORIES over the network, which both wasted the API
 // budget and burned the per-run discovery deadline sequentially. Persisting the
@@ -4213,7 +4213,7 @@ async function main() {
   try { quizSize = fs.statSync(QUIZ_PATH).size; } catch (e) {}
   // The monolithic quiz is sharded across ~4 files totalling ~3GB (~6M question
   // objects). readQuizQuestions()/readQuiz() reassemble ALL shards into one
-  // in-memory array; doing that on every one of the 27 parallel chunk jobs
+  // in-memory array; doing that on every one of the 10 parallel chunk jobs
   // blows the 8GB heap → FATAL OOM (exit 134, runs #482 / #488). Instead we
   // stream the existing questions one shard at a time via iterQuizQuestions(),
   // keeping only the derived dedup/state structures in memory — the same
@@ -4299,7 +4299,7 @@ async function main() {
   let linkPool = {};
   try { linkPool = JSON.parse(fs.readFileSync(LINK_POOL_PATH, 'utf8')); }
   catch (e) { linkPool = {}; }
-  // Discovered Category:XXX member lists shared across the 27 parallel chunk
+  // Discovered Category:XXX member lists shared across the 10 parallel chunk
   // jobs (persisted read-through cache, see CAT_MEMBER_CACHE_PATH above).
   const catMemberCache = {};
   try { Object.assign(catMemberCache, JSON.parse(fs.readFileSync(CAT_MEMBER_CACHE_PATH, 'utf8'))); }

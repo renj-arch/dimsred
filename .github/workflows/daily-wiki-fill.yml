@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       chunk:
-        description: 'Chunk to process (1-27, leave empty for all)'
+        description: 'Chunk to process (1-10, leave empty for all)'
         required: false
         default: ''
 
@@ -24,6 +24,7 @@ jobs:
   # ΓöÇΓöÇ Setup: prepare baseline quiz.json, PIB feeds ΓöÇΓöÇ
   setup:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
         with:
@@ -78,22 +79,21 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ΓöÇΓöÇ Wiki chunks: 27 runners, capped at 20 in parallel ΓöÇΓöÇ
+  # ΓöÇΓöÇ Wiki chunks: 10 runners, ALL in one parallel wave (2026-11-02 restructure: was 27 chunks at max-parallel 8 = four waves, worst case ~20 h per run). Single wave of 10 with a 240-min self-stop finishes the fill in ~4 h; job caps sum to a hard ~10 h ceiling: setup 20 + chunks 300 + merge 45 + archive 90 + finalize 85 = 540 min. ΓöÇΓöÇ
   # Each chunk is bounded by its discovery budgets (LINK_BUDGET limits how many
   # linked pages a single category may traverse per run at ~2.5s/request and
   # concurrency 2 ΓÇö worst case a 200k budget would run ~70h). Linked pages are
   # persisted to the link pool and re-mined next run, so the caps only spread
-  # discovery across runs, never drop data. Timeout lifted to the GitHub-hosted
-  # runner max (360 min) as headroom on top of the cut link budget.
+  # discovery across runs, never drop data. Job cap is 300 min as headroom on top of the cut link budget + 240-min self-stop.
   wiki-chunks:
     needs: setup
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        chunk: ${{ fromJSON(inputs.chunk != '' && format('[{0}]', inputs.chunk) || '[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27]') }}
-      max-parallel: 8
+        chunk: ${{ fromJSON(inputs.chunk != '' && format('[{0}]', inputs.chunk) || '[1,2,3,4,5,6,7,8,9,10]') }}
+      max-parallel: 10
       fail-fast: false
-    timeout-minutes: 360
+    timeout-minutes: 300
     # A chunk that hits the runner's hard timeout (or fails) must not abort the
     # whole run: run #434 lost 17 successful chunks' data because 10 slow chunks
     # were killed at the 360-min cap, which cancelled merge+finalize. Each chunk
@@ -122,8 +122,8 @@ jobs:
         if: inputs.chunk != ''
         run: |
           case "${{ inputs.chunk }}" in
-            1|2|3|4|5|6|7|8|9|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26|27) echo "Single-chunk run: only chunk ${{ inputs.chunk }}";;
-            *) echo "::error::chunk must be 1-27, got '${{ inputs.chunk }}'"; exit 1;;
+            1|2|3|4|5|6|7|8|9|10) echo "Single-chunk run: only chunk ${{ inputs.chunk }}";;
+            *) echo "::error::chunk must be 1-10, got '${{ inputs.chunk }}'"; exit 1;;
           esac
 
       - name: Prepare chunk output file
@@ -138,11 +138,11 @@ jobs:
         # the 360-min job budget again (run 38974805883 hung 10 shards ~7h on
         # one dead socket; the script now times out sockets too - this is the
         # second seatbelt and leaves the merge job its window).
-        timeout-minutes: 330
+        timeout-minutes: 280
         run: node scripts/wiki-fill-all.cjs
         env:
           WIKI_FILL_CHUNK: ${{ matrix.chunk }}
-          WIKI_FILL_CHUNKS: 27
+          WIKI_FILL_CHUNKS: 10
           WIKI_FILL_ALL: '1'
           QUIZ_PATH: data/quiz-chunk-${{ matrix.chunk }}.json
           WIKI_FILL_CONCURRENCY: 5
@@ -169,8 +169,8 @@ jobs:
           # discovered in the same run instead of deferring to the link pool.
           WIKI_FILL_DISCOVERY_BUDGET_PCT: 45
           WIKI_FILL_DELAY_MS: 2500
-          # Self-stop budget: 300 min leaves 60 min of headroom before the runner's
-          # 360-min hard timeout. Run #508 proved 330 was too tight ΓÇö the
+          # Self-stop budget: 240 min, inside a 280-min step cap and a 300-min
+          # job cap — one wave of 10 chunks, so the fill lands in ~4 h. Run #508 proved 330 was too tight ΓÇö the
           # link-following loop only respected the discovery budget, ate the
           # remaining window, and chunks were killed at the 360-min cap before
           # upload-artifact ran, losing the merged data. The script now also
@@ -178,7 +178,7 @@ jobs:
           # discovery budget), so a chunk always exits cleanly (code 0) with time
           # to upload ΓÇö never killed mid-run by the runner timeout. Raised 280->300
           # so the 17 added wiki categories get a fuller generation slot.
-          WIKI_FILL_TIME_BUDGET_MIN: 300
+          WIKI_FILL_TIME_BUDGET_MIN: 240
 
       - uses: actions/upload-artifact@v4
         with:
@@ -204,6 +204,7 @@ jobs:
   # ΓöÇΓöÇ Merge: combine all chunk outputs ΓöÇΓöÇ
   merge:
     needs: wiki-chunks
+    timeout-minutes: 45
     # Merge whatever chunks succeeded ΓÇö a failed/timed-out chunk must not throw
     # away the rest (run #434). merge-chunks.js skips missing chunks and no-ops
     # cleanly when there are none.
@@ -347,9 +348,10 @@ jobs:
   # ΓöÇΓöÇ Archive tail: build archive.html + indexes in a dedicated job ΓöÇΓöÇ
   # Split out of `merge` (run #519: build-archive-single.js hit merge's default
   # 6h cap and cancelled the job before `merged` was uploaded). This job gets a
-  # fresh 360-min budget and re-uploads the final payload under `merged`.
+  # fresh 90-min budget and re-uploads the final payload under `merged`.
   archive:
     needs: [merge]
+    timeout-minutes: 90
     if: ${{ !cancelled() && needs.merge.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -406,7 +408,7 @@ jobs:
     # on the hard 6h kill. The 6h-cap guard on the timeline step (below) keeps
     # normal runs far under this: timeline only starts when it can FINISH, and
     # build-timeline.yml is self-dispatched at the end as the continuation path.
-    timeout-minutes: 350
+    timeout-minutes: 85
     steps:
       - uses: actions/checkout@v4
         with:
