@@ -809,7 +809,11 @@ function narrationPrompt(film, scene, rows) {
     'Write exactly five narration lines for this scene.',
     '',
     'RULES',
-    '- Each line is 7 to 22 words and is spoken once.',
+    // 4 words, not 7: the CPU model reliably writes a complete but short
+    // sentence ("Wavell returned to India in September." is 6 words) and the
+    // old floor rejected whole scenes for being concise, not wrong. Facts are
+    // still checked against the cited row; only the length floor moved.
+    '- Each line is 4 to 22 words and is spoken once.',
     '- Choose one ledger row for each line. Every number, year, date or name in',
     '  the line must appear in that row.',
     '- Do not invent a fact. If the rows do not support a line, write a shorter',
@@ -887,8 +891,8 @@ function auditLines(lines, rows, scene, usedTexts) {
       continue;
     }
     const count = words(text).length;
-    if (count < 7 || count > 22) {
-      problems.push(`"${text}" is ${count} words (7..22)`);
+    if (count < 4 || count > 22) {
+      problems.push(`"${text}" is ${count} words (4..22)`);
       continue;
     }
     if (/\b(we|our|us|you|your|imagine|perhaps|probably)\b/i.test(text)) {
@@ -911,7 +915,7 @@ function auditLines(lines, rows, scene, usedTexts) {
 
 function stubLines(rows, scene, usedTexts) {
   /*
-   * A deterministic stand-in for the model: build 5 lines of 7-22 words each
+   * A deterministic stand-in for the model: build 5 lines of 4-22 words each
    * from the candidate rows, skipping anything an earlier scene already said.
    * This exists only so the assembly and the gate can be exercised without a
    * model on the machine.
@@ -1592,5 +1596,7 @@ module.exports = {
   topicSetPool,
   choosePlates,
   directorPrompt,
-  validateDirector
+  validateDirector,
+  // Exported for the narration-gate unit test.
+  auditLines
 };

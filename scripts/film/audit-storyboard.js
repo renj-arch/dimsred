@@ -55,7 +55,9 @@ for (const scene of film.scenes || []) {
     }
 
     const count = words(text);
-    if (count < 7 || count > 22) problems.push(`${where}: ${count} words, expected 7-22`);
+    // Match author.js: 4-word floor. The old 7-word floor rejected sourced,
+    // complete short sentences and stalled entire films at the S05 gate.
+    if (count < 4 || count > 22) problems.push(`${where}: ${count} words, expected 4-22`);
     if (/\b(you|your|yours)\b/i.test(text)) problems.push(`${where}: second person`);
     if (/\b(reportedly|it is said|some say|many believe)\b/i.test(text)) {
       problems.push(`${where}: hedge`);
