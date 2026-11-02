@@ -478,45 +478,46 @@
    ]
   },
   {
-   "at": "2026-11-02T06:34:46.093Z",
+   "at": "2026-11-02T06:47:52.556Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
+     "agent": "foresight",
      "count": 0
     },
     {
-     "agent": "invention",
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
      "count": 0
     },
     {
-     "agent": "mainsfresh",
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
      "count": 0
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent producing fixes recently, so it leads. MetaLearn, Invention, and MainsFresh have produced zero fixes for three consecutive runs, indicating they are currently starved of inputs rather than broken; they will be queued last to avoid wasting budget on empty loops while we clear the backlog.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "questions",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (376 total)",
-       "text": "How is the slag removed from a finished weld? | What welding clothing protects the welder? | Name the common sheet metal snips."
+       "page": "data/questions",
+       "fix": "Found 233193 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 2 overlapping subtopics into correct categories"
       }
      ]
     }
