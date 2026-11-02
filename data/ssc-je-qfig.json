@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T03:29:57.204Z",
-  "cursor": 378,
-  "built": 358
+  "updatedAt": "2026-11-02T04:06:18.275Z",
+  "cursor": 381,
+  "built": 361
  },
  "figs": {
   "11434945": {
@@ -2151,6 +2151,24 @@
   "4744d674": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,180 L100,180 L100,120 L160,120 L160,180 L220,180 L220,140 L280,140 L280,180 L320,180\"/><path d=\"M100,120 L100,80 L160,80 L160,120 Z\" fill=\"#eee\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M220,140 L220,100 L280,100 L280,140 Z\" fill=\"#eee\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"130\" y=\"70\" text-anchor=\"middle\">Face</text><text x=\"250\" y=\"90\" text-anchor=\"middle\">Horn</text><text x=\"130\" y=\"115\" text-anchor=\"middle\">Step</text><text x=\"60\" y=\"195\">Hardy Hole</text><text x=\"140\" y=\"195\">Pritchel Hole</text><text x=\"260\" y=\"195\">Tooling</text></svg>",
    "n": "name the main parts of a blacksmith anvil.",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "d50826d2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Smith Tongs: Grip Types</text><rect x=\"40\" y=\"35\" width=\"60\" height=\"140\" rx=\"5\" stroke-dasharray=\"4 2\"/><text x=\"70\" y=\"80\" text-anchor=\"middle\" font-weight=\"bold\">Flat Tongs</text><path d=\"M 45 50 L 85 50 L 85 130 L 45 130 Z\" fill=\"#ddd\" stroke=\"#222\"/><circle cx=\"65\" cy=\"90\" r=\"5\" fill=\"#222\"/><text x=\"70\" y=\"150\" text-anchor=\"middle\">For Flat Bars</text><rect x=\"140\" y=\"35\" width=\"60\" height=\"140\" rx=\"5\" stroke-dasharray=\"4 2\"/><text x=\"170\" y=\"80\" text-anchor=\"middle\" font-weight=\"bold\">Hollow Tongs</text><path d=\"M 145 50 L 195 50 L 195 130 L 145 130 Z\" fill=\"#ddd\" stroke=\"#222\"/><circle cx=\"170\" cy=\"90\" r=\"8\" fill=\"#222\"/><text x=\"170\" y=\"150\" text-anchor=\"middle\">For Round Bars</text><rect x=\"240\" y=\"35\" width=\"60\" height=\"140\" rx=\"5\" stroke-dasharray=\"4 2\"/><text x=\"270\" y=\"80\" text-anchor=\"middle\" font-weight=\"bold\">Pick-Up Tongs</text><path d=\"M 245 50 L 295 50 L 295 130 L 245 130 Z\" fill=\"#ddd\" stroke=\"#222\"/><circle cx=\"270\" cy=\"90\" r=\"6\" fill=\"#222\"/><text x=\"270\" y=\"150\" text-anchor=\"middle\">For Small Pieces</text><line x1=\"30\" y1=\"180\" x2=\"330\" y2=\"180\" stroke-dasharray=\"4 2\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Protects Hand from Heat</text></svg>",
+   "n": "what are the purpose and types of smith tongs?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "b46e4b27": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Ball-Peen Hammer Usage</text><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\"/><text x=\"50\" y=\"65\">Flat Face</text><text x=\"50\" y=\"80\">(Heavy Striking)</text><circle cx=\"180\" cy=\"70\" r=\"4\"/><line x1=\"300\" y1=\"70\" x2=\"300\" y2=\"150\"/><text x=\"305\" y=\"90\">Ball End</text><text x=\"305\" y=\"110\">(Shaping/Rivets)</text><path d=\"M 60 70 L 180 150\" stroke-dasharray=\"4,2\"/><text x=\"100\" y=\"130\">Strike Direction</text><circle cx=\"180\" cy=\"70\" r=\"12\" fill=\"#222\" opacity=\"0.1\"/><circle cx=\"300\" cy=\"70\" r=\"12\" fill=\"#222\" opacity=\"0.1\"/></svg>",
+   "n": "what is the ball-peen hammer used for?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "7c2ca916": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Initial Thick Stock -->\n  <rect x=\"40\" y=\"80\" width=\"20\" height=\"60\" rx=\"2\" />\n  <text x=\"35\" y=\"125\" text-anchor=\"end\">Thick</text>\n  \n  <!-- Hammering Action (Repeated Strokes) -->\n  <path d=\"M 80 40 L 80 70 M 90 40 L 90 70 M 100 40 L 100 70\" stroke-dasharray=\"2,2\" />\n  <text x=\"85\" y=\"30\">Hammer</text>\n  \n  <!-- Final Thin Stock -->\n  <rect x=\"120\" y=\"90\" width=\"20\" height=\"40\" rx=\"2\" />\n  <text x=\"115\" y=\"125\" text-anchor=\"end\">Thin</text>\n  \n  <!-- Lengthening Arrow -->\n  <line x1=\"100\" y1=\"130\" x2=\"140\" y2=\"130\" stroke-width=\"1\" />\n  <text x=\"120\" y=\"125\" text-anchor=\"middle\">Lengthened</text>\n  \n  <!-- Labels -->\n  <text x=\"20\" y=\"20\">Smithing Process</text>\n  <text x=\"20\" y=\"35\">Drawing Down</text>\n</svg>",
+   "n": "what is drawing down in smithing?",
    "sub": "workshop",
    "at": "2026-11-02"
   }

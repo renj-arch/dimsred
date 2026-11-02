@@ -1,34 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T22:47:37.331Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 2
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      },
-      {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T22:49:43.377Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -562,8 +534,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T04:16:35.658Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical gaps in figures (79) and papers (0 present), while BankFigures is the only agent producing fixes recently. I will prioritize BankFigures to clear the massive figure debt immediately. Once figures are stable, Invention must be triggered to generate the missing papers, questions, and syllabus files since no content exists yet. MetaLearn and MainsFresh are starved (0 output in last 3 runs) and should run last to avoid wasting budget on empty pipelines until upstream agents fee",
+    "actions": [
+     "BankFigures",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (361 total)",
+       "text": "What are the purpose and types of smith tongs? | What is the ball-peen hammer used for? | What is drawing down in smithing?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T03:54:29.480Z",
+ "lastRun": "2026-11-02T04:16:35.658Z",
  "model": "qwen3.5:9b"
 }
