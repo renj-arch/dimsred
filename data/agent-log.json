@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T13:54:50.975Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/syllabus files are missing, Invention is needed immediately to generate foundational study materials before MockPapers or ExamPatterns can function effectively. MetaLearn will follow to synthesize new patterns from the generated content, while MainsFresh runs last to refresh daily material now that core assets exist.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (408 total)",
-       "text": "How is a multimeter used to check a continuous circuit? | How is the size of a copper conductor chosen? | State two vital electrical workshop safety rules."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T14:23:53.416Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -661,8 +611,31 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T20:45:01.684Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T20:19:36.732Z",
+ "lastRun": "2026-11-02T20:45:01.684Z",
  "model": "qwen3.5:9b"
 }
