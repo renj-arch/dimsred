@@ -1,17 +1,27 @@
 {
  "meta": {
-  "generatedAt": "2026-11-01T08:18:49.848Z",
+  "generatedAt": "2026-11-02T08:27:31.361Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 35,
+  "count": 36,
   "lastAttempt": {
-   "at": "2026-11-01T08:18:49.848Z",
+   "at": "2026-11-02T08:27:31.361Z",
    "ok": true,
-   "count": 2,
-   "dropped": 2
+   "count": 1,
+   "dropped": 4
   }
  },
  "proposals": [
+  {
+   "id": "prp-mvyzx9r5-1",
+   "at": "2026-11-02T08:27:31.361Z",
+   "title": "Fix Tutor Lane Generation Count & Parsing",
+   "why": "Recent failures show 'tutor-questions' generating only 2 of 5 valid questions and sometimes returning non-array JSON, causing the lane to stall.",
+   "idea": "Update the on-demand writer script to enforce a minimum token count for generation attempts until a valid JSON array with at least 3 items is returned, then wrap the output parser in a try-catch block that retries or falls back gracefully if the model returns malformed text.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvxk68op-1",
    "at": "2026-11-01T08:18:49.848Z",
