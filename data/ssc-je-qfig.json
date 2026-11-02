@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T14:36:15.927Z",
-  "cursor": 438,
-  "built": 413
+  "updatedAt": "2026-11-02T15:29:17.746Z",
+  "cursor": 441,
+  "built": 416
  },
  "figs": {
   "11434945": {
@@ -2481,6 +2481,24 @@
   "836b2d37": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"60\" width=\"80\" height=\"120\" stroke-dasharray=\"3,2\" />\n <line x1=\"100\" y1=\"70\" x2=\"100\" y2=\"150\" />\n <rect x=\"90\" y=\"65\" width=\"20\" height=\"80\" fill=\"#222\" />\n <polygon points=\"100,150 110,140 100,130 90,140\" />\n <text x=\"70\" y=\"120\">Blade</text>\n <text x=\"85\" y=\"65\">Handle</text>\n <line x1=\"190\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"2,2\" />\n <polygon points=\"240,70 250,60 260,70 250,80\" />\n <polygon points=\"240,90 250,80 260,90 250,100\" />\n <text x=\"230\" y=\"55\">Screw</text>\n <text x=\"230\" y=\"75\">Slot</text>\n <line x1=\"180\" y1=\"60\" x2=\"190\" y2=\"60\" />\n <line x1=\"220\" y1=\"60\" x2=\"230\" y2=\"60\" />\n <line x1=\"260\" y1=\"60\" x2=\"270\" y2=\"60\" />\n <text x=\"185\" y=\"45\">Width Match</text>\n <text x=\"185\" y=\"35\">Square Tip</text>\n</svg>",
    "n": "what is a screwdriver and how is the blade matched to the screw?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "2692d144": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Screw Head Types</text><g id=\"slotted\"><circle cx=\"60\" cy=\"70\" r=\"30\"/><path d=\"M 40 70 L 80 70 M 60 50 L 60 90\" stroke-width=\"2\"/><text x=\"55\" y=\"100\">Slotted</text><text x=\"45\" y=\"105\">Flat blade</text></g><g id=\"crosshead\"><circle cx=\"180\" cy=\"70\" r=\"30\"/><path d=\"M 160 70 L 200 70 M 180 50 L 180 90\" stroke-width=\"2\"/><text x=\"175\" y=\"100\">Cross-head</text><text x=\"165\" y=\"105\">Cruciform blade</text></g><g id=\"star\"><circle cx=\"300\" cy=\"70\" r=\"30\"/><path d=\"M 290 70 L 310 70 M 300 50 L 300 90 M 285 65 L 305 65 M 305 65 L 285 65\" stroke-width=\"1.5\"/><text x=\"295\" y=\"100\">Star (Torx)</text><text x=\"285\" y=\"105\">Splined driver</text></g><line x1=\"30\" y1=\"120\" x2=\"330\" y2=\"120\" stroke-dasharray=\"4,2\"/><text x=\"60\" y=\"140\">Slotted: Flat blade fits slot</text><text x=\"180\" y=\"140\">Cross: Cruciform blade fits cross</text><text x=\"300\" y=\"140\">Star: Splined driver grips star</text></svg>",
+   "n": "what is the difference between a slotted, a cross-head and a star screw?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "d7166528": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Screw Head -->\n  <path d=\"M80,40 L120,40 L140,60 L160,40 L200,40 L220,60 L240,40 L280,40 L300,60 L320,40\" stroke=\"none\" fill=\"#222\"/>\n  <path d=\"M100,50 L160,50 L170,60 L190,60 L200,50 L260,50 L270,60 L290,60 L300,50\" stroke=\"none\" fill=\"#222\"/>\n  <!-- Hex Socket -->\n  <polygon points=\"140,50 150,45 160,50 150,55 140,50\" fill=\"none\" stroke-width=\"2\"/>\n  <polygon points=\"220,50 230,45 240,50 230,55 220,50\" fill=\"none\" stroke-width=\"2\"/>\n  <!-- Allen Key -->\n  <rect x=\"170\" y=\"80\" width=\"20\" height=\"80\" transform=\"rotate(45 180 120)\" stroke=\"#222\" fill=\"none\"/>\n  <line x1=\"180\" y1=\"160\" x2=\"180\" y2=\"170\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Labels -->\n  <text x=\"130\" y=\"35\" font-weight=\"bold\">Socket Head</text>\n  <text x=\"130\" y=\"50\">Cap Screw</text>\n  <text x=\"240\" y=\"35\" font-weight=\"bold\">Hexagon</text>\n  <text x=\"240\" y=\"50\">Socket</text>\n  <text x=\"180\" y=\"190\" text-anchor=\"middle\">Allen Key</text>\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">(Twisting Motion)</text>\n</svg>",
+   "n": "what are allen (hex) keys used for?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "731e4a33": {
+   "svg": "<svg viewBox='0 0 360 220' stroke='#222' fill='none' stroke-width='1.5' font-size='12'><rect x='40' y='80' width='120' height='90' /><path d='M 40 80 L 160 80 L 160 170 L 40 170 Z' fill='#eee' opacity='0.5' /><path d='M 40 80 L 40 170 M 160 80 L 160 170' stroke-width='3' /><circle cx='100' cy='125' r='25' fill='#eee' opacity='0.5' /><path d='M 100 125 L 100 145 M 85 125 L 95 135 M 115 125 L 105 135' stroke-width='2' /><text x='75' y='65'>Workpiece</text><text x='85' y='195'>Bench Vice</text><text x='145' y='195'>Gripping Area</text></svg>",
+   "n": "what is a bench vice and how is it used safely?",
    "sub": "workshop",
    "at": "2026-11-02"
   }
