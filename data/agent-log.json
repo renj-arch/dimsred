@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T23:41:29.969Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation; the 'papers' agent produced 0 fixes in the last two runs so it must be starved and moved to the end of the queue despite being a high-priority goal type. The strategy is to clear standing debts first: fix broken figures, then complete pending mock papers, followed by addressing open faults and generating fresh mains material.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (333 total)",
-       "text": "State the measuring range of a standard outside micrometer. | What is a micrometer used to measure, and its accuracy advantage? | What are the anvil and spindle of a micrometer made of and why?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T00:02:30.780Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -597,8 +547,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T04:49:26.237Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-02T04:31:57.199Z",
+ "lastRun": "2026-11-02T04:49:26.237Z",
  "model": "qwen3.5:9b"
 }
