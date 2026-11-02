@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T07:14:04.137Z",
-  "cursor": 402,
-  "built": 381
+  "updatedAt": "2026-11-02T07:34:56.914Z",
+  "cursor": 405,
+  "built": 384
  },
  "figs": {
   "11434945": {
@@ -2289,6 +2289,24 @@
   "819b7f3b": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <text x=\"180\" y=\"40\" text-anchor=\"middle\">Sheet Metal Hemming</text>\n  <!-- Initial Edge -->\n  <path d=\"M 60 100 L 300 100\" stroke-dasharray=\"5,5\"/>\n  <text x=\"180\" y=\"90\" text-anchor=\"middle\">Original Edge</text>\n  <!-- Folded Lip -->\n  <path d=\"M 60 100 L 300 100 L 300 140 L 260 140 L 260 180 L 60 180 Z\"/>\n  <!-- Labels -->\n  <path d=\"M 290 105 L 290 120\" stroke-width=\"1\"/>\n  <text x=\"300\" y=\"117\">Folded Lip</text>\n  <path d=\"M 65 185 L 45 185\" stroke-width=\"1\"/>\n  <text x=\"35\" y=\"192\">Stiffened Edge</text>\n  <!-- Hidden Cut -->\n  <line x1=\"70\" y1=\"180\" x2=\"290\" y2=\"180\" stroke-dasharray=\"2,2\" opacity=\"0.3\"/>\n  <text x=\"180\" y=\"195\" text-anchor=\"middle\">Cut Hidden Inside</text>\n</svg>",
    "n": "what is hemming in sheet metal work?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "752c10f2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"20\" y=\"40\" width=\"80\" height=\"120\" /><path d=\"M 40 60 L 100 60\" /><path d=\"M 40 70 L 100 70\" /><path d=\"M 40 80 L 100 80\" /><path d=\"M 40 90 L 100 90\" /><path d=\"M 40 100 L 100 100\" /><path d=\"M 40 110 L 100 110\" /><text x=\"55\" y=\"55\" text-anchor=\"middle\">Sheet A</text><text x=\"55\" y=\"125\" text-anchor=\"middle\">Sheet B</text><path d=\"M 105 60 L 340 60\" /><path d=\"M 105 70 L 340 70\" /><path d=\"M 105 80 L 340 80\" /><path d=\"M 105 90 L 340 90\" /><path d=\"M 105 100 L 340 100\" /><path d=\"M 105 110 L 340 110\" /><text x=\"225\" y=\"55\" text-anchor=\"middle\">Folded Edge</text><text x=\"225\" y=\"125\" text-anchor=\"middle\">Folded Edge</text><path d=\"M 340 60 L 340 110\" /><path d=\"M 340 60 L 345 60\" /><path d=\"M 340 70 L 345 70\" /><path d=\"M 340 80 L 345 80\" /><path d=\"M 340 90 L 345 90\" /><path d=\"M 340 100 L 345 100\" /><path d=\"M 340 110 L 345 110\" /><text x=\"350\" y=\"85\" text-anchor=\"middle\">Groover</text><text x=\"270\" y=\"145\" text-anchor=\"middle\">Clinched Seam</text></svg>",
+   "n": "what is a grooved seam in sheet metal?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "11265f9b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">Sheet Metal Riveting</text>\n <!-- Top Sheet -->\n <path d=\"M 40 60 L 320 60 L 320 90 L 40 90 Z\" />\n <text x=\"180\" y=\"75\" text-anchor=\"middle\">Top Sheet</text>\n <!-- Bottom Sheet (Lapped) -->\n <path d=\"M 40 100 L 320 100 L 320 130 L 40 130 Z\" />\n <text x=\"180\" y=\"115\" text-anchor=\"middle\">Bottom Sheet</text>\n <!-- Rivet Shank -->\n <line x1=\"180\" y1=\"90\" x2=\"180\" y2=\"130\" stroke-width=\"4\" />\n <!-- Rivet Head (Top) -->\n <circle cx=\"180\" cy=\"85\" r=\"12\" fill=\"#222\" />\n <!-- Rivet Tail (Bucked) -->\n <path d=\"M 175 130 Q 180 145 185 130\" stroke-width=\"3\" />\n <!-- Hammer -->\n <rect x=\"260\" y=\"110\" width=\"40\" height=\"10\" fill=\"#222\" />\n <line x1=\"260\" y1=\"110\" x2=\"300\" y2=\"110\" stroke-width=\"2\" />\n <!-- Rivet Set -->\n <rect x=\"240\" y=\"125\" width=\"20\" height=\"10\" fill=\"#222\" />\n <text x=\"250\" y=\"138\" text-anchor=\"middle\">Rivet Set</text>\n <!-- Arrows for Action -->\n <path d=\"M 290 105 L 300 115 M 290 115 L 300 105\" stroke-width=\"1.5\" fill=\"none\" />\n <text x=\"310\" y=\"110\" text-anchor=\"start\">Hammer</text>\n <path d=\"M 240 120 L 250 130 M 240 130 L 250 120\" stroke-width=\"1.5\" fill=\"none\" />\n <text x=\"260\" y=\"138\" text-anchor=\"start\">Set</text>\n</svg>",
+   "n": "how is a sheet metal panel riveted for a strong joint?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "21d6cec1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Rivet Set &amp; Bucking Bar</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"180\" cy=\"60\" r=\"10\"/><text x=\"175\" y=\"75\">Rivet Head</text><path d=\"M 170 50 L 190 50\" stroke-width=\"3\"/><text x=\"180\" y=\"42\" text-anchor=\"middle\">Shank</text><line x1=\"40\" y1=\"60\" x2=\"170\" y2=\"60\"/><path d=\"M 40 60 L 40 130\" stroke-width=\"2\"/><circle cx=\"40\" cy=\"130\" r=\"8\"/><text x=\"25\" y=\"145\">Rivet Set</text><text x=\"25\" y=\"135\">(Shapes Top)</text><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"130\" stroke-dasharray=\"4,2\"/><circle cx=\"320\" cy=\"130\" r=\"8\"/><text x=\"335\" y=\"145\">Bucking Bar</text><text x=\"335\" y=\"135\">(Backs Shank)</text><path d=\"M 170 60 L 190 60\" stroke-dasharray=\"2,2\"/><text x=\"185\" y=\"55\">Struck</text></svg>",
+   "n": "what are a rivet set and a bucking bar?",
    "sub": "workshop",
    "at": "2026-11-02"
   }
