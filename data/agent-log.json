@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T02:57:57.953Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. Since MockPapers produced 0 fixes in the last two runs while others worked, it is moved to the end of the queue per starvation rules. Invention and MetaLearn follow to address pending ideas and content depth.",
-    "actions": [
-     "BankFigures",
-     "ExamPatterns",
-     "MainsFresh",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (352 total)",
-       "text": "What is floor (bed) moulding? | Name the two halves of a moulding box and their function. | What does ramming do to the moulding sand and why must it be even?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T03:19:01.082Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -611,8 +561,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T09:15:41.484Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; prioritize BankFigures to fix broken visual content immediately. MockPapers must follow to address the 0/true state of papers files, as unfinished standing goals take precedence over new ideas. Invention and MetaLearn agents produced 0 fixes in the last two runs respectively and should be placed last to avoid starving them of input until gaps are cleared.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (390 total)",
+       "text": "What is a pipe cutter and how is it used? | What is used to cut an external pipe thread? | Name the common pipe fittings."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T08:48:44.533Z",
+ "lastRun": "2026-11-02T09:15:41.484Z",
  "model": "qwen3.5:9b"
 }

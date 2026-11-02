@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T08:33:34.875Z",
-  "cursor": 408,
-  "built": 387
+  "updatedAt": "2026-11-02T09:00:27.817Z",
+  "cursor": 411,
+  "built": 390
  },
  "figs": {
   "11434945": {
@@ -2325,6 +2325,24 @@
   "f1f021e6": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Stillson Wrench Action</text><path d=\"M40,80 L60,80 M60,80 L70,90 M70,90 L60,80 Z\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M320,80 L340,80 M340,80 L330,90 M330,90 L340,80 Z\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M60,80 Q100,60 140,80 T220,80 T340,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><circle cx=\"100\" cy=\"80\" r=\"15\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><circle cx=\"260\" cy=\"80\" r=\"15\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M70,90 L100,60 M330,90 L300,60\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"140\" text-anchor=\"middle\">Pipe</text><path d=\"M100,80 L100,160 M300,80 L300,160\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M100,160 L300,160\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"90\" y=\"175\">Serrated Jaw</text><text x=\"310\" y=\"175\">Serrated Jaw</text><path d=\"M40,80 L40,160 M340,80 L340,160\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"200\" text-anchor=\"middle\">Grips Tighter as Pulled</text></svg>",
    "n": "what is a stillson wrench (pipe wrench) used for?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "253cb979": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"80\" height=\"60\" rx=\"5\"/><circle cx=\"120\" cy=\"110\" r=\"3\"/><line x1=\"120\" y1=\"110\" x2=\"120\" y2=\"140\"/><text x=\"105\" y=\"105\">Wheel</text><circle cx=\"160\" cy=\"90\" r=\"4\"/><circle cx=\"160\" cy=\"130\" r=\"4\"/><line x1=\"160\" y1=\"90\" x2=\"160\" y2=\"130\"/><text x=\"155\" y=\"85\">Rollers</text><line x1=\"120\" y1=\"140\" x2=\"200\" y2=\"140\" stroke-dasharray=\"4,2\"/><polygon points=\"200,130 220,140 200,150\"/><text x=\"210\" y=\"145\">Screw</text><path d=\"M60 80 L60 140 M100 80 L100 140 M140 80 L140 140\"/><text x=\"30\" y=\"120\">Pipe</text><text x=\"240\" y=\"50\">Cutter</text></svg>",
+   "n": "what is a pipe cutter and how is it used?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "2b94140e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Pipe Body -->\n  <path d=\"M40,80 L320,80\" stroke-dasharray=\"5,5\"/>\n  <path d=\"M40,90 L320,90\" stroke-dasharray=\"5,5\"/>\n  <path d=\"M40,100 L320,100\" stroke-dasharray=\"5,5\"/>\n  <!-- Pipe End Chamfer -->\n  <path d=\"M60,80 L70,70 L90,90 Z\" fill=\"none\" stroke=\"#222\"/>\n  <text x=\"75\" y=\"65\" font-size=\"10\">Chamfer</text>\n  <!-- Pipe Die Stock -->\n  <rect x=\"80\" y=\"60\" width=\"40\" height=\"40\" stroke=\"#222\" fill=\"none\"/>\n  <line x1=\"100\" y1=\"70\" x2=\"100\" y2=\"90\" stroke=\"#222\"/>\n  <!-- Pipe Die -->\n  <path d=\"M100,65 L140,65 L140,95 L100,95 Z\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n  <!-- Threads being cut (simplified representation) -->\n  <path d=\"M120,70 L130,85 M130,70 L120,85\" stroke=\"#222\"/>\n  <path d=\"M140,70 L150,85 M150,70 L140,85\" stroke=\"#222\"/>\n  <!-- Labels -->\n  <text x=\"130\" y=\"60\" font-size=\"12\">Pipe Die</text>\n  <text x=\"130\" y=\"105\" font-size=\"12\">Die Stock</text>\n  <text x=\"280\" y=\"90\" font-size=\"12\">External Thread</text>\n  <!-- Arrow indicating rotation/cutting action -->\n  <path d=\"M160,70 Q180,55 200,70\" fill=\"none\" stroke=\"#222\"/>\n  <circle cx=\"180\" cy=\"70\" r=\"3\" fill=\"#222\"/>\n</svg>",
+   "n": "what is used to cut an external pipe thread?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "bdfaab8c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Main Pipe Line -->\n  <line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\" />\n  \n  <!-- Elbow (Bend) -->\n  <path d=\"M 160 110 L 180 90 L 200 110 L 180 130 L 160 110\" />\n  <text x=\"175\" y=\"100\">Elbow</text>\n  \n  <!-- Tee (Branch) -->\n  <line x1=\"240\" y1=\"110\" x2=\"240\" y2=\"60\" />\n  <text x=\"235\" y=\"70\">Tee</text>\n  \n  <!-- Coupling/Union (Join) -->\n  <line x1=\"80\" y1=\"110\" x2=\"100\" y2=\"110\" />\n  <line x1=\"100\" y1=\"90\" x2=\"100\" y2=\"130\" />\n  <text x=\"75\" y=\"145\">Coupling</text>\n  \n  <!-- Reducer (Size Change) -->\n  <path d=\"M 280 60 L 300 60 L 320 90 L 300 110 L 280 140 L 260 110 L 240 90\" />\n  <text x=\"275\" y=\"155\">Reducer</text>\n  \n  <!-- Nipple (Short Join) -->\n  <line x1=\"30\" y1=\"110\" x2=\"50\" y2=\"110\" />\n  <text x=\"20\" y=\"145\">Nipple</text>\n  \n  <!-- Cross (Multi-branch) -->\n  <line x1=\"300\" y1=\"60\" x2=\"300\" y2=\"140\" />\n  <text x=\"315\" y=\"70\">Cross</text>\n</svg>",
+   "n": "name the common pipe fittings.",
    "sub": "workshop",
    "at": "2026-11-02"
   }
