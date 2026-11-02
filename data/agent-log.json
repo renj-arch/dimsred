@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T20:42:46.619Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the top priorities; BankFigures must run first to fix broken visual content. MainsFresh is next as it produced 0 fixes in the last two runs, suggesting a need for fresh material generation to fill content voids. ExamPatterns should follow to address the lack of question banks/files present. MetaLearn and MockPapers are deferred because they have been inactive (0 fixes) for consecutive runs and may require input from previous agents before becoming pr",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (322 total)",
-       "text": "What is a surface plate used for? | What are a scriber and marking-blue used for? | What is a vernier height gauge?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T21:27:18.938Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -603,8 +563,36 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T02:28:47.857Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T02:20:24.538Z",
+ "lastRun": "2026-11-02T02:28:47.857Z",
  "model": "qwen3.5:9b"
 }
