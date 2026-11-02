@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T13:34:20.563Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-02T13:54:50.975Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -617,8 +605,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T20:19:36.732Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content creation. MainsFresh produced 0 fixes in the last two runs and must be deprioritized to reallocate resources to high-impact agents like BankFigures. The strategy is to clear standing debts first, then address pending ideas once the backlog stabilizes.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (435 total)",
+       "text": "Define one newton of force. | What is the CGS unit of force and its relation to the newton? | What is a kilogram-force (kgf)?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Heat Transfer (360 in pool)",
+       "text": "Heat Transfer"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T20:03:32.633Z",
+ "lastRun": "2026-11-02T20:19:36.732Z",
  "model": "qwen3.5:9b"
 }
