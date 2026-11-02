@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T06:47:00.116Z",
-  "cursor": 399,
-  "built": 379
+  "updatedAt": "2026-11-02T07:14:04.137Z",
+  "cursor": 402,
+  "built": 381
  },
  "figs": {
   "11434945": {
@@ -2277,6 +2277,18 @@
   "73776eff": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"80\" width=\"120\" height=\"10\" rx=\"2\" />\n <line x1=\"40\" y1=\"90\" x2=\"160\" y2=\"90\" stroke-width=\"1.5\" />\n <text x=\"35\" y=\"85\">Sheet</text>\n <text x=\"165\" y=\"85\">Metal</text>\n <circle cx=\"100\" cy=\"40\" r=\"25\" fill=\"#ddd\" stroke=\"#222\" />\n <path d=\"M 75 40 L 100 10 L 125 40 Z\" fill=\"#ddd\" stroke=\"#222\" />\n <text x=\"95\" y=\"30\">Rubber</text>\n <text x=\"95\" y=\"48\">Head</text>\n <path d=\"M 75 60 L 100 100 L 125 60 Z\" fill=\"#ddd\" stroke=\"#222\" />\n <text x=\"95\" y=\"115\">Mallet</text>\n <line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"100\" stroke-dasharray=\"3,3\" />\n <path d=\"M 160 40 L 200 40 L 200 100 L 160 100 Z\" fill=\"#ddd\" stroke=\"#222\" />\n <text x=\"175\" y=\"30\">Soft</text>\n <text x=\"175\" y=\"48\">Face</text>\n <path d=\"M 220 40 L 260 40 L 260 100 L 220 100 Z\" fill=\"#ddd\" stroke=\"#222\" />\n <text x=\"235\" y=\"30\">No</text>\n <text x=\"235\" y=\"48\">Marks</text>\n</svg>",
    "n": "what is the use of the mallet and rubber-headed hammer in sheet metal?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "c823a499": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Folded Seam -->\n  <path d=\"M40,100 L280,100\" stroke-dasharray=\"4,2\"/>\n  <text x=\"35\" y=\"95\">Folded Edge</text>\n  \n  <!-- Groover Tool -->\n  <rect x=\"160\" y=\"70\" width=\"20\" height=\"60\" fill=\"#222\"/>\n  <line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"130\" stroke-width=\"3\"/>\n  <text x=\"155\" y=\"95\">Groover</text>\n  \n  <!-- Action Arrow -->\n  <path d=\"M140,100 L160,100\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  \n  <!-- Resulting Locked Seam -->\n  <path d=\"M30,100 L35,95 L40,100 L45,105 L50,100 L55,95 L60,100\" stroke-width=\"2\"/>\n  <text x=\"30\" y=\"85\">Clinched Seam</text>\n  \n  <!-- Arrow indicating pressing action -->\n  <path d=\"M170,140 L170,160\" marker-end=\"url(#arrow)\"/>\n  <text x=\"165\" y=\"180\">Presses Tight</text>\n  \n  <!-- Arrowhead definition -->\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\">\n      <polygon points=\"0 0, 10 3, 0 6\" fill=\"#222\"/>\n    </marker>\n  </defs>\n</svg>",
+   "n": "what is a groover used for?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "819b7f3b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <text x=\"180\" y=\"40\" text-anchor=\"middle\">Sheet Metal Hemming</text>\n  <!-- Initial Edge -->\n  <path d=\"M 60 100 L 300 100\" stroke-dasharray=\"5,5\"/>\n  <text x=\"180\" y=\"90\" text-anchor=\"middle\">Original Edge</text>\n  <!-- Folded Lip -->\n  <path d=\"M 60 100 L 300 100 L 300 140 L 260 140 L 260 180 L 60 180 Z\"/>\n  <!-- Labels -->\n  <path d=\"M 290 105 L 290 120\" stroke-width=\"1\"/>\n  <text x=\"300\" y=\"117\">Folded Lip</text>\n  <path d=\"M 65 185 L 45 185\" stroke-width=\"1\"/>\n  <text x=\"35\" y=\"192\">Stiffened Edge</text>\n  <!-- Hidden Cut -->\n  <line x1=\"70\" y1=\"180\" x2=\"290\" y2=\"180\" stroke-dasharray=\"2,2\" opacity=\"0.3\"/>\n  <text x=\"180\" y=\"195\" text-anchor=\"middle\">Cut Hidden Inside</text>\n</svg>",
+   "n": "what is hemming in sheet metal work?",
    "sub": "workshop",
    "at": "2026-11-02"
   }
