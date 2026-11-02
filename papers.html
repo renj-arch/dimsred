@@ -288,7 +288,8 @@ function renderPaperGrid() {
     card.innerHTML = '<div class="exam-badge">' + p.exam + '</div>' +
       '<div class="paper-title">' + p.year + ' ' + p.type + (p.subject ? ' — ' + p.subject : '') + '</div>' +
       '<div class="paper-meta">' + qCount + ' questions' + (p.cutoff ? ' · Cutoff: ' + p.cutoff : '') +
-      (p.official ? ' · <span style="color:#34d399">● official paper</span>' : '') + '</div>';
+      (p.official ? ' · <span style="color:#34d399">● official paper</span>' : '') +
+      (p.source === 'agent-solved' ? ' · <span style="color:#f59e0b" title="Answers produced by the site agent from the official question paper, not from a parsed official key. Check against the official PDF.">◐ agent-solved</span>' : '') + '</div>';
     card.onclick = function() { openPaper(p.id); };
     grid.appendChild(card);
   });
@@ -307,6 +308,7 @@ function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').repla
   document.getElementById('paperTitle').textContent = currentPaper.year + ' ' + currentPaper.exam + ' ' + currentPaper.type;
   document.getElementById('paperMeta').innerHTML = esc(currentPaper.subject || '') + ' · ' + (currentPaper.questions ? currentPaper.questions.length : 0) + ' questions' + (currentPaper.cutoff ? ' · Cutoff: ' + esc(String(currentPaper.cutoff)) : '') +
     (currentPaper.official ? ' · <span style="color:#34d399">● official paper</span>' : '') +
+    (currentPaper.source === 'agent-solved' ? ' · <span style="color:#f59e0b">◐ agent-solved — verify against the official PDF</span>' : '') +
     (currentPaper.officialPdf ? ' · <a href="' + esc(currentPaper.officialPdf) + '" target="_blank" rel="noopener" style="color:#60a5fa">Official PDF</a>' : '');
   buildSubjectFilter();
   renderQuestions();
@@ -388,6 +390,10 @@ function selectOption(num, idx) {
   updateStats();
 }
 
+function qAnswerLabel(q) {
+  return (q && q.source === 'agent-solved') ? 'Agent answer (verify vs official PDF): ' : 'Official answer: ';
+}
+
 function answerOne(num) {
   var q = currentPaper.questions.find(function(x) { return x.n === num; });
   if (!q) return;
@@ -412,7 +418,7 @@ function answerOne(num) {
     return String.fromCharCode(65 + i) + ') ' + o;
   }).join(' ') : '') + '\nCorrect answer: ' + q.answer;
 
-  tryExplain(qText, q.answer).then(function(explanation) {
+  tryExplain(qText, q.answer, q).then(function(explanation) {
     loader.classList.remove('show');
     ansDiv.innerHTML = '<div class="q-answer-label">💡 Explanation</div><div class="q-explain">' + explanation + '</div>';
     ansDiv.classList.add('show');
@@ -422,8 +428,8 @@ function answerOne(num) {
     updateStats();
   }).catch(function() {
     loader.classList.remove('show');
-    ansDiv.innerHTML = '<div class="q-answer-label">Official Answer: ' + q.answer + '</div>' +
-      '<div class="q-explain">Official answer is <strong>' + q.answer + '</strong>.</div>';
+    ansDiv.innerHTML = '<div class="q-answer-label">' + qAnswerLabel(q) + q.answer + '</div>' +
+      '<div class="q-explain">' + (q.source === 'agent-solved' ? 'Solved by the site agent from the official question paper — confirm against the official PDF/key before relying on it.' : 'Official answer is <strong>' + q.answer + '</strong>.') + '</div>';
     ansDiv.classList.add('show');
     btn.disabled = false;
     btn.textContent = '💡 Retry';
@@ -432,7 +438,8 @@ function answerOne(num) {
   });
 }
 
-function tryExplain(qText, officialAnswer) {
+function tryExplain(qText, officialAnswer, q) {
+  var label = qAnswerLabel(q) + '<strong>' + officialAnswer + '</strong>';
   return new Promise(function(resolve) {
     if (typeof retrieve === 'function' && typeof compose === 'function') {
       try {
@@ -450,12 +457,12 @@ function tryExplain(qText, officialAnswer) {
       try {
         askLLMAnswer(qText).then(function(ans) {
           if (ans && ans.text && ans.text.length > 20) resolve(ans.text);
-          else resolve('Official answer: <strong>' + officialAnswer + '</strong>');
-        }).catch(function() { resolve('Official answer: <strong>' + officialAnswer + '</strong>'); });
+          else resolve(label);
+        }).catch(function() { resolve(label); });
         return;
       } catch (e) {}
     }
-    resolve('Official answer: <strong>' + officialAnswer + '</strong>');
+    resolve(label);
   });
 }
 
