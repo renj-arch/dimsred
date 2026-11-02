@@ -202,6 +202,65 @@ async function checkShardLoader(file, fetcherName, loaderName) {
   const texts = new Set(cqs.map(function (q) { return String(q.q).toLowerCase().replace(/\s+/g, ' ').trim(); }));
   assert(texts.size === cqs.length, 'course questions are unique', (cqs.length - texts.size) + ' duplicates');
 
+  console.log('\n--- news wire ---');
+  const V = require('./feed-validate');
+  const news = readJson('data/news.json');
+  const newsSources = readJson('data/news-sources.json');
+  const newsProblems = V.validateNewsData(news, newsSources, Date.now());
+  assert(newsProblems.length === 0, 'news snapshot satisfies its contract', newsProblems.slice(0, 4).join(' | '));
+  const requiredDesks = ['top', 'national', 'international', 'business', 'tech', 'sports', 'health', 'science', 'entertainment', 'education', 'opinion', 'trending'];
+  const missingDesks = requiredDesks.filter(function (id) {
+    const s = (news.sections || []).filter(function (x) { return x.id === id; })[0];
+    return !s || !s.items.length;
+  });
+  assert(missingDesks.length === 0, 'every named news desk has fresh items', missingDesks.join(', '));
+  const coveredStates = (news.sections || []).filter(function (s) { return s.id.indexOf('state:') === 0 && s.items.length; });
+  assert(coveredStates.length >= 20, 'statewise desk covers most states and UTs', coveredStates.length + ' covered');
+  assert(news.disclaimers && /not independently verified/i.test(news.disclaimers.trending || ''),
+    'trending carries the virality disclaimer');
+  const badNewsImages = [];
+  (news.sections || []).forEach(function (s) {
+    s.items.forEach(function (item) {
+      if (item.image && !/^https:\/\//i.test(item.image)) badNewsImages.push(item.title);
+    });
+  });
+  assert(badNewsImages.length === 0, 'news images are https (no mixed content)', badNewsImages.slice(0, 3).join(' | '));
+  const badFeedDomains = [];
+  newsSources.sections.forEach(function (s) {
+    (s.feeds || []).forEach(function (feed) {
+      if (!/^https:\/\//i.test(feed.url)) badFeedDomains.push('non-https ' + feed.url);
+      if (!V.hostAllowed(feed.domain, newsSources.allowDomains)) badFeedDomains.push('unlisted ' + feed.domain);
+    });
+  });
+  assert(badFeedDomains.length === 0, 'every news feed is https and allowlisted', badFeedDomains.slice(0, 3).join(' | '));
+
+  console.log('\n--- magazine ---');
+  const magazine = readJson('data/magazine.json');
+  const magazineProblems = V.validateMagazineData(magazine, Date.now());
+  assert(magazineProblems.length === 0, 'magazine issue satisfies its contract', magazineProblems.slice(0, 4).join(' | '));
+  const photoEssay = (magazine.sections || []).filter(function (s) { return s.id === 'photos'; })[0];
+  assert(photoEssay && photoEssay.items.length >= 8, 'photo essay carries a real set of frames',
+    photoEssay ? String(photoEssay.items.length) : 'missing');
+  const unattributed = (photoEssay ? photoEssay.items : []).filter(function (p) {
+    return !p.credit || !p.license || !p.link || !p.image;
+  });
+  assert(unattributed.length === 0, 'every photograph has credit, licence, image and source', unattributed.length + ' missing');
+  const postcardStates = ((magazine.sections || []).filter(function (s) { return s.id === 'postcards'; })[0] || {}).items || [];
+  assert(new Set(postcardStates.map(function (p) { return p.title; })).size === postcardStates.length,
+    'postcards never repeat a state');
+  const shelves = (magazine.sections || []).filter(function (s) { return s.kind === 'books'; });
+  assert(shelves.length === 2 && shelves.every(function (s) { return s.items.length >= 4; }),
+    'both public-domain shelves are stocked');
+  const badBooks = [];
+  shelves.forEach(function (s) {
+    s.items.forEach(function (b) {
+      if (!/^https:\/\/www\.gutenberg\.org\/ebooks\/\d+$/.test(b.link)) badBooks.push(b.link);
+    });
+  });
+  assert(badBooks.length === 0, 'every book links to a real Gutenberg edition', badBooks.slice(0, 3).join(' | '));
+  assert(magazine.cover && magazine.cover.title && magazine.cover.link, 'issue has a cover story');
+  assert(magazine.editorNote && magazine.editorNote.links.length > 0, 'editor note is built from linked stories');
+
   console.log('\n' + pass + ' passed, ' + fail + ' failed');
   process.exit(fail ? 1 : 0);
 })();

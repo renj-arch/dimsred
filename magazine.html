@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Long Read — vlymbooq magazine</title>
+<meta name="description" content="A magazine of Indian literature, women's lives, money, health, children's stories, celebrity, travel and culture — with open-licensed photography, public-domain reading shelves and a link home for every story.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{
+  --paper:#f6efe2; --paper-2:#efe6d5; --ink:#1b1712; --muted:#6b6257; --faint:#948a7c;
+  --line:rgba(27,23,18,.16); --hair:rgba(27,23,18,.09);
+  --maroon:#8f2b2b; --marigold:#b9720e; --indigo:#33427a; --green:#2f6b4f; --rose:#a83e5b;
+  --serif:'Iowan Old Style','Palatino Linotype',Palatino,Georgia,'Times New Roman',serif;
+  --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--paper);color:var(--ink);font-family:var(--sans);line-height:1.55;
+  background-image:radial-gradient(rgba(27,23,18,.035) 1px,transparent 1px);background-size:5px 5px}
+a{color:inherit}
+::selection{background:rgba(185,114,14,.28)}
+.skip{position:absolute;left:-9999px;top:0;background:var(--ink);color:var(--paper);padding:10px 16px;z-index:999;font-weight:800}
+.skip:focus{left:0}
+
+/* nav */
+.nav{position:sticky;top:0;z-index:100;padding:11px 20px;background:rgba(246,239,226,.94);backdrop-filter:blur(12px);border-bottom:1px solid var(--line)}
+.nav-inner{max-width:1180px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:900;letter-spacing:-.02em;text-decoration:none}
+.brand svg{color:var(--maroon)}
+.nav-links{display:flex;gap:2px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.8em;font-weight:700;padding:6px 10px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--ink);background:rgba(27,23,18,.06)}
+.nav-links a.active{background:var(--ink);color:var(--paper)}
+.nav-links a.wire{color:var(--maroon);border:1px solid rgba(143,43,43,.28)}
+.nav-links a.wire:hover{background:rgba(143,43,43,.08);color:var(--maroon)}
+
+/* masthead */
+.mast{max-width:1180px;margin:0 auto;padding:22px 20px 0}
+.mast-top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;border-top:3px solid var(--ink);border-bottom:1px solid var(--line);padding:8px 0;font-size:.66em;letter-spacing:.14em;text-transform:uppercase;font-weight:800;color:var(--muted)}
+.mast-top a{color:var(--maroon);text-decoration:none}
+.mast-top a:hover{text-decoration:underline}
+.flag{text-align:center;padding:26px 0 20px}
+.kicker{font-size:.64em;letter-spacing:.34em;text-transform:uppercase;font-weight:900;color:var(--marigold)}
+h1.flag-title{font-family:var(--serif);font-weight:700;letter-spacing:-.045em;line-height:.9;font-size:clamp(3rem,10vw,7rem);margin:6px 0 10px}
+h1.flag-title em{font-style:italic;color:var(--maroon)}
+.deck{max-width:640px;margin:0 auto;color:var(--muted);font-size:.92em}
+.deck b{color:var(--ink)}
+
+/* cover */
+.cover-grid{display:grid;grid-template-columns:1.5fr .8fr;gap:18px;align-items:stretch;border-top:1px solid var(--line);padding-top:18px}
+.cover{position:relative;display:flex;flex-direction:column;justify-content:flex-end;min-height:430px;overflow:hidden;border-radius:4px;background:var(--ink);color:var(--paper);text-decoration:none}
+.cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.78;transition:transform .6s ease}
+.cover:hover img{transform:scale(1.025)}
+.cover:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(15,12,9,.05) 20%,rgba(15,12,9,.82) 100%)}
+.cover .cover-tag{position:absolute;top:16px;left:16px;z-index:2;background:var(--maroon);color:#fff;font-size:.6em;font-weight:900;letter-spacing:.18em;text-transform:uppercase;padding:5px 10px}
+.cover .cover-body{position:relative;z-index:2;padding:26px 24px}
+.cover .cover-body .src{font-size:.64em;letter-spacing:.12em;text-transform:uppercase;font-weight:800;opacity:.85}
+.cover h2{font-family:var(--serif);font-size:clamp(1.6rem,3.4vw,2.7rem);line-height:1.06;letter-spacing:-.02em;margin:8px 0 8px}
+.cover p{font-size:.84em;opacity:.86;max-width:560px;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.cover .read{display:inline-block;margin-top:12px;font-size:.72em;font-weight:900;letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid rgba(246,239,226,.5);padding-bottom:2px}
+.side{display:flex;flex-direction:column;gap:14px}
+.issue-box{border:1px solid var(--ink);padding:18px;background:var(--paper-2)}
+.issue-box h3{font-family:var(--serif);font-size:1.25em;margin-bottom:10px;border-bottom:1px solid var(--line);padding-bottom:8px}
+.issue-list{list-style:none;display:flex;flex-direction:column;gap:0}
+.issue-list li{border-bottom:1px solid var(--hair);padding:7px 0;font-size:.8em;display:flex;justify-content:space-between;gap:10px}
+.issue-list li:last-child{border-bottom:0}
+.issue-list a{text-decoration:none;font-weight:700}
+.issue-list a:hover{color:var(--maroon)}
+.issue-list span{color:var(--faint);font-size:.85em;white-space:nowrap}
+.mag-note{border-left:3px solid var(--marigold);padding:10px 0 10px 13px;font-size:.78em;color:var(--muted)}
+.mag-note b{color:var(--ink)}
+
+/* editor note */
+.editor{max-width:1180px;margin:26px auto 0;padding:0 20px}
+.note-band{border-top:1px solid var(--ink);border-bottom:1px solid var(--ink);padding:22px 0;display:grid;grid-template-columns:180px 1fr;gap:24px;align-items:start}
+.note-label{font-size:.64em;letter-spacing:.2em;text-transform:uppercase;font-weight:900;color:var(--maroon)}
+.note-label span{display:block;font-family:var(--serif);font-size:2.4em;letter-spacing:-.03em;color:var(--ink);text-transform:none;margin-top:4px}
+.note-text{font-family:var(--serif);font-size:1.08em;line-height:1.62;color:#2b241d}
+.note-text .drop{float:left;font-size:3.4em;line-height:.82;padding:4px 8px 0 0;font-weight:700;color:var(--maroon)}
+.note-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.note-links a{font-size:.7em;font-weight:800;text-decoration:none;border:1px solid var(--line);padding:5px 9px;border-radius:2px;background:var(--paper-2)}
+.note-links a:hover{border-color:var(--maroon);color:var(--maroon)}
+
+/* index chips */
+.index{max-width:1180px;margin:18px auto 0;padding:0 20px;display:flex;gap:7px;overflow-x:auto;scrollbar-width:none}
+.index::-webkit-scrollbar{display:none}
+.index a{flex:0 0 auto;text-decoration:none;font-size:.7em;font-weight:800;letter-spacing:.04em;border:1px solid var(--line);background:var(--paper-2);padding:6px 11px;border-radius:100px;color:var(--muted)}
+.index a:hover{color:var(--ink);border-color:var(--ink)}
+
+main{max-width:1180px;margin:0 auto;padding:8px 20px 80px}
+.section{padding:34px 0 8px;scroll-margin-top:70px}
+.sec-head{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--ink);padding-bottom:7px;margin-bottom:16px;flex-wrap:wrap}
+.sec-head .num{font-family:var(--serif);font-size:.95em;color:var(--maroon);font-weight:700}
+.sec-head h2{font-family:var(--serif);font-size:clamp(1.5rem,3vw,2.1rem);letter-spacing:-.02em;line-height:1}
+.sec-head .cnt{margin-left:auto;font-size:.64em;letter-spacing:.12em;text-transform:uppercase;color:var(--faint);font-weight:800}
+.sec-intro{font-size:.8em;color:var(--muted);max-width:700px;margin:-6px 0 16px}
+
+/* story cards */
+.stories{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
+.story{display:flex;flex-direction:column;gap:7px;min-width:0;border-bottom:1px solid var(--hair);padding-bottom:14px}
+.story .im{display:block;aspect-ratio:16/10;overflow:hidden;background:var(--paper-2);border-radius:2px}
+.story .im img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .4s ease}
+.story:hover .im img{transform:scale(1.035)}
+.story .src{font-size:.6em;letter-spacing:.12em;text-transform:uppercase;font-weight:900;color:var(--maroon)}
+.story h3{font-family:var(--serif);font-size:1.12em;line-height:1.25;letter-spacing:-.01em}
+.story h3 a{text-decoration:none}
+.story h3 a:hover{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
+.story p{font-size:.76em;color:var(--muted);display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.story .when{font-size:.64em;color:var(--faint);margin-top:auto}
+
+/* photo essay */
+.essay{display:grid;grid-template-columns:repeat(4,1fr);grid-auto-rows:150px;gap:8px}
+.shot{position:relative;overflow:hidden;background:var(--paper-2);border:0;padding:0;cursor:zoom-in;min-width:0;border-radius:2px}
+.shot:first-child{grid-column:span 2;grid-row:span 2}
+.shot:nth-child(6){grid-column:span 2;grid-row:span 2}
+.shot img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .5s ease}
+.shot:hover img{transform:scale(1.04)}
+.shot .cap{position:absolute;left:0;right:0;bottom:0;padding:18px 10px 8px;background:linear-gradient(180deg,transparent,rgba(15,12,9,.82));color:#fff;text-align:left;opacity:0;transition:.2s}
+.shot:hover .cap,.shot:focus .cap{opacity:1}
+.shot .cap b{display:block;font-family:var(--serif);font-size:.82em;line-height:1.25;font-weight:600;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.shot .cap span{display:block;font-size:.56em;letter-spacing:.04em;opacity:.8;margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+/* postcards */
+.postcards{display:grid;grid-template-columns:repeat(5,1fr);gap:8px}
+.postcard{position:relative;overflow:hidden;cursor:zoom-in;border:0;padding:0;background:var(--paper-2);border-radius:2px;min-width:0}
+.postcard img{width:100%;aspect-ratio:4/5;object-fit:cover;display:block;transition:transform .4s ease}
+.postcard:hover img{transform:scale(1.04)}
+.postcard .pc-cap{position:absolute;left:0;right:0;bottom:0;padding:22px 9px 8px;background:linear-gradient(180deg,transparent,rgba(15,12,9,.85));color:#fff;text-align:left}
+.postcard .pc-cap b{display:block;font-family:var(--serif);font-size:.9em;line-height:1.1}
+.postcard .pc-cap span{display:block;font-size:.55em;letter-spacing:.08em;text-transform:uppercase;opacity:.75;margin-top:2px}
+.pc-note{font-size:.68em;color:var(--faint);margin-top:9px}
+
+/* books */
+.shelves{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.shelf h3{font-family:var(--serif);font-size:1.1em;margin-bottom:8px;display:flex;align-items:center;gap:7px}
+.books{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.book{display:flex;flex-direction:column;text-decoration:none;min-width:0;group:book}
+.book .spine{aspect-ratio:2/3;border-radius:2px 4px 4px 2px;padding:12px 10px;display:flex;flex-direction:column;justify-content:space-between;color:#fff;position:relative;overflow:hidden;box-shadow:inset 4px 0 0 rgba(0,0,0,.18);transition:transform .2s}
+.book:hover .spine{transform:translateY(-3px)}
+.book .spine:after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.12),transparent 45%)}
+.book .spine b{font-family:var(--serif);font-size:.82em;line-height:1.2;z-index:1;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.book .spine span{font-size:.55em;letter-spacing:.08em;text-transform:uppercase;opacity:.85;z-index:1}
+.book .meta{font-size:.62em;color:var(--muted);margin-top:6px;display:-webkit-box;-webkit-line-clamp:1;-webkit-box-orient:vertical;overflow:hidden}
+.book .meta b{color:var(--ink);font-weight:700}
+.book:hover .meta{color:var(--maroon)}
+
+/* dialog */
+dialog.lightbox{max-width:min(1000px,94vw);width:auto;padding:0;border:0;background:#14110d;color:var(--paper);border-radius:4px;overflow:hidden}
+dialog.lightbox::backdrop{background:rgba(12,10,8,.86);backdrop-filter:blur(6px)}
+dialog.lightbox img{display:block;max-width:100%;max-height:72vh;margin:0 auto;object-fit:contain;background:#0d0b09}
+.lb-cap{padding:14px 18px 16px;display:grid;grid-template-columns:1fr auto;gap:10px;align-items:end}
+.lb-cap b{font-family:var(--serif);font-size:1em;font-weight:600;display:block}
+.lb-cap span{font-size:.68em;color:rgba(246,239,226,.68);display:block;margin-top:4px}
+.lb-cap a{font-size:.66em;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--marigold);text-decoration:none;white-space:nowrap}
+.lb-close{position:absolute;top:10px;right:10px;background:rgba(20,17,13,.7);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:100px;width:32px;height:32px;cursor:pointer;font-size:1em}
+
+/* states */
+.loading{padding:60px 20px;text-align:center;color:var(--muted);font-family:var(--serif);font-size:1.1em}
+.error{padding:40px 20px;text-align:center;border:1px dashed var(--line);margin-top:30px}
+.error h2{font-family:var(--serif);margin-bottom:6px}
+.retry{margin-top:12px;background:var(--ink);color:var(--paper);border:0;font:inherit;font-size:.8em;font-weight:800;padding:9px 18px;border-radius:100px;cursor:pointer}
+
+footer{border-top:3px solid var(--ink);background:var(--paper-2)}
+.foot{max-width:1180px;margin:0 auto;padding:30px 20px 44px;display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:26px}
+.foot h3{font-size:.64em;letter-spacing:.18em;text-transform:uppercase;color:var(--maroon);margin-bottom:8px;font-weight:900}
+.foot p,.foot li{font-size:.74em;color:var(--muted);line-height:1.55}
+.foot ul{list-style:none;display:flex;flex-direction:column;gap:5px}
+.foot a{text-decoration:none}
+.foot a:hover{color:var(--maroon)}
+.foot .fine{grid-column:1/-1;border-top:1px solid var(--line);padding-top:14px;font-size:.66em;color:var(--faint)}
+
+@media(max-width:940px){
+  .cover-grid{grid-template-columns:1fr}
+  .cover{min-height:340px}
+  .stories{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .essay{grid-template-columns:repeat(3,1fr);grid-auto-rows:140px}
+  .shot:nth-child(6){grid-column:span 1;grid-row:span 1}
+  .postcards{grid-template-columns:repeat(3,1fr)}
+  .shelves{grid-template-columns:1fr}
+  .note-band{grid-template-columns:1fr;gap:8px}
+  .foot{grid-template-columns:1fr 1fr}
+}
+@media(max-width:600px){
+  .mast,.editor,.index,main,.foot{padding-left:14px;padding-right:14px}
+  .flag{padding:20px 0 14px}
+  .cover{min-height:300px}
+  .cover .cover-body{padding:18px}
+  .stories{grid-template-columns:1fr}
+  .essay{grid-template-columns:repeat(2,1fr);grid-auto-rows:130px}
+  .shot:first-child{grid-column:span 2;grid-row:span 2}
+  .postcards{grid-template-columns:repeat(2,1fr)}
+  .books{grid-template-columns:repeat(3,1fr)}
+  .foot{grid-template-columns:1fr}
+  .lb-cap{grid-template-columns:1fr}
+}
+@media(prefers-reduced-motion:reduce){
+  *,*:before,*:after{animation-duration:.001ms !important;transition-duration:.001ms !important;scroll-behavior:auto !important}
+}
+</style>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<nav class="nav" aria-label="Primary">
+  <div class="nav-inner">
+    <a href="index.html" class="brand">
+      <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+      <span>vlymbooq</span>
+    </a>
+    <div class="nav-links">
+      <a href="index.html">Home</a>
+      <a class="wire" href="news.html">📰 The Wire</a>
+      <a class="active" href="magazine.html" aria-current="page">📖 Magazine</a>
+      <a href="revision.html">Revision</a>
+      <a href="recall.html">Recall</a>
+      <a href="papers.html">Papers</a>
+      <a href="films.html">Films</a>
+      <a href="ask.html">Ask</a>
+    </div>
+  </div>
+</nav>
+
+<header class="mast">
+  <div class="mast-top">
+    <span id="issueLine">Setting the issue…</span>
+    <span>India · independent reading</span>
+    <a href="news.html">The Wire — every headline links home →</a>
+  </div>
+  <div class="flag">
+    <span class="kicker">vlymbooq presents</span>
+    <h1 class="flag-title">The Long <em>Read</em></h1>
+    <p class="deck">Literature, women's lives, money, health, childhood, celebrity, travel and culture — <b>what publishers are actually printing</b>, with photography from open collections and a public-domain shelf for the long evening.</p>
+  </div>
+  <div class="cover-grid" id="coverGrid" aria-live="polite">
+    <div class="loading">Setting the cover…</div>
+  </div>
+</header>
+
+<section class="editor" aria-label="Editor's note">
+  <div class="note-band" id="noteBand">
+    <div class="note-label">From the desk <span>Editor's note</span></div>
+    <div>
+      <p class="note-text" id="noteText">The issue is being assembled.</p>
+      <div class="note-links" id="noteLinks"></div>
+    </div>
+  </div>
+</section>
+
+<nav class="index" id="index" aria-label="In this issue"></nav>
+
+<main id="main">
+  <div id="sections"><div class="loading">Setting the type…</div></div>
+</main>
+
+<dialog class="lightbox" id="lightbox" aria-label="Photograph">
+  <button class="lb-close" id="lbClose" type="button" aria-label="Close photograph">✕</button>
+  <img id="lbImage" alt="">
+  <div class="lb-cap">
+    <div><b id="lbTitle"></b><span id="lbMeta"></span></div>
+    <a id="lbLink" href="#" target="_blank" rel="noopener noreferrer nofollow">View source ↗</a>
+  </div>
+</dialog>
+
+<footer>
+  <div class="foot">
+    <div>
+      <h3>How this issue is made</h3>
+      <p>Story links are aggregated from publisher RSS and carried with their own title, source and timestamp. Photography comes from Wikimedia Commons with the licence and photographer named on every frame. Books come from Project Gutenberg's public-domain catalogue. Nothing here is ghost-written by a model, and no article is reproduced.</p>
+      <div id="footDisclaimers" style="margin-top:10px"></div>
+    </div>
+    <div>
+      <h3>Read next</h3>
+      <ul>
+        <li><a href="news.html">The Wire — live headlines</a></li>
+        <li><a href="revision.html">Revision notes</a></li>
+        <li><a href="recall.html">Recall Deck</a></li>
+        <li><a href="current-affairs.html">Current affairs quiz</a></li>
+        <li><a href="films.html">Films &amp; argument maps</a></li>
+      </ul>
+    </div>
+    <div>
+      <h3>Credits &amp; rules</h3>
+      <ul>
+        <li>Photographs: Wikimedia Commons</li>
+        <li>Books: Project Gutenberg</li>
+        <li>Stories: their publishers</li>
+        <li>No paywall circumvention</li>
+        <li>No invented quotes or captions</li>
+      </ul>
+    </div>
+    <p class="fine" id="fine">vlymbooq · The Long Read is an index and a reading room, not a publisher of record.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  'use strict';
+  var DATA_URL = 'data/magazine.json';
+  var data = null;
+  var BOOK_COLORS = ['#8f2b2b','#33427a','#2f6b4f','#b9720e','#6b3f78','#a83e5b','#26565f','#7a4a21'];
+
+  function $(id) { return document.getElementById(id); }
+  function el(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text != null) n.textContent = String(text);
+    return n;
+  }
+  function esc(text) {
+    return String(text == null ? '' : text);
+  }
+  function section(id) {
+    if (!data) return null;
+    return (data.sections || []).filter(function (s) { return s.id === id; })[0] || null;
+  }
+  function dateLabel(iso) {
+    var t = Date.parse(iso);
+    if (!isFinite(t)) return '';
+    return new Date(t).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  }
+  function creditLine(item) {
+    var bits = [];
+    if (item.credit) bits.push(item.credit);
+    if (item.license) bits.push(item.license);
+    return bits.join(' · ');
+  }
+
+  // --- cover ----------------------------------------------------------------
+  function renderCover() {
+    var grid = $('coverGrid');
+    grid.innerHTML = '';
+    var cover = data.cover;
+    if (!cover) {
+      grid.appendChild(el('div', 'loading', 'No cover story in this snapshot.'));
+      return;
+    }
+    var a = el('a', 'cover');
+    a.href = cover.link;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer nofollow';
+    if (cover.image) {
+      var img = document.createElement('img');
+      img.src = cover.image;
+      img.alt = '';
+      img.decoding = 'async';
+      img.referrerPolicy = 'no-referrer';
+      img.addEventListener('error', function () { img.remove(); });
+      a.appendChild(img);
+    }
+    a.appendChild(el('span', 'cover-tag', 'Cover story'));
+    var body = el('div', 'cover-body');
+    body.appendChild(el('span', 'src', cover.source + (cover.publishedAt ? ' · ' + dateLabel(cover.publishedAt) : '')));
+    body.appendChild(el('h2', null, cover.title));
+    if (cover.summary) body.appendChild(el('p', null, cover.summary));
+    body.appendChild(el('span', 'read', 'Read at source ↗'));
+    a.appendChild(body);
+    grid.appendChild(a);
+
+    var side = el('aside', 'side');
+    var box = el('div', 'issue-box');
+    box.appendChild(el('h3', null, 'In this issue'));
+    var list = el('ul', 'issue-list');
+    ['photos', 'features', 'literature', 'women', 'finance', 'health', 'children', 'celebrity', 'travel', 'culture'].forEach(function (id) {
+      var s = section(id);
+      if (!s || !s.items.length) return;
+      var li = document.createElement('li');
+      var link = el('a', null, (s.icon ? s.icon + ' ' : '') + s.label);
+      link.href = '#sec-' + s.id;
+      li.appendChild(link);
+      li.appendChild(el('span', null, s.kind === 'books' ? s.items.length + ' books' : s.items.length + ' pieces'));
+      list.appendChild(li);
+    });
+    box.appendChild(list);
+    side.appendChild(box);
+    var note = el('div', 'mag-note');
+    note.appendChild(el('b', null, 'On the shelf. '));
+    note.appendChild(document.createTextNode('A photo essay, postcards from every corner of India, and public-domain reading for children and grown-ups.'));
+    side.appendChild(note);
+    grid.appendChild(side);
+  }
+
+  // --- editor ---------------------------------------------------------------
+  function renderEditor() {
+    var note = data.editorNote || {};
+    var target = $('noteText');
+    target.innerHTML = '';
+    var text = note.text || 'This issue is assembled from publisher headlines and open collections.';
+    var first = text.charAt(0);
+    var drop = el('span', 'drop', first);
+    target.appendChild(drop);
+    target.appendChild(document.createTextNode(text.slice(1)));
+    var links = $('noteLinks');
+    links.innerHTML = '';
+    (note.links || []).slice(0, 5).forEach(function (link) {
+      var a = el('a', null, link.title.length > 52 ? link.title.slice(0, 49) + '…' : link.title);
+      a.href = link.link;
+      a.target = '_blank';
+      a.rel = 'noopener noreferrer nofollow';
+      a.title = link.source;
+      links.appendChild(a);
+    });
+  }
+
+  // --- index ----------------------------------------------------------------
+  function renderIndex() {
+    var wrap = $('index');
+    wrap.innerHTML = '';
+    (data.sections || []).forEach(function (s) {
+      if (!s.items || !s.items.length) return;
+      var a = el('a', null, (s.icon ? s.icon + ' ' : '') + s.label);
+      a.href = '#sec-' + s.id;
+      wrap.appendChild(a);
+    });
+  }
+
+  // --- story ---------------------------------------------------------------
+  function storyCard(item, skipLink) {
+    if (skipLink && item.link === skipLink) return null;
+    var card = el('article', 'story');
+    if (item.image) {
+      var im = el('a', 'im');
+      im.href = item.link;
+      im.target = '_blank';
+      im.rel = 'noopener noreferrer nofollow';
+      im.setAttribute('aria-hidden', 'true');
+      im.tabIndex = -1;
+      var img = document.createElement('img');
+      img.src = item.image;
+      img.alt = '';
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      img.referrerPolicy = 'no-referrer';
+      img.addEventListener('error', function () { im.remove(); });
+      im.appendChild(img);
+      card.appendChild(im);
+    }
+    card.appendChild(el('div', 'src', item.source));
+    var h = el('h3');
+    var a = el('a', null, item.title);
+    a.href = item.link;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer nofollow';
+    h.appendChild(a);
+    card.appendChild(h);
+    if (item.summary) card.appendChild(el('p', null, item.summary));
+    card.appendChild(el('div', 'when', item.publishedAt ? dateLabel(item.publishedAt) : ''));
+    return card;
+  }
+
+  function storySection(s, number, intro, limit, skipLink) {
+    var wrap = el('section', 'section');
+    wrap.id = 'sec-' + s.id;
+    var head = el('div', 'sec-head');
+    head.appendChild(el('span', 'num', number));
+    head.appendChild(el('h2', null, s.label));
+    head.appendChild(el('span', 'cnt', s.items.length + (s.kind === 'books' ? ' books' : ' pieces')));
+    wrap.appendChild(head);
+    if (intro) wrap.appendChild(el('p', 'sec-intro', intro));
+    var grid = el('div', 'stories');
+    var shown = 0;
+    s.items.forEach(function (item) {
+      if (shown >= limit) return;
+      var card = storyCard(item, skipLink);
+      if (!card) return;
+      grid.appendChild(card);
+      shown++;
+    });
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
+  // --- photos ---------------------------------------------------------------
+  function photoFigure(item, kind) {
+    var fig = el(kind === 'postcard' ? 'button' : 'button', kind === 'postcard' ? 'postcard' : 'shot');
+    fig.type = 'button';
+    fig.setAttribute('aria-label', 'View photograph: ' + item.title);
+    var img = document.createElement('img');
+    img.src = item.image;
+    img.alt = item.title;
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    img.referrerPolicy = 'no-referrer';
+    fig.appendChild(img);
+    var cap = el('span', kind === 'postcard' ? 'pc-cap' : 'cap');
+    cap.appendChild(el('b', null, item.title));
+    cap.appendChild(el('span', null, creditLine(item)));
+    fig.appendChild(cap);
+    fig.addEventListener('click', function () { openLightbox(item); });
+    return fig;
+  }
+
+  function photoSection() {
+    var s = section('photos');
+    if (!s || !s.items.length) return null;
+    var wrap = el('section', 'section');
+    wrap.id = 'sec-photos';
+    var head = el('div', 'sec-head');
+    head.appendChild(el('span', 'num', '01'));
+    head.appendChild(el('h2', null, 'Photo Essay'));
+    head.appendChild(el('span', 'cnt', s.items.length + ' frames'));
+    wrap.appendChild(head);
+    wrap.appendChild(el('p', 'sec-intro', 'Open-licensed photography from Wikimedia Commons. Every frame names its photographer and licence; click to read the full record.'));
+    var essay = el('div', 'essay');
+    s.items.forEach(function (item) { essay.appendChild(photoFigure(item, 'photo')); });
+    wrap.appendChild(essay);
+    return wrap;
+  }
+
+  function postcardSection() {
+    var s = section('postcards');
+    if (!s || !s.items.length) return null;
+    var wrap = el('section', 'section');
+    wrap.id = 'sec-postcards';
+    var head = el('div', 'sec-head');
+    head.appendChild(el('span', 'num', '02'));
+    head.appendChild(el('h2', null, 'Postcards from Every Corner'));
+    head.appendChild(el('span', 'cnt', s.items.length + ' states & UTs'));
+    wrap.appendChild(head);
+    wrap.appendChild(el('p', 'sec-intro', 'A rotating set of open photographs attached to states and union territories. The set changes daily so the whole country keeps circulating.'));
+    var grid = el('div', 'postcards');
+    s.items.forEach(function (item) { grid.appendChild(photoFigure(item, 'postcard')); });
+    wrap.appendChild(grid);
+    wrap.appendChild(el('p', 'pc-note', 'Image credit and licence are shown on each frame; the source record is one click away.'));
+    return wrap;
+  }
+
+  // --- books ----------------------------------------------------------------
+  function bookCard(book, index) {
+    var a = el('a', 'book');
+    a.href = book.link;
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer nofollow';
+    var spine = el('span', 'spine');
+    spine.style.background = BOOK_COLORS[index % BOOK_COLORS.length];
+    spine.appendChild(el('b', null, book.title));
+    spine.appendChild(el('span', null, 'Project Gutenberg'));
+    a.appendChild(spine);
+    var meta = el('span', 'meta');
+    meta.appendChild(el('b', null, book.author || 'Unknown'));
+    a.appendChild(meta);
+    a.title = book.title + ' — ' + book.author + ' (public domain)';
+    return a;
+  }
+
+  function bookSection(id, number, heading, intro) {
+    var s = section(id);
+    if (!s || !s.items.length) return null;
+    var wrap = el('section', 'section');
+    wrap.id = 'sec-' + id;
+    var head = el('div', 'sec-head');
+    head.appendChild(el('span', 'num', number));
+    head.appendChild(el('h2', null, heading || s.label));
+    head.appendChild(el('span', 'cnt', s.items.length + ' books'));
+    wrap.appendChild(head);
+    if (intro) wrap.appendChild(el('p', 'sec-intro', intro));
+    var grid = el('div', 'books');
+    s.items.forEach(function (book, i) { grid.appendChild(bookCard(book, i)); });
+    wrap.appendChild(grid);
+    return wrap;
+  }
+
+  // --- lightbox -------------------------------------------------------------
+  function openLightbox(item) {
+    var dialog = $('lightbox');
+    $('lbImage').src = item.image;
+    $('lbImage').alt = item.title;
+    $('lbTitle').textContent = item.title;
+    $('lbMeta').textContent = creditLine(item) + (item.description ? ' — ' + item.description : '');
+    $('lbLink').href = item.link;
+    if (typeof dialog.showModal === 'function') dialog.showModal();
+  }
+
+  // --- assembly -------------------------------------------------------------
+  function render() {
+    renderCover();
+    renderEditor();
+    renderIndex();
+    var host = $('sections');
+    host.innerHTML = '';
+    var number = 3;
+    var photos = photoSection(); if (photos) host.appendChild(photos);
+    var cards = postcardSection(); if (cards) host.appendChild(cards);
+    var features = section('features');
+    if (features && features.items.length) {
+      var f = storySection(features, String(number++).padStart(2, '0'), 'Longer pieces and reported essays from magazines and newspapers.', 6, data.cover && data.cover.link);
+      if (f) host.appendChild(f);
+    }
+    ['literature', 'women', 'finance', 'health'].forEach(function (id) {
+      var s = section(id);
+      if (!s || !s.items.length) return;
+      var intro = {
+        literature: 'Books, writers and the reading life.',
+        women: 'Work, family, style and the shape of everyday life.',
+        finance: 'Money, markets and the household ledger.',
+        health: 'Medicine, public health and looking after oneself.'
+      }[id];
+      host.appendChild(storySection(s, String(number++).padStart(2, '0'), intro, 6));
+    });
+    var kids = bookSection('children', String(number++).padStart(2, '0'), "Children's Shelf", 'Public-domain stories to read aloud, free at Project Gutenberg.');
+    if (kids) host.appendChild(kids);
+    var shelf = bookSection('shelf', String(number++).padStart(2, '0'), 'Short Reads', 'Public-domain short fiction and plays for a single sitting.');
+    if (shelf) host.appendChild(shelf);
+    ['celebrity', 'travel', 'culture'].forEach(function (id) {
+      var s = section(id);
+      if (!s || !s.items.length) return;
+      var intro = {
+        celebrity: 'Public figures, as their own industry reports them.',
+        travel: 'Places, journeys and the business of going away.',
+        culture: 'Art, screen, music and the conversations around them.'
+      }[id];
+      host.appendChild(storySection(s, String(number++).padStart(2, '0'), intro, 6));
+    });
+
+    $('issueLine').textContent = (data.issue && data.issue.label) || 'The Long Read';
+    var stats = data.stats || {};
+    $('fine').textContent = 'vlymbooq · The Long Read · ' + (data.issue ? data.issue.label : '') +
+      ' · ' + (stats.stories || 0) + ' stories · ' + (stats.photos || 0) + ' photographs · ' +
+      (stats.postcards || 0) + ' postcards · ' + (stats.books || 0) + ' public-domain books. Built ' +
+      new Date(data.generatedAt).toLocaleString() + '.';
+    var disc = $('footDisclaimers');
+    disc.innerHTML = '';
+    var d = data.disclaimers || {};
+    ['stories', 'photos', 'books'].forEach(function (k) {
+      if (d[k]) {
+        var p = el('p', null, d[k]);
+        p.style.marginTop = '6px';
+        disc.appendChild(p);
+      }
+    });
+  }
+
+  function fail(error) {
+    $('issueLine').textContent = 'This issue is still being set';
+    $('coverGrid').innerHTML = '';
+    var box = el('div', 'error');
+    box.appendChild(el('h2', null, 'The ink is not dry yet'));
+    box.appendChild(el('p', null, 'The magazine agent may still be running. This page never invents coverage to fill the gap.'));
+    var retry = el('button', 'retry', 'Try again');
+    retry.type = 'button';
+    retry.addEventListener('click', load);
+    box.appendChild(retry);
+    $('coverGrid').appendChild(box);
+    $('sections').innerHTML = '';
+    $('noteText').textContent = error || 'No snapshot yet.';
+  }
+
+  function load() {
+    fetch(DATA_URL, { cache: 'no-store' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (json) {
+        if (!json || !Array.isArray(json.sections) || !json.sections.length) throw new Error('empty snapshot');
+        data = json;
+        render();
+      })
+      .catch(function (e) { fail(e && e.message); });
+  }
+
+  $('lbClose').addEventListener('click', function () { $('lightbox').close(); });
+  $('lightbox').addEventListener('click', function (e) { if (e.target === $('lightbox')) $('lightbox').close(); });
+
+  load();
+})();
+</script>
+</body>
+</html>

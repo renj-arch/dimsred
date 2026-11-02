@@ -29,6 +29,9 @@ var staticPages = [
   { loc: '/ask.html', priority: '0.8' },
   { loc: '/map.html', priority: '0.7' },
   { loc: '/flowchart.html', priority: '0.7' },
+  { loc: '/news.html', priority: '0.9' },
+  { loc: '/magazine.html', priority: '0.9' },
+  { loc: '/revision.html', priority: '0.8' },
 ];
 
 staticPages.forEach(function(p) {

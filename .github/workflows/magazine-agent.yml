@@ -1,0 +1,71 @@
+name: Magazine Agent
+
+# Offset by seven minutes from the news wire so the two agents do not race for
+# the same push. Rebuilds after content workflows and by hand as well.
+on:
+  schedule:
+    - cron: '7,22,37,52 * * * *'
+  workflow_run:
+    workflows:
+      - Daily PIB Feed
+      - Revision Content Rebuild
+      - Search index
+      - Daily Paper Generation
+      - Paper Solve (agent answers official PYQ)
+      - Author
+      - Site Agent
+      - Agent Chain
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: magazine-issue
+  cancel-in-progress: true
+
+jobs:
+  refresh:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Assemble and validate the issue
+        run: node scripts/fetch-magazine.js
+
+      - name: Re-check the issue contract
+        run: node scripts/check-feed-data.js magazine
+
+      - name: Commit when the issue changed
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/magazine.json
+          if git diff --staged --quiet; then
+            echo "No change in the issue"
+            exit 0
+          fi
+          git commit -m "magazine: set issue $(date -u +'%Y-%m-%dT%H:%MZ')"
+          for i in 1 2 3; do
+            git pull --rebase --autostash || true
+            if git push; then
+              echo "Pushed magazine update"
+              break
+            fi
+            echo "push attempt $i failed, retrying..."
+            sleep 5
+          done

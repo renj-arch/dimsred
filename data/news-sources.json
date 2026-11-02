@@ -1,0 +1,218 @@
+{
+  "version": 1,
+  "description": "Feed registry for the vlymbooq news wire. Every item is validated (title, link, source, date, allowlisted domain) and linked back to its publisher. Nothing is rewritten or invented.",
+  "maxAgeHours": 336,
+  "maxItemsPerSection": 80,
+  "maxItemsPerFeed": 25,
+  "stateBatchSize": 9,
+  "stateQuery": {
+    "Andaman and Nicobar Islands": "Andaman Nicobar news",
+    "Dadra and Nagar Haveli and Daman and Diu": "Dadra Nagar Haveli Daman Diu"
+  },
+  "allowDomains": [
+    "news.google.com",
+    "timesofindia.indiatimes.com",
+    "indiatimes.com",
+    "ndtv.com",
+    "thehindu.com",
+    "indianexpress.com",
+    "hindustantimes.com",
+    "bbc.com",
+    "bbc.co.uk",
+    "feeds.bbci.co.uk",
+    "theguardian.com",
+    "aljazeera.com",
+    "nytimes.com",
+    "business-standard.com",
+    "livemint.com",
+    "businesstoday.in",
+    "theverge.com",
+    "arstechnica.com",
+    "wired.com",
+    "espn.com",
+    "nature.com",
+    "sciencedaily.com",
+    "who.int",
+    "scroll.in",
+    "pib.gov.in"
+  ],
+  "disclaimers": {
+    "general": "Headlines link to the original publisher. vlymbooq does not rewrite news and is not responsible for third-party reporting.",
+    "trending": "Trending lists what newsrooms are reporting as popular. Virality is not independently verified by vlymbooq.",
+    "statewise": "State and UT feeds are generated from Google News search results; coverage depends on what publishers index."
+  },
+  "sections": [
+    {
+      "id": "top",
+      "label": "Top Stories",
+      "icon": "⚡",
+      "accent": "#f59e0b",
+      "feeds": [
+        { "url": "https://news.google.com/rss?hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" },
+        { "url": "https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms", "source": "The Times of India", "domain": "timesofindia.indiatimes.com" },
+        { "url": "https://www.pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3", "source": "PIB", "domain": "www.pib.gov.in" }
+      ]
+    },
+    {
+      "id": "national",
+      "label": "National",
+      "icon": "🇮🇳",
+      "accent": "#34d399",
+      "feeds": [
+        { "url": "https://www.thehindu.com/news/national/feeder/default.rss", "source": "The Hindu", "domain": "www.thehindu.com" },
+        { "url": "https://indianexpress.com/section/india/feed/", "source": "The Indian Express", "domain": "indianexpress.com" },
+        { "url": "https://news.google.com/rss/search?q=India+government+policy&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    },
+    {
+      "id": "international",
+      "label": "World",
+      "icon": "🌍",
+      "accent": "#22d3ee",
+      "feeds": [
+        { "url": "https://feeds.bbci.co.uk/news/world/rss.xml", "source": "BBC News", "domain": "feeds.bbci.co.uk" },
+        { "url": "https://www.theguardian.com/world/rss", "source": "The Guardian", "domain": "www.theguardian.com" },
+        { "url": "https://www.aljazeera.com/xml/rss/all.xml", "source": "Al Jazeera", "domain": "www.aljazeera.com" },
+        { "url": "https://rss.nytimes.com/services/xml/rss/nyt/World.xml", "source": "The New York Times", "domain": "rss.nytimes.com" }
+      ]
+    },
+    {
+      "id": "business",
+      "label": "Business",
+      "icon": "📈",
+      "accent": "#a78bfa",
+      "feeds": [
+        { "url": "https://economictimes.indiatimes.com/rssfeedsdefault.cms", "source": "The Economic Times", "domain": "economictimes.indiatimes.com" },
+        { "url": "https://www.business-standard.com/rss/home_page_top_stories.rss", "source": "Business Standard", "domain": "www.business-standard.com" },
+        { "url": "https://www.livemint.com/rss/news", "source": "Mint", "domain": "www.livemint.com" },
+        { "url": "https://www.businesstoday.in/rss/home", "source": "Business Today", "domain": "www.businesstoday.in" }
+      ]
+    },
+    {
+      "id": "tech",
+      "label": "Technology",
+      "icon": "💻",
+      "accent": "#60a5fa",
+      "feeds": [
+        { "url": "https://www.theverge.com/rss/index.xml", "source": "The Verge", "domain": "www.theverge.com" },
+        { "url": "https://feeds.arstechnica.com/arstechnica/index", "source": "Ars Technica", "domain": "feeds.arstechnica.com" },
+        { "url": "https://www.wired.com/feed/rss", "source": "WIRED", "domain": "www.wired.com" },
+        { "url": "https://news.google.com/rss/search?q=technology+India&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    },
+    {
+      "id": "sports",
+      "label": "Sport",
+      "icon": "🏏",
+      "accent": "#fb7185",
+      "feeds": [
+        { "url": "https://www.thehindu.com/sport/feeder/default.rss", "source": "The Hindu", "domain": "www.thehindu.com" },
+        { "url": "https://feeds.bbci.co.uk/sport/rss.xml", "source": "BBC Sport", "domain": "feeds.bbci.co.uk" },
+        { "url": "https://news.google.com/rss/search?q=India+sports+cricket&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    },
+    {
+      "id": "health",
+      "label": "Health",
+      "icon": "🩺",
+      "accent": "#4ade80",
+      "feeds": [
+        { "url": "https://www.who.int/rss-feeds/news-english.xml", "source": "World Health Organization", "domain": "www.who.int" },
+        { "url": "https://www.thehindu.com/sci-tech/health/feeder/default.rss", "source": "The Hindu", "domain": "www.thehindu.com" },
+        { "url": "https://news.google.com/rss/search?q=health+India&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    },
+    {
+      "id": "science",
+      "label": "Science",
+      "icon": "🔬",
+      "accent": "#38bdf8",
+      "feeds": [
+        { "url": "https://www.nature.com/nature.rss", "source": "Nature", "domain": "www.nature.com" },
+        { "url": "https://www.sciencedaily.com/rss/all.xml", "source": "ScienceDaily", "domain": "www.sciencedaily.com" },
+        { "url": "https://news.google.com/rss/search?q=science+India+ISRO&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    },
+    {
+      "id": "entertainment",
+      "label": "Culture & Screen",
+      "icon": "🎬",
+      "accent": "#f472b6",
+      "feeds": [
+        { "url": "https://www.thehindu.com/entertainment/feeder/default.rss", "source": "The Hindu", "domain": "www.thehindu.com" },
+        { "url": "https://news.google.com/rss/search?q=Bollywood+cinema+India&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    },
+    {
+      "id": "education",
+      "label": "Education",
+      "icon": "🎓",
+      "accent": "#facc15",
+      "feeds": [
+        { "url": "https://indianexpress.com/section/education/feed/", "source": "The Indian Express", "domain": "indianexpress.com" },
+        { "url": "https://news.google.com/rss/search?q=education+India+exam&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    },
+    {
+      "id": "opinion",
+      "label": "Opinion",
+      "icon": "✍️",
+      "accent": "#c4b5fd",
+      "feeds": [
+        { "url": "https://www.thehindu.com/opinion/feeder/default.rss", "source": "The Hindu", "domain": "www.thehindu.com" },
+        { "url": "https://indianexpress.com/section/opinion/feed/", "source": "The Indian Express", "domain": "indianexpress.com" },
+        { "url": "https://news.google.com/rss/search?q=editorial+opinion+India&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    },
+    {
+      "id": "trending",
+      "label": "Trending",
+      "icon": "🔥",
+      "accent": "#f97316",
+      "disclaimer": "trending",
+      "feeds": [
+        { "url": "https://news.google.com/rss/search?q=trending+India+viral&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" },
+        { "url": "https://news.google.com/rss/search?q=social+media+viral+India&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" },
+        { "url": "https://news.google.com/rss/search?q=viral+video+India&hl=en-IN&gl=IN&ceid=IN:en", "source": "Google News India", "domain": "news.google.com" }
+      ]
+    }
+  ],
+  "states": [
+    "Andhra Pradesh",
+    "Arunachal Pradesh",
+    "Assam",
+    "Bihar",
+    "Chhattisgarh",
+    "Goa",
+    "Gujarat",
+    "Haryana",
+    "Himachal Pradesh",
+    "Jharkhand",
+    "Karnataka",
+    "Kerala",
+    "Madhya Pradesh",
+    "Maharashtra",
+    "Manipur",
+    "Meghalaya",
+    "Mizoram",
+    "Nagaland",
+    "Odisha",
+    "Punjab",
+    "Rajasthan",
+    "Sikkim",
+    "Tamil Nadu",
+    "Telangana",
+    "Tripura",
+    "Uttar Pradesh",
+    "Uttarakhand",
+    "West Bengal",
+    "Andaman and Nicobar Islands",
+    "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi",
+    "Jammu and Kashmir",
+    "Ladakh",
+    "Lakshadweep",
+    "Puducherry"
+  ]
+}
