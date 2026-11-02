@@ -38,6 +38,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn, execSync } = require('child_process');
+const { auditQuestion } = require('./lib/invented-quality');
 
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const HOST = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').replace(/\/+$/, '');
@@ -500,25 +501,32 @@ function validate(raw, section, tier, recentTokenSets) {
       return { ok: false, why: 'duplicate (70% overlap rule)' };
     }
   }
+  const candidate = {
+    stem: stem,
+    options: options,
+    answer: answer,
+    solution: solution,
+    hint: String(t.hint || '').trim().slice(0, 160),
+    section: section,
+    difficulty: tier,
+    style: style.slice(0, 90),
+    topic: topic.slice(0, 70),
+    importance: importance,
+    importantFor: importantFor,
+    seconds: TIER_SECONDS[tier],
+    inventedAt: nowISO(),
+    model: FAKE ? 'fake-llm' : MODEL,
+    run: RUN
+  };
+  // The generator's shape checks cannot prove that the key follows from the
+  // stem. Recompute what can be recomputed before the item is stored: a model
+  // that writes a confident but wrong solution must not reach the pool, and it
+  // will not reach a publish either (revalidate-invented.js runs again there).
+  const audit = auditQuestion(candidate);
+  if (!audit.ok) return { ok: false, why: 'quality: ' + audit.errors.join('; ') };
   return {
     ok: true,
-    q: {
-      stem: stem,
-      options: options,
-      answer: answer,
-      solution: solution,
-      hint: String(t.hint || '').trim().slice(0, 160),
-      section: section,
-      difficulty: tier,
-      style: style.slice(0, 90),
-      topic: topic.slice(0, 70),
-      importance: importance,
-      importantFor: importantFor,
-      seconds: TIER_SECONDS[tier],
-      inventedAt: nowISO(),
-      model: FAKE ? 'fake-llm' : MODEL,
-      run: RUN
-    },
+    q: candidate,
     tokenSet: { key: key, tokens: tk }
   };
 }

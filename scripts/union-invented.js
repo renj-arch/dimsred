@@ -19,11 +19,16 @@
  *     by normalized stem when an id is missing), nothing is written at all
  *     — repeated ci-push retries are no-ops.
  *   - 1200-question cap matches INVENT_MAX_STORE.
+ *   - data/invented/quarantine.json is a hard blocklist. A question removed
+ *     for a wrong key must not come back through a remote snapshot. If the
+ *     manifest exists but cannot be read, the union is refused (exit 2)
+ *     rather than published without its safety control.
  *
  * Usage: node scripts/union-invented.js <remote.json> <local.json>
  * Rewrites <local.json> in place when the union actually adds questions.
  */
 const fs = require('fs');
+const path = require('path');
 
 const MAX_STORE = 1200;
 
@@ -47,6 +52,32 @@ function qkey(q) {
   return id || ('stem:' + stemKey(q));
 }
 
+// The manifest lives beside the pool it governs. A missing file is tolerated
+// for old checkouts and tests; an unreadable one is not: silently unioning
+// without the blocklist would resurrect exactly the questions it exists to
+// bury.
+function loadQuarantine(poolPath) {
+  const manifestPath = path.join(path.dirname(poolPath), 'quarantine.json');
+  if (!fs.existsSync(manifestPath)) return { ids: new Set(), path: null };
+  let manifest;
+  try {
+    manifest = JSON.parse(fs.readFileSync(manifestPath, 'utf8'));
+  } catch (e) {
+    console.error('union-invented: quarantine manifest unreadable (' + e.message + ') — refusing to union');
+    process.exit(2);
+  }
+  if (!manifest || !Array.isArray(manifest.items)) {
+    console.error('union-invented: quarantine manifest has no items array — refusing to union');
+    process.exit(2);
+  }
+  const ids = new Set();
+  for (const item of manifest.items) {
+    const id = String((item && item.id) || '').trim();
+    if (id) ids.add(id);
+  }
+  return { ids: ids, path: manifestPath };
+}
+
 const remotePath = process.argv[2];
 const localPath = process.argv[3];
 if (!remotePath || !localPath) {
@@ -59,10 +90,19 @@ const local = load(localPath);
 if (!local) { console.error('union-invented: local pool unreadable — no union'); process.exit(0); }
 if (!remote) { console.error('union-invented: remote pool unreadable — keeping local'); process.exit(0); }
 
-const localKeys = new Set(local.questions.map(qkey));
-const missing = remote.questions.filter(q => !localKeys.has(qkey(q)));
-if (!missing.length) {
-  console.log('union-invented: local already contains all ' + remote.questions.length + ' remote question(s)');
+const quarantine = loadQuarantine(localPath);
+const banned = quarantine.ids;
+const isBanned = q => banned.has(String((q && q.id) || ''));
+const remoteClean = remote.questions.filter(q => !isBanned(q));
+const localClean = local.questions.filter(q => !isBanned(q));
+const droppedLocal = local.questions.length - localClean.length;
+const droppedRemote = remote.questions.length - remoteClean.length;
+
+const localKeys = new Set(localClean.map(qkey));
+const missing = remoteClean.filter(q => !localKeys.has(qkey(q)));
+if (!missing.length && !droppedLocal) {
+  console.log('union-invented: local already contains all ' + remoteClean.length + ' remote question(s)' +
+    (banned.size ? ' (' + banned.size + ' quarantined id(s) blocked)' : ''));
   process.exit(0);
 }
 
@@ -70,7 +110,7 @@ if (!missing.length) {
 // stay at the tail, which is what the novelty memory reads.
 const seen = new Set();
 const merged = [];
-for (const q of remote.questions.concat(local.questions)) {
+for (const q of remoteClean.concat(localClean)) {
   if (!q || typeof q !== 'object') continue;
   const k = qkey(q);
   if (seen.has(k)) continue;
@@ -86,5 +126,6 @@ const out = Object.assign({}, remote, {
   questions: capped
 });
 fs.writeFileSync(localPath, JSON.stringify(out) + '\n');
-console.log('union-invented: ' + remote.questions.length + ' remote + ' + local.questions.length + ' local -> ' +
-  capped.length + ' pooled (+' + missing.length + ' recovered)');
+console.log('union-invented: ' + remoteClean.length + ' remote + ' + localClean.length + ' local -> ' +
+  capped.length + ' pooled (+' + missing.length + ' recovered, -' + (droppedLocal + droppedRemote) +
+  ' quarantined)');

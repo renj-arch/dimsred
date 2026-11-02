@@ -173,10 +173,15 @@ jobs:
           INVENT_NUM_PREDICT: '1200'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/invent-questions.js
 
+      # Revalidate the pool before it is ever committed. The generator's own
+      # checks cannot prove that the key follows from the stem; this gate
+      # catches the class of confident-but-wrong items that previously shipped.
+      - name: Revalidate invented pool (gate)
+        run: node scripts/revalidate-invented.js
+
       # Incremental saves mean even a timeout keeps every question invented
       # so far — publish whatever landed. Nothing staged -> ci-push exits 0.
       - name: Publish invented questions
-        if: always()
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
