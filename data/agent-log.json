@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T05:22:16.618Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; prioritize BankFigures to fix broken visual content immediately as it yielded fixes in prior runs. MetaLearn should follow to address syllabus gaps since files are missing, while Invention can tackle pending ideas if resources allow. MainsFresh and MockPapers go last as they produced zero fixes recently or depend on upstream data completion.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (370 total)",
-       "text": "Why is acetylene kept dissolved in acetone in the cylinder? | What is the function of a gas regulator in the workshop? | What does a flashback arrestor do?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T05:57:38.580Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -634,8 +594,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T13:15:13.914Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. Since papers/questions/syllabus files are missing, Invention is required next to generate fresh content from scratch. MetaLearn should follow to patch syllabus logic gaps revealed by new content. MockPapers and ExamPatterns will be queued last as they depend on the newly generated questions and fixed figures.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (406 total)",
+       "text": "What is a wire stripper used for? | What is the proper way to solder a wire joint? | What is insulation tape used for and why must it be applied correctly?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "11 fresh mock questions on Power Plant Engineering (360 in pool)",
+       "text": "Power Plant Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T12:45:15.816Z",
+ "lastRun": "2026-11-02T13:15:13.914Z",
  "model": "qwen3.5:9b"
 }
