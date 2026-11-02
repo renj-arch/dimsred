@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T05:08:57.421Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing figures immediately as they block content completeness. Since MainsFresh produced zero fixes in the last run, it is moved to the end of the execution order per starvation rules. The plan prioritizes fixing broken visual assets before moving to meta-learning or new inventions.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (367 total)",
-       "text": "What are punching and drifting in the smithy? | What are the oxide colours of steel in hardening and tempering? | What are the colours and purpose of oxy-acetylene cylinders?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T05:22:16.618Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -657,8 +612,63 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T12:45:15.816Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address critical visual errors first to restore site integrity. Since papers/sidecar files are missing, Invention is required immediately to generate foundational content before MockPapers or ExamPatterns can function. MetaLearn will target syllabus gaps next, while MainsFresh handles remaining open faults. Agents producing zero output in the last two runs (Invention, ExamPatterns, MetaLearn, MainsFresh) are scheduled",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (403 total)",
+       "text": "What is the function of the lathe carriage (saddle and apron)? | What is the purpose of earthing (grounding) an electrical appliance? | What is the function of a fuse and of an MCB?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T11:56:18.781Z",
+ "lastRun": "2026-11-02T12:45:15.816Z",
  "model": "qwen3.5:9b"
 }

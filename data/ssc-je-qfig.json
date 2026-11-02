@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T11:23:19.740Z",
-  "cursor": 423,
-  "built": 401
+  "updatedAt": "2026-11-02T12:07:00.442Z",
+  "cursor": 426,
+  "built": 403
  },
  "figs": {
   "11434945": {
@@ -2409,6 +2409,18 @@
   "4784195f": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"140\" rx=\"2\"/><circle cx=\"80\" cy=\"100\" r=\"30\"/><path d=\"M 60 100 L 100 100 M 60 120 L 100 120 M 60 80 L 100 80\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"105\" font-weight=\"bold\">Mandrel</text><text x=\"35\" y=\"125\">(Tapered Bar)</text><path d=\"M 160 100 L 280 100 M 160 120 L 280 120 M 160 80 L 280 80\" stroke-dasharray=\"4,2\"/><circle cx=\"220\" cy=\"100\" r=\"35\"/><path d=\"M 220 100 L 255 75 M 220 100 L 255 125\" stroke-width=\"2\"/><text x=\"295\" y=\"105\" font-weight=\"bold\">Workpiece</text><text x=\"295\" y=\"125\">(Bore on Mandrel)</text><path d=\"M 140 160 L 230 160\"/><text x=\"180\" y=\"175\">Machine Tool</text><text x=\"180\" y=\"190\">Cutting Force</text></svg>",
    "n": "what is a mandrel and when is it used?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "5bafbe9a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"20\" y=\"40\" width=\"320\" height=\"140\" rx=\"5\"/><line x1=\"20\" y1=\"80\" x2=\"340\" y2=\"80\" stroke-dasharray=\"4,4\"/><text x=\"22\" y=\"75\">Bed</text><rect x=\"60\" y=\"60\" width=\"100\" height=\"40\"/><line x1=\"60\" y1=\"100\" x2=\"160\" y2=\"100\" stroke-dasharray=\"2,2\"/><text x=\"85\" y=\"95\">Saddle</text><rect x=\"170\" y=\"60\" width=\"40\" height=\"40\"/><line x1=\"170\" y1=\"100\" x2=\"210\" y2=\"100\" stroke-dasharray=\"2,2\"/><text x=\"185\" y=\"95\">Apron</text><rect x=\"60\" y=\"110\" width=\"140\" height=\"30\"/><line x1=\"200\" y1=\"110\" x2=\"200\" y2=\"140\" stroke-dasharray=\"2,2\"/><text x=\"185\" y=\"135\">Cross Slide</text><rect x=\"60\" y=\"140\" width=\"30\" height=\"30\"/><line x1=\"90\" y1=\"140\" x2=\"90\" y2=\"170\" stroke-dasharray=\"2,2\"/><text x=\"85\" y=\"165\">Tool Post</text><path d=\"M 20 100 L 340 100\" stroke-width=\"2\"/><text x=\"180\" y=\"95\">Direction of Feed</text></svg>",
+   "n": "what is the function of the lathe carriage (saddle and apron)?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "ec5707f3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"Fuse\">\n<path d=\"M40,60 L80,60 L90,55 L100,60 L110,55 L120,60 L130,55 L140,60 L150,55 L160,60\" stroke-dasharray=\"2,2\"/>\n<circle cx=\"95\" cy=\"58\" r=\"3\" fill=\"none\"/>\n<text x=\"70\" y=\"45\">Fuse</text>\n<text x=\"115\" y=\"45\">(Melts)</text>\n<line x1=\"160\" y1=\"60\" x2=\"200\" y2=\"60\"/>\n<text x=\"170\" y=\"80\">Circuit</text>\n</g>\n<g id=\"MCB\">\n<path d=\"M40,130 L80,130 L90,125 L100,130 L110,125 L120,130 L130,125 L140,130 L150,125 L160,130\" stroke-dasharray=\"2,2\"/>\n<rect x=\"85\" y=\"115\" width=\"20\" height=\"15\" rx=\"5\"/>\n<text x=\"95\" y=\"130\">MCB</text>\n<text x=\"115\" y=\"130\">(Trips)</text>\n<line x1=\"160\" y1=\"130\" x2=\"200\" y2=\"130\"/>\n<text x=\"170\" y=\"150\">Circuit</text>\n</g>\n<g id=\"Comparison\">\n<rect x=\"210\" y=\"40\" width=\"120\" height=\"140\" rx=\"5\"/>\n<line x1=\"230\" y1=\"60\" x2=\"230\" y2=\"180\"/>\n<text x=\"220\" y=\"75\">Fuse</text>\n<text x=\"220\" y=\"95\">One-time use</text>\n<text x=\"220\" y=\"115\">Burns out</text>\n<text x=\"220\" y=\"135\">Needs replacement</text>\n<line x1=\"230\" y1=\"160\" x2=\"230\" y2=\"180\"/>\n<text x=\"220\" y=\"175\">MCB</text>\n<text x=\"220\" y=\"195\">Resettable</text>\n</g>\n</svg>",
+   "n": "what is the function of a fuse and of an mcb?",
    "sub": "workshop",
    "at": "2026-11-02"
   }
