@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T04:49:26.237Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-02T05:08:57.421Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -603,8 +591,74 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T11:56:18.781Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical gaps in foundational content (figures, papers, questions) and high fault counts. BankFigures is the only agent producing results recently; others have yielded zero for 2+ consecutive runs, so they must be queued last to avoid starvation bias. Priority is clearing the 79 figure gaps and generating missing core files before attempting new inventions or meta-learning.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (401 total)",
+       "text": "Name the three common chuck types of the lathe. | Why are workpieces turned between centres instead of in a chuck? | What is a mandrel and when is it used?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "3 fresh mock questions on Air Compressors (360 in pool)",
+       "text": "Air Compressors"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T11:11:24.530Z",
+ "lastRun": "2026-11-02T11:56:18.781Z",
  "model": "qwen3.5:9b"
 }
