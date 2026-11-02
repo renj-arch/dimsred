@@ -355,6 +355,18 @@ function cleanText(s, min, max) {
   return (t.length >= min && t.length <= max) ? t : null;
 }
 function normTitle(t) { return String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim(); }
+
+// Fuzzy duplicate check (2026-11-02): the model rephrases the same idea with
+// different filler words ("...count & parsing" vs "...count and parsing"),
+// which exact-match dedupe missed. Token Jaccard >= 0.7 counts as a repeat.
+function tokenSet(t) { return new Set(normTitle(t).split(' ').filter(Boolean)); }
+function similarTitle(a, b) {
+  const A = tokenSet(a), B = tokenSet(b);
+  if (!A.size || !B.size) return false;
+  let inter = 0;
+  for (const w of A) if (B.has(w)) inter++;
+  return inter / (A.size + B.size - inter) >= 0.7;
+}
 function normalizeLevel(v, allowed) {
   const t = String(v || '').toLowerCase();
   for (const a of allowed) { if (t.indexOf(a) >= 0) return a; }
@@ -383,7 +395,7 @@ function validateItems(rawItems, prevTitles) {
     const risk = normalizeLevel(it.risk, ['low', 'medium', 'high']);
     if (!title || !why || !idea || !effort || !risk) { dropped++; return; }
     const nt = normTitle(title);
-    if (seen.has(nt)) { dropped++; return; }
+    if (seen.has(nt) || Array.from(seen).some(prev => similarTitle(nt, prev))) { dropped++; return; }
     seen.add(nt);
     out.push({ title: title, why: why, idea: idea, effort: effort, risk: risk });
   });

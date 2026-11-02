@@ -247,15 +247,17 @@ function renderFaults() {
       }
     }
 
-    // 2. The full fault list.
+    // 2. The full fault list with severity triage (2026-11-02 upgrade):
+    //    chips filter by severity, and info items (pipeline-status noise)
+    //    are hidden by default so critical/warn stand out.
+    var counts = data.counts || {};
     html += '<div class="list-head" style="margin-top:18px">All current faults</div>';
     html += '<p>' + stamp(data.generatedAt) +
-      ' &middot; <b style="color:var(--rose)">' + ((data.counts && data.counts.critical) || 0) + ' critical</b>' +
-      ' &middot; <b style="color:var(--amber)">' + ((data.counts && data.counts.warn) || 0) + ' warning</b>' +
-      ' &middot; ' + ((data.counts && data.counts.info) || 0) + ' info</p>';
-    html += faults.length
-      ? faults.map(function (x) { return faultRow(x, ''); }).join('')
-      : '<p class="empty">No faults detected.</p>';
+      ' &middot; <b style="color:var(--rose)">' + (counts.critical || 0) + ' critical</b>' +
+      ' &middot; <b style="color:var(--amber)">' + (counts.warn || 0) + ' warning</b>' +
+      ' &middot; ' + (counts.info || 0) + ' info</p>';
+    html += '<div id="faultChips" style="margin:4px 0 6px;display:flex;gap:6px;flex-wrap:wrap"></div>';
+    html += '<div id="faultList"></div>';
 
     // 3. Pipeline health — latest run of every workflow.
     if (data.runs && data.runs.length) {
@@ -413,9 +415,41 @@ function renderFaults() {
       return r.json();
     }).then(function (pp) {
       if (!pp || !pp.proposals || !pp.proposals.length) return;
-      var recent = pp.proposals.slice(0, 6);
+      // Group near-duplicate proposals (the model re-raises the same idea in
+      // different words): token-Jaccard >= 0.7 merges a proposal into an
+      // existing group; the group shows the newest wording + a ×N badge.
+      function pTokens(t) { return String(t || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ').filter(Boolean); }
+      function pSimilar(a, b) {
+        var A = pTokens(a), B = pTokens(b);
+        if (!A.length || !B.length) return false;
+        var sa = {}, inter = 0, i;
+        for (i = 0; i < A.length; i++) sa[A[i]] = 1;
+        for (i = 0; i < B.length; i++) if (sa[B[i]]) inter++;
+        var union = new Set(A.concat(B)).size;
+        return union ? inter / union >= 0.7 : false;
+      }
+      var groups = [];
+      pp.proposals.forEach(function (p) {
+        for (var g = 0; g < groups.length; g++) {
+          if (pSimilar(groups[g].title, p.title)) {
+            groups[g].count++;
+            if (!groups[g].newest.at || (p.at && p.at > groups[g].newest.at)) groups[g].newest = p;
+            return;
+          }
+        }
+        groups.push({ title: p.title, count: 1, newest: p });
+      });
+      groups.sort(function (a, b) {
+        if (b.count !== a.count) return b.count - a.count;
+        return String(b.newest.at || '').localeCompare(String(a.newest.at || ''));
+      });
+      var recent = groups.slice(0, 6).map(function (g) {
+        var p = g.newest;
+        p.__count = g.count;
+        return p;
+      });
       var section = '<div class="list-head" style="margin-top:18px">🧠 Proposal lane <span style="font-weight:400;text-transform:none;letter-spacing:0;color:var(--text-muted)">&middot; the model\'s daily improvement ideas &mdash; nothing is built until the owner approves one</span></div>';
-      section += '<p style="font-size:12px;color:var(--text-muted)">Last pass: ' + stamp(pp.generatedAt) + ' &middot; model: ' + esc((pp.meta && pp.meta.model) || 'the site\'s own model') + ' &middot; writes 3&ndash;5 ideas each morning on the build runner &middot; ' + pp.proposals.length + ' kept</p>';
+      section += '<p style="font-size:12px;color:var(--text-muted)">Last pass: ' + stamp(pp.generatedAt) + ' &middot; model: ' + esc((pp.meta && pp.meta.model) || 'the site\'s own model') + ' &middot; writes 3&ndash;5 ideas each morning on the build runner &middot; ' + pp.proposals.length + ' kept, grouped below into distinct ideas</p>';
       if (pp.meta && pp.meta.lastAttempt && pp.meta.lastAttempt.ok === false) {
         section += '<div style="margin:6px 0;padding:6px 12px;background:rgba(239,68,68,.08);border-left:3px solid var(--rose);border-radius:0 8px 8px 0;font-size:12px;color:var(--text-sec)">⚠️ The last pass failed (' + esc(String(pp.meta.lastAttempt.error || '').slice(0, 160)) + ') — these are the previous proposals.</div>';
       }
@@ -427,6 +461,7 @@ function renderFaults() {
           '&body=' + encodeURIComponent('From the site\'s Proposal Lane (' + (p.id || '') + ', ' + stamp(pp.generatedAt) + ').\n\n**Why:** ' + p.why + '\n\n**Idea:** ' + p.idea + '\n\n**Effort:** ' + p.effort + ' · **Risk:** ' + p.risk + '\n\n_The owner approved this suggestion from the site\'s improve page._');
         return '<div style="border-left:3px solid var(--purple);padding:8px 12px;margin:8px 0;background:var(--bg);border-radius:0 8px 8px 0">' +
           '<b style="font-size:13px">' + esc(p.title) + '</b>' +
+          (p.__count > 1 ? '<span style="margin-left:6px;font-size:10px;color:var(--amber);border:1px solid var(--amber);border-radius:8px;padding:1px 6px" title="The model re-raised this idea ' + p.__count + ' times">raised ×' + p.__count + '</span>' : '') +
           '<span style="margin-left:6px;font-size:10px;color:' + effColor + ';border:1px solid ' + effColor + ';border-radius:8px;padding:1px 6px">effort: ' + esc(p.effort) + '</span>' +
           '<span style="margin-left:4px;font-size:10px;color:' + riskColor + ';border:1px solid ' + riskColor + ';border-radius:8px;padding:1px 6px">risk: ' + esc(p.risk) + '</span>' +
           '<div style="font-size:12px;color:var(--text-sec);margin-top:3px">' + esc(p.why) + '</div>' +
@@ -481,19 +516,62 @@ function renderFaults() {
     }
 
     box.innerHTML = html;
-    Array.prototype.forEach.call(box.querySelectorAll('[data-act]'), function (btn) {
-      btn.addEventListener('click', function () {
-        var a = actionable[+btn.getAttribute('data-act')];
-        if (!a) return;
-        el('target').value = a.target || '';
-        el('current').value = a.current || '';
-        el('issue').value = a.issue || '';
-        el('fix').value = a.fix || '';
-        var fb = document.querySelector('.form-box');
-        if (fb) fb.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        el('fix').focus();
+
+    // Prefill-button binding, reusable so dynamically re-rendered lists
+    // (the severity-filtered fault list) get wired too.
+    function bindActs(scope) {
+      Array.prototype.forEach.call((scope || box).querySelectorAll('[data-act]'), function (btn) {
+        if (btn.__bound) return; btn.__bound = 1;
+        btn.addEventListener('click', function () {
+          var a = actionable[+btn.getAttribute('data-act')];
+          if (!a) return;
+          el('target').value = a.target || '';
+          el('current').value = a.current || '';
+          el('issue').value = a.issue || '';
+          el('fix').value = a.fix || '';
+          var fb = document.querySelector('.form-box');
+          if (fb) fb.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          el('fix').focus();
+        });
       });
-    });
+    }
+
+    // Severity triage: chips filter the list; 'core' (default) hides info.
+    var activeSev = 'core';
+    function drawChips() {
+      var chips = el('faultChips');
+      if (!chips) return;
+      var defs = [
+        ['core', 'critical + warn + ideas'],
+        ['critical', 'critical'], ['warn', 'warn'], ['idea', 'ideas'], ['info', 'info']
+      ];
+      chips.innerHTML = defs.map(function (d) {
+        var n = d[0] === 'core'
+          ? faults.filter(function (x) { return x.severity !== 'info'; }).length
+          : faults.filter(function (x) { return x.severity === d[0]; }).length;
+        var on = activeSev === d[0];
+        return '<button data-sev="' + d[0] + '" style="border:1px solid ' + (on ? 'var(--purple)' : 'var(--border)') +
+          ';background:' + (on ? 'rgba(167,139,250,.15)' : 'var(--bg)') + ';color:' + (on ? 'var(--purple)' : 'var(--text-sec)') +
+          ';border-radius:100px;padding:3px 12px;font-size:11.5px;font-weight:600;cursor:pointer">' + d[1] + ' (' + n + ')</button>';
+      }).join('');
+      Array.prototype.forEach.call(chips.querySelectorAll('[data-sev]'), function (b) {
+        b.addEventListener('click', function () { activeSev = b.getAttribute('data-sev'); drawChips(); drawFaultList(); });
+      });
+    }
+    function drawFaultList() {
+      var list = el('faultList');
+      if (!list) return;
+      var vis = faults.filter(function (x) {
+        return activeSev === 'core' ? x.severity !== 'info' : x.severity === activeSev;
+      });
+      list.innerHTML = vis.length
+        ? vis.map(function (x) { return faultRow(x, ''); }).join('')
+        : '<p class="empty">None at this severity.</p>';
+      bindActs(list);
+    }
+    drawChips();
+    drawFaultList();
+    bindActs(box);
   }).catch(function () {
     box.innerHTML = '<p class="empty">No fault report published yet &mdash; the nightly wiki-fill run writes one after its coverage check, and fault-status.yml refreshes it every 6 hours.</p>';
   });

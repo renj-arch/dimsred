@@ -437,3 +437,14 @@ questions to Generators first because they carry `_wikiCat='course-lesson'`.
      persist link + category discovery; pushQ plus the Bloom dedup keys make
      re-minted questions yield 0 new. Network only goes to un-mined content;
      the remaining per-run cost is a local baseline scan, not fetching.
+ - 2026-11-02: Improvement pass (owner-approved proposals from the lane)
+   - improve.html fault board now has severity triage: chips (critical/warn/
+     ideas/info) filter the list and info items are hidden by default, so the
+     23 criticals and 44 warns are not buried under 14 info status lines
+     (implements the repeated "Improve Fault Board Triage for Info Items" proposal).
+   - Proposal lane deduped two ways: proposal-lane.js now drops a new proposal
+     when its title is token-Jaccard >= 0.7 similar to an existing one (the model
+     kept re-raising "tutor lane parsing" / "auto-resolve faults" in different
+     words; 36 kept proposals group into 29 distinct ideas), and improve.html
+     groups near-duplicates at render time with a "raised xN" badge, newest
+     wording wins, groups sorted by frequency then recency.
