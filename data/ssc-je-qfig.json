@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T10:14:40.132Z",
-  "cursor": 417,
-  "built": 395
+  "updatedAt": "2026-11-02T10:46:07.292Z",
+  "cursor": 420,
+  "built": 398
  },
  "figs": {
   "11434945": {
@@ -2373,6 +2373,24 @@
   "705cf224": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Base Line -->\n  <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" />\n  <!-- Workpiece Surface -->\n  <line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" />\n  <!-- Angle to be measured (Workpiece) -->\n  <path d=\"M 40 180 L 180 160\" />\n  <!-- Protractor Base -->\n  <circle cx=\"180\" cy=\"180\" r=\"90\" stroke-dasharray=\"3,2\" />\n  <!-- Swinging Blade (Vernier Scale) -->\n  <line x1=\"180\" y1=\"180\" x2=\"180\" y2=\"100\" />\n  <!-- Angle Indicator at Blade Tip -->\n  <circle cx=\"180\" cy=\"100\" r=\"3\" fill=\"#222\" />\n  <!-- Labels -->\n  <text x=\"165\" y=\"195\" text-anchor=\"middle\">Workpiece</text>\n  <text x=\"185\" y=\"140\" text-anchor=\"middle\">Swinging Blade</text>\n  <text x=\"200\" y=\"105\" text-anchor=\"middle\">Vernier Scale</text>\n  <text x=\"180\" y=\"30\" text-anchor=\"middle\">Measures Angle</text>\n  <text x=\"180\" y=\"45\" text-anchor=\"middle\">(to ~5 min arc)</text>\n</svg>",
    "n": "what is a bevel protractor and what does it measure?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "d5f3f784": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"5\"/><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\"/><line x1=\"40\" y1=\"40\" x2=\"40\" y2=\"160\"/><line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"160\"/><text x=\"50\" y=\"80\">Base Plate</text><text x=\"50\" y=\"120\">Horizontal Surface</text><rect x=\"90\" y=\"70\" width=\"20\" height=\"40\" rx=\"2\"/><circle cx=\"100\" cy=\"85\" r=\"3\" fill=\"#222\"/><line x1=\"100\" y1=\"85\" x2=\"100\" y2=\"160\"/><text x=\"90\" y=\"175\">Universal Surface Gauge</text><path d=\"M 100 160 L 140 160 M 100 160 L 100 180\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"195\">Scratching Lines</text><path d=\"M 100 160 L 100 140 M 100 160 L 120 160\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"145\">Testing Parallelism</text><text x=\"200\" y=\"80\">Height Setting</text><text x=\"200\" y=\"120\">Transfer Measurement</text></svg>",
+   "n": "what is a universal surface gauge used for?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "1244f089": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Vee-Block Setup</text><path d=\"M 80 140 L 160 140 L 160 180 L 80 180 Z\" stroke-dasharray=\"4,2\"/><circle cx=\"120\" cy=\"140\" r=\"35\" fill=\"none\"/><path d=\"M 80 140 L 70 160 M 160 140 L 170 160\"/><text x=\"90\" y=\"200\">Workpiece</text><text x=\"150\" y=\"200\">Shaft/Bar</text><text x=\"30\" y=\"180\">Stable Position</text></svg>",
+   "n": "what are vee-blocks used for?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "dfc77f15": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"5\"/>\n <circle cx=\"200\" cy=\"110\" r=\"60\"/>\n <line x1=\"200\" y1=\"50\" x2=\"200\" y2=\"170\" stroke-width=\"3\"/>\n <line x1=\"140\" y1=\"110\" x2=\"260\" y2=\"110\" stroke-width=\"3\"/>\n <circle cx=\"200\" cy=\"110\" r=\"2\" fill=\"#222\"/>\n <line x1=\"185\" y1=\"105\" x2=\"195\" y2=\"105\"/>\n <line x1=\"185\" y1=\"115\" x2=\"195\" y2=\"115\"/>\n <line x1=\"200\" y1=\"95\" x2=\"200\" y2=\"105\"/>\n <line x1=\"200\" y1=\"115\" x2=\"200\" y2=\"125\"/>\n <text x=\"170\" y=\"130\">Face</text>\n <rect x=\"40\" y=\"80\" width=\"60\" height=\"60\"/>\n <line x1=\"100\" y1=\"100\" x2=\"160\" y2=\"100\" stroke-width=\"2\"/>\n <path d=\"M 100 100 L 80 90 L 75 105 Z\" fill=\"#222\"/>\n <text x=\"55\" y=\"95\">Plunger</text>\n <line x1=\"160\" y1=\"100\" x2=\"200\" y2=\"100\" stroke-width=\"2\"/>\n <path d=\"M 160 100 L 175 90 L 180 105 Z\" fill=\"#222\"/>\n <text x=\"175\" y=\"95\">Magnifies</text>\n <line x1=\"200\" y1=\"100\" x2=\"260\" y2=\"100\" stroke-width=\"2\"/>\n <path d=\"M 260 100 L 280 90 L 275 105 Z\" fill=\"#222\"/>\n <text x=\"275\" y=\"95\">Measures</text>\n <line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" stroke-dasharray=\"4,2\"/>\n <text x=\"80\" y=\"175\">Reference Surface</text>\n <line x1=\"40\" y1=\"160\" x2=\"40\" y2=\"190\"/>\n <line x1=\"320\" y1=\"160\" x2=\"320\" y2=\"190\"/>\n</svg>",
+   "n": "what is a dial test indicator and how is it used?",
    "sub": "workshop",
    "at": "2026-11-02"
   }
