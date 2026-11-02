@@ -399,7 +399,7 @@ function showExplanation() {
   tryExplain(qText).then(function(explanation) {
     txt.innerHTML = explanation;
   }).catch(function() {
-    txt.innerHTML = (chip ? chip + '<br>' : '') + 'Official answer: <strong>' + currentQ.a + '</strong>. Open the Ask engine for a detailed explanation.';
+    txt.innerHTML = (chip ? chip + '<br>' : '') + 'Answer: <strong>' + currentQ.a + '</strong> (site-verified quiz item, not an official key). Open the Ask engine for a detailed explanation.';
   });
 }
 

@@ -25,6 +25,7 @@
 const fs = require('fs');
 const path = require('path');
 const { auditQuestion } = require('./lib/invented-quality');
+const { checkPapers } = require('./check-papers-provenance');
 
 const ROOT = path.join(__dirname, '..');
 const CANDIDATES = path.join(ROOT, 'data', 'paper-solve-candidates.json');
@@ -89,6 +90,11 @@ function main() {
 
   if (CHECK_ONLY) {
     if (hard.length) process.exit(1);
+    // Also audit the existing papers.json provenance (fail-closed gate).
+    const existing = readJson(PAPERS, null);
+    const ev = existing ? checkPapers(existing) : ['papers.json unreadable'];
+    for (const v of ev) console.log('PROVENANCE VIOLATION ' + v);
+    if (ev.length) process.exit(1);
     return;
   }
 
@@ -134,6 +140,7 @@ function main() {
       officialPdf: c.qpUrl,
       source: 'agent-solved',
       verification: 'agent-solved-unverified',
+      official: false,
       model: c.model,
       solvedAt: c.solvedAt
     });
@@ -161,6 +168,13 @@ function main() {
 
   // Hard failures never block the apply of good items, but they must be loud.
   if (hard.length) process.exitCode = 1;
+
+  // Fail-closed provenance audit of the whole papers.json: every answered
+  // question must carry an honest source label and agent-solved items must
+  // never have official=true.
+  const violations = checkPapers(papers);
+  for (const v of violations) console.log('PROVENANCE VIOLATION ' + v);
+  if (violations.length) process.exitCode = 1;
 }
 
 main();

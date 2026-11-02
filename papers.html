@@ -288,8 +288,7 @@ function renderPaperGrid() {
     card.innerHTML = '<div class="exam-badge">' + p.exam + '</div>' +
       '<div class="paper-title">' + p.year + ' ' + p.type + (p.subject ? ' — ' + p.subject : '') + '</div>' +
       '<div class="paper-meta">' + qCount + ' questions' + (p.cutoff ? ' · Cutoff: ' + p.cutoff : '') +
-      (p.official ? ' · <span style="color:#34d399">● official paper</span>' : '') +
-      (p.source === 'agent-solved' ? ' · <span style="color:#f59e0b" title="Answers produced by the site agent from the official question paper, not from a parsed official key. Check against the official PDF.">◐ agent-solved</span>' : '') + '</div>';
+      paperBadge(p) + '</div>';
     card.onclick = function() { openPaper(p.id); };
     grid.appendChild(card);
   });
@@ -307,8 +306,7 @@ function esc(s) { return String(s == null ? '' : s).replace(/&/g, '&amp;').repla
   document.getElementById('paperView').style.display = 'block';
   document.getElementById('paperTitle').textContent = currentPaper.year + ' ' + currentPaper.exam + ' ' + currentPaper.type;
   document.getElementById('paperMeta').innerHTML = esc(currentPaper.subject || '') + ' · ' + (currentPaper.questions ? currentPaper.questions.length : 0) + ' questions' + (currentPaper.cutoff ? ' · Cutoff: ' + esc(String(currentPaper.cutoff)) : '') +
-    (currentPaper.official ? ' · <span style="color:#34d399">● official paper</span>' : '') +
-    (currentPaper.source === 'agent-solved' ? ' · <span style="color:#f59e0b">◐ agent-solved — verify against the official PDF</span>' : '') +
+    paperBadge(currentPaper) +
     (currentPaper.officialPdf ? ' · <a href="' + esc(currentPaper.officialPdf) + '" target="_blank" rel="noopener" style="color:#60a5fa">Official PDF</a>' : '');
   buildSubjectFilter();
   renderQuestions();
@@ -390,8 +388,25 @@ function selectOption(num, idx) {
   updateStats();
 }
 
+// Fail-closed badges: the green "official paper" badge appears ONLY when the
+// paper was ingested from a parsed official answer key (source official-pyq).
+// Anything else — agent-solved or legacy unlabelled — gets the amber badge.
+function paperBadge(p) {
+  if (p && p.source === 'official-pyq') return ' · <span style="color:#34d399">● official paper</span>';
+  var title = (p && p.source === 'agent-solved')
+    ? 'Answers produced by the site agent from the official question paper, not from a parsed official key. Check against the official PDF.'
+    : 'Answers are not from a parsed official answer key — verify against the official PDF/key.';
+  return ' · <span style="color:#f59e0b" title="' + title + '">◐ agent-solved / unverified</span>';
+}
+
+// Fail-closed answer label: "Official answer" only for questions ingested from
+// a parsed official key; agent-solved and unlabelled answers say so plainly.
 function qAnswerLabel(q) {
-  return (q && q.source === 'agent-solved') ? 'Agent answer (verify vs official PDF): ' : 'Official answer: ';
+  var official = q && (q.source === 'official-pyq' ||
+    (currentPaper && currentPaper.source === 'official-pyq' && q.pyqExam));
+  if (official) return 'Official answer: ';
+  if (q && q.source === 'agent-solved') return 'Agent answer (verify vs official PDF): ';
+  return 'Answer (no official key parsed — verify): ';
 }
 
 function answerOne(num) {
@@ -429,7 +444,11 @@ function answerOne(num) {
   }).catch(function() {
     loader.classList.remove('show');
     ansDiv.innerHTML = '<div class="q-answer-label">' + qAnswerLabel(q) + q.answer + '</div>' +
-      '<div class="q-explain">' + (q.source === 'agent-solved' ? 'Solved by the site agent from the official question paper — confirm against the official PDF/key before relying on it.' : 'Official answer is <strong>' + q.answer + '</strong>.') + '</div>';
+      '<div class="q-explain">' + (q.source === 'official-pyq' || (currentPaper && currentPaper.source === 'official-pyq' && q.pyqExam)
+        ? 'Official answer is <strong>' + q.answer + '</strong>.'
+        : (q.source === 'agent-solved'
+          ? 'Solved by the site agent from the official question paper — confirm against the official PDF/key before relying on it.'
+          : 'Answer is <strong>' + q.answer + '</strong>, but no official answer key was parsed for this paper — verify against the official PDF/key.')) + '</div>';
     ansDiv.classList.add('show');
     btn.disabled = false;
     btn.textContent = '💡 Retry';

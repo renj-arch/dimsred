@@ -142,8 +142,16 @@ jobs:
         if: steps.gate.outcome == 'success'
         run: node scripts/apply-paper-solve.js
 
-      - name: Publish solved paper questions
+      # Fail-closed provenance audit of the whole papers.json: every answered
+      # question must carry an honest source label and agent-solved items must
+      # never have official=true. Publish is skipped if this fails.
+      - name: Provenance gate on papers.json
+        id: prov
         if: steps.gate.outcome == 'success'
+        run: node scripts/check-papers-provenance.js
+
+      - name: Publish solved paper questions
+        if: steps.gate.outcome == 'success' && steps.prov.outcome == 'success'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
