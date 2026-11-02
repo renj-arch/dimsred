@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T00:02:30.780Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in core assets (papers, questions) and high fault counts; MainsFresh produced zero fixes last run so it is deprioritized to the end of the queue. I will prioritize filling the massive figure gap with BankFigures, then address pending ideas via Invention, followed by generating fresh mains content via MetaLearn to ensure daily freshness, while ExamPatterns and MockPapers are queued later as they require existing question banks which filesPresent indicates are currently ",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "ExamPatterns",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (336 total)",
-       "text": "What is an inside micrometer and when is it used? | What is a depth gauge (micrometer)? | What is a feeler gauge used for?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Materials & Metallurgy (360 in pool)",
-       "text": "Materials & Metallurgy"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T00:25:27.195Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -559,8 +498,53 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-02T05:08:57.421Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing figures immediately as they block content completeness. Since MainsFresh produced zero fixes in the last run, it is moved to the end of the execution order per starvation rules. The plan prioritizes fixing broken visual assets before moving to meta-learning or new inventions.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (367 total)",
+       "text": "What are punching and drifting in the smithy? | What are the oxide colours of steel in hardening and tempering? | What are the colours and purpose of oxy-acetylene cylinders?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T04:49:26.237Z",
+ "lastRun": "2026-11-02T05:08:57.421Z",
  "model": "qwen3.5:9b"
 }

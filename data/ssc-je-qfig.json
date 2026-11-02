@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T04:25:24.525Z",
-  "cursor": 384,
-  "built": 364
+  "updatedAt": "2026-11-02T04:57:09.407Z",
+  "cursor": 387,
+  "built": 367
  },
  "figs": {
   "11434945": {
@@ -2187,6 +2187,24 @@
   "464ee45c": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Fullering Process</text><path d=\"M40,80 L80,80 L90,60 L110,70 L130,60 L140,80 L180,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M40,100 Q80,120 140,100\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><circle cx=\"110\" cy=\"70\" r=\"8\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"35\" y=\"90\">Bar</text><text x=\"145\" y=\"90\">Hammer Face</text><text x=\"100\" y=\"140\">Gathered Metal</text><text x=\"180\" y=\"200\" text-anchor=\"middle\">Shoulder Forming</text></svg>",
    "n": "what is fullering?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "89ff4f16": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Stock (Workpiece) -->\n  <rect x=\"40\" y=\"80\" width=\"120\" height=\"40\" />\n  <text x=\"35\" y=\"95\">Stock</text>\n  \n  <!-- Punching Phase: Vertical Punch -->\n  <line x1=\"100\" y1=\"40\" x2=\"100\" y2=\"80\" stroke-dasharray=\"2,2\" />\n  <circle cx=\"100\" cy=\"40\" r=\"6\" />\n  <text x=\"95\" y=\"35\">Punch</text>\n  \n  <!-- Drifting Phase: Tapered Drift -->\n  <path d=\"M 120 80 L 130 60 L 140 80 Z\" fill=\"none\" stroke-width=\"1.5\" />\n  <text x=\"125\" y=\"70\">Drift</text>\n  \n  <!-- Labels -->\n  <text x=\"40\" y=\"130\">Punching: Drives punch through stock to form hole.</text>\n  <text x=\"40\" y=\"150\">Drifting: Enlarges and trues hole with tapered drift.</text>\n</svg>",
+   "n": "what are punching and drifting in the smithy?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "d16cd04": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Temperature vs Oxide Colour</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"35\" y=\"60\">Blue</text><text x=\"35\" y=\"90\">Purple</text><text x=\"35\" y=\"120\">Brown</text><text x=\"35\" y=\"150\">Straw</text><line x1=\"40\" y1=\"175\" x2=\"60\" y2=\"175\"/><line x1=\"80\" y1=\"175\" x2=\"100\" y2=\"175\"/><line x1=\"120\" y1=\"175\" x2=\"140\" y2=\"175\"/><line x1=\"160\" y1=\"175\" x2=\"180\" y2=\"175\"/><text x=\"190\" y=\"175\">Temp (°C)</text><text x=\"35\" y=\"40\">~300</text><text x=\"65\" y=\"70\">~275</text><text x=\"95\" y=\"100\">~245</text><text x=\"125\" y=\"130\">~220</text><path d=\"M 40 180 L 60 175 L 80 175 L 100 175 L 120 175 L 140 175 L 160 175 L 180 175\"/><text x=\"190\" y=\"50\">300</text><text x=\"210\" y=\"80\">275</text><text x=\"230\" y=\"110\">245</text><text x=\"250\" y=\"140\">220</text></svg>",
+   "n": "what are the oxide colours of steel in hardening and tempering?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "d9b664ec": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"50\" y=\"40\" width=\"80\" height=\"140\" rx=\"5\" /><text x=\"90\" y=\"70\" text-anchor=\"middle\">Oxygen</text><text x=\"90\" y=\"90\" text-anchor=\"middle\" fill=\"#fff\">(Black)</text><rect x=\"130\" y=\"40\" width=\"80\" height=\"140\" rx=\"5\" /><text x=\"170\" y=\"70\" text-anchor=\"middle\">Acetylene</text><text x=\"170\" y=\"90\" text-anchor=\"middle\" fill=\"#fff\">(Maroon)</text><line x1=\"280\" y1=\"60\" x2=\"340\" y2=\"60\" /><line x1=\"280\" y1=\"160\" x2=\"340\" y2=\"160\" /><rect x=\"290\" y=\"50\" width=\"40\" height=\"120\" rx=\"5\" /><text x=\"310\" y=\"115\" text-anchor=\"middle\">White Band</text><text x=\"310\" y=\"135\" text-anchor=\"middle\">on Oxygen</text><text x=\"310\" y=\"155\" text-anchor=\"middle\">for ID</text><circle cx=\"280\" cy=\"110\" r=\"3\" /><text x=\"290\" y=\"125\" text-anchor=\"start\">Never mix</text></svg>",
+   "n": "what are the colours and purpose of oxy-acetylene cylinders?",
    "sub": "workshop",
    "at": "2026-11-02"
   }
