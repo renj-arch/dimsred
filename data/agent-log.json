@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T18:06:03.504Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual data. MockPapers and MainsFresh follow immediately to address the 81 open faults and generate fresh content, as files are currently missing. MetaLearn is scheduled last because it produced zero fixes in the last two runs, indicating it needs input from upstream agents before it can contribute.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "ExamPatterns",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (308 total)",
-       "text": "Name the single-cut and double-cut file. | Why are soft materials and thin edges filed with a coarse single-cut file? | Describe the half-round file."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T18:32:24.665Z",
    "model": "qwen3.5:9b",
    "totalFixes": 3,
@@ -675,8 +625,53 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-02T01:03:33.669Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority standing goals; the previous run exhausted MainsFresh with zero output so it moves last. We will first generate fresh question banks to address critical faults, then fill figure gaps, followed by exam patterns and mock papers to complete unfinished goals before finally attempting invention or meta-learning if resources allow.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (342 total)",
+       "text": "Why is wooden seasoning carried out and what are its methods? | State the purpose of the dovetail joint and where it is used. | Describe the mortise and tenon joint."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T00:36:32.598Z",
+ "lastRun": "2026-11-02T01:03:33.669Z",
  "model": "qwen3.5:9b"
 }
