@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T16:52:40.487Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in papers, questions, and syllabus content (all false), while the queue shows high demand for figures (79) and exam patterns. Since 'mainsfresh' produced 0 fixes in the last two runs, it will be deprioritized to allow agents with active inputs to work. I will prioritize filling the critical content gaps using Invention (for questions/syllabus logic), BankFigures, ExamPatterns, and MockPapers to generate fresh material.",
-    "actions": [
-     "Invention",
-     "BankFigures",
-     "ExamPatterns",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (420 total)",
-       "text": "What is the first-aid treatment for a burn? | Why must goggles or a face shield be worn in the workshop? | What must be done to a machine before cleaning or repair?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Production Technology (360 in pool)",
-       "text": "Production Technology"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T17:09:36.514Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -681,8 +625,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T23:39:25.243Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to fix broken diagrams blocking study flow. MockPapers should follow immediately to address the 80 open faults, as incomplete papers are a primary user blocker. Invention is scheduled last because MetaLearn produced zero fixes in the last two runs and likely needs time to ingest new data before generating fresh ideas.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (455 total)",
+       "text": "A 100 N weight is suspended by two strings such that the angle between the strin | What is the essential condition for the application of Lami's theorem? | Two forces of 8 N and 6 N act at right angles. Find the resultant."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T23:11:35.593Z",
+ "lastRun": "2026-11-02T23:39:25.243Z",
  "model": "qwen3.5:9b"
 }
