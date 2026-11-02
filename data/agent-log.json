@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T16:01:46.877Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority to prevent site degradation; BankFigures must address both immediately. MockPapers is unfinished (papers: false) and should be tackled next to complete that standing goal. MainsFresh produced 0 fixes in the last run, so it moves last despite being a new venture, as per the rule to starve agents with recent zero output unless they are critical for immediate safety.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (416 total)",
-       "text": "What is the difference between a slotted, a cross-head and a star screw? | What are Allen (hex) keys used for? | What is a bench vice and how is it used safely?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Fluid Mechanics (360 in pool)",
-       "text": "Fluid Mechanics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T16:30:39.504Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -712,8 +651,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T22:48:41.856Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. MockPapers should follow immediately to address the missing papers flag in filesPresent. MetaLearn is scheduled last because it produced zero fixes in the last two consecutive runs, indicating it needs starvation or input refresh before re-engagement.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (449 total)",
+       "text": "Write the formula for the magnitude of the resultant of two forces P and Q actin | How is the direction of the resultant of two forces P and Q (angle θ between the | Two equal forces P act at an angle of 60°. Find the magnitude of their resultant"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T22:08:05.094Z",
+ "lastRun": "2026-11-02T22:48:41.856Z",
  "model": "qwen3.5:9b"
 }
