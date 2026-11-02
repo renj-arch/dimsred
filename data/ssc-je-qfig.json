@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T09:00:27.817Z",
-  "cursor": 411,
-  "built": 390
+  "updatedAt": "2026-11-02T09:40:46.540Z",
+  "cursor": 414,
+  "built": 393
  },
  "figs": {
   "11434945": {
@@ -2343,6 +2343,24 @@
   "bdfaab8c": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Main Pipe Line -->\n  <line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\" />\n  \n  <!-- Elbow (Bend) -->\n  <path d=\"M 160 110 L 180 90 L 200 110 L 180 130 L 160 110\" />\n  <text x=\"175\" y=\"100\">Elbow</text>\n  \n  <!-- Tee (Branch) -->\n  <line x1=\"240\" y1=\"110\" x2=\"240\" y2=\"60\" />\n  <text x=\"235\" y=\"70\">Tee</text>\n  \n  <!-- Coupling/Union (Join) -->\n  <line x1=\"80\" y1=\"110\" x2=\"100\" y2=\"110\" />\n  <line x1=\"100\" y1=\"90\" x2=\"100\" y2=\"130\" />\n  <text x=\"75\" y=\"145\">Coupling</text>\n  \n  <!-- Reducer (Size Change) -->\n  <path d=\"M 280 60 L 300 60 L 320 90 L 300 110 L 280 140 L 260 110 L 240 90\" />\n  <text x=\"275\" y=\"155\">Reducer</text>\n  \n  <!-- Nipple (Short Join) -->\n  <line x1=\"30\" y1=\"110\" x2=\"50\" y2=\"110\" />\n  <text x=\"20\" y=\"145\">Nipple</text>\n  \n  <!-- Cross (Multi-branch) -->\n  <line x1=\"300\" y1=\"60\" x2=\"300\" y2=\"140\" />\n  <text x=\"315\" y=\"70\">Cross</text>\n</svg>",
    "n": "name the common pipe fittings.",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "2cb57df9": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Pipe -->\n  <path d=\"M40,100 Q180,100 320,100\" stroke-width=\"6\"/>\n  <!-- Bending Spring (inside) -->\n  <path d=\"M50,90 Q180,90 310,90\" stroke-width=\"4\"/>\n  <!-- Arrow indicating bending force -->\n  <line x1=\"280\" y1=\"60\" x2=\"280\" y2=\"140\" stroke-width=\"1.5\"/>\n  <polygon points=\"280,60 275,70 285,70\" fill=\"#222\"/>\n  <polygon points=\"280,140 275,130 285,130\" fill=\"#222\"/>\n  <!-- Labels -->\n  <text x=\"330\" y=\"95\" font-family=\"sans-serif\">Soft Pipe</text>\n  <text x=\"330\" y=\"75\" font-family=\"sans-serif\">Bending Spring</text>\n  <text x=\"260\" y=\"105\" font-family=\"sans-serif\">Bend Direction</text>\n</svg>",
+   "n": "what is used to bend a soft pipe without kinking?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "7626d506": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\" stroke-dasharray=\"4,4\"/>\n  <text x=\"330\" y=\"105\">Fixed Tool</text>\n  <circle cx=\"80\" cy=\"110\" r=\"30\"/>\n  <line x1=\"110\" y1=\"110\" x2=\"320\" y2=\"110\"/>\n  <path d=\"M 140 80 L 160 140 M 140 140 L 160 80\" stroke-width=\"2\"/>\n  <text x=\"135\" y=\"75\">Rotating Work</text>\n  <text x=\"135\" y=\"155\">Rotating Work</text>\n  <line x1=\"140\" y1=\"80\" x2=\"160\" y2=\"140\" stroke-dasharray=\"2,2\"/>\n  <line x1=\"140\" y1=\"140\" x2=\"160\" y2=\"80\" stroke-dasharray=\"2,2\"/>\n  <text x=\"175\" y=\"115\">Feed Direction</text>\n  <path d=\"M 320 100 L 340 100\" stroke-width=\"2\"/>\n  <line x1=\"340\" y1=\"90\" x2=\"360\" y2=\"90\"/>\n</svg>",
+   "n": "what is the principle of the centre lathe?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "1fb2e16": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"140\" rx=\"5\"/><line x1=\"120\" y1=\"40\" x2=\"120\" y2=\"180\"/><circle cx=\"120\" cy=\"40\" r=\"3\"/><circle cx=\"120\" cy=\"180\" r=\"3\"/><path d=\"M 120 60 L 150 60 L 150 90 L 120 90 Z\" fill=\"#222\"/><text x=\"145\" y=\"75\" font-size=\"10\">Ram</text><text x=\"115\" y=\"35\">↑ Cut</text><text x=\"115\" y=\"185\">↓ Idle</text><line x1=\"120\" y1=\"90\" x2=\"260\" y2=\"90\" stroke-dasharray=\"4,2\"/><path d=\"M 260 90 L 230 90 L 230 120 L 260 120 Z\" fill=\"#222\"/><text x=\"245\" y=\"105\" font-size=\"10\">Work</text><text x=\"180\" y=\"125\">→ Forward Stroke</text><text x=\"180\" y=\"145\">← Return Stroke</text></svg>",
+   "n": "how does the shaper machine the work?",
    "sub": "workshop",
    "at": "2026-11-02"
   }

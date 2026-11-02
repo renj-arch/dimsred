@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T03:54:29.480Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; mainsfresh produced 0 for two consecutive runs so it moves last despite pending ideas. Prioritize BankFigures to fix broken visuals, then ExamPatterns for question banks, followed by Invention/MetaLearn for content depth, ending with MainsFresh to catch remaining gaps.",
-    "actions": [
-     "BankFigures",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (358 total)",
-       "text": "What must be done to a core to make it strong and free of gas? | What are the main types of furnaces used in the smithy? | Name the main parts of a blacksmith anvil."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T04:16:35.658Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -578,8 +528,58 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-02T10:06:50.772Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; prioritize BankFigures to resolve broken visual content immediately. Since MockPapers produced 0 fixes in the last two runs, it will be placed last after addressing critical infrastructure gaps. MainsFresh is also at 0 but targets fresh daily material which is a standing goal; however, unfinished standing goals (figures) take precedence over new ventures per rules.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "ExamPatterns",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (393 total)",
+       "text": "What is used to bend a soft pipe without kinking? | What is the principle of the centre lathe? | How does the shaper machine the work?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T09:29:23.878Z",
+ "lastRun": "2026-11-02T10:06:50.772Z",
  "model": "qwen3.5:9b"
 }
