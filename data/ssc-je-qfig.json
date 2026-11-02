@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T07:34:56.914Z",
-  "cursor": 405,
-  "built": 384
+  "updatedAt": "2026-11-02T08:33:34.875Z",
+  "cursor": 408,
+  "built": 387
  },
  "figs": {
   "11434945": {
@@ -2307,6 +2307,24 @@
   "21d6cec1": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Rivet Set &amp; Bucking Bar</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"180\" cy=\"60\" r=\"10\"/><text x=\"175\" y=\"75\">Rivet Head</text><path d=\"M 170 50 L 190 50\" stroke-width=\"3\"/><text x=\"180\" y=\"42\" text-anchor=\"middle\">Shank</text><line x1=\"40\" y1=\"60\" x2=\"170\" y2=\"60\"/><path d=\"M 40 60 L 40 130\" stroke-width=\"2\"/><circle cx=\"40\" cy=\"130\" r=\"8\"/><text x=\"25\" y=\"145\">Rivet Set</text><text x=\"25\" y=\"135\">(Shapes Top)</text><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"130\" stroke-dasharray=\"4,2\"/><circle cx=\"320\" cy=\"130\" r=\"8\"/><text x=\"335\" y=\"145\">Bucking Bar</text><text x=\"335\" y=\"135\">(Backs Shank)</text><path d=\"M 170 60 L 190 60\" stroke-dasharray=\"2,2\"/><text x=\"185\" y=\"55\">Struck</text></svg>",
    "n": "what are a rivet set and a bucking bar?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "256de23": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Flat Sheet -->\n  <path d=\"M20,40 L340,40 L340,80 L20,80 Z\" />\n  <text x=\"180\" y=\"65\" text-anchor=\"middle\">Flat Sheet</text>\n  \n  <!-- Stakes (Forming Tools) -->\n  <path d=\"M100,140 Q120,180 140,140\" stroke-dasharray=\"3,2\" />\n  <path d=\"M220,140 Q240,180 260,140\" stroke-dasharray=\"3,2\" />\n  <text x=\"125\" y=\"195\">Stakes</text>\n  \n  <!-- Shrinking (Inner Curve) -->\n  <path d=\"M100,80 Q120,100 140,80\" stroke-dasharray=\"2,1\" opacity=\"0.6\" />\n  \n  <!-- Stretching (Outer Curve) -->\n  <path d=\"M100,80 Q120,95 140,80\" stroke-dasharray=\"2,1\" opacity=\"0.6\" />\n  \n  <!-- Final Formed Shape -->\n  <path d=\"M100,40 Q120,70 140,40 L140,80 Q120,95 100,80 Z\" />\n  <text x=\"120\" y=\"55\" text-anchor=\"middle\">Curved Shape</text>\n  \n  <!-- Hammer -->\n  <circle cx=\"300\" cy=\"60\" r=\"4\" />\n  <line x1=\"280\" y1=\"56\" x2=\"320\" y2=\"64\" stroke-width=\"2\" />\n  <text x=\"300\" y=\"45\">Hammer</text>\n  \n  <!-- Process Arrow -->\n  <path d=\"M180,10 L180,35\" stroke=\"#222\" marker-end=\"url(#arrow)\"/>\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"5\" refY=\"5\" orient=\"auto\">\n      <path d=\"M0,0 L10,5 L0,10\" fill=\"#222\"/>\n    </marker>\n  </defs>\n</svg>",
+   "n": "what is raising in sheet metal work?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "4cbb0a60": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"120\" height=\"40\" rx=\"5\"/><path d=\"M 70 90 L 60 80 M 80 90 L 70 80 M 90 90 L 80 80 M 100 90 L 90 80 M 110 90 L 100 80 M 120 90 L 110 80\" stroke-width=\"1.5\"/><path d=\"M 40 120 L 160 120 L 160 160 L 40 160 Z\"/><text x=\"100\" y=\"75\" text-anchor=\"middle\">Pipe</text><text x=\"100\" y=\"185\" text-anchor=\"middle\">Serrated Jaws Grip</text><text x=\"100\" y=\"200\" text-anchor=\"middle\">Without Crushing</text></svg>",
+   "n": "what is a pipe vice used for?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "f1f021e6": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Stillson Wrench Action</text><path d=\"M40,80 L60,80 M60,80 L70,90 M70,90 L60,80 Z\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M320,80 L340,80 M340,80 L330,90 M330,90 L340,80 Z\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M60,80 Q100,60 140,80 T220,80 T340,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><circle cx=\"100\" cy=\"80\" r=\"15\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><circle cx=\"260\" cy=\"80\" r=\"15\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M70,90 L100,60 M330,90 L300,60\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"140\" text-anchor=\"middle\">Pipe</text><path d=\"M100,80 L100,160 M300,80 L300,160\" stroke=\"#222\" stroke-width=\"1.5\"/><path d=\"M100,160 L300,160\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"90\" y=\"175\">Serrated Jaw</text><text x=\"310\" y=\"175\">Serrated Jaw</text><path d=\"M40,80 L40,160 M340,80 L340,160\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"200\" text-anchor=\"middle\">Grips Tighter as Pulled</text></svg>",
+   "n": "what is a stillson wrench (pipe wrench) used for?",
    "sub": "workshop",
    "at": "2026-11-02"
   }

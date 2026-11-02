@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T02:36:54.157Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-02T02:57:57.953Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -578,8 +566,53 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-02T08:48:44.533Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams, followed by MockPapers to address incomplete question banks. Invention is queued last as it produced zero fixes in the previous two runs, indicating a need for input stabilization before new idea generation.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (387 total)",
+       "text": "What is raising in sheet metal work? | What is a pipe vice used for? | What is a stillson wrench (pipe wrench) used for?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T08:15:02.540Z",
+ "lastRun": "2026-11-02T08:48:44.533Z",
  "model": "qwen3.5:9b"
 }
