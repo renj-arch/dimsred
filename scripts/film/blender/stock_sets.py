@@ -639,6 +639,391 @@ def scene_flame_source(samples, width, height, out, params):
     render(samples, width, height, out)
 
 
+def scene_railway_platform(samples, width, height, out, params):
+    """A platform edge, two rails running into fog, one abandoned trunk."""
+    rng = random.Random(params.get("seed", 7))
+    p = palette(params)
+    dressing = int(params.get("dressing", 0)) % 3
+    reset()
+    sky((0.004, 0.010, 0.018), (0.20, 0.09, 0.04), (0.001, 0.002, 0.003))
+
+    plane("Ballast", (0, 4.0, 0), 28, wet_stone("BallastMat", p["paper"]))
+    metal = principled("RailMetal", (0.045, 0.048, 0.055), roughness=0.28, metallic=0.85)
+    for side in (-1, 1):
+        cube(f"Rail-{side}", (side * 0.72, 4.0, 0.11), (0.09, 14.0, 0.07), metal)
+    sleeper = dark_wood()
+    for i in range(26):
+        cube(f"Sleeper-{i:02d}", (0, -1.5 + i * 0.46, 0.035), (1.85, 0.20, 0.07), sleeper)
+
+    cube("Platform", (2.85, 4.0, 0.36), (3.1, 12.0, 0.72), concrete("PlatformMat", p["paper"]))
+    cube("PlatformEdge", (1.32, 4.0, 0.725), (0.12, 12.0, 0.02),
+         paper("EdgePaint", scaled(p["paper"], 0.9)))
+    for i in range(4):
+        cylinder(f"CanopyPost-{i}", (3.95, 0.2 + i * 2.7, 1.85), 0.07, 3.7,
+                 aged_brass(), vertices=12)
+    cube("Canopy", (3.55, 4.0, 3.55), (3.9, 12.5, 0.10),
+         principled("CanopyMat", (0.05, 0.045, 0.04), roughness=0.6, metallic=0.25))
+
+    cylinder("SignalPole", (-1.55, 5.6, 1.55), 0.055, 3.1, metal, vertices=12)
+    cube("SignalHead", (-1.55, 5.6, 3.05), (0.30, 0.22, 0.62),
+         ink_material("SignalHeadMat", p["ink"]))
+    cylinder("SignalRed", (-1.55, 5.48, 3.18), 0.075, 0.03,
+             emission("SignalRedMat", (0.90, 0.08, 0.03), 6.0),
+             rot=(math.radians(90), 0, 0), vertices=20)
+    cylinder("SignalGreen", (-1.55, 5.48, 2.92), 0.075, 0.03,
+             emission("SignalGreenMat", (0.05, 0.55, 0.22), 3.0),
+             rot=(math.radians(90), 0, 0), vertices=20)
+
+    if dressing == 1:
+        cube("Trunk", (2.8, 1.8, 0.86), (1.05, 0.55, 0.38), dark_wood())
+        cube("TrunkBand", (2.8, 1.8, 1.055), (1.08, 0.58, 0.03), aged_brass())
+        cylinder("TrunkHandle", (2.8, 1.50, 0.98), 0.02, 0.30, aged_brass(),
+                 rot=(0, math.radians(90), 0), vertices=10)
+    elif dressing == 2:
+        for i in range(4):
+            cube(f"Crate-{i}", (2.4 + (i % 2) * 0.55, 2.1 + (i // 2) * 0.6, 0.86),
+                 (0.50, 0.50, 0.42), dark_wood())
+    else:
+        cube("Bench", (2.7, 2.4, 0.80), (1.50, 0.42, 0.08), dark_wood())
+        cube("BenchBack", (2.7, 2.62, 1.08), (1.50, 0.06, 0.50), dark_wood())
+        for i in range(2):
+            cube(f"BenchLeg-{i}", (2.1 + i * 1.2, 2.4, 0.39), (0.07, 0.36, 0.74), ink_material(f"BenchLegMat-{i}", p["ink"]))
+
+    lamp_kit("PlatformLamp", 3.4, 2.4, 0.72, p["sodium"], scale=0.75)
+
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.3, 3.2, 1.25))
+    focus = bpy.context.object
+    camera((0.9, -3.6, 1.15), (0.2, 5.0, 1.25), lens=34, fstop=2.6, focus=focus)
+    bpy.context.scene.view_settings.exposure = -1.15
+    area("Moon", (-4.0, 0.0, 5.0), (0.0, 4.0, 1.2), 55, 3.0, (0.36, 0.48, 0.68))
+    area("PlatformWarm", (3.2, 1.4, 2.8), (2.4, 3.0, 0.9), 90, 1.4, (1.0, 0.58, 0.28))
+    dust(count=70, seed=rng.randint(1, 999), zmax=3.0, ymax=10.0)
+    render(samples, width, height, out)
+
+
+def scene_river_ghat(samples, width, height, out, params):
+    """Stone steps down to a wide river, one boat, one hanging lamp."""
+    rng = random.Random(params.get("seed", 8))
+    p = palette(params)
+    reset()
+    sky((0.010, 0.020, 0.035), (0.30, 0.14, 0.055), (0.004, 0.008, 0.010))
+
+    plane("Bank", (0, 0.6, 0), 18, wet_stone("BankMat", p["paper"]))
+    plane("River", (0, 5.4, 0.02), 26,
+          principled("RiverMat", (0.008, 0.014, 0.018), roughness=0.05, metallic=0.25))
+    for i in range(9):
+        cube(f"Step-{i}", (0, 1.7 + i * 0.33, 0.62 - i * 0.072),
+             (5.2, 0.34, 0.16), wet_stone(f"StepMat-{i}", scaled(p["paper"], 0.9 - i * 0.03)))
+    cube("GhatWallL", (-2.7, 2.8, 0.70), (0.50, 4.0, 1.40),
+         concrete("GhatWallLMat", scaled(p["paper"], 0.75)))
+    cube("GhatWallR", (2.7, 2.8, 0.70), (0.50, 4.0, 1.40),
+         concrete("GhatWallRMat", scaled(p["paper"], 0.75)))
+
+    brass = aged_brass()
+    for side in (-1, 1):
+        cylinder(f"GhatPost-{side}", (side * 2.25, 3.6, 1.55), 0.075, 2.6, brass, vertices=12)
+    cube("LampArm", (0, 3.6, 2.82), (4.6, 0.06, 0.06), brass)
+    cylinder("GhatLampWire", (0, 3.6, 2.50), 0.012, 0.55, ink_material("WireMat", p["ink"]), vertices=6)
+    sphere("GhatLamp", (0, 3.6, 2.18), 0.12, emission("GhatLampMat", p["sodium"], 5.0))
+    bpy.ops.object.light_add(type="POINT", location=(0, 3.6, 2.10))
+    lamp_light = bpy.context.object
+    lamp_light.data.energy = 60
+    lamp_light.data.color = p["sodium"]
+    lamp_light.data.shadow_soft_size = 0.18
+
+    for i in range(2):
+        x = -3.4 + i * 4.4
+        cube(f"BoatHull-{i}", (x, 5.6, 0.10), (2.6, 0.80, 0.28), dark_wood(),
+             rot=(0, 0, 0.04 * (i - 0.5)))
+        cube(f"BoatGunwale-{i}", (x, 5.6, 0.26), (2.7, 0.86, 0.06), ink_material(f"GunwaleMat-{i}", p["ink"]))
+        cylinder(f"BoatMast-{i}", (x, 5.6, 0.95), 0.035, 1.6, dark_wood(), vertices=8)
+
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.0, 3.8, 0.55))
+    focus = bpy.context.object
+    camera((0.6, -3.2, 1.00), (0.0, 4.2, 0.55), lens=38, fstop=2.4, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.95
+    area("GhatWarm", (0.0, 3.6, 2.2), (0.0, 3.8, 0.6), 110, 0.9, (1.0, 0.56, 0.24))
+    area("GhatMoon", (-3.2, 0.0, 4.2), (0.0, 4.0, 0.8), 45, 2.6, (0.34, 0.46, 0.66))
+    dust(count=60, seed=rng.randint(1, 999), zmax=2.2, ymax=7.0)
+    render(samples, width, height, out)
+
+
+def scene_field_dawn(samples, width, height, out, params):
+    """Furrows in cold dawn light, stubble, a fence and one tree."""
+    rng = random.Random(params.get("seed", 9))
+    p = palette(params)
+    reset()
+    sky((0.015, 0.030, 0.055), (0.62, 0.26, 0.09), (0.020, 0.015, 0.010))
+
+    soil = principled("FieldSoil", (0.075, 0.048, 0.028), roughness=0.96)
+    dark = principled("FieldSoilDark", (0.035, 0.022, 0.014), roughness=0.97)
+    plane("Field", (0, 5.0, 0), 34, soil)
+    for i in range(22):
+        cube(f"Furrow-{i}", (-5.5 + i * 0.52, 5.0, 0.02), (0.05, 16.0, 0.05), dark)
+    for i in range(42):
+        x = rng.uniform(-5.2, 5.2)
+        y = rng.uniform(0.0, 9.0)
+        cylinder(f"Stubble-{i}", (x, y, 0.10), 0.012, 0.18, dark, vertices=5)
+
+    for i in range(9):
+        cylinder(f"FencePost-{i}", (-6.0 + i * 1.5, 1.4, 0.55), 0.045, 1.10,
+                 dark_wood(), vertices=8)
+    for k in range(2):
+        cube(f"FenceRail-{k}", (0, 1.4, 0.80 - k * 0.30), (12.0, 0.035, 0.035), dark_wood())
+
+    cylinder("TreeTrunk", (4.6, 6.8, 1.10), 0.22, 2.2, dark_wood(), vertices=12)
+    tree = principled("TreeCanopy", (0.035, 0.045, 0.025), roughness=0.9)
+    for i, (dx, dz, rr) in enumerate(((0.0, 2.35, 1.05), (-0.75, 2.10, 0.70), (0.80, 2.15, 0.75))):
+        sphere(f"TreeCanopy-{i}", (4.6 + dx, 6.8, dz), rr, tree, segments=18, rings=10)
+
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.0, 4.0, 0.55))
+    focus = bpy.context.object
+    camera((0.0, -3.6, 0.68), (0.0, 4.0, 0.58), lens=30, fstop=5.6, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.90
+    area("Dawn", (0.0, 8.0, 1.2), (0.0, 4.0, 0.5), 260, 4.0, (1.0, 0.52, 0.22))
+    area("ColdFill", (-4.0, -1.0, 3.0), (0.0, 4.0, 0.5), 35, 3.0, (0.32, 0.44, 0.62))
+    dust(count=45, seed=rng.randint(1, 999), zmax=1.6, ymax=12.0)
+    render(samples, width, height, out)
+
+
+def scene_ration_queue(samples, width, height, out, params):
+    """A ration counter, sacks, a brass scale and a queue marked in rope."""
+    rng = random.Random(params.get("seed", 10))
+    p = palette(params)
+    reset()
+    dark_world((0.0005, 0.0004, 0.0003))
+
+    plane("RationFloor", (0, 1.5, 0), 14, wet_stone("RationFloorMat", p["paper"]))
+    cube("BackWall", (0, 3.2, 1.5), (6.0, 0.18, 3.0), concrete("RationWallMat", p["paper"]))
+    cube("SideWall", (-3.0, 1.5, 1.5), (0.18, 3.4, 3.0), concrete("RationSideMat", p["paper"]))
+    cube("Ceiling", (0, 1.5, 3.02), (6.2, 3.6, 0.12), ink_material("RationCeilMat", p["ink"]))
+
+    cube("Counter", (0, 2.0, 0.85), (3.8, 0.75, 0.90), dark_wood())
+    cube("CounterTop", (0, 2.0, 1.32), (4.0, 0.85, 0.08), dark_wood())
+
+    wire = principled("MeshWire", (0.05, 0.05, 0.045), roughness=0.5, metallic=0.6)
+    for i in range(7):
+        cylinder(f"MeshV-{i}", (-1.5 + i * 0.5, 2.52, 2.22), 0.012, 1.75, wire, vertices=6)
+    for k in range(4):
+        cube(f"MeshH-{k}", (0, 2.52, 1.52 + k * 0.46), (3.4, 0.024, 0.024), wire)
+    cube("MeshFrameTop", (0, 2.52, 3.06), (3.5, 0.05, 0.05), aged_brass())
+
+    burlap = principled("Burlap", (0.16, 0.115, 0.060), roughness=0.95)
+    for i in range(4):
+        cylinder(f"Sack-{i}", (-2.45 + i * 0.56, 1.30, 0.36), 0.28, 0.78, burlap,
+                 rot=(0, math.radians(90), 0), vertices=16)
+    for i in range(3):
+        cube(f"SackTie-{i}", (-2.45 + i * 0.56, 1.30, 0.72), (0.10, 0.10, 0.10),
+             ink_material(f"SackTieMat-{i}", p["ink"]), rot=(0, 0, 0.4))
+
+    brass = aged_brass()
+    cylinder("ScalePost", (0.72, 1.72, 1.53), 0.035, 0.42, brass, vertices=10)
+    cube("ScaleBeam", (0.72, 1.72, 1.76), (0.90, 0.04, 0.04), brass)
+    for side in (-1, 1):
+        cylinder(f"ScalePan-{side}", (0.72 + side * 0.42, 1.72, 1.58), 0.16, 0.025,
+                 brass, vertices=20)
+        cylinder(f"ScaleChain-{side}", (0.72 + side * 0.42, 1.72, 1.68), 0.006, 0.16,
+                 brass, vertices=6)
+
+    sheet("RationLedger", -0.60, 1.62, 1.37, 0.55, 0.36,
+          paper("RationLedgerMat", p["paper"]), tilt=0.2, rot=-0.05)
+    sheet("RationNotice", 1.50, 2.90, 2.00, 0.55, 0.75,
+          paper("RationNoticeMat", scaled(p["paper"], 0.9)), tilt=0.2, rot=0.04)
+
+    for i in range(3):
+        cylinder(f"QueuePost-{i}", (-2.2 + i * 1.7, 0.25, 0.55), 0.05, 1.10,
+                 brass, vertices=10)
+    for i in range(2):
+        cylinder(f"QueueRope-{i}", (-1.35 + i * 1.7, 0.25, 0.94), 0.012, 1.70,
+                 ink_material(f"RopeMat-{i}", p["ink"]),
+                 rot=(0, math.radians(90), 0), vertices=6)
+
+    cylinder("BulbWire", (0, 2.0, 2.55), 0.008, 0.70, ink_material("BulbWireMat", p["ink"]), vertices=6)
+    sphere("RationBulb", (0, 2.0, 2.14), 0.075, emission("RationBulbMat", p["sodium"], 7.0))
+    bpy.ops.object.light_add(type="POINT", location=(0, 2.0, 2.04))
+    bulb = bpy.context.object
+    bulb.data.energy = 42
+    bulb.data.color = p["sodium"]
+    bulb.data.shadow_soft_size = 0.10
+
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.0, 1.9, 1.20))
+    focus = bpy.context.object
+    camera((1.25, -3.4, 1.35), (0.0, 2.0, 1.25), lens=40, fstop=2.4, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.90
+    area("RationKey", (-1.5, -0.5, 3.0), (0.0, 2.0, 1.2), 120, 1.0, (1.0, 0.62, 0.30))
+    area("RationFill", (2.2, 0.2, 1.6), (0.0, 2.0, 1.2), 28, 1.6, (0.34, 0.48, 0.66))
+    dust(count=45, seed=rng.randint(1, 999), zmax=2.8, ymax=4.0)
+    render(samples, width, height, out)
+
+
+def scene_press_room(samples, width, height, out, params):
+    """A letterpress, a flywheel, stacked paper and one working lamp."""
+    rng = random.Random(params.get("seed", 11))
+    p = palette(params)
+    reset()
+    dark_world((0.0004, 0.0004, 0.0003))
+
+    plane("PressFloor", (0, 1.6, 0), 14, wet_stone("PressFloorMat", p["paper"]))
+    cube("PressWall", (0, 3.4, 1.6), (6.4, 0.18, 3.2), concrete("PressWallMat", p["paper"]))
+    cube("PressCeiling", (0, 1.6, 3.05), (6.4, 3.8, 0.12), ink_material("PressCeilMat", p["ink"]))
+
+    metal = principled("PressMetal", (0.055, 0.060, 0.062), roughness=0.38, metallic=0.72)
+    cube("PressBase", (0, 2.1, 0.48), (2.9, 1.7, 0.96), ink_material("PressBaseMat", p["ink"]))
+    for side in (-1, 1):
+        cube(f"PressColumn-{side}", (side * 1.12, 2.1, 1.72), (0.34, 0.56, 2.35), metal)
+    cube("PressBeam", (0, 2.1, 2.85), (2.95, 0.62, 0.28), metal)
+    cube("Platen", (0, 1.58, 1.25), (1.70, 0.44, 0.12), metal)
+
+    bpy.ops.mesh.primitive_torus_add(
+        major_radius=0.55, minor_radius=0.07, major_segments=32, minor_segments=8,
+        location=(1.55, 1.42, 1.32), rotation=(math.radians(90), 0, 0))
+    flywheel = bpy.context.object
+    flywheel.name = "PressFlywheel"
+    assign(flywheel, aged_brass())
+    for i in range(3):
+        angle = i * math.pi / 3
+        cylinder(f"WheelSpoke-{i}", (1.55 + math.cos(angle) * 0.26, 1.42,
+                 1.32 + math.sin(angle) * 0.26), 0.025, 0.50, metal,
+                 rot=(math.radians(90), 0, angle), vertices=8)
+    cylinder("PressRoller", (0, 1.52, 2.10), 0.18, 1.85, metal,
+             rot=(0, math.radians(90), 0), vertices=24)
+    cylinder("PressRollerArm", (-1.30, 1.52, 2.10), 0.035, 0.34, metal,
+             rot=(0, math.radians(90), 0), vertices=10)
+
+    cube("PressTable", (-1.85, 1.10, 0.76), (1.30, 0.85, 0.08), dark_wood())
+    for i, (x, y) in enumerate(((-2.35, 0.75), (-1.35, 0.75), (-2.35, 1.45), (-1.35, 1.45))):
+        cube(f"PressTableLeg-{i}", (x, y, 0.37), (0.07, 0.07, 0.72),
+             ink_material(f"PressLegMat-{i}", p["ink"]))
+    for i in range(9):
+        sheet(f"PressStack-{i}", -1.92 + i * 0.004, 1.05 + i * 0.006, 0.81 + i * 0.008,
+              0.72, 0.50, paper("PressPaper", p["paper"]), tilt=0.3, rot=i * 0.006)
+    cube("InkSlab", (-1.10, 1.30, 0.80), (0.34, 0.26, 0.03),
+         principled("InkSlabMat", (0.015, 0.012, 0.010), roughness=0.35))
+
+    cube("GalleyFrame", (1.55, 2.95, 1.65), (1.20, 0.06, 0.90),
+         ink_material("GalleyFrameMat", p["ink"]))
+    sheet("GalleySheet", 1.55, 2.90, 1.65, 1.02, 0.74,
+          paper("GalleyPaper", scaled(p["paper"], 0.95)), tilt=0.0, rot=0.0)
+    for i in range(7):
+        cube(f"GalleyLine-{i}", (1.55, 2.86, 1.92 - i * 0.075), (0.80 - (i % 3) * 0.10, 0.002, 0.002),
+             ink_material(f"GalleyInk-{i}", p["ink"]))
+
+    window_kit("PressWindow", -2.10, 3.30, 1.95, 1.10, 0.90, (0.34, 0.50, 0.72))
+    lamp_kit("PressLamp", -1.80, 1.10, 0.80, p["sodium"], scale=0.65)
+
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.0, 2.0, 1.40))
+    focus = bpy.context.object
+    camera((1.85, -3.4, 1.70), (0.0, 1.9, 1.40), lens=38, fstop=2.5, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.95
+    area("PressKey", (-0.4, -1.2, 3.2), (0.0, 2.0, 1.3), 150, 1.6, (1.0, 0.62, 0.30))
+    area("PressCold", (2.4, 2.6, 2.4), (0.0, 2.0, 1.3), 42, 1.6, (0.34, 0.48, 0.66))
+    dust(count=60, seed=rng.randint(1, 999), zmax=3.0, ymax=4.0)
+    render(samples, width, height, out)
+
+
+def scene_map_table(samples, width, height, out, params):
+    """A large map, grid lines, pins and brass dividers under one lamp."""
+    rng = random.Random(params.get("seed", 12))
+    p = palette(params)
+    reset()
+    dark_world((0.0004, 0.0004, 0.0003))
+
+    plane("MapFloor", (0, 1.4, 0), 12, wet_stone("MapFloorMat", p["paper"]))
+    cube("MapBackWall", (0, 3.6, 1.5), (6.0, 0.16, 3.0), plaster_material("MapWallMat", scaled(p["paper"], 0.35)))
+
+    cube("MapTable", (0, 1.55, 0.84), (3.6, 2.2, 0.09), dark_wood())
+    for i, (x, y) in enumerate(((-1.55, 0.60), (1.55, 0.60), (-1.55, 2.50), (1.55, 2.50))):
+        cube(f"MapLeg-{i}", (x, y, 0.40), (0.09, 0.09, 0.80), ink_material(f"MapLegMat-{i}", p["ink"]))
+
+    sheet("MapSheet", 0, 1.55, 0.900, 3.10, 1.86,
+          paper("MapSheetMat", scaled(p["paper"], 0.98)), tilt=0.0, rot=0.0)
+    ink = ink_material("MapInk", p["ink"])
+    for i in range(9):
+        cube(f"MapGridX-{i}", (0, 0.68 + i * 0.22, 0.905), (3.05, 0.0018, 0.002), ink)
+    for i in range(6):
+        cube(f"MapGridY-{i}", (-1.48 + i * 0.59, 1.55, 0.905), (0.0018, 1.82, 0.002), ink)
+    accent = principled("MapBorder", scaled(p["accent"], 0.9), roughness=0.8)
+    for name, loc, dims in (
+        ("MapBorderTop", (0, 2.46, 0.906), (3.00, 0.004, 0.008)),
+        ("MapBorderBottom", (0, 0.64, 0.906), (3.00, 0.004, 0.008)),
+        ("MapBorderLeft", (-1.48, 1.55, 0.906), (0.008, 1.82, 0.004)),
+        ("MapBorderRight", (1.48, 1.55, 0.906), (0.008, 1.82, 0.004)),
+    ):
+        cube(name, loc, dims, accent)
+    for i in range(5):
+        x = -0.90 + i * 0.46
+        y = 1.10 + (i % 3) * 0.34
+        cylinder(f"MapPin-{i}", (x, y, 0.930), 0.008, 0.06, aged_brass(), vertices=6)
+        sphere(f"MapPinHead-{i}", (x, y, 0.965), 0.028,
+               principled(f"MapPinMat-{i}", (0.42, 0.035, 0.025), roughness=0.45))
+
+    brass = aged_brass()
+    cylinder("MapDividerPivot", (1.02, 2.05, 0.945), 0.018, 0.10, brass, vertices=10)
+    for i, angle in enumerate((0.38, -0.24)):
+        cylinder(f"MapDivider-{i}", (1.02 + math.sin(angle) * 0.26, 2.05 + math.cos(angle) * 0.26, 0.942),
+                 0.008, 0.56, brass, rot=(math.radians(90), 0, angle), vertices=6)
+    lamp_kit("MapLamp", -1.55, 1.15, 0.88, p["sodium"], scale=0.68)
+
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.0, 1.55, 0.95))
+    focus = bpy.context.object
+    camera((1.65, -1.90, 2.55), (0.0, 1.55, 0.95), lens=42, fstop=2.2, focus=focus)
+    bpy.context.scene.view_settings.exposure = -0.90
+    area("MapKey", (0.2, -1.0, 3.2), (0.0, 1.6, 0.9), 170, 1.3, (1.0, 0.64, 0.32))
+    area("MapFill", (-1.8, 2.8, 2.0), (0.0, 1.5, 0.9), 35, 1.4, (0.34, 0.48, 0.66))
+    dust(count=40, seed=rng.randint(1, 999), zmax=2.4, ymax=4.0)
+    render(samples, width, height, out)
+
+
+def scene_jail_cell(samples, width, height, out, params):
+    """A cell from the corridor side: bars, a cot, a high window, one shaft."""
+    rng = random.Random(params.get("seed", 13))
+    p = palette(params)
+    reset()
+    dark_world((0.0002, 0.0002, 0.0002))
+
+    plane("CellFloor", (0, 1.8, 0), 12, wet_stone("CellFloorMat", scaled(p["paper"], 0.75)))
+    cube("CellBack", (0, 3.5, 1.50), (4.2, 0.16, 3.0), concrete("CellBackMat", p["paper"]))
+    cube("CellSideL", (-2.1, 1.8, 1.50), (0.16, 3.4, 3.0), concrete("CellSideLMat", scaled(p["paper"], 0.85)))
+    cube("CellSideR", (2.1, 1.8, 1.50), (0.16, 3.4, 3.0), concrete("CellSideRMat", scaled(p["paper"], 0.85)))
+    cube("CellCeiling", (0, 1.8, 3.02), (4.3, 3.5, 0.12), ink_material("CellCeilMat", p["ink"]))
+
+    cool = (0.42, 0.56, 0.76)
+    cube("CellWindow", (0.55, 3.40, 2.35), (0.92, 0.02, 0.55), emission("CellWindowMat", cool, 2.8))
+    metal = principled("CellMetal", (0.045, 0.050, 0.055), roughness=0.42, metallic=0.70)
+    for i in range(4):
+        cube(f"CellWindowBar-{i}", (0.19 + i * 0.24, 3.38, 2.35), (0.022, 0.022, 0.58), metal)
+    cube("CellWindowSill", (0.55, 3.36, 2.06), (1.02, 0.08, 0.06), concrete("CellSillMat", scaled(p["paper"], 0.9)))
+
+    cube("CellCotFrame", (-1.15, 2.65, 0.42), (1.55, 0.72, 0.10), metal)
+    for i, (x, y) in enumerate(((-1.80, 2.35), (-0.50, 2.35), (-1.80, 2.95), (-0.50, 2.95))):
+        cube(f"CellCotLeg-{i}", (x, y, 0.22), (0.05, 0.05, 0.44), metal)
+    sheet("CellMattress", -1.15, 2.65, 0.49, 1.42, 0.66,
+          plaster_material("CellMattressMat", scaled(p["paper"], 0.55)), tilt=0.0, rot=0.0)
+    cube("CellBucket", (-1.72, 1.15, 0.18), (0.28, 0.28, 0.32), metal)
+
+    for i in range(8):
+        cylinder(f"CellBar-{i}", (-1.05 + i * 0.30, 0.18, 1.42), 0.026, 2.80, metal, vertices=10)
+    cube("CellBarTop", (0, 0.18, 2.80), (2.40, 0.06, 0.06), metal)
+    cube("CellBarBottom", (0, 0.18, 0.06), (2.40, 0.06, 0.06), metal)
+    for k in range(3):
+        cube(f"CellBarRail-{k}", (0, 0.18, 0.50 + k * 0.95), (2.40, 0.045, 0.05), metal)
+
+    for i in range(7):
+        cube(f"CellScratch-{i}", (-1.65 + i * 0.34, 3.40, 1.05 + (i % 3) * 0.12),
+             (0.005, 0.002, 0.16 + (i % 2) * 0.10),
+             ink_material(f"CellScratchMat-{i}", p["ink"]), rot=(0, 0, 0.08 * ((i % 3) - 1)))
+
+    bpy.ops.object.empty_add(type="PLAIN_AXES", location=(0.0, 2.2, 1.30))
+    focus = bpy.context.object
+    camera((0.45, -2.85, 1.55), (0.0, 2.2, 1.35), lens=34, fstop=2.8, focus=focus)
+    bpy.context.scene.view_settings.exposure = -1.05
+    area("CellShaft", (0.55, 3.20, 2.40), (0.0, 1.8, 0.9), 90, 0.8, cool)
+    area("CorridorWarm", (0.0, -3.2, 1.9), (0.0, 0.8, 1.4), 30, 1.2, (1.0, 0.55, 0.24))
+    dust(count=55, seed=rng.randint(1, 999), zmax=2.6, ymax=3.0)
+    render(samples, width, height, out)
+
+
+
 SCENES = {
     "wall_surface": scene_wall_surface,
     "paper_desk": scene_paper_desk,
@@ -648,6 +1033,13 @@ SCENES = {
     "gate": scene_gate,
     "plinth_object": scene_plinth_object,
     "flame_source": scene_flame_source,
+    "railway_platform": scene_railway_platform,
+    "river_ghat": scene_river_ghat,
+    "field_dawn": scene_field_dawn,
+    "ration_queue": scene_ration_queue,
+    "press_room": scene_press_room,
+    "map_table": scene_map_table,
+    "jail_cell": scene_jail_cell,
 }
 
 

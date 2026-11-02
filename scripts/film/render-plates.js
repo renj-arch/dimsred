@@ -85,6 +85,8 @@ function parse(argv) {
     height: 1080,
     samples: 32,
     only: '',
+    scene: '',
+    script: 'stock_sets.py',
     force: false,
     blender: process.env.BLENDER || 'blender'
   };
@@ -100,6 +102,8 @@ function parse(argv) {
     else if (a === '--height') o.height = Number(next());
     else if (a === '--samples') o.samples = Number(next());
     else if (a === '--only') o.only = next();
+    else if (a === '--scene') o.scene = next();
+    else if (a === '--script') o.script = next();
     else if (a === '--force') o.force = true;
     else if (a === '--blender') o.blender = next();
     else if (a === '--help' || a === '-h') {
@@ -126,43 +130,65 @@ function loadSetMap(filmId) {
   const map = new Map();
   for (const [plate, entry] of Object.entries(sets.plates)) {
     if (!entry || !entry.scene) throw new Error(`plate ${plate} has no scene in ${path.relative(ROOT, setsFile)}`);
-    map.set(plate, {
-      scene: entry.scene,
-      params: { ...(entry.params || {}), palette: sets.palette || {} }
-    });
+    const script = entry.script || sets.script || 'stock_sets.py';
+    // The stock bank takes a palette and a dressing seed; the bespoke sets are
+    // fixed-look scene files and do not accept --params. A film can borrow
+    // either, so the script travels with the plate.
+    const params = script === 'stock_sets.py'
+      ? { ...(entry.params || {}), palette: sets.palette || {} }
+      : null;
+    map.set(plate, { scene: entry.scene, script, params });
   }
-  return { script: sets.script || 'stock_sets.py', map, palette: sets.palette || {} };
+  return { map, palette: sets.palette || {} };
 }
 
 function main() {
   const opts = parse(process.argv.slice(2));
-  const filmPath = path.join(ROOT, 'data', 'films', `${opts.film}.json`);
-  if (!fs.existsSync(filmPath)) throw new Error(`Film not found: ${filmPath}`);
-  const film = JSON.parse(fs.readFileSync(filmPath, 'utf8'));
-  const config = FILMS[opts.film];
-  const sets = config ? null : loadSetMap(opts.film);
-  if (!config && !sets) {
-    throw new Error(`No Blender scene set registered for film ${opts.film} (add data/films/${opts.film}-sets.json)`);
+  const direct = opts.scene
+    ? String(opts.scene).split(',').map((name) => name.trim()).filter(Boolean)
+    : [];
+  let film = null;
+  let config = null;
+  let sets = null;
+  if (!direct.length) {
+    const filmPath = path.join(ROOT, 'data', 'films', `${opts.film}.json`);
+    if (!fs.existsSync(filmPath)) throw new Error(`Film not found: ${filmPath}`);
+    film = JSON.parse(fs.readFileSync(filmPath, 'utf8'));
+    config = FILMS[opts.film];
+    sets = config ? null : loadSetMap(opts.film);
+    if (!config && !sets) {
+      throw new Error(`No Blender scene set registered for film ${opts.film} (add data/films/${opts.film}-sets.json)`);
+    }
   }
-  const blenderScript = path.join(__dirname, 'blender', config ? config.script : sets.script);
-  if (!fs.existsSync(blenderScript)) throw new Error(`Blender script not found: ${blenderScript}`);
   const lookup = (plate) => config
-    ? { scene: config.scenes[plate], params: null }
+    ? { scene: config.scenes[plate], script: config.script, params: null }
     : sets.map.get(plate);
   fs.mkdirSync(opts.outDir, { recursive: true });
 
-  const plates = new Map();
-  for (const scene of film.scenes || []) {
-    for (const shot of scene.shots || []) {
-      if (shot.render !== 'blender') continue;
-      const entry = lookup(shot.plate);
-      if (!entry || !entry.scene) throw new Error(`No Blender scene mapped for plate ${shot.plate} in ${opts.film}`);
-      plates.set(shot.plate, entry);
+  let wanted;
+  if (direct.length) {
+    // A plate test can name a scene directly, without a storyboard. This is
+    // how a new set is checked before any film is allowed to cast it.
+    wanted = direct.map((scene) => ({
+      plate: scene,
+      scene,
+      script: opts.script,
+      params: opts.script === 'stock_sets.py' ? { seed: 7, palette: {} } : null
+    }));
+  } else {
+    const plates = new Map();
+    for (const scene of film.scenes || []) {
+      for (const shot of scene.shots || []) {
+        if (shot.render !== 'blender') continue;
+        const entry = lookup(shot.plate);
+        if (!entry || !entry.scene) throw new Error(`No Blender scene mapped for plate ${shot.plate} in ${opts.film}`);
+        plates.set(shot.plate, entry);
+      }
     }
+    wanted = opts.only
+      ? [{ plate: opts.only, ...lookup(opts.only) }]
+      : [...plates].map(([plate, entry]) => ({ plate, ...entry }));
   }
-  const wanted = opts.only
-    ? [{ plate: opts.only, ...lookup(opts.only) }]
-    : [...plates].map(([plate, entry]) => ({ plate, ...entry }));
   if (!wanted.length) throw new Error('No Blender plates requested');
 
   const blenderCheck = spawnSync(opts.blender, ['--version'], { encoding: 'utf8' });
@@ -171,8 +197,10 @@ function main() {
   }
   console.log(blenderCheck.stdout.split('\n')[0]);
 
-  for (const { plate, scene, params } of wanted) {
+  for (const { plate, scene, params, script } of wanted) {
     if (!scene) throw new Error(`No Blender scene mapped for plate ${plate}`);
+    const blenderScript = path.join(__dirname, 'blender', script || (config ? config.script : 'stock_sets.py'));
+    if (!fs.existsSync(blenderScript)) throw new Error(`Blender script not found: ${blenderScript}`);
     const out = path.join(opts.outDir, `${plate}.png`);
     if (fs.existsSync(out) && !opts.force) {
       console.log(`[skip] ${plate} already exists`);
@@ -209,9 +237,13 @@ function main() {
   console.log(`\nplates ready: ${opts.outDir}`);
 }
 
-try {
-  main();
-} catch (e) {
-  console.error(`FAIL ${e.message}`);
-  process.exitCode = 1;
+if (require.main === module) {
+  try {
+    main();
+  } catch (e) {
+    console.error(`FAIL ${e.message}`);
+    process.exitCode = 1;
+  }
 }
+
+module.exports = { FILMS, loadSetMap };

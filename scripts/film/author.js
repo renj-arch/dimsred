@@ -16,12 +16,15 @@
  *   3. Any number in a line must occur in the row that supports it. A line
  *      that fails is sent back once with the failure named; a second failure
  *      stops the run.
- *   4. Shots are cut on the voice by this script. The model never chooses a
- *      duration, a transition or a plate, so the render cannot drift.
+ *   4. Shots are cut on the voice by this script. The base plates are fixed;
+ *      a director pass chooses each scene's extra plates from a catalogue of
+ *      real Blender sets. The model never chooses a duration or a transition,
+ *      so the render cannot drift.
  *
  * Usage:
  *   node scripts/film/author.js --film emergency-1975
  *   node scripts/film/author.js --film emergency-1975 --stub     # no model
+ *   node scripts/film/author.js --film emergency-1975 --no-director
  *   node scripts/film/author.js --film emergency-1975 --corpus out/research/emergency-1975
  *
  * The corpus is normally written by scripts/film/research.js. `--stub` builds
@@ -35,6 +38,7 @@ const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
 const { ask } = require('./llama');
+const { SCENE_CATALOG, catalogEntry } = require('./scene-catalog');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const FILMS = path.join(ROOT, 'data', 'films');
@@ -60,7 +64,9 @@ const SCENES = [
     ask: 'Name the single object or place this film will keep returning to.',
     keywords: ['newspaper', 'newspapers', 'press', 'censor', 'censorship', 'column', 'blank', 'editor', 'editorial', 'journalist', 'publication', 'expression', 'obituary', 'times of india'],
     exclude: ['aandhi', 'kissa kurzi', 'nasbandi', 'bhindranwale', 'jagat narain'],
-    plates: ['wall', 'night']
+    plates: ['object'],
+    pool: ['wall', 'desk', 'rail', 'ghat', 'field', 'map', 'press', 'newspaper-desk', 'archive', 'street-lamp'],
+    extraPlates: 2
   },
   {
     id: 'S02',
@@ -69,7 +75,9 @@ const SCENES = [
     ask: 'State what was proclaimed or decided, by whom, and on what date.',
     keywords: ['proclaim a state of emergency', 'proclaimed a state of emergency', 'emergency was proclaimed', 'issue the proclamation', 'declared a state of emergency', 'declare a state of emergency', 'internal emergency', 'article 352', 'ratified', 'ordinance', 'ordinances', 'war cabinet', 'cabinet decision', 'shipping decision', 'denial of', 'refused', 'diverted', 'ordered', 'directed', 'mandated', 'authorized', 'decreed', 'proclamation', 'directive', 'instruction', 'command'],
     exclude: ['article 356', 'american policy', 'future government', 'nationalisation of several major banks'],
-    plates: ['room', 'desk']
+    plates: ['room', 'desk'],
+    pool: ['press', 'newspaper-desk', 'map', 'courtroom', 'report', 'archive', 'rail', 'clock', 'gate'],
+    extraPlates: 2
   },
   {
     id: 'S03',
@@ -77,7 +85,9 @@ const SCENES = [
     purpose: 'Explain how the decision reached ordinary life: the law, the police, the press.',
     ask: 'Describe the mechanism — the rule, the agency, the censor — that carried the order into daily life.',
     keywords: ['misa', 'maintenance of internal security', 'defence of india', 'dir', 'arrest', 'arrested', 'detain', 'detained', 'detention', 'police', 'warrant', 'magistrate', 'censor', 'censorship', 'preventive', 'ban', 'banned'],
-    plates: ['wall', 'corridor']
+    plates: ['corridor'],
+    pool: ['press', 'newspaper-desk', 'cell', 'ration', 'map', 'courtroom', 'archive', 'hospital-corridor', 'pipe-corridor'],
+    extraPlates: 2
   },
   {
     id: 'S04',
@@ -86,7 +96,9 @@ const SCENES = [
     ask: 'Give the human count the sources actually report: prisoners, months, families, deaths.',
     keywords: ['prisoners', 'prisoner', 'detained', 'arrested', 'families', 'died', 'custody', 'torture', 'sterilisation', 'sterilization', 'months', 'lakh', 'thousands', 'prison', 'detention', 'forced'],
     exclude: ['released all political prisoners', 'called elections', 'prisoners of war', 'pakistani', 'the strike was brutally suppressed', 'class a prisoners', 'class b prisoners', 'class a and b', 'electricity to all major newspapers', 'continuation of the emergency'],
-    plates: ['corridor', 'object']
+    plates: ['object'],
+    pool: ['ration', 'field', 'ghat', 'rail', 'hospital-corridor', 'water-tap', 'plant-gate', 'pipe-corridor', 'archive', 'memorial-wall'],
+    extraPlates: 2
   },
   {
     id: 'S05',
@@ -95,7 +107,9 @@ const SCENES = [
     ask: 'Show the turn: the election that was called, the prisoners who came out, the press that printed again.',
     keywords: ['election', 'elections', 'released', 'general election', 'janata', 'verdict', 'defeated', 'poll', 'vote', 'restored', 'returned'],
     exclude: ['gujarat', 'vidhan sabha', 'election commission', '1989', 'jebamani', 'may 1977', 'political science review', '1980', 'won the next election by a landslide', '1971', 'privy purse', 'medak', 'repeal the 42nd', 'postponed elections', 'elections were postponed', 'authority to rule by decree', 'temple complex', 'lost 172 seats', 'shastri', '1967', 'resisted merging'],
-    plates: ['desk', 'room', 'gate']
+    plates: ['gate'],
+    pool: ['memorial', 'bagh-gate', 'rail', 'ghat', 'field', 'courtroom', 'press', 'newspaper-desk', 'street-lamp', 'city-rooftops'],
+    extraPlates: 2
   },
   {
     id: 'S06',
@@ -104,7 +118,9 @@ const SCENES = [
     ask: 'State the argument for and against, in the words the record attributes to each side.',
     keywords: ['argued', 'argues', 'critic', 'critics', 'criticised', 'criticized', 'controversial', 'opposition', 'opposed', 'defended', 'defend', 'justif', 'support', 'supreme court', 'basic structure', 'unconstitutional', 'arbitrary', 'contended', 'controversy'],
     exclude: ['goongi goodiya', 'nationalisation of the banks', 'land ownership', 'method of selection', 'rival congress leaders', 'justice shah had already spoken', 'confusing investigation with inquiry', 'form a united', 'electricity to all major newspapers', 'raids were conducted', 'disadvantaged sections', 'machiavellian', 'sought an accommodation'],
-    plates: ['room', 'wall']
+    plates: ['room'],
+    pool: ['courtroom', 'court-ledger', 'press', 'newspaper-desk', 'report', 'map', 'archive', 'desk'],
+    extraPlates: 2
   },
   {
     id: 'S07',
@@ -113,7 +129,9 @@ const SCENES = [
     ask: 'Describe the inquiry, report or testimony — what it found and what it refused to find.',
     keywords: ['report', 'commission', 'inquiry', 'evidence', 'testimony', 'witness', 'concluded', 'terms of reference', 'proceedings', 'tribunal', 'trial', 'interim report', 'final report'],
     exclude: ['desai government proceeded'],
-    plates: ['desk', 'wall']
+    plates: ['desk'],
+    pool: ['press', 'report', 'archive', 'court-ledger', 'map', 'newspaper-desk', 'cell', 'wall'],
+    extraPlates: 2
   },
   {
     id: 'S08',
@@ -123,7 +141,9 @@ const SCENES = [
     keywords: ['returned to power', 'landslide', 'special courts', 'report', 'copy', 'library', 'republished', 'memorial', 'anniversary', 'legacy', 'blank editorial', 'press'],
     exclude: ['1967', 'bangladesh', 'tata told a reporter', 'first interim report', 'second interim report', 'final report', 'commission was to report', 'commission concluded', 'scathing', 'wikileaks', '1971'],
     reuse: true,
-    plates: ['object', 'flame', 'desk']
+    plates: ['object', 'flame'],
+    pool: ['ghat', 'field', 'memorial', 'memorial-wall', 'memorial-flame', 'bagh-wall', 'well', 'rail', 'desk'],
+    extraPlates: 1
   }
 ];
 
@@ -231,8 +251,85 @@ const ARCHETYPES = {
   flame: {
     scene: 'flame_source',
     visual: 'A single flame behind glass, the only warm thing in a cold room, reflected once in the black.'
+  },
+
+  /*
+   * The 2026-11-02 scene bank. The first three authored films all shared the
+   * same eight sets, so every new film looked like the last one. These sets
+   * are still procedural and object-led, but they give the author enough
+   * visual grammar to dress a famine, a partition, a railway story or a
+   * courtroom differently. Each one is a real set in stock_sets.py.
+   */
+  rail: {
+    scene: 'railway_platform',
+    visual: 'A platform edge, two rails running into fog, a signal lamp and one abandoned trunk; the line is the only direction.'
+  },
+  ghat: {
+    scene: 'river_ghat',
+    visual: 'Stone steps down to a wide river, a moored boat, one hanging lamp; the water takes the light and gives nothing back.'
+  },
+  field: {
+    scene: 'field_dawn',
+    visual: 'Furrows in cold dawn light, stubble and a fence line; the field is worked, the horizon is empty.'
+  },
+  ration: {
+    scene: 'ration_queue',
+    visual: 'A ration counter behind wire mesh, sacks, a brass scale and a ledger; the queue is marked by posts and rope.'
+  },
+  press: {
+    scene: 'press_room',
+    visual: 'A letterpress in a dark room: a flywheel, ink rollers, stacked paper and a galley frame under one lamp.'
+  },
+  map: {
+    scene: 'map_table',
+    visual: 'A large map under a low lamp, grid lines, border marks, brass dividers and pins; the table is a decision surface.'
+  },
+  cell: {
+    scene: 'jail_cell',
+    visual: 'A cell seen from inside: a cot, a high barred window, a stone floor and the corridor light through the door bars.'
+  },
+  court: {
+    scene: 'courthouse',
+    visual: 'A wooden courtroom: the bench, the witness box, the railing and a stack of files under a green lamp.'
+  },
+  square: {
+    scene: 'village_square',
+    visual: 'A village square at first light: a banyan tree, a well, thatched roofs and a meeting mat no one has stood on yet.'
+  },
+  market: {
+    scene: 'market_night',
+    visual: 'A narrow market lane at night: awnings, hanging bulbs, crates and shutters, the wet ground carrying every light.'
+  },
+  telegraph: {
+    scene: 'telegraph_office',
+    visual: 'A telegraph key and sounder on a dark desk, paper tape curling to the floor, battery jars and rain on the window.'
+  },
+  port: {
+    scene: 'port_dock',
+    visual: 'A dock before dawn: bollards, rope, stacked cargo, a crane lattice and the black hull of a ship in fog.'
+  },
+  radio: {
+    scene: 'radio_room',
+    visual: 'A radio set and microphone in a small room, dials glowing, a script on the desk and the door shut.'
+  },
+  bridge: {
+    scene: 'bridge_crossing',
+    visual: 'An iron bridge in fog: girders, rivets, lamps and the river far below; the road runs straight through the frame.'
+  },
+  convoy: {
+    scene: 'road_convoy',
+    visual: 'An empty road at dusk with an abandoned handcart, tied bundles and a lantern; the column has already passed.'
   }
 };
+
+/*
+ * The hand-written keys above are kept for the films that already use them.
+ * The catalogue is the real casting vocabulary: every entry names a scene
+ * function that exists in one of the Blender files, so the author can borrow a
+ * courtroom from the Bhopal set or a memorial from Jallianwala without adding
+ * Python. The director pass below chooses from this map, not from a fixed list.
+ */
+for (const entry of SCENE_CATALOG) ARCHETYPES[entry.key] = entry;
 
 const CAMERAS = [
   'slow push, lens 35, eye height',
@@ -240,7 +337,13 @@ const CAMERAS = [
   'slow tilt up, lens 50, from the table edge',
   'slow lateral track, lens 40, parallax on the foreground',
   'locked macro, lens 85, breathing room on the left',
-  'slow pull back, lens 32, the room taking the object'
+  'slow pull back, lens 32, the room taking the object',
+  'slow crane down, lens 40, from the ceiling edge',
+  'low angle push, lens 24, the floor taking the foreground',
+  'handheld drift, lens 35, breathing room on the right',
+  'locked profile, lens 60, the subject against black',
+  'slow orbit, lens 50, twenty degrees across the set',
+  'high angle hold, lens 45, the table filling the frame'
 ];
 
 const SFX = {
@@ -251,8 +354,248 @@ const SFX = {
   night: ['night insects', 'a dog barks once', 'low city hum'],
   gate: ['rain on metal', 'chain link', 'a gate hinge'],
   object: ['room tone', 'a single metal tick', 'breath of cloth'],
-  flame: ['low flame', 'glass tick', 'room tone']
+  flame: ['low flame', 'glass tick', 'room tone'],
+  rail: ['distant train', 'rail click', 'platform tone'],
+  ghat: ['water lap', 'oar knock', 'river birds'],
+  field: ['wind in crop', 'a distant crow', 'dry earth'],
+  ration: ['scale tick', 'sack drag', 'queue murmur'],
+  press: ['press thud', 'roller turn', 'paper stack'],
+  map: ['paper slide', 'pin drop', 'room tone'],
+  cell: ['bolt slide', 'a distant door', 'stone drip'],
+  court: ['gavel knock', 'paper rustle', 'ceiling fan'],
+  square: ['leaves', 'well rope', 'village morning'],
+  market: ['shutter rattle', 'bicycle bell', 'market hum'],
+  telegraph: ['key click', 'sounder tap', 'battery hum'],
+  port: ['gull cry', 'rope creak', 'water slap'],
+  radio: ['dial click', 'valve hum', 'mic tap'],
+  bridge: ['wind through girder', 'river below', 'iron hum'],
+  convoy: ['cart wheel', 'wind', 'bird call']
 };
+
+/*
+ * Topic-aware set casting. The old author gave every film the same two or
+ * three plates per scene. The pool below adds two wildcard plates per scene,
+ * chosen deterministically from the topics's own vocabulary and the grammar,
+ * so a famine film reaches for the ration counter and the river ghat while a
+ * partition film reaches for the railway and the map table. The base plates
+ * stay fixed: the object, the order, the turn and the return still have to be
+ * legible. Only the dressing changes.
+ */
+const TOPIC_SET_RULES = [
+  { test: /\b(famine|hunger|ration|food|drought|scarcity|starvation|starving)\b/i,
+    sets: ['ration', 'field', 'ghat', 'rail', 'press', 'night', 'street-lamp', 'water-tap'] },
+  { test: /\b(partition|refugee|refugees|border|migration|migrant|displacement|radcliffe)\b/i,
+    sets: ['rail', 'field', 'map', 'ghat', 'gate', 'street-lamp', 'archive', 'newspaper-desk'] },
+  { test: /\b(emergency|censor|censorship|press|newspaper|media|detention|prison|arrest)\b/i,
+    sets: ['press', 'newspaper-desk', 'cell', 'courtroom', 'map', 'archive', 'street-lamp', 'clock'] },
+  { test: /\b(march|satyagraha|movement|protest|strike|peasant|village|indigo|salt)\b/i,
+    sets: ['field', 'gate', 'ghat', 'night', 'courtroom', 'rail', 'memorial'] },
+  { test: /\b(war|defence|army|navy|air force|bomb|nuclear|treaty|frontier)\b/i,
+    sets: ['map', 'press', 'rail', 'field', 'plant-gate', 'pipe-corridor', 'archive'] },
+  { test: /\b(rail|railway|train|transport|telegraph|communication|post)\b/i,
+    sets: ['rail', 'map', 'press', 'newspaper-desk', 'street-lamp', 'gate'] },
+  { test: /\b(industry|factory|plant|mill|mine|labour|worker|gas|chemical)\b/i,
+    sets: ['press', 'rail', 'plant-gate', 'tank-farm', 'pipe-corridor', 'ration', 'cell'] },
+  { test: /\b(water|river|dam|flood|monsoon|canal)\b/i,
+    sets: ['ghat', 'field', 'water-tap', 'rail', 'ration', 'plant-gate'] },
+  { test: /\b(election|vote|parliament|law|court|constitution|assembly)\b/i,
+    sets: ['courtroom', 'court-ledger', 'press', 'newspaper-desk', 'map', 'memorial'] }
+];
+
+function topicSetPool(topic, grammar) {
+  const text = [topic.title, topic.why, topic.angle, topic.id].filter(Boolean).join(' ');
+  const pool = new Set();
+  for (const rule of TOPIC_SET_RULES) {
+    if (rule.test.test(text)) rule.sets.forEach((set) => pool.add(set));
+  }
+  // The fallback is grammar-shaped, not a fixed list, so a paper-ledger film
+  // still reaches for the press and the map, and a night-watch film for the
+  // road and the river.
+  const fallback = grammar === 'mechanical-causality'
+    ? ['rail', 'plant-gate', 'pipe-corridor', 'press', 'map', 'courtroom', 'tank-farm']
+    : grammar === 'paper-ledger'
+      ? ['press', 'newspaper-desk', 'archive', 'court-ledger', 'courtroom', 'map', 'cell']
+      : ['rail', 'ghat', 'field', 'street-lamp', 'gate', 'night', 'memorial'];
+  fallback.forEach((set) => pool.add(set));
+  // Only sets that exist in the catalogue and have a real scene function.
+  return new Set([...pool].filter((set) => catalogEntry(set)));
+}
+
+function hashString(value) {
+  let h = 2166136261;
+  for (let i = 0; i < value.length; i++) {
+    h ^= value.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+/*
+ * Pick the plate list for one scene. Base plates come first (they carry the
+ * scene's meaning); wildcards are ranked by topic relevance, then by how
+ * often the film has already used them, then by a stable hash of film+scene.
+ * That keeps two films about the same event from sharing a shot list while
+ * staying reproducible.
+ */
+function choosePlates(scene, topicPool, filmId, usage) {
+  const base = scene.plates.slice();
+  const want = Math.max(0, Number(scene.extraPlates) || 0);
+  const pool = (scene.pool || []).filter((set) => catalogEntry(set) && !base.includes(set));
+  const ranked = pool.slice().sort((a, b) => {
+    const topicA = topicPool.has(a) ? 0 : 1;
+    const topicB = topicPool.has(b) ? 0 : 1;
+    if (topicA !== topicB) return topicA - topicB;
+    const usedA = usage[a] || 0;
+    const usedB = usage[b] || 0;
+    if (usedA !== usedB) return usedA - usedB;
+    return hashString(`${filmId}:${scene.id}:${a}`) - hashString(`${filmId}:${scene.id}:${b}`);
+  });
+  const chosen = base.concat(ranked.slice(0, want));
+  for (const set of chosen) usage[set] = (usage[set] || 0) + 1;
+  return chosen;
+}
+
+/*
+ * The director pass.
+ *
+ * Narration is written line by line against the ledger; the picture should be
+ * chosen the same way, by the agent, from the catalogue of sets that actually
+ * exist. The model is given every plate with its visual description and the
+ * eight scene briefs, and returns two extra plates per scene. The base plates
+ * are fixed because they carry the argument (object, order, machine, cost...).
+ * Extras are the film's look: a famine can reach for the ration counter and
+ * the river ghat, a partition for the railway and the map table.
+ *
+ * Any invalid answer falls back to the deterministic casting for that scene,
+ * so a bad model can make a film duller but never broken. The render gate has
+ * the final say either way.
+ */
+const DIRECTOR_SYSTEM = [
+  'You are the visual director of a sourced documentary short.',
+  'You choose sets, not facts, not narration, not camera moves.',
+  'Use only keys from the catalogue. A key that is not listed does not exist.',
+  'The base plates of a scene are fixed. Choose only the extra plates.',
+  'Choose the specific thing the scene is about: a ration counter for hunger,',
+  'a railway platform for displacement, a press for censorship, a map table',
+  'for a border. Do not choose a set that belongs to another film world.',
+  'Keep the film varied: do not use one key in more than two scenes.',
+  'Return only the JSON object. No prose, no markdown.'
+].join('\n');
+
+const DIRECTOR_SCHEMA = {
+  type: 'object',
+  properties: {
+    scenes: {
+      type: 'array',
+      minItems: 8,
+      maxItems: 8,
+      items: {
+        type: 'object',
+        properties: {
+          id: { type: 'string' },
+          plates: {
+            type: 'array',
+            minItems: 1,
+            maxItems: 2,
+            items: { type: 'string' }
+          }
+        },
+        required: ['id', 'plates'],
+        additionalProperties: false
+      }
+    }
+  },
+  required: ['scenes'],
+  additionalProperties: false
+};
+
+function directorPrompt(film, topic, scenes, preferred) {
+  const catalogue = SCENE_CATALOG
+    .map((entry) => `- ${entry.key} [${entry.tags.join(', ')}] ${entry.visual}`)
+    .join('\n');
+  const shortlist = (preferred || []).filter((key) => catalogEntry(key)).join(', ');
+  const briefs = scenes
+    .map((scene) => {
+      const want = Math.max(0, Number(scene.extraPlates) || 0);
+      return [
+        `${scene.id} ${scene.title}`,
+        `  purpose: ${scene.purpose}`,
+        `  base plates (fixed): ${scene.plates.join(', ')}`,
+        `  choose exactly ${want} extra plate${want === 1 ? '' : 's'}`
+      ].join('\n');
+    })
+    .join('\n');
+  return [
+    `FILM: ${film.title}`,
+    topic && topic.why ? `WHY: ${topic.why}` : '',
+    topic && topic.angle ? `ANGLE: ${topic.angle}` : '',
+    shortlist ? `PREFERRED FOR THIS FILM: ${shortlist}` : '',
+    'Prefer the shortlist. Use a key outside it only when that set is clearly the better object for the scene.',
+    '',
+    'SCENES',
+    briefs,
+    '',
+    'CATALOGUE (key [tags] visual)',
+    catalogue,
+    '',
+    'Format: {"scenes":[{"id":"S01","plates":["key","key"]}, ...]}',
+    'One entry per scene id, in order. Choose only extra plates, never a base plate.',
+    'If the catalogue cannot dress a scene, choose the nearest object-led set rather than a person or an event.',
+    'Finish the closing brace and stop.'
+  ].filter((line) => line !== '').join('\n');
+}
+
+function validateDirector(answer, scenes) {
+  const rows = answer && Array.isArray(answer.scenes) ? answer.scenes : null;
+  if (!rows) return null;
+  const byId = new Map();
+  for (const row of rows) {
+    if (!row || typeof row.id !== 'string' || !Array.isArray(row.plates)) continue;
+    byId.set(row.id.trim().toUpperCase(), row.plates);
+  }
+  const usage = {};
+  const picks = new Map();
+  for (const scene of scenes) {
+    const want = Math.max(0, Number(scene.extraPlates) || 0);
+    const raw = byId.get(scene.id);
+    if (!Array.isArray(raw) || raw.length !== want) continue;
+    const keys = raw.map((key) => String(key).trim().toLowerCase());
+    if (new Set(keys).size !== keys.length) continue;
+    if (keys.some((key) => !catalogEntry(key) || scene.plates.includes(key))) continue;
+    if (keys.some((key) => (usage[key] || 0) >= 2)) continue;
+    for (const key of keys) usage[key] = (usage[key] || 0) + 1;
+    picks.set(scene.id, keys);
+  }
+  return picks.size ? picks : null;
+}
+
+function directPlates(film, topic, scenes, preferred) {
+  if (!process.env.LM_MODEL) {
+    console.log('[author] no LM_MODEL set; the director pass will use deterministic casting');
+    return null;
+  }
+  try {
+    const result = ask({
+      system: DIRECTOR_SYSTEM,
+      prompt: directorPrompt(film, topic, scenes, preferred),
+      schema: DIRECTOR_SCHEMA,
+      tokens: 900,
+      outDir: path.join(ROOT, 'out', 'author', film.id),
+      label: `${film.id}-director`
+    });
+    const picks = validateDirector(result.value, scenes);
+    if (!picks) {
+      console.error('[author] the director answer was unusable; falling back to deterministic casting');
+      return null;
+    }
+    const missing = scenes.filter((scene) => !picks.has(scene.id)).map((scene) => scene.id);
+    if (missing.length) console.log(`[author] director fallback for ${missing.join(', ')}`);
+    return picks;
+  } catch (err) {
+    console.error(`[author] director pass failed (${err.message}); using deterministic casting`);
+    return null;
+  }
+}
 
 function arg(name, fallback) {
   const i = process.argv.indexOf(`--${name}`);
@@ -566,27 +909,29 @@ function auditLines(lines, rows, scene, usedTexts) {
   return { kept, problems };
 }
 
-function stubLines(rows, scene) {
+function stubLines(rows, scene, usedTexts) {
   /*
    * A deterministic stand-in for the model: build 5 lines of 7-22 words each
-   * from the first candidate rows. This exists only so the assembly and
-   * the gate can be exercised without a model on the machine.
+   * from the candidate rows, skipping anything an earlier scene already said.
+   * This exists only so the assembly and the gate can be exercised without a
+   * model on the machine.
    */
-  return rows.slice(0, 5).map((row) => {
+  const out = [];
+  const seen = new Set();
+  for (const row of rows) {
+    if (out.length >= 5) break;
     const text = row.text.replace(/\.$/, '');
     const w = words(text);
-    // Ensure 7-22 words by taking a middle segment if needed
-    let out;
-    if (w.length >= 7 && w.length <= 22) {
-      out = text;
-    } else if (w.length > 22) {
-      out = w.slice(0, 20).join(' ') + '.';
-    } else {
-      // Too short: pad with neutral context from the row
-      out = text + ' was recorded in the sources for this scene.';
-    }
-    return { row: row.id, text: out };
-  });
+    let line;
+    if (w.length >= 7 && w.length <= 22) line = text;
+    else if (w.length > 22) line = `${w.slice(0, 20).join(' ')}.`;
+    else continue;
+    const key = line.toLowerCase();
+    if ((usedTexts && usedTexts.has(key)) || seen.has(key)) continue;
+    seen.add(key);
+    out.push({ row: row.id, text: line });
+  }
+  return out;
 }
 
 function pickGrammar(corpus, topic) {
@@ -744,14 +1089,14 @@ function buildDebates(film, topic, ledger, corpus, plans) {
  * placed where the plate earns them, reads like an edit.
  */
 function plannedTransition(archetype, li, effects) {
-  if (archetype === 'wall_surface' && effects['paper-wipe'] < 2) {
+  if (archetype === 'wall' && effects['paper-wipe'] < 2) {
     effects['paper-wipe'] += 1;
     return {
       type: 'paper-wipe',
       reason: 'The newspaper page drags across the cut and the wall of print arrives.'
     };
   }
-  if (archetype === 'paper_desk' && li === 0 && effects['page-turn'] < 2) {
+  if (['desk', 'newspaper-desk', 'report'].includes(archetype) && li === 0 && effects['page-turn'] < 2) {
     effects['page-turn'] += 1;
     return {
       type: 'page-turn',
@@ -772,6 +1117,34 @@ function plannedTransition(archetype, li, effects) {
       reason: 'The candle rim closes to a ring around the flame.'
     };
   }
+  if (archetype === 'rail' && effects['whip-right'] < 2) {
+    effects['whip-right'] += 1;
+    return {
+      type: 'whip-right',
+      reason: 'The train\u2019s motion whips the platform into the next set.'
+    };
+  }
+  if (archetype === 'market' && effects['whip-left'] < 2) {
+    effects['whip-left'] += 1;
+    return {
+      type: 'whip-left',
+      reason: 'A handcart turns out of frame and the motion carries the lane into the next shot.'
+    };
+  }
+  if (archetype === 'telegraph' && effects['match-cut'] < 2) {
+    effects['match-cut'] += 1;
+    return {
+      type: 'match-cut',
+      reason: 'The telegraph key lands on the same beat as the next cut.'
+    };
+  }
+  if (archetype === 'court' && effects.iris < 2) {
+    effects.iris += 1;
+    return {
+      type: 'iris',
+      reason: 'The brass seal ring closes around the verdict as the scene turns.'
+    };
+  }
   return {
     type: 'hard-cut',
     reason: 'The cut lands on the first word of the line so the figure and the voice arrive together.'
@@ -785,7 +1158,14 @@ function plannedTransition(archetype, li, effects) {
  */
 function buildScenes(film, plans, grammar, counts, sets) {
   let start = 0;
-  const effects = { 'paper-wipe': 0, 'page-turn': 0, iris: 0 };
+  const effects = {
+    'paper-wipe': 0,
+    'page-turn': 0,
+    iris: 0,
+    'whip-left': 0,
+    'whip-right': 0,
+    'match-cut': 0
+  };
   const scenes = plans.map((plan, si) => {
     const narrated = plan.lines.map((line) => ({
       text: line.text,
@@ -824,6 +1204,7 @@ function buildScenes(film, plans, grammar, counts, sets) {
         const spec = ARCHETYPES[archetype];
         sets.plates[plate] = {
           scene: spec.scene,
+          script: spec.script,
           archetype,
           params: {
             seed: (si + 1) * 17 + li,
@@ -843,7 +1224,7 @@ function buildScenes(film, plans, grammar, counts, sets) {
         weight: 3,
         camera: CAMERAS[(si * 2 + li) % CAMERAS.length],
         visual: `${ARCHETYPES[archetype].visual} ${plan.visualNote}`,
-        sfx: SFX[archetype].slice(0, 3),
+        sfx: (SFX[archetype] || SFX.object).slice(0, 3),
         framing: {
           zoom: [1.03, 1.09],
           x: [50 + ((si + li) % 3) - 1, 50 + ((si + li + 1) % 3) - 1],
@@ -864,6 +1245,7 @@ function buildScenes(film, plans, grammar, counts, sets) {
       if (!sets.plates[plate]) {
         sets.plates[plate] = {
           scene: ARCHETYPES[archetype].scene,
+          script: ARCHETYPES[archetype].script,
           archetype,
           params: { seed: 99, dressing: 2, prop: 'none' }
         };
@@ -918,6 +1300,7 @@ function main() {
   const stub = !!arg('stub', false);
   const force = !!arg('force', false);
   const diagnose = !!arg('diagnose', false);
+  const noDirector = !!arg('no-director', false);
   const outFile = path.join(FILMS, `${filmId}.json`);
   if (!diagnose && fs.existsSync(outFile) && !force) {
     throw new Error(`${path.relative(ROOT, outFile)} exists; pass --force to author it again`);
@@ -961,6 +1344,8 @@ function main() {
   const used = new Set();
   const usedTexts = new Set();
   const plans = [];
+  const setPool = topicSetPool(topic, grammar.grammar);
+  const plateUsage = {};
 
   if (diagnose) {
     const dump = path.join(ROOT, 'out', 'author', filmId, 'diagnose-ledger.json');
@@ -979,12 +1364,26 @@ function main() {
     return;
   }
 
+  const directed = stub || noDirector
+    ? null
+    : directPlates({ id: filmId, title: topic.title }, topic, SCENES, [...setPool]);
+  if (directed) console.log(`[author] director chose extra plates for ${directed.size}/${SCENES.length} scenes`);
+
   for (const scene of SCENES) {
     const rows = candidatesFor(scene, ledger, used, subject, primary);
     if (rows.length < 5) throw new Error(`not enough ledger rows left for ${scene.id}`);
+    let plates;
+    const directedForScene = directed && directed.get(scene.id);
+    if (directedForScene) {
+      plates = scene.plates.concat(directedForScene);
+      for (const key of directedForScene) plateUsage[key] = (plateUsage[key] || 0) + 1;
+      console.log(`[author] ${scene.id} director cast: ${directedForScene.join(', ')}`);
+    } else {
+      plates = choosePlates(scene, setPool, filmId, plateUsage);
+    }
     let lines;
     if (stub) {
-      const audit = auditLines(stubLines(rows, scene), rows, scene, usedTexts);
+      const audit = auditLines(stubLines(rows, scene, usedTexts), rows, scene, usedTexts);
       if (audit.problems.length) {
         throw new Error(`stub narration for ${scene.id} failed the ledger audit:\n  ${audit.problems.join('\n  ')}`);
       }
@@ -1026,9 +1425,10 @@ function main() {
     console.log(`[author] ${scene.id} ${scene.title}: ${lines.length} lines`);
 
     const plateNames = {};
-    for (const archetype of scene.plates) plateNames[archetype] = plateName(archetype, counts);
+    for (const archetype of plates) plateNames[archetype] = plateName(archetype, counts);
     plans.push({
       ...scene,
+      plates,
       lines,
       plateNames,
       props: ['newspaper', 'register', 'notice'],
@@ -1176,9 +1576,21 @@ function main() {
   console.log(`[author] ${path.relative(ROOT, debatesFile)}`);
 }
 
-try {
-  main();
-} catch (e) {
-  console.error(`[author] FAIL ${e.message}`);
-  process.exitCode = 1;
+if (require.main === module) {
+  try {
+    main();
+  } catch (e) {
+    console.error(`[author] FAIL ${e.message}`);
+    process.exitCode = 1;
+  }
 }
+
+module.exports = {
+  SCENES,
+  ARCHETYPES,
+  TOPIC_SET_RULES,
+  topicSetPool,
+  choosePlates,
+  directorPrompt,
+  validateDirector
+};

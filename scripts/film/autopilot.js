@@ -27,6 +27,7 @@ const ROOT = path.resolve(__dirname, '..', '..');
 const SLATE = path.join(ROOT, 'data', 'film-slate.json');
 const FILMS = path.join(ROOT, 'data', 'films');
 const OUT = path.join(ROOT, 'out', 'autopilot');
+const CAP = Number(process.env.FILM_DAILY_CAP || 2);
 
 function readJson(file, fallback) {
   try {
@@ -35,13 +36,6 @@ function readJson(file, fallback) {
     if (fallback !== undefined) return fallback;
     throw new Error(`Cannot read ${path.relative(ROOT, file)}: ${err.message}`);
   }
-}
-
-function listFilms() {
-  if (!fs.existsSync(FILMS)) return new Set();
-  return new Set(fs.readdirSync(FILMS)
-    .filter((name) => name.endsWith('.json') && !name.endsWith('-debates.json'))
-    .map((name) => name.replace(/\.json$/, '')));
 }
 
 function hasSourcePair(id) {
@@ -68,7 +62,6 @@ function choose() {
   if (!Array.isArray(slate.topics) || !slate.topics.length) {
     throw new Error('data/film-slate.json has no topics');
   }
-  const existing = listFilms();
   const videoData = readJson(path.join(ROOT, 'data', 'lecture-videos.json'), { videos: {} });
   const videos = videoData && videoData.videos ? videoData.videos : {};
   const published = Array.isArray(videos)
@@ -79,8 +72,7 @@ function choose() {
     (a.priority || 0) - (b.priority || 0));
 
   const ready = sorted.find((topic) =>
-    topic.status === 'ready' &&
-    !existing.has(topic.id) &&
+    ['ready', 'storyboard'].includes(topic.status) &&
     !published.includes(topic.id) &&
     hasSourcePair(topic.id));
 
@@ -92,9 +84,26 @@ function choose() {
     return { kind: 'ready', topic: ready, validation: checked };
   }
 
+  /*
+   * A blocked topic is not retried. The strike counter in author.yml moved it
+   * there after three failed authoring passes; the chain must spend the next
+   * slot on a different brief instead of looping on the same corpus.
+   */
   const research = sorted.find((topic) =>
     ['research', 'authoring'].includes(topic.status));
-  return { kind: 'research', topic: research || null };
+  if (research) return { kind: 'research', topic: research };
+
+  /*
+   * Nothing researched is waiting. Either start a new brief from the news
+   * feeds (the authoring workflow does the sourcing) or stop for the day once
+   * the cap is reached. A blocked topic never reaches this branch: it has
+   * already spent its three attempts.
+   */
+  const today = new Date().toISOString().slice(0, 10);
+  const producedToday = slate.topics.filter((topic) =>
+    topic.status === 'published' && topic.publishedAt === today).length;
+  if (producedToday >= CAP) return { kind: 'cap', topic: null };
+  return { kind: 'invent', topic: null };
 }
 
 function writeReport(payload) {
@@ -107,10 +116,11 @@ function writeReport(payload) {
 function dispatch(topic) {
   const args = [
     'workflow', 'run', 'film.yml',
-    '--ref', 'main',
+    '--ref', 'film-ci',
     '-f', `film=${topic.id}`,
     '-f', 'quality=final',
-    '-f', 'release=true'
+    '-f', 'release=true',
+    '-f', 'publish=true'
   ];
   const res = spawnSync('gh', args, { cwd: ROOT, encoding: 'utf8' });
   if (res.status !== 0) {
@@ -134,10 +144,18 @@ function main() {
     process.stderr.write(`READY FILM IS INVALID: ${result.topic.id}\n${result.validation.detail}\n`);
   } else if (result.kind === 'research') {
     process.stdout.write(
-      `NO READY FILM.\nNext research topic: ${result.topic ? result.topic.id : '(none)'}\n` +
+      `NO READY FILM.\nNext research topic: ${result.topic.id}\n` +
       `Report: ${path.relative(ROOT, report)}\n` +
-      'Write the sourced brief + storyboard, then set the slate status to ready.\n'
+      'The authoring workflow will write the sourced brief and storyboard.\n'
     );
+  } else if (result.kind === 'invent') {
+    process.stdout.write(
+      'SLATE EMPTY.\nThe authoring workflow will invent and source-lock the next brief.\n'
+    );
+  } else if (result.kind === 'cap') {
+    process.stdout.write(`DAILY CAP REACHED (${CAP}).\nThe queue resumes at 00:00 UTC.\n`);
+  } else {
+    process.stdout.write('NO ACTION.\n');
   }
 
   if (result.kind === 'invalid' || (requireReady && result.kind !== 'ready')) {

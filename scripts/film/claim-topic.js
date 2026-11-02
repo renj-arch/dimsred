@@ -18,8 +18,8 @@
  * --ensure is what the film pipeline itself calls at the top of a final run. A
  * manual final render used to leave the topic at "ready", so the autopilot
  * could dispatch a duplicate while the first render was still in Blender.
- * --ensure is idempotent: a fresh "rendering" lease is left alone, a ready or
- * published topic is claimed, and a blocked topic is refused.
+ * --ensure is idempotent: a fresh "rendering" lease is left alone, a ready,
+ * storyboard or published topic is claimed, and a blocked topic is refused.
  *
  * --reap returns a lease older than the render timeout to the queue. film.yml
  * has a six-hour job cap, so a seven-hour lease cannot belong to a live run.
@@ -98,7 +98,7 @@ function main() {
       process.exitCode = 2;
       return;
     }
-    if (topic.status !== 'ready') {
+    if (!['ready', 'storyboard'].includes(topic.status)) {
       process.stderr.write(`claim failed: ${claimId} is ${topic.status}, not ready\n`);
       process.exitCode = 2;
       return;
@@ -130,7 +130,7 @@ function main() {
       process.stdout.write(`already rendering ${ensureId}\n`);
       return;
     }
-    if (!['ready', 'published', 'rendering'].includes(topic.status)) {
+    if (!['ready', 'storyboard', 'published', 'rendering'].includes(topic.status)) {
       process.stderr.write(`ensure failed: ${ensureId} is ${topic.status}, not ready\n`);
       process.exitCode = 2;
       return;

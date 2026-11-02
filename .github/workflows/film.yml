@@ -37,6 +37,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: film-${{ github.ref }}-${{ inputs.film }}
@@ -313,3 +314,14 @@ jobs:
           fi
           git commit -m "slate: $FILM is published"
           git push
+
+      # Start the next film immediately. The autopilot has a concurrency lock
+      # and a daily cap, so this cannot run away: it either picks the next
+      # brief or stops at the cap.
+      - name: Start the next film
+        if: ${{ success() && inputs.release == true && inputs.quality == 'final' && inputs.publish == true }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh api --method POST "repos/${GITHUB_REPOSITORY}/dispatches" \
+            -f event_type=film-finished

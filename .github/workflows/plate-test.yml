@@ -18,6 +18,16 @@ on:
         required: false
         default: ''
         type: string
+      scene:
+        description: Comma-separated scene names to render directly, without a storyboard (e.g. railway_platform,river_ghat)
+        required: false
+        default: ''
+        type: string
+      script:
+        description: Blender script used with --scene
+        required: true
+        default: stock_sets.py
+        type: string
       width:
         description: Width in pixels
         required: true
@@ -48,6 +58,8 @@ jobs:
     env:
       FILM: ${{ inputs.film }}
       ONLY: ${{ inputs.only }}
+      SCENE: ${{ inputs.scene }}
+      SCRIPT: ${{ inputs.script }}
       WIDTH: ${{ inputs.width }}
       HEIGHT: ${{ inputs.height }}
       SAMPLES: ${{ inputs.samples }}
@@ -88,6 +100,9 @@ jobs:
           )
           if [ -n "$ONLY" ]; then
             args+=(--only "$ONLY")
+          fi
+          if [ -n "$SCENE" ]; then
+            args+=(--scene "$SCENE" --script "$SCRIPT")
           fi
           node scripts/film/render-plates.js "${args[@]}"
 

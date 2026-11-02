@@ -125,7 +125,22 @@ jobs:
           ls -lh "$MODEL"
           echo "LM_MODEL=${MODEL}" >> "$GITHUB_ENV"
 
+      - name: Invent a sourced brief
+        if: ${{ inputs.film == 'invent' }}
+        run: |
+          set -euo pipefail
+          node scripts/film/news.js --slate 2
+          ID=$(node -e "
+            const slate = require('./data/film-slate.json');
+            const topic = [...slate.topics].reverse().find((t) => t.status === 'research');
+            if (!topic) process.exit(3);
+            process.stdout.write(topic.id);
+          ")
+          echo "FILM=$ID" >> "$GITHUB_ENV"
+          echo "::notice title=Invented $ID::The news feed supplied the next sourced brief."
+
       - name: Fetch the sources
+        id: fetch
         run: |
           node scripts/film/research.js --topic "$FILM" \
             --out "out/research/$FILM"
@@ -172,6 +187,29 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      - name: Clear the authoring strikes
+        if: ${{ success() && !inputs.stub }}
+        run: node scripts/film/author-strike.js --pass "$FILM"
+
+      - name: Record the failed attempt
+        if: ${{ failure() && !inputs.stub && steps.fetch.outcome == 'success' }}
+        run: |
+          node scripts/film/author-strike.js --fail "$FILM" \
+            --reason "the sourced storyboard did not pass the gate"
+
+      - name: Commit the strike
+        if: ${{ failure() && !inputs.stub && steps.fetch.outcome == 'success' }}
+        run: |
+          git config user.name "vlymbooq"
+          git config user.email "vlymbooq@users.noreply.github.com"
+          git add data/film-slate.json
+          if git diff --cached --quiet; then
+            echo "nothing to record"
+            exit 0
+          fi
+          git commit -m "record $FILM authoring strike"
+          git push
+
       - name: Commit the storyboard to this branch
         if: ${{ success() && !inputs.stub }}
         run: |
@@ -192,4 +230,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run film.yml --ref "$GITHUB_REF_NAME" \
-            -f "film=$FILM" -f "publish=true"
+            -f "film=$FILM" \
+            -f quality=final \
+            -f release=true \
+            -f publish=true
