@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T12:58:37.110Z",
-  "cursor": 429,
-  "built": 406
+  "updatedAt": "2026-11-02T13:40:54.089Z",
+  "cursor": 432,
+  "built": 408
  },
  "figs": {
   "11434945": {
@@ -2439,6 +2439,18 @@
   "ae270914": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Bare Conductor -->\n  <rect x=\"80\" y=\"60\" width=\"40\" height=\"80\" stroke-dasharray=\"3,3\" />\n  <text x=\"90\" y=\"115\" text-anchor=\"middle\">Bare</text>\n  <text x=\"90\" y=\"127\" text-anchor=\"middle\">Conductor</text>\n  \n  <!-- Insulation Tape Layers -->\n  <path d=\"M 80 60 L 120 60 L 120 40 L 140 40 L 140 60\" />\n  <path d=\"M 80 70 L 130 70 L 130 50 L 150 50 L 150 70\" />\n  <path d=\"M 80 80 L 140 80 L 140 60 L 160 60 L 160 80\" />\n  <path d=\"M 80 90 L 150 90 L 150 70 L 170 70 L 170 90\" />\n  \n  <!-- Half Overlap Indicators -->\n  <text x=\"125\" y=\"45\" text-anchor=\"middle\">Half</text>\n  <text x=\"135\" y=\"57\" text-anchor=\"middle\">Overlap</text>\n  \n  <!-- Stretch Action -->\n  <path d=\"M 180 100 L 260 100\" stroke-width=\"2\" />\n  <text x=\"220\" y=\"105\" text-anchor=\"middle\">Stretch</text>\n  \n  <!-- Resulting Seal -->\n  <rect x=\"180\" y=\"40\" width=\"80\" height=\"100\" stroke-dasharray=\"3,3\" />\n  <text x=\"220\" y=\"155\" text-anchor=\"middle\">Sealed</text>\n  <text x=\"220\" y=\"167\" text-anchor=\"middle\">&amp; Insulated</text>\n</svg>",
    "n": "what is insulation tape used for and why must it be applied correctly?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "387e0fba": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"180\" height=\"140\" rx=\"5\"/><line x1=\"60\" y1=\"60\" x2=\"300\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"55\" y=\"65\">Probe A</text><text x=\"295\" y=\"65\">Probe B</text><path d=\"M 60 80 L 100 80 L 100 140 L 300 140 L 300 80\" fill=\"none\" stroke-width=\"2\"/><circle cx=\"100\" cy=\"80\" r=\"3\"/><circle cx=\"300\" cy=\"80\" r=\"3\"/><text x=\"150\" y=\"110\" text-anchor=\"middle\">Continuous Path</text><text x=\"150\" y=\"125\" text-anchor=\"middle\">(Low Resistance)</text><text x=\"150\" y=\"140\" text-anchor=\"middle\">Beep Sound</text><circle cx=\"320\" cy=\"160\" r=\"8\"/><text x=\"315\" y=\"175\">Beep</text></svg>",
+   "n": "how is a multimeter used to check a continuous circuit?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "4070f80": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Current (Amps) vs Wire Size</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"70\">Small</text><text x=\"315\" y=\"70\">Large</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><text x=\"40\" y=\"200\">Low Current</text><text x=\"40\" y=\"190\">High Current</text><path d=\"M 50 170 L 310 60\" stroke-width=\"8\"/><circle cx=\"180\" cy=\"100\" r=\"3\"/><text x=\"175\" y=\"105\">Thicker wire</text><text x=\"200\" y=\"105\">= Lower Resistance</text><text x=\"200\" y=\"125\">= Less Heat</text><text x=\"180\" y=\"145\" text-anchor=\"middle\">Safe Load Rating</text></svg>",
+   "n": "how is the size of a copper conductor chosen?",
    "sub": "workshop",
    "at": "2026-11-02"
   }
