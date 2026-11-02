@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T17:50:30.132Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visuals. MockPapers and MainsFresh address content depth and freshness, while MetaLearn tackles the zero-output agent from the last run which is now starved of input. ExamPatterns is deferred as it produced zero fixes in two consecutive runs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (305 total)",
-       "text": "What is the difference between a bolt and a cap screw? | Write the tap-drill size for a metric thread. | What is a file and how are files classified?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "11 fresh mock questions on Power Plant Engineering (360 in pool)",
-       "text": "Power Plant Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T18:06:03.504Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -719,8 +663,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T00:36:32.598Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-02T00:25:27.195Z",
+ "lastRun": "2026-11-02T00:36:32.598Z",
  "model": "qwen3.5:9b"
 }
