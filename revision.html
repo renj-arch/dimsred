@@ -43,6 +43,7 @@ h1{font-size:1.8em;font-weight:800;margin-bottom:8px;background:linear-gradient(
 .bullets{list-style:none;padding:0}
 .bullets li{padding:8px 0;border-bottom:1px solid var(--border);font-size:.95em}
 .bullets li:last-child{border-bottom:none}
+.bullets li strong{color:var(--cyan);font-weight:700}
 .bullets li.none{color:var(--text-sec);font-style:italic}
 p.none{color:var(--text-sec);font-style:italic}
 .card-badge{margin-top:6px;font-size:.72em;letter-spacing:.04em;text-transform:uppercase;opacity:.65}
@@ -100,6 +101,9 @@ p.none{color:var(--text-sec);font-style:italic}
     <div class="section-title">🧩 Context</div>
     <ul class="bullets" id="modalContext"></ul>
 
+    <div class="section-title">🧠 Connected Notes <span class="section-note">verified facts about related entities, not this one</span></div>
+    <ul class="bullets" id="modalConnected"></ul>
+
     <div class="section-title">🗂 Neighbor Entities <span class="section-note">graph links, not facts</span></div>
     <div class="facts" id="modalNeighbors"></div>
 
@@ -129,6 +133,9 @@ function matchesQuery(topicName, data, q) {
   // should not surface a topic because of text that is not about it.
   var hay = '';
   (data.primaryFacts || []).forEach(function (f) { hay += ' ' + (f.fact || ''); });
+  (data.connectedNotes || []).forEach(function (n) {
+    hay += ' ' + (n.entity || '') + ' ' + (n.fact || '');
+  });
   (data.neighbors || []).forEach(function (n) { hay += ' ' + (n.entity || ''); });
   return hay.toLowerCase().includes(q);
 }
@@ -176,16 +183,22 @@ function renderTopics() {
     h3.textContent = topicName;
     var owned = data.primaryFacts || [];
     var p = document.createElement('p');
+    var connected = data.connectedNotes || [];
     // Derived from verified facts, so a card can never advertise text that is
-    // not about the entity.
+    // not about the entity. Connected notes are named as such, never merged
+    // into the topic summary.
     p.textContent = owned.length
       ? owned.slice(0, 2).map(function (f) { return f.fact; }).join(' ')
-      : 'No verified fact for this entity yet.';
+      : (connected.length
+          ? 'No verified fact about this entity yet. ' + connected.length +
+            ' verified notes about connected entities are shown inside.'
+          : 'No verified fact for this entity yet.');
     if (!owned.length) p.className = 'none';
     var badge = document.createElement('div');
     badge.className = 'card-badge';
     badge.textContent = owned.length + (owned.length === 1 ? ' fact' : ' facts') +
-      ' \u00b7 ' + (data.neighbors || []).length + ' links';
+      ' \u00b7 ' + connected.length + ' connected \u00b7 ' +
+      (data.neighbors || []).length + ' links';
     card.appendChild(h3);
     card.appendChild(p);
     card.appendChild(badge);
@@ -286,9 +299,12 @@ function openModal(topicName) {
   // Quick summary is derived from the primary facts only, so it can never
   // inherit a neighbour's biography.
   var owned = data.primaryFacts || [];
+  var connected = data.connectedNotes || [];
   document.getElementById('modalSummary').textContent =
     owned.length ? owned.slice(0, 2).map(function (f) { return f.fact; }).join(' ')
-                 : 'No verified fact for this entity yet.';
+                 : (connected.length
+                     ? 'No verified fact about this entity yet. The connected notes below are verified facts about related entities, each attributed to its own subject.'
+                     : 'No verified fact for this entity yet.');
 
   function list(items, render, empty) {
     if (!items || !items.length) return '<li>' + escapeHtml(empty) + '</li>';
@@ -314,6 +330,16 @@ function openModal(topicName) {
     list(data.context, function (c) {
       return '<li>' + escapeHtml(c.fact || c.text || '') + '</li>';
     }, 'No additional context');
+
+  function prettyName(s) {
+    return String(s || '').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+  document.getElementById('modalConnected').innerHTML =
+    list(connected, function (n) {
+      return '<li><strong>' + escapeHtml(prettyName(n.entity || '')) + '</strong>' +
+        ' <span class="fact-type">' + escapeHtml(n.rel || 'connected') + '</span><br>' +
+        escapeHtml(n.fact || '') + '</li>';
+    }, 'No verified notes about connected entities yet');
 
   var nb = data.neighbors || [];
   document.getElementById('modalNeighbors').innerHTML = nb.length

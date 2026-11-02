@@ -72,7 +72,39 @@ jobs:
             process.exit(1);
           }
           const empty = keys.filter(k => !(j[k] || {}).summary);
-          console.log('topics: ' + keys.length + ', empty summaries: ' + empty.length);
+          // Connected notes are shown beside a topic but belong to a named
+          // neighbour. Fail the build if a note is unattributed or if the
+          // quoted fact is not actually on that neighbour's own card.
+          const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+          const byNorm = new Map(keys.map(k => [norm(k), k]));
+          const noteProblems = [];
+          let noteCount = 0;
+          keys.forEach(k => {
+            const topic = j[k] || {};
+            const own = new Set((topic.primaryFacts || []).map(f => norm(f.fact)));
+            (topic.connectedNotes || []).forEach(n => {
+              noteCount++;
+              if (!n || !n.entity || !n.rel || !n.fact) {
+                noteProblems.push(k + ': incomplete note');
+                return;
+              }
+              const targetKey = byNorm.get(norm(n.entity));
+              const target = targetKey ? j[targetKey] : null;
+              if (norm(n.entity) === norm(k)) noteProblems.push(k + ': note names the topic itself');
+              else if (!target) noteProblems.push(k + ': unknown entity ' + n.entity);
+              else if (!(target.primaryFacts || []).some(f => norm(f.fact) === norm(n.fact))) {
+                noteProblems.push(k + ': ' + n.entity + ' does not own "' + String(n.fact).slice(0, 60) + '"');
+              } else if (own.has(norm(n.fact))) {
+                noteProblems.push(k + ': connected note duplicates an own fact');
+              }
+            });
+          });
+          if (noteProblems.length) {
+            noteProblems.slice(0, 20).forEach(p => console.error('BAD NOTE ' + p));
+            process.exit(1);
+          }
+          console.log('topics: ' + keys.length + ', empty summaries: ' + empty.length +
+            ', connected notes: ' + noteCount + ' (all attributed)');
           NODE
 
       - name: Commit if changed

@@ -23,8 +23,11 @@ var HONORIFICS = {
   president: 0, prime: 0, general: 0, captain: 1, major: 1, colonel: 1
 };
 
+// Generational suffixes only. Roman numerals are NOT suffixes here: "World
+// War II", "Chandragupta II" and "Elizabeth II" are distinct entities, not
+// repetitions of "World War", "Chandragupta" or "Elizabeth".
 var SUFFIXES = {
-  jr: 1, sr: 1, junior: 1, senior: 1, ii: 1, iii: 1, iv: 1
+  jr: 1, sr: 1, junior: 1, senior: 1
 };
 
 // Cross-name equivalences that normalisation cannot derive. The first entry of
@@ -56,7 +59,29 @@ var AMBIGUOUS_TOKENS = {
   ministry: 1, department: 1, party: 1, court: 1, council: 1, commission: 1,
   war: 1, wars: 1, revolution: 1, independence: 1, movement: 1, act: 1,
   empire: 1, kingdom: 1, state: 1, states: 1, city: 1, government: 1,
-  national: 1, international: 1, general: 1, union: 1, league: 1, association: 1
+  national: 1, international: 1, general: 1, union: 1, league: 1, association: 1,
+  // Ordinals are session/part labels in the graph ("Third (Nov-Dec 1932)").
+  // As bare single tokens they must never be read as the subject of an
+  // otherwise ordinary phrase such as "third Prime Minister of India".
+  first: 1, second: 1, third: 1, fourth: 1, fifth: 1,
+  sixth: 1, seventh: 1, eighth: 1, ninth: 1, tenth: 1,
+  // Languages, nationalities and dynasty adjectives are modifiers, not
+  // subjects. "Sanskrit poet and playwright" is about Kalidasa, not about
+  // Sanskrit; "Kannada philosopher..." is about Basavanna. The full names of
+  // the entities they modify ("Sanskrit literature", "Gupta Empire") are
+  // multi-token and still match before the single adjective is considered.
+  sanskrit: 1, kannada: 1, tamil: 1, telugu: 1, malayalam: 1, hindi: 1,
+  bengali: 1, marathi: 1, gujarati: 1, punjabi: 1, urdu: 1, english: 1,
+  persian: 1, arabic: 1, turkish: 1, latin: 1, greek: 1, chinese: 1,
+  japanese: 1, russian: 1, french: 1, german: 1, spanish: 1, italian: 1,
+  portuguese: 1, dutch: 1, american: 1, indian: 1, british: 1, pakistani: 1,
+  bangladeshi: 1, nepalese: 1, afghan: 1, egyptian: 1, ottoman: 1, mughal: 1,
+  gupta: 1, roman: 1, arab: 1, mongol: 1, timurid: 1, safavid: 1,
+  chola: 1, chera: 1, pandya: 1, chalukya: 1, rashtrakuta: 1, pallava: 1,
+  mauryan: 1, kushan: 1, sikh: 1, maratha: 1, rajput: 1, jain: 1,
+  hindu: 1, muslim: 1, christian: 1, buddhist: 1,
+  north: 1, south: 1, east: 1, west: 1, central: 1,
+  northern: 1, southern: 1, eastern: 1, western: 1
 };
 
 // Relations that make a neighbour's statement usable as context rather than
@@ -99,7 +124,11 @@ function canonicalId(name) {
   s = s.replace(/[^\p{L}\p{N}]+/gu, ' ').trim();
   if (!s) return '';
   var parts = s.split(' ').filter(function (w) { return w && !STOPWORDS[w]; });
-  while (parts.length && (HONORIFICS[parts[0]] || SUFFIXES[parts[parts.length - 1]])) {
+  // Honorifics are leading words and must be removed from the front. Suffixes
+  // are trailing words and must be removed from the back. The old combined
+  // loop shifted the FIRST word whenever the LAST word was "Jr" or "II", so
+  // "Martin Luther King Jr." and "World War II" both canonicalised to "".
+  while (parts.length && HONORIFICS[parts[0]]) {
     if (HONORIFICS[parts[0]] === 0) break;
     parts.shift();
   }
@@ -205,6 +234,11 @@ function entityAt(tokens, start, idSet, maxWords) {
   var limit = Math.min(maxWords || 10, tokens.length - start);
   for (var take = limit; take >= 1; take--) {
     var phrase = tokens.slice(start, start + take).join(' ');
+    // A bare generic word ("third", "state", "war") is not enough to name an
+    // entity. Without this, "Third (Nov-Dec 1932)" in the graph turned the
+    // ordinary phrase "third Prime Minister of India" into a statement about
+    // that session and emptied the card of the person it actually describes.
+    if (take === 1 && AMBIGUOUS_TOKENS[phrase]) continue;
     var hit = idSet[phrase];
     if (hit) return { id: hit, len: take, raw: phrase };
   }
@@ -287,6 +321,45 @@ function findCopularSubject(sentence, idSet, maxScan) {
   return null;
 }
 
+// Common finite verbs and copulas. This is deliberately a small, high-precision
+// list, used only to tell a noun label ("Kerala social reformer") from a
+// sentence about the name it opens with ("Skandagupta was a Gupta emperor").
+// Participles such as "raised" or "exploring" are intentionally absent: labels
+// like "Indian National Army raised by Subhas Chandra Bose" and "NASA probes
+// exploring the outer solar system" are still labels.
+var FINITE_VERBS = {
+  is: 1, was: 1, were: 1, are: 1, am: 1, be: 1, been: 1, being: 1,
+  became: 1, becomes: 1, served: 1, serves: 1, ruled: 1, rules: 1,
+  reigned: 1, reigns: 1, founded: 1, founds: 1, led: 1, leads: 1,
+  won: 1, wins: 1, defeated: 1, defeats: 1, conquered: 1, conquers: 1,
+  established: 1, establishes: 1, created: 1, creates: 1, wrote: 1,
+  writes: 1, built: 1, builds: 1, made: 1, makes: 1, died: 1, dies: 1,
+  signed: 1, signs: 1, launched: 1, launches: 1, introduced: 1,
+  introduces: 1, started: 1, starts: 1, began: 1, begins: 1, ended: 1,
+  ends: 1, joined: 1, joins: 1, fought: 1, fights: 1, commanded: 1,
+  commands: 1, governed: 1, governs: 1, held: 1, holds: 1, elected: 1,
+  elects: 1, appointed: 1, appoints: 1, succeeded: 1, succeeds: 1,
+  overthrew: 1, overthrows: 1, killed: 1, kills: 1, assassinated: 1,
+  assassinates: 1, married: 1, marries: 1, partitioned: 1, partitions: 1,
+  annexed: 1, annexes: 1, invaded: 1, invades: 1, withdrew: 1,
+  withdraws: 1, resigned: 1, resigns: 1, formed: 1, forms: 1,
+  organized: 1, organises: 1, organizes: 1, published: 1, publishes: 1,
+  discovered: 1, discovers: 1, invented: 1, invents: 1, developed: 1,
+  develops: 1, proposed: 1, proposes: 1, argued: 1, argues: 1,
+  composed: 1, composes: 1, directed: 1, directs: 1, produced: 1,
+  produces: 1, starred: 1, stars: 1, presided: 1, presides: 1,
+  helped: 1, helps: 1, recognised: 1, recognized: 1, pointed: 1,
+  points: 1, includes: 1, include: 1, covers: 1, cover: 1, contains: 1,
+  contain: 1
+};
+function hasFiniteVerb(sentence) {
+  var tokens = words(sentence);
+  for (var i = 0; i < tokens.length; i++) {
+    if (FINITE_VERBS[tokens[i]]) return true;
+  }
+  return false;
+}
+
 function detectSubject(sentence, ctx) {
   var s = flatten(sentence);
   var empty = { subjectId: null, confidence: 0, method: 'empty', uncertain: true, selectedIsExplicitAgent: false };
@@ -300,6 +373,22 @@ function detectSubject(sentence, ctx) {
   var head = startsWithEntity(s, idSet, aliasIndex);
   if (head) {
     var isSelected = !!selectedId && head.id === selectedId;
+    // A provenance-owned noun label can open on a place, title or concept
+    // that is also a graph node: "Kerala social reformer" is a label for
+    // Narayana Guru, not a sentence about Kerala. When there is no finite
+    // verb, the label belongs to its owner. With a verb ("Skandagupta was a
+    // Gupta emperor") the explicit subject still wins and the fact is
+    // rejected for the wrong owner.
+    if (!isSelected && ctx.provenanceAuthoritative && claimantId && !hasFiniteVerb(s)) {
+      return {
+        subjectId: claimantId,
+        subjectName: ctx.claimantName || null,
+        confidence: 0.7,
+        method: 'provenance-label',
+        uncertain: false,
+        selectedIsExplicitAgent: agent
+      };
+    }
     return {
       subjectId: head.id,
       subjectName: head.name,

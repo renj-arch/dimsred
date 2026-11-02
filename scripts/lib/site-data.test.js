@@ -118,11 +118,38 @@ async function checkShardLoader(file, fetcherName, loaderName) {
     const d = rev[k];
     return d && typeof d === 'object' &&
       Array.isArray(d.primaryFacts) && Array.isArray(d.neighbors) &&
-      Array.isArray(d.directRelationships) && Array.isArray(d.comparisons);
+      Array.isArray(d.directRelationships) && Array.isArray(d.comparisons) &&
+      Array.isArray(d.connectedNotes);
   });
   assert(shaped.length === topics.length, 'every topic has the arrays revision.html renders',
     (topics.length - shaped.length) + ' malformed');
   assert(rev[topics[0]] && rev[topics[0]].generatedAt, 'topics carry a generatedAt stamp');
+
+  // A connected note is only honest while it stays attributed. It must name the
+  // entity it describes and quote one of that entity's own verified facts; it
+  // must never become a fact about the topic it is displayed under.
+  const norm = s => String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  const byNorm = new Map(topics.map(k => [norm(k), k]));
+  const noteProblems = [];
+  let noteCount = 0;
+  topics.forEach(k => {
+    const own = new Set((rev[k].primaryFacts || []).map(f => norm(f.fact)));
+    (rev[k].connectedNotes || []).forEach(n => {
+      noteCount++;
+      const targetKey = byNorm.get(norm(n.entity));
+      const target = targetKey ? rev[targetKey] : null;
+      if (!n.entity || !n.rel || !n.fact) noteProblems.push(k + ': missing entity/rel/fact');
+      else if (!target) noteProblems.push(k + ': unknown entity ' + n.entity);
+      else if (!(target.primaryFacts || []).some(f => norm(f.fact) === norm(n.fact))) {
+        noteProblems.push(k + ': ' + n.entity + ' does not own "' + n.fact.slice(0, 60) + '"');
+      } else if (own.has(norm(n.fact))) {
+        noteProblems.push(k + ': connected note duplicates an own fact');
+      }
+    });
+  });
+  assert(noteProblems.length === 0, 'connected notes stay attributed to their own entity',
+    noteProblems.slice(0, 5).join(' | '));
+  console.log('      connected notes: ' + noteCount);
 
   console.log('\n--- knowledge-graph.html data store ---');
   const kg = readJson('data/knowledge-graph.json');

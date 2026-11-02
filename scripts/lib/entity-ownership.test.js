@@ -23,7 +23,12 @@ const NAMES = [
   'Indian independence movement', 'Mahatma Gandhi', 'Gopal Krishna Gokhale',
   'Goods and Services Tax (India)', 'GST', 'ISRO', 'Chandrayaan-1',
   'Ashoka', 'Barren Island', 'Second Battle of Panipat',
-  'Akbar', 'Hemu', 'Sten Konow'
+  'Akbar', 'Hemu', 'Sten Konow',
+  // A real graph label that canonicalises to the bare token "third".
+  'Third (Nov\u2013Dec 1932)', 'Lal Bahadur Shastri',
+  // Place/title adjectives that open an owned noun label.
+  'Narayana Guru', 'Kerala', 'Iltutmish', 'Delhi Sultanate',
+  'Voyager program', 'NASA', 'Martin Luther King Jr.', 'Chandragupta II'
 ];
 const aliasIndex = EO.buildAliasIndex(NAMES);
 const idSet = EO.buildIdSet(NAMES, aliasIndex);
@@ -75,7 +80,12 @@ const OWNERSHIP_CASES = [
   // a year must never be readable as a name
   ['Jallianwala Bagh massacre', '1919 British massacre of civilians at Amritsar', null, true],
   // a possessive is a modifier, not the subject
-  ['Chandrayaan-1', 'ISRO\u2019s first lunar orbiter (2008)', null, true]
+  ['Chandrayaan-1', 'ISRO\u2019s first lunar orbiter (2008)', null, true],
+  // "third" is a session label elsewhere in the graph, not the head noun of
+  // an ordinary role description. The role belongs to the claimant.
+  ['Third (Nov\u2013Dec 1932)', 'third Prime Minister of India', 'Lal Bahadur Shastri', true],
+  // a finite verb still makes it a sentence about the named subject
+  ['World War I', 'Skandagupta was a Gupta emperor who defeated the Huns', 'Skandagupta', true]
 ];
 
 // ---------------------------------------------------------------------------
@@ -89,6 +99,12 @@ const KEEP_CASES = [
   ['Muhammad Ali Jinnah', 'Muhammad Ali Jinnah became the first Governor-General of Pakistan', null, false],
   ['Anno Lucis', 'Anno Lucis is a system for dating events', null, false],
   ['Mahatma Gandhi', 'Indian independence leader', 'Mahatma Gandhi', true],
+  // The unambiguous reading: "third" is an ordinal adjective, not a name.
+  ['Lal Bahadur Shastri', 'third Prime Minister of India', 'Lal Bahadur Shastri', true],
+  // A provenance-owned noun label starts with a place/title but has no verb.
+  ['Narayana Guru', 'Kerala social reformer', 'Narayana Guru', true],
+  ['Iltutmish', 'Delhi Sultanate ruler', 'Iltutmish', true],
+  ['Voyager program', 'NASA probes exploring the outer solar system', 'Voyager program', true],
   ['Ashoka', 'Mauryan emperor', 'Ashoka', true],
   ['Barren Island', 'Barren Island is a small island', 'Barren Island', true],
   ['Second Battle of Panipat', '1556 battle where Akbar\u2019s army defeated Hemu', 'Second Battle of Panipat', true]
@@ -115,7 +131,13 @@ const ALIAS_CASES = [
   ['Indian independence movement', 'indian independence movement', null],
   // the (India) qualifier is dropped in normalisation, so GST unifies
   ['Goods and Services Tax (India)', 'goods and services tax', null],
-  ['GST', 'goods and services tax', null]
+  ['GST', 'goods and services tax', null],
+  // A trailing suffix is removed from the back, never by shifting the front.
+  ['Martin Luther King Jr.', 'martin luther king', null],
+  // Roman numerals are part of the name, and distinguish different entities.
+  ['World War II', 'world war ii', null],
+  ['Chandragupta II', 'chandragupta ii', null],
+  ['George VI', 'george vi', null]
 ];
 
 let pass = 0, fail = 0;

@@ -131,6 +131,10 @@ function nameOccurrences(text, entityId) {
 function nodeDescScore(desc, ownerId) {
   var t = String(desc).replace(/\s+/g, ' ').trim();
   if (t.length < 13) return -100;
+  // usable() rejects anything longer than 200, so a long candidate must never
+  // win the selection and then be thrown away. This was leaving Constantine
+  // with a 300-character sentence about his father and no usable fact.
+  if (t.length > 200) return -100;
   if ((t.match(/\(/g) || []).length !== (t.match(/\)/g) || []).length) return -80;
   // A first-person singular memoir title ("My Journey Back from ...") or a route/list
   // fragment ("Louis, with Joliet, ... in between") is a work or a place
@@ -138,6 +142,10 @@ function nodeDescScore(desc, ownerId) {
   if (/^my\b/i.test(t)) return -70;
   if (/^[A-Z][\w.'-]*,\s+with\b/.test(t) || /\bin between\b/i.test(t)) return -70;
   if (t.charAt(0) === '"' || /\\"/.test(t)) return -60;
+  // A description that opens on a pronoun is a continuation of some other
+  // article ("He has served as a member of the Minnesota House..."). It can
+  // never be a self-contained fact about the node it is filed under.
+  if (/^(?:he|she|it|they|this|that|these|those|his|her|its|their|there)\b/i.test(t)) return -70;
   // A truncated fragment such as "rritory by defeating the Seleucid Empire"
   // begins mid-word. A lowercase opening is otherwise perfectly normal
   // ("mystic poet and saint", "single nationwide indirect tax"), so the signal
@@ -158,9 +166,13 @@ function nodeDescScore(desc, ownerId) {
   if (/^[A-Z][\w.'-]*(?:\s+[A-Z][\w.'-]*){0,3}\s*,\s+(?:the|a|an)\b/.test(t)) return -60;
   if (/:\s*\\?"/.test(t)) return -60;
 
-  // Opens on a different entity than the node it is filed under.
+  // Opens on a different entity than the node it is filed under. For a
+  // SHORT label this signal is unreliable: "American civil rights leader"
+  // and "Gupta emperor (Vikramaditya)" open on an adjective that is also a
+  // graph node. The mis-routing signal is only meaningful once the text is
+  // long enough to be a sentence about that other entity.
   var lead = EO.startsWithEntity(t, idSet, aliasIndex);
-  if (lead && lead.id !== ownerId) return -80;
+  if (lead && lead.id !== ownerId && t.length >= 60) return -80;
 
   var score = 10;
   // A circular gloss repeats the entity's own name and says nothing:
@@ -201,9 +213,10 @@ function splitSentences(text) {
 // Debug hook: REV_DEBUG="kabir" prints the chosen node description and every
 // rejection reason for that one topic. Ownership bugs are almost never
 // visible from the aggregate counts.
-var DEBUG_TOPIC = (process.env.REV_DEBUG || '').toLowerCase();
+var DEBUG_TOPICS = String(process.env.REV_DEBUG || '').toLowerCase()
+  .split(',').map(function (s) { return s.trim(); }).filter(Boolean);
 function debugTopic(topicName, msg) {
-  if (DEBUG_TOPIC && String(topicName).toLowerCase() === DEBUG_TOPIC) {
+  if (DEBUG_TOPICS.length && DEBUG_TOPICS.indexOf(String(topicName).toLowerCase()) !== -1) {
     console.log('  [debug ' + topicName + '] ' + msg);
   }
 }
@@ -214,7 +227,7 @@ function normalizeKey(s) {
 
 var TEMPLATE_JUNK = /^(?:the .+ linked to|geography|see also|key concepts|key events|major events)\b/i;
 
-var BAN_PHRASES = /(?:became a union territory|is the capital and largest city|and largest city of|metropolitan area is the largest|most populous city proper|population of [\d,]+|coastline|coast along|along the bay|along the arabian sea|gulf of |marina beach|geography\b|stands on the river|at the head of a|world cities located in|megacity|metropolitan region which is|metropolitan area|officially the|was a (?:ugandan|indian|british|american|pakistani|sri lankan|bangladeshi|nepalese|afghan|chinese|russian|french|german|japanese|italian|spanish|iraqi|iranian|israeli|egyptian|south african|australian|canadian)\b|(?:military officer|dictator who served|general and presiden|liberation army of)\b)/i;
+var BAN_PHRASES = /(?:became a union territory|is the capital and largest city|and largest city of|metropolitan area is the largest|most populous city proper|population of [\d,]+|coastline|coast along|along the bay|along the arabian sea|gulf of |marina beach|geography\b|stands on the river|at the head of a|world cities located in|megacity|metropolitan region which is|metropolitan area|officially the|(?:military officer|dictator who served|general and presiden|liberation army of)\b)/i;
 
 // Neighbour biographies are proper-noun dense, so they need two caps to look
 // substantial. A node's own description is already scoped to the entity, so a
@@ -242,7 +255,7 @@ function hasSubstance(clean, mode) {
     // cannot be the bar. What does separate them from junk is that a real
     // description has a head noun: the timeline corpus also contains bare
     // adverbial fragments ("At the age of 80", "In August 1907").
-    if (clean.length < 15) return false;
+    if (clean.length < 12) return false;
     if (/^(?:at|in|on|by|for|from|during|after|before|since|with|as|between|under|over|through|about|around|upon|within|into|towards?|upon|whilst|while)\b/i.test(clean)) return false;
     return true;
   }
@@ -262,7 +275,12 @@ function tidy(s) {
 }
 
 function usable(s, mode) {
-  if (!s || s.length < 15 || s.length > 200) return false;
+  // Short role labels are the best facts on many person cards: "Gupta
+  // emperor" (13), "Ottoman sultan" (14), "first President of India" (24).
+  // The 15-character floor was written for prose and silently emptied those
+  // cards. Context statements still need the longer floor.
+  var minLen = mode === 'owned' ? 12 : 15;
+  if (!s || s.length < minLen || s.length > 200) return false;
   if (s.charAt(0) === '"' || s.indexOf(' \u2014 ') !== -1 || s.indexOf('==') !== -1) return false;
   if (s.indexOf('http') !== -1) return false;
   if (/\[(?:citation needed|source needed)\]/.test(s)) return false;
@@ -393,34 +411,6 @@ function gatherPrimary(topicName, selectedId, entityType) {
     bag.push(fact);
   }
 
-// Policy for a description that lives on the entity's OWN node: provenance is
-// authoritative, because the field belongs to that node. What still has to be
-// proven is that the text describes the entity rather than a neighbour that
-// happened to be filed under it.
-//
-// "Barren Island is a small island" mentions the entity, so it is owned.
-// "king of Magadha" is a short label, so it is owned.
-// "A theory is, in general, a set of propositions..." is a dictionary entry for
-// a common noun, so it is not about Toba and is dropped.
-// gen-topic-layers.js synthesises placeholder blurbs as branch descriptions
-// ("Direct kin and closest relations recorded for X.", "The people & leaders
-// linked to X."). They are UI scaffolding, not statements about the entity,
-// but they reach the desc pool and were being admitted as CORE_FACTs, so a
-// revision card could open on a sentence that says nothing.
-var PLACEHOLDER = [
-  /\brecorded for\b/i,
-  /\blinked to\b/i,
-  /\bconnected to\b/i,
-  /\bneighbours? in this branch\b/i,
-  /^the .* linked to /i
-];
-function isPlaceholderDesc(desc) {
-  var t = String(desc || '').trim();
-  if (!t) return true;
-  for (var i = 0; i < PLACEHOLDER.length; i++) if (PLACEHOLDER[i].test(t)) return true;
-  return false;
-}
-
 function nodeDescIsOwned(desc, selectedId) {
   var text = String(desc).trim();
   if (!text) return false;
@@ -471,10 +461,56 @@ if (nodeDesc && nodeDescIsOwned(nodeDesc, selectedId)) {
 var layer = topicLayers[topicName];
 (layer.branches || []).forEach(function (branch) {
   var d = (branch.desc || '').trim();
-  if (d && !TEMPLATE_JUNK.test(d) && d.length < 200) run(d, 'layer-branch', selectedId, true, null);
+  if (d && !TEMPLATE_JUNK.test(d) && !isPlaceholderDesc(d) && d.length < 200) {
+    run(d, 'layer-branch', selectedId, true, null);
+  }
 });
 
   return { primary: out, context: ctxOut };
+}
+
+// Policy for a description that lives on the entity's OWN node: provenance is
+// authoritative, because the field belongs to that node. What still has to be
+// proven is that the text describes the entity rather than a neighbour that
+// happened to be filed under it.
+//
+// "Barren Island is a small island" mentions the entity, so it is owned.
+// "king of Magadha" is a short label, so it is owned.
+// "A theory is, in general, a set of propositions..." is a dictionary entry for
+// a common noun, so it is not about Toba and is dropped.
+// gen-topic-layers.js synthesises placeholder blurbs as branch descriptions
+// ("Direct kin and closest relations recorded for X.", "The people & leaders
+// linked to X."). They are UI scaffolding, not statements about the entity,
+// but they reach the desc pool and were being admitted as CORE_FACTs, so a
+// revision card could open on a sentence that says nothing.
+var PLACEHOLDER = [
+  /\brecorded for\b/i,
+  /\blinked to\b/i,
+  /\bconnected to\b/i,
+  /\bneighbours? in this branch\b/i,
+  /^the .* linked to /i
+];
+function isPlaceholderDesc(desc) {
+  var t = String(desc || '').trim();
+  if (!t) return true;
+  for (var i = 0; i < PLACEHOLDER.length; i++) if (PLACEHOLDER[i].test(t)) return true;
+  return false;
+}
+
+// Authored layer items are deliberately terse ("House arrest -> Kabul ->
+// Moscow -> Berlin"), so the prose rules cannot be applied to them. What can
+// still be rejected is a one-word fragment ("Odisha."), a UI placeholder
+// ("Direct kin and closest relations recorded for X") and a cut-off bracket.
+function curatedFactUsable(text) {
+  var t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (t.length < 12 || t.length > 220) return false;
+  if (t.split(/\s+/).filter(Boolean).length < 2) return false;
+  if (isPlaceholderDesc(t)) return false;
+  if ((t.match(/\(/g) || []).length !== (t.match(/\)/g) || []).length) return false;
+  if (t.charAt(0) === '"') return false;
+  if (/^my\b/i.test(t)) return false;
+  if (/^[A-Z][\w.'-]*,\s+with\b/.test(t) || /\bin between\b/i.test(t)) return false;
+  return true;
 }
 
 // Layer 1 supplies the relationship labels and nothing else. A neighbour's
@@ -518,6 +554,23 @@ function rankFacts(facts) {
   });
 }
 
+// A connected note is a verified fact taken from a NEIGHBOUR's own card. It is
+// allowed to sit beside this topic only because the UI names the entity it is
+// about. It is never merged into primaryFacts, never counted as a fact about
+// this topic, and never used by the Recall Deck.
+function connectedNoteUsable(text) {
+  var t = String(text || '').replace(/\s+/g, ' ').trim();
+  if (t.length < 18 || t.length > 220) return false;
+  if (t.split(/\s+/).filter(Boolean).length < 3) return false;
+  if ((t.match(/\(/g) || []).length !== (t.match(/\)/g) || []).length) return false;
+  if (isPlaceholderDesc(t)) return false;
+  if (/^my\b/i.test(t)) return false;
+  if (/^(?:this|that|these|those|he|she|it|they|his|her|its|their|there)\b/i.test(t)) return false;
+  if (/^[A-Z][\w.'-]*,\s+with\b/.test(t) || /\bin between\b/i.test(t)) return false;
+  if (/[:;]$/.test(t)) return false;
+  return true;
+}
+
 function cap(arr, n) { return arr.slice(0, n); }
 
 // ---------------------------------------------------------------------------
@@ -525,7 +578,10 @@ function cap(arr, n) { return arr.slice(0, n); }
 // ---------------------------------------------------------------------------
 
 var revisionContent = {};
-var stats = { topics: 0, withPrimary: 0, primaryTotal: 0, contextTotal: 0, neighbourTotal: 0, zeroPrimary: [] };
+var stats = {
+  topics: 0, withPrimary: 0, primaryTotal: 0, contextTotal: 0,
+  neighbourTotal: 0, connectedTotal: 0, withConnected: 0, zeroPrimary: []
+};
 
 Object.keys(topicLayers).forEach(function (topicName) {
   var selectedId = EO.resolveId(topicName, aliasIndex);
@@ -547,7 +603,7 @@ Object.keys(topicLayers).forEach(function (topicName) {
     // Use authored branch items as primary facts
     (layer.branches || []).forEach(function (branch) {
       (branch.items || []).forEach(function (item) {
-        if (item.desc && item.desc.trim()) {
+        if (curatedFactUsable(item.desc)) {
           curatedFacts.push({
             fact: item.desc.trim(),
             role: 'primary',
@@ -569,7 +625,7 @@ Object.keys(topicLayers).forEach(function (topicName) {
             }
           });
         }
-        if (item.ev && item.ev.trim()) {
+        if (curatedFactUsable(item.ev)) {
           curatedFacts.push({
             fact: item.ev.trim(),
             role: 'primary',
@@ -704,6 +760,81 @@ if (fs.existsSync(OVERRIDES)) {
   });
 }
 
+// ---------------------------------------------------------------------------
+// connected notes
+// ---------------------------------------------------------------------------
+// A thin card is not improved by inventing a fact about its topic. It is
+// improved by showing the verified facts the graph already holds about the
+// entities around it, each one named and attributed. This runs after the
+// overrides pass so a corrected neighbour contributes its corrected fact.
+(function attachConnectedNotes() {
+  var byName = Object.create(null);
+  var byId = Object.create(null);
+  Object.keys(revisionContent).forEach(function (name) {
+    byName[normalizeKey(name)] = name;
+    var id = revisionContent[name].selectedEntityId;
+    if (id && !byId[id]) byId[id] = name;
+  });
+
+  Object.keys(revisionContent).forEach(function (topicName) {
+    var entry = revisionContent[topicName];
+    var topicKey = normalizeKey(topicName);
+    var ownFacts = Object.create(null);
+    (entry.primaryFacts || []).forEach(function (f) {
+      ownFacts[normalizeKey(f.fact)] = 1;
+    });
+
+    var notes = [];
+    var seenEntity = Object.create(null);
+    var seenFact = Object.create(null);
+
+    (entry.neighbors || []).forEach(function (n) {
+      if (notes.length >= 6) return;
+      var entityKey = normalizeKey(n.entity);
+      if (!entityKey || entityKey === topicKey) return;
+      if (seenEntity[entityKey]) return;
+      // Co-occurrence weights of 1-3 are mostly graph noise: a cricketer or a
+      // foreign leader who happened to share a sentence. A note is still true
+      // with a low weight, but it is not worth the space on a revision card.
+      // Missing weights are kept: curated layers do not always carry one.
+      if (typeof n.weight === 'number' && n.weight < 4) return;
+
+      var targetName = byName[entityKey];
+      if (!targetName && n.entityId) targetName = byId[n.entityId];
+      if (!targetName || targetName === topicName) return;
+
+      var target = revisionContent[targetName];
+      var chosen = null;
+      (target.primaryFacts || []).some(function (f) {
+        var text = String(f.fact || '').replace(/\s+/g, ' ').trim();
+        var key = normalizeKey(text);
+        if (!key || ownFacts[key] || seenFact[key] || !connectedNoteUsable(text)) return false;
+        chosen = text;
+        seenFact[key] = 1;
+        return true;
+      });
+      if (!chosen) return;
+
+      seenEntity[entityKey] = 1;
+      notes.push({
+        // Use the canonical revision key as the entity name so the UI, the
+        // tests and the CI validator can all resolve the note back to the
+        // neighbour's own card. The raw graph display name can carry a
+        // parenthetical ("Indian National Congress (1885)") that is not a key.
+        entity: targetName,
+        entityId: target.selectedEntityId || n.entityId || null,
+        rel: n.rel || 'connected with',
+        fact: chosen
+      });
+    });
+
+    entry.connectedNotes = notes;
+    entry.ownership.connectedNoteCount = notes.length;
+    stats.connectedTotal += notes.length;
+    if (notes.length) stats.withConnected++;
+  });
+})();
+
 fs.writeFileSync(OUTPUT, JSON.stringify(revisionContent, null, 2));
 
 console.log('Generated revision content for ' + Object.keys(revisionContent).length + ' topics');
@@ -712,6 +843,8 @@ console.log('  topics with 0 primary facts  : ' + stats.zeroPrimary.length);
 console.log('  primary facts total          : ' + stats.primaryTotal);
 console.log('  context statements           : ' + stats.contextTotal);
 console.log('  neighbour relationships      : ' + stats.neighbourTotal);
+console.log('  topics with connected notes  : ' + stats.withConnected + '/' + stats.topics);
+console.log('  connected notes total        : ' + stats.connectedTotal);
 console.log('Saved to: ' + OUTPUT);
 if (stats.zeroPrimary.length) {
   console.log('  no-primary sample: ' + stats.zeroPrimary.slice(0, 12).join(' | '));
