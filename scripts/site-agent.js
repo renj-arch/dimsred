@@ -2457,6 +2457,12 @@ async function agentPapers() {
   if (!fs.existsSync('data/questions')) return { agent: 'papers', fixes: fixes };
   const papers = loadJson('data/papers.json', { papers: [] });
   if (!Array.isArray(papers.papers)) papers.papers = [];
+  // Fail-closed: never let an unlabelled answer survive a save. Anything not
+  // ingested from a parsed official key (source official-pyq) is agent-solved.
+  try {
+    const { normalizePapers } = require('./check-papers-provenance');
+    normalizePapers(papers);
+  } catch (e) { console.log('agent: Papers - provenance normaliser unavailable: ' + e.message); }
   const haveIds = new Set();
   for (const p of papers.papers) for (const q of (p.questions || [])) if (q && q.id) haveIds.add(q.id);
 
