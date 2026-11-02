@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T04:16:35.658Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in figures (79) and papers (0 present), while BankFigures is the only agent producing fixes recently. I will prioritize BankFigures to clear the massive figure debt immediately. Once figures are stable, Invention must be triggered to generate the missing papers, questions, and syllabus files since no content exists yet. MetaLearn and MainsFresh are starved (0 output in last 3 runs) and should run last to avoid wasting budget on empty pipelines until upstream agents fee",
-    "actions": [
-     "BankFigures",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (361 total)",
-       "text": "What are the purpose and types of smith tongs? | What is the ball-peen hammer used for? | What is drawing down in smithing?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T04:31:57.199Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -578,8 +543,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T10:33:17.684Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of resolving these high-priority structural deficits. Since 'papers', 'questions', 'syllabus', and 'sidecar' files are absent, Invention must be prioritized to generate foundational content before MockPapers or ExamPatterns can function effectively. MetaLearn will run last as it requires existing content to optimize learning paths, and MainsFresh is deferred due to zero output in recent ru",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (395 total)",
+       "text": "Name the drilling machines used in the workshop. | At what angle is a twist drill point ground and why? | What is a bevel protractor and what does it measure?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T10:06:50.772Z",
+ "lastRun": "2026-11-02T10:33:17.684Z",
  "model": "qwen3.5:9b"
 }
