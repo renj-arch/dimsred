@@ -1,74 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T19:26:52.451Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 4,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 3
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Prioritize BankFigures to address the critical 79 figure gaps and 23 critical faults, as these are foundational for exam prep. Follow with MockPapers to generate fresh practice material since papers are currently missing. Move MainsFresh next to ensure daily content freshness. Finally, assign MetaLearn to the last slot because it produced zero fixes in the last two runs, indicating it may be starved of inputs rather than broken.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (313 total)",
-       "text": "Name the principal flat-chisel work in fitting. | At what angle is a cold chisel ground for general work? | Name the three types of hand taps."
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvy7a86u-ccsr (gs1, 15 marks): The decade of the 1930s marked a decisive shift in India's freedom struggle, transforming it from a petitionary movement",
-       "model": "qwen3.5:9b (local)"
-      },
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvy7tfi4-ojy6 (gs2, 15 marks): The Election Commission of India (ECI) is the guardian of free and fair elections, yet its powers are often debated in l",
-       "model": "qwen3.5:9b (local)"
-      },
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mvy81cm9-uaus (gs4, 15 marks): As the District Magistrate during a severe cyclone, you receive conflicting reports: one suggests immediate evacuation o",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T19:56:56.413Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -648,8 +580,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T01:48:42.207Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-02T01:29:40.484Z",
+ "lastRun": "2026-11-02T01:48:42.207Z",
  "model": "qwen3.5:9b"
 }
