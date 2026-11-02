@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T20:23:25.702Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing diagrams immediately as unfinished standing goals. MainsFresh is highly productive today (3 fixes in last run) and should continue filling content gaps while MetaLearn/ExamPatterns are starved (0 output for 2+ runs), so they will be scheduled later if inputs arrive. The plan prioritizes BankFigures first, followed by MainsFresh to maintain momentum on critical faults.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (319 total)",
-       "text": "What is reaming and when is a hand reamer used? | What is the difference between a hand reamer and a machine reamer? | What is the use of a scraper?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T20:42:46.619Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -608,8 +563,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T02:20:24.538Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; address these first with BankFigures to fix broken visuals and MetaLearn to patch syllabus/content holes. Invention should be deferred until standing goals are cleared, as it consumes resources without fixing immediate user blockers. MainsFresh is starved (0 fixes in last run) and will move to the end of the queue once high-priority gaps are addressed.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (349 total)",
+       "text": "What is the purpose of the set on a saw blade? | What is the firmer chisel and the mortise chisel? | What is bench moulding?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T01:58:24.276Z",
+ "lastRun": "2026-11-02T02:20:24.538Z",
  "model": "qwen3.5:9b"
 }
