@@ -605,6 +605,7 @@ async function main() {
     ['archive.html', 'Archive'],
     ['map.html', 'Map'],
     ['revision.html', 'Revision'],
+    ['recall.html', 'Recall Deck'],
     ['cgl/index.html', 'CGL Hub'],
     ['upsc/index.html', 'UPSC Hub'],
     ['rbi/index.html', 'RBI Hub'],

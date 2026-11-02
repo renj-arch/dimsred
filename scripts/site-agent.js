@@ -1778,7 +1778,10 @@ async function agentProposals() {
     hasComparisons: pages.some(p => /comparison|vs-/i.test(p)),
     hasRevision: pages.some(p => /revision/i.test(p)),
     hasMains: pages.some(p => /mains/i.test(p)),
-    hasPYQ: pages.some(p => /pyq|previous-year/i.test(p))
+    hasPYQ: pages.some(p => /pyq|previous-year/i.test(p)),
+    // The site ships a spaced-repetition deck and read-aloud revision notes;
+    // declare them so the invention lane does not rebuild the same tool.
+    hasRecallDeck: pages.some(p => /recall/i.test(p))
   };
 
   // Ask the model: what NEW feature should this site have?

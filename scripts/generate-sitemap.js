@@ -20,6 +20,7 @@ var staticPages = [
   { loc: '/community.html', priority: '0.8' },
   { loc: '/leaderboard.html', priority: '0.5' },
   { loc: '/mistakes.html', priority: '0.5' },
+  { loc: '/recall.html', priority: '0.8' },
   { loc: '/premium.html', priority: '0.7' },
   { loc: '/badges.html', priority: '0.5' },
   { loc: '/knowledge-graph.html', priority: '0.8' },

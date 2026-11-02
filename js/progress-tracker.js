@@ -45,6 +45,7 @@
     { name: 'Mains', match: 'mains.html', href: 'mains.html' },
     { name: 'Papers', match: 'papers.html', href: 'papers.html' },
     { name: 'Revision', match: 'revision.html', href: 'revision.html' },
+    { name: 'Recall Deck', match: 'recall.html', href: 'recall.html' },
     { name: 'Mistake Review', match: 'mistakes.html', href: 'mistakes.html' },
     { name: 'Dashboard', match: 'dashboard.html', href: 'dashboard.html', study: false },
     { name: 'Progress', match: 'progress.html', href: 'progress.html', study: false }

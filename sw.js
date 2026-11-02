@@ -3,6 +3,7 @@ const STATIC_ASSETS = [
   '/css/style.css',
   '/js/theme.js',
   '/js/shared.js',
+  '/js/recall-deck.js',
   '/favicon.svg',
   '/logo.png'
 ];

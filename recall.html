@@ -1,0 +1,802 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Recall Deck — Spaced Repetition on Verified Notes | vlymbooq</title>
+<meta name="description" content="Free spaced-repetition deck for UPSC and competitive exams. Review verified revision notes with a due queue, read-aloud and keyboard shortcuts. Stored only in your browser.">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebApplication","name":"Recall Deck — vlymbooq","url":"https://vlymbooq.qzz.io/recall.html","applicationCategory":"EducationalApplication","operatingSystem":"Any","isAccessibleForFree":true,"description":"Spaced repetition over verified UPSC and competitive-exam revision notes, with a due queue and read-aloud. Data stays in the browser.","offers":{"@type":"Offer","price":"0","priceCurrency":"INR"}}</script>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#09090b;--card:#12121c;--card2:#171725;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--red:#f87171;--text:#fafafa;--muted:#a1a1aa}
+*{box-sizing:border-box;margin:0;padding:0}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
+a{color:var(--purple)}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.88);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1040px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800;color:var(--text);text-decoration:none}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--muted);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
+.container{max-width:900px;margin:0 auto;padding:28px 16px 70px}
+.hero{margin-bottom:22px;padding-bottom:20px;border-bottom:1px solid var(--border)}
+.hero-tag{display:inline-block;font-size:.7em;text-transform:uppercase;letter-spacing:.08em;font-weight:700;color:var(--emerald);background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);padding:4px 10px;border-radius:100px;margin-bottom:12px}
+h1{font-size:2em;font-weight:900;line-height:1.2;margin-bottom:8px;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero p{color:var(--muted);font-size:.95em;max-width:640px}
+.hero p b{color:var(--text)}
+.warn{margin-top:12px;padding:10px 14px;border-radius:10px;border:1px solid rgba(245,158,11,.35);background:rgba(245,158,11,.08);color:#fcd34d;font-size:.85em}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:22px}
+.stat{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px 16px;text-align:center}
+.stat span{display:block;font-size:1.7em;font-weight:900;line-height:1.2;color:var(--text)}
+.stat.due span{color:var(--amber)}
+.stat.good span{color:var(--emerald)}
+.stat label{font-size:.7em;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:700}
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:18px;border-bottom:1px solid var(--border);padding-bottom:10px}
+.tab{background:transparent;border:1px solid transparent;color:var(--muted);font:inherit;font-size:.9em;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;display:flex;align-items:center;gap:8px}
+.tab:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.tab[aria-selected="true"]{color:var(--purple);background:rgba(167,139,250,.12);border-color:rgba(167,139,250,.25)}
+.count{font-size:.75em;background:rgba(255,255,255,.08);border-radius:100px;padding:1px 8px;min-width:22px;text-align:center}
+.tab[aria-selected="true"] .count{background:rgba(167,139,250,.2)}
+.panel-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}
+.panel-head h2{font-size:1.15em}
+.panel-sub{color:var(--muted);font-size:.82em}
+.search{width:100%;padding:11px 14px;border-radius:11px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:.95em;outline:none}
+.search:focus{border-color:var(--purple)}
+.review-head{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:.82em;color:var(--muted)}
+.review-head .mini-actions{display:flex;gap:6px}
+.mini-btn{background:var(--card);border:1px solid var(--border);color:var(--muted);font:inherit;font-size:.85em;padding:5px 10px;border-radius:8px;cursor:pointer}
+.mini-btn:hover:not(:disabled){border-color:var(--purple);color:var(--text)}
+.mini-btn:disabled{opacity:.4;cursor:not-allowed}
+.review-card{background:linear-gradient(160deg,var(--card2),var(--card));border:1px solid var(--border);border-radius:18px;padding:22px;min-height:300px;display:flex;flex-direction:column;cursor:pointer;transition:border-color .2s,transform .2s}
+.review-card:hover{border-color:rgba(167,139,250,.45)}
+.review-card:focus-visible{outline:2px solid var(--purple);outline-offset:3px}
+.review-card.flipped{cursor:default;border-color:rgba(52,211,153,.35)}
+.card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:10px;margin-bottom:12px}
+.card-state{font-size:.7em;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--muted);border:1px solid var(--border);border-radius:100px;padding:3px 10px}
+.review-card.flipped .card-state{color:var(--emerald);border-color:rgba(52,211,153,.3)}
+.speak-btn{background:rgba(255,255,255,.04);border:1px solid var(--border);color:var(--muted);font:inherit;font-size:.8em;font-weight:700;padding:5px 11px;border-radius:100px;cursor:pointer;white-space:nowrap}
+.speak-btn:hover{border-color:var(--cyan);color:var(--cyan)}
+.speak-btn.active{border-color:var(--cyan);color:var(--cyan);background:rgba(34,211,238,.1)}
+.card-front{margin:auto;text-align:center;padding:14px 0}
+.card-kicker{font-size:.75em;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700;margin-bottom:10px}
+.card-front h2{font-size:2em;line-height:1.25;font-weight:900;text-transform:capitalize;max-width:640px;margin:0 auto}
+.card-meta{color:var(--muted);font-size:.85em;margin-top:12px}
+.flip-hint{color:var(--muted);font-size:.78em;margin-top:22px;opacity:.85}
+kbd{display:inline-block;border:1px solid var(--border);border-bottom-width:2px;border-radius:5px;padding:1px 6px;font-family:inherit;font-size:.9em;background:rgba(255,255,255,.05)}
+.reveal-btn{display:block;margin:18px auto 0;background:rgba(167,139,250,.14);border:1px solid rgba(167,139,250,.35);color:var(--purple);font:inherit;font-size:.9em;font-weight:800;padding:10px 22px;border-radius:11px;cursor:pointer}
+.reveal-btn:hover{background:rgba(167,139,250,.22)}
+.card-back{display:flex;flex-direction:column;gap:6px}
+.back-label{font-size:.7em;text-transform:uppercase;letter-spacing:.08em;color:var(--emerald);font-weight:800;margin-bottom:2px}
+.card-back ul{list-style:none;display:flex;flex-direction:column;gap:8px}
+.card-back li{background:rgba(255,255,255,.03);border:1px solid var(--border);border-radius:9px;padding:9px 12px;font-size:.93em}
+.card-summary{color:var(--muted);font-size:.85em;margin-top:6px;font-style:italic}
+.card-links{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.card-links span{background:rgba(255,255,255,.04);border:1px solid var(--border);border-radius:100px;padding:3px 9px;font-size:.72em;color:var(--muted)}
+.revision-link{margin-top:12px;font-size:.8em;font-weight:700;text-decoration:none;align-self:flex-start}
+.revision-link:hover{text-decoration:underline}
+.grades{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:12px}
+.grade{position:relative;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 8px;font:inherit;color:var(--text);cursor:pointer;text-align:center;transition:transform .15s,border-color .15s}
+.grade:hover{transform:translateY(-2px)}
+.grade b{display:block;font-size:.95em;font-weight:800}
+.grade span{display:block;font-size:.7em;color:var(--muted);margin-top:2px}
+.grade small{position:absolute;top:4px;right:7px;font-size:.62em;color:var(--muted);opacity:.7}
+.grade.again:hover{border-color:var(--red);color:var(--red)}
+.grade.hard:hover{border-color:var(--amber);color:var(--amber)}
+.grade.good:hover{border-color:var(--emerald);color:var(--emerald)}
+.grade.easy:hover{border-color:var(--cyan);color:var(--cyan)}
+.empty{text-align:center;padding:44px 16px;background:var(--card);border:1px dashed var(--border);border-radius:16px}
+.empty-icon{font-size:2em;margin-bottom:6px}
+.empty h2{font-size:1.2em;margin-bottom:6px}
+.empty p{color:var(--muted);font-size:.9em;max-width:460px;margin:0 auto 16px}
+.empty-actions{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.btn{background:var(--card2);border:1px solid var(--border);color:var(--text);font:inherit;font-size:.88em;font-weight:700;padding:9px 16px;border-radius:10px;cursor:pointer;text-decoration:none;display:inline-block}
+.btn:hover{border-color:var(--purple)}
+.btn.primary{background:rgba(167,139,250,.16);border-color:rgba(167,139,250,.4);color:var(--purple)}
+.btn.primary:hover{background:rgba(167,139,250,.25)}
+.deck-list,.add-list{display:flex;flex-direction:column;gap:8px}
+.deck-row,.add-row{display:flex;align-items:center;justify-content:space-between;gap:12px;background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px}
+.deck-row.due{border-left:3px solid var(--amber)}
+.deck-info{min-width:0}
+.deck-info h3,.add-info h3{font-size:.95em;font-weight:800;text-transform:capitalize;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.deck-info p,.add-info p{font-size:.75em;color:var(--muted)}
+.add-info p{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;margin-top:2px}
+.ghost-btn{background:transparent;border:1px solid var(--border);color:var(--muted);font:inherit;font-size:.78em;font-weight:700;padding:5px 11px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.ghost-btn:hover{border-color:var(--red);color:var(--red)}
+.add-btn{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.3);color:var(--emerald);font:inherit;font-size:.78em;font-weight:800;padding:6px 12px;border-radius:8px;cursor:pointer;white-space:nowrap}
+.add-btn:hover{background:rgba(52,211,153,.18)}
+.add-btn:disabled{background:transparent;border-color:var(--border);color:var(--muted);cursor:default}
+.coverage{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:12px 14px;margin-bottom:14px}
+.coverage-top{display:flex;justify-content:space-between;gap:10px;font-size:.78em;color:var(--muted);margin-bottom:7px;flex-wrap:wrap}
+.coverage-top b{color:var(--text)}
+.bar{height:7px;background:rgba(255,255,255,.06);border-radius:100px;overflow:hidden}
+.bar-fill{height:100%;width:0;background:linear-gradient(90deg,var(--purple),var(--emerald));transition:width .35s}
+.add-tools{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.add-tools .search{flex:1;min-width:220px}
+.more-wrap{text-align:center;margin-top:14px}
+.footnote{color:var(--muted);font-size:.75em;margin-top:18px;text-align:center}
+footer{border-top:1px solid var(--border);padding:22px 16px;text-align:center;color:var(--muted);font-size:.78em}
+footer a{color:var(--muted);margin:0 7px}
+footer a:hover{color:var(--text)}
+#toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(20px);background:#1c1c2b;border:1px solid var(--border);border-radius:10px;padding:10px 16px;font-size:.85em;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:200;max-width:90vw}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+@media(max-width:660px){
+  .stats{grid-template-columns:1fr 1fr}
+  .card-front h2{font-size:1.45em}
+  .grades{grid-template-columns:1fr 1fr}
+  .container{padding-top:20px}
+}
+@media(max-width:420px){
+  .nav{padding:12px 14px}
+  .deck-row,.add-row{align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="index.html"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span>vlymbooq</span></a>
+  <div class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="current-affairs.html">Quiz</a>
+    <a href="dashboard.html">Dashboard</a>
+    <a href="progress.html">Progress</a>
+    <a href="adaptive.html">Adaptive</a>
+    <a href="revision.html">Revision</a>
+    <a class="active" href="recall.html" aria-current="page">Recall Deck</a>
+    <a href="ask.html">Ask</a>
+  </div>
+</div></nav>
+
+<main class="container" id="main">
+  <header class="hero">
+    <div class="hero-tag">Spaced repetition · stored in this browser</div>
+    <h1>🧠 Recall Deck</h1>
+    <p>Turn the site's <b>verified revision notes</b> into a daily recall habit. Each card is one topic; the answer is read from the revision note at review time, so a corrected fact never lingers in an old card. <b><span id="heroEligible">492</span> of <span id="heroTotal">566</span> topics</b> have at least one verified fact. Nothing is generated here and nothing leaves your browser.</p>
+    <p class="warn" id="storageWarn" hidden>This browser is blocking local storage (private mode or a full quota). You can still review in this tab, but the deck will not be saved.</p>
+  </header>
+
+  <section class="stats" aria-label="Deck statistics">
+    <div class="stat due"><span id="statDue">—</span><label>Due now</label></div>
+    <div class="stat"><span id="statTotal">—</span><label>In your deck</label></div>
+    <div class="stat good"><span id="statStreak">—</span><label>Day streak</label></div>
+    <div class="stat"><span id="statRetention">—</span><label>Recall accuracy</label></div>
+  </section>
+
+  <div class="tabs" role="tablist" aria-label="Recall Deck sections">
+    <button class="tab" type="button" role="tab" data-tab="review" aria-selected="true" aria-controls="panel-review">Review <span class="count" id="tabDue">0</span></button>
+    <button class="tab" type="button" role="tab" data-tab="deck" aria-selected="false" aria-controls="panel-deck">My deck <span class="count" id="tabTotal">0</span></button>
+    <button class="tab" type="button" role="tab" data-tab="add" aria-selected="false" aria-controls="panel-add">Add topics</button>
+  </div>
+
+  <section id="panel-review" role="tabpanel" aria-label="Review due cards">
+    <div class="review-head">
+      <span id="reviewProgress">Loading…</span>
+      <div class="mini-actions">
+        <button class="mini-btn" type="button" id="undoBtn" disabled title="Undo the last rating">↶ Undo</button>
+        <button class="mini-btn" type="button" id="restartBtn" title="Rebuild the queue from cards that are due">↻ Rebuild queue</button>
+      </div>
+    </div>
+
+    <div id="reviewActive" hidden>
+      <div class="review-card" id="reviewCard" tabindex="0" aria-label="Review card. Press Space or the Show answer button to reveal.">
+        <div class="card-head">
+          <span class="card-state" id="cardState">New</span>
+          <button class="speak-btn" type="button" id="speakBtn">🔊 Listen</button>
+        </div>
+        <div class="card-front" id="cardFront">
+          <div class="card-kicker">Recall everything you know about</div>
+          <h2 id="cardTopic"></h2>
+          <p class="card-meta" id="cardMeta"></p>
+          <button class="reveal-btn" type="button" id="revealBtn">Show answer <span style="opacity:.6">(Space)</span></button>
+          <p class="flip-hint">or tap anywhere on the card</p>
+        </div>
+        <div class="card-back" id="cardBack" hidden>
+          <div class="back-label">Verified facts</div>
+          <ul id="cardFacts"></ul>
+          <p class="card-summary" id="cardSummary" hidden></p>
+          <div class="card-links" id="cardLinks" hidden></div>
+          <a class="revision-link" id="revisionLink" href="revision.html">Open the full revision note →</a>
+        </div>
+      </div>
+      <div class="grades" id="grades" hidden>
+        <button class="grade again" type="button" data-grade="again"><b>Again</b><span>—</span><small>1</small></button>
+        <button class="grade hard" type="button" data-grade="hard"><b>Hard</b><span>—</span><small>2</small></button>
+        <button class="grade good" type="button" data-grade="good"><b>Good</b><span>—</span><small>3</small></button>
+        <button class="grade easy" type="button" data-grade="easy"><b>Easy</b><span>—</span><small>4</small></button>
+      </div>
+    </div>
+
+    <div class="empty" id="reviewEmpty" hidden>
+      <div class="empty-icon" id="emptyIcon">✓</div>
+      <h2 id="emptyTitle">All caught up</h2>
+      <p id="emptyText"></p>
+      <div class="empty-actions">
+        <button class="btn primary" type="button" id="emptyAdd">Add topics</button>
+        <button class="btn" type="button" id="emptyAhead" hidden>Study ahead</button>
+        <button class="btn" type="button" id="emptyRefresh" hidden>Refresh queue</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="panel-deck" role="tabpanel" aria-label="My deck" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Your deck</h2>
+        <p class="panel-sub">Scheduling lives in this browser. Removing a card does not touch the revision note.</p>
+      </div>
+    </div>
+    <input class="search" type="search" id="deckSearch" placeholder="Filter your deck…" autocomplete="off">
+    <div class="deck-list" id="deckList" style="margin-top:12px"></div>
+  </section>
+
+  <section id="panel-add" role="tabpanel" aria-label="Add topics" hidden>
+    <div class="panel-head">
+      <div>
+        <h2>Add topics</h2>
+        <p class="panel-sub">Only topics with at least one verified fact can be added.</p>
+      </div>
+    </div>
+    <div class="coverage">
+      <div class="coverage-top"><span><b id="coverageCount">0</b> of <span id="coverageEligible">0</span> verified-note topics in your deck</span><span id="coveragePct">0%</span></div>
+      <div class="bar"><div class="bar-fill" id="coverageBar"></div></div>
+    </div>
+    <div class="add-tools">
+      <input class="search" type="search" id="addSearch" placeholder="Search topics or their facts…" autocomplete="off">
+      <button class="btn primary" type="button" id="addAllBtn">Add all shown</button>
+    </div>
+    <div class="add-list" id="addList"></div>
+    <div class="more-wrap"><button class="mini-btn" type="button" id="addMoreBtn" hidden>Load more topics</button></div>
+    <p class="footnote">Coverage is measured against the revision topics that currently have a verified fact. A topic with no verified fact stays out of the deck on purpose.</p>
+  </section>
+</main>
+
+<footer>
+  <div><a href="revision.html">Revision</a><a href="mistakes.html">Mistake Review</a><a href="adaptive.html">Adaptive Plan</a><a href="dashboard.html">Dashboard</a><a href="about.html">About</a></div>
+  <div style="margin-top:8px">Recall Deck · spacing computed in your browser · no account, no sync, no tracking</div>
+</footer>
+
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/recall-deck.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var data = null;
+  var topics = [];        // all revision topic names, sorted
+  var eligible = [];      // topics with >= 1 verified fact
+  var state = {
+    tab: 'review',
+    queue: [],
+    pos: 0,
+    flipped: false,
+    session: 0,
+    early: false,
+    addLimit: 60
+  };
+  var PAGE = 60;
+  var toastTimer = null;
+
+  function $(id) { return document.getElementById(id); }
+  function esc(value) {
+    return String(value == null ? '' : value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  }
+  function currentTopic() { return state.queue[state.pos] || null; }
+  function currentCard() {
+    var t = currentTopic();
+    return t ? RecallDeck.get(t) : null;
+  }
+
+  function toast(msg) {
+    var el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.remove('show'); }, 2400);
+  }
+
+  // ── load revision content ────────────────────────────────────────────────
+  fetch('data/revision-content.json')
+    .then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      return r.json();
+    })
+    .then(function (json) {
+      data = json && typeof json === 'object' ? json : {};
+      RecallDeck.setTopics(data);
+      topics = Object.keys(data).sort(function (a, b) { return a.localeCompare(b); });
+      eligible = topics.filter(function (t) {
+        return (data[t].primaryFacts || []).some(function (f) { return f && f.fact; });
+      });
+      $('heroEligible').textContent = eligible.length;
+      $('heroTotal').textContent = topics.length;
+      if (!RecallDeck.storageOk()) $('storageWarn').hidden = false;
+      var initial = (location.hash || '').replace('#', '');
+      if (['review', 'deck', 'add'].indexOf(initial) === -1) initial = 'review';
+      setTab(initial, false);
+      startReview(false);
+      renderAll();
+    })
+    .catch(function (err) {
+      console.error('Recall Deck: failed to load revision data', err);
+      $('reviewProgress').textContent = 'Could not load revision notes.';
+      $('reviewEmpty').hidden = false;
+      $('emptyTitle').textContent = 'Revision notes unavailable';
+      $('emptyText').textContent = 'The page could not load data/revision-content.json. Refresh to try again.';
+      $('emptyAdd').hidden = true;
+    });
+
+  // ── tabs ─────────────────────────────────────────────────────────────────
+  function setTab(name, push) {
+    if (['review', 'deck', 'add'].indexOf(name) === -1) name = 'review';
+    state.tab = name;
+    var tabs = document.querySelectorAll('.tab');
+    for (var i = 0; i < tabs.length; i++) {
+      var on = tabs[i].getAttribute('data-tab') === name;
+      tabs[i].setAttribute('aria-selected', on ? 'true' : 'false');
+      tabs[i].tabIndex = on ? 0 : -1;
+    }
+    $('panel-review').hidden = name !== 'review';
+    $('panel-deck').hidden = name !== 'deck';
+    $('panel-add').hidden = name !== 'add';
+    if (push && location.hash !== '#' + name) {
+      try { history.replaceState(null, '', '#' + name); } catch (e) { /* file:// */ }
+    }
+    if (name === 'deck') renderDeck();
+    if (name === 'add') renderAdd();
+    if (name === 'review') {
+      if (!state.queue.length || state.pos >= state.queue.length) startReview(false);
+      else renderReview();
+    }
+    renderStats();
+  }
+
+  document.querySelector('.tabs').addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-tab]') : null;
+    if (!btn) return;
+    setTab(btn.getAttribute('data-tab'), true);
+  });
+
+  window.addEventListener('hashchange', function () {
+    var name = (location.hash || '').replace('#', '');
+    if (name) setTab(name, false);
+  });
+
+  // ── stats ────────────────────────────────────────────────────────────────
+  function renderStats() {
+    var s = RecallDeck.stats();
+    $('statDue').textContent = s.due;
+    $('statTotal').textContent = s.total;
+    $('statStreak').textContent = s.streak;
+    $('statRetention').textContent = s.retention == null ? '—' : s.retention + '%';
+    $('statRetention').title = s.reviews
+      ? s.retention + '% of the last ' + s.reviews + ' ratings were not "Again"'
+      : 'No reviews yet';
+    $('tabDue').textContent = s.due;
+    $('tabTotal').textContent = s.total;
+  }
+
+  // ── review ───────────────────────────────────────────────────────────────
+  function startReview(includeEarly) {
+    var all = RecallDeck.all();
+    var now = Date.now();
+    var chosen = includeEarly ? all : all.filter(function (c) { return Number(c.due) <= now; });
+    state.queue = chosen.map(function (c) { return c.topic; });
+    state.pos = 0;
+    state.flipped = false;
+    state.session = 0;
+    state.early = !!includeEarly;
+    RecallDeck.stopSpeaking();
+    setSpeak(false);
+    renderReview();
+    renderStats();
+  }
+
+  function cardStateLabel(card) {
+    if (!card) return '—';
+    if (!card.reps) return 'New';
+    if (Number(card.interval) < 1) return 'Learning';
+    if (card.lastGrade === 'again') return 'Lapsed';
+    return 'Review';
+  }
+
+  function renderReview() {
+    var card = currentCard();
+    var active = $('reviewActive');
+    var empty = $('reviewEmpty');
+
+    if (!card) {
+      active.hidden = true;
+      empty.hidden = false;
+      $('emptyAdd').textContent = 'Add topics';
+      var s = RecallDeck.stats();
+      if (state.pos > 0 && state.pos >= state.queue.length && s.due > 0) {
+        // Something became due while the session was open (e.g. an Again
+        // card surfaced after 10 minutes) — offer a fresh queue.
+        $('emptyIcon').textContent = '✓';
+        $('emptyTitle').textContent = 'Queue complete';
+        $('emptyText').textContent = 'You reviewed ' + state.session + ' card' + (state.session === 1 ? '' : 's') + '. More cards are due now.';
+        $('emptyAdd').hidden = true;
+        $('emptyAhead').hidden = false;
+        $('emptyAhead').textContent = 'Load due cards';
+        $('emptyRefresh').hidden = true;
+      } else if (state.pos > 0 && state.pos >= state.queue.length) {
+        $('emptyIcon').textContent = '🎉';
+        $('emptyTitle').textContent = 'Queue complete';
+        $('emptyText').textContent = 'You reviewed ' + state.session + ' card' + (state.session === 1 ? '' : 's') + ' this session.' + (s.due ? ' ' + s.due + ' more are due.' : ' Nothing else is due.');
+        $('emptyAdd').hidden = true;
+        $('emptyAhead').hidden = false;
+        $('emptyAhead').textContent = 'Study ahead';
+        $('emptyRefresh').hidden = !s.due;
+      } else if (s.total === 0) {
+        $('emptyIcon').textContent = '🧠';
+        $('emptyTitle').textContent = 'Your deck is empty';
+        $('emptyText').textContent = 'Add a few revision topics and they become due immediately. Start with five; the queue grows only as fast as you add.';
+        $('emptyAdd').hidden = false;
+        $('emptyAhead').hidden = true;
+        $('emptyRefresh').hidden = true;
+      } else if (!s.due) {
+        var next = RecallDeck.nextDue();
+        $('emptyIcon').textContent = '✓';
+        $('emptyTitle').textContent = 'All caught up';
+        $('emptyText').textContent = 'Nothing is due right now.' + (next ? ' Next card ' + RecallDeck.formatDue(next, Date.now()) + '.' : '') + ' Streak: ' + s.streak + ' day' + (s.streak === 1 ? '' : 's') + '.';
+        $('emptyAdd').hidden = false;
+        $('emptyAdd').textContent = 'Add more topics';
+        $('emptyAhead').hidden = false;
+        $('emptyAhead').textContent = 'Study ahead';
+        $('emptyRefresh').hidden = true;
+      } else {
+        $('emptyIcon').textContent = '↻';
+        $('emptyTitle').textContent = 'Cards are due';
+        $('emptyText').textContent = s.due + ' card' + (s.due === 1 ? '' : 's') + ' ready. Rebuild the queue to start.';
+        $('emptyAdd').hidden = true;
+        $('emptyAhead').hidden = true;
+        $('emptyRefresh').hidden = false;
+      }
+      $('reviewProgress').textContent = s.total ? s.total + ' cards in deck · ' + s.due + ' due' : 'No cards yet';
+      $('undoBtn').disabled = !RecallDeck.canUndo() || state.pos === 0;
+      return;
+    }
+
+    active.hidden = false;
+    empty.hidden = true;
+    $('emptyAdd').hidden = false;
+    $('emptyAdd').textContent = 'Add topics';
+
+    var c = RecallDeck.content(card.topic);
+    $('cardTopic').textContent = card.topic;
+    $('cardState').textContent = cardStateLabel(card);
+    $('cardMeta').textContent = c.found
+      ? ((c.factTotal > c.facts.length
+          ? c.facts.length + ' of ' + c.factTotal + ' verified facts'
+          : c.facts.length + ' verified fact' + (c.facts.length === 1 ? '' : 's')) +
+         (c.links.length ? ' · ' + c.links.length + ' graph link' + (c.links.length === 1 ? '' : 's') : ''))
+      : 'This topic is no longer in the verified revision set';
+
+    var factsEl = $('cardFacts');
+    factsEl.innerHTML = '';
+    if (c.facts.length) {
+      c.facts.forEach(function (fact) {
+        var li = document.createElement('li');
+        li.textContent = fact;
+        factsEl.appendChild(li);
+      });
+    } else {
+      var none = document.createElement('li');
+      none.textContent = 'No verified fact for this entity yet. It is still scheduled, but there is nothing to test here.';
+      none.style.color = 'var(--muted)';
+      factsEl.appendChild(none);
+    }
+
+    $('cardSummary').hidden = !c.summary;
+    $('cardSummary').textContent = c.summary || '';
+    $('cardLinks').hidden = !c.links.length;
+    $('cardLinks').innerHTML = c.links.map(function (l) { return '<span>' + esc(l) + '</span>'; }).join('');
+    $('revisionLink').href = 'revision.html?topic=' + encodeURIComponent(card.topic);
+
+    $('reviewProgress').textContent = (state.early ? 'Study ahead · ' : '') +
+      (state.pos + 1) + ' of ' + state.queue.length + ' · ' + state.session + ' rated this session';
+
+    // Grade labels are computed from the live card, so they match exactly what
+    // rate() will schedule.
+    var gradeBtns = document.querySelectorAll('#grades [data-grade]');
+    for (var i = 0; i < gradeBtns.length; i++) {
+      var grade = gradeBtns[i].getAttribute('data-grade');
+      gradeBtns[i].querySelector('span').textContent = RecallDeck.preview(card.topic, grade);
+    }
+
+    setFlip(false);
+    $('undoBtn').disabled = !RecallDeck.canUndo() || state.pos === 0;
+  }
+
+  function setFlip(on) {
+    state.flipped = !!on;
+    var card = currentCard();
+    if (!card) return;
+    $('cardFront').hidden = state.flipped;
+    $('cardBack').hidden = !state.flipped;
+    $('grades').hidden = !state.flipped;
+    $('reviewCard').classList.toggle('flipped', state.flipped);
+    $('cardState').textContent = state.flipped ? 'Answer' : cardStateLabel(card);
+    if (!state.flipped) {
+      RecallDeck.stopSpeaking();
+      setSpeak(false);
+    }
+  }
+
+  function rateCard(grade) {
+    var topic = currentTopic();
+    if (!topic || !state.flipped) return;
+    var card = RecallDeck.rate(topic, grade);
+    if (!card) return;
+    state.session += 1;
+    state.pos += 1;
+    state.flipped = false;
+    renderStats();
+    renderReview();
+    if (state.pos < state.queue.length) {
+      var next = currentCard();
+      if (next) $('reviewCard').focus({ preventScroll: true });
+    }
+  }
+
+  function undoLast() {
+    var card = RecallDeck.undo();
+    if (!card) return;
+    if (state.pos > 0) state.pos -= 1;
+    if (state.session > 0) state.session -= 1;
+    state.flipped = false;
+    renderStats();
+    renderReview();
+    toast('Last rating undone');
+  }
+
+  $('reviewCard').addEventListener('click', function (e) {
+    if (e.target.closest('button, a')) return;
+    if (!state.flipped) setFlip(true);
+  });
+  $('revealBtn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    setFlip(true);
+  });
+  document.querySelector('.tabs').addEventListener('keydown', function (e) {
+    if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+    var names = ['review', 'deck', 'add'];
+    var idx = names.indexOf(state.tab);
+    idx = e.key === 'ArrowRight' ? (idx + 1) % names.length : (idx + names.length - 1) % names.length;
+    setTab(names[idx], true);
+    document.querySelector('.tab[data-tab="' + names[idx] + '"]').focus();
+  });
+  document.getElementById('grades').addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-grade]') : null;
+    if (btn) rateCard(btn.getAttribute('data-grade'));
+  });
+  $('undoBtn').addEventListener('click', undoLast);
+  $('restartBtn').addEventListener('click', function () { startReview(false); toast('Queue rebuilt'); });
+  $('emptyAdd').addEventListener('click', function () { setTab('add', true); });
+  $('emptyAhead').addEventListener('click', function () {
+    if (state.pos >= state.queue.length && RecallDeck.stats().due > 0) startReview(false);
+    else startReview(true);
+  });
+  $('emptyRefresh').addEventListener('click', function () { startReview(false); });
+
+  // ── speech ───────────────────────────────────────────────────────────────
+  function setSpeak(on) {
+    var btn = $('speakBtn');
+    btn.textContent = on ? '⏹ Stop' : '🔊 Listen';
+    btn.classList.toggle('active', !!on);
+  }
+  $('speakBtn').addEventListener('click', function (e) {
+    e.stopPropagation();
+    if (RecallDeck.isSpeaking()) {
+      RecallDeck.stopSpeaking();
+      setSpeak(false);
+      return;
+    }
+    var topic = currentTopic();
+    if (!topic) return;
+    if (!RecallDeck.canSpeak()) {
+      toast('Read-aloud is not supported in this browser.');
+      return;
+    }
+    var ok = RecallDeck.speak(RecallDeck.speechFor(topic), {
+      onend: function () { setSpeak(false); }
+    });
+    if (!ok) {
+      toast('Read-aloud could not start. Your browser may block voices.');
+      return;
+    }
+    setSpeak(true);
+  });
+
+  // ── my deck ──────────────────────────────────────────────────────────────
+  function renderDeck() {
+    var q = ($('deckSearch').value || '').trim().toLowerCase();
+    var cards = RecallDeck.all().filter(function (c) {
+      return !q || String(c.topic).toLowerCase().indexOf(q) !== -1;
+    });
+    var wrap = $('deckList');
+    if (!cards.length) {
+      wrap.innerHTML = '<div class="empty"><div class="empty-icon">🃏</div><h2>No cards match</h2><p>' +
+        (RecallDeck.stats().total ? 'Try a shorter filter, or clear the search.' : 'Your deck is empty. Add topics from the Add topics tab.') +
+        '</p><div class="empty-actions"><button class="btn primary" type="button" id="deckEmptyAdd">Add topics</button></div></div>';
+      var btn = $('deckEmptyAdd');
+      if (btn) btn.addEventListener('click', function () { setTab('add', true); });
+      return;
+    }
+    var now = Date.now();
+    wrap.innerHTML = cards.map(function (c) {
+      var due = Number(c.due) <= now;
+      var content = RecallDeck.content(c.topic);
+      var reviewed = c.lastReviewed ? new Date(Number(c.lastReviewed)).toLocaleDateString() : 'never';
+      return '<div class="deck-row' + (due ? ' due' : '') + '">' +
+        '<div class="deck-info"><h3>' + esc(c.topic) + '</h3><p>' +
+        esc(RecallDeck.formatDue(c.due, now)) + ' · ' + Number(c.reps || 0) + ' review' + (Number(c.reps) === 1 ? '' : 's') +
+        ' · ' + content.facts.length + ' fact' + (content.facts.length === 1 ? '' : 's') +
+        ' · ease ' + Number(c.ease || 2.3).toFixed(2) +
+        ' · last ' + esc(reviewed) +
+        '</p></div>' +
+        '<button class="ghost-btn" type="button" data-remove="' + esc(c.topic) + '" aria-label="Remove ' + esc(c.topic) + ' from the deck">Remove</button>' +
+        '</div>';
+    }).join('');
+  }
+
+  $('deckSearch').addEventListener('input', renderDeck);
+  $('deckList').addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-remove]') : null;
+    if (!btn) return;
+    var topic = btn.getAttribute('data-remove');
+    if (!window.confirm('Remove "' + topic + '" from your Recall Deck? The revision note is not affected.')) return;
+    RecallDeck.remove(topic);
+    if (state.queue[state.pos] === topic) {
+      state.queue.splice(state.pos, 1);
+    }
+    renderDeck();
+    renderStats();
+    if (state.tab === 'review') renderReview();
+    toast('Removed from the deck');
+  });
+
+  // ── add topics ───────────────────────────────────────────────────────────
+  function matchTopic(topic, q) {
+    if (!q) return true;
+    if (topic.toLowerCase().indexOf(q) !== -1) return true;
+    var facts = (data[topic].primaryFacts || []);
+    for (var i = 0; i < facts.length; i++) {
+      if (String(facts[i].fact || '').toLowerCase().indexOf(q) !== -1) return true;
+    }
+    return false;
+  }
+
+  function filteredAdd() {
+    var q = ($('addSearch').value || '').trim().toLowerCase();
+    return eligible.filter(function (t) { return matchTopic(t, q); });
+  }
+
+  function renderCoverage() {
+    var total = RecallDeck.stats().total;
+    var pct = eligible.length ? Math.round((total / eligible.length) * 100) : 0;
+    $('coverageCount').textContent = total;
+    $('coverageEligible').textContent = eligible.length;
+    $('coveragePct').textContent = pct + '%';
+    $('coverageBar').style.width = Math.min(100, pct) + '%';
+  }
+
+  function renderAdd() {
+    if (!data) return;
+    renderCoverage();
+    var matches = filteredAdd();
+    var shown = matches.slice(0, state.addLimit);
+    $('addAllBtn').textContent = 'Add all shown (' + matches.length + ')';
+    $('addAllBtn').disabled = matches.length === 0;
+
+    var wrap = $('addList');
+    if (!matches.length) {
+      wrap.innerHTML = '<div class="empty"><div class="empty-icon">🔎</div><h2>No topic matches</h2><p>Try a broader search. Only topics with a verified fact are listed.</p></div>';
+    } else {
+      wrap.innerHTML = shown.map(function (t) {
+        var facts = (data[t].primaryFacts || []).filter(function (f) { return f && f.fact; });
+        var first = String(facts[0].fact || '');
+        var added = RecallDeck.has(t);
+        return '<div class="add-row">' +
+          '<div class="add-info"><h3>' + esc(t) + '</h3><p>' + esc(first) + '</p><p>' +
+          facts.length + ' verified fact' + (facts.length === 1 ? '' : 's') + ' in the note</p></div>' +
+          '<button class="add-btn" type="button" data-add="' + esc(t) + '"' + (added ? ' disabled' : '') + '>' +
+          (added ? '✓ In deck' : 'Add') + '</button>' +
+          '</div>';
+      }).join('');
+    }
+    $('addMoreBtn').hidden = matches.length <= state.addLimit;
+    $('addMoreBtn').textContent = 'Load more topics (' + Math.max(0, matches.length - state.addLimit) + ' left)';
+  }
+
+  $('addSearch').addEventListener('input', function () {
+    state.addLimit = PAGE;
+    renderAdd();
+  });
+  $('addList').addEventListener('click', function (e) {
+    var btn = e.target.closest ? e.target.closest('[data-add]') : null;
+    if (!btn || btn.disabled) return;
+    var topic = btn.getAttribute('data-add');
+    var result = RecallDeck.add(topic, data[topic]);
+    if (!result.ok) {
+      toast(result.reason === 'no-facts' ? 'This topic has no verified fact to recall.' : 'Could not add this topic.');
+      return;
+    }
+    if (!result.saved) toast('Added, but this browser could not save it. Export or free some storage.');
+    else toast('Added "' + topic + '" — due now');
+    renderAdd();
+    renderStats();
+  });
+  $('addMoreBtn').addEventListener('click', function () {
+    state.addLimit += PAGE;
+    renderAdd();
+  });
+  $('addAllBtn').addEventListener('click', function () {
+    var matches = filteredAdd();
+    var pending = matches.filter(function (t) { return !RecallDeck.has(t); });
+    if (!pending.length) { toast('Everything shown is already in your deck.'); return; }
+    if (pending.length > 30 && !window.confirm('Add ' + pending.length + ' topics? They will all become due immediately.')) return;
+    var added = 0;
+    pending.forEach(function (t) {
+      var r = RecallDeck.add(t, data[t]);
+      if (r.ok) added += 1;
+    });
+    renderAdd();
+    renderStats();
+    toast(added + ' topic' + (added === 1 ? '' : 's') + ' added');
+  });
+
+  // ── keyboard ─────────────────────────────────────────────────────────────
+  document.addEventListener('keydown', function (e) {
+    var tag = e.target && e.target.tagName ? e.target.tagName : '';
+    if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT') return;
+    if (state.tab !== 'review' || !currentTopic()) return;
+
+    if (e.key === ' ' || e.code === 'Space') {
+      if (tag === 'BUTTON' || tag === 'A') return; // let the focused control act
+      e.preventDefault();
+      if (!state.flipped) setFlip(true);
+      return;
+    }
+    if (e.key === 'Enter' && tag !== 'BUTTON' && tag !== 'A') {
+      e.preventDefault();
+      if (!state.flipped) setFlip(true);
+      return;
+    }
+    if (state.flipped) {
+      var map = { '1': 'again', '2': 'hard', '3': 'good', '4': 'easy' };
+      if (map[e.key]) {
+        e.preventDefault();
+        rateCard(map[e.key]);
+        return;
+      }
+    }
+    if ((e.key === 'u' || e.key === 'U') && RecallDeck.canUndo()) {
+      e.preventDefault();
+      undoLast();
+    }
+  });
+
+  // ── cross-tab sync ───────────────────────────────────────────────────────
+  window.addEventListener('storage', function (e) {
+    if (e.key !== RecallDeck.KEY) return;
+    RecallDeck.reload();
+    renderAll();
+    toast('Deck updated in another tab');
+  });
+
+  function renderAll() {
+    renderStats();
+    if (state.tab === 'review') renderReview();
+    if (state.tab === 'deck') renderDeck();
+    if (state.tab === 'add') renderAdd();
+  }
+})();
+</script>
+</body>
+</html>
