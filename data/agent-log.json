@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T01:03:33.669Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority standing goals; the previous run exhausted MainsFresh with zero output so it moves last. We will first generate fresh question banks to address critical faults, then fill figure gaps, followed by exam patterns and mock papers to complete unfinished goals before finally attempting invention or meta-learning if resources allow.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (342 total)",
-       "text": "Why is wooden seasoning carried out and what are its methods? | State the purpose of the dovetail joint and where it is used. | Describe the mortise and tenon joint."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T01:29:40.484Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -571,8 +526,54 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T06:47:52.556Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 233193 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 2 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T05:57:38.580Z",
+ "lastRun": "2026-11-02T06:47:52.556Z",
  "model": "qwen3.5:9b"
 }
