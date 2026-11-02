@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T07:55:55.074Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to address broken visuals and missing data. Since 'papers' and 'questions' files are absent, MockPapers is next to generate fresh exam materials from scratch. Invention should follow to create new content ideas for unfinished goals. MetaLearn goes last as it has produced 0 fixes in the last two runs and may be starved of inputs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (384 total)",
-       "text": "What is a grooved seam in sheet metal? | How is a sheet metal panel riveted for a strong joint? | What are a rivet set and a bucking bar?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Industrial Engineering (360 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T08:15:02.540Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -636,8 +580,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T15:16:44.112Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-02T14:58:03.685Z",
+ "lastRun": "2026-11-02T15:16:44.112Z",
  "model": "qwen3.5:9b"
 }
