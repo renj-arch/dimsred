@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T16:30:39.504Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. MockPapers should follow immediately to address the lack of exam papers, as filesPresent shows false for all content types. ExamPatterns is needed next to provide question banks since questions are missing. Invention will be last to generate new ideas once core maintenance is underway. MainsFresh and MetaLearn are deferred as they produced 0 fixes in recent runs or are low",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (418 total)",
-       "text": "What is a G-clamp (C-clamp) used for? | What class of fire extinguisher suits an electrical fire? | What is the first-aid treatment for a bleeding cut?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T16:52:40.487Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -691,8 +646,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T23:11:35.593Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bank figures is the only agent capable of fixing both. Mock papers must be prioritized next because filesPresent shows zero content exists for papers or questions, making it an unfinished standing goal. MetaLearn and Invention have produced 0 fixes in the last two runs and will be deprioritized to focus resources on immediate gaps.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (452 total)",
+       "text": "State Lami's theorem. | To which force system does Lami's theorem apply? | Three equal forces of 10 N keep a particle in equilibrium. What is the angle bet"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T22:48:41.856Z",
+ "lastRun": "2026-11-02T23:11:35.593Z",
  "model": "qwen3.5:9b"
 }
