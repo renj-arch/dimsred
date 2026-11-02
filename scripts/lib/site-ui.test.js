@@ -75,6 +75,43 @@ console.log('\n--- the map timeframe panel can be opened and closed ---');
   assert(html.indexOf('onclick="closeTimeframe()"') !== -1, 'the close control is wired to closeTimeframe()');
 })();
 
+console.log('\n--- the map stays responsive while scrolling, zooming and opening timeframes ---');
+(function () {
+  const html = read('map.html');
+
+  // Timeframe used to build one innerHTML string for every dated topic in the
+  // window. At full history that is ~483k cards, synchronously, before the
+  // modal could paint. It now paints first, then appends 250-card chunks.
+  assert(/var\s+TF_CHUNK\s*=\s*250\b/.test(html), 'timeframe renders 250 cards at a time');
+  assert(/var\s+TF_EXPORT_CAP\s*=\s*2000\b/.test(html), 'timeframe export has an explicit 2,000-topic cap');
+  assert(/function\s+appendTfChunk\b/.test(html), 'appendTfChunk() appends the next slice');
+  assert(/function\s+updateTfMore\b/.test(html), 'updateTfMore() keeps the remaining count honest');
+  assert(html.indexOf('id="tfMore"') !== -1, 'the dialog has a Show more container');
+  assert(html.indexOf('appendTfChunk()') !== -1, 'the Show more control calls appendTfChunk()');
+  assert(/setTimeout\(renderTimeframe,\s*0\)/.test(html), 'openTimeframe() defers the linear scan until after paint');
+  assert(/\.slice\(0,\s*TF_EXPORT_CAP\)/.test(html), 'exportTimeframe() slices to the cap');
+  assert(html.indexOf('narrow the timeframe for a complete list') !== -1,
+    'capped exports say how to get the complete list');
+
+  // Scrolling called render() every 60 ms, which re-filtered and re-placed all
+  // 557k nodes. Layout is now cached per window/filter change and the scroll
+  // path only swaps the visible slice.
+  assert(/var\s+_LAYOUT\s*=\s*null/.test(html), 'render() keeps a cached layout');
+  assert(/function\s+emitViewport\b/.test(html), 'emitViewport() emits the visible slice');
+  assert(/_LAYOUT\s*=\s*\{\s*nodes:/.test(html), 'render() stores placed nodes in _LAYOUT');
+  assert(/_LAYOUT\.ys/.test(html) && /while\s*\(lo\s*<\s*hi\)/.test(html),
+    'emitViewport() binary-searches the sorted placement rows');
+  assert(/addEventListener\('scroll'[\s\S]{0,220}setTimeout\(emitViewport,\s*50\)/.test(html),
+    'the scroll handler debounces emitViewport(), not render()');
+  assert(!/addEventListener\('scroll'[\s\S]{0,220}setTimeout\(render,/.test(html),
+    'the scroll handler never re-runs the full layout');
+  assert(/_suppressScroll\s*=\s*true/.test(html) && /if\s*\(_suppressScroll\)\s*return/.test(html),
+    'programmatic scrollToPresent() jumps do not queue a second render');
+
+  assert(/var\s+newStart\b/.test(html) && /fmtYear\(newStart\)/.test(html),
+    'zoomBy() labels the window it enters, not the one it leaves');
+})();
+
 // ---------------------------------------------------------------------------
 // Inline-script integrity.
 //
@@ -308,6 +345,54 @@ console.log('\n--- content-source checkboxes map to exactly one source ---');
   assert(filter(archive) === true, 'archive question returns when Archive is enabled');
 })();
 
+
+console.log('\n--- the quiz applies curated category moves before display ---');
+(function () {
+  const html = read('current-affairs.html');
+  const src = extractNamedFunction(html, '_applyCategoryMove');
+  assert(!!src, '_applyCategoryMove() is defined');
+  assert(/await _categoryMovesReady;/.test(html), 'archive loaders wait for the move registry');
+  assert((html.match(/await _categoryMovesReady;/g) || []).length >= 3,
+    'all three archive entry points wait for the move registry');
+  if (!src) return;
+  let reg = [];
+  try { reg = JSON.parse(read('data/category-moves.json')).moves || []; } catch (e) {}
+  assert(reg.length >= 1, 'the shipped category-move registry is readable');
+  let apply;
+  try {
+    apply = new Function('_CATEGORY_MOVES', src + '\nreturn _applyCategoryMove;')(reg);
+  } catch (e) {
+    assert(false, '_applyCategoryMove() can be evaluated', e.message);
+    return;
+  }
+  const arp = apply({
+    subject: 'Indian Languages', subTopic: 'ARP4761', relevance: 'high', examScope: 'exam',
+    scopeReasons: ['stale'], scopeEvidence: ['stale'], scopeVersion: 1
+  });
+  assert(arp.subject === 'Indian Aviation & Shipping' && arp.category === 'Indian Aviation & Shipping',
+    'ARP4761 is shown under Indian Aviation & Shipping');
+  assert(arp.relevance === '' && arp.examScope === '', 'stale scope tags are cleared so ExamScope recomputes');
+  assert(!arp.scopeReasons && !arp.scopeEvidence && !arp.scopeVersion, 'stale scope evidence is removed');
+  assert(arp._categoryMoved === 'arp4761-indian-aviation', 'the applied move is traceable');
+  const other = apply({ subject: 'Indian Languages', subTopic: 'Hindi literature' });
+  assert(other.subject === 'Indian Languages', 'unlisted subtopics are left untouched');
+})();
+
+// The figures rebuild used to regenerate geography-diagrams.html from a head
+// template with only charset + title, silently dropping the viewport and meta
+// description that aeb302c704 had added by hand. Assert the generated artifact
+// and the builder template together so a rerun cannot lose them again.
+(function () {
+  const page = read('geography-diagrams.html');
+  const builder = read('scripts/build-geography-diagrams.js');
+  assert(/^<!DOCTYPE html>/i.test(page) && /<\/body><\/html>\s*$/i.test(page),
+    'geography-diagrams.html is a complete document');
+  assert(/<meta\s+name="description"\s+content="[^"]+"/i.test(page) &&
+    /<meta\s+name="viewport"\s+content="[^"]+"/i.test(page),
+    'geography-diagrams.html has a description and viewport');
+  assert(builder.indexOf('name="description"') !== -1 && builder.indexOf('name="viewport"') !== -1,
+    'the geography diagram builder emits description and viewport');
+})();
 
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

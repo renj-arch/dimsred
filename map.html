@@ -201,6 +201,7 @@ p.none{color:var(--text-sec);font-style:italic}
       <span id="tfCount" style="color:var(--text-sec);font-size:.85em;align-self:center;margin-left:auto"></span>
     </div>
     <div id="tfList" style="max-height:65vh;overflow:auto"></div>
+    <div id="tfMore" style="text-align:center;padding:10px 0"></div>
   </div>
 </div>
 
@@ -327,11 +328,18 @@ var _gpb = [0, 0];   // fallback two-column stack when no era band is in the win
 // multi-tens-of-thousands-of-pixels tall canvas, which desktop Chrome survives.
 var IS_SMALL = window.innerWidth < 768 || (navigator.maxTouchPoints > 1 && window.innerWidth < 1024);
 
+// The full layout (filter + sort + placement) is cached here. Scrolling used to
+// call render() every 60 ms, which re-filtered and re-placed all 557k nodes on
+// every nudge; the page froze and the zoom buttons looked dead while it worked.
+// render() now builds the layout once per window/filter change and emitViewport()
+// only swaps the small slice inside the scroll window.
+var _LAYOUT = null;
+var _suppressScroll = false;
+
 function render() {
   var canvas = document.getElementById('canvas');
   var th = detailThreshold();
   var html = '';
-  var count = 0;
   var range = WINDOW.end - WINDOW.start;
   var searchActive = !!searchText;
   var activeCat = catValue();
@@ -446,17 +454,9 @@ function render() {
   // Greedy anti-overlap per era: each era has its own two-column stack anchored at
   // its body top, so a dense era's nodes can never be pushed down into the next
   // era's band (e.g. Maurya Empire spilling from Ancient into Medieval).
-  // Nodes are placed for ALL filtered topics (no cap); only those inside the
-  // visible viewport (plus a buffer) are emitted to the DOM, and a scroll
-  // listener re-renders as the user pans. This keeps the DOM small even with
-  // "Show All" across all ~29k topics, which would otherwise crash mobile Safari.
-  var vp = document.getElementById('viewport');
-  var vpTop = vp.scrollTop || 0;
-  var vpH = vp.clientHeight || 800;
-  var vpBuffer = 1400;
-  var vpCutTop = vpTop - vpBuffer;
-  var vpCutBot = vpTop + vpH + vpBuffer;
-  var canvasW = document.getElementById('viewport').clientWidth || 800;
+  // Nodes are placed for ALL filtered topics (no cap); emitViewport() below only
+  // writes the visible window (plus a buffer) to the DOM. This keeps the DOM
+  // small even with "Show All", which would otherwise crash mobile Safari.
 
   // Dry-run placement to measure how tall each era body must actually be, then
   // inflate it to match. Two passes are required because the era chain shifts when
@@ -474,63 +474,103 @@ function render() {
   curY = buildEraChain();
   _gpb[0] = 0; _gpb[1] = 0;
 
+  var bandsHtml = html;
   for (var s3 of secs) {
-    html += '<div role="button" tabindex="0" class="era" style="top:' + s3._labelTop + 'px;height:' + (LABEL_H + s3._bodyH) + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + s3.id + '\')"><span class="era-label">' + esc(s3.label) + '</span></div>';
+    bandsHtml += '<div role="button" tabindex="0" class="era" style="top:' + s3._labelTop + 'px;height:' + (LABEL_H + s3._bodyH) + 'px;background:rgba(167,139,250,.05)" onclick="focusEra(\'' + s3.id + '\')"><span class="era-label">' + esc(s3.label) + '</span></div>';
   }
 
-  count = 0;
-  for (var i = 0; i < filtered.length; i++) {
-    var nd = filtered[i];
-    var pl = placeNode(nd);
-    var es = pl.es;
-    var col = pl.col;
-    var y = pl.y;
-    if (y > vpCutBot || y + NODE_H < vpCutTop) continue;
-    var color = TYPE_COLOR[nd.type] || '#71717a';
-    var isArch = nd.timebase === 'archive';
-    var isEra = nd.timebase === 'era';
-    var spanLabel;
-    if (isEra) {
-      var eo = TL.eras.find(function (x) { return x.id === nd.era; });
-      spanLabel = (eo ? eo.label : nd.era) + ' (~)';
+  if (filtered.length === 0) {
+    if (!searchText && !activeCat) {
+      bandsHtml += '<div class="loading" style="margin:20px 14px">Nothing at this zoom — scroll up or zoom out.</div>';
+    } else if (activeCat) {
+      bandsHtml += '<div class="loading" style="margin:20px 14px">No ' + esc(_catByKey[activeCat] || activeCat) + ' topics in this window — zoom out or scroll.</div>';
     } else {
-      spanLabel = fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '');
+      bandsHtml += '<div class="loading" style="margin:20px 14px">No topic matching &ldquo;' + esc(searchText) + '&rdquo;</div>';
     }
-    var tip = ' title="' + esc(nd.name)
-      + (isArch ? ' — anchored to archive year (no event year in the data)'
-        : isEra ? ' — era inferred (no exact event year in the data)'
-        : nd.span ? ' — ' + fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '')
-        : '')
-      + '"';
-    var horiz = col === 0
-      ? 'left:14px;width:calc(50% - 18px)'
-      : 'left:calc(50% + 4px);width:calc(50% - 18px)';
-    html += '<div role="button" tabindex="0" class="node" style="top:' + y + 'px;height:' + NODE_H + 'px;' + horiz + ';border-left:2px solid ' + color + '"'
-      + tip
-      + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
-      + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
-      + (nd.desc ? '<span class="ns">' + esc(nd.desc) + '</span>' : '')
-      + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch || isEra ? ' · ~' : '') + '</span></div>';
-    count++;
   }
 
-  if (count === 0 && filtered.length === 0 && !searchText && !activeCat) {
-    html += '<div class="loading" style="margin:20px 14px">Nothing at this zoom — scroll up or zoom out.</div>';
-  } else if (count === 0 && filtered.length === 0 && activeCat) {
-    html += '<div class="loading" style="margin:20px 14px">No ' + esc(_catByKey[activeCat] || activeCat) + ' topics in this window — zoom out or scroll.</div>';
-  } else if (count === 0 && filtered.length === 0 && searchText) {
-    html += '<div class="loading" style="margin:20px 14px">No topic matching &ldquo;' + esc(searchText) + '&rdquo;</div>';
+  // Final placement pass. Positions are kept in parallel arrays so the scroll
+  // path can binary-search the visible slice instead of touching every node.
+  var placed = [];
+  var ys = [];
+  var cols = [];
+  for (var i = 0; i < filtered.length; i++) {
+    var pl = placeNode(filtered[i]);
+    placed.push(filtered[i]);
+    ys.push(pl.y);
+    cols.push(pl.col);
   }
 
   var canvasBottom = curY;
   for (var s6 of secs) canvasBottom = Math.max(canvasBottom, s6._pb[0], s6._pb[1]);
   canvasBottom = Math.max(canvasBottom, _gpb[0], _gpb[1]);
   canvas.style.height = (canvasBottom + 8) + 'px';
-  canvas.innerHTML = html;
+  canvas.innerHTML = bandsHtml + '<div id="nodeLayer"></div>';
+  _LAYOUT = { nodes: placed, ys: ys, cols: cols, lastFrom: -1, lastTo: -1 };
+  emitViewport();
 
   var zi = document.getElementById('zoomInfo');
   zi.textContent = 'Showing ' + fmtYear(WINDOW.start) + ' – ' + fmtYear(WINDOW.end) + ' · level ' + th + (SHOW_ALL ? ' · SHOW ALL' : '') + (activeCat ? ' · filter: ' + (_catByKey[activeCat] || activeCat) : '') + ' · ' + filtered.length.toLocaleString() + ' topics' + (filtered.length > 400 ? ' (virtualized — pan to view all)' : '');
   document.getElementById('crumb').innerHTML = 'Viewing: ' + (HISTORY.length ? HISTORY.map(function (h) { return '<b onclick="zoomOut()">' + esc(h.label) + '</b>'; }).join(' › ') + ' › ' : '') + '<b onclick="zoomOut()">Full history</b>';
+}
+
+// One timeline card. Kept out of render() so the scroll path can emit the same
+// markup without rebuilding the layout.
+function nodeCardHtml(nd, y, col) {
+  var color = TYPE_COLOR[nd.type] || '#71717a';
+  var isArch = nd.timebase === 'archive';
+  var isEra = nd.timebase === 'era';
+  var spanLabel;
+  if (isEra) {
+    var eo = TL.eras.find(function (x) { return x.id === nd.era; });
+    spanLabel = (eo ? eo.label : nd.era) + ' (~)';
+  } else {
+    spanLabel = fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '');
+  }
+  var tip = ' title="' + esc(nd.name)
+    + (isArch ? ' — anchored to archive year (no event year in the data)'
+      : isEra ? ' — era inferred (no exact event year in the data)'
+      : nd.span ? ' — ' + fmtYear(nd.span.min) + (nd.span.max > nd.span.min ? '–' + fmtYear(nd.span.max) : '')
+      : '')
+    + '"';
+  var horiz = col === 0
+    ? 'left:14px;width:calc(50% - 18px)'
+    : 'left:calc(50% + 4px);width:calc(50% - 18px)';
+  return '<div role="button" tabindex="0" class="node" style="top:' + y + 'px;height:' + NODE_H + 'px;' + horiz + ';border-left:2px solid ' + color + '"'
+    + tip
+    + ' onclick="openProfile(\'' + esc(nd.id).replace(/'/g, "\\'") + '\')">'
+    + '<span class="nm" style="color:' + color + '">' + esc(nd.name) + '</span>'
+    + (nd.desc ? '<span class="ns">' + esc(nd.desc) + '</span>' : '')
+    + '<span class="ct">' + spanLabel + (nd.count ? ' · ' + nd.count + ' q' : '') + (isArch || isEra ? ' · ~' : '') + '</span></div>';
+}
+
+// y is non-decreasing across the sorted placement, so a binary search finds the
+// first visible row and the loop stops at the last one. Nothing above or below
+// the buffer window is ever written to the DOM.
+function emitViewport() {
+  var layer = document.getElementById('nodeLayer');
+  if (!layer || !_LAYOUT) return;
+  var vp = document.getElementById('viewport');
+  var vpTop = vp.scrollTop || 0;
+  var vpH = vp.clientHeight || 800;
+  var buffer = 1400;
+  var cutTop = vpTop - buffer;
+  var cutBot = vpTop + vpH + buffer;
+  var ys = _LAYOUT.ys, nodes = _LAYOUT.nodes, cols = _LAYOUT.cols;
+  var n = ys.length;
+  var lo = 0, hi = n;
+  while (lo < hi) {
+    var mid = (lo + hi) >> 1;
+    if (ys[mid] < cutTop) lo = mid + 1; else hi = mid;
+  }
+  var end = lo;
+  while (end < n && ys[end] <= cutBot) end++;
+  if (lo === _LAYOUT.lastFrom && end === _LAYOUT.lastTo) return;
+  _LAYOUT.lastFrom = lo;
+  _LAYOUT.lastTo = end;
+  var html = '';
+  for (var i = lo; i < end; i++) html += nodeCardHtml(nodes[i], ys[i], cols[i]);
+  layer.innerHTML = html;
 }
 
 var searchText = '';
@@ -575,13 +615,23 @@ function zoomIn() {
 
 function zoomBy(f) {
   var range = WINDOW.end - WINDOW.start;
-  var newRange = Math.max(2, Math.min(MAX_YEAR - MIN_YEAR, range * f));
-  setWindow(WINDOW.end - newRange, WINDOW.end, fmtYear(WINDOW.start) + '–' + fmtYear(WINDOW.end));
+  var newRange = Math.max(2, Math.min(MAX_YEAR - MIN_YEAR, Math.round(range * f)));
+  var newStart = Math.round(Math.max(MIN_YEAR, Math.min(MAX_YEAR, WINDOW.end - newRange)));
+  // Label the window we are entering, not the one we are leaving: the old code
+  // evaluated fmtYear(WINDOW.start) before setWindow() moved it.
+  setWindow(newStart, WINDOW.end, fmtYear(newStart) + '–' + fmtYear(WINDOW.end));
 }
 
 function scrollToPresent() {
   var vp = document.getElementById('viewport');
+  _suppressScroll = true;
   vp.scrollTop = vp.scrollHeight;
+  // The assignment above fires a scroll event. Emit the new window directly and
+  // ignore that event so a programmatic jump never queues a second render.
+  emitViewport();
+  requestAnimationFrame(function () {
+    requestAnimationFrame(function () { _suppressScroll = false; });
+  });
 }
 
 document.getElementById('btnIn').onclick = function () { zoomBy(0.5); };
@@ -605,9 +655,10 @@ document.getElementById('search').addEventListener('input', function () {
 
 var _scrollTimer = null;
 document.getElementById('viewport').addEventListener('scroll', function () {
+  if (_suppressScroll) return;
   clearTimeout(_scrollTimer);
-  _scrollTimer = setTimeout(render, 60);
-});
+  _scrollTimer = setTimeout(emitViewport, 50);
+}, { passive: true });
 
 document.getElementById('catFilter').addEventListener('change', function () { render(); });
 
@@ -951,6 +1002,10 @@ function closeProfile() { document.getElementById('profile').classList.remove('o
 var _tfMode = false;
 var _tfStart = null;
 var _tfEnd = null;
+var TF_CHUNK = 250;        // cards appended per "Show more" click
+var TF_EXPORT_CAP = 2000;  // markdown rows in one export
+var _TF_ITEMS = null;
+var _TF_SHOWN = 0;
 
 function openTimeframe(start, end) {
   _tfMode = true;
@@ -958,32 +1013,45 @@ function openTimeframe(start, end) {
   _tfEnd = end != null ? end : WINDOW.end;
   var modal = document.getElementById('timeframeModal');
   modal.classList.add('active');
-  renderTimeframe();
+  // Paint the dialog before the linear filter/sort over the dated corpus. At
+  // full history that is ~483k topics; doing it synchronously used to make the
+  // click look dead and the whole page unresponsive.
+  var list = document.getElementById('tfList');
+  if (list) list.innerHTML = '<div style="padding:24px;color:var(--text-sec)">Building the timeframe…</div>';
+  var more = document.getElementById('tfMore');
+  if (more) more.innerHTML = '';
+  setTimeout(renderTimeframe, 0);
 }
 
 function closeTimeframe() {
   _tfMode = false;
   document.getElementById('timeframeModal').classList.remove('active');
+  _TF_ITEMS = null;
+  _TF_SHOWN = 0;
+  var list = document.getElementById('tfList');
+  var more = document.getElementById('tfMore');
+  if (list) list.innerHTML = '';
+  if (more) more.innerHTML = '';
 }
 
 function renderTimeframe() {
-  var list = document.getElementById('tfList');
+  if (!_tfMode) return;
   var summary = document.getElementById('tfSummary');
   var countEl = document.getElementById('tfCount');
   var title = document.getElementById('tfTitle');
-  
+
   // Get all nodes in timeframe, sorted chronologically
-  var items = NODES.filter(function(n) {
+  var items = NODES.filter(function (n) {
     return n.span && n.span.min != null && n.span.max != null &&
            n.span.max >= _tfStart && n.span.min <= _tfEnd &&
            TYPE_FILTERS[n.type];
   });
-  
+
   // Sort by start year, then by count (prominence)
-  items.sort(function(a, b) {
+  items.sort(function (a, b) {
     return (a.span.min - b.span.min) || (b.count - a.count);
   });
-  
+
   // Build summary
   var eraLabel = '';
   for (var e of TL.eras) {
@@ -992,66 +1060,121 @@ function renderTimeframe() {
     }
   }
   title.textContent = '⏳ ' + fmtYear(_tfStart) + ' – ' + fmtYear(_tfEnd) + (eraLabel ? ' (' + eraLabel + ')' : '');
-  summary.innerHTML = '<b>' + items.length + ' topics</b> in this timeframe · Types: ' + 
-    Object.entries(items.reduce(function(acc, n) { acc[n.type] = (acc[n.type] || 0) + 1; return acc; }, {}))
-      .map(function(e) { return e[1] + ' ' + e[0]; }).join(', ');
-  
-  countEl.textContent = items.length + ' items';
-  
-  // Build the chronological list grouped by year/decade
-  var html = '';
-  var currentYear = null;
-  var currentDecade = null;
-  
-  items.forEach(function(n, idx) {
-    var year = n.span.min;
-    var decade = Math.floor(year / 10) * 10;
-    var isNewDecade = decade !== currentDecade;
-    var isNewYear = year !== currentYear;
-    
-    if (isNewDecade) {
-      if (currentDecade !== null) html += '</div>';
-      currentDecade = decade;
-      html += '<div style="margin-bottom:16px"><div style="font-size:.72em;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px">' + 
-        (decade < 0 ? Math.abs(decade) + 's BC' : decade + 's') + '</div><div style="display:flex;flex-direction:column;gap:6px">';
-    } else if (isNewYear) {
-      currentYear = year;
-      html += '<div style="font-size:.68em;color:var(--text-sec);font-weight:700;margin:10px 0 4px 8px;border-left:2px solid var(--purple);padding-left:8px">' + fmtYear(year) + '</div>';
-    }
-    
-    var color = TYPE_COLOR[n.type] || '#71717a';
-    var spanLabel = fmtYear(n.span.min) + (n.span.max > n.span.min ? ' – ' + fmtYear(n.span.max) : '');
-    var cats = n.cats ? n.cats.map(function(c) { return c.key; }).join(', ') : '';
-    var connections = (_adj[n.id] || []).slice(0, 3).map(function(c) {
-      var cn = nodeById(c.id);
-      return cn ? cn.name + ' (' + c.rel + ')' : '';
-    }).filter(Boolean).join('; ');
-    
-    html += '<div class="topic-card" style="cursor:pointer;border-left:3px solid ' + color + ';background:rgba(255,255,255,.02);transition:all .15s" ' +
-      'onclick="openProfile(\'' + esc(n.id).replace(/'/g, "\\'") + '\');closeTimeframe()" ' +
-      'onmouseover="this.style.background=\'rgba(255,255,255,.04)\'" onmouseout="this.style.background=\'rgba(255,255,255,.02)\'">' +
-      '<div style="display:flex;align-items:center;gap:10px">' +
-        '<span style="font-size:1.1em">' + (n.type === 'person' ? '👤' : n.type === 'event' ? '⚔️' : n.type === 'disease' ? '🦠' : n.type === 'scheme' ? '📜' : n.type === 'org' ? '🏛️' : n.type === 'place' ? '📍' : '📄') + '</span>' +
-        '<div style="flex:1;min-width:0">' +
-          '<div style="font-weight:700;font-size:.85em;color:' + color + '">' + esc(n.name) + '</div>' +
-          '<div style="font-size:.7em;color:var(--text-sec);display:flex;gap:8px;flex-wrap:wrap">' +
-            '<span>' + spanLabel + '</span>' +
-            (cats ? '<span>' + cats + '</span>' : '') +
-            '<span>📊 ' + n.count + ' mentions</span>' +
-          '</div>' +
-          (connections ? '<div style="font-size:.65em;color:var(--text-muted);margin-top:4px">🔗 ' + esc(connections) + '</div>' : '') +
-        '</div>' +
-      '</div></div>';
-  });
-  
-  if (currentDecade !== null) html += '</div></div>';
-  
-  if (items.length === 0) {
-    html = '<div style="text-align:center;padding:40px;color:var(--text-sec)">No topics in this timeframe. Adjust zoom or filters.</div>';
+  var byType = items.reduce(function (acc, n) { acc[n.type] = (acc[n.type] || 0) + 1; return acc; }, {});
+  summary.innerHTML = '<b>' + items.length.toLocaleString() + ' topics</b> in this timeframe · Types: ' +
+    Object.keys(byType).sort().map(function (k) { return byType[k].toLocaleString() + ' ' + k; }).join(', ') +
+    (items.length > TF_CHUNK
+      ? '<div style="margin-top:6px;font-size:.78em;color:var(--text-sec)">Rendering ' + TF_CHUNK +
+        ' at a time so the page stays responsive. Use <b>Show more</b>, or open a narrower timeframe for a complete list.</div>'
+      : '');
+
+  countEl.textContent = items.length.toLocaleString() + ' topics';
+  _TF_ITEMS = items;
+  _TF_SHOWN = 0;
+
+  var list = document.getElementById('tfList');
+  if (list) list.innerHTML = '';
+  if (!items.length) {
+    if (list) list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--text-sec)">No topics in this timeframe. Adjust zoom or filters.</div>';
+    var emptyMore = document.getElementById('tfMore');
+    if (emptyMore) emptyMore.innerHTML = '';
+    return;
   }
-  
-  document.getElementById('tfList').innerHTML = html;
-  document.getElementById('tfCount').textContent = items.length + ' topics';
+  appendTfChunk();
+}
+
+// Append the next slice. Each slice is self-contained markup: if it starts in
+// the middle of a decade it opens an honest "(continued)" section rather than
+// re-emitting a huge decade in one innerHTML call.
+function appendTfChunk() {
+  var items = _TF_ITEMS || [];
+  if (!items.length) return;
+  var from = _TF_SHOWN || 0;
+  var to = Math.min(items.length, from + TF_CHUNK);
+  var html = tfChunkHtml(items, from, to);
+  var list = document.getElementById('tfList');
+  if (!list) return;
+  if (from === 0) list.innerHTML = html;
+  else list.insertAdjacentHTML('beforeend', html);
+  _TF_SHOWN = to;
+  updateTfMore(items.length);
+}
+
+function updateTfMore(total) {
+  var more = document.getElementById('tfMore');
+  if (!more) return;
+  if (_TF_SHOWN >= total) {
+    more.innerHTML = total
+      ? '<div style="font-size:.75em;color:var(--text-sec)">End of list · ' + total.toLocaleString() + ' topics</div>'
+      : '';
+    return;
+  }
+  var left = total - _TF_SHOWN;
+  more.innerHTML = '<button class="btn" onclick="appendTfChunk()">Show ' +
+    Math.min(TF_CHUNK, left).toLocaleString() + ' more (' + left.toLocaleString() + ' left)</button>';
+}
+
+function tfChunkHtml(items, from, to) {
+  var html = '';
+  var prev = from > 0 ? items[from - 1] : null;
+  var currentDecade = prev ? Math.floor(prev.span.min / 10) * 10 : null;
+  var currentYear = prev ? prev.span.min : null;
+  var openDecade = false;
+  var firstDecade = from < to ? Math.floor(items[from].span.min / 10) * 10 : null;
+
+  if (prev && firstDecade === currentDecade) {
+    var contLabel = currentDecade < 0 ? Math.abs(currentDecade) + 's BC' : currentDecade + 's';
+    html += '<div style="margin-bottom:16px"><div style="font-size:.72em;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px">' +
+      contLabel + ' (continued)</div><div style="display:flex;flex-direction:column;gap:6px">';
+    openDecade = true;
+  }
+
+  for (var idx = from; idx < to; idx++) {
+    var n = items[idx];
+    var decade = Math.floor(n.span.min / 10) * 10;
+    if (decade !== currentDecade) {
+      if (openDecade) html += '</div></div>';
+      currentDecade = decade;
+      currentYear = null;
+      html += '<div style="margin-bottom:16px"><div style="font-size:.72em;color:var(--amber);font-weight:800;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px;border-bottom:1px solid var(--border);padding-bottom:4px">' +
+        (decade < 0 ? Math.abs(decade) + 's BC' : decade + 's') + '</div><div style="display:flex;flex-direction:column;gap:6px">';
+      openDecade = true;
+    }
+    if (n.span.min !== currentYear) {
+      currentYear = n.span.min;
+      html += '<div style="font-size:.68em;color:var(--text-sec);font-weight:700;margin:10px 0 4px 8px;border-left:2px solid var(--purple);padding-left:8px">' + fmtYear(currentYear) + '</div>';
+    }
+    html += tfCardHtml(n);
+  }
+
+  if (openDecade) html += '</div></div>';
+  return html;
+}
+
+function tfCardHtml(n) {
+  var color = TYPE_COLOR[n.type] || '#71717a';
+  var spanLabel = fmtYear(n.span.min) + (n.span.max > n.span.min ? ' – ' + fmtYear(n.span.max) : '');
+  var cats = n.cats ? n.cats.map(function (c) { return c.key; }).join(', ') : '';
+  var connections = (_adj[n.id] || []).slice(0, 3).map(function (c) {
+    var cn = nodeById(c.id);
+    return cn ? cn.name + ' (' + c.rel + ')' : '';
+  }).filter(Boolean).join('; ');
+
+  return '<div class="topic-card" style="cursor:pointer;border-left:3px solid ' + color + ';background:rgba(255,255,255,.02);transition:all .15s" ' +
+    'onclick="openProfile(\'' + esc(n.id).replace(/'/g, "\\'") + '\');closeTimeframe()" ' +
+    'onmouseover="this.style.background=\'rgba(255,255,255,.04)\'" onmouseout="this.style.background=\'rgba(255,255,255,.02)\'">' +
+    '<div style="display:flex;align-items:center;gap:10px">' +
+      '<span style="font-size:1.1em">' + (n.type === 'person' ? '👤' : n.type === 'event' ? '⚔️' : n.type === 'disease' ? '🦠' : n.type === 'scheme' ? '📜' : n.type === 'org' ? '🏛️' : n.type === 'place' ? '📍' : '📄') + '</span>' +
+      '<div style="flex:1;min-width:0">' +
+        '<div style="font-weight:700;font-size:.85em;color:' + color + '">' + esc(n.name) + '</div>' +
+        '<div style="font-size:.7em;color:var(--text-sec);display:flex;gap:8px;flex-wrap:wrap">' +
+          '<span>' + spanLabel + '</span>' +
+          (cats ? '<span>' + cats + '</span>' : '') +
+          '<span>📊 ' + n.count + ' mentions</span>' +
+        '</div>' +
+        (connections ? '<div style="font-size:.65em;color:var(--text-muted);margin-top:4px">🔗 ' + esc(connections) + '</div>' : '') +
+      '</div>' +
+    '</div></div>';
 }
 
 function openTimeframeFromZoom() {
@@ -1059,16 +1182,23 @@ function openTimeframeFromZoom() {
 }
 
 function exportTimeframe() {
-  var items = NODES.filter(function(n) {
+  var all = NODES.filter(function (n) {
     return n.span && n.span.min != null && n.span.max != null &&
            n.span.max >= _tfStart && n.span.min <= _tfEnd && TYPE_FILTERS[n.type];
-  }).sort(function(a, b) { return (a.span.min - b.span.min) || (b.count - a.count); });
-  
+  }).sort(function (a, b) { return (a.span.min - b.span.min) || (b.count - a.count); });
+
+  var items = all.slice(0, TF_EXPORT_CAP);
+  var capped = items.length < all.length;
   var md = '# Timeframe: ' + fmtYear(_tfStart) + ' – ' + fmtYear(_tfEnd) + '\n\n';
-  md += items.length + ' topics\n\n';
-  
+  md += all.length.toLocaleString() + ' topics';
+  if (capped) {
+    md += ' (export shows the first ' + TF_EXPORT_CAP.toLocaleString() +
+      '; narrow the timeframe for a complete list)';
+  }
+  md += '\n\n';
+
   var currentDecade = null;
-  items.forEach(function(n) {
+  items.forEach(function (n) {
     var decade = Math.floor(n.span.min / 10) * 10;
     if (decade !== currentDecade) {
       currentDecade = decade;
@@ -1077,13 +1207,13 @@ function exportTimeframe() {
     md += '### ' + n.name + ' (' + fmtYear(n.span.min) + (n.span.max > n.span.min ? ' – ' + fmtYear(n.span.max) : '') + ')\n';
     md += '- **Type:** ' + n.type + '\n';
     if (n.desc) md += '- **Desc:** ' + n.desc + '\n';
-    if (n.cats) md += '- **Categories:** ' + n.cats.map(function(c) { return c.key; }).join(', ') + '\n';
+    if (n.cats) md += '- **Categories:** ' + n.cats.map(function (c) { return c.key; }).join(', ') + '\n';
     md += '- **Mentions:** ' + n.count + '\n\n';
   });
-  
-  navigator.clipboard.writeText(md).then(function() {
-    alert('Exported to clipboard as Markdown!');
-  }).catch(function() {
+
+  navigator.clipboard.writeText(md).then(function () {
+    alert('Exported to clipboard as Markdown!' + (capped ? ' (first ' + TF_EXPORT_CAP.toLocaleString() + ' topics)' : ''));
+  }).catch(function () {
     // Fallback: create download
     var blob = new Blob([md], {type: 'text/markdown'});
     var url = URL.createObjectURL(blob);

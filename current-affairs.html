@@ -6722,12 +6722,53 @@ function prevQuestion() {
                 : 'background:rgba(148,163,184,.12);color:#94a3b8';
             return '<span style="display:inline-block;margin-top:8px;padding:2px 10px;border-radius:100px;font-size:.72em;font-weight:600;' + color + '" title="AI-assessed exam relevance — not an official syllabus list">' + label + exams + '</span>';
         }
+        // Curated category moves. The question bank shard is served through a
+        // 1-hour raw-GitHub cache, so a corrected move can take a while to
+        // reach a browser. The same registry the mover validates is applied
+        // here too, keyed on the on-disk source category + subtopic. A move
+        // only changes the label; ExamScope still decides relevance from the
+        // corrected subject.
+        var _CATEGORY_MOVES = [];
+        var _categoryMovesReady = (function () {
+            try {
+                return fetch('data/category-moves.json').then(function (r) {
+                    if (!r.ok) throw 0;
+                    return r.json();
+                }).then(function (d) {
+                    _CATEGORY_MOVES = (d && d.moves) || [];
+                    return _CATEGORY_MOVES;
+                }).catch(function () { _CATEGORY_MOVES = []; return _CATEGORY_MOVES; });
+            } catch (e) { return Promise.resolve(_CATEGORY_MOVES); }
+        })();
+
+        function _applyCategoryMove(q) {
+            if (!q || !_CATEGORY_MOVES.length) return q;
+            var sub = q.subTopic || '';
+            var from = q.subject || '';
+            for (var i = 0; i < _CATEGORY_MOVES.length; i++) {
+                var m = _CATEGORY_MOVES[i];
+                if (m.subSubject === sub && m.from === from) {
+                    q.subject = m.to;
+                    q.category = m.to;
+                    // Derived tags from the old subject must not survive.
+                    q.relevance = '';
+                    q.examScope = '';
+                    delete q.scopeReasons;
+                    delete q.scopeEvidence;
+                    delete q.scopeVersion;
+                    q._categoryMoved = m.id;
+                    break;
+                }
+            }
+            return q;
+        }
+
         function _asQuizQ(raw) {
             if (!raw) return null;
             var q = raw.q != null ? raw.q : raw.question;
             var a = raw.a != null ? raw.a : raw.answer;
             if (q == null || String(q).trim() === '') return null;
-            return {
+            return _applyCategoryMove({
                 q: String(q),
                 a: a != null ? String(a) : '',
                 options: raw.options || raw.opts || null,
@@ -6741,7 +6782,7 @@ function prevQuestion() {
                 importantFor: Array.isArray(raw.importantFor) ? raw.importantFor : [],
                 pubDate: raw.pubDate || raw._pubDate || '',
                 _wikiCat: raw._wikiCat || ''
-            };
+            });
         }
         function nextQuestion() {
             if (state.questions.length === 0) return;
@@ -8481,6 +8522,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             state._sessionKey = null;
             state._feedTotal = null;
             await ensureSessionsReady();
+            await _categoryMovesReady;
             if (offerResumeFor(key, label)) return;
             clearQuizSession(key);
             state.questions = [];
@@ -8539,6 +8581,7 @@ var fact = q.fact || q.solution || q.explanation || '';
             state._sessionKey = null;
             state._feedTotal = null;
             await ensureSessionsReady();
+            await _categoryMovesReady;
             if (offerResumeFor(state.cat, subject)) return;
             clearQuizSession(state.cat);
             state.questions = [];
@@ -8591,6 +8634,7 @@ var fact = q.fact || q.solution || q.explanation || '';
                 if (!confirm('Leave the current quiz? Your progress is saved and you can resume it later.')) return;
             }
             await ensureSessionsReady();
+            await _categoryMovesReady;
             if (offerResumeFor('feed', 'Archive')) return;
             clearQuizSession('feed');
             state.cat = 'feed';
