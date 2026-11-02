@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T21:56:52.803Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address critical structural breaks first. Since MainsFresh produced 0 fixes in the last two runs, it is starved of input and should be scheduled last despite its daily freshness goal. The remaining slots prioritize filling the massive figure gap and then tackling pending ideas to diversify content.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (328 total)",
-       "text": "What is the difference between a prick punch and a centre punch? | How is an outside caliper used for measuring diameters? | How is an inside caliper used?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T22:38:46.519Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -564,8 +514,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T03:19:01.082Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) indicate immediate content decay; BankFigures is the priority to restore visual integrity. Since papers/questions/syllabus are missing from files, Invention must run early to generate foundational study materials before they can be populated by other agents. MetaLearn should follow to synthesize these new assets into coherent lessons. MainsFresh and ExamPatterns will be queued last as they require existing content to function effectively.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (355 total)",
+       "text": "Why must a mould be vented? | What is the parting line of a mould? | What is a CO2 (sodium silicate) core and why is it used?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T02:57:57.953Z",
+ "lastRun": "2026-11-02T03:19:01.082Z",
  "model": "qwen3.5:9b"
 }
