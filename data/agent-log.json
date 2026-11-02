@@ -548,66 +548,33 @@
    ]
   },
   {
-   "at": "2026-11-02T11:56:18.781Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
+   "at": "2026-11-02T12:15:04.921Z",
+   "model": "batiai/qwen3.8-27b:iq3",
+   "totalFixes": 3,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
+     "agent": "archive-writer",
+     "count": 3
     }
    ],
-   "plan": {
-    "reasoning": "The site has critical gaps in foundational content (figures, papers, questions) and high fault counts. BankFigures is the only agent producing results recently; others have yielded zero for 2+ consecutive runs, so they must be queued last to avoid starvation bias. Priority is clearing the 79 figure gaps and generating missing core files before attempting new inventions or meta-learning.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "archive-writer",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (401 total)",
-       "text": "Name the three common chuck types of the lathe. | Why are workpieces turned between centres instead of in a chuck? | What is a mandrel and when is it used?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"Key facts: Nagorno-Karabakh ( , nə-GOR-noh kər-ə-BAHK; lit.\"",
+       "text": "VERDICT: Nagorno-Karabakh is a disputed highland region in the South Caucasus. WHY: Its name literally translates to 'Black Mountain' in Armenian, reflecting its rugged terrain. TRAPS: Confusing it with the broader Karabakh region or mistaking its status as an internationally recognized state. HOOK: Remember 'Black Mountain' for the terrain; alert for questions on post-Soviet conflicts."
+      },
       {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "3 fresh mock questions on Air Compressors (360 in pool)",
-       "text": "Air Compressors"
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"Part of the greater region of _____, it spans the area between Lower Karabakh and Syunik\"",
+       "text": "VERDICT: Karabakh. WHY: The region spans the area between Lower Karabakh and Syunik, forming the greater Karabakh zone in the Lesser Caucasus. TRAPS: Do not confuse this with Syunik alone, which is a distinct southern province, or Lesser Caucasus, which is the broader mountain range. HOOK: Remember 'Upper Karabakh' literally means the highlands; visualize the mountain spine connecting the two zones. Exam trap: Candidates often misidentify Syunik as the primary answer due to its prominence, but t"
+      },
+      {
+       "page": "archive (International Relations / International Relations)",
+       "fix": "Explained \"On 27 September _____, the Second Nagorno-Karabakh War broke out with an Azerbaijani offen\"",
+       "text": "VERDICT: 2020. WHY: The Second Nagorno-Karabakh War commenced on 27 September 2020, marked by an Azerbaijani offensive targeting Nagorno-Karabakh and surrounding areas. TRAPS: Confusing this with the 1991-1994 First War or the 2016 Four-Day War; the 2020 conflict was distinct in scale and duration. HOOK: Remember '2020' as the year of the major escalation, distinct from earlier skirmishes. Exam trap: Do not mix up the start date with the ceasefire agreement in November 2020."
       }
      ]
     }

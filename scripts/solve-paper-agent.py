@@ -58,6 +58,27 @@ def load_parser():
     return mod
 
 
+def valid_pdf(path):
+    # A truncated Wayback stream still starts with %PDF-, so pypdf used to
+    # crash with "Stream has ended unexpectedly" (run #41423475747). Check
+    # the header, the trailer and a sane size BEFORE handing it to pypdf.
+    try:
+        size = os.path.getsize(path)
+        if size < 4096:
+            return False, 'too small (%d bytes)' % size
+        with open(path, 'rb') as f:
+            head = f.read(5)
+            f.seek(max(0, size - 4096))
+            tail = f.read()
+    except OSError as ex:
+        return False, str(ex)
+    if head != b'%PDF-':
+        return False, 'not a PDF (starts with %r)' % head
+    if b'%%EOF' not in tail:
+        return False, 'truncated PDF (no %%EOF trailer)'
+    return True, ''
+
+
 def download(url, dest, tries=4):
     # upsc.gov.in intermittently 504s; retry with backoff, then fall back to
     # the Wayback Machine snapshot of the exact same URL (run #41415587800
@@ -72,6 +93,9 @@ def download(url, dest, tries=4):
                     if not chunk:
                         break
                     f.write(chunk)
+            ok, why = valid_pdf(dest)
+            if not ok:
+                raise RuntimeError(why)
             return dest
         except Exception as ex:
             last = ex
@@ -87,6 +111,9 @@ def download(url, dest, tries=4):
                 if not chunk:
                     break
                 f.write(chunk)
+        ok, why = valid_pdf(dest)
+        if not ok:
+            raise RuntimeError('Wayback copy is unusable: ' + why)
         return dest
     except Exception as ex:
         last = ex
@@ -190,12 +217,21 @@ def main():
         download(entry['qpUrl'], qp_path)
     except Exception as ex:
         log('QP download failed: %s' % str(ex)[:120])
+        print('::warning::QP unavailable for %s; nothing solved, next run will retry' % pid)
         return
 
     parser = load_parser()
-    qp, qerr = parser.parse_qp(qp_path)
+    try:
+        qp, qerr = parser.parse_qp(qp_path)
+    except Exception as ex:
+        # Never let a corrupt PDF take the workflow down: skip cleanly so the
+        # QA gate and the next scheduled retry still run.
+        log('QP parse crashed: %s' % str(ex)[:120])
+        print('::warning::QP unreadable for %s; nothing solved, next run will retry' % pid)
+        return
     if qerr:
         log('QP parse failed: %s' % qerr)
+        print('::warning::QP unreadable for %s (%s); next run will retry' % (pid, qerr))
         return
     log('parsed %d questions (booklet set %s)' % (len(qp['questions']), qp.get('set')))
 
