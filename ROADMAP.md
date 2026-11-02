@@ -393,3 +393,33 @@ questions to Generators first because they carry `_wikiCat='course-lesson'`.
   - S02 passes the five-line gate; S04 still fails the strict ledger audit on
     the 7B CPU runner, so the film stays unpublished until QC passes. This is
     fail-closed, not a relaxed gate.
+ - 2026-11-02: Invented-quiz revalidation and publish gates
+   - data/invented/questions.json revalidated item by item: 153 -> 76
+     verified items; 77 quarantined with recorded reasons in
+     data/invented/quarantine.json; 14 unambiguous repairs applied by
+     scripts/apply-invented-quarantine.js (idempotent, --check mode).
+   - scripts/lib/invented-quality.js deterministically re-derives what it
+     can (linear equations, series, answer-echo, leak/evasion, letter-only
+     options) and never guesses at what it cannot (percentage chains, labels);
+     scripts/lib/invented-quality.test.js pins 15 regressions.
+   - scripts/revalidate-invented.js is the publish gate in
+     invent-questions.yml / invent-27b.yml (publish no longer runs on
+     if: always()), scripts/invent-questions.js rejects candidates through
+     uditQuestion at generation time, and scripts/union-invented.js skips
+     quarantined ids so remote snapshots cannot resurrect them.
+ - 2026-11-02: Agent-solved official PYQ lane (paper-solve)
+   - Where the official answer key is a scanned PDF with no text layer (e.g.
+     CSP-2023 AnsKey-CSP-2023-Paper-I-090524.pdf), the key ingestor cannot
+     parse answers. New lane .github/workflows/paper-solve.yml runs
+     scripts/solve-paper-agent.py: it downloads the OFFICIAL question paper
+     from data/official-paper-sources.json (status eed-solve), parses
+     questions with the ingestor proven QP parser, and has the local model
+     solve them in batches of 5, saving candidates incrementally.
+   - scripts/apply-paper-solve.js is the fail-closed gate: every candidate
+     goes through uditQuestion, the key must be one of the four options,
+     and only clean items merge into data/papers.json labelled
+     source: agent-solved, official: false,
+     erification: agent-solved-unverified. The publish step is skipped
+     when the gate fails. papers.html shows an amber agent-solved badge
+     instead of the green official one, and per-question fallbacks say
+     Agent answer, not Official answer.
