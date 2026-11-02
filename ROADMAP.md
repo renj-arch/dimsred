@@ -423,3 +423,17 @@ questions to Generators first because they carry `_wikiCat='course-lesson'`.
      when the gate fails. papers.html shows an amber agent-solved badge
      instead of the green official one, and per-question fallbacks say
      Agent answer, not Official answer.
+ - 2026-11-02: Wiki Fill restructured to 10 chunks, one wave, ~10 h hard ceiling
+   - Was 27 chunks at max-parallel 8 = four sequential waves x up to 300 min
+     self-stop each — worst case ~20 h per run. Now 10 chunks at max-parallel 10
+     run as a SINGLE wave: fill lands in ~4-6 h typical. Job caps sum to a hard
+     ceiling: setup 20 + wiki-chunks 300 (step 280, TIME_BUDGET 240) + merge 45
+     + archive 90 + finalize 85 = 540 min ~ 9 h. Chunk input validated 1-10;
+     merge/recovery loops already tolerate any chunk count (seq 1 40 sweep).
+   - Resume is persisted, not re-scanned: the per-article sentence cursor
+     (wikiMinedTo in the shards) lets a partial article continue past consumed
+     sentences; wikiDone marks exhausted/barren articles so they are never
+     re-fetched; data/wiki-link-pool.json and data/wiki-category-members.json
+     persist link + category discovery; pushQ plus the Bloom dedup keys make
+     re-minted questions yield 0 new. Network only goes to un-mined content;
+     the remaining per-run cost is a local baseline scan, not fetching.
