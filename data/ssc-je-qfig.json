@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T05:17:17.387Z",
-  "cursor": 390,
-  "built": 370
+  "updatedAt": "2026-11-02T05:33:38.123Z",
+  "cursor": 393,
+  "built": 373
  },
  "figs": {
   "11434945": {
@@ -2223,6 +2223,24 @@
   "132ce978": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Flashback Arrestor Function</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"40\" cy=\"60\" r=\"15\"/><text x=\"25\" y=\"75\" text-anchor=\"end\">Cylinder</text><line x1=\"80\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"80\" cy=\"60\" r=\"15\"/><text x=\"95\" y=\"75\" text-anchor=\"start\">Arrestor Valve</text><line x1=\"100\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"320\" cy=\"60\" r=\"15\"/><text x=\"335\" y=\"75\" text-anchor=\"start\">Torch</text><path d=\"M 340 60 L 340 100 L 380 100 L 380 140 L 340 140 L 340 180\" fill=\"none\" stroke=\"#222\"/><text x=\"350\" y=\"125\" text-anchor=\"middle\">Flame</text><path d=\"M 60 60 L 70 50 L 80 60 L 70 70 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"55\" y=\"65\" text-anchor=\"end\">Normal Flow</text><path d=\"M 310 60 L 300 50 L 290 60 L 300 70 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"295\" y=\"65\" text-anchor=\"end\">Backfire Blocked</text><line x1=\"40\" y1=\"100\" x2=\"80\" y2=\"100\"/><circle cx=\"40\" cy=\"100\" r=\"15\"/><circle cx=\"80\" cy=\"100\" r=\"15\"/><text x=\"60\" y=\"115\" text-anchor=\"middle\">Gas Flow Direction</text></svg>",
    "n": "what does a flashback arrestor do?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "86d69c2b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Oxide Layer -->\n  <path d=\"M40,80 L100,80 L100,90 L40,90 Z\" opacity=\"0.3\"/>\n  <text x=\"70\" y=\"75\" text-anchor=\"middle\">Oxide</text>\n  \n  <!-- Metal Surfaces -->\n  <rect x=\"20\" y=\"100\" width=\"80\" height=\"60\" stroke-dasharray=\"2,2\"/>\n  <rect x=\"140\" y=\"100\" width=\"80\" height=\"60\" stroke-dasharray=\"2,2\"/>\n  \n  <!-- Flux Action -->\n  <path d=\"M90,75 Q100,60 110,75 L130,75 Q140,60 150,75\" fill=\"none\" stroke-width=\"2\"/>\n  <text x=\"100\" y=\"68\" text-anchor=\"middle\">Flux</text>\n  \n  <!-- Cleaning Result -->\n  <path d=\"M40,90 L100,90\" stroke-dasharray=\"4,2\"/>\n  <path d=\"M140,90 L200,90\" stroke-dasharray=\"4,2\"/>\n  \n  <!-- Wetting Alloy -->\n  <path d=\"M35,100 Q100,160 165,100\" fill=\"none\" stroke-width=\"2\"/>\n  <text x=\"100\" y=\"145\" text-anchor=\"middle\">Alloy</text>\n  \n  <!-- Labels -->\n  <text x=\"180\" y=\"35\" text-anchor=\"middle\">Brazing Process</text>\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">Clean Surface &rarr; Wetting</text>\n</svg>",
+   "n": "what is the purpose of flux in brazing?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "54bbef02": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Arc Welding Setup -->\n  <text x=\"180\" y=\"40\" text-anchor=\"middle\">Arc Welding</text>\n  \n  <!-- Bright Arc (Dangerous Light) -->\n  <circle cx=\"180\" cy=\"80\" r=\"25\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <circle cx=\"180\" cy=\"80\" r=\"30\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" stroke-dasharray=\"4,2\"/>\n  <text x=\"180\" y=\"75\" text-anchor=\"middle\" font-weight=\"bold\">BRIGHT ARC</text>\n  \n  <!-- Welder's Eye -->\n  <circle cx=\"180\" cy=\"160\" r=\"15\" fill=\"none\" stroke=\"#222\"/>\n  <circle cx=\"180\" cy=\"160\" r=\"8\" fill=\"none\" stroke=\"#222\"/>\n  \n  <!-- Protective Lens (Dark Shade) -->\n  <path d=\"M 150 145 L 210 145 L 210 175 L 150 175 Z\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <rect x=\"160\" y=\"148\" width=\"40\" height=\"30\" rx=\"5\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  \n  <!-- Lens Label -->\n  <text x=\"195\" y=\"172\" text-anchor=\"middle\">Dark Shade</text>\n  <text x=\"195\" y=\"185\" text-anchor=\"middle\">(Shade 9-14)</text>\n  \n  <!-- Shielding Effect -->\n  <line x1=\"150\" y1=\"175\" x2=\"210\" y2=\"175\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M 180 145 L 180 160\" stroke=\"#222\" stroke-width=\"1.5\"/>\n</svg>",
+   "n": "what shade of lens should be used for arc welding?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "cbeb4d33": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"140\" y2=\"100\"/><circle cx=\"80\" cy=\"100\" r=\"10\"/><text x=\"70\" y=\"92\" text-anchor=\"end\">d</text><text x=\"145\" y=\"105\">Weld bead</text><text x=\"160\" y=\"105\">size</text><circle cx=\"80\" cy=\"100\" r=\"10\"/><line x1=\"200\" y1=\"40\" x2=\"200\" y2=\"160\"/><line x1=\"190\" y1=\"40\" x2=\"210\" y2=\"40\"/><line x1=\"190\" y1=\"160\" x2=\"210\" y2=\"160\"/><text x=\"185\" y=\"35\">d</text><text x=\"185\" y=\"165\">d</text><text x=\"225\" y=\"105\">Plate thickness</text><text x=\"240\" y=\"105\">t</text><line x1=\"280\" y1=\"70\" x2=\"320\" y2=\"70\"/><text x=\"285\" y=\"65\">2.5, 3.15</text><text x=\"285\" y=\"80\">4, 5 mm</text></svg>",
+   "n": "how are welding electrodes sized?",
    "sub": "workshop",
    "at": "2026-11-02"
   }

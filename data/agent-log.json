@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T00:36:32.598Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-02T01:03:33.669Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -538,8 +526,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T05:57:38.580Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; mainsfresh produced 0 for two consecutive runs indicating it is currently starved of inputs rather than broken, so it must be scheduled last to avoid wasting budget on empty tasks. The plan prioritizes fixing critical infrastructure and content gaps via BankFigures and MetaLearn, then addresses pending ideas with Invention, while reserving MainsFresh for the final slot once other agents have populated its input stream.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (373 total)",
+       "text": "What is the purpose of flux in brazing? | What shade of lens should be used for arc welding? | How are welding electrodes sized?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T05:22:16.618Z",
+ "lastRun": "2026-11-02T05:57:38.580Z",
  "model": "qwen3.5:9b"
 }
