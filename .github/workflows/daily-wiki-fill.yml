@@ -24,10 +24,12 @@ jobs:
   # ΓöÇΓöÇ Setup: prepare baseline quiz.json, PIB feeds ΓöÇΓöÇ
   setup:
     runs-on: ubuntu-latest
-    # 45 min: run #41405135087 was killed at the old 20-min cap mid-`git fetch
-    # origin` (the repo's data/ is huge), which failed setup and cascaded into
-    # merge. 45 + 300 + 45 + 90 + 85 = 565 min ~ 9.4 h hard ceiling, still < 10 h.
-    timeout-minutes: 45
+    # 60 min cap, but the fetch below is now SHALLOW (--depth 1): the old full
+    # `git fetch origin` on this multi-GB repo alone ate 20-45+ min and got
+    # setup killed at the cap twice (runs #41405135087, #41415582382), which
+    # cascaded into merge. 60 + 300 + 45 + 90 + 85 = 580 min ~ 9.7 h hard
+    # ceiling, still < 10 h.
+    timeout-minutes: 60
     steps:
       - uses: actions/checkout@v4
         with:
@@ -40,7 +42,9 @@ jobs:
       - run: npm install
 
       - run: |
-          git fetch origin
+          # Shallow fetch: setup only needs main's tip working tree, not the
+          # history. Full fetch of this repo exceeded the job cap twice.
+          git fetch --depth 1 origin main
           git reset --hard origin/main
           git clean -fd
 
@@ -82,7 +86,7 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ΓöÇΓöÇ Wiki chunks: 10 runners, ALL in one parallel wave (2026-11-02 restructure: was 27 chunks at max-parallel 8 = four waves, worst case ~20 h per run). Single wave of 10 with a 240-min self-stop finishes the fill in ~4 h; job caps sum to a hard ~10 h ceiling: setup 45 + chunks 300 + merge 45 + archive 90 + finalize 85 = 565 min (~9.4 h). ΓöÇΓöÇ
+  # ΓöÇΓöÇ Wiki chunks: 10 runners, ALL in one parallel wave (2026-11-02 restructure: was 27 chunks at max-parallel 8 = four waves, worst case ~20 h per run). Single wave of 10 with a 240-min self-stop finishes the fill in ~4 h; job caps sum to a hard ~10 h ceiling: setup 60 + chunks 300 + merge 45 + archive 90 + finalize 85 = 580 min (~9.7 h). ΓöÇΓöÇ
   # Each chunk is bounded by its discovery budgets (LINK_BUDGET limits how many
   # linked pages a single category may traverse per run at ~2.5s/request and
   # concurrency 2 ΓÇö worst case a 200k budget would run ~70h). Linked pages are

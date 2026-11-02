@@ -158,5 +158,15 @@ jobs:
           rm -f .git/config.lock .git/index.lock .git/HEAD.lock
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          git add data/papers.json data/paper-solve-candidates.json data/official-paper-sources.json papers.html
+          # Only add files that exist (a run where the QP download failed or no
+          # candidate survived the gate writes no candidates file — run
+          # #41415587800 failed here on `git add` of a missing pathspec), and
+          # skip the push entirely when nothing changed.
+          git add data/papers.json papers.html
+          [ -f data/paper-solve-candidates.json ] && git add data/paper-solve-candidates.json || true
+          [ -f data/official-paper-sources.json ] && git add data/official-paper-sources.json || true
+          if git diff --cached --quiet; then
+            echo "nothing changed (no candidates survived the gate) — skipping publish"
+            exit 0
+          fi
           bash scripts/ci-push.sh "paper-solve: ${{ inputs.model || 'qwen3.5:9b' }} agent-solved official PYQ answers (run #${{ github.run_number }})"

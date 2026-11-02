@@ -58,15 +58,39 @@ def load_parser():
     return mod
 
 
-def download(url, dest):
-    req = urllib.request.Request(url, headers=UA)
-    with urllib.request.urlopen(req, timeout=180) as r, open(dest, 'wb') as f:
-        while True:
-            chunk = r.read(1024 * 256)
-            if not chunk:
-                break
-            f.write(chunk)
-    return dest
+def download(url, dest, tries=4):
+    # upsc.gov.in intermittently 504s; retry with backoff, then fall back to
+    # the Wayback Machine snapshot of the exact same URL (run #41415587800
+    # died on a single 504 with no retry).
+    last = None
+    for i in range(tries):
+        try:
+            req = urllib.request.Request(url, headers=UA)
+            with urllib.request.urlopen(req, timeout=180) as r, open(dest, 'wb') as f:
+                while True:
+                    chunk = r.read(1024 * 256)
+                    if not chunk:
+                        break
+                    f.write(chunk)
+            return dest
+        except Exception as ex:
+            last = ex
+            log('download attempt %d/%d for %s failed: %s' % (i + 1, tries, url, str(ex)[:100]))
+            time.sleep(min(30, 5 * (i + 1)))
+    try:
+        wb = 'https://web.archive.org/web/2id_/' + url
+        log('trying Wayback fallback for %s' % url)
+        req = urllib.request.Request(wb, headers=UA)
+        with urllib.request.urlopen(req, timeout=300) as r, open(dest, 'wb') as f:
+            while True:
+                chunk = r.read(1024 * 256)
+                if not chunk:
+                    break
+                f.write(chunk)
+        return dest
+    except Exception as ex:
+        last = ex
+    raise last
 
 
 def call_llm(system, user, max_tokens=2048):
