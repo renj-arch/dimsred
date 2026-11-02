@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T21:27:18.938Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. BankFigures is the only agent producing output recently; MainsFresh and MetaLearn have yielded zero for two consecutive runs, so they will be queued last to avoid starving them unnecessarily while we tackle the backlog. The priority order addresses critical infrastructure first, then fills content gaps, finally attempting fresh material if capacity allows.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (325 total)",
-       "text": "What does a combination set consist of and what does it measure? | What is a try square used for? | What are dividers used for?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Fluid Mechanics (360 in pool)",
-       "text": "Fluid Mechanics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T21:56:52.803Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -575,8 +514,58 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-02T02:57:57.953Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. Since MockPapers produced 0 fixes in the last two runs while others worked, it is moved to the end of the queue per starvation rules. Invention and MetaLearn follow to address pending ideas and content depth.",
+    "actions": [
+     "BankFigures",
+     "ExamPatterns",
+     "MainsFresh",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (352 total)",
+       "text": "What is floor (bed) moulding? | Name the two halves of a moulding box and their function. | What does ramming do to the moulding sand and why must it be even?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T02:36:54.157Z",
+ "lastRun": "2026-11-02T02:57:57.953Z",
  "model": "qwen3.5:9b"
 }
