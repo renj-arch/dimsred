@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T10:06:50.772Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; prioritize BankFigures to resolve broken visual content immediately. Since MockPapers produced 0 fixes in the last two runs, it will be placed last after addressing critical infrastructure gaps. MainsFresh is also at 0 but targets fresh daily material which is a standing goal; however, unfinished standing goals (figures) take precedence over new ventures per rules.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "ExamPatterns",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (393 total)",
-       "text": "What is used to bend a soft pipe without kinking? | What is the principle of the centre lathe? | How does the shaper machine the work?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T10:33:17.684Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -652,8 +602,53 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-02T17:32:32.564Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing diagrams immediately as unfinished standing goals. MockPapers should follow to resolve critical faults, while ExamPatterns handles remaining content gaps. Invention is placed last per rules due to zero output in recent runs, despite pending ideas.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (423 total)",
+       "text": "Why must hands remain clear and loose clothing be avoided at the machines? | What is the purpose of good housekeeping in a workshop? | What is lockout and tag-out in workshop practice?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T17:09:36.514Z",
+ "lastRun": "2026-11-02T17:32:32.564Z",
  "model": "qwen3.5:9b"
 }
