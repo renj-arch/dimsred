@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T00:25:27.195Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; mainsfresh produced 0 fixes in the last two runs so it must be queued last to avoid starving its inputs while we tackle hard gaps first. We will cycle BankFigures, MockPapers, ExamPatterns, and Invention to clear standing debts before attempting MetaLearn or new ideas.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (339 total)",
-       "text": "What is a radius gauge used for? | What is a screw-thread pitch gauge? | What is a wire gauge and what does it measure?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T00:36:32.598Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -543,8 +498,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T05:22:16.618Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; prioritize BankFigures to fix broken visual content immediately as it yielded fixes in prior runs. MetaLearn should follow to address syllabus gaps since files are missing, while Invention can tackle pending ideas if resources allow. MainsFresh and MockPapers go last as they produced zero fixes recently or depend on upstream data completion.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (370 total)",
+       "text": "Why is acetylene kept dissolved in acetone in the cylinder? | What is the function of a gas regulator in the workshop? | What does a flashback arrestor do?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T05:08:57.421Z",
+ "lastRun": "2026-11-02T05:22:16.618Z",
  "model": "qwen3.5:9b"
 }
