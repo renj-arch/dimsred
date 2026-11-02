@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-01T17:18:31.163Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. BankFigures is the only agent fixing figures in recent runs; MockPapers and MainsFresh have produced output recently, so they will be prioritized next to clear pending goals. Exampatterns has zero fixes for two consecutive runs but addresses a critical fault category, so it moves last after the primary gap-fillers are exhausted.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (302 total)",
-       "text": "What is the difference between shaping and planing? | What is broaching? | What is the difference between counterboring and countersinking?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Gas Turbines (360 in pool)",
-       "text": "Gas Turbines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-01T17:50:30.132Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -730,8 +674,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T00:25:27.195Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; mainsfresh produced 0 fixes in the last two runs so it must be queued last to avoid starving its inputs while we tackle hard gaps first. We will cycle BankFigures, MockPapers, ExamPatterns, and Invention to clear standing debts before attempting MetaLearn or new ideas.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (339 total)",
+       "text": "What is a radius gauge used for? | What is a screw-thread pitch gauge? | What is a wire gauge and what does it measure?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T00:02:30.780Z",
+ "lastRun": "2026-11-02T00:25:27.195Z",
  "model": "qwen3.5:9b"
 }

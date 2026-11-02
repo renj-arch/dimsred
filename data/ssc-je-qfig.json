@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-01T23:51:32.840Z",
-  "cursor": 354,
-  "built": 336
+  "updatedAt": "2026-11-02T00:11:53.849Z",
+  "cursor": 357,
+  "built": 339
  },
  "figs": {
   "11434945": {
@@ -2021,6 +2021,24 @@
    "n": "what is a feeler gauge used for?",
    "sub": "workshop",
    "at": "2026-11-01"
+  },
+  "4c97dd40": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Workpiece with convex corner -->\n  <path d=\"M20,100 L80,100 Q140,40 200,100 T340,100 L340,180 L20,180 Z\" />\n  <!-- Workpiece with concave corner -->\n  <path d=\"M20,100 Q60,160 100,100 T140,160\" stroke-dasharray=\"4,2\" />\n  <!-- Radius Gauge Leaf (Convex) -->\n  <path d=\"M30,105 Q70,55 110,105\" fill=\"none\" />\n  <!-- Radius Gauge Leaf (Concave) -->\n  <path d=\"M290,105 Q330,55 370,105\" fill=\"none\" stroke-dasharray=\"4,2\" />\n  <!-- Labels -->\n  <text x=\"50\" y=\"85\">Convex Corner</text>\n  <text x=\"300\" y=\"85\">Concave Corner</text>\n  <text x=\"180\" y=\"195\">Radius Gauge Leaves</text>\n  <text x=\"20\" y=\"175\">Matched to Part</text>\n</svg>",
+   "n": "what is a radius gauge used for?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "f65bbfc1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><line x1=\"40\" y1=\"90\" x2=\"40\" y2=\"110\"/><text x=\"35\" y=\"100\" text-anchor=\"end\">Thread</text><path d=\"M 60 100 L 70 80 L 80 100 L 90 80 L 100 100 L 110 80 L 120 100\" stroke-width=\"2\"/><text x=\"55\" y=\"70\">Pitch Gauge</text><text x=\"125\" y=\"100\">Leaf Set</text><path d=\"M 140 100 L 150 80 L 160 100 L 170 80 L 180 100 L 190 80 L 200 100\" stroke-width=\"2\"/><text x=\"135\" y=\"70\">Standard Pitches</text><path d=\"M 220 100 L 230 80 L 240 100 L 250 80 L 260 100 L 270 80 L 280 100\" stroke-width=\"2\"/><text x=\"215\" y=\"70\">Exact Match</text><path d=\"M 300 100 L 310 90 L 320 100 L 310 110 Z\" fill=\"#222\" opacity=\"0.2\"/><text x=\"305\" y=\"100\">Identifies Pitch</text></svg>",
+   "n": "what is a screw-thread pitch gauge?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "7d73335c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"180\" height=\"140\" rx=\"5\"/><path d=\"M 60 60 L 90 60 L 90 160 L 60 160 Z\"/><path d=\"M 120 60 L 150 60 L 150 160 L 120 160 Z\"/><path d=\"M 180 60 L 210 60 L 210 160 L 180 160 Z\"/><path d=\"M 240 60 L 270 60 L 270 160 L 240 160 Z\"/><text x=\"75\" y=\"90\" text-anchor=\"middle\">Wire</text><text x=\"75\" y=\"105\" text-anchor=\"middle\">Diameter</text><text x=\"75\" y=\"125\" text-anchor=\"middle\">(tapered slot)</text><text x=\"75\" y=\"145\" text-anchor=\"middle\">measurement</text><text x=\"135\" y=\"90\" text-anchor=\"middle\">Notched</text><text x=\"135\" y=\"105\" text-anchor=\"middle\">Gauge</text><text x=\"135\" y=\"125\" text-anchor=\"middle\">Numbers</text><text x=\"135\" y=\"145\" text-anchor=\"middle\">(size)</text><text x=\"200\" y=\"90\" text-anchor=\"middle\">Sheet</text><text x=\"200\" y=\"105\" text-anchor=\"middle\">Metal</text><text x=\"200\" y=\"125\" text-anchor=\"middle\">Thickness</text><text x=\"200\" y=\"145\" text-anchor=\"middle\">Check</text><text x=\"260\" y=\"90\" text-anchor=\"middle\">Tapered</text><text x=\"260\" y=\"105\" text-anchor=\"middle\">Slot</text><text x=\"260\" y=\"125\" text-anchor=\"middle\">Gauge</text><text x=\"260\" y=\"145\" text-anchor=\"middle\">Tool</text></svg>",
+   "n": "what is a wire gauge and what does it measure?",
+   "sub": "workshop",
+   "at": "2026-11-02"
   }
  }
 }
