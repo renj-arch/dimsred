@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T06:10:27.827Z",
-  "cursor": 396,
-  "built": 376
+  "updatedAt": "2026-11-02T06:47:00.116Z",
+  "cursor": 399,
+  "built": 379
  },
  "figs": {
   "11434945": {
@@ -65,6 +65,12 @@
    "n": "define fatigue strength.",
    "sub": "design",
    "at": "2026-10-21"
+  },
+  "91889543": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Hammer -->\n  <rect x=\"140\" y=\"20\" width=\"80\" height=\"10\" rx=\"2\"/>\n  <rect x=\"130\" y=\"30\" width=\"100\" height=\"10\" rx=\"2\"/>\n  <!-- Handle -->\n  <line x1=\"145\" y1=\"40\" x2=\"145\" y2=\"160\" stroke-width=\"8\"/>\n  <!-- Sheet Metal -->\n  <rect x=\"100\" y=\"70\" width=\"160\" height=\"40\" fill=\"#eee\" opacity=\"0.3\" stroke=\"#222\" stroke-width=\"1\"/>\n  <!-- Dolly Block -->\n  <rect x=\"80\" y=\"90\" width=\"120\" height=\"50\" rx=\"5\"/>\n  <!-- Label: Hammer -->\n  <text x=\"170\" y=\"45\" text-anchor=\"middle\">Hammer</text>\n  <!-- Label: Sheet Metal -->\n  <text x=\"180\" y=\"95\">Sheet Metal</text>\n  <!-- Label: Dolly (Anvil) -->\n  <text x=\"140\" y=\"175\" text-anchor=\"middle\">Dolly Block</text>\n  <!-- Arrow indicating backing force -->\n  <path d=\"M 80 120 L 60 120 M 60 120 L 30 140\" stroke-dasharray=\"4,2\"/>\n  <text x=\"25\" y=\"135\">Backing Force</text>\n</svg>",
+   "n": "what is a dolly and its use?",
+   "sub": "workshop",
+   "at": "2026-11-02"
   },
   "94621318": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Workshop: Blacksmith's Set Hammer</text><rect x=\"40\" y=\"60\" width=\"280\" height=\"100\" rx=\"5\" stroke-dasharray=\"4 2\"/><circle cx=\"180\" cy=\"90\" r=\"35\" fill=\"#eee\" stroke=\"#222\"/><line x1=\"180\" y1=\"90\" x2=\"180\" y2=\"110\" stroke=\"#222\"/><text x=\"165\" y=\"94\">Flat Face</text><text x=\"195\" y=\"94\">Square Peen</text><line x1=\"180\" y1=\"110\" x2=\"180\" y2=\"130\" stroke-dasharray=\"2 2\"/><text x=\"160\" y=\"140\">Target: Corner/Recess</text><path d=\"M 145 110 L 155 120 M 180 110 L 180 130 M 215 110 L 205 120\" stroke-width=\"2\"/><text x=\"160\" y=\"165\">Precision Striking</text><circle cx=\"180\" cy=\"45\" r=\"20\" fill=\"#eee\" stroke=\"#222\"/><text x=\"170\" y=\"55\">Square Punch Shape</text></svg>",
@@ -2259,6 +2265,18 @@
   "1c31223b": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Sheet Metal Snips</text><g id=\"straight\"><path d=\"M40,60 L100,60 M120,60 L180,60 M200,60 L260,60\" stroke-dasharray=\"5,3\"/><text x=\"70\" y=\"55\" text-anchor=\"middle\">Straight</text><text x=\"140\" y=\"55\" text-anchor=\"middle\">Straight</text><text x=\"230\" y=\"55\" text-anchor=\"middle\">Straight</text></g><g id=\"curved\"><path d=\"M40,90 Q70,60 100,90 T130,90 T160,90 T190,90\" stroke-dasharray=\"5,3\"/><text x=\"110\" y=\"85\" text-anchor=\"middle\">Curved</text></g><g id=\"aviation\"><path d=\"M40,120 L70,90 L100,120 M120,120 L150,90 L180,120\" stroke-dasharray=\"5,3\"/><text x=\"110\" y=\"115\" text-anchor=\"middle\">Aviation</text></g><path d=\"M340,160 L340,175 M340,180 L320,195\" stroke-width=\"2\"/><text x=\"330\" y=\"175\" text-anchor=\"end\">Thin Sheet</text></svg>",
    "n": "name the common sheet metal snips.",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "e365ca77": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"200\" height=\"80\" rx=\"5\"/><path d=\"M 100 80 L 100 160 M 300 80 L 300 160 M 100 100 L 300 100 M 100 120 L 300 120\"/><path d=\"M 100 80 Q 150 40 200 80 T 300 80\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"160\" y=\"70\" text-anchor=\"middle\">Stake Holder</text><text x=\"160\" y=\"195\" text-anchor=\"middle\">Sheet Metal Stake</text><text x=\"160\" y=\"55\" text-anchor=\"middle\">Hammering Surface</text><path d=\"M 240 80 L 240 160 M 260 80 L 260 160 M 240 100 L 260 100 M 240 120 L 260 120\"/><text x=\"275\" y=\"135\" text-anchor=\"middle\">Sheet</text><path d=\"M 80 140 Q 100 160 120 140 T 160 140 T 200 140 T 240 140\" fill=\"none\"/><text x=\"160\" y=\"175\" text-anchor=\"middle\">Curved Form</text></svg>",
+   "n": "what is a stake used for in sheet metal work?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "73776eff": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"80\" width=\"120\" height=\"10\" rx=\"2\" />\n <line x1=\"40\" y1=\"90\" x2=\"160\" y2=\"90\" stroke-width=\"1.5\" />\n <text x=\"35\" y=\"85\">Sheet</text>\n <text x=\"165\" y=\"85\">Metal</text>\n <circle cx=\"100\" cy=\"40\" r=\"25\" fill=\"#ddd\" stroke=\"#222\" />\n <path d=\"M 75 40 L 100 10 L 125 40 Z\" fill=\"#ddd\" stroke=\"#222\" />\n <text x=\"95\" y=\"30\">Rubber</text>\n <text x=\"95\" y=\"48\">Head</text>\n <path d=\"M 75 60 L 100 100 L 125 60 Z\" fill=\"#ddd\" stroke=\"#222\" />\n <text x=\"95\" y=\"115\">Mallet</text>\n <line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"100\" stroke-dasharray=\"3,3\" />\n <path d=\"M 160 40 L 200 40 L 200 100 L 160 100 Z\" fill=\"#ddd\" stroke=\"#222\" />\n <text x=\"175\" y=\"30\">Soft</text>\n <text x=\"175\" y=\"48\">Face</text>\n <path d=\"M 220 40 L 260 40 L 260 100 L 220 100 Z\" fill=\"#ddd\" stroke=\"#222\" />\n <text x=\"235\" y=\"30\">No</text>\n <text x=\"235\" y=\"48\">Marks</text>\n</svg>",
+   "n": "what is the use of the mallet and rubber-headed hammer in sheet metal?",
    "sub": "workshop",
    "at": "2026-11-02"
   }

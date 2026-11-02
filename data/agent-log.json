@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T01:29:40.484Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visual data. Since MockPapers and ExamPatterns produced zero fixes in the last two runs, they will be placed later in the queue after critical infrastructure is stabilized, adhering to the rule of starving underperformers temporarily while addressing unfinished standing goals.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "ExamPatterns",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (345 total)",
-       "text": "What is a dowel joint? | State the strength and weakness of the plain butt joint. | What is a sash (frame) joint?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T01:48:42.207Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -571,8 +521,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T07:01:38.526Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/syllabus files are missing, MetaLearn is needed immediately to generate foundational study materials before we can build specific question banks or mock exams. MainsFresh should follow to ensure daily fresh material generation once core gaps are addressed. Invention and MockPapers will be deferred as they require existing content (syllabus/papers) which MetaLe",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (379 total)",
+       "text": "What is a stake used for in sheet metal work? | What is a dolly and its use? | What is the use of the mallet and rubber-headed hammer in sheet metal?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T06:34:46.093Z",
+ "lastRun": "2026-11-02T07:01:38.526Z",
  "model": "qwen3.5:9b"
 }
