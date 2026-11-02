@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-02T17:42:51.325Z",
-  "cursor": 453,
-  "built": 425
+  "updatedAt": "2026-11-02T18:26:12.518Z",
+  "cursor": 456,
+  "built": 428
  },
  "figs": {
   "11434945": {
@@ -2553,6 +2553,24 @@
   "884215c9": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"140\" /><rect x=\"140\" y=\"40\" width=\"80\" height=\"140\" /><rect x=\"240\" y=\"40\" width=\"80\" height=\"140\" /><text x=\"50\" y=\"70\">Veneer A</text><text x=\"150\" y=\"70\">Veneer B</text><text x=\"250\" y=\"70\">Veneer C</text><line x1=\"80\" y1=\"40\" x2=\"80\" y2=\"180\" /><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"180\" /><line x1=\"280\" y1=\"40\" x2=\"280\" y2=\"180\" /><text x=\"35\" y=\"110\">Grain Direction</text><text x=\"95\" y=\"110\">→</text><text x=\"195\" y=\"110\">←</text><text x=\"295\" y=\"110\">→</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" /><text x=\"170\" y=\"200\">Plywood Board</text></svg>",
    "n": "what is a veneer and how is plywood made from it?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "5d269e5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"120\" height=\"60\" stroke-dasharray=\"4,2\"/><text x=\"100\" y=\"95\" text-anchor=\"middle\">Wood Surface</text><path d=\"M 60 100 L 60 120 M 70 100 L 70 120 M 80 100 L 80 120 M 90 100 L 90 120 M 100 100 L 100 120\"/><text x=\"55\" y=\"115\">Sanding</text><path d=\"M 170 80 L 170 140\" stroke-dasharray=\"2,2\"/><text x=\"185\" y=\"110\" text-anchor=\"start\">Film/Wax/Oil</text><rect x=\"260\" y=\"80\" width=\"60\" height=\"60\" fill=\"#ddd\" opacity=\"0.3\" stroke-dasharray=\"4,2\"/><text x=\"290\" y=\"115\" text-anchor=\"middle\">Finished</text></svg>",
+   "n": "how is wood finished after assembly?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "11ac2ee4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Sheet Metal -->\n  <rect x=\"10\" y=\"10\" width=\"340\" height=\"200\" stroke-dasharray=\"4,4\" />\n  <text x=\"180\" y=\"30\" text-anchor=\"middle\">Sheet Metal</text>\n  \n  <!-- Card Pattern Template -->\n  <path d=\"M 60 60 L 120 40 L 180 60 L 220 90 L 180 120 L 120 140 L 60 120 L 40 90 Z\" />\n  <text x=\"105\" y=\"100\" text-anchor=\"middle\">Card Pattern</text>\n  \n  <!-- Tracing Action -->\n  <path d=\"M 60 60 Q 80 70 100 60\" stroke-dasharray=\"2,2\" />\n  <circle cx=\"90\" cy=\"65\" r=\"3\" fill=\"#222\" />\n  \n  <!-- Cut Out Result -->\n  <path d=\"M 60 60 L 120 40 L 180 60 L 220 90 L 180 120 L 120 140 L 60 120 L 40 90 Z\" fill=\"none\" stroke-width=\"3\" />\n  <text x=\"135\" y=\"105\" text-anchor=\"middle\">Traced &amp; Cut</text>\n  \n  <!-- Repeating Tray -->\n  <path d=\"M 240 60 L 300 40 L 340 60 L 380 90 L 340 120 L 300 140 L 260 120 L 240 90 Z\" />\n  <text x=\"315\" y=\"100\" text-anchor=\"middle\">Repeatable Tray</text>\n  \n  <!-- Legend/Notes -->\n  <line x1=\"20\" y1=\"180\" x2=\"40\" y2=\"180\" />\n  <text x=\"45\" y=\"185\">Template</text>\n  <line x1=\"20\" y1=\"195\" x2=\"40\" y2=\"195\" stroke-dasharray=\"2,2\" />\n  <text x=\"45\" y=\"200\">Developed Shape</text>\n</svg>",
+   "n": "how is a cardboard (card) pattern used in tin smithing?",
+   "sub": "workshop",
+   "at": "2026-11-02"
+  },
+  "2a186db3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"60\" width=\"80\" height=\"60\" /><path d=\"M120 60 L120 120 M120 60 L160 60 M120 120 L160 120\" stroke-width=\"3\" /><text x=\"50\" y=\"95\" text-anchor=\"middle\">Iron/Steel</text><text x=\"175\" y=\"95\" text-anchor=\"middle\">Coating Layer</text><path d=\"M40 140 L160 140 M40 180 L160 180\" stroke-width=\"2\" /><text x=\"50\" y=\"135\" text-anchor=\"middle\">Moisture Barrier</text><text x=\"50\" y=\"175\" text-anchor=\"middle\">(Oil/Paint/Galvanizing)</text><rect x=\"240\" y=\"60\" width=\"80\" height=\"60\" /><path d=\"M320 60 L320 120 M320 60 L280 60 M320 120 L280 120\" stroke-width=\"3\" /><text x=\"250\" y=\"95\" text-anchor=\"middle\">Rust Free</text><text x=\"250\" y=\"135\" text-anchor=\"middle\">Protected Surface</text></svg>",
+   "n": "how is rust prevented on iron and steel workshop goods?",
    "sub": "workshop",
    "at": "2026-11-02"
   }

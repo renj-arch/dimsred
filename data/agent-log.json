@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T11:11:24.530Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. BankFigures is the only agent with recent output, so it leads to address the 81 open faults. Invention and ExamPatterns follow to tackle pending ideas and syllabus gaps while MetaLearn monitors quality; MainsFresh is starved of input after two zero-fix runs and moves last.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "ExamPatterns",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (398 total)",
-       "text": "What is a universal surface gauge used for? | What are vee-blocks used for? | What is a dial test indicator and how is it used?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T12:15:04.921Z",
    "model": "batiai/qwen3.8-27b:iq3",
    "totalFixes": 3,
@@ -658,8 +608,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-02T18:47:05.615Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. MainsFresh produced 0 fixes in the last two runs and should be deprioritized to allow BankFigures and MockPapers to clear their respective backlogs first. The plan prioritizes fixing broken figures, generating mock papers, then exam patterns, reserving Invention for the final slot if capacity remains.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (428 total)",
+       "text": "How is wood finished after assembly? | How is a cardboard (card) pattern used in tin smithing? | How is rust prevented on iron and steel workshop goods?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Refrigeration & Air Conditioning (360 in pool)",
+       "text": "Refrigeration & Air Conditioning"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T18:12:53.286Z",
+ "lastRun": "2026-11-02T18:47:05.615Z",
  "model": "qwen3.5:9b"
 }
