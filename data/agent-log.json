@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T22:48:41.856Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. MockPapers should follow immediately to address the missing papers flag in filesPresent. MetaLearn is scheduled last because it produced zero fixes in the last two consecutive runs, indicating it needs starvation or input refresh before re-engagement.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (449 total)",
-       "text": "Write the formula for the magnitude of the resultant of two forces P and Q actin | How is the direction of the resultant of two forces P and Q (angle θ between the | Two equal forces P act at an angle of 60°. Find the magnitude of their resultant"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T23:11:35.593Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -711,8 +671,59 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T05:07:51.346Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to fix broken visual assets blocking study flow. MockPapers and MainsFresh follow immediately to generate fresh, complete exam materials since papers and mains content are currently missing. ExamPatterns and Invention are deferred as they require stable foundational content (figures/papers) before adding new patterns or inventions.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (493 total)",
+       "text": "What is the effort P required to pull a body of weight W up a rough inclined pla | What is the effort needed to just hold a body of weight W on a rough inclined pl | At what inclination does a body just begin to slide down a plane of coefficient "
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Refrigeration & Air Conditioning (360 in pool)",
+       "text": "Refrigeration & Air Conditioning"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T04:30:22.990Z",
+ "lastRun": "2026-11-03T05:07:51.346Z",
  "model": "qwen3.5:9b"
 }
