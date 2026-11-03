@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T11:42:35.959Z",
-  "cursor": 561,
-  "built": 527
+  "updatedAt": "2026-11-03T12:09:58.791Z",
+  "cursor": 564,
+  "built": 530
  },
  "figs": {
   "11434945": {
@@ -3165,6 +3165,24 @@
   "a8c0df82": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Projectile Path</text><path d=\"M 30 190 Q 180 60 330 190\" fill=\"none\" stroke-width=\"2\"/><circle cx=\"30\" cy=\"190\" r=\"4\"/><circle cx=\"330\" cy=\"190\" r=\"4\"/><line x1=\"30\" y1=\"186\" x2=\"30\" y2=\"194\"/><line x1=\"330\" y1=\"186\" x2=\"330\" y2=\"194\"/><text x=\"50\" y=\"180\">u</text><text x=\"310\" y=\"180\">u</text><path d=\"M 30 190 L 30 60\" stroke-dasharray=\"4,2\"/><line x1=\"30\" y1=\"60\" x2=\"30\" y2=\"50\"/><line x1=\"30\" y1=\"50\" x2=\"30\" y2=\"40\"/><text x=\"25\" y=\"55\">u sin θ</text><text x=\"25\" y=\"75\">g t/2</text><path d=\"M 30 60 L 180 60\" stroke-dasharray=\"4,2\"/><line x1=\"180\" y1=\"60\" x2=\"190\" y2=\"60\"/><line x1=\"180\" y1=\"50\" x2=\"180\" y2=\"40\"/><text x=\"175\" y=\"45\">u cos θ</text><text x=\"175\" y=\"30\">T/2</text><text x=\"195\" y=\"65\">Horizontal Range</text><text x=\"195\" y=\"85\">(Not needed for T)</text></svg>",
    "n": "write the time of flight of a projectile projected with velocity u at angle θ to the horizontal.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "a80395cb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"190\">Ground</text><path d=\"M 60 180 L 100 100 L 140 180\" fill=\"none\" stroke=\"#222\"/><circle cx=\"100\" cy=\"100\" r=\"3\"/><text x=\"95\" y=\"95\">Max Height H</text><line x1=\"60\" y1=\"175\" x2=\"140\" y2=\"175\" stroke-dasharray=\"4,2\"/><text x=\"100\" y=\"195\">Range R</text><path d=\"M 60 180 L 100 100 L 140 180\" fill=\"none\" stroke-width=\"1.5\"/><text x=\"70\" y=\"130\">Projectile Path</text><text x=\"20\" y=\"190\">θ</text><line x1=\"30\" y1=\"180\" x2=\"40\" y2=\"170\" stroke-dasharray=\"4,2\"/><text x=\"50\" y=\"165\">u</text></svg>",
+   "n": "write the maximum height reached by a projectile projected at angle θ with velocity u.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "98e44315": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Horizontal Range R</text><path d=\"M 40 40 L 320 40\"/><path d=\"M 40 40 Q 180 160 320 40\" fill=\"none\" stroke-width=\"2\"/><circle cx=\"40\" cy=\"40\" r=\"3\"/><circle cx=\"320\" cy=\"40\" r=\"3\"/><text x=\"50\" y=\"45\">Launch</text><text x=\"310\" y=\"45\">Impact</text><path d=\"M 40 40 L 40 180\" stroke-dasharray=\"4,2\"/><path d=\"M 320 40 L 320 180\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"115\">Vertical</text><text x=\"35\" y=\"165\">Axis</text><text x=\"275\" y=\"115\">Horizontal</text><text x=\"275\" y=\"165\">Axis</text><path d=\"M 40 40 L 180 40\" stroke-dasharray=\"4,2\"/><text x=\"90\" y=\"35\">R/2</text><path d=\"M 180 40 L 180 160\" stroke-dasharray=\"4,2\"/><text x=\"175\" y=\"105\">H</text></svg>",
+   "n": "write the horizontal range of a projectile launched with velocity u at angle θ.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "606a3e6f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"195\">x</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"70\">y</text><path d=\"M 40 180 L 100 100 L 160 180\" fill=\"none\" stroke-width=\"2.5\"/><circle cx=\"40\" cy=\"180\" r=\"3\"/><circle cx=\"160\" cy=\"180\" r=\"3\"/><text x=\"90\" y=\"170\">R</text><line x1=\"100\" y1=\"100\" x2=\"140\" y2=\"60\" stroke-width=\"1.5\"/><text x=\"115\" y=\"55\">θ</text><text x=\"80\" y=\"30\">Max Range at θ = 45°</text></svg>",
+   "n": "at what angle is the horizontal range of a projectile maximum?",
    "sub": "emech",
    "at": "2026-11-03"
   }
