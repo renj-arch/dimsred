@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T23:56:59.428Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "BankFigures is the only agent producing fixes recently and must lead to address critical figure gaps; MetaLearn should follow to generate fresh syllabus-aligned content since files are missing; Invention goes last as it has zero output in recent runs and may be starved of inputs.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (458 total)",
-       "text": "Write the analytical method for the resultant of several concurrent coplanar for | Find the resultant of two unlike parallel forces of 60 N and 40 N acting 50 cm a | Two like parallel forces of 30 N and 70 N are 20 cm apart. Find the position of "
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T00:17:56.247Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -748,8 +708,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T06:13:52.914Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-03T05:59:04.352Z",
+ "lastRun": "2026-11-03T06:13:52.914Z",
  "model": "qwen3.5:9b"
 }
