@@ -56,7 +56,6 @@ var GC = require('./lib/graph-core.js');
 var SCHEMA = require('./lib/graph-schema.js');
 var CURATION = require('./lib/graph-edge-curation.js');
 var TYPE_AUTHORITY = require('./lib/type-authority.js');
-var TL_LINKS = require('./lib/timeline-links.js');
 
 var ROOT = '.';
 var WRITE = process.argv.indexOf('--write') >= 0;
@@ -123,7 +122,6 @@ function main() {
     process.exit(2);
   }
   var meta = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/timeline.json'), 'utf8'));
-  var links = TL_LINKS.loadLinks(meta, path.join(ROOT, 'data'));
   var nodes = [];
   for (var p = 0; p < meta.nodesParts; p++) {
     var sh = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/timeline.nodes.' + p + '.json'), 'utf8'));
@@ -164,7 +162,7 @@ function main() {
     members[k].verbs[rel] = true;
   });
   var hits = [];
-  links.forEach(function (l) {
+  (meta.links || []).forEach(function (l) {
     if (l.a !== node.id && l.b !== node.id) return;
     if ((l.w || 0) < 3) return;
     var other = BY_ID[l.a === node.id ? l.b : l.a];

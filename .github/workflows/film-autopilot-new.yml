@@ -1,0 +1,33 @@
+name: Film Autopilot (Fresh)
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 4 * * *'
+
+permissions:
+  contents: write
+
+jobs:
+  agent:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: agent-cautious-push
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Download Qwen 35B quantized model
+        run: |
+          mkdir -p models
+          curl -L -o models/Qwen2.5-35B-Instruct-Q4_K_M.gguf \
+            "https://huggingface.co/Qwen/Qwen2.5-35B-Instruct-GGUF/resolve/main/Qwen2.5-35B-Instruct-Q4_K_M.gguf"
+      - name: Run agent pipeline (autopilot -> discover -> invent 35B -> build -> site)
+        run: node scripts/film/autopilot.js --json | tee out/autopilot.json
+      - name: Upload selection evidence
+        uses: actions/upload-artifact@v4
+        with:
+          name: film-autopilot-selection
+          path: out/autopilot/
+          if-no-files-found: warn

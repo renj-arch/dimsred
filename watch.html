@@ -4,196 +4,171 @@
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>Watch — vlymbooq</title>
-<meta name="description" content="Watch a vlymbooq film: short, sourced cinematic history, one object at a time." />
+<meta name="description" content="Short, sourced cinematic histories from vlymbooq. Each film is a sourced argument with an open debate map." />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=DM+Sans:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --bg:#070707; --panel:#0f0d0a; --panel2:#16110c; --bone:#f2e6d0;
-    --muted:rgba(242,230,208,.62); --faint:rgba(242,230,208,.36);
-    --gold:#d6a14a; --teal:#143f47; --line:rgba(214,161,74,.2);
-    --serif:Georgia,"Liberation Serif","Times New Roman",serif;
-    --sans:"Liberation Sans",Arial,Helvetica,sans-serif;
-  }
-  *{box-sizing:border-box}
-  body{margin:0;background:var(--bg);color:var(--bone);font-family:var(--sans);line-height:1.6;
-    background-image:radial-gradient(75% 45% at 50% -8%,rgba(214,161,74,.11),transparent 70%),
-      radial-gradient(45% 35% at 100% 25%,rgba(20,63,71,.18),transparent 70%)}
-  a{color:inherit}
-  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
-  .top{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;
-    border-bottom:1px solid rgba(255,255,255,.07)}
-  .brand{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);text-decoration:none}
-  .brand b{color:var(--gold)}
-  .back{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;
-    border:1px solid rgba(255,255,255,.12);padding:9px 14px;border-radius:999px;white-space:nowrap}
-  .back:hover{border-color:var(--gold);color:var(--bone)}
-  main{padding:44px 0 90px}
-  .kicker{font-size:.68rem;letter-spacing:.36em;text-transform:uppercase;color:var(--gold);margin-bottom:16px}
-  h1{font-family:var(--serif);font-weight:900;letter-spacing:-.05em;line-height:.92;
-    font-size:clamp(34px,5.4vw,72px);margin:0 0 14px}
-  .sub{font-family:var(--serif);font-size:clamp(19px,2.2vw,28px);line-height:1.2;color:var(--muted);
-    margin:0 0 28px;max-width:820px;letter-spacing:-.01em}
-  .stage{position:relative;border:1px solid rgba(255,255,255,.09);border-radius:16px;overflow:hidden;
-    background:#000;box-shadow:0 40px 120px rgba(0,0,0,.6)}
-  video{display:block;width:100%;height:auto;aspect-ratio:16/9;background:#000}
-  .stage .status{position:absolute;left:14px;top:14px;font-size:.58rem;letter-spacing:.22em;
-    text-transform:uppercase;color:rgba(242,230,208,.85);background:rgba(7,7,7,.72);
-    border:1px solid rgba(214,161,74,.35);border-radius:999px;padding:7px 12px;backdrop-filter:blur(6px)}
-  .meta{display:flex;flex-wrap:wrap;gap:8px 22px;margin:20px 0 0;font-size:.66rem;letter-spacing:.18em;
-    text-transform:uppercase;color:var(--faint)}
-  .dek{max-width:820px;color:var(--muted);margin:18px 0 0}
-  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:28px 0 0}
-  .btn{display:inline-block;text-decoration:none;border:1px solid rgba(242,230,208,.2);color:var(--bone);
-    padding:11px 15px;border-radius:999px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
-  .btn:hover{border-color:var(--gold)}
-  .btn.strong{background:var(--gold);color:#17110a;border-color:var(--gold);font-weight:800}
-  .note{border-left:3px solid var(--teal);padding:16px 20px;color:var(--muted);font-size:.9rem;max-width:820px;
-    background:linear-gradient(90deg,rgba(20,63,71,.14),transparent);border-radius:0 10px 10px 0;margin:34px 0 0}
-  .note b{color:var(--bone)}
-  .others{border-top:1px solid rgba(255,255,255,.08);margin-top:56px;padding-top:24px}
-  .others h2{font-family:var(--serif);font-size:1.1rem;letter-spacing:-.01em;margin:0 0 14px}
-  .others a{display:inline-block;margin:0 18px 8px 0;text-decoration:none;color:var(--muted);
-    font-size:.72rem;letter-spacing:.16em;text-transform:uppercase;border-bottom:1px solid transparent}
-  .others a:hover{color:var(--bone);border-color:var(--gold)}
-  .empty{border:1px dashed rgba(242,230,208,.2);border-radius:16px;padding:34px;color:var(--muted)}
-  footer{border-top:1px solid rgba(255,255,255,.08);padding:28px 0 48px;color:var(--faint);font-size:.72rem}
-  @media(max-width:820px){
-    .wrap{padding:0 18px}
-    main{padding:28px 0 60px}
-  }
+:root {
+  --bg:#070707; --panel:#0f0d0a; --panel2:#16110c; --bone:#f2e6d0;
+  --muted:rgba(242,230,208,.62); --faint:rgba(242,230,208,.38);
+  --gold:#d6a14a; --rust:#b14a2f; --card:#0f0d0a; --line:rgba(242,230,208,.14);
+}
+* { box-sizing:border-box; }
+html,body { margin:0; padding:0; background:var(--bg); color:var(--bone); font-family:'DM Sans',system-ui,sans-serif; line-height:1.5; }
+a { color:var(--gold); text-decoration:none; }
+a:hover { color:var(--bone); }
+.skip-link { position:absolute; top:-100%; left:50%; transform:translateX(-50%); background:var(--gold); color:var(--bg); padding:.5rem 1rem; border-radius:4px; z-index:100; }
+.skip-link:focus { top:1rem; }
+header { position:sticky; top:0; z-index:50; background:rgba(7,7,7,.92); backdrop-filter:blur(6px); border-bottom:1px solid var(--line); }
+.header-inner { max-width:1100px; margin:0 auto; padding:.75rem 1rem; display:flex; align-items:center; gap:1rem; }
+.logo { font-family:'Cormorant Garamond',serif; font-weight:700; font-size:1.4rem; color:var(--bone); letter-spacing:.02em; }
+nav { margin-left:auto; display:flex; gap:1.5rem; font-size:.85rem; font-weight:500; }
+nav a { color:var(--muted); }
+nav a:hover { color:var(--gold); }
+main { max-width:1100px; margin:0 auto; padding:2rem 1rem 4rem; }
+.film-hero { text-align:center; padding:3rem 1rem 2rem; }
+.film-hero h1 { font-family:'Cormorant Garamond',serif; font-size:clamp(1.8rem,4vw,2.8rem); font-weight:700; margin:0 0 .5rem; line-height:1.2; }
+.film-hero .subtitle { color:var(--muted); font-size:clamp(1rem,2vw,1.2rem); margin:0 0 1rem; max-width:70ch; margin-left:auto; margin-right:auto; }
+.film-hero .meta { display:flex; flex-wrap:wrap; justify-content:center; gap:1rem; font-size:.85rem; color:var(--faint); margin-top:1rem; }
+.player-wrap { position:relative; width:100%; max-width:960px; margin:0 auto 2rem; aspect-ratio:16/9; background:#000; border-radius:4px; overflow:hidden; border:1px solid var(--line); }
+#player { width:100%; height:100%; display:block; }
+.poster-mode { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:#000; z-index:10; }
+.poster-mode img { max-width:100%; max-height:100%; object-fit:contain; }
+.play-btn { position:absolute; inset:0; background:transparent; border:none; cursor:pointer; display:flex; align-items:center; justify-content:center; z-index:20; }
+.play-btn svg { width:80px; height:80px; fill:var(--bone); filter:drop-shadow(0 4px 16px rgba(0,0,0,.6)); transition:transform .15s, fill .15s; }
+.play-btn:hover svg { transform:scale(1.1); fill:var(--gold); }
+.play-btn:focus-visible { outline:2px solid var(--gold); outline-offset:4px; border-radius:50%; }
+.video-mode .poster-mode { display:none; }
+.video-mode .play-btn { display:none; }
+.film-info { max-width:960px; margin:0 auto; padding:0 1rem 3rem; }
+.film-info h2 { font-family:'Cormorant Garamond',serif; font-size:1.3rem; font-weight:600; margin:2rem 0 1rem; color:var(--gold); }
+.film-info p { color:var(--muted); max-width:70ch; margin:0 0 1rem; }
+.meta-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(160px,1fr)); gap:.75rem; margin:1.5rem 0; font-size:.85rem; }
+.meta-item { background:var(--panel); border:1px solid var(--line); border-radius:4px; padding:.75rem 1rem; }
+.meta-item strong { color:var(--bone); display:block; margin-bottom:.25rem; }
+.meta-item span { color:var(--muted); }
+.tags { display:flex; flex-wrap:wrap; gap:.5rem; margin-top:1rem; }
+.tag { background:var(--panel2); border:1px solid var(--line); color:var(--muted); padding:.25rem .75rem; border-radius:999px; font-size:.75rem; transition:all .15s; }
+.tag:hover { color:var(--gold); border-color:var(--gold); }
+.debate-link { display:inline-flex; align-items:center; gap:.5rem; margin-top:1.5rem; padding:.75rem 1.25rem; background:var(--panel); border:1px solid var(--line); border-radius:4px; color:var(--gold); font-weight:500; }
+.debate-link:hover { background:var(--panel2); border-color:var(--gold); }
+footer { border-top:1px solid var(--line); padding:2rem 1rem; text-align:center; color:var(--faint); font-size:.8rem; }
+@media (max-width: 640px) {
+  .header-inner { flex-wrap:wrap; }
+  nav { width:100%; justify-content:center; margin-top:.5rem; }
+}
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="top">
-    <a class="brand" href="index.html"><b>vlymbooq</b> · watch</a>
-    <a class="back" href="films.html">&larr; All films</a>
+<a href="#main" class="skip-link">Skip to player</a>
+<header>
+  <div class="header-inner">
+    <a href="index.html" class="logo">vlymbooq</a>
+    <nav>
+      <a href="index.html">Films</a>
+      <a href="films.html">Archive</a>
+      <a href="https://github.com/renj-arch/dimsred" target="_blank" rel="noopener">Source</a>
+    </nav>
   </div>
-</div>
-
-<main class="wrap" id="main">
-  <section id="film" hidden>
-    <div class="kicker" id="kicker">Film</div>
-    <h1 id="title"></h1>
-    <p class="sub" id="subtitle"></p>
-    <div class="stage">
-      <video id="video" controls playsinline preload="metadata">
-        <track id="captions" kind="captions" srclang="en" label="English" default />
-        Your browser does not support the video tag.
-      </video>
-      <div class="status" id="status"></div>
+</header>
+<main id="main">
+  <div class="film-hero">
+    <h1 id="filmTitle">Loading…</h1>
+    <p class="subtitle" id="filmSubtitle"></p>
+    <div class="meta" id="filmMeta"></div>
+  </div>
+  <div class="player-wrap" id="playerWrap">
+    <div class="poster-mode" id="posterMode">
+      <img id="posterImg" alt="" />
+      <button class="play-btn" id="playBtn" aria-label="Play film" type="button">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14l11-7z"/></svg>
+      </button>
     </div>
-    <div class="meta" id="meta"></div>
-    <p class="dek" id="logline"></p>
-    <div class="actions">
-      <a class="btn strong" id="master" href="#">1080p master &rarr;</a>
-      <a class="btn" id="making" href="#">Inside the making</a>
-      <a class="btn" id="argument" href="#">Open the argument</a>
-    </div>
-    <div class="note" id="note"></div>
-  </section>
-
-  <section id="missing" class="empty" hidden>
-    <h1 style="font-size:clamp(28px,4vw,48px);margin:0 0 12px">Not published yet</h1>
-    <p id="missingText">This film is still in production. Nothing is shown until it passes QC.</p>
-    <p><a class="btn" href="films.html">&larr; Back to the films</a></p>
-  </section>
-
-  <section class="others" id="others" hidden>
-    <h2>Other films</h2>
-    <div id="otherLinks"></div>
-  </section>
+    <video id="player" controls playsinline preload="metadata" poster="" aria-label="Film player"></video>
+  </div>
+  <div class="film-info" id="filmInfo"></div>
 </main>
-
-<div class="wrap">
-  <footer>vlymbooq · every number sourced · a 720p preview on this page, the 1080p master on the release.</footer>
-</div>
-
+<footer>
+  vlymbooq · history, cut from paper · <a href="https://github.com/renj-arch/dimsred">source</a>
+</footer>
 <script>
-(function () {
-  var params = new URLSearchParams(location.search);
-  var wanted = params.get('film');
+const FILM_ID = new URLSearchParams(location.search).get('film') || 'salt-march';
+let filmData = null;
 
-  function pick(data) {
-    var films = (data && data.films) || [];
-    if (!films.length) return null;
-    if (!wanted) return films[0];
-    for (var i = 0; i < films.length; i++) if (films[i].id === wanted) return films[i];
-    return null;
-  }
-
-  function fill(film) {
-    document.getElementById('film').hidden = false;
-    document.title = film.title + ' — watch | vlymbooq';
-    document.getElementById('kicker').textContent = film.kicker || 'Film';
-    document.getElementById('title').textContent = film.title;
-    document.getElementById('subtitle').textContent = film.subtitle || '';
-    document.getElementById('status').textContent = film.status || '';
-    document.getElementById('logline').textContent = film.logline || '';
-
-    var meta = [];
-    if (film.duration) meta.push(film.duration);
-    if (film.scenes) meta.push(film.scenes + ' scenes');
-    if (film.shots) meta.push(film.shots + ' shots');
-    if (film.sources) meta.push(film.sources + ' sources');
-    if (film.date) meta.push(film.date);
-    document.getElementById('meta').innerHTML = meta.map(function (m) {
-      return '<span>' + String(m).replace(/[<>&]/g, '') + '</span>';
-    }).join('');
-
-    var video = document.getElementById('video');
-    if (film.poster) video.setAttribute('poster', film.poster);
-    if (film.preview) {
-      video.setAttribute('src', film.preview);
-    } else {
-      video.classList.add('empty');
-      document.getElementById('status').textContent = 'Preview not published yet';
+async function loadIndex() {
+  try {
+    const res = await fetch('data/film-watch.json?v=' + Date.now(), {cache:'no-store'});
+    if (!res.ok) throw new Error('Index not found');
+    const idx = await res.json();
+    filmData = idx.films.find(f => f.id === FILM_ID);
+    if (!filmData) {
+      document.getElementById('filmTitle').textContent = 'Film not found';
+      return;
     }
-    if (film.captions) document.getElementById('captions').setAttribute('src', film.captions);
+    renderFilm();
+  } catch (e) {
+    document.getElementById('filmTitle').textContent = 'Index unavailable';
+    console.error(e);
+  }
+}
 
-    if (film.master) {
-      var master = document.getElementById('master');
-      master.href = film.master;
-      master.textContent = '1080p master →';
-    } else {
-      document.getElementById('master').style.display = 'none';
+function renderFilm() {
+  document.title = filmData.title + ' — vlymbooq';
+  document.getElementById('filmTitle').textContent = filmData.title;
+  document.getElementById('filmSubtitle').textContent = filmData.subtitle;
+  const meta = [
+    filmData.year,
+    filmData.duration,
+    filmData.scenes + ' scenes',
+    filmData.shots + ' shots'
+  ];
+  document.getElementById('filmMeta').innerHTML = meta.join(' · ');
+  const wrap = document.getElementById('playerWrap');
+  const posterMode = document.getElementById('posterMode');
+  const posterImg = document.getElementById('posterImg');
+  const playBtn = document.getElementById('playBtn');
+  const player = document.getElementById('player');
+  if (filmData.poster) {
+    posterImg.src = filmData.poster;
+    posterImg.alt = filmData.title + ' poster';
+  }
+  if (filmData.preview) {
+    player.poster = filmData.poster || '';
+    player.src = filmData.preview;
+    if (filmData.captions) {
+      const track = document.createElement('track');
+      track.kind = 'captions';
+      track.src = filmData.captions;
+      track.srclang = 'en';
+      track.label = 'English';
+      track.default = true;
+      player.appendChild(track);
     }
-    if (film.making) document.getElementById('making').href = film.making;
-    else document.getElementById('making').style.display = 'none';
-    if (film.argument) document.getElementById('argument').href = film.argument;
-    else document.getElementById('argument').style.display = 'none';
-
-    document.getElementById('note').innerHTML = film.note ||
-      'The 720p preview here is for watching. The <b>1080p master</b> with the full bitrate lives on the release.';
+    wrap.classList.add('video-mode');
   }
-
-  function others(data, current) {
-    var list = ((data && data.films) || []).filter(function (f) { return f.id !== current.id; });
-    if (!list.length) return;
-    document.getElementById('others').hidden = false;
-    document.getElementById('otherLinks').innerHTML = list.map(function (f) {
-      return '<a href="watch.html?film=' + encodeURIComponent(f.id) + '">' + f.title.replace(/[<>&]/g, '') + '</a>';
-    }).join('');
-  }
-
-  fetch('data/film-watch.json', { cache: 'no-cache' })
-    .then(function (r) { if (!r.ok) throw new Error('no film index'); return r.json(); })
-    .then(function (data) {
-      var film = pick(data);
-      if (!film || !film.preview) {
-        document.getElementById('missing').hidden = false;
-        if (film && film.title) document.getElementById('missingText').textContent =
-          film.title + ' is still in production. Nothing is shown until it passes QC.';
-        return;
-      }
-      fill(film);
-      others(data, film);
-    })
-    .catch(function () {
-      document.getElementById('missing').hidden = false;
-      document.getElementById('missingText').textContent =
-        'The film index could not be loaded. Try the films page.';
-    });
-})();
+  const info = document.getElementById('filmInfo');
+  info.innerHTML = `
+    <h2>About this film</h2>
+    <p>${filmData.subtitle}</p>
+    <div class="meta-grid">
+      <div class="meta-item"><strong>Year</strong><span>${filmData.year}</span></div>
+      <div class="meta-item"><strong>Duration</strong><span>${filmData.duration}</span></div>
+      <div class="meta-item"><strong>Scenes</strong><span>${filmData.scenes}</span></div>
+      <div class="meta-item"><strong>Shots</strong><span>${filmData.shots}</span></div>
+      <div class="meta-item"><strong>Status</strong><span>${filmData.status}</span></div>
+      <div class="meta-item"><strong>Master</strong><span><a href="${filmData.masterUrl}" target="_blank" rel="noopener">GitHub release</a></span></div>
+    </div>
+    <div class="tags">
+      ${filmData.tags.map(t => `<span class="tag">${t}</span>`).join('')}
+    </div>
+    <a class="debate-link" href="watch.html?film=${filmData.id}&debate=1" target="_blank">Open argument map &rarr;</a>
+  `;
+  playBtn.addEventListener('click', () => {
+    player.play().catch(() => {});
+  });
+}
+loadIndex();
 </script>
 </body>
 </html>

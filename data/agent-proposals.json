@@ -1,57 +1,17 @@
 {
  "meta": {
-  "generatedAt": "2026-10-30T07:52:06.074Z",
+  "generatedAt": "2026-10-27T08:07:35.592Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 32,
+  "count": 28,
   "lastAttempt": {
-   "at": "2026-10-30T07:52:06.074Z",
+   "at": "2026-10-27T08:07:35.592Z",
    "ok": true,
-   "count": 1,
-   "dropped": 3
+   "count": 2,
+   "dropped": 2
   }
  },
  "proposals": [
-  {
-   "id": "prp-mvuoc5ve-1",
-   "at": "2026-10-30T07:52:06.074Z",
-   "title": "Fix tutor lane generation count and parsing",
-   "why": "Recent failures show 'tutor-questions' often returning only 2 of 5 valid questions or failing to output a JSON array, causing incomplete practice sessions.",
-   "idea": "Update the Node.js script handling the 'tutor-questions' on-demand request to enforce a strict JSON schema validation. If the LLM returns fewer than 3 valid questions or invalid text, the script should retry generation with a prompt adjustment (e.g., 'Ensure you output exactly 5 JSON objects') before failing, ensuring users always get a complete set.",
-   "effort": "small",
-   "risk": "low",
-   "status": "new"
-  },
-  {
-   "id": "prp-mvt8ric8-1",
-   "at": "2026-10-29T07:48:22.040Z",
-   "title": "Auto-Resolve Low Priority Faults on Board",
-   "why": "The fault board contains 46 warnings and 12 critical items, including missing figures and coverage info. The site agent has run recently but often with rule-based logic yielding 0 fixes.",
-   "idea": "Implement a lightweight Node.js script that scans the `fault-board.json` for 'info' or 'warn' level faults (excluding critical ones) and automatically generates HTML snippets or placeholder text to address coverage gaps. This script runs as part of the GitHub Actions post-build step to keep the fault board clean without heavy LLM intervention.",
-   "effort": "small",
-   "risk": "low",
-   "status": "new"
-  },
-  {
-   "id": "prp-mvs13rr6-1",
-   "at": "2026-10-28T11:26:11.010Z",
-   "title": "Fix tutor lane output parsing robustness",
-   "why": "Recent failures in the 'tutor-questions' lane show issues like 'no JSON array in model output' and generating only 2 of 5 valid questions, causing incomplete practice sets.",
-   "idea": "Modify the Node.js script processing the Ollama response to include a regex extraction step that finds JSON-like blocks within text responses and a retry loop if the count is below the minimum threshold.",
-   "effort": "medium",
-   "risk": "low",
-   "status": "new"
-  },
-  {
-   "id": "prp-mvs13rr6-2",
-   "at": "2026-10-28T11:26:11.010Z",
-   "title": "Auto resolve low priority faults on fault board",
-   "why": "The fault board lists 68 unchanged faults including info-level items like 'Site Agent ran' and 'Corpus fill run in progress' which may be transient or already handled.",
-   "idea": "Implement a GitHub Action that scans data/fault-board.json, identifies items marked as 'info' or with no critical impact, and automatically updates their status to 'resolved' or 'monitoring' after a delay.",
-   "effort": "small",
-   "risk": "low",
-   "status": "new"
-  },
   {
    "id": "prp-mvqekj3c-1",
    "at": "2026-10-27T08:07:35.592Z",

@@ -1,0 +1,16 @@
+{
+  "agent": "vlymbooq-film-autopilot",
+  "rule": "Agent owns film loop: selects from data/film-slate.json, refuses if no ready film or sources <5, invents only when >=5 credible free sources verified, fails loud never silent.",
+  "author": "scripts/film/author.js writes ledger + 9/18-scene + audit + debate + title + sets spec + numeric audit",
+  "discover": "scripts/film/discover-news.js pulls Wikipedia/Britannica; throws if <5 sentences",
+  "invent": "scripts/film/invent-topic.js creates seed concept; throws if <5 sentences from free sources; validates consistency with invent-validator.js",
+  "validate": "invent-validator.js passes only when all Q/A consistent (no broken invented Q/A)",
+  "relevance": "current-affairs cards show high-yield / exam-relevant / low-priority from q.relevance; filter checkboxes in current-affairs.html",
+  "site": "scripts/site/rebuild-films-page.js rebuilds films.html from film-slate.json; site-agent.yml runs it",
+  "monitor": "scripts/agent-monitor.js writes out/monitor-state.txt every 30s",
+  "pipeline": "autopilot -> author -> build-film -> film.yml (QC/release) -> youtube-upload (manual until YOUTUBE_TOKEN added)",
+  "data": "quiz-proper.json carries pubDate + relevance; film-slate.json carries pubDate + status; data/research/ holds agent-created briefs only",
+  "caution": "AGENT CAUTION in every log; never invent without 5+ sources; never skip validation; never write manual briefs — agent creates from sources",
+  "budget": "Zero paid APIs; rendering on GitHub Actions free runners; 720p previews on site; 1080 master release-only (Cloudflare 25 MiB cap)",
+  "evidence": "Public dossier, sources list, sets spec, shot map, debate map, failed cuts, poster/master links visible"
+}

@@ -1,0 +1,85 @@
+name: Previous Year Papers — AI Agent
+
+# Fetches real previous-year questions for UPSC, IBPS, SSC, RBI, etc. using an
+# AI agent with web search, writes them to data/papers.json with full
+# solutions, and commits the updated file. Runs weekly or on-demand.
+#
+# The agent searches for official papers, extracts questions, and structures
+# them with explanations. Each paper gets a cutoff, official PDF link, and
+# subject tags so papers.html renders it correctly.
+
+on:
+  schedule:
+    - cron: '0 6 * * 1'   # weekly Monday 06:00 UTC
+  workflow_dispatch:
+    inputs:
+      exams:
+        description: 'Exams to fetch (space-separated, default: all)'
+        required: false
+        default: ''
+      year:
+        description: 'Target year (default: last year)'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+
+concurrency:
+  group: previous-year-papers-${{ github.event.inputs.exams || 'all' }}
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    env:
+      GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}
+      GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+      OPENROUTER_API_KEY: ${{ secrets.OPENROUTER_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Determine exams
+        id: exams
+        run: |
+          DEFAULT="upsc ibps-po sbi-clerk ssc-gd rbi nda cds ctet gate"
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ] && [ -n "${{ github.event.inputs.exams }}" ]; then
+            echo "exams=${{ github.event.inputs.exams }}" >> $GITHUB_OUTPUT
+          else
+            echo "exams=$DEFAULT" >> $GITHUB_OUTPUT
+          fi
+          YEAR="${{ github.event.inputs.year }}"
+          if [ -z "$YEAR" ]; then
+            YEAR=$(( $(date +%Y) - 1 ))
+          fi
+          echo "year=$YEAR" >> $GITHUB_OUTPUT
+
+      - name: Fetch previous year papers (AI agent)
+        env:
+          TARGET_EXAMS: ${{ steps.exams.outputs.exams }}
+          TARGET_YEAR: ${{ steps.exams.outputs.year }}
+        run: |
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/previous-year-agent.js
+
+      - name: Commit and push
+        if: always()
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/papers.json
+          git diff --staged --quiet || git commit -m "papers: add ${{ steps.exams.outputs.year }} previous year papers for ${{ steps.exams.outputs.exams }}"
+          for i in 1 2 3; do
+            git pull --rebase --autostash 2>/dev/null || true
+            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            sleep 5
+          done

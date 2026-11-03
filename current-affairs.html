@@ -52,10 +52,6 @@
         .q-card .q-progress .fill{height:100%;background:linear-gradient(90deg,var(--purple),var(--emerald));border-radius:100px;transition:width .3s}
         .q-card .q-cat-tag{display:inline-block;padding:2px 10px;border-radius:100px;background:rgba(34,211,238,.08);color:var(--cyan);font-size:.68em;font-weight:600;margin-bottom:8px}
 .q-card .q-yield{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.65em;font-weight:700;margin-left:6px;border:1px solid transparent}
-        .q-relevance{display:inline-block;padding:2px 8px;border-radius:100px;font-size:.65em;font-weight:700;margin-left:6px;border:1px solid transparent;background:rgba(167,139,250,.12);color:var(--purple);border-color:rgba(167,139,250,.25)}
-        .q-relevance.high{background:rgba(239,68,68,.12);color:#ef4444;border-color:rgba(239,68,68,.25)}
-        .q-relevance.medium{background:rgba(245,158,11,.12);color:#f59e0b;border-color:rgba(245,158,11,.25)}
-        .q-relevance.low{background:rgba(148,163,184,.12);color:#94a3b8;border-color:rgba(148,163,184,.25)}
 .q-yield.high-yield{background:rgba(239,68,68,.12);color:#ef4444;border-color:rgba(239,68,68,.25)}
 .q-yield.exam-relevant{background:rgba(245,158,11,.12);color:#f59e0b;border-color:rgba(245,158,11,.25)}
 .q-yield.low-priority{background:rgba(148,163,184,.12);color:#94a3b8;border-color:rgba(148,163,184,.25)}
@@ -274,7 +270,7 @@
                 <div class="streak" id="streakDisplay">🔥 <span id="streakNum">0</span> streak</div>
                 <button id="restartBtn" onclick="if(state.restartFn)state.restartFn()" style="display:none;padding:4px 10px;border-radius:8px;border:1px solid var(--border);background:var(--bg-card);color:var(--text);cursor:pointer;font-size:.72em">↻ Restart</button>
             </div>
-            <div role="button" tabindex="0" class="q-card" onclick="if(!event.target.closest('button,a,.q-hint,.action-btn,#jumpRow,#jumpInput'))toggleAutoPlay()">
+            <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="q-card" onclick="if(!event.target.closest('button,a,.q-hint,.action-btn,#jumpRow,#jumpInput'))toggleAutoPlay()">
                 <div class="q-num" id="qNum"></div>
                 <div class="q-progress"><div class="fill" id="qProgress" style="width:0%"></div></div>
                 <div id="jumpRow" style="display:none;align-items:center;justify-content:center;gap:6px;margin-bottom:8px">
@@ -287,7 +283,7 @@
                 <div class="q-cat-tag" id="catTag"></div>
                 <div id="qImgWrap" style="display:none;text-align:center"></div>
                 <div class="q-text" id="qText">Loading...</div>
-                <div role="button" tabindex="0" class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
+                <div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="q-hint" id="qHint" onclick="toggleHint()" style="display:none">💡 Hint
                 <div class="q-opt-grid" id="optGrid"></div>
                 <div style="font-size:.65em;color:var(--text-muted);margin-top:8px;text-align:center"><span class="kb-hint"><kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">→</kbd> advance · <kbd style="padding:1px 5px;border-radius:3px;border:1px solid var(--border);font-size:.9em">⏸</kbd> pause</span> <span class="swipe-hint" style="display:none">swipe ← / swipe → · hold →⚡ rapid</span></div>
             </div>
@@ -6248,7 +6244,9 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('qProgress').style.width = ((state.idx / Math.max(state.questions.length, 1)) * 100) + '%';
                 var catLabel = q._wikiCat ? q._wikiCat.replace(/_/g, ' ') : (q.subject ? q.subject + (q.subTopic ? ' — ' + q.subTopic : '') : state.categoryName);
                 document.getElementById('catTag').textContent = catLabel;
-  _renderRelevanceTag(q);
+  var rel = (state.current && state.current.relevance) ? state.current.relevance : '';
+  var yEl = document.getElementById('yieldTag'); if(!yEl){ yEl = document.createElement('span'); yEl.id='yieldTag'; yEl.className='q-yield'; document.getElementById('catTag').parentNode.insertBefore(yEl, document.getElementById('catTag').nextSibling); }
+  if(rel==='high'){ yEl.textContent='high-yield'; yEl.className='q-yield high-yield'; yEl.style.display='inline-block'; } else if(rel==='medium'){ yEl.textContent='exam-relevant'; yEl.className='q-yield exam-relevant'; yEl.style.display='inline-block'; } else if(rel==='low'){ yEl.textContent='low-priority'; yEl.className='q-yield low-priority'; yEl.style.display='inline-block'; } else { yEl.style.display='none'; }
                 var displayText = '<div style="font-size:1.2em;font-weight:700;margin-bottom:8px">' + q.q.replace(/\n/g, '<br>') + '</div>';
                 if (q.a) displayText += '<div style="font-size:1.05em;color:var(--emerald);margin-bottom:10px;padding:8px 12px;border-radius:8px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.15)">→ ' + q.a + '</div>';
                 if (q.fact || q.solution) displayText += '<div style="font-size:.85em;color:var(--text-sec);line-height:1.7">' + (q.fact||q.solution).replace(/\n/g, '<br>') + '</div>';
@@ -6279,7 +6277,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
                 document.getElementById('qNum').textContent = 'Q ' + ((state.baseIdx || 0) + state.idx + 1);
                 document.getElementById('qProgress').style.width = ((state.idx / state.questions.length) * 100) + '%';
                 document.getElementById('catTag').textContent = state.categoryName;
-  _renderRelevanceTag(q);
+  var rel = (state.current && state.current.relevance) ? state.current.relevance : ''; var yEl = document.getElementById('yieldTag'); if(yEl){ if(rel==='high'){ yEl.textContent='high-yield'; yEl.className='q-yield high-yield'; yEl.style.display='inline-block'; } else if(rel==='medium'){ yEl.textContent='exam-relevant'; yEl.className='q-yield exam-relevant'; yEl.style.display='inline-block'; } else if(rel==='low'){ yEl.textContent='low-priority'; yEl.className='q-yield low-priority'; yEl.style.display='inline-block'; } else { yEl.style.display='none'; } }
                 var pd = q.pubDate || q._pubDate;
                 var yearStr = pd ? ' (' + pd.slice(0,4) + ')' : '';
                 document.getElementById('qText').innerHTML = q.q.replace(/\n/g, '<br>') + yearStr + _yieldChipHtml(q);
@@ -6672,9 +6670,8 @@ function prevQuestion() {
                 fact: raw.fact || raw.solution || raw.explanation || '',
                 hint: raw.hint || '',
                 subject: raw.subject || raw.category || '',
-                subTopic: raw.subTopic || raw.subSubject || raw.subsubject || '',
+                subTopic: raw.subTopic || raw.subsubject || '',
                 type: raw.type || '',
-                relevance: raw.relevance || '',
                 importance: raw.importance || '',
                 importantFor: Array.isArray(raw.importantFor) ? raw.importantFor : [],
                 pubDate: raw.pubDate || raw._pubDate || '',
@@ -7095,7 +7092,7 @@ function prevQuestion() {
                 sec.className = 'study-sec';
                 sec.id = 'sec_' + s.id;
                 sec.innerHTML =
-                    '<div role="button" tabindex="0" class="study-sec-h" onclick="_toggleSec(this)">'
+                    '<div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="study-sec-h" onclick="_toggleSec(this)">'
                     + '<span class="arrow">▶</span>'
                     + '<span class="st">' + s.title + '</span>'
                     + '<span class="chk' + (prog[s.id] ? ' d' : '') + '" id="chk_' + s.id + '" onclick="event.stopPropagation();_toggleChk(\'' + s.id + '\')">✓</span>'
@@ -7185,7 +7182,7 @@ function prevQuestion() {
             }
             area.innerHTML =
                 '<div class="fc-area">'
-                + '<div role="button" tabindex="0" class="fc-card" onclick="_revealFC()">'
+                + '<div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="fc-card" onclick="_revealFC()">'
                 + '<div class="q" id="fcQ"></div>'
                 + '<div class="a" id="fcA"></div>'
                 + '<div class="tap" id="fcTap">👆 Tap to reveal answer</div>'
@@ -7297,13 +7294,13 @@ function prevQuestion() {
                 '<div class="sr-box">'
                 + '<div class="sr-title">🔍 ' + results.length + ' result' + (results.length > 1 ? 's' : '') + ' for "' + q + '"</div>'
                 + results.map(function(r){
-                    return '<div role="button" tabindex="0" class="sr-item" onclick="closeSearch();showStudy(\'' + r.catId + '\',\'' + r.catName.replace(/'/g,"\\'") + '\',\'' + (r.icon || '📖') + '\')">'
+                    return '<div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="sr-item" onclick="closeSearch();showStudy(\'' + r.catId + '\',\'' + r.catName.replace(/'/g,"\\'") + '\',\'' + (r.icon || '📖') + '\')">'
                     + '<div class="cat">' + r.catName + '</div>'
                     + '<div class="snippet">' + r.snippet + '</div>'
                     + '</div>';
                 }).join('')
                 + '</div>'
-                + '<div role="button" tabindex="0" class="sr-close" onclick="closeSearch()">✕</div>';
+                + '<div role="button" tabindex="0" role="button" tabindex="0" role="button" tabindex="0" class="sr-close" onclick="closeSearch()">✕</div>';
             overlay.addEventListener('click', function(e) { if (e.target === overlay) closeSearch(); });
             document.body.appendChild(overlay);
         }
@@ -9198,63 +9195,20 @@ var fact = q.fact || q.solution || q.explanation || '';
             xhr.open('GET', 'data/upsc-topics.json?t=' + Date.now(), true);
             xhr.send();
         }
-        // Subjects that the Static GK generators can emit but that are not part
-        // of the UPSC GS syllabus. Kept out of UPSC-only mode explicitly; the
-        // big whitelist above predates some of these generators.
-        var UPSC_EXCLUDED_SUBJECTS = {
-            "Sports": 1, "Books & Authors": 1, "Awards & Honours": 1,
-            "Important Days": 1, "State GK": 1, "Indian Festivals & Fairs": 1,
-            "Indian Festivals & Traditions": 1, "Kannada Literature": 1,
-            "Malayalam Literature": 1, "Telugu Literature": 1,
-            "Punjabi & Other Regional Literature": 1
-        };
-        // Words that put a question firmly outside the UPSC GS syllabus even
-        // when its broad subject is whitelisted (the classic leak: a film or
-        // asteroid item filed under "Ancient India"/"Art & Culture").
-        var UPSC_OFF_SYLLABUS_RE = /\b(asteroid|comet|galaxy|constellation|star cluster|film|movie|cinema|song|album|singer|actor|actress|sport|cricket|football|hockey|olympic|tournament|league|video game|television|soap opera|fictional|genus|species|moth|butterfly|beetle|fish|bird|fungus|bacteria|protein|gene|airport|railway station|highway|village|ship|aircraft|regiment|value at risk|derivative|hedge fund|private equity|stock market|ipo|mutual fund|cryptocurrency|bitcoin|forex|booker prize|oscar|grammy|miss world|beauty pageant)\b/i;
-        var UPSC_CORE_RE = /\b(constitution|polity|fundamental right|directive principle|parliament|legislature|judiciary|supreme court|high court|president|governor|prime minister|cabinet|election commission|amendment|federalism|panchayat|governance|public administration|economy|budget|fiscal|monetary|rbi|reserve bank|banking|inflation|gdp|taxation|gst|poverty|unemployment|agriculture|msme|industry|trade|wto|imf|world bank|environment|ecology|climate change|biodiversity|pollution|conservation|forest|wildlife|energy|renewable|solar|health|education|welfare|scheme|yojana|history|ancient|medieval|modern india|freedom struggle|national movement|dynasty|empire|civilization|geography|river|mountain|monsoon|soil|mineral|ocean|international relations|foreign policy|diplomacy|treaty|summit|united nations|brics|g20|quad|defence|security|terrorism|insurgency|cyber|science|technology|space|isro|nuclear|biotechnology|artificial intelligence|ethics|integrity|aptitude|society|culture|heritage|architecture|religion|tribe|language|literature|disaster|urban|population|census|women|child|labour|migration|globalisation)\b/i;
-
-        // Deterministic exam-relevance tier. The site agent may override it by
-        // writing a `relevance` field ('high'|'medium'|'low') into the data;
-        // otherwise this heuristic is the single, transparent decider so the
-        // tag is never missing and never depends on a model run.
-        function _upscRelevance(q) {
-            if (!q) return 'low';
-            var given = String(q.relevance || q.importance || '').toLowerCase();
-            if (given === 'high' || given === 'medium' || given === 'low') return given;
-            var subject = String(q.subject || '').trim();
-            var text = subject + ' ' + String(q.subSubject || q.subTopic || '') + ' ' + String(q.q || '').slice(0, 240);
-            if (UPSC_OFF_SYLLABUS_RE.test(text)) return 'low';
-            if (UPSC_EXCLUDED_SUBJECTS[subject]) return 'low';
-            if (!_isUpscSubject(subject)) return 'low';
-            if (_upscTier(subject) === 0) return 'high';
-            if (UPSC_CORE_RE.test(text)) return 'high';
-            return 'medium';
-        }
-        function _renderRelevanceTag(q) {
-            var cat = document.getElementById('catTag');
-            if (!cat) return;
-            var relEl = document.getElementById('relTag');
-            if (!relEl) {
-                relEl = document.createElement('span');
-                relEl.id = 'relTag';
-                relEl.className = 'q-relevance';
-                cat.parentNode.insertBefore(relEl, cat.nextSibling);
-            }
-            var rel = _upscRelevance(q);
-            relEl.textContent = rel === 'high' ? 'High relevance' : (rel === 'medium' ? 'Medium relevance' : 'Low relevance');
-            relEl.className = 'q-relevance ' + rel;
-            relEl.title = 'Exam relevance: syllabus mapping + subject/topic keywords. Agent-tagged data overrides it.';
-            relEl.style.display = 'inline-block';
-        }
         function _isUpscTopic(aq) {
-            // One gate for archive and generator items: subject whitelist plus
-            // the relevance classifier. Archive items expose the sub-topic as
-            // `subSubject` (its on-disk field), not `subTopic` — reading only
-            // `subTopic` made every archive item look untagged and (under the
-            // old fallback) let unrelated subjects through.
-            if (!aq) return false;
-            return _isUpscSubject(aq.subject) && _upscRelevance(aq) !== 'low';
+            // Subject is the authoritative UPSC gate (driven by the subject
+            // whitelist / upsc_sorted_topics.csv). A question may only be kept
+            // if its SUBJECT is a UPSC subject. The sub-topic map is a finer
+            // filter ON TOP of that — it must never pull in a question whose
+            // subject is not UPSC (e.g. a finance "Value at risk" item parked
+            // under the non-UPSC subject "Labour Law & Industrial Relations").
+            if (!_isUpscSubject(aq.subject)) return false;
+            var st = (aq.subTopic || '').trim();
+            // Subject is UPSC-whitelisted: a sub-topic explicitly flagged as
+            // UPSC confirms it; an unknown/empty sub-topic is still kept via
+            // the subject whitelist (e.g. PIB Releases, Current Affairs).
+            if (_upscTopics && st && _upscTopics[st] === 1) return true;
+            return true;
         }
         var _pibCache = null;
         var _pibLoading = false;

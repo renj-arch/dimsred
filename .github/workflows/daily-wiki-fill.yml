@@ -21,7 +21,7 @@ env:
   NODE_OPTIONS: --max-old-space-size=12288
 
 jobs:
-  # ΓöÇΓöÇ Setup: prepare baseline quiz.json, PIB feeds ΓöÇΓöÇ
+  # ── Setup: prepare baseline quiz.json, PIB feeds ──
   setup:
     runs-on: ubuntu-latest
     steps:
@@ -55,21 +55,6 @@ jobs:
       - run: node scripts/fetch-pib-rss.js
       - run: node scripts/update-pib-archive.js
 
-      # Free news RSS -> Current Affairs. The wiki miners only read Wikipedia,
-      # which for Indian current affairs is often a week behind and sometimes
-      # never covers a story at all (the 'Thuli' mascot campaign has no article
-      # anywhere in English Wikipedia). This reads Google News + Bing News +
-      # publisher feeds and writes headline-derived Q/A straight into
-      # data/questions/current-affairs.json, so the baseline every chunk starts
-      # from already contains this week's facts.
-      # continue-on-error: a news outage must never cost a whole harvest.
-      - name: Mine free news into Current Affairs
-        continue-on-error: true
-        env:
-          NEWS_CA_DAYS: 21
-          NEWS_CA_MAX_NEW: 160
-        run: node scripts/fetch-news-ca.js
-
       - run: node scripts/rebuild-quiz-json.js
 
       - uses: actions/upload-artifact@v4
@@ -78,10 +63,10 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ΓöÇΓöÇ Wiki chunks: 27 runners, capped at 20 in parallel ΓöÇΓöÇ
+  # ── Wiki chunks: 27 runners, capped at 20 in parallel ──
   # Each chunk is bounded by its discovery budgets (LINK_BUDGET limits how many
   # linked pages a single category may traverse per run at ~2.5s/request and
-  # concurrency 2 ΓÇö worst case a 200k budget would run ~70h). Linked pages are
+  # concurrency 2 — worst case a 200k budget would run ~70h). Linked pages are
   # persisted to the link pool and re-mined next run, so the caps only spread
   # discovery across runs, never drop data. Timeout lifted to the GitHub-hosted
   # runner max (360 min) as headroom on top of the cut link budget.
@@ -170,13 +155,13 @@ jobs:
           WIKI_FILL_DISCOVERY_BUDGET_PCT: 45
           WIKI_FILL_DELAY_MS: 2500
           # Self-stop budget: 300 min leaves 60 min of headroom before the runner's
-          # 360-min hard timeout. Run #508 proved 330 was too tight ΓÇö the
+          # 360-min hard timeout. Run #508 proved 330 was too tight — the
           # link-following loop only respected the discovery budget, ate the
           # remaining window, and chunks were killed at the 360-min cap before
           # upload-artifact ran, losing the merged data. The script now also
           # enforces TIME_BUDGET inside the link-traversal loops (not just the
           # discovery budget), so a chunk always exits cleanly (code 0) with time
-          # to upload ΓÇö never killed mid-run by the runner timeout. Raised 280->300
+          # to upload — never killed mid-run by the runner timeout. Raised 280->300
           # so the 17 added wiki categories get a fuller generation slot.
           WIKI_FILL_TIME_BUDGET_MIN: 300
 
@@ -191,7 +176,7 @@ jobs:
       # Runs when the run is manually cancelled mid-chunk. GitHub does not
       # expose the *canceller* in the github.* context (only actor/actor_id =
       # triggerer), so record which account started this run here and point to
-      # Settings ΓåÆ Security log ΓåÆ Actions, the only place the canceller's user
+      # Settings → Security log → Actions, the only place the canceller's user
       # id is authoritatively recorded.
       - name: Cancellation receipt
         if: cancelled()
@@ -199,12 +184,12 @@ jobs:
           echo "## Run cancelled" >> "$GITHUB_STEP_SUMMARY"
           echo "- Run #${{ github.run_number }} (id ${{ github.run_id }}), chunk ${{ matrix.chunk }}" >> "$GITHUB_STEP_SUMMARY"
           echo "- Started by: \`${{ github.actor }}\` (user id ${{ github.actor_id }})" >> "$GITHUB_STEP_SUMMARY"
-          echo "- To confirm WHO cancelled: GitHub Security log (Settings ΓåÆ Security log ΓåÆ Actions) records the cancelling user id ΓÇö the Actions context/api do not expose it." >> "$GITHUB_STEP_SUMMARY"
+          echo "- To confirm WHO cancelled: GitHub Security log (Settings → Security log → Actions) records the cancelling user id — the Actions context/api do not expose it." >> "$GITHUB_STEP_SUMMARY"
 
-  # ΓöÇΓöÇ Merge: combine all chunk outputs ΓöÇΓöÇ
+  # ── Merge: combine all chunk outputs ──
   merge:
     needs: wiki-chunks
-    # Merge whatever chunks succeeded ΓÇö a failed/timed-out chunk must not throw
+    # Merge whatever chunks succeeded — a failed/timed-out chunk must not throw
     # away the rest (run #434). merge-chunks.js skips missing chunks and no-ops
     # cleanly when there are none.
     # NOT `always()`: when the run is manually cancelled GitHub re-evaluates
@@ -224,10 +209,10 @@ jobs:
 
       - run: npm install
 
-      # ΓöÇΓöÇ Baseline FIRST, then chunks ONE AT A TIME ΓöÇΓöÇ
+      # ── Baseline FIRST, then chunks ONE AT A TIME ──
       # Run #458 died with "No space left on device": all 27 unzipped chunks
       # (~25 GB) landed on disk before the baseline restore ran. Pulling the
-      # baseline while disk is empty, then downloadΓåÆmergeΓåÆfree per chunk,
+      # baseline while disk is empty, then download→merge→free per chunk,
       # caps peak usage at roughly one chunk (~1 GB). merge-chunks.js deletes
       # each quiz-chunk-* file as it consumes it.
       - name: Download baseline data
@@ -246,7 +231,7 @@ jobs:
             elif [ -f "baseline/data/questions/$f" ]; then
               cp "baseline/data/questions/$f" "preserve-feed/$f" && echo "preserved $f from baseline"
             else
-              echo "note: $f not found ΓÇö skipping preserve"
+              echo "note: $f not found — skipping preserve"
             fi
           done
 
@@ -258,13 +243,13 @@ jobs:
           elif [ -d baseline ] && [ -n "$(ls -A baseline 2>/dev/null)" ]; then
             rm -rf data && cp -r baseline data && echo "restored from baseline (flat layout)"
           else
-            echo "WARNING: no baseline artifact ΓÇö merging over checkout data/"
+            echo "WARNING: no baseline artifact — merging over checkout data/"
             mkdir -p data
           fi
           rm -rf baseline
           df -h / || true
 
-      - name: Merge chunks incrementally (download, collect, free ΓÇö repeat, then finalize once)
+      - name: Merge chunks incrementally (download, collect, free — repeat, then finalize once)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -275,12 +260,12 @@ jobs:
           # chunks/.merge-state and deletes the chunk, so each chunk costs one
           # chunk read instead of a full quiz.json pass. The single finalize
           # below then rebuilds quiz.json exactly once. Missing numbers are
-          # tolerated ΓÇö chunks run with fail-fast: false and some may be absent.
+          # tolerated — chunks run with fail-fast: false and some may be absent.
           for i in $(seq 1 40); do
             if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" "^chunk-${i}$" chunks; then
               node scripts/merge-chunks.js collect || echo "WARNING: collect errored for chunk $i (continuing)"
             else
-              echo "chunk-$i not produced this run ΓÇö skipping"
+              echo "chunk-$i not produced this run — skipping"
             fi
             find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
             df -h / | tail -1
@@ -293,7 +278,7 @@ jobs:
           find chunks -name 'quiz-chunk-*' -delete 2>/dev/null || true
           # Single full rebuild of quiz.json from the accumulated state. This is
           # the one pass that actually materializes the run's data, so its
-          # failure must fail the job ΓÇö continuing would commit the un-merged
+          # failure must fail the job — continuing would commit the un-merged
           # baseline as if it were a completed fill.
           node scripts/merge-chunks.js finalize
           rc=$?
@@ -308,7 +293,7 @@ jobs:
             if [ -f "preserve-feed/$f" ]; then
               cp "preserve-feed/$f" "data/questions/$f" && echo "re-applied $f"
             else
-              echo "note: no preserved $f ΓÇö leaving merged version"
+              echo "note: no preserved $f — leaving merged version"
             fi
           done
           rm -rf preserve-feed
@@ -317,7 +302,7 @@ jobs:
       - run: node scripts/dedup-sentence-flood.js
       - run: node scripts/inject-handpicked-gk.js
 
-      # Auto-route newly generated sub-topics to their correct category (Γ£ô-ticking
+      # Auto-route newly generated sub-topics to their correct category (✓-ticking
       # them) so fresh wiki content lands in the right place. 0 moves when clean.
       - name: Classify new sub-topics into correct categories
         run: node scripts/classify-global.cjs
@@ -335,8 +320,8 @@ jobs:
 
       # The archive tail used to run inline in this job. When the merge phase ran
       # long (~5h), build-archive-single.js outlived merge's default 360-minute
-      # GitHub-hosted job ceiling and GitHub cancelled the whole job (run #519 ΓÇö
-      # no artifact uploaded ΓåÆ finalize skipped). Archive building now runs in
+      # GitHub-hosted job ceiling and GitHub cancelled the whole job (run #519 —
+      # no artifact uploaded → finalize skipped). Archive building now runs in
       # its own job (`archive`) below with a fresh time budget.
       - uses: actions/upload-artifact@v4
         with:
@@ -344,7 +329,7 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ΓöÇΓöÇ Archive tail: build archive.html + indexes in a dedicated job ΓöÇΓöÇ
+  # ── Archive tail: build archive.html + indexes in a dedicated job ──
   # Split out of `merge` (run #519: build-archive-single.js hit merge's default
   # 6h cap and cancelled the job before `merged` was uploaded). This job gets a
   # fresh 360-min budget and re-uploads the final payload under `merged`.
@@ -354,7 +339,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       # build-archive-single.js streams every unique question as NDJSON into
-      # /tmp (~6-8GB) on top of the ~5GB merged-raw download ΓÇö runner default
+      # /tmp (~6-8GB) on top of the ~5GB merged-raw download — runner default
       # free space is not enough (Feed Fill #25 died with ENOSPC at flushCat).
       - name: Free runner disk space (archive build needs ~20GB)
         run: |
@@ -394,7 +379,7 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ΓöÇΓöÇ Finalize: commit wiki data, advance progress, chain to feed workflow ΓöÇΓöÇ
+  # ── Finalize: commit wiki data, advance progress, chain to feed workflow ──
   finalize:
     needs: [archive]
     # `!cancelled()` (not `always()`): a manual cancel must also stop an already
@@ -436,40 +421,71 @@ jobs:
       # continue-on-error: a reader who believes a model answer is an official
       # key will reproduce it in the hall. Placed before the heavy rebuilds so
       # it fails in seconds. Cost of a genuine failure is one stalled chain,
-      # not lost data ΓÇö the run does not advance its progress marker, so the
+      # not lost data — the run does not advance its progress marker, so the
       # next run re-harvests the same range once the bank is fixed.
       - name: Validate Mains answer bank
         run: node scripts/validate-mains.js
 
-      # Timeline and Ask index are NOT rebuilt here any more. build-timeline.yml
-      # owns both, on its own fresh clock, and this job always self-dispatches
-      # it at the end.
+      # 6h-cap guard: the timeline rebuild takes ~3h. Only start it when
+      # 3h20m + a 10m commit/dispatch tail still remains before the job's
+      # 350-minute cap; otherwise DEFER it — finalize still commits the
+      # harvested questions below, and the build-timeline.yml run that is
+      # always self-dispatched at the end of this job rebuilds timeline +
+      # Ask index + mind-tree on a fresh clock. This is the difference between
+      # "deferred and continued" and GitHub killing the job at 6h with nothing
+      # committed.
+      - name: Rebuild timeline map from question data
+        continue-on-error: true
+        run: |
+          NOW=$(date +%s)
+          ELAPSED=$(( NOW - FINALIZE_START ))
+          REMAINING=$(( 350*60 - ELAPSED ))
+          NEEDED=$(( 3*3600 + 1200 + 600 ))
+          if [ "$REMAINING" -ge "$NEEDED" ]; then
+            echo "Timeline guard: ${REMAINING}s remain >= ${NEEDED}s needed — running"
+            echo "TIMELINE_DEFERRED=" >> "$GITHUB_ENV"
+            NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-timeline.js || echo "timeline rebuild skipped/failed — questions still committed"
+          else
+            echo "Timeline guard: only ${REMAINING}s remain < ${NEEDED}s needed — DEFERRED to self-dispatched build-timeline.yml"
+            echo "TIMELINE_DEFERRED=1" >> "$GITHUB_ENV"
+          fi
+
+      # Rebuild the Ask engine's retrieval index from the fresh timeline nodes.
+      # It was generated exactly once and never rebuilt, so ask.html served a
+      # frozen index while the corpus grew. Reads timeline.nodes.*.json, which
+      # the step above just produced; if that was skipped/failed, so is this.
       #
-      # Why: the guard below used to allow the rebuild when ~5h remained, and
-      # the rebuild takes ~3h. That left a few minutes for hashing and packing
-      # ~9 GB of data/, and the commit step then ran past the job timeout.
-      # Run #40447089924 is the proof: Ask index ran 22:05 -> 01:11, and the
-      # commit step was still stuck at 01:12 when the run was cancelled, losing
-      # every harvested question. Finalize's only job is to land the harvest it
-      # just downloaded, as fast as possible.
-      - name: Defer timeline + Ask index to build-timeline.yml
-        run: echo "Timeline + Ask index deferred to the self-dispatched build-timeline.yml"
+      # NOTE: this is the TIMELINE index (data/ask-index.json plus its
+      # data/ask-index-nodes.*.json shards, which `git add -A` below stages) only.
+      # It does NOT build the question-bank tables under data/ask-qb/ — those have
+      # their own builders and their own workflow (build-ask-qb.yml,
+      # self-dispatched below). Running this step alone leaves the question bank
+      # stale.
+      # Skipped when the timeline guard deferred: this index reads the node
+      # parts the step above produces, so rebuilding it against old nodes
+      # would just hide the staleness. build-timeline.yml runs both steps
+      # unconditionally on its fresh clock, so nothing stays stale either way.
+      - name: Rebuild Ask engine index
+        if: ${{ env.TIMELINE_DEFERRED != '1' }}
+        continue-on-error: true
+        run: |
+          NODE_OPTIONS=--max-old-space-size=6144 node scripts/build-ask-index.js || echo "ask index rebuild skipped/failed — questions still committed"
 
       # Per-category low-count coverage report. Runs AFTER classify (merged
       # data is already routed into the right categories) and BEFORE commit
-      # so data/wiki-coverage.json is staged below and lands
+      # so data/wiki-coverage.json is staged by `git add -A` below and lands
       # on main after every run. Never blocks: the script exits 0 even when
       # it fails; thresholds come from COVERAGE_LOW_MIN/COVERAGE_CRITICAL_MIN.
       - name: Category coverage report
         run: node scripts/wiki-coverage-report.js
 
       # Fold the coverage report (and any training-audit results already on
-      # main) into data/faults.json ΓÇö the "Detected faults" panel on
+      # main) into data/faults.json — the "Detected faults" panel on
       # improve.html, with prefilled correction actions. GITHUB_TOKEN lets the
       # report attach pipeline status (latest run per workflow). Reporting
       # only: the script always exits 0.
       # Lineage coverage audit: cheap shard/edge census (no miner re-run).
-      # Replaced the old "missing lineage" theory ΓÇö wiring is confirmed
+      # Replaced the old "missing lineage" theory — wiring is confirmed
       # (miner -> timeline edges -> map lineage tab); this tracks yield.
       - name: Lineage coverage audit
         continue-on-error: true
@@ -485,7 +501,7 @@ jobs:
       # WH-questions (never trained as blanks). PAT, not GITHUB_TOKEN: a
       # GITHUB_TOKEN push would not trigger train-writer's on.push, so the
       # model would never see the batch. The +15 delta gate then retrains the
-      # writer model automatically ΓÇö the site teaches itself from its own
+      # writer model automatically — the site teaches itself from its own
       # corpus while the owner's answers/improve records steer quality.
       - name: Self-train bootstrap (corpus -> training-data)
         continue-on-error: true
@@ -499,36 +515,18 @@ jobs:
           rm -f .git/CHERRY_PICK_HEAD .git/MERGE_HEAD .git/MERGE_MSG .git/MERGE_MODE .git/REVERT_HEAD 2>/dev/null
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          # Cheap packs on purpose. This tree is ~9 GB of JSON that compresses
-          # well but slowly; default zlib settings spent the whole timeout here.
-          # Compression level 1 with no delta window turns a multi-minute pack
-          # into a fast stream, and gc stays out of the way.
-          git config core.compression 1
-          git config pack.window 0
-          git config pack.depth 0
-          git config gc.auto 0
           git checkout -B main 2>/dev/null || true
           git reset HEAD -- . 2>/dev/null
-          # Scoped staging, not `git add -A`. Everything this job writes lives
-          # under data/ (questions, timeline, ask index, coverage, faults) plus
-          # the root archive.html copy. Walking the whole worktree used to pick
-          # up every stray artifact and made the add step both slow and
-          # unpredictable.
-          git add -A -- data archive.html
-          UNEXPECTED=$(git status --porcelain | grep -v -E '^(.. )?(data/|archive\.html)' | head -20 || true)
-          if [ -n "$UNEXPECTED" ]; then
-            echo "NOT staged (outside data/ + archive.html):"
-            echo "$UNEXPECTED"
-          fi
+          git add -A
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
-            git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') ΓÇö run #${{ github.run_number }}"
+            git commit -m "Wiki fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
             for i in 1 2 3; do
               if git pull --rebase 2>/dev/null; then
                 echo "Rebased cleanly"
               else
-                echo "Rebase conflict ΓÇö aborting and union-merging to keep BOTH runs' data."
+                echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
                 git rebase --abort
                 git fetch origin main 2>/dev/null
                 git merge --no-edit origin/main 2>/dev/null || {
@@ -537,7 +535,7 @@ jobs:
                 }
               fi
               # Guard: prevent question count regression below critical thresholds
-              node scripts/guard-question-count.js || { echo "Question count guard failed - aborting push"; exit 1; }
+              node scripts/guard-question-count.js || { echo "Question count guard failed — aborting push"; exit 1; }
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
               sleep 5
             done || true
@@ -578,14 +576,14 @@ jobs:
             # steps were removed in the same change.
             # The Ask question-bank tables (data/ask-qb/) are a SEPARATE artifact
             # from the timeline index rebuilt in `finalize`, and nothing used to
-            # rebuild them, so they went stale on every fill ΓÇö run #560 left
+            # rebuild them, so they went stale on every fill — run #560 left
             # 3,74,175 records invisible. Its own workflow (not a step here) so the
             # ~838 MB build gets a fresh runner and a full disk instead of risking
             # the job that commits the question data. Its daily cron backstops the
             # non-fatal dispatch above.
             gh workflow run build-ask-qb.yml 2>/dev/null && echo "Self-dispatched Ask Question-Bank Build" || echo "Ask Q/B dispatch failed (non-fatal)"
           else
-            echo "No wiki data changes ΓÇö chain ends here"
+            echo "No wiki data changes — chain ends here"
           fi
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
