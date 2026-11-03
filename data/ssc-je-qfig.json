@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T02:10:37.112Z",
-  "cursor": 507,
-  "built": 476
+  "updatedAt": "2026-11-03T02:31:15.881Z",
+  "cursor": 510,
+  "built": 479
  },
  "figs": {
   "11434945": {
@@ -2859,6 +2859,24 @@
   "76c4d78e": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"180\"/><line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\"/><circle cx=\"180\" cy=\"110\" r=\"5\"/><text x=\"175\" y=\"105\" text-anchor=\"end\">O</text><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"110\"/><text x=\"185\" y=\"65\">F₁</text><line x1=\"180\" y1=\"110\" x2=\"320\" y2=\"110\"/><text x=\"330\" y=\"115\">F₂</text><line x1=\"40\" y1=\"110\" x2=\"180\" y2=\"110\"/><text x=\"60\" y=\"115\">F₃</text><text x=\"20\" y=\"30\">Lines of action meet at O (Concurrent)</text></svg>",
    "n": "what are the conditions of equilibrium for three non-parallel coplanar forces?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "eede24df": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Stable Equilibrium -->\n  <text x=\"40\" y=\"30\">Stable</text>\n  <path d=\"M 60 50 L 90 50\"/>\n  <path d=\"M 75 50 Q 75 80 75 110\"/>\n  <circle cx=\"75\" cy=\"110\" r=\"3\" fill=\"none\"/>\n  <line x1=\"75\" y1=\"110\" x2=\"75\" y2=\"140\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M 75 140 Q 75 160 75 180\"/>\n  <text x=\"35\" y=\"195\">Return to center</text>\n\n  <!-- Unstable Equilibrium -->\n  <text x=\"180\" y=\"30\">Unstable</text>\n  <path d=\"M 200 50 L 230 50\"/>\n  <path d=\"M 215 50 Q 215 80 215 110\"/>\n  <circle cx=\"215\" cy=\"110\" r=\"3\" fill=\"none\"/>\n  <line x1=\"215\" y1=\"110\" x2=\"215\" y2=\"140\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M 215 140 Q 215 160 215 180\"/>\n  <text x=\"175\" y=\"195\">Moves away</text>\n\n  <!-- Neutral Equilibrium -->\n  <text x=\"300\" y=\"30\">Neutral</text>\n  <path d=\"M 320 50 L 350 50\"/>\n  <path d=\"M 335 50 Q 335 110 335 110\"/>\n  <circle cx=\"335\" cy=\"110\" r=\"3\" fill=\"none\"/>\n  <line x1=\"335\" y1=\"110\" x2=\"335\" y2=\"140\" stroke-dasharray=\"2,2\"/>\n  <path d=\"M 335 140 Q 335 160 335 180\"/>\n  <text x=\"295\" y=\"195\">Stays displaced</text>\n</svg>",
+   "n": "what are the types of equilibrium of a body?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "e1f9c5af": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <rect x=\"40\" y=\"40\" width=\"180\" height=\"100\" stroke-dasharray=\"4,4\" />\n <text x=\"130\" y=\"70\" text-anchor=\"middle\">Isolated Body</text>\n <line x1=\"125\" y1=\"90\" x2=\"125\" y2=\"110\" stroke-width=\"2\" />\n <text x=\"110\" y=\"105\">Fy (Reaction)</text>\n <line x1=\"125\" y1=\"130\" x2=\"125\" y2=\"145\" stroke-width=\"2\" />\n <text x=\"110\" y=\"145\">-W (Weight)</text>\n <line x1=\"90\" y1=\"100\" x2=\"70\" y2=\"100\" stroke-width=\"2\" />\n <text x=\"60\" y=\"105\">Fx (Load)</text>\n <line x1=\"160\" y1=\"100\" x2=\"180\" y2=\"100\" stroke-width=\"2\" />\n <text x=\"190\" y=\"105\">M (Moment)</text>\n</svg>",
+   "n": "what is a free body diagram (fbd)?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "a786b52b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g>\n<!-- Beam -->\n<line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/>\n<!-- Supports -->\n<circle cx=\"40\" cy=\"100\" r=\"5\"/>\n<circle cx=\"320\" cy=\"100\" r=\"5\"/>\n<!-- Load at center -->\n<line x1=\"180\" y1=\"100\" x2=\"180\" y2=\"60\"/>\n<line x1=\"175\" y1=\"60\" x2=\"185\" y2=\"60\"/>\n<!-- Labels -->\n<text x=\"40\" y=\"130\">A</text>\n<text x=\"320\" y=\"130\">B</text>\n<text x=\"180\" y=\"45\">W</text>\n<!-- Reaction Arrows -->\n<path d=\"M 40 100 L 40 140\" stroke-width=\"2\"/>\n<path d=\"M 320 100 L 320 140\" stroke-width=\"2\"/>\n<text x=\"35\" y=\"160\">R_A</text>\n<text x=\"315\" y=\"160\">R_B</text>\n<!-- Symmetry Line -->\n<line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"100\" stroke-dasharray=\"4,4\"/>\n<text x=\"175\" y=\"35\">Symmetry</text>\n</g>\n</svg>",
+   "n": "a simply supported beam of span l carries a central point load w. what are the support reactions?",
    "sub": "emech",
    "at": "2026-11-03"
   }
