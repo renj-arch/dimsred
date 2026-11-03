@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T20:45:28.180Z",
-  "cursor": 603,
-  "built": 565
+  "updatedAt": "2026-11-03T21:31:56.893Z",
+  "cursor": 606,
+  "built": 567
  },
  "figs": {
   "11434945": {
@@ -3393,6 +3393,18 @@
   "86ed6b29": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Power-to-Weight Comparison</text><rect x=\"40\" y=\"40\" width=\"120\" height=\"140\" fill=\"#eee\" stroke=\"#222\"/><text x=\"50\" y=\"65\" font-weight=\"bold\">2-Stroke</text><line x1=\"60\" y1=\"80\" x2=\"110\" y2=\"80\"/><circle cx=\"85\" cy=\"90\" r=\"3\"/><circle cx=\"85\" cy=\"100\" r=\"3\"/><circle cx=\"85\" cy=\"110\" r=\"3\"/><text x=\"40\" y=\"95\">High Power</text><text x=\"40\" y=\"105\">Freq. Strokes</text><text x=\"40\" y=\"115\">No Valves</text><line x1=\"200\" y1=\"40\" x2=\"320\" y2=\"40\"/><rect x=\"220\" y=\"40\" width=\"120\" height=\"140\" fill=\"#eee\" stroke=\"#222\"/><text x=\"230\" y=\"65\" font-weight=\"bold\">4-Stroke</text><line x1=\"240\" y1=\"80\" x2=\"290\" y2=\"80\"/><circle cx=\"265\" cy=\"90\" r=\"3\"/><circle cx=\"265\" cy=\"130\" r=\"3\"/><text x=\"220\" y=\"95\">Lower Power</text><text x=\"220\" y=\"105\">Less Freq.</text><text x=\"220\" y=\"115\">Has Valves</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">Result: 2-Stroke is lighter &amp; more powerful</text></svg>",
    "n": "compare the power-to-weight ratio of 2-stroke and 4-stroke engines.",
+   "sub": "ice",
+   "at": "2026-11-03"
+  },
+  "e971eff8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Thermal Efficiency Comparison</text><rect x=\"40\" y=\"60\" width=\"80\" height=\"100\" stroke-dasharray=\"3,3\"/><text x=\"50\" y=\"90\" text-anchor=\"start\">2-Stroke</text><text x=\"50\" y=\"110\" text-anchor=\"start\">(Scavenging Loss)</text><path d=\"M 60 80 L 120 140\" stroke=\"#222\"/><text x=\"90\" y=\"130\" text-anchor=\"middle\">Lower</text><rect x=\"180\" y=\"60\" width=\"80\" height=\"100\" stroke-dasharray=\"3,3\"/><text x=\"190\" y=\"90\" text-anchor=\"start\">4-Stroke</text><text x=\"190\" y=\"110\" text-anchor=\"start\">(Better Scavenge)</text><path d=\"M 200 80 L 260 120\" stroke=\"#222\"/><text x=\"230\" y=\"130\" text-anchor=\"middle\">Higher</text></svg>",
+   "n": "compare the thermal efficiency of 2-stroke and 4-stroke engines.",
+   "sub": "ice",
+   "at": "2026-11-03"
+  },
+  "af5e97af": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"100\" height=\"40\" stroke-dasharray=\"4\"/><text x=\"90\" y=\"105\" text-anchor=\"middle\">Cylinder</text><path d=\"M 140 80 L 260 80\" stroke-width=\"3\"/><text x=\"200\" y=\"70\" text-anchor=\"middle\">Piston</text><path d=\"M 140 120 L 140 200 M 260 120 L 260 200\" stroke-width=\"3\"/><text x=\"150\" y=\"195\" text-anchor=\"middle\">Valves</text><path d=\"M 140 80 L 140 120 M 260 80 L 260 120\" stroke-width=\"3\"/><text x=\"135\" y=\"100\" text-anchor=\"middle\">Intake</text><text x=\"265\" y=\"100\" text-anchor=\"middle\">Exhaust</text><path d=\"M 40 80 L 140 80 M 40 120 L 140 120 M 260 80 L 360 80 M 260 120 L 360 120\" stroke-width=\"1\"/><text x=\"370\" y=\"105\" text-anchor=\"middle\">4-Stroke</text><text x=\"370\" y=\"125\" text-anchor=\"middle\">(Dedicated Induction)</text><path d=\"M 40 80 L 140 80 M 40 120 L 140 120 M 260 80 L 360 80 M 260 120 L 360 120\" stroke-width=\"1\"/><text x=\"370\" y=\"55\" text-anchor=\"middle\">2-Stroke</text><text x=\"370\" y=\"75\" text-anchor=\"middle\">(Blowing-down Loss)</text></svg>",
+   "n": "which engine has better volumetric efficiency, 2-stroke or 4-stroke?",
    "sub": "ice",
    "at": "2026-11-03"
   }
