@@ -47,7 +47,7 @@ jobs:
     # to recover, and re-merging it would duplicate work).
     if: github.event_name == 'workflow_dispatch' || github.event.workflow_run.conclusion == 'failure' || github.event.workflow_run.conclusion == 'cancelled'
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    timeout-minutes: 240
     steps:
       # build-archive-single.js streams every unique question as NDJSON into
       # /tmp (~6-8GB) on top of the full checkout — drop unused preinstalled
@@ -173,17 +173,20 @@ jobs:
             fi
           done
 
-      - name: Restore baseline data (early, while disk has headroom)
+      - name: Keep current main data as the merge base
         if: steps.list.outputs.recoverable == 'true'
         run: |
-          if [ -d baseline/data ]; then
-            rm -rf data && cp -r baseline/data data && echo "restored from baseline/data"
-          elif [ -d baseline ] && [ -n "$(ls -A baseline 2>/dev/null)" ]; then
-            rm -rf data && cp -r baseline data && echo "restored from baseline (flat layout)"
+          # Do NOT overwrite data/ with the failed run's baseline. Main may have
+          # moved since that baseline was captured (news wire, magazine, site
+          # agent), and committing the old snapshot reverts newer work. The
+          # baseline is used ONLY to decide which chunk questions are genuinely
+          # new (MERGE_BASE_QUIZ below); finalize writes the CURRENT quiz.json
+          # plus that delta.
+          if [ -f "baseline/data/quiz.json" ]; then
+            echo "Baseline quiz.json available for delta dedup"
           else
-            echo "WARNING: no baseline artifact — using checkout data/ as baseline ($(ls data | head -3 | tr '\n' ' '))"
+            echo "::warning::baseline quiz.json missing — collect will dedup against the current quiz.json"
           fi
-          rm -rf baseline
           df -h / || true
 
       - name: Merge chunks incrementally (download, collect, free — repeat, then finalize once)
@@ -193,6 +196,14 @@ jobs:
         run: |
           chmod +x scripts/download-run-artifacts.sh
           mkdir -p chunks
+          # The failed run's baseline is the dedup reference ("what did this run
+          # start with?"), never the output base. finalize applies only the new
+          # questions to the current checkout's quiz.json, so a salvage adds
+          # data instead of reverting main to a snapshot from hours ago.
+          if [ -f "baseline/data/quiz.json" ]; then
+            export MERGE_BASE_QUIZ="$PWD/baseline/data/quiz.json"
+            echo "Deduping chunk questions against $MERGE_BASE_QUIZ"
+          fi
           # One chunk resident at a time: merge-chunks.js collect appends the
           # chunk's delta to chunks/.merge-state and deletes the chunk, so each
           # round works from a near-empty workspace. Missing numbers are
@@ -306,32 +317,40 @@ jobs:
           git add -A -- data archive.html
           if git diff --staged --quiet; then
             echo "No changes to commit"
+            # Already current: still let the chain continue below.
+            PUSHED=1
           else
             git commit -m "Wiki fill recovery — run ${{ steps.resolve.outputs.run-id }} $(date +'%Y-%m-%d %H:%M UTC')"
             PUSHED=0
             for i in 1 2 3; do
-              if git pull --rebase 2>/dev/null; then
+              if git pull --rebase --autostash origin main 2>/dev/null; then
                 echo "Rebased cleanly"
               else
                 echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
-                git rebase --abort
+                if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
+                  git rebase --abort || true
+                fi
                 git fetch origin main 2>/dev/null
-                git merge --no-edit origin/main 2>/dev/null || {
+                if ! git merge --no-edit origin/main 2>/dev/null; then
                   node scripts/resolve-data-merge.js
+                  git add -A -- data archive.html
                   git commit --no-edit 2>/dev/null || true
-                }
+                fi
               fi
               if git push; then echo "Push succeeded"; PUSHED=1; break; fi
               echo "Push attempt $i failed, retrying..."
               sleep 5
             done
-            # Same contract as Wiki Fill's finalize: a recovered commit means
-            # fresh questions landed, so start the next mining run now instead
-            # of waiting for the next cron or watchdog pass. Recoveries used
-            # to end the chain silently — the corpus then sat still even
-            # though the salvage itself had succeeded.
-            if [ "$PUSHED" = "1" ]; then
-              gh workflow run build-timeline.yml 2>/dev/null && echo "Dispatched build-timeline.yml" || echo "Timeline dispatch failed (non-fatal)"
-              gh workflow run daily-wiki-fill.yml 2>/dev/null && echo "Self-dispatched next Wiki Fill" || echo "Self-dispatch failed (non-fatal)"
+            if [ "$PUSHED" != "1" ]; then
+              echo "::error::Could not push recovered wiki data after 3 attempts"
+              exit 1
             fi
           fi
+
+          # Same contract as Wiki Fill's finalize: queue the next mining run
+          # BEFORE this workflow completes. The shared `data-fill` concurrency
+          # group holds it pending and starts it the instant this run ends.
+          # Dispatch even when the salvage produced no net-new rows, so a
+          # recovery that merely confirms main is current keeps the chain alive.
+          gh workflow run build-timeline.yml --ref main 2>/dev/null && echo "Dispatched build-timeline.yml" || echo "Timeline dispatch failed (non-fatal)"
+          gh workflow run daily-wiki-fill.yml --ref main 2>/dev/null && echo "Queued next Wiki Fill" || echo "Next-fill dispatch failed (non-fatal)"

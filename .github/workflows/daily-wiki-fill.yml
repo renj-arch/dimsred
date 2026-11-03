@@ -24,12 +24,11 @@ jobs:
   # ΓöÇΓöÇ Setup: prepare baseline quiz.json, PIB feeds ΓöÇΓöÇ
   setup:
     runs-on: ubuntu-latest
-    # 60 min cap, but the fetch below is now SHALLOW (--depth 1): the old full
+    # 45 min: observed 29 min (shallow fetch + rebuilds). The old full
     # `git fetch origin` on this multi-GB repo alone ate 20-45+ min and got
     # setup killed at the cap twice (runs #41405135087, #41415582382), which
-    # cascaded into merge. 60 + 300 + 45 + 90 + 85 = 580 min ~ 9.7 h hard
-    # ceiling, still < 10 h.
-    timeout-minutes: 60
+    # cascaded into merge.
+    timeout-minutes: 45
     steps:
       - uses: actions/checkout@v4
         with:
@@ -86,12 +85,12 @@ jobs:
           path: data/
           retention-days: 1
 
-  # ΓöÇΓöÇ Wiki chunks: 10 runners, ALL in one parallel wave (2026-11-02 restructure: was 27 chunks at max-parallel 8 = four waves, worst case ~20 h per run). Single wave of 10 with a 240-min self-stop finishes the fill in ~4 h; job caps sum to a hard ~10 h ceiling: setup 60 + chunks 300 + merge 45 + archive 90 + finalize 85 = 580 min (~9.7 h). ΓöÇΓöÇ
+  # ΓöÇΓöÇ Wiki chunks: 10 runners, ALL in one parallel wave (2026-11-02 restructure: was 27 chunks at max-parallel 8 = four waves, worst case ~20 h per run). Single wave of 10 with a 240-min self-stop finishes the fill in ~4 h; job caps sum to a hard ~10 h ceiling: setup 45 + chunks 280 + merge 90 + archive 70 + finalize 110 = 595 min (~9.9 h). ΓöÇΓöÇ
   # Each chunk is bounded by its discovery budgets (LINK_BUDGET limits how many
   # linked pages a single category may traverse per run at ~2.5s/request and
   # concurrency 2 ΓÇö worst case a 200k budget would run ~70h). Linked pages are
   # persisted to the link pool and re-mined next run, so the caps only spread
-  # discovery across runs, never drop data. Job cap is 300 min as headroom on top of the cut link budget + 240-min self-stop.
+  # discovery across runs, never drop data. Job cap is 280 min as headroom on top of the cut link budget + 240-min self-stop.
   wiki-chunks:
     needs: setup
     runs-on: ubuntu-latest
@@ -100,7 +99,7 @@ jobs:
         chunk: ${{ fromJSON(inputs.chunk != '' && format('[{0}]', inputs.chunk) || '[1,2,3,4,5,6,7,8,9,10]') }}
       max-parallel: 10
       fail-fast: false
-    timeout-minutes: 300
+    timeout-minutes: 280
     # A chunk that hits the runner's hard timeout (or fails) must not abort the
     # whole run: run #434 lost 17 successful chunks' data because 10 slow chunks
     # were killed at the 360-min cap, which cancelled merge+finalize. Each chunk
@@ -211,10 +210,17 @@ jobs:
   # ΓöÇΓöÇ Merge: combine all chunk outputs ΓöÇΓöÇ
   merge:
     needs: wiki-chunks
-    timeout-minutes: 45
+    # 90 min. Checkout of this multi-GB repo alone takes ~20 min, the baseline
+    # artifact ~3 min, and 10 chunk artifacts must be downloaded+collected one
+    # at a time. The old 45-min cap killed two consecutive runs mid-collect
+    # (41424766644, 41584958983) AFTER all ten chunks had succeeded, losing the
+    # whole harvest. collect is now fixed (it used to die on a missing
+    # .merge-state dir), so this is real work, not a hang.
+    timeout-minutes: 90
     # Merge whatever chunks succeeded ΓÇö a failed/timed-out chunk must not throw
-    # away the rest (run #434). merge-chunks.js skips missing chunks and no-ops
-    # cleanly when there are none.
+    # away the rest (run #434). merge-chunks.js skips missing chunks, but if NO
+    # chunk was collected finalize now fails instead of committing the bare
+    # baseline as if it were a completed fill.
     # NOT `always()`: when the run is manually cancelled GitHub re-evaluates
     # this condition for running jobs, and `always()` evaluates true so the
     # merge would keep running for hours. `!cancelled()` stops it immediately.
@@ -355,10 +361,10 @@ jobs:
   # ΓöÇΓöÇ Archive tail: build archive.html + indexes in a dedicated job ΓöÇΓöÇ
   # Split out of `merge` (run #519: build-archive-single.js hit merge's default
   # 6h cap and cancelled the job before `merged` was uploaded). This job gets a
-  # fresh 90-min budget and re-uploads the final payload under `merged`.
+  # fresh 70-min budget and re-uploads the final payload under `merged`.
   archive:
     needs: [merge]
-    timeout-minutes: 90
+    timeout-minutes: 70
     if: ${{ !cancelled() && needs.merge.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -415,7 +421,7 @@ jobs:
     # on the hard 6h kill. The 6h-cap guard on the timeline step (below) keeps
     # normal runs far under this: timeline only starts when it can FINISH, and
     # build-timeline.yml is self-dispatched at the end as the continuation path.
-    timeout-minutes: 85
+    timeout-minutes: 110
     steps:
       - uses: actions/checkout@v4
         with:
@@ -549,17 +555,19 @@ jobs:
         timeout-minutes: 10
         run: |
           for i in 1 2 3; do
-            if git pull --rebase 2>/dev/null; then
+            if git pull --rebase --autostash origin main 2>/dev/null; then
               echo "Rebased cleanly"
               break
-            else
-              echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
-              git rebase --abort
-              git fetch origin main 2>/dev/null
-              git merge --no-edit origin/main 2>/dev/null || {
-                node scripts/resolve-data-merge.js
-                git commit --no-edit 2>/dev/null || true
-              }
+            fi
+            echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
+            if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
+              git rebase --abort || true
+            fi
+            git fetch origin main 2>/dev/null
+            if ! git merge --no-edit origin/main 2>/dev/null; then
+              node scripts/resolve-data-merge.js
+              git add -A -- data archive.html
+              git commit --no-edit 2>/dev/null || true
             fi
           done
 
@@ -573,58 +581,72 @@ jobs:
           for i in 1 2 3; do
             if git push; then
               echo "Push succeeded"
-              break
-            else
-              echo "Push attempt $i failed, retrying..."
-              sleep 5
+              exit 0
             fi
+            echo "Push attempt $i failed, retrying..."
+            sleep 5
           done
+          echo "::error::Could not push wiki data after 3 attempts"
+          exit 1
 
-      - name: Mark changes committed
-        timeout-minutes: 1
-        run: touch "$RUNNER_TEMP/changes-committed"
-      - run: |
-          if [ -f "$RUNNER_TEMP/changes-committed" ]; then
-            echo "Wiki data committed; starting next run automatically"
-            gh workflow run daily-wiki-fill.yml 2>/dev/null && echo "Self-dispatched next Wiki Fill" || echo "Self-dispatch failed (non-fatal)"
-            # GITHUB_TOKEN pushes never fire on:push workflows, so slim-live (main
-            # -> live -> Cloudflare production) would silently skip after every bot
-            # commit. Dispatch it explicitly to keep production fresh.
-            gh workflow run slim-live.yml 2>/dev/null && echo "Self-dispatched Slim Live" || echo "Slim Live dispatch failed (non-fatal)"
-            # The Ask index and mind-tree DO depend on new questions, so the
-            # timeline rebuild stays chained here. build-timeline.yml no longer
-            # builds any figure packs.
-            gh workflow run build-timeline.yml 2>/dev/null && echo "Self-dispatched Build Timeline" || echo "Build Timeline dispatch failed (non-fatal)"
-            # FIGURES ARE NO LONGER DISPATCHED FROM HERE.
-            #
-            # This block used to fan out to resolve-figures.yml,
-            # build-timeline.yml (which built the figure packs) and
-            # figure-link-check.yml. That put the entire figure pipeline behind
-            # the fill chain: it only ever started inside `if [ -f
-            # changes-committed ]`, so any night that mined nothing new, or any
-            # failure upstream, silently skipped figures for as long as the
-            # problem lasted. Figure discovery and question growth are unrelated
-            # -- a Commons file can be renamed on a day the corpus does not
-            # change, and then nothing would look at it.
-            #
-            # build-figures.yml now owns all of it, on `cron: '23 */6 * * *'`, in
-            # its own concurrency group that nothing else shares. So figures keep
-            # a fixed 4x-daily cadence regardless of what this workflow does, and
-            # a busy or failing fill can no longer delay, skip or cancel them.
-            #
-            # build-timeline.yml is still dispatched below, because the Ask index
-            # and the mind-tree genuinely do depend on new questions. Its figure
-            # steps were removed in the same change.
-            # The Ask question-bank tables (data/ask-qb/) are a SEPARATE artifact
-            # from the timeline index rebuilt in `finalize`, and nothing used to
-            # rebuild them, so they went stale on every fill ΓÇö run #560 left
-            # 3,74,175 records invisible. Its own workflow (not a step here) so the
-            # ~838 MB build gets a fresh runner and a full disk instead of risking
-            # the job that commits the question data. Its daily cron backstops the
-            # non-fatal dispatch above.
-            gh workflow run build-ask-qb.yml 2>/dev/null && echo "Self-dispatched Ask Question-Bank Build" || echo "Ask Q/B dispatch failed (non-fatal)"
-          else
-            echo "No wiki data changes ΓÇö chain ends here"
-          fi
+      - name: Queue the next fill before this run ends
+        timeout-minutes: 5
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The next run enters the `data-fill` concurrency group while this one
+          # is still finishing, so GitHub holds it pending and starts it the
+          # moment this workflow completes. That is the chain: no wait for the
+          # 00:00 cron. Three attempts, fail-closed so a broken dispatch is
+          # visible instead of silently ending the chain.
+          queued=0
+          for i in 1 2 3; do
+            if gh workflow run daily-wiki-fill.yml --ref main; then
+              echo "Queued the next Wiki Fill (starts when this run completes)"
+              queued=1
+              break
+            fi
+            echo "Dispatch attempt $i failed, retrying..."
+            sleep 10
+          done
+          if [ "$queued" != "1" ]; then
+            echo "::error::Could not queue the next Wiki Fill"
+            exit 1
+          fi
+
+          # GITHUB_TOKEN pushes never fire on:push workflows, so slim-live (main
+          # -> live -> Cloudflare production) would silently skip after every bot
+          # commit. Dispatch it explicitly to keep production fresh.
+          gh workflow run slim-live.yml --ref main 2>/dev/null && echo "Self-dispatched Slim Live" || echo "Slim Live dispatch failed (non-fatal)"
+          # The Ask index and mind-tree DO depend on new questions, so the
+          # timeline rebuild stays chained here. build-timeline.yml no longer
+          # builds any figure packs.
+          gh workflow run build-timeline.yml --ref main 2>/dev/null && echo "Self-dispatched Build Timeline" || echo "Build Timeline dispatch failed (non-fatal)"
+          # FIGURES ARE NO LONGER DISPATCHED FROM HERE.
+          #
+          # This block used to fan out to resolve-figures.yml,
+          # build-timeline.yml (which built the figure packs) and
+          # figure-link-check.yml. That put the entire figure pipeline behind
+          # the fill chain: it only ever started inside `if [ -f
+          # changes-committed ]`, so any night that mined nothing new, or any
+          # failure upstream, silently skipped figures for as long as the
+          # problem lasted. Figure discovery and question growth are unrelated
+          # -- a Commons file can be renamed on a day the corpus does not
+          # change, and then nothing would look at it.
+          #
+          # build-figures.yml now owns all of it, on `cron: '23 */6 * * *'`, in
+          # its own concurrency group that nothing else shares. So figures keep
+          # a fixed 4x-daily cadence regardless of what this workflow does, and
+          # a busy or failing fill can no longer delay, skip or cancel them.
+          #
+          # build-timeline.yml is still dispatched below, because the Ask index
+          # and the mind-tree genuinely do depend on new questions. Its figure
+          # steps were removed in the same change.
+          # The Ask question-bank tables (data/ask-qb/) are a SEPARATE artifact
+          # from the timeline index rebuilt in `finalize`, and nothing used to
+          # rebuild them, so they went stale on every fill — run #560 left
+          # 3,74,175 records invisible. Its own workflow (not a step here) so the
+          # ~838 MB build gets a fresh runner and a full disk instead of risking
+          # the job that commits the question data. Its daily cron backstops the
+          # non-fatal dispatch above.
+          gh workflow run build-ask-qb.yml --ref main 2>/dev/null && echo "Self-dispatched Ask Question-Bank Build" || echo "Ask Q/B dispatch failed (non-fatal)"

@@ -11,7 +11,14 @@ const STATE_DIR = path.join(CHUNKS_DIR, '.merge-state');
 const NEW_QUESTIONS_PATH = path.join(STATE_DIR, 'new.jsonl');
 const CARRY_PATH = path.join(STATE_DIR, 'carry.txt');
 const SEEN_PATH = path.join(STATE_DIR, 'seen.txt');
+const BLOOM_PATH = SEEN_PATH + '.bloom';
 const LOOP_POOL_PATH = path.join(STATE_DIR, 'linkpool.json');
+// Recovery can use an older baseline only to decide what is genuinely new,
+// while finalize still writes the CURRENT checkout's quiz.json + delta. That
+// keeps a salvage additive instead of reverting main to the failed run's base.
+const MERGE_BASE_QUIZ = process.env.MERGE_BASE_QUIZ
+  ? path.resolve(process.env.MERGE_BASE_QUIZ)
+  : QUIZ_PATH;
 
 function norm(s) {
   return String(s).replace(/\s+/g, ' ').trim().toLowerCase();
@@ -91,8 +98,10 @@ function saveSeen(seen) {
     try {
       fs.mkdirSync(STATE_DIR, { recursive: true });
       if (seen instanceof BloomFilter) {
-        seen.save(SEEN_PATH);
-        console.log('Saved BloomFilter dedup: ' + seen.size + ' keys');
+        // loadSeen() looks for seen.txt.bloom; writing to seen.txt here made
+        // the next collect mistake the binary file for a text key list.
+        seen.save(BLOOM_PATH);
+        console.log('Saved BloomFilter dedup (' + Math.round(seen.arr.length / 1024 / 1024) + 'MB)');
         resolve();
       } else {
         // Fallback: original Set-based save
@@ -112,10 +121,15 @@ function saveSeen(seen) {
 }
 
 function loadSeen() {
-  const BLOOM_PATH = SEEN_PATH + '.bloom';
+  // The first collect in a fresh merge job builds the bloom from quiz.json and
+  // saves it here. STATE_DIR is created by finalize's parent directories only
+  // on success, so it is absent at this point: create it before saving, or the
+  // whole collect dies with ENOENT (which silently discarded every chunk since
+  // the state split was introduced).
+  fs.mkdirSync(STATE_DIR, { recursive: true });
   if (fs.existsSync(BLOOM_PATH)) {
     const bf = BloomFilter.load(BLOOM_PATH);
-    console.log('Loaded BloomFilter dedup: ~' + bf.size + ' keys (' + Math.round(bf.arr.length / 1024 / 1024) + 'MB)');
+    console.log('Loaded BloomFilter dedup (' + Math.round(bf.arr.length / 1024 / 1024) + 'MB)');
     return Promise.resolve(bf);
   }
   // Legacy: text file of keys
@@ -134,11 +148,11 @@ function loadSeen() {
   }
   return (async () => {
     const bf = new BloomFilter();
-    if (fs.existsSync(QUIZ_PATH)) {
-      iterQuizQuestions(QUIZ_PATH, (q) => { bf.add(compactKey(norm(q.question))); });
+    if (fs.existsSync(MERGE_BASE_QUIZ)) {
+      iterQuizQuestions(MERGE_BASE_QUIZ, (q) => { bf.add(compactKey(norm(q.question))); });
     }
     bf.save(BLOOM_PATH);
-    console.log('Built BloomFilter from quiz.json: ~' + bf.size + ' questions');
+    console.log('Built BloomFilter from ' + path.relative(path.join(__dirname, '..'), MERGE_BASE_QUIZ) + ': ~' + bf.size + ' questions');
     return bf;
   })();
 }
@@ -165,10 +179,10 @@ async function collectChunks() {
   }
   console.log('Found ' + chunkFiles.length + ' chunk output files');
   const seen = await loadSeen();
-  consumeChunks(chunkFiles, seen);
+  await consumeChunks(chunkFiles, seen);
 }
 
-function consumeChunks(chunkFiles, seen) {
+async function consumeChunks(chunkFiles, seen) {
   const linkPool = loadLoopPool();
 
   for (const f of chunkFiles) {
@@ -187,7 +201,6 @@ function consumeChunks(chunkFiles, seen) {
 
       const newQbuf = [];
       const carryBuf = [];
-      const newSeen = [];
       const consume = (qs) => {
         for (const q of qs) {
           chunkTotal++;
@@ -195,7 +208,6 @@ function consumeChunks(chunkFiles, seen) {
           const ck = compactKey(key);
           if (!seen.has(ck)) {
             seen.add(ck);
-            newSeen.push(ck);
             newQbuf.push(JSON.stringify(q));
             chunkAdded++;
           } else if (q.wikiDone) {
@@ -218,7 +230,6 @@ function consumeChunks(chunkFiles, seen) {
       fs.mkdirSync(STATE_DIR, { recursive: true });
       if (newQbuf.length) fs.appendFileSync(NEW_QUESTIONS_PATH, newQbuf.join('\n') + '\n');
       if (carryBuf.length) fs.appendFileSync(CARRY_PATH, carryBuf.join('\n') + '\n');
-      if (newSeen.length) fs.appendFileSync(SEEN_PATH, newSeen.join('\n') + '\n');
 
       // Free disk as we go: each chunk is a full quiz copy sharded across many
       // files. Removing it after consuming caps peak disk usage at ~1 chunk.
@@ -233,6 +244,10 @@ function consumeChunks(chunkFiles, seen) {
     }
   }
 
+  // Persist the updated bloom so the next `collect` process dedupes against
+  // questions added by earlier chunks in this same run. Without this, the same
+  // question produced by two chunks could be appended twice.
+  await saveSeen(seen);
   fs.writeFileSync(LOOP_POOL_PATH, JSON.stringify(linkPool, null, 1));
   console.log('Collected chunks into .merge-state (ready for finalize)');
 }
@@ -242,8 +257,10 @@ function consumeChunks(chunkFiles, seen) {
 // the only full pass over the corpus, so it happens exactly once per run.
 async function finalizeChunks() {
   if (!fs.existsSync(STATE_DIR)) {
-    console.error('No .merge-state found. Nothing to finalize.');
-    return;
+    // This used to return success, which let a recovery with zero collected
+    // chunks commit the stale baseline as if it were new data. Fail instead:
+    // no collection state means nothing was merged.
+    throw new Error('No .merge-state found. Refusing to finalize (nothing was collected).');
   }
 
   // Load carry keys into a small in-memory Set for the write pass
@@ -259,12 +276,20 @@ async function finalizeChunks() {
   for (let i = 0; i < 1000; i++) { try { fs.unlinkSync(TMP + '.part.' + i); } catch (e) { break; } }
 
   const writer = createStreamingShardWriter(TMP);
+  // Dedup the collected delta against the CURRENT corpus as it is written. In
+  // the normal merge the dedup base and the output base are the same file, so
+  // this is a no-op; in recovery they differ (the baseline decides what the run
+  // produced, main decides what already exists), and a question added by
+  // another workflow in between must not be written twice.
+  const seenOut = new BloomFilter();
   let total = 0;
   let added = 0;
   let carried = 0;
+  let skippedExisting = 0;
   if (fs.existsSync(QUIZ_PATH)) {
     try {
       iterQuizQuestions(QUIZ_PATH, (q) => {
+        seenOut.add(compactKey(norm(q.question)));
         const key = norm(q.question);
         if (carry.has(key) && !q.wikiDone) {
           q.wikiDone = true;
@@ -287,6 +312,12 @@ async function finalizeChunks() {
       if (!line) return;
       const q = JSON.parse(line);
       const key = norm(q.question);
+      const ck = compactKey(key);
+      if (seenOut.has(ck)) {
+        skippedExisting++;
+        return;
+      }
+      seenOut.add(ck);
       if (carry.has(key) && q.wikiDone !== true) {
         q.wikiDone = true;
         carried++;
@@ -298,6 +329,9 @@ async function finalizeChunks() {
     rl.on('close', () => resolve());
   });
   const res = writer.finish();
+  if (skippedExisting) {
+    console.log('Skipped ' + skippedExisting + ' collected questions already present in the current corpus');
+  }
   console.log('Wrote quiz.json: ' + total + ' total (' + added + ' new, ' + carried + ' wikiDone handled) across ' + (res.shards || 0) + ' shards');
 
   // Atomically swap temp file in for the real quiz.json
@@ -311,8 +345,7 @@ async function finalizeChunks() {
     }
     fs.renameSync(TMP, QUIZ_PATH);
   } else {
-    console.error('No questions written — leaving existing quiz.json untouched.');
-    return;
+    throw new Error('No questions written — no quiz base to merge into (refusing to commit a partial merge).');
   }
 
   // Prune fully-mined titles from the pool. Combine the committed pool with the
