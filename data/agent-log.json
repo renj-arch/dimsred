@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T08:23:52.968Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; mainsfresh produced zero fixes in the last two runs so it is starved to the end of the queue while we prioritize content generation for broken pages and missing diagrams.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (510 total)",
-       "text": "How is the centroid of a composite figure determined? | What is the centroidal position of a circular sector having semi-angle α? | Define moment of inertia of a body about an axis."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T08:59:05.855Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -739,8 +689,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T16:54:06.715Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. BankFigures is the only agent producing results recently; it must lead to clear backlog bottlenecks. MockPapers should follow to convert cleared figures into complete exam resources, while MainsFresh can finally contribute once the foundational data pipeline is unblocked. Invention and MetaLearn are starved (0 fixes in last 2 runs) and will be queued last if inputs remain insufficient.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (547 total)",
+       "text": "A wheel of radius 0.5 m rotates at 20 rad/s. What is the linear speed of a point | Define the mechanical advantage of a machine. | Define the velocity ratio of a machine."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Production Technology (360 in pool)",
+       "text": "Production Technology"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T16:07:23.999Z",
+ "lastRun": "2026-11-03T16:54:06.715Z",
  "model": "qwen3.5:9b"
 }
