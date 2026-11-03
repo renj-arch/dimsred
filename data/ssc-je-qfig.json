@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T12:09:58.791Z",
-  "cursor": 564,
-  "built": 530
+  "updatedAt": "2026-11-03T12:51:40.448Z",
+  "cursor": 567,
+  "built": 531
  },
  "figs": {
   "11434945": {
@@ -3183,6 +3183,12 @@
   "606a3e6f": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"195\">x</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"70\">y</text><path d=\"M 40 180 L 100 100 L 160 180\" fill=\"none\" stroke-width=\"2.5\"/><circle cx=\"40\" cy=\"180\" r=\"3\"/><circle cx=\"160\" cy=\"180\" r=\"3\"/><text x=\"90\" y=\"170\">R</text><line x1=\"100\" y1=\"100\" x2=\"140\" y2=\"60\" stroke-width=\"1.5\"/><text x=\"115\" y=\"55\">θ</text><text x=\"80\" y=\"30\">Max Range at θ = 45°</text></svg>",
    "n": "at what angle is the horizontal range of a projectile maximum?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "dc72eced": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/>\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\"/>\n  <!-- Vector A (Absolute Velocity) -->\n  <line x1=\"80\" y1=\"200\" x2=\"160\" y2=\"150\" stroke-width=\"3\"/>\n  <text x=\"70\" y=\"145\">V_A</text>\n  <!-- Vector B (Absolute Velocity) -->\n  <line x1=\"80\" y1=\"200\" x2=\"160\" y2=\"190\" stroke-width=\"3\"/>\n  <text x=\"70\" y=\"185\">V_B</text>\n  <!-- Vector AB (Relative Velocity) -->\n  <line x1=\"160\" y1=\"150\" x2=\"240\" y2=\"190\" stroke-width=\"3\"/>\n  <text x=\"230\" y=\"185\">V_AB</text>\n  <!-- Arrowheads -->\n  <polygon points=\"160,150 155,147 165,147\" fill=\"#222\"/>\n  <polygon points=\"240,190 235,187 245,187\" fill=\"#222\"/>\n  <!-- Origin Label -->\n  <text x=\"35\" y=\"215\">O</text>\n  <!-- Concept Label -->\n  <text x=\"90\" y=\"230\" font-style=\"italic\">Vector Subtraction</text>\n</svg>",
+   "n": "define relative velocity.",
    "sub": "emech",
    "at": "2026-11-03"
   }
