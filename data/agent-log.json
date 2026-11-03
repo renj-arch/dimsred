@@ -1,61 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T12:42:41.346Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual assets. Since papers/syllabus files are missing, MockPapers and MainsFresh agents will be starved this run and placed last per protocol. Invention and MetaLearn should follow to generate fresh content once structural gaps are addressed.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (530 total)",
-       "text": "Write the maximum height reached by a projectile projected at angle θ with veloc | Write the horizontal range of a projectile launched with velocity u at angle θ. | At what angle is the horizontal range of a projectile maximum?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T13:21:15.656Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -765,8 +710,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T22:30:14.554Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical gaps in papers, questions, syllabus, and sidecar files, with a high backlog of figure gaps (79) and open faults (81). BankFigures is the only agent producing output recently; MockPapers and MainsFresh have produced zero for the last two runs but are essential for the core content goals, so they will be reactivated after BankFigures to clear the standing unfinished goals. Invention and MetaLearn are deprioritized until the immediate content gaps are addressed.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (570 total)",
+       "text": "What is the firing interval of a four-cylinder four-stroke engine? | What is the main advantage of a two-stroke engine? | What is the function of the cylinder in an IC engine?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Industrial Engineering (360 in pool)",
+       "text": "Industrial Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T22:06:35.916Z",
+ "lastRun": "2026-11-03T22:30:14.554Z",
  "model": "qwen3.5:9b"
 }
