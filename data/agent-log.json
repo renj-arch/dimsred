@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T00:37:32.165Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of addressing both simultaneously based on available data. MetaLearn and Invention have produced zero fixes in the last three consecutive runs, indicating they are currently starved of inputs rather than broken, so they will be scheduled last after the critical debt is cleared. The goal is to stabilize the site's core integrity before attempting new content generation.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (464 total)",
-       "text": "What is the principle on which resolution of multiple forces is based? | Define moment of a force about a point. | What is the SI unit of moment of a force?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T00:57:55.530Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -730,8 +690,54 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T07:17:36.260Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults and figure gaps are blocking core content; prioritize BankFigures to fix broken visuals and MockPapers to generate missing exam materials. Invention is deferred as it requires stable base content first. MainsFresh, MetaLearn, and ExamPatterns produced zero fixes recently and will be queued later if inputs stabilize.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (504 total)",
+       "text": "Where is the centroid of a triangle measured from its base? | What is the centroidal distance of a semicircular area from its diameter? | What is the centre of gravity of a solid hemisphere of radius r?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Engineering Mathematics (360 in pool)",
+       "text": "Engineering Mathematics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T07:03:33.355Z",
+ "lastRun": "2026-11-03T07:17:36.260Z",
  "model": "qwen3.5:9b"
 }
