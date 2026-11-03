@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T20:45:35.173Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "BankFigures is the only agent producing output recently and must clear the critical 23 faults immediately. Since filesPresent shows false for all categories (papers, questions, etc.), we are in a 'foundational debt' phase where generating core assets takes precedence over polishing existing gaps until the base layer exists; however, BankFigures handles the immediate broken links/missing data points. MockPapers and ExamPatterns have produced zero output for 2+ runs and must be moved to the end of",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (438 total)",
-       "text": "What are collinear forces? | What are coplanar forces? | What are concurrent forces?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Engineering Mathematics (360 in pool)",
-       "text": "Engineering Mathematics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T21:18:41.051Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -706,8 +645,31 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T02:54:38.641Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T02:41:23.738Z",
+ "lastRun": "2026-11-03T02:54:38.641Z",
  "model": "qwen3.5:9b"
 }
