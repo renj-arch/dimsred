@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T23:11:35.593Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bank figures is the only agent capable of fixing both. Mock papers must be prioritized next because filesPresent shows zero content exists for papers or questions, making it an unfinished standing goal. MetaLearn and Invention have produced 0 fixes in the last two runs and will be deprioritized to focus resources on immediate gaps.",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (452 total)",
-       "text": "State Lami's theorem. | To which force system does Lami's theorem apply? | Three equal forces of 10 N keep a particle in equilibrium. What is the angle bet"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T23:39:25.243Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -722,8 +687,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T05:31:47.177Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. MockPapers is next as papers are absent, followed by MainsFresh for new content since it produced 0 in the last two runs but has pending ideas. ExamPatterns and Invention go last as they have zero output recently and should be starved until gaps are closed.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (496 total)",
+       "text": "What forces act on a ladder resting against a wall and floor? | A uniform ladder rests on a rough floor (coefficient μ) and a smooth vertical wa | What is rolling friction and how does it compare with sliding friction?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T05:07:51.346Z",
+ "lastRun": "2026-11-03T05:31:47.177Z",
  "model": "qwen3.5:9b"
 }
