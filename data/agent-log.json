@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T06:13:52.914Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-03T07:03:33.355Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -658,8 +646,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T13:55:55.439Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures is the only agent fixing items today so it must lead to clear immediate debt. MockPapers has produced zero fixes in the last two runs while others worked, indicating it is starved of inputs rather than broken, so it should be scheduled last after a successful run by another agent. Invention and MetaLearn have also hit zero recently but will only be viable once critical faults are cleared; they remain low priority for this ",
+    "actions": [
+     "BankFigures",
+     "ExamPatterns",
+     "MainsFresh",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (534 total)",
+       "text": "State Newton's second law of motion. | Define momentum of a body. | State D'Alembert's principle."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T13:21:15.656Z",
+ "lastRun": "2026-11-03T13:55:55.439Z",
  "model": "qwen3.5:9b"
 }
