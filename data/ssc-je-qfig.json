@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T02:52:09.804Z",
-  "cursor": 513,
-  "built": 482
+  "updatedAt": "2026-11-03T03:19:48.568Z",
+  "cursor": 516,
+  "built": 485
  },
  "figs": {
   "11434945": {
@@ -2895,6 +2895,24 @@
   "222ff0d7": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Simply Supported Beam with UDL</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"40\" cy=\"60\" r=\"8\"/><circle cx=\"320\" cy=\"60\" r=\"8\"/><path d=\"M 40 78 L 40 100 M 320 78 L 320 100\"/><text x=\"35\" y=\"95\">R_A = wL/2</text><text x=\"315\" y=\"95\">R_B = wL/2</text><path d=\"M 40 60 L 40 40 M 320 60 L 320 40\"/><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"50\" text-anchor=\"middle\">w (UDL)</text><path d=\"M 40 60 L 40 40 M 320 60 L 320 40\" stroke-dasharray=\"4,2\"/><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/></svg>",
    "n": "a simply supported beam carries a uniformly distributed load w (per unit length) over its full span l. find the reaction",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "e5a23217": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Cantilever Beam with UDL</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-width=\"3\"/><polygon points=\"320,55 320,65 310,60\" fill=\"#222\"/><text x=\"325\" y=\"64\">Wall</text><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"160\" stroke-width=\"1.5\"/><polygon points=\"320,160 330,160 330,145 320,145\" fill=\"#222\"/><text x=\"335\" y=\"152\">Fixed</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"160\" stroke-width=\"1.5\"/><polygon points=\"40,160 30,160 30,145 40,145\" fill=\"#222\"/><text x=\"35\" y=\"178\">Free</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"160\" stroke-dasharray=\"2,2\"/><text x=\"20\" y=\"110\">w L</text><polygon points=\"35,80 45,80 45,75 35,75\" fill=\"#222\"/><polygon points=\"35,90 45,90 45,85 35,85\" fill=\"#222\"/><text x=\"180\" y=\"110\">wL/2</text><line x1=\"170\" y1=\"60\" x2=\"190\" y2=\"60\" stroke-width=\"1.5\"/><polygon points=\"190,60 190,70 180,65\" fill=\"#222\"/><text x=\"175\" y=\"75\">R = wL</text><polygon points=\"40,160 30,160 30,145 40,145\" fill=\"#222\"/><text x=\"20\" y=\"178\">M = wL²/2</text></svg>",
+   "n": "a cantilever of length l carries a udl w over its entire length. find the reaction and the fixing moment.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "b556f95d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"280\" height=\"40\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Uniformly Distributed Load</text><line x1=\"320\" y1=\"100\" x2=\"320\" y2=\"120\" stroke-width=\"2\"/><polygon points=\"320,100 340,110 320,120\" fill=\"#222\"/><text x=\"350\" y=\"115\">Resultant</text><line x1=\"200\" y1=\"80\" x2=\"200\" y2=\"140\" stroke-width=\"2\"/><circle cx=\"200\" cy=\"110\" r=\"3\" fill=\"#222\"/><text x=\"195\" y=\"105\">Centroid</text><text x=\"180\" y=\"135\" text-anchor=\"middle\">Middle of loaded length</text></svg>",
+   "n": "where does the resultant of a uniformly distributed load act?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "65a410ca": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><circle cx=\"40\" cy=\"180\" r=\"6\"/><circle cx=\"320\" cy=\"180\" r=\"6\"/><text x=\"25\" y=\"175\">RA</text><text x=\"315\" y=\"175\">RB</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"120\"/><line x1=\"320\" y1=\"180\" x2=\"320\" y2=\"120\"/><text x=\"35\" y=\"160\">RA</text><text x=\"315\" y=\"160\">RB</text><text x=\"180\" y=\"100\">Simply Supported Beam</text></svg>",
+   "n": "how many unknown reactions does a simply supported beam have, and is it statically determinate?",
    "sub": "emech",
    "at": "2026-11-03"
   }

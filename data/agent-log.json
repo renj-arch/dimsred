@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T21:18:41.051Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visuals. MockPapers is next because filesPresent shows no papers exist, creating a major content gap. MetaLearn should follow to generate fresh study materials while Invention handles pending ideas last as it has produced 0 fixes in recent runs and may be starved of inputs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (441 total)",
-       "text": "What is resolution of a force? | What is composition of forces? | What are the rectangular components of a force F making angle θ with the horizon"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Industrial Engineering (360 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T21:56:13.551Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -701,8 +645,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T03:24:47.937Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures must lead to resolve the 80 open faults. MockPapers is next as files are missing, followed by MetaLearn to stabilize zero-output agents. Invention is deferred until core maintenance stabilizes.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (485 total)",
+       "text": "A cantilever of length L carries a UDL w over its entire length. Find the reacti | Where does the resultant of a uniformly distributed load act? | How many unknown reactions does a simply supported beam have, and is it statical"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T03:10:43.298Z",
+ "lastRun": "2026-11-03T03:24:47.937Z",
  "model": "qwen3.5:9b"
 }
