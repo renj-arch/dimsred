@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T05:16:26.247Z",
-  "cursor": 528,
-  "built": 496
+  "updatedAt": "2026-11-03T05:42:01.360Z",
+  "cursor": 531,
+  "built": 499
  },
  "figs": {
   "11434945": {
@@ -2979,6 +2979,24 @@
   "45dc6535": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Rolling Friction</text><path d=\"M40,160 L320,160\"/><path d=\"M40,155 Q180,120 320,155\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"155\" r=\"20\"/><text x=\"175\" y=\"145\">Rolling</text><path d=\"M40,160 L320,160 M40,165 L320,165 M40,170 L320,170\"/><circle cx=\"180\" cy=\"170\" r=\"20\" fill=\"#eee\"/><text x=\"175\" y=\"195\">Sliding</text><path d=\"M40,160 L320,160 M40,165 L320,165 M40,170 L320,170 M40,175 L320,175 M40,180 L320,180\"/><text x=\"180\" y=\"205\" text-anchor=\"middle\">F = μr N (Small)</text></svg>",
    "n": "what is rolling friction and how does it compare with sliding friction?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "39a65b39": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Block on Surface</text><rect x=\"60\" y=\"60\" width=\"240\" height=\"30\"/><line x1=\"60\" y1=\"90\" x2=\"300\" y2=\"90\"/><text x=\"50\" y=\"75\">Area A</text><text x=\"310\" y=\"75\">Area 2A</text><path d=\"M 60 90 L 60 140 M 300 90 L 300 140\"/><line x1=\"60\" y1=\"140\" x2=\"300\" y2=\"140\" stroke-dasharray=\"4,2\"/><text x=\"50\" y=\"155\">Friction Force f</text><text x=\"310\" y=\"155\">Friction Force f</text><circle cx=\"60\" cy=\"140\" r=\"3\"/><circle cx=\"300\" cy=\"140\" r=\"3\"/><line x1=\"280\" y1=\"165\" x2=\"280\" y2=\"190\" stroke-dasharray=\"4,2\"/><text x=\"270\" y=\"185\">Normal Force N</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">Friction depends only on Normal Force (N) and Coefficient (μ)</text></svg>",
+   "n": "does the limiting friction depend on the area of contact?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "35ca10b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Flat Belt Drive</text><path d=\"M40 100 L160 100\"/><path d=\"M200 100 L320 100\"/><path d=\"M40 100 Q80 50 120 100 T200 100\" stroke-dasharray=\"4,2\"/><path d=\"M200 100 Q240 50 280 100 T360 100\" stroke-dasharray=\"4,2\"/><line x1=\"40\" y1=\"90\" x2=\"40\" y2=\"110\"/><line x1=\"320\" y1=\"90\" x2=\"320\" y2=\"110\"/><text x=\"35\" y=\"95\">T1</text><text x=\"35\" y=\"115\">T2</text><text x=\"325\" y=\"95\">T1</text><text x=\"325\" y=\"115\">T2</text><path d=\"M40 100 L40 80 M40 100 L60 100\"/><path d=\"M320 100 L320 120 M320 100 L300 100\"/><text x=\"50\" y=\"75\">μθ</text><text x=\"290\" y=\"140\">μθ</text></svg>",
+   "n": "write the relation between belt tensions in a flat belt drive.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "a407c065": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Flat Belt</text><path d=\"M40,80 L160,80 L160,40 L320,40 L320,180 L160,180 L160,140 L40,140\" stroke-width=\"2\" fill=\"none\"/><path d=\"M40,140 Q100,190 160,140\" fill=\"none\" stroke-width=\"1.5\"/><path d=\"M160,80 L160,140\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"70\">T₁</text><text x=\"130\" y=\"155\">T₂</text><text x=\"180\" y=\"100\">θ = 120°</text><text x=\"180\" y=\"165\">μ = 0.3</text></svg>",
+   "n": "a flat belt with μ = 0.3 has an angle of lap of 120°. find the tension ratio t1/t2.",
    "sub": "emech",
    "at": "2026-11-03"
   }
