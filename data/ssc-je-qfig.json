@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T00:46:05.415Z",
-  "cursor": 498,
-  "built": 467
+  "updatedAt": "2026-11-03T01:11:58.730Z",
+  "cursor": 501,
+  "built": 470
  },
  "figs": {
   "11434945": {
@@ -2805,6 +2805,24 @@
   "b745e29d": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Couples cannot be balanced by a single force</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"4 4\"/><circle cx=\"180\" cy=\"60\" r=\"3\"/><text x=\"175\" y=\"55\">Couple</text><text x=\"200\" y=\"55\">(Net Force = 0)</text><line x1=\"40\" y1=\"90\" x2=\"320\" y2=\"90\"/><circle cx=\"180\" cy=\"90\" r=\"3\"/><text x=\"175\" y=\"85\">Single Force</text><text x=\"200\" y=\"85\">(Cannot balance)</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\" stroke-dasharray=\"4 4\"/><circle cx=\"180\" cy=\"120\" r=\"3\"/><text x=\"175\" y=\"115\">Opposite Couple</text><text x=\"200\" y=\"115\">(Required to balance)</text></svg>",
    "n": "can a couple be balanced by a single force?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "24a4ab23": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"180\" y1=\"100\" x2=\"180\" y2=\"140\" />\n <line x1=\"130\" y1=\"100\" x2=\"180\" y2=\"100\" />\n <line x1=\"230\" y1=\"100\" x2=\"180\" y2=\"100\" />\n <text x=\"135\" y=\"95\">F = 20 N</text>\n <text x=\"235\" y=\"95\">d = 0.5 m</text>\n <text x=\"175\" y=\"145\">Point O</text>\n <path d=\"M 180 100 L 180 140 M 180 140 L 130 100\" stroke-dasharray=\"2,2\" />\n <text x=\"165\" y=\"115\">Moment Arm</text>\n <text x=\"175\" y=\"190\">M = F × d</text>\n</svg>",
+   "n": "a 20 n force acts at a perpendicular distance of 0.5 m from a point. find the moment about that point.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "a293e37a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/>\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\"/>\n  <!-- Single Force System (Moment depends on point) -->\n  <text x=\"60\" y=\"50\">Single Force F</text>\n  <line x1=\"80\" y1=\"180\" x2=\"80\" y2=\"140\"/>\n  <line x1=\"75\" y1=\"135\" x2=\"85\" y2=\"145\"/>\n  <text x=\"90\" y=\"130\">F</text>\n  <!-- Reference Point A -->\n  <circle cx=\"120\" cy=\"200\" r=\"3\" fill=\"#222\"/>\n  <text x=\"115\" y=\"215\">A</text>\n  <!-- Moment Arm for A -->\n  <line x1=\"80\" y1=\"140\" x2=\"120\" y2=\"200\" stroke-dasharray=\"4\"/>\n  <text x=\"100\" y=\"175\">d_A</text>\n  <!-- Moment about A -->\n  <line x1=\"130\" y1=\"190\" x2=\"130\" y2=\"180\"/>\n  <line x1=\"135\" y1=\"185\" x2=\"125\" y2=\"175\"/>\n  <text x=\"145\" y=\"180\">M_A = F*d_A</text>\n  <!-- Reference Point B -->\n  <circle cx=\"200\" cy=\"200\" r=\"3\" fill=\"#222\"/>\n  <text x=\"195\" y=\"215\">B</text>\n  <!-- Moment Arm for B -->\n  <line x1=\"80\" y1=\"140\" x2=\"200\" y2=\"200\" stroke-dasharray=\"4\"/>\n  <text x=\"120\" y=\"175\">d_B</text>\n  <!-- Moment about B -->\n  <line x1=\"210\" y1=\"190\" x2=\"210\" y2=\"180\"/>\n  <line x1=\"215\" y1=\"185\" x2=\"205\" y2=\"175\"/>\n  <text x=\"225\" y=\"180\">M_B = F*d_B</text>\n  <text x=\"235\" y=\"165\">(Changes with point)</text>\n  <!-- Couple System (Moment independent) -->\n  <text x=\"60\" y=\"90\">Couple (Two Equal & Opposite Forces)</text>\n  <line x1=\"80\" y1=\"120\" x2=\"80\" y2=\"80\"/>\n  <line x1=\"75\" y1=\"75\" x2=\"85\" y2=\"85\"/>\n  <text x=\"90\" y=\"75\">F</text>\n  <line x1=\"240\" y1=\"120\" x2=\"240\" y2=\"80\"/>\n  <line x1=\"235\" y1=\"75\" x2=\"245\" y2=\"85\"/>\n  <text x=\"250\" y=\"75\">-F</text>\n  <!-- Moment Arm for Couple -->\n  <line x1=\"80\" y1=\"100\" x2=\"240\" y2=\"100\" stroke-dasharray=\"4\"/>\n  <text x=\"160\" y=\"95\">d</text>\n  <!-- Moment about A for Couple -->\n  <line x1=\"130\" y1=\"180\" x2=\"130\" y2=\"170\"/>\n  <line x1=\"135\" y1=\"175\" x2=\"125\" y2=\"165\"/>\n  <text x=\"145\" y=\"170\">M_A = F*d</text>\n  <!-- Moment about B for Couple -->\n  <line x1=\"210\" y1=\"180\" x2=\"210\" y2=\"170\"/>\n  <line x1=\"215\" y1=\"175\" x2=\"205\" y2=\"165\"/>\n  <text x=\"225\" y=\"170\">M_B = F*d</text>\n  <text x=\"235\" y=\"155\">(Same for all points)</text>\n</svg>",
+   "n": "what is the difference between moment of a force and moment of a couple?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "5a452733": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">O</text><line x1=\"40\" y1=\"20\" x2=\"40\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"180\" y2=\"60\"/><circle cx=\"40\" cy=\"60\" r=\"3\"/><text x=\"50\" y=\"75\">F₁</text><line x1=\"40\" y1=\"60\" x2=\"180\" y2=\"60\"/><circle cx=\"180\" cy=\"60\" r=\"3\"/><text x=\"190\" y=\"75\">F₂</text><line x1=\"40\" y1=\"60\" x2=\"220\" y2=\"60\"/><circle cx=\"220\" cy=\"60\" r=\"3\"/><text x=\"230\" y=\"75\">R</text><line x1=\"40\" y1=\"60\" x2=\"220\" y2=\"60\"/><text x=\"230\" y=\"55\">M_R</text><text x=\"180\" y=\"90\">Varignon's Theorem</text></svg>",
+   "n": "state varignon's theorem (principle of moments).",
    "sub": "emech",
    "at": "2026-11-03"
   }

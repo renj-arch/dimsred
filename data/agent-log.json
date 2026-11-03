@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T19:05:06.664Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-02T19:33:28.966Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -667,8 +655,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T01:27:59.968Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of resolving these high-priority technical debts. Since papers, questions, syllabus, and sidecar files are absent, we must prioritize generating core content via MockPapers to fill the 'papers: false' gap before attempting complex pattern generation or meta-learning. Invention agents have produced zero output for two consecutive runs; per rules, they move last despite pending ideas, as the",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (470 total)",
+       "text": "A 20 N force acts at a perpendicular distance of 0.5 m from a point. Find the mo | What is the difference between moment of a force and moment of a couple? | State Varignon's theorem (principle of moments)."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "11 fresh mock questions on Strength of Materials (360 in pool)",
+       "text": "Strength of Materials"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T00:57:55.530Z",
+ "lastRun": "2026-11-03T01:27:59.968Z",
  "model": "qwen3.5:9b"
 }
