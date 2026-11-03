@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T17:38:06.009Z",
-  "cursor": 591,
-  "built": 553
+  "updatedAt": "2026-11-03T18:24:53.746Z",
+  "cursor": 594,
+  "built": 556
  },
  "figs": {
   "11434945": {
@@ -3321,6 +3321,24 @@
   "e9d0501e": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\" xmlns=\"http://www.w3.org/2000/svg\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Screw Jack: Lowering Load</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"65\">Load W</text><polygon points=\"40,60 80,40 120,60\" fill=\"#222\"/><line x1=\"120\" y1=\"60\" x2=\"120\" y2=\"140\"/><line x1=\"135\" y1=\"60\" x2=\"135\" y2=\"140\"/><text x=\"125\" y=\"100\">Thread</text><line x1=\"120\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"310\" y=\"145\">Ground</text><line x1=\"120\" y1=\"60\" x2=\"120\" y2=\"40\" stroke-dasharray=\"4\"/><text x=\"110\" y=\"35\">Effort P (Down)</text><path d=\"M 120 40 L 135 25\" stroke=\"#222\"/><line x1=\"80\" y1=\"60\" x2=\"120\" y2=\"60\"/><text x=\"95\" y=\"75\">Friction Angle φ</text><line x1=\"120\" y1=\"60\" x2=\"135\" y2=\"45\" stroke-dasharray=\"4\"/><text x=\"140\" y=\"50\">Lead Angle α</text><path d=\"M 135 45 L 120 60\" stroke=\"#222\"/><text x=\"170\" y=\"110\" text-anchor=\"middle\">φ &gt; α (Self-locking)</text></svg>",
    "n": "what is the effort for lowering a load with a screw jack?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "274b10dc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Virtual Work Principle</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"65\">Force F</text><text x=\"35\" y=\"185\">Virtual Displacement δs</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"75\" font-style=\"italic\">δs</text><path d=\"M 40 60 L 80 60 L 100 40 L 140 60 L 180 40 L 220 60 L 260 40 L 300 60\" fill=\"none\"/><text x=\"185\" y=\"55\">System Boundary</text><circle cx=\"180\" cy=\"100\" r=\"5\"/><text x=\"175\" y=\"105\">Equilibrium Point</text><path d=\"M 40 60 L 320 60\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"200\" text-anchor=\"middle\">∑ F · δs = 0</text></svg>",
+   "n": "state the principle of virtual work.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "e3f23437": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Virtual Work Principle</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"55\" x2=\"40\" y2=\"180\"/><circle cx=\"180\" cy=\"60\" r=\"3\"/><text x=\"175\" y=\"65\">A</text><text x=\"190\" y=\"65\">B</text><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"180\"/><circle cx=\"180\" cy=\"180\" r=\"3\"/><text x=\"175\" y=\"185\">C</text><line x1=\"40\" y1=\"60\" x2=\"180\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"30\" y=\"55\">δr_AB (Virtual)</text><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"180\" stroke-dasharray=\"4,2\"/><text x=\"185\" y=\"175\">δr_BC</text><polygon points=\"320,60 300,70 320,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"325\" y=\"75\">External Force F</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"125\">δr_AC</text><text x=\"30\" y=\"195\">System in Equilibrium: ΣF·δr = 0</text></svg>",
+   "n": "on which systems is the principle of virtual work most useful?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "c08e39df": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Torque T on Shaft</text><circle cx=\"180\" cy=\"110\" r=\"60\" /><line x1=\"180\" y1=\"50\" x2=\"180\" y2=\"170\" stroke-dasharray=\"4\" /><text x=\"195\" y=\"110\" text-anchor=\"start\">T</text><path d=\"M 180 110 L 240 110\" stroke-width=\"3\" /><text x=\"245\" y=\"115\" text-anchor=\"middle\">Rotation (N rpm)</text><line x1=\"180\" y1=\"170\" x2=\"180\" y2=\"190\" /><text x=\"160\" y=\"185\" text-anchor=\"end\">P = 2πNT/60</text></svg>",
+   "n": "write the power transmitted by a shaft carrying torque t (n·m) at n rpm.",
    "sub": "emech",
    "at": "2026-11-03"
   }

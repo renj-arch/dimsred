@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T09:55:38.221Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in papers and questions (filesPresent false) and high fault counts. Previous runs show BankFigures consistently fixing 1 item while others yield 0; Invention is starved (0 for 2+ runs) so it goes last. Priority: fill content gaps first via BankFigures, then generate fresh materials with MockPapers and MainsFresh, followed by ExamPatterns to address syllabus depth. Invention will be queued last as per rules despite pending ideas.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (516 total)",
-       "text": "What is the moment of inertia of a thin uniform circular ring of mass m and radi | What is the moment of inertia of a uniform circular disc about its central axis? | What is the moment of inertia of a solid sphere about a diameter?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T10:20:36.396Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -784,8 +734,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T19:02:14.870Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults and figure gaps are the highest priority; BankFigures must address 23 critical faults and 79 figure gaps immediately. MockPapers should follow to generate fresh exam content since papers are currently missing. MainsFresh is needed next to ensure daily fresh material as per the owner's mission. Invention will be last despite zero recent output because it is a new venture, not an unfinished standing goal, and the agent has not been starved of inputs yet.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (556 total)",
+       "text": "State the principle of virtual work. | On which systems is the principle of virtual work most useful? | Write the power transmitted by a shaft carrying torque T (N·m) at N rpm."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T18:11:41.962Z",
+ "lastRun": "2026-11-03T19:02:14.870Z",
  "model": "qwen3.5:9b"
 }
