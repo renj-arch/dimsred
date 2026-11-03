@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T13:32:52.256Z",
-  "cursor": 570,
-  "built": 534
+  "updatedAt": "2026-11-03T14:07:11.746Z",
+  "cursor": 573,
+  "built": 536
  },
  "figs": {
   "11434945": {
@@ -3207,6 +3207,18 @@
   "1368c029": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">F_net</text><rect x=\"60\" y=\"100\" width=\"240\" height=\"60\" stroke-dasharray=\"4\"/><line x1=\"100\" y1=\"120\" x2=\"320\" y2=\"120\"/><line x1=\"100\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"90\" y=\"115\">ΣF</text><text x=\"90\" y=\"135\">−ma</text><text x=\"330\" y=\"125\">= 0</text><text x=\"330\" y=\"145\">(Static Eq.)</text><circle cx=\"80\" cy=\"130\" r=\"3\"/><circle cx=\"310\" cy=\"130\" r=\"3\"/></svg>",
    "n": "state d'alembert's principle.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "78f5bfe8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"80\" stroke-dasharray=\"4\"/><text x=\"50\" y=\"70\" text-anchor=\"middle\">F</text><text x=\"90\" y=\"100\" text-anchor=\"middle\">t</text><text x=\"130\" y=\"100\" text-anchor=\"middle\">=</text><text x=\"145\" y=\"100\" text-anchor=\"middle\">Impulse</text><line x1=\"120\" y1=\"60\" x2=\"120\" y2=\"140\" stroke-dasharray=\"4\"/><text x=\"110\" y=\"95\" text-anchor=\"end\">F·t</text><polygon points=\"180,100 220,100 220,140 180,140\" fill=\"none\" stroke=\"#222\"/><text x=\"190\" y=\"130\" text-anchor=\"middle\">mv</text><polygon points=\"260,100 300,100 300,140 260,140\" fill=\"none\" stroke=\"#222\"/><text x=\"270\" y=\"130\" text-anchor=\"middle\">mu</text><line x1=\"180\" y1=\"100\" x2=\"260\" y2=\"100\" stroke-dasharray=\"4\"/><text x=\"225\" y=\"90\" text-anchor=\"middle\">Δp</text></svg>",
+   "n": "define impulse of a force.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "532c7013": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Kinetic Energy Concept</text><line x1=\"60\" y1=\"100\" x2=\"300\" y2=\"100\"/><text x=\"55\" y=\"105\">Velocity (v)</text><text x=\"305\" y=\"105\">m/s</text><line x1=\"60\" y1=\"80\" x2=\"300\" y2=\"80\"/><text x=\"55\" y=\"85\">Mass (m)</text><text x=\"305\" y=\"85\">kg</text><circle cx=\"180\" cy=\"100\" r=\"4\"/><text x=\"170\" y=\"95\">Body</text><text x=\"170\" y=\"120\">(m = 2 kg)</text><path d=\"M 60 100 L 300 100 M 60 80 L 300 80\"/><text x=\"180\" y=\"150\" text-anchor=\"middle\">KE = ½ mv²</text><text x=\"180\" y=\"170\" text-anchor=\"middle\">= 9 J</text></svg>",
+   "n": "find the kinetic energy of a 2 kg body moving at 3 m/s.",
    "sub": "emech",
    "at": "2026-11-03"
   }
