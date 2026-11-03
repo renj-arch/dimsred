@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T21:56:13.551Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity; BankFigures is the primary agent for these. MockPapers should follow to address the lack of question files, as it directly populates the 'papers' and 'questions' assets. Invention is scheduled last because it produced 0 fixes in the previous two runs, indicating it may be starved of inputs or currently blocked until core content gaps are resolved.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (443 total)",
-       "text": "A force of 100 N acts at 60° to the horizontal. Find its horizontal and vertical | Two forces of 3 N and 4 N act at right angles. Find the magnitude of their resul | What is the resultant of a force system?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Workshop Technology (360 in pool)",
-       "text": "Workshop Technology"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T22:08:05.094Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -685,8 +634,80 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T04:08:01.034Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 4,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (488 total)",
+       "text": "State the first law of dry friction. | Define angle of friction. | Define the coefficient of friction."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Engineering Mechanics (360 in pool)",
+       "text": "Engineering Mechanics"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw05kh14-54sx (optional2/psir, 15 marks): Critically examine the architecture of the Nuclear Non-Proliferation Treaty (NPT) regime in the context of India's 'No F",
+       "model": "qwen3.5:9b (local)"
+      },
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw05qh80-d20y (lang-indian, 15 marks): निबंध विषय: 'नारी शक्ति केवल घर की सीमा तक नहीं, बल्कि सामाजिक-राजनीतिक क्षेत्र में भी अपनी पहचान बना रही है।' इस विचार ",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T03:24:47.937Z",
+ "lastRun": "2026-11-03T04:08:01.034Z",
  "model": "qwen3.5:9b"
 }
