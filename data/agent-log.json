@@ -1,78 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T04:08:01.034Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 4,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 2
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (488 total)",
-       "text": "State the first law of dry friction. | Define angle of friction. | Define the coefficient of friction."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Engineering Mechanics (360 in pool)",
-       "text": "Engineering Mechanics"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw05kh14-54sx (optional2/psir, 15 marks): Critically examine the architecture of the Nuclear Non-Proliferation Treaty (NPT) regime in the context of India's 'No F",
-       "model": "qwen3.5:9b (local)"
-      },
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw05qh80-d20y (lang-indian, 15 marks): निबंध विषय: 'नारी शक्ति केवल घर की सीमा तक नहीं, बल्कि सामाजिक-राजनीतिक क्षेत्र में भी अपनी पहचान बना रही है।' इस विचार ",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T04:30:22.990Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -677,8 +605,63 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T11:06:06.996Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "We have critical gaps in papers (0/79) and questions (0/81), so we must prioritize content generation over maintenance. BankFigures and MockPapers are the only agents that produced fixes yesterday; they should run first to clear standing goals. MainsFresh has produced zero for two consecutive runs, indicating it is starved of input rather than broken, so it will be scheduled last after the primary generators have populated the file system.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (522 total)",
+       "text": "Write the moment of inertia of a rectangular section of width b and depth d abou | What is the polar moment of inertia of a solid circular shaft of diameter d? | What is the moment of inertia of a thin ring about a diameter?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T10:20:36.396Z",
+ "lastRun": "2026-11-03T11:06:06.996Z",
  "model": "qwen3.5:9b"
 }

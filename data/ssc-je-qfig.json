@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T10:05:15.268Z",
-  "cursor": 552,
-  "built": 519
+  "updatedAt": "2026-11-03T10:31:05.475Z",
+  "cursor": 555,
+  "built": 522
  },
  "figs": {
   "11434945": {
@@ -3117,6 +3117,24 @@
   "6d9f2f4a": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"280\" y2=\"100\"/><circle cx=\"40\" cy=\"100\" r=\"3\"/><text x=\"30\" y=\"95\" text-anchor=\"end\">O</text><line x1=\"40\" y1=\"100\" x2=\"40\" y2=\"160\" stroke-dasharray=\"3,3\"/><text x=\"35\" y=\"175\" text-anchor=\"end\">l/2</text><path d=\"M 40 100 L 280 100 L 280 160 L 40 160 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"150\" y=\"185\" text-anchor=\"middle\">m</text><line x1=\"300\" y1=\"90\" x2=\"300\" y2=\"110\"/><text x=\"305\" y=\"100\" text-anchor=\"start\">Axis</text><text x=\"160\" y=\"45\" text-anchor=\"middle\">Thin Rod</text></svg>",
    "n": "what is the moment of inertia of a thin rod about an axis through one end perpendicular to its length?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "2b476977": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"140\"/><line x1=\"120\" y1=\"40\" x2=\"120\" y2=\"180\"/><line x1=\"40\" y1=\"105\" x2=\"200\" y2=\"105\"/><text x=\"90\" y=\"35\" text-anchor=\"middle\">b</text><text x=\"160\" y=\"195\" text-anchor=\"middle\">d</text><text x=\"45\" y=\"110\" text-anchor=\"end\">y</text><text x=\"205\" y=\"110\" text-anchor=\"start\">x</text><text x=\"120\" y=\"85\" text-anchor=\"middle\">I = bd³/12</text></svg>",
+   "n": "write the moment of inertia of a rectangular section of width b and depth d about its centroidal axis parallel to the ba",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "2ca9d40c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Solid Circular Shaft</text><path d=\"M40,110 Q180,110 320,110\" fill=\"none\" stroke-width=\"6\"/><circle cx=\"180\" cy=\"110\" r=\"50\" fill=\"none\"/><text x=\"180\" y=\"145\" text-anchor=\"middle\">d</text><text x=\"230\" y=\"115\" text-anchor=\"start\">J = πd⁴/32</text></svg>",
+   "n": "what is the polar moment of inertia of a solid circular shaft of diameter d?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "5262dd14": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><circle cx=\"180\" cy=\"110\" r=\"80\"/><line x1=\"180\" y1=\"30\" x2=\"180\" y2=\"190\"/><text x=\"170\" y=\"105\" font-weight=\"bold\">d</text><text x=\"160\" y=\"115\">I<sub>d</sub> = I<sub>d</sub></text><text x=\"180\" y=\"205\" text-anchor=\"middle\">mr²/2</text><text x=\"10\" y=\"110\">Perpendicular Axis Theorem:</text><text x=\"10\" y=\"130\">I<sub>z</sub> = I<sub>x</sub> + I<sub>y</sub></text><text x=\"10\" y=\"150\">mr² = 2 I<sub>d</sub></text><text x=\"10\" y=\"170\">⇒ I<sub>d</sub> = mr²/2</text></svg>",
+   "n": "what is the moment of inertia of a thin ring about a diameter?",
    "sub": "emech",
    "at": "2026-11-03"
   }
