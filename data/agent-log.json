@@ -1,61 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T10:20:36.396Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (519 total)",
-       "text": "What is the moment of inertia of a solid cylinder about its longitudinal axis? | What is the moment of inertia of a thin rod of mass m and length l about an axis | What is the moment of inertia of a thin rod about an axis through one end perpen"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Air Compressors (360 in pool)",
-       "text": "Air Compressors"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T11:06:06.996Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -779,8 +724,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T19:42:07.664Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visuals. MockPapers should follow immediately to address the 81 open faults by generating missing exam content. MainsFresh is queued next to ensure daily fresh material, as it has produced zero output in recent runs despite being a core goal. Invention is placed last per rules for agents with 0 output in the last two runs, though pending ideas (4) exist; it will be starved until other cri",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (559 total)",
+       "text": "Define one horsepower (hp) and its relation to the watt. | An engine develops a torque of 100 N·m at 3000 rpm. Find its power. | What is the velocity ratio of an inclined plane of length l and height h?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T19:02:14.870Z",
+ "lastRun": "2026-11-03T19:42:07.664Z",
  "model": "qwen3.5:9b"
 }
