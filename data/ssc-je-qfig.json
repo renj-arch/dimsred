@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T14:53:15.449Z",
-  "cursor": 576,
-  "built": 538
+  "updatedAt": "2026-11-03T15:27:54.434Z",
+  "cursor": 579,
+  "built": 541
  },
  "figs": {
   "11434945": {
@@ -3231,6 +3231,24 @@
   "708ac9ad": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Coefficient of Restitution</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"75\" text-anchor=\"middle\">Point of Collision</text><circle cx=\"40\" cy=\"60\" r=\"3\"/><circle cx=\"320\" cy=\"60\" r=\"3\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"90\" stroke-dasharray=\"2,2\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"90\" stroke-dasharray=\"2,2\"/><text x=\"25\" y=\"78\">u1</text><text x=\"315\" y=\"78\">u2</text><line x1=\"40\" y1=\"90\" x2=\"40\" y2=\"120\" stroke-dasharray=\"2,2\"/><line x1=\"320\" y1=\"90\" x2=\"320\" y2=\"120\" stroke-dasharray=\"2,2\"/><text x=\"25\" y=\"108\">v1</text><text x=\"315\" y=\"108\">v2</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"90\" stroke-width=\"2\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"90\" stroke-width=\"2\"/><text x=\"180\" y=\"150\" text-anchor=\"middle\">Relative Velocity of Approach</text><text x=\"180\" y=\"175\" text-anchor=\"middle\">= u1 - u2</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">Relative Velocity of Separation</text><text x=\"180\" y=\"215\" text-anchor=\"middle\">= v2 - v1</text></svg>",
    "n": "define the coefficient of restitution.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "680761f7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Height (m)</text><line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/><line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"40\"/><line x1=\"320\" y1=\"200\" x2=\"320\" y2=\"40\"/><text x=\"20\" y=\"205\">Ground</text><circle cx=\"180\" cy=\"160\" r=\"6\"/><text x=\"170\" y=\"155\">Drop (h1 = 1m)</text><path d=\"M 180 160 L 180 200\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"130\" r=\"6\"/><text x=\"170\" y=\"125\">Rebound (h2 = 0.25m)</text><path d=\"M 180 130 L 180 160\" stroke-dasharray=\"4,2\"/><text x=\"200\" y=\"195\">e = √(h₂/h₁) = 0.5</text></svg>",
+   "n": "a ball dropped from a height of 1 m rebounds to 0.25 m. find the coefficient of restitution.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "942b5389": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Velocity vs Time</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><text x=\"35\" y=\"195\">t</text><text x=\"35\" y=\"65\">v</text><circle cx=\"100\" cy=\"120\" r=\"4\"/><line x1=\"100\" y1=\"120\" x2=\"100\" y2=\"180\"/><text x=\"95\" y=\"135\">v₁</text><circle cx=\"260\" cy=\"120\" r=\"4\"/><line x1=\"260\" y1=\"120\" x2=\"260\" y2=\"180\"/><text x=\"255\" y=\"135\">v₂</text><path d=\"M 100 120 L 100 120 L 260 120\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\">Common Velocity (v)</text><text x=\"180\" y=\"35\" text-anchor=\"middle\">e = 0</text></svg>",
+   "n": "what is the coefficient of restitution in a perfectly inelastic collision?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "b67e9e9f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><circle cx=\"180\" cy=\"110\" r=\"70\"/><text x=\"180\" y=\"110\" text-anchor=\"middle\" dominant-baseline=\"middle\">θ</text><path d=\"M 180 40 L 180 180\" stroke-dasharray=\"2,2\"/><text x=\"175\" y=\"105\" text-anchor=\"end\">r</text><text x=\"195\" y=\"115\">θ (rad)</text></svg>",
+   "n": "define angular displacement of a rotating body.",
    "sub": "emech",
    "at": "2026-11-03"
   }
