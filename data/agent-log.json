@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T11:32:26.863Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in papers, questions, and syllabus data (all false), while open faults are high. BankFigures is the only agent producing output recently; others have yielded zero for 2+ runs and must be deprioritized or placed last to avoid wasting budget on starved inputs. Strategy: First, generate foundational question banks and figure content to populate the empty 'questions' and 'papers' flags, then address critical faults via invention or meta-learning once data exists.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (525 total)",
-       "text": "Define speed and velocity. | Write the equations of motion for a body moving with constant acceleration. | A body is dropped from rest. What is its velocity after 3 seconds? (g = 9.81 m/s"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T11:58:24.221Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -759,8 +714,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T21:18:52.919Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical faults and massive gaps in figures, papers, and questions, while the last three runs have exclusively used 'bankfigures' with zero output from other agents. As the owner, I must stop starving the content creators (mockpapers, mainsfresh, invention) who are currently idle. I will deploy a balanced squad: BankFigures to tackle the backlog of 79 gaps, MockPapers and MainsFresh to generate the missing exam materials, and Invention to address the pending ideas, ensuring we fix c",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (565 total)",
+       "text": "How often does a power stroke occur in a four-stroke engine? | How often does a power stroke occur in a two-stroke engine? | Compare the power-to-weight ratio of 2-stroke and 4-stroke engines."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Heat Transfer (360 in pool)",
+       "text": "Heat Transfer"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T20:31:01.928Z",
+ "lastRun": "2026-11-03T21:18:52.919Z",
  "model": "qwen3.5:9b"
 }
