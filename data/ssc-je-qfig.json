@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T00:27:37.644Z",
-  "cursor": 495,
-  "built": 464
+  "updatedAt": "2026-11-03T00:46:05.415Z",
+  "cursor": 498,
+  "built": 467
  },
  "figs": {
   "11434945": {
@@ -2787,6 +2787,24 @@
   "9fe0879": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Force (F)</text><line x1=\"20\" y1=\"60\" x2=\"340\" y2=\"60\"/><circle cx=\"20\" cy=\"60\" r=\"3\"/><circle cx=\"340\" cy=\"60\" r=\"3\"/><line x1=\"20\" y1=\"60\" x2=\"20\" y2=\"90\"/><text x=\"15\" y=\"80\">d</text><path d=\"M 20 60 L 20 90 L 340 60 Z\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"110\" text-anchor=\"middle\">Moment = F × d</text><text x=\"180\" y=\"130\" text-anchor=\"middle\">Unit: Newton-metre (N·m)</text></svg>",
    "n": "what is the si unit of moment of a force?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "f3cc727b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\"/><line x1=\"40\" y1=\"90\" x2=\"40\" y2=\"130\"/><line x1=\"320\" y1=\"90\" x2=\"320\" y2=\"130\"/><line x1=\"40\" y1=\"110\" x2=\"80\" y2=\"70\"/><line x1=\"320\" y1=\"110\" x2=\"280\" y2=\"150\"/><text x=\"10\" y=\"95\">F</text><text x=\"330\" y=\"95\">-F</text><text x=\"10\" y=\"145\">F</text><text x=\"330\" y=\"145\">-F</text><text x=\"85\" y=\"65\">d/2</text><text x=\"275\" y=\"165\">d/2</text><text x=\"180\" y=\"205\">Pure Moment (Couple)</text></svg>",
+   "n": "define a couple.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "a080377a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"80\" y1=\"110\" x2=\"280\" y2=\"110\"/><circle cx=\"80\" cy=\"110\" r=\"3\"/><circle cx=\"280\" cy=\"110\" r=\"3\"/><text x=\"75\" y=\"100\" text-anchor=\"end\">50 N</text><text x=\"285\" y=\"100\" text-anchor=\"start\">50 N</text><line x1=\"80\" y1=\"110\" x2=\"80\" y2=\"60\"/><line x1=\"280\" y1=\"110\" x2=\"280\" y2=\"160\"/><text x=\"70\" y=\"75\" text-anchor=\"end\">d = 0.4 m</text><text x=\"290\" y=\"145\" text-anchor=\"start\">d = 0.4 m</text><text x=\"180\" y=\"200\" text-anchor=\"middle\">M = F × d</text></svg>",
+   "n": "compute the moment of a couple formed by two 50 n forces separated by a perpendicular distance of 0.4 m.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "b745e29d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Couples cannot be balanced by a single force</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"4 4\"/><circle cx=\"180\" cy=\"60\" r=\"3\"/><text x=\"175\" y=\"55\">Couple</text><text x=\"200\" y=\"55\">(Net Force = 0)</text><line x1=\"40\" y1=\"90\" x2=\"320\" y2=\"90\"/><circle cx=\"180\" cy=\"90\" r=\"3\"/><text x=\"175\" y=\"85\">Single Force</text><text x=\"200\" y=\"85\">(Cannot balance)</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\" stroke-dasharray=\"4 4\"/><circle cx=\"180\" cy=\"120\" r=\"3\"/><text x=\"175\" y=\"115\">Opposite Couple</text><text x=\"200\" y=\"115\">(Required to balance)</text></svg>",
+   "n": "can a couple be balanced by a single force?",
    "sub": "emech",
    "at": "2026-11-03"
   }
