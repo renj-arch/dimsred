@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T08:59:05.855Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity and content depth. MainsFresh has produced zero fixes in the last two runs and must be deprioritized until critical infrastructure is stable; BankFigures and MockPapers are active producers and should lead the queue.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (513 total)",
-       "text": "Define radius of gyration. | State the parallel axis theorem. | State the perpendicular axis theorem."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T09:13:08.248Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -750,8 +700,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T17:25:30.224Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address critical visual errors first to restore trust. MockPapers should follow to generate fresh exam simulations since papers are absent, directly tackling the 'no papers' file state. MainsFresh is essential for daily content freshness as files are missing. Invention and MetaLearn agents produced zero fixes in the last two runs, so they are deprioritized to this run per the rule to starve underperformers unless a go",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (550 total)",
+       "text": "Define the efficiency of a machine. | What is an ideal machine? | State the law of a machine."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T16:54:06.715Z",
+ "lastRun": "2026-11-03T17:25:30.224Z",
  "model": "qwen3.5:9b"
 }
