@@ -105,7 +105,9 @@ jobs:
           done
           exit 1
 
-      - name: Dispatch validated film
+      # Draft first. film.yml runs the independent QC gate before it is allowed
+      # to dispatch the final render, so a bad board cannot reach the site.
+      - name: Dispatch validated film for a draft gate
         if: steps.choose.outputs.kind == 'ready'
         env:
           GH_TOKEN: ${{ github.token }}
@@ -113,9 +115,11 @@ jobs:
           gh workflow run film.yml \
             --ref film-ci \
             -f film='${{ steps.choose.outputs.film }}' \
-            -f quality=final \
-            -f release=true \
-            -f publish=true
+            -f quality=draft \
+            -f release=false \
+            -f publish=false \
+            -f promote=true \
+            -f autopilot=true
 
       - name: Dispatch authoring pass
         if: steps.choose.outputs.kind == 'research'

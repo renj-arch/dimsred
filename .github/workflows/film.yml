@@ -3,10 +3,11 @@ name: Film pipeline
 # Every frame is generated on a GitHub-hosted CPU runner. Nothing is rendered
 # on the owner's machine. The free runner has no GPU, so the film is built from
 # high-quality Blender stills plus frame-accurate motion graphics on a Skia canvas;
-# ffmpeg then encodes the master and Piper supplies the narration.
+# ffmpeg then encodes the master and Edge TTS supplies the Indian-English narration.
 #
-# Manual runs only: a full master is expensive, and a broken storyboard should
-# never start a render automatically.
+# A full master is expensive, so the autopilot starts with a draft gate: the
+# independent QC step must pass before this workflow dispatches the final
+# render. Manual runs keep the same gate and can opt out of promotion.
 
 on:
   workflow_dispatch:
@@ -17,13 +18,14 @@ on:
         default: salt-march
         type: string
       quality:
-        description: Draft is 720p/24fps; final is 1080p/24fps
+        description: Draft 720p, final 1080p, ultra 4K
         required: true
         default: draft
         type: choice
         options:
           - draft
           - final
+          - ultra
       release:
         description: Publish the MP4, SRT and thumbnail as a GitHub release
         required: true
@@ -31,6 +33,16 @@ on:
         type: boolean
       publish:
         description: Put the 720p preview, captions and poster on the site (final only)
+        required: true
+        default: false
+        type: boolean
+      promote:
+        description: After a passing draft, dispatch the final render automatically
+        required: true
+        default: false
+        type: boolean
+      autopilot:
+        description: This run belongs to the autopilot promotion chain
         required: true
         default: false
         type: boolean
@@ -87,16 +99,19 @@ jobs:
       - name: Install Node dependencies
         run: npm ci
 
-      - name: Install Piper
+      - name: Install Piper and Edge TTS
         run: |
           python3 -m pip install --upgrade pip
-          python3 -m pip install piper-tts==1.8.0
+          python3 -m pip install piper-tts==1.8.0 edge-tts==7.3.1
 
       - name: Cache the Piper voice
         uses: actions/cache@v4
         with:
           path: .cache/piper
           key: piper-en_US-lessac-medium-v1
+
+      - name: Compose the original channel theme
+        run: node scripts/film/theme.js out/brand/vlymbooq-theme.wav
 
       - name: Resolve quality settings
         run: |
@@ -105,6 +120,8 @@ jobs:
             draft)
               echo "WIDTH=1280" >> "$GITHUB_ENV"
               echo "HEIGHT=720" >> "$GITHUB_ENV"
+              echo "PLATE_WIDTH=1280" >> "$GITHUB_ENV"
+              echo "PLATE_HEIGHT=720" >> "$GITHUB_ENV"
               echo "SAMPLES=16" >> "$GITHUB_ENV"
               echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
               echo "CRF=20" >> "$GITHUB_ENV"
@@ -115,12 +132,26 @@ jobs:
             final)
               echo "WIDTH=1920" >> "$GITHUB_ENV"
               echo "HEIGHT=1080" >> "$GITHUB_ENV"
+              echo "PLATE_WIDTH=1920" >> "$GITHUB_ENV"
+              echo "PLATE_HEIGHT=1080" >> "$GITHUB_ENV"
               echo "SAMPLES=32" >> "$GITHUB_ENV"
               echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
               echo "CRF=16" >> "$GITHUB_ENV"
               echo "VIDEO_BITRATE=12000k" >> "$GITHUB_ENV"
               echo "PRESET=slow" >> "$GITHUB_ENV"
               echo "OUT_NAME=${FILM}-master.mp4" >> "$GITHUB_ENV"
+              ;;
+            ultra)
+              echo "WIDTH=3840" >> "$GITHUB_ENV"
+              echo "HEIGHT=2160" >> "$GITHUB_ENV"
+              echo "PLATE_WIDTH=2560" >> "$GITHUB_ENV"
+              echo "PLATE_HEIGHT=1440" >> "$GITHUB_ENV"
+              echo "SAMPLES=20" >> "$GITHUB_ENV"
+              echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
+              echo "CRF=15" >> "$GITHUB_ENV"
+              echo "VIDEO_BITRATE=22000k" >> "$GITHUB_ENV"
+              echo "PRESET=slow" >> "$GITHUB_ENV"
+              echo "OUT_NAME=${FILM}-4k.mp4" >> "$GITHUB_ENV"
               ;;
             *)
               echo "Unknown quality: $QUALITY" >&2
@@ -134,16 +165,19 @@ jobs:
       - name: Validate political argument map
         run: node scripts/film/validate-debates.js "data/films/${FILM}-debates.json"
 
+      - name: Director gate (Evidence Room grammar)
+        run: node scripts/film/validate-director.js "data/films/${FILM}.json"
+
       - name: Render 3D plates with Blender
         run: |
           node scripts/film/render-plates.js \
             --film "$FILM" \
             --out-dir "out/film/$FILM/plates" \
-            --width "$WIDTH" \
-            --height "$HEIGHT" \
+            --width "$PLATE_WIDTH" \
+            --height "$PLATE_HEIGHT" \
             --samples "$SAMPLES"
 
-      - name: Build film (map, Piper, Skia frames, ffmpeg)
+      - name: Build film (map, Edge TTS, Skia frames, ffmpeg)
         run: |
           node scripts/film/build-film.js \
             --film "$FILM" \
@@ -158,22 +192,24 @@ jobs:
             --preset "$PRESET" \
             --samples "$SAMPLES" \
             --skip-plates \
-            --tts piper \
-            --voice en_US-lessac-medium
+            --tts edge \
+            --voice en-IN-PrabhatNeural
 
       - name: Refuse a starved master
-        if: inputs.quality == 'final'
+        if: inputs.quality == 'final' || inputs.quality == 'ultra'
         run: |
           set -euo pipefail
           FILE="out/film/$FILM/$OUT_NAME"
           RATE=$(ffprobe -v error -select_streams v:0 \
             -show_entries stream=bit_rate -of csv=p=0 "$FILE")
           SIZE=$(stat -c%s "$FILE")
-          echo "master ${SIZE} bytes, video ${RATE} bps"
-          # A 1080p film of grainy plates cannot honestly encode below this.
+          FLOOR=2500000
+          if [ "$QUALITY" = "ultra" ]; then FLOOR=6000000; fi
+          echo "master ${SIZE} bytes, video ${RATE} bps, floor ${FLOOR}"
+          # A grainy 1080p/4K film cannot honestly encode below this.
           # 40324105535 came in at 738 kbps with 14 KB frames behind it.
-          if [ "${RATE:-0}" -lt 2500000 ]; then
-            echo "::error::master video bitrate ${RATE} bps is below the 2.5 Mbps floor; the frames are probably degraded again"
+          if [ "${RATE:-0}" -lt "$FLOOR" ]; then
+            echo "::error::master video bitrate ${RATE} bps is below the ${FLOOR} bps floor; the frames are probably degraded again"
             exit 1
           fi
 
@@ -182,6 +218,7 @@ jobs:
           set -euo pipefail
           FLOOR=1200000
           if [ "$QUALITY" = "final" ]; then FLOOR=2500000; fi
+          if [ "$QUALITY" = "ultra" ]; then FLOOR=6000000; fi
           node scripts/film/qc-film.js \
             --film "$FILM" \
             --file "out/film/$FILM/$OUT_NAME" \
@@ -215,6 +252,24 @@ jobs:
             out/film/${{ inputs.film }}/qc/*.png
             out/film/${{ inputs.film }}/plates/*.png
 
+      # The draft is a gate, not a deliverable. Only a draft that passed the
+      # independent QC step above is allowed to spend a final render.
+      - name: Promote a passing draft to final
+        if: ${{ success() && inputs.quality == 'draft' && inputs.promote == true }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+          AUTOPILOT: ${{ inputs.autopilot }}
+        run: |
+          set -euo pipefail
+          gh workflow run film.yml \
+            --ref film-ci \
+            -f film="$FILM" \
+            -f quality=final \
+            -f release=true \
+            -f publish=true \
+            -f promote=false \
+            -f autopilot="$AUTOPILOT"
+
       - name: Publish film release
         if: ${{ inputs.release == true }}
         uses: softprops/action-gh-release@v2
@@ -227,9 +282,10 @@ jobs:
             Generated on a GitHub-hosted CPU runner by the Film pipeline.
 
             - Blender 4.2.3 LTS (Cycles CPU)
-            - Piper local narration
+            - Edge TTS Indian English narration
+            - Original vlymbooq theme (procedural, channel-owned)
             - Skia canvas compositor
-            - ffmpeg H.264/AAC master with burned captions
+            - ffmpeg H.264/AAC master with burned ASS captions
 
             Download the MP4, SRT and thumbnail below. YouTube upload remains a
             deliberate owner action.
@@ -325,3 +381,37 @@ jobs:
         run: |
           gh api --method POST "repos/${GITHUB_REPOSITORY}/dispatches" \
             -f event_type=film-finished
+
+      # Fail closed, but do not fail silently. The first autopilot failure
+      # returns the topic to the queue and asks for one retry; the second blocks
+      # it with the reason on the slate. Manual runs are not counted.
+      - name: Record a failed autopilot promotion
+        if: ${{ failure() && inputs.autopilot == true }}
+        env:
+          FILM: ${{ inputs.film }}
+          QUALITY: ${{ inputs.quality }}
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          node scripts/film/slate-fail.js \
+            --film "$FILM" \
+            --stage "$QUALITY" \
+            --reason "the $QUALITY stage failed"
+          git config user.name "vlymbooq"
+          git config user.email "vlymbooq@users.noreply.github.com"
+          git add data/film-slate.json
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m "slate: record failed $QUALITY render for $FILM"
+          PUSHED=0
+          for i in 1 2 3; do
+            if git push origin "HEAD:film-ci"; then PUSHED=1; break; fi
+            git fetch origin film-ci
+            git rebase --autostash origin/film-ci
+          done
+          test "$PUSHED" = "1"
+          if node -e "process.exit(require('./out/film/slate-failure.json').retry ? 0 : 1)"; then
+            gh api --method POST "repos/${GITHUB_REPOSITORY}/dispatches" \
+              -f event_type=film-finished
+          fi

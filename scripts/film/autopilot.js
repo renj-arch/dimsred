@@ -114,13 +114,16 @@ function writeReport(payload) {
 }
 
 function dispatch(topic) {
+  // Draft first: film.yml only promotes to final after its QC gate passes.
   const args = [
     'workflow', 'run', 'film.yml',
     '--ref', 'film-ci',
     '-f', `film=${topic.id}`,
-    '-f', 'quality=final',
-    '-f', 'release=true',
-    '-f', 'publish=true'
+    '-f', 'quality=draft',
+    '-f', 'release=false',
+    '-f', 'publish=false',
+    '-f', 'promote=true',
+    '-f', 'autopilot=true'
   ];
   const res = spawnSync('gh', args, { cwd: ROOT, encoding: 'utf8' });
   if (res.status !== 0) {

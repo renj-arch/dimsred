@@ -29,7 +29,7 @@ const RANGES = {
 
 const REASONS = {
   iris: /circle|ring|seal|handwheel|rim/i,
-  'paper-wipe': /paper|ledger|newspaper|page|document/i,
+  'paper-wipe': /paper|ledger|newspaper|page|document|sheet/i,
   dissolve: /gas|vapou?r|haze|smoke|cloud/i,
   'whip-left': /siren|turn|motion|whip|air/i,
   'whip-right': /siren|turn|motion|whip|air/i

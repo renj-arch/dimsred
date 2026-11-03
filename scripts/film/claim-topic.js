@@ -74,12 +74,22 @@ function main() {
       return;
     }
     for (const topic of stale) {
-      const next = reapedStatus(topic);
-      topic.status = next;
-      topic.renderAttempts = (Number(topic.renderAttempts) || 0);
+      // A lease that expired without a success or failure receipt is a failed
+      // promotion attempt. Count it so a topic cannot loop forever when the
+      // runner dies before it can write the receipt.
+      const failures = (Number(topic.promotionFailures) || 0) + 1;
+      topic.promotionFailures = failures;
       topic.lastRenderFailedAt = topic.renderStartedAt || null;
       delete topic.renderStartedAt;
-      process.stdout.write(`reaped ${topic.id} (${next})\n`);
+      if (failures >= 2) {
+        topic.status = 'blocked';
+        topic.blockedAt = new Date().toISOString();
+        topic.blockedBy = 'autopilot';
+        topic.blockedReason = `render lease expired ${failures} times without a result`;
+      } else {
+        topic.status = reapedStatus(topic);
+      }
+      process.stdout.write(`reaped ${topic.id} (${topic.status}, failure ${failures}/2)\n`);
     }
     writeSlate(slate, slateFile);
     return;

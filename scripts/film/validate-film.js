@@ -38,6 +38,30 @@ function readJson(file) {
   }
 }
 
+const NUMBER_WORDS = {
+  zero: 0, one: 1, two: 2, three: 3, four: 4, five: 5, six: 6, seven: 7,
+  eight: 8, nine: 9, ten: 10, eleven: 11, twelve: 12, thirteen: 13,
+  fourteen: 14, fifteen: 15, sixteen: 16, seventeen: 17, eighteen: 18,
+  nineteen: 19, twenty: 20, thirty: 30, forty: 40, fifty: 50, sixty: 60,
+  seventy: 70, eighty: 80, ninety: 90, hundred: 100, thousand: 1000
+};
+
+function canonical(text) {
+  return String(text)
+    .toLowerCase()
+    .replace(/\b(zero|one|two|three|four|five|six|seven|eight|nine|ten|eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty|ninety|hundred|thousand)\b/g,
+      (word) => String(NUMBER_WORDS[word]))
+    .replace(/,/g, '');
+}
+
+function numericTokens(text) {
+  return (canonical(text).match(/\d+(?:\.\d+)?/g) || []);
+}
+
+const GRAPHIC_TYPES = new Set(['map', 'timeline', 'stats', 'compare', 'board', 'document', 'split']);
+const RENDERS = new Set(['blender', 'html', 'map', 'title', 'graphic']);
+
+
 function validate(file) {
   const film = readJson(file);
   const errors = [];
@@ -80,6 +104,27 @@ function validate(file) {
     else sources.set(s.id, s);
   }
 
+  const ledgerFile = file.replace(/\.json$/i, '-ledger.json');
+  const ledgerRaw = fs.existsSync(ledgerFile) ? readJson(ledgerFile) : null;
+  const ledgerById = new Map(((ledgerRaw && ledgerRaw.rows) || []).map((row) => [row.id, row]));
+  const checkLedgerNumbers = (where, ref, display) => {
+    if (!ref) {
+      warn(`${where}: ledger row is required`);
+      return;
+    }
+    const row = ledgerById.get(ref);
+    if (!row) {
+      warn(`${where}: ledger row ${ref} does not exist`);
+      return;
+    }
+    const available = new Set(numericTokens(row.text));
+    for (const token of numericTokens(display)) {
+      if (!available.has(token)) {
+        warn(`${where}: ${token} is not in ${ref}`);
+      }
+    }
+  };
+
   const lectures = fs.existsSync(LECTURES) ? readJson(LECTURES) : null;
   const topic = lectures
     ? (lectures.topics || []).find((t) => String(t.id).toLowerCase() === String(film.topicId).toLowerCase())
@@ -109,7 +154,13 @@ function validate(file) {
       warn(`${where}: narrationStart must be zero or a positive number of seconds`);
     }
     if (scene.hold != null && !(Number(scene.hold) >= 0)) warn(`${where}: hold must be zero or positive`);
-    if (!Array.isArray(scene.narration) || !scene.narration.length) warn(`${where}: narration is empty`);
+    if (!Array.isArray(scene.narration) || !scene.narration.length) {
+      // A silent coda is allowed only when it is exactly a closing title card:
+      // no voice, no caption, no new claim.
+      const silentCoda = Array.isArray(scene.shots) && scene.shots.length > 0 &&
+        scene.shots.every((shot) => shot.render === 'title' && shot.closing === true);
+      if (!silentCoda) warn(`${where}: narration is empty`);
+    }
     for (const line of scene.narration || []) {
       narrationLines++;
       const lineLen = String(line.text || '').trim().length;
@@ -130,10 +181,75 @@ function validate(file) {
       shotIds.add(shot.id);
       if (!shot.visual || String(shot.visual).trim().length < 30) warn(`${where}/${shot.id}: visual description is too thin`);
       if (!shot.camera) warn(`${where}/${shot.id}: camera is required`);
-      if (!shot.plate) warn(`${where}/${shot.id}: plate is required`);
+      if (!shot.plate && shot.render !== 'graphic') warn(`${where}/${shot.id}: plate is required`);
       if (!shot.render) warn(`${where}/${shot.id}: render is required`);
+      else if (!RENDERS.has(shot.render)) warn(`${where}/${shot.id}: unknown render ${shot.render}`);
       if (!Array.isArray(shot.sfx) || !shot.sfx.length) warn(`${where}/${shot.id}: at least one sound cue is required`);
       if (shot.render === 'blender' && !shot.plate) warn(`${where}/${shot.id}: Blender shot needs a plate`);
+      if (shot.render === 'graphic') {
+        const g = shot.graphic;
+        const gwhere = `${where}/${shot.id}`;
+        if (!g || typeof g !== 'object' || Array.isArray(g)) {
+          warn(`${gwhere}: graphic data is required`);
+        } else {
+          if (!GRAPHIC_TYPES.has(g.type)) warn(`${gwhere}: unknown graphic type ${g.type}`);
+          if (!g.title || String(g.title).trim().length < 3) warn(`${gwhere}: graphic title is required`);
+          if (!g.source || String(g.source).trim().length < 4) warn(`${gwhere}: graphic source tag is required`);
+          if (g.type === 'map') {
+            const points = Array.isArray(g.points) ? g.points : [];
+            if (!points.length) warn(`${gwhere}: map needs at least one point`);
+            points.forEach((point, pi) => {
+              if (point.lon == null || point.lat == null) warn(`${gwhere}: map point ${pi + 1} needs lon and lat`);
+              const rows = Array.isArray(point.rows) ? point.rows : [];
+              if (!rows.length) warn(`${gwhere}: map point ${pi + 1} needs rows`);
+              rows.forEach((row, ri) => {
+                const value = Array.isArray(row) ? row[0] : row && row.value;
+                const ref = Array.isArray(row) ? row[2] : row && row.ledger;
+                checkLedgerNumbers(`${gwhere} map row ${ri + 1}`, ref, value);
+              });
+            });
+          } else if (g.type === 'timeline') {
+            const events = Array.isArray(g.events) ? g.events : [];
+            if (events.length < 2) warn(`${gwhere}: timeline needs at least two events`);
+            events.forEach((ev, i) => {
+              checkLedgerNumbers(`${gwhere} event ${i + 1}`, ev.ledger, `${ev.date || ''} ${ev.label || ''}`);
+            });
+          } else if (g.type === 'stats') {
+            const items = Array.isArray(g.items) ? g.items : [];
+            if (!items.length) warn(`${gwhere}: stats needs at least one item`);
+            items.forEach((item, i) => {
+              checkLedgerNumbers(`${gwhere} stat ${i + 1}`, item.ledger, item.value);
+            });
+          } else if (g.type === 'compare') {
+            if (!g.left || !g.right) warn(`${gwhere}: compare needs left and right sides`);
+            [g.left, g.right].forEach((side, i) => {
+              if (!side) return;
+              checkLedgerNumbers(`${gwhere} compare ${i === 0 ? 'left' : 'right'}`,
+                side.ledger, `${side.value == null ? '' : side.value} ${side.title || ''} ${side.body || ''}`);
+            });
+          } else if (g.type === 'board') {
+            const cards = Array.isArray(g.cards) ? g.cards : [];
+            if (cards.length < 2) warn(`${gwhere}: board needs at least two cards`);
+            cards.forEach((card, i) => {
+              checkLedgerNumbers(`${gwhere} card ${i + 1}`, card.ledger, `${card.title || ''} ${card.line || ''}`);
+            });
+          } else if (g.type === 'document') {
+            if (!g.image) warn(`${gwhere}: document needs an image`);
+            else if (!fs.existsSync(path.join(ROOT, 'assets', 'film-media', g.image))) {
+              warn(`${gwhere}: missing media image ${g.image}`);
+            }
+            if (!g.credit) warn(`${gwhere}: document needs an image credit`);
+            checkLedgerNumbers(`${gwhere} document`, g.ledger, `${g.title || ''} ${g.body || ''} ${g.caption || ''}`);
+          } else if (g.type === 'split') {
+            if (!g.left || !g.right) warn(`${gwhere}: split needs left and right sides`);
+            [g.left, g.right].forEach((side, i) => {
+              if (!side) return;
+              checkLedgerNumbers(`${gwhere} split ${i === 0 ? 'left' : 'right'}`,
+                side.ledger, `${side.value == null ? '' : side.value} ${side.title || ''} ${side.body || ''}`);
+            });
+          }
+        }
+      }
       if (shot.hold != null && !(Number(shot.hold) > 0)) warn(`${where}/${shot.id}: hold must be a positive number of seconds`);
       if (shot.narrationLine != null) {
         const n = Number(shot.narrationLine);

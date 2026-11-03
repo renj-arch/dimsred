@@ -36,8 +36,11 @@ function parse(argv) {
     crf: 18,
     videoBitrate: '',
     preset: 'veryfast',
-    voice: 'en_US-lessac-medium',
+    voice: '',
     tts: 'piper',
+    rate: '-4%',
+    pitch: '-2Hz',
+    reuseTts: false,
     samples: 32,
     skipPlates: false,
     thumbnail: true,
@@ -65,6 +68,9 @@ function parse(argv) {
     else if (a === '--preset') o.preset = next();
     else if (a === '--voice') o.voice = next();
     else if (a === '--tts') o.tts = next();
+    else if (a === '--rate') o.rate = next();
+    else if (a === '--pitch') o.pitch = next();
+    else if (a === '--reuse-tts') o.reuseTts = true;
     else if (a === '--samples') o.samples = Number(next());
     else if (a === '--skip-plates') o.skipPlates = true;
     else if (a === '--no-thumbnail') o.thumbnail = false;
@@ -83,8 +89,11 @@ function parse(argv) {
   --preset <name>       x264 preset (default veryfast)
   --samples <n>         Blender samples for plates (default 32)
   --skip-plates         Use plates rendered by a previous step
-  --tts piper|none      Narration (default piper)
-  --voice <name>        Piper voice (default en_US-lessac-medium)
+  --tts piper|edge|none Narration (default piper)
+  --voice <name>        Piper voice or Edge voice id
+  --rate <pct>          Edge speaking rate, e.g. -4%
+  --pitch <hz>          Edge pitch, e.g. -2Hz
+  --reuse-tts           Reuse an existing audio/durations.json in the work dir
   --out <file>          Output MP4
   --work <dir>          Work directory (default out/film/<film>)
   --no-thumbnail        Skip the 1280x720 thumbnail
@@ -95,7 +104,8 @@ function parse(argv) {
       process.exit(0);
     } else throw new Error(`Unknown option: ${a}`);
   }
-  if (!['piper', 'none'].includes(o.tts)) throw new Error('--tts must be piper or none');
+  if (!['piper', 'edge', 'none'].includes(o.tts)) throw new Error('--tts must be piper, edge or none');
+  if (!o.voice) o.voice = o.tts === 'edge' ? 'en-IN-PrabhatNeural' : 'en_US-lessac-medium';
   if (!(o.width > 0 && o.height > 0 && o.width % 2 === 0 && o.height % 2 === 0)) {
     throw new Error('width and height must be positive even numbers');
   }
@@ -144,6 +154,13 @@ function checkTools(opts) {
       throw new Error('Piper is not installed. Run: pip install piper-tts==1.8.0');
     }
   }
+  if (opts.tts === 'edge') {
+    const py = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
+    const p = spawnSync(py, ['-c', 'import edge_tts; print(edge_tts.__version__)'], { encoding: 'utf8' });
+    if (p.error || p.status !== 0) {
+      throw new Error('edge-tts is not installed. Run: pip install edge-tts==7.3.1');
+    }
+  }
 }
 
 function loadFilm(opts) {
@@ -188,21 +205,44 @@ function generateTts(lines, opts) {
   const inputPath = path.join(work, 'tts-input.json');
   const audioDir = path.join(work, 'audio');
   fs.mkdirSync(audioDir, { recursive: true });
+  const cachedFile = path.join(audioDir, 'durations.json');
+  if (opts.reuseTts && fs.existsSync(cachedFile)) {
+    const cached = readJson(cachedFile);
+    const files = Array.isArray(cached.durations)
+      ? cached.durations.map((_, i) => path.join(audioDir, `audio-${String(i).padStart(4, '0')}.wav`))
+      : [];
+    if (files.length === lines.length && files.every((f) => fs.existsSync(f))) {
+      console.log(`tts: reused ${files.length} cached lines`);
+      return { durations: cached.durations, audioDir, files };
+    }
+    console.log('tts: cache is incomplete; synthesising again');
+  }
   fs.writeFileSync(inputPath, JSON.stringify({ texts: lines.map((l) => l.speak || l.text) }, null, 2) + '\n');
   const py = process.env.PYTHON || (process.platform === 'win32' ? 'python' : 'python3');
-  const r = spawnSync(py, [
-    path.join(__dirname, 'piper-tts.py'),
+  const script = opts.tts === 'edge' ? 'edge-tts.py' : 'piper-tts.py';
+  const args = [
+    path.join(__dirname, script),
     '--input', inputPath,
     '--out-dir', audioDir,
-    '--voice', opts.voice,
-    '--data-dir', path.join(ROOT, '.cache', 'piper'),
-    '--length-scale', '1.0'
-  ], { stdio: 'inherit', cwd: ROOT });
-  if (r.error) throw new Error(`Could not start Piper: ${r.error.message}`);
-  if (r.status !== 0) throw new Error(`Piper failed with exit ${r.status}`);
+    '--voice', opts.voice
+  ];
+  if (opts.tts === 'edge') {
+    // Only pass prosody flags that were actually requested. Bind the value with
+    // "=": argparse reads a leading minus (e.g. -4%) as another option when the
+    // value arrives as a separate argv token.
+    if (opts.rate) args.push(`--rate=${opts.rate}`);
+    if (opts.pitch) args.push(`--pitch=${opts.pitch}`);
+    args.push('--retries', '3');
+  } else {
+    args.push('--data-dir', path.join(ROOT, '.cache', 'piper'), '--length-scale', '1.0');
+  }
+  const r = spawnSync(py, args, { stdio: 'inherit', cwd: ROOT });
+  const tool = opts.tts === 'edge' ? 'Edge TTS' : 'Piper';
+  if (r.error) throw new Error(`Could not start ${tool}: ${r.error.message}`);
+  if (r.status !== 0) throw new Error(`${tool} failed with exit ${r.status}`);
   const payload = readJson(path.join(audioDir, 'durations.json'));
   if (!Array.isArray(payload.durations) || payload.durations.length !== lines.length) {
-    throw new Error(`Piper returned ${payload.durations && payload.durations.length} durations for ${lines.length} lines`);
+    throw new Error(`${tool} returned ${payload.durations && payload.durations.length} durations for ${lines.length} lines`);
   }
   return {
     durations: payload.durations,
@@ -349,6 +389,11 @@ function buildTimeline(film, tts, opts) {
           visual: shot.visual,
           sfx: shot.sfx || [],
           text: shot.text || '',
+          graphic: shot.graphic || undefined,
+          stamp: shot.stamp || undefined,
+          thread: shot.thread || undefined,
+          sourceTag: shot.sourceTag || '',
+          closing: shot.closing === true,
           impact: !!shot.impact,
           impactSub: shot.impactSub || '',
           impactShift: shot.impactShift || '',
@@ -562,6 +607,15 @@ function makeBed(timeline, file) {
     args.push('-i', bridgeFile);
     bridgeInput = 5 + (hits.length ? 1 : 0);
   }
+  // The channel theme opens every film. It is an original recording owned by
+  // the channel, mixed low so it colours the room without competing with the
+  // narration. Missing theme is not fatal: the bed still works.
+  const themeFile = path.join(ROOT, 'out', 'brand', 'vlymbooq-theme.wav');
+  let themeInput = -1;
+  if (fs.existsSync(themeFile)) {
+    args.push('-i', themeFile);
+    themeInput = 5 + (hits.length ? 1 : 0) + (bridgeEvents.length ? 1 : 0);
+  }
   const filters = [
     '[0:a]volume=0.050,lowpass=f=100[a0]',
     '[1:a]lowpass=f=430,volume=0.065[a1]',
@@ -582,6 +636,11 @@ function makeBed(timeline, file) {
   if (bridgeInput >= 0) {
     filters.push(`[${bridgeInput}:a]volume=0.9[br]`);
     labels.push('[br]');
+  }
+  if (themeInput >= 0) {
+    filters.push(`[${themeInput}:a]atrim=0:12,volume=0.24,` +
+      'afade=t=in:st=0:d=0.8,afade=t=out:st=9.4:d=2.6[th]');
+    labels.push('[th]');
   }
   filters.push(`${labels.join('')}amix=inputs=${labels.length}:normalize=0,` +
     `alimiter=limit=0.90:level=false,afade=t=in:st=0:d=2.2,` +
@@ -633,7 +692,7 @@ function doubleRate(rate) {
   return `${Math.round(Number(m[1]) * 2)}${m[2] || ''}`;
 }
 
-function encode(framesDir, audio, timeline, opts, subtitleFile) {
+function encode(framesDir, audio, timeline, opts, subtitles) {
   const pattern = path.join(framesDir, 'frame-%06d.jpg');
   const args = [
     '-y',
@@ -641,10 +700,17 @@ function encode(framesDir, audio, timeline, opts, subtitleFile) {
     '-i', pattern,
     '-i', audio
   ];
-  if (subtitleFile) {
-    // Burn the captions into the master. A sidecar SRT is easy to forget, and
-    // a film with narration but no visible captions is not accessible.
-    const rel = path.relative(ROOT, subtitleFile).replace(/\\/g, '/');
+  if (subtitles && subtitles.assFile && fs.existsSync(subtitles.assFile)) {
+    // Burn the styled ASS master. Spectral carries the caption, amber marks
+    // keywords and numbers, and the vendored fonts travel with the repo so the
+    // render never depends on a runner's installed fonts.
+    const rel = path.relative(ROOT, subtitles.assFile).replace(/\\/g, '/');
+    const fonts = path.relative(ROOT, path.join(ROOT, 'assets', 'film-fonts')).replace(/\\/g, '/');
+    args.push('-vf', `ass=${rel}:fontsdir=${fonts}`);
+  } else if (subtitles && subtitles.file) {
+    // Sidecar-only fallback: still burn readable captions rather than ship a
+    // film with narration and no on-screen text.
+    const rel = path.relative(ROOT, subtitles.file).replace(/\\/g, '/');
     const style = 'FontName=DejaVu Sans,FontSize=22,PrimaryColour=&H00F2E6D0,' +
       'OutlineColour=&H00000000,BorderStyle=1,Outline=1,Shadow=0,MarginV=42,Alignment=2';
     args.push('-vf', `subtitles=${rel}:force_style='${style}'`);
@@ -711,40 +777,76 @@ function wrapCaption(text, max = 46) {
   return lines;
 }
 
+function splitSentences(text) {
+  // Split on terminal punctuation only when it is followed by whitespace or the
+  // end of the line. "12.2" and "O.Chidambaram" must never become two cues.
+  const s = String(text || '');
+  const out = [];
+  let start = 0;
+  for (let i = 0; i < s.length; i++) {
+    const ch = s[i];
+    if (ch !== '.' && ch !== '!' && ch !== '?') continue;
+    const next = s[i + 1];
+    if (next && !/\s/.test(next) && !/["')\]]/.test(next)) continue;
+    let end = i + 1;
+    while (end < s.length && /["')\]]/.test(s[end])) end++;
+    const piece = s.slice(start, end).trim();
+    if (piece) out.push(piece);
+    start = end;
+    i = end - 1;
+  }
+  const rest = s.slice(start).trim();
+  if (rest) out.push(rest);
+  return out.length ? out : [s];
+}
+
+function packCaption(text, max = 46) {
+  const clean = String(text || '').trim();
+  if (!clean) return [];
+  const lines = wrapCaption(clean, max);
+  if (lines.length <= 2) return [lines.join('\n')];
+  const words = clean.split(/\s+/).filter(Boolean);
+  // A very short tail is not a cue. Let it wrap over the hard limit instead of
+  // leaving one word alone for half a second.
+  if (words.length <= 5) return [clean];
+  // Balance the sentence in two, scoring boundaries a few words either side of
+  // the middle. A clause boundary wins; a cue should not begin with a bare
+  // year, and it should not leave an article stranded at the end of the line.
+  const mid = Math.ceil(words.length / 2);
+  let at = mid;
+  let best = -Infinity;
+  for (let i = Math.max(2, mid - 4); i <= Math.min(words.length - 2, mid + 4); i++) {
+    const prev = words[i - 1];
+    const next = words[i];
+    let score = -Math.abs(i - mid) * 0.3;
+    if (/[,;—]$/.test(prev)) score += 6;
+    if (/^(to|of|in|on|from|with|by|and|but|or|that|which|when|while|as|for|at)$/i.test(next)) score += 3;
+    if (/^(a|an|the|of|to|in|on|from|with|by|and|but|or|that|which)$/i.test(prev)) score -= 4;
+    if (/^\d/.test(prev) && /^\d/.test(next)) score -= 3;
+    if (score > best) {
+      best = score;
+      at = i;
+    }
+  }
+  if (at <= 1 || at >= words.length - 1) return [clean];
+  return [
+    ...packCaption(words.slice(0, at).join(' '), max),
+    ...packCaption(words.slice(at).join(' '), max)
+  ];
+}
+
 function captionChunks(text) {
-  // Cue at sentence boundaries, then wrap a sentence over at most two lines.
-  // The old word-count split could leave a one-word cue such as "lesson." on
-  // screen for less than half a second.
-  const sentences = String(text || '').match(/[^.!?]+[.!?]+["')\]]?|[^.!?]+$/g) || [String(text || '')];
+  // One cue per sentence where it fits; a long sentence is balanced into two
+  // or more cues, each at most two lines. Cue boundaries never split a number,
+  // a hyphenated name, or a one-word tail.
   const chunks = [];
-  for (const sentence of sentences) {
-    const clean = sentence.trim();
-    if (!clean) continue;
-    const lines = wrapCaption(clean);
-    if (lines.length <= 2) {
-      chunks.push(lines.join('\n'));
-      continue;
-    }
-    // A long sentence is easier to read as comma-sized cues than as one
-    // three-line block. Split only after wrapping proved too tall.
-    const clauses = clean.match(/[^,;—]+[,;—]?/g) || [clean];
-    for (const clause of clauses) {
-      const part = clause.trim();
-      if (!part) continue;
-      const partLines = wrapCaption(part);
-      if (partLines.length <= 2) {
-        chunks.push(partLines.join('\n'));
-      } else {
-        for (let i = 0; i < partLines.length; i += 2) {
-          chunks.push(partLines.slice(i, i + 2).join('\n'));
-        }
-      }
-    }
+  for (const sentence of splitSentences(text)) {
+    chunks.push(...packCaption(sentence));
   }
   return chunks.length ? chunks : [''];
 }
 
-function writeSrt(timeline, opts) {
+function buildCaptionCues(timeline) {
   const cues = [];
   timeline.scenes.forEach((scene) => {
     scene.narration.forEach((line) => {
@@ -768,12 +870,78 @@ function writeSrt(timeline, opts) {
     const latest = cues[i + 1].start - 0.06;
     if (cues[i].end > latest) cues[i].end = latest;
   }
-  const visible = cues.filter((c) => c.end - c.start >= 0.12);
+  return cues.filter((c) => c.end - c.start >= 0.12);
+}
+
+function assTime(sec) {
+  const cs = Math.max(0, Math.round(sec * 100));
+  const h = Math.floor(cs / 360000);
+  const m = Math.floor((cs % 360000) / 6000);
+  const s = Math.floor((cs % 6000) / 100);
+  const c = cs % 100;
+  return `${h}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}.${String(c).padStart(2, '0')}`;
+}
+
+const CAPTION_KEYWORDS = [
+  'CHAURI CHAURA', 'NON-COOPERATION', 'NON COOPERATION', 'LIFE IMPRISONMENT',
+  'DEATH SENTENCE', 'UNITED PROVINCES', 'POLICE STATION', 'GORAKHPUR',
+  'CONVICTED', 'CONVICTION', 'ACQUITTED', 'HANGED', 'HANGINGS', 'APPEAL',
+  'TRIAL', 'GANDHI', 'FIRE'
+];
+
+function assEscape(text) {
+  return String(text).replace(/\\/g, '\\\\').replace(/[{}]/g, '');
+}
+
+function highlightAssLine(line) {
+  const source = `${CAPTION_KEYWORDS.map((word) => word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')}|\\b\\d[\\d,.]*\\b`;
+  const re = new RegExp(source, 'gi');
+  let out = '';
+  let last = 0;
+  let match;
+  while ((match = re.exec(line)) !== null) {
+    out += assEscape(line.slice(last, match.index));
+    out += `{\\c&H0058A5D8&\\b1}${assEscape(match[0])}{\\c&H00C6DDE9&\\b0}`;
+    last = match.index + match[0].length;
+  }
+  out += assEscape(line.slice(last));
+  return out;
+}
+
+function writeAss(cues, opts) {
+  const header = [
+    '[Script Info]',
+    'ScriptType: v4.00+',
+    'PlayResX: 1920',
+    'PlayResY: 1080',
+    'WrapStyle: 2',
+    'ScaledBorderAndShadow: yes',
+    '',
+    '[V4+ Styles]',
+    'Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding',
+    'Style: Evidence,Spectral,44,&H00C6DDE9,&H00C6DDE9,&H00000000,&H66000000,0,0,0,0,100,100,0.3,0,1,2.0,0,2,96,96,52,1',
+    '',
+    '[Events]',
+    'Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text'
+  ];
+  cues.forEach((cue) => {
+    const text = cue.text.split('\n').map(highlightAssLine).join('\\N');
+    header.push(`Dialogue: 0,${assTime(cue.start)},${assTime(cue.end)},Evidence,,0,0,0,,${text}`);
+  });
+  const file = path.join(opts.work, `${opts.film}.ass`);
+  fs.writeFileSync(file, header.join('\n') + '\n', 'utf8');
+  console.log(`captions: ${file} (${cues.length} cues, keywords highlighted)`);
+  return file;
+}
+
+function writeSrt(timeline, opts) {
+  const visible = buildCaptionCues(timeline);
   const body = visible.map((c, i) => `${i + 1}\n${srtTime(c.start)} --> ${srtTime(c.end)}\n${c.text}\n`).join('\n');
   const file = path.join(opts.work, `${opts.film}.srt`);
   fs.writeFileSync(file, body, 'utf8');
-  console.log(`captions: ${file} (${visible.length} cues, ${cues.length - visible.length} collapsed)`);
-  return { file, cues: visible };
+  const assFile = writeAss(visible, opts);
+  console.log(`captions: ${file} (${visible.length} cues)`);
+  return { file, assFile, cues: visible };
 }
 
 function checkEdit(timeline, film, cues, opts) {
@@ -816,7 +984,7 @@ function checkEdit(timeline, film, cues, opts) {
     if (type === 'iris' && !/circle|ring|seal|handwheel|rim/i.test(spec.reason)) {
       errors.push(`${h.id}: iris needs a circular object in the reason`);
     }
-    if (type === 'paper-wipe' && !/paper|ledger|newspaper|page|document/i.test(spec.reason)) {
+    if (type === 'paper-wipe' && !/paper|ledger|newspaper|page|document|sheet/i.test(spec.reason)) {
       errors.push(`${h.id}: paper-wipe needs a paper object in the reason`);
     }
     if ((type === 'whip-left' || type === 'whip-right') && !/siren|turn|motion|whip|air/i.test(spec.reason)) {
@@ -1025,7 +1193,7 @@ async function main() {
   const timeline = buildTimeline(film, tts, opts);
   writeTimeline(timeline, opts);
   printTimeline(timeline);
-  const srt = opts.srt ? writeSrt(timeline, opts) : { file: '', cues: [] };
+  const srt = opts.srt ? writeSrt(timeline, opts) : { file: '', assFile: '', cues: [] };
   checkEdit(timeline, film, srt.cues, opts);
   if (opts.dryRun) return;
 
@@ -1034,7 +1202,7 @@ async function main() {
   // bad state after thousands of frames, and a tiled poster is not publishable.
   if (opts.thumbnail) await makeThumbnail(timeline, opts);
   const frames = await renderFrames(timeline, opts);
-  encode(frames, audio, timeline, opts, srt.file);
+  encode(frames, audio, timeline, opts, srt);
   if (opts.metadata) writeMetadata(timeline, film, opts);
   writeScript(timeline, film, opts);
   console.log('\nDONE');

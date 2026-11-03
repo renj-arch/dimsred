@@ -1,0 +1,1619 @@
+{
+  "schema": "vlymbooq.film.v1",
+  "id": "chauri-chaura-1922",
+  "topicId": "chauri-chaura-1922",
+  "caseNumber": "01",
+  "title": "Chauri Chaura",
+  "titleLines": [
+    "CHAURI",
+    "CHAURA"
+  ],
+  "subtitle": "The Fire That Stopped a Movement",
+  "logline": "One town burns a police station, a national movement halts, and the trial hangs nineteen. The case is laid out as evidence: the order, the fire, the argument, and the record.",
+  "targetDuration": 303.6,
+  "fps": 24,
+  "aspect": "16:9",
+  "posterPlate": "wall-03",
+  "posterMeta": "4 FEBRUARY 1922 · GORAKHPUR DISTRICT · LEDGER L01–L28",
+  "style": {
+    "genre": "sourced archival documentary",
+    "look": "ink black, archive paper, thread red, sodium amber, oxidised green; one lamp, paper grain, no reenactment",
+    "rules": [
+      "The room is the world: every scene begins and ends on paper, pins and one lamp.",
+      "The red thread is the argument: claim to evidence to consequence, never decoration.",
+      "Never show a body or a burning building; the fire is ember, reflection or record.",
+      "Every factual card carries the ledger row that proves it, visible on screen.",
+      "Camera is a hand over a table, never a drone; no generic stock and no talking heads."
+    ]
+  },
+  "toolchain": {
+    "blender": {
+      "version": "4.2 LTS",
+      "role": "procedural sets from the stock archetype library, hero stills",
+      "automation": "scripts/film/blender/stock_sets.py"
+    },
+    "tts": "Edge TTS en-IN-PrabhatNeural",
+    "capture": "Skia 2D canvas at 24 fps",
+    "encode": "ffmpeg H.264/AAC with burned ASS captions"
+  },
+  "edit": {
+    "grammar": "evidence-room",
+    "captureFps": 24,
+    "signature": [
+      "thread test: the red thread from one beat is the rule, route or axis of the next",
+      "pin drop: a new fact lands as a pin, not as a lower third",
+      "paper seam: the split screen opens like a file, both sides on the same stock",
+      "date slide: timelines draw left to right and never jump the thread",
+      "room return: every act ends on the table, not on a montage"
+    ],
+    "transitionDefaults": {
+      "hard-cut": 0,
+      "match-cut": 0,
+      "paper-wipe": 9,
+      "dissolve": 12,
+      "dip": 5
+    },
+    "forbidden": [
+      "default crossfade",
+      "drone establishing shot",
+      "generic stock footage",
+      "talking head",
+      "reconstruction of violence",
+      "unlabelled statistic"
+    ],
+    "acts": [
+      {
+        "id": "I",
+        "scenes": [
+          "S01",
+          "S02"
+        ],
+        "signature": "the anomaly, the file"
+      },
+      {
+        "id": "II",
+        "scenes": [
+          "S03",
+          "S04"
+        ],
+        "signature": "the chain, the split"
+      },
+      {
+        "id": "III",
+        "scenes": [
+          "S05",
+          "S06",
+          "S07"
+        ],
+        "signature": "the mechanism, the return, the coda"
+      }
+    ]
+  },
+  "sources": [
+    {
+      "id": "en-wikipedia-org-wiki-chauri-chaura-incident",
+      "title": "Chauri Chaura incident",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Chauri_Chaura_incident"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+      "title": "Non-cooperation movement (1919-1922)",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Non-cooperation_movement_(1919%E2%80%931922)"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-mahatma-gandhi",
+      "title": "Mahatma Gandhi",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Mahatma_Gandhi"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-indian-independence-moveme",
+      "title": "Indian independence movement",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Indian_independence_movement"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-1922-in-india",
+      "title": "1922 in India",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/1922_in_India"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-khilafat-movement",
+      "title": "Khilafat Movement",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Khilafat_Movement"
+    },
+    {
+      "id": "en-wikipedia-org-wiki-gorakhpur-district",
+      "title": "Gorakhpur district",
+      "publisher": "Wikipedia",
+      "url": "https://en.wikipedia.org/wiki/Gorakhpur_district"
+    }
+  ],
+  "scenes": [
+    {
+      "id": "S01",
+      "title": "THE ANOMALY",
+      "purpose": "Cold open on the evidence board. A small district is pinned beside a national halt, and the question is stated before the answer.",
+      "start": 0,
+      "duration": 31,
+      "narrationStart": 9,
+      "narration": [
+        {
+          "text": "The Chauri Chaura incident took place on 4 February 1922 in Gorakhpur district.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L01",
+          "quote": "The Chauri Chaura Incident took place on 4 February 1922 at Chauri Chaura in the Gorakhpur district of United Provinces (now Uttar Pradesh) in British India."
+        },
+        {
+          "text": "Three civilians and 22 policemen died in the incident.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L03",
+          "quote": "The incident led to the deaths of three civilians and 22 policemen."
+        },
+        {
+          "text": "Gandhi halted the non-cooperation movement on the national level on 12 February 1922.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L04",
+          "quote": "Mohandas Gandhi halted the non-cooperation movement on the national level on 12 February 1922 as a direct result of the incident."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S01-A",
+          "plate": "title",
+          "render": "title",
+          "hold": 3.6,
+          "camera": "locked title card, paper grain, a one-percent push",
+          "visual": "The channel mark lands over ink black: CASE 01 · THE EVIDENCE ROOM, then the case name in two heavy lines.",
+          "sfx": [
+            "room tone",
+            "one low note"
+          ],
+          "transition": {
+            "type": "match-cut",
+            "frames": 0,
+            "reason": "The thin rule under the title becomes the red thread pinned across the board.",
+            "sound": "thread pull"
+          }
+        },
+        {
+          "id": "S01-B",
+          "render": "graphic",
+          "hold": 4.8,
+          "camera": "top-down on the board, slow settle",
+          "visual": "Four paper cards are pinned in a row, joined by one red thread: the date, the dead, the national halt, and a blank WHY card.",
+          "sfx": [
+            "pin press",
+            "paper settle"
+          ],
+          "graphic": {
+            "type": "board",
+            "title": "THE ANOMALY",
+            "source": "LEDGER · L01 L03 L04",
+            "cards": [
+              {
+                "tag": "01",
+                "title": "4 FEB 1922",
+                "line": "CHAURI CHAURA, GORAKHPUR DISTRICT",
+                "ledger": "L01"
+              },
+              {
+                "tag": "02",
+                "title": "3 + 22",
+                "line": "CIVILIANS AND POLICEMEN KILLED",
+                "ledger": "L03"
+              },
+              {
+                "tag": "03",
+                "title": "12 FEB 1922",
+                "line": "NON-COOPERATION HALTED NATIONALLY",
+                "ledger": "L04"
+              },
+              {
+                "tag": "04",
+                "title": "WHY?",
+                "line": "A NATIONAL MOVEMENT ENDED SUDDENLY",
+                "ledger": "L28"
+              }
+            ]
+          },
+          "stamp": {
+            "text": "CASE FILE · 01",
+            "sub": "THE EVIDENCE ROOM",
+            "x": 0.79,
+            "y": 0.135,
+            "rotate": -5
+          },
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 9,
+            "reason": "The board sheet drags off the table and the district map is already underneath it.",
+            "sound": "paper drag"
+          }
+        },
+        {
+          "id": "S01-C",
+          "render": "graphic",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "top-down map, one lamp, slow push to the pin",
+          "visual": "A case map of India under the lamp. The pin lands at Chauri Chaura and a leader line runs to a file card with the date and the crowd.",
+          "sfx": [
+            "pin drop",
+            "paper flat"
+          ],
+          "graphic": {
+            "type": "map",
+            "title": "THE PLACE",
+            "source": "LEDGER · L01 L03 L09",
+            "points": [
+              {
+                "lon": 83.581,
+                "lat": 26.651,
+                "label": "CHAURI CHAURA",
+                "sub": "GORAKHPUR DISTRICT · UNITED PROVINCES",
+                "rows": [
+                  [
+                    "4 FEBRUARY 1922",
+                    "THE INCIDENT",
+                    "L01"
+                  ],
+                  [
+                    "2,000–2,500",
+                    "ON THE MARCH",
+                    "L09"
+                  ],
+                  [
+                    "22",
+                    "POLICEMEN KILLED",
+                    "L03"
+                  ]
+                ]
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The pin holds and the count takes the frame."
+          }
+        },
+        {
+          "id": "S01-D",
+          "render": "graphic",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "locked grid, numbers rising with the voice",
+          "visual": "Four evidence cells: three civilians, 22 policemen, the crowd, and the fifteen local officers. The figures count up once, then hold.",
+          "sfx": [
+            "pencil tick",
+            "low pulse"
+          ],
+          "graphic": {
+            "type": "stats",
+            "title": "THE COST",
+            "source": "LEDGER · L03 L09 L11",
+            "items": [
+              {
+                "value": "3",
+                "label": "CIVILIANS KILLED",
+                "ledger": "L03"
+              },
+              {
+                "value": "22",
+                "label": "POLICEMEN KILLED",
+                "ledger": "L03"
+              },
+              {
+                "value": "2,000–2,500",
+                "label": "PROTESTERS ASSEMBLED",
+                "ledger": "L09"
+              },
+              {
+                "value": "15",
+                "label": "LOCAL POLICE OFFICERS",
+                "ledger": "L11"
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The last number holds and the dates take over."
+          }
+        },
+        {
+          "id": "S01-E",
+          "render": "graphic",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "frontal timeline, thread drawing left to right",
+          "visual": "A red thread draws a three-point timeline: the incident, the national halt, and Gandhi in prison. Each pin carries its date and ledger tag.",
+          "sfx": [
+            "thread tension",
+            "pin press"
+          ],
+          "graphic": {
+            "type": "timeline",
+            "title": "THE HALT",
+            "source": "LEDGER · L01 L04 L48",
+            "range": "1922",
+            "events": [
+              {
+                "date": "4 FEB 1922",
+                "label": "CHAURI CHAURA",
+                "tag": "THE INCIDENT",
+                "ledger": "L01"
+              },
+              {
+                "date": "12 FEB 1922",
+                "label": "MOVEMENT HALTED",
+                "tag": "GANDHI",
+                "ledger": "L04"
+              },
+              {
+                "date": "18 MAR 1922",
+                "label": "SIX YEARS",
+                "tag": "IMPRISONED",
+                "ledger": "L48"
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The timeline settles and the room holds on the index wall."
+          }
+        },
+        {
+          "id": "S01-F",
+          "plate": "wall-01",
+          "weight": 1,
+          "camera": "raking side light, slow drift, lens 50",
+          "visual": "The index wall under one lamp, cards squared, one blank card at the end. The room is quiet enough for the first file.",
+          "sfx": [
+            "paper settle",
+            "room tone"
+          ],
+          "sourceTag": "LEDGER · L01 L03 L04",
+          "thread": {
+            "from": [
+              0.12,
+              0.68
+            ],
+            "to": [
+              0.86,
+              0.62
+            ],
+            "sag": 0.02,
+            "label": "THE CASE BEGINS",
+            "drawTime": 1.4
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The wall falls away and the file opens at the beginning."
+          },
+          "render": "blender"
+        }
+      ]
+    },
+    {
+      "id": "S02",
+      "title": "THE FILE",
+      "purpose": "Open the file: the movement, the town, the march, the liquor picket, the arrests. The escalation is a sequence, not a mood.",
+      "start": 31,
+      "duration": 52,
+      "narrationStart": 2,
+      "narration": [
+        {
+          "text": "The non-cooperation movement was launched on 4 September 1920 to withdraw cooperation from the British government.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L26",
+          "quote": "The non-cooperation movement was a political campaign launched on 4 September 1920 by Mahatma Gandhi to encourage Indians to withdraw their cooperation from the British government, with the aim of persuading them to grant self-governance."
+        },
+        {
+          "text": "A protest against the police was called on 4 February, to be held at the bazaar.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L08",
+          "quote": "In response to this, a protest against the police was called on 4 February, to be held at the Bazaar."
+        },
+        {
+          "text": "Approximately 2,000 to 2,500 protesters assembled and marched towards the market lane.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L09",
+          "quote": "On 4 February, approximately 2,000 to 2,500 protesters assembled and began marching towards the market lane at Chauri Chaura."
+        },
+        {
+          "text": "A police officer had attacked volunteers picketing a liquor shop.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L41",
+          "quote": "A police officer had attacked some volunteers picketing a liquor shop."
+        },
+        {
+          "text": "Several of the leaders were arrested and put in the lock-up at the police station.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L07",
+          "quote": "Several of the leaders were arrested and put in the lock-up at the Chauri Chaura police station."
+        },
+        {
+          "text": "Armed police were dispatched while the protesters marched towards the bazaar, shouting anti-British slogans.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L10",
+          "quote": "Armed police were dispatched to control the situation while the protesters marched towards the bazaar, shouting anti-British slogans."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S02-A",
+          "render": "graphic",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "frontal timeline, the thread drawing through the dates",
+          "visual": "The timeline starts in 1920: the movement launched, the first arrests, and the February protest. The thread is the through-line.",
+          "sfx": [
+            "thread draw",
+            "pin press"
+          ],
+          "graphic": {
+            "type": "timeline",
+            "title": "THE MOVEMENT",
+            "source": "LEDGER · L26 L27 L01",
+            "range": "1920 — 1922",
+            "events": [
+              {
+                "date": "4 SEP 1920",
+                "label": "NON-COOPERATION",
+                "tag": "LAUNCHED",
+                "ledger": "L26"
+              },
+              {
+                "date": "6 DEC 1921",
+                "label": "FIRST ARRESTS",
+                "tag": "NEHRU",
+                "ledger": "L27"
+              },
+              {
+                "date": "4 FEB 1922",
+                "label": "CHAURI CHAURA",
+                "tag": "THE FILE",
+                "ledger": "L01"
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The last date holds and the map takes the pin."
+          }
+        },
+        {
+          "id": "S02-B",
+          "render": "graphic",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "top-down map, the pin pressed on the market town",
+          "visual": "The same map, closer: the case card names the bazaar protest and the crowd that would march into the market lane.",
+          "sfx": [
+            "pin press",
+            "paper flat"
+          ],
+          "graphic": {
+            "type": "map",
+            "title": "THE DAY",
+            "source": "LEDGER · L01 L08 L09",
+            "points": [
+              {
+                "lon": 83.581,
+                "lat": 26.651,
+                "label": "CHAURI CHAURA",
+                "sub": "THE BAZAAR · 4 FEBRUARY 1922",
+                "rows": [
+                  [
+                    "4 FEBRUARY",
+                    "THE PROTEST",
+                    "L08"
+                  ],
+                  [
+                    "2,000–2,500",
+                    "ON THE MARCH",
+                    "L09"
+                  ],
+                  [
+                    "THE BAZAAR",
+                    "THE MARKET LANE",
+                    "L08"
+                  ]
+                ]
+              }
+            ]
+          },
+          "transition": {
+            "type": "paper-wipe",
+            "frames": 9,
+            "reason": "The map sheet lifts and the field is already under the same lamp.",
+            "sound": "paper drag"
+          }
+        },
+        {
+          "id": "S02-C",
+          "plate": "field-01",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "low eye-height wide, dust in the light",
+          "visual": "Furrows and stubble at dawn, a line of walkers crossing the frame, dust hanging in the low sun.",
+          "sfx": [
+            "dry stubble",
+            "soft footfall",
+            "dawn wind"
+          ],
+          "framing": {
+            "zoom": [
+              1.02,
+              1.09
+            ],
+            "x": [
+              50,
+              52
+            ],
+            "y": [
+              50,
+              49
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The march carries across the cut and the picket takes the frame."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S02-D",
+          "plate": "object-01",
+          "narrationLine": 4,
+          "weight": 2,
+          "camera": "macro on a plinth, lens 60, shallow focus",
+          "visual": "A glass liquor jar on a dark plinth, one amber edge lit, a picket stick leaning beside it.",
+          "sfx": [
+            "glass tick",
+            "room tone"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The jar glass ticks and the lock-up register answers."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S02-E",
+          "plate": "wall-03",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "slow push along the cards, lens 50",
+          "visual": "A wall of index cards in six rows, one whole row missing, a clerk stool below and dust in the raking light.",
+          "sfx": [
+            "card slip",
+            "room tone"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "A card slips and the armed police arrive at the gate."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S02-F",
+          "plate": "gate-01",
+          "narrationLine": 6,
+          "weight": 3,
+          "camera": "locked wide, eye height, gate centred",
+          "visual": "The thana gate at dusk, iron bars and one lamp above the arch, armed men arriving in the yard beyond.",
+          "sfx": [
+            "gate latch",
+            "boots on stone"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The gate holds and the board restates the file."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S02-G",
+          "render": "graphic",
+          "weight": 1,
+          "camera": "top-down board, four cards already pinned",
+          "visual": "Four cards summarise the file so far: the launch, the protest, the arrests, the armed police. The thread runs through all four.",
+          "sfx": [
+            "pin press",
+            "paper settle"
+          ],
+          "graphic": {
+            "type": "board",
+            "title": "THE FILE SO FAR",
+            "source": "LEDGER · L26 L08 L07 L10",
+            "cards": [
+              {
+                "tag": "A",
+                "title": "4 SEP 1920",
+                "line": "NON-COOPERATION LAUNCHED",
+                "ledger": "L26"
+              },
+              {
+                "tag": "B",
+                "title": "4 FEBRUARY",
+                "line": "PROTEST CALLED AT THE BAZAAR",
+                "ledger": "L08"
+              },
+              {
+                "tag": "C",
+                "title": "LEADERS ARRESTED",
+                "line": "LOCK-UP AT THE POLICE STATION",
+                "ledger": "L07"
+              },
+              {
+                "tag": "D",
+                "title": "ARMED POLICE",
+                "line": "DISPATCHED TO THE BAZAAR",
+                "ledger": "L10"
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The board clears and the warning shots begin the chain."
+          }
+        }
+      ]
+    },
+    {
+      "id": "S03",
+      "title": "THE CHAIN",
+      "purpose": "The escalation as a chain of orders and reactions: warning shots, stones, fire, retreat, the burning chowki, and two accounts of why the police fell back.",
+      "start": 83,
+      "duration": 54,
+      "narrationStart": 2,
+      "narration": [
+        {
+          "text": "Gupteshwar Singh ordered his 15 local police officers to fire warning shots into the air.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L11",
+          "quote": "In an attempt to frighten and disperse the crowd, Gupteshwar Singh ordered his 15 local police officers to fire warning shots into the air."
+        },
+        {
+          "text": "The warning shots only agitated the crowd, which began to throw stones at the police.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L12",
+          "quote": "This only agitated the crowd who began to throw stones at the police."
+        },
+        {
+          "text": "Prithvi Pal ordered the police to open fire on the advancing crowd, killing three.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L13",
+          "quote": "With the situation getting out of control, the sub-inspector Prithvi Pal ordered the police to open fire on the advancing crowd, killing three and wounding several others."
+        },
+        {
+          "text": "The heavily outnumbered police fell back to the shelter of the town chowki.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L15",
+          "quote": "In the ensuing chaos, the heavily outnumbered police fell back to the shelter of the town chowki (police station) while the angry mob advanced."
+        },
+        {
+          "text": "The crowd set the chowki ablaze, killing all the policemen trapped inside, including Gupteshwar Singh.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L16",
+          "quote": "Infuriated by the gunfire into their ranks, the crowd set the chowki a blaze, killing all of the policemen trapped inside, including Inspector Gupteshwar Singh."
+        },
+        {
+          "text": "Reports vary on the police retreat: some constables ran out of ammunition.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L14",
+          "quote": "Reports vary on the reason for the police retreat, with some suggesting that the constables ran out of ammunition while others claimed that the crowd's unexpectedly assertive reaction to the gunfire was the cause."
+        },
+        {
+          "text": "Others claimed the crowd's unexpectedly assertive reaction to the gunfire caused the retreat.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L14",
+          "quote": "Reports vary on the reason for the police retreat, with some suggesting that the constables ran out of ammunition while others claimed that the crowd's unexpectedly assertive reaction to the gunfire was the cause."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S03-A",
+          "render": "graphic",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "locked grid, the fifteen counted once",
+          "visual": "The numbers of the chain: fifteen officers, the crowd, three killed by fire, 22 policemen inside the chowki.",
+          "sfx": [
+            "pencil tick",
+            "low pulse"
+          ],
+          "graphic": {
+            "type": "stats",
+            "title": "THE CHAIN",
+            "source": "LEDGER · L11 L09 L13 L43",
+            "items": [
+              {
+                "value": "15",
+                "label": "LOCAL POLICE OFFICERS",
+                "ledger": "L11"
+              },
+              {
+                "value": "2,000–2,500",
+                "label": "PROTESTERS",
+                "ledger": "L09"
+              },
+              {
+                "value": "3",
+                "label": "KILLED BY POLICE FIRE",
+                "ledger": "L13"
+              },
+              {
+                "value": "22",
+                "label": "POLICEMEN IN THE CHOWKI",
+                "ledger": "L43"
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The count lands and the stones start."
+          }
+        },
+        {
+          "id": "S03-B",
+          "plate": "field-02",
+          "narrationLine": 2,
+          "weight": 2,
+          "camera": "low wide, stones in the foreground",
+          "visual": "Loose stones in the dust, a broken fence rail, the town haze beyond; the ground is the only foreground.",
+          "sfx": [
+            "stone hit",
+            "crowd murmur"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "A stone lands and the order to fire takes the frame."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S03-C",
+          "plate": "gate-02",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "inside the yard, bars in foreground, lens 28",
+          "visual": "The gate from inside, bars across the foreground, the yard lit by one bulb, the street lost in black.",
+          "sfx": [
+            "bolt draw",
+            "distant shout"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The bolt draws and the retreat begins."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S03-D",
+          "plate": "gate-01",
+          "narrationLine": 4,
+          "weight": 2,
+          "camera": "low angle from the yard, lens 28",
+          "visual": "The gate from the yard, bars and arch, the lamp above it out and the sky turning to soot.",
+          "sfx": [
+            "wind through bars",
+            "distant crowd"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The gate empties and the embers take the frame."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S03-E",
+          "plate": "flame-02",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "macro on stone, lens 90, shallow focus",
+          "visual": "Embers and ash on dark stone, one orange seam breathing; no wall, no roof, no figure in the frame.",
+          "sfx": [
+            "ember pop",
+            "smoke breath"
+          ],
+          "transition": {
+            "type": "dissolve",
+            "frames": 12,
+            "reason": "Smoke crosses the embers and dissolves into the two accounts of the retreat.",
+            "sound": "smoke swell"
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S03-F",
+          "render": "graphic",
+          "narrationLine": 6,
+          "weight": 3,
+          "camera": "frontal split, the seam opening like a file",
+          "visual": "The record splits in two: ammunition on the left, the crowd's reaction on the right. Both panels carry the same ledger row.",
+          "sfx": [
+            "paper seam",
+            "thread tension"
+          ],
+          "graphic": {
+            "type": "split",
+            "title": "THE RETREAT",
+            "source": "LEDGER · L14",
+            "left": {
+              "eyebrow": "ACCOUNT ONE",
+              "title": "THE AMMUNITION",
+              "body": "Some constables ran out of ammunition.",
+              "label": "THE POLICE VERSION",
+              "ledger": "L14"
+            },
+            "right": {
+              "eyebrow": "ACCOUNT TWO",
+              "title": "THE CROWD",
+              "body": "Others said the crowd's reaction caused the retreat.",
+              "label": "THE OTHER VERSION",
+              "ledger": "L14"
+            },
+            "note": "The record does not settle which account is true."
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The seam closes and the aftermath is a wall of names."
+          }
+        },
+        {
+          "id": "S03-G",
+          "plate": "wall-03",
+          "narrationLine": 7,
+          "weight": 2,
+          "camera": "slow pull back, lens 50",
+          "visual": "The index-card wall again, cards browned at the edges, the missing row now a black gap.",
+          "sfx": [
+            "card drop",
+            "low tone"
+          ],
+          "sourceTag": "LEDGER · L14 L16 L43",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "A card drops and the corridor of the lock-up opens."
+          },
+          "render": "blender"
+        }
+      ]
+    },
+    {
+      "id": "S04",
+      "title": "THE SPLIT",
+      "purpose": "The political argument: Nehru and Congress workers thought the halt hasty; Gandhi feared a wider slide into violence. The film states both, then follows the arrests.",
+      "start": 137,
+      "duration": 54,
+      "narrationStart": 2.4,
+      "narration": [
+        {
+          "text": "Nehru and most Congress workers, in prison when Gandhi decided, felt the decision was hasty and incorrect.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L19",
+          "quote": "Jawaharlal Nehru and most of the workers of the Congress, who were in prison when Gandhi made this decision, felt that this was a hasty and incorrect decision at a time when the nation was reaching the epoch of support for the Indian independence movement."
+        },
+        {
+          "text": "The Moplah Rebellion of 1921 had veered away from non-violent methods.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L45",
+          "quote": "Moplah Rebellion of 1921 had veered away from non-violent methods."
+        },
+        {
+          "text": "In 1921, the Prince of Wales riots saw a Hindu-Muslim mob attack Parsis, Jews and Anglo-Indians.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L44",
+          "quote": "In 1921, there had been Prince of Wales riots where Parsis, Jews and Anglo-Indians were attacked by a Hindu-Muslim mob which caused large scale destruction."
+        },
+        {
+          "text": "Gandhi did not want the movement to degenerate into a contest of violence.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L46",
+          "quote": "Mahatma Gandhi did not want the movement to degenerate into a contest of violence, with police and angry mobs attacking each other back and forth, victimizing civilians in between."
+        },
+        {
+          "text": "Although he had stopped the national revolt single-handedly, Gandhi was arrested on 12 February 1922.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L47",
+          "quote": "Although he had stopped the national revolt single-handedly, on 12 February 1922, Mahatma Gandhi was arrested."
+        },
+        {
+          "text": "On 18 March 1922, he was imprisoned for six years for publishing seditious materials.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L48",
+          "quote": "On 18 March 1922, he was imprisoned for six years for publishing seditious materials."
+        },
+        {
+          "text": "This led to the suppression of the movement and the arrest of other leaders.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L49",
+          "quote": "This led to the suppression of the movement and was followed by the arrest of other leaders."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S04-A",
+          "plate": "room-03",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "wide from the window, lens 35",
+          "visual": "A meeting room with empty chairs, a table and a half-drawn blind; one paper sits where a speaker would stand.",
+          "sfx": [
+            "chair scrape",
+            "room tone"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The empty chair holds and the 1921 file opens."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S04-B",
+          "plate": "wall-02",
+          "narrationLine": 2,
+          "weight": 2,
+          "camera": "frontal, raking light, lens 50",
+          "visual": "A wall of newspaper pages pasted edge to edge, headlines turned away, the paste dark and the paper cockled.",
+          "sfx": [
+            "paper flap",
+            "street murmur"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "A page flaps and the second 1921 file takes the frame."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S04-C",
+          "plate": "field-01",
+          "narrationLine": 3,
+          "weight": 2,
+          "camera": "low wide, smoke in the middle distance, lens 30",
+          "visual": "A field at dusk with stubble smoke standing in still air, a fence and one tree, no figures in the frame.",
+          "sfx": [
+            "smoke wind",
+            "distant bird"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The smoke bends and the argument is laid out in two panels."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S04-D",
+          "render": "graphic",
+          "narrationLine": 4,
+          "weight": 3,
+          "camera": "frontal split, both panels on the same paper stock",
+          "visual": "The split is the argument: on the left the dissent that the halt was hasty, on the right Gandhi's fear of a contest of violence.",
+          "sfx": [
+            "paper seam",
+            "low note"
+          ],
+          "graphic": {
+            "type": "split",
+            "title": "THE ARGUMENT",
+            "source": "LEDGER · L19 L46",
+            "left": {
+              "eyebrow": "NEHRU · CONGRESS",
+              "title": "THE HALT WAS HASTY",
+              "body": "The decision came while support was reaching its peak.",
+              "label": "THE DISSENT",
+              "ledger": "L19"
+            },
+            "right": {
+              "eyebrow": "GANDHI",
+              "title": "A FEAR OF VIOLENCE",
+              "body": "He did not want the movement to become a contest of violence.",
+              "label": "THE REASON",
+              "ledger": "L46"
+            },
+            "note": "Both claims sit in the same record."
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The seam closes and the arrest follows."
+          }
+        },
+        {
+          "id": "S04-E",
+          "plate": "gate-02",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "exterior, rain on bars, lens 45",
+          "visual": "A jail gate in rain, the lamp halo soft, a warder's shadow just outside the frame and the street empty.",
+          "sfx": [
+            "rain on bar",
+            "gate chain"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "Rain on the bars carries the cut into the cell."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S04-F",
+          "plate": "jail-01",
+          "narrationLine": 6,
+          "weight": 2,
+          "camera": "inside the cell, lens 45",
+          "visual": "A cell door ajar, the stone floor catching a wedge of corridor light, the cot stripped to the frame.",
+          "sfx": [
+            "door hinge",
+            "footstep echo"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The hinge turns and the corridor repeats."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S04-G",
+          "plate": "corridor-02",
+          "narrationLine": 7,
+          "weight": 3,
+          "camera": "from the far end, doors repeating, lens 30",
+          "visual": "The corridor from its far end, doors repeating, one open and the rest closed, the floor wet with light.",
+          "sfx": [
+            "far door",
+            "low echo"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "A far door closes and the trial ledger opens."
+          },
+          "render": "blender"
+        }
+      ]
+    },
+    {
+      "id": "S05",
+      "title": "THE MECHANISM",
+      "purpose": "The machinery of the case: raids, custody, the eight-month trial, the High Court appeal, nineteen death sentences, fourteen life sentences, and the hangings.",
+      "start": 191,
+      "duration": 62,
+      "narrationStart": 2,
+      "narration": [
+        {
+          "text": "Several raids were conducted and hundreds of people were arrested.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L17",
+          "quote": "Several raids were conducted and hundreds of people were arrested."
+        },
+        {
+          "text": "Six of the accused died while in police custody.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L20",
+          "quote": "Of these, six died while in police custody, two were sentenced to two years' imprisonment, 170 were convicted and sentenced to death by hanging while 47 were acquitted on 9 January 1923, following a trial which lasted eight months."
+        },
+        {
+          "text": "170 were convicted and 47 were acquitted after an eight-month trial.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L20",
+          "quote": "Of these, six died while in police custody, two were sentenced to two years' imprisonment, 170 were convicted and sentenced to death by hanging while 47 were acquitted on 9 January 1923, following a trial which lasted eight months."
+        },
+        {
+          "text": "Two of the accused were sentenced to two years' imprisonment.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L20",
+          "quote": "Of these, six died while in police custody, two were sentenced to two years' imprisonment, 170 were convicted and sentenced to death by hanging while 47 were acquitted on 9 January 1923, following a trial which lasted eight months."
+        },
+        {
+          "text": "On 30 April 1923, the High Court of Allahabad pronounced the final judgements.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L21",
+          "quote": "On 30 April 1923, the High Court of Allahabad pronounced the final judgements in the case, after appeals had been considered regarding the 170 convicted accused, who had been awarded death sentences: The (19) people who were sentenced to death were - 1."
+        },
+        {
+          "text": "Nineteen demonstrators received death sentences and 14 received life imprisonment.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L05",
+          "quote": "Nineteen arrested demonstrators were sentenced to death and 14 to life imprisonment by the British colonial authorities. == Background == From 1920 onwards, Indians, led by Mohandas Gandhi, were engaged in a nationwide non-cooperation movement."
+        },
+        {
+          "text": "The court reviewed the appeals of the 170 convicted accused.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L21",
+          "quote": "On 30 April 1923, the High Court of Allahabad pronounced the final judgements in the case, after appeals had been considered regarding the 170 convicted accused, who had been awarded death sentences: The (19) people who were sentenced to death were - 1."
+        },
+        {
+          "text": "The 19 condemned to death were hanged between 2 and 11 July 1923.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L22",
+          "quote": "The 19 defendants condemned to death were hanged between 2 and 11 July 1923. == Memorial == A memorial to the dead policemen was dedicated by the British colonial authorities in 1923."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S05-A",
+          "plate": "corridor-02",
+          "narrationLine": 1,
+          "weight": 3,
+          "camera": "steady lateral move, lens 35",
+          "visual": "A jail corridor with doors on both sides, a bucket and a folded blanket on the floor, one bulb at the far end.",
+          "sfx": [
+            "door echo",
+            "dripping water"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The corridor ends at the cell door."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S05-B",
+          "plate": "jail-01",
+          "narrationLine": 2,
+          "weight": 2,
+          "camera": "from the corridor, bars in foreground, lens 34",
+          "visual": "A cell seen through bars: a cot, a bucket, a high slit window and one blade of cold light on the wall.",
+          "sfx": [
+            "bar tap",
+            "cell room tone"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The bar taps and the trial count takes the frame."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S05-C",
+          "render": "graphic",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "locked grid, the four trial figures counting up",
+          "visual": "The trial ledger in four cells: 170 convicted, 47 acquitted, eight months, six dead in custody.",
+          "sfx": [
+            "pencil tick",
+            "paper stack"
+          ],
+          "graphic": {
+            "type": "stats",
+            "title": "THE TRIAL",
+            "source": "LEDGER · L20",
+            "items": [
+              {
+                "value": "170",
+                "label": "CONVICTED",
+                "ledger": "L20"
+              },
+              {
+                "value": "47",
+                "label": "ACQUITTED",
+                "ledger": "L20"
+              },
+              {
+                "value": "8",
+                "label": "MONTHS OF TRIAL",
+                "ledger": "L20"
+              },
+              {
+                "value": "6",
+                "label": "DIED IN CUSTODY",
+                "ledger": "L20"
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The last cell holds and the two-year sentence takes the desk."
+          }
+        },
+        {
+          "id": "S05-D",
+          "plate": "desk-02",
+          "narrationLine": 4,
+          "weight": 2,
+          "camera": "overhead, ribbon marker in focus, lens 46",
+          "visual": "The trial ledger open at a page of names, a red ribbon marker at the fold and the desk lamp low.",
+          "sfx": [
+            "ribbon pull",
+            "paper flex"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The ribbon pulls free and the High Court page appears."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S05-E",
+          "plate": "desk-03",
+          "narrationLine": 5,
+          "weight": 3,
+          "camera": "high desk, seal in foreground, lens 50",
+          "visual": "A high court desk with a judgement sheet, a wax seal, a glass of water and everything else in black.",
+          "sfx": [
+            "room tone",
+            "glass set"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The seal presses and the sentence count takes over."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S05-F",
+          "render": "graphic",
+          "narrationLine": 6,
+          "weight": 3,
+          "camera": "locked grid, the appeal figures held",
+          "visual": "Four appeal figures: nineteen death sentences, fourteen life sentences, 170 appeals, and the date of the final judgement.",
+          "sfx": [
+            "pencil tick",
+            "low pulse"
+          ],
+          "graphic": {
+            "type": "stats",
+            "title": "THE SENTENCE",
+            "source": "LEDGER · L05 L21",
+            "items": [
+              {
+                "value": "19",
+                "label": "DEATH SENTENCES",
+                "ledger": "L05"
+              },
+              {
+                "value": "14",
+                "label": "LIFE SENTENCES",
+                "ledger": "L05"
+              },
+              {
+                "value": "170",
+                "label": "APPEALS REVIEWED",
+                "ledger": "L21"
+              },
+              {
+                "value": "30 APRIL 1923",
+                "label": "FINAL JUDGEMENTS",
+                "ledger": "L21"
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The date holds and the appeal page returns."
+          }
+        },
+        {
+          "id": "S05-G",
+          "plate": "wall-01",
+          "narrationLine": 7,
+          "weight": 2,
+          "camera": "frontal, sheets aligned, lens 50",
+          "visual": "The notice wall with every sheet aligned, the missing gap filled by one blank page, the light hard from the left.",
+          "sfx": [
+            "sheet settle",
+            "room tone"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The blank sheet settles and the jail gate takes the last line."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S05-H",
+          "plate": "gate-01",
+          "narrationLine": 8,
+          "weight": 2,
+          "camera": "first light, wet bars, lens 40",
+          "visual": "The jail gate at first light, the bars wet and the street empty; the date of the hangings is the only text in the frame.",
+          "sfx": [
+            "gate drip",
+            "morning birds"
+          ],
+          "impact": true,
+          "text": "19",
+          "impactSub": "HANGED · 2–11 JULY 1923",
+          "sourceTag": "LEDGER · L22",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The gate holds and the film returns to the lake."
+          },
+          "render": "blender"
+        }
+      ]
+    },
+    {
+      "id": "S06",
+      "title": "THE RETURN",
+      "purpose": "Return to paper and memory: the 1971 association, the 1973 minaret, the subscription, the colonial police memorial, and Nehru's word for the end.",
+      "start": 253,
+      "duration": 44,
+      "narrationStart": 2,
+      "narration": [
+        {
+          "text": "In 1971, local inhabitants formed an association named Chauri Chaura Shaheed Smarak Samiti.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L23",
+          "quote": "In 1971, local inhabitants formed an association named Chauri Chaura Shaheed Smarak Samiti."
+        },
+        {
+          "text": "In 1973, this Samiti constructed near the lake a 12.2-metre-tall triangular minaret.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L24",
+          "quote": "In 1973, this Samiti constructed near the lake at Chauri Chaura a 12.2-metre-tall (40 ft) triangular minaret on each side of which a figure is depicted hanging with a noose around his neck."
+        },
+        {
+          "text": "Each side of the minaret depicts a figure hanging with a noose around his neck.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L24",
+          "quote": "In 1973, this Samiti constructed near the lake at Chauri Chaura a 12.2-metre-tall (40 ft) triangular minaret on each side of which a figure is depicted hanging with a noose around his neck."
+        },
+        {
+          "text": "The minaret was built at a cost of Rs 13,500 contributed by popular subscription.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L25",
+          "quote": "The minaret was built at a cost of Rs 13,500 contributed by popular subscription."
+        },
+        {
+          "text": "A memorial to the dead policemen was dedicated by the British colonial authorities in 1923.",
+          "source": "en-wikipedia-org-wiki-chauri-chaura-incident",
+          "ledger": "L22",
+          "quote": "The 19 defendants condemned to death were hanged between 2 and 11 July 1923. == Memorial == A memorial to the dead policemen was dedicated by the British colonial authorities in 1923."
+        },
+        {
+          "text": "Nehru described the movement as ending suddenly on 4 February 1922.",
+          "source": "en-wikipedia-org-wiki-non-cooperation-movement-1",
+          "ledger": "L28",
+          "quote": "The non-cooperation movement was among the broader movement for Indian independence from British rule and ended, as Nehru described in his autobiography, \"suddenly\" on 4 February 1922 after the Chauri Chaura incident."
+        }
+      ],
+      "shots": [
+        {
+          "id": "S06-A",
+          "plate": "river-01",
+          "narrationLine": 1,
+          "weight": 2,
+          "camera": "wide at dusk, steps leading to water, lens 38",
+          "visual": "Stone steps down to a wide river, one boat and a hanging lamp; the far bank is a dark line.",
+          "sfx": [
+            "water lap",
+            "evening birds"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "Water laps and the memorial photograph takes the frame."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S06-B",
+          "render": "graphic",
+          "narrationLine": 2,
+          "weight": 3,
+          "camera": "document insert, slow push across the print",
+          "visual": "A modern photograph of the Chauri Chaura memorial, pinned beside the case note: a triangular minaret above the lake.",
+          "sfx": [
+            "photo paper",
+            "pin press"
+          ],
+          "graphic": {
+            "type": "document",
+            "kicker": "THE SITE TODAY",
+            "title": "A MINARET, NOT A VERDICT",
+            "body": "In 1973 the Chauri Chaura Shaheed Smarak Samiti built a 12.2-metre triangular minaret near the lake. Each side shows a figure hanging.",
+            "caption": "CHAURI CHAURA MEMORIAL · GORAKHPUR",
+            "credit": "PHOTO: NITISHKUMAROJHA · WIKIMEDIA COMMONS · CC BY-SA 3.0",
+            "image": "chauri-memorial.jpg",
+            "ledger": "L24",
+            "source": "LEDGER · L24"
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The print lifts and the flame holds the next line."
+          }
+        },
+        {
+          "id": "S06-C",
+          "plate": "flame-01",
+          "narrationLine": 3,
+          "weight": 3,
+          "camera": "macro, flame centred, lens 85",
+          "visual": "A small flame in a glass on a dark table, the only warm thing in the room, its halo on the glass.",
+          "sfx": [
+            "flame breath",
+            "quiet room"
+          ],
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The flame breathes and the subscription figures appear."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S06-D",
+          "render": "graphic",
+          "narrationLine": 4,
+          "weight": 2,
+          "camera": "locked grid, the cost and the date held together",
+          "visual": "Four figures from the memorial file: the subscription, the year, the height, and the association that built it.",
+          "sfx": [
+            "coin set",
+            "paper tick"
+          ],
+          "graphic": {
+            "type": "stats",
+            "title": "THE SUBSCRIPTION",
+            "source": "LEDGER · L23 L24 L25",
+            "items": [
+              {
+                "value": "13,500",
+                "label": "RUPEES CONTRIBUTED",
+                "ledger": "L25"
+              },
+              {
+                "value": "1973",
+                "label": "MINARET BUILT",
+                "ledger": "L24"
+              },
+              {
+                "value": "12.2 M",
+                "label": "MINARET HEIGHT",
+                "ledger": "L24"
+              },
+              {
+                "value": "1971",
+                "label": "ASSOCIATION FORMED",
+                "ledger": "L23"
+              }
+            ]
+          },
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The figures hold and the colonial memorial returns."
+          }
+        },
+        {
+          "id": "S06-E",
+          "plate": "wall-01",
+          "narrationLine": 5,
+          "weight": 2,
+          "camera": "frontal, raking light, lens 50",
+          "visual": "The notice wall with one sheet squared at eye height, the rest turned away; the colonial memorial is a document, not a monument.",
+          "sfx": [
+            "sheet settle",
+            "room tone"
+          ],
+          "sourceTag": "LEDGER · L22",
+          "transition": {
+            "type": "hard-cut",
+            "frames": 0,
+            "reason": "The sheet settles and the case returns to four cards."
+          },
+          "render": "blender"
+        },
+        {
+          "id": "S06-F",
+          "render": "graphic",
+          "narrationLine": 6,
+          "weight": 3,
+          "camera": "top-down board, the four cards already joined",
+          "visual": "The case in four cards: the incident, the halt, the hangings, and the minaret. The red thread ties the dates together.",
+          "sfx": [
+            "pin press",
+            "thread tension"
+          ],
+          "graphic": {
+            "type": "board",
+            "title": "THE RETURN",
+            "source": "LEDGER · L01 L04 L22 L24",
+            "cards": [
+              {
+                "tag": "01",
+                "title": "4 FEB 1922",
+                "line": "THE INCIDENT",
+                "ledger": "L01"
+              },
+              {
+                "tag": "02",
+                "title": "12 FEB 1922",
+                "line": "THE HALT",
+                "ledger": "L04"
+              },
+              {
+                "tag": "03",
+                "title": "19",
+                "line": "HANGED BY 11 JULY 1923",
+                "ledger": "L22"
+              },
+              {
+                "tag": "04",
+                "title": "1973",
+                "line": "THE MINARET",
+                "ledger": "L24"
+              }
+            ]
+          },
+          "transition": {
+            "type": "match-cut",
+            "frames": 0,
+            "reason": "The red thread pulls taut and becomes the rule under the closing title.",
+            "sound": "thread pull"
+          }
+        }
+      ]
+    },
+    {
+      "id": "S07",
+      "title": "CODA",
+      "purpose": "Close on the channel mark and the promise that governs every case file.",
+      "start": 297,
+      "duration": 6.6,
+      "narration": [],
+      "shots": [
+        {
+          "id": "S07-A",
+          "plate": "title",
+          "render": "title",
+          "hold": 5.6,
+          "closing": true,
+          "camera": "locked title card, the room dimming to black",
+          "visual": "The closing card: the case name, the channel mark, and the line that governs the archive.",
+          "sfx": [
+            "room tone",
+            "one low note"
+          ],
+          "text": "EVERY CLAIM HAS A SOURCE",
+          "transition": {
+            "type": "dip",
+            "frames": 5,
+            "reason": "The lamp goes down and the room closes to black.",
+            "sound": "room tone closes"
+          }
+        }
+      ]
+    }
+  ]
+}

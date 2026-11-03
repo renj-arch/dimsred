@@ -37,6 +37,12 @@ function main() {
   topic.publishedAt = new Date().toISOString().slice(0, 10);
   topic.watch = `watch.html?film=${id}`;
   if (release) topic.release = release;
+  // A published film has spent no retry budget; clear the failure bookkeeping
+  // so the slate stays readable and a future re-publish starts clean.
+  delete topic.promotionFailures;
+  delete topic.lastRenderFailedAt;
+  delete topic.lastFailureStage;
+  delete topic.lastFailureReason;
   slate.updated = topic.publishedAt;
   fs.writeFileSync(SLATE, JSON.stringify(slate, null, 2) + '\n');
   console.log(`[slate] ${id} published${release ? ` (${release})` : ''}`);

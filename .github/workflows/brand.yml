@@ -1,0 +1,115 @@
+name: Brand assets
+
+# The channel bumper and the theme are part of the film grammar: the thread,
+# the stamp and the low A are the first five seconds of every case file. This
+# job renders both from source on a clean runner, verifies their specs, and
+# keeps the exact files as artifacts. A release is optional and manual.
+
+on:
+  workflow_dispatch:
+    inputs:
+      release:
+        description: Attach the theme and bumper to a GitHub release
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: brand-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  brand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends ffmpeg
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Compose the original channel theme
+        run: node scripts/film/theme.js out/brand/vlymbooq-theme.wav
+
+      - name: Render the channel bumper
+        run: node scripts/film/render-intro.js --out out/brand/vlymbooq-intro.mp4
+
+      - name: Verify brand specs
+        run: |
+          set -euo pipefail
+
+          THEME=out/brand/vlymbooq-theme.wav
+          INTRO=out/brand/vlymbooq-intro.mp4
+
+          theme_rate=$(ffprobe -v error -select_streams a:0 \
+            -show_entries stream=sample_rate -of csv=p=0 "$THEME")
+          theme_channels=$(ffprobe -v error -select_streams a:0 \
+            -show_entries stream=channels -of csv=p=0 "$THEME")
+          theme_duration=$(ffprobe -v error -show_entries format=duration \
+            -of csv=p=0 "$THEME")
+
+          width=$(ffprobe -v error -select_streams v:0 \
+            -show_entries stream=width -of csv=p=0 "$INTRO")
+          height=$(ffprobe -v error -select_streams v:0 \
+            -show_entries stream=height -of csv=p=0 "$INTRO")
+          fps=$(ffprobe -v error -select_streams v:0 \
+            -show_entries stream=r_frame_rate -of csv=p=0 "$INTRO")
+          intro_duration=$(ffprobe -v error -show_entries format=duration \
+            -of csv=p=0 "$INTRO")
+
+          echo "theme ${theme_rate} Hz ${theme_channels} ch ${theme_duration}s"
+          echo "intro ${width}x${height} ${fps} ${intro_duration}s"
+
+          test "$theme_rate" = "48000"
+          test "$theme_channels" = "2"
+          test "$width" = "1920"
+          test "$height" = "1080"
+          test "$fps" = "24/1"
+          awk -v d="$theme_duration" 'BEGIN { exit !(d >= 11.5 && d <= 12.5) }'
+          awk -v d="$intro_duration" 'BEGIN { exit !(d >= 7.5 && d <= 8.5) }'
+
+          # The bumper must carry the theme, not silence.
+          ffprobe -v error -select_streams a:0 \
+            -show_entries stream=codec_name,channels -of csv=p=0 "$INTRO" | grep -q .
+
+      - name: Upload brand artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: vlymbooq-brand-${{ github.run_number }}
+          path: |
+            out/brand/vlymbooq-theme.wav
+            out/brand/vlymbooq-intro.mp4
+            out/brand/intro/frames/frame-00168.jpg
+          if-no-files-found: error
+          retention-days: 30
+
+      - name: Attach a brand release
+        if: inputs.release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          TAG="brand-${GITHUB_RUN_NUMBER}"
+          gh release create "$TAG" \
+            out/brand/vlymbooq-theme.wav \
+            out/brand/vlymbooq-intro.mp4 \
+            out/brand/intro/frames/frame-00168.jpg \
+            --title "vlymbooq brand ${TAG}" \
+            --notes "Original 12-second theme and 8-second channel bumper, rendered from scripts/film/theme.js and scripts/film/render-intro.js at 1920x1080/24fps." \
+            --prerelease
