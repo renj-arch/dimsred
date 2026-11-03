@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T14:07:11.746Z",
-  "cursor": 573,
-  "built": 536
+  "updatedAt": "2026-11-03T14:53:15.449Z",
+  "cursor": 576,
+  "built": 538
  },
  "figs": {
   "11434945": {
@@ -3219,6 +3219,18 @@
   "532c7013": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Kinetic Energy Concept</text><line x1=\"60\" y1=\"100\" x2=\"300\" y2=\"100\"/><text x=\"55\" y=\"105\">Velocity (v)</text><text x=\"305\" y=\"105\">m/s</text><line x1=\"60\" y1=\"80\" x2=\"300\" y2=\"80\"/><text x=\"55\" y=\"85\">Mass (m)</text><text x=\"305\" y=\"85\">kg</text><circle cx=\"180\" cy=\"100\" r=\"4\"/><text x=\"170\" y=\"95\">Body</text><text x=\"170\" y=\"120\">(m = 2 kg)</text><path d=\"M 60 100 L 300 100 M 60 80 L 300 80\"/><text x=\"180\" y=\"150\" text-anchor=\"middle\">KE = ½ mv²</text><text x=\"180\" y=\"170\" text-anchor=\"middle\">= 9 J</text></svg>",
    "n": "find the kinetic energy of a 2 kg body moving at 3 m/s.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "4c79dff9": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Work (W) = ΔKE</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"50\">Initial State</text><text x=\"310\" y=\"50\">Final State</text><circle cx=\"80\" cy=\"60\" r=\"4\"/><circle cx=\"300\" cy=\"60\" r=\"4\"/><line x1=\"80\" y1=\"60\" x2=\"300\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"195\" y=\"75\">W = ½mv² − ½mu²</text><text x=\"195\" y=\"90\">(Change in Kinetic Energy)</text></svg>",
+   "n": "state the work-energy theorem.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "708ac9ad": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Coefficient of Restitution</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"75\" text-anchor=\"middle\">Point of Collision</text><circle cx=\"40\" cy=\"60\" r=\"3\"/><circle cx=\"320\" cy=\"60\" r=\"3\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"90\" stroke-dasharray=\"2,2\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"90\" stroke-dasharray=\"2,2\"/><text x=\"25\" y=\"78\">u1</text><text x=\"315\" y=\"78\">u2</text><line x1=\"40\" y1=\"90\" x2=\"40\" y2=\"120\" stroke-dasharray=\"2,2\"/><line x1=\"320\" y1=\"90\" x2=\"320\" y2=\"120\" stroke-dasharray=\"2,2\"/><text x=\"25\" y=\"108\">v1</text><text x=\"315\" y=\"108\">v2</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"90\" stroke-width=\"2\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"90\" stroke-width=\"2\"/><text x=\"180\" y=\"150\" text-anchor=\"middle\">Relative Velocity of Approach</text><text x=\"180\" y=\"175\" text-anchor=\"middle\">= u1 - u2</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">Relative Velocity of Separation</text><text x=\"180\" y=\"215\" text-anchor=\"middle\">= v2 - v1</text></svg>",
+   "n": "define the coefficient of restitution.",
    "sub": "emech",
    "at": "2026-11-03"
   }
