@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T02:21:44.635Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and open faults (80) demand immediate attention via BankFigures to restore site integrity. Figure gaps (79) indicate a lack of practice material, so MockPapers must follow to generate fresh content. MetaLearn is scheduled last as it has produced zero fixes in the last three runs, suggesting it may be starved or less efficient currently; Invention is also deferred due to low pending ideas and high fault load.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (476 total)",
-       "text": "Define equilibrium of a body. | What are the conditions for equilibrium of a body under two forces only? | What are the conditions of equilibrium for three non-parallel coplanar forces?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T02:41:23.738Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -691,8 +651,31 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T08:43:01.088Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal-error",
+       "fix": "Proposal pass failed — see the run log",
+       "detail": "no proposal survived validation (raw items: 4)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T08:23:52.968Z",
+ "lastRun": "2026-11-03T08:43:01.088Z",
  "model": "qwen3.5:9b"
 }
