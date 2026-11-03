@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T17:05:52.309Z",
-  "cursor": 588,
-  "built": 550
+  "updatedAt": "2026-11-03T17:38:06.009Z",
+  "cursor": 591,
+  "built": 553
  },
  "figs": {
   "11434945": {
@@ -3303,6 +3303,24 @@
   "68bdfd7a": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Load (W)</text><circle cx=\"40\" cy=\"180\" r=\"3\"/><text x=\"20\" y=\"175\">P = mW + C</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" stroke-dasharray=\"4,2\"/><circle cx=\"320\" cy=\"160\" r=\"3\"/><text x=\"330\" y=\"165\">C</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"110\" text-anchor=\"end\">Effort (P)</text><circle cx=\"40\" cy=\"40\" r=\"3\"/><line x1=\"60\" y1=\"180\" x2=\"60\" y2=\"40\" stroke-dasharray=\"4,2\"/><circle cx=\"60\" cy=\"40\" r=\"3\"/><text x=\"70\" y=\"55\">m</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"40\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"110\" r=\"3\"/><text x=\"175\" y=\"105\">Friction</text><text x=\"175\" y=\"125\">VR</text></svg>",
    "n": "state the law of a machine.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "e262740a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Reversible Lifting Machine</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"180\" cy=\"60\" r=\"5\"/><text x=\"175\" y=\"75\" text-anchor=\"end\">Effort (E)</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><circle cx=\"180\" cy=\"100\" r=\"5\"/><text x=\"175\" y=\"115\" text-anchor=\"end\">Load (W)</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"100\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"100\"/><polygon points=\"180,55 175,85 185,85\" fill=\"none\" stroke=\"#222\"/><text x=\"190\" y=\"80\">Effort</text><polygon points=\"180,105 175,75 185,75\" fill=\"none\" stroke=\"#222\"/><text x=\"190\" y=\"70\">Load</text><rect x=\"40\" y=\"115\" width=\"280\" height=\"60\" rx=\"3\"/><line x1=\"45\" y1=\"120\" x2=\"315\" y2=\"120\" stroke-dasharray=\"2,2\"/><text x=\"50\" y=\"135\">Condition: η &gt; 50%</text><text x=\"50\" y=\"155\">Load descends when Effort removed</text></svg>",
+   "n": "when is a lifting machine reversible?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "d0a8737f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"190\">Effort P</text><text x=\"30\" y=\"175\">Load W</text><path d=\"M 40 180 L 60 160 L 80 180 Z\"/><line x1=\"80\" y1=\"180\" x2=\"320\" y2=\"180\"/><path d=\"M 80 180 L 100 160 L 120 180 Z\"/><text x=\"95\" y=\"170\">α</text><text x=\"95\" y=\"140\">φ</text><path d=\"M 320 180 L 300 160 L 280 180 Z\"/><line x1=\"280\" y1=\"180\" x2=\"40\" y2=\"180\"/><text x=\"295\" y=\"170\">W tan(α+φ)</text><path d=\"M 40 180 L 60 160 L 80 180 Z\"/><line x1=\"80\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"95\" y=\"170\">α</text><text x=\"95\" y=\"140\">φ</text><path d=\"M 320 180 L 300 160 L 280 180 Z\"/><line x1=\"280\" y1=\"180\" x2=\"40\" y2=\"180\"/><text x=\"295\" y=\"170\">W tan(α+φ)</text></svg>",
+   "n": "write the effort required to lift a load w with a screw jack of helix angle α and friction angle φ.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "e9d0501e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\" xmlns=\"http://www.w3.org/2000/svg\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Screw Jack: Lowering Load</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"65\">Load W</text><polygon points=\"40,60 80,40 120,60\" fill=\"#222\"/><line x1=\"120\" y1=\"60\" x2=\"120\" y2=\"140\"/><line x1=\"135\" y1=\"60\" x2=\"135\" y2=\"140\"/><text x=\"125\" y=\"100\">Thread</text><line x1=\"120\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"310\" y=\"145\">Ground</text><line x1=\"120\" y1=\"60\" x2=\"120\" y2=\"40\" stroke-dasharray=\"4\"/><text x=\"110\" y=\"35\">Effort P (Down)</text><path d=\"M 120 40 L 135 25\" stroke=\"#222\"/><line x1=\"80\" y1=\"60\" x2=\"120\" y2=\"60\"/><text x=\"95\" y=\"75\">Friction Angle φ</text><line x1=\"120\" y1=\"60\" x2=\"135\" y2=\"45\" stroke-dasharray=\"4\"/><text x=\"140\" y=\"50\">Lead Angle α</text><path d=\"M 135 45 L 120 60\" stroke=\"#222\"/><text x=\"170\" y=\"110\" text-anchor=\"middle\">φ &gt; α (Self-locking)</text></svg>",
+   "n": "what is the effort for lowering a load with a screw jack?",
    "sub": "emech",
    "at": "2026-11-03"
   }
