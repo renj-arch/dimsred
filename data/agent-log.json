@@ -1,61 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T11:06:06.996Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "We have critical gaps in papers (0/79) and questions (0/81), so we must prioritize content generation over maintenance. BankFigures and MockPapers are the only agents that produced fixes yesterday; they should run first to clear standing goals. MainsFresh has produced zero for two consecutive runs, indicating it is starved of input rather than broken, so it will be scheduled last after the primary generators have populated the file system.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (522 total)",
-       "text": "Write the moment of inertia of a rectangular section of width b and depth d abou | What is the polar moment of inertia of a solid circular shaft of diameter d? | What is the moment of inertia of a thin ring about a diameter?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T11:32:26.863Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -769,8 +714,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T20:31:01.928Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Prioritizing the critical backlog of 23 faults and 79 figure gaps, I will deploy BankFigures first to resolve data voids, followed by MockPapers to address the lack of exam materials. Since MainsFresh and Invention agents produced zero fixes in the last three consecutive runs, they are moved to the end of this queue to prevent starvation while focusing on high-impact repair tasks.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (562 total)",
+       "text": "What is the velocity ratio of a screw jack with handle arm length l and pitch p? | What is a friction clutch? | Write the torque transmitted by a single-plate clutch with uniform pressure."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T19:42:07.664Z",
+ "lastRun": "2026-11-03T20:31:01.928Z",
  "model": "qwen3.5:9b"
 }

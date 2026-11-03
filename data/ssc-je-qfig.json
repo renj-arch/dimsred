@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T19:15:01.465Z",
-  "cursor": 597,
-  "built": 559
+  "updatedAt": "2026-11-03T19:56:25.578Z",
+  "cursor": 600,
+  "built": 562
  },
  "figs": {
   "11434945": {
@@ -3357,6 +3357,24 @@
   "6532bffc": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><polygon points=\"50,80 50,140 150,140 150,80\" /><line x1=\"50\" y1=\"80\" x2=\"150\" y2=\"140\" stroke-dasharray=\"3,3\" /><text x=\"90\" y=\"65\" text-anchor=\"middle\">h</text><text x=\"110\" y=\"175\" text-anchor=\"middle\">l</text><line x1=\"50\" y1=\"80\" x2=\"150\" y2=\"140\" stroke-width=\"3\" /><text x=\"165\" y=\"110\" text-anchor=\"start\">Effort // Plane</text><text x=\"90\" y=\"70\" text-anchor=\"middle\">Inclined Plane</text></svg>",
    "n": "what is the velocity ratio of an inclined plane of length l and height h?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "82479dd3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Handle Arm</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><circle cx=\"320\" cy=\"40\" r=\"5\"/><line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\"/><text x=\"335\" y=\"100\">Pitch (p)</text><line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\" stroke-dasharray=\"4 2\"/><circle cx=\"320\" cy=\"180\" r=\"5\"/><path d=\"M 320 40 L 320 180 M 320 40 A 160 160 0 0 1 320 180\" fill=\"none\" stroke-dasharray=\"4 2\"/><text x=\"180\" y=\"115\">Distance = 2πl</text><path d=\"M 40 40 L 320 40\" stroke-dasharray=\"4 2\"/><text x=\"170\" y=\"35\">Handle Arm (l)</text><circle cx=\"320\" cy=\"40\" r=\"3\" fill=\"#222\"/><circle cx=\"320\" cy=\"180\" r=\"3\" fill=\"#222\"/></svg>",
+   "n": "what is the velocity ratio of a screw jack with handle arm length l and pitch p?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "ed2cefba": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Housing/Pressure Plate -->\n  <path d=\"M40,60 L320,60 L320,160 L40,160 Z\" />\n  <path d=\"M40,80 L320,80\" stroke-dasharray=\"4,2\" />\n  <!-- Input Shaft (Driving) -->\n  <circle cx=\"100\" cy=\"120\" r=\"15\" />\n  <line x1=\"100\" y1=\"95\" x2=\"100\" y2=\"70\" stroke-dasharray=\"2,2\" />\n  <!-- Friction Disc (Clutch Plate) -->\n  <circle cx=\"180\" cy=\"120\" r=\"35\" fill=\"#eee\" opacity=\"0.5\" />\n  <text x=\"175\" y=\"115\">Friction</text>\n  <text x=\"175\" y=\"128\">Surface</text>\n  <!-- Output Shaft (Driven) -->\n  <circle cx=\"260\" cy=\"120\" r=\"15\" />\n  <line x1=\"260\" y1=\"95\" x2=\"260\" y2=\"70\" stroke-dasharray=\"2,2\" />\n  <!-- Pressure Plate Spring (Clamping Force) -->\n  <path d=\"M145,80 Q180,40 215,80\" fill=\"none\" stroke-width=\"3\" />\n  <text x=\"190\" y=\"60\">Spring</text>\n  <text x=\"190\" y=\"72\">Force</text>\n  <!-- Labels -->\n  <text x=\"50\" y=\"40\">Input Shaft</text>\n  <text x=\"280\" y=\"40\">Output Shaft</text>\n  <text x=\"330\" y=\"125\">Torque Transfer</text>\n</svg>",
+   "n": "what is a friction clutch?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "aed508f1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Clutch Disc Section</text><path d=\"M 30 60 L 330 60\"/><path d=\"M 30 100 L 330 100\"/><path d=\"M 30 80 L 330 80\"/><circle cx=\"180\" cy=\"80\" r=\"60\" fill=\"none\" stroke=\"#222\"/><circle cx=\"180\" cy=\"80\" r=\"40\" fill=\"none\" stroke=\"#222\"/><text x=\"195\" y=\"75\">r₁</text><text x=\"195\" y=\"95\">r₂</text><text x=\"205\" y=\"65\">Outer Radius</text><text x=\"205\" y=\"85\">Inner Radius</text><path d=\"M 30 40 L 330 40\"/><path d=\"M 30 120 L 330 120\"/><path d=\"M 30 60 L 30 120 M 330 60 L 330 120\"/><text x=\"20\" y=\"90\">Axial Force W</text><text x=\"180\" y=\"145\" text-anchor=\"middle\">Torque T ∝ (r₁³ - r₂³)/(r₁² - r₂²)</text></svg>",
+   "n": "write the torque transmitted by a single-plate clutch with uniform pressure.",
    "sub": "emech",
    "at": "2026-11-03"
   }
