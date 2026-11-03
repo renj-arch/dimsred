@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T19:33:28.966Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual content. MockPapers and ExamPatterns follow immediately to address the 81 open faults and ensure fresh practice material. MainsFresh is queued last as it produced zero fixes in the previous two runs, indicating it needs a cooldown or input refresh before re-engagement.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (431 total)",
-       "text": "What is the ball-faced (cross-peen) hammer used for? | What is a mortise gauge and how is it marked out? | What is a chalk line used for?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T20:03:32.633Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -711,8 +666,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T02:01:33.180Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the immediate priorities; BankFigures must run first to resolve broken visual assets. Since papers and questions are missing from filesPresent, MockPapers is next to generate core study materials. MetaLearn should follow to synthesize new content based on identified syllabus gaps before shifting to Invention for novel ideas or MainsFresh for daily updates. Agents metalearn and invention produced zero fixes in the last three runs, so they will be sche",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (473 total)",
+       "text": "State the principle of moments for a body in equilibrium. | Why is Varignon's theorem useful? | What are the general conditions of equilibrium for a coplanar force system?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "5 fresh mock questions on Theory of Machines (360 in pool)",
+       "text": "Theory of Machines"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T01:27:59.968Z",
+ "lastRun": "2026-11-03T02:01:33.180Z",
  "model": "qwen3.5:9b"
 }
