@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T00:17:56.247Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to fix broken visual assets blocking study flow. Since papers/sidecar files are missing, Invention is needed immediately to generate fresh exam materials rather than relying on empty storage. MetaLearn should follow to synthesize new patterns from the generated content, addressing the 80 open faults efficiently.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (461 total)",
-       "text": "What is the method to find the resultant of non-concurrent coplanar forces? | Three concurrent forces keep a point in equilibrium; two of them are 30 N and 40 | What is the triangle law of forces?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T00:37:32.165Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -720,8 +680,58 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-03T07:03:33.355Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams. Since MockPapers produced 0 in the last two runs while others produced fixes, it is starved of input and should be scheduled last after critical gaps are addressed. The queue shows no pending ideas for Invention, so we focus on closing existing content gaps before exploring new ventures.",
+    "actions": [
+     "BankFigures",
+     "ExamPatterns",
+     "MainsFresh",
+     "MetaLearn",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (502 total)",
+       "text": "Define limiting friction. | Define the centroid of a plane figure. | Define centre of gravity of a body."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T06:13:52.914Z",
+ "lastRun": "2026-11-03T07:03:33.355Z",
  "model": "qwen3.5:9b"
 }

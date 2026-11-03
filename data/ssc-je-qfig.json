@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T05:42:01.360Z",
-  "cursor": 531,
-  "built": 499
+  "updatedAt": "2026-11-03T06:29:50.011Z",
+  "cursor": 534,
+  "built": 502
  },
  "figs": {
   "11434945": {
@@ -2997,6 +2997,24 @@
   "a407c065": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Flat Belt</text><path d=\"M40,80 L160,80 L160,40 L320,40 L320,180 L160,180 L160,140 L40,140\" stroke-width=\"2\" fill=\"none\"/><path d=\"M40,140 Q100,190 160,140\" fill=\"none\" stroke-width=\"1.5\"/><path d=\"M160,80 L160,140\" stroke-dasharray=\"2,2\"/><text x=\"130\" y=\"70\">T₁</text><text x=\"130\" y=\"155\">T₂</text><text x=\"180\" y=\"100\">θ = 120°</text><text x=\"180\" y=\"165\">μ = 0.3</text></svg>",
    "n": "a flat belt with μ = 0.3 has an angle of lap of 120°. find the tension ratio t1/t2.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "20a6f5fb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\" font-weight=\"bold\">Limiting Friction</text><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><line x1=\"40\" y1=\"75\" x2=\"40\" y2=\"85\"/><line x1=\"320\" y1=\"75\" x2=\"320\" y2=\"85\"/><text x=\"180\" y=\"65\">Applied Force (F)</text><polygon points=\"340,90 320,80 340,70\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><line x1=\"40\" y1=\"95\" x2=\"40\" y2=\"105\"/><line x1=\"320\" y1=\"95\" x2=\"320\" y2=\"105\"/><text x=\"180\" y=\"120\">Normal Reaction (N)</text><polygon points=\"340,110 320,100 340,90\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"40\" y1=\"80\" x2=\"40\" y2=\"100\"/><line x1=\"35\" y1=\"80\" x2=\"45\" y2=\"90\"/><line x1=\"35\" y1=\"100\" x2=\"45\" y2=\"90\"/><text x=\"20\" y=\"90\">Friction Force (f)</text><polygon points=\"50,85 40,75 60,75\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"200\" y1=\"80\" x2=\"200\" y2=\"100\" stroke-dasharray=\"3,2\"/><text x=\"190\" y=\"95\">Limiting Friction (f_max)</text><polygon points=\"200,85 190,75 210,75\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"230\" y=\"95\">μN</text></svg>",
+   "n": "define limiting friction.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "e4d4f3ef": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <title>Centroid of a Plane Figure</title>\n  <!-- Arbitrary irregular shape representing the plane figure -->\n  <path d=\"M40,180 L100,160 L140,190 L200,170 L260,150 L300,180 L320,120 L300,60 L240,40 L180,60 L120,40 L60,60 L40,120 Z\" />\n  <!-- Horizontal axis for reference -->\n  <line x1=\"20\" y1=\"110\" x2=\"340\" y2=\"110\" stroke-dasharray=\"4\"/>\n  <!-- Vertical axis for reference -->\n  <line x1=\"180\" y1=\"20\" x2=\"180\" y2=\"200\" stroke-dasharray=\"4\"/>\n  <!-- Centroid point -->\n  <circle cx=\"180\" cy=\"110\" r=\"3\" fill=\"#222\"/>\n  <!-- Label for centroid -->\n  <text x=\"175\" y=\"95\" text-anchor=\"middle\">Centroid</text>\n  <!-- Label for shape -->\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">Plane Figure Area</text>\n</svg>",
+   "n": "define the centroid of a plane figure.",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "d112229c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Ground -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\" />\n  <!-- Irregular Body Shape -->\n  <path d=\"M80,160 L100,140 L120,150 L140,130 L160,150 L180,140 L200,160 L220,170 L240,160 L260,180 L280,190 L300,180 L310,170 L320,150 L310,130 L300,140 L280,150 L260,160\" />\n  <!-- Center of Gravity Point -->\n  <circle cx=\"190\" cy=\"155\" r=\"4\" />\n  <!-- Label for CG -->\n  <text x=\"175\" y=\"145\" font-weight=\"bold\">CG</text>\n  <!-- Weight Vector (downward) -->\n  <line x1=\"190\" y1=\"155\" x2=\"190\" y2=\"185\" />\n  <text x=\"175\" y=\"195\">Weight (W)</text>\n  <!-- Orientation Line -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\" stroke-dasharray=\"4\" />\n</svg>",
+   "n": "define centre of gravity of a body.",
    "sub": "emech",
    "at": "2026-11-03"
   }
