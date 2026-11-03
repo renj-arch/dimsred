@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-02T17:32:32.564Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address the 79 missing diagrams immediately as unfinished standing goals. MockPapers should follow to resolve critical faults, while ExamPatterns handles remaining content gaps. Invention is placed last per rules due to zero output in recent runs, despite pending ideas.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (423 total)",
-       "text": "Why must hands remain clear and loose clothing be avoided at the machines? | What is the purpose of good housekeeping in a workshop? | What is lockout and tag-out in workshop practice?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-02T18:12:53.286Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -693,8 +648,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T00:17:56.247Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to fix broken visual assets blocking study flow. Since papers/sidecar files are missing, Invention is needed immediately to generate fresh exam materials rather than relying on empty storage. MetaLearn should follow to synthesize new patterns from the generated content, addressing the 80 open faults efficiently.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (461 total)",
+       "text": "What is the method to find the resultant of non-concurrent coplanar forces? | Three concurrent forces keep a point in equilibrium; two of them are 30 N and 40 | What is the triangle law of forces?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-02T23:56:59.428Z",
+ "lastRun": "2026-11-03T00:17:56.247Z",
  "model": "qwen3.5:9b"
 }
