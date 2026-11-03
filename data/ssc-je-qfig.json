@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T07:14:27.961Z",
-  "cursor": 537,
-  "built": 504
+  "updatedAt": "2026-11-03T07:44:26.049Z",
+  "cursor": 540,
+  "built": 507
  },
  "figs": {
   "11434945": {
@@ -3027,6 +3027,24 @@
   "3664bb71": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,180 A40,40 0 0,1 140,180 L140,140 A40,40 0 0,1 40,140 Z\"/><line x1=\"140\" y1=\"140\" x2=\"140\" y2=\"180\"/><circle cx=\"140\" cy=\"153.75\" r=\"3\"/><text x=\"145\" y=\"156\" fill=\"#222\">CG</text><text x=\"150\" y=\"140\" fill=\"#222\">r/2</text><text x=\"150\" y=\"180\" fill=\"#222\">r</text><text x=\"30\" y=\"160\" fill=\"#222\">Base</text><text x=\"170\" y=\"160\" fill=\"#222\">Axis</text></svg>",
    "n": "what is the centre of gravity of a solid hemisphere of radius r?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "3ea040f3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M20,100 A80,80 0 0,1 100,180 L100,100 Z\"/><line x1=\"96\" y1=\"100\" x2=\"104\" y2=\"100\"/><line x1=\"100\" y1=\"96\" x2=\"100\" y2=\"104\"/><circle cx=\"100\" cy=\"100\" r=\"3\"/><text x=\"85\" y=\"95\">x̄ = 4r/3π</text><text x=\"115\" y=\"95\">ȳ = 4r/3π</text><text x=\"25\" y=\"190\" font-size=\"10\">Quarter Circle Area</text></svg>",
+   "n": "where is the centroid of a quarter-circular area?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "a9ed3454": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><circle cx=\"180\" cy=\"110\" r=\"80\" stroke-dasharray=\"4,4\"/><path d=\"M 100 110 A 80 80 0 0 0 260 110\" fill=\"none\"/><line x1=\"180\" y1=\"110\" x2=\"180\" y2=\"190\" stroke-dasharray=\"2,2\"/><line x1=\"180\" y1=\"110\" x2=\"180\" y2=\"60\"/><text x=\"175\" y=\"100\" text-anchor=\"end\">Diameter</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">y̅ = 2r/π</text><text x=\"180\" y=\"60\" text-anchor=\"middle\">O</text><line x1=\"180\" y1=\"110\" x2=\"230\" y2=\"110\" stroke-dasharray=\"2,2\"/><text x=\"240\" y=\"115\" text-anchor=\"start\">r</text></svg>",
+   "n": "what is the centroidal distance of a semicircular arc (wire) from the diameter?",
+   "sub": "emech",
+   "at": "2026-11-03"
+  },
+  "b679aa35": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" />\n  <line x1=\"40\" y1=\"90\" x2=\"320\" y2=\"90\" />\n  <line x1=\"40\" y1=\"40\" x2=\"40\" y2=\"180\" />\n  <circle cx=\"180\" cy=\"90\" r=\"4\" />\n  <text x=\"175\" y=\"95\">Centroid</text>\n  <line x1=\"180\" y1=\"96\" x2=\"180\" y2=\"130\" stroke-dasharray=\"4\" />\n  <line x1=\"146\" y1=\"90\" x2=\"146\" y2=\"130\" stroke-dasharray=\"4\" />\n</svg>",
+   "n": "where is the centroid of a rectangle?",
    "sub": "emech",
    "at": "2026-11-03"
   }

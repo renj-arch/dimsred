@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T01:27:59.968Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of resolving these high-priority technical debts. Since papers, questions, syllabus, and sidecar files are absent, we must prioritize generating core content via MockPapers to fill the 'papers: false' gap before attempting complex pattern generation or meta-learning. Invention agents have produced zero output for two consecutive runs; per rules, they move last despite pending ideas, as the",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (470 total)",
-       "text": "A 20 N force acts at a perpendicular distance of 0.5 m from a point. Find the mo | What is the difference between moment of a force and moment of a couple? | State Varignon's theorem (principle of moments)."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "11 fresh mock questions on Strength of Materials (360 in pool)",
-       "text": "Strength of Materials"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T02:01:33.180Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -692,8 +636,69 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-03T07:58:09.884Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures must run first to address broken figures and generate missing data. Since mainsfresh produced 0 fixes in the last run while others produced results, it will be scheduled last per the 'starve' rule for underperformers. The sequence prioritizes fixing critical infrastructure before generating new content.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention",
+     "MockPapers",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (507 total)",
+       "text": "Where is the centroid of a quarter-circular area? | What is the centroidal distance of a semicircular arc (wire) from the diameter? | Where is the centroid of a rectangle?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "8 fresh mock questions on Industrial Engineering (360 in pool)",
+       "text": "Industrial Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T07:37:10.598Z",
+ "lastRun": "2026-11-03T07:58:09.884Z",
  "model": "qwen3.5:9b"
 }
