@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T02:41:23.738Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address broken diagrams immediately to restore trust. MockPapers should follow to fill the missing question banks, as files are currently absent. MetaLearn and Invention agents have produced zero output for two consecutive runs and will be placed last to prevent starvation of core maintenance tasks.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (479 total)",
-       "text": "What are the types of equilibrium of a body? | What is a free body diagram (FBD)? | A simply supported beam of span L carries a central point load W. What are the s"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T03:10:43.298Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -701,8 +656,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T09:13:08.248Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-03T08:59:05.855Z",
+ "lastRun": "2026-11-03T09:13:08.248Z",
  "model": "qwen3.5:9b"
 }
