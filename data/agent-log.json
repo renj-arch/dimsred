@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T07:58:09.884Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; bankfigures must run first to address broken figures and generate missing data. Since mainsfresh produced 0 fixes in the last run while others produced results, it will be scheduled last per the 'starve' rule for underperformers. The sequence prioritizes fixing critical infrastructure before generating new content.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (507 total)",
-       "text": "Where is the centroid of a quarter-circular area? | What is the centroidal distance of a semicircular arc (wire) from the diameter? | Where is the centroid of a rectangle?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Industrial Engineering (360 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T08:23:52.968Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -755,8 +694,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-03T16:07:23.999Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "BankFigures is the primary engine for fixing figure gaps (79 open) and critical faults (23), so it must lead. MockPapers should follow to generate fresh exam content since papers are currently missing. MainsFresh is needed next to address the lack of sidecar/syllabus files and ensure daily freshness. Invention will be placed last as a lower-priority filler for pending ideas, adhering to the rule that agents with zero output in recent runs go last.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (544 total)",
+       "text": "What is the relation between linear and angular velocity of a point at radius r? | Write the expression for centripetal acceleration. | What is tangential acceleration when the angular acceleration is α at radius r?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T15:42:28.230Z",
+ "lastRun": "2026-11-03T16:07:23.999Z",
  "model": "qwen3.5:9b"
 }
