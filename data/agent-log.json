@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T01:28:04.701Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults and figure gaps are the highest priority; bank figures must run first to fix broken visuals, followed by mock papers to address incomplete exam materials. MetaLearn is scheduled last as it produced zero fixes in the previous two runs, indicating it may be starved of inputs rather than broken. MainsFresh is deferred since papers are not currently present in the file system.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (583 total)",
-       "text": "Why can a diesel (CI) engine work at a much higher compression ratio than a petr | How does the actual p-V diagram of an engine differ from the ideal air-standard  | Why is the whole area below the exhaust line negative pumping work in the actual"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T01:56:44.239Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -644,8 +604,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T07:29:35.337Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-04T07:09:35.250Z",
+ "lastRun": "2026-11-04T07:29:35.337Z",
  "model": "qwen3.5:9b"
 }
