@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T05:32:09.097Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults and figure gaps are the highest priority; mainsfresh produced zero for two consecutive runs so it will be starved to the end of the queue. The plan prioritizes fixing broken figures, generating mock papers to address content depth, then patterns and invention to fill remaining gaps.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (595 total)",
-       "text": "Write the air-standard efficiency of an Otto cycle. | Define relative efficiency of an engine. | Define volumetric efficiency of an engine."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T06:00:09.044Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -611,8 +566,36 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T14:30:04.100Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T14:15:49.071Z",
+ "lastRun": "2026-11-04T14:30:04.100Z",
  "model": "qwen3.5:9b"
 }
