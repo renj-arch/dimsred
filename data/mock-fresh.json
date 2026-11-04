@@ -1,51 +1,15 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-03T23:41:52.619Z",
-  "cursor": 16,
+  "updatedAt": "2026-11-04T00:18:29.748Z",
+  "cursor": 17,
   "count": 360,
   "lastAttempt": {
-   "at": "2026-11-03T23:41:52.619Z",
-   "reason": "added 11"
+   "at": "2026-11-04T00:18:29.748Z",
+   "reason": "added 4"
   }
  },
  "items": [
-  {
-   "ex": "ssc-je",
-   "sub": "Gas Turbines",
-   "q": "What is the effect of increasing the inlet air temperature on the power output and thermal efficiency of a simple gas turbine cycle?",
-   "a": "Power output decreases; Thermal efficiency remains theoretically unchanged (in an ideal cycle).",
-   "h": "Higher inlet temp reduces density but increases peak cycle temperature.",
-   "s": "Increasing inlet air temperature reduces the air density, which lowers the mass flow rate through the compressor and combustor, thus decreasing the power output. However, in an ideal Brayton cycle with fixed pressure ratios and maximum temperatures, the thermal efficiency depends only on the pressure ratio and is theoretically independent of the inlet temperature.",
-   "at": "2026-11-01"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Gas Turbines",
-   "q": "Why are 'vanes' or 'stators' placed between rotating turbine blades in a multi-stage axial flow gas turbine?",
-   "a": "To convert kinetic energy from the rotor into static pressure and prepare the flow for the next stage.",
-   "h": "To redirect flow and maintain constant absolute velocity direction.",
-   "s": "In an axial flow turbine, the rotating blades extract energy from the gas, causing the flow to swirl. The stationary vanes (stators) straighten this flow, converting relative kinetic energy into static pressure rise and directing the flow axially onto the next row of rotor blades to ensure efficient energy extraction in subsequent stages.",
-   "at": "2026-11-01"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Power Plant Engineering",
-   "q": "Define the term 'Heat Rate' in a thermal power plant and state its ideal value for a Carnot cycle operating between 100°C and 500°C.",
-   "a": "Theoretically, minimum heat rate is 2640 kJ/kWh (derived from Carnot efficiency).",
-   "h": "Relate heat input to work output using Carnot efficiency limits.",
-   "s": "Heat rate is the ratio of heat energy input to the power output. For a Carnot cycle between 373 K and 773 K, efficiency η = 1 - (373/773) ≈ 0.517. Since 1 kWh = 3600 kJ, the minimum heat rate is 3600 / 0.517 ≈ 2640 kJ/kWh. Real plants have much higher heat rates due to irreversibilities.",
-   "at": "2026-11-01"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Power Plant Engineering",
-   "q": "A coal-fired boiler receives coal at a rate of 500 kg/h with a calorific value of 30 MJ/kg. The steam generated is 8 MPa, 500°C from feed water at 140°C. Calculate the overall thermal efficiency if the turbine-generator set has an isentropic efficiency of 90% and mechanical-electrical losses are negligible (Assume h_steam ≈ 3375 kJ/kg, h_feed ≈ 588 kJ/kg).",
-   "a": "Overall thermal efficiency is approximately 42.6%.",
-   "h": "Calculate heat input from coal and useful work output from enthalpy drop.",
-   "s": "Heat input rate = Mass flow × Calorific Value = (500/3600) kg/s × 30,000 kJ/kg ≈ 4167 kW. Net work output per kg steam = h_steam - h_feed = 3375 - 588 = 2787 kJ/kg. Power output = (500/3600) × 2787 ≈ 386 kW. Efficiency = (386 / 4167) × 100 ≈ 9.3%. Note: This low efficiency suggests significant losses or that the enthalpy values provided represent a specific partial cycle step, but mathematically based on the given numbers, this is the result.",
-   "at": "2026-11-01"
-  },
   {
    "ex": "ssc-je",
    "sub": "Power Plant Engineering",
@@ -3249,6 +3213,42 @@
    "h": "Analyze the impact of superheating/pressure increase on the T-s diagram expansion line.",
    "s": "On a T-s diagram, increasing the boiler pressure shifts the saturation dome to the right. While this expands the area under the heat addition curve (increasing efficiency), it also causes the isentropic expansion line to cut deeper into the wet region of the saturation dome. Consequently, while more work is extracted per unit mass, the steam exiting the turbine contains a higher percentage of liquid droplets, which can erode blades if not managed by reheat.",
    "at": "2026-11-03"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Define the function of a 'feed check valve' in a boiler feed water system and explain why it is critical for safety.",
+   "a": "A feed check valve allows water to flow only from the pump to the boiler drum, preventing reverse flow (backflow) if the pump fails or stops. This is critical because backflow could cause the pump to run dry, leading to overheating and catastrophic failure of the pump impeller.",
+   "h": "Identify the component that prevents backflow into the pump when it stops.",
+   "s": "In a high-pressure boiler system, the feed pump creates significant pressure to push water into the drum. If the pump stops suddenly due to power failure or mechanical jamming, the high pressure inside the boiler drum would force hot water back into the suction side of the stopped pump. The feed check valve acts as a one-way gate, closing immediately upon detecting this reverse flow tendency, thereby protecting the pump from damage and maintaining system integrity.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "A boiler produces 2000 kg/h of steam at 15 bar with a dryness fraction of 0.95. If the enthalpy of saturated liquid (hf) is 844.7 kJ/kg and latent heat (hfg) is 1947.3 kJ/kg, calculate the equivalent evaporation from and at 100°C.",
+   "a": "1984.6 kg/h",
+   "h": "Use the formula: Mass × [hg + x·hfg - hf] / 2257, where 2257 kJ/kg is latent heat of water at 100°C.",
+   "s": "First, calculate the total enthalpy of the steam produced: h_steam = hf + x·hfg = 844.7 + (0.95 × 1947.3) = 2687.635 kJ/kg. Next, find the heat absorbed per kg of steam relative to water at 100°C: q_absorbed = h_steam - hf_100C = 2687.635 - 419.04 (approx latent heat reference) or simply use the standard equivalent evaporation formula: E.E. = m × [(hf + x·hfg) - hf_ref] / 2257. Assuming hf at 100°C is ~419 kJ/kg, q_net = 2687.635 - 419 = 2268.635 kJ/kg. E.E. = (2000 × 2268.635) / 2257 ≈ 1984.6 kg/h.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Calculate the percentage increase in boiler efficiency if the heat loss due to dry flue gases decreases from 8% to 5%, assuming all other losses remain constant.",
+   "a": "3.33%",
+   "h": "Recall that boiler efficiency = 100% - sum of all heat losses.",
+   "s": "Boiler efficiency is defined as the ratio of heat utilized to heat supplied. Heat losses include dry flue gases, moisture in fuel, radiation, etc. If the loss due to dry flue gases drops from 8% to 5%, and all other losses are constant, the net heat recovered by the boiler increases by exactly the difference in these losses. Therefore, the efficiency increases by 3 percentage points (from X% to X+3%).",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Boilers",
+   "q": "Why are 'economizers' always installed on the flue gas path before the chimney and what fluid flows through them?",
+   "a": "Economizers are installed in the flue gas path (between the boiler furnace and the chimney) to recover waste heat from hot exhaust gases. Water from the feed pump flows through the economizer tubes, entering as cold feed water and leaving as heated feed water before entering the drum.",
+   "h": "Identify the heat recovery device that preheats feed water using waste heat.",
+   "s": "Flue gases exiting the boiler still contain significant thermal energy (often 200-300°C). An economizer captures this heat to preheat the incoming feed water. This reduces the fuel required in the furnace to generate steam, improving overall efficiency. It is placed before the chimney because that is where the hot gas stream exists; placing it after would mean no heat source remains.",
+   "at": "2026-11-04"
   }
  ]
 }
