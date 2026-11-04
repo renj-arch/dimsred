@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T07:09:35.250Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults and figure gaps are blocking exam prep; prioritize BankFigures to fix broken visual data immediately. MockPapers must be generated next since file presence is false for all study materials. Invention follows to populate the pending ideas queue, while MetaLearn addresses remaining syllabus gaps. MainFresh is deferred as it requires prior content generation.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (600 total)",
-       "text": "How is the indicated power obtained in a Morse test? | Why cannot the Morse test be applied to a single-cylinder engine? | List the components of a heat balance sheet of an engine."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T07:29:35.337Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -611,8 +566,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T23:30:13.393Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-04T21:17:34.050Z",
+ "lastRun": "2026-11-04T23:30:13.393Z",
  "model": "qwen3.5:9b"
 }
