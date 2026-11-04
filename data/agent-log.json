@@ -524,61 +524,33 @@
    ]
   },
   {
-   "at": "2026-11-04T11:21:57.844Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
+   "at": "2026-11-04T11:48:58.613Z",
+   "model": "batiai/qwen3.8-27b:iq3",
+   "totalFixes": 3,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
+     "agent": "archive-writer",
+     "count": 3
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address broken diagrams immediately as they block content consumption. MockPapers are next to fill question banks, followed by ExamPatterns for syllabus alignment. MainsFresh will generate fresh daily material once core structure is stable. Invention agents have produced zero fixes in the last two runs and will be queued last per protocol.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "archive-writer",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (608 total)",
-       "text": "What is the function of the throttle valve? | Why does a simple carburettor give a rich mixture as speed increases? | Why is fuel injected directly (not carburetted) in CI engines?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
+       "page": "archive (Animal Husbandry & Dairy / Animal Husbandry & Dairy)",
+       "fix": "Explained \"What do you know about Fereydoon Batmanghelidj (1931 – 15 November 2004)?\"",
+       "text": "1) VERDICT: Fereydoon Batmanghelidj (1931–2004) was an Iranian doctor, naturopath, HIV/AIDS denialist, and writer. 2) WHY: He is best known for controversial alternative health theories, specifically the 'alkaline theory' of disease, which posits that cancer is a fungal infection caused by acidic body conditions. 3) TRAPS: Do not confuse his naturopathic background with mainstream medical consensus; his HIV/AIDS denialism is a distinct, discredited position. 4) HOOK: Remember 'Iranian Doctor + D"
+      },
       {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Workshop Technology (360 in pool)",
-       "text": "Workshop Technology"
+       "page": "archive (Animal Husbandry & Dairy / Animal Husbandry & Dairy)",
+       "fix": "Explained \"Fereydoon Batmanghelidj (_____ – 15 November 2004) was an Iranian doctor, naturopath, HIV/\"",
+       "text": "1. VERDICT: The correct birth year is 1931. 2. WHY: Fereydoon Batmanghelidj was an Iranian doctor and naturopath who lived from 1931 until his death on 15 November 2004. 3. TRAPS: Do not confuse his controversial HIV/AIDS denialist writings with mainstream medical consensus; the question strictly tests biographical dates, not medical validity. 4. HOOK: Remember '31' as the start of his 73-year life. Exam trap: Ignore the distracting category label; this is a general knowledge fact, not animal hu"
+      },
+      {
+       "page": "archive (Animal Husbandry & Dairy / Animal Husbandry & Dairy)",
+       "fix": "Explained \"He attended secondary school in the _____, at Fettes College in Scotland, and later gradua\"",
+       "text": "VERDICT: The answer is United Kingdom. WHY: Fettes College is a prestigious school in Scotland, and St Mary's Hospital Medical School is part of London University, both located in the UK. TRAPS: Scotland is a nation within the UK, not a separate country for this context; London is in England, not Scotland. HOOK: Remember Fettes (Scotland) and St Mary's (London) are both UK institutions. Exam trap: Do not confuse Scotland with an independent nation in this context."
       }
      ]
     }
