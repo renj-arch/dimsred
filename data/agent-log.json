@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T17:25:30.224Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address critical visual errors first to restore trust. MockPapers should follow to generate fresh exam simulations since papers are absent, directly tackling the 'no papers' file state. MainsFresh is essential for daily content freshness as files are missing. Invention and MetaLearn agents produced zero fixes in the last two runs, so they are deprioritized to this run per the rule to starve underperformers unless a go",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (550 total)",
-       "text": "Define the efficiency of a machine. | What is an ideal machine? | State the law of a machine."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T18:11:41.962Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -686,8 +646,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T01:56:44.239Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity; unfinished standing goals like papers and questions must be prioritized over new ideas since files are currently missing. Agents 'exampatterns', 'invention', and 'metalearn' produced zero fixes in the last two runs and will be scheduled last to prevent starvation while high-priority agents clear the backlog.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (585 total)",
+       "text": "Why must ignition be advanced (earlier) as engine speed increases? | Give typical valve timing angles for an SI engine. | Why is the exhaust valve opened well before BDC?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "8 fresh mock questions on Power Plant Engineering (360 in pool)",
+       "text": "Power Plant Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T01:28:04.701Z",
+ "lastRun": "2026-11-04T01:56:44.239Z",
  "model": "qwen3.5:9b"
 }

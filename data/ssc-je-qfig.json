@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-04T01:22:17.401Z",
-  "cursor": 624,
-  "built": 583
+  "updatedAt": "2026-11-04T01:38:44.103Z",
+  "cursor": 627,
+  "built": 585
  },
  "figs": {
   "11434945": {
@@ -3501,6 +3501,18 @@
   "ad5e6831": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">P-V Diagram: Exhaust Process</text><path d=\"M40 160 L70 140 L90 130 L110 150 L130 180\" fill=\"none\" stroke=\"#222\"/><path d=\"M130 180 L160 200 L180 210 L200 200 L230 180\" fill=\"none\" stroke=\"#222\"/><text x=\"55\" y=\"175\">V</text><text x=\"215\" y=\"195\">P</text><path d=\"M130 180 L160 200\" stroke-dasharray=\"4,2\"/><text x=\"145\" y=\"195\">Negative Work (Area)</text><circle cx=\"145\" cy=\"195\" r=\"3\" fill=\"#222\"/><text x=\"235\" y=\"185\">Exhaust Valve Opens</text><text x=\"235\" y=\"205\">Piston Pushes Gas Out</text><path d=\"M160 200 L180 210\" stroke-dasharray=\"4,2\"/><text x=\"175\" y=\"215\">Intake Valve Opens</text><text x=\"175\" y=\"235\">Piston Pulls Charge In</text></svg>",
    "n": "why is the whole area below the exhaust line negative pumping work in the actual p-v diagram?",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "e62cdaa4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Crank Angle (°)</text><line x1=\"40\" y1=\"20\" x2=\"320\" y2=\"20\"/><text x=\"180\" y=\"35\">TDC</text><text x=\"170\" y=\"60\">Combustion End</text><path d=\"M 80 20 L 140 20 L 140 100 L 80 100 Z\"/><text x=\"95\" y=\"60\">Flame Travel Time</text><line x1=\"140\" y1=\"20\" x2=\"320\" y2=\"20\"/><text x=\"230\" y=\"25\">Spark Timing (°)</text><path d=\"M 80 20 L 120 20 L 120 80 L 80 80 Z\"/><text x=\"95\" y=\"50\">Low RPM</text><path d=\"M 80 20 L 160 20 L 160 70 L 80 70 Z\"/><text x=\"110\" y=\"45\">High RPM</text><text x=\"10\" y=\"130\">Explanation:</text><text x=\"15\" y=\"150\">Flame speed is constant.</text><text x=\"15\" y=\"165\">Higher RPM = less time.</text><text x=\"15\" y=\"180\">Spark must start earlier</text><text x=\"15\" y=\"195\">to finish near TDC.</text></svg>",
+   "n": "why must ignition be advanced (earlier) as engine speed increases?",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "58f09342": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Cylinder Section</text><path d=\"M 40 100 L 320 100\"/><path d=\"M 40 100 L 40 20 L 320 20 L 320 100\" stroke-dasharray=\"4,2\"/><ellipse cx=\"180\" cy=\"100\" rx=\"140\" ry=\"60\" fill=\"none\" stroke=\"#222\"/><path d=\"M 180 40 L 180 160\" stroke-dasharray=\"2,2\"/><circle cx=\"180\" cy=\"40\" r=\"5\" fill=\"none\" stroke=\"#222\"/><circle cx=\"180\" cy=\"160\" r=\"5\" fill=\"none\" stroke=\"#222\"/><path d=\"M 320 80 L 340 80 L 340 120 L 320 120 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"345\" y=\"100\" text-anchor=\"start\">Exhaust Valve</text><path d=\"M 180 60 L 180 140\" stroke-dasharray=\"2,2\"/><text x=\"170\" y=\"95\" text-anchor=\"end\">Piston</text><text x=\"180\" y=\"35\" text-anchor=\"middle\">Top Dead Centre (TDC)</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Bottom Dead Centre (BDC)</text><path d=\"M 240 70 L 260 90 L 240 110 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"235\" y=\"95\" text-anchor=\"end\">Blow-down</text></svg>",
+   "n": "why is the exhaust valve opened well before bdc?",
    "sub": "ice",
    "at": "2026-11-04"
   }
