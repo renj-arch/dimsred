@@ -1,96 +1,15 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-04T04:45:20.855Z",
-  "cursor": 6,
+  "updatedAt": "2026-11-04T05:50:11.750Z",
+  "cursor": 7,
   "count": 360,
   "lastAttempt": {
-   "at": "2026-11-04T05:27:12.066Z",
-   "reason": "nothing"
+   "at": "2026-11-04T05:50:11.750Z",
+   "reason": "added 9"
   }
  },
  "items": [
-  {
-   "ex": "ssc-je",
-   "sub": "Air Compressors",
-   "q": "Define the term 'Clearance Volume' in a reciprocating air compressor and explain its primary effect on the volumetric efficiency of the machine.",
-   "a": "The clearance volume is the space remaining in the cylinder when the piston is at top dead centre (TDC). Its primary effect is to reduce volumetric efficiency by causing re-expansion of trapped air, which lowers the mass of fresh air drawn into the cylinder during the suction stroke.",
-   "h": "Identify the space between piston head and cylinder head at top dead centre.",
-   "s": "Clearance volume refers to the void between the piston face and the cylinder head when the piston reaches its highest point. As the compressor operates, high-pressure gas trapped in this volume expands back into the cylinder during the suction stroke before the intake valve opens. This re-expansion reduces the effective suction volume, thereby decreasing the volumetric efficiency of the reciprocating compressor.",
-   "at": "2026-11-02"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Air Compressors",
-   "q": "A single-stage reciprocating air compressor delivers 0.2 m³/min of free air at 7 bar (absolute) from an inlet pressure of 1 bar. If the compression follows the law PV^1.3 = constant, calculate the indicated power required assuming the suction temperature is 290 K.",
-   "a": "Indicated Power ≈ 4.68 kW",
-   "h": "Use the formula for work done in polytropic compression: W = (n/(n-1)) * P1 * V1 * [(P2/P1)^((n-1)/n) - 1].",
-   "s": "Given: P1=1 bar, P2=7 bar, V_dot_free=0.2 m³/min = 3.33e-3 m³/s, n=1.3. First, calculate the work per unit mass or directly use the volume flow rate at suction conditions assuming ideal gas behavior to find the specific volume. The work done per second (power) is calculated using the polytropic work formula for compression. Substituting the values yields approximately 4.68 kW.",
-   "at": "2026-11-02"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Air Compressors",
-   "q": "Calculate the theoretical power required to drive an air compressor if the compression process is isothermal (PV = constant) from 1 bar and 300 K to 6 bar, delivering a mass flow rate of 0.5 kg/s.",
-   "a": "Theoretical Isothermal Power ≈ 87.4 kW (assuming air R=287 J/kgK)",
-   "h": "For isothermal compression, work depends only on pressure ratio and temperature: W = m_dot * R * T1 * ln(P2/P1).",
-   "s": "Given: P1=1 bar, P2=6 bar, T1=300 K, m_dot=0.5 kg/s. For an isothermal process, the work done per unit time is given by W = m_dot * R * T1 * ln(P2/P1). Using the gas constant for air R = 287 J/kg·K, we substitute the values: W = 0.5 * 287 * 300 * ln(6/1). This calculation yields approximately 87,400 Watts or 87.4 kW.",
-   "at": "2026-11-02"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Power Plant Engineering",
-   "q": "Define 'Heat Rate' in a thermal power plant and state its typical unit of measurement.",
-   "a": "The ratio of heat input (fuel) to electrical output, typically measured in kJ/kWh or kcal/kWh.",
-   "h": "Relates fuel energy input to electrical output.",
-   "s": "Heat rate is a measure of the efficiency of a power plant's cycle. It represents the amount of thermal energy required from the fuel to generate one kilowatt-hour of electricity. A lower heat rate indicates a more efficient plant.",
-   "at": "2026-11-02"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Power Plant Engineering",
-   "q": "A coal-fired boiler receives 1000 kg/h of coal with a calorific value of 5000 kcal/kg. If the plant generates 8000 kW of power, calculate the overall thermal efficiency.",
-   "a": "29.4 %",
-   "h": "Convert units to match and use Efficiency = Output/Input.",
-   "s": "First, convert the heat input rate: 1000 kg/h * 5000 kcal/kg = 5,000,000 kcal/h. Convert this to kW (1 kcal/s ≈ 1.163 W, so 1 kcal/h ≈ 0.001163 kW): Input = 5,000,000 * 0.001163 = 5815 kW. Efficiency = (Output / Input) * 100 = (8000 / 5815) * 100 ≈ 29.4 %.",
-   "at": "2026-11-02"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Power Plant Engineering",
-   "q": "Explain the primary function of a 'Feedwater Heater' in a Rankine cycle power plant.",
-   "a": "To increase the average temperature of heat addition in the boiler, thereby improving the overall thermal efficiency of the Rankine cycle.",
-   "h": "Uses extracted steam to preheat water before it enters the boiler.",
-   "s": "Feedwater heaters utilize steam extracted from intermediate turbine stages to heat the condensate returning from the condenser. By raising the enthalpy of the feedwater before it enters the boiler, less fuel is required to generate steam, which directly increases the cycle's thermal efficiency.",
-   "at": "2026-11-02"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Power Plant Engineering",
-   "q": "Calculate the theoretical maximum efficiency (Carnot efficiency) of a steam power plant operating between a boiler temperature of 500°C and a condenser temperature of 30°C.",
-   "a": "86.7 %",
-   "h": "Use Carnot formula: η = 1 - (Tc/Th), converting temperatures to Kelvin.",
-   "s": "Convert temperatures to Kelvin: Th = 500 + 273 = 773 K, Tc = 30 + 273 = 303 K. Apply the Carnot efficiency formula: η = 1 - (Tc/Th) = 1 - (303/773) ≈ 0.608 or 60.8%. This represents the absolute maximum theoretical efficiency possible for any heat engine operating between these two temperature limits.",
-   "at": "2026-11-02"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Power Plant Engineering",
-   "q": "What is the primary purpose of a 'Scavenging Air' system in a diesel power generation set?",
-   "a": "To cool the intake charge and remove dust/particulates from the incoming air to ensure efficient combustion and prevent engine wear.",
-   "h": "Related to cooling and cleaning air before it enters the combustion chamber.",
-   "s": "In large diesel generators, scavenging air systems (often using air pre-coolers or electrostatic precipitators) serve to lower the temperature of the intake air (increasing density for more power) and filter out dust. This clean, dense air ensures complete fuel combustion and reduces the risk of abrasive wear on piston rings and cylinder liners.",
-   "at": "2026-11-02"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Power Plant Engineering",
-   "q": "A hydroelectric plant has a head of 100 m, a flow rate of 50 m³/s, and an overall efficiency (turbine + generator) of 85%. Calculate the electrical power output in MW.",
-   "a": "42.13 MW",
-   "h": "Use P = ρ * g * H * Q * η. Use ρ=1000 kg/m³, g=9.81 m/s².",
-   "s": "Given: Head (H) = 100 m, Flow (Q) = 50 m³/s, Efficiency (η) = 0.85, ρ = 1000 kg/m³, g = 9.81 m/s². Power P = ρ * g * H * Q * η = 1000 * 9.81 * 100 * 50 * 0.85 = 41,722,500 Watts. Converting to MW: 41,722,500 / 1,000,000 ≈ 41.72 MW.",
-   "at": "2026-11-02"
-  },
   {
    "ex": "ssc-je",
    "sub": "Power Plant Engineering",
@@ -3248,6 +3167,87 @@
    "a": "Modulus of resilience is the energy absorbed per unit volume up to the elastic limit, whereas modulus of toughness is the total energy absorbed per unit volume up to fracture.",
    "h": "Resilience: elastic energy; Toughness: total energy up to fracture",
    "s": "Resilience relates to the material's ability to return to its original shape after deformation (elastic behavior). Toughness includes both elastic and plastic deformation energies, indicating the material's capacity to absorb energy before rupturing.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A rectangular block of weight 500 N rests on a rough horizontal surface with a coefficient of friction μ = 0.4. Calculate the minimum horizontal force required to initiate motion.",
+   "a": "200 N",
+   "h": "Minimum force equals the limiting friction, calculated as μ times the normal reaction.",
+   "s": "On a horizontal surface, the normal reaction N equals the weight W (500 N). The limiting friction f is given by f = μN = 0.4 × 500 N = 200 N. Therefore, an applied horizontal force of at least 200 N is required to overcome static friction and initiate motion.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A simply supported beam of length 6 m carries a point load of 12 kN at its mid-span. Determine the maximum bending moment in the beam.",
+   "a": "18 kNm",
+   "h": "For a central point load, the max bending moment occurs at the center and equals (Load × Length)/4.",
+   "s": "For a simply supported beam with a central point load W, the maximum bending moment occurs at the center and is given by the formula M_max = WL/4. Substituting W = 12 kN and L = 6 m, we get M_max = (12 × 6) / 4 = 18 kNm.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "State the Principle of Transmissibility of forces and provide one practical application in structural analysis.",
+   "a": "Used to simplify free-body diagrams by shifting forces to convenient points for moment calculation.",
+   "h": "A force can be moved along its line of action without changing the external effect on a rigid body.",
+   "s": "The principle states that the state of rest or motion of a rigid body is not altered if a force acting on it is replaced by another force of the same magnitude and direction, provided both act along the same line. This allows engineers to slide forces along their lines of action to intersect other forces, facilitating the construction of vector polygons for equilibrium analysis.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A ladder of length 5 m leans against a smooth vertical wall making an angle of 60° with the horizontal ground. If the coefficient of friction between the ladder and the ground is 0.5, determine if the ladder will slip when a man stands at the top.",
+   "a": "Safe (No slip)",
+   "h": "Compare the required friction (tan θ) with the available friction (μ).",
+   "s": "Resolving forces horizontally and vertically, the friction required at the base to balance the horizontal reaction from the wall is compared with the maximum static friction available (μN). Since the coefficient of friction (0.5) provides a sufficient frictional limit greater than the horizontal component required for equilibrium at 60°, the ladder remains stable.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Differentiate between 'stress' and 'strain' in materials science, giving their respective SI units.",
+   "a": "Stress: Pascal (Pa) or N/m²; Strain: Dimensionless (m/m).",
+   "h": "Stress is force per unit area; Strain is deformation per unit length (dimensionless).",
+   "s": "Stress is defined as the internal restoring force per unit cross-sectional area developed within a material when an external load is applied, measured in Pascals (Pa). Strain is the measure of deformation representing the change in dimension relative to the original dimension, making it a ratio of lengths and thus having no units.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Calculate the moment of inertia of a solid circular section about its centroidal axis if the diameter is 200 mm.",
+   "a": "78539.8 mm⁴ (approx)",
+   "h": "Use formula I = πd⁴/64 for a solid circle.",
+   "s": "The moment of inertia for a solid circular section about its centroidal axis is given by I = πD⁴/64. Substituting D = 200 mm: I = (π × 200⁴) / 64 = (3.14159 × 1,600,000,000) / 64 ≈ 78,539,816 mm⁴ or 78.54 × 10⁶ mm⁴.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Explain the concept of 'virtual work' and state its primary use in solving indeterminate structures.",
+   "a": "Used to determine displacements (deflections) in beams and frames without knowing internal force distributions explicitly.",
+   "h": "Virtual work relates a virtual displacement to the work done by real forces; useful for finding deflections.",
+   "s": "The principle of virtual work states that the total work done by external forces during a small, imaginary (virtual) displacement equals the work done by internal stresses. In structural analysis, this principle is primarily used to calculate deflections at specific points in determinate or indeterminate structures by applying a unit virtual load and integrating the product of real and virtual internal moments.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A particle moves along a straight line with acceleration a = 2t (where t is time in seconds). If initial velocity u = 0, find the velocity at t = 5 s.",
+   "a": "25 m/s",
+   "h": "Integrate acceleration with respect to time; v = ∫a dt + u.",
+   "s": "Acceleration is the rate of change of velocity, so v(t) = ∫ a(t) dt + u. Integrating a = 2t gives v = t² + C. Since initial velocity u = 0 at t = 0, C = 0. Thus, v = t². At t = 5 s, v = 5² = 25 m/s.",
+   "at": "2026-11-04"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Define 'centroid' of a plane area and explain why it is crucial in calculating the bending moment of resistance.",
+   "a": "The point where the entire area can be considered concentrated for moment calculations.",
+   "h": "The centroid is the geometric center; for symmetric shapes, it lies on the axis of symmetry.",
+   "s": "The centroid is the arithmetic mean position of all points in a plane area. In beam theory, the bending stress distribution is linear and zero at the neutral axis, which passes through the centroid of the cross-section. Knowing the location of the centroid is essential to determine the moment of inertia (I) about the neutral axis, which directly governs the beam's bending moment capacity.",
    "at": "2026-11-04"
   }
  ]
