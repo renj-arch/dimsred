@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T06:47:52.933Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visuals blocking study flow. Since papers and questions files are absent, MockPapers is next to generate core exam content from available syllabus data. Invention follows to create unique practice materials where standard banks are insufficient. MetaLearn is queued last as it has produced zero fixes in the last two runs, indicating it needs input from other agents before it can contri",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (598 total)",
-       "text": "Compare typical BSFC values of petrol and diesel engines. | An engine consumes 10 kg of fuel per hour while producing 20 kW of brake power.  | What is the Morse test?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T07:09:35.250Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -628,8 +583,36 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T21:17:34.050Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T16:12:47.931Z",
+ "lastRun": "2026-11-04T21:17:34.050Z",
  "model": "qwen3.5:9b"
 }
