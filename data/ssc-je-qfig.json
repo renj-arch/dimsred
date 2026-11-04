@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-04T09:27:10.359Z",
-  "cursor": 666,
-  "built": 604
+  "updatedAt": "2026-11-04T09:52:21.789Z",
+  "cursor": 669,
+  "built": 605
  },
  "figs": {
   "11434945": {
@@ -3627,6 +3627,12 @@
   "e13d30af": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,100 L100,40 L160,100 L220,60 L280,100 L320,100\"/><circle cx=\"160\" cy=\"100\" r=\"5\"/><text x=\"145\" y=\"95\" font-weight=\"bold\">Throat</text><line x1=\"160\" y1=\"85\" x2=\"160\" y2=\"115\" stroke-dasharray=\"3,3\"/><text x=\"165\" y=\"100\">Low Pressure</text><path d=\"M40,100 L40,190 L320,190 L320,100\"/><text x=\"180\" y=\"185\">Air Stream →</text><circle cx=\"160\" cy=\"40\" r=\"3\"/><text x=\"155\" y=\"35\">Velocity ↑</text><circle cx=\"160\" cy=\"100\" r=\"3\"/><text x=\"155\" y=\"105\">Pressure ↓</text></svg>",
    "n": "what is the function of the venturi in a simple carburettor?",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "f3524ae9": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Air Flow Restriction</text><path d=\"M40 60 L40 160 L120 160 L120 60 Z\" fill=\"#ddd\" stroke=\"#222\"/><path d=\"M120 60 L180 60 L180 160 L120 160 Z\" fill=\"#eee\" stroke=\"#222\"/><path d=\"M180 60 L180 160 M180 160 L240 160 M240 60 L240 160\" stroke-dasharray=\"4,2\"/><circle cx=\"120\" cy=\"110\" r=\"5\" fill=\"#222\"/><text x=\"95\" y=\"115\">Throttle</text><text x=\"130\" y=\"115\">Choke Valve</text><text x=\"205\" y=\"115\">Air</text><path d=\"M40 60 L40 40 M40 160 L40 180 M120 60 L140 60 M120 160 L140 160\" stroke-dasharray=\"2,2\"/><text x=\"30\" y=\"50\">Rich</text><text x=\"30\" y=\"190\">Lean</text></svg>",
+   "n": "what is the function of the choke?",
    "sub": "ice",
    "at": "2026-11-04"
   }
