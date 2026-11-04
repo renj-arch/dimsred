@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T14:40:22.146Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has 81 figure gaps and 23 critical faults, with no papers or questions present. BankFigures is the only agent producing fixes (1 per run), while MockPapers, ExamPatterns, MainsFresh, Invention, and MetaLearn have produced zero fixes for the last two runs; they must be starved to prevent resource waste until inputs exist. The priority is to feed BankFigures to reduce critical faults, then attempt to activate other agents once gaps are addressed or if new content generation becomes viable",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (536 total)",
-       "text": "Define impulse of a force. | State the law of conservation of momentum. | Find the kinetic energy of a 2 kg body moving at 3 m/s."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Thermodynamics (360 in pool)",
-       "text": "Thermodynamics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T15:19:53.881Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -734,8 +673,69 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-04T00:06:18.168Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content creation. MainsFresh produced 0 fixes in the last two runs, so it is moved to the end of the queue while BankFigures and MockPapers address the backlog. Once high-priority gaps are reduced, Invention can be utilized for fresh material.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (576 total)",
+       "text": "At what speed relative to the crankshaft does the camshaft of a four-stroke engi | What is valve overlap and why is it provided? | What is the function of the crankcase in an engine?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "11 fresh mock questions on Steam Turbines (360 in pool)",
+       "text": "Steam Turbines"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-03T23:21:12.748Z",
+ "lastRun": "2026-11-04T00:06:18.168Z",
  "model": "qwen3.5:9b"
 }

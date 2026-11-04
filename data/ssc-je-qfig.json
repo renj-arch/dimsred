@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-03T22:43:13.200Z",
-  "cursor": 612,
-  "built": 573
+  "updatedAt": "2026-11-03T23:32:13.564Z",
+  "cursor": 615,
+  "built": 576
  },
  "figs": {
   "11434945": {
@@ -3441,6 +3441,24 @@
   "bc55a411": {
    "svg": "<svg viewBox=\"0 0 360 220\" xmlns=\"http://www.w3.org/2000/svg\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\" />\n <circle cx=\"180\" cy=\"110\" r=\"60\" />\n <path d=\"M 180 50 L 180 170\" />\n <path d=\"M 120 110 L 240 110\" />\n <path d=\"M 180 50 A 60 60 0 0 1 180 170\" />\n <text x=\"180\" y=\"35\" text-anchor=\"middle\">Flywheel</text>\n <text x=\"180\" y=\"200\" text-anchor=\"middle\">Energy Storage</text>\n <text x=\"30\" y=\"115\">Power Stroke</text>\n <text x=\"30\" y=\"95\">Other Strokes</text>\n</svg>",
    "n": "what is the function of the flywheel?",
+   "sub": "ice",
+   "at": "2026-11-03"
+  },
+  "9cd717f2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"80\" rx=\"10\"/><circle cx=\"80\" cy=\"80\" r=\"30\"/><line x1=\"80\" y1=\"110\" x2=\"80\" y2=\"140\" stroke-dasharray=\"2,2\"/><text x=\"65\" y=\"75\" font-weight=\"bold\">Camshaft</text><text x=\"90\" y=\"135\">(N/2)</text><line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"180\" stroke-width=\"3\"/><circle cx=\"180\" cy=\"40\" r=\"10\"/><circle cx=\"180\" cy=\"180\" r=\"10\"/><text x=\"175\" y=\"35\">Crankshaft</text><text x=\"175\" y=\"195\">(N)</text><line x1=\"240\" y1=\"110\" x2=\"300\" y2=\"110\"/><text x=\"245\" y=\"125\">Speed Ratio</text><text x=\"245\" y=\"140\">= 1 : 2</text></svg>",
+   "n": "at what speed relative to the crankshaft does the camshaft of a four-stroke engine rotate?",
+   "sub": "ice",
+   "at": "2026-11-03"
+  },
+  "af437646": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Piston at TDC -->\n  <line x1=\"180\" y1=\"40\" x2=\"180\" y2=\"60\" />\n  <path d=\"M160,60 L200,60 L190,35 L170,35 Z\" />\n  <!-- Crankshaft -->\n  <circle cx=\"180\" cy=\"140\" r=\"30\" />\n  <line x1=\"180\" y1=\"110\" x2=\"180\" y2=\"170\" />\n  <!-- Connecting Rod -->\n  <line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"140\" />\n  <!-- Inlet Valve Stem -->\n  <rect x=\"150\" y=\"30\" width=\"10\" height=\"100\" />\n  <!-- Exhaust Valve Stem -->\n  <rect x=\"200\" y=\"30\" width=\"10\" height=\"100\" />\n  <!-- Overlap Zone Label -->\n  <text x=\"180\" y=\"25\" text-anchor=\"middle\">Overlap Period</text>\n  <text x=\"180\" y=\"35\" text-anchor=\"middle\" font-size=\"10\">(Both Valves Open)</text>\n  <!-- Gas Flow Arrows -->\n  <path d=\"M145,120 Q160,100 175,120\" fill=\"none\" stroke=\"#222\" stroke-width=\"1\" marker-end=\"url(#arrow)\"/>\n  <path d=\"M215,120 Q200,100 185,120\" fill=\"none\" stroke=\"#222\" stroke-width=\"1\" marker-end=\"url(#arrow)\"/>\n  <!-- Legend/Explanation -->\n  <text x=\"20\" y=\"190\">Better Gas Exchange</text>\n  <text x=\"320\" y=\"190\">Scavenging & Efficiency</text>\n  <!-- Arrow Marker Definition -->\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"5\" refY=\"5\" orient=\"auto\">\n      <path d=\"M0,0 L10,5 L0,10\" fill=\"#222\"/>\n    </marker>\n  </defs>\n</svg>",
+   "n": "what is valve overlap and why is it provided?",
+   "sub": "ice",
+   "at": "2026-11-03"
+  },
+  "9e33e42e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" rx=\"10\"/><circle cx=\"180\" cy=\"110\" r=\"30\"/><line x1=\"180\" y1=\"140\" x2=\"180\" y2=\"170\" stroke-width=\"3\"/><text x=\"165\" y=\"105\">Crankshaft</text><text x=\"195\" y=\"105\">Connecting Rod</text><text x=\"160\" y=\"185\">Oil Reservoir (Sump)</text></svg>",
+   "n": "what is the function of the crankcase in an engine?",
    "sub": "ice",
    "at": "2026-11-03"
   }
