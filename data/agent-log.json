@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T00:18:29.751Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. BankFigures must address the 79 missing figures and 81 open faults first, as broken visuals break trust. MockPapers should follow to ensure question banks are populated alongside the fixed figures. MetaLearn is scheduled last for its zero output in recent runs; it may be starved of inputs rather than broken, so it goes after high-priority maintenance tasks.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (578 total)",
-       "text": "What is the function of the cylinder head and the gasket? | Which air-standard cycle does an SI (petrol) engine follow? | Which air-standard cycle does a CI (diesel) engine follow?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "4 fresh mock questions on Boilers (360 in pool)",
-       "text": "Boilers"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T00:53:37.338Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -666,8 +615,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T06:18:50.742Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-04T06:00:09.044Z",
+ "lastRun": "2026-11-04T06:18:50.742Z",
  "model": "qwen3.5:9b"
 }
