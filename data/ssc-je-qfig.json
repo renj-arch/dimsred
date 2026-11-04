@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-04T02:48:15.457Z",
-  "cursor": 633,
-  "built": 589
+  "updatedAt": "2026-11-04T03:21:32.621Z",
+  "cursor": 636,
+  "built": 591
  },
  "figs": {
   "11434945": {
@@ -3537,6 +3537,18 @@
   "2fed166e": {
    "svg": "<svg viewBox=\"0 0 360 220\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"50\" y=\"40\" width=\"180\" height=\"140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"60\" y=\"70\" font-family=\"sans-serif\" font-size=\"12\">P (Pressure)</text><line x1=\"60\" y1=\"70\" x2=\"60\" y2=\"190\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"40\" y=\"105\" font-family=\"sans-serif\" font-size=\"12\">V (Volume)</text><line x1=\"60\" y1=\"190\" x2=\"230\" y2=\"190\" stroke=\"#222\" stroke-width=\"1.5\"/><polygon points=\"70,180 220,180 220,100 140,60 70,180\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"190\" y=\"175\" font-family=\"sans-serif\" font-size=\"12\">Swept Volume</text><text x=\"130\" y=\"140\" font-family=\"sans-serif\" font-size=\"12\">Work Area</text><text x=\"80\" y=\"205\" font-family=\"sans-serif\" font-size=\"12\">MEP = Work / Swept Vol</text></svg>",
    "n": "define mean effective pressure (mep).",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "96229a00": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\"/><text x=\"50\" y=\"70\">P (Pressure)</text><text x=\"330\" y=\"65\">atm</text><line x1=\"50\" y1=\"65\" x2=\"310\" y2=\"65\"/><text x=\"50\" y=\"180\">V (Volume)</text><text x=\"310\" y=\"175\">max</text><line x1=\"50\" y1=\"175\" x2=\"310\" y2=\"175\"/><path d=\"M 60 65 L 80 40 L 100 65 L 120 90 L 140 65 L 160 40 L 180 65 L 200 90 L 220 65 L 240 40 L 260 65 L 280 90 L 300 65\" fill=\"none\"/><text x=\"170\" y=\"55\">Indicated Pressure Area</text><text x=\"170\" y=\"115\">= Indicated Work</text><text x=\"170\" y=\"145\">Power = (Work × RPM) / Constant</text></svg>",
+   "n": "define indicated power.",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "43087bc1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Friction Power (FP)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"65\">Indicated Power</text><text x=\"315\" y=\"65\">Brake Power</text><polygon points=\"40,60 180,60 180,180 40,180\" fill=\"#222\" stroke=\"none\"/><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"180\"/><text x=\"175\" y=\"195\">FP = IP - BP</text><circle cx=\"180\" cy=\"60\" r=\"3\" fill=\"#222\"/><circle cx=\"180\" cy=\"180\" r=\"3\" fill=\"#222\"/></svg>",
+   "n": "define friction power.",
    "sub": "ice",
    "at": "2026-11-04"
   }

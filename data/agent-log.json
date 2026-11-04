@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T21:18:52.919Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults and massive gaps in figures, papers, and questions, while the last three runs have exclusively used 'bankfigures' with zero output from other agents. As the owner, I must stop starving the content creators (mockpapers, mainsfresh, invention) who are currently idle. I will deploy a balanced squad: BankFigures to tackle the backlog of 79 gaps, MockPapers and MainsFresh to generate the missing exam materials, and Invention to address the pending ideas, ensuring we fix c",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (565 total)",
-       "text": "How often does a power stroke occur in a four-stroke engine? | How often does a power stroke occur in a two-stroke engine? | Compare the power-to-weight ratio of 2-stroke and 4-stroke engines."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Heat Transfer (360 in pool)",
-       "text": "Heat Transfer"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T22:06:35.916Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -662,8 +606,69 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-04T03:49:22.843Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visual content. MockPapers should follow immediately to address the lack of question files, as they directly impact exam readiness. MainsFresh is assigned last because it produced 0 fixes in the previous run, indicating it may be starved of inputs rather than broken, per the rule to deprioritize agents with recent zero output.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (591 total)",
+       "text": "Define indicated power. | Define brake power. | Define friction power."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Thermodynamics (360 in pool)",
+       "text": "Thermodynamics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T03:12:21.149Z",
+ "lastRun": "2026-11-04T03:49:22.843Z",
  "model": "qwen3.5:9b"
 }
