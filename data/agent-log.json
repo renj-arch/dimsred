@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T06:18:50.742Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-04T06:47:52.933Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -590,8 +578,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T16:12:47.931Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must run first to resolve broken visual assets blocking study flow. MockPapers is the only agent producing fixes recently, so it continues immediately to address the 'papers: false' file absence. ExamPatterns and MainsFresh have produced zero fixes in the last two runs despite open gaps, indicating they are starved of inputs rather than broken; they will be placed last in this sequence to avoid wasting budget on empty loop",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Power Plant Engineering (360 in pool)",
+       "text": "Power Plant Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T15:32:35.351Z",
+ "lastRun": "2026-11-04T16:12:47.931Z",
  "model": "qwen3.5:9b"
 }
