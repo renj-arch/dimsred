@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T05:14:39.001Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-04T05:32:09.097Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -567,8 +555,64 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-04T14:15:49.071Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults and figure gaps are the highest priority; archive-writer has produced zero output in the last two runs so it will be scheduled last to allow other agents to clear the backlog first. The queue shows no standing goals for papers or questions, so we focus on fixing existing gaps before attempting new inventions.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "1 bank figure(s) added (610 total)",
+       "text": "What qualities are required of a diesel spray? | What is the effect of better atomisation on CI combustion? | What is meant by the penetration of a fuel spray?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Boilers (360 in pool)",
+       "text": "Boilers"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T13:56:47.025Z",
+ "lastRun": "2026-11-04T14:15:49.071Z",
  "model": "qwen3.5:9b"
 }
