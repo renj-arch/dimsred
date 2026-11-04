@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-04T06:55:55.322Z",
-  "cursor": 654,
-  "built": 600
+  "updatedAt": "2026-11-04T07:38:39.061Z",
+  "cursor": 657,
+  "built": 602
  },
  "figs": {
   "11434945": {
@@ -3603,6 +3603,18 @@
   "7525fe7d": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Heat Balance Sheet</text><path d=\"M40,40 L100,40\"/><circle cx=\"100\" cy=\"40\" r=\"3\"/><text x=\"115\" y=\"45\">Input (mf × CV)</text><path d=\"M100,40 L100,80\"/><path d=\"M100,80 L160,80\"/><circle cx=\"160\" cy=\"80\" r=\"3\"/><text x=\"175\" y=\"85\">Brake Power</text><path d=\"M100,80 L100,120\"/><path d=\"M100,120 L160,120\"/><circle cx=\"160\" cy=\"120\" r=\"3\"/><text x=\"175\" y=\"125\">Friction Loss</text><path d=\"M100,120 L100,160\"/><path d=\"M100,160 L160,160\"/><circle cx=\"160\" cy=\"160\" r=\"3\"/><text x=\"175\" y=\"165\">Cooling Water</text><path d=\"M100,160 L100,200\"/><path d=\"M100,200 L160,200\"/><circle cx=\"160\" cy=\"200\" r=\"3\"/><text x=\"175\" y=\"205\">Exhaust Gases</text><text x=\"40\" y=\"105\" text-anchor=\"end\">Energy Input = Useful + Losses</text></svg>",
    "n": "list the components of a heat balance sheet of an engine.",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "13e12c2f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">BSFC</text><text x=\"180\" y=\"40\" text-anchor=\"middle\">(g/kWh)</text><line x1=\"30\" y1=\"190\" x2=\"330\" y2=\"190\"/><text x=\"335\" y=\"195\" text-anchor=\"end\">High</text><text x=\"335\" y=\"185\" text-anchor=\"end\">Low</text><line x1=\"30\" y1=\"40\" x2=\"30\" y2=\"190\"/><text x=\"25\" y=\"105\" text-anchor=\"end\">Load (%)</text><text x=\"20\" y=\"195\" text-anchor=\"end\">0</text><text x=\"30\" y=\"45\" text-anchor=\"end\">~100</text><path d=\"M 30 180 Q 180 140 330 170\"/><text x=\"260\" y=\"155\" text-anchor=\"middle\">Min</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">U-shaped curve</text></svg>",
+   "n": "how does bsfc vary with load at constant speed?",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "184570c7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">ηm (Efficiency)</text><line x1=\"30\" y1=\"180\" x2=\"30\" y2=\"40\"/><line x1=\"30\" y1=\"40\" x2=\"350\" y2=\"40\"/><text x=\"330\" y=\"45\">ηm = 1</text><text x=\"330\" y=\"185\">ηm = 0</text><line x1=\"30\" y1=\"175\" x2=\"350\" y2=\"175\"/><polyline points=\"30,160 100,140 180,90 260,50 350,45\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"110\" y=\"155\">Load ↑</text><text x=\"270\" y=\"180\">BP ↑</text></svg>",
+   "n": "how does mechanical efficiency vary with load?",
    "sub": "ice",
    "at": "2026-11-04"
   }
