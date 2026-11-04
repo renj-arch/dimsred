@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T03:49:22.843Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to resolve broken visual content. MockPapers should follow immediately to address the lack of question files, as they directly impact exam readiness. MainsFresh is assigned last because it produced 0 fixes in the previous run, indicating it may be starved of inputs rather than broken, per the rule to deprioritize agents with recent zero output.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (591 total)",
-       "text": "Define indicated power. | Define brake power. | Define friction power."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Thermodynamics (360 in pool)",
-       "text": "Thermodynamics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T04:30:43.577Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -644,8 +583,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T11:21:57.844Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address broken diagrams immediately as they block content consumption. MockPapers are next to fill question banks, followed by ExamPatterns for syllabus alignment. MainsFresh will generate fresh daily material once core structure is stable. Invention agents have produced zero fixes in the last two runs and will be queued last per protocol.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (608 total)",
+       "text": "What is the function of the throttle valve? | Why does a simple carburettor give a rich mixture as speed increases? | Why is fuel injected directly (not carburetted) in CI engines?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Workshop Technology (360 in pool)",
+       "text": "Workshop Technology"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T10:25:51.870Z",
+ "lastRun": "2026-11-04T11:21:57.844Z",
  "model": "qwen3.5:9b"
 }
