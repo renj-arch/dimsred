@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T04:30:43.577Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams, followed by MockPapers to address incomplete exam papers. MainsFresh is next to ensure daily fresh content, while ExamPatterns and Invention will tackle remaining logic gaps and new ideas. MetaLearn is last as it requires stable inputs from other agents.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (592 total)",
-       "text": "Write the brake power equation and the units used. | How is brake power measured? | What losses make up friction power in an engine?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Fluid Mechanics (360 in pool)",
-       "text": "Fluid Mechanics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T04:56:27.256Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -644,8 +583,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T11:57:14.244Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken visual data. MockPapers should follow immediately to address the lack of question files, as they directly impact exam readiness. ExamPatterns is next to fill content depth gaps in solution logic. MainsFresh will be used later if previous agents stall or if fresh daily material is needed after core fixes. Invention and MetaLearn are deferred as they require stable base content first.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "1 bank figure(s) added (609 total)",
+       "text": "Name the types of fuel injection systems used in CI engines. | What injection pressures are used in modern diesel engines? | When is fuel injected in a diesel engine?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Steam Turbines (360 in pool)",
+       "text": "Steam Turbines"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T11:21:57.844Z",
+ "lastRun": "2026-11-04T11:57:14.244Z",
  "model": "qwen3.5:9b"
 }

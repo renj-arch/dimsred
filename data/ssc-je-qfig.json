@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-04T10:40:21.108Z",
-  "cursor": 672,
-  "built": 608
+  "updatedAt": "2026-11-04T11:32:25.032Z",
+  "cursor": 675,
+  "built": 609
  },
  "figs": {
   "11434945": {
@@ -3651,6 +3651,12 @@
   "bf53c82d": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Hot Compressed Air</text><path d=\"M40,60 L320,60\" /><path d=\"M40,60 L40,180\" /><path d=\"M320,60 L320,180\" /><circle cx=\"180\" cy=\"180\" r=\"50\" /><text x=\"170\" y=\"205\">Diesel Fuel</text><path d=\"M180,180 L180,140\" stroke-dasharray=\"3,3\" /><circle cx=\"180\" cy=\"140\" r=\"10\" /><text x=\"175\" y=\"125\">Ignition</text><path d=\"M180,130 L160,100\" /><path d=\"M180,130 L200,100\" /><circle cx=\"160\" cy=\"100\" r=\"5\" /><circle cx=\"200\" cy=\"100\" r=\"5\" /><text x=\"145\" y=\"95\">Spray</text><text x=\"215\" y=\"95\">Mix &amp; Burn</text></svg>",
    "n": "why is fuel injected directly (not carburetted) in ci engines?",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "f5d4254a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Crank Angle (°)</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"60\" y1=\"50\" x2=\"60\" y2=\"70\"/><text x=\"30\" y=\"55\">-20°</text><text x=\"30\" y=\"75\">+20°</text><text x=\"45\" y=\"195\">TDC</text><line x1=\"60\" y1=\"40\" x2=\"60\" y2=\"180\"/><path d=\"M 60 40 L 100 40 L 100 70 L 60 70 Z\" fill=\"#222\" opacity=\"0.3\"/><text x=\"85\" y=\"55\">Ignition</text><text x=\"85\" y=\"75\">Peak</text><path d=\"M 40 180 L 100 180 L 100 150 L 60 150 Z\" fill=\"#222\" opacity=\"0.3\"/><text x=\"70\" y=\"195\">Fuel</text><text x=\"70\" y=\"210\">Injection</text><path d=\"M 40 180 L 60 180\" stroke-dasharray=\"4,2\"/><text x=\"30\" y=\"205\">BTDC</text></svg>",
+   "n": "when is fuel injected in a diesel engine?",
    "sub": "ice",
    "at": "2026-11-04"
   }
