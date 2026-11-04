@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T22:30:14.554Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in papers, questions, syllabus, and sidecar files, with a high backlog of figure gaps (79) and open faults (81). BankFigures is the only agent producing output recently; MockPapers and MainsFresh have produced zero for the last two runs but are essential for the core content goals, so they will be reactivated after BankFigures to clear the standing unfinished goals. Invention and MetaLearn are deprioritized until the immediate content gaps are addressed.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (570 total)",
-       "text": "What is the firing interval of a four-cylinder four-stroke engine? | What is the main advantage of a two-stroke engine? | What is the function of the cylinder in an IC engine?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Industrial Engineering (360 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T23:02:58.910Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -672,8 +616,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T04:56:27.256Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and open faults (81) demand immediate attention before new content generation. BankFigures and MockPapers are the primary drivers for fixing figure gaps (79) and generating fresh exam material, respectively. MainsFresh has produced zero fixes in the last two runs and must be deprioritized to avoid wasting budget on a stalled agent until upstream data flows improve.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "1 bank figure(s) added (593 total)",
+       "text": "Define mechanical efficiency of an engine. | Define indicated thermal efficiency. | Define brake thermal efficiency."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Machine Design (360 in pool)",
+       "text": "Machine Design"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T04:30:43.577Z",
+ "lastRun": "2026-11-04T04:56:27.256Z",
  "model": "qwen3.5:9b"
 }
