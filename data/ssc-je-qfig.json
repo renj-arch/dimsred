@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-04T03:21:32.621Z",
-  "cursor": 636,
-  "built": 591
+  "updatedAt": "2026-11-04T03:58:47.642Z",
+  "cursor": 639,
+  "built": 592
  },
  "figs": {
   "11434945": {
@@ -3549,6 +3549,12 @@
   "43087bc1": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Friction Power (FP)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"65\">Indicated Power</text><text x=\"315\" y=\"65\">Brake Power</text><polygon points=\"40,60 180,60 180,180 40,180\" fill=\"#222\" stroke=\"none\"/><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"180\"/><text x=\"175\" y=\"195\">FP = IP - BP</text><circle cx=\"180\" cy=\"60\" r=\"3\" fill=\"#222\"/><circle cx=\"180\" cy=\"180\" r=\"3\" fill=\"#222\"/></svg>",
    "n": "define friction power.",
+   "sub": "ice",
+   "at": "2026-11-04"
+  },
+  "2bfe08b5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Friction Power (FP)</text><line x1=\"40\" y1=\"50\" x2=\"320\" y2=\"50\"/><circle cx=\"60\" cy=\"50\" r=\"4\"/><circle cx=\"180\" cy=\"50\" r=\"4\"/><circle cx=\"300\" cy=\"50\" r=\"4\"/><text x=\"55\" y=\"65\" text-anchor=\"end\">IP</text><text x=\"175\" y=\"65\" text-anchor=\"middle\">FP</text><text x=\"295\" y=\"65\" text-anchor=\"start\">BP</text><rect x=\"40\" y=\"70\" width=\"80\" height=\"10\"/><rect x=\"120\" y=\"70\" width=\"80\" height=\"10\"/><rect x=\"200\" y=\"70\" width=\"80\" height=\"10\"/><text x=\"45\" y=\"86\">Piston/Ring</text><text x=\"125\" y=\"86\">Bearings</text><text x=\"205\" y=\"86\">Valves/Aux</text><line x1=\"40\" y1=\"95\" x2=\"320\" y2=\"95\"/><text x=\"180\" y=\"115\" text-anchor=\"middle\">Components</text><rect x=\"40\" y=\"120\" width=\"80\" height=\"60\"/><rect x=\"120\" y=\"120\" width=\"80\" height=\"60\"/><rect x=\"200\" y=\"120\" width=\"80\" height=\"60\"/><text x=\"45\" y=\"135\">Friction</text><text x=\"45\" y=\"150\">Losses</text><text x=\"125\" y=\"135\">Friction</text><text x=\"125\" y=\"150\">Losses</text><text x=\"205\" y=\"135\">Friction</text><text x=\"205\" y=\"150\">Losses</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><rect x=\"40\" y=\"180\" width=\"80\" height=\"30\"/><rect x=\"120\" y=\"180\" width=\"80\" height=\"30\"/><rect x=\"200\" y=\"180\" width=\"80\" height=\"30\"/><text x=\"45\" y=\"196\">Piston</text><text x=\"125\" y=\"196\">Bearing</text><text x=\"205\" y=\"196\">Valve Train</text></svg>",
+   "n": "what losses make up friction power in an engine?",
    "sub": "ice",
    "at": "2026-11-04"
   }

@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-03T22:06:35.916Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; bankfigures is the only agent producing output recently, so it leads. Mockpapers produced 1 fix last run but has been zero for two prior runs, indicating a potential input starvation rather than failure, so it follows to clear its backlog. Mainsfresh has never produced output in this session and files are missing, suggesting it needs fresh material generation before it can function; it is placed third to address the 'papers: false' st",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (567 total)",
-       "text": "Compare the thermal efficiency of 2-stroke and 4-stroke engines. | Which engine has better volumetric efficiency, 2-stroke or 4-stroke? | A four-cylinder four-stroke engine runs at 3000 rpm. How many power strokes occu"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Engineering Mathematics (360 in pool)",
-       "text": "Engineering Mathematics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-03T22:30:14.554Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -667,8 +611,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T04:30:43.577Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) are the highest priority; BankFigures must run first to fix broken diagrams, followed by MockPapers to address incomplete exam papers. MainsFresh is next to ensure daily fresh content, while ExamPatterns and Invention will tackle remaining logic gaps and new ideas. MetaLearn is last as it requires stable inputs from other agents.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "1 bank figure(s) added (592 total)",
+       "text": "Write the brake power equation and the units used. | How is brake power measured? | What losses make up friction power in an engine?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Fluid Mechanics (360 in pool)",
+       "text": "Fluid Mechanics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T03:49:22.843Z",
+ "lastRun": "2026-11-04T04:30:43.577Z",
  "model": "qwen3.5:9b"
 }
