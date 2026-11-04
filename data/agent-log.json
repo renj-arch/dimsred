@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T03:01:31.812Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "We have 81 open faults and 79 figure gaps; the last two runs produced zero fixes for exampatterns, invention, metalearn, and mainsfresh, so they must go last to avoid starving them further while we clear critical backlog. Prioritize BankFigures and MockPapers to address immediate content holes, then ExamPatterns to fix pattern gaps, followed by Invention and MetaLearn to revive stalled agents.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (589 total)",
-       "text": "How is the work per cycle obtained from an indicator diagram? | Define mean effective pressure (mep). | Write the formula for indicated power of a four-stroke engine."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Theory of Machines (360 in pool)",
-       "text": "Theory of Machines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T03:12:21.149Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -637,8 +576,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-04T09:43:11.203Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address critical image/data failures first to restore page integrity. MockPapers should follow to fill content voids where questions are missing, directly improving exam readiness. Invention is deferred as it requires stable infrastructure before generating new ideas, while MetaLearn and MainsFresh remain idle due to zero output in recent runs.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "1 bank figure(s) added (604 total)",
+       "text": "What is the purpose of a carburettor? | What is the function of the venturi in a simple carburettor? | List the main parts of a simple carburettor."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T09:18:47.969Z",
+ "lastRun": "2026-11-04T09:43:11.203Z",
  "model": "qwen3.5:9b"
 }
