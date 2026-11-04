@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T01:56:44.239Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity; unfinished standing goals like papers and questions must be prioritized over new ideas since files are currently missing. Agents 'exampatterns', 'invention', and 'metalearn' produced zero fixes in the last two runs and will be scheduled last to prevent starvation while high-priority agents clear the backlog.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (585 total)",
-       "text": "Why must ignition be advanced (earlier) as engine speed increases? | Give typical valve timing angles for an SI engine. | Why is the exhaust valve opened well before BDC?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Power Plant Engineering (360 in pool)",
-       "text": "Power Plant Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T02:14:49.165Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -616,8 +555,31 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-04T08:07:55.040Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal-error",
+       "fix": "Proposal pass failed — see the run log",
+       "detail": "no proposal survived validation (raw items: 4)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-04T07:29:35.337Z",
+ "lastRun": "2026-11-04T08:07:55.040Z",
  "model": "qwen3.5:9b"
 }
