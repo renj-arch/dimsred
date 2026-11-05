@@ -1,57 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T06:34:17.376Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention; BankFigures is the only agent capable of fixing these content holes. MainsFresh must run to ensure daily material freshness, as files are missing. MetaLearn should follow to synthesize fixes into coherent study units. Invention and MockPapers are deferred until core content stability is achieved, preserving budget for high-impact repairs.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (635 total)",
-       "text": "Distinguish quantity and quality governing. | Name the main exhaust pollutants of an SI (petrol) engine. | Name the main exhaust pollutants of a CI (diesel) engine."
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw35owex-mq8t (optional2/history, 10 marks): The architecture of the colonial state in India is often described as having shaped the independent Indian state more th",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T07:27:23.340Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -587,8 +536,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T17:36:23.745Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-05T17:15:46.756Z",
+ "lastRun": "2026-11-05T17:36:23.745Z",
  "model": "qwen3.5:9b"
 }
