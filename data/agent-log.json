@@ -1,34 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T08:01:21.604Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are blocking exam prep; prioritize BankFigures to fix broken content immediately. MainsFresh is needed for daily fresh material since papers/questions/syllabus files are missing. MetaLearn should run last as it produced 0 fixes in the last two runs, likely due to lack of input data until gaps are filled.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": []
-  },
-  {
    "at": "2026-11-05T08:28:12.707Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -553,8 +525,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T18:42:27.225Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures is active and must lead to clear immediate wins. Invention should follow to convert pending ideas into content, while MetaLearn handles the remaining critical faults. MainsFresh and MockPapers are deferred because papers/sidecar files are missing, preventing them from producing output until source material exists.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (651 total)",
+       "text": "Define bulk modulus of a liquid. | What is compressibility of a fluid? | Define surface tension and state its unit."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T18:18:22.974Z",
+ "lastRun": "2026-11-05T18:42:27.225Z",
  "model": "qwen3.5:9b"
 }
