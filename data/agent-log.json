@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T15:32:35.351Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention to restore site integrity and content depth. MainsFresh has produced zero fixes for the last three runs while files are missing, indicating it is starved of inputs rather than broken; it will be scheduled last after core maintenance agents clear the backlog. The execution order prioritizes fixing critical faults via BankFigures, then addressing figure gaps with MockPapers and ExamPatterns to generate fresh material, finally att",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Gas Turbines (360 in pool)",
-       "text": "Gas Turbines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T16:12:47.931Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -635,8 +590,48 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-05T05:55:48.334Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address both immediately as it produced 0 in the last two runs but likely lacks input data, so it is scheduled first to recover. MetaLearn follows to generate fresh syllabus-aligned content since papers/sidecar files are missing, directly tackling the 'papers: false' state. MainsFresh is included next to ensure daily material freshness. ExamPatterns and MockPapers are deferred until BankFigures clears the critical bac",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (634 total)",
+       "text": "What are the effects of overcooling an engine? | What is the purpose of governing an engine? | What is hit-and-miss governing?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T05:27:50.403Z",
+ "lastRun": "2026-11-05T05:55:48.334Z",
  "model": "qwen3.5:9b"
 }
