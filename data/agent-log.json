@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T14:09:38.765Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-05T14:30:04.516Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -551,8 +539,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T20:44:07.310Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address broken diagrams immediately while MetaLearn tackles content voids. MainsFresh is starved (0 fixes in last 3 runs) so it moves last to avoid wasting budget on empty inputs. Pending ideas are low priority until core stability is restored.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (666 total)",
+       "text": "Describe a Bourdon gauge. | Relate gauge, absolute and vacuum pressure. | State Pascal law."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T20:16:23.994Z",
+ "lastRun": "2026-11-05T20:44:07.310Z",
  "model": "qwen3.5:9b"
 }
