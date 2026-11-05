@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T05:27:50.403Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-05T05:55:48.334Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -559,8 +547,48 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-05T16:58:01.507Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the backlog; BankFigures must address the 80 missing figures immediately as they block content consumption. MockPapers should follow to generate fresh exam materials since papers are absent, directly tackling the 'deepest correct content' mission. MetaLearn is scheduled last because it produced zero fixes in the previous two runs and may be starved of inputs rather than broken.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (643 total)",
+       "text": "What is density of a fluid and its unit? | Define specific weight and give its value for water. | What is specific gravity of a fluid?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T16:37:11.651Z",
+ "lastRun": "2026-11-05T16:58:01.507Z",
  "model": "qwen3.5:9b"
 }

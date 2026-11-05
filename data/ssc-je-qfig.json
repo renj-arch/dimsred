@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T16:01:13.586Z",
-  "cursor": 750,
-  "built": 641
+  "updatedAt": "2026-11-05T16:49:39.552Z",
+  "cursor": 753,
+  "built": 643
  },
  "figs": {
   "11434945": {
@@ -3850,6 +3850,18 @@
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">P</text><path d=\"M 60 60 L 300 60\"/><path d=\"M 60 60 L 60 160\"/><path d=\"M 300 60 L 300 160\"/><path d=\"M 60 160 Q 180 200 300 160\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">V</text><text x=\"55\" y=\"65\">Intake</text><text x=\"295\" y=\"65\">Exhaust</text><text x=\"35\" y=\"165\">Compression</text><text x=\"310\" y=\"165\">Expansion</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">Auto-ignition (HCCI)</text></svg>",
    "n": "what is hcci in engines?",
    "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "fec22f19": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Density (ρ) Concept</text><rect x=\"40\" y=\"60\" width=\"280\" height=\"120\" fill=\"none\" stroke=\"#222\"/><text x=\"50\" y=\"90\">Mass (m)</text><path d=\"M 60 90 L 140 90\" stroke=\"#222\"/><text x=\"100\" y=\"80\" text-anchor=\"middle\">Volume (V)</text><rect x=\"50\" y=\"100\" width=\"260\" height=\"60\" fill=\"none\" stroke=\"#222\"/><text x=\"50\" y=\"130\">Density = Mass / Volume</text><text x=\"50\" y=\"145\">ρ = m / V</text><text x=\"50\" y=\"160\">Unit: kg/m³</text></svg>",
+   "n": "what is density of a fluid and its unit?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "86a967af": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Specific Weight (γ)</text><rect x=\"40\" y=\"30\" width=\"80\" height=\"60\" stroke-dasharray=\"4\" /><text x=\"50\" y=\"60\">Water</text><text x=\"50\" y=\"75\">Volume</text><line x1=\"120\" y1=\"90\" x2=\"320\" y2=\"90\" stroke-width=\"2\" /><text x=\"240\" y=\"80\">γ = ρg ≈ 9810 N/m³</text><text x=\"10\" y=\"115\">Weight (W)</text><line x1=\"30\" y1=\"115\" x2=\"30\" y2=\"170\" stroke-width=\"2\" /><text x=\"40\" y=\"160\">Volume (V)</text><text x=\"180\" y=\"190\">γ = W / V</text></svg>",
+   "n": "define specific weight and give its value for water.",
+   "sub": "fluids",
    "at": "2026-11-05"
   }
  }
