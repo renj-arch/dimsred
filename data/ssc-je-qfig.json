@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T20:30:26.605Z",
-  "cursor": 777,
-  "built": 666
+  "updatedAt": "2026-11-05T21:09:39.741Z",
+  "cursor": 780,
+  "built": 669
  },
  "figs": {
   "11434945": {
@@ -3999,6 +3999,24 @@
   "ea5d41ac": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Pascal's Law</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"40\" cy=\"60\" r=\"5\"/><circle cx=\"320\" cy=\"60\" r=\"5\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\"/><circle cx=\"40\" cy=\"180\" r=\"5\"/><circle cx=\"320\" cy=\"180\" r=\"5\"/><text x=\"180\" y=\"75\" text-anchor=\"middle\">Pressure applied</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">Transmitted equally</text><text x=\"45\" y=\"120\" text-anchor=\"end\">Undiminished</text><text x=\"315\" y=\"120\" text-anchor=\"start\">in all directions</text></svg>",
    "n": "state pascal law.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "2b7451a0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Hydraulic Lift Force Multiplier</text><rect x=\"40\" y=\"35\" width=\"60\" height=\"160\" fill=\"none\" stroke=\"#222\"/><circle cx=\"70\" cy=\"90\" r=\"8\" fill=\"none\" stroke=\"#222\"/><circle cx=\"70\" cy=\"140\" r=\"8\" fill=\"none\" stroke=\"#222\"/><text x=\"55\" y=\"30\">Small Piston</text><text x=\"60\" y=\"95\">Area A1</text><text x=\"60\" y=\"145\">Area A2</text><text x=\"75\" y=\"80\">F1 (Input)</text><text x=\"75\" y=\"130\">F2 (Output)</text><line x1=\"140\" y1=\"90\" x2=\"220\" y2=\"90\" stroke=\"#222\"/><line x1=\"140\" y1=\"140\" x2=\"220\" y2=\"140\" stroke=\"#222\"/><text x=\"135\" y=\"85\">Pressure P</text><text x=\"135\" y=\"135\">Pressure P</text><line x1=\"220\" y1=\"90\" x2=\"260\" y2=\"90\" stroke=\"#222\"/><line x1=\"220\" y1=\"140\" x2=\"260\" y2=\"140\" stroke=\"#222\"/><text x=\"235\" y=\"85\">Load</text><text x=\"235\" y=\"135\">Load</text><line x1=\"70\" y1=\"90\" x2=\"70\" y2=\"140\" stroke=\"#222\"/><line x1=\"260\" y1=\"90\" x2=\"260\" y2=\"140\" stroke=\"#222\"/><text x=\"35\" y=\"115\">F1 × A1 = F2 × A2</text><text x=\"35\" y=\"135\">(Pascal's Law)</text></svg>",
+   "n": "how is force multiplied in a hydraulic lift?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "6abca871": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-weight=\"bold\">Hydrostatic Pressure vs Depth</text><line x1=\"60\" y1=\"140\" x2=\"300\" y2=\"140\"/><text x=\"55\" y=\"155\" font-size=\"10\">Pressure (p)</text><line x1=\"60\" y1=\"140\" x2=\"60\" y2=\"80\"/><text x=\"70\" y=\"105\" text-anchor=\"start\">dp</text><polygon points=\"60,140 300,140 300,80 60,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"60\" y1=\"140\" x2=\"300\" y2=\"140\"/><text x=\"310\" y=\"155\" font-size=\"10\">Depth (h)</text><polyline points=\"60,140 80,120 90,130 100,120 110,130 120,120 130,130 140,120\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"145\" y=\"155\">dh</text><polyline points=\"60,140 80,120 90,130 100,120 110,130 120,120 130,130 140,120\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"175\">dp/dh = γ</text><line x1=\"60\" y1=\"140\" x2=\"300\" y2=\"140\"/></svg>",
+   "n": "state the hydrostatic law.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "9c74eb93": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Pressure (p)</text><line x1=\"40\" y1=\"190\" x2=\"320\" y2=\"190\"/><line x1=\"40\" y1=\"190\" x2=\"40\" y2=\"50\"/><text x=\"35\" y=\"175\">p0</text><text x=\"35\" y=\"85\">p0 + ρgh</text><path d=\"M 40 190 L 320 190\"/><path d=\"M 40 50 L 320 50\"/><path d=\"M 40 190 L 40 50\"/><path d=\"M 320 190 L 320 50\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">Depth (h)</text><line x1=\"160\" y1=\"190\" x2=\"160\" y2=\"45\" stroke-dasharray=\"4,2\"/><text x=\"150\" y=\"40\">Surface</text><rect x=\"130\" y=\"185\" width=\"20\" height=\"5\" fill=\"none\" stroke=\"#222\"/><text x=\"145\" y=\"198\">Liquid</text></svg>",
+   "n": "how does pressure vary with depth in a static liquid?",
    "sub": "fluids",
    "at": "2026-11-05"
   }
