@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T15:40:16.345Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "We have 81 figure gaps and 23 critical faults; mainsfresh produced zero fixes in the last two runs so it must be starved last. BankFigures is the only agent that delivered value recently, so we prioritize it to clear the massive figure gap backlog. MetaLearn should follow to address the 4 pending ideas and potentially generate new content for the missing syllabus/files.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (639 total)",
-       "text": "What are Bharat Stage (BS) emission norms? | Which pollutants are regulated by emission norms? | What is a dual-fuel engine?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "11 fresh mock questions on Heat Transfer (360 in pool)",
-       "text": "Heat Transfer"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T16:24:46.857Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -631,8 +575,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T22:34:20.032Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-05T22:22:19.159Z",
+ "lastRun": "2026-11-05T22:34:20.032Z",
  "model": "qwen3.5:9b"
 }
