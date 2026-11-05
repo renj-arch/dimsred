@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T05:41:01.389Z",
-  "cursor": 723,
-  "built": 634
+  "updatedAt": "2026-11-05T06:06:11.735Z",
+  "cursor": 726,
+  "built": 635
  },
  "figs": {
   "11434945": {
@@ -3807,6 +3807,12 @@
   "94497ccb": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Crankshaft Rotation -->\n  <circle cx=\"180\" cy=\"110\" r=\"40\" />\n  <line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"30\" stroke-width=\"2\" />\n  <line x1=\"180\" y1=\"150\" x2=\"180\" y2=\"190\" stroke-width=\"2\" />\n  <!-- Connecting Rods (Alternating Active/Inactive) -->\n  <!-- Cycle 1: Active -->\n  <line x1=\"140\" y1=\"110\" x2=\"180\" y2=\"70\" stroke-width=\"3\" />\n  <line x1=\"140\" y1=\"110\" x2=\"100\" y2=\"150\" stroke-width=\"3\" />\n  <!-- Cycle 2: Inactive (Coasting) -->\n  <line x1=\"220\" y1=\"110\" x2=\"180\" y2=\"70\" stroke-width=\"1\" opacity=\"0.3\" />\n  <line x1=\"220\" y1=\"110\" x2=\"260\" y2=\"150\" stroke-width=\"1\" opacity=\"0.3\" />\n  <!-- Cycle 3: Active -->\n  <line x1=\"140\" y1=\"110\" x2=\"180\" y2=\"70\" stroke-width=\"3\" />\n  <line x1=\"140\" y1=\"110\" x2=\"100\" y2=\"150\" stroke-width=\"3\" />\n  <!-- Labels -->\n  <text x=\"180\" y=\"60\" text-anchor=\"middle\">Crankshaft</text>\n  <text x=\"140\" y=\"95\" text-anchor=\"end\" font-weight=\"bold\">FIRE</text>\n  <text x=\"220\" y=\"95\" text-anchor=\"start\" opacity=\"0.3\">SKIP</text>\n  <text x=\"180\" y=\"200\" text-anchor=\"middle\">Hit-and-Miss Governing</text>\n</svg>",
    "n": "what is hit-and-miss governing?",
+   "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "2629b6c8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">IC ENGINE GOVERNING</text><rect x=\"40\" y=\"60\" width=\"140\" height=\"100\" stroke=\"#222\" fill=\"none\"/><text x=\"50\" y=\"85\">THROTTLE VALVE</text><path d=\"M 70 90 L 130 90\" stroke=\"#222\"/><circle cx=\"100\" cy=\"90\" r=\"4\" fill=\"#222\"/><text x=\"95\" y=\"105\">PARTIAL OPEN</text><path d=\"M 60 110 L 140 110\" stroke=\"#222\"/><circle cx=\"100\" cy=\"110\" r=\"3\" fill=\"#none\"/><text x=\"95\" y=\"125\">FULL OPEN</text><path d=\"M 70 130 L 130 130\" stroke=\"#222\"/><circle cx=\"100\" cy=\"130\" r=\"4\" fill=\"#222\"/><text x=\"95\" y=\"145\">FUEL INJECTED</text><path d=\"M 70 150 L 130 150\" stroke=\"#222\"/><circle cx=\"100\" cy=\"150\" r=\"3\" fill=\"#none\"/><text x=\"95\" y=\"165\">AIR CONSTANT</text><path d=\"M 70 170 L 130 170\" stroke=\"#222\"/><circle cx=\"100\" cy=\"170\" r=\"4\" fill=\"#222\"/><text x=\"95\" y=\"185\">VARIABLE RATIO</text><rect x=\"220\" y=\"60\" width=\"140\" height=\"100\" stroke=\"#222\" fill=\"none\"/><text x=\"230\" y=\"85\">AIR INTAKE</text><path d=\"M 240 90 L 300 90\" stroke=\"#222\"/><circle cx=\"270\" cy=\"90\" r=\"4\" fill=\"#222\"/><text x=\"265\" y=\"105\">VARIABLE OPENING</text><path d=\"M 240 110 L 300 110\" stroke=\"#222\"/><circle cx=\"270\" cy=\"110\" r=\"3\" fill=\"#none\"/><text x=\"265\" y=\"125\">CONSTANT OPENING</text><path d=\"M 240 130 L 300 130\" stroke=\"#222\"/><circle cx=\"270\" cy=\"130\" r=\"4\" fill=\"#222\"/><text x=\"265\" y=\"145\">AIR FLOW VARYS</text><path d=\"M 240 150 L 300 150\" stroke=\"#222\"/><circle cx=\"270\" cy=\"150\" r=\"3\" fill=\"#none\"/><text x=\"265\" y=\"165\">FUEL CONSTANT</text><path d=\"M 240 170 L 300 170\" stroke=\"#222\"/><circle cx=\"270\" cy=\"170\" r=\"4\" fill=\"#222\"/><text x=\"265\" y=\"185\">VARIABLE RATIO</text><path d=\"M 180 190 Q 180 200 180 210\" stroke=\"#222\"/><text x=\"180\" y=\"215\" text-anchor=\"middle\">QUALITY GOVERNING (AIR FLOW)</text></svg>",
+   "n": "distinguish quantity and quality governing.",
    "sub": "ice",
    "at": "2026-11-05"
   }
