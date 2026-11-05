@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T03:15:42.441Z",
-  "cursor": 711,
-  "built": 624
+  "updatedAt": "2026-11-05T03:48:44.892Z",
+  "cursor": 714,
+  "built": 626
  },
  "figs": {
   "11434945": {
@@ -3747,6 +3747,18 @@
   "ac66e13f": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Trapping Efficiency</text><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\"/><text x=\"50\" y=\"60\">Total Charge</text><path d=\"M 60 70 L 180 70\" stroke-dasharray=\"4,2\"/><text x=\"190\" y=\"60\">Trapped Charge</text><path d=\"M 180 70 L 300 70\"/><line x1=\"60\" y1=\"70\" x2=\"60\" y2=\"140\"/><line x1=\"300\" y1=\"70\" x2=\"300\" y2=\"140\"/><path d=\"M 60 140 L 300 140\" stroke-dasharray=\"4,2\"/><text x=\"50\" y=\"130\">Untrapped Charge</text><rect x=\"60\" y=\"70\" width=\"120\" height=\"70\" fill=\"#eee\" opacity=\"0.5\"/><text x=\"120\" y=\"105\" text-anchor=\"middle\">Cylinder</text><text x=\"180\" y=\"145\" text-anchor=\"middle\">Efficiency = Trapped / Total</text></svg>",
    "n": "define trapping efficiency in a two-stroke engine.",
+   "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "84a51838": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Sump -->\n  <path d=\"M20,180 L340,180 L340,160 Q340,140 320,120 L40,120 Q20,140 20,160 Z\" />\n  <!-- Oil in Sump -->\n  <path d=\"M25,170 L335,170 L335,155 Q335,135 315,115 L45,115 Q25,135 25,155 Z\" />\n  <!-- Connecting Rod -->\n  <line x1=\"180\" y1=\"160\" x2=\"180\" y2=\"90\" stroke-width=\"6\" stroke-linecap=\"round\" />\n  <!-- Piston/Cylinder Wall -->\n  <path d=\"M175,90 L185,90 L185,40 Q185,20 165,20 L165,40 Z\" />\n  <!-- Dipper (Oil Droplet) -->\n  <circle cx=\"180\" cy=\"70\" r=\"8\" />\n  <!-- Splash Arc -->\n  <path d=\"M180,70 Q230,60 250,90 L250,100 Q230,110 180,100\" fill=\"none\" stroke-dasharray=\"4,2\" />\n  <!-- Labels -->\n  <text x=\"180\" y=\"195\" text-anchor=\"middle\">Sump (Oil Reservoir)</text>\n  <text x=\"170\" y=\"60\" text-anchor=\"end\">Dipper</text>\n  <text x=\"260\" y=\"95\" text-anchor=\"start\">Cylinder Wall</text>\n  <text x=\"345\" y=\"185\" text-anchor=\"middle\">Splash Lubrication</text>\n</svg>",
+   "n": "describe splash lubrication and its application.",
+   "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "c97e6c39": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Forced Lubrication System</text><circle cx=\"40\" cy=\"100\" r=\"15\"/><text x=\"30\" y=\"105\">Gear Pump</text><line x1=\"55\" y1=\"95\" x2=\"85\" y2=\"95\"/><line x1=\"55\" y1=\"105\" x2=\"85\" y2=\"105\"/><rect x=\"90\" y=\"75\" width=\"30\" height=\"40\" rx=\"5\"/><text x=\"105\" y=\"100\">Filter</text><line x1=\"120\" y1=\"85\" x2=\"120\" y2=\"115\"/><line x1=\"120\" y1=\"90\" x2=\"120\" y2=\"110\"/><rect x=\"150\" y=\"70\" width=\"60\" height=\"50\" rx=\"3\"/><text x=\"180\" y=\"95\">Relief Valve</text><line x1=\"210\" y1=\"90\" x2=\"240\" y2=\"90\"/><line x1=\"210\" y1=\"100\" x2=\"240\" y2=\"100\"/><rect x=\"250\" y=\"70\" width=\"60\" height=\"50\" rx=\"3\"/><text x=\"280\" y=\"95\">Galleries</text><line x1=\"310\" y1=\"90\" x2=\"340\" y2=\"90\"/><line x1=\"310\" y1=\"100\" x2=\"340\" y2=\"100\"/><rect x=\"350\" y=\"70\" width=\"10\" height=\"50\" rx=\"2\"/><text x=\"365\" y=\"95\">Bearings</text><path d=\"M 85 95 L 90 95 L 90 105 L 85 105 Z\" fill=\"#222\" opacity=\"0.2\"/><path d=\"M 120 85 L 125 85 L 125 90 L 120 90 Z\" fill=\"#222\" opacity=\"0.2\"/><path d=\"M 210 90 L 215 90 L 215 95 L 210 95 Z\" fill=\"#222\" opacity=\"0.2\"/><path d=\"M 310 90 L 315 90 L 315 95 L 310 95 Z\" fill=\"#222\" opacity=\"0.2\"/></svg>",
+   "n": "describe the forced (pressure) wet-sump lubrication system.",
    "sub": "ice",
    "at": "2026-11-05"
   }
