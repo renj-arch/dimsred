@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T08:13:14.162Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The queue shows 79 figure gaps and 81 open faults with no papers or questions present; the last two runs produced zero fixes for mockpapers, invention, metalearn, and mainsfresh, indicating they are starved of inputs rather than broken. Prioritize BankFigures to immediately reduce critical content gaps, then cycle through MockPapers, ExamPatterns, Invention, and MainsFresh to replenish the missing study assets while keeping agents that have zeroed out for recent runs toward the end of the sequen",
-    "actions": [
-     "BankFigures",
-     "ExamPatterns",
-     "MockPapers",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (602 total)",
-       "text": "Give typical percentages in an engine heat balance. | How does BSFC vary with load at constant speed? | How does mechanical efficiency vary with load?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "5 fresh mock questions on IC Engines (360 in pool)",
-       "text": "IC Engines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T08:56:46.151Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -613,8 +552,46 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T00:29:00.944Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention; BankFigures and MockPapers are priority agents to fill content voids. MainsFresh produced 0 fixes in the last run, so it is scheduled last despite being a standing goal, while ExamPatterns and Invention follow to ensure comprehensive coverage without starving high-impact tools.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": []
   }
  ],
- "lastRun": "2026-11-04T23:46:40.109Z",
+ "lastRun": "2026-11-05T00:29:00.944Z",
  "model": "qwen3.5:9b"
 }
