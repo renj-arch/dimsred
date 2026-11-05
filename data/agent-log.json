@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T05:55:48.334Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address both immediately as it produced 0 in the last two runs but likely lacks input data, so it is scheduled first to recover. MetaLearn follows to generate fresh syllabus-aligned content since papers/sidecar files are missing, directly tackling the 'papers: false' state. MainsFresh is included next to ensure daily material freshness. ExamPatterns and MockPapers are deferred until BankFigures clears the critical bac",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (634 total)",
-       "text": "What are the effects of overcooling an engine? | What is the purpose of governing an engine? | What is hit-and-miss governing?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T06:34:17.376Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -587,8 +547,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T17:15:46.756Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as they block content consumption. MockPapers should follow to generate new exam materials since papers are absent, directly tackling the 'papers: false' state. MetaLearn is scheduled last because it produced zero fixes in the previous two runs and may be starved of inputs rather than broken.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (646 total)",
+       "text": "Define dynamic viscosity and give its unit. | What is kinematic viscosity? | What is a Newtonian fluid?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T16:58:01.507Z",
+ "lastRun": "2026-11-05T17:15:46.756Z",
  "model": "qwen3.5:9b"
 }
