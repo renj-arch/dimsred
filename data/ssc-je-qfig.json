@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T19:42:54.478Z",
-  "cursor": 771,
-  "built": 660
+  "updatedAt": "2026-11-05T20:30:26.605Z",
+  "cursor": 777,
+  "built": 666
  },
  "figs": {
   "11434945": {
@@ -3963,6 +3963,42 @@
   "4683c711": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"180\" y1=\"20\" x2=\"180\" y2=\"200\"/><circle cx=\"180\" cy=\"20\" r=\"3\"/><text x=\"175\" y=\"40\" text-anchor=\"end\">Atmosphere</text><path d=\"M 180 20 L 160 180 L 140 180 L 140 200 L 160 200 Z\"/><text x=\"135\" y=\"195\">p = γh</text><text x=\"175\" y=\"195\">Gauge Pressure</text></svg>",
    "n": "what is a piezometer?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "5f088c50": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">U-Tube Manometer</text><path d=\"M 40 60 L 40 180 M 320 60 L 320 180\"/><path d=\"M 40 180 L 180 180 L 180 120 L 320 120 L 320 180\"/><circle cx=\"40\" cy=\"60\" r=\"5\"/><circle cx=\"320\" cy=\"60\" r=\"5\"/><path d=\"M 40 60 L 180 120 M 320 60 L 180 120\" stroke-dasharray=\"4,2\"/><text x=\"30\" y=\"90\">Gas (p)</text><text x=\"30\" y=\"105\">(Pressure)</text><text x=\"30\" y=\"120\">to</text><text x=\"30\" y=\"135\">Heavy Liquid</text><text x=\"30\" y=\"150\">Interface</text><text x=\"300\" y=\"90\">Atmosphere</text><text x=\"300\" y=\"105\">(p_atm)</text><text x=\"300\" y=\"120\">to</text><text x=\"300\" y=\"135\">Heavy Liquid</text><text x=\"300\" y=\"150\">Interface</text><text x=\"180\" y=\"190\" text-anchor=\"middle\">h = Height Diff.</text><text x=\"140\" y=\"205\" text-anchor=\"middle\">p = S γw h</text></svg>",
+   "n": "give the pressure relation of a u-tube manometer with a heavy liquid.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "7245c463": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Differential Manometer</text><path d=\"M 40 100 L 40 160\"/><circle cx=\"40\" cy=\"100\" r=\"3\"/><circle cx=\"40\" cy=\"160\" r=\"3\"/><path d=\"M 280 100 L 280 160\"/><circle cx=\"280\" cy=\"100\" r=\"3\"/><circle cx=\"280\" cy=\"160\" r=\"3\"/><path d=\"M 40 100 Q 180 50 280 100\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"70\" text-anchor=\"middle\">U-tube</text><path d=\"M 40 160 L 280 160\"/><text x=\"35\" y=\"155\">P₁</text><text x=\"295\" y=\"155\">P₂</text><text x=\"180\" y=\"190\" text-anchor=\"middle\">Pressure Difference (P₁ - P₂)</text></svg>",
+   "n": "what does a differential manometer measure?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "d065c988": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"40\"/><circle cx=\"40\" cy=\"180\" r=\"6\"/><circle cx=\"320\" cy=\"40\" r=\"6\"/><path d=\"M 46 174 L 50 170 L 54 174 Z\"/><path d=\"M 314 46 L 318 42 L 322 46 Z\"/><text x=\"180\" y=\"110\" text-anchor=\"middle\">Inclined Tube</text><text x=\"20\" y=\"195\">Reservoir</text><text x=\"330\" y=\"35\">Tilted Up</text><path d=\"M 46 174 L 314 46\"/><text x=\"180\" y=\"100\" text-anchor=\"middle\">L = Length of liquid column</text><text x=\"180\" y=\"90\" text-anchor=\"middle\">h = Vertical height = L sinθ</text><path d=\"M 40 180 L 40 195 M 320 40 L 320 25\"/><text x=\"35\" y=\"185\">P1</text><text x=\"325\" y=\"45\">P2</text></svg>",
+   "n": "why is an inclined manometer used?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "90468ac5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,100 Q80,40 120,100 T200,100\" stroke-dasharray=\"3,2\"/><circle cx=\"40\" cy=\"100\" r=\"3\"/><circle cx=\"200\" cy=\"100\" r=\"3\"/><path d=\"M200,100 L260,95 M200,100 L260,105 M200,100 L260,85 M200,100 L260,115\"/><path d=\"M40,100 L30,100\"/><text x=\"35\" y=\"95\">Tube</text><text x=\"265\" y=\"95\">Pointer</text><text x=\"270\" y=\"105\">Gauge Pressure</text><text x=\"270\" y=\"115\">Increases</text><path d=\"M40,100 Q80,160 120,100 T200,100\" stroke-dasharray=\"3,2\"/><circle cx=\"40\" cy=\"100\" r=\"3\"/><circle cx=\"200\" cy=\"100\" r=\"3\"/><path d=\"M200,100 L260,95 M200,100 L260,105 M200,100 L260,85 M200,100 L260,115\"/><path d=\"M40,100 L30,100\"/><text x=\"35\" y=\"95\">Tube</text><text x=\"265\" y=\"95\">Pointer</text><text x=\"270\" y=\"105\">Gauge Pressure</text><text x=\"270\" y=\"115\">Increases</text></svg>",
+   "n": "describe a bourdon gauge.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "3acea8f9": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Pressure Relationship</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"50\" x2=\"40\" y2=\"70\"/><circle cx=\"100\" cy=\"60\" r=\"3\"/><text x=\"90\" y=\"65\">p(gauge)</text><circle cx=\"180\" cy=\"60\" r=\"3\"/><text x=\"170\" y=\"65\">p(atm)</text><circle cx=\"260\" cy=\"60\" r=\"3\"/><text x=\"250\" y=\"65\">p(abs)</text><line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\"/><line x1=\"40\" y1=\"100\" x2=\"40\" y2=\"130\"/><circle cx=\"100\" cy=\"110\" r=\"3\"/><text x=\"90\" y=\"115\">p(abs)</text><circle cx=\"180\" cy=\"110\" r=\"3\"/><text x=\"170\" y=\"115\">p(atm)</text><circle cx=\"260\" cy=\"110\" r=\"3\"/><text x=\"250\" y=\"115\">Vacuum</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\"/><line x1=\"40\" y1=\"150\" x2=\"40\" y2=\"180\"/><circle cx=\"100\" cy=\"160\" r=\"3\"/><text x=\"90\" y=\"165\">p(abs)</text><circle cx=\"180\" cy=\"160\" r=\"3\"/><text x=\"170\" y=\"165\">p(atm)</text><circle cx=\"260\" cy=\"160\" r=\"3\"/><text x=\"250\" y=\"165\">Vacuum</text><line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/><text x=\"80\" y=\"215\">Higher Pressure</text><text x=\"200\" y=\"215\">Atmospheric</text><text x=\"280\" y=\"215\">Lower (Vacuum)</text></svg>",
+   "n": "relate gauge, absolute and vacuum pressure.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "ea5d41ac": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Pascal's Law</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><circle cx=\"40\" cy=\"60\" r=\"5\"/><circle cx=\"320\" cy=\"60\" r=\"5\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\"/><circle cx=\"40\" cy=\"180\" r=\"5\"/><circle cx=\"320\" cy=\"180\" r=\"5\"/><text x=\"180\" y=\"75\" text-anchor=\"middle\">Pressure applied</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">Transmitted equally</text><text x=\"45\" y=\"120\" text-anchor=\"end\">Undiminished</text><text x=\"315\" y=\"120\" text-anchor=\"start\">in all directions</text></svg>",
+   "n": "state pascal law.",
    "sub": "fluids",
    "at": "2026-11-05"
   }
