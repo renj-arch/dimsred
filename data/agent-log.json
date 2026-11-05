@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T14:53:14.137Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of addressing both simultaneously, so it must lead. MockPapers should follow to convert fixed figures into complete exam resources. Exampatterns and MainsFresh are placed last as they produced zero fixes in recent runs, indicating a need for input refreshment before re-engagement.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Air Compressors (360 in pool)",
-       "text": "Air Compressors"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T15:32:35.351Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -663,8 +623,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T05:17:19.613Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address critical visual errors first to prevent broken diagrams in exam prep. MockPapers are essential for content depth but yield zero output recently, so they will be scheduled last per starvation rules. MetaLearn is also starved (0 fixes for 2+ runs) and should run late to generate fresh material without blocking urgent repairs.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (631 total)",
+       "text": "Describe thermosyphon cooling. | What are the components of a forced (pump) water cooling system? | What are the functions of the thermostat and pressure cap?"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw32yvrs-fcz2 (optional1/sociology, 10 marks): Critically examine the nature of caste in contemporary India. Is it a system of birth or a system of practice? (10 marks",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T04:34:40.920Z",
+ "lastRun": "2026-11-05T05:17:19.613Z",
  "model": "qwen3.5:9b"
 }
