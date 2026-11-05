@@ -575,21 +575,7 @@
      "count": 0
     }
    ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 229112 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 35 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ],
+   "details": [],
    "plan": {
     "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address critical visual breaks first. MainsFresh should immediately fill the 80 missing figures to restore page completeness. MetaLearn is starved (0 fixes in last two runs) and will be placed last to clear backlog without blocking urgent repairs.",
     "actions": [
@@ -597,8 +583,7 @@
      "MainsFresh",
      "MetaLearn"
     ]
-   },
-   "details": []
+   }
   },
   {
    "at": "2026-11-05T08:01:21.604Z",
@@ -627,8 +612,36 @@
     ]
    },
    "details": []
+  },
+  {
+   "at": "2026-11-05T08:28:12.707Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention; BankFigures must address the 80 missing figures first as they are likely blocking content consumption. MetaLearn produced zero fixes in the last two runs, so it is scheduled last to avoid wasting budget on a potentially starved agent. MainsFresh is included to ensure daily fresh material generation, balancing the heavy lifting of fixing broken assets.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": []
   }
  ],
- "lastRun": "2026-11-05T08:01:21.604Z",
+ "lastRun": "2026-11-05T08:28:12.707Z",
  "model": "qwen3.5:9b"
 }
