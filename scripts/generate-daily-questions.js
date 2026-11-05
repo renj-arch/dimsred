@@ -271,6 +271,40 @@ function generateQuestions(exam, count) {
 
 // ========== MAIN ==========
 
+var SECTION_COLORS = ['#a855f7', '#60a5fa', '#34d399', '#fb923c', '#6366f1', '#f59e0b'];
+var EXAM_NAMES = {
+  cgl: 'CGL', rbi: 'RBI Grade B', jee: 'JEE Main', neet: 'NEET UG', gate: 'GATE',
+  agniveer: 'Agniveer', upsc: 'UPSC Civil Services', 'ibps-po': 'IBPS PO',
+  'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD Constable', ctet: 'CTET',
+  nda: 'NDA', cds: 'CDS', clat: 'CLAT'
+};
+
+// Create an empty, fully-shaped bank so an exam whose papers don't exist yet
+// (NDA/CDS/CLAT) still gets daily questions and practice papers instead of
+// being skipped forever. Mirrors the shape produced by extract-question-bank.js.
+function createBank(exam) {
+  var sections = EXAM_SECTIONS[exam];
+  if (!sections) return null;
+  var name = EXAM_NAMES[exam] || exam.toUpperCase();
+  var bank = {
+    exam: name,
+    folder: exam,
+    sections: sections.map(function(s, i) { return { name: s, color: SECTION_COLORS[i % SECTION_COLORS.length] }; }),
+    timerMinutes: 60,
+    paperDefaults: {
+      titlePrefix: name + ' Practice Set',
+      pageTitleTemplate: name + ' Practice Set {number} — Solved Paper',
+      pageDescTemplate: 'Free ' + name + ' practice paper set {number} with detailed solutions.',
+      metaTemplate: '{questionCount} Q · Solved with answers'
+    },
+    questions: [],
+    generatedPapers: []
+  };
+  if (!fs.existsSync(bankDir)) fs.mkdirSync(bankDir, { recursive: true });
+  fs.writeFileSync(path.join(bankDir, exam + '.json'), JSON.stringify(bank, null, 2), 'utf-8');
+  return bank;
+}
+
 function run() {
   var args = process.argv.slice(2);
   if (args.length === 0) {
@@ -300,12 +334,17 @@ function run() {
     var exam = exams[ei];
     var bankPath = path.join(bankDir, exam + '.json');
 
+    var bank;
     if (!fs.existsSync(bankPath)) {
-      console.log(exam + ': bank not found, skipping');
-      continue;
+      bank = createBank(exam);
+      if (!bank) {
+        console.log(exam + ': unknown exam, skipping');
+        continue;
+      }
+      console.log(exam + ': created seed bank (' + bank.exam + ')');
+    } else {
+      bank = JSON.parse(fs.readFileSync(bankPath, 'utf-8'));
     }
-
-    var bank = JSON.parse(fs.readFileSync(bankPath, 'utf-8'));
     var questions = bank.questions || [];
 
     // Check if refill needed
@@ -340,6 +379,20 @@ function run() {
         options: newQs[ni].options,
         solution: newQs[ni].solution
       });
+    }
+
+    // Ensure every generated section has a badge definition. Existing banks use
+    // the paper badge names (e.g. "General Intelligence") while the template
+    // engine uses syllabus names (e.g. "General Intelligence & Reasoning");
+    // without this, build-papers.js silently drops those section badges.
+    bank.sections = bank.sections || [];
+    var secNames = {};
+    for (var si2 = 0; si2 < bank.sections.length; si2++) secNames[bank.sections[si2].name] = true;
+    for (var ni2 = 0; ni2 < newQs.length; ni2++) {
+      if (!secNames[newQs[ni2].section]) {
+        secNames[newQs[ni2].section] = true;
+        bank.sections.push({ name: newQs[ni2].section, color: SECTION_COLORS[bank.sections.length % SECTION_COLORS.length] });
+      }
     }
 
     bank.questions = questions;

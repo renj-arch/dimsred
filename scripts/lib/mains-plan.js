@@ -82,7 +82,46 @@ const OPTIONAL_SUBJECTS = [
   { id: 'pubadmin', name: 'Public Administration', p1: 'Administrative theory; organisation; management; public policy', p2: 'Indian administration: constitutional framework, civil services and reforms' },
   { id: 'economics', name: 'Economics', p1: 'Microeconomics; macroeconomics; money and banking; public finance', p2: 'Indian economy: growth, development, sectors, external sector and policy' },
   { id: 'anthropology', name: 'Anthropology', p1: 'Physical anthropology; social anthropology; archaeological anthropology', p2: 'Indian anthropology: tribes, caste, kinship, religion and development' },
-  { id: 'philosophy', name: 'Philosophy', p1: 'Western philosophy: Greek, modern, epistemology and metaphysics', p2: 'Indian philosophy: schools, ethics, political philosophy and religion' }
+  { id: 'philosophy', name: 'Philosophy', p1: 'Western philosophy: Greek, modern, epistemology and metaphysics', p2: 'Indian philosophy: schools, ethics, political philosophy and religion' },
+  { id: 'agriculture', name: 'Agriculture', p1: 'Agronomy; soil science; plant breeding; agricultural economics', p2: 'Animal husbandry, forestry, horticulture and agricultural extension' },
+  { id: 'animal-husbandry', name: 'Animal Husbandry & Veterinary Science', p1: 'Animal nutrition; breeding; physiology; hygiene', p2: 'Veterinary medicine; surgery; animal reproduction and extension' },
+  { id: 'botany', name: 'Botany', p1: 'Plant taxonomy; morphology; anatomy; physiology; ecology', p2: 'Cell biology; genetics; molecular biology; economic botany' },
+  { id: 'chemistry', name: 'Chemistry', p1: 'Atomic structure; chemical bonding; thermodynamics; kinetics', p2: 'Organic, inorganic and physical chemistry; spectroscopy; polymers' },
+  { id: 'civil-eng', name: 'Civil Engineering', p1: 'Structural analysis; concrete and steel design; mechanics', p2: 'Fluid mechanics; geotechnical, environmental and transportation engineering' },
+  { id: 'commerce', name: 'Commerce & Accountancy', p1: 'Accounting; auditing; business organisation; financial management', p2: 'Taxation; cost accounting; business law; industrial relations' },
+  { id: 'electrical-eng', name: 'Electrical Engineering', p1: 'Circuit theory; electromagnetic fields; power systems', p2: 'Control systems; electrical machines; power electronics; measurement' },
+  { id: 'geology', name: 'Geology', p1: 'Geomorphology; structural geology; mineralogy; petrology', p2: 'Stratigraphy; palaeontology; economic geology; hydrogeology' },
+  { id: 'law', name: 'Law', p1: 'Constitutional law; administrative law; international law', p2: 'Contract, tort, criminal, property and corporate law; legal theory' },
+  { id: 'management', name: 'Management', p1: 'Organisational behaviour; managerial economics; accounting', p2: 'Marketing; finance; operations; human resource management; strategy' },
+  { id: 'mathematics', name: 'Mathematics', p1: 'Algebra; real analysis; complex analysis; topology', p2: 'Differential equations; numerical analysis; mechanics; probability' },
+  { id: 'mechanical-eng', name: 'Mechanical Engineering', p1: 'Thermodynamics; fluid mechanics; strength of materials', p2: 'Theory of machines; manufacturing; industrial engineering; heat transfer' },
+  { id: 'medical-science', name: 'Medical Science', p1: 'Human anatomy; physiology; biochemistry; pathology', p2: 'Pharmacology; microbiology; forensic medicine; social medicine' },
+  { id: 'physics', name: 'Physics', p1: 'Mechanics; waves; thermodynamics; electromagnetism', p2: 'Quantum mechanics; atomic, nuclear and particle physics; electronics' },
+  { id: 'psychology', name: 'Psychology', p1: 'General psychology; learning; memory; motivation; personality', p2: 'Social psychology; abnormal psychology; industrial and organisational psychology' },
+  { id: 'statistics', name: 'Statistics', p1: 'Probability; statistical inference; sampling theory', p2: 'Linear models; multivariate analysis; operations research; demography' },
+  { id: 'zoology', name: 'Zoology', p1: 'Animal taxonomy; morphology; physiology; embryology', p2: 'Genetics; ecology; evolution; applied zoology and biotechnology' },
+  { id: 'lit-assamese', name: 'Literature: Assamese', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-bengali', name: 'Literature: Bengali', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-bodo', name: 'Literature: Bodo', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-dogri', name: 'Literature: Dogri', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-gujarati', name: 'Literature: Gujarati', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-hindi', name: 'Literature: Hindi', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-kannada', name: 'Literature: Kannada', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-kashmiri', name: 'Literature: Kashmiri', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-konkani', name: 'Literature: Konkani', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-maithili', name: 'Literature: Maithili', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-malayalam', name: 'Literature: Malayalam', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-manipuri', name: 'Literature: Manipuri', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-marathi', name: 'Literature: Marathi', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-nepali', name: 'Literature: Nepali', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-odia', name: 'Literature: Odia', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-punjabi', name: 'Literature: Punjabi', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-sanskrit', name: 'Literature: Sanskrit', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-santali', name: 'Literature: Santali', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-sindhi', name: 'Literature: Sindhi', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-tamil', name: 'Literature: Tamil', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-telugu', name: 'Literature: Telugu', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' },
+  { id: 'lit-urdu', name: 'Literature: Urdu', p1: 'Literary history and major movements', p2: 'Prescribed texts and critical approaches' }
 ];
 const OPTIONAL_BY_ID = {};
 OPTIONAL_SUBJECTS.forEach(s => { OPTIONAL_BY_ID[s.id] = s; });
@@ -149,8 +188,32 @@ function nextTarget(items, opts) {
   const list = Array.isArray(items) ? items : [];
   const options = opts || {};
   let p = options.paper ? paper(options.paper) : null;
+  let forcedSubject = null;
+  const counts = paperCounts(list);
+  if (!p && options.coverageFirst) {
+    // Coverage-first mode (used by the live MainsFresh agent): finish the
+    // papers that still have no item at all before resuming the normal
+    // least-covered rotation. Language papers come first because there are
+    // only two of them, then optional subjects, then GS/Essay.
+    const missingLanguage = PAPERS.filter(x => x.kind === 'language' && !counts[x.id]);
+    if (missingLanguage.length) {
+      p = missingLanguage[0];
+    } else {
+      const optCounts = {};
+      OPTIONAL_SUBJECTS.forEach(s => { optCounts[s.id] = 0; });
+      list.forEach(item => {
+        if (item && /^optional/.test(item.paper) && optCounts[item.subject] != null) optCounts[item.subject]++;
+      });
+      const missingSubject = OPTIONAL_SUBJECTS.filter(s => !optCounts[s.id])[0];
+      if (missingSubject) {
+        forcedSubject = missingSubject.id;
+        const o1 = paper('optional1');
+        const o2 = paper('optional2');
+        p = (counts[o1.id] || 0) <= (counts[o2.id] || 0) ? o1 : o2;
+      }
+    }
+  }
   if (!p) {
-    const counts = paperCounts(list);
     const exclude = Array.isArray(options.exclude) ? options.exclude : [];
     const candidates = PAPERS.filter(x => exclude.indexOf(x.id) === -1);
     const min = Math.min.apply(null, candidates.map(x => counts[x.id] || 0));
@@ -184,7 +247,7 @@ function nextTarget(items, opts) {
   if (p.kind === 'essay') { target.marks = 125; target.maxTokens = 6000; }
   if (p.kind === 'optional') {
     target.marks = [15, 20, 10][count % 3];
-    const subject = (options.subject && optionalSubject(options.subject)) || nextOptionalSubject(list, p.id);
+    const subject = (forcedSubject && optionalSubject(forcedSubject)) || (options.subject && optionalSubject(options.subject)) || nextOptionalSubject(list, p.id);
     target.subject = subject.id;
     target.subjectName = subject.name;
   }
@@ -228,10 +291,10 @@ function buildPrompt(target, seeds, stricter) {
       : 'TARGET: ' + target.name + ' (' + target.paper + '), ' + target.marks + ' marks.';
 
   const lengthLine = target.kind === 'essay'
-    ? 'The answer is a scaffolding for a 1000-1200 word essay: 5 or 6 sections, each 300-900 characters, total at least 850 words. The first heading may be "How to build this essay" or "Introduction"; the last heading MUST be "Conclusion".'
+    ? 'The answer is a full-marks essay scaffold for a 1000-1200 word essay: 5 or 6 sections, each 300-900 characters, total at least 900 words. The first heading may be "How to build this essay" or "Introduction"; the last heading MUST be "Conclusion".'
     : target.kind === 'language'
-      ? 'The whole answer must reach at least 250 words. Use 5 sections, each 150-600 characters. The first heading should set the context and the last heading MUST be "Conclusion" (Hindi: "निष्कर्ष").'
-      : 'The whole answer must reach at least ' + targetWords(target.marks) + ' words. Use 4 to 6 sections, each 150-700 characters. The first heading should set the context; the last heading MUST be "Way forward" or "Conclusion".';
+      ? 'The whole answer must reach at least 300 words. Use 5 sections, each 150-600 characters. The first heading should set the context and the last heading MUST be "Conclusion" (Hindi: "निष्कर्ष").'
+      : 'The whole answer must reach at least ' + targetWords(target.marks) + ' words and should aim for ' + Math.round(targetWords(target.marks) * 1.15) + ' words — write the full-marks answer, not the minimum. Use 5 to 6 sections, each 150-700 characters. The first heading should set the context; the last heading MUST be "Way forward" or "Conclusion".';
 
   const subjectLine = target.subject
     ? 'The "subject" field MUST be exactly "' + target.subject + '". Do not choose a different optional subject.'
@@ -246,6 +309,10 @@ function buildPrompt(target, seeds, stricter) {
     paperLine + ' ' + (subjectLine ? subjectLine + ' ' : '') +
     'The "paper" field MUST be exactly "' + target.paper + '" and the "marks" field MUST be exactly ' + target.marks + '. ' +
     '4 to 6 objects in "answer"; 3 to 5 strings each in marksGuide and pitfalls; 5 to 8 keywords; "laws" may be []. ' +
+    'FULL-MARKS RUBRIC: write the answer you would expect from a 10/10 or 15/15 (or the paper-equivalent top) script. ' +
+    'A top script (1) opens by defining the term and locating it in time/place, (2) answers the exact directive word (discuss = both sides; examine = causes and evidence; critically examine = evidence plus a judgement; evaluate = criteria then verdict), ' +
+    '(3) gives at least one concrete Indian example or data point per analytical section, (4) states the strongest counter-argument or limitation rather than only one side, and (5) closes with a specific, actionable way forward — not a restatement of the question. ' +
+    'Every analytical paragraph must earn its marks: no filler, no dictionary definitions repeated, no generic "it is important" sentences. ' +
     'Constraints: ' + lengthLine + ' ' +
     'Keep every "p" paragraph to 2-3 sentences and under 700 characters, except an essay scaffolding where a section may be up to 900 characters (the reply has a strict token budget — longer text gets cut off and the item is rejected). ' +
     'Never invent a scheme, case, article or statistic: name a reform only when certain of it, with its year; a verified older example beats an uncertain new one. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral. ' +

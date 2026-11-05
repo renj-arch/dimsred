@@ -70,12 +70,35 @@ function parseArray(src) {
 
 function clean(text) {
   return String(text == null ? '' : text)
+    .replace(/<sup[^>]*>([\s\S]*?)<\/sup>/gi, function (_, inner) {
+      var t = String(inner).replace(/<[^>]+>/g, '').trim();
+      return t ? '^' + (t.length > 1 ? '(' + t + ')' : t) : '';
+    })
+    .replace(/<sub[^>]*>([\s\S]*?)<\/sub>/gi, function (_, inner) {
+      var t = String(inner).replace(/<[^>]+>/g, '').trim();
+      return t ? (t.length > 1 ? '(' + t + ')' : t) : '';
+    })
     .replace(/<[^>]+>/g, ' ')
     .replace(/&amp;/g, '&')
     .replace(/&lt;/g, '<')
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#39;/g, "'")
+    .replace(/&minus;/g, '−')
+    .replace(/&rarr;/g, '→')
+    .replace(/&larr;/g, '←')
+    .replace(/&infin;/g, '∞')
+    .replace(/&times;/g, '×')
+    .replace(/&divide;/g, '÷')
+    .replace(/&pi;/g, 'π')
+    .replace(/&theta;/g, 'θ')
+    .replace(/&deg;/g, '°')
+    .replace(/&radic;/g, '√')
+    .replace(/&le;/g, '≤')
+    .replace(/&ge;/g, '≥')
+    .replace(/&ne;/g, '≠')
+    .replace(/&middot;/g, '·')
+    .replace(/&nbsp;/g, ' ')
     .replace(/\s+/g, ' ')
     .trim();
 }

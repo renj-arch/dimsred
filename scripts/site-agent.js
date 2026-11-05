@@ -3479,7 +3479,10 @@ async function agentMainsFresh() {
     if (pastDeadline()) { reason = 'deadline reached after ' + shipped.length + ' item(s)'; break; }
     // Recompute from the live pool every time: the paper that was scarce when
     // the run started must not be chosen again after the first item ships.
-    const target = mainsPlan.nextTarget(pool.items, { cursor: cursor });
+    // Pass the reviewed bank plus the pool, not the pool alone: otherwise a
+    // paper already covered by data/mains-questions.json looks empty and the
+    // runner keeps regenerating it while optional subjects stay uncovered.
+    const target = mainsPlan.nextTarget(known, { cursor: cursor, coverageFirst: true });
     if (!target) { reason = 'no target paper'; break; }
     cursor = target.paper;
 

@@ -31,6 +31,11 @@ var staticPages = [
   { loc: '/flowchart.html', priority: '0.7' },
   { loc: '/news.html', priority: '0.9' },
   { loc: '/magazine.html', priority: '0.9' },
+  { loc: '/current-affairs.html', priority: '0.8' },
+  { loc: '/archive.html', priority: '0.8' },
+  { loc: '/mains.html', priority: '0.9' },
+  { loc: '/figures.html', priority: '0.8' },
+  { loc: '/subject-figures-index.html', priority: '0.7' },
   { loc: '/revision.html', priority: '0.8' },
 ];
 

@@ -51,11 +51,26 @@ const index = {
   // one). catalog.json is written by build-archive-single.js in the same
   // pipeline pass; fall back to the raw per-file sum if it is missing.
   total: (() => {
-    try {
-      const cat = JSON.parse(fs.readFileSync(path.join(DIR, 'catalog.json'), 'utf8'));
-      if (cat && typeof cat.total === 'number' && cat.total > 0) return cat.total;
-    } catch (e) {}
-    return total;
+    const cat = (() => {
+      try { return JSON.parse(fs.readFileSync(path.join(DIR, 'catalog.json'), 'utf8')); } catch (e) { return null; }
+    })();
+    const prev = (() => {
+      try { return JSON.parse(fs.readFileSync(OUT, 'utf8')); } catch (e) { return null; }
+    })();
+    let candidate = (cat && typeof cat.total === 'number' && cat.total > 0) ? cat.total : total;
+
+    // A stale/partial catalog.json must never make the published total shrink
+    // while the corpus itself grew. If the corpus is at least as large as the
+    // previous build but the catalog reports a lower total, the catalog is
+    // behind — keep the previous published total instead of regressing.
+    if (prev && typeof prev.total === 'number' && prev.total > 0) {
+      if (candidate < prev.total && total >= (prev.rawTotal || 0)) {
+        console.warn('Ignoring stale catalog total ' + candidate.toLocaleString() +
+          ' (previous published ' + prev.total.toLocaleString() + ', corpus raw ' + total.toLocaleString() + ')');
+        candidate = prev.total;
+      }
+    }
+    return candidate;
   })(),
   rawTotal: total,
   fileCount: files.length,

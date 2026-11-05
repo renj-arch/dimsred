@@ -80,13 +80,30 @@ jobs:
             esac
           fi >> $GITHUB_OUTPUT
 
-      - name: Generate procedural questions (no AI)
+      - name: Backfill missing question banks from existing papers
+        if: steps.batch.outputs.exams != 'skip'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/extract-question-bank.js --missing-only
+
+      - name: Import validated invented questions into exam banks
+        if: steps.batch.outputs.exams != 'skip'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/import-invented-to-banks.js
+
+      - name: Import authored course questions into exam banks
+        if: steps.batch.outputs.exams != 'skip'
+        run: |
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-course-questions.js
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/import-course-questions-to-banks.js --refresh-course
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/refresh-course-paper-text.js
+
+      - name: Generate procedural questions (no AI, last-resort filler)
         if: steps.batch.outputs.exams != 'skip'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-daily-questions.js ${{ steps.batch.outputs.exams }} --count=15
 
       - name: Build practice paper
         if: steps.batch.outputs.exams != 'skip'
-        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
+        run: |
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/sanitize-question-text.js
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
 
       - name: Generate calendar data
         if: steps.batch.outputs.exams != 'skip'
@@ -99,6 +116,10 @@ jobs:
       - name: Build topic index for micro-tests
         if: steps.batch.outputs.exams != 'skip'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-topic-index.js
+
+      - name: Audit whole-site coverage
+        if: steps.batch.outputs.exams != 'skip'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/audit-coverage.js
 
       - name: Ping search engines
         if: steps.batch.outputs.exams != 'skip'
@@ -115,6 +136,10 @@ jobs:
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
+          # question-bank/ is gitignored, so new exam banks and the *-meta.json
+          # used-id rotation files would vanish on a fresh CI clone. Force-add
+          # the JSON so extraction, course imports and paper rotation persist.
+          git add -f question-bank/*.json
           git diff --staged --quiet || git commit -m "Auto-generate practice papers $(date +'%Y-%m-%d') — ${{ steps.batch.outputs.exams }}"
           for i in 1 2 3; do
             git pull --rebase --autostash 2>/dev/null || true
