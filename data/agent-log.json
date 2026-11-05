@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T07:27:23.340Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    },
-    {
-     "agent": "questioncats",
-     "count": 0
-    }
-   ],
-   "details": [],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address critical visual breaks first. MainsFresh should immediately fill the 80 missing figures to restore page completeness. MetaLearn is starved (0 fixes in last two runs) and will be placed last to clear backlog without blocking urgent repairs.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   }
-  },
-  {
    "at": "2026-11-05T08:01:21.604Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -548,8 +508,53 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-05T18:18:22.974Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "We have 81 figure gaps and 80 pending ideas; the last two runs produced zero fixes for mockpapers and metalearn, so they must be starved this cycle while we prioritize unfinished standing goals. We will start with BankFigures to close critical content gaps, followed by Invention to convert pending ideas into fresh material, then MainsFresh to ensure daily freshness, and finally MetaLearn to address the agent that has been idle for two runs.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MainsFresh",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (648 total)",
+       "text": "Name the non-Newtonian fluid classes. | What is an ideal fluid? | What is a real fluid?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T17:36:23.745Z",
+ "lastRun": "2026-11-05T18:18:22.974Z",
  "model": "qwen3.5:9b"
 }
