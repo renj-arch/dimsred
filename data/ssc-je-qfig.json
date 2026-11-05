@@ -1,11 +1,17 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T22:51:35.329Z",
-  "cursor": 789,
-  "built": 678
+  "updatedAt": "2026-11-05T23:16:00.574Z",
+  "cursor": 792,
+  "built": 681
  },
  "figs": {
+  "2316121": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"80\" y=\"40\" width=\"200\" height=\"140\" rx=\"5\"/><text x=\"90\" y=\"70\">Submerged Body</text><path d=\"M 130 60 L 130 100 M 170 60 L 170 100 M 130 80 L 170 80\"/><circle cx=\"150\" cy=\"80\" r=\"20\" fill=\"none\" stroke=\"#222\"/><text x=\"145\" y=\"95\">Liquid</text><path d=\"M 130 100 L 130 160 M 170 100 L 170 160\"/><path d=\"M 120 160 Q 150 180 180 160\" fill=\"none\" stroke=\"#222\"/><text x=\"140\" y=\"195\">Displaced Volume</text><line x1=\"130\" y1=\"70\" x2=\"130\" y2=\"100\" stroke-dasharray=\"2,2\"/><line x1=\"170\" y1=\"70\" x2=\"170\" y2=\"100\" stroke-dasharray=\"2,2\"/><text x=\"115\" y=\"85\">Fb (Upthrust)</text><text x=\"195\" y=\"85\">Weight of Displaced Liquid</text></svg>",
+   "n": "state archimedes principle.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
   "11434945": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Left Hub -->\n  <circle cx=\"80\" cy=\"110\" r=\"40\"/>\n  <path d=\"M 40 110 L 60 110 M 40 90 L 40 130 M 60 90 L 60 130\" stroke-width=\"2\"/>\n  <!-- Right Hub -->\n  <circle cx=\"280\" cy=\"110\" r=\"40\"/>\n  <path d=\"M 240 110 L 260 110 M 240 90 L 240 130 M 260 90 L 260 130\" stroke-width=\"2\"/>\n  <!-- Sleeve (Internal Teeth) -->\n  <path d=\"M 120 110 Q 180 50 240 110 T 120 110\" fill=\"none\" stroke-dasharray=\"3,2\"/>\n  <!-- Meshing Gear Teeth Representation -->\n  <path d=\"M 100 110 L 115 95 M 115 125 L 100 140\" stroke-width=\"1.8\"/>\n  <path d=\"M 130 110 L 145 95 M 145 125 L 130 140\" stroke-width=\"1.8\"/>\n  <path d=\"M 160 110 L 175 95 M 175 125 L 160 140\" stroke-width=\"1.8\"/>\n  <path d=\"M 190 110 L 205 95 M 205 125 L 190 140\" stroke-width=\"1.8\"/>\n  <path d=\"M 220 110 L 235 95 M 235 125 L 220 140\" stroke-width=\"1.8\"/>\n  <!-- Labels -->\n  <text x=\"40\" y=\"60\" text-anchor=\"middle\">Input Shaft</text>\n  <text x=\"300\" y=\"60\" text-anchor=\"middle\">Output Shaft</text>\n  <text x=\"180\" y=\"200\" text-anchor=\"middle\">Flexible Sleeve</text>\n  <text x=\"180\" y=\"190\" text-anchor=\"middle\">(Internal Teeth)</text>\n  <text x=\"180\" y=\"40\" text-anchor=\"middle\">Meshing Gear Teeth</text>\n</svg>",
    "n": "what is a gear coupling and where is it used?",
@@ -4071,6 +4077,18 @@
   "c58f57aa": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"80\" y=\"40\" width=\"200\" height=\"140\" /><text x=\"90\" y=\"70\">Water Surface</text><line x1=\"80\" y1=\"60\" x2=\"280\" y2=\"60\" stroke-dasharray=\"4,2\" /><line x1=\"80\" y1=\"60\" x2=\"80\" y2=\"200\" /><line x1=\"280\" y1=\"60\" x2=\"280\" y2=\"200\" /><text x=\"75\" y=\"195\">Bottom</text><text x=\"285\" y=\"195\">Top</text><line x1=\"140\" y1=\"100\" x2=\"140\" y2=\"130\" stroke-dasharray=\"2,2\" /><text x=\"125\" y=\"120\">h̄ = 1.5 m</text><path d=\"M 140 130 L 160 130 L 160 190 L 140 190 Z\" fill=\"#222\" /><text x=\"135\" y=\"180\">CP</text><line x1=\"170\" y1=\"100\" x2=\"170\" y2=\"130\" stroke-dasharray=\"2,2\" /><text x=\"155\" y=\"120\">h = 2.0 m</text><path d=\"M 80 60 L 80 140 L 280 140 L 280 60 Z\" fill=\"none\" stroke-dasharray=\"2,2\" /><text x=\"135\" y=\"95\">γh</text><text x=\"170\" y=\"95\">dA</text></svg>",
    "n": "find the total pressure and cp on a 3 m deep, 2 m wide vertical plate with its top at the surface.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "ae1cb862": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"20\" width=\"80\" height=\"80\" stroke-dasharray=\"2,2\"/><text x=\"70\" y=\"65\" text-anchor=\"middle\">Body</text><circle cx=\"130\" cy=\"100\" r=\"40\"/><text x=\"130\" y=\"105\" text-anchor=\"middle\">Liquid</text><path d=\"M 80 100 L 170 100\" stroke-dasharray=\"2,2\"/><text x=\"125\" y=\"90\" text-anchor=\"middle\">Surface</text><line x1=\"130\" y1=\"40\" x2=\"130\" y2=\"60\"/><line x1=\"130\" y1=\"140\" x2=\"130\" y2=\"160\"/><text x=\"115\" y=\"55\" text-anchor=\"end\">ρ_body &lt; ρ_liq</text><text x=\"115\" y=\"155\" text-anchor=\"end\">ρ_body &gt; ρ_liq</text><text x=\"175\" y=\"105\" text-anchor=\"middle\">ρ_body = ρ_liq</text></svg>",
+   "n": "when does a body float, sink or hover in a liquid?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "76833d7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"175\">Liquid</text><path d=\"M 60 180 L 100 180 L 100 140 A 40 40 0 0 1 140 180 L 180 180\" fill=\"#222\"/><text x=\"115\" y=\"160\">Floating Body</text><line x1=\"180\" y1=\"180\" x2=\"320\" y2=\"180\"/><path d=\"M 40 180 L 40 140 A 40 40 0 0 1 80 180 L 120 180\" fill=\"#222\"/><text x=\"75\" y=\"160\">Submerged Part</text><text x=\"200\" y=\"195\">Fraction = ρ_body / ρ_liquid</text></svg>",
+   "n": "what fraction of a floating body remains submerged?",
    "sub": "fluids",
    "at": "2026-11-05"
   }
