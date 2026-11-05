@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T19:34:29.988Z",
-  "cursor": 768,
-  "built": 657
+  "updatedAt": "2026-11-05T19:42:54.478Z",
+  "cursor": 771,
+  "built": 660
  },
  "figs": {
   "11434945": {
@@ -3945,6 +3945,24 @@
   "9a969fa4": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Pressure (P)</text><line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/><text x=\"330\" y=\"205\" text-anchor=\"end\">Ambient</text><text x=\"30\" y=\"205\" text-anchor=\"end\">P_vapour</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"180\" y=\"40\" text-anchor=\"middle\">Time (t)</text><polyline points=\"50,180 100,160 150,180 200,140 250,180 300,120\"/><circle cx=\"100\" cy=\"160\" r=\"4\"/><circle cx=\"200\" cy=\"140\" r=\"4\"/><circle cx=\"300\" cy=\"120\" r=\"4\"/><text x=\"95\" y=\"175\">High P</text><text x=\"195\" y=\"135\">Cavitation (P &lt; P_vap)</text><text x=\"295\" y=\"115\">Collapse</text></svg>",
    "n": "what is cavitation in fluids?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "6b4f67aa": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Pressure (P)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"50\" x2=\"40\" y2=\"180\"/><text x=\"30\" y=\"170\">Vapour Pressure</text><text x=\"30\" y=\"60\">Operating Pressure</text><circle cx=\"100\" cy=\"100\" r=\"5\" fill=\"#222\"/><circle cx=\"280\" cy=\"100\" r=\"5\" fill=\"#222\"/><path d=\"M 40 180 L 320 180\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Risk of Cavitation</text><rect x=\"60\" y=\"70\" width=\"240\" height=\"40\" rx=\"5\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Keep Operating Pressure &gt; Vapour Pressure</text></svg>",
+   "n": "how is cavitation generally prevented?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "74285fb5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,180 L40,20 L320,20 L320,180 Z\"/><text x=\"60\" y=\"90\" text-anchor=\"middle\">760 mm</text><text x=\"60\" y=\"115\" text-anchor=\"middle\" font-style=\"italic\">Hg</text><path d=\"M40,20 L320,20 M40,180 L40,20 M320,180 L320,20\"/><circle cx=\"180\" cy=\"100\" r=\"5\" fill=\"#222\"/><line x1=\"180\" y1=\"95\" x2=\"180\" y2=\"105\"/><text x=\"170\" y=\"100\" text-anchor=\"end\">Vacuum</text><text x=\"190\" y=\"100\" text-anchor=\"start\">Atmospheric Pressure</text><text x=\"60\" y=\"195\">Mercury Column Height</text><text x=\"280\" y=\"195\">Pressure Indicator</text></svg>",
+   "n": "what does a barometer measure?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "4683c711": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"180\" y1=\"20\" x2=\"180\" y2=\"200\"/><circle cx=\"180\" cy=\"20\" r=\"3\"/><text x=\"175\" y=\"40\" text-anchor=\"end\">Atmosphere</text><path d=\"M 180 20 L 160 180 L 140 180 L 140 200 L 160 200 Z\"/><text x=\"135\" y=\"195\">p = γh</text><text x=\"175\" y=\"195\">Gauge Pressure</text></svg>",
+   "n": "what is a piezometer?",
    "sub": "fluids",
    "at": "2026-11-05"
   }

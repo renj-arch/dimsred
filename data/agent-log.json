@@ -1,65 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T10:48:06.266Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 49,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 49
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      },
-      {
-       "page": "agniveer/papers/practice-set-01.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-13.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-14.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-15.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cds/papers/practice-set-01.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cds/papers/practice-set-02.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cgl/papers/13-sep-2025-s1.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cgl/papers/practice-set-01.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cgl/papers/practice-set-02.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T12:01:07.070Z",
    "model": "batiai/qwen3.8-27b:iq3",
    "totalFixes": 3,
@@ -563,8 +504,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T19:49:12.854Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention to restore site integrity; BankFigures is the primary fixer for figures, while MetaLearn must be starved as it produced zero fixes in the last two runs despite available inputs. MainsFresh should follow to generate fresh content once structural gaps are addressed, ensuring a balanced workflow that prioritizes unfinished standing goals over new ventures.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (660 total)",
+       "text": "How is cavitation generally prevented? | What does a barometer measure? | What is a piezometer?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T19:34:29.997Z",
+ "lastRun": "2026-11-05T19:49:12.854Z",
  "model": "qwen3.5:9b"
 }
