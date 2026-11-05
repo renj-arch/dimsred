@@ -1,4 +1,4 @@
-name: Author
+﻿name: Author
 
 # The writer tier, end to end: fetch the slate topic's sources, cut a ledger,
 # let the local model write narration inside a fixed scene structure, assemble
@@ -126,6 +126,7 @@ jobs:
           echo "LM_MODEL=${MODEL}" >> "$GITHUB_ENV"
 
       - name: Invent a sourced brief
+        id: invent
         if: ${{ inputs.film == 'invent' }}
         run: |
           set -euo pipefail
@@ -133,19 +134,32 @@ jobs:
           ID=$(node -e "
             const slate = require('./data/film-slate.json');
             const topic = [...slate.topics].reverse().find((t) => t.status === 'research');
-            if (!topic) process.exit(3);
-            process.stdout.write(topic.id);
+            process.stdout.write(topic ? topic.id : '');
           ")
+          # No researchable topic is a normal no-op, not a failure: the news
+          # scanner skips single-outlet stories without an official document,
+          # and some days nothing qualifies. The old code exited 3 here, which
+          # failed the whole run (author #41970252115, 2026-11-05) and then
+          # tried to author with an empty FILM. Stop cleanly and let the
+          # downstream steps skip instead.
+          if [ -z "$ID" ]; then
+            echo "found=false" >> "$GITHUB_OUTPUT"
+            echo "::notice title=Nothing to author::The slate has no researchable topic this run; nothing was published."
+            exit 0
+          fi
+          echo "found=true" >> "$GITHUB_OUTPUT"
           echo "FILM=$ID" >> "$GITHUB_ENV"
           echo "::notice title=Invented $ID::The news feed supplied the next sourced brief."
 
       - name: Fetch the sources
         id: fetch
+        if: steps.invent.outputs.found != 'false'
         run: |
           node scripts/film/research.js --topic "$FILM" \
             --out "out/research/$FILM"
 
       - name: Author the storyboard
+        if: steps.invent.outputs.found != 'false'
         env:
           STUB: ${{ inputs.stub }}
         run: |
@@ -158,11 +172,12 @@ jobs:
           grep -E 'Maximum resident set size|Elapsed \(wall clock\)' "out/author-$FILM.time.log" || true
 
       - name: Show what the film will say
+        if: steps.invent.outputs.found != 'false'
         run: |
           node - <<'NODE'
           const fs = require('fs');
           const film = JSON.parse(fs.readFileSync(`data/films/${process.env.FILM}.json`, 'utf8'));
-          console.log(`${film.title} — ${film.subtitle}`);
+          console.log(`${film.title} ΓÇö ${film.subtitle}`);
           console.log(`${film.scenes.length} scenes, ${film.targetDuration}s, grammar ${film.edit.grammar}`);
           for (const scene of film.scenes) {
             console.log(`\n${scene.id} ${scene.title} (${scene.duration}s)`);
@@ -188,7 +203,7 @@ jobs:
           retention-days: 30
 
       - name: Clear the authoring strikes
-        if: ${{ success() && !inputs.stub }}
+        if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub }}
         run: node scripts/film/author-strike.js --pass "$FILM"
 
       - name: Record the failed attempt
@@ -211,7 +226,7 @@ jobs:
           git push
 
       - name: Commit the storyboard to this branch
-        if: ${{ success() && !inputs.stub }}
+        if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub }}
         run: |
           git config user.name "vlymbooq"
           git config user.email "vlymbooq@users.noreply.github.com"
@@ -225,7 +240,7 @@ jobs:
           git push
 
       - name: Dispatch the render
-        if: ${{ success() && !inputs.stub && inputs.render }}
+        if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub && inputs.render }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
@@ -234,3 +249,4 @@ jobs:
             -f quality=final \
             -f release=true \
             -f publish=true
+
