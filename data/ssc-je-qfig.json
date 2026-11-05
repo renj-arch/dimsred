@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T03:48:44.892Z",
-  "cursor": 714,
-  "built": 626
+  "updatedAt": "2026-11-05T04:18:29.617Z",
+  "cursor": 717,
+  "built": 628
  },
  "figs": {
   "11434945": {
@@ -3759,6 +3759,18 @@
   "c97e6c39": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Forced Lubrication System</text><circle cx=\"40\" cy=\"100\" r=\"15\"/><text x=\"30\" y=\"105\">Gear Pump</text><line x1=\"55\" y1=\"95\" x2=\"85\" y2=\"95\"/><line x1=\"55\" y1=\"105\" x2=\"85\" y2=\"105\"/><rect x=\"90\" y=\"75\" width=\"30\" height=\"40\" rx=\"5\"/><text x=\"105\" y=\"100\">Filter</text><line x1=\"120\" y1=\"85\" x2=\"120\" y2=\"115\"/><line x1=\"120\" y1=\"90\" x2=\"120\" y2=\"110\"/><rect x=\"150\" y=\"70\" width=\"60\" height=\"50\" rx=\"3\"/><text x=\"180\" y=\"95\">Relief Valve</text><line x1=\"210\" y1=\"90\" x2=\"240\" y2=\"90\"/><line x1=\"210\" y1=\"100\" x2=\"240\" y2=\"100\"/><rect x=\"250\" y=\"70\" width=\"60\" height=\"50\" rx=\"3\"/><text x=\"280\" y=\"95\">Galleries</text><line x1=\"310\" y1=\"90\" x2=\"340\" y2=\"90\"/><line x1=\"310\" y1=\"100\" x2=\"340\" y2=\"100\"/><rect x=\"350\" y=\"70\" width=\"10\" height=\"50\" rx=\"2\"/><text x=\"365\" y=\"95\">Bearings</text><path d=\"M 85 95 L 90 95 L 90 105 L 85 105 Z\" fill=\"#222\" opacity=\"0.2\"/><path d=\"M 120 85 L 125 85 L 125 90 L 120 90 Z\" fill=\"#222\" opacity=\"0.2\"/><path d=\"M 210 90 L 215 90 L 215 95 L 210 95 Z\" fill=\"#222\" opacity=\"0.2\"/><path d=\"M 310 90 L 315 90 L 315 95 L 310 95 Z\" fill=\"#222\" opacity=\"0.2\"/></svg>",
    "n": "describe the forced (pressure) wet-sump lubrication system.",
+   "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "133fa1df": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,180 L40,20 L280,20 L280,180 Z\"/><text x=\"30\" y=\"25\">Temp</text><text x=\"275\" y=\"25\">Viscosity</text><path d=\"M60,160 L60,40\"/><text x=\"50\" y=\"95\">High Viscosity</text><path d=\"M240,160 L240,40\"/><text x=\"230\" y=\"95\">Low Viscosity</text><path d=\"M80,100 L120,100 L120,70 L160,70 L160,40 L200,40 L200,70 L240,70 L240,100\"/><text x=\"135\" y=\"85\">VI: Flat Curve</text><path d=\"M80,140 L120,140 L120,170 L160,170 L160,140 L200,140 L200,170 L240,170 L240,140\"/><text x=\"135\" y=\"155\">Low VI</text><path d=\"M80,160 L120,160 L120,190 L160,190 L160,160 L200,160 L200,190 L240,190 L240,160\"/><text x=\"135\" y=\"175\">High VI</text><path d=\"M80,100 L80,190\"/><text x=\"70\" y=\"145\">Temperature</text></svg>",
+   "n": "define viscosity and viscosity index of an engine oil.",
+   "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "fd25701f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"120\" stroke-dasharray=\"4,2\"/><text x=\"80\" y=\"70\" text-anchor=\"middle\">Engine</text><text x=\"80\" y=\"95\" text-anchor=\"middle\">Block</text><path d=\"M 60 140 L 100 140\" stroke-dasharray=\"2,2\"/><text x=\"80\" y=\"135\" text-anchor=\"middle\">Coolant</text><text x=\"80\" y=\"150\" text-anchor=\"middle\">Flow</text><path d=\"M 60 140 L 60 160\" stroke-dasharray=\"2,2\"/><text x=\"50\" y=\"175\" text-anchor=\"end\">Heat Out</text><circle cx=\"180\" cy=\"100\" r=\"30\" fill=\"#222\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\">Combustion</text><text x=\"180\" y=\"120\" text-anchor=\"middle\">Zone</text><path d=\"M 150 130 L 180 140 L 210 130\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"165\" text-anchor=\"middle\">Exhaust</text><text x=\"180\" y=\"180\" text-anchor=\"middle\">Gases</text><path d=\"M 240 60 L 240 140\" stroke-dasharray=\"2,2\"/><text x=\"255\" y=\"100\" text-anchor=\"start\">Air In</text><text x=\"255\" y=\"115\" text-anchor=\"start\">Flow</text></svg>",
+   "n": "why must an engine be cooled even though heat is needed for combustion?",
    "sub": "ice",
    "at": "2026-11-05"
   }
