@@ -4,14 +4,24 @@ const path = require('path');
 const CSP = "default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com https://unpkg.com https://static.cloudflareinsights.com https://ep2.adtrafficquality.google https://*.adtrafficquality.google; connect-src 'self' https:; frame-src 'self' https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google https://www.google.com; upgrade-insecure-requests";
 
 const BASE = 'https://vlymbooq.qzz.io';
-const EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
+const EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet', 'nda', 'cds', 'clat'];
 
 function esc(s) {
   if (!s) return '';
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  // The course banks already carry HTML entities such as &rarr; and &infin;
+  // (extracted from authored lesson sources). Escaping every bare "&" turned
+  // them into "&amp;rarr;" and printed the entity literally on paper pages.
+  // Preserve anything that is already a valid named/numeric entity.
+  return String(s)
+    // A NUL or other C0 control byte inside a solution (seen in older
+    // extracted Hindi glosses) makes git treat the whole page as binary and
+    // produces invalid HTML. Drop controls, keep tab/newline-free whitespace.
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ')
+    .replace(/&(?!(?:[a-zA-Z][a-zA-Z0-9]{1,31}|#\d{1,7}|#x[0-9a-fA-F]{1,6});)/g, '&amp;')
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-const NAV_LABELS = { cgl: 'CGL', rbi: 'RBI', jee: 'JEE', neet: 'NEET', gate: 'GATE', agniveer: 'Agniveer', 'upsc': 'UPSC', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', 'ctet': 'CTET' };
+const NAV_LABELS = { cgl: 'CGL', rbi: 'RBI', jee: 'JEE', neet: 'NEET', gate: 'GATE', agniveer: 'Agniveer', 'upsc': 'UPSC', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', 'ctet': 'CTET', nda: 'NDA', cds: 'CDS', clat: 'CLAT' };
 
 function navLinks(folder) {
   // Exam-hub links are emitted root-absolute "/<slug>/" — the exact shape

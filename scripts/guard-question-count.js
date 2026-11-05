@@ -1,146 +1,157 @@
 // guard-question-count.js
 //
-// Prevents question count regression in data/questions/*.json files.
-// Reads wiki-coverage.json thresholds and blocks push if any subject drops
-// below critical (<100) or low (<1000) thresholds compared to the last
-// successful coverage report.
+// Prevents corpus regression in data/questions/*.json.
+//
+// Two layers:
+//   1. TOTAL GUARD (hard block) — the raw per-file question sum must not fall
+//      by more than a small tolerance. This is the guard that was missing when
+//      the archive silently shrank from 16.15M to 16.05M: the old per-subject
+//      checks only fired below 100 questions and the old parser returned 0 for
+//      every real corpus file (it looked for a top-level `subSubjects` that
+//      does not exist in the {Subject:{subSubjects:{...}}} shape), so the
+//      baseline was all zeros and no drop could ever be detected.
+//   2. PER-FILE WARNINGS — large drops inside one file are reported. They are
+//      not fatal because re-filing moves questions between files.
 //
 // Usage: node scripts/guard-question-count.js
+// Env:   GUARD_MAX_DROP   absolute questions allowed to disappear (default:
+//                         max(1000, 0.05% of the previous total))
 
 const fs = require('fs');
 const path = require('path');
-const { execSync } = require('child_process');
 
 const QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
 const COVERAGE_FILE = path.join(__dirname, '..', 'data', 'wiki-coverage.json');
 const STATE_FILE = path.join(__dirname, '..', 'data', 'questions', '_state', 'count-guard.json');
+const STATE_VERSION = 2;
 
 function loadCoverage() {
-  if (!fs.existsSync(COVERAGE_FILE)) {
-    console.log('No wiki-coverage.json found, skipping guard');
+  if (!fs.existsSync(COVERAGE_FILE)) return null;
+  try {
+    return JSON.parse(fs.readFileSync(COVERAGE_FILE, 'utf8'));
+  } catch {
     return null;
   }
-  return JSON.parse(fs.readFileSync(COVERAGE_FILE, 'utf8'));
 }
 
-function loadPreviousCounts() {
-  if (!fs.existsSync(STATE_FILE)) return {};
+function loadState() {
+  if (!fs.existsSync(STATE_FILE)) return null;
   try {
-    return JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    const s = JSON.parse(fs.readFileSync(STATE_FILE, 'utf8'));
+    // v1 was a flat {file: count} map produced by the broken parser; those
+    // numbers are all 0, so they must never be used as a baseline.
+    if (s && s.version === STATE_VERSION && s.files && typeof s.total === 'number') return s;
+    return null;
   } catch {
-    return {};
+    return null;
   }
 }
 
-function saveCounts(counts) {
+function saveState(state) {
   fs.mkdirSync(path.dirname(STATE_FILE), { recursive: true });
-  fs.writeFileSync(STATE_FILE, JSON.stringify(counts, null, 2) + '\n');
+  fs.writeFileSync(STATE_FILE, JSON.stringify(state, null, 2) + '\n');
 }
 
+// Mirrors scripts/build-archive-index.mjs: corpus files are
+// { "Subject": { subSubjects: { "Sub-subject": [questions...] } } }.
 function countQuestionsInFile(filePath) {
   try {
     const data = JSON.parse(fs.readFileSync(filePath, 'utf8'));
     if (Array.isArray(data)) return data.length;
-    if (data && typeof data === 'object' && data.subSubjects) {
-      let total = 0;
-      for (const qs of Object.values(data.subSubjects)) {
-        if (Array.isArray(qs)) total += qs.length;
+    if (!data || typeof data !== 'object') return 0;
+    let total = 0;
+    for (const key of Object.keys(data)) {
+      const ss = data[key];
+      if (Array.isArray(ss)) { total += ss.length; continue; }
+      if (!ss || typeof ss !== 'object') continue;
+      if (ss.subSubjects && typeof ss.subSubjects === 'object' && !Array.isArray(ss.subSubjects)) {
+        for (const qs of Object.values(ss.subSubjects)) {
+          if (Array.isArray(qs)) total += qs.length;
+        }
       }
-      return total;
     }
-    return 0;
+    return total;
   } catch {
     return 0;
   }
 }
 
 function main() {
-  const coverage = loadCoverage();
-  const prevCounts = loadPreviousCounts();
-
   if (!fs.existsSync(QUESTIONS_DIR)) {
     console.log('Questions directory not found, skipping guard');
     return 0;
   }
 
+  const coverage = loadCoverage();
+  const prev = loadState();
+
   const files = fs.readdirSync(QUESTIONS_DIR)
-    .filter(f => f.endsWith('.json') && !f.startsWith('_'));
+    .filter(f => f.endsWith('.json') && !f.startsWith('_'))
+    .filter(f => !['archive-index.json', 'archive-cat-index.json', 'catalog.json', 'manifest.json', 'wiki-coverage.json'].includes(f));
 
   const currentCounts = {};
   let totalQuestions = 0;
-  let subjectCount = 0;
 
   for (const file of files) {
-    const filePath = path.join(QUESTIONS_DIR, file);
-    const count = countQuestionsInFile(filePath);
+    const count = countQuestionsInFile(path.join(QUESTIONS_DIR, file));
     currentCounts[file] = count;
     totalQuestions += count;
-    subjectCount++;
   }
 
-  console.log(`Question count guard: ${subjectCount} subjects, ${totalQuestions} total questions`);
+  console.log(`Question count guard: ${files.length} files, ${totalQuestions.toLocaleString()} total questions`);
 
-  // Initialize baseline from previous state if we have it, otherwise from coverage
-  const baseline = Object.keys(prevCounts).length > 0 ? prevCounts : (coverage?.subjects?.reduce((acc, s) => {
-    acc[s.file] = s.questions;
-    return acc;
-  }, {}) || {});
+  // Baseline: v2 state first; otherwise the coverage report; otherwise none.
+  let prevTotal = prev ? prev.total : 0;
+  const prevFiles = prev ? prev.files : {};
+  if (!prevTotal && coverage && Array.isArray(coverage.subjects)) {
+    prevTotal = coverage.subjects.reduce((acc, s) => acc + (Number(s.questions) || 0), 0);
+  }
 
-  // Check for regressions
-  let criticalDrop = false;
-  let lowDrop = false;
-  const regressions = [];
+  const current = { version: STATE_VERSION, generatedAt: new Date().toISOString(), total: totalQuestions, files: currentCounts };
 
+  if (!prevTotal) {
+    console.log('No trusted baseline yet — recording one and passing');
+    saveState(current);
+    return 0;
+  }
+
+  const configured = parseInt(process.env.GUARD_MAX_DROP || '', 10);
+  const tolerance = Number.isFinite(configured) && configured >= 0
+    ? configured
+    : Math.max(1000, Math.floor(prevTotal * 0.0005));
+  const drop = prevTotal - totalQuestions;
+
+  // New files are additive and must not mask a loss elsewhere, so the total
+  // comparison above is the hard gate. Per-file detail is only diagnostic.
+  const warnings = [];
   for (const [file, count] of Object.entries(currentCounts)) {
-    const prev = baseline[file];
-    if (prev === undefined) continue; // new subject, no baseline
-
-    const drop = prev - count;
-    if (drop > 0) {
-      const subj = coverage?.subjects?.find(s => s.file === file);
-      const threshold = subj?.low === 'critical' ? 100 : (subj?.low === 'low' ? 1000 : 100);
-      const isCritical = subj?.low === 'critical' || count < 100;
-      const isLow = subj?.low === 'low' || count < 1000;
-
-      console.log(`  DROP: ${file} ${prev} -> ${count} (-${drop}) [critical: ${isCritical}, low: ${isLow}]`);
-
-      if (isCritical && count < 100) {
-        criticalDrop = true;
-        regressions.push({ file, prev, count, drop, level: 'CRITICAL' });
-      } else if (isLow && count < 1000) {
-        lowDrop = true;
-        regressions.push({ file, prev, count, drop, level: 'LOW' });
-      } else if (drop > prev * 0.1) { // >10% drop for other subjects
-        regressions.push({ file, prev, count, drop, level: 'WARNING' });
-      }
+    const before = prevFiles[file];
+    if (typeof before !== 'number') continue;
+    const d = before - count;
+    if (d > 0 && d > Math.max(50, before * 0.1)) {
+      warnings.push(`${file}: ${before} -> ${count} (-${d})`);
     }
   }
 
-  if (regressions.length > 0) {
-    console.log('\n⚠️  Question count regressions detected:');
-    for (const r of regressions) {
-      console.log(`  ${r.level}: ${r.file} ${r.prev} -> ${r.count} (-${r.drop})`);
-    }
+  if (warnings.length) {
+    console.log('\nPer-file drops (moved questions are normal; total guard is authoritative):');
+    for (const w of warnings.slice(0, 25)) console.log('  ' + w);
+    if (warnings.length > 25) console.log(`  ... and ${warnings.length - 25} more`);
   }
 
-  // Block on critical regressions
-  if (criticalDrop) {
-    console.error('\n❌ BLOCKED: Critical subject dropped below 100 questions');
+  if (drop > tolerance) {
+    console.error(`\nBLOCKED: corpus total dropped ${prevTotal.toLocaleString()} -> ${totalQuestions.toLocaleString()} (-${drop.toLocaleString()}); allowed tolerance is ${tolerance.toLocaleString()}.`);
+    console.error('If this loss is intentional, re-run with GUARD_MAX_DROP=<questions> after verifying the deletion.');
     return 1;
   }
 
-  // Warn on low regressions but don't block
-  if (lowDrop) {
-    console.warn('\n⚠️  WARNING: Low subject dropped below 1000 questions');
+  saveState(current);
+  if (drop > 0) {
+    console.log(`OK: ${drop.toLocaleString()} question(s) removed, within tolerance ${tolerance.toLocaleString()}`);
+  } else {
+    console.log('OK: corpus total did not shrink');
   }
-
-  // Update baseline with current counts (only if no critical drop)
-  if (!criticalDrop) {
-    saveCounts(currentCounts);
-    console.log('✅ Guard passed, baseline updated');
-  }
-
-  return criticalDrop ? 1 : 0;
+  return 0;
 }
 
 try {
