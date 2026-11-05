@@ -1,34 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T08:01:21.604Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are blocking exam prep; prioritize BankFigures to fix broken content immediately. MainsFresh is needed for daily fresh material since papers/questions/syllabus files are missing. MetaLearn should run last as it produced 0 fixes in the last two runs, likely due to lack of input data until gaps are filled.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": []
-  },
-  {
    "at": "2026-11-05T08:28:12.707Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -553,8 +525,36 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T18:42:54.414Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T18:18:22.974Z",
+ "lastRun": "2026-11-05T18:42:54.414Z",
  "model": "qwen3.5:9b"
 }
