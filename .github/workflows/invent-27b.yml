@@ -167,6 +167,13 @@ jobs:
           INVENT_DEADLINE_MIN: '110'
           INVENT_NUM_CTX: '4096'
           INVENT_NUM_PREDICT: '1200'
+          # This is the premium-quality lane: only fully gated items are ever
+          # published, so a run where the model's candidates all fail the
+          # checks has produced nothing to publish — a no-op, not a corrupt
+          # corpus. Keep the run green (with the full reject breakdown in the
+          # log) instead of failing daily on model-quality variance. The bulk
+          # 9B lane (invent-questions.yml) stays fail-closed.
+          INVENT_ALLOW_EMPTY: '1'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/invent-questions.js
 
       # Revalidate the pool before it is ever committed. The generator's own

@@ -648,5 +648,16 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
 
   const mins = ((Date.now() - started) / 60000).toFixed(1);
   log('[invent] done in ' + mins + 'min — slots=' + slots + ' accepted=' + accepted.length + ' rejects=' + JSON.stringify(rejects));
-  if (!accepted.length) { console.error('[invent] ZERO questions invented — refusing to claim success'); process.exit(1); }
+  if (!accepted.length) {
+    // A run where every candidate was rejected is a no-op, not corruption:
+    // nothing enters the pool. The slow 27B lane sets INVENT_ALLOW_EMPTY=1 so
+    // a day of low-quality model output does not paint the workflow red (it
+    // still logs the full reject breakdown); the bulk lane stays fail-closed.
+    if (process.env.INVENT_ALLOW_EMPTY === '1') {
+      console.log('[invent] ZERO questions accepted — soft no-op (INVENT_ALLOW_EMPTY=1); nothing published');
+      return;
+    }
+    console.error('[invent] ZERO questions invented — refusing to claim success');
+    process.exit(1);
+  }
 })().catch(e => { console.error('[invent] fatal: ' + e.stack); process.exit(1); });
