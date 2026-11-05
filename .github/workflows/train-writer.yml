@@ -150,7 +150,14 @@ jobs:
         run: |
           set -e
           pip install --quiet torch --index-url https://download.pytorch.org/whl/cpu
-          pip install --quiet transformers peft accelerate datasets
+          # Pin transformers to 4.x: 5.0 removed TrainingArguments.warmup_ratio
+          # (run 42048879261 died there with "unexpected keyword argument
+          # 'warmup_ratio'"). train/finetune.py targets the 4.x API.
+          # Pin numpy to 1.x: TVM's DataType -> numpy conversion in
+          # mlc_llm's standard_loader (`x.astype(mlc_param.dtype)`) fails on
+          # numpy 2.5 with "Could not convert T.float16 to a NumPy dtype"
+          # (run 42050824394).
+          pip install --quiet "transformers<5" "numpy<2" peft accelerate datasets
           # MLC conversion (safetensors -> q4f16_1 param shards + the JSON the
           # browser reads). The PyPI distribution was renamed: plain `mlc-llm`
           # is NOT published anymore (verified 404 — that is exactly what
@@ -165,54 +172,60 @@ jobs:
           # is exactly how run #6 died: ModuleNotFoundError: No module named
           # 'tvm'. The provider is the matching runtime wheel `mlc-ai-cpu` on
           # the same index (verified: it ships top-level tvm/__init__.py).
-          # Install the pair, with a fallback to the nightly pair.
+          # Install the pair. Two builds exist and they target DIFFERENT
+          # `apache-tvm-ffi` ABIs, and both declare it with no upper bound:
           #
-          # ABI pin: both wheels declare `apache-tvm-ffi` with NO upper bound,
-          # but they were built against the pre-0.1.13 runtime, which exports
-          #   json::Stringify(Any const&, Optional<int> const&)
-          # BY VALUE. apache-tvm-ffi 0.1.13 changed it to a const reference
-          # and dropped the by-value symbol, so a bare `pip install` resolves
-          # the newest release and every run since 2026-10-24 died at import:
+          #   stable  (mlc-ai-cpu 0.20.0 / mlc-llm-cpu 0.20.0.dev0)
+          #           needs json::Stringify(Any const&, Optional<int>) BY VALUE,
+          #           exported only by apache-tvm-ffi <= 0.1.12.
+          #   nightly (0.26.dev*) needs the BY-REFERENCE form added in 0.1.13.
+          #
+          # A bare install resolves the newest release (0.1.15) for the stable
+          # pair and every run since 2026-10-24 died at import with:
           #   libtvm_runtime.so: undefined symbol:
           #   _ZN3tvm3ffi4json9StringifyERKNS0_3AnyENS0_8OptionalIivEE
-          # `--pre` made it worse by selecting the 0.1.16rc1 prerelease.
-          # Verified against the published wheels: 0.1.7..0.1.12 export the
-          # by-value symbol; 0.1.13+ export only the by-reference one.
+          # `--pre` made it worse by also allowing the 0.1.16rc1 prerelease.
+          # Verified directly in the published wheels: 0.1.7..0.1.12 export
+          # the by-value symbol, 0.1.13+ only the by-reference one.
           #
-          # 0.1.12 is the newest ABI-compatible runtime; 0.1.1 is the version
-          # that was current when this wheel pair was published (2025-11-10),
-          # so retry with it if a newer Python API in 0.1.12 disagrees.
+          # The stable pair also *aborts* (SIGABRT, not ImportError) even with
+          # its matching 0.1.12/0.1.1 runtime (2026-11-05 run 42045863249), so
+          # try the self-consistent nightly pair first and fall back to stable.
+          # Import failures are printed, not swallowed: the old code sent the
+          # abort reason to /dev/null and left nothing to debug.
+          try_import() {
+            python -c "import numpy, tvm, mlc_llm; print('numpy', numpy.__version__); print('tvm', getattr(tvm, '__version__', 'unknown')); print('mlc_llm', getattr(mlc_llm, '__version__', 'unknown'))"
+          }
           install_stable() {
             pip install --quiet "apache-tvm-ffi==$1" \
               "mlc-ai-cpu==0.20.0" "mlc-llm-cpu==0.20.0.dev0" \
               -f https://mlc.ai/wheels
           }
-          install_ok() {
-            python -c "import tvm, mlc_llm" >/dev/null 2>&1
-          }
-          install_stable 0.1.12 || echo "[train-writer] stable pair install failed; will try the next pin"
-          if ! install_ok; then
-            echo "[train-writer] stable pair + tvm-ffi 0.1.12 does not import; retrying with 0.1.1"
-            install_stable 0.1.1 || true
+
+          # 1) Self-consistent nightly pair: the index always serves the newest
+          #    nightly runtime + CLI built together, and `--pre` lets pip pick
+          #    the matching (possibly rc) apache-tvm-ffi from PyPI.
+          if pip install --quiet --pre mlc-ai-nightly-cpu mlc-llm-nightly-cpu \
+               -f https://mlc.ai/wheels && try_import; then
+            echo "[train-writer] using the nightly MLC pair"
+          else
+            echo "[train-writer] nightly MLC pair unavailable or broken; falling back to stable"
+            pip uninstall -y -q mlc-ai-nightly-cpu mlc-llm-nightly-cpu 2>/dev/null || true
+            # 2) Stable pair, pinned to an ABI-compatible runtime (0.1.12 is
+            #    the newest; 0.1.1 is the build-time version).
+            for v in 0.1.12 0.1.1; do
+              install_stable "$v" || { echo "[train-writer] install with tvm-ffi $v failed"; continue; }
+              if try_import; then break; fi
+              echo "[train-writer] stable pair with tvm-ffi $v does not import"
+            done
           fi
-          # The nightly pair was rebuilt against the 0.1.13+ ABI, so it needs
-          # the matching runtime (and the stable dist-info names must be
-          # uninstalled first: both pairs install the same tvm/ and mlc_llm/
-          # packages, so leaving them behind mixes two ABIs on sys.path).
-          if ! install_ok; then
-            echo "[train-writer] stable MLC pair failed to import; trying nightly pair"
-            pip uninstall -y -q mlc-ai-cpu mlc-llm-cpu
-            pip install --quiet "apache-tvm-ffi==0.1.15.post2" \
-              mlc-ai-nightly-cpu mlc-llm-nightly-cpu -f https://mlc.ai/wheels
-          fi
-          # The wheels ship the Python package but NO console script (their
-          # dist-info has no entry_points at all — that is what left run #5
-          # dying with "mlc_llm: command not found" AFTER a clean install).
-          # The CLI lives in mlc_llm/__main__.py, so `python -m mlc_llm` is
-          # the entrypoint; the convert step below uses it directly. The
-          # import chain pulls mlc_llm/__init__.py -> tvm, so these checks
-          # fail fast HERE (before any CPU-hour) if the runtime is missing.
-          python -c "import tvm; print('tvm', tvm.__version__)"
+          # Fail fast, with the runtime's own error message, before any
+          # CPU-hour is spent.
+          try_import
+          # The wheels ship no console script (their dist-info has no
+          # entry_points — that is what left run #5 dying with "mlc_llm:
+          # command not found" AFTER a clean install). The CLI lives in
+          # mlc_llm/__main__.py, so `python -m mlc_llm` is the entrypoint.
           python -m mlc_llm --help > /dev/null
           df -h /
 
