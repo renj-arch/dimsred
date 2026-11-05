@@ -294,7 +294,12 @@ async function callLLM(system, user) {
     model: MODEL,
     stream: true,
     think: false,
-    options: { temperature: 0.95, top_p: 0.92, num_ctx: NUM_CTX, num_predict: NUM_PREDICT },
+    // Structured-output mode: the model must emit one JSON object, so the
+    // parse/repair loop stops burning attempts on prose wrappers. A lower
+    // temperature than the old 0.95 keeps arithmetic self-consistent while
+    // the novelty rules still vary the mechanism.
+    format: 'json',
+    options: { temperature: 0.8, top_p: 0.92, num_ctx: NUM_CTX, num_predict: NUM_PREDICT },
     messages: [
       { role: 'system', content: system },
       { role: 'user', content: user }
@@ -538,6 +543,8 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
   return [
     'You are a veteran Indian exam question setter (IBPS PO/Clerk, SBI, SSC CGL, RRB NTPC, State PSC).',
     'INVENT one completely ORIGINAL multiple-choice question. Do not recall or copy any known exam question — create a new context, new numbers, a new twist.',
+    'Match the toughness of a real previous-year paper: a prepared candidate should need real working, not recall or a one-line formula lookup.',
+    'Do not use a template. The stem must be a self-contained situation, and every distractor must be the answer a real candidate would reach after a specific mistake.',
     '',
     'SECTION: ' + SECTION_BRIEF[section],
     'DIFFICULTY (' + tier + '): ' + TIER_BRIEF[tier],

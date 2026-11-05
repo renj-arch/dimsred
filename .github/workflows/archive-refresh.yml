@@ -108,6 +108,10 @@ jobs:
           }
           NODE
 
+      - name: Guard against corpus count regression
+        if: steps.gate.outputs.skip != 'true'
+        run: node scripts/guard-question-count.js
+
       - name: Publish refreshed archive
         if: steps.gate.outputs.skip != 'true'
         env:

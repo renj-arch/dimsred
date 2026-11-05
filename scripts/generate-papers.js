@@ -249,22 +249,36 @@ function updateExamGridCards() {
   var indexPath = path.join(root, 'index.html');
   if (!fs.existsSync(indexPath)) return;
   var html = fs.readFileSync(indexPath, 'utf-8');
-  var h3Labels = { cgl: 'SSC CGL Tier 1', rbi: 'RBI Grade B Phase 1', jee: 'JEE Main &amp; Advanced', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer', upsc: 'UPSC Civil Services', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', ctet: 'CTET' };
+  var metaOpen = '<div class="meta">';
+  var updated = 0;
+  var skipped = [];
 
+  // Locate each exam card by its link, not by a hardcoded <h3> label. The old
+  // label map drifted from the markup ("SSC GD" vs "SSC GD Constable",
+  // "JEE Main & Advanced" vs "JEE Main &amp; Advanced") and had no entry at all
+  // for NDA/CDS/CLAT, so label.replace() crashed the whole run. Anchoring on
+  // href="/<folder>/" can never be undefined and keeps working when a card's
+  // display name is edited.
   for (var i = 0; i < EXAMS.length; i++) {
     var folder = EXAMS[i];
-    var label = h3Labels[folder];
     var paperCount = countPapersForExam(folder);
     var questionCount = countQuestionsInBank(folder);
 
-    html = html.replace(
-      new RegExp('(<h3>' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '<\\/h3>\\s*<div class="meta">)[^<]+(<\\/div>)'),
-      function(m, before, after) { return before + paperCount + ' papers \u00B7 ' + questionCount + '+ questions' + after; }
-    );
+    var anchor = html.indexOf('href="/' + folder + '/"');
+    if (anchor === -1) { skipped.push(folder); continue; }
+    var metaAt = html.indexOf(metaOpen, anchor);
+    if (metaAt === -1) { skipped.push(folder); continue; }
+    var metaEnd = html.indexOf('</div>', metaAt + metaOpen.length);
+    if (metaEnd === -1) { skipped.push(folder); continue; }
+
+    html = html.substring(0, metaAt + metaOpen.length) +
+      paperCount + ' papers \u00B7 ' + questionCount + '+ questions' +
+      html.substring(metaEnd);
+    updated++;
   }
 
   fs.writeFileSync(indexPath, html, 'utf-8');
-  console.log('  Updated exam grid cards');
+  console.log('  Updated exam grid cards (' + updated + ')' + (skipped.length ? ', no card: ' + skipped.join(', ') : ''));
 }
 
 function updateTrustBar() {

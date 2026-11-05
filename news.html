@@ -149,6 +149,20 @@ kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:inherit
 .story h3 a{text-decoration:none}
 .story h3 a:hover{text-decoration:underline;text-decoration-thickness:1.5px;text-underline-offset:3px}
 .story .summary{font-size:.78em;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.summary .kw{background:rgba(245,181,68,.16);color:inherit;border-bottom:1px dotted rgba(245,181,68,.55);border-radius:2px;padding:0 1px}
+.notes{margin-top:2px;border-top:1px dashed var(--line);padding-top:8px}
+.notes summary{display:flex;align-items:center;gap:7px;cursor:pointer;list-style:none;font-size:.66em;font-weight:850;letter-spacing:.08em;text-transform:uppercase;color:var(--amber)}
+.notes summary::-webkit-details-marker{display:none}
+.notes summary:after{content:"+";margin-left:auto;font-size:1.3em;line-height:1;color:var(--faint)}
+.notes[open] summary:after{content:"–"}
+.notes .paper{font-size:.92em;letter-spacing:.04em;color:var(--cyan);border:1px solid rgba(34,211,238,.28);background:rgba(34,211,238,.08);border-radius:100px;padding:2px 7px}
+.notes .subject{color:var(--muted);letter-spacing:.02em;text-transform:none;font-weight:750}
+.notes .kp{margin:8px 0 0 16px;display:flex;flex-direction:column;gap:5px;font-size:.76em;color:var(--muted);line-height:1.45}
+.notes .kp li{padding-left:2px}
+.notes .why{font-size:.74em;color:var(--muted);line-height:1.45;margin-top:8px}
+.notes .why b{color:var(--text)}
+.notes .terms{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.notes .term{font-size:.68em;color:var(--text);background:rgba(255,255,255,.045);border:1px solid var(--line);border-radius:100px;padding:3px 8px;cursor:help}
 .story .meta{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:2px}
 .story .meta .region{font-size:.62em;font-weight:800;letter-spacing:.06em;text-transform:uppercase;color:var(--cyan);background:rgba(34,211,238,.08);border:1px solid rgba(34,211,238,.16);padding:2px 7px;border-radius:100px;white-space:nowrap}
 .story .meta .trend{font-size:.6em;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--amber);background:rgba(245,181,68,.08);border:1px solid rgba(245,181,68,.2);padding:2px 7px;border-radius:100px;white-space:nowrap}
@@ -313,6 +327,7 @@ footer a:hover{color:var(--amber)}
   </div>
 </footer>
 
+<script src="js/news-enhance.js"></script>
 <script>
 (function () {
   'use strict';
@@ -381,6 +396,55 @@ footer a:hover{color:var(--amber)}
     render();
   }
 
+  // --- study layer -----------------------------------------------------------
+  function summaryNode(item, cls) {
+    var p = el('p', cls || 'summary');
+    var info = window.NewsEnhance ? window.NewsEnhance.analyze(item) : null;
+    if (info && info.summaryHtml) p.innerHTML = info.summaryHtml;
+    else p.textContent = item.summary;
+    return p;
+  }
+
+  function notesNode(item) {
+    if (!window.NewsEnhance) return null;
+    var info = window.NewsEnhance.analyze(item);
+    if (!info.keyPoints.length && !info.angles.length) return null;
+    var box = document.createElement('details');
+    box.className = 'notes';
+    var sum = document.createElement('summary');
+    var label = el('span', 'notes-k', 'UPSC notes');
+    sum.appendChild(label);
+    if (info.angles[0]) {
+      sum.appendChild(el('span', 'paper', info.angles[0].paper));
+      sum.appendChild(el('span', 'subject', info.angles[0].subject));
+    }
+    box.appendChild(sum);
+    if (info.keyPoints.length) {
+      var ul = el('ul', 'kp');
+      info.keyPoints.forEach(function (point) {
+        ul.appendChild(el('li', null, point));
+      });
+      box.appendChild(ul);
+    }
+    info.angles.forEach(function (angle) {
+      var p = el('p', 'why');
+      var b = el('b', null, angle.paper + ' ' + angle.subject + ': ');
+      p.appendChild(b);
+      p.appendChild(document.createTextNode(angle.why));
+      box.appendChild(p);
+    });
+    if (info.terms.length) {
+      var terms = el('div', 'terms');
+      info.terms.forEach(function (t) {
+        var chip = el('span', 'term', t.term);
+        chip.title = t.def;
+        terms.appendChild(chip);
+      });
+      box.appendChild(terms);
+    }
+    return box;
+  }
+
   // --- card ------------------------------------------------------------------
   function storyCard(item, section) {
     var card = el('article', 'story' + (section.id === 'trending' ? ' trending' : ''));
@@ -433,7 +497,9 @@ footer a:hover{color:var(--amber)}
     h.appendChild(a);
     card.appendChild(h);
 
-    if (item.summary && item.summary.length > 20) card.appendChild(el('p', 'summary', item.summary));
+    if (item.summary && item.summary.length > 20) card.appendChild(summaryNode(item));
+    var notes = notesNode(item);
+    if (notes) card.appendChild(notes);
 
     var meta = el('div', 'meta');
     if (section.id.indexOf('state:') === 0 && section.region) meta.appendChild(el('span', 'region', section.region));
@@ -484,7 +550,11 @@ footer a:hover{color:var(--amber)}
       h.appendChild(a);
     }
     node.appendChild(h);
-    if (item.summary && item.summary.length > 20) node.appendChild(el('p', big ? null : 'summary', item.summary));
+    if (item.summary && item.summary.length > 20) node.appendChild(summaryNode(item, big ? null : 'summary'));
+    if (big) {
+      var notes = notesNode(item);
+      if (notes) node.appendChild(notes);
+    }
     return node;
   }
 
