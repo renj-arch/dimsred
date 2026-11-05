@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T02:02:46.077Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in core content (papers, questions) and high fault counts; previous runs show BankFigures and MockPapers are active but Invention/MetaLearn have produced zero fixes recently. Priority is to generate missing foundational files first, then address remaining figure gaps and fresh ideas. I will cycle agents to ensure no single agent starves while focusing on the 'papers: false' gap.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MainsFresh",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (618 total)",
-       "text": "What is the purpose of supercharging an engine? | What are the effects of supercharging on performance and stresses? | Distinguish mechanically driven supercharging and turbocharging."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T02:48:09.456Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -624,8 +574,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T14:09:38.765Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-05T12:01:07.070Z",
+ "lastRun": "2026-11-05T14:09:38.765Z",
  "model": "qwen3.5:9b"
 }
