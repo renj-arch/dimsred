@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-02",
+  "updatedAt": "2026-11-05",
   "note": "Questions removed from data/invented/questions.json after manual revalidation. Each entry records why it can no longer be served. union-invented.js must never resurrect these ids. Repairs are listed separately and applied before the pool is written.",
   "items": [
     {
@@ -771,6 +771,50 @@
       "stemPreview": "A vertical pole of height $h$ stands on the equator. The length of its shadow cast by the sun is measured to be equal to its height exactly ",
       "model": "qwen3.5:9b",
       "inventedAt": "2026-11-02T00:26:11.815Z"
+    },
+    {
+      "id": "inv-od-9476e526-8d71-4ad8-b6b5-7368cf3b5050-1",
+      "reason": "arithmetic mismatch: 5410 vs 4998",
+      "section": "quant",
+      "difficulty": "moderate",
+      "topic": "mixed",
+      "stemPreview": "A shopkeeper buys a table for ₹4,200. He spends 10% on transportation and 5% on repairs. If he sells the table at a profit of 12% on the tot",
+      "model": "batiai/qwen3.8-27b:iq3",
+      "inventedAt": "2026-11-02T20:21:52.335Z",
+      "quarantinedAt": "2026-11-05T12:53:30.628Z"
+    },
+    {
+      "id": "inv-od-9476e526-8d71-4ad8-b6b5-7368cf3b5050-2",
+      "reason": "series predicts 90 but key is 88",
+      "section": "reasoning",
+      "difficulty": "moderate",
+      "topic": "mixed",
+      "stemPreview": "Identify the next term in the series: 15, 22, 33, 48, 67, ?",
+      "model": "batiai/qwen3.8-27b:iq3",
+      "inventedAt": "2026-11-02T20:21:52.335Z",
+      "quarantinedAt": "2026-11-05T12:53:30.628Z"
+    },
+    {
+      "id": "inv-od-9476e526-8d71-4ad8-b6b5-7368cf3b5050-3",
+      "reason": "duplicate options",
+      "section": "reasoning",
+      "difficulty": "moderate",
+      "topic": "mixed",
+      "stemPreview": "If 'PENCIL' is coded as 'QFODJO', how is 'ERASE' coded using the same logic?",
+      "model": "batiai/qwen3.8-27b:iq3",
+      "inventedAt": "2026-11-02T20:21:52.335Z",
+      "quarantinedAt": "2026-11-05T12:53:30.628Z"
+    },
+    {
+      "id": "inv-od-9476e526-8d71-4ad8-b6b5-7368cf3b5050-8",
+      "reason": "solution contradicts itself for x: 5 vs 15 vs 5",
+      "section": "quant",
+      "difficulty": "moderate",
+      "topic": "mixed",
+      "stemPreview": "Find the value of x if 3x + 7 = 22.",
+      "model": "batiai/qwen3.8-27b:iq3",
+      "inventedAt": "2026-11-02T20:21:52.335Z",
+      "quarantinedAt": "2026-11-05T12:53:30.628Z"
     }
   ],
   "repairs": [
@@ -861,11 +905,10 @@
       "extractOptionsFromStem": true
     }
   ],
-  "appliedAt": "2026-11-02T03:50:28.203Z",
+  "appliedAt": "2026-11-05T12:53:30.628Z",
   "counts": {
-    "before": 153,
-    "removed": 77,
-    "kept": 76,
-    "repaired": 14
+    "before": 94,
+    "removed": 4,
+    "kept": 90
   }
 }
