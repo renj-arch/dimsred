@@ -20,11 +20,21 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    # The repository checkout alone takes ~20 min on these runners and the
+    # shallow `pull --rebase` after the commit has taken another ~24 min.
+    # The old 45-minute cap killed every run at the push step (2026-11-01,
+    # 2026-10-25). Leave room for the slow but successful publish.
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
+          # This job only rewrites current-affairs.html. Checking out the
+          # multi-GB question corpus made the checkout alone take ~20 min.
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
       - uses: actions/setup-node@v4
         with:
           node-version: 22
@@ -55,7 +65,9 @@ jobs:
           git add current-affairs.html
           git commit -m "chore: update time-sensitive GK data [auto]"
           for i in 1 2 3; do
-            git pull --rebase --autostash 2>/dev/null || true
+            # Nothing is uncommitted here, so autostash only stats the whole
+            # tree (very slow on this repo). A plain rebase is enough.
+            git pull --rebase 2>/dev/null || true
             git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
             sleep 5
           done
