@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T04:34:40.920Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual assets. Since papers, questions, sidecar, and syllabus files are all missing, MetaLearn is required immediately to generate the foundational content structure before MockPapers or ExamPatterns can function effectively. MainsFresh will follow to ensure daily material freshness once the core content exists.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (628 total)",
-       "text": "Define viscosity and viscosity index of an engine oil. | Why must an engine be cooled even though heat is needed for combustion? | Name the two main engine cooling systems."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T05:27:50.403Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -587,8 +547,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T16:37:11.651Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-05T16:24:46.857Z",
+ "lastRun": "2026-11-05T16:37:11.651Z",
  "model": "qwen3.5:9b"
 }
