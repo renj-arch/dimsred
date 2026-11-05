@@ -356,11 +356,24 @@ console.log('\n--- the quiz applies curated category moves before display ---');
     'all three archive entry points wait for the move registry');
   if (!src) return;
   let reg = [];
-  try { reg = JSON.parse(read('data/category-moves.json')).moves || []; } catch (e) {}
-  assert(reg.length >= 1, 'the shipped category-move registry is readable');
+  let regOk = false;
+  try {
+    const shipped = JSON.parse(read('data/category-moves.json'));
+    regOk = Array.isArray(shipped.moves);
+    reg = shipped.moves || [];
+  } catch (e) {}
+  assert(regOk, 'the shipped category-move registry is readable');
+  // The behaviour of _applyCategoryMove must not depend on a particular live
+  // move: the ARP4761 entry was retired when the refreshed corpus dropped that
+  // subtopic. Use a fixture with the same shape so the client logic is still
+  // covered even when the registry is empty.
+  const fixture = [{
+    id: 'arp4761-indian-aviation', subSubject: 'ARP4761',
+    from: 'Indian Languages', to: 'Indian Aviation & Shipping'
+  }];
   let apply;
   try {
-    apply = new Function('_CATEGORY_MOVES', src + '\nreturn _applyCategoryMove;')(reg);
+    apply = new Function('_CATEGORY_MOVES', src + '\nreturn _applyCategoryMove;')(fixture);
   } catch (e) {
     assert(false, '_applyCategoryMove() can be evaluated', e.message);
     return;
