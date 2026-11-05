@@ -1,42 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T14:30:04.516Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "4 fresh mock questions on IC Engines (360 in pool)",
-       "text": "IC Engines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T15:12:22.449Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -611,8 +575,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T21:49:36.896Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "We have 81 figure gaps and 23 critical faults; the last run fixed bankfigures and mockpapers while metalearn, mainsfresh, and invention produced zero output for two consecutive runs (likely input-starved). Prioritize completing the standing unfinished goals: generate missing BankFigures to close the largest gap, then MockPapers to address critical faults, followed by Invention to revive the dormant agent with new prompts. Finally, deploy MetaLearn and MainsFresh to ensure daily freshness and syl",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (672 total)",
+       "text": "What is total pressure on an immersed plane surface? | Define centre of pressure. | Total pressure and CP for a vertical rectangular plate with its top at the surfa"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T21:09:39.747Z",
+ "lastRun": "2026-11-05T21:49:36.896Z",
  "model": "qwen3.5:9b"
 }
