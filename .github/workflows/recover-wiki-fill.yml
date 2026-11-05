@@ -52,10 +52,36 @@ jobs:
       # build-archive-single.js streams every unique question as NDJSON into
       # /tmp (~6-8GB) on top of the full checkout — drop unused preinstalled
       # SDKs to free ~20GB so the tail never dies with ENOSPC.
+      #
+      # Recovery #21 (2026-11-04) still died at "Merge chunks…" with
+      # "No space left on device" while the *runner* was writing its own
+      # Worker_*.log, i.e. the whole filesystem hit 100%. The first pass only
+      # removed a handful of SDK directories; add the rest of the image's
+      # dead weight (Docker layers, package caches, hosted toolcache) and
+      # print the result so the next failure is diagnosable.
       - name: Free runner disk space (archive build needs ~20GB)
         run: |
-          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
-          df -h / | tail -1
+          df -h /
+          sudo rm -rf \
+            /usr/share/dotnet \
+            /usr/local/lib/android \
+            /usr/local/share/boost \
+            /usr/share/swift \
+            /opt/ghc \
+            /opt/az \
+            /opt/microsoft \
+            /opt/hostedtoolcache/CodeQL \
+            /opt/hostedtoolcache/go \
+            /opt/hostedtoolcache/Ruby \
+            /usr/local/.ghcup \
+            /usr/local/share/chromium \
+            /opt/google/chrome \
+            2>/dev/null || true
+          sudo apt-get clean 2>/dev/null || true
+          sudo rm -rf /var/lib/apt/lists/* 2>/dev/null || true
+          docker system prune -af --volumes 2>/dev/null || true
+          npm cache clean --force 2>/dev/null || true
+          df -h /
 
       - uses: actions/checkout@v4
         with:
@@ -182,9 +208,20 @@ jobs:
           # baseline is used ONLY to decide which chunk questions are genuinely
           # new (MERGE_BASE_QUIZ below); finalize writes the CURRENT quiz.json
           # plus that delta.
-          if [ -f "baseline/data/quiz.json" ]; then
-            echo "Baseline quiz.json available for delta dedup"
+          #
+          # The baseline artifact is a full data/ snapshot (several GB). Only
+          # quiz.json is read from here, so keep that one file and release the
+          # rest before the chunk loop — otherwise the merge state and the
+          # finalize rebuild are competing with a stale copy for the same
+          # ~14 GB of runner disk (recovery #21 died that way).
+          if [ -f baseline/data/quiz.json ]; then
+            mv baseline/data/quiz.json "$RUNNER_TEMP/baseline-quiz.json"
+            rm -rf baseline
+            mkdir -p baseline/data
+            mv "$RUNNER_TEMP/baseline-quiz.json" baseline/data/quiz.json
+            echo "Baseline quiz.json available for delta dedup (rest of baseline released)"
           else
+            rm -rf baseline
             echo "::warning::baseline quiz.json missing — collect will dedup against the current quiz.json"
           fi
           df -h / || true
@@ -212,6 +249,21 @@ jobs:
           # quiz.json exactly once instead of one full corpus pass per chunk
           # (keeps the merge job clear of the 360-minute runner cap).
           for i in $(seq 1 40); do
+            # Never begin another download when the disk is nearly full: the
+            # 2026-11-04 recovery ran the filesystem to 100% and the runner
+            # then died trying to write its own diagnostics log. Bail with a
+            # clear error (or reclaim transient files) instead.
+            avail_kb=$(df --output=avail / | tail -1 | tr -d ' ')
+            if [ "${avail_kb:-0}" -lt 2097152 ]; then
+              echo "::warning::only $((avail_kb/1024)) MB free before chunk-$i — reclaiming"
+              find chunks -maxdepth 2 -type f \( -name '*.zip' -o -name 'quiz-chunk-*' \) -delete 2>/dev/null || true
+              npm cache clean --force 2>/dev/null || true
+              avail_kb=$(df --output=avail / | tail -1 | tr -d ' ')
+              if [ "${avail_kb:-0}" -lt 1048576 ]; then
+                echo "::error::less than 1 GB free on the runner before chunk-$i; aborting instead of dying mid-merge"
+                exit 1
+              fi
+            fi
             if bash scripts/download-run-artifacts.sh "${{ steps.resolve.outputs.run-id }}" "^chunk-${i}$" chunks; then
               node scripts/merge-chunks.js collect || echo "WARNING: collect errored for chunk $i (continuing)"
             else
