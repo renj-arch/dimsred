@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T06:06:11.735Z",
-  "cursor": 741,
-  "built": 635
+  "updatedAt": "2026-11-05T14:43:58.907Z",
+  "cursor": 744,
+  "built": 638
  },
  "figs": {
   "11434945": {
@@ -3813,6 +3813,24 @@
   "2629b6c8": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">IC ENGINE GOVERNING</text><rect x=\"40\" y=\"60\" width=\"140\" height=\"100\" stroke=\"#222\" fill=\"none\"/><text x=\"50\" y=\"85\">THROTTLE VALVE</text><path d=\"M 70 90 L 130 90\" stroke=\"#222\"/><circle cx=\"100\" cy=\"90\" r=\"4\" fill=\"#222\"/><text x=\"95\" y=\"105\">PARTIAL OPEN</text><path d=\"M 60 110 L 140 110\" stroke=\"#222\"/><circle cx=\"100\" cy=\"110\" r=\"3\" fill=\"#none\"/><text x=\"95\" y=\"125\">FULL OPEN</text><path d=\"M 70 130 L 130 130\" stroke=\"#222\"/><circle cx=\"100\" cy=\"130\" r=\"4\" fill=\"#222\"/><text x=\"95\" y=\"145\">FUEL INJECTED</text><path d=\"M 70 150 L 130 150\" stroke=\"#222\"/><circle cx=\"100\" cy=\"150\" r=\"3\" fill=\"#none\"/><text x=\"95\" y=\"165\">AIR CONSTANT</text><path d=\"M 70 170 L 130 170\" stroke=\"#222\"/><circle cx=\"100\" cy=\"170\" r=\"4\" fill=\"#222\"/><text x=\"95\" y=\"185\">VARIABLE RATIO</text><rect x=\"220\" y=\"60\" width=\"140\" height=\"100\" stroke=\"#222\" fill=\"none\"/><text x=\"230\" y=\"85\">AIR INTAKE</text><path d=\"M 240 90 L 300 90\" stroke=\"#222\"/><circle cx=\"270\" cy=\"90\" r=\"4\" fill=\"#222\"/><text x=\"265\" y=\"105\">VARIABLE OPENING</text><path d=\"M 240 110 L 300 110\" stroke=\"#222\"/><circle cx=\"270\" cy=\"110\" r=\"3\" fill=\"#none\"/><text x=\"265\" y=\"125\">CONSTANT OPENING</text><path d=\"M 240 130 L 300 130\" stroke=\"#222\"/><circle cx=\"270\" cy=\"130\" r=\"4\" fill=\"#222\"/><text x=\"265\" y=\"145\">AIR FLOW VARYS</text><path d=\"M 240 150 L 300 150\" stroke=\"#222\"/><circle cx=\"270\" cy=\"150\" r=\"3\" fill=\"#none\"/><text x=\"265\" y=\"165\">FUEL CONSTANT</text><path d=\"M 240 170 L 300 170\" stroke=\"#222\"/><circle cx=\"270\" cy=\"170\" r=\"4\" fill=\"#222\"/><text x=\"265\" y=\"185\">VARIABLE RATIO</text><path d=\"M 180 190 Q 180 200 180 210\" stroke=\"#222\"/><text x=\"180\" y=\"215\" text-anchor=\"middle\">QUALITY GOVERNING (AIR FLOW)</text></svg>",
    "n": "distinguish quantity and quality governing.",
+   "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "27b8401c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Absorption Dynamometer (Left) -->\n  <text x=\"20\" y=\"40\">Absorption</text>\n  <circle cx=\"80\" cy=\"100\" r=\"30\" />\n  <path d=\"M50 100 L70 90 L90 110 M60 100 L80 90 L100 110\" stroke-dasharray=\"2,2\"/>\n  <text x=\"45\" y=\"135\">Heat</text>\n  <rect x=\"120\" y=\"80\" width=\"60\" height=\"40\" fill=\"#eee\" opacity=\"0.5\"/>\n  <text x=\"145\" y=\"105\">Brake/Load</text>\n  <path d=\"M180 100 L200 90 L220 110 M190 100 L210 90 L230 110\" stroke-dasharray=\"2,2\"/>\n  <text x=\"165\" y=\"135\">Lost</text>\n  \n  <!-- Transmission Dynamometer (Right) -->\n  <text x=\"240\" y=\"40\">Transmission</text>\n  <circle cx=\"300\" cy=\"100\" r=\"30\" />\n  <path d=\"M270 100 L290 90 L310 110 M280 100 L300 90 L320 110\" stroke-dasharray=\"2,2\"/>\n  <text x=\"255\" y=\"135\">Work</text>\n  <rect x=\"240\" y=\"80\" width=\"60\" height=\"40\" fill=\"#eee\" opacity=\"0.5\"/>\n  <text x=\"265\" y=\"105\">Load</text>\n  <path d=\"M340 100 L360 90 M340 100 L360 110\" stroke-dasharray=\"2,2\"/>\n  <text x=\"345\" y=\"135\">Output</text>\n</svg>",
+   "n": "distinguish absorption and transmission dynamometers.",
+   "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "2233da54": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g>\n<!-- Drum -->\n<circle cx=\"180\" cy=\"110\" r=\"50\"/>\n<!-- Brake Band wrapping drum -->\n<path d=\"M 130 60 A 50 50 0 0 1 230 60 L 240 90 L 230 130 A 50 50 0 0 1 130 130 L 120 100 Z\"/>\n<!-- Load W arrow -->\n<line x1=\"260\" y1=\"110\" x2=\"290\" y2=\"80\"/>\n<line x1=\"295\" y1=\"80\" x2=\"295\" y2=\"85\"/>\n<text x=\"300\" y=\"75\">W</text>\n<!-- Radius r label -->\n<line x1=\"230\" y1=\"60\" x2=\"230\" y2=\"110\"/>\n<text x=\"240\" y=\"85\">r</text>\n<!-- Torque T label -->\n<text x=\"180\" y=\"45\" text-anchor=\"middle\">Torque T = W × r</text>\n<!-- Power formula -->\n<text x=\"180\" y=\"205\" text-anchor=\"middle\">BP = 2πNT/60</text>\n</g>\n</svg>",
+   "n": "how does a prony brake dynamometer measure torque?",
+   "sub": "ice",
+   "at": "2026-11-05"
+  },
+  "3e0d1e9f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Magnetic Field</text><path d=\"M40,60 L40,140 M320,60 L320,140\" stroke-dasharray=\"4,4\"/><circle cx=\"180\" cy=\"110\" r=\"70\" fill=\"none\" stroke=\"#222\"/><path d=\"M110,110 Q180,180 250,110\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/><path d=\"M110,110 L40,160 M110,110 L320,160\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Conducting Disc</text><text x=\"180\" y=\"105\" text-anchor=\"middle\">Eddy Currents (Opposing)</text><path d=\"M180,110 L180,140\" stroke-dasharray=\"2,2\"/><text x=\"185\" y=\"135\" text-anchor=\"start\">Braking Torque</text></svg>",
+   "n": "what is the principle of an eddy current dynamometer?",
    "sub": "ice",
    "at": "2026-11-05"
   }

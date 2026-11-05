@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T03:06:53.739Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "BankFigures is the only agent producing output recently and must lead to address the 80 critical figure gaps. MainsFresh should follow immediately as papers are missing from the file system, requiring fresh content generation. MetaLearn will be placed last because it produced zero fixes in the last two runs, indicating it needs input stabilization before being re-engaged.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (623 total)",
-       "text": "Define scavenging in a two-stroke engine. | Name the main types of scavenging in two-stroke engines. | What is short-circuiting of the fresh charge?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T03:36:49.726Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -577,8 +537,63 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T15:12:22.449Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Prioritize filling the massive content voids (80 figure gaps, 81 open faults) before addressing minor pending ideas. The 'mainsfresh' agent produced zero fixes in the last run and must be moved to the end of the queue to avoid starving it further while we focus on high-impact agents like 'bankfigures' and 'mockpapers'.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (638 total)",
+       "text": "Distinguish absorption and transmission dynamometers. | How does a Prony brake dynamometer measure torque? | What is the principle of an eddy current dynamometer?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T14:30:04.516Z",
+ "lastRun": "2026-11-05T15:12:22.449Z",
  "model": "qwen3.5:9b"
 }
