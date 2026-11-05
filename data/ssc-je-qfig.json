@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T21:27:13.478Z",
-  "cursor": 783,
-  "built": 672
+  "updatedAt": "2026-11-05T22:04:45.688Z",
+  "cursor": 786,
+  "built": 675
  },
  "figs": {
   "11434945": {
@@ -4035,6 +4035,24 @@
   "2204c5da": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><text x=\"330\" y=\"75\">Surface</text><path d=\"M 40 80 L 40 160 L 320 160 L 320 80 Z\" fill=\"none\" stroke=\"#222\"/><polygon points=\"40,80 40,160 320,160 320,80\" fill=\"none\" stroke=\"#222\"/><text x=\"50\" y=\"120\">Plate</text><path d=\"M 40 80 L 320 80 M 40 160 L 320 160\" stroke-dasharray=\"4,2\"/><text x=\"330\" y=\"125\">Depth d</text><line x1=\"40\" y1=\"80\" x2=\"40\" y2=\"160\"/><line x1=\"320\" y1=\"80\" x2=\"320\" y2=\"160\"/><polygon points=\"180,80 180,105 170,105 170,90\" fill=\"none\" stroke=\"#222\"/><text x=\"160\" y=\"95\">CP</text><line x1=\"170\" y1=\"90\" x2=\"170\" y2=\"130\"/><text x=\"160\" y=\"145\">2d/3</text><polygon points=\"180,130 180,155 170,155 170,140\" fill=\"none\" stroke=\"#222\"/><text x=\"160\" y=\"165\">d/3</text><path d=\"M 40 80 L 40 160 L 320 160 L 320 80 Z\" fill=\"none\" stroke=\"#222\"/><polygon points=\"40,80 40,160 320,160 320,80\" fill=\"none\" stroke=\"#222\"/><text x=\"50\" y=\"175\">F = γbd²/2</text></svg>",
    "n": "total pressure and cp for a vertical rectangular plate with its top at the surface.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "276c2ca8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g transform=\"translate(40,20)\">\n<!-- Inclined Plane -->\n<polygon points=\"0,0 300,0 300,200 0,200\" fill=\"#eee\" stroke=\"none\"/>\n<line x1=\"0\" y1=\"0\" x2=\"300\" y2=\"0\" stroke=\"#222\" stroke-width=\"2\"/>\n<!-- Fluid Surface -->\n<line x1=\"0\" y1=\"-50\" x2=\"300\" y2=\"-50\" stroke=\"#222\" stroke-dasharray=\"4,2\"/>\n<!-- Center of Gravity G -->\n<circle cx=\"150\" cy=\"100\" r=\"4\" fill=\"none\" stroke=\"#222\"/>\n<text x=\"160\" y=\"95\">G</text>\n<!-- Center of Pressure CP -->\n<circle cx=\"150\" cy=\"130\" r=\"4\" fill=\"none\" stroke=\"#222\"/>\n<text x=\"160\" y=\"125\">CP</text>\n<!-- Vertical Depth h_bar -->\n<line x1=\"150\" y1=\"-50\" x2=\"150\" y2=\"100\" stroke=\"#222\" stroke-dasharray=\"2,2\"/>\n<text x=\"140\" y=\"60\">h̄</text>\n<!-- Distance along plane -->\n<line x1=\"150\" y1=\"100\" x2=\"150\" y2=\"130\" stroke=\"#222\" stroke-width=\"1\"/>\n<text x=\"140\" y=\"115\">I_G sin²θ/(A h̄)</text>\n<!-- Angle θ -->\n<path d=\"M 300 -50 L 300 150 M 280 150 L 300 130\" stroke=\"#222\" fill=\"none\"/>\n<text x=\"290\" y=\"140\">θ</text>\n<!-- Labels -->\n<text x=\"-10\" y=\"100\">Inclined Plane</text>\n<text x=\"-10\" y=\"130\">Fluid Surface</text>\n</g></svg>",
+   "n": "where lies the cp of an inclined submerged plane?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "726e8567": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"10\" y1=\"40\" x2=\"350\" y2=\"40\"/><text x=\"180\" y=\"35\" text-anchor=\"middle\">Free Surface</text><path d=\"M 100 40 L 100 180\"/><circle cx=\"100\" cy=\"160\" r=\"20\"/><line x1=\"90\" y1=\"160\" x2=\"110\" y2=\"160\"/><text x=\"100\" y=\"175\" text-anchor=\"middle\">Diameter D</text><circle cx=\"100\" cy=\"143.75\" r=\"3\" fill=\"#222\"/><line x1=\"94\" y1=\"143.75\" x2=\"106\" y2=\"143.75\"/><text x=\"80\" y=\"148\">CP Depth</text><text x=\"100\" y=\"135\" text-anchor=\"middle\">h̄ + I/Ah̄ = 5D/8</text></svg>",
+   "n": "give the depth of cp for a vertical circular plate tangent to the free surface.",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "784d58eb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"30\" y=\"100\" text-anchor=\"end\">h1</text><text x=\"30\" y=\"50\" text-anchor=\"end\">h2</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"190\" text-anchor=\"start\">b</text><path d=\"M 40 180 L 40 50 L 160 50 L 160 180 Z\"/><path d=\"M 40 180 L 40 20 L 320 20 L 320 180 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"170\" y=\"95\">Total Pressure</text><text x=\"170\" y=\"115\">on Gate =</text><text x=\"170\" y=\"135\">γb(h1² - h2²)/2</text></svg>",
+   "n": "what is the total pressure on a vertical sluice gate between water depths h1 and h2?",
    "sub": "fluids",
    "at": "2026-11-05"
   }
