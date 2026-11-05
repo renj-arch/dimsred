@@ -499,40 +499,28 @@
    ]
   },
   {
-   "at": "2026-11-05T18:42:27.225Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "at": "2026-11-05T18:42:54.414Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
+     "agent": "selfcheck",
+     "count": 2
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures is active and must lead to clear immediate wins. Invention should follow to convert pending ideas into content, while MetaLearn handles the remaining critical faults. MainsFresh and MockPapers are deferred because papers/sidecar files are missing, preventing them from producing output until source material exists.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "selfcheck",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (651 total)",
-       "text": "Define bulk modulus of a liquid. | What is compressibility of a fluid? | Define surface tension and state its unit."
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
       }
      ]
     }
