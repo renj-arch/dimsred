@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T09:43:11.203Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) dominate the queue; BankFigures must address critical image/data failures first to restore page integrity. MockPapers should follow to fill content voids where questions are missing, directly improving exam readiness. Invention is deferred as it requires stable infrastructure before generating new ideas, while MetaLearn and MainsFresh remain idle due to zero output in recent runs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (604 total)",
-       "text": "What is the purpose of a carburettor? | What is the function of the venturi in a simple carburettor? | List the main parts of a simple carburettor."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T10:25:51.870Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -608,8 +573,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T02:02:46.077Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical gaps in core content (papers, questions) and high fault counts; previous runs show BankFigures and MockPapers are active but Invention/MetaLearn have produced zero fixes recently. Priority is to generate missing foundational files first, then address remaining figure gaps and fresh ideas. I will cycle agents to ensure no single agent starves while focusing on the 'papers: false' gap.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MainsFresh",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (618 total)",
+       "text": "What is the purpose of supercharging an engine? | What are the effects of supercharging on performance and stresses? | Distinguish mechanically driven supercharging and turbocharging."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T01:34:17.172Z",
+ "lastRun": "2026-11-05T02:02:46.077Z",
  "model": "qwen3.5:9b"
 }
