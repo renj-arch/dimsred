@@ -1,48 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T08:39:14.898Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 4,
-   "byAgent": [
-    {
-     "agent": "proposals",
-     "count": 4
-    }
-   ],
-   "details": [
-    {
-     "agent": "proposals",
-     "fixes": [
-      {
-       "kind": "proposal",
-       "fix": "Fix transport duration cap in mental-batch generation",
-       "detail": "The digest logs a specific failure for 'mental-batch' on 2026-10-27 due to the model hitting a hard cap of 55 minutes, causing the generation to stop prematurely.",
-       "text": "Update the Node script invoking the Ollama model to inject a system prompt or parameter that explicitly limits response generation time (e.g., via temperature adjustments or token limits) to prevent timeouts, and add a retry logic for this specific error code."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Enforce minimum question count in tutor-lane output parser",
-       "detail": "A failure on 2026-10-19 occurred because the model only generated 2 valid questions instead of the required 3, causing the 'tutor-questions' lane to fail.",
-       "text": "Modify the data parsing script to detect when the extracted JSON array has fewer than 3 items. If so, automatically trigger a secondary generation request with adjusted parameters (e.g., higher temperature or different prompt phrasing) until the count requirement is met before saving."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Resolve 'missing figure' faults for top syllabus topics",
-       "detail": "The fault board lists 80 syllabus topics missing figures, which degrades the 'mental' arena experience where visual aids are likely expected.",
-       "text": "Implement a script that scans the data folder for HTML files lacking image tags or broken figure references. For the top 20 most frequent missing topics, automatically generate placeholder SVG diagrams using a local lightweight library (like svg.js) and save them to an assets folder to be linked in the HTML."
-      },
-      {
-       "kind": "proposal",
-       "fix": "Activate daily wiki-fill pipeline for corpus growth",
-       "detail": "The fault board shows the 'daily-wiki-fill' pipeline is currently in progress or stalled, contributing to the 14 info items and preventing automatic content enrichment.",
-       "text": "Update the GitHub Actions workflow configuration to ensure the 'daily-wiki-fill' job runs every midnight. Add a simple Node.js scraper that fetches text from open-licensed educational wikis (like Wikipedia) and formats them into new question banks, automatically pushing updates to the data repository when the pipeline completes."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T10:48:06.266Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 49,
@@ -570,8 +528,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T19:34:29.997Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/syllabus files are missing, MetaLearn should immediately synthesize fresh study materials to fill these voids. Invention is deferred as it requires stable foundational content before generating new ideas.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (657 total)",
+       "text": "Write the formula for capillary rise in a small tube. | Define vapour pressure of a liquid. | What is cavitation in fluids?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T19:17:50.325Z",
+ "lastRun": "2026-11-05T19:34:29.997Z",
  "model": "qwen3.5:9b"
 }
