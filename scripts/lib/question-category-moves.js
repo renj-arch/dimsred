@@ -72,12 +72,23 @@ function loadRegistry(root) {
 function validateRegistry(reg) {
   if (!reg || typeof reg !== 'object') fail('registry must be a JSON object');
   if (reg.version !== 1) fail('registry version must be 1');
-  if (!Array.isArray(reg.moves) || !reg.moves.length) fail('registry.moves must be a non-empty array');
+  // Empty is a valid state: the corpus changes, and a move whose source
+  // subtopic no longer exists is retired instead of being replayed forever.
+  if (!Array.isArray(reg.moves)) fail('registry.moves must be an array');
+  if (reg.retired != null && !Array.isArray(reg.retired)) fail('registry.retired must be an array when present');
   const ids = Object.create(null);
   for (const move of reg.moves) {
     validateMove(move);
     if (ids[move.id]) fail('duplicate move id: ' + move.id);
     ids[move.id] = true;
+  }
+  for (const old of (reg.retired || [])) {
+    if (!old || typeof old !== 'object') fail('retired entry must be an object');
+    if (!old.id || typeof old.id !== 'string') fail('retired entry needs an id');
+    if (!old.retiredReason || String(old.retiredReason).trim().length < 20) {
+      fail('retired ' + old.id + ': retiredReason must explain why it was retired');
+    }
+    if (ids[old.id]) fail('id is both active and retired: ' + old.id);
   }
   return true;
 }

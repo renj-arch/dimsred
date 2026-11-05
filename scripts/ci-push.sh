@@ -138,10 +138,16 @@ for i in 1 2 3; do
   if git push 2>&1; then
     if [ "$PAT_AUTH" = "1" ]; then
       echo "::error::ci-push: published via GITHUB_TOKEN fallback — PAT IS DEAD, renew secrets.PAT"
+      exit 1
     else
-      echo "::error::ci-push: published via GITHUB_TOKEN fallback after TRANSIENT PAT failures (PAT not proven dead — check auth-sentinel) — downstream triggers skipped for this run"
+      # The work IS published. A transient PAT race (another workflow pushing
+      # at the same second) is not a failure: exiting 1 here turned routine
+      # back-to-back publishes into red runs (Search index, Slim live mirror)
+      # even though main received the commit. Warn so the skipped downstream
+      # trigger stays visible, but keep the run green.
+      echo "::warning::ci-push: published via GITHUB_TOKEN fallback after TRANSIENT PAT failures — downstream triggers skipped for this run"
+      exit 0
     fi
-    exit 1
   fi
   sleep 5
 done
