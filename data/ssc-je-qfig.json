@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-05T22:04:45.688Z",
-  "cursor": 786,
-  "built": 675
+  "updatedAt": "2026-11-05T22:51:35.329Z",
+  "cursor": 789,
+  "built": 678
  },
  "figs": {
   "11434945": {
@@ -4053,6 +4053,24 @@
   "784d58eb": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"30\" y=\"100\" text-anchor=\"end\">h1</text><text x=\"30\" y=\"50\" text-anchor=\"end\">h2</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"190\" text-anchor=\"start\">b</text><path d=\"M 40 180 L 40 50 L 160 50 L 160 180 Z\"/><path d=\"M 40 180 L 40 20 L 320 20 L 320 180 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"170\" y=\"95\">Total Pressure</text><text x=\"170\" y=\"115\">on Gate =</text><text x=\"170\" y=\"135\">γb(h1² - h2²)/2</text></svg>",
    "n": "what is the total pressure on a vertical sluice gate between water depths h1 and h2?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "c4ba891b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,160 L120,160 L120,80 L40,80 Z\"/><path d=\"M120,80 L120,40 Q120,10 90,10 Q60,10 60,40 L60,80 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"75\" y=\"130\" text-anchor=\"middle\">Vertical Projection</text><text x=\"125\" y=\"100\" text-anchor=\"middle\">Curved Surface</text><path d=\"M60,40 L90,40 L90,10 Q120,10 120,40 Z\" fill=\"none\" stroke=\"#222\"/><path d=\"M120,80 L120,160\"/><text x=\"115\" y=\"175\">H</text><text x=\"130\" y=\"175\">= Fv</text><path d=\"M40,80 L120,80 L120,40 Q90,10 60,40 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"80\" y=\"75\">V</text><text x=\"80\" y=\"90\">= W</text><path d=\"M30,170 L130,170\" stroke-dasharray=\"4\"/><text x=\"80\" y=\"185\" text-anchor=\"middle\">Horizontal Force</text><path d=\"M30,160 L30,200\" stroke-dasharray=\"4\"/><text x=\"15\" y=\"190\" text-anchor=\"middle\">Vertical Force</text></svg>",
+   "n": "how are the forces on a curved submerged surface found?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "30f76b94": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\" xmlns=\"http://www.w3.org/2000/svg\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"140\" /><text x=\"60\" y=\"70\" text-anchor=\"middle\">Water</text><line x1=\"50\" y1=\"180\" x2=\"90\" y2=\"180\" stroke=\"#222\" stroke-width=\"1.5\" /><text x=\"45\" y=\"195\" text-anchor=\"end\">Base</text><line x1=\"80\" y1=\"40\" x2=\"80\" y2=\"180\" stroke=\"#222\" stroke-width=\"1.5\" /><text x=\"85\" y=\"110\" text-anchor=\"middle\">H</text><polygon points=\"95,180 135,40 175,180\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><line x1=\"135\" y1=\"180\" x2=\"135\" y2=\"60\" stroke=\"#222\" stroke-width=\"1.5\" /><text x=\"140\" y=\"120\" text-anchor=\"start\">H/3</text><line x1=\"175\" y1=\"180\" x2=\"175\" y2=\"60\" stroke-dasharray=\"2,2\" stroke-width=\"1.5\" /><text x=\"180\" y=\"120\" text-anchor=\"start\">2H/3</text><line x1=\"95\" y1=\"180\" x2=\"175\" y2=\"180\" stroke=\"#222\" stroke-width=\"1.5\" /><text x=\"135\" y=\"195\" text-anchor=\"middle\">b</text><text x=\"100\" y=\"210\" text-anchor=\"middle\">Resultant Force F</text></svg>",
+   "n": "what is the total pressure on a vertical dam wall holding water to height h?",
+   "sub": "fluids",
+   "at": "2026-11-05"
+  },
+  "c58f57aa": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"80\" y=\"40\" width=\"200\" height=\"140\" /><text x=\"90\" y=\"70\">Water Surface</text><line x1=\"80\" y1=\"60\" x2=\"280\" y2=\"60\" stroke-dasharray=\"4,2\" /><line x1=\"80\" y1=\"60\" x2=\"80\" y2=\"200\" /><line x1=\"280\" y1=\"60\" x2=\"280\" y2=\"200\" /><text x=\"75\" y=\"195\">Bottom</text><text x=\"285\" y=\"195\">Top</text><line x1=\"140\" y1=\"100\" x2=\"140\" y2=\"130\" stroke-dasharray=\"2,2\" /><text x=\"125\" y=\"120\">h̄ = 1.5 m</text><path d=\"M 140 130 L 160 130 L 160 190 L 140 190 Z\" fill=\"#222\" /><text x=\"135\" y=\"180\">CP</text><line x1=\"170\" y1=\"100\" x2=\"170\" y2=\"130\" stroke-dasharray=\"2,2\" /><text x=\"155\" y=\"120\">h = 2.0 m</text><path d=\"M 80 60 L 80 140 L 280 140 L 280 60 Z\" fill=\"none\" stroke-dasharray=\"2,2\" /><text x=\"135\" y=\"95\">γh</text><text x=\"170\" y=\"95\">dA</text></svg>",
+   "n": "find the total pressure and cp on a 3 m deep, 2 m wide vertical plate with its top at the surface.",
    "sub": "fluids",
    "at": "2026-11-05"
   }

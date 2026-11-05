@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T16:24:46.857Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the backlog; prioritize BankFigures to fix broken visual data immediately. MockPapers must be regenerated as files are missing entirely, while ExamPatterns addresses the remaining question bank holes. Invention is deferred until after core content stability is restored.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (641 total)",
-       "text": "What are the advantages of dual-fuel operation? | What is HCCI in engines? | What are the main challenges of HCCI operation?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Engineering Mathematics (360 in pool)",
-       "text": "Engineering Mathematics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T16:37:11.651Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -587,8 +531,48 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-05T23:02:54.493Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention before new content generation. BankFigures is the only agent producing output recently; it must lead to clear critical faults. MockPapers and ExamPatterns are currently idle (0 fixes in last two runs) but have high-priority queues; they will follow once critical infrastructure is stable. MainsFresh and Invention are deprioritized until gaps shrink, as fresh content without a solid question bank risks irrelevance.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (678 total)",
+       "text": "How are the forces on a curved submerged surface found? | What is the total pressure on a vertical dam wall holding water to height H? | Find the total pressure and CP on a 3 m deep, 2 m wide vertical plate with its t"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T22:34:20.032Z",
+ "lastRun": "2026-11-05T23:02:54.493Z",
  "model": "qwen3.5:9b"
 }
