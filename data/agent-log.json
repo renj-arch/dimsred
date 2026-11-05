@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T14:53:14.137Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention; BankFigures is the only agent capable of addressing both simultaneously, so it must lead. MockPapers should follow to convert fixed figures into complete exam resources. Exampatterns and MainsFresh are placed last as they produced zero fixes in recent runs, indicating a need for input refreshment before re-engagement.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Air Compressors (360 in pool)",
-       "text": "Air Compressors"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T15:32:35.351Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -663,8 +623,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T05:27:50.403Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-05T04:34:40.920Z",
+ "lastRun": "2026-11-05T05:27:50.403Z",
  "model": "qwen3.5:9b"
 }
