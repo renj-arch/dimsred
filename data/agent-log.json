@@ -1,34 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T21:17:34.050Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 2
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      },
-      {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T23:30:13.393Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -631,8 +603,41 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T07:03:52.371Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "We have critical gaps in papers, questions, and syllabus content (all false), plus 80 figure gaps and 23 critical faults. MainsFresh produced zero fixes in the last two runs, so it must be deprioritized until other agents clear the backlog. BankFigures is the only agent with consistent output, so we start there to address figure gaps while MetaLearn tackles critical faults; once BankFigures finishes its current batch, we will pivot to generating the missing papers and questions.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": []
   }
  ],
- "lastRun": "2026-11-05T06:34:17.376Z",
+ "lastRun": "2026-11-05T07:03:52.371Z",
  "model": "qwen3.5:9b"
 }
