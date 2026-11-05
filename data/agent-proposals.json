@@ -1,16 +1,57 @@
 {
  "meta": {
-  "generatedAt": "2026-11-02T08:27:31.361Z",
+  "generatedAt": "2026-11-05T08:39:14.898Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 36,
+  "count": 40,
   "lastAttempt": {
-   "at": "2026-11-04T08:07:55.040Z",
-   "ok": false,
-   "error": "no proposal survived validation (raw items: 4)"
+   "at": "2026-11-05T08:39:14.898Z",
+   "ok": true,
+   "count": 4,
+   "dropped": 1
   }
  },
  "proposals": [
+  {
+   "id": "prp-mw3anwlu-1",
+   "at": "2026-11-05T08:39:14.898Z",
+   "title": "Fix transport duration cap in mental-batch generation",
+   "why": "The digest logs a specific failure for 'mental-batch' on 2026-10-27 due to the model hitting a hard cap of 55 minutes, causing the generation to stop prematurely.",
+   "idea": "Update the Node script invoking the Ollama model to inject a system prompt or parameter that explicitly limits response generation time (e.g., via temperature adjustments or token limits) to prevent timeouts, and add a retry logic for this specific error code.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mw3anwlu-2",
+   "at": "2026-11-05T08:39:14.898Z",
+   "title": "Enforce minimum question count in tutor-lane output parser",
+   "why": "A failure on 2026-10-19 occurred because the model only generated 2 valid questions instead of the required 3, causing the 'tutor-questions' lane to fail.",
+   "idea": "Modify the data parsing script to detect when the extracted JSON array has fewer than 3 items. If so, automatically trigger a secondary generation request with adjusted parameters (e.g., higher temperature or different prompt phrasing) until the count requirement is met before saving.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mw3anwlu-3",
+   "at": "2026-11-05T08:39:14.898Z",
+   "title": "Resolve 'missing figure' faults for top syllabus topics",
+   "why": "The fault board lists 80 syllabus topics missing figures, which degrades the 'mental' arena experience where visual aids are likely expected.",
+   "idea": "Implement a script that scans the data folder for HTML files lacking image tags or broken figure references. For the top 20 most frequent missing topics, automatically generate placeholder SVG diagrams using a local lightweight library (like svg.js) and save them to an assets folder to be linked in the HTML.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mw3anwlu-4",
+   "at": "2026-11-05T08:39:14.898Z",
+   "title": "Activate daily wiki-fill pipeline for corpus growth",
+   "why": "The fault board shows the 'daily-wiki-fill' pipeline is currently in progress or stalled, contributing to the 14 info items and preventing automatic content enrichment.",
+   "idea": "Update the GitHub Actions workflow configuration to ensure the 'daily-wiki-fill' job runs every midnight. Add a simple Node.js scraper that fetches text from open-licensed educational wikis (like Wikipedia) and formats them into new question banks, automatically pushing updates to the data repository when the pipeline completes.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mvyzx9r5-1",
    "at": "2026-11-02T08:27:31.361Z",
