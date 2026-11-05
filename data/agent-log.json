@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T00:51:17.589Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site is in a critical state with 80 open faults and no fresh content files present; the previous run produced zero fixes across all agents, indicating a potential starvation or bottleneck rather than agent failure. I will prioritize generating core assets (BankFigures, MockPapers) to populate the empty file states, followed by ExamPatterns and Invention to address specific gaps, while moving MainsFresh last as it has consistently yielded zero results in recent runs.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (613 total)",
-       "text": "Name the four phases of combustion in a CI engine. | What is diesel knock and what causes it? | Define the cetane number of diesel fuel."
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Thermodynamics (360 in pool)",
-       "text": "Thermodynamics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T01:34:17.172Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -644,8 +588,67 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T10:48:06.266Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 49,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 49
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "agniveer/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-13.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-14.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-15.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-02.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cgl/papers/13-sep-2025-s1.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cgl/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cgl/papers/practice-set-02.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T08:39:14.898Z",
+ "lastRun": "2026-11-05T10:48:06.266Z",
  "model": "qwen3.5:9b"
 }
