@@ -1,105 +1,15 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-05T01:08:42.035Z",
-  "cursor": 6,
+  "updatedAt": "2026-11-05T03:20:50.327Z",
+  "cursor": 7,
   "count": 360,
   "lastAttempt": {
-   "at": "2026-11-05T02:22:22.559Z",
-   "reason": "nothing"
+   "at": "2026-11-05T03:20:50.327Z",
+   "reason": "added 10"
   }
  },
  "items": [
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "A steel bar of length 2 m and cross-sectional area 400 mm² is subjected to an axial tensile force of 50 kN. If Young's modulus for steel is 200 GPa, calculate the elongation.",
-   "a": "1.25 mm",
-   "h": "Use Hooke's Law: δ = (P × L) / (A × E).",
-   "s": "Given P=50×10³ N, L=2000 mm, A=400 mm², and E=200×10³ N/mm². Substituting into δ = (PL/EA) yields δ = (50000 × 2000) / (400 × 200000), which simplifies to 1.25 mm.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "What is the difference between a 'hollow shaft' and a 'thin-walled tube' in the context of torsion analysis?",
-   "a": "A thin-walled tube is defined when the ratio of mean diameter (D) to wall thickness (t) is greater than 20 (D/t > 20).",
-   "h": "The distinction depends on the ratio of diameter to wall thickness.",
-   "s": "In torsion theory, a shaft is classified as 'thin-walled' if the diameter-to-thickness ratio exceeds 20, allowing simplifications like assuming uniform shear stress across the thickness. If this ratio is less than or equal to 20, it is treated as a 'hollow shaft' requiring integration of shear stress over the varying radius.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "Define Poisson's ratio and state its typical range for most engineering materials.",
-   "a": "ν = - (ε_lat / ε_long)",
-   "h": "It is the negative ratio of lateral strain to longitudinal strain.",
-   "s": "Poisson's ratio (ν) quantifies the tendency of a material to expand in directions perpendicular to the direction of compression. For most common engineering materials like metals, it typically ranges between 0.25 and 0.35.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "A simply supported beam of span L carries a central point load W. What is the maximum bending moment?",
-   "a": "M_max = (W × L) / 4",
-   "h": "The max moment occurs at the center where shear force changes sign.",
-   "s": "For a simply supported beam with a central point load, the reaction forces are W/2 at each support. The bending moment increases linearly from zero at the supports to a maximum at the center, calculated as Reaction × Distance = (W/2) × (L/2).",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "Explain the concept of 'shear center' in an open thin-walled section like a channel or angle.",
-   "a": "The shear center is the specific point in the cross-section through which a transverse force must pass to cause pure bending without inducing torsion.",
-   "h": "It is the point where a transverse load must act to produce bending without twisting.",
-   "s": "In asymmetric or open sections like channels, shear stresses do not sum to zero about the centroidal axis if the load is applied elsewhere. The shear center is the unique point where applying a load ensures that the resulting shear flow does not create a net torque on the section.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "Define 'factor of safety' (FoS) in design and write its mathematical expression.",
-   "a": "FoS = Failure Load / Working Load",
-   "h": "It is the ratio of failure load to the working or allowable load.",
-   "s": "The factor of safety is a design margin used to account for uncertainties in material properties, loading conditions, and manufacturing defects. It ensures that the actual stress in the component remains well below the yield or ultimate strength of the material.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "What is the relationship between maximum shear stress (τ_max) and maximum bending stress (σ_max) at the neutral axis of a solid circular shaft subjected to combined bending and torsion?",
-   "a": "At the neutral axis, bending stress σ is zero; thus τ_max equals the shear stress due to torsion only.",
-   "h": "This requires understanding that max shear occurs at the surface due to torsion, but at the neutral axis specifically for bending.",
-   "s": "In a solid circular shaft under combined loading, bending stress varies linearly from maximum at the extreme fibers to zero at the neutral axis. Therefore, at the exact location of the neutral axis, the bending component of stress vanishes, leaving only the shear stress induced by the applied torque.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "Define 'strain energy' and state its unit in the SI system.",
-   "a": "Joule (J) or N·m",
-   "h": "It is the work done by external forces stored as internal potential energy during deformation.",
-   "s": "Strain energy is the energy absorbed by a body when it is deformed elastically, which is recoverable upon unloading. In the SI system, since it represents work done (Force × Distance), its unit is the Joule (J).",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "For a cantilever beam of length L fixed at one end and carrying a point load W at the free end, what is the slope at the free end?",
-   "a": "θ_max = (W × L²) / (2 × E × I)",
-   "h": "Integrate the moment equation or use standard formulas for cantilevers.",
-   "s": "The bending moment at a distance x from the free end is M = -Wx. Integrating the curvature equation d²y/dx² = M/EI twice and applying boundary conditions (slope=0, deflection=0 at fixed end) yields the slope at the free end as WL²/2EI.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Strength of Materials",
-   "q": "What happens to the stress distribution in a beam if the cross-section is not symmetric about the neutral axis?",
-   "a": "The neutral axis still passes through the centroid of the section, but its orientation and position relative to geometric axes change.",
-   "h": "The neutral axis shifts, but it always passes through the centroid.",
-   "s": "Regardless of symmetry, the neutral axis in pure bending always coincides with the centroidal axis because the sum of moments of area about this axis must be zero for equilibrium. However, if the section is unsymmetric (e.g., a T-beam), the neutral axis does not align with an axis of geometric symmetry.",
-   "at": "2026-11-03"
-  },
   {
    "ex": "ssc-je",
    "sub": "Theory of Machines",
@@ -3248,6 +3158,96 @@
    "a": "Specific Gravity of Wood = 0.60",
    "h": "Buoyant force = Weight of displaced fluid; for floating bodies, weight of object = weight of displaced fluid.",
    "s": "Archimedes' principle states that a floating body displaces a weight of fluid equal to its own weight. Since the block is in equilibrium, the weight of the wood equals the weight of the water displaced by the submerged portion. Therefore, the ratio of the wood's density to water's density (specific gravity) is exactly equal to the fraction of volume submerged, which is 0.60.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Define the term 'equilibrium' for a rigid body in two dimensions and state the necessary conditions that must be satisfied simultaneously.",
+   "a": "A state where the body is at rest or moves with constant velocity; Conditions: ΣFx = 0, ΣFy = 0, and ΣM = 0.",
+   "h": "Recall the state of zero acceleration and the vector sum requirements.",
+   "s": "Equilibrium implies that the resultant force and resultant moment acting on the rigid body are zero. For a 2D problem, this requires the algebraic sum of all horizontal forces, vertical forces, and moments about any point to vanish simultaneously.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A block of mass 50 kg rests on a rough horizontal surface with a coefficient of static friction μs = 0.4. Calculate the minimum horizontal force required to just start moving the block (take g = 9.8 m/s²).",
+   "a": "196 N",
+   "h": "Use the limiting friction formula F = μs × Normal Reaction.",
+   "s": "First, calculate the normal reaction N which equals the weight (mg) on a horizontal surface: N = 50 × 9.8 = 490 N. The minimum force to initiate motion equals the limiting friction force: F = μs × N = 0.4 × 490 = 196 N.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A simply supported beam of length L carries a point load W at its mid-span. Determine the maximum bending moment and specify its location.",
+   "a": "Maximum Moment = WL/4, located at the center (mid-span) of the beam.",
+   "h": "Recall that max moment occurs under the point load for this loading case.",
+   "s": "For a simply supported beam with a central point load, the reactions at both supports are W/2. The bending moment increases linearly from zero at the supports to a peak at the center. Thus, M_max = (W/2) × (L/2) = WL/4.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Explain the difference between 'stress' and 'strain' in the context of material deformation.",
+   "a": "Stress is internal resistance per unit area (Force/Area); Strain is the ratio of change in dimension to original dimension (dimensionless).",
+   "h": "Stress is force per unit area; strain is relative deformation.",
+   "s": "Stress represents the intensity of internal forces developed within a material when an external load is applied, measured as Force divided by Area. Strain quantifies the resulting deformation, defined as the fractional change in length or shape relative to the original dimensions.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "A particle moves in a circular path of radius r with constant speed v. What is the direction of its acceleration and what causes it?",
+   "a": "Direction: Towards the center (centripetal); Cause: Net inward force.",
+   "h": "Recall that velocity changes direction even if speed is constant.",
+   "s": "Even though the speed is constant, the direction of the velocity vector changes continuously as the particle moves along the circle. This change in direction constitutes acceleration directed radially inward towards the center, known as centripetal acceleration.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "State the principle of transmissibility of forces and give one practical application.",
+   "a": "A force acting on a rigid body can be moved anywhere along its own line of action without altering the external equilibrium or motion conditions.",
+   "h": "Force can slide along its line of action without changing external effect.",
+   "s": "The principle states that the point of application of a force on a rigid body can be shifted anywhere along the same line of action without affecting the body's external response. This is practically used in structural analysis to simplify free-body diagrams by moving forces to convenient points for moment calculation.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Calculate the total work done by a constant force of 10 N acting at an angle of 60° to the direction of displacement, if the object moves 5 meters.",
+   "a": "25 Joules",
+   "h": "Use Work = Force × Displacement × cos(theta).",
+   "s": "Work done is the dot product of force and displacement vectors. Using W = F × d × cos(θ), we substitute F=10 N, d=5 m, and θ=60°. Since cos(60°) = 0.5, the calculation is 10 × 5 × 0.5 = 25 J.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "Define 'moment of inertia' for a rigid body about an axis and state its SI unit.",
+   "a": "SI Unit: kg·m²",
+   "h": "It is the rotational analog of mass; resistance to angular acceleration.",
+   "s": "The moment of inertia measures a body's resistance to change in its rotational motion about a specific axis. It depends on both the total mass and how that mass is distributed relative to the axis of rotation, with SI units of kilogram-meter squared.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "In a parallel force system acting on a beam, if the sum of moments about point A is zero and the sum of vertical forces is zero, what can be concluded about the system?",
+   "a": "The system is in complete static equilibrium.",
+   "h": "Zero net force and zero net moment implies static equilibrium.",
+   "s": "According to the conditions for rigid body equilibrium, if both the vector sum of all external forces (ΣF = 0) and the sum of moments about any point (ΣM = 0) are satisfied, the body remains at rest or continues uniform motion without rotation.",
+   "at": "2026-11-05"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mechanics",
+   "q": "What is the relationship between the angle of friction φ and the coefficient of static friction μs?",
+   "a": "tan(φ) = μs",
+   "h": "Relate the tangent of the angle to the coefficient.",
+   "s": "The angle of friction is defined as the angle whose tangent equals the coefficient of static friction. This relationship arises from the right-angled triangle formed by the limiting friction force and the normal reaction, where tan(φ) = Friction/Normal Reaction = μs.",
    "at": "2026-11-05"
   }
  ]
