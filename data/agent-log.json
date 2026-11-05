@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T10:25:51.870Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (79) demand immediate attention before new content generation. BankFigures is the only agent producing output recently, so it leads to tackle critical faults. MockPapers produced a fix in the last run but zero in the previous two; despite being starved of inputs, it must be reactivated to address the massive question deficit. MainsFresh and Invention have been idle for multiple runs and should follow to generate fresh material once structural gaps are address",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (605 total)",
-       "text": "Define mixture strength. | Why do simple carburettors need compensating devices? | What is the function of the choke?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T11:48:58.613Z",
    "model": "batiai/qwen3.8-27b:iq3",
    "totalFixes": 3,
@@ -623,8 +578,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-05T02:48:09.456Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the immediate priorities; BankFigures must run first to fix broken diagrams, followed by MockPapers to generate new content for missing papers. Since Exampatterns produced 0 in the last two runs while others produced fixes, it will be placed later in the queue as a secondary action once primary gaps are addressed.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (621 total)",
+       "text": "Why must the compression ratio be reduced for a supercharged SI engine? | State one limitation of supercharging at high altitude or speed. | What is the purpose of an intercooler in a turbocharged engine?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T02:02:46.077Z",
+ "lastRun": "2026-11-05T02:48:09.456Z",
  "model": "qwen3.5:9b"
 }
