@@ -1,50 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-04T08:56:46.151Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (603 total)",
-       "text": "How do the torque and power curves of an engine vary with speed? | What is the stoichiometric air-fuel ratio of gasoline? | What is the stoichiometric air-fuel ratio of diesel?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-04T09:18:47.969Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -590,8 +546,64 @@
     ]
    },
    "details": []
+  },
+  {
+   "at": "2026-11-05T00:51:17.589Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site is in a critical state with 80 open faults and no fresh content files present; the previous run produced zero fixes across all agents, indicating a potential starvation or bottleneck rather than agent failure. I will prioritize generating core assets (BankFigures, MockPapers) to populate the empty file states, followed by ExamPatterns and Invention to address specific gaps, while moving MainsFresh last as it has consistently yielded zero results in recent runs.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (613 total)",
+       "text": "Name the four phases of combustion in a CI engine. | What is diesel knock and what causes it? | Define the cetane number of diesel fuel."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Thermodynamics (360 in pool)",
+       "text": "Thermodynamics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T00:29:00.944Z",
+ "lastRun": "2026-11-05T00:51:17.589Z",
  "model": "qwen3.5:9b"
 }
