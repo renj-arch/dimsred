@@ -266,12 +266,22 @@ function main() {
 
   var existing = [];
   if (fs.existsSync(quizPath)) {
-    try { existing = readQuiz(quizPath); } catch(e) { existing = {}; }
-    if (existing.questions) existing = existing.questions;
+    try {
+      var parsed = readQuiz(quizPath);
+      // readQuiz returns the stored object {questions: [...]}. A corrupt or
+      // legacy file can be an object, array or null; normalise it so the
+      // filter below never runs on a non-array (the 2026-11-04 PIB run died
+      // with "existing.filter is not a function" for exactly this reason).
+      if (Array.isArray(parsed)) existing = parsed;
+      else if (parsed && Array.isArray(parsed.questions)) existing = parsed.questions;
+      else existing = [];
+    } catch(e) { existing = []; }
   }
 
   var todayKey = new Date().toISOString().substring(0, 10);
-  existing = existing.filter(function(q) { return q.pubDate.substring(0, 10) !== todayKey; });
+  existing = existing.filter(function(q) {
+    return q && typeof q.pubDate === 'string' && q.pubDate.substring(0, 10) !== todayKey;
+  });
   // Re-evaluate subject for all existing questions (in case subject logic improved)
   existing = existing.map(function(q) {
     var subj = determineSubject(q.question, q.category, q.source);

@@ -33,20 +33,25 @@ console.log('\n--- the shipped move registry is reviewable and specific ---');
   try { reg = moves.loadRegistry(ROOT); } catch (e) { assert(false, 'registry loads', e.message); }
   if (!reg) return;
   assert(reg.version === 1, 'registry version is 1');
-  assert(Array.isArray(reg.moves) && reg.moves.length >= 1, 'registry has at least one move');
+  assert(Array.isArray(reg.moves), 'registry moves is an array (empty allowed)');
   try {
     moves.validateRegistry(reg);
     assert(true, 'every move passes structural validation');
   } catch (e) {
     assert(false, 'every move passes structural validation', e.message);
   }
-  const arp = reg.moves.filter(m => m.subSubject === 'ARP4761')[0];
-  assert(!!arp, 'ARP4761 has a curated move');
+  // The ARP4761 move was real, but the refreshed corpus no longer contains the
+  // subtopic on either side. It must stay recorded for audit and must not be
+  // replayed as an active move (that made the Question Quality gate fail).
+  const arp = (reg.retired || []).filter(m => m.subSubject === 'ARP4761')[0];
+  assert(!!arp, 'the resolved ARP4761 move is recorded as retired');
+  assert(!reg.moves.some(m => m.subSubject === 'ARP4761'), 'the ARP4761 move is not replayed');
   if (arp) {
     assert(arp.from === 'Indian Languages' && arp.to === 'Indian Aviation & Shipping',
-      'ARP4761 moves from Indian Languages to Indian Aviation & Shipping');
-    assert(arp.evidence.length >= 2, 'ARP4761 move carries literal evidence');
+      'ARP4761 retired from Indian Languages to Indian Aviation & Shipping');
+    assert(arp.evidence.length >= 2, 'ARP4761 move keeps literal evidence');
     assert(arp.timelineUndated === true, 'the bogus 1309 timeline year is explicitly dropped');
+    assert(String(arp.retiredReason || '').length >= 20, 'the retirement explains itself');
   }
 })();
 

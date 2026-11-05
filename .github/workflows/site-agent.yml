@@ -90,16 +90,13 @@ jobs:
         with:
           node-version: 22
 
-      # EXACT same swap as llm-autofix (kept as safety margin for the heavy tier).
-      # 24GB filled more disk and made paging worse, not better.
-      # (Only the heavy tier needs it; harmless on fast runs.)
-      - name: Create swap (16GB — same as proven llm-autofix)
-        run: |
-          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
-          sudo chmod 600 /tmp/swapfile
-          sudo mkswap /tmp/swapfile
-          sudo swapon /tmp/swapfile
-          free -h
+      # The 16GB swap file needs free disk. GitHub's stock runner image can be
+      # within ~1GB of full, and run #590 died at this exact step with
+      # "dd: IO error: No space left on device". scripts/ci-make-swap.sh
+      # reclaims the bundled toolchains first, falls back to 8GB, then
+      # continues without swap rather than failing setup.
+      - name: Create swap (16GB, fall back to 8GB)
+        run: bash scripts/ci-make-swap.sh
 
       - name: Install Ollama
         run: |

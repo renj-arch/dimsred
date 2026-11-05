@@ -455,14 +455,30 @@ async function main() {
   }
 
   let validated = { items: [], dropped: 0 };
+  // A malformed model reply is a bad round, not a broken lane. The proposal
+  // board is advisory (nothing is implemented automatically), so a model that
+  // returns an unparseable array or four ideas that all fail the rules must
+  // keep the previous proposals and end green. Transport/model-down errors
+  // above still fail loudly: those mean the lane itself is not running.
+  let softFail = false;
   if (!err && text) {
     const raw = extractArray(text);
-    if (!raw) err = new Error('model reply contained no JSON array');
+    if (!raw) { err = new Error('model reply contained no JSON array'); softFail = true; }
     else validated = validateItems(raw, prevTitles);
-    if (!err && !validated.items.length) err = new Error('no proposal survived validation (raw items: ' + (raw ? raw.length : 0) + ')');
+    if (!err && !validated.items.length) {
+      err = new Error('no proposal survived validation (raw items: ' + (raw ? raw.length : 0) + ')');
+      softFail = true;
+    }
   }
 
   if (err) {
+    if (softFail) {
+      // Advisory lane: keep the previous board untouched and end green. Writing
+      // meta.lastAttempt here would create a publish commit for every junk
+      // reply, which is exactly the noise that made this lane look broken.
+      console.warn('proposals: no new proposals this round — ' + (err.message || err));
+      process.exit(0);
+    }
     console.error('proposals: FAILED — ' + (err.message || err));
     const at = new Date().toISOString();
     // Keep the file honest: record the attempt, keep the previous proposals.

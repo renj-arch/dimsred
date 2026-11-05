@@ -55,11 +55,7 @@ jobs:
       # it (it nearly fills the 16GB runner); harmless for the fast tier.
       - name: Create swap (16GB — same as site-agent)
         run: |
-          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
-          sudo chmod 600 /tmp/swapfile
-          sudo mkswap /tmp/swapfile
-          sudo swapon /tmp/swapfile
-          free -h
+          bash scripts/ci-make-swap.sh
 
       - name: Install Ollama
         run: |

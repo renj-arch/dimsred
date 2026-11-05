@@ -32,6 +32,11 @@ const MANIFEST = path.resolve(
 );
 const STRICT = flags.has('--strict');
 const JSON_OUT = flags.has('--json');
+// --quarantine: remove items that fail the deterministic audit, record them in
+// the manifest, and let the run pass. Used by the generator workflow so one
+// legacy bad item cannot block every future publish. The default (no flag)
+// still fails hard for the manual gate.
+const QUARANTINE = flags.has('--quarantine');
 
 function readJson(p) {
   try {
@@ -110,6 +115,66 @@ function main() {
   }
 
   if (STRICT) errors.push.apply(errors, warnings.map(w => 'warning: ' + w));
+
+  // Auto-quarantine mode (generator workflow): drop hard-failing items so they
+  // can never be served, record why, then re-check the cleaned pool for
+  // structural defects. Without the flag the original fail-closed behaviour
+  // is unchanged (the manual gate must still stop on a bad item).
+  if (QUARANTINE && failures.length) {
+    const now = new Date().toISOString();
+    const byId = new Map(pool.questions.map(q => [String(q.id), q]));
+    const already = new Set((manifest.items || []).map(x => String(x.id)));
+    const added = [];
+    for (const f of failures) {
+      if (already.has(String(f.id))) continue;
+      const q = byId.get(String(f.id)) || {};
+      manifest.items.push({
+        id: f.id,
+        reason: f.errors.join('; '),
+        section: q.section || '',
+        difficulty: q.difficulty || '',
+        topic: q.topic || '',
+        stemPreview: String(q.stem || '').replace(/\s+/g, ' ').slice(0, 140),
+        model: q.model || '',
+        inventedAt: q.inventedAt || '',
+        quarantinedAt: now
+      });
+      added.push(f.id);
+    }
+    const drop = new Set(failures.map(f => String(f.id)));
+    const before = pool.questions.length;
+    pool.questions = pool.questions.filter(q => !drop.has(String(q.id)));
+    manifest.updatedAt = now.slice(0, 10);
+    manifest.appliedAt = now;
+    manifest.counts = { before: before, removed: before - pool.questions.length, kept: pool.questions.length };
+    fs.writeFileSync(POOL, JSON.stringify(pool, null, 2) + '\n', 'utf8');
+    fs.writeFileSync(MANIFEST, JSON.stringify(manifest, null, 2) + '\n', 'utf8');
+
+    // Recompute structural errors against the cleaned pool.
+    errors.length = 0;
+    warnings.length = 0;
+    if (!pool.questions.length) errors.push('pool is empty');
+    const qIds = new Set();
+    const qStems = new Set();
+    for (const q of pool.questions) {
+      const qid = String((q && q.id) || '(no id)');
+      if (quarantined.has(qid)) errors.push('quarantined id still in pool: ' + qid);
+      if (qIds.has(qid)) errors.push('duplicate id: ' + qid);
+      qIds.add(qid);
+      const sk = stemKey(q);
+      if (sk) {
+        if (qStems.has(sk)) errors.push('duplicate stem: ' + qid);
+        qStems.add(sk);
+      }
+    }
+    if (STRICT) errors.push.apply(errors, warnings.map(w => 'warning: ' + w));
+    console.log('quarantine: removed ' + (before - pool.questions.length) +
+      ' invalid item(s) and recorded them in ' + path.basename(MANIFEST) +
+      (added.length ? ' (' + added.slice(0, 6).join(', ') + (added.length > 6 ? ', ...' : '') + ')' : ''));
+    failed = 0;
+    failures.length = 0;
+    ok = pool.questions.length;
+  }
 
   const summary = {
     pool: POOL,
