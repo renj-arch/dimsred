@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T07:48:40.524Z",
-  "cursor": 837,
-  "built": 726
+  "updatedAt": "2026-11-06T08:28:20.323Z",
+  "cursor": 840,
+  "built": 729
  },
  "figs": {
   "2316121": {
@@ -17,6 +17,12 @@
    "n": "what is a gear coupling and where is it used?",
    "sub": "design",
    "at": "2026-10-31"
+  },
+  "21679413": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <path d=\"M40,80 L140,80 L160,40 L200,40 L220,80 L320,80 L320,160 L40,160 Z\"/>\n <line x1=\"140\" y1=\"80\" x2=\"140\" y2=\"160\" stroke-dasharray=\"2,2\"/>\n <line x1=\"220\" y1=\"80\" x2=\"220\" y2=\"160\" stroke-dasharray=\"2,2\"/>\n <text x=\"50\" y=\"75\">Rectangular</text>\n <text x=\"230\" y=\"75\">Triangular</text>\n <text x=\"90\" y=\"180\">H = Head</text>\n <text x=\"260\" y=\"180\">θ = Notch Angle</text>\n <text x=\"140\" y=\"30\">Free Surface</text>\n <text x=\"100\" y=\"50\">b = Width of Rect.</text>\n <text x=\"270\" y=\"50\">tan(θ/2)</text>\n</svg>",
+   "n": "write the discharge over a trapezoidal notch.",
+   "sub": "fluids",
+   "at": "2026-11-06"
   },
   "33687437": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Clamp Force Direction</text><rect x=\"40\" y=\"40\" width=\"20\" height=\"160\" rx=\"2\"/><rect x=\"70\" y=\"40\" width=\"20\" height=\"160\" rx=\"2\"/><rect x=\"100\" y=\"40\" width=\"20\" height=\"160\" rx=\"2\"/><text x=\"35\" y=\"120\" text-anchor=\"end\">Work Part</text><text x=\"35\" y=\"190\" text-anchor=\"end\">Locators (Fixed)</text><path d=\"M 140 40 L 140 200\" stroke-dasharray=\"4,2\"/><circle cx=\"140\" cy=\"40\" r=\"3\"/><circle cx=\"140\" cy=\"200\" r=\"3\"/><text x=\"150\" y=\"120\" text-anchor=\"start\">Clamp</text><path d=\"M 260 40 L 260 200\" stroke-dasharray=\"4,2\"/><circle cx=\"260\" cy=\"40\" r=\"3\"/><circle cx=\"260\" cy=\"200\" r=\"3\"/><text x=\"270\" y=\"120\" text-anchor=\"start\">Incorrect</text><path d=\"M 280 40 L 280 200\" stroke-dasharray=\"4,2\"/><circle cx=\"280\" cy=\"40\" r=\"3\"/><circle cx=\"280\" cy=\"200\" r=\"3\"/><text x=\"290\" y=\"120\" text-anchor=\"start\">Distortion</text><path d=\"M 300 40 L 300 200\" stroke-dasharray=\"4,2\"/><circle cx=\"300\" cy=\"40\" r=\"3\"/><circle cx=\"300\" cy=\"200\" r=\"3\"/><text x=\"310\" y=\"120\" text-anchor=\"start\">No Support</text><path d=\"M 320 40 L 320 200\" stroke-dasharray=\"4,2\"/><circle cx=\"320\" cy=\"40\" r=\"3\"/><circle cx=\"320\" cy=\"200\" r=\"3\"/><text x=\"330\" y=\"120\" text-anchor=\"start\">Loose</text></svg>",
@@ -4359,6 +4365,18 @@
   "c8340bcc": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Discharge over Rectangular Notch</text><path d=\"M40 160 L100 160 L100 120 L40 120 Z\"/><path d=\"M40 160 L320 160 L320 120 L40 120 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"80\" y=\"175\" text-anchor=\"middle\">b</text><text x=\"340\" y=\"175\" text-anchor=\"middle\">H</text><path d=\"M100 120 L100 60\"/><path d=\"M100 60 L180 60\" stroke-dasharray=\"4,2\"/><text x=\"120\" y=\"55\" text-anchor=\"middle\">H</text><path d=\"M100 60 L100 160\"/><text x=\"95\" y=\"135\" text-anchor=\"end\">y</text><path d=\"M40 120 L100 120\" stroke-dasharray=\"4,2\"/><text x=\"70\" y=\"115\" text-anchor=\"middle\">b</text><path d=\"M320 160 L320 120 L320 60 L320 160 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"340\" y=\"95\" text-anchor=\"end\">H</text><path d=\"M100 60 L320 60\" stroke-dasharray=\"4,2\"/><text x=\"210\" y=\"55\" text-anchor=\"middle\">b</text><path d=\"M100 160 L320 160\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"190\" text-anchor=\"middle\">Q = (2/3) C_d b √(2g) H^(3/2)</text></svg>",
    "n": "write the discharge over a rectangular notch.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "5fdb65e0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Free Surface</text><path d=\"M20,40 L340,40\" stroke-dasharray=\"4,2\"/><line x1=\"60\" y1=\"40\" x2=\"60\" y2=\"180\"/><line x1=\"300\" y1=\"40\" x2=\"300\" y2=\"180\"/><path d=\"M60,40 L300,40 L180,180 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"115\" text-anchor=\"middle\">θ</text><line x1=\"180\" y1=\"95\" x2=\"180\" y2=\"135\"/><path d=\"M60,40 L180,180 M300,40 L180,180\" stroke-dasharray=\"2,2\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">H</text><path d=\"M180,180 L180,160 M180,180 L200,180\" stroke-dasharray=\"2,2\"/><text x=\"345\" y=\"100\" text-anchor=\"middle\">θ/2</text><text x=\"345\" y=\"130\" text-anchor=\"middle\">θ/2</text></svg>",
+   "n": "write the discharge over a triangular (v) notch.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "5be1a611": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Water Surface</text><path d=\"M 40 180 L 40 160 L 100 160 L 100 180 Z\" fill=\"#222\" opacity=\"0.2\"/><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"150\" text-anchor=\"middle\">Weir Crest</text><path d=\"M 40 160 L 70 140 L 320 140 L 290 160 Z\" fill=\"#222\" opacity=\"0.2\"/><line x1=\"65\" y1=\"140\" x2=\"65\" y2=\"160\" stroke-dasharray=\"2,2\"/><text x=\"75\" y=\"150\">1H</text><line x1=\"65\" y1=\"140\" x2=\"95\" y2=\"140\" stroke-dasharray=\"2,2\"/><text x=\"85\" y=\"130\">4V</text><path d=\"M 290 160 L 320 140 L 320 180 Z\" fill=\"#222\" opacity=\"0.2\"/><text x=\"280\" y=\"175\">Trapezoidal</text><text x=\"280\" y=\"190\">Shape</text><text x=\"40\" y=\"30\" font-weight=\"bold\">Cipolletti Weir</text></svg>",
+   "n": "what is a cipolletti weir?",
    "sub": "fluids",
    "at": "2026-11-06"
   }
