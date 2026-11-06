@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T12:39:46.670Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention; BankFigures is the only agent capable of fixing figures, so it must lead. Since 'archive-writer' produced 3 fixes last run while others produced 0 or 1, we prioritize high-output agents but must include BankFigures to clear the backlog. We will cycle through available agents to maximize daily content depth without overloading any single inference slot.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (749 total)",
-       "text": "How are bend, elbow and valve losses expressed? | State the rules for pipes in series. | State the rules for pipes in parallel."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T13:01:27.610Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -813,8 +768,50 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T20:07:16.351Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 226079 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 48 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T18:27:30.952Z",
+ "lastRun": "2026-11-06T20:07:16.351Z",
  "model": "qwen3.5:9b"
 }
