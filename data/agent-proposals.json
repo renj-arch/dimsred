@@ -1,17 +1,27 @@
 {
  "meta": {
-  "generatedAt": "2026-11-05T08:39:14.898Z",
+  "generatedAt": "2026-11-06T08:38:28.906Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 40,
+  "count": 41,
   "lastAttempt": {
-   "at": "2026-11-05T08:39:14.898Z",
+   "at": "2026-11-06T08:38:28.906Z",
    "ok": true,
-   "count": 4,
-   "dropped": 1
+   "count": 1,
+   "dropped": 3
   }
  },
  "proposals": [
+  {
+   "id": "prp-mw4q2rsa-1",
+   "at": "2026-11-06T08:38:28.906Z",
+   "title": "Fix Tutor Lane Minimum Count Validation",
+   "why": "Recent failures show the tutor lane sometimes generating only 2 questions instead of the required minimum, and output parsing fails when JSON arrays are missing.",
+   "idea": "Update the Node.js writer script to enforce a strict post-generation check: if the resulting array has fewer than 3 items, automatically retry generation or append fallback questions from the invented pool before saving.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mw3anwlu-1",
    "at": "2026-11-05T08:39:14.898Z",
