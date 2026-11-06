@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T05:46:44.974Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address critical image/data failures first to restore site integrity. Since papers/syllabus files are absent, MetaLearn should immediately generate foundational study materials to fill content voids. MainsFresh will follow to create fresh daily practice questions once core assets exist. Invention and MockPapers are deferred as they require stable base content before generating new problems or full papers.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (711 total)",
-       "text": "What is the function of a nozzle in a fluid system? | Explain the working of a siphon and its height limit. | Define hydraulic gradient line and total energy gradient line."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T06:16:50.490Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -593,8 +553,58 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-06T13:49:11.670Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visuals. Since papers/syllabus files are missing, MetaLearn is essential next to generate foundational content. MockPapers should follow to utilize generated questions, while ExamPatterns addresses the remaining critical fault count. MainsFresh will be last as it requires prior content generation and has produced 0 fixes recently.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (754 total)",
+       "text": "Define displacement thickness δ*. | Define momentum and energy thicknesses. | Give the laminar boundary-layer thickness and transition range on a flat plate."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T13:21:29.942Z",
+ "lastRun": "2026-11-06T13:49:11.670Z",
  "model": "qwen3.5:9b"
 }
