@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T09:34:38.726Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention; BankFigures is the only agent producing fixes recently, so it must lead. Invention and MetaLearn have produced zero fixes for three consecutive runs, indicating they are likely starved of inputs rather than broken, so they will be scheduled last to avoid wasting budget on empty cycles while we clear the backlog.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (732 total)",
-       "text": "Write the discharge over a submerged (drowned) weir. | How are end contractions of a rectangular weir accounted for? | What is the velocity-of-approach correction in weirs?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T09:56:50.774Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -579,8 +534,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T16:52:01.923Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Priority is clearing the 81 open faults and filling the 80 figure gaps immediately as these block user access and content completeness. Since 'bankfigures' produced output in the last run while 'metalearn', 'invention', and 'mainsfresh' yielded zero fixes recently, they will be scheduled later to prevent starvation of critical path items. The plan focuses on high-impact repair agents first.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (767 total)",
+       "text": "Where do maximum velocity and discharge occur in a circular channel? | Explain a hydraulic jump and its conjugate-depth relation. | Define specific energy and critical depth."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T16:11:56.137Z",
+ "lastRun": "2026-11-06T16:52:01.923Z",
  "model": "qwen3.5:9b"
 }
