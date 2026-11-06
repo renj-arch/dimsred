@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T12:00:44.924Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. Since papers, questions, syllabus, and sidecar files are all missing, Invention is required immediately to generate the foundational raw material for these exams. MetaLearn should follow to synthesize this new material into coherent study units. MainsFresh will then update the main content feed with these fresh resources. Agents that produced 0 in recent runs (MetaLearn, M",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (746 total)",
-       "text": "What is the exit loss into a reservoir? | Write the loss at a sudden enlargement. | Write the loss at a sudden contraction."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T12:39:46.670Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -834,8 +789,32 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T18:27:30.952Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw5b49vr (gs3, 15 marks): India has recently identified critical and strategic minerals (such as lithium, cobalt, and rare earth elements) essenti",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T18:16:27.958Z",
+ "lastRun": "2026-11-06T18:27:30.952Z",
  "model": "qwen3.5:9b"
 }
