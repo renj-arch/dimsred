@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T04:29:12.328Z",
-  "cursor": 816,
-  "built": 705
+  "updatedAt": "2026-11-06T05:02:42.490Z",
+  "cursor": 819,
+  "built": 708
  },
  "figs": {
   "2316121": {
@@ -4233,6 +4233,24 @@
   "750c0119": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n<g id=\"Streamline\">\n<path d=\"M40,110 Q100,70 160,110 T280,110\" stroke=\"#222\" fill=\"none\"/>\n<circle cx=\"40\" cy=\"110\" r=\"3\" fill=\"none\"/>\n<circle cx=\"160\" cy=\"110\" r=\"3\" fill=\"none\"/>\n<circle cx=\"280\" cy=\"110\" r=\"3\" fill=\"none\"/>\n</g>\n<g id=\"Arrows\">\n<path d=\"M45,108 L60,108\" stroke=\"#222\" fill=\"none\"/>\n<path d=\"M165,108 L180,108\" stroke=\"#222\" fill=\"none\"/>\n<path d=\"M285,108 L300,108\" stroke=\"#222\" fill=\"none\"/>\n</g>\n<g id=\"Labels\">\n<text x=\"45\" y=\"95\">Steady</text>\n<text x=\"165\" y=\"95\">Incompressible</text>\n<text x=\"285\" y=\"95\">Inviscid</text>\n</g>\n<g id=\"Energy\">\n<rect x=\"30\" y=\"40\" width=\"300\" height=\"60\" stroke=\"#222\" fill=\"none\"/>\n<line x1=\"30\" y1=\"50\" x2=\"330\" y2=\"50\" stroke=\"#222\"/>\n<text x=\"180\" y=\"70\">No Energy Added/Removed</text>\n</g>\n</svg>",
    "n": "state the assumptions of the bernoulli equation.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "9035f067": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Venturimeter Section</text><path d=\"M40 60 L320 60\"/><circle cx=\"100\" cy=\"60\" r=\"20\"/><circle cx=\"260\" cy=\"60\" r=\"15\"/><path d=\"M80 40 L100 20 L120 40 Z\"/><path d=\"M240 40 L260 20 L280 40 Z\"/><text x=\"90\" y=\"35\">A1</text><text x=\"250\" y=\"35\">a (throat)</text><line x1=\"100\" y1=\"60\" x2=\"100\" y2=\"80\"/><line x1=\"260\" y1=\"60\" x2=\"260\" y2=\"80\"/><text x=\"95\" y=\"95\">P1</text><text x=\"255\" y=\"95\">P2</text><path d=\"M40 60 L40 160 L320 160 L320 60 Z\" opacity=\"0.1\"/><text x=\"180\" y=\"180\" text-anchor=\"middle\">Q = C_d a_1 a_2 &radic;(2gh)/&radic;(a_1^2 - a_2^2)</text></svg>",
+   "n": "write the venturimeter discharge formula.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "d40282c0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Orifice (Cd≈0.62)</text><path d=\"M20,40 L80,40 L80,180 L20,180 Z\"/><circle cx=\"50\" cy=\"110\" r=\"3\"/><line x1=\"50\" y1=\"113\" x2=\"50\" y2=\"117\"/><text x=\"42\" y=\"125\">Contraction</text><path d=\"M100,40 L160,40 L160,180 L100,180 Z\"/><circle cx=\"130\" cy=\"110\" r=\"3\"/><line x1=\"130\" y1=\"113\" x2=\"130\" y2=\"117\"/><text x=\"122\" y=\"125\">No Contraction</text><path d=\"M180,40 L240,40 L240,180 L180,180 Z\"/><circle cx=\"210\" cy=\"110\" r=\"3\"/><line x1=\"210\" y1=\"113\" x2=\"210\" y2=\"117\"/><text x=\"202\" y=\"125\">Recovery</text><path d=\"M260,40 L320,40 L320,180 L260,180 Z\"/><circle cx=\"290\" cy=\"110\" r=\"3\"/><line x1=\"290\" y1=\"113\" x2=\"290\" y2=\"117\"/><text x=\"282\" y=\"125\">Recovery</text><path d=\"M340,40 L360,40 L360,180 L340,180 Z\"/><circle cx=\"350\" cy=\"110\" r=\"3\"/><line x1=\"350\" y1=\"113\" x2=\"350\" y2=\"117\"/><text x=\"342\" y=\"125\">Recovery</text><path d=\"M80,40 L100,40 M160,40 L180,40 M240,40 L260,40 M320,40 L340,40\"/><text x=\"95\" y=\"35\">Orifice</text><text x=\"175\" y=\"35\">Venturi</text><text x=\"255\" y=\"35\">Flow</text><text x=\"335\" y=\"35\">Nozzle</text></svg>",
+   "n": "compare an orifice meter with a venturimeter.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "90d62283": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Pitot Tube Velocity Principle</text><rect x=\"40\" y=\"50\" width=\"280\" height=\"140\" fill=\"#eee\" stroke=\"#222\"/><text x=\"50\" y=\"75\">Static Port</text><line x1=\"60\" y1=\"75\" x2=\"90\" y2=\"75\"/><text x=\"100\" y=\"75\">Pitot Tube</text><path d=\"M 90 75 L 140 75 L 140 135 L 90 135 Z\" fill=\"#ddd\" stroke=\"#222\"/><text x=\"110\" y=\"100\">Stagnation</text><text x=\"110\" y=\"120\">Pressure</text><line x1=\"140\" y1=\"75\" x2=\"280\" y2=\"75\" stroke-dasharray=\"4,2\"/><text x=\"290\" y=\"80\">Static Pressure</text><text x=\"290\" y=\"100\">Line</text><path d=\"M 140 135 L 280 135\" stroke-dasharray=\"4,2\"/><text x=\"290\" y=\"140\">Static Pressure</text><text x=\"290\" y=\"160\">Line</text><path d=\"M 140 75 L 140 135\" stroke-dasharray=\"4,2\"/><text x=\"145\" y=\"105\">Head Difference</text><text x=\"145\" y=\"125\">(h)</text><line x1=\"280\" y1=\"75\" x2=\"340\" y2=\"75\" stroke=\"#222\"/><text x=\"350\" y=\"80\">Flow Direction</text><path d=\"M 340 60 L 340 90 M 330 60 L 330 90 M 350 60 L 350 90\"/><text x=\"180\" y=\"170\" text-anchor=\"middle\">V = √(2gh)</text></svg>",
+   "n": "how does a pitot tube measure velocity?",
    "sub": "fluids",
    "at": "2026-11-06"
   }

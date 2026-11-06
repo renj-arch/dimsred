@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T22:34:20.032Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-05T23:02:54.493Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -543,8 +531,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T05:24:05.047Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as they block content completeness. Since MetaLearn, Invention, and MainsFresh produced zero fixes in the last three consecutive runs, they are starved of inputs rather than broken and should be scheduled last to prevent further stagnation while we tackle the critical backlog.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (708 total)",
+       "text": "Write the venturimeter discharge formula. | Compare an orifice meter with a venturimeter. | How does a pitot tube measure velocity?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T04:44:43.799Z",
+ "lastRun": "2026-11-06T05:24:05.047Z",
  "model": "qwen3.5:9b"
 }
