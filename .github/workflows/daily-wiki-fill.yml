@@ -291,6 +291,21 @@ jobs:
           # below then rebuilds quiz.json exactly once. Missing numbers are
           # tolerated ΓÇö chunks run with fail-fast: false and some may be absent.
           for i in $(seq 1 40); do
+            # Never begin another download when the disk is nearly full:
+            # the fill once ran the filesystem to 100% and the runner died
+            # writing its own diagnostics. Reclaim transient files, then bail
+            # with a clear error rather than dying mid-merge.
+            avail_kb=$(df --output=avail / | tail -1 | tr -d ' ')
+            if [ "${avail_kb:-0}" -lt 2097152 ]; then
+              echo "::warning::only $((avail_kb/1024)) MB free before chunk-$i — reclaiming"
+              find chunks -maxdepth 2 -type f \( -name '*.zip' -o -name 'quiz-chunk-*' \) -delete 2>/dev/null || true
+              npm cache clean --force 2>/dev/null || true
+              avail_kb=$(df --output=avail / | tail -1 | tr -d ' ')
+              if [ "${avail_kb:-0}" -lt 1048576 ]; then
+                echo "::error::less than 1 GB free on the runner before chunk-$i; aborting instead of dying mid-merge"
+                exit 1
+              fi
+            fi
             if bash scripts/download-run-artifacts.sh "${{ github.run_id }}" "^chunk-${i}$" chunks; then
               node scripts/merge-chunks.js collect || echo "WARNING: collect errored for chunk $i (continuing)"
             else
@@ -494,19 +509,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: node scripts/fault-report.js
-
-      # Self-train bootstrap: sample fresh corpus Q/A as Ask-style records on
-      # the training-data branch. Blank questions are rewritten into proper
-      # WH-questions (never trained as blanks). PAT, not GITHUB_TOKEN: a
-      # GITHUB_TOKEN push would not trigger train-writer's on.push, so the
-      # model would never see the batch. The +15 delta gate then retrains the
-      # writer model automatically ΓÇö the site teaches itself from its own
-      # corpus while the owner's answers/improve records steer quality.
-      - name: Self-train bootstrap (corpus -> training-data)
-        continue-on-error: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
-        run: node scripts/self-train-sample.js
 
       # Split into separate steps with timeouts to prevent hour-long hangs
       - name: Clean git locks
