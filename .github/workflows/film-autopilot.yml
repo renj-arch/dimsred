@@ -6,8 +6,9 @@ name: Film autopilot
 # authoring pass, which writes and validates the storyboard on the same runner
 # and dispatches the render itself. A finished film dispatches this workflow
 # again, so production runs back-to-back until the daily cap is reached. When
-# the slate has no brief left, the topic brain refills it from real news or a
-# curated evergreen bank before the authoring pass is asked to invent one.
+# the slate has no brief left, the topic brain checks the news feeds; if none
+# qualifies, the authoring pass asks the local model to choose from the day's
+# cited events, with the curated bank as the last resort.
 
 on:
   schedule:
@@ -71,8 +72,9 @@ jobs:
 
       # Keep the idea source from collapsing to one feed. News first, with the
       # existing second-outlet or official-document gate. If nothing qualifies,
-      # promote a real subject from the curated bank after checking that every
-      # source URL returns HTTP 200. No facts are written here.
+      # leave the slate empty: the authoring pass has the local model and the
+      # cited current-events digest, and it proposes the next brief there. No
+      # facts are written in this step.
       - name: Refill the slate
         run: |
           set -euo pipefail

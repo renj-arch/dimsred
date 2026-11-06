@@ -125,23 +125,21 @@ jobs:
           ls -lh "$MODEL"
           echo "LM_MODEL=${MODEL}" >> "$GITHUB_ENV"
 
-      - name: Invent a sourced brief
+      - name: Propose a sourced brief
         id: invent
         if: ${{ inputs.film == 'invent' }}
         run: |
           set -euo pipefail
-          node scripts/film/news.js --slate 2
+          node scripts/film/topic-propose.js
           ID=$(node -e "
             const slate = require('./data/film-slate.json');
             const topic = [...slate.topics].reverse().find((t) => t.status === 'research');
             process.stdout.write(topic ? topic.id : '');
           ")
-          # No researchable topic is a normal no-op, not a failure: the news
-          # scanner skips single-outlet stories without an official document,
-          # and some days nothing qualifies. The old code exited 3 here, which
-          # failed the whole run (author #41970252115, 2026-11-05) and then
-          # tried to author with an empty FILM. Stop cleanly and let the
-          # downstream steps skip instead.
+          # No researchable topic is a normal no-op, not a failure: the
+          # current-events digest may have nothing that clears the source
+          # gate, and the model may not return a usable pick. Stop cleanly
+          # and let the downstream steps skip instead.
           if [ -z "$ID" ]; then
             echo "found=false" >> "$GITHUB_OUTPUT"
             echo "::notice title=Nothing to author::The slate has no researchable topic this run; nothing was published."
@@ -149,7 +147,7 @@ jobs:
           fi
           echo "found=true" >> "$GITHUB_OUTPUT"
           echo "FILM=$ID" >> "$GITHUB_ENV"
-          echo "::notice title=Invented $ID::The news feed supplied the next sourced brief."
+          echo "::notice title=Proposed $ID::The model chose a cited event and the source gate accepted it."
 
       - name: Fetch the sources
         id: fetch
@@ -223,7 +221,14 @@ jobs:
             exit 0
           fi
           git commit -m "record $FILM authoring strike"
-          git push
+          # The render lane may publish while this lane is still writing.
+          # Rebase onto the new tip instead of losing the strike to a race.
+          for i in 1 2 3; do
+            git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase --autostash "origin/${GITHUB_REF_NAME}"
+          done
+          exit 1
 
       - name: Commit the storyboard to this branch
         if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub }}
@@ -237,7 +242,14 @@ jobs:
             exit 0
           fi
           git commit -m "author $FILM from its sourced ledger"
-          git push
+          # Same race as the strike: another lane can advance the branch while
+          # the model is still writing. Rebase, then retry the push.
+          for i in 1 2 3; do
+            git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase --autostash "origin/${GITHUB_REF_NAME}"
+          done
+          exit 1
 
       - name: Dispatch the render
         if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub && inputs.render }}

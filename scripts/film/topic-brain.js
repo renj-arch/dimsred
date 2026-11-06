@@ -4,22 +4,17 @@
  *
  * One idea source was never enough. The news selector is the first choice:
  * it carries what is happening now and already refuses a single-outlet story
- * without an official document. When the feeds are quiet or every candidate
- * fails that gate, this reads data/films/topic-bank.json, an authored list of
- * real, well-documented subjects, and promotes one brief to the slate.
- *
- * It does not write prose and it does not decide truth. A bank entry is an
- * idea plus a source trail. Before promotion every source URL must return
- * HTTP 200 (at least five live sources), and author.yml still has to fetch the
- * pages, build the evidence ledger and pass validate-film. The bank exists so
- * the pipeline chooses a proper topic instead of stalling, not so it can skip
- * research.
+ * without an official document. When the feeds are quiet, this leaves the
+ * slate empty on purpose: the authoring pass then asks the local model to
+ * choose from the day's cited events, and only falls back to the curated
+ * evergreen bank if that produces nothing. The brain does not write prose and
+ * it does not decide truth.
  *
  * Usage:
  *   node scripts/film/topic-brain.js
  *   node scripts/film/topic-brain.js --json
  *   node scripts/film/topic-brain.js --dry-run
- *   node scripts/film/topic-brain.js --skip-news
+ *   node scripts/film/topic-brain.js --skip-news --bank
  */
 'use strict';
 
@@ -169,6 +164,7 @@ async function main() {
   const json = process.argv.includes('--json');
   const dryRun = process.argv.includes('--dry-run');
   const skipNews = process.argv.includes('--skip-news');
+  const allowBank = process.argv.includes('--bank');
 
   const slate = readJson(SLATE);
   if (!Array.isArray(slate.topics)) throw new Error('data/film-slate.json has no topics array');
@@ -201,7 +197,7 @@ async function main() {
     }
   }
 
-  if (report.kind === 'none') {
+  if (report.kind === 'none' && allowBank) {
     const bank = await tryBank(slate, dryRun);
     report.bank = bank;
     if (bank.added) {
@@ -220,6 +216,16 @@ async function main() {
           process.stdout.write(`  skip ${item.id}: ${item.reason}\n`);
         }
       }
+    }
+  } else if (report.kind === 'none') {
+    /*
+     * No qualified news is not a failure. The authoring pass has the model and
+     * the current-events portal; it will propose there. The slate stays empty
+     * so the autopilot dispatches that pass instead of a bank brief.
+     */
+    report.kind = 'empty';
+    if (!json) {
+      process.stdout.write('topic-brain: no qualified news story; leaving the proposal to the authoring pass\n');
     }
   }
 
