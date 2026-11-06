@@ -1,72 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T21:09:39.747Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures is starved (0 fixes in last 3 runs) so it moves last to avoid wasting budget on empty inputs. MetaLearn also produced 0 recently and will be queued after primary content agents. We start with Invention to generate fresh material for the pending ideas queue, followed by MainsFresh to ensure daily freshness, then ExamPatterns and MockPapers to address the critical fault backlog.",
-    "actions": [
-     "Invention",
-     "MainsFresh",
-     "ExamPatterns",
-     "MockPapers",
-     "BankFigures",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Steam Turbines (360 in pool)",
-       "text": "Steam Turbines"
-      }
-     ]
-    },
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (669 total)",
-       "text": "How is force multiplied in a hydraulic lift? | State the hydrostatic law. | How does pressure vary with depth in a static liquid?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T21:49:36.896Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -590,8 +524,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T03:40:50.303Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Prioritize fixing critical content gaps (figures and papers) as files are missing; assign BankFigures to address 80 figure gaps and MetaLearn to generate the missing paper/question/syllabus assets since it produced zero in the last two runs but is essential for content depth. Move Invention to the queue only after core content agents have output, ensuring fresh material generation follows content repair.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (699 total)",
+       "text": "What is the velocity potential φ? | Which equation does the velocity potential satisfy? | What is the relation between streamlines and equipotential lines?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T03:24:32.695Z",
+ "lastRun": "2026-11-06T03:40:50.303Z",
  "model": "qwen3.5:9b"
 }
