@@ -454,63 +454,46 @@
    ]
   },
   {
-   "at": "2026-11-06T06:45:55.567Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-06T07:11:25.309Z",
+   "at": "2026-11-06T07:21:09.116Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
+     "agent": "foresight",
      "count": 0
     },
     {
-     "agent": "invention",
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
      "count": 0
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken diagrams. Since papers/syllabus files are missing, MetaLearn should generate foundational content next to fill those structural gaps. Invention is placed last as it requires existing content to build upon, aligning with the rule to starve agents producing 0 for recent runs.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "questions",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (720 total)",
-       "text": "How is the force on a pipe bend calculated? | Compute the force of a 60 mm jet at 15 m/s on a fixed vertical plate. | Define vena contracta and the coefficients Cc, Cv and Cd of an orifice."
+       "page": "data/questions",
+       "fix": "Found 227984 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 40 overlapping subtopics into correct categories"
       }
      ]
     }
