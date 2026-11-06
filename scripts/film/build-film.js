@@ -669,7 +669,12 @@ function buildAudio(timeline, tts, opts) {
   const labels = ['[bed]'].concat(lines.map((_, i) => `[n${i}]`)).join('');
   filters.push(
     `${labels}amix=inputs=${lines.length + 1}:normalize=0,` +
-    `alimiter=limit=0.78:level=false,afade=t=in:st=0:d=0.6,` +
+    // Sample-peak limiting is not enough: AAC inter-sample peaks landed at
+    // +0.7 dBTP. loudnorm targets true peak directly, with -2 dB of headroom
+    // for the encoder's overshoot.
+    `alimiter=limit=0.78:level=false,` +
+    `loudnorm=I=-15:TP=-2.0:LRA=11,` +
+    `afade=t=in:st=0:d=0.6,` +
     `afade=t=out:st=${Math.max(0, timeline.duration - 2.5)}:d=2.5[a]`
   );
   args.push('-filter_complex', filters.join(';'), '-map', '[a]', '-t', timeline.duration.toFixed(3),
@@ -706,14 +711,19 @@ function encode(framesDir, audio, timeline, opts, subtitles) {
     // render never depends on a runner's installed fonts.
     const rel = path.relative(ROOT, subtitles.assFile).replace(/\\/g, '/');
     const fonts = path.relative(ROOT, path.join(ROOT, 'assets', 'film-fonts')).replace(/\\/g, '/');
-    args.push('-vf', `ass=${rel}:fontsdir=${fonts}`);
+    // JPEG plates arrive tagged full-range (yuvj420p). force the limited-range
+    // 4:2:0 output here; -pix_fmt alone keeps the full-range tag.
+    args.push('-vf', `ass=${rel}:fontsdir=${fonts},format=yuv420p:out_range=tv`);
   } else if (subtitles && subtitles.file) {
     // Sidecar-only fallback: still burn readable captions rather than ship a
     // film with narration and no on-screen text.
     const rel = path.relative(ROOT, subtitles.file).replace(/\\/g, '/');
     const style = 'FontName=DejaVu Sans,FontSize=22,PrimaryColour=&H00F2E6D0,' +
       'OutlineColour=&H00000000,BorderStyle=1,Outline=1,Shadow=0,MarginV=42,Alignment=2';
-    args.push('-vf', `subtitles=${rel}:force_style='${style}'`);
+    args.push('-vf', `subtitles=${rel}:force_style='${style}',format=yuv420p:out_range=tv`);
+  } else {
+    // No captions: still normalise the JPEG plate range before encoding.
+    args.push('-vf', 'format=yuv420p:out_range=tv');
   }
   args.push(
     '-c:v', 'libx264',
@@ -734,6 +744,10 @@ function encode(framesDir, audio, timeline, opts, subtitles) {
   }
   args.push(
     '-pix_fmt', 'yuv420p',
+    '-color_range', 'tv',
+    '-colorspace', 'bt709',
+    '-color_primaries', 'bt709',
+    '-color_trc', 'bt709',
     '-r', String(opts.fps),
     '-c:a', 'aac',
     '-b:a', '192k',
