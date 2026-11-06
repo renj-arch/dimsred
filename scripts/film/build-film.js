@@ -670,10 +670,11 @@ function buildAudio(timeline, tts, opts) {
   filters.push(
     `${labels}amix=inputs=${lines.length + 1}:normalize=0,` +
     // Sample-peak limiting is not enough: AAC inter-sample peaks landed at
-    // +0.7 dBTP. loudnorm targets true peak directly, with -2 dB of headroom
-    // for the encoder's overshoot.
+    // +0.6 dBTP even after loudnorm. Upsample, limit hard, then return to
+    // 48 kHz so the encoder cannot overshoot.
     `alimiter=limit=0.78:level=false,` +
-    `loudnorm=I=-15:TP=-2.0:LRA=11,` +
+    `loudnorm=I=-15:TP=-2.5:LRA=11,` +
+    `aresample=192000,alimiter=limit=0.62:level=false,aresample=48000,` +
     `afade=t=in:st=0:d=0.6,` +
     `afade=t=out:st=${Math.max(0, timeline.duration - 2.5)}:d=2.5[a]`
   );
