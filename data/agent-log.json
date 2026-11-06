@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T19:34:29.997Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/syllabus files are missing, MetaLearn should immediately synthesize fresh study materials to fill these voids. Invention is deferred as it requires stable foundational content before generating new ideas.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (657 total)",
-       "text": "Write the formula for capillary rise in a small tube. | Define vapour pressure of a liquid. | What is cavitation in fluids?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T19:49:12.854Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -603,8 +568,69 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-06T02:51:01.611Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the backlog; BankFigures must address the 80 missing figures immediately as unfinished standing goals take priority over new ideas. MetaLearn is next to patch the zero-fixes from recent runs, while MockPapers and ExamPatterns tackle remaining critical content gaps. Invention goes last as it requires fresh inputs after core maintenance.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (693 total)",
+       "text": "Distinguish Eulerian and Lagrangian descriptions of flow. | What is steady flow? | What is uniform flow?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "11 fresh mock questions on Fluid Mechanics (360 in pool)",
+       "text": "Fluid Mechanics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T02:07:16.483Z",
+ "lastRun": "2026-11-06T02:51:01.611Z",
  "model": "qwen3.5:9b"
 }

@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T01:27:35.086Z",
-  "cursor": 801,
-  "built": 690
+  "updatedAt": "2026-11-06T02:28:07.913Z",
+  "cursor": 804,
+  "built": 693
  },
  "figs": {
   "2316121": {
@@ -4143,6 +4143,24 @@
   "423c1658": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,180 L40,40 Q180,10 320,40 L320,180 Z\"/><text x=\"160\" y=\"100\" text-anchor=\"middle\">Free Surface</text><text x=\"160\" y=\"195\" text-anchor=\"middle\">z = ω²r²/2g</text><path d=\"M40,180 L320,180\"/><path d=\"M40,40 Q180,10 320,40\"/></svg>",
    "n": "what is the free surface shape in a vessel rotating at uniform angular speed ω?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "82b31cbc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"25\" text-anchor=\"middle\">Fixed Points (Eulerian)</text>\n <line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" />\n <circle cx=\"100\" cy=\"60\" r=\"3\" />\n <circle cx=\"200\" cy=\"60\" r=\"3\" />\n <circle cx=\"300\" cy=\"60\" r=\"3\" />\n <text x=\"100\" y=\"55\">A</text>\n <text x=\"200\" y=\"55\">B</text>\n <text x=\"300\" y=\"55\">C</text>\n <line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\" />\n <line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\" />\n <path d=\"M 100 60 L 100 180\" stroke-dasharray=\"4,2\" />\n <text x=\"95\" y=\"120\">Field</text>\n <text x=\"95\" y=\"135\">at A, B, C</text>\n <line x1=\"60\" y1=\"180\" x2=\"340\" y2=\"180\" />\n <circle cx=\"180\" cy=\"180\" r=\"3\" />\n <text x=\"175\" y=\"195\">Particle</text>\n <text x=\"175\" y=\"210\">Path</text>\n <path d=\"M 60 180 Q 180 140 340 180\" />\n <text x=\"200\" y=\"160\">Trajectory</text>\n <text x=\"290\" y=\"185\">Lagrangian</text>\n</svg>",
+   "n": "distinguish eulerian and lagrangian descriptions of flow.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "2c8f4490": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Steady Flow (∂/∂t = 0)</text>\n  <!-- Streamlines -->\n  <path d=\"M30,60 Q90,60 150,60 T270,60\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M30,80 Q90,80 150,80 T270,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M30,100 Q90,100 150,100 T270,100\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Velocity Vectors -->\n  <line x1=\"60\" y1=\"60\" x2=\"90\" y2=\"60\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"120\" y1=\"60\" x2=\"150\" y2=\"60\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"210\" y1=\"60\" x2=\"240\" y2=\"60\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"60\" y1=\"80\" x2=\"90\" y2=\"80\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"120\" y1=\"80\" x2=\"150\" y2=\"80\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"210\" y1=\"80\" x2=\"240\" y2=\"80\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"60\" y1=\"100\" x2=\"90\" y2=\"100\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"120\" y1=\"100\" x2=\"150\" y2=\"100\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"210\" y1=\"100\" x2=\"240\" y2=\"100\" stroke=\"#222\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <!-- Axis Labels -->\n  <text x=\"320\" y=\"80\" text-anchor=\"end\">Position (x)</text>\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">Time (t)</text>\n  <!-- Definition Box -->\n  <rect x=\"10\" y=\"130\" width=\"340\" height=\"60\" stroke=\"#222\" fill=\"none\"/>\n  <text x=\"180\" y=\"155\" text-anchor=\"middle\">Conditions at any point do not change with time</text>\n  <!-- Definition Box -->\n  <text x=\"180\" y=\"178\" text-anchor=\"middle\">(∂/∂t = 0)</text>\n</svg>",
+   "n": "what is steady flow?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "eb1d8970": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Velocity V</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><line x1=\"40\" y1=\"40\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\"/><text x=\"50\" y=\"60\">V</text><text x=\"50\" y=\"190\">s</text><path d=\"M 40 40 L 320 40 M 40 40 L 40 180 M 320 40 L 320 180\"/><circle cx=\"40\" cy=\"40\" r=\"6\"/><circle cx=\"100\" cy=\"40\" r=\"6\"/><circle cx=\"160\" cy=\"40\" r=\"6\"/><circle cx=\"220\" cy=\"40\" r=\"6\"/><circle cx=\"280\" cy=\"40\" r=\"6\"/><text x=\"35\" y=\"45\">V</text><text x=\"95\" y=\"45\">V</text><text x=\"155\" y=\"45\">V</text><text x=\"215\" y=\"45\">V</text><text x=\"275\" y=\"45\">V</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">Uniform Flow: V is constant along s</text></svg>",
+   "n": "what is uniform flow?",
    "sub": "fluids",
    "at": "2026-11-06"
   }
