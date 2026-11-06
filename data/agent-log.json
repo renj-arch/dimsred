@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T03:40:50.303Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Prioritize fixing critical content gaps (figures and papers) as files are missing; assign BankFigures to address 80 figure gaps and MetaLearn to generate the missing paper/question/syllabus assets since it produced zero in the last two runs but is essential for content depth. Move Invention to the queue only after core content agents have output, ensuring fresh material generation follows content repair.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (699 total)",
-       "text": "What is the velocity potential φ? | Which equation does the velocity potential satisfy? | What is the relation between streamlines and equipotential lines?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T04:16:43.095Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -617,8 +577,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T11:39:31.251Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention; BankFigures is the only agent capable of resolving these specific content voids. MainsFresh produced zero fixes in the last two runs, so it will be starved to prioritize high-impact agents. Invention and MetaLearn are secondary here as we must fix broken data first.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (743 total)",
+       "text": "Write the Colebrook equation. | Write the Blasius friction formula for smooth turbulent pipe flow. | What is the entrance loss at a sharp pipe entry?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T11:24:13.194Z",
+ "lastRun": "2026-11-06T11:39:31.251Z",
  "model": "qwen3.5:9b"
 }
