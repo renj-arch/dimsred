@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T08:53:58.974Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as unfinished standing goals. MetaLearn is starved (0 fixes in last 3 runs) so it goes last to avoid blocking high-priority content generation. MainsFresh and Invention are viable for new material once figure gaps are cleared, but priority remains on fixing broken existing assets.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (729 total)",
-       "text": "Write the discharge over a triangular (V) notch. | Write the discharge over a trapezoidal notch. | What is a Cipolletti weir?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T09:34:38.726Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -574,8 +529,58 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-06T16:11:56.137Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures is the only agent producing output in recent runs, so it must lead to clear immediate debt. MainsFresh produced zero fixes last run and has no files present, suggesting it needs a fresh start or input before contributing; placing it later avoids blocking high-priority math/content gaps. MetaLearn and Invention are idle (0 fixes) for multiple runs and should be queued last to prevent starving the critical content pipeline.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MainsFresh",
+     "Invention",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (764 total)",
+       "text": "Write the Chezy equation and its units. | Write the Manning equation and state the unit of n. | What is the most economical channel section?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T15:30:15.531Z",
+ "lastRun": "2026-11-06T16:11:56.137Z",
  "model": "qwen3.5:9b"
 }
