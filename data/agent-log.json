@@ -1,52 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T07:21:09.116Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    },
-    {
-     "agent": "questioncats",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 227984 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 40 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T07:33:06.438Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -608,8 +562,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T14:42:14.630Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "We have 81 open faults and 23 critical ones; MainsFresh produced zero fixes in the last two runs so it must be moved to the end of the queue while we starve it temporarily. BankFigures is currently active and effective, so we prioritize fixing figure gaps (80) and critical content issues first.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (759 total)",
+       "text": "How does streamlining reduce drag? | State Stokes law for a sphere. | What is the terminal velocity of a falling sphere?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T14:24:34.634Z",
+ "lastRun": "2026-11-06T14:42:14.630Z",
  "model": "qwen3.5:9b"
 }
