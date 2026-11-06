@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T19:49:12.854Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention to restore site integrity; BankFigures is the primary fixer for figures, while MetaLearn must be starved as it produced zero fixes in the last two runs despite available inputs. MainsFresh should follow to generate fresh content once structural gaps are addressed, ensuring a balanced workflow that prioritizes unfinished standing goals over new ventures.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (660 total)",
-       "text": "How is cavitation generally prevented? | What does a barometer measure? | What is a piezometer?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T20:44:13.348Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -629,8 +589,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T03:11:15.440Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-06T02:51:01.611Z",
+ "lastRun": "2026-11-06T03:11:15.440Z",
  "model": "qwen3.5:9b"
 }
