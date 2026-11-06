@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T22:52:26.771Z",
-  "cursor": 891,
-  "built": 774
+  "updatedAt": "2026-11-06T23:19:27.019Z",
+  "cursor": 894,
+  "built": 777
  },
  "figs": {
   "2316121": {
@@ -4647,6 +4647,24 @@
   "33f35631": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Hydraulic Turbine Classification</text><g id=\"Impulse\"><path d=\"M40 60 L80 60 L90 40 L110 60 L150 60 L170 80 L230 80 L250 60 L270 60 L280 80 L320 80 L340 60\" fill=\"none\"/><text x=\"190\" y=\"70\">Pelton (Impulse)</text><text x=\"190\" y=\"55\">Jet hits</text><text x=\"180\" y=\"95\">Bucket</text></g><g id=\"Reaction\"><path d=\"M40 120 L100 120 L100 160 L140 160 L140 120 L200 120 L200 160 L240 160 L240 120 L300 120 L300 160 L340 160\" fill=\"none\"/><text x=\"190\" y=\"135\">Francis/Kaplan</text><text x=\"180\" y=\"175\">Flow through</text></g><g id=\"Axes\"><line x1=\"30\" y1=\"200\" x2=\"330\" y2=\"200\"/><line x1=\"30\" y1=\"200\" x2=\"30\" y2=\"40\"/><text x=\"25\" y=\"205\">Static Pressure</text><text x=\"335\" y=\"105\">Flow Direction</text></g></svg>",
    "n": "on what basis are hydraulic turbines classified?",
+   "sub": "hydmach",
+   "at": "2026-11-06"
+  },
+  "7bf04248": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\" />\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\" />\n  <!-- Arrows -->\n  <path d=\"M 315 190 L 325 190 M 325 190 L 325 180\" stroke-width=\"2\"/>\n  <path d=\"M 40 200 L 40 210 M 40 210 L 50 210\" stroke-width=\"2\"/>\n  <!-- Flow Arrows -->\n  <!-- Tangential (Pelton) -->\n  <path d=\"M 60 180 Q 90 140 120 180\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n  <text x=\"100\" y=\"130\">Tangential</text>\n  <!-- Radial (Francis) -->\n  <path d=\"M 60 180 L 90 150 L 120 180\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n  <text x=\"100\" y=\"170\">Radial</text>\n  <!-- Axial (Kaplan) -->\n  <path d=\"M 60 180 L 90 180 L 120 180\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n  <text x=\"100\" y=\"195\">Axial</text>\n  <!-- Mixed Flow -->\n  <path d=\"M 60 180 Q 90 170 120 180\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\"/>\n  <text x=\"100\" y=\"195\">Mixed</text>\n  <!-- Labels -->\n  <text x=\"45\" y=\"20\" font-weight=\"bold\">Flow Direction</text>\n  <text x=\"300\" y=\"20\" font-weight=\"bold\">Inlet to Outlet</text>\n</svg>",
+   "n": "into what classes are turbines grouped by flow direction?",
+   "sub": "hydmach",
+   "at": "2026-11-06"
+  },
+  "623a2b9": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Nozzle Section -->\n  <path d=\"M40,80 L80,80 L90,40 L130,40 L140,80 L180,80\" stroke=\"#222\" fill=\"none\"/>\n  <text x=\"65\" y=\"70\">NOZZLE</text>\n  <!-- Pressure Drop Arrow -->\n  <line x1=\"30\" y1=\"90\" x2=\"40\" y2=\"90\" stroke=\"#222\"/>\n  <line x1=\"30\" y1=\"95\" x2=\"40\" y2=\"95\" stroke=\"#222\"/>\n  <text x=\"15\" y=\"85\">P_high</text>\n  <text x=\"15\" y=\"100\">P_low</text>\n  <!-- Jet -->\n  <path d=\"M180,80 L240,80\" stroke=\"#222\" stroke-dasharray=\"4,2\"/>\n  <text x=\"205\" y=\"75\">JET (Kinetic Energy)</text>\n  <!-- Turbine Wheel -->\n  <circle cx=\"260\" cy=\"110\" r=\"35\" stroke=\"#222\" fill=\"none\"/>\n  <path d=\"M260,75 L260,145 M225,110 L295,110\" stroke=\"#222\" stroke-width=\"2\"/>\n  <!-- Vanes -->\n  <path d=\"M238,110 Q260,130 282,110\" fill=\"none\" stroke=\"#222\"/>\n  <text x=\"245\" y=\"115\">Vanes</text>\n  <!-- Atmospheric Pressure Label -->\n  <line x1=\"290\" y1=\"130\" x2=\"320\" y2=\"130\" stroke=\"#222\"/>\n  <line x1=\"290\" y1=\"135\" x2=\"320\" y2=\"135\" stroke=\"#222\"/>\n  <text x=\"325\" y=\"135\">P_atm</text>\n  <!-- Impulse Arrow -->\n  <path d=\"M240,80 L260,100 L280,80\" stroke=\"#222\" fill=\"none\"/>\n  <circle cx=\"260\" cy=\"90\" r=\"3\" fill=\"#222\"/>\n  <text x=\"245\" y=\"75\">Impulse</text>\n  <!-- Definition Box -->\n  <rect x=\"10\" y=\"150\" width=\"340\" height=\"60\" stroke=\"#222\" fill=\"none\"/>\n  <text x=\"20\" y=\"175\">Definition: Whole pressure head converted to kinetic energy in nozzle.</text>\n  <text x=\"20\" y=\"190\">Jet strikes vanes at atmospheric pressure; no pressure change across wheel.</text>\n</svg>",
+   "n": "define an impulse turbine.",
+   "sub": "hydmach",
+   "at": "2026-11-06"
+  },
+  "2a869b17": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Water Inlet (High Pressure) -->\n  <path d=\"M40,80 L90,80\" stroke-dasharray=\"4,2\"/>\n  <text x=\"60\" y=\"70\" text-anchor=\"middle\">Inlet</text>\n  <text x=\"60\" y=\"55\" text-anchor=\"middle\">High P</text>\n  \n  <!-- Runner (Submerged) -->\n  <path d=\"M100,80 Q135,120 170,80 T240,80\" fill=\"none\" stroke-width=\"2\"/>\n  <circle cx=\"170\" cy=\"80\" r=\"60\" fill=\"none\" stroke=\"#222\" stroke-dasharray=\"3,3\"/>\n  <text x=\"170\" y=\"145\" text-anchor=\"middle\">Runner</text>\n  \n  <!-- Vanes inside Runner -->\n  <path d=\"M180,60 L180,100 M160,70 L200,70 M160,90 L200,90\" stroke-width=\"1\"/>\n  \n  <!-- Water Outlet (Low Pressure) -->\n  <path d=\"M240,80 L290,80\" stroke-dasharray=\"4,2\"/>\n  <text x=\"270\" y=\"70\" text-anchor=\"middle\">Outlet</text>\n  <text x=\"270\" y=\"55\" text-anchor=\"middle\">Low P</text>\n  \n  <!-- Pressure Gradient Arrow -->\n  <path d=\"M40,80 L290,80\" stroke-width=\"1\" stroke-dasharray=\"2,2\" opacity=\"0.3\"/>\n  <text x=\"35\" y=\"75\" text-anchor=\"end\">P_high</text>\n  <text x=\"295\" y=\"75\" text-anchor=\"start\">P_low</text>\n</svg>",
+   "n": "define a reaction turbine.",
    "sub": "hydmach",
    "at": "2026-11-06"
   }

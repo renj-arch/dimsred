@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T13:49:11.670Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visuals. Since papers/syllabus files are missing, MetaLearn is essential next to generate foundational content. MockPapers should follow to utilize generated questions, while ExamPatterns addresses the remaining critical fault count. MainsFresh will be last as it requires prior content generation and has produced 0 fixes recently.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (754 total)",
-       "text": "Define displacement thickness δ*. | Define momentum and energy thicknesses. | Give the laminar boundary-layer thickness and transition range on a flat plate."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T14:24:34.634Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -846,8 +796,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T23:44:18.736Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as unfinished standing goals take priority over new ideas. MetaLearn is starved (0 fixes in last 2 runs), so it moves to the end of the execution list to allow other agents to clear the backlog first. The remaining actions target critical faults and pending ideas while respecting the agent starvation rule.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (777 total)",
+       "text": "Into what classes are turbines grouped by flow direction? | Define an impulse turbine. | Define a reaction turbine."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T23:04:38.794Z",
+ "lastRun": "2026-11-06T23:44:18.736Z",
  "model": "qwen3.5:9b"
 }
