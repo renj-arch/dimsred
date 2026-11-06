@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T11:49:29.876Z",
-  "cursor": 858,
-  "built": 746
+  "updatedAt": "2026-11-06T12:15:41.146Z",
+  "cursor": 861,
+  "built": 749
  },
  "figs": {
   "2316121": {
@@ -4479,6 +4479,24 @@
   "7d0da3c3": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Sudden Contraction</text><path d=\"M40 80 L160 80\"/><path d=\"M160 80 L160 50\"/><path d=\"M160 50 L160 20\"/><path d=\"M160 20 L320 20\"/><path d=\"M160 50 L240 50\"/><path d=\"M240 50 L240 80\"/><path d=\"M240 80 L320 80\"/><text x=\"90\" y=\"70\">V1</text><text x=\"280\" y=\"70\">V2</text><text x=\"165\" y=\"40\">A1</text><text x=\"245\" y=\"40\">A2</text><path d=\"M160 80 L160 95\"/><path d=\"M160 95 L240 95\"/><path d=\"M240 95 L240 80\"/><path d=\"M160 80 L145 80\"/><text x=\"135\" y=\"85\">Loss</text><text x=\"170\" y=\"105\">hL ≈ 0.5 V₂²/2g</text></svg>",
    "n": "write the loss at a sudden contraction.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "e23386b5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">h_L = k * (V^2 / 2g)</text><line x1=\"30\" y1=\"70\" x2=\"330\" y2=\"70\"/><text x=\"50\" y=\"65\">Pipe</text><circle cx=\"180\" cy=\"70\" r=\"4\"/><text x=\"175\" y=\"80\" text-anchor=\"end\">k ~ 0.9</text><path d=\"M 250 70 L 260 70 L 260 60 L 270 70 L 280 70 L 280 60\"/><text x=\"275\" y=\"55\">90° Elbow</text><path d=\"M 300 70 L 310 70 L 310 60 L 320 70 L 330 70 L 330 60\"/><text x=\"325\" y=\"55\">Globe Valve</text><path d=\"M 300 70 L 310 70 L 310 60 L 320 70 L 330 70 L 330 60\"/><text x=\"325\" y=\"55\">Gate Valve</text><path d=\"M 180 70 L 180 140\"/><rect x=\"170\" y=\"140\" width=\"20\" height=\"10\"/><text x=\"180\" y=\"160\" text-anchor=\"middle\">V</text><line x1=\"180\" y1=\"150\" x2=\"180\" y2=\"170\"/><text x=\"175\" y=\"185\" text-anchor=\"end\">2g</text></svg>",
+   "n": "how are bend, elbow and valve losses expressed?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "92e41b92": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Pipe 1 -->\n  <line x1=\"40\" y1=\"80\" x2=\"100\" y2=\"80\" />\n  <text x=\"60\" y=\"70\" text-anchor=\"middle\">Pipe 1</text>\n  \n  <!-- Pipe 2 -->\n  <line x1=\"100\" y1=\"80\" x2=\"160\" y2=\"80\" />\n  <text x=\"130\" y=\"70\" text-anchor=\"middle\">Pipe 2</text>\n  \n  <!-- Pipe 3 -->\n  <line x1=\"160\" y1=\"80\" x2=\"220\" y2=\"80\" />\n  <text x=\"190\" y=\"70\" text-anchor=\"middle\">Pipe 3</text>\n  \n  <!-- Reservoir Levels -->\n  <line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"100\" />\n  <line x1=\"220\" y1=\"60\" x2=\"220\" y2=\"100\" />\n  \n  <!-- Head Loss Arrows -->\n  <polygon points=\"85,75 95,75 95,85 85,85\" fill=\"#222\" />\n  <text x=\"80\" y=\"65\">hL1</text>\n  \n  <polygon points=\"130,75 140,75 140,85 130,85\" fill=\"#222\" />\n  <text x=\"125\" y=\"65\">hL2</text>\n  \n  <polygon points=\"190,75 200,75 200,85 190,85\" fill=\"#222\" />\n  <text x=\"185\" y=\"65\">hL3</text>\n  \n  <!-- Flow Direction -->\n  <polygon points=\"45,80 55,80 55,90 45,90\" fill=\"#222\" />\n  <polygon points=\"105,80 115,80 115,90 105,90\" fill=\"#222\" />\n  <polygon points=\"165,80 175,80 175,90 165,90\" fill=\"#222\" />\n  <polygon points=\"215,80 225,80 225,90 215,90\" fill=\"#222\" />\n  \n  <!-- Labels -->\n  <text x=\"30\" y=\"40\">Reservoir A</text>\n  <text x=\"230\" y=\"40\">Reservoir B</text>\n  <text x=\"125\" y=\"115\">Total Head Loss = ΣhL</text>\n</svg>",
+   "n": "state the rules for pipes in series.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "7accf7cc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Parallel Pipe Flow</text><path d=\"M40,60 L100,60\"/><circle cx=\"100\" cy=\"60\" r=\"3\"/><path d=\"M100,60 L100,120\" stroke-dasharray=\"4\"/><path d=\"M100,120 L160,120\"/><circle cx=\"160\" cy=\"120\" r=\"3\"/><path d=\"M160,120 L220,120\"/><text x=\"50\" y=\"75\">Pipe 1</text><text x=\"170\" y=\"135\">Pipe 2</text><path d=\"M40,60 L40,180\" stroke-dasharray=\"4\"/><path d=\"M220,120 L220,180\" stroke-dasharray=\"4\"/><path d=\"M40,180 L220,180\"/><text x=\"130\" y=\"205\" text-anchor=\"middle\">hL same</text><text x=\"130\" y=\"225\" text-anchor=\"middle\">Q = Q1 + Q2</text></svg>",
+   "n": "state the rules for pipes in parallel.",
    "sub": "fluids",
    "at": "2026-11-06"
   }
