@@ -380,7 +380,14 @@ jobs:
             exit 0
           fi
           git commit -m "slate: $FILM is published"
-          git push
+          # Another lane may have advanced film-ci while the render ran.
+          # Rebase and retry instead of losing the published mark.
+          for i in 1 2 3; do
+            git push origin "HEAD:${GITHUB_REF_NAME}" && exit 0
+            git fetch origin "${GITHUB_REF_NAME}"
+            git rebase --autostash "origin/${GITHUB_REF_NAME}"
+          done
+          exit 1
 
       # Start the next film immediately. The autopilot has a concurrency lock
       # and a daily cap, so this cannot run away: it either picks the next
