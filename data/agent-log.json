@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T03:24:32.695Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention before any new content generation. MainsFresh has produced zero fixes in the last two runs and should be starved to prioritize BankFigures for the 80 missing figures. MetaLearn also yielded zero in the previous run but is essential for addressing critical faults; it will follow BankFigures. Invention and ExamPatterns are lower priority now as we must close existing gaps first.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (696 total)",
-       "text": "Define path, stream and streak lines. | Write the continuity equation for fluid flow. | Define the stream function ψ."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T03:40:50.303Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -612,8 +577,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T11:24:13.194Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention to restore site integrity and content depth. BankFigures is the primary agent for resolving both critical faults and figure gaps, so it must lead. MainsFresh should follow to ensure daily fresh material generation once structural issues are addressed. Invention will be placed last as per rules since it produced 0 fixes in the last two runs, indicating a need for input stabilization before new ideas.",
+    "actions": [
+     "BankFigures",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (740 total)",
+       "text": "Write the Darcy–Weisbach equation. | What is the friction factor for laminar pipe flow? | What does the Moody chart represent?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T10:36:06.214Z",
+ "lastRun": "2026-11-06T11:24:13.194Z",
  "model": "qwen3.5:9b"
 }
