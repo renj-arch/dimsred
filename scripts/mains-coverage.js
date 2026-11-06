@@ -21,8 +21,9 @@ const BANK = path.join(ROOT, 'data', 'mains-questions.json');
 const FRESH = path.join(ROOT, 'data', 'mains-fresh.json');
 const OUT = path.join(ROOT, 'data', 'mains-coverage.json');
 
-const PAPERS = ['gs1', 'gs2', 'gs3', 'gs4', 'essay'];
-const OPTIONAL_SUBJECTS = 25; /* subjects, before the literature languages */
+const PAPERS = ['gs1', 'gs2', 'gs3', 'gs4', 'essay', 'optional1', 'optional2', 'lang-indian', 'lang-english'];
+const PAPER_MARKS = { gs1: 250, gs2: 250, gs3: 250, gs4: 250, essay: 250, optional1: 250, optional2: 250, 'lang-indian': 300, 'lang-english': 300 };
+const OPTIONAL_SUBJECTS = 47; /* fallback: read from the bank when present */
 
 function readJson(file, fallback) {
   try {
@@ -40,7 +41,7 @@ function main() {
   const generated = Array.isArray(fresh.items) ? fresh.items : [];
 
   const papers = {};
-  for (const id of PAPERS) papers[id] = { reviewed: 0, fresh: 0, marks: id === 'essay' ? 250 : 250 };
+  for (const id of PAPERS) papers[id] = { reviewed: 0, fresh: 0, marks: PAPER_MARKS[id] || 250 };
 
   const unknown = [];
   for (const q of reviewed) {
@@ -68,9 +69,9 @@ function main() {
       fresh: generated.length
     },
     optional: {
-      subjects: OPTIONAL_SUBJECTS,
+      subjects: Array.isArray(bank.optionalSubjects) && bank.optionalSubjects.length ? bank.optionalSubjects.length : OPTIONAL_SUBJECTS,
       papers: 2,
-      note: 'Optional questions are generated on demand for the subject the candidate chooses; they are not stored in the reviewed bank until a human promotes one.'
+      note: 'Optional questions are generated on demand for the subject the candidate chooses; the reviewed bank stores only the worked examples.'
     },
     language: {
       papers: 2,

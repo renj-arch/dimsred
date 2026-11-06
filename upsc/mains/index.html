@@ -176,8 +176,14 @@
         var cls = row.reviewed === 0 ? 'a' : '';
         return card(row.reviewed, p[1], row.fresh + ' fresh AI · ' + (row.reviewed ? 'reviewed bank' : 'no reviewed item yet'), cls);
       }).join('');
-      html += card((j.optional && j.optional.subjects) || 0, 'Optional subjects', 'guide + practice loop; question bank grows once your subject is chosen', '');
-      html += card((j.language && j.language.papers) || 2, 'Language papers', 'qualifying at 25% each; practice prompts on the language page', '');
+      var opt = by.optional1 || { reviewed: 0, fresh: 0 };
+      var opt2 = by.optional2 || { reviewed: 0, fresh: 0 };
+      html += card((opt.reviewed + opt2.reviewed), 'Optional I + II',
+        (opt.fresh + opt2.fresh) + ' fresh AI · ' + ((j.optional && j.optional.subjects) || 0) + ' subject guides', '');
+      var li = by['lang-indian'] || { reviewed: 0, fresh: 0 };
+      var le = by['lang-english'] || { reviewed: 0, fresh: 0 };
+      html += card((li.reviewed + le.reviewed), 'Language papers',
+        (li.fresh + le.fresh) + ' fresh AI · qualifying at 25% each', '');
       host.innerHTML = html;
       var at = document.getElementById('covAt');
       if (at && j.generatedAt) at.textContent = 'updated ' + String(j.generatedAt).slice(0, 10);

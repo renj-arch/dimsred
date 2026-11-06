@@ -27,6 +27,22 @@ h1{font-size:24px;margin:6px 0 8px}
 .bar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:14px 0}
 .chip{border:1px solid var(--border);background:var(--card);border-radius:999px;padding:7px 14px;font-size:12.5px;cursor:pointer;font-weight:600;color:var(--text-sec)}
 .chip[aria-pressed="true"]{background:rgba(167,139,250,.15);border-color:var(--purple);color:var(--purple)}
+.chip.empty{opacity:.6;border-style:dashed}
+.subjectbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:0 0 12px}
+.subjectbar label{font-size:12px;color:var(--text-sec)}
+.subjectbar select{border:1px solid var(--border);border-radius:100px;padding:8px 12px;font-size:13px;background:var(--card);color:var(--text)}
+.guide{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px;margin:0 0 14px}
+.guide h2{font-size:15px;margin:0 0 6px}
+.guide p{font-size:12.5px;line-height:1.65;color:var(--text-sec);margin:0 0 10px}
+.guide table{width:100%;border-collapse:collapse;font-size:12px}
+.guide th,.guide td{text-align:left;padding:7px 8px;border-top:1px solid var(--border);vertical-align:top}
+.guide th{color:var(--text);font-size:10.5px;letter-spacing:.06em;text-transform:uppercase}
+.guide td b{color:var(--text)}
+.guide-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.guide-scroll table{min-width:560px}
+.tag.sub{background:rgba(34,211,238,.08);border-color:rgba(34,211,238,.3);color:var(--cyan)}
+.tag.lang{background:rgba(245,158,11,.08);border-color:rgba(245,158,11,.3);color:var(--amber)}
+.fresh-stat{font-size:11.5px;color:var(--text-muted);margin:2px 0 10px;line-height:1.5}
 .search{flex:1;min-width:180px;border:1px solid var(--border);border-radius:100px;padding:9px 12px;font-size:13.5px;background:var(--card);color:var(--text);outline:none}
 .search:focus{border-color:var(--purple)}
 .q{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:18px 20px;margin:12px 0}
@@ -66,6 +82,14 @@ h1{font-size:24px;margin:6px 0 8px}
 .fresh-note{font-size:12.5px;color:var(--text-sec);line-height:1.6;margin:6px 0 4px;max-width:680px}
 .empty{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
 .load{text-align:center;color:var(--text-sec);padding:40px 0;font-size:14px}
+@media (max-width:600px){
+  .guide{padding:14px 14px}
+  .guide-scroll table{min-width:520px;font-size:11.5px}
+  .subjectbar select{max-width:100%}
+  .q{padding:15px 15px}
+  .bar{gap:6px}
+  .chip{padding:6px 11px;font-size:12px}
+}
 @page{size:A4;margin:14mm}
 @media print{
   body{background:#fff}
@@ -96,6 +120,8 @@ h1{font-size:24px;margin:6px 0 8px}
     <span id="paperChips"></span>
     <input class="search" id="q" type="search" placeholder="Search questions, topics, keywords&hellip;" aria-label="Search questions">
   </div>
+  <div class="subjectbar" id="subjectbar" hidden></div>
+  <section class="guide" id="paperGuide" hidden></section>
 
   <div class="genbar">
     <button class="btn sec" id="genAI" type="button">&#10024; Generate one more question + model answer (AI)</button>
@@ -112,15 +138,17 @@ h1{font-size:24px;margin:6px 0 8px}
       <span class="fresh-tag">PUBLIC BATCH &middot; UNREVIEWED</span>
     </div>
     <p class="fresh-note">Written by the site&rsquo;s model on its GitHub runners. These are kept separate from the reviewed bank above; every reviewed item has been read before publication, and these have not. Verify every fact before trusting them.</p>
+    <p class="fresh-stat" id="freshStat"></p>
     <div id="freshGrid"></div>
   </section>
 </div>
 
 <script src="scripts/lib/ask-llm.js"></script>
+<script src="scripts/lib/ask-figures.js"></script>
 <script src="js/owner-runner.js?v=20261019b"></script>
 <script>
 'use strict';
-var STATE = { data: null, paper: 'all', term: '' };
+var STATE = { data: null, paper: 'all', subject: 'all', term: '' };
 // Post-publication updates (data/mains-updates.json): dated, source-linked
 // additions the site agent appends when a major development lands after an
 // answer was written. The core answer text stays hand-authored; this rail is
@@ -207,24 +235,39 @@ function norm(s) {
   return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
 }
 
+function paperById(id) {
+  var ps = (STATE.data && STATE.data.papers) || [];
+  for (var i = 0; i < ps.length; i++) if (ps[i].id === id) return ps[i];
+  return null;
+}
 function paperName(id) {
-  var ps = STATE.data.papers || [];
-  for (var i = 0; i < ps.length; i++) if (ps[i].id === id) return ps[i].name;
-  return id;
+  var p = paperById(id);
+  return p ? p.name : id;
+}
+function subjectById(id) {
+  var ss = (STATE.data && STATE.data.optionalSubjects) || [];
+  for (var i = 0; i < ss.length; i++) if (ss[i].id === id) return ss[i];
+  return null;
+}
+function subjectName(id) {
+  var s = subjectById(id);
+  return s ? s.name : (id || 'General');
 }
 
 function visible() {
   var qs = (STATE.data.questions || []).filter(function (q) {
     if (STATE.paper !== 'all' && q.paper !== STATE.paper) return false;
+    if (STATE.subject !== 'all' && q.subject !== STATE.subject) return false;
     if (!STATE.term) return true;
     var hay = norm([q.question, q.topic, (q.keywords || []).join(' '), (q.laws || []).join(' '), (q.updates || []).map(function (u) { return u.text; }).join(' ')].join(' '));
     return hay.indexOf(STATE.term) !== -1;
   });
-  // Saved AI items ride along at the top, held to the same paper and search
-  // filters. They are badged and never mixed into the reviewed bank.
+  // Saved AI items ride along at the top, held to the same paper, subject and
+  // search filters. They are badged and never mixed into the reviewed bank.
   var ai = [];
   AI_QS.forEach(function (q) {
     if (STATE.paper !== 'all' && q.paper !== STATE.paper) return;
+    if (STATE.subject !== 'all' && q.subject !== STATE.subject) return;
     if (STATE.term) {
       var hay = norm([q.question, q.topic, (q.keywords || []).join(' ')].join(' '));
       if (hay.indexOf(STATE.term) === -1) return;
@@ -260,8 +303,14 @@ function card(q) {
   var diff = q.difficulty === 'high' ? '<span class="tag d">Hard</span>'
           : q.difficulty === 'medium' ? '<span class="tag">Medium</span>' : '<span class="tag">Easy</span>';
 
+  var extraTags = '';
+  if (q.subject) extraTags += '<span class="tag sub">' + esc(subjectName(q.subject)) + '</span>';
+  if (q.lang) extraTags += '<span class="tag lang">' + esc(q.lang === 'hi' ? 'Hindi' : q.lang.toUpperCase()) + '</span>';
+  if (q.task) extraTags += '<span class="tag">' + esc(q.task) + '</span>';
+
   return '<section class="q" id="q-' + esc(q.id) + '">' +
     '<div class="tags"><span class="tag">' + esc(paperName(q.paper)) + '</span>' +
+      extraTags +
       diff +
       '<span class="tag m">' + esc(q.marks) + ' marks</span>' +
       (yrs ? '<span class="tag">' + yrs + '</span>' : '') +
@@ -282,7 +331,7 @@ function card(q) {
 // clicking Generate. Items already saved in this browser stay in the list at
 // the top instead, so the same card is never shown twice.
 function renderFresh() {
-  var wrap = el('freshWrap'), host = el('freshGrid');
+  var wrap = el('freshWrap'), host = el('freshGrid'), stat = el('freshStat');
   if (!wrap || !host) return;
   var local = {};
   AI_QS.forEach(function (q) { if (q.question) local[q.question] = 1; });
@@ -291,18 +340,91 @@ function renderFresh() {
   }).slice(-12).reverse();
   var cards = items.map(fromPool).filter(Boolean).map(card);
   host.innerHTML = cards.join('');
-  wrap.hidden = !cards.length;
+  wrap.hidden = !(FRESH.items || []).length;
+  if (stat) {
+    // The reviewed bank's chips count reviewed items only. This line shows
+    // what the runner has actually produced, paper by paper, so a zero in a
+    // chip is not mistaken for a dead pipeline.
+    var counts = {};
+    (FRESH.items || []).forEach(function (o) { if (o && o.paper) counts[o.paper] = (counts[o.paper] || 0) + 1; });
+    var parts = ((STATE.data && STATE.data.papers) || []).map(function (p) {
+      return p.name.replace('GS Paper ', 'GS ') + ' ' + (counts[p.id] || 0);
+    });
+    stat.textContent = 'Frozen batch coverage (' + (FRESH.items || []).length + ' unreviewed items): ' + parts.join(' \u00b7 ');
+  }
 }
 
 function render() {
   var qs = visible();
   if (!qs.length) {
-    el('list').innerHTML = '<div class="empty">No question matches that filter. ' +
-      'The bank is deliberately small and every item is reviewed, so gaps are real &mdash; ' +
-      'see the note in <code>data/mains-questions.json</code>.</div>';
+    el('list').innerHTML = '<div class="empty">No reviewed question matches that filter. ' +
+      'The bank is deliberately small and every item is reviewed, so gaps are real. ' +
+      'The paper guide above explains the syllabus and what to practise; fresh AI items, when available, are badged and listed below.</div>';
     return;
   }
   el('list').innerHTML = qs.map(card).join('');
+}
+
+// Optional papers are chosen by the candidate, so a single "Optional 1" bank
+// would be meaningless. The selector scopes the list to one subject and shows
+// the exact Paper I / Paper II focus the syllabus uses.
+function renderSubjectBar() {
+  var host = el('subjectbar');
+  if (!host) return;
+  var p = paperById(STATE.paper);
+  if (!p || p.kind !== 'optional') {
+    host.hidden = true;
+    host.innerHTML = '';
+    return;
+  }
+  var subs = (STATE.data && STATE.data.optionalSubjects) || [];
+  var counts = {};
+  (STATE.data.questions || []).forEach(function (q) {
+    if (q.paper === STATE.paper && q.subject) counts[q.subject] = (counts[q.subject] || 0) + 1;
+  });
+  var opts = ['<option value="all">All optional subjects</option>'];
+  subs.forEach(function (s) {
+    opts.push('<option value="' + esc(s.id) + '"' + (STATE.subject === s.id ? ' selected' : '') + '>' +
+      esc(s.name) + ' (' + (counts[s.id] || 0) + ')</option>');
+  });
+  host.innerHTML = '<label for="subjectSel">Optional subject</label><select id="subjectSel">' + opts.join('') + '</select>';
+  host.hidden = false;
+}
+
+// A bare "(0)" is a bad answer to "why is this section empty?". Every paper
+// gets its syllabus scope and, for optional papers, the subject map. The text
+// is authored in data/mains-questions.json, not generated on the page.
+function renderGuide() {
+  var host = el('paperGuide');
+  if (!host) return;
+  var p = paperById(STATE.paper);
+  if (!p || STATE.paper === 'all') {
+    host.hidden = true;
+    host.innerHTML = '';
+    return;
+  }
+  var qs = (STATE.data.questions || []).filter(function (q) { return q.paper === p.id; });
+  var html = '<h2>' + esc(p.name) + '</h2><p>' + esc(p.guide || p.sub || '') + '</p>';
+  if (p.kind === 'optional') {
+    var subs = (STATE.data && STATE.data.optionalSubjects) || [];
+    var counts = {};
+    qs.forEach(function (q) { if (q.subject) counts[q.subject] = (counts[q.subject] || 0) + 1; });
+    html += '<div class="guide-scroll"><table><thead><tr><th>Subject</th><th>Paper I focus</th><th>Paper II focus</th><th>Reviewed</th></tr></thead><tbody>';
+    subs.forEach(function (s) {
+      html += '<tr><td><b>' + esc(s.name) + '</b></td><td>' + esc(s.p1 || '') + '</td><td>' +
+        esc(s.p2 || '') + '</td><td>' + (counts[s.id] || 0) + '</td></tr>';
+    });
+    html += '</tbody></table></div>';
+    if (!qs.length) {
+      html += '<p style="margin-top:10px">No reviewed question for this optional paper yet. The syllabus map above is the honest starting point; the runner now rotates across optional papers and subjects, and its unreviewed items appear in the fresh batch below when they pass the quality gate.</p>';
+    }
+  } else if (p.kind === 'language') {
+    html += '<p>The qualifying papers test the language, not the optional subject. Practise comprehension, precis, grammar and a short essay; the reviewed example below shows the standard expected. Hindi is the worked Indian-language example; the same paper can be taken in any language in the Eighth Schedule.</p>';
+  } else if (!qs.length) {
+    html += '<p>No reviewed question for this paper yet. The bank grows by review, not by volume; fresh AI items, when available, are badged and listed below.</p>';
+  }
+  host.innerHTML = html;
+  host.hidden = false;
 }
 
 function boot(data) {
@@ -316,7 +438,7 @@ function boot(data) {
   var counts = {};
   (data.questions || []).forEach(function (q) { counts[q.paper] = (counts[q.paper] || 0) + 1; });
   el('paperChips').innerHTML = (data.papers || []).map(function (p) {
-    return '<button class="chip" data-paper="' + esc(p.id) + '" aria-pressed="false" title="' + esc(p.sub || '') + '">' +
+    return '<button class="chip' + (counts[p.id] ? '' : ' empty') + '" data-paper="' + esc(p.id) + '" aria-pressed="false" title="' + esc(p.sub || '') + '">' +
       esc(p.name) + ' (' + (counts[p.id] || 0) + ')</button>';
   }).join('');
   /* Deep link from the Mains hub: /mains.html?paper=gs2 opens that paper. */
@@ -329,7 +451,9 @@ function boot(data) {
         chips[ci].setAttribute('aria-pressed', chips[ci].getAttribute('data-paper') === want ? 'true' : 'false');
       }
     }
-  } catch (e) { /* old browser: leave the default */ }
+  } catch (e) { /* older browser: leave the default */ }
+  renderSubjectBar();
+  renderGuide();
   render();
   renderFresh();
 
@@ -355,10 +479,14 @@ document.addEventListener('click', function (e) {
   var chip = e.target.closest('.chip');
   if (chip) {
     STATE.paper = chip.getAttribute('data-paper');
+    var chosen = paperById(STATE.paper);
+    if (!chosen || chosen.kind !== 'optional') STATE.subject = 'all';
     var all = document.querySelectorAll('.chip');
     for (var i = 0; i < all.length; i++) {
       all[i].setAttribute('aria-pressed', all[i] === chip ? 'true' : 'false');
     }
+    renderSubjectBar();
+    renderGuide();
     render();
     return;
   }
@@ -370,7 +498,23 @@ document.addEventListener('click', function (e) {
       box.hidden = showing;
       open.textContent = showing ? 'Show the model answer' : 'Hide the model answer';
       open.className = showing ? 'btn' : 'btn sec';
+      // Figures: attach syllabus sketches (maps, charts, architecture) to the
+      // answer so theory and diagram are studied together. The shared library
+      // matches on the question text; a dead hotlink removes its own card.
+      if (!showing && window.VlymbooqAskFigures) {
+        var section = box.closest ? box.closest('.q') : null;
+        var h2 = section && section.querySelector('h2');
+        try { VlymbooqAskFigures.decorate(box, h2 ? h2.textContent : ''); } catch (e) {}
+      }
     }
+  }
+});
+
+document.addEventListener('change', function (e) {
+  if (e.target && e.target.id === 'subjectSel') {
+    STATE.subject = e.target.value || 'all';
+    render();
+    renderGuide();
   }
 });
 
@@ -422,24 +566,49 @@ function parseAIJSON(text) {
   try { return JSON.parse(body.replace(/,\s*([}\]])/g, '$1')); } catch (e) { return null; }
 }
 
-function cleanAI(o) {
+function cleanAI(o, enforceTarget) {
   if (!o || typeof o !== 'object') return null;
   var q = String(o.question || '').trim();
   var ans = (o.answer || []).filter(function (s) { return s && (s.h || s.p); })
-    .map(function (s) { return { h: String(s.h || 'Section').slice(0, 120), p: String(s.p || '').slice(0, 1400) }; });
+    .map(function (s) { return { h: String(s.h || 'Section').slice(0, 120), p: String(s.p || '').slice(0, 2200) }; });
   if (q.length < 20 || ans.length < 2) return null;
-  var ids = {};
-  (STATE.data.papers || []).forEach(function (p) { ids[p.id] = 1; });
+  var ids = {}, kinds = {};
+  (STATE.data.papers || []).forEach(function (p) { ids[p.id] = 1; kinds[p.id] = p.kind || (/^gs/.test(p.id) ? 'gs' : p.id === 'essay' ? 'essay' : /^optional/.test(p.id) ? 'optional' : 'language'); });
+  // Never relabel a reply: an item must name a paper the bank actually has.
+  // A missing paper used to fall back to gs1, which is how a model writing
+  // for another section could be shown as GS1. When the visitor has selected
+  // a paper, the reply must also be for that paper; the same rule applies to
+  // the optional subject and the language/task fields.
+  if (!ids[o.paper]) return null;
+  var paper = String(o.paper);
+  if (enforceTarget && STATE.paper !== 'all' && paper !== STATE.paper) return null;
+  var kind = kinds[paper];
+  var marks = Number(o.marks);
+  var allowed = kind === 'essay' ? [125, 250]
+    : kind === 'gs' ? [10, 15, 20]
+    : [10, 15, 20, 25, 30];
+  if (allowed.indexOf(marks) === -1) marks = kind === 'essay' ? 125 : 15;
   function strList(v, cap) { return (v || []).filter(Boolean).map(String).slice(0, cap); }
+  var subject = String(o.subject || '').slice(0, 80);
+  var lang = String(o.lang || '').slice(0, 12);
+  var task = String(o.task || '').slice(0, 40);
+  if (enforceTarget && kind === 'optional' && STATE.subject !== 'all' && subject !== STATE.subject) return null;
+  if (enforceTarget && kind === 'language') {
+    var wantLang = paper === 'lang-indian' ? 'hi' : 'en';
+    if (lang !== wantLang || task !== 'essay') return null;
+  }
   return {
     id: 'ai-' + Date.now().toString(36),
     ai: 1,
-    paper: ids[o.paper] ? o.paper : 'gs1',
+    paper: paper,
+    subject: subject,
+    lang: lang,
+    task: task,
     topic: String(o.topic || 'AI-generated practice').slice(0, 160),
-    marks: /^(10|15|20|125|250)$/.test(String(o.marks)) ? Number(o.marks) : 15,
+    marks: marks,
     difficulty: o.difficulty === 'high' || o.difficulty === 'easy' ? o.difficulty : 'medium',
     years: [],
-    question: q.slice(0, 700),
+    question: q.slice(0, kind === 'language' ? 1000 : 900),
     answer: ans,
     marksGuide: strList(o.marksGuide, 6),
     pitfalls: strList(o.pitfalls, 6),
@@ -449,21 +618,50 @@ function cleanAI(o) {
 }
 
 function aiPrompt() {
+  var selected = paperById(STATE.paper);
   var papers = (STATE.data.papers || []).map(function (p) {
     return p.id + ' = ' + p.name + ' (' + (p.sub || '') + ')';
   }).join('\n');
+  var paperLine = selected
+    ? 'Write for ' + selected.name + ' only. The "paper" field MUST be "' + selected.id + '".'
+    : 'Pick the least-covered paper from the list and a topic where aspirants are weakest.';
+  var subjectLine = '';
+  if (selected && selected.kind === 'optional') {
+    var subj = subjectById(STATE.subject);
+    subjectLine = subj
+      ? 'Optional subject: ' + subj.name + '. The "subject" field MUST be "' + subj.id + '".'
+      : 'Choose an optional subject before generating; an optional paper cannot be generic.';
+  }
+  var languageLine = '';
+  if (selected && selected.kind === 'language') {
+    languageLine = selected.id === 'lang-indian'
+      ? 'This is the Indian Language paper. Write the question and the model answer in Hindi (Devanagari). The "lang" field MUST be "hi" and the "task" field MUST be "essay".'
+      : 'This is the English Language paper. The "lang" field MUST be "en" and the "task" field MUST be "essay".';
+  }
+  var marksLine = selected && selected.kind === 'essay' ? '125 marks, 1000-1200 words'
+    : selected && selected.kind === 'language' ? '15 marks, 250 words'
+    : '10, 15 or 20 marks with the matching word limit';
+  // The example shape must agree with the target. A 15-mark example in an
+  // essay prompt invites exactly the wrong reply, and an empty subject/lang
+  // example invites a generated item the page then has to reject.
+  var exPaper = selected ? selected.id : 'gs1';
+  var exMarks = selected && selected.kind === 'essay' ? 125 : 15;
+  var exSubject = selected && selected.kind === 'optional' && STATE.subject !== 'all' ? STATE.subject : '';
+  var exLang = selected && selected.kind === 'language' ? (selected.id === 'lang-indian' ? 'hi' : 'en') : '';
+  var exTask = selected && selected.kind === 'language' ? 'essay' : '';
   return {
     system: 'You write UPSC Civil Services Mains practice questions with model-answer skeletons for Indian aspirants. Reply with ONE valid JSON object and nothing else: no markdown fences, no commentary before or after.',
     user: 'Papers:\n' + papers + '\n\n' +
-      'Create ONE practice question and its model-answer skeleton. Pick the paper and a topic where aspirants are weakest; avoid repeating the most over-used questions.\n' +
+      'Create ONE practice question and its model-answer skeleton. ' + paperLine + ' ' + subjectLine + ' ' + languageLine + '\n' +
+      'Marks: ' + marksLine + '. Do not change the paper, marks, subject or language.\n' +
       'Reply with strict JSON in exactly this shape:\n' +
-      '{"paper":"gs3","topic":"short topic label","marks":15,"difficulty":"medium",' +
+      '{"paper":"' + exPaper + '","subject":"' + exSubject + '","lang":"' + exLang + '","task":"' + exTask + '","topic":"short topic label","marks":' + exMarks + ',"difficulty":"medium",' +
       '"question":"full question text including the marking note, e.g. (15 marks, 250 words)",' +
       '"answer":[{"h":"short heading","p":"2-4 sentence paragraph"}],' +
       '"marksGuide":["what the examiner rewards"],"pitfalls":["how this is answered badly"],' +
       '"keywords":["term"],"laws":["law, case or scheme, only if certain"]}\n\n' +
       'Constraints: 4 to 6 objects in "answer"; 3 to 5 strings each in marksGuide and pitfalls; 5 to 8 keywords; "laws" may be [].\n' +
-      'Keep every "p" paragraph to 2-3 sentences. The whole answer must reach at least 150 words for 10 marks, 250 for 15 and 300 for 20; use "Introduction" or "Context" as the first heading and "Way forward" or "Conclusion" as the last. Never invent a scheme, case, article or statistic. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral.\n' +
+      'Keep every "p" paragraph to 2-3 sentences. The whole answer must reach at least 150 words for 10 marks, 250 for 15, 300 for 20 and 850 for a 125-mark essay; use "Introduction" or "Context" as the first heading and "Way forward" or "Conclusion" as the last. Never invent a scheme, case, article or statistic. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral.\n' +
       'Where a recent reform is squarely relevant and you are certain of it, name it with its year (a law, a court direction, a scheme); if the year or detail is not certain, leave it out - a verified older example beats an uncertain new one.\n' +
       'Do not reason step by step. Do not output any thinking or analysis. Reply with ONLY the JSON object -- first character {, last character }.\n' +
       '/no_think'
@@ -488,11 +686,20 @@ function fromPool(o) {
 // When every item has been shown this session, the cycle restarts rather than
 // failing -- the page says the pool refills on the site's next build run.
 function takeFromPool() {
-  var items = (FRESH.items || []);
-  for (var tries = 0; tries < 6 && items.length; tries++) {
-    var pool = items.filter(function (o) { return o && o.id && !POOL_USED[o.id]; });
-    if (!pool.length) { POOL_USED = {}; pool = items.slice(); }
+  var items = (FRESH.items || []).filter(function (o) { return o && o.id; });
+  // Serve the paper/subject the visitor is looking at instead of a random GS3
+  // card, so the frozen batch reinforces the section they chose.
+  if (STATE.paper !== 'all') items = items.filter(function (o) { return o.paper === STATE.paper; });
+  if (STATE.subject !== 'all') items = items.filter(function (o) { return o.subject === STATE.subject; });
+  if (!items.length) return null;
+  var pool = items.filter(function (o) { return !POOL_USED[o.id]; });
+  if (!pool.length) {
+    items.forEach(function (o) { delete POOL_USED[o.id]; });
+    pool = items.slice();
+  }
+  for (var tries = 0; tries < 6 && pool.length; tries++) {
     var pick = pool[Math.floor(Math.random() * pool.length)];
+    pool = pool.filter(function (o) { return o !== pick; });
     var q = fromPool(pick);
     POOL_USED[pick.id] = 1;
     if (q) return q;
@@ -503,6 +710,11 @@ function takeFromPool() {
 function generateOne() {
   if (AI_BUSY) return;
   if (!STATE.data) { setGenStat('Still loading the question bank -- try again in a second.'); return; }
+  var selPaper = paperById(STATE.paper);
+  if (selPaper && selPaper.kind === 'optional' && STATE.subject === 'all') {
+    setGenStat('Choose an optional subject first - an optional paper question cannot be generic.');
+    return;
+  }
 
   // Source 1: the frozen batch. Written by the site's own model on the GitHub
   // build runners and shipped with the site, so this click costs nothing
@@ -511,7 +723,7 @@ function generateOne() {
   if (fromBatch) {
     var savedBatch = addAI(fromBatch);
     render();
-    setGenStat('Added one question from the site\u2019s frozen AI batch (written on the build runners). ' +
+    setGenStat('Added one ' + paperName(fromBatch.paper) + ' question from the site\u2019s frozen AI batch (written on the build runners). ' +
       (savedBatch ? 'Saved on this device; refresh keeps it.' : 'Refresh discards it.'));
     var node0 = el('q-' + fromBatch.id);
     if (node0 && node0.scrollIntoView) node0.scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -522,8 +734,8 @@ function generateOne() {
   // device-heat permission card before compiling anything; declining (or no
   // WebGPU) ends here without heating anything.
   var lib = window.VlymbooqAskLLM;
-  if (!lib) { setGenStat('The in-browser AI library could not load (offline?) and the frozen batch is empty right now -- try again later.'); return; }
-  if (!navigator.gpu) { setGenStat('The frozen batch is empty right now and this browser has no WebGPU, so the in-browser model cannot run here. Desktop Chrome, Edge 121+ or recent Safari works.'); return; }
+  if (!lib) { setGenStat('The in-browser AI library could not load (offline?) and the frozen batch has nothing for this paper right now -- try again later.'); return; }
+  if (!navigator.gpu) { setGenStat('The frozen batch has no question for this paper yet and this browser has no WebGPU, so the in-browser model cannot run here. Desktop Chrome, Edge 121+ or recent Safari works.'); return; }
 
   var btn = el('genAI');
   AI_BUSY = true; btn.disabled = true;
@@ -550,7 +762,7 @@ function generateOne() {
           messages: msgs, temperature: prevRaw ? 0.4 : 0.7, max_tokens: 2200, stream: false
         }).then(function (res) {
           var raw = res && res.choices && res.choices[0] && res.choices[0].message ? res.choices[0].message.content : '';
-          var q = cleanAI(parseAIJSON(raw));
+          var q = cleanAI(parseAIJSON(raw), true);
           if (q) return q;
           try { console.warn('mains-ai: unreadable model output (' + String(raw || '').length + ' chars): ' + String(raw || '').slice(0, 400)); } catch (e) {}
           if (prevRaw) return null;
@@ -600,7 +812,7 @@ function runnerSeeds() {
   return seeds.slice(-60);
 }
 function fromRunnerItem(item) {
-  var q = cleanAI(item);
+  var q = cleanAI(item, true);
   if (!q) return null;
   q.id = 'od-' + String(item.id || Date.now().toString(36)).replace(/[^a-z0-9-]/gi, '').slice(0, 40);
   q.origin = 'runner';
@@ -615,7 +827,11 @@ function generateRunner() {
   if (!STATE.data) { setGenStat('Still loading the question bank -- try again in a second.'); return; }
   AI_BUSY = true; btn.disabled = true;
   setGenStat('Sending the request to the GitHub runner\u2026');
-  R.run('mains-fresh', { seeds: runnerSeeds() }, {
+  R.run('mains-fresh', {
+    seeds: runnerSeeds(),
+    paper: STATE.paper === 'all' ? '' : STATE.paper,
+    subject: STATE.subject === 'all' ? '' : STATE.subject
+  }, {
     onStatus: function (m) { setGenStat(m); }
   }).then(function (res) {
     var item = res && res.item;
