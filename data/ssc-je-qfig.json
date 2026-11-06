@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T13:35:35.170Z",
-  "cursor": 867,
-  "built": 754
+  "updatedAt": "2026-11-06T14:05:24.918Z",
+  "cursor": 870,
+  "built": 756
  },
  "figs": {
   "2316121": {
@@ -4527,6 +4527,18 @@
   "dfca54a5": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Velocity Profile u(y)</text><path d=\"M20,40 L340,40\"/><path d=\"M20,60 Q180,10 340,60\" fill=\"none\" stroke-dasharray=\"4,2\"/><path d=\"M20,40 L340,40\"/><text x=\"5\" y=\"50\">U</text><text x=\"5\" y=\"65\">u(y)</text><line x1=\"20\" y1=\"40\" x2=\"20\" y2=\"70\"/><line x1=\"340\" y1=\"40\" x2=\"340\" y2=\"70\"/><line x1=\"20\" y1=\"70\" x2=\"340\" y2=\"70\"/><text x=\"180\" y=\"85\" text-anchor=\"middle\">y</text><path d=\"M20,60 L180,60 L180,100 L20,100 Z\" fill=\"none\" stroke-dasharray=\"3,3\"/><text x=\"90\" y=\"75\">δ (Displacement)</text><path d=\"M20,60 L180,60 L180,90 L20,90 Z\" fill=\"none\" stroke-dasharray=\"3,3\"/><text x=\"90\" y=\"85\">θ (Momentum)</text><path d=\"M20,60 L180,60 L180,80 L20,80 Z\" fill=\"none\" stroke-dasharray=\"3,3\"/><text x=\"90\" y=\"75\">δe (Energy)</text></svg>",
    "n": "define momentum and energy thicknesses.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "3f8d1082": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"30\" y=\"195\">x</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"65\">y</text><path d=\"M 40 175 L 120 120\" stroke-dasharray=\"3,3\"/><text x=\"80\" y=\"145\">δ(x)</text><path d=\"M 40 175 L 160 90\"/><text x=\"100\" y=\"145\">δ</text><path d=\"M 160 90 L 280 30\" stroke-dasharray=\"3,3\"/><text x=\"220\" y=\"55\">Separation</text><path d=\"M 40 175 L 140 175\"/><text x=\"90\" y=\"165\">Zero shear (∂u/∂y=0)</text><text x=\"30\" y=\"20\">Turbulent BL Growth</text></svg>",
+   "n": "give the turbulent boundary-layer growth and the separation condition.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "bdc33624": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Drag Components</text><path d=\"M 40 100 L 320 100\" stroke-dasharray=\"4,2\"/><circle cx=\"100\" cy=\"100\" r=\"35\"/><path d=\"M 65 85 L 135 85 M 65 115 L 135 115\"/><text x=\"95\" y=\"75\">Object</text><text x=\"95\" y=\"125\">Surface</text><path d=\"M 140 100 L 220 100\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"100\" r=\"35\"/><path d=\"M 165 85 L 195 85 M 165 115 L 195 115\"/><text x=\"175\" y=\"75\">Wake</text><text x=\"175\" y=\"125\">Separated</text><path d=\"M 30 40 L 330 40\" stroke-dasharray=\"4,2\"/><circle cx=\"100\" cy=\"40\" r=\"30\" fill=\"#ddd\"/><circle cx=\"260\" cy=\"40\" r=\"30\" fill=\"#ddd\"/><text x=\"95\" y=\"30\">Pressure Drag</text><text x=\"255\" y=\"30\">Skin Friction</text><path d=\"M 180 170 L 180 200\"/><text x=\"175\" y=\"195\">FD = Fp + Fs</text></svg>",
+   "n": "write the drag equation and name the two drag components.",
    "sub": "fluids",
    "at": "2026-11-06"
   }
