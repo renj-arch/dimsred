@@ -69,6 +69,7 @@
     </select>
     <select id="question" aria-label="Question" style="flex:1;min-width:240px"></select>
     <button class="btn ghost" id="pick" type="button">Random</button>
+    <button class="btn sec" id="runGen" type="button" hidden>✍️ Write a new one on the GitHub runner (8–20 min)</button>
   </div>
   <div class="row" style="margin-top:10px">
     <label class="muted"><input type="checkbox" id="includeFresh" checked> include unreviewed AI practice</label>
@@ -142,6 +143,7 @@
     </section>
   </aside>
 </div>
+<script src="runner.js"></script>
 <script>
 'use strict';
 var BANK = { questions: [], papers: [] };
@@ -214,7 +216,9 @@ function selectQuestion(id) {
   CURRENT = q;
   el('qtext').textContent = q.question;
   el('qpaper').textContent = (q.paper || '').toUpperCase() + ' · ' + q.marks + ' marks';
-  el('qid').textContent = q.ai ? 'fresh AI · unreviewed' : 'reviewed bank';
+  el('qid').textContent = q.ai
+    ? 'fresh AI · unreviewed' + (q.at ? ' · generated ' + q.at : '')
+    : 'reviewed bank';
   el('target').textContent = targetWords(q) + ' words';
   el('answer').value = '';
   updateWords();
@@ -405,7 +409,8 @@ el('ask').addEventListener('click', function () {
     var txt = res && res.choices && res.choices[0] && res.choices[0].message
       ? res.choices[0].message.content : '';
     el('feedbackPanel').hidden = false;
-    el('feedback').textContent = txt || 'The model returned nothing. Try again.';
+    el('feedback').textContent = (txt || 'The model returned nothing. Try again.') +
+      '\n\n— generated ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
     setAsk('');
   }).catch(function (err) {
     setAsk(String(err && err.message || err).slice(0, 220));
@@ -423,6 +428,33 @@ el('pick').addEventListener('click', function () {
   var i = Math.floor(Math.random() * opts.length);
   el('question').selectedIndex = i;
   selectQuestion(opts[i].value);
+});
+/* Owner-only: same GitHub runner route as mains.html. */
+if (window.MainsRunner) window.MainsRunner.showIfOwner(el('runGen'));
+el('runGen').addEventListener('click', function () {
+  if (!window.MainsRunner) return;
+  var btn = this;
+  var paper = el('paper').value === 'all' ? '' : el('paper').value;
+  var seeds = CURRENT && CURRENT.topic ? [CURRENT.topic] : [];
+  btn.disabled = true;
+  el('savedNote').textContent = 'Sending the request to the GitHub runner…';
+  window.MainsRunner.run('mains-fresh', { paper: paper, seeds: seeds, subject: '' }, function (m) {
+    el('savedNote').textContent = m || 'The GitHub runner is writing…';
+  }).then(function (res) {
+    var item = res && res.item;
+    if (!item) throw new Error('the runner returned no question');
+    item.ai = 1;
+    FRESH = FRESH.filter(function (x) { return x.id !== item.id; }).concat([item]);
+    fillPicker();
+    if (el('question').querySelector('option[value="' + item.id + '"]')) {
+      el('question').value = item.id;
+      selectQuestion(item.id);
+    }
+    el('savedNote').textContent = 'The runner wrote a new question (' + (item.paper || '') + ')' +
+      (item.at ? ' on ' + item.at : '') + '. It is unreviewed practice.';
+  }).catch(function (err) {
+    el('savedNote').textContent = String(err && err.message || err).slice(0, 240);
+  }).then(function () { btn.disabled = false; });
 });
 el('showAns').addEventListener('click', function () {
   var hidden = el('modelAnswer').hidden;

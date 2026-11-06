@@ -78,6 +78,14 @@
     <button class="btn ghost" id="copy" type="button" hidden>Copy</button>
     <span class="muted" id="genStat" role="status" aria-live="polite"></span>
   </div>
+  <div class="row" style="margin-top:10px">
+    <select id="runnerPaper" aria-label="Optional paper">
+      <option value="optional1">Optional Paper I</option>
+      <option value="optional2">Optional Paper II</option>
+    </select>
+    <button class="btn sec" id="runGen" type="button" hidden>✍️ Write one on the GitHub runner (8–20 min)</button>
+    <span class="muted" id="runnerStat" role="status" aria-live="polite"></span>
+  </div>
   <div class="panel" style="margin-top:12px">
     <div id="genOut" class="muted">Choose a subject above, then generate. The model runs on your device only after you allow it; nothing is sent anywhere.</div>
   </div>
@@ -89,6 +97,7 @@
   <span><a href="index.html">Mains hub</a> · <a href="answer-writing.html">Answer workspace</a> · <a href="language.html">Language</a></span>
 </footer>
 
+<script src="runner.js"></script>
 <script>
 'use strict';
 var SUBJECTS = [
@@ -173,7 +182,7 @@ document.getElementById('gen').addEventListener('click', function () {
   }).then(function (res) {
     var txt = res && res.choices && res.choices[0] && res.choices[0].message
       ? res.choices[0].message.content : '';
-    out.textContent = txt || 'The model returned nothing. Try again.';
+    out.textContent = (txt || 'The model returned nothing. Try again.') + '\n\n— generated ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
     out.className = '';
     document.getElementById('copy').hidden = !txt;
     stat.textContent = chosen;
@@ -186,6 +195,44 @@ document.getElementById('copy').addEventListener('click', function () {
   if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () {
     document.getElementById('genStat').textContent = 'Copied.';
   });
+});
+
+/* Owner-only GitHub runner: same route as mains.html, no on-device model. */
+function showRunnerItem(item, statusEl) {
+  var out = document.getElementById('genOut');
+  var lines = [item.question || '', '', 'SKELETON:'];
+  (item.answer || []).forEach(function (s) {
+    lines.push('• ' + (s.h || '') + ' — ' + (s.p || ''));
+  });
+  if (item.marksGuide && item.marksGuide.length) {
+    lines.push('', 'WHAT EARNS MARKS:');
+    item.marksGuide.forEach(function (x) { lines.push('• ' + x); });
+  }
+  out.textContent = lines.join('\n');
+  out.className = '';
+  document.getElementById('copy').hidden = false;
+  statusEl.textContent = 'Unreviewed practice from the GitHub runner (' + (item.paper || '') + ')' +
+    (item.at ? ' · generated ' + item.at : '') + '.';
+}
+if (window.MainsRunner) window.MainsRunner.showIfOwner(document.getElementById('runGen'));
+document.getElementById('runGen').addEventListener('click', function () {
+  if (!window.MainsRunner) return;
+  if (!chosen) { document.getElementById('runnerStat').textContent = 'Choose a subject first.'; return; }
+  var btn = this;
+  var statusEl = document.getElementById('runnerStat');
+  btn.disabled = true;
+  statusEl.textContent = 'Sending the request to the GitHub runner…';
+  window.MainsRunner.run('mains-fresh', {
+    paper: document.getElementById('runnerPaper').value,
+    subject: chosen,
+    seeds: [chosen]
+  }, function (m) { statusEl.textContent = m || 'The GitHub runner is writing…'; })
+    .then(function (res) {
+      if (!res || !res.item) throw new Error('the runner returned no question');
+      showRunnerItem(res.item, statusEl);
+    })
+    .catch(function (err) { statusEl.textContent = String(err && err.message || err).slice(0, 240); })
+    .then(function () { btn.disabled = false; });
 });
 </script>
 </div>

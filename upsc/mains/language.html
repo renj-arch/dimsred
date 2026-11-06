@@ -90,6 +90,17 @@
 </section>
 
 <section class="section">
+  <div class="section-head"><h2>Write a fresh language task</h2><span class="pill a">AI · unreviewed</span></div>
+  <p class="section-sub">Owner-only route: the site's model writes a new language question and answer skeleton on GitHub's runners, not on this device. The result arrives in this box in roughly 8–20 minutes.</p>
+  <div class="row">
+    <button class="btn sec" id="runIndian" type="button" hidden>Paper A · Indian language</button>
+    <button class="btn sec" id="runEnglish" type="button" hidden>Paper B · English</button>
+    <span class="muted" id="runnerStat" role="status" aria-live="polite"></span>
+  </div>
+  <div class="panel" style="margin-top:12px"><div id="runnerOut" class="muted">Signed-in owners see the two buttons above. Nothing is sent anywhere unless you press one.</div></div>
+</section>
+
+<section class="section">
   <div class="section-head"><h2>A four-week routine</h2></div>
   <div class="grid two">
     <div class="card"><div class="t">Week 1 · Comprehension and precis</div><div class="d">One passage a day. Read once for the claim, once for the structure. Write the precis without looking back at the passage, then compare.</div></div>
@@ -104,6 +115,7 @@
   <span><a href="index.html">Mains hub</a> · <a href="answer-writing.html">Answer workspace</a> · <a href="optional.html">Optional</a></span>
 </footer>
 
+<script src="runner.js"></script>
 <script>
 'use strict';
 function wc(s) {
@@ -131,6 +143,40 @@ document.getElementById('clear').addEventListener('click', function () {
   document.getElementById('precis').value = '';
   update();
 });
+
+/* Owner-only GitHub runner for a fresh language task. */
+function showLangItem(item, stat) {
+  var lines = [item.question || '', '', 'SKELETON:'];
+  (item.answer || []).forEach(function (s) { lines.push('• ' + (s.h || '') + ' — ' + (s.p || '')); });
+  if (item.marksGuide && item.marksGuide.length) {
+    lines.push('', 'WHAT EARNS MARKS:');
+    item.marksGuide.forEach(function (x) { lines.push('• ' + x); });
+  }
+  var out = document.getElementById('runnerOut');
+  out.textContent = lines.join('\n');
+  out.className = '';
+  stat.textContent = 'Unreviewed practice from the GitHub runner' + (item.at ? ' · generated ' + item.at : '') + '.';
+}
+function languageRunner(paper, btn) {
+  if (!window.MainsRunner) return;
+  var stat = document.getElementById('runnerStat');
+  btn.disabled = true;
+  stat.textContent = 'Sending the request to the GitHub runner…';
+  window.MainsRunner.run('mains-fresh', { paper: paper, seeds: [] }, function (m) {
+    stat.textContent = m || 'The GitHub runner is writing…';
+  }).then(function (res) {
+    if (!res || !res.item) throw new Error('the runner returned no question');
+    showLangItem(res.item, stat);
+  }).catch(function (err) {
+    stat.textContent = String(err && err.message || err).slice(0, 240);
+  }).then(function () { btn.disabled = false; });
+}
+if (window.MainsRunner) {
+  window.MainsRunner.showIfOwner(document.getElementById('runIndian'));
+  window.MainsRunner.showIfOwner(document.getElementById('runEnglish'));
+}
+document.getElementById('runIndian').addEventListener('click', function () { languageRunner('lang-indian', this); });
+document.getElementById('runEnglish').addEventListener('click', function () { languageRunner('lang-english', this); });
 </script>
 </div>
 </body>

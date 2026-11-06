@@ -96,6 +96,7 @@
   <div class="row">
     <input type="text" id="daf" placeholder="One line from your DAF: home district, degree, job, hobby…" style="flex:1;min-width:240px">
     <button class="btn" id="gen" type="button">Generate follow-ups</button>
+    <button class="btn sec" id="runGen" type="button" hidden>🗣️ Ask the GitHub runner (8–20 min)</button>
     <span class="muted" id="genStat" role="status" aria-live="polite"></span>
   </div>
   <div class="panel" style="margin-top:12px"><div id="mockOut" class="muted">Type one honest detail, then generate. The model runs on your device only after you allow it.</div></div>
@@ -106,6 +107,7 @@
   <span><a href="index.html">Mains hub</a> · <a href="answer-writing.html">Answer workspace</a> · <a href="optional.html">Optional</a></span>
 </footer>
 
+<script src="runner.js"></script>
 <script>
 'use strict';
 function loadLib() {
@@ -159,6 +161,44 @@ document.getElementById('gen').addEventListener('click', function () {
     stat.textContent = '';
   }).catch(function (err) {
     stat.textContent = String(err && err.message || err).slice(0, 220);
+  }).then(function () { btn.disabled = false; });
+});
+
+/* Owner-only GitHub runner: one prose reply, generated on GitHub's runners. */
+function stamp() {
+  var d = new Date();
+  return d.toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+}
+if (window.MainsRunner) window.MainsRunner.showIfOwner(document.getElementById('runGen'));
+document.getElementById('runGen').addEventListener('click', function () {
+  if (!window.MainsRunner) return;
+  var detail = document.getElementById('daf').value.trim();
+  var stat = document.getElementById('genStat');
+  var out = document.getElementById('mockOut');
+  if (detail.length < 4) { stat.textContent = 'Add one real detail first.'; return; }
+  var btn = this;
+  btn.disabled = true;
+  stat.textContent = 'Sending the request to the GitHub runner…';
+  out.textContent = '';
+  var prompt = [
+    'You are a UPSC Civil Services interview board member. The candidate wrote this DAF detail:',
+    detail,
+    '',
+    'Write eight follow-up questions a board would naturally ask from it.',
+    'Mix personal, situational and ethical questions. Keep each under 30 words.',
+    'Do not invent facts about the candidate, and do not assert facts about places or schemes.',
+    'After the questions, add one line: "Which answer would you change if the board pushed back?"',
+    'Return plain text, numbered 1 to 8.'
+  ].join('\n');
+  window.MainsRunner.run('writer', { prompt: prompt, temperature: 0.6, maxTokens: 700 }, function (m) {
+    stat.textContent = m || 'The GitHub runner is writing…';
+  }).then(function (res) {
+    var txt = res && (res.text || res.answer || '');
+    out.textContent = (txt || 'The runner returned nothing.') + '\n\n— generated ' + stamp();
+    out.className = '';
+    stat.textContent = 'Unreviewed practice from the GitHub runner.';
+  }).catch(function (err) {
+    stat.textContent = String(err && err.message || err).slice(0, 240);
   }).then(function () { btn.disabled = false; });
 });
 </script>
