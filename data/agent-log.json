@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T19:17:50.325Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention; BankFigures is the priority to fix broken visual data. Invention should follow to generate fresh content for the empty papers/questions/syllabus files. MetaLearn and MainsFresh are deferred as they produced zero fixes in recent runs, so they go last despite potential utility once high-priority gaps are addressed.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (654 total)",
-       "text": "What is the pressure inside a liquid droplet? | What is the excess pressure inside a soap bubble? | What is the excess pressure in a liquid jet?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T19:34:29.997Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -636,8 +591,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T02:07:16.483Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-06T01:46:05.461Z",
+ "lastRun": "2026-11-06T02:07:16.483Z",
  "model": "qwen3.5:9b"
 }
