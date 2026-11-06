@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T17:36:23.745Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-05T18:18:22.974Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -608,8 +596,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T00:50:01.492Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as they are likely blocking content consumption. MockPapers should follow to generate fresh exam materials since filesPresent indicates no papers exist yet, addressing the 'papers: false' state. MetaLearn is placed last because it produced 0 fixes in the last two runs and may be starved of inputs until core content gaps are filled.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (687 total)",
+       "text": "When is a fully submerged body stable? | Compute the upthrust on a 0.4 m cube fully immersed in water. | Name the three equilibrium states of a floating body."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T00:14:38.219Z",
+ "lastRun": "2026-11-06T00:50:01.492Z",
  "model": "qwen3.5:9b"
 }
