@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T04:44:43.799Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as unfinished standing goals take priority over new ideas. Since MetaLearn and Invention produced zero fixes in the last two consecutive runs, they are moved to the end of the execution order per protocol, allowing BankFigures and MainsFresh to clear critical debt first.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (705 total)",
-       "text": "Write the Euler equation of motion along a streamline. | Write the Bernoulli equation and name its terms. | State the assumptions of the Bernoulli equation."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T05:24:05.047Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -615,8 +570,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T13:01:27.610Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; prioritize BankFigures to resolve missing data immediately, followed by MockPapers and ExamPatterns to address content depth and broken pages. Invention is deferred as it requires fresh inputs not yet available from upstream agents.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (752 total)",
+       "text": "Define an equivalent pipe. | What is water hammer and how does a surge tank help? | What is a boundary layer?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Machine Design (360 in pool)",
+       "text": "Machine Design"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T12:39:46.670Z",
+ "lastRun": "2026-11-06T13:01:27.610Z",
  "model": "qwen3.5:9b"
 }
