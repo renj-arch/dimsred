@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T07:33:06.438Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures is the only agent fixing content in recent runs, so it must lead to clear immediate holes. MetaLearn and Invention have produced zero fixes for two consecutive runs and should be deprioritized until core content debt is reduced.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (723 total)",
-       "text": "Write the discharge through a sharp-edged orifice. | What is a mouthpiece and what is its Cd? | Give the discharge coefficient of a Borda (re-entrant) mouthpiece."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T08:15:22.038Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -612,8 +567,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T15:11:34.075Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address both immediately as it is the only agent producing fixes. MetaLearn and Invention are starved (0 output in last 3 runs) but represent high-leverage content generation for syllabus gaps and fresh ideas, so they follow BankFigures once the critical infrastructure is stabilized. MainsFresh and MockPapers remain at zero; given the file state shows no papers or questions present, these agents will likely fail witho",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (761 total)",
+       "text": "What are the sphere drag-coefficient ranges? | How is lift generated and expressed? | How is open-channel flow classified by depth variation?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T14:42:14.630Z",
+ "lastRun": "2026-11-06T15:11:34.075Z",
  "model": "qwen3.5:9b"
 }
