@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T05:02:42.490Z",
-  "cursor": 819,
-  "built": 708
+  "updatedAt": "2026-11-06T05:37:34.724Z",
+  "cursor": 822,
+  "built": 711
  },
  "figs": {
   "2316121": {
@@ -4251,6 +4251,24 @@
   "90d62283": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Pitot Tube Velocity Principle</text><rect x=\"40\" y=\"50\" width=\"280\" height=\"140\" fill=\"#eee\" stroke=\"#222\"/><text x=\"50\" y=\"75\">Static Port</text><line x1=\"60\" y1=\"75\" x2=\"90\" y2=\"75\"/><text x=\"100\" y=\"75\">Pitot Tube</text><path d=\"M 90 75 L 140 75 L 140 135 L 90 135 Z\" fill=\"#ddd\" stroke=\"#222\"/><text x=\"110\" y=\"100\">Stagnation</text><text x=\"110\" y=\"120\">Pressure</text><line x1=\"140\" y1=\"75\" x2=\"280\" y2=\"75\" stroke-dasharray=\"4,2\"/><text x=\"290\" y=\"80\">Static Pressure</text><text x=\"290\" y=\"100\">Line</text><path d=\"M 140 135 L 280 135\" stroke-dasharray=\"4,2\"/><text x=\"290\" y=\"140\">Static Pressure</text><text x=\"290\" y=\"160\">Line</text><path d=\"M 140 75 L 140 135\" stroke-dasharray=\"4,2\"/><text x=\"145\" y=\"105\">Head Difference</text><text x=\"145\" y=\"125\">(h)</text><line x1=\"280\" y1=\"75\" x2=\"340\" y2=\"75\" stroke=\"#222\"/><text x=\"350\" y=\"80\">Flow Direction</text><path d=\"M 340 60 L 340 90 M 330 60 L 330 90 M 350 60 L 350 90\"/><text x=\"180\" y=\"170\" text-anchor=\"middle\">V = √(2gh)</text></svg>",
    "n": "how does a pitot tube measure velocity?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "b124ce16": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Pressure Energy &rarr; Kinetic Energy</text><path d=\"M40,60 L100,60 L100,40 L160,40 L160,20 L220,20 L220,60 L280,60 L280,140 L220,140 L220,180 L160,180 L160,160 L100,160 L100,140 L40,140 Z\" fill=\"none\" stroke=\"#222\"/><path d=\"M30,60 L30,140\" stroke=\"#222\"/><path d=\"M310,60 L310,140\" stroke=\"#222\"/><text x=\"85\" y=\"95\" text-anchor=\"middle\">Inlet</text><text x=\"275\" y=\"95\" text-anchor=\"middle\">Outlet</text><path d=\"M100,60 L100,40\" stroke=\"#222\"/><path d=\"M160,20 L160,40\" stroke=\"#222\"/><path d=\"M220,20 L220,40\" stroke=\"#222\"/><text x=\"95\" y=\"35\" text-anchor=\"middle\">Wide</text><text x=\"170\" y=\"35\" text-anchor=\"middle\">Narrow</text><text x=\"260\" y=\"35\" text-anchor=\"middle\">Wide</text><path d=\"M40,140 L100,140\" stroke=\"#222\"/><path d=\"M160,180 L220,180\" stroke=\"#222\"/><path d=\"M220,140 L280,140\" stroke=\"#222\"/><text x=\"75\" y=\"165\" text-anchor=\"middle\">Inlet</text><text x=\"245\" y=\"165\" text-anchor=\"middle\">Outlet</text><path d=\"M100,140 L100,160\" stroke=\"#222\"/><path d=\"M160,180 L160,160\" stroke=\"#222\"/><path d=\"M220,140 L220,160\" stroke=\"#222\"/><text x=\"95\" y=\"185\" text-anchor=\"middle\">Wide</text><text x=\"170\" y=\"185\" text-anchor=\"middle\">Narrow</text><text x=\"260\" y=\"185\" text-anchor=\"middle\">Wide</text><path d=\"M130,10 L130,40\" stroke=\"#222\"/><path d=\"M230,10 L230,40\" stroke=\"#222\"/><text x=\"125\" y=\"30\" text-anchor=\"middle\">High P</text><text x=\"225\" y=\"30\" text-anchor=\"middle\">Low P</text></svg>",
+   "n": "what is the function of a nozzle in a fluid system?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "37a7b996": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"35\" y=\"10\" font-weight=\"bold\">Reservoir</text><path d=\"M 40 60 Q 180 60 320 60 L 320 180 Q 180 180 40 180 Z\"/><text x=\"175\" y=\"90\">Liquid</text><path d=\"M 40 60 L 100 60 L 100 20 L 140 20 L 140 60 L 200 60 L 200 20 L 240 20 L 240 60 L 320 60\"/><text x=\"180\" y=\"45\">Pipe</text><circle cx=\"140\" cy=\"20\" r=\"2\"/><text x=\"135\" y=\"15\">Summit</text><line x1=\"140\" y1=\"20\" x2=\"140\" y2=\"60\"/><text x=\"135\" y=\"45\">Height Limit</text><text x=\"280\" y=\"195\">Outlet</text><text x=\"20\" y=\"195\">Atmospheric Pressure</text><text x=\"200\" y=\"195\">Vapour Pressure Head</text></svg>",
+   "n": "explain the working of a siphon and its height limit.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "b6bcd04a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><text x=\"30\" y=\"75\">p/γ + z</text><text x=\"30\" y=\"95\">HGL</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\"/><text x=\"30\" y=\"115\">p/γ + z + V²/2g</text><text x=\"30\" y=\"135\">EGL</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\"/><text x=\"30\" y=\"155\">z</text><text x=\"30\" y=\"175\">Datum</text><path d=\"M 80 80 L 80 120 M 240 80 L 240 120\"/><text x=\"75\" y=\"100\">Point A</text><text x=\"235\" y=\"100\">Point B</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"120\" text-anchor=\"end\">Vertical Axis</text></svg>",
+   "n": "define hydraulic gradient line and total energy gradient line.",
    "sub": "fluids",
    "at": "2026-11-06"
   }
