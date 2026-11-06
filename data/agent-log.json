@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T00:14:38.219Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address both immediately as it is the only agent producing fixes in recent runs. MockPapers should follow to tackle pending papers, while ExamPatterns remains idle despite high fault counts, so it will be placed later in the sequence. Invention and MetaLearn are deferred until gaps shrink, adhering to the rule of prioritizing unfinished standing goals over new ventures.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (684 total)",
-       "text": "Define metacentre. | Give the metacentric height formula. | When is a floating body stable?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Strength of Materials (360 in pool)",
-       "text": "Strength of Materials"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T00:50:01.492Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -576,8 +515,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T07:11:25.309Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken diagrams. Since papers/syllabus files are missing, MetaLearn should generate foundational content next to fill those structural gaps. Invention is placed last as it requires existing content to build upon, aligning with the rule to starve agents producing 0 for recent runs.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (720 total)",
+       "text": "How is the force on a pipe bend calculated? | Compute the force of a 60 mm jet at 15 m/s on a fixed vertical plate. | Define vena contracta and the coefficients Cc, Cv and Cd of an orifice."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T06:45:55.567Z",
+ "lastRun": "2026-11-06T07:11:25.309Z",
  "model": "qwen3.5:9b"
 }
