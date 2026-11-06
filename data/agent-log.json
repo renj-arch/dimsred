@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T04:16:43.095Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; mainsfresh produced 0 fixes in the last two runs so it must be queued last despite its name implying freshness. BankFigures should run first to address the massive figure gap, followed by MetaLearn to stabilize content generation, then Invention to tackle critical faults with new problem sets, and finally MainsFresh to attempt any remaining open faults.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (702 total)",
-       "text": "Define circulation Γ. | What are rotational and irrotational flows? | What is a flow net?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T04:44:43.799Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -617,8 +572,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T12:00:44.924Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. Since papers, questions, syllabus, and sidecar files are all missing, Invention is required immediately to generate the foundational raw material for these exams. MetaLearn should follow to synthesize this new material into coherent study units. MainsFresh will then update the main content feed with these fresh resources. Agents that produced 0 in recent runs (MetaLearn, M",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (746 total)",
+       "text": "What is the exit loss into a reservoir? | Write the loss at a sudden enlargement. | Write the loss at a sudden contraction."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T11:39:31.251Z",
+ "lastRun": "2026-11-06T12:00:44.924Z",
  "model": "qwen3.5:9b"
 }
