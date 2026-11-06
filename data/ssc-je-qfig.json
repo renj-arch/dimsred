@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T07:21:36.322Z",
-  "cursor": 834,
-  "built": 723
+  "updatedAt": "2026-11-06T07:48:40.524Z",
+  "cursor": 837,
+  "built": 726
  },
  "figs": {
   "2316121": {
@@ -4341,6 +4341,24 @@
   "69a96e8e": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Borda Mouthpiece (Running Full)</text><path d=\"M40 60 L40 140 L320 140 L320 60 Z\" fill=\"none\" stroke=\"#222\"/><path d=\"M80 60 Q120 90 160 60\" fill=\"none\" stroke=\"#222\"/><path d=\"M160 60 L160 140\" fill=\"none\" stroke=\"#222\"/><path d=\"M80 60 L80 140\" fill=\"none\" stroke=\"#222\"/><text x=\"150\" y=\"95\" text-anchor=\"middle\">Vena Contracta</text><text x=\"150\" y=\"135\" text-anchor=\"middle\">Jet exits at</text><text x=\"175\" y=\"65\" text-anchor=\"start\">Re-entrant edge</text><text x=\"290\" y=\"105\" text-anchor=\"end\">Full flow</text></svg>",
    "n": "give the discharge coefficient of a borda (re-entrant) mouthpiece.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "5ea79582": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Convergent-Divergent Mouthpiece</text><path d=\"M40,60 L100,60 L100,40 Q130,20 160,40 L160,60 L220,60\"/><path d=\"M100,60 L100,160\"/><path d=\"M160,60 L160,160\"/><path d=\"M100,160 L160,160\"/><text x=\"90\" y=\"55\" text-anchor=\"middle\">Convergent</text><text x=\"170\" y=\"55\" text-anchor=\"middle\">Divergent</text><path d=\"M40,60 L40,80\" stroke-dasharray=\"2,2\"/><path d=\"M220,60 L220,80\" stroke-dasharray=\"2,2\"/><text x=\"35\" y=\"75\">Atmospheric</text><text x=\"215\" y=\"75\">Atmospheric</text><path d=\"M40,160 L100,160\"/><path d=\"M160,160 L220,160\"/><text x=\"90\" y=\"180\" text-anchor=\"middle\">Vena Contracta</text><text x=\"170\" y=\"180\" text-anchor=\"middle\">Full Section</text></svg>",
+   "n": "what is a convergent-divergent mouthpiece used for?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "5c2d6811": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"120\" /><path d=\"M120 160 L120 180 L140 180 L140 160 Z\" /><text x=\"135\" y=\"175\" text-anchor=\"middle\">a</text><text x=\"105\" y=\"195\" text-anchor=\"end\">Q = Cd a √(2gH)</text><path d=\"M40 40 L120 40 L120 60 L40 60 Z\" /><text x=\"80\" y=\"55\" text-anchor=\"middle\">A</text><path d=\"M120 40 L120 160\" stroke-dasharray=\"3,3\" /><text x=\"125\" y=\"100\" text-anchor=\"start\">H(t)</text><text x=\"80\" y=\"40\" text-anchor=\"middle\">H₁</text><text x=\"80\" y=\"160\" text-anchor=\"middle\">H₂</text><path d=\"M320 40 L320 210 M340 40 L340 210\" stroke-dasharray=\"3,3\" /><text x=\"350\" y=\"120\" text-anchor=\"start\">t</text><path d=\"M320 40 L340 40 M320 210 L340 210\" stroke-dasharray=\"3,3\" /><text x=\"350\" y=\"45\" text-anchor=\"end\">t = ∫ dt</text></svg>",
+   "n": "give the time to lower a tank of area a from head h1 to h2 through an orifice.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "c8340bcc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Discharge over Rectangular Notch</text><path d=\"M40 160 L100 160 L100 120 L40 120 Z\"/><path d=\"M40 160 L320 160 L320 120 L40 120 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"80\" y=\"175\" text-anchor=\"middle\">b</text><text x=\"340\" y=\"175\" text-anchor=\"middle\">H</text><path d=\"M100 120 L100 60\"/><path d=\"M100 60 L180 60\" stroke-dasharray=\"4,2\"/><text x=\"120\" y=\"55\" text-anchor=\"middle\">H</text><path d=\"M100 60 L100 160\"/><text x=\"95\" y=\"135\" text-anchor=\"end\">y</text><path d=\"M40 120 L100 120\" stroke-dasharray=\"4,2\"/><text x=\"70\" y=\"115\" text-anchor=\"middle\">b</text><path d=\"M320 160 L320 120 L320 60 L320 160 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"340\" y=\"95\" text-anchor=\"end\">H</text><path d=\"M100 60 L320 60\" stroke-dasharray=\"4,2\"/><text x=\"210\" y=\"55\" text-anchor=\"middle\">b</text><path d=\"M100 160 L320 160\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"190\" text-anchor=\"middle\">Q = (2/3) C_d b √(2g) H^(3/2)</text></svg>",
+   "n": "write the discharge over a rectangular notch.",
    "sub": "fluids",
    "at": "2026-11-06"
   }
