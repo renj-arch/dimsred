@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T17:15:46.756Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as they block content consumption. MockPapers should follow to generate new exam materials since papers are absent, directly tackling the 'papers: false' state. MetaLearn is scheduled last because it produced zero fixes in the previous two runs and may be starved of inputs rather than broken.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (646 total)",
-       "text": "Define dynamic viscosity and give its unit. | What is kinematic viscosity? | What is a Newtonian fluid?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T17:36:23.745Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -587,8 +547,69 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-06T00:14:38.219Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address both immediately as it is the only agent producing fixes in recent runs. MockPapers should follow to tackle pending papers, while ExamPatterns remains idle despite high fault counts, so it will be placed later in the sequence. Invention and MetaLearn are deferred until gaps shrink, adhering to the rule of prioritizing unfinished standing goals over new ventures.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (684 total)",
+       "text": "Define metacentre. | Give the metacentric height formula. | When is a floating body stable?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Strength of Materials (360 in pool)",
+       "text": "Strength of Materials"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T23:47:34.323Z",
+ "lastRun": "2026-11-06T00:14:38.219Z",
  "model": "qwen3.5:9b"
 }
