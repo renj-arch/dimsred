@@ -63,22 +63,61 @@ function upsertIndex(current, entry) {
 }
 
 /*
- * The card is authored with the film. Publishing only ever refreshes its status
- * line and points "Enter the film" at the player; if the card is not there yet
- * the film is still watchable at watch.html?film=<id>, so this warns instead of
- * failing.
+ * films.html keeps its catalogue in a `const FILMS = [...]` array that the page
+ * renders client-side. Publishing must UPSERT an entry there: an existing film
+ * is left alone (its card was hand-tuned), a new film gets a card generated
+ * from the watch entry. The old `<article data-film>` patching is kept as a
+ * fallback for a future server-rendered layout.
  */
+function cardFromEntry(entry) {
+  const year = entry.year || (String(entry.id).match(/(\d{4})$/) || [])[1] || '';
+  let duration = entry.duration || '';
+  const m = /^(\d+):(\d+)$/.exec(duration);
+  if (m) duration = `${m[1]}m ${m[2]}s`;
+  const card = {
+    id: entry.id,
+    title: entry.title || entry.id,
+    subtitle: entry.subtitle || entry.logline || '',
+    duration,
+    scenes: entry.scenes || 40,
+    poster: entry.poster || `media/films/${entry.id}/poster.jpg`,
+    tags: entry.tags || [],
+  };
+  if (year) card.year = Number(year);
+  return card;
+}
+
 function patchCard(html, entry) {
-  if (!html) return { html: null, changed: false };
+  if (!html) return { html: null, changed: false, found: false };
   const id = entry.id;
   const before = html;
+
+  // Legacy server-rendered card, if one ever exists.
   const block = new RegExp(`(<article class="card" data-film="${id}">[\\s\\S]*?<div class="status">)([^<]*)(</div>)`);
-  if (block.test(html)) html = html.replace(block, (_, a, __, c) => `${a}${entry.status}${c}`);
-  html = html.replace(
-    new RegExp(`href="film\\.html\\?film=${id}"`, 'g'),
-    `href="watch.html?film=${id}"`,
-  );
-  return { html, changed: html !== before, found: block.test(before) };
+  if (block.test(html)) {
+    html = html.replace(block, (_, a, __, c) => `${a}${entry.status}${c}`);
+    return { html, changed: html !== before, found: true };
+  }
+
+  // Current design: a JS array. Already listed -> nothing to do; the card was
+  // authored alongside the film and must not be overwritten. Keys may be
+  // quoted (JSON-style) or bare.
+  const idTest = new RegExp(`["']?id["']?\\s*:\\s*["']${id.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}["']`);
+  if (idTest.test(html)) return { html, changed: false, found: true };
+
+  const marker = 'const FILMS = [';
+  const at = html.indexOf(marker);
+  if (at === -1) return { html, changed: false, found: false };
+
+  // Newest first: insert directly after the opening bracket.
+  const card = cardFromEntry(entry);
+  const literal = JSON.stringify(card, null, 2)
+    .split('\n')
+    .map((line) => `  ${line}`)
+    .join('\n');
+  const insertAt = at + marker.length;
+  html = `${html.slice(0, insertAt)}\n${literal},${html.slice(insertAt)}`;
+  return { html, changed: true, found: false };
 }
 
 async function main() {
@@ -107,8 +146,11 @@ async function main() {
 
   if (filmsText) {
     const { html, changed, found } = patchCard(filmsText, entry);
-    if (changed) files.push({ path: 'films.html', bytes: Buffer.from(html, 'utf8') });
-    if (!found) console.log(`  note: no card for ${film} on films.html; add one when the design is ready`);
+    if (changed) {
+      files.push({ path: 'films.html', bytes: Buffer.from(html, 'utf8') });
+      console.log(`  films.html: added a card for ${film}`);
+    }
+    if (!found && !changed) console.log(`  note: ${film} is not listed and films.html has no FILMS array`);
   }
 
   for (const file of files) {

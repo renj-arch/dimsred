@@ -212,6 +212,11 @@ function main() {
       opts.blender,
       [
         '-b',
+        // Ignore any user startup file and audio device: on a headless runner
+        // both are pure failure surface, and the scene files set everything
+        // they need.
+        '--factory-startup',
+        '-noaudio',
         '--python', blenderScript,
         '--',
         '--scene', scene,
@@ -224,7 +229,18 @@ function main() {
       { stdio: 'inherit', cwd: ROOT, timeout: 2 * 60 * 60 * 1000 }
     );
     if (result.error) throw new Error(`Blender failed for ${plate}: ${result.error.message}`);
-    if (result.status !== 0) throw new Error(`Blender exited ${result.status} for ${plate}`);
+    if (result.status !== 0) {
+      // Blender writes the reason to /tmp/blender.crash.txt, not to stdout.
+      // Surface it in the CI log so a segfault can be diagnosed without
+      // re-running the whole job.
+      const crash = '/tmp/blender.crash.txt';
+      if (fs.existsSync(crash)) {
+        const text = fs.readFileSync(crash, 'utf8');
+        const tail = text.split('\n').slice(-80).join('\n');
+        console.error(`\n[blender] crash report for ${plate} (${crash}):\n${tail}`);
+      }
+      throw new Error(`Blender exited ${result.status} for ${plate}`);
+    }
     if (!fs.existsSync(out)) throw new Error(`Blender did not write ${out}`);
     const bytes = fs.statSync(out).size;
     console.log(`[blender] ${plate}: ${(bytes / 1024 / 1024).toFixed(1)} MB`);

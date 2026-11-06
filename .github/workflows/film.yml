@@ -177,6 +177,17 @@ jobs:
             --height "$PLATE_HEIGHT" \
             --samples "$SAMPLES"
 
+      # A Cycles segfault writes its reason to /tmp/blender.crash.txt, which the
+      # job workspace (and the log) does not include. Keep it for diagnosis.
+      - name: Preserve the Blender crash report
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blender-crash
+          path: /tmp/blender.crash.txt
+          if-no-files-found: ignore
+          retention-days: 7
+
       - name: Build film (map, Edge TTS, Skia frames, ffmpeg)
         run: |
           node scripts/film/build-film.js \
