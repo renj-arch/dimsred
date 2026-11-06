@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T05:37:34.724Z",
-  "cursor": 822,
-  "built": 711
+  "updatedAt": "2026-11-06T06:01:06.841Z",
+  "cursor": 825,
+  "built": 714
  },
  "figs": {
   "2316121": {
@@ -4269,6 +4269,24 @@
   "b6bcd04a": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><text x=\"30\" y=\"75\">p/γ + z</text><text x=\"30\" y=\"95\">HGL</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\"/><text x=\"30\" y=\"115\">p/γ + z + V²/2g</text><text x=\"30\" y=\"135\">EGL</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\"/><text x=\"30\" y=\"155\">z</text><text x=\"30\" y=\"175\">Datum</text><path d=\"M 80 80 L 80 120 M 240 80 L 240 120\"/><text x=\"75\" y=\"100\">Point A</text><text x=\"235\" y=\"100\">Point B</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"120\" text-anchor=\"end\">Vertical Axis</text></svg>",
    "n": "define hydraulic gradient line and total energy gradient line.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "fad3d8f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\">Flow Direction</text><circle cx=\"80\" cy=\"100\" r=\"5\"/><circle cx=\"280\" cy=\"100\" r=\"5\"/><line x1=\"40\" y1=\"100\" x2=\"80\" y2=\"100\"/><text x=\"60\" y=\"115\" text-anchor=\"middle\">V₁</text><line x1=\"280\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"300\" y=\"115\" text-anchor=\"middle\">V₂</text><path d=\"M 40 100 L 40 180 L 320 180 L 320 100 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"50\" y=\"195\" text-anchor=\"start\">Control Volume</text><line x1=\"60\" y1=\"140\" x2=\"60\" y2=\"170\"/><text x=\"70\" y=\"155\" text-anchor=\"middle\">F_net</text></svg>",
+   "n": "write the impulse–momentum equation.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "2f5ee3d8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" stroke-dasharray=\"4,4\"/><text x=\"50\" y=\"65\">Flow Area A</text><path d=\"M 70 90 L 290 90\"/><path d=\"M 70 90 L 70 180\"/><path d=\"M 290 90 L 290 180\"/><circle cx=\"135\" cy=\"90\" r=\"3\"/><circle cx=\"165\" cy=\"90\" r=\"3\"/><circle cx=\"195\" cy=\"90\" r=\"3\"/><text x=\"132\" y=\"85\">u</text><text x=\"162\" y=\"85\">u</text><text x=\"192\" y=\"85\">u</text><path d=\"M 70 130 L 290 130\"/><path d=\"M 70 130 L 70 180\"/><path d=\"M 290 130 L 290 180\"/><circle cx=\"135\" cy=\"130\" r=\"3\"/><circle cx=\"165\" cy=\"130\" r=\"3\"/><circle cx=\"195\" cy=\"130\" r=\"3\"/><text x=\"132\" y=\"125\">u</text><text x=\"162\" y=\"125\">u</text><text x=\"192\" y=\"125\">u</text><path d=\"M 70 170 L 290 170\"/><text x=\"310\" y=\"85\">β = (1/AV²)∫u²dA</text><text x=\"310\" y=\"105\">α = (1/AV³)∫u³dA</text></svg>",
+   "n": "what are the momentum and kinetic-energy correction factors?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "409766b0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Jet Force on Vertical Plate</text><path d=\"M 100 140 L 100 60\" stroke-dasharray=\"4,2\"/><circle cx=\"100\" cy=\"50\" r=\"8\"/><line x1=\"92\" y1=\"42\" x2=\"108\" y2=\"58\"/><text x=\"90\" y=\"35\">Jet</text><path d=\"M 100 60 L 100 140\"/><rect x=\"100\" y=\"60\" width=\"160\" height=\"80\" fill=\"none\" stroke-dasharray=\"2,2\"/><line x1=\"100\" y1=\"60\" x2=\"100\" y2=\"140\"/><text x=\"95\" y=\"100\">Plate</text><path d=\"M 180 140 L 340 140\"/><line x1=\"180\" y1=\"140\" x2=\"340\" y2=\"140\"/><text x=\"260\" y=\"155\">Reaction</text><path d=\"M 180 140 L 180 170\"/><line x1=\"180\" y1=\"140\" x2=\"180\" y2=\"170\"/><text x=\"165\" y=\"190\">F = ρAV²</text><path d=\"M 100 60 L 260 60\" stroke-dasharray=\"4,2\"/><line x1=\"100\" y1=\"60\" x2=\"260\" y2=\"60\"/><text x=\"180\" y=\"55\">Axis</text></svg>",
+   "n": "what is the force of a jet on a stationary vertical flat plate?",
    "sub": "fluids",
    "at": "2026-11-06"
   }
