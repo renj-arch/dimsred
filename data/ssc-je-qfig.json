@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T18:05:58.081Z",
-  "cursor": 888,
-  "built": 771
+  "updatedAt": "2026-11-06T22:52:26.771Z",
+  "cursor": 891,
+  "built": 774
  },
  "figs": {
   "2316121": {
@@ -4630,6 +4630,24 @@
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Dimensionless Numbers: Force Ratios</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"55\">Inertia</text><text x=\"315\" y=\"55\">Other Force</text><line x1=\"80\" y1=\"70\" x2=\"80\" y2=\"190\"/><text x=\"75\" y=\"195\">Gravity</text><text x=\"75\" y=\"135\">Surface Tension</text><text x=\"75\" y=\"65\">Elasticity</text><text x=\"75\" y=\"205\">Pressure</text><rect x=\"40\" y=\"60\" width=\"80\" height=\"130\" fill=\"#eee\" stroke=\"#222\"/><text x=\"50\" y=\"95\" text-anchor=\"middle\" font-weight=\"bold\">Fr</text><text x=\"50\" y=\"115\">V / √(gL)</text><rect x=\"140\" y=\"60\" width=\"80\" height=\"130\" fill=\"#eee\" stroke=\"#222\"/><text x=\"150\" y=\"95\" text-anchor=\"middle\" font-weight=\"bold\">Ma</text><text x=\"150\" y=\"115\">V / c</text><rect x=\"200\" y=\"60\" width=\"80\" height=\"130\" fill=\"#eee\" stroke=\"#222\"/><text x=\"210\" y=\"95\" text-anchor=\"middle\" font-weight=\"bold\">We</text><text x=\"210\" y=\"115\">ρV²L / σ</text><rect x=\"260\" y=\"60\" width=\"80\" height=\"130\" fill=\"#eee\" stroke=\"#222\"/><text x=\"270\" y=\"95\" text-anchor=\"middle\" font-weight=\"bold\">Eu</text><text x=\"270\" y=\"115\">Δp / ρV²</text></svg>",
    "n": "give the physical meanings of the froude, mach, weber and euler numbers.",
    "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "992937c2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\" font-weight=\"bold\">Model</text><line x1=\"40\" y1=\"25\" x2=\"320\" y2=\"25\"/><text x=\"180\" y=\"45\">Prototype</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"25\" x2=\"40\" y2=\"60\" stroke-dasharray=\"2,2\"/><text x=\"25\" y=\"45\">Geometric</text><circle cx=\"320\" cy=\"25\" r=\"8\"/><circle cx=\"320\" cy=\"60\" r=\"8\"/><line x1=\"328\" y1=\"25\" x2=\"348\" y2=\"25\"/><line x1=\"328\" y1=\"60\" x2=\"348\" y2=\"60\"/><text x=\"355\" y=\"45\">Motion</text><text x=\"355\" y=\"65\">Kinematic</text><rect x=\"40\" y=\"75\" width=\"280\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/><line x1=\"40\" y1=\"85\" x2=\"320\" y2=\"85\"/><text x=\"180\" y=\"95\">Forces</text><rect x=\"40\" y=\"95\" width=\"280\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/><line x1=\"40\" y1=\"105\" x2=\"320\" y2=\"105\"/><text x=\"180\" y=\"115\">Dynamic</text><rect x=\"40\" y=\"115\" width=\"280\" height=\"10\" fill=\"#eee\" stroke=\"#222\"/><line x1=\"40\" y1=\"125\" x2=\"320\" y2=\"125\"/><text x=\"180\" y=\"135\">Similarity</text><rect x=\"40\" y=\"135\" width=\"280\" height=\"60\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">Similitude Types</text></svg>",
+   "n": "name the three types of similitude between model and prototype.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "a8f584da": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"10\" y=\"40\">Prototype</text>\n <rect x=\"20\" y=\"50\" width=\"180\" height=\"60\"/>\n <path d=\"M 30 70 L 200 70\" stroke-dasharray=\"4,2\"/>\n <path d=\"M 30 90 L 200 90\" stroke-dasharray=\"4,2\"/>\n <text x=\"110\" y=\"65\">Free Surface</text>\n <text x=\"110\" y=\"85\">Submerged Flow</text>\n <text x=\"10\" y=\"130\">Distorted Model</text>\n <rect x=\"20\" y=\"140\" width=\"180\" height=\"60\"/>\n <path d=\"M 30 160 L 200 160\" stroke-dasharray=\"4,2\"/>\n <path d=\"M 30 180 L 200 180\" stroke-dasharray=\"4,2\"/>\n <text x=\"110\" y=\"155\">Free Surface (Stretched)</text>\n <text x=\"110\" y=\"175\">Submerged Flow</text>\n <text x=\"230\" y=\"90\">Re = Re_p</text>\n <text x=\"230\" y=\"140\">Fr != Fr_p</text>\n <text x=\"280\" y=\"110\">Viscous Law</text>\n <text x=\"280\" y=\"160\">Gravity Law</text>\n</svg>",
+   "n": "when are the reynolds and froude model laws applied, and why are distorted models used?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "33f35631": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Hydraulic Turbine Classification</text><g id=\"Impulse\"><path d=\"M40 60 L80 60 L90 40 L110 60 L150 60 L170 80 L230 80 L250 60 L270 60 L280 80 L320 80 L340 60\" fill=\"none\"/><text x=\"190\" y=\"70\">Pelton (Impulse)</text><text x=\"190\" y=\"55\">Jet hits</text><text x=\"180\" y=\"95\">Bucket</text></g><g id=\"Reaction\"><path d=\"M40 120 L100 120 L100 160 L140 160 L140 120 L200 120 L200 160 L240 160 L240 120 L300 120 L300 160 L340 160\" fill=\"none\"/><text x=\"190\" y=\"135\">Francis/Kaplan</text><text x=\"180\" y=\"175\">Flow through</text></g><g id=\"Axes\"><line x1=\"30\" y1=\"200\" x2=\"330\" y2=\"200\"/><line x1=\"30\" y1=\"200\" x2=\"30\" y2=\"40\"/><text x=\"25\" y=\"205\">Static Pressure</text><text x=\"335\" y=\"105\">Flow Direction</text></g></svg>",
+   "n": "on what basis are hydraulic turbines classified?",
+   "sub": "hydmach",
    "at": "2026-11-06"
   }
  }
