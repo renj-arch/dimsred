@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T10:16:06.671Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-06T10:36:06.214Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -605,8 +593,265 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T17:26:29.422Z",
+   "model": "qwen3:4b",
+   "totalFixes": 311,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 2
+    },
+    {
+     "agent": "questions",
+     "count": 0
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "figures",
+     "count": 0
+    },
+    {
+     "agent": "workflows",
+     "count": 17
+    },
+    {
+     "agent": "selfcheck",
+     "count": 1
+    },
+    {
+     "agent": "seo",
+     "count": 0
+    },
+    {
+     "agent": "perf",
+     "count": 62
+    },
+    {
+     "agent": "a11y",
+     "count": 217
+    },
+    {
+     "agent": "code",
+     "count": 12
+    }
+   ],
+   "details": [
+    {
+     "agent": "foresight",
+     "fixes": [
+      {
+       "page": "3d-globe.html",
+       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
+      },
+      {
+       "page": "test-globe.html",
+       "fix": "Duplicate title \"UPSC Atlas — 3D Globe\" (same as 3d-globe-test.html)"
+      }
+     ]
+    },
+    {
+     "agent": "workflows",
+     "fixes": [
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/author.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-figures.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/build-timeline.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/crawl-all.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/film-autopilot.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/film-preview-repair.yml",
+       "fix": "Added pull+push retry loop"
+      },
+      {
+       "page": ".github/workflows/film-repair.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/local-model.yml",
+       "fix": "Added memory limit to node steps"
+      },
+      {
+       "page": ".github/workflows/magazine-agent.yml",
+       "fix": "Added memory limit to node steps"
+      }
+     ]
+    },
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    },
+    {
+     "agent": "perf",
+     "fixes": [
+      {
+       "page": "3d-globe-test.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "3d-globe.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "adaptive.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "animal-husbandry-dairy-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "applied-sciences-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "ask.html",
+       "fix": "Left scripts synchronous — an inline block reads lib globals, defer would break the page",
+       "kind": "perf-note"
+      },
+      {
+       "page": "ask.html",
+       "fix": "WARNING: 1 inline script(s) >50KB — consider extracting to external file",
+       "kind": "perf-warn"
+      },
+      {
+       "page": "ayurveda-traditional-medicine-figures.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "bhopal-gas-tragedy-production.html",
+       "fix": "Added lazy loading to images"
+      },
+      {
+       "page": "computer-it-figures.html",
+       "fix": "Added lazy loading to images"
+      }
+     ]
+    },
+    {
+     "agent": "a11y",
+     "fixes": [
+      {
+       "page": "adaptive.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "archive.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "bhopal-gas-tragedy-production.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "current-affairs.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "dashboard.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "emergency-1975-production.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "figures.html",
+       "fix": "Added skip-to-content link"
+      },
+      {
+       "page": "lesson-abstract-algebra.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-acoustics.html",
+       "fix": "Added role/tabindex to clickable divs"
+      },
+      {
+       "page": "lesson-actuarial-science.html",
+       "fix": "Added role/tabindex to clickable divs"
+      }
+     ]
+    },
+    {
+     "agent": "code",
+     "fixes": [
+      {
+       "page": "index.html",
+       "fix": "Converted dead link to text: guides/index.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: guides/index.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: languages/slavic.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: languages/icelandic.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: languages/navajo.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: languages/uralic.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: languages/korean.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: languages/japanese.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: languages/chinese.html"
+      },
+      {
+       "page": "languages.html",
+       "fix": "Converted dead link to text: languages/arabic.html"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T17:21:14.531Z",
- "model": "qwen3.5:9b"
+ "lastRun": "2026-11-06T17:26:29.422Z",
+ "model": "qwen3:4b"
 }
