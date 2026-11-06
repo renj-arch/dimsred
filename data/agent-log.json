@@ -494,80 +494,33 @@
    ]
   },
   {
-   "at": "2026-11-06T11:24:13.194Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "at": "2026-11-06T11:48:50.577Z",
+   "model": "batiai/qwen3.8-27b:iq3",
+   "totalFixes": 3,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
+     "agent": "archive-writer",
+     "count": 3
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention to restore site integrity and content depth. BankFigures is the primary agent for resolving both critical faults and figure gaps, so it must lead. MainsFresh should follow to ensure daily fresh material generation once structural issues are addressed. Invention will be placed last as per rules since it produced 0 fixes in the last two runs, indicating a need for input stabilization before new ideas.",
-    "actions": [
-     "BankFigures",
-     "MainsFresh",
-     "Invention"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "archive-writer",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (740 total)",
-       "text": "Write the Darcy–Weisbach equation. | What is the friction factor for laminar pipe flow? | What does the Moody chart represent?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-06T11:39:31.251Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention; BankFigures is the only agent capable of resolving these specific content voids. MainsFresh produced zero fixes in the last two runs, so it will be starved to prioritize high-impact agents. Invention and MetaLearn are secondary here as we must fix broken data first.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
+       "page": "archive (Fisheries & Aquaculture / Fisheries & Aquaculture)",
+       "fix": "Explained \"What do you know about Garrett Nolan Crochet (; born June 21, 1999)?\"",
+       "text": "1) VERDICT: Garrett Nolan Crochet is an American professional baseball pitcher currently playing for the Boston Red Sox. 2) WHY: He is a Major League Baseball (MLB) athlete, having previously pitched for the Chicago White Sox. 3) TRAPS: Do not confuse his current team with his previous one; the question specifically asks for his current affiliation. 4) HOOK: Remember 'Red Sox' as his current home, not the White Sox. Exam-day trap: Ensure you identify him as a pitcher, not a batter, and confirm h"
+      },
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (743 total)",
-       "text": "Write the Colebrook equation. | Write the Blasius friction formula for smooth turbulent pipe flow. | What is the entrance loss at a sharp pipe entry?"
+       "page": "archive (Fisheries & Aquaculture / Fisheries & Aquaculture)",
+       "fix": "Explained \"Garrett Nolan Crochet (; born June 21, _____) is an American professional baseball pitcher\"",
+       "text": "1) VERDICT: 1999. 2) WHY: Garrett Crochet, born June 21, 1999, is an American professional baseball pitcher for the Boston Red Sox. 3) TRAPS: Confusing his birth year with draft years or other players' ages leads to incorrect options. 4) HOOK: Remember '99 for Crochet's birth year; exam-day trap is mixing up player birth years with debut years."
+      },
+      {
+       "page": "archive (Fisheries & Aquaculture / Fisheries & Aquaculture)",
+       "fix": "Explained \"Crochet played college baseball for the Tennessee Volunteers and was selected by the White\"",
+       "text": "VERDICT: 2020. WHY: Crochet was drafted by the White Sox in 2020 and called up that same month. TRAPS: Confusing draft year with debut year; missing the rare same-year promotion. HOOK: Remember '2020 draft, 2020 debut' — a historic fast track."
       }
      ]
     }
