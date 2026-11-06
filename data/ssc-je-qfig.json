@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T09:07:34.754Z",
-  "cursor": 843,
-  "built": 732
+  "updatedAt": "2026-11-06T09:46:56.957Z",
+  "cursor": 846,
+  "built": 734
  },
  "figs": {
   "2316121": {
@@ -4395,6 +4395,18 @@
   "f3609c08": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Control Volume around Weir Crest -->\n  <path d=\"M40,60 L180,60 L180,100 L40,100 Z\" />\n  <!-- Weir Plate (Vertical) -->\n  <rect x=\"170\" y=\"60\" width=\"20\" height=\"40\" />\n  <!-- Upstream Head H -->\n  <path d=\"M35,60 L40,60 L40,80 L35,80 Z\" />\n  <text x=\"30\" y=\"75\">H</text>\n  <!-- Velocity of Approach Va (Horizontal Arrow) -->\n  <line x1=\"45\" y1=\"90\" x2=\"165\" y2=\"90\" stroke-dasharray=\"4,2\" />\n  <text x=\"175\" y=\"94\">Vₐ</text>\n  <!-- Downstream Tail -->\n  <path d=\"M185,100 L320,100 L320,160 L185,160 Z\" />\n  <!-- Corrected Head H' (Total Energy Line) -->\n  <line x1=\"40\" y1=\"70\" x2=\"320\" y2=\"70\" stroke-dasharray=\"2,2\" />\n  <text x=\"330\" y=\"75\">H + Vₐ²/2g</text>\n  <!-- Labels -->\n  <text x=\"195\" y=\"85\">Weir Crest</text>\n  <text x=\"260\" y=\"145\">Tail Water</text>\n</svg>",
    "n": "what is the velocity-of-approach correction in weirs?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "95d18e08": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\" font-weight=\"bold\">Laminar (Orderly)</text><path d=\"M20,40 L340,40 M20,60 L340,60 M20,80 L340,80\"/><text x=\"15\" y=\"50\">Parallel Layers</text><text x=\"15\" y=\"70\">No Mixing</text><path d=\"M20,100 Q180,100 340,100 M20,120 Q180,120 340,120 M20,140 Q180,140 340,140\"/><text x=\"15\" y=\"110\">Smooth Flow</text><text x=\"15\" y=\"130\">Re < 2000</text><text x=\"10\" y=\"160\" font-weight=\"bold\">Turbulent (Chaotic)</text><path d=\"M20,170 L340,170 M20,190 L340,190 M20,210 L340,210 M100,180 Q120,160 140,180 T180,180\"/><path d=\"M250,170 Q270,190 290,170 T330,170\"/><text x=\"15\" y=\"180\">Fluctuations</text><text x=\"15\" y=\"200\">Strong Mixing</text><text x=\"15\" y=\"220\">Re > 4000</text></svg>",
+   "n": "distinguish laminar and turbulent flow.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "bd1bca8e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Reynolds Number (Re)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"75\">Inertia Force</text><text x=\"35\" y=\"90\">(ρV²)</text><text x=\"35\" y=\"110\">↑</text><text x=\"35\" y=\"125\">↑</text><text x=\"35\" y=\"140\">↑</text><text x=\"35\" y=\"155\">↑</text><text x=\"35\" y=\"170\">↑</text><line x1=\"40\" y1=\"60\" x2=\"80\" y2=\"60\"/><line x1=\"80\" y1=\"60\" x2=\"80\" y2=\"180\"/><text x=\"95\" y=\"75\">Viscous Force</text><text x=\"95\" y=\"90\">(μV/L)</text><text x=\"95\" y=\"110\">↓</text><text x=\"95\" y=\"125\">↓</text><text x=\"95\" y=\"140\">↓</text><text x=\"95\" y=\"155\">↓</text><text x=\"95\" y=\"170\">↓</text><line x1=\"80\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"180\" y=\"45\" text-anchor=\"middle\">Re = Inertia / Viscous</text></svg>",
+   "n": "define the reynolds number and its significance.",
    "sub": "fluids",
    "at": "2026-11-06"
   }
