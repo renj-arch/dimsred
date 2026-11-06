@@ -1,39 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T11:48:50.577Z",
-   "model": "batiai/qwen3.8-27b:iq3",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "archive-writer",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "archive-writer",
-     "fixes": [
-      {
-       "page": "archive (Fisheries & Aquaculture / Fisheries & Aquaculture)",
-       "fix": "Explained \"What do you know about Garrett Nolan Crochet (; born June 21, 1999)?\"",
-       "text": "1) VERDICT: Garrett Nolan Crochet is an American professional baseball pitcher currently playing for the Boston Red Sox. 2) WHY: He is a Major League Baseball (MLB) athlete, having previously pitched for the Chicago White Sox. 3) TRAPS: Do not confuse his current team with his previous one; the question specifically asks for his current affiliation. 4) HOOK: Remember 'Red Sox' as his current home, not the White Sox. Exam-day trap: Ensure you identify him as a pitcher, not a batter, and confirm h"
-      },
-      {
-       "page": "archive (Fisheries & Aquaculture / Fisheries & Aquaculture)",
-       "fix": "Explained \"Garrett Nolan Crochet (; born June 21, _____) is an American professional baseball pitcher\"",
-       "text": "1) VERDICT: 1999. 2) WHY: Garrett Crochet, born June 21, 1999, is an American professional baseball pitcher for the Boston Red Sox. 3) TRAPS: Confusing his birth year with draft years or other players' ages leads to incorrect options. 4) HOOK: Remember '99 for Crochet's birth year; exam-day trap is mixing up player birth years with debut years."
-      },
-      {
-       "page": "archive (Fisheries & Aquaculture / Fisheries & Aquaculture)",
-       "fix": "Explained \"Crochet played college baseball for the Tennessee Volunteers and was selected by the White\"",
-       "text": "VERDICT: 2020. WHY: Crochet was drafted by the White Sox in 2020 and called up that same month. TRAPS: Confusing draft year with debut year; missing the rare same-year promotion. HOOK: Remember '2020 draft, 2020 debut' — a historic fast track."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T12:00:44.924Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -817,8 +784,58 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-06T18:16:27.958Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The previous run completed a goal for 'mainsfresh' (fixes=0 implies it finished its specific task or was starved, but given the 80 figure gaps and 23 critical faults, we must prioritize content generation first). The state shows severe gaps in figures (80) and pending ideas (4), while papers and questions are absent. I will deploy 'Invention' to generate fresh material based on pending ideas, followed by 'BankFigures' to address the massive figure gap. 'MetaLearn' should run next to analyze cont",
+    "actions": [
+     "Invention",
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (771 total)",
+       "text": "State the Buckingham π theorem. | Give the physical significance of the Reynolds number. | Give the physical meanings of the Froude, Mach, Weber and Euler numbers."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T17:46:29.787Z",
+ "lastRun": "2026-11-06T18:16:27.958Z",
  "model": "qwen3.5:9b"
 }
