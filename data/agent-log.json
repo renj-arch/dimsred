@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-05T17:15:46.756Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as they block content consumption. MockPapers should follow to generate new exam materials since papers are absent, directly tackling the 'papers: false' state. MetaLearn is scheduled last because it produced zero fixes in the previous two runs and may be starved of inputs rather than broken.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (646 total)",
-       "text": "Define dynamic viscosity and give its unit. | What is kinematic viscosity? | What is a Newtonian fluid?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-05T17:36:23.745Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -587,8 +547,36 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-06T00:12:06.591Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-05T23:47:34.323Z",
+ "lastRun": "2026-11-06T00:12:06.591Z",
  "model": "qwen3.5:9b"
 }
