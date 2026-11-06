@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T16:26:04.734Z",
-  "cursor": 882,
-  "built": 767
+  "updatedAt": "2026-11-06T17:03:51.790Z",
+  "cursor": 885,
+  "built": 769
  },
  "figs": {
   "2316121": {
@@ -4605,6 +4605,18 @@
   "b221eb71": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Specific Energy (E) vs Depth (y)</text><line x1=\"40\" y1=\"160\" x2=\"320\" y2=\"160\"/><text x=\"35\" y=\"170\">Total</text><text x=\"35\" y=\"155\">Energy</text><line x1=\"40\" y1=\"160\" x2=\"40\" y2=\"40\"/><text x=\"30\" y=\"90\">E</text><path d=\"M 40 160 L 40 140 Q 80 120 120 140 T 160 160\"/><text x=\"105\" y=\"130\">Critical Depth (yc)</text><line x1=\"160\" y1=\"160\" x2=\"160\" y2=\"40\"/><text x=\"170\" y=\"90\">y</text><path d=\"M 160 40 L 320 40 Q 280 80 240 40 T 200 40\"/><text x=\"250\" y=\"25\">Minimum E at yc</text><circle cx=\"160\" cy=\"40\" r=\"3\"/></svg>",
    "n": "define specific energy and critical depth.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "9edd691f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"280\" height=\"90\" rx=\"5\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\">Froude Number (Fr)</text><line x1=\"60\" y1=\"130\" x2=\"300\" y2=\"130\"/><text x=\"70\" y=\"145\">Subcritical</text><text x=\"180\" y=\"145\">Critical</text><text x=\"290\" y=\"145\">Supercritical</text><line x1=\"60\" y1=\"130\" x2=\"170\" y2=\"130\"/><line x1=\"170\" y1=\"130\" x2=\"180\" y2=\"130\" stroke-dasharray=\"4 2\"/><line x1=\"180\" y1=\"130\" x2=\"290\" y2=\"130\"/><text x=\"175\" y=\"165\">Fr = V/√(gy)</text><path d=\"M 60 130 L 60 180 L 170 180 L 170 130 Z\" fill=\"none\" stroke=\"#222\"/><path d=\"M 180 130 L 180 180\" stroke=\"#222\"/><path d=\"M 290 130 L 290 180\" stroke=\"#222\"/><text x=\"145\" y=\"175\">Tranquil</text><text x=\"180\" y=\"175\">Critical</text><text x=\"265\" y=\"175\">Rapid</text></svg>",
+   "n": "how is open-channel flow classified by the froude number?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "f0b833cb": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">DEPENDENT VARIABLE (V)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"180\" y=\"55\" text-anchor=\"middle\">= k D<sup>a</sup> ρ<sup>b</sup> μ<sup>c</sup></text><line x1=\"40\" y1=\"90\" x2=\"320\" y2=\"90\"/><text x=\"80\" y=\"95\">D (Diameter)</text><text x=\"160\" y=\"95\">ρ (Density)</text><text x=\"240\" y=\"95\">μ (Viscosity)</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\"/><text x=\"80\" y=\"125\">k (Constant)</text><text x=\"160\" y=\"125\">a, b, c (Exponents)</text><line x1=\"40\" y1=\"150\" x2=\"320\" y2=\"150\"/><text x=\"80\" y=\"155\">Found by matching</text><text x=\"160\" y=\"155\">dimensions (M, L, T)</text></svg>",
+   "n": "what is the rayleigh method of dimensional analysis?",
    "sub": "fluids",
    "at": "2026-11-06"
   }

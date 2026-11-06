@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T09:56:50.774Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical gaps in figures (80) and open faults (81), while papers, questions, syllabus, and sidecar files are all missing. BankFigures is the only agent producing output recently; others have been idle for three consecutive runs. I will prioritize BankFigures to fix broken diagrams immediately, then deploy Invention to generate the missing foundational content (papers/questions/syllabus) since no other agents can fill these specific gaps without new creative input.",
-    "actions": [
-     "BankFigures",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (734 total)",
-       "text": "Give typical discharge coefficients of common devices. | Distinguish laminar and turbulent flow. | Define the Reynolds number and its significance."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T10:16:06.671Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -579,8 +544,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-06T17:21:14.531Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults and figure gaps are the highest priority to prevent user churn and ensure content completeness. MainsFresh has produced zero fixes in the last two runs despite being active, indicating it is likely starved of input rather than broken; therefore, it will be placed last in the queue after the critical agents have addressed the immediate gaps.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (769 total)",
+       "text": "How is open-channel flow classified by the Froude number? | State the principle of dimensional homogeneity. | What is the Rayleigh method of dimensional analysis?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "5 fresh mock questions on Refrigeration & Air Conditioning (360 in pool)",
+       "text": "Refrigeration & Air Conditioning"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T16:52:01.923Z",
+ "lastRun": "2026-11-06T17:21:14.531Z",
  "model": "qwen3.5:9b"
 }
