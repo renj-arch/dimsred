@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-06T09:46:56.957Z",
-  "cursor": 846,
-  "built": 734
+  "updatedAt": "2026-11-06T10:25:40.539Z",
+  "cursor": 849,
+  "built": 737
  },
  "figs": {
   "2316121": {
@@ -4407,6 +4407,24 @@
   "bd1bca8e": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Reynolds Number (Re)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"75\">Inertia Force</text><text x=\"35\" y=\"90\">(ρV²)</text><text x=\"35\" y=\"110\">↑</text><text x=\"35\" y=\"125\">↑</text><text x=\"35\" y=\"140\">↑</text><text x=\"35\" y=\"155\">↑</text><text x=\"35\" y=\"170\">↑</text><line x1=\"40\" y1=\"60\" x2=\"80\" y2=\"60\"/><line x1=\"80\" y1=\"60\" x2=\"80\" y2=\"180\"/><text x=\"95\" y=\"75\">Viscous Force</text><text x=\"95\" y=\"90\">(μV/L)</text><text x=\"95\" y=\"110\">↓</text><text x=\"95\" y=\"125\">↓</text><text x=\"95\" y=\"140\">↓</text><text x=\"95\" y=\"155\">↓</text><text x=\"95\" y=\"170\">↓</text><line x1=\"80\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"180\" y=\"45\" text-anchor=\"middle\">Re = Inertia / Viscous</text></svg>",
    "n": "define the reynolds number and its significance.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "f78ff959": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"20\" y1=\"190\" x2=\"340\" y2=\"190\"/><text x=\"180\" y=\"205\" text-anchor=\"middle\">Re</text><line x1=\"20\" y1=\"170\" x2=\"20\" y2=\"190\"/><text x=\"10\" y=\"180\">4000</text><line x1=\"20\" y1=\"130\" x2=\"20\" y2=\"150\"/><text x=\"10\" y=\"140\">2000</text><path d=\"M 60 190 L 60 170 L 80 170 L 80 130 L 100 130 L 100 190\"/><text x=\"50\" y=\"145\">Laminar</text><path d=\"M 260 190 L 260 170 L 280 170 L 280 130 L 300 130 L 300 190\"/><text x=\"250\" y=\"145\">Turbulent</text><path d=\"M 140 190 L 140 170 L 160 170 L 160 130 L 180 130 L 180 190\"/><text x=\"130\" y=\"145\">Transition</text><circle cx=\"20\" cy=\"190\" r=\"3\"/><circle cx=\"340\" cy=\"190\" r=\"3\"/></svg>",
+   "n": "what is the critical reynolds number range for pipe flow?",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "dd5c555c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><text x=\"180\" y=\"70\" text-anchor=\"middle\">Δp (Pressure drop)</text><circle cx=\"40\" cy=\"80\" r=\"3\"/><circle cx=\"320\" cy=\"80\" r=\"3\"/><line x1=\"60\" y1=\"60\" x2=\"60\" y2=\"100\"/><text x=\"50\" y=\"80\" text-anchor=\"end\">d (Diameter)</text><path d=\"M 40 80 L 320 80\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">L (Length)</text><path d=\"M 40 80 Q 180 120 320 80\" fill=\"none\"/><text x=\"180\" y=\"145\" text-anchor=\"middle\">Flow (Q)</text><text x=\"20\" y=\"160\">Hagen-Poiseuille Law</text></svg>",
+   "n": "state the hagen–poiseuille law.",
+   "sub": "fluids",
+   "at": "2026-11-06"
+  },
+  "ad0d2a93": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Parabolic Velocity Profile</text><path d=\"M40,100 Q180,20 320,100\" fill=\"none\" stroke=\"#222\"/><circle cx=\"180\" cy=\"20\" r=\"2\" fill=\"#222\"/><text x=\"175\" y=\"25\">V(max)</text><circle cx=\"180\" cy=\"100\" r=\"2\" fill=\"#222\"/><text x=\"175\" y=\"105\">V(mean) = V(max)/2</text><path d=\"M40,100 L320,100\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"125\" text-anchor=\"middle\">Pipe Axis</text></svg>",
+   "n": "give the head loss and velocity relation for laminar pipe flow.",
    "sub": "fluids",
    "at": "2026-11-06"
   }

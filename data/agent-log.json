@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T03:11:15.440Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-06T03:24:32.695Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -579,8 +567,53 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-06T10:36:06.214Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken diagrams. Since papers/syllabus files are missing, MetaLearn is essential next to generate foundational study materials. MainsFresh follows to ensure daily content freshness. Invention goes last as it is a lower-priority creative task and its agent produced 0 fixes in the previous two runs.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MainsFresh",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (737 total)",
+       "text": "What is the critical Reynolds number range for pipe flow? | State the Hagen–Poiseuille law. | Give the head loss and velocity relation for laminar pipe flow."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-06T10:16:06.671Z",
+ "lastRun": "2026-11-06T10:36:06.214Z",
  "model": "qwen3.5:9b"
 }
