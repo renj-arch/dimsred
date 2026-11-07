@@ -1,49 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T20:52:13.496Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 6,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 6
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      },
-      {
-       "page": "upsc/mains/answer-writing.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/mains/index.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/mains/interview.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/mains/language.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/mains/optional.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T23:04:38.794Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -705,8 +662,63 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T05:52:53.494Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (812 total)",
+       "text": "Write the work done per kilogram in a Francis turbine. | What is the condition for maximum efficiency in a Francis turbine? | Write the hydraulic efficiency of a Francis turbine."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw5zlo8l (gs3, 15 marks): India has pioneered the concept of Digital Public Infrastructure (DPI) with its stack of UPI, Aadhaar, and DIKSHA. Criti",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T05:20:35.041Z",
+ "lastRun": "2026-11-07T05:52:53.494Z",
  "model": "qwen3.5:9b"
 }
