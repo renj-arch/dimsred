@@ -75,6 +75,9 @@ function assemble(examKey, paperId, date) {
   const blueprints = bp.load(ROOT);
   const examDef = bp.exam(blueprints, examKey);
   const paper = bp.paper(blueprints, examKey, paperId);
+  if (paper.mcqLane === false || paper.mode === 'descriptive' || paper.mode === 'mixed') {
+    throw new Error('paper "' + paper.id + '" is ' + (paper.mode || 'not an MCQ paper') + '; the full-paper MCQ lane cannot assemble it');
+  }
   const bank = readJson(path.join(BANK_DIR, examKey + '.json'), null);
   if (!bank) throw new Error('missing bank for ' + examKey);
   const random = rng(examKey + '|' + paper.id + '|' + date);

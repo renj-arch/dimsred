@@ -1,6 +1,6 @@
 {
   "meta": {
-    "about": "Real exam paper structures. Each paper lists its sections with question counts, marks share, duration and negative marking, plus a source line. 'provisionalSplit' marks a practice distribution that is not an official section split (UPSC GS1 has no official internal sections). 'provisional' marks a paper whose section counts could not be checked against an official source at the date shown.",
+    "about": "Real exam paper structures. Each paper lists its sections with question counts, marks share, duration and negative marking, plus a source line. 'provisionalSplit' marks a practice distribution that is not an official section split (UPSC GS1 has no official internal sections). 'provisional' marks a paper whose section counts could not be checked against an official source at the date shown. 'mode' is 'mcq' by default; 'descriptive' and 'mixed' papers set 'mcqLane: false' because the MCQ full-paper lane cannot assemble them. 'daily: false' keeps a paper out of daily-practice rotation until its bank sections exist.",
     "updatedAt": "2026-11-07",
     "verifiedAt": "2026-11-07"
   },
@@ -17,6 +17,19 @@
           { "name": "English Language", "count": 25, "marks": 50, "bank": ["English Language", "English Comprehension"] }
         ],
         "source": "SSC CGL Tier-I: 100 questions, 200 marks, 60 minutes, 25 questions in each of Reasoning, GA, Quant and English; negative 0.50 per wrong answer."
+      }, {
+        "id": "tier2", "name": "Tier II Paper-I", "total": 150, "marks": 450, "duration": 150, "negative": 1,
+        "negativeNote": "-1 mark per wrong answer in Sections I, II and III; Section-III (Computer Knowledge) and Section-IV (DEST) are qualifying",
+        "daily": false,
+        "sections": [
+          { "name": "Mathematical Abilities", "count": 30, "marks": 90, "bank": ["Quantitative Aptitude", "Mathematics"] },
+          { "name": "Reasoning and General Intelligence", "count": 30, "marks": 90, "bank": ["General Intelligence & Reasoning", "General Intelligence"] },
+          { "name": "English Language and Comprehension", "count": 45, "marks": 135, "bank": ["English Language", "English Comprehension"] },
+          { "name": "General Awareness", "count": 25, "marks": 75, "bank": ["General Awareness"] },
+          { "name": "Computer Knowledge", "count": 20, "marks": 60, "bank": ["Computer Knowledge"], "qualifying": true }
+        ],
+        "note": "Tier-II Paper-I runs in two sessions: Session-I (2 hours 15 minutes) has Mathematical Abilities, Reasoning, English, General Awareness and Computer Knowledge; Session-II (15 minutes) is the Data Entry Speed Test, one qualifying task. Computer Knowledge is mandatory but qualifying.",
+        "source": "SSC CGL 2026 notification, para 13.9: Tier-II Paper-I, 150 questions, 450 marks; Maths 30, Reasoning 30, English 45, GA 25, Computer Knowledge 20; negative 1 mark; Section-III and DEST qualifying."
       }]
     },
     "rbi": {
@@ -31,6 +44,20 @@
           { "name": "Quantitative Aptitude", "count": 30, "marks": 30, "bank": ["Quantitative Aptitude"] }
         ],
         "source": "RBI Grade B Phase I: 200 questions, 200 marks, 120 minutes; GA 80, Reasoning 60, English 30, Quant 30; negative 0.25."
+      }, {
+        "id": "phase2", "name": "Phase II", "total": 71, "marks": 300, "duration": 330, "negative": 0,
+        "negativeNote": "No negative marking is stated in the Phase-II scheme",
+        "mode": "mixed", "mcqLane": false, "daily": false,
+        "sections": [
+          { "name": "Economic and Social Issues - Objective", "count": 30, "marks": 50, "bank": ["Economic and Social Issues", "General Awareness"] },
+          { "name": "Economic and Social Issues - Descriptive", "count": 4, "marks": 50, "bank": [], "descriptive": true },
+          { "name": "English (Writing Skills)", "count": 3, "marks": 100, "bank": [], "descriptive": true },
+          { "name": "General Finance and Management - Objective", "count": 30, "marks": 50, "bank": ["General Finance and Management", "Finance", "Management"] },
+          { "name": "General Finance and Management - Descriptive", "count": 4, "marks": 50, "bank": [], "descriptive": true }
+        ],
+        "durationNote": "120 minutes for ESI, 90 for English Writing Skills and 120 for General Finance and Management",
+        "note": "Paper-I and Paper-III each set 30 objective questions (50 marks) plus 6 descriptive questions of which 4 are attempted (50 marks). Paper-II sets 3 descriptive questions (100 marks). Interview is 75 marks. The paper is mixed and cannot be assembled by the MCQ lane.",
+        "source": "RBI Grade B (DR) General PY 2026 notification, Appendix-II: Phase II, 300 marks; ESI 100 (30 objective/50 + 4 descriptive/50), English Writing Skills 100 (3 descriptive), General Finance and Management 100 (30 objective/50 + 4 descriptive/50); interview 75."
       }]
     },
     "ibps-po": {
@@ -86,6 +113,31 @@
           { "name": "Language II", "count": 30, "marks": 30, "bank": ["Language"] }
         ],
         "source": "CTET Paper I: 150 questions, 150 marks, 150 minutes; CDP 30, Mathematics 30, EVS 30, Language I 30, Language II 30; no negative marking."
+      }, {
+        "id": "paper2", "name": "Paper II (Classes VI-VIII)", "total": 150, "marks": 150, "duration": 150, "negative": 0,
+        "negativeNote": "No negative marking",
+        "daily": false,
+        "sections": [
+          { "name": "Child Development & Pedagogy", "count": 30, "marks": 30, "bank": ["Child Development & Pedagogy"] },
+          { "name": "Mathematics", "count": 30, "marks": 30, "bank": ["Mathematics", "Quantitative Aptitude"] },
+          { "name": "Science", "count": 30, "marks": 30, "bank": ["Science"] },
+          { "name": "Language I", "count": 30, "marks": 30, "bank": ["Language"] },
+          { "name": "Language II", "count": 30, "marks": 30, "bank": ["Language"] }
+        ],
+        "note": "Official Paper II presents Mathematics and Science as one 60-mark section (30 marks each) for the Mathematics and Science teacher. This practice paper lists the two halves separately so each is drawn from its own bank.",
+        "source": "CTET September 2026 Information Bulletin, para 7: Paper II, 150 MCQs, 150 marks, 2.5 hours; CDP 30, Mathematics and Science 60 (30+30), Language I 30, Language II 30; no negative marking."
+      }, {
+        "id": "paper2-social", "name": "Paper II - Social Studies/Social Science", "total": 150, "marks": 150, "duration": 150, "negative": 0,
+        "negativeNote": "No negative marking",
+        "daily": false,
+        "sections": [
+          { "name": "Child Development & Pedagogy", "count": 30, "marks": 30, "bank": ["Child Development & Pedagogy"] },
+          { "name": "Social Studies/Social Science", "count": 60, "marks": 60, "bank": ["Social Studies", "Social Science"] },
+          { "name": "Language I", "count": 30, "marks": 30, "bank": ["Language"] },
+          { "name": "Language II", "count": 30, "marks": 30, "bank": ["Language"] }
+        ],
+        "note": "Alternative to the Mathematics and Science variant, for the Social Studies/Social Science teacher. The bank has no Social Studies pool yet, so the full-paper lane reports a gap until model fill adds one.",
+        "source": "CTET September 2026 Information Bulletin, para 7: Paper II Social Studies/Social Science variant, 150 MCQs, 150 marks, 2.5 hours; CDP 30, Social Studies/Social Science 60, Language I 30, Language II 30; no negative marking."
       }]
     },
     "jee": {
@@ -100,6 +152,28 @@
         ],
         "note": "Each subject has 20 MCQs + 5 numerical-answer questions. This bank stores MCQ form only, so the paper is assembled as 25 MCQs per subject.",
         "source": "JEE Main Paper 1: 75 questions, 300 marks, 180 minutes; 25 per subject (20 MCQ + 5 numerical); +4/-1."
+      }, {
+        "id": "paper2a", "name": "Paper 2A (B.Arch)", "total": 77, "marks": 400, "duration": 180, "negative": 1,
+        "negativeNote": "-1 mark per wrong answer in Mathematics and Aptitude; Drawing Test has no negative marking",
+        "mode": "mixed", "mcqLane": false, "daily": false,
+        "sections": [
+          { "name": "Mathematics", "count": 25, "marks": 100, "bank": ["Mathematics"] },
+          { "name": "Aptitude Test", "count": 50, "marks": 200, "bank": ["Aptitude", "General Aptitude"] },
+          { "name": "Drawing Test", "count": 2, "marks": 100, "bank": [], "descriptive": true }
+        ],
+        "note": "Part-III Drawing is a pen-and-paper descriptive test of two questions worth 100 marks, so the MCQ lane cannot assemble this paper. Mathematics also has 5 numerical-answer questions (20 MCQ + 5 numerical).",
+        "source": "JEE Main 2027 Information Bulletin, para 2.4: Paper 2A, 77 questions, 400 marks, 3 hours; Mathematics 25 (20 MCQ + 5 numerical) 100, Aptitude 50/200, Drawing 2/100."
+      }, {
+        "id": "paper2b", "name": "Paper 2B (B.Planning)", "total": 100, "marks": 400, "duration": 180, "negative": 1,
+        "negativeNote": "-1 mark per wrong answer (+4 correct)",
+        "daily": false,
+        "sections": [
+          { "name": "Mathematics", "count": 25, "marks": 100, "bank": ["Mathematics"] },
+          { "name": "Aptitude Test", "count": 50, "marks": 200, "bank": ["Aptitude", "General Aptitude"] },
+          { "name": "Planning-Based Questions", "count": 25, "marks": 100, "bank": ["Planning", "Planning-Based Questions"] }
+        ],
+        "note": "Mathematics has 20 MCQs + 5 numerical-answer questions in the real paper. This bank stores MCQ form only, so the paper is assembled as 25 MCQs.",
+        "source": "JEE Main 2027 Information Bulletin, para 2.4: Paper 2B, 100 questions, 400 marks, 3 hours; Mathematics 25 (20 MCQ + 5 numerical) 100, Aptitude 50/200, Planning 25/100."
       }]
     },
     "neet": {
@@ -163,6 +237,28 @@
             { "name": "CSAT", "count": 80, "marks": 200, "bank": ["CSAT"] }
           ],
           "source": "UPSC CSE Prelims CSAT Paper II: 80 questions, 200 marks, 2 hours; qualifying at 33%; negative 1/3."
+        },
+        {
+          "id": "mains", "name": "Civil Services (Main) Examination - Merit Papers", "total": 7, "marks": 1750, "duration": 180, "negative": 0,
+          "negativeNote": "No negative marking; all papers are descriptive",
+          "mode": "descriptive", "mcqLane": false, "daily": false,
+          "sections": [
+            { "name": "Essay", "count": 1, "marks": 250, "bank": [], "descriptive": true },
+            { "name": "General Studies-I", "count": 1, "marks": 250, "bank": [], "descriptive": true },
+            { "name": "General Studies-II", "count": 1, "marks": 250, "bank": [], "descriptive": true },
+            { "name": "General Studies-III", "count": 1, "marks": 250, "bank": [], "descriptive": true },
+            { "name": "General Studies-IV", "count": 1, "marks": 250, "bank": [], "descriptive": true },
+            { "name": "Optional Subject - Paper 1", "count": 1, "marks": 250, "bank": [], "descriptive": true },
+            { "name": "Optional Subject - Paper 2", "count": 1, "marks": 250, "bank": [], "descriptive": true }
+          ],
+          "qualifyingPapers": [
+            { "name": "Paper A - Indian Language", "marks": 300 },
+            { "name": "Paper B - English", "marks": 300 }
+          ],
+          "interviewMarks": 275,
+          "grandTotal": 2025,
+          "note": "Nine descriptive papers of 3 hours each. Paper A (Indian Language) and Paper B (English) are qualifying at 300 marks each and are not counted in the merit total. The seven merit papers total 1750 marks; the interview is 275, for a grand total of 2025. The MCQ full-paper lane cannot assemble this stage.",
+          "source": "UPSC CSE 2026 notification, para 3: Mains has 9 conventional essay papers; Paper A Indian Language 300 and Paper B English 300 (qualifying), Essay 250, GS-I to GS-IV 250 each, Optional 1 and 2 250 each; written 1750, interview 275, grand total 2025; each paper 3 hours."
         }
       ]
     },
