@@ -1,60 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T13:36:53.147Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 4,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 4
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    },
-    {
-     "agent": "questioncats",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 226504 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 48 overlapping subtopics into correct categories"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Converted 79 fill-in-blank questions to proper Q&A"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Updated 58 question files"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T13:58:23.109Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 57,
@@ -768,8 +714,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T20:04:25.340Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures is the only agent with recent output, so it must lead to clear immediate debt. MetaLearn and Invention have produced zero fixes in the last two runs and will be placed at the end of the action list as they may simply be starved of inputs while the system focuses on high-impact content generation.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (887 total)",
+       "text": "Why is pump specific speed based on discharge and turbine specific speed on powe | State the working principle and main parts of a reciprocating pump. | Write the discharge of a single-acting reciprocating pump."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T19:32:22.813Z",
+ "lastRun": "2026-11-07T20:04:25.340Z",
  "model": "qwen3.5:9b"
 }

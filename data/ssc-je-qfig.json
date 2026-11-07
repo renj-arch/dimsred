@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T19:15:16.347Z",
-  "cursor": 1005,
-  "built": 884
+  "updatedAt": "2026-11-07T19:44:49.567Z",
+  "cursor": 1008,
+  "built": 887
  },
  "figs": {
   "2316121": {
@@ -5307,6 +5307,24 @@
   "c05e6611": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Vane Passage</text><path d=\"M 60 140 L 300 140\" /><path d=\"M 60 140 L 90 100 L 120 140\" /><path d=\"M 300 140 L 270 100 L 240 140\" /><circle cx=\"90\" cy=\"100\" r=\"5\" /><circle cx=\"270\" cy=\"100\" r=\"5\" /><path d=\"M 90 100 Q 180 60 270 100\" fill=\"none\" stroke-dasharray=\"4,2\" /><text x=\"180\" y=\"35\" text-anchor=\"middle\">Slip Stream</text><path d=\"M 90 100 L 90 160\" /><path d=\"M 270 100 L 270 160\" /><text x=\"85\" y=\"145\" text-anchor=\"end\">Vw2 (Ideal)</text><text x=\"265\" y=\"145\" text-anchor=\"start\">Vw2 (Real)</text><path d=\"M 90 100 L 130 100\" stroke-dasharray=\"2,2\" /><path d=\"M 270 100 L 230 100\" stroke-dasharray=\"2,2\" /><text x=\"180\" y=\"195\" text-anchor=\"middle\">Slip reduces whirl velocity</text></svg>",
    "n": "how does circulatory slip reduce the head of a pump below the euler value?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "7147e462": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Pump vs Turbine Specific Speed</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"40\" y=\"50\">Input Power (P)</text><text x=\"320\" y=\"50\">Output Power (P)</text><path d=\"M 80 60 L 100 60 L 100 90 L 80 90 Z\"/><text x=\"70\" y=\"80\">Flow (Q)</text><path d=\"M 260 60 L 280 60 L 280 90 L 260 90 Z\"/><text x=\"250\" y=\"80\">Power (P)</text><line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\"/><text x=\"40\" y=\"100\">Specific Speed Basis</text><path d=\"M 80 110 L 100 110 L 100 140 L 80 140 Z\"/><text x=\"70\" y=\"130\">√Q (Flow)</text><path d=\"M 260 110 L 280 110 L 280 140 L 260 140 Z\"/><text x=\"250\" y=\"130\">√P (Power)</text></svg>",
+   "n": "why is pump specific speed based on discharge and turbine specific speed on power?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "ceb0401c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Cylinder -->\n  <rect x=\"80\" y=\"40\" width=\"200\" height=\"140\" rx=\"5\"/>\n  <!-- Piston -->\n  <rect x=\"130\" y=\"60\" width=\"100\" height=\"20\"/>\n  <!-- Connecting Rod -->\n  <line x1=\"230\" y1=\"70\" x2=\"280\" y2=\"150\" stroke-width=\"2\"/>\n  <!-- Crank -->\n  <circle cx=\"280\" cy=\"150\" r=\"15\"/>\n  <line x1=\"280\" y1=\"150\" x2=\"300\" y2=\"170\" stroke-width=\"2\"/>\n  <!-- Suction Valve -->\n  <circle cx=\"140\" cy=\"60\" r=\"5\"/>\n  <text x=\"135\" y=\"55\" font-size=\"10\">Suction</text>\n  <!-- Delivery Valve -->\n  <circle cx=\"260\" cy=\"180\" r=\"5\"/>\n  <text x=\"255\" y=\"195\" font-size=\"10\">Delivery</text>\n  <!-- Pipes -->\n  <path d=\"M 40 180 L 80 180\" stroke-width=\"3\"/>\n  <path d=\"M 320 180 L 280 180\" stroke-width=\"3\"/>\n  <!-- Labels -->\n  <text x=\"20\" y=\"120\">Cylinder</text>\n  <text x=\"20\" y=\"145\">Piston</text>\n  <text x=\"20\" y=\"170\">Valves & Pipes</text>\n  <!-- Principle Arrow -->\n  <path d=\"M 130 60 L 130 80\" stroke-dasharray=\"2,2\"/>\n  <text x=\"115\" y=\"75\">Suck/Force</text>\n</svg>",
+   "n": "state the working principle and main parts of a reciprocating pump.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "3ca1fffc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"35\" text-anchor=\"middle\">Piston (Area A)</text><rect x=\"80\" y=\"45\" width=\"200\" height=\"10\"/><line x1=\"80\" y1=\"55\" x2=\"280\" y2=\"55\" stroke-dasharray=\"3,3\"/><text x=\"180\" y=\"75\" text-anchor=\"middle\">Stroke L</text><line x1=\"80\" y1=\"65\" x2=\"80\" y2=\"145\" stroke-dasharray=\"3,3\"/><text x=\"70\" y=\"105\" text-anchor=\"end\">L</text><rect x=\"80\" y=\"145\" width=\"200\" height=\"10\"/><line x1=\"80\" y1=\"155\" x2=\"280\" y2=\"155\" stroke-dasharray=\"3,3\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">N rpm</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">Q = A · L · N / 60</text></svg>",
+   "n": "write the discharge of a single-acting reciprocating pump.",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
