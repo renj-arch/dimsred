@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T14:42:14.630Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "We have 81 open faults and 23 critical ones; MainsFresh produced zero fixes in the last two runs so it must be moved to the end of the queue while we starve it temporarily. BankFigures is currently active and effective, so we prioritize fixing figure gaps (80) and critical content issues first.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (759 total)",
-       "text": "How does streamlining reduce drag? | State Stokes law for a sphere. | What is the terminal velocity of a falling sphere?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T15:11:34.075Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -852,8 +802,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T00:43:41.138Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual assets blocking study flow. Since papers/syllabus files are absent, MetaLearn should immediately generate foundational content to fill the 'false' file states before attempting complex mock exams or invention tasks. Invention agents produced 0 for the last two runs and will be placed last in this sequence as per starvation rules.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (783 total)",
+       "text": "What is governing of a turbine? | What is a Pelton wheel? | Name the main parts of a Pelton wheel."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T00:10:34.208Z",
+ "lastRun": "2026-11-07T00:43:41.138Z",
  "model": "qwen3.5:9b"
 }
