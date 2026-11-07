@@ -1,30 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T09:06:43.539Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw66iy1f (gs3, 15 marks): India's strategic pivot towards critical minerals like lithium, cobalt and rare earth elements is reshaping its geopolit",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T09:20:34.277Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -740,8 +716,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T16:59:31.962Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visuals and missing data. Since papers, questions, syllabus, and sidecars are all absent, Invention is required next to generate the foundational content needed for MockPapers and ExamPatterns. MetaLearn will follow to optimize the generation pipeline once raw content exists. Agents producing 0 in recent runs (Invention, MetaLearn) are moved last only after critical infrastructure gap",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (866 total)",
+       "text": "Write the discharge through a centrifugal pump impeller. | Define the coefficient of discharge of a pump impeller. | Define the hydraulic efficiency of a centrifugal pump."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Strength of Materials (360 in pool)",
+       "text": "Strength of Materials"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T16:28:06.780Z",
+ "lastRun": "2026-11-07T16:59:31.962Z",
  "model": "qwen3.5:9b"
 }
