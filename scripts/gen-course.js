@@ -223,7 +223,7 @@ function generateExam(examKey) {
   for (var mi = 0; mi < modKeys.length; mi++) {
     var mk = modKeys[mi];
     var mod = modules[mk];
-    idx += '        <div class="module-card">\n';
+    idx += '        <div class="module-card" id="' + esc(mk) + '">\n';
     idx += '            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">\n';
     idx += '                <span style="font-size:1.4em">' + mod.icon + '</span>\n';
     idx += '                <div class="m-title" style="color:' + mod.color + '">Module ' + mod.num + ': ' + esc(mod.name) + '</div>\n';
