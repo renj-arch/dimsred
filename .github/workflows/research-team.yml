@@ -1,0 +1,152 @@
+name: Research Team (original solutions)
+
+# A scientist solves each exam question, an inventor finds the fastest valid
+# method, and a verifier solves it again. A method is published only when the
+# two independent solves agree. Novelty is stated as "original to this lab";
+# no world-first claim is made.
+on:
+  schedule:
+    - cron: '0 15 * * *'
+  workflow_dispatch:
+    inputs:
+      limit:
+        description: 'Questions to investigate this run'
+        required: false
+        default: '6'
+      model:
+        description: 'Ollama model tag'
+        required: false
+        default: 'qwen3.5:9b'
+      exams:
+        description: 'Comma-separated exam folders (blank = all)'
+        required: false
+        default: ''
+
+concurrency:
+  group: research-team
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - name: Create swap (16GB)
+        run: bash scripts/ci-make-swap.sh
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL --max-time 120 -o /tmp/ollama-install.sh https://ollama.com/install.sh
+          sudo sh /tmp/ollama-install.sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      - name: Cache Ollama models
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-research-v1
+          restore-keys: |
+            ollama-${{ runner.os }}-mid-
+
+      - name: Start Ollama server
+        run: |
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && { echo "Ollama ready after ${i}s"; break; }
+            sleep 1
+          done
+
+      - name: Pull + warm the model
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+
+      - name: Investigate questions
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+        run: |
+          ARGS="--limit=${{ inputs.limit || '6' }} --max-minutes=110"
+          if [ -n "${{ inputs.exams }}" ]; then ARGS="$ARGS --exams=${{ inputs.exams }}"; fi
+          node scripts/research-run.js $ARGS
+
+      - name: Rebuild the research page
+        if: always()
+        run: node scripts/build-research-page.js
+
+      - name: Rebuild affected paper pages
+        if: always()
+        run: |
+          if [ -f data/research-build-targets.json ]; then
+            node -e "const t=require('./data/research-build-targets.json');console.log((t.slugs||[]).join('\n'))" | while read -r slug; do
+              [ -n "$slug" ] || continue
+              echo "rebuilding $slug"
+              node scripts/build-full-papers.js --slug="$slug" || echo "::warning::could not rebuild $slug"
+            done
+          fi
+          node scripts/generate-sitemap.js || true
+
+      - name: Commit and push
+        if: always()
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/research-solutions.json data/research-build-targets.json research-team.html
+          git add -A -- '*mock-tests/*.html' sitemap.xml 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "No new research to publish"
+            exit 0
+          fi
+          git commit -m "research: original methods $(date +'%Y-%m-%d')"
+          pushed=""
+          for i in 1 2 3; do
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed"; break; fi
+            echo "push attempt $i failed, retrying..."
+            sleep 5
+          done
+          if [ -z "$pushed" ]; then
+            echo "::error::research methods could not be pushed to main"
+            exit 1
+          fi
+
+      - name: Report
+        if: always()
+        run: |
+          node -e "const s=require('./data/research-solutions.json');const a=(s.solutions||[]);console.log('entries='+a.length+' published='+a.filter(x=>x.status==='published').length+' review='+a.filter(x=>x.status==='review').length)" 2>/dev/null || echo "no research data yet"

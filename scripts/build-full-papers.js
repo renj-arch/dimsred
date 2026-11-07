@@ -2,10 +2,13 @@
 // with the real pattern header, timer, answer key and explanations.
 const fs = require('fs');
 const path = require('path');
+const researchStore = require('./lib/research-store');
 
 const ROOT = path.resolve(__dirname, '..');
 const DATA_DIR = path.join(ROOT, 'papers-data');
 const BASE = 'https://vlymbooq.qzz.io';
+let RESEARCH = {};
+let SLUG = '';
 
 function esc(s) {
   return String(s == null ? '' : s)
@@ -23,15 +26,22 @@ function questionHtml(q, color) {
   const opts = (q.options || []).map(function (o) {
     return '<label class="opt"><input type="radio" name="q' + q.q + '" value="' + esc(o.label) + '"><span class="ol">' + esc(o.label) + '.</span> ' + esc(o.text) + '</label>';
   }).join('');
+  const lab = RESEARCH[SLUG + '#' + q.q];
+  const labHtml = lab ? '<div class="lab"><div class="labh">Research Team · ~' + (parseInt(lab.methods[0].seconds, 10) || 10) + 's · verified</div>' +
+    '<div class="labn">' + esc(lab.methods[0].name) + '</div><ol class="labs">' +
+    (lab.methods[0].steps || []).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') + '</ol>' +
+    '<a class="labmore" href="../../research-team.html">All research methods</a></div>' : '';
   return '<article class="q" id="q' + q.q + '" data-correct="' + esc(correctLabel(q)) + '">' +
     '<div class="qhead"><span class="qnum">Q' + q.q + '</span><span class="badge" style="background:' + color + '33;color:' + color + '">' + esc(q.section) + '</span>' +
     (q.source === 'model' || q.reviewed === false ? '<span class="ai">model-generated · ' + esc((q.generatedAt || '').slice(0, 10)) + '</span>' : '') +
     '</div><div class="stem">' + esc(q.text) + '</div><div class="opts">' + opts + '</div>' +
     '<button class="reveal" type="button">Show answer &amp; explanation</button>' +
-    '<div class="sol" hidden><strong>Answer: ' + esc(correctLabel(q)) + '</strong><p>' + esc(q.solution || '') + '</p></div></article>';
+    '<div class="sol" hidden><strong>Answer: ' + esc(correctLabel(q)) + '</strong><p>' + esc(q.solution || '') + '</p>' + labHtml + '</div></article>';
 }
 
 function build(data) {
+  RESEARCH = researchStore.indexByPaper(researchStore.load(ROOT));
+  SLUG = data.slug;
   const colors = {};
   (data.sections || []).forEach(function (s) { colors[s.name] = s.color || '#a78bfa'; });
   let body = '';
@@ -77,13 +87,14 @@ function build(data) {
     '.opt:hover{border-color:#3f3f46}.opt input{margin-top:4px}.ol{font-weight:700;color:#a1a1aa}' +
     '.reveal{margin-top:10px;background:transparent;border:1px solid #3f3f46;color:#a1a1aa;border-radius:8px;padding:5px 10px;cursor:pointer;font-size:.8em}' +
     '.sol{margin-top:10px;border-top:1px dashed #3f3f46;padding-top:9px;font-size:.9em;color:#d4d4d8}.sol p{margin:4px 0 0}' +
+    '.lab{margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:9px;padding:9px 11px}.labh{color:#93c5fd;font-size:.72em;font-weight:700;letter-spacing:.04em}.labn{color:#fafafa;font-weight:700;margin:3px 0}.labs{margin:4px 0 6px;padding-left:18px;font-size:.88em;color:#d4d4d8}.labs li{margin:2px 0}.labmore{color:#60a5fa;font-size:.78em;text-decoration:none}' +
     '.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:8px}' +
     'table{width:100%;border-collapse:collapse;font-size:.85em}td,th{border:1px solid #27272a;padding:6px 8px;text-align:left}th{background:#18181b}.k{font-weight:800;color:#34d399}' +
     '.ex{border-bottom:1px solid #27272a;padding:9px 0;font-size:.88em;color:#d4d4d8}.exq{font-weight:600;color:#fafafa}.exa{color:#34d399;margin:3px 0}' +
     '.footer{margin:28px 0;color:#71717a;font-size:.8em}' +
     '@media print{.nav,.timer,.reveal,.btn{display:none}.sol[hidden]{display:block!important}body{background:#fff;color:#000}.q{border-color:#ccc;background:#fff}}' +
     '</style></head><body>' +
-    '<nav class="nav"><a href="../../index.html">Home</a><a href="../index.html">' + esc(data.folder.toUpperCase()) + '</a><a href="index.html" class="active">Mock Tests</a><a href="' + data.slug + '.html">Full paper</a></nav>' +
+    '<nav class="nav"><a href="../../index.html">Home</a><a href="../index.html">' + esc(data.folder.toUpperCase()) + '</a><a href="index.html" class="active">Mock Tests</a><a href="../../research-team.html">Research Team</a><a href="' + data.slug + '.html">Full paper</a></nav>' +
     '<div class="wrap"><h1>' + esc(data.title) + '</h1>' +
     '<p class="sub">' + esc(data.meta) + '</p>' +
     '<div class="facts">' + metaBits.map(function (m) { return '<span>' + esc(m) + '</span>'; }).join('') + '</div>' +
