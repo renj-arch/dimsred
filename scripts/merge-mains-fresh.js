@@ -7,10 +7,25 @@
 //   2. a textual `-X ours` merge produced a file that did not parse, and the
 //      next run published a pool containing bare id strings.
 // So: parse each side independently, union objects by id (remote first), drop
-// anything that fails the shared quality rubric or is not an object, and write
-// JSON with a fixed 2-space layout.
+// anything that fails the shared quality rubric or is not an object, drop
+// duplicates of the reviewed bank or of an item kept before it (a run that
+// started from a corrupted, partial pool once regenerated "Net Zero funding"
+// and the union then published two versions of it), and write JSON with a
+// fixed 2-space layout.
 const fs = require('fs');
+const path = require('path');
 const quality = require('./lib/mains-quality');
+const plan = require('./lib/mains-plan');
+
+let BANK = [];
+try {
+  const bank = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'data', 'mains-questions.json'), 'utf-8'));
+  if (bank && Array.isArray(bank.questions)) BANK = bank.questions.filter(Boolean);
+} catch (e) {
+  // A missing bank is not a reason to refuse the merge; it only weakens the
+  // duplicate check to the pool itself.
+  console.error('merge-mains-fresh: bank unavailable for duplicate check: ' + e.message);
+}
 
 const [remoteFile, oursFile, outFileArg] = process.argv.slice(2);
 if (!remoteFile) {
@@ -54,10 +69,20 @@ const seen = new Set();
 
 const keep = [];
 const dropped = [];
+const known = BANK.slice();
 merged.forEach(function (it) {
   const qa = quality.assess(it);
-  if (qa.ok) keep.push(it);
-  else dropped.push(it.id + ' [' + (qa.score || 0) + '] ' + (qa.failures || []).join('; '));
+  if (!qa.ok) {
+    dropped.push(it.id + ' [rubric ' + (qa.score || 0) + '] ' + (qa.failures || []).join('; '));
+    return;
+  }
+  const dup = plan.isDuplicate(it, known);
+  if (dup) {
+    dropped.push(it.id + ' [duplicate of ' + (dup.id || 'a covered question') + ']');
+    return;
+  }
+  known.push(it);
+  keep.push(it);
 });
 
 const base = remote || ours;
