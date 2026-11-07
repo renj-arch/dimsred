@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T07:57:50.714Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; prioritize BankFigures to resolve visual content debt immediately. Since 'selfcheck' cleared 61 items last run, it is likely a cleanup agent that should follow high-impact generation agents if inputs remain, but given the specific gap types, we focus on generation first. The previous run showed 'bankfigures:1' and 'mainsfresh:1' active; moving to MockPapers next addresses the pending paper generation goal. ExamPatterns follows to ensu",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (821 total)",
-       "text": "How does a propeller turbine differ from a Kaplan turbine? | What is the advantage of the adjustable Kaplan blades? | What head range suits a Kaplan or propeller turbine?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Engineering Mechanics (360 in pool)",
-       "text": "Engineering Mechanics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T08:26:57.183Z",
    "model": "qwen3.5:9b",
    "totalFixes": 3,
@@ -773,8 +717,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T15:28:58.999Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual content blocking study flow. Since papers/sidecar files are absent, Invention is required next to generate foundational question banks and syllabus-aligned materials from scratch. MetaLearn should follow to synthesize these new assets into coherent exam patterns before MockPapers can utilize them for full-length practice.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (858 total)",
+       "text": "What is the best efficiency point of a turbine? | State the working principle and main parts of a centrifugal pump. | Why is a centrifugal pump primed before starting?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Gas Turbines (360 in pool)",
+       "text": "Gas Turbines"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T14:58:34.274Z",
+ "lastRun": "2026-11-07T15:28:58.999Z",
  "model": "qwen3.5:9b"
 }
