@@ -43,6 +43,14 @@ function slugifySection(name) {
   return String(name || '').toLowerCase().trim();
 }
 
+function roleFor(section) {
+  const s = slugifySection(section);
+  if (/math|quant|arithmetic|data interpretation/.test(s)) return 'Mathematician';
+  if (/physics|chemistry/.test(s)) return 'Scientist';
+  if (/reason|logical|intelligence/.test(s)) return 'Logician';
+  return 'Scientist';
+}
+
 function isTargetSection(name) {
   const s = slugifySection(name);
   return TARGET_SECTIONS.some(function (t) { return s === t || s.indexOf(t) !== -1; });
@@ -130,7 +138,7 @@ function questionBlock(q) {
 
 function scientistPrompt(q) {
   return [
-    'You are the Scientist on the Vlymbooq Research Team, a competitive-exam solution lab.',
+    'You are the ' + roleFor(q.section) + ' on the Vlymbooq Research Team, a competitive-exam solution lab.',
     'Solve the question below independently and exactly. Use standard, valid reasoning.',
     '',
     questionBlock(q),
@@ -271,6 +279,7 @@ async function investigate(item) {
     answerAgreesWithKey: keyAgrees,
     canonicalSteps: (sci && Array.isArray(sci.steps) ? sci.steps : []).map(function (s) { return llm.clean(s); }).slice(0, 6),
     verifierCheck: llm.clean(ver && ver.check),
+    roles: { solver: roleFor(q.section), inventor: 'Inventor', verifier: 'Verifier' },
     methods: methods.sort(function (a, b) { return a.seconds - b.seconds; }),
     status: agree && keyAgrees ? 'published' : 'review',
     note: !agree
