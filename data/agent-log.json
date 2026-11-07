@@ -673,66 +673,114 @@
    ]
   },
   {
-   "at": "2026-11-07T13:12:57.426Z",
+   "at": "2026-11-07T13:36:53.147Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 2,
+   "totalFixes": 4,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
+     "agent": "foresight",
      "count": 0
     },
     {
-     "agent": "invention",
+     "agent": "questions",
+     "count": 4
+    },
+    {
+     "agent": "content",
      "count": 0
     },
     {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
+     "agent": "papers",
      "count": 0
     },
     {
-     "agent": "exampatterns",
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
      "count": 0
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken diagrams. Since MockPapers and ExamPatterns produced zero fixes in the last two runs, they are starved of input and should be scheduled last after critical infrastructure is stable. MainsFresh is essential for daily freshness and has not been idle recently.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MainsFresh",
-     "MockPapers",
-     "ExamPatterns"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "questions",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (847 total)",
-       "text": "Why are unit quantities used in turbine testing? | What are constant-head characteristic curves of a turbine? | What are constant-speed characteristic curves of a turbine?"
+       "page": "data/questions",
+       "fix": "Found 226504 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 48 overlapping subtopics into correct categories"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Converted 79 fill-in-blank questions to proper Q&A"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Updated 58 question files"
       }
      ]
-    },
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T13:58:23.109Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 57,
+   "byAgent": [
     {
-     "agent": "mainsfresh",
+     "agent": "selfcheck",
+     "count": 57
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
      "fixes": [
       {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw6f3c2v (gs3, 15 marks): India's 'Neighbourhood First' policy faces challenges from rising regional assertiveness. Critically examine the balance",
-       "model": "qwen3.5:9b (local)"
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "agniveer/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-13.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-14.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-15.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-02.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cgl/papers/13-sep-2025-s1.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cgl/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
       }
      ]
     }
