@@ -1,30 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T02:54:18.514Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw5t80i9 (gs3, 15 marks): India's energy transition hinges on securing critical minerals like lithium, cobalt, and nickel. Critically examine the ",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T03:36:42.895Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -721,8 +697,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T09:51:25.983Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) indicate severe content debt; BankFigures must address the 80 missing figures immediately as they block exam prep utility. MockPapers is next to tackle the critical fault backlog, followed by MainsFresh to ensure daily material freshness. ExamPatterns will handle remaining structural gaps, while Invention and MetaLearn are deferred to later runs as per the rule to prioritize unfinished standing goals over new ventures.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (833 total)",
+       "text": "Define mechanical efficiency of a turbine. | Define volumetric efficiency of a turbine. | Define the overall efficiency of a turbine and relate it to the others."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw684fto (gs3, 15 marks): India is increasingly dependent on critical minerals like lithium, cobalt and rare earths for its green energy transitio",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T09:20:34.277Z",
+ "lastRun": "2026-11-07T09:51:25.983Z",
  "model": "qwen3.5:9b"
 }
