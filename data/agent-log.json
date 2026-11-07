@@ -1,61 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T05:52:53.494Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (812 total)",
-       "text": "Write the work done per kilogram in a Francis turbine. | What is the condition for maximum efficiency in a Francis turbine? | Write the hydraulic efficiency of a Francis turbine."
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw5zlo8l (gs3, 15 marks): India has pioneered the concept of Digital Public Infrastructure (DPI) with its stack of UPI, Aadhaar, and DIKSHA. Criti",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T07:04:20.218Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -792,8 +737,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T14:02:44.365Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visuals and missing data. Since papers, questions, sidecar, and syllabus files are all absent, Invention is required immediately to generate foundational content before MockPapers or ExamPatterns can function. MetaLearn will be placed last as it produced zero fixes in the last two runs and requires prior content generation to be effective.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (850 total)",
+       "text": "What are iso-efficiency or muschel curves of a turbine? | What is the run-away speed of a turbine? | Name the common types of draft tubes."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T13:12:57.426Z",
+ "lastRun": "2026-11-07T14:02:44.365Z",
  "model": "qwen3.5:9b"
 }
