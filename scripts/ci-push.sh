@@ -117,12 +117,37 @@ union_mains_fresh() {
   return 0
 }
 
+# data/questions/archive-cat-index.json is the registry the archive page and the
+# Ask question bank read. It must never shrink: on 2026-11-07 a merge resolved a
+# conflict with "-X ours" and published a 424-byte one-category index over the
+# 21 MB, 145-category file, hiding 15.9 million questions. Keep whichever side
+# declares more questions (see scripts/guard-archive-index.js). Only runs when
+# this checkout actually carries the corpus file.
+guard_archive_index() {
+  local f=data/questions/archive-cat-index.json
+  [ -f "$f" ] || return 0
+  local ref="" cand
+  for cand in FETCH_HEAD origin/main HEAD; do
+    if git cat-file -e "$cand:$f" 2>/dev/null; then ref="$cand"; break; fi
+  done
+  [ -n "$ref" ] || return 0
+  git show "$ref:$f" > "$f.remote.json" 2>/dev/null || { rm -f "$f.remote.json"; return 0; }
+  node scripts/guard-archive-index.js "$f" "$f.remote.json" || true
+  rm -f "$f.remote.json"
+  git add "$f" 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit --amend --no-edit >/dev/null 2>&1 || true
+  fi
+  return 0
+}
+
 try_push() {
   # $1 = label for logs. Echoes server output to stdout, returns push status.
   local out
   sync_remote
   union_invented
   union_mains_fresh
+  guard_archive_index
   out=$(git push 2>&1)
   local st=$?
   echo "$out"
