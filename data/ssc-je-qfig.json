@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T11:20:33.315Z",
-  "cursor": 960,
-  "built": 842
+  "updatedAt": "2026-11-07T11:59:30.223Z",
+  "cursor": 963,
+  "built": 845
  },
  "figs": {
   "2316121": {
@@ -5055,6 +5055,24 @@
   "9688e296": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Runner Shape vs Specific Speed (Ns)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"65\">Low Ns</text><text x=\"35\" y=\"78\">Pelton</text><path d=\"M 40 60 L 90 10 Q 100 140 200 140 L 250 60 Z\"/><text x=\"160\" y=\"105\" text-anchor=\"middle\">Deep</text><text x=\"160\" y=\"120\" text-anchor=\"middle\">Slow</text><path d=\"M 90 60 L 140 30 Q 180 140 280 140 L 320 60 Z\"/><text x=\"250\" y=\"105\" text-anchor=\"middle\">Medium Ns</text><text x=\"250\" y=\"120\" text-anchor=\"middle\">Radial Francis</text><path d=\"M 140 60 L 190 35 Q 230 140 330 140 L 360 60 Z\"/><text x=\"300\" y=\"105\" text-anchor=\"middle\">High Ns</text><text x=\"300\" y=\"120\" text-anchor=\"middle\">Axial Kaplan</text><text x=\"300\" y=\"145\" text-anchor=\"end\">Squat</text></svg>",
    "n": "how does the specific speed choose the runner shape?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "149a762a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Unit Speed Concept</text><path d=\"M40 60 L120 60 L120 140 L40 140 Z\" /><path d=\"M120 60 L280 60 L280 140 L120 140 Z\" /><text x=\"80\" y=\"95\">N (Speed)</text><text x=\"200\" y=\"95\">H (Head)</text><path d=\"M130 70 L130 130 M140 70 L140 130 M150 70 L150 130 M160 70 L160 130\" /><path d=\"M290 80 L130 80 M290 90 L130 90 M290 100 L130 100 M290 110 L130 110\" /><text x=\"145\" y=\"65\">N / √H</text><text x=\"145\" y=\"145\">Unit Speed Nu</text></svg>",
+   "n": "what is the unit speed of a hydraulic turbine?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "b0858a10": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/>\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\"/>\n  <!-- Head Curve (Parabolic shape for Q vs sqrt(H)) -->\n  <path d=\"M 60 180 L 70 150 L 80 120 L 90 90 L 100 60 L 110 40\" fill=\"none\" stroke=\"#222\"/>\n  <!-- Labels -->\n  <text x=\"300\" y=\"215\">Discharge (Q)</text>\n  <text x=\"180\" y=\"195\">√Head (√H)</text>\n  <text x=\"45\" y=\"20\">Unit Discharge</text>\n  <text x=\"30\" y=\"190\">Q = Q / √H</text>\n</svg>",
+   "n": "define the unit discharge of a turbine.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "d101d2b7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Power P vs Head H</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><text x=\"35\" y=\"65\">P</text><text x=\"35\" y=\"175\">H</text><path d=\"M 40 180 L 320 60\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Unit Power (Pu)</text><text x=\"180\" y=\"175\" text-anchor=\"middle\">at H = 1</text><circle cx=\"180\" cy=\"60\" r=\"3\"/><text x=\"172\" y=\"65\">P_u</text></svg>",
+   "n": "what is the unit power of a turbine?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
