@@ -166,6 +166,10 @@ jobs:
           # reader's own last-seen headings are the baseline, so a section
           # inserted anywhere in the body is still noticed.
           node scripts/inject-lesson-watch.js .
+          # Depth addenda for hand-built lessons (Polity and the other pages
+          # the generator must not rewrite). Kept in scripts/course-addons.json
+          # and inserted inside .lesson-body on every deploy.
+          node scripts/inject-course-addons.js .
           git add -A -- '*.html' 2>/dev/null || true
 
           TREE=$(git write-tree)
