@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T15:28:58.999Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual content blocking study flow. Since papers/sidecar files are absent, Invention is required next to generate foundational question banks and syllabus-aligned materials from scratch. MetaLearn should follow to synthesize these new assets into coherent exam patterns before MockPapers can utilize them for full-length practice.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (858 total)",
-       "text": "What is the best efficiency point of a turbine? | State the working principle and main parts of a centrifugal pump. | Why is a centrifugal pump primed before starting?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Gas Turbines (360 in pool)",
-       "text": "Gas Turbines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T15:54:37.907Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -744,8 +688,68 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T22:42:45.113Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 185,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 185
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+       "fix": "Nav: \"CGL\" → /cgl/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/index.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-essay/lesson-essay-language.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-essay/lesson-essay-practice.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-essay/lesson-essay-structure.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-essay/lesson-essay-topics.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-gs1/lesson-answer-writing-gs1.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-gs1/lesson-heritage-culture.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T22:31:10.529Z",
+ "lastRun": "2026-11-07T22:42:45.113Z",
  "model": "qwen3.5:9b"
 }
