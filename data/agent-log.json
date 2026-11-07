@@ -1,146 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T01:13:02.793Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual assets. MockPapers is next because filesPresent shows papers=false, indicating a major content gap in exam prep materials. Invention should follow to generate fresh questions/sidecars once structural assets are stable. MetaLearn and ExamPatterns are deferred as they require existing paper/question data which is currently missing.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (786 total)",
-       "text": "What is the function of the spear in a Pelton wheel? | Describe the bucket construction of a Pelton runner. | What is the velocity of the jet entering a Pelton bucket?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T01:44:27.027Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visuals and data. Since papers/syllabus files are missing, MockPapers is next to generate core study assets from scratch. Invention should follow to create fresh content for unfinished goals, while MetaLearn and ExamPatterns go last as they rely on existing structured data or have produced zero fixes recently.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (789 total)",
-       "text": "Define the speed ratio φ of a Pelton wheel. | State the condition for maximum hydraulic efficiency of a Pelton wheel. | What is the work done per kilogram of water in a Pelton wheel?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T02:15:45.129Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has 81 figure gaps and 23 critical faults, with no papers or questions present. BankFigures is the only agent producing results recently (1 fix/run), so it must lead to clear the backlog of broken figures. Since filesPresent shows false for all content types, we prioritize generating core assets over new ideas; MetaLearn should run last as it produced 0 fixes in the last two runs and likely needs input from BankFigures first.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "ExamPatterns",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (792 total)",
-       "text": "Write the hydraulic efficiency of a Pelton wheel. | Why does a Pelton wheel not need a casing or draft tube? | What is the jet ratio of a Pelton wheel and its usual value?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T02:42:58.322Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -713,8 +573,155 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T08:26:57.183Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "We have severe content gaps (80 figure gaps, 23 critical faults) and no source files present; self-check alone cannot generate missing assets. Prioritize BankFigures to fill the massive figure gap backlog, then MockPapers and ExamPatterns to address critical faults and pending ideas. MainsFresh should run last as it is currently producing zero output while others are needed urgently.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (824 total)",
+       "text": "Describe the runner and shaft layout of a Kaplan turbine. | What is the tangential-velocity characteristic of axial-flow turbines? | How is the discharge through a Kaplan runner obtained?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Materials & Metallurgy (360 in pool)",
+       "text": "Materials & Metallurgy"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw653spq (gs3, 15 marks): India launched the National Green Hydrogen Mission to achieve net-zero emissions by 2070. Critically examine the strateg",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T08:58:26.619Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. MockPapers and MainsFresh should follow immediately to address the missing papers and questions indicated by false file flags, as these represent unfinished standing goals. ExamPatterns will be queued last since no specific pattern gaps were flagged in the immediate critical path, though it remains available if new gaps emerge.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (827 total)",
+       "text": "How does the part-load efficiency of a Kaplan turbine compare with a fixed-blade | Why must a Kaplan turbine be set deeper relative to the tail race? | Write the Euler turbine equation."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw668alz (gs3, 15 marks): India's commitment to achieving Net Zero by 2070 requires massive capital mobilization. Critically examine the role of t",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T09:06:43.539Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw66iy1f (gs3, 15 marks): India's strategic pivot towards critical minerals like lithium, cobalt and rare earth elements is reshaping its geopolit",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T07:57:50.714Z",
+ "lastRun": "2026-11-07T09:06:43.539Z",
  "model": "qwen3.5:9b"
 }
