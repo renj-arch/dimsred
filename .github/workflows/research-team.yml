@@ -6,13 +6,15 @@ name: Research Team (original solutions)
 # no world-first claim is made.
 on:
   schedule:
-    - cron: '0 15 * * *'
+    # Four investigations a day build a real corpus quickly; the lane has its
+    # own concurrency group and does not block the paper runs.
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       limit:
         description: 'Questions to investigate this run'
         required: false
-        default: '6'
+        default: '12'
       model:
         description: 'Ollama model tag'
         required: false
@@ -102,7 +104,7 @@ jobs:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
         run: |
-          ARGS="--limit=${{ inputs.limit || '6' }} --max-minutes=110"
+          ARGS="--limit=${{ inputs.limit || '12' }} --max-minutes=110"
           if [ -n "${{ inputs.exams }}" ]; then ARGS="$ARGS --exams=${{ inputs.exams }}"; fi
           node scripts/research-run.js $ARGS
 
@@ -117,7 +119,8 @@ jobs:
             node -e "const t=require('./data/research-build-targets.json');console.log((t.slugs||[]).join('\n'))" | while read -r slug; do
               [ -n "$slug" ] || continue
               echo "rebuilding $slug"
-              node scripts/build-full-papers.js --slug="$slug" || echo "::warning::could not rebuild $slug"
+              node scripts/build-full-papers.js --slug="$slug" || true
+              node scripts/build-papers.js --slug="$slug" || true
             done
           fi
           node scripts/generate-sitemap.js || true
@@ -128,6 +131,7 @@ jobs:
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add data/research-solutions.json data/research-build-targets.json research-team.html
+          git add -f data/research-solutions.json data/research-build-targets.json
           git add -A -- '*mock-tests/*.html' sitemap.xml 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No new research to publish"

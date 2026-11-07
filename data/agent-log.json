@@ -1,7 +1,107 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T20:07:16.351Z",
+   "at": "2026-11-07T05:20:35.041Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention before new content generation. BankFigures is the primary fixer for figures but has been active in recent runs; however, MockPapers has produced zero fixes in the last two runs despite pending needs, so it will be scheduled last to avoid starving its potential inputs if any exist. Invention and MetaLearn also hit zero recently and should follow low-priority tasks. The queue shows no completed goals yet, so we prioritize filling",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (809 total)",
+       "text": "What is the function of the guide vanes in a Francis turbine? | Are the Francis runner blades adjustable? | What is the function of the draft tube in a Francis turbine?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T05:52:53.494Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (812 total)",
+       "text": "Write the work done per kilogram in a Francis turbine. | What is the condition for maximum efficiency in a Francis turbine? | Write the hydraulic efficiency of a Francis turbine."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw5zlo8l (gs3, 15 marks): India has pioneered the concept of Digital Public Infrastructure (DPI) with its stack of UPI, Aadhaar, and DIKSHA. Criti",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T07:04:20.218Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
    "byAgent": [
@@ -43,13 +143,13 @@
    ]
   },
   {
-   "at": "2026-11-06T20:52:13.496Z",
+   "at": "2026-11-07T07:05:58.784Z",
    "model": "rule-based (no LLM)",
-   "totalFixes": 6,
+   "totalFixes": 61,
    "byAgent": [
     {
      "agent": "selfcheck",
-     "count": 6
+     "count": 61
     }
    ],
    "details": [
@@ -62,142 +162,47 @@
        "kind": "runtime"
       },
       {
-       "page": "upsc/mains/answer-writing.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+       "page": "agniveer/mock-tests/full-2026-11-07-agniveer-cee.html",
+       "fix": "Nav: \"AGNIVEER\" → /agniveer/ (was ../index.html)"
       },
       {
-       "page": "upsc/mains/index.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+       "page": "agniveer/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
       },
       {
-       "page": "upsc/mains/interview.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+       "page": "agniveer/papers/practice-set-13.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
       },
       {
-       "page": "upsc/mains/language.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+       "page": "agniveer/papers/practice-set-14.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
       },
       {
-       "page": "upsc/mains/optional.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+       "page": "agniveer/papers/practice-set-15.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-02.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html",
+       "fix": "Nav: \"CGL\" → /cgl/ (was ../index.html)"
+      },
+      {
+       "page": "cgl/papers/13-sep-2025-s1.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
       }
      ]
     }
    ]
   },
   {
-   "at": "2026-11-06T23:04:38.794Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "We have 81 figure gaps and 23 critical faults; the last run produced zero fixes for 'foresight', 'questions', 'content', 'papers', and 'wikisyllabus', so these agents must be starved or moved to the end of the queue. Since 'mainsfresh' just fixed one item, we prioritize unfinished standing goals (figure gaps) before new ventures like invention.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MockPapers",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (774 total)",
-       "text": "Name the three types of similitude between model and prototype. | When are the Reynolds and Froude model laws applied, and why are distorted model | On what basis are hydraulic turbines classified?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Hydraulic Machines (360 in pool)",
-       "text": "Hydraulic Machines"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-06T23:44:18.736Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as unfinished standing goals take priority over new ideas. MetaLearn is starved (0 fixes in last 2 runs), so it moves to the end of the execution list to allow other agents to clear the backlog first. The remaining actions target critical faults and pending ideas while respecting the agent starvation rule.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (777 total)",
-       "text": "Into what classes are turbines grouped by flow direction? | Define an impulse turbine. | Define a reaction turbine."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T00:10:34.208Z",
+   "at": "2026-11-07T07:39:00.974Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
    "byAgent": [
@@ -207,66 +212,6 @@
     },
     {
      "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults and zero content files present (papers, questions, syllabus), indicating a complete rebuild is needed before fixing UI faults. BankFigures must run first to generate the foundational question bank since no 'questions' file exists. MockPapers should follow immediately to assemble exam papers from those figures. Invention is next to create fresh study materials and fill content gaps. MetaLearn will then synthesize these new assets into a cohesive syllabus structure. Fi",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (780 total)",
-       "text": "Which turbine type needs a full-pressure casing? | Give typical examples of each turbine class. | How is a turbine selected according to head?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Engineering Mathematics (360 in pool)",
-       "text": "Engineering Mathematics"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T00:43:41.138Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
      "count": 0
     },
     {
@@ -274,18 +219,17 @@
      "count": 0
     },
     {
-     "agent": "invention",
-     "count": 0
+     "agent": "mainsfresh",
+     "count": 1
     }
    ],
    "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual assets blocking study flow. Since papers/syllabus files are absent, MetaLearn should immediately generate foundational content to fill the 'false' file states before attempting complex mock exams or invention tasks. Invention agents produced 0 for the last two runs and will be placed last in this sequence as per starvation rules.",
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken diagrams blocking content consumption. Since papers/syllabus files are missing, MockPapers is next to generate fresh exam materials from scratch. ExamPatterns follows to ensure question structures align with new content. MainsFresh runs last to capture daily fresh material opportunities.",
     "actions": [
      "BankFigures",
-     "MetaLearn",
      "MockPapers",
      "ExamPatterns",
-     "Invention"
+     "MainsFresh"
     ]
    },
    "details": [
@@ -295,155 +239,26 @@
       {
        "page": "data/ssc-je-qfig.json",
        "kind": "figure",
-       "fix": "3 bank figure(s) added (783 total)",
-       "text": "What is governing of a turbine? | What is a Pelton wheel? | Name the main parts of a Pelton wheel."
+       "fix": "3 bank figure(s) added (818 total)",
+       "text": "How does the draft tube contribute to the reaction effect of a Francis turbine? | How does the stay ring differ from the guide vanes? | What is a Kaplan turbine?"
       }
      ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T01:13:02.793Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
     },
     {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual assets. MockPapers is next because filesPresent shows papers=false, indicating a major content gap in exam prep materials. Invention should follow to generate fresh questions/sidecars once structural assets are stable. MetaLearn and ExamPatterns are deferred as they require existing paper/question data which is currently missing.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
+     "agent": "mainsfresh",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (786 total)",
-       "text": "What is the function of the spear in a Pelton wheel? | Describe the bucket construction of a Pelton runner. | What is the velocity of the jet entering a Pelton bucket?"
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw63e5f2 (gs3, 15 marks): India has emerged as a global player in the space sector with missions like Chandrayaan-3 and Gaganyaan. Critically exam",
+       "model": "qwen3.5:9b (local)"
       }
      ]
     }
    ]
   },
   {
-   "at": "2026-11-07T01:44:27.027Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visuals and data. Since papers/syllabus files are missing, MockPapers is next to generate core study assets from scratch. Invention should follow to create fresh content for unfinished goals, while MetaLearn and ExamPatterns go last as they rely on existing structured data or have produced zero fixes recently.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (789 total)",
-       "text": "Define the speed ratio φ of a Pelton wheel. | State the condition for maximum hydraulic efficiency of a Pelton wheel. | What is the work done per kilogram of water in a Pelton wheel?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T02:15:45.129Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has 81 figure gaps and 23 critical faults, with no papers or questions present. BankFigures is the only agent producing results recently (1 fix/run), so it must lead to clear the backlog of broken figures. Since filesPresent shows false for all content types, we prioritize generating core assets over new ideas; MetaLearn should run last as it produced 0 fixes in the last two runs and likely needs input from BankFigures first.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "ExamPatterns",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (792 total)",
-       "text": "Write the hydraulic efficiency of a Pelton wheel. | Why does a Pelton wheel not need a casing or draft tube? | What is the jet ratio of a Pelton wheel and its usual value?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T02:42:58.322Z",
+   "at": "2026-11-07T07:57:50.714Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
    "byAgent": [
@@ -457,14 +272,6 @@
     },
     {
      "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
      "count": 0
     },
     {
@@ -472,6 +279,15 @@
      "count": 0
     }
    ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; prioritize BankFigures to resolve visual content debt immediately. Since 'selfcheck' cleared 61 items last run, it is likely a cleanup agent that should follow high-impact generation agents if inputs remain, but given the specific gap types, we focus on generation first. The previous run showed 'bankfigures:1' and 'mainsfresh:1' active; moving to MockPapers next addresses the pending paper generation goal. ExamPatterns follows to ensu",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
    "details": [
     {
      "agent": "bankfigures",
@@ -479,8 +295,8 @@
       {
        "page": "data/ssc-je-qfig.json",
        "kind": "figure",
-       "fix": "3 bank figure(s) added (795 total)",
-       "text": "How is the number of buckets on a Pelton runner found? | Why are Pelton wheels sometimes given several jets? | What is the purpose of the braking jet on a Pelton wheel?"
+       "fix": "3 bank figure(s) added (821 total)",
+       "text": "How does a propeller turbine differ from a Kaplan turbine? | What is the advantage of the adjustable Kaplan blades? | What head range suits a Kaplan or propeller turbine?"
       }
      ]
     },
@@ -490,15 +306,138 @@
       {
        "page": "data/mock-fresh.json",
        "kind": "content",
-       "fix": "10 fresh mock questions on Air Compressors (360 in pool)",
-       "text": "Air Compressors"
+       "fix": "9 fresh mock questions on Engineering Mechanics (360 in pool)",
+       "text": "Engineering Mechanics"
       }
      ]
     }
    ]
   },
   {
-   "at": "2026-11-07T02:54:18.514Z",
+   "at": "2026-11-07T08:26:57.183Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "We have severe content gaps (80 figure gaps, 23 critical faults) and no source files present; self-check alone cannot generate missing assets. Prioritize BankFigures to fill the massive figure gap backlog, then MockPapers and ExamPatterns to address critical faults and pending ideas. MainsFresh should run last as it is currently producing zero output while others are needed urgently.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (824 total)",
+       "text": "Describe the runner and shaft layout of a Kaplan turbine. | What is the tangential-velocity characteristic of axial-flow turbines? | How is the discharge through a Kaplan runner obtained?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Materials & Metallurgy (360 in pool)",
+       "text": "Materials & Metallurgy"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw653spq (gs3, 15 marks): India launched the National Green Hydrogen Mission to achieve net-zero emissions by 2070. Critically examine the strateg",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T08:58:26.619Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. MockPapers and MainsFresh should follow immediately to address the missing papers and questions indicated by false file flags, as these represent unfinished standing goals. ExamPatterns will be queued last since no specific pattern gaps were flagged in the immediate critical path, though it remains available if new gaps emerge.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (827 total)",
+       "text": "How does the part-load efficiency of a Kaplan turbine compare with a fixed-blade | Why must a Kaplan turbine be set deeper relative to the tail race? | Write the Euler turbine equation."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw668alz (gs3, 15 marks): India's commitment to achieving Net Zero by 2070 requires massive capital mobilization. Critically examine the role of t",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T09:06:43.539Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
    "byAgent": [
@@ -514,7 +453,7 @@
       {
        "page": "data/mains-fresh.json",
        "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw5t80i9 (gs3, 15 marks): India's energy transition hinges on securing critical minerals like lithium, cobalt, and nickel. Critically examine the ",
+       "fix": "Shipped practice question ci-mw66iy1f (gs3, 15 marks): India's strategic pivot towards critical minerals like lithium, cobalt and rare earth elements is reshaping its geopolit",
        "model": "qwen3.5:9b (local)"
       }
      ]
@@ -522,9 +461,9 @@
    ]
   },
   {
-   "at": "2026-11-07T03:36:42.895Z",
+   "at": "2026-11-07T09:20:34.277Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "totalFixes": 2,
    "byAgent": [
     {
      "agent": "bankfigures",
@@ -535,21 +474,21 @@
      "count": 0
     },
     {
-     "agent": "invention",
-     "count": 0
+     "agent": "mainsfresh",
+     "count": 1
     },
     {
-     "agent": "metalearn",
+     "agent": "exampatterns",
      "count": 0
     }
    ],
    "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/sidecar files are missing, MockPapers is next to generate core study material. Invention should follow to create fresh daily content, while MetaLearn addresses syllabus gaps. MainFresh is deferred as it requires existing paper data which is currently absent.",
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; prioritize BankFigures to fix broken visual content immediately. Since papers/questions/syllabus are missing, MockPapers must generate core study materials next. MainsFresh will refresh daily content while ExamPatterns addresses the remaining pattern gaps. Exampatterns produced 0 in the last two runs and should be placed last to avoid starving it further.",
     "actions": [
      "BankFigures",
      "MockPapers",
-     "Invention",
-     "MetaLearn"
+     "MainsFresh",
+     "ExamPatterns"
     ]
    },
    "details": [
@@ -559,15 +498,26 @@
       {
        "page": "data/ssc-je-qfig.json",
        "kind": "figure",
-       "fix": "2 bank figure(s) added (797 total)",
-       "text": "How is bucket friction represented in the Pelton velocity triangle? | Describe the Pelton velocity triangle at inlet and outlet. | Compute the jet velocity for a Pelton wheel working under a 50 m head with Cv = "
+       "fix": "3 bank figure(s) added (830 total)",
+       "text": "What head does the Euler turbine work correspond to? | Simplify the Euler equation for an axial-flow machine. | Define hydraulic efficiency of a turbine."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw670r1e (gs3, 15 marks): India has committed to net-zero emissions by 2070 but faces a funding gap for green transitions. Critically examine the ",
+       "model": "qwen3.5:9b (local)"
       }
      ]
     }
    ]
   },
   {
-   "at": "2026-11-07T03:53:38.353Z",
+   "at": "2026-11-07T09:51:25.983Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
    "byAgent": [
@@ -577,14 +527,24 @@
     },
     {
      "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
      "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
     }
    ],
    "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority to prevent site degradation; BankFigures must address the 80 missing figures immediately. MockPapers should follow to generate fresh exam content since filesPresent indicates no papers exist yet. Invention is deferred as it requires stable foundational content first, while MetaLearn and MainsFresh are low priority given the current backlog of structural gaps.",
+    "reasoning": "Critical faults (23) and figure gaps (80) indicate severe content debt; BankFigures must address the 80 missing figures immediately as they block exam prep utility. MockPapers is next to tackle the critical fault backlog, followed by MainsFresh to ensure daily material freshness. ExamPatterns will handle remaining structural gaps, while Invention and MetaLearn are deferred to later runs as per the rule to prioritize unfinished standing goals over new ventures.",
     "actions": [
      "BankFigures",
-     "MockPapers"
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns"
     ]
    },
    "details": [
@@ -594,26 +554,120 @@
       {
        "page": "data/ssc-je-qfig.json",
        "kind": "figure",
-       "fix": "3 bank figure(s) added (800 total)",
-       "text": "What bucket speed gives the maximum efficiency when the jet velocity V1 = 40 m/s | Find the speed of a Pelton wheel with a 1 m pitch diameter at the optimum condit | Compute the shaft power of a Pelton wheel with Q = 0.05 m³/s and a specific work"
+       "fix": "3 bank figure(s) added (833 total)",
+       "text": "Define mechanical efficiency of a turbine. | Define volumetric efficiency of a turbine. | Define the overall efficiency of a turbine and relate it to the others."
       }
      ]
     },
     {
-     "agent": "mockpapers",
+     "agent": "mainsfresh",
      "fixes": [
       {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "5 fresh mock questions on Power Plant Engineering (360 in pool)",
-       "text": "Power Plant Engineering"
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw684fto (gs3, 15 marks): India is increasingly dependent on critical minerals like lithium, cobalt and rare earths for its green energy transitio",
+       "model": "qwen3.5:9b (local)"
       }
      ]
     }
    ]
   },
   {
-   "at": "2026-11-07T04:23:27.196Z",
+   "at": "2026-11-07T10:18:26.118Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visuals. Since MockPapers produced 0 fixes in the last two runs, it is moved to the end of the queue per starvation rules, while MainsFresh continues its daily cycle. The plan prioritizes fixing standing debts before attempting new inventions.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MainsFresh",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (836 total)",
+       "text": "Compute the water power for Q = 10 m³/s under a head of 10 m. | Compute the runner power for Q = 5 m³/s when Vw1u1 − Vw2u2 = 500 J/kg. | What is the shaft power if the water power is 981 kW and the overall efficiency "
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw68qdp1 (gs3, 15 marks): The rapid integration of Artificial Intelligence (AI) in public service delivery raises concerns about algorithmic bias ",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T11:14:31.407Z",
+   "model": "batiai/qwen3.8-27b:iq3",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "archive-writer",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "archive-writer",
+     "fixes": [
+      {
+       "page": "archive (Defence & Security / Defence & Security)",
+       "fix": "Explained \"What do you know about The Egyptian Air Force (EAF) (Egyptian Arabic: القوات الجوية المصري\"",
+       "text": "VERDICT: The Egyptian Air Force is the aviation branch of the Egyptian Armed Forces, handling all airborne defence missions and operating all military aircraft. WHY: It is the central air power of Egypt, coordinating with the Army, Navy, and Air Defense Forces for integrated security. TRAPS: Do not confuse it with the separate Air Defense Forces; the EAF operates the aircraft, while Air Defense handles specific missile systems. HOOK: Remember 'EAF flies, EAD defends' to distinguish their roles. "
+      },
+      {
+       "page": "archive (Defence & Security / Defence & Security)",
+       "fix": "Explained \"The force's motto is 'To highness for the sake of glory' (_____: إلى العلا في سبيل المجد, \"",
+       "text": "VERDICT: Arabic. WHY: The Egyptian Air Force operates within Egypt, where Arabic is the official language, and its motto is written in Arabic script. TRAPS: Candidates might guess English due to global military influence, or French due to historical colonial ties, but the script provided is unmistakably Arabic. HOOK: Remember that national mottos often reflect the state's primary language; if you see Arabic script, the answer is Arabic. Exam-day trap: Do not confuse the language of the motto wit"
+      },
+      {
+       "page": "archive (Defence & Security / Defence & Security)",
+       "fix": "Explained \"It was known as the Royal Egyptian Air Force until 18 June _____, following the declaratio\"",
+       "text": "VERDICT: 1953. WHY: The Royal Egyptian Air Force shed its royal title on 18 June 1953, when Muhammad Naguib declared Egypt a republic, ending the monarchy. TRAPS: Do not confuse this with the 1952 revolution start; the formal republic declaration and name change occurred in 1953. HOOK: Remember 'Naguib's 53' — the year the crown fell and the Republic rose. Exam trap: Questions often swap 1952 (revolution) with 1953 (republic declaration)."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T11:46:48.889Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
    "byAgent": [
@@ -626,21 +680,26 @@
      "count": 0
     },
     {
-     "agent": "metalearn",
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
      "count": 0
     },
     {
-     "agent": "mockpapers",
-     "count": 1
+     "agent": "mainsfresh",
+     "count": 0
     }
    ],
    "plan": {
-    "reasoning": "We have 81 figure gaps and 23 critical faults; the last two runs produced zero output from MockPapers, Invention, and MetaLearn, so they must be starved of inputs this run while BankFigures continues its steady work. We will prioritize filling the massive figure gap backlog first, then address pending ideas and critical faults, reserving the underperforming agents for later once inputs stabilize.",
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention to restore site integrity and content depth. BankFigures is the only agent capable of addressing both critical faults and figure gaps, so it must lead. Invention should follow to generate fresh material for pending ideas, while MockPapers and ExamPatterns will be starved as they produced zero fixes in recent runs; they are moved to the end of the queue despite potential input starvation.",
     "actions": [
      "BankFigures",
      "Invention",
-     "MetaLearn",
-     "MockPapers"
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
     ]
    },
    "details": [
@@ -650,8 +709,8 @@
       {
        "page": "data/ssc-je-qfig.json",
        "kind": "figure",
-       "fix": "3 bank figure(s) added (803 total)",
-       "text": "What is the effect of the bucket outlet angle on Pelton performance? | What head and discharge range suits a Pelton wheel? | What overall efficiency is typical for a large Pelton wheel?"
+       "fix": "3 bank figure(s) added (842 total)",
+       "text": "Give the specific-speed ranges of Pelton, Francis and Kaplan turbines. | For which head is a low specific speed used? | How does the specific speed choose the runner shape?"
       }
      ]
     },
@@ -661,49 +720,14 @@
       {
        "page": "data/mock-fresh.json",
        "kind": "content",
-       "fix": "9 fresh mock questions on Strength of Materials (360 in pool)",
-       "text": "Strength of Materials"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T04:37:41.667Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the backlog; BankFigures must run first to restore visual integrity, followed by MockPapers to address the 81 open faults via generated content. Invention and MetaLearn are deferred as they require stable base content before ideation or meta-analysis can yield high-value returns.",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (806 total)",
-       "text": "What is a Francis turbine? | Name the main parts of a Francis turbine. | What is the function of the spiral casing?"
+       "fix": "9 fresh mock questions on Engineering Mathematics (360 in pool)",
+       "text": "Engineering Mathematics"
       }
      ]
     }
    ]
   }
  ],
- "lastRun": "2026-11-07T04:37:41.667Z",
+ "lastRun": "2026-11-07T11:46:48.889Z",
  "model": "qwen3.5:9b"
 }

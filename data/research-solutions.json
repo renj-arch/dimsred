@@ -1,0 +1,238 @@
+{
+  "updatedAt": "2026-11-07T05:21:07.484Z",
+  "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
+  "solutions": [
+    {
+      "id": "1e0cf6c6d2b216f2",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier1",
+      "paperTitle": "SSC CGL — Tier I (Full Paper)",
+      "paperFile": "full-2026-11-07-cgl-tier1.json",
+      "questionNumber": 1,
+      "section": "General Intelligence & Reasoning",
+      "question": "Five books arranged on a shelf. Math is above English. Science is below History but above Geography. English is above Science. Which is at the bottom?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Geography",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Science",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "English",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "History",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the total number of books is five.",
+        "Place History at the top since Science is below it and English is above Science (implying a specific order).",
+        "Determine the relative order: Math > English > Science > Geography.",
+        "Note that History must be above Science, placing it either above Math or between Math/English, but regardless, Geography is explicitly stated as being below Science.",
+        "Conclude that Geography is the lowest book in the sequence.",
+        "Verify no other book is placed below Geography based on the constraints."
+      ],
+      "verifierCheck": "Let the positions be 1 (top) to 5 (bottom). We know Math > English, Science < History, Science > Geography, and English > Science. Combining these: History is above Science; Science is above Geography. So the order for these three is History > Science > Geography. Also, English is above Science. Math is above English. This creates a chain where Science must be below both History and English. Since there are 5 books and we need to place Math, English, History, Science, and Geography. The relative order constraints force Geography to be the lowest because it is strictly below Science, which is below History and English, and Science is also below English (which is below Math). No other book is stated to be below Geography or in a position that forces it lower than Geography given the strict inequalities provided.",
+      "methods": [
+        {
+          "name": "Direct Elimination",
+          "idea": "Remove non-bottoms first",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "List positions: Top to Bottom.",
+            "Identify Math > English > Science > Geography.",
+            "Note History is above Science.",
+            "Eliminate anything not below all others.",
+            "Geography is the only item with no one below it.",
+            "Final: Geography (Option A)"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T05:15:33.371Z"
+    },
+    {
+      "id": "d5cef3cc104c9739",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier1",
+      "paperTitle": "SSC CGL — Tier I (Full Paper)",
+      "paperFile": "full-2026-11-07-cgl-tier1.json",
+      "questionNumber": 2,
+      "section": "General Intelligence & Reasoning",
+      "question": "Statement: 'The HR department has launched a skill development program for employees.' Assumption I: Employees currently lack some required skills. Assumption II: The program will improve employee productivity.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Only I is implicit",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Only II is implicit",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Both are implicit",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Neither is implicit",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Analyze the statement: The HR department launched a skill development program.",
+        "Evaluate Assumption I: A skill development program is typically initiated because there is a recognized gap or lack of specific skills among employees, making this assumption implicit.",
+        "Evaluate Assumption II: While improvement in productivity is a likely desired outcome, it is not a guaranteed logical necessity inherent to the mere act of launching the program; success depends on execution and other factors, so this is not strictly implicit.",
+        "Conclusion: Only Assumption I is directly implied by the context of launching such a program."
+      ],
+      "verifierCheck": "To determine which assumption is implicit, we analyze the logical necessity of each statement based solely on the given fact that an HR department launched a skill development program. Assumption I states that employees currently lack some required skills; this is the direct logical prerequisite for launching such a program—if employees possessed all necessary skills, a skill development initiative would be unnecessary, making this assumption implicit. Assumption II suggests the program will improve productivity; however, while this may be the intended outcome or a likely result, it is not a logical certainty inherent in the mere act of launching the program (outcomes depend on execution and other variables), so it is not strictly implicit. Therefore, only Assumption I is implicit.",
+      "methods": [
+        {
+          "name": "Keyword Match",
+          "idea": "link action to cause",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify program purpose: skill development implies current lack of skills (I).",
+            "Note 'productivity' is a possible outcome, not a guaranteed immediate fact (II)."
+          ]
+        },
+        {
+          "name": "Logic Filter",
+          "idea": "separate certainty from hope",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Assumption I connects directly to the existence of the program (valid cause).",
+            "Assumption II treats a potential benefit as an implicit certainty (invalid leap).",
+            "Select option where only the first assumption holds true."
+          ]
+        },
+        {
+          "name": "Direct Deduction",
+          "idea": "validate each claim strictly",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Check I: Does 'skill development' imply missing skills? Yes, so I is implicit.",
+            "Check II: Does it guarantee productivity improvement? No, that is an assumption, not a fact.",
+            "Conclusion: Only I is implicit."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T05:18:16.739Z"
+    },
+    {
+      "id": "ce15027bb3b31fd2",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier1",
+      "paperTitle": "SSC CGL — Tier I (Full Paper)",
+      "paperFile": "full-2026-11-07-cgl-tier1.json",
+      "questionNumber": 3,
+      "section": "General Intelligence & Reasoning",
+      "question": "Situation: 'Exams have been postponed due to a natural calamity.' Course I: The education board should announce revised dates immediately. Course II: The board should reduce the syllabus to reduce student burden.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Only I follows",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Only II follows",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Both follow",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Neither follows",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the core situation: exams are postponed due to a natural calamity.",
+        "Analyze Course I: Announcing revised dates immediately is a direct administrative response to a postponement, ensuring clarity for students and stakeholders.",
+        "Analyze Course II: Reducing the syllabus addresses content coverage but does not directly resolve the immediate logistical issue of rescheduling the exam itself.",
+        "Evaluate logical consistency: Course I follows logically from the situation as it deals with the 'when' of the exam. Course II is a separate policy decision regarding 'what' to study, which may or may not be necessary depending on the new timeline and isn't an immediate consequence of the postponement alone.",
+        "Conclusion: Only Course I is a direct and logical follow-up action to the specific situation described."
+      ],
+      "verifierCheck": "In situations involving natural calamities where exams are postponed, the immediate administrative priority is to restore order and clarity for students and stakeholders by announcing revised dates (Course I), as this directly addresses the disruption caused by the postponement. Course II suggests reducing the syllabus, which is a pedagogical decision regarding curriculum scope rather than an immediate procedural response to the specific event of postponement; furthermore, reducing the syllabus does not inherently solve the logistical issue of when the exams will occur and may be seen as a separate policy choice unrelated to the emergency protocol. Therefore, only Course I logically follows as the necessary immediate action.",
+      "methods": [
+        {
+          "name": "Keyword Link",
+          "idea": "Map 'postponed' to 'announcement'",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify situation: Exams postponed.",
+            "Link consequence: Board must announce new dates immediately.",
+            "Ignore irrelevant Course II about syllabus reduction.",
+            "Select option matching the logical link."
+          ]
+        },
+        {
+          "name": "Direct Deduction",
+          "idea": "Follow the immediate obligation",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Read Course I: Postponement requires revised dates.",
+            "Verify validity: Immediate announcement is standard procedure.",
+            "Read Course II: Syllabus reduction is not a direct result of postponement.",
+            "Conclude only Course I follows logically."
+          ]
+        },
+        {
+          "name": "Elimination Filter",
+          "idea": "Remove non-mandatory actions",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Check if syllabus cut (II) is forced by delay.",
+            "Deduce II is optional, not mandatory.",
+            "Keep I as the necessary administrative step.",
+            "Reject options B, C, D; select A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T05:21:07.483Z"
+    }
+  ]
+}

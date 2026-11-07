@@ -43,6 +43,14 @@ function slugifySection(name) {
   return String(name || '').toLowerCase().trim();
 }
 
+function roleFor(section) {
+  const s = slugifySection(section);
+  if (/math|quant|arithmetic|data interpretation/.test(s)) return 'Mathematician';
+  if (/physics|chemistry/.test(s)) return 'Scientist';
+  if (/reason|logical|intelligence/.test(s)) return 'Logician';
+  return 'Scientist';
+}
+
 function isTargetSection(name) {
   const s = slugifySection(name);
   return TARGET_SECTIONS.some(function (t) { return s === t || s.indexOf(t) !== -1; });
@@ -130,7 +138,7 @@ function questionBlock(q) {
 
 function scientistPrompt(q) {
   return [
-    'You are the Scientist on the Vlymbooq Research Team, a competitive-exam solution lab.',
+    'You are the ' + roleFor(q.section) + ' on the Vlymbooq Research Team, a competitive-exam solution lab.',
     'Solve the question below independently and exactly. Use standard, valid reasoning.',
     '',
     questionBlock(q),
@@ -196,13 +204,12 @@ function cleanMethod(m, answer) {
 }
 
 function candidates(examFilter, excludeIds) {
-  const files = fs.readdirSync(DATA_DIR).filter(function (f) { return f.endsWith('.json') && f.indexOf('-full-') !== -1; });
+  const files = fs.readdirSync(DATA_DIR).filter(function (f) { return f.endsWith('.json'); });
   const items = [];
   files.forEach(function (f) {
     let data;
     try { data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, f), 'utf-8')); } catch (e) { return; }
     if (!data || !Array.isArray(data.questions) || !data.slug || !data.folder) return;
-    if (data.kind !== 'full') return;
     if (examFilter.length && examFilter.indexOf(data.folder) === -1) return;
     const created = String(data.generatedAt || data.createdDate || '');
     data.questions.forEach(function (q) {
@@ -258,6 +265,9 @@ async function investigate(item) {
     exam: item.data.folder,
     paperSlug: item.data.slug,
     paperTitle: item.data.title,
+    paperPath: item.data.kind === 'full'
+      ? item.data.folder + '/mock-tests/' + item.data.slug + '.html'
+      : item.data.folder + '/papers/' + item.data.slug + '.html',
     paperFile: path.basename(String(item.data.slug)) + '.json',
     questionNumber: q.q,
     section: q.section,
@@ -271,6 +281,7 @@ async function investigate(item) {
     answerAgreesWithKey: keyAgrees,
     canonicalSteps: (sci && Array.isArray(sci.steps) ? sci.steps : []).map(function (s) { return llm.clean(s); }).slice(0, 6),
     verifierCheck: llm.clean(ver && ver.check),
+    roles: { solver: roleFor(q.section), inventor: 'Inventor', verifier: 'Verifier' },
     methods: methods.sort(function (a, b) { return a.seconds - b.seconds; }),
     status: agree && keyAgrees ? 'published' : 'review',
     note: !agree
@@ -334,7 +345,18 @@ async function run(opts) {
 
 if (require.main === module) {
   const a = args(process.argv.slice(2));
-  run(a).then(function () { process.exit(0); }).catch(function (e) {
+  run(a).then(function (counts) {
+    // A run that investigated questions but produced neither a published
+    // method nor a review entry did no useful work: report it as a failure so
+    // a broken solver/verifier loop cannot look green for hours. Queue-empty
+    // and time-budget stops are legitimate and stay green.
+    if (counts.investigated > 0 && counts.published === 0 && counts.review === 0) {
+      console.error('::error::research run investigated ' + counts.investigated +
+        ' question(s) and published none - check the solver and verifier');
+      process.exit(1);
+    }
+    process.exit(0);
+  }).catch(function (e) {
     console.error('research team failed: ' + e.message);
     process.exit(1);
   });

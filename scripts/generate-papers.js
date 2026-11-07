@@ -79,8 +79,9 @@ function pickQuestions(bank, count) {
 }
 
 // Daily practice keeps the exam's real section proportions even though it is
-// a short set. If a section pool cannot supply its share, the whole paper is
-// skipped rather than silently drifting away from the pattern.
+// a short set. Only questions written by the model lane are eligible: a
+// daily set is never padded with older bank or extracted items. If a section
+// pool cannot supply its share the whole paper is skipped, visibly.
 function pickProportionalQuestions(bank, plan) {
   var unused = getUnusedQuestions(bank);
   var picked = [];
@@ -89,10 +90,11 @@ function pickProportionalQuestions(bank, plan) {
     var p = plan[i];
     var def = { name: p.name, bank: p.bank };
     var candidates = unused.filter(function (q) {
+      if (q.source !== 'model') return false;
       return !used[q.id] && examBlueprint.sectionAccepts(def, q.section);
     });
     if (candidates.length < p.count) {
-      console.log('  SKIPPED: section "' + p.name + '" has ' + candidates.length + ' unused (need ' + p.count + ')');
+      console.log('  SKIPPED: section "' + p.name + '" has ' + candidates.length + ' unused model question(s) (need ' + p.count + ')');
       return null;
     }
     var take = shuffle(candidates).slice(0, p.count);
@@ -392,8 +394,10 @@ function run() {
   if (args.length === 1 && args[0] === 'all') args = [];
   var folders = args.length > 0 ? args : EXAMS;
 
+  var made = 0, skipped = [];
   for (var i = 0; i < folders.length; i++) {
-    generatePaper(folders[i]);
+    var result = generatePaper(folders[i]);
+    if (result) made++; else skipped.push(folders[i]);
   }
 
   updateRootHeroBadge();
@@ -402,7 +406,11 @@ function run() {
   updateRootStats();
   updateExamStats();
 
-  console.log('\nDone! Generated ' + folders.length + ' paper(s).');
+  console.log('\nDone! ' + made + ' paper(s) built, ' + skipped.length + ' skipped.');
+  if (skipped.length) {
+    console.error('::error::no model-only paper for: ' + skipped.join(', ') + '. Refusing to pad with bank items.');
+    process.exitCode = 1;
+  }
 }
 
 run();

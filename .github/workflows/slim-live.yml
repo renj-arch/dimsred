@@ -125,7 +125,11 @@ jobs:
           node scripts/lib/merge-chunks.test.js
           node scripts/validate-mains.js
           node scripts/lib/mains-plan.test.js
-
+          # User-facing defects on 2026-11-07: a key that its own solution
+          # contradicted and leaked model reasoning. This gate fails the deploy
+          # on either, so they cannot reach live again.
+          node scripts/lib/question-solutions.test.js
+          node scripts/lib/course-versions.test.js
       - name: Rebuild slim live tree (orphan root)
         run: |
           set -euo pipefail

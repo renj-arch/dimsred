@@ -318,6 +318,35 @@ async function callLLM(system, user) {
   return parsed.text || '';
 }
 
+// Independent answer check for quantitative items. The structural and
+// arithmetic audits prove the key is among the options and the solution does
+// not contradict itself; neither can catch a wrong unit conversion (72 km/h
+// converted as 36 km/h) or an option set with no correct value at all. A
+// second solve, with no access to the stated key, can.
+async function verifyQuant(q) {
+  if (FAKE) return { ok: true };
+  const opts = q.options.map((o, i) => 'ABCD'[i] + '. ' + o).join('\n');
+  try {
+    const raw = await callLLM(
+      'You are an independent exam verifier on a solution lab. Solve the question from scratch and never trust any stated answer. Convert units carefully. Return ONLY JSON: {"answer":"A|B|C|D","check":"one line of arithmetic"}',
+      'Question: ' + q.stem + '\nOptions:\n' + opts
+    );
+    const t = extractJson(raw);
+    if (!t) return { ok: false, why: 'verifier unparseable' };
+    let a = String(t.answer == null ? '' : t.answer).trim().toUpperCase();
+    const m = a.match(/\b([A-D])\b/);
+    if (m) a = m[1];
+    const idx = 'ABCD'.indexOf(a);
+    if (idx < 0) return { ok: false, why: 'verifier gave no option' };
+    if (q.options[idx] !== q.answer) {
+      return { ok: false, why: 'verifier picked ' + a + ' (' + q.options[idx] + '), key says ' + q.answer };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, why: 'verifier failed: ' + e.message };
+  }
+}
+
 // ── parsing + validation ─────────────────────────────────────────────────
 function extractJson(text) {
   if (!text) return null;
@@ -625,6 +654,15 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
           }
           const v = validate(raw, section, tier, recentTokenSets.concat(accepted.map(a => a.tokenSet)));
           if (v.ok) {
+            if (section === 'quant') {
+              const chk = await verifyQuant(v.q);
+              if (!chk.ok) {
+                rejects[chk.why] = (rejects[chk.why] || 0) + 1;
+                rejects['last-' + section + tier] = chk.why;
+                log('[invent] ' + section + '/' + tier + ' rejected: ' + chk.why);
+                continue;
+              }
+            }
             made = v;
           } else {
             rejects[v.why] = (rejects[v.why] || 0) + 1;

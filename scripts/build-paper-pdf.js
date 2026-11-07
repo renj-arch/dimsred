@@ -3,6 +3,7 @@
 // no browser) so the GitHub runner can produce it.
 const fs = require('fs');
 const path = require('path');
+const researchStore = require('./lib/research-store');
 
 let PDFDocument;
 try { PDFDocument = require('pdfkit'); } catch (e) {
@@ -14,6 +15,8 @@ const ROOT = path.resolve(__dirname, '..');
 const DATA_DIR = path.join(ROOT, 'papers-data');
 const OUT_DIR = path.join(ROOT, 'pdfs');
 const M = 46;
+let RESEARCH = {};
+let SLUG = '';
 
 function safe(s) {
   return String(s == null ? '' : s)
@@ -30,6 +33,8 @@ function correctLabel(q) {
 }
 
 function build(data) {
+  RESEARCH = researchStore.indexByPaper(researchStore.load(ROOT));
+  SLUG = data.slug;
   const doc = new PDFDocument({ size: 'A4', margin: M, info: {
     Title: safe(data.pageTitle), Author: 'vlymbooq', Subject: safe(data.meta),
     Keywords: 'exam, full paper, ' + data.folder, CreationDate: new Date()
@@ -122,6 +127,14 @@ function build(data) {
     doc.font('Helvetica-Bold').fontSize(9.5).fillColor('#111').text('Q' + q.q + '. ' + safe(q.text), { width: W });
     doc.font('Helvetica-Bold').fontSize(9).fillColor('#047857').text('Answer: ' + correctLabel(q), { width: W });
     doc.font('Helvetica').fontSize(9).fillColor('#222').text(safe(q.solution || ''), { width: W });
+    var lab = RESEARCH[SLUG + '#' + q.q];
+    if (lab && lab.methods && lab.methods[0]) {
+      var m = lab.methods[0];
+      doc.font('Helvetica-Bold').fontSize(8.5).fillColor('#1d4ed8')
+        .text('Research Team · ~' + (parseInt(m.seconds, 10) || 10) + 's · ' + safe(m.name), { width: W });
+      doc.font('Helvetica').fontSize(8.5).fillColor('#1e3a8a')
+        .text('   ' + safe((m.steps || []).join(' → ')), { width: W, indent: 6 });
+    }
     doc.moveDown(0.45);
   });
 
