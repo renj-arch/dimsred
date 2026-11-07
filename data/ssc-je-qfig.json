@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T04:33:47.873Z",
-  "cursor": 924,
-  "built": 806
+  "updatedAt": "2026-11-07T04:56:15.318Z",
+  "cursor": 927,
+  "built": 809
  },
  "figs": {
   "2316121": {
@@ -4839,6 +4839,24 @@
   "bacf0331": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Spiral Casing Outline -->\n  <path d=\"M 40,190 L 320,190 L 320,120 Q 320,60 280,40 Q 240,20 180,20 Q 120,20 80,40 Q 40,60 40,120 L 40,190 Z\" />\n  <!-- Inlet Spout (Guide Vanes) -->\n  <path d=\"M 180,20 L 175,35 L 185,35 Z M 160,40 L 155,55 L 165,55 Z M 140,50 L 135,65 L 145,65 Z\" />\n  <!-- Runner (Impeller) -->\n  <ellipse cx=\"180\" cy=\"120\" rx=\"90\" ry=\"40\" stroke-dasharray=\"2,2\" />\n  <!-- Flow Arrows indicating Uniform Admission -->\n  <path d=\"M 50,170 L 60,170 L 60,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 80,170 L 90,170 L 90,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 100,170 L 110,170 L 110,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 120,170 L 130,170 L 130,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 140,170 L 150,170 L 150,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 160,170 L 170,170 L 170,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 180,170 L 190,170 L 190,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 200,170 L 210,170 L 210,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 220,170 L 230,170 L 230,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 240,170 L 250,170 L 250,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 260,170 L 270,170 L 270,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 280,170 L 290,170 L 290,160\" stroke-linecap=\"round\"/>\n  <!-- Labels -->\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">Runner</text>\n  <text x=\"30\" y=\"105\" text-anchor=\"middle\">Spiral Casing</text>\n  <text x=\"180\" y=\"45\" text-anchor=\"middle\">Uniform Admission</text>\n  <text x=\"290\" y=\"165\" text-anchor=\"end\">Decreasing Area</text>\n</svg>",
    "n": "what is the function of the spiral casing?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "c7dd70e1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Spiral Casing -->\n  <path d=\"M40,10 Q180,20 320,10 L320,210 Q180,220 40,210 Z\"/>\n  <text x=\"180\" y=\"15\" text-anchor=\"middle\">Spiral Casing</text>\n  \n  <!-- Guide Vanes (Wicket Gates) -->\n  <path d=\"M60,90 L70,85 M70,85 L75,92 M75,92 L80,88 M80,88 L85,95 M85,95 L90,90 M90,90 L95,86 M95,86 L100,93 M100,93 L105,89 M105,89 L110,96 M110,96 L115,92 M115,92 L120,87 M120,87 L125,84 M125,84 L130,91 M130,91 L135,88 M135,88 L140,95 M140,95 L145,92 M145,92 L150,89 M150,89 L155,86 M155,86 L160,93 M160,93 L165,90 M165,90 L170,87 M170,87 L175,94 M175,94 L180,91 M180,91 L185,88 M185,88 L190,95 M190,95 L195,92 M195,92 L200,89 M200,89 L205,86 M205,86 L210,93 M210,93 L215,90 M215,90 L220,87 M220,87 L225,94 M225,94 L230,91 M230,91 L235,88 M235,88 L240,95 M240,95 L245,92 M245,92 L250,89 M250,89 L255,86 M255,86 L260,93 M260,93 L265,90 M265,90 L270,87 M270,87 L275,94 M275,94 L280,91 M280,91 L285,88 M285,88 L290,95 M290,95 L295,92 M295,92 L300,89 M300,89 L305,86 M305,86 L310,93 M310,93 L315,90 M315,90 L320,87\" stroke-width=\"1.2\"/>\n  <text x=\"180\" y=\"75\" text-anchor=\"middle\">Guide Vanes</text>\n  \n  <!-- Runner -->\n  <path d=\"M60,140 Q180,190 300,140 L300,200 Q180,250 60,200 Z\"/>\n  <text x=\"180\" y=\"215\" text-anchor=\"middle\">Runner</text>\n  \n  <!-- Flow Arrows -->\n  <path d=\"M320,100 L290,100\" stroke=\"#222\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path d=\"M290,100 L260,105\" stroke=\"#222\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <path d=\"M260,105 L230,110\" stroke=\"#222\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <text x=\"310\" y=\"95\">Control Flow</text>\n  <text x=\"280\" y=\"115\">Direct Angle</text>\n  \n  <!-- Arrow Marker Definition -->\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\">\n      <polygon points=\"0 0, 10 3, 0 6\" fill=\"#222\"/>\n    </marker>\n  </defs>\n</svg>",
+   "n": "what is the function of the guide vanes in a francis turbine?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "8e8a8763": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Francis Turbine Section</text><path d=\"M40,100 L160,100\" stroke-dasharray=\"4,2\"/><circle cx=\"160\" cy=\"100\" r=\"35\" fill=\"none\" stroke=\"#222\"/><path d=\"M195,100 Q220,75 245,100 T270,100 L270,135 Q245,160 220,135 T195,135\" fill=\"none\" stroke=\"#222\"/><path d=\"M125,100 Q100,75 75,100 T50,100 L50,65 Q75,40 100,65 T125,65\" fill=\"none\" stroke=\"#222\"/><path d=\"M80,100 L100,100 M100,100 L100,135\" stroke-dasharray=\"2,2\"/><text x=\"90\" y=\"145\" text-anchor=\"middle\">Guide Vanes</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Fixed Runner Blades</text><path d=\"M160,135 L160,170\" stroke-dasharray=\"2,2\"/><text x=\"160\" y=\"195\" text-anchor=\"middle\">Draft Tube</text></svg>",
+   "n": "are the francis runner blades adjustable?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "fae512ab": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40,80 L140,80 L140,140 L40,140 Z\"/><circle cx=\"140\" cy=\"80\" r=\"30\"/><path d=\"M170,80 L260,140\"/><path d=\"M260,140 L260,200 L170,200 Z\"/><text x=\"95\" y=\"65\">Runner</text><text x=\"185\" y=\"130\">Draft Tube</text><text x=\"275\" y=\"190\">Tail Race</text><path d=\"M140,80 L140,140\" stroke-dasharray=\"2,2\"/><text x=\"145\" y=\"115\">Pressure Recovery</text></svg>",
+   "n": "what is the function of the draft tube in a francis turbine?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }

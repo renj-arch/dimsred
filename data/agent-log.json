@@ -1,48 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T20:07:16.351Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 226079 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 48 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T20:52:13.496Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 6,
@@ -702,8 +660,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T05:20:35.041Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention before new content generation. BankFigures is the primary fixer for figures but has been active in recent runs; however, MockPapers has produced zero fixes in the last two runs despite pending needs, so it will be scheduled last to avoid starving its potential inputs if any exist. Invention and MetaLearn also hit zero recently and should follow low-priority tasks. The queue shows no completed goals yet, so we prioritize filling",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (809 total)",
+       "text": "What is the function of the guide vanes in a Francis turbine? | Are the Francis runner blades adjustable? | What is the function of the draft tube in a Francis turbine?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T04:37:41.667Z",
+ "lastRun": "2026-11-07T05:20:35.041Z",
  "model": "qwen3.5:9b"
 }
