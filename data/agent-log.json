@@ -608,56 +608,101 @@
    ]
   },
   {
-   "at": "2026-11-07T07:02:12.664Z",
+   "at": "2026-11-07T07:04:20.218Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
+     "agent": "foresight",
      "count": 0
     },
     {
-     "agent": "exampatterns",
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
      "count": 0
     },
     {
-     "agent": "mainsfresh",
-     "count": 1
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
     }
    ],
-   "plan": {
-    "reasoning": "The site has critical gaps in figures (80) and papers are missing entirely; BankFigures must run first to fix the broken visual content. Since papers are absent, MockPapers is next to generate the core study material, followed by ExamPatterns to add value once a base exists. Invention and MetaLearn agents have produced zero output for two consecutive runs and should be deprioritized to this slot to avoid wasting budget on starved processes.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "questions",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (815 total)",
-       "text": "List the losses in a Francis turbine. | What head and discharge conditions suit a Francis turbine? | Compute the peripheral speed u1 at a Francis runner inlet with φ = 0.7 and H = 3"
+       "page": "data/questions",
+       "fix": "Found 226079 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 48 overlapping subtopics into correct categories"
       }
      ]
-    },
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T07:05:58.784Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 61,
+   "byAgent": [
     {
-     "agent": "mainsfresh",
+     "agent": "selfcheck",
+     "count": 61
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
      "fixes": [
       {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw622th4 (gs3, 15 marks): India aims to secure 500 GW of non-fossil energy capacity by 2030, but this transition hinges on accessing critical mine",
-       "model": "qwen3.5:9b (local)"
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "agniveer/mock-tests/full-2026-11-07-agniveer-cee.html",
+       "fix": "Nav: \"AGNIVEER\" → /agniveer/ (was ../index.html)"
+      },
+      {
+       "page": "agniveer/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-13.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-14.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-15.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-02.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html",
+       "fix": "Nav: \"CGL\" → /cgl/ (was ../index.html)"
+      },
+      {
+       "page": "cgl/papers/13-sep-2025-s1.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
       }
      ]
     }
