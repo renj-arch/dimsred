@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T16:11:56.137Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures is the only agent producing output in recent runs, so it must lead to clear immediate debt. MainsFresh produced zero fixes last run and has no files present, suggesting it needs a fresh start or input before contributing; placing it later avoids blocking high-priority math/content gaps. MetaLearn and Invention are idle (0 fixes) for multiple runs and should be queued last to prevent starving the critical content pipeline.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MainsFresh",
-     "Invention",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (764 total)",
-       "text": "Write the Chezy equation and its units. | Write the Manning equation and state the unit of n. | What is the most economical channel section?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T16:52:01.923Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -890,8 +840,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T02:15:45.129Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has 81 figure gaps and 23 critical faults, with no papers or questions present. BankFigures is the only agent producing results recently (1 fix/run), so it must lead to clear the backlog of broken figures. Since filesPresent shows false for all content types, we prioritize generating core assets over new ideas; MetaLearn should run last as it produced 0 fixes in the last two runs and likely needs input from BankFigures first.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "ExamPatterns",
+     "MockPapers",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (792 total)",
+       "text": "Write the hydraulic efficiency of a Pelton wheel. | Why does a Pelton wheel not need a casing or draft tube? | What is the jet ratio of a Pelton wheel and its usual value?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T01:44:27.027Z",
+ "lastRun": "2026-11-07T02:15:45.129Z",
  "model": "qwen3.5:9b"
 }

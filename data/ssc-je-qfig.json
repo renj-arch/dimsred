@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T01:27:24.820Z",
-  "cursor": 906,
-  "built": 789
+  "updatedAt": "2026-11-07T01:56:50.583Z",
+  "cursor": 909,
+  "built": 792
  },
  "figs": {
   "2316121": {
@@ -4737,6 +4737,24 @@
   "cf32f558": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Pelton Wheel Work Diagram</text><circle cx=\"100\" cy=\"110\" r=\"40\"/><path d=\"M 60 70 L 140 150 M 140 70 L 60 150\" stroke-dasharray=\"2,2\"/><text x=\"90\" y=\"80\" text-anchor=\"middle\">Vw1</text><text x=\"110\" y=\"120\" text-anchor=\"middle\">Vw2</text><path d=\"M 150 110 L 260 110 M 260 70 L 260 150\"/><circle cx=\"260\" cy=\"70\" r=\"4\"/><circle cx=\"260\" cy=\"150\" r=\"4\"/><text x=\"280\" y=\"100\" text-anchor=\"start\">Bucket</text><path d=\"M 270 110 L 320 110 M 320 70 L 320 150\" stroke-dasharray=\"2,2\"/><text x=\"340\" y=\"100\" text-anchor=\"start\">u</text><path d=\"M 100 110 L 150 110\"/><text x=\"125\" y=\"115\" text-anchor=\"middle\">(Vw1 - Vw2)</text></svg>",
    "n": "what is the work done per kilogram of water in a pelton wheel?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "f7e2f532": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Hydraulic Efficiency (ηh)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"70\">Work Done</text><line x1=\"40\" y1=\"60\" x2=\"80\" y2=\"60\"/><line x1=\"80\" y1=\"55\" x2=\"80\" y2=\"65\"/><line x1=\"320\" y1=\"60\" x2=\"280\" y2=\"60\"/><line x1=\"280\" y1=\"55\" x2=\"280\" y2=\"65\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\">(Vw1 - Vw2)u</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"110\">Potential Energy</text><line x1=\"40\" y1=\"100\" x2=\"80\" y2=\"100\"/><line x1=\"80\" y1=\"95\" x2=\"80\" y2=\"105\"/><line x1=\"320\" y1=\"100\" x2=\"280\" y2=\"100\"/><line x1=\"280\" y1=\"95\" x2=\"280\" y2=\"105\"/><text x=\"180\" y=\"130\" text-anchor=\"middle\">gH</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\" stroke-dasharray=\"4,2\"/><text x=\"35\" y=\"150\">Velocity Head</text><line x1=\"40\" y1=\"140\" x2=\"80\" y2=\"140\"/><line x1=\"80\" y1=\"135\" x2=\"80\" y2=\"145\"/><line x1=\"320\" y1=\"140\" x2=\"280\" y2=\"140\"/><line x1=\"280\" y1=\"135\" x2=\"280\" y2=\"145\"/><text x=\"180\" y=\"170\" text-anchor=\"middle\">ηh = Work / gH</text><circle cx=\"180\" cy=\"195\" r=\"3\" fill=\"#222\"/></svg>",
+   "n": "write the hydraulic efficiency of a pelton wheel.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "c9ad1d1a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <text x=\"180\" y=\"20\" text-anchor=\"middle\">Pelton Wheel: Atmospheric Discharge</text>\n  <!-- Nozzle Jet -->\n  <path d=\"M 40 100 L 70 100\" stroke-width=\"3\"/>\n  <circle cx=\"70\" cy=\"100\" r=\"2\" fill=\"#222\"/>\n  <!-- Wheel with Buckets -->\n  <ellipse cx=\"180\" cy=\"100\" rx=\"60\" ry=\"40\" stroke-dasharray=\"4,2\"/>\n  <path d=\"M 120 100 L 135 90 L 145 110 Z\" fill=\"none\"/>\n  <path d=\"M 240 100 L 225 90 L 215 110 Z\" fill=\"none\"/>\n  <!-- Water exiting into air -->\n  <path d=\"M 230 100 L 260 100\" stroke-width=\"3\"/>\n  <text x=\"245\" y=\"105\" text-anchor=\"middle\">Atmosphere</text>\n  <!-- Labels -->\n  <text x=\"30\" y=\"105\">Jet (High Pressure)</text>\n  <text x=\"270\" y=\"105\">Exit to Air</text>\n  <text x=\"180\" y=\"160\" text-anchor=\"middle\">No Draft Tube Needed</text>\n</svg>",
+   "n": "why does a pelton wheel not need a casing or draft tube?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "678ef302": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">D</text><circle cx=\"180\" cy=\"100\" r=\"70\" /><text x=\"190\" y=\"105\">D</text><line x1=\"110\" y1=\"30\" x2=\"110\" y2=\"170\" stroke-dasharray=\"4\" /><text x=\"105\" y=\"95\">d</text><circle cx=\"180\" cy=\"30\" r=\"3\" fill=\"#222\" /><circle cx=\"180\" cy=\"170\" r=\"3\" fill=\"#222\" /><line x1=\"177\" y1=\"33\" x2=\"183\" y2=\"33\" /><line x1=\"177\" y1=\"167\" x2=\"183\" y2=\"167\" /><text x=\"200\" y=\"50\">Jet (d)</text><text x=\"200\" y=\"180\">Jet (d)</text><text x=\"240\" y=\"110\">Pelton Wheel</text><text x=\"240\" y=\"90\">Pitch Diameter (D)</text></svg>",
+   "n": "what is the jet ratio of a pelton wheel and its usual value?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
