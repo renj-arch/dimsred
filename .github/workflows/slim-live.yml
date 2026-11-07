@@ -129,6 +129,7 @@ jobs:
           # contradicted and leaked model reasoning. This gate fails the deploy
           # on either, so they cannot reach live again.
           node scripts/lib/question-solutions.test.js
+          node scripts/lib/course-versions.test.js
       - name: Rebuild slim live tree (orphan root)
         run: |
           set -euo pipefail
