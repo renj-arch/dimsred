@@ -128,6 +128,7 @@ jobs:
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add data/research-solutions.json data/research-build-targets.json research-team.html
+          git add -f data/research-solutions.json data/research-build-targets.json
           git add -A -- '*mock-tests/*.html' sitemap.xml 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "No new research to publish"
