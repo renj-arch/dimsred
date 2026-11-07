@@ -591,95 +591,114 @@
    ]
   },
   {
-   "at": "2026-11-07T21:56:45.778Z",
+   "at": "2026-11-07T22:31:10.529Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "totalFixes": 4,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
+     "agent": "foresight",
      "count": 0
     },
     {
-     "agent": "exampatterns",
+     "agent": "questions",
+     "count": 4
+    },
+    {
+     "agent": "content",
      "count": 0
     },
     {
-     "agent": "metalearn",
+     "agent": "papers",
      "count": 0
     },
     {
-     "agent": "invention",
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
      "count": 0
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual content. Since papers and questions files are missing, MockPapers is next to generate core study material. ExamPatterns follows to create question banks once figures exist. MetaLearn should run to synthesize new learning paths from the growing content pool. Invention goes last as it requires a stable base of content before generating novel exam scenarios.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "questions",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (898 total)",
-       "text": "How much work does an air vessel save in a reciprocating pump? | What is separation in the suction of a reciprocating pump? | Compare a centrifugal pump with a reciprocating pump."
+       "page": "data/questions",
+       "fix": "Found 226482 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 48 overlapping subtopics into correct categories"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Converted 1 fill-in-blank questions to proper Q&A"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Updated 1 question files"
       }
      ]
     }
    ]
   },
   {
-   "at": "2026-11-07T22:22:58.761Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
+   "at": "2026-11-07T22:42:45.113Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 185,
    "byAgent": [
     {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
+     "agent": "selfcheck",
+     "count": 185
     }
    ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/questions/syllabus are missing, MockPapers is next to generate core study material from available data. ExamPatterns should follow to ensure questions align with current syllabus logic. Invention is scheduled last as it produces new ideas rather than fixing immediate gaps.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
    "details": [
     {
-     "agent": "bankfigures",
+     "agent": "selfcheck",
      "fixes": [
       {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (901 total)",
-       "text": "What is a hydraulic ram? | What is a hydraulic accumulator? | What is a hydraulic intensifier?"
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+       "fix": "Nav: \"CGL\" → /cgl/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/index.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-essay/lesson-essay-language.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-essay/lesson-essay-practice.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-essay/lesson-essay-structure.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-essay/lesson-essay-topics.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-gs1/lesson-answer-writing-gs1.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
+      },
+      {
+       "page": "upsc/course/mains-gs1/lesson-heritage-culture.html",
+       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
       }
      ]
     }
