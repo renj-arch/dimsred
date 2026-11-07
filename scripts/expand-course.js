@@ -29,6 +29,7 @@
 var fs = require('fs');
 var path = require('path');
 var cp = require('child_process');
+var htmlRepair = require('./lib/html-repair');
 
 var ROOT = path.join(__dirname, '..');
 var CONFIGS_FILE = path.join(__dirname, 'exam-configs.json');
@@ -687,6 +688,9 @@ function generateOne(gap, timeoutMs) {
       rest = raw.slice(qi + 15);
     }
     html = html.replace(/^\s*```(?:html)?\s*/i, '').replace(/```\s*$/, '').trim();
+    // Close missing tags and drop attributes the validator would reject. The
+    // model's prose is kept; only malformed markup is repaired.
+    html = htmlRepair.sanitize(html);
     var err = validateHtml(html);
     if (err) throw new Error('html rejected: ' + err);
     if (gap.role === 'enrich' && html.length < gap.oldLen + 1500) {
