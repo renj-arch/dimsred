@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T04:06:40.481Z",
-  "cursor": 921,
-  "built": 803
+  "updatedAt": "2026-11-07T04:33:47.873Z",
+  "cursor": 924,
+  "built": 806
  },
  "figs": {
   "2316121": {
@@ -4821,6 +4821,24 @@
   "b9c9ecfc": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"330\" y=\"175\">Efficiency (η)</text><line x1=\"40\" y1=\"190\" x2=\"40\" y2=\"40\"/><text x=\"35\" y=\"100\">Output</text><circle cx=\"180\" cy=\"100\" r=\"6\"/><text x=\"175\" y=\"95\">η ≈ 0.85–0.90</text><path d=\"M40,180 L320,180 M40,40 L40,190 M180,94 L180,106\"/><text x=\"170\" y=\"150\">Design Point</text><rect x=\"100\" y=\"130\" width=\"160\" height=\"20\" rx=\"5\"/><text x=\"110\" y=\"148\">Large Pelton Wheel</text></svg>",
    "n": "what overall efficiency is typical for a large pelton wheel?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "e0a4fcbe": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Spiral Casing -->\n  <path d=\"M40,180 Q180,40 320,180 L320,190 Q180,100 40,190 Z\" />\n  <!-- Guide Vanes (Stator) -->\n  <path d=\"M60,170 L50,150 M70,160 L60,140 M80,150 L70,130 M90,140 L80,120\" stroke-dasharray=\"2,2\" />\n  <!-- Runner (Impeller) -->\n  <path d=\"M100,160 Q120,140 140,160 T180,160 T220,160 T260,160 Q280,180 300,160\" />\n  <circle cx=\"180\" cy=\"160\" r=\"5\" fill=\"#222\" />\n  <!-- Inlet Flow (Radial) -->\n  <path d=\"M40,180 L100,160 M320,180 L260,160\" stroke-dasharray=\"4,2\" />\n  <!-- Outlet Flow (Axial/Downward) -->\n  <path d=\"M100,160 L100,190 M260,160 L260,190\" stroke-dasharray=\"4,2\" />\n  <!-- Labels -->\n  <text x=\"50\" y=\"195\">Inlet (Radial)</text>\n  <text x=\"170\" y=\"210\">Axial Outlet</text>\n  <text x=\"330\" y=\"185\">Guide Vanes</text>\n  <text x=\"160\" y=\"40\">Runner</text>\n  <text x=\"180\" y=\"195\">Turbine Shaft</text>\n</svg>",
+   "n": "what is a francis turbine?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "49d4bc41": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><path d=\"M40 80 Q 100 40 160 80 T 280 80 L 280 140 Q 220 180 160 140 T 40 140 Z\"/><path d=\"M160 80 L 160 140 M 140 90 L 180 90 M 140 110 L 180 110\" stroke-dasharray=\"2,2\"/><circle cx=\"160\" cy=\"80\" r=\"5\"/><text x=\"170\" y=\"75\">Runner</text><path d=\"M30 40 L 30 180 L 330 180 L 330 40 Z\"/><path d=\"M30 60 L 330 60 M 30 120 L 330 120 M 180 40 L 180 180\" stroke-dasharray=\"2,2\"/><text x=\"50\" y=\"55\">Spiral Casing</text><text x=\"50\" y=\"135\">Draft Tube</text><text x=\"290\" y=\"55\">Stay Ring</text><text x=\"290\" y=\"135\">Guide Vanes</text></svg>",
+   "n": "name the main parts of a francis turbine.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "bacf0331": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Spiral Casing Outline -->\n  <path d=\"M 40,190 L 320,190 L 320,120 Q 320,60 280,40 Q 240,20 180,20 Q 120,20 80,40 Q 40,60 40,120 L 40,190 Z\" />\n  <!-- Inlet Spout (Guide Vanes) -->\n  <path d=\"M 180,20 L 175,35 L 185,35 Z M 160,40 L 155,55 L 165,55 Z M 140,50 L 135,65 L 145,65 Z\" />\n  <!-- Runner (Impeller) -->\n  <ellipse cx=\"180\" cy=\"120\" rx=\"90\" ry=\"40\" stroke-dasharray=\"2,2\" />\n  <!-- Flow Arrows indicating Uniform Admission -->\n  <path d=\"M 50,170 L 60,170 L 60,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 80,170 L 90,170 L 90,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 100,170 L 110,170 L 110,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 120,170 L 130,170 L 130,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 140,170 L 150,170 L 150,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 160,170 L 170,170 L 170,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 180,170 L 190,170 L 190,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 200,170 L 210,170 L 210,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 220,170 L 230,170 L 230,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 240,170 L 250,170 L 250,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 260,170 L 270,170 L 270,160\" stroke-linecap=\"round\"/>\n  <path d=\"M 280,170 L 290,170 L 290,160\" stroke-linecap=\"round\"/>\n  <!-- Labels -->\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">Runner</text>\n  <text x=\"30\" y=\"105\" text-anchor=\"middle\">Spiral Casing</text>\n  <text x=\"180\" y=\"45\" text-anchor=\"middle\">Uniform Admission</text>\n  <text x=\"290\" y=\"165\" text-anchor=\"end\">Decreasing Area</text>\n</svg>",
+   "n": "what is the function of the spiral casing?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
