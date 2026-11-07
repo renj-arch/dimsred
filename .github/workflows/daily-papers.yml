@@ -23,6 +23,14 @@ on:
         description: 'Exams to generate (space-separated, default: all)'
         required: false
         default: ''
+      model:
+        description: 'Ollama model for question writing (default qwen3.5:9b)'
+        required: false
+        default: 'qwen3.5:9b'
+      count:
+        description: 'Questions per daily set'
+        required: false
+        default: '15'
 
 permissions:
   contents: write
@@ -36,7 +44,7 @@ concurrency:
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
@@ -48,6 +56,57 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      # The paper questions are written by the model on this runner. No
+      # procedural filler remains in this lane.
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - name: Create swap (16GB)
+        run: bash scripts/ci-make-swap.sh
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL --max-time 120 -o /tmp/ollama-install.sh https://ollama.com/install.sh
+          sudo sh /tmp/ollama-install.sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && { echo "Ollama ready after ${i}s"; break; }
+            sleep 1
+          done
+
+      - name: Pull + warm the model
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
 
       - name: Determine exam for this slot
         id: batch
@@ -95,9 +154,22 @@ jobs:
           NODE_OPTIONS=--max-old-space-size=4096 node scripts/import-course-questions-to-banks.js --refresh-course
           NODE_OPTIONS=--max-old-space-size=4096 node scripts/refresh-course-paper-text.js
 
-      - name: Generate procedural questions (no AI, last-resort filler)
+      # Model-only generation. The procedural filler is gone: if the model
+      # cannot produce a valid question the step fails visibly instead of
+      # publishing template questions.
+      - name: Write fresh questions with the model
         if: steps.batch.outputs.exams != 'skip'
-        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-daily-questions.js ${{ steps.batch.outputs.exams }} --count=15
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+        run: |
+          TARGETS="${{ steps.batch.outputs.exams }}"
+          if [ "$TARGETS" = "all" ]; then
+            TARGETS="cgl rbi jee neet gate agniveer upsc ibps-po sbi-clerk ssc-gd ctet nda cds clat"
+          fi
+          for e in $TARGETS; do
+            NODE_OPTIONS=--max-old-space-size=4096 node scripts/model-fill-bank.js "$e" --count=${{ inputs.count || '15' }} --budget=30
+          done
 
       - name: Build practice paper
         if: steps.batch.outputs.exams != 'skip'
