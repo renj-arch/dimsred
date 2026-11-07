@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T08:13:12.009Z",
-  "cursor": 942,
-  "built": 824
+  "updatedAt": "2026-11-07T08:45:57.945Z",
+  "cursor": 945,
+  "built": 827
  },
  "figs": {
   "2316121": {
@@ -4947,6 +4947,24 @@
   "a9d81f48": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Kaplan Runner Section</text><circle cx=\"180\" cy=\"100\" r=\"70\" /><circle cx=\"180\" cy=\"100\" r=\"30\" /><path d=\"M 110 100 L 250 100\" stroke-dasharray=\"4,2\" /><text x=\"180\" y=\"90\" text-anchor=\"middle\">D (Tip Diameter)</text><text x=\"180\" y=\"130\" text-anchor=\"middle\">d (Hub Diameter)</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Vf (Flow Velocity)</text><path d=\"M 110 100 L 250 100\" stroke-dasharray=\"4,2\" /><text x=\"170\" y=\"115\" text-anchor=\"start\">Annular Area</text><text x=\"170\" y=\"135\" text-anchor=\"start\">= π/4 (D² - d²)</text></svg>",
    "n": "how is the discharge through a kaplan runner obtained?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "64b08527": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Efficiency</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"35\" y=\"195\">Part Load</text><text x=\"35\" y=\"70\">Full Load</text><path d=\"M 60 170 L 300 170 L 300 80 Q 260 40 180 40 Q 100 40 60 170 Z\" fill=\"#ddd\" stroke=\"#222\"/><path d=\"M 60 170 L 300 170 L 300 140 L 60 170 Z\" fill=\"#eee\" stroke=\"#222\"/><text x=\"180\" y=\"115\" text-anchor=\"middle\">Kaplan (Adjustable)</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Propeller (Fixed)</text></svg>",
+   "n": "how does the part-load efficiency of a kaplan turbine compare with a fixed-blade machine?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "1c519325": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Water Surface -->\n  <line x1=\"10\" y1=\"40\" x2=\"350\" y2=\"40\" />\n  <!-- Tail Race Level (Lower) -->\n  <line x1=\"10\" y1=\"160\" x2=\"350\" y2=\"160\" />\n  <!-- Turbine Runner Outline -->\n  <ellipse cx=\"180\" cy=\"100\" rx=\"40\" ry=\"25\" />\n  <!-- Draft Tube (Converging) -->\n  <path d=\"M 140 125 L 180 160 L 220 125\" stroke-dasharray=\"3,2\" />\n  <!-- Critical Thoma Factor Label -->\n  <text x=\"190\" y=\"175\">Critical Thoma Factor</text>\n  <!-- Cavitation Warning Zone -->\n  <rect x=\"140\" y=\"125\" width=\"80\" height=\"35\" fill=\"#eee\" stroke=\"#222\" opacity=\"0.5\"/>\n  <text x=\"190\" y=\"165\">Avoid Cavitation</text>\n  <!-- Specific Speed Indicator -->\n  <text x=\"10\" y=\"180\">High Ns</text>\n  <line x1=\"30\" y1=\"175\" x2=\"40\" y2=\"175\" stroke-width=\"2\"/>\n</svg>",
+   "n": "why must a kaplan turbine be set deeper relative to the tail race?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "1be32589": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Velocity Diagram</text><line x1=\"40\" y1=\"45\" x2=\"320\" y2=\"45\"/><circle cx=\"180\" cy=\"45\" r=\"20\"/><path d=\"M 160 45 L 180 25 M 200 45 L 180 65\"/><text x=\"175\" y=\"30\">u</text><text x=\"195\" y=\"70\">u</text><path d=\"M 180 25 L 180 65 M 160 45 L 140 25 M 200 45 L 220 65\"/><text x=\"135\" y=\"20\">Vw1</text><text x=\"225\" y=\"70\">Vw2</text><path d=\"M 180 25 L 180 65 M 140 25 L 160 45 M 220 65 L 200 45\"/><text x=\"175\" y=\"55\">Vr</text><path d=\"M 180 65 L 180 100\"/><circle cx=\"180\" cy=\"100\" r=\"30\"/><path d=\"M 180 100 L 150 70 M 210 100 L 240 70\"/><text x=\"145\" y=\"65\">Vw1</text><text x=\"235\" y=\"65\">Vw2</text><path d=\"M 180 100 L 180 130\"/><circle cx=\"180\" cy=\"130\" r=\"25\"/><path d=\"M 180 130 L 155 100 M 205 130 L 230 100\"/><text x=\"145\" y=\"95\">Vw1</text><text x=\"235\" y=\"95\">Vw2</text><path d=\"M 180 130 L 180 160\"/><circle cx=\"180\" cy=\"160\" r=\"20\"/><path d=\"M 180 160 L 160 145 M 200 160 L 220 145\"/><text x=\"155\" y=\"140\">Vw2</text><text x=\"215\" y=\"140\">Vw1</text><path d=\"M 180 160 L 180 190\"/><circle cx=\"180\" cy=\"190\" r=\"35\"/><path d=\"M 180 190 L 145 160 M 215 190 L 245 160\"/><text x=\"140\" y=\"155\">Vw2</text><text x=\"230\" y=\"155\">Vw1</text><path d=\"M 180 190 L 180 210\"/><circle cx=\"180\" cy=\"210\" r=\"40\"/><path d=\"M 180 210 L 140 185 M 220 210 L 260 185\"/><text x=\"135\" y=\"180\">Vw2</text><text x=\"245\" y=\"180\">Vw1</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">Inlet &gt; Outlet</text></svg>",
+   "n": "write the euler turbine equation.",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
