@@ -345,7 +345,18 @@ async function run(opts) {
 
 if (require.main === module) {
   const a = args(process.argv.slice(2));
-  run(a).then(function () { process.exit(0); }).catch(function (e) {
+  run(a).then(function (counts) {
+    // A run that investigated questions but produced neither a published
+    // method nor a review entry did no useful work: report it as a failure so
+    // a broken solver/verifier loop cannot look green for hours. Queue-empty
+    // and time-budget stops are legitimate and stay green.
+    if (counts.investigated > 0 && counts.published === 0 && counts.review === 0) {
+      console.error('::error::research run investigated ' + counts.investigated +
+        ' question(s) and published none - check the solver and verifier');
+      process.exit(1);
+    }
+    process.exit(0);
+  }).catch(function (e) {
     console.error('research team failed: ' + e.message);
     process.exit(1);
   });
