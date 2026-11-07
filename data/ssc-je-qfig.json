@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T14:15:12.874Z",
-  "cursor": 972,
-  "built": 853
+  "updatedAt": "2026-11-07T14:45:38.538Z",
+  "cursor": 975,
+  "built": 855
  },
  "figs": {
   "2316121": {
@@ -5121,6 +5121,18 @@
   "7bfc02a0": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Thoma Cavitation Factor (σ)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"65\">Hb</text><text x=\"315\" y=\"65\">pv/γ</text><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><text x=\"35\" y=\"85\">Hs</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"35\" y=\"105\">Tailrace</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\"/><text x=\"35\" y=\"125\">Hs + Ht</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"35\" y=\"145\">Hb - Hs - pv/γ</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Net Positive Suction Head</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"185\">Hb - Hs - pv/γ</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">Divided by Total Head (H)</text></svg>",
    "n": "define the thoma cavitation factor of a turbine.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "5fd188c1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Setting Height (Hs) vs Suction Head</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"30\" y=\"65\">Hb - pv/γ - σc·H</text><text x=\"30\" y=\"78\">Limit</text><line x1=\"40\" y1=\"90\" x2=\"320\" y2=\"90\"/><text x=\"30\" y=\"95\">Hb - pv/γ</text><text x=\"30\" y=\"108\">Max Suction</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\"/><text x=\"30\" y=\"125\">Hs (Actual)</text><text x=\"30\" y=\"138\">Safe Zone</text><line x1=\"40\" y1=\"150\" x2=\"320\" y2=\"150\"/><text x=\"30\" y=\"155\">Cavitation Risk</text><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"150\" stroke-dasharray=\"4,2\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"150\" stroke-dasharray=\"4,2\"/><text x=\"38\" y=\"105\" text-anchor=\"end\">↑</text><text x=\"38\" y=\"107\">Head (m)</text><text x=\"335\" y=\"105\" text-anchor=\"end\">↓</text><text x=\"335\" y=\"107\">Height</text></svg>",
+   "n": "how is the setting height of a reaction turbine determined?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "813ab1d8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">IMPULSE</text><path d=\"M40,40 L80,40 L90,60 L70,80 L30,60 Z\"/><circle cx=\"60\" cy=\"50\" r=\"5\"/><line x1=\"95\" y1=\"50\" x2=\"135\" y2=\"50\"/><text x=\"140\" y=\"55\">Jet</text><path d=\"M135,50 L175,50 L185,70 L165,90 L125,70 Z\"/><circle cx=\"150\" cy=\"60\" r=\"5\"/><text x=\"180\" y=\"65\">Atmospheric</text><path d=\"M40,130 L80,130 L90,150 L70,170 L30,150 Z\"/><circle cx=\"60\" cy=\"140\" r=\"5\"/><line x1=\"95\" y1=\"140\" x2=\"135\" y2=\"140\"/><text x=\"140\" y=\"145\">Pressure Drop</text><path d=\"M135,140 L175,140 L185,160 L165,180 L125,160 Z\"/><circle cx=\"150\" cy=\"150\" r=\"5\"/><text x=\"180\" y=\"155\">Submerged</text><line x1=\"90\" y1=\"40\" x2=\"90\" y2=\"130\" stroke-dasharray=\"2,2\"/><line x1=\"175\" y1=\"40\" x2=\"175\" y2=\"130\" stroke-dasharray=\"2,2\"/><text x=\"105\" y=\"95\">Nozzle</text><text x=\"195\" y=\"95\">Blades</text></svg>",
+   "n": "compare an impulse turbine with a reaction turbine.",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
