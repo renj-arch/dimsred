@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T17:40:06.081Z",
-  "cursor": 993,
-  "built": 872
+  "updatedAt": "2026-11-07T18:09:29.163Z",
+  "cursor": 996,
+  "built": 875
  },
  "figs": {
   "2316121": {
@@ -5235,6 +5235,24 @@
   "fd9e81fc": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"32\" y=\"100\" text-anchor=\"end\">Static Head</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"240\" y=\"195\" text-anchor=\"end\">Impeller Head</text><path d=\"M 40 180 L 120 180 L 120 160 Q 160 140 200 160 L 280 160\"/><circle cx=\"120\" cy=\"180\" r=\"3\" fill=\"#222\"/><text x=\"115\" y=\"175\">Start</text><circle cx=\"280\" cy=\"160\" r=\"3\" fill=\"#222\"/><text x=\"275\" y=\"155\">Min. Speed</text><rect x=\"240\" y=\"10\" width=\"80\" height=\"10\" rx=\"5\"/><text x=\"260\" y=\"22\" text-anchor=\"middle\">Threshold</text></svg>",
    "n": "what is the minimum starting speed of a centrifugal pump?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "b8f4d61e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Volute Casing -->\n  <path d=\"M40,100 Q100,20 180,100 T320,100\" fill=\"none\"/>\n  <text x=\"160\" y=\"95\" text-anchor=\"middle\">Volute</text>\n  <text x=\"160\" y=\"105\" text-anchor=\"middle\">(Spiral)</text>\n  \n  <!-- Vortex Casing -->\n  <path d=\"M40,100 Q100,20 180,100 T320,100\" fill=\"none\"/>\n  <circle cx=\"180\" cy=\"100\" r=\"60\" fill=\"none\"/>\n  <path d=\"M120,40 Q180,10 240,40\" fill=\"none\"/>\n  <text x=\"180\" y=\"95\" text-anchor=\"middle\">Vortex</text>\n  \n  <!-- Diffuser Casing -->\n  <path d=\"M40,100 Q100,20 180,100 T320,100\" fill=\"none\"/>\n  <rect x=\"160\" y=\"40\" width=\"40\" height=\"120\" rx=\"5\"/>\n  <text x=\"180\" y=\"95\" text-anchor=\"middle\">Diffuser</text>\n  <text x=\"180\" y=\"105\" text-anchor=\"middle\">(Guide Vanes)</text>\n</svg>",
+   "n": "name the types of casings used for centrifugal pumps.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "9f356c38": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Impeller Types</text><g id=\"closed\"><path d=\"M40,60 Q70,30 100,60 L100,100 Q70,130 40,100 Z\"/><circle cx=\"70\" cy=\"80\" r=\"5\"/><text x=\"20\" y=\"90\">Closed</text><text x=\"105\" y=\"90\">(Enclosed)</text></g><g id=\"semi-open\"><path d=\"M40,60 Q70,30 100,60 L100,100 Q70,130 40,100 Z M50,80 L90,80\"/><circle cx=\"70\" cy=\"80\" r=\"5\"/><text x=\"20\" y=\"115\">Semi-Open</text></g><g id=\"open\"><path d=\"M40,60 Q70,30 100,60 L100,100 Q70,130 40,100 Z M50,80 L90,80 M50,90 L90,90\"/><circle cx=\"70\" cy=\"80\" r=\"5\"/><text x=\"20\" y=\"145\">Open</text></g><text x=\"320\" y=\"100\" text-anchor=\"end\">Vanes visible</text></svg>",
+   "n": "what are the constructional types of a pump impeller?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "2df6d2f1": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Pipe/Discharge Line -->\n  <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" stroke-dasharray=\"4,2\"/>\n  <text x=\"180\" y=\"195\" text-anchor=\"middle\">Common Discharge</text>\n  <!-- Pump 1 -->\n  <circle cx=\"100\" cy=\"100\" r=\"35\" stroke-width=\"1.5\"/>\n  <line x1=\"100\" y1=\"85\" x2=\"100\" y2=\"65\"/>\n  <text x=\"100\" y=\"55\" text-anchor=\"middle\">Pump 1</text>\n  <!-- Pump 2 -->\n  <circle cx=\"200\" cy=\"100\" r=\"35\" stroke-width=\"1.5\"/>\n  <line x1=\"200\" y1=\"85\" x2=\"200\" y2=\"65\"/>\n  <text x=\"200\" y=\"55\" text-anchor=\"middle\">Pump 2</text>\n  <!-- Head Arrows -->\n  <path d=\"M 70 100 L 95 100\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>\n  <text x=\"65\" y=\"95\">H₁</text>\n  <path d=\"M 230 100 L 255 100\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>\n  <text x=\"245\" y=\"95\">H₂</text>\n  <!-- Total Head -->\n  <path d=\"M 170 60 L 170 85\" stroke-dasharray=\"2,2\"/>\n  <text x=\"170\" y=\"45\" text-anchor=\"middle\">Total Head = H₁ + H₂</text>\n  <!-- Labels -->\n  <text x=\"20\" y=\"30\" font-weight=\"bold\">Series Arrangement</text>\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"5\" refY=\"5\" orient=\"auto\">\n      <path d=\"M0,0 L10,5 L0,10 z\" fill=\"#222\"/>\n    </marker>\n  </defs>\n</svg>",
+   "n": "why are centrifugal pump stages arranged in series?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
