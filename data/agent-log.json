@@ -1,61 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T02:42:58.322Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (795 total)",
-       "text": "How is the number of buckets on a Pelton runner found? | Why are Pelton wheels sometimes given several jets? | What is the purpose of the braking jet on a Pelton wheel?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Air Compressors (360 in pool)",
-       "text": "Air Compressors"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T02:54:18.514Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -720,8 +665,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T09:20:34.277Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; prioritize BankFigures to fix broken visual content immediately. Since papers/questions/syllabus are missing, MockPapers must generate core study materials next. MainsFresh will refresh daily content while ExamPatterns addresses the remaining pattern gaps. Exampatterns produced 0 in the last two runs and should be placed last to avoid starving it further.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "MainsFresh",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (830 total)",
+       "text": "What head does the Euler turbine work correspond to? | Simplify the Euler equation for an axial-flow machine. | Define hydraulic efficiency of a turbine."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw670r1e (gs3, 15 marks): India has committed to net-zero emissions by 2070 but faces a funding gap for green transitions. Critically examine the ",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T09:06:43.539Z",
+ "lastRun": "2026-11-07T09:20:34.277Z",
  "model": "qwen3.5:9b"
 }

@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T08:45:57.945Z",
-  "cursor": 945,
-  "built": 827
+  "updatedAt": "2026-11-07T09:15:20.456Z",
+  "cursor": 948,
+  "built": 830
  },
  "figs": {
   "2316121": {
@@ -4965,6 +4965,24 @@
   "1be32589": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Velocity Diagram</text><line x1=\"40\" y1=\"45\" x2=\"320\" y2=\"45\"/><circle cx=\"180\" cy=\"45\" r=\"20\"/><path d=\"M 160 45 L 180 25 M 200 45 L 180 65\"/><text x=\"175\" y=\"30\">u</text><text x=\"195\" y=\"70\">u</text><path d=\"M 180 25 L 180 65 M 160 45 L 140 25 M 200 45 L 220 65\"/><text x=\"135\" y=\"20\">Vw1</text><text x=\"225\" y=\"70\">Vw2</text><path d=\"M 180 25 L 180 65 M 140 25 L 160 45 M 220 65 L 200 45\"/><text x=\"175\" y=\"55\">Vr</text><path d=\"M 180 65 L 180 100\"/><circle cx=\"180\" cy=\"100\" r=\"30\"/><path d=\"M 180 100 L 150 70 M 210 100 L 240 70\"/><text x=\"145\" y=\"65\">Vw1</text><text x=\"235\" y=\"65\">Vw2</text><path d=\"M 180 100 L 180 130\"/><circle cx=\"180\" cy=\"130\" r=\"25\"/><path d=\"M 180 130 L 155 100 M 205 130 L 230 100\"/><text x=\"145\" y=\"95\">Vw1</text><text x=\"235\" y=\"95\">Vw2</text><path d=\"M 180 130 L 180 160\"/><circle cx=\"180\" cy=\"160\" r=\"20\"/><path d=\"M 180 160 L 160 145 M 200 160 L 220 145\"/><text x=\"155\" y=\"140\">Vw2</text><text x=\"215\" y=\"140\">Vw1</text><path d=\"M 180 160 L 180 190\"/><circle cx=\"180\" cy=\"190\" r=\"35\"/><path d=\"M 180 190 L 145 160 M 215 190 L 245 160\"/><text x=\"140\" y=\"155\">Vw2</text><text x=\"230\" y=\"155\">Vw1</text><path d=\"M 180 190 L 180 210\"/><circle cx=\"180\" cy=\"210\" r=\"40\"/><path d=\"M 180 210 L 140 185 M 220 210 L 260 185\"/><text x=\"135\" y=\"180\">Vw2</text><text x=\"245\" y=\"180\">Vw1</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">Inlet &gt; Outlet</text></svg>",
    "n": "write the euler turbine equation.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "9ac55f91": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Specific Work (W)</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"180\" y=\"205\" text-anchor=\"middle\">g</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"40\"/><text x=\"25\" y=\"110\" text-anchor=\"end\">H(e)</text><path d=\"M 60 180 L 300 40\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"105\" text-anchor=\"middle\" fill=\"#555\">(Vw1u1 - Vw2u2)</text></svg>",
+   "n": "what head does the euler turbine work correspond to?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "f417efc5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Constant Radius (Axial Flow)</text><path d=\"M 40 100 L 320 100\"/><circle cx=\"40\" cy=\"100\" r=\"5\"/><circle cx=\"320\" cy=\"100\" r=\"5\"/><text x=\"30\" y=\"105\">Inlet (1)</text><text x=\"325\" y=\"105\">Outlet (2)</text><path d=\"M 40 100 L 40 60\" stroke-dasharray=\"4\"/><path d=\"M 320 100 L 320 140\" stroke-dasharray=\"4\"/><text x=\"35\" y=\"75\">Vw1 (Inlet)</text><text x=\"325\" y=\"160\">Vw2 (Outlet)</text><path d=\"M 40 100 L 80 100 L 80 60 L 40 60 Z\" fill=\"none\" stroke=\"#222\"/><path d=\"M 320 100 L 280 100 L 280 140 L 320 140 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"65\" y=\"90\">Blade Speed u</text><text x=\"295\" y=\"90\">Blade Speed u</text></svg>",
+   "n": "simplify the euler equation for an axial-flow machine.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "44c6df85": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Hydraulic Efficiency</text><line x1=\"50\" y1=\"140\" x2=\"310\" y2=\"140\"/><text x=\"180\" y=\"160\" text-anchor=\"middle\">Energy Terms</text><line x1=\"50\" y1=\"100\" x2=\"310\" y2=\"100\"/><line x1=\"50\" y1=\"140\" x2=\"50\" y2=\"100\"/><line x1=\"310\" y1=\"140\" x2=\"310\" y2=\"100\"/><rect x=\"70\" y=\"80\" width=\"60\" height=\"40\" rx=\"5\"/><text x=\"100\" y=\"105\" text-anchor=\"middle\">Euler Work</text><text x=\"100\" y=\"120\" text-anchor=\"middle\">(Vw1u1 − Vw2u2)</text><rect x=\"190\" y=\"80\" width=\"60\" height=\"40\" rx=\"5\"/><text x=\"220\" y=\"105\" text-anchor=\"middle\">Available Head</text><text x=\"220\" y=\"120\" text-anchor=\"middle\">(gH)</text><line x1=\"70\" y1=\"140\" x2=\"310\" y2=\"140\" stroke-dasharray=\"4\"/><text x=\"180\" y=\"155\" text-anchor=\"middle\">ηh = Efficiency</text></svg>",
+   "n": "define hydraulic efficiency of a turbine.",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
