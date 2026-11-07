@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T14:31:53.524Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "We have 60 critical faults and 80 figure gaps; the previous run exhausted 'bankfigures' (1 fix) and 'invention' (0), so we must prioritize content generation to fill these deep gaps before tackling general faults. Since 'papers', 'questions', and 'syllabus' files are missing, we cannot use those agents yet; we must first generate the raw material via 'BankFigures' and 'Invention'. We will follow with 'MockPapers' and 'ExamPatterns' to structure that content, saving 'MetaLearn' for last as it has",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MockPapers",
-     "ExamPatterns",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (853 total)",
-       "text": "Write the efficiency of a draft tube. | What causes cavitation in a reaction turbine? | Define the Thoma cavitation factor of a turbine."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T14:58:34.274Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -750,8 +700,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T21:34:15.416Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; bankfigures must run first to fix broken diagrams. Since papers and questions files are missing, metalearn should immediately generate fresh exam content to fill the syllabus void. Invention is deferred as it requires stable inputs from prior agents.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (895 total)",
+       "text": "How does the acceleration of the piston affect the indicator diagram? | How does pipe friction affect the indicator diagram? | What is the function and position of an air vessel on a reciprocating pump?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T21:22:07.228Z",
+ "lastRun": "2026-11-07T21:34:15.416Z",
  "model": "qwen3.5:9b"
 }
