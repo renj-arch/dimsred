@@ -1,17 +1,37 @@
 {
  "meta": {
-  "generatedAt": "2026-11-06T08:38:28.906Z",
+  "generatedAt": "2026-11-07T07:54:38.829Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 41,
+  "count": 43,
   "lastAttempt": {
-   "at": "2026-11-06T08:38:28.906Z",
+   "at": "2026-11-07T07:54:38.829Z",
    "ok": true,
-   "count": 1,
+   "count": 2,
    "dropped": 3
   }
  },
  "proposals": [
+  {
+   "id": "prp-mw63y92l-1",
+   "at": "2026-11-07T07:54:38.829Z",
+   "title": "Fix transport hard cap timeout",
+   "why": "A recent failure occurred in `mental-batch` due to a 'transport: hard cap 55min' limit, likely caused by long-running generation or processing tasks.",
+   "idea": "Adjust the GitHub Actions workflow timeout settings for the `mental-batch` lane from the default (often 6h) to a more generous value if the model is slow, or split the generation task into smaller chunks that finish within the 55-minute window before re-joining them.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mw63y92l-2",
+   "at": "2026-11-07T07:54:38.829Z",
+   "title": "Add visible Next button to quiz flows",
+   "why": "Browser tests flagged 'flow-skipped' on both Homepage and Ask Engine because no visible Next button exists, preventing users from exercising the quiz flow.",
+   "idea": "Insert a standard HTML `button id='next-btn'Next/button` element into the quiz container templates for both pages and wire it to the existing JavaScript logic that loads the next question from the current pool.",
+   "effort": "small",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mw4q2rsa-1",
    "at": "2026-11-06T08:38:28.906Z",
