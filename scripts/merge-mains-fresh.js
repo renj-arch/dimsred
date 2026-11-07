@@ -1,36 +1,55 @@
-// Merge two copies of data/mains-fresh.json without losing either side.
+// Merge copies of data/mains-fresh.json without losing either side and
+// without ever writing invalid JSON.
 //
-// The fresh pool is rewritten wholesale by long site-agent runs. When such a
-// run publishes after a human (or another lane) edited the same file, the old
-// `-X ours` rebase fallback replaced the newer remote paragraph with the
-// runner's stale copy: a repaired item silently reverted on 2026-11-07.
-// Union by id (remote first), then re-apply the shared quality rubric so an
-// item that fails it is dropped loudly instead of failing the deploy gate.
+// The fresh pool is rewritten wholesale by long site-agent runs. Two failures
+// were observed on 2026-11-07:
+//   1. a stale run replaced a repaired paragraph (fixed by unioning by id);
+//   2. a textual `-X ours` merge produced a file that did not parse, and the
+//      next run published a pool containing bare id strings.
+// So: parse each side independently, union objects by id (remote first), drop
+// anything that fails the shared quality rubric or is not an object, and write
+// JSON with a fixed 2-space layout.
 const fs = require('fs');
-const path = require('path');
 const quality = require('./lib/mains-quality');
 
-const [remoteFile, localFile] = process.argv.slice(2);
-if (!remoteFile || !localFile) {
-  console.error('usage: merge-mains-fresh.js <remote.json> <local.json>');
+const [remoteFile, oursFile, outFileArg] = process.argv.slice(2);
+if (!remoteFile) {
+  console.error('usage: merge-mains-fresh.js <remote.json> <ours.json> [out.json]');
   process.exit(2);
 }
+const outFile = outFileArg || oursFile || remoteFile;
 
-let remote, local;
-try {
-  remote = JSON.parse(fs.readFileSync(remoteFile, 'utf-8'));
-  local = JSON.parse(fs.readFileSync(localFile, 'utf-8'));
-} catch (e) {
-  console.error('merge-mains-fresh: unreadable input: ' + e.message);
+function read(file) {
+  try {
+    const data = JSON.parse(fs.readFileSync(file, 'utf-8'));
+    return data && Array.isArray(data.items) ? data : null;
+  } catch (e) {
+    console.error('merge-mains-fresh: ignoring unreadable ' + file + ': ' + e.message);
+    return null;
+  }
+}
+
+const remote = read(remoteFile);
+const ours = read(oursFile || '');
+if (!remote && !ours) {
+  console.error('merge-mains-fresh: neither side is usable; leaving the pool untouched');
   process.exit(1);
 }
 
-const merged = (remote.items || []).slice();
-const seen = new Set(merged.map(function (x) { return x.id; }));
-(local.items || []).forEach(function (it) {
-  if (!it || !it.id || seen.has(it.id)) return;
-  seen.add(it.id);
-  merged.push(it);
+const isItem = function (x) { return x && typeof x === 'object' && x.id && x.question; };
+const merged = [];
+const seen = new Set();
+[remote, ours].forEach(function (side) {
+  if (!side) return;
+  side.items.forEach(function (it) {
+    if (!isItem(it)) {
+      console.error('merge-mains-fresh: dropping malformed entry ' + JSON.stringify(it).slice(0, 60));
+      return;
+    }
+    if (seen.has(it.id)) return;
+    seen.add(it.id);
+    merged.push(it);
+  });
 });
 
 const keep = [];
@@ -41,14 +60,15 @@ merged.forEach(function (it) {
   else dropped.push(it.id + ' [' + (qa.score || 0) + '] ' + (qa.failures || []).join('; '));
 });
 
-const out = Object.assign({}, remote, {
-  items: keep,
-  meta: Object.assign({}, remote.meta, local.meta, {
+const base = remote || ours;
+const out = {
+  meta: Object.assign({}, base.meta, {
     count: keep.length,
     updated: new Date().toISOString().slice(0, 10)
-  })
-});
-fs.writeFileSync(localFile, JSON.stringify(out, null, 2), 'utf-8');
+  }),
+  items: keep
+};
+fs.writeFileSync(outFile, JSON.stringify(out, null, 2) + '\n', 'utf-8');
 console.log('merge-mains-fresh: ' + merged.length + ' item(s) -> ' + keep.length +
-  ' kept, ' + dropped.length + ' dropped by the quality rubric');
+  ' kept, ' + dropped.length + ' dropped');
 dropped.forEach(function (d) { console.log('  dropped ' + d); });

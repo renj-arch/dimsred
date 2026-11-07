@@ -98,8 +98,18 @@ union_mains_fresh() {
   done
   [ -n "$ref" ] || return 0
   git show "$ref:$f" > "$f.remote.json" 2>/dev/null || { rm -f "$f.remote.json"; return 0; }
-  node scripts/merge-mains-fresh.js "$f.remote.json" "$f" || true
-  rm -f "$f.remote.json"
+  # Ours may be a conflicted mixture from the -X ours fallback: it can parse
+  # as garbage. Use the committed version for our side instead.
+  if git cat-file -e "HEAD:$f" 2>/dev/null; then
+    git show "HEAD:$f" > "$f.ours.json" 2>/dev/null || cp "$f" "$f.ours.json" 2>/dev/null || true
+  else
+    cp "$f" "$f.ours.json" 2>/dev/null || true
+  fi
+  node scripts/merge-mains-fresh.js "$f.remote.json" "$f.ours.json" "$f" || {
+    echo "[ci-push] WARNING: mains-fresh merge failed; keeping the remote pool"
+    cp "$f.remote.json" "$f" 2>/dev/null || true
+  }
+  rm -f "$f.remote.json" "$f.ours.json"
   git add "$f" 2>/dev/null || true
   if ! git diff --cached --quiet 2>/dev/null; then
     git commit --amend --no-edit >/dev/null 2>&1 || true
