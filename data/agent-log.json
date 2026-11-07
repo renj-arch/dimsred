@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T18:16:27.958Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The previous run completed a goal for 'mainsfresh' (fixes=0 implies it finished its specific task or was starved, but given the 80 figure gaps and 23 critical faults, we must prioritize content generation first). The state shows severe gaps in figures (80) and pending ideas (4), while papers and questions are absent. I will deploy 'Invention' to generate fresh material based on pending ideas, followed by 'BankFigures' to address the massive figure gap. 'MetaLearn' should run next to analyze cont",
-    "actions": [
-     "Invention",
-     "BankFigures",
-     "MetaLearn",
-     "MockPapers",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (771 total)",
-       "text": "State the Buckingham π theorem. | Give the physical significance of the Reynolds number. | Give the physical meanings of the Froude, Mach, Weber and Euler numbers."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T18:27:30.952Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -685,8 +635,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T04:23:27.196Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "We have 81 figure gaps and 23 critical faults; the last two runs produced zero output from MockPapers, Invention, and MetaLearn, so they must be starved of inputs this run while BankFigures continues its steady work. We will prioritize filling the massive figure gap backlog first, then address pending ideas and critical faults, reserving the underperforming agents for later once inputs stabilize.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (803 total)",
+       "text": "What is the effect of the bucket outlet angle on Pelton performance? | What head and discharge range suits a Pelton wheel? | What overall efficiency is typical for a large Pelton wheel?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Strength of Materials (360 in pool)",
+       "text": "Strength of Materials"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T03:53:38.353Z",
+ "lastRun": "2026-11-07T04:23:27.196Z",
  "model": "qwen3.5:9b"
 }
