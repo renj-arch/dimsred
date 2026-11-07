@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T14:58:34.274Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; selfcheck cleared 57 items last run but is likely saturated or a placeholder for 'all agents'. BankFigures must address the 80 figure gaps immediately as they are incomplete standing goals. Invention should follow to convert pending ideas into fresh content, keeping the site dynamic. MetaLearn and MockPapers go last as they require input data (papers/questions) which are currently absent; these agents produced 0 in recent runs so they",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (855 total)",
-       "text": "How is the setting height of a reaction turbine determined? | Compare an impulse turbine with a reaction turbine. | Compare the part-load behaviour of the three turbine families."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T15:28:58.999Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -735,8 +690,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T21:56:45.778Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual content. Since papers and questions files are missing, MockPapers is next to generate core study material. ExamPatterns follows to create question banks once figures exist. MetaLearn should run to synthesize new learning paths from the growing content pool. Invention goes last as it requires a stable base of content before generating novel exam scenarios.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (898 total)",
+       "text": "How much work does an air vessel save in a reciprocating pump? | What is separation in the suction of a reciprocating pump? | Compare a centrifugal pump with a reciprocating pump."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T21:34:15.416Z",
+ "lastRun": "2026-11-07T21:56:45.778Z",
  "model": "qwen3.5:9b"
 }
