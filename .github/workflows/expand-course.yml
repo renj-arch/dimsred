@@ -22,13 +22,16 @@ name: Expand Course Content
 
 on:
   schedule:
-    - cron: '47 1,13 * * *'   # 2 batches a day, off :00
+    # Every 6 hours. A depth run needs ~3 h including model load, so a 6-hour
+    # gap keeps at most one run waiting; the concurrency group below stops
+    # them from overlapping.
+    - cron: '17 0,6,12,18 * * *'
   workflow_dispatch:
     inputs:
       per_run:
-        description: 'Lessons to write this run (default 8)'
+        description: 'Lessons to write this run (default 12)'
         required: false
-        default: '8'
+        default: '12'
       model:
         description: 'Ollama model tag. Default = mid tier (qwen3.5:9b); qwen3:4b is the cached fast tier.'
         required: false
@@ -44,7 +47,7 @@ permissions:
 jobs:
   expand:
     runs-on: ubuntu-latest
-    timeout-minutes: 210
+    timeout-minutes: 300
     steps:
       - name: Free runner disk space (swap + 17GB model + repo)
         run: |
@@ -147,8 +150,8 @@ jobs:
         env:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
-          EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '8' }}
-          EXPAND_DEADLINE_MIN: '110'
+          EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '12' }}
+          EXPAND_DEADLINE_MIN: '170'
           EXPAND_DEEPEN: '1'
           EXPAND_DEPTH_PASSES: '3'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
