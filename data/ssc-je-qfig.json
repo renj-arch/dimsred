@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T20:24:52.910Z",
-  "cursor": 1011,
-  "built": 889
+  "updatedAt": "2026-11-07T20:59:10.082Z",
+  "cursor": 1014,
+  "built": 892
  },
  "figs": {
   "2316121": {
@@ -5337,6 +5337,24 @@
   "fe9edd2": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"80\" width=\"100\" height=\"40\" rx=\"5\" /><path d=\"M 140 100 L 160 100 L 160 120 L 140 120 Z\" fill=\"#222\" opacity=\"0.3\" /><text x=\"85\" y=\"95\" text-anchor=\"middle\">Pump</text><text x=\"150\" y=\"115\" text-anchor=\"middle\">Valve</text><path d=\"M 40 160 L 220 160\" stroke-dasharray=\"4,2\" /><path d=\"M 220 160 L 320 160\" stroke-dasharray=\"4,2\" /><text x=\"270\" y=\"185\" text-anchor=\"middle\">Delivery Column</text><path d=\"M 140 140 Q 140 190 160 190 T 180 190\" fill=\"none\" /><text x=\"120\" y=\"155\">Suction Stroke</text><text x=\"170\" y=\"155\">Valve Stays Open</text><path d=\"M 40 60 L 320 60\" stroke-dasharray=\"4,2\" /><text x=\"180\" y=\"55\" text-anchor=\"middle\">Theoretical Flow (Q_th)</text><path d=\"M 40 40 L 320 40\" stroke-dasharray=\"4,2\" /><text x=\"180\" y=\"35\" text-anchor=\"middle\">Actual Flow (Q_act)</text><text x=\"180\" y=\"20\" text-anchor=\"middle\">Negative Slip</text></svg>",
    "n": "when does a reciprocating pump show negative slip?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "5271bfa6": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Pump Discharge (Q)</text><path d=\"M40,40 L320,40\"/><path d=\"M40,40 L40,180\"/><path d=\"M320,40 L320,180\"/><path d=\"M200,40 L200,180\"/><text x=\"200\" y=\"20\" text-anchor=\"middle\">ρgQ</text><text x=\"160\" y=\"55\" text-anchor=\"end\">(Hs + Hd)</text><path d=\"M40,40 L320,40\"/><path d=\"M40,40 L40,180\"/><path d=\"M320,40 L320,180\"/><path d=\"M200,40 L200,180\"/><text x=\"200\" y=\"195\" text-anchor=\"middle\">Work Done (W)</text><text x=\"160\" y=\"210\" text-anchor=\"end\">= ρgALN(Hs+Hd)/60</text></svg>",
+   "n": "write the work done per second by a single-acting reciprocating pump.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "ffbf2d12": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"140\" /><path d=\"M40 40 L120 40 M120 40 L120 180 M120 180 L40 180\" /><path d=\"M120 40 L120 180\" stroke-dasharray=\"4,2\" /><text x=\"50\" y=\"30\" text-anchor=\"middle\">Piston</text><text x=\"125\" y=\"100\" text-anchor=\"middle\">Suction Valve</text><text x=\"125\" y=\"130\" text-anchor=\"middle\">Delivery Valve</text><text x=\"125\" y=\"190\" text-anchor=\"middle\">Cylinder</text><path d=\"M240 60 L320 60 M320 60 L320 140 M320 140 L240 140\" /><path d=\"M320 60 L320 140\" stroke-dasharray=\"4,2\" /><text x=\"250\" y=\"30\" text-anchor=\"middle\">Piston</text><text x=\"325\" y=\"100\" text-anchor=\"middle\">Suction Valve</text><text x=\"325\" y=\"130\" text-anchor=\"middle\">Delivery Valve</text><text x=\"325\" y=\"190\" text-anchor=\"middle\">Cylinder</text><path d=\"M40 180 L320 180\" /><text x=\"180\" y=\"205\" text-anchor=\"middle\">Double-acting Pump</text><text x=\"180\" y=\"220\" text-anchor=\"middle\">(Two strokes per cycle)</text></svg>",
+   "n": "write the work done by a double-acting reciprocating pump.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "8ea0600d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <defs>\n  <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"9\" refY=\"3\" orient=\"auto\">\n   <path d=\"M0,0 L10,5 L0,10 Z\" />\n  </marker>\n </defs>\n <!-- Axes -->\n <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\" />\n <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\" />\n <!-- Labels -->\n <text x=\"180\" y=\"225\" text-anchor=\"middle\">Piston Stroke (Volume)</text>\n <text x=\"10\" y=\"110\" text-anchor=\"end\">Pressure</text>\n <!-- Suction Line -->\n <path d=\"M40,160 L180,130\" marker-end=\"url(#arrow)\" />\n <text x=\"110\" y=\"125\">Suction</text>\n <!-- Delivery Line -->\n <path d=\"M180,130 L320,90\" marker-end=\"url(#arrow)\" />\n <text x=\"250\" y=\"110\">Delivery</text>\n <!-- Losses (Drops) -->\n <line x1=\"160\" y1=\"130\" x2=\"170\" y2=\"145\" stroke-width=\"2\" />\n <text x=\"180\" y=\"155\">Friction Loss</text>\n <!-- Title -->\n <text x=\"180\" y=\"30\" text-anchor=\"middle\" font-weight=\"bold\">Indicator Diagram</text>\n</svg>",
+   "n": "what does the indicator diagram of a reciprocating pump record?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
