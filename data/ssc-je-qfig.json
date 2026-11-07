@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T18:09:29.163Z",
-  "cursor": 996,
-  "built": 875
+  "updatedAt": "2026-11-07T19:15:16.347Z",
+  "cursor": 1005,
+  "built": 884
  },
  "figs": {
   "2316121": {
@@ -5253,6 +5253,60 @@
   "2df6d2f1": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Pipe/Discharge Line -->\n  <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" stroke-dasharray=\"4,2\"/>\n  <text x=\"180\" y=\"195\" text-anchor=\"middle\">Common Discharge</text>\n  <!-- Pump 1 -->\n  <circle cx=\"100\" cy=\"100\" r=\"35\" stroke-width=\"1.5\"/>\n  <line x1=\"100\" y1=\"85\" x2=\"100\" y2=\"65\"/>\n  <text x=\"100\" y=\"55\" text-anchor=\"middle\">Pump 1</text>\n  <!-- Pump 2 -->\n  <circle cx=\"200\" cy=\"100\" r=\"35\" stroke-width=\"1.5\"/>\n  <line x1=\"200\" y1=\"85\" x2=\"200\" y2=\"65\"/>\n  <text x=\"200\" y=\"55\" text-anchor=\"middle\">Pump 2</text>\n  <!-- Head Arrows -->\n  <path d=\"M 70 100 L 95 100\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>\n  <text x=\"65\" y=\"95\">H₁</text>\n  <path d=\"M 230 100 L 255 100\" stroke-width=\"3\" marker-end=\"url(#arrow)\"/>\n  <text x=\"245\" y=\"95\">H₂</text>\n  <!-- Total Head -->\n  <path d=\"M 170 60 L 170 85\" stroke-dasharray=\"2,2\"/>\n  <text x=\"170\" y=\"45\" text-anchor=\"middle\">Total Head = H₁ + H₂</text>\n  <!-- Labels -->\n  <text x=\"20\" y=\"30\" font-weight=\"bold\">Series Arrangement</text>\n  <defs>\n    <marker id=\"arrow\" markerWidth=\"10\" markerHeight=\"10\" refX=\"5\" refY=\"5\" orient=\"auto\">\n      <path d=\"M0,0 L10,5 L0,10 z\" fill=\"#222\"/>\n    </marker>\n  </defs>\n</svg>",
    "n": "why are centrifugal pump stages arranged in series?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "851dd4b9": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"50\" y=\"40\" width=\"80\" height=\"140\" /><text x=\"90\" y=\"70\" text-anchor=\"middle\">Pump 1</text><text x=\"90\" y=\"130\" text-anchor=\"middle\">Q1</text><line x1=\"130\" y1=\"40\" x2=\"130\" y2=\"180\" /><line x1=\"50\" y1=\"180\" x2=\"210\" y2=\"180\" /><text x=\"130\" y=\"195\" text-anchor=\"middle\">Head H</text><rect x=\"140\" y=\"40\" width=\"80\" height=\"140\" /><text x=\"180\" y=\"70\" text-anchor=\"middle\">Pump 2</text><text x=\"180\" y=\"130\" text-anchor=\"middle\">Q2</text><line x1=\"220\" y1=\"40\" x2=\"220\" y2=\"180\" /><line x1=\"140\" y1=\"180\" x2=\"300\" y2=\"180\" /><text x=\"220\" y=\"195\" text-anchor=\"middle\">Head H</text><line x1=\"130\" y1=\"180\" x2=\"300\" y2=\"180\" stroke-dasharray=\"4,4\" /><text x=\"215\" y=\"175\" text-anchor=\"middle\" font-style=\"italic\">Total Q = Q1 + Q2</text></svg>",
+   "n": "why are centrifugal pumps arranged in parallel?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "f5a566bc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Specific Speed (Ns) Concept</text><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\"/><text x=\"55\" y=\"65\">N (RPM)</text><text x=\"305\" y=\"65\">H^(3/4)</text><line x1=\"60\" y1=\"80\" x2=\"60\" y2=\"190\"/><text x=\"55\" y=\"185\">Q^(1/2)</text><circle cx=\"180\" cy=\"110\" r=\"4\" fill=\"#222\"/><text x=\"175\" y=\"105\">Ns = N√Q / H^0.75</text><path d=\"M 60 70 L 300 70 M 60 80 L 60 190\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"110\" r=\"15\" fill=\"none\" stroke=\"#222\"/><text x=\"175\" y=\"130\">Each Ns value</text><text x=\"175\" y=\"145\">defines an</text><text x=\"175\" y=\"160\">impeller shape</text></svg>",
+   "n": "write the specific speed of a pump and its use.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "bf4ecc41": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"325\" y=\"185\">Pump Inlet</text><path d=\"M 60 180 L 60 100\"/><text x=\"45\" y=\"140\">Suction Pipe</text><circle cx=\"60\" cy=\"100\" r=\"8\"/><text x=\"70\" y=\"95\">Eye</text><path d=\"M 60 100 L 60 40\"/><text x=\"45\" y=\"70\">Atmosphere (pa)</text><line x1=\"30\" y1=\"40\" x2=\"90\" y2=\"40\"/><path d=\"M 60 40 L 60 80\"/><text x=\"45\" y=\"60\">Static Head (hs)</text><path d=\"M 60 80 L 100 80\"/><text x=\"105\" y=\"85\">Friction Loss (hfs)</text><path d=\"M 100 80 L 100 40\"/><text x=\"95\" y=\"35\">Vapour Pressure (pv)</text><path d=\"M 60 40 L 120 40\"/><text x=\"125\" y=\"45\">NPSH Available</text><path d=\"M 120 40 L 120 180\"/><text x=\"135\" y=\"110\">Available Head</text></svg>",
+   "n": "what is npsh and why is it important for a pump?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "3611eac4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Affinity Laws (Constant Diameter)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><text x=\"35\" y=\"65\">Q</text><text x=\"35\" y=\"185\">P</text><text x=\"325\" y=\"65\">N</text><text x=\"325\" y=\"185\">H</text><path d=\"M 40 60 L 320 60\"/><path d=\"M 40 60 L 40 180\"/><path d=\"M 40 60 L 320 180\"/><circle cx=\"180\" cy=\"110\" r=\"5\"/><text x=\"175\" y=\"115\">Q ∝ N</text><circle cx=\"180\" cy=\"110\" r=\"5\"/><text x=\"195\" y=\"115\">H ∝ N²</text><circle cx=\"180\" cy=\"110\" r=\"5\"/><text x=\"215\" y=\"115\">P ∝ N³</text></svg>",
+   "n": "state the affinity laws of a centrifugal pump.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "224240d2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">Head (H)</text>\n <line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"190\" />\n <line x1=\"40\" y1=\"190\" x2=\"320\" y2=\"190\" />\n <text x=\"330\" y=\"105\" text-anchor=\"end\">H</text>\n <text x=\"180\" y=\"205\" text-anchor=\"middle\">Discharge (Q)</text>\n <line x1=\"40\" y1=\"190\" x2=\"40\" y2=\"30\" />\n <line x1=\"320\" y1=\"190\" x2=\"320\" y2=\"30\" />\n <text x=\"330\" y=\"35\" text-anchor=\"end\">Q</text>\n <path d=\"M 60 180 Q 140 120 220 60\" fill=\"none\" />\n <text x=\"240\" y=\"75\">Pump Curve</text>\n <line x1=\"30\" y1=\"190\" x2=\"30\" y2=\"190\" stroke-dasharray=\"4\" />\n <path d=\"M 30 190 L 30 185\" />\n <path d=\"M 30 185 Q 100 160 170 120\" fill=\"none\" />\n <text x=\"140\" y=\"155\">System Curve</text>\n <circle cx=\"160\" cy=\"130\" r=\"4\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\" />\n <line x1=\"160\" y1=\"130\" x2=\"160\" y2=\"190\" stroke-dasharray=\"2\" />\n <line x1=\"150\" y1=\"130\" x2=\"170\" y2=\"130\" stroke-dasharray=\"2\" />\n <text x=\"145\" y=\"125\">Working Point</text>\n</svg>",
+   "n": "how is the working point of a pump found?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "81e74733": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Centrifugal Pump: Shut-Off Condition</text><circle cx=\"100\" cy=\"140\" r=\"30\" /><path d=\"M 70 140 L 100 110 L 130 140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><path d=\"M 130 140 L 160 110 L 190 140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><path d=\"M 190 140 L 220 110 L 250 140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><circle cx=\"250\" cy=\"140\" r=\"30\" /><path d=\"M 280 140 L 310 110 L 340 140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><text x=\"90\" y=\"165\">Impeller</text><text x=\"270\" y=\"165\">Volute Casing</text><path d=\"M 130 140 L 130 180 M 190 140 L 190 180\" stroke=\"#222\" /><text x=\"140\" y=\"195\">Recirculation Flow</text><circle cx=\"100\" cy=\"60\" r=\"15\" /><circle cx=\"250\" cy=\"60\" r=\"15\" /><path d=\"M 115 60 L 115 80 M 265 60 L 265 80\" stroke=\"#222\" /><text x=\"90\" y=\"45\">High Pressure</text><text x=\"250\" y=\"45\">Low Pressure</text><path d=\"M 130 140 Q 130 160 150 160 T 170 140\" fill=\"none\" stroke=\"#222\" /><text x=\"145\" y=\"175\">Heat Generation</text></svg>",
+   "n": "what happens when a centrifugal pump runs at shut-off?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "d1469da3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Pump Impeller Outline -->\n  <path d=\"M180,40 L220,70 L200,110 L160,90 L120,110 L100,70 Z\" />\n  <!-- Cavitation Bubbles (Voids) -->\n  <circle cx=\"130\" cy=\"85\" r=\"4\" fill=\"#222\" opacity=\"0.6\"/>\n  <circle cx=\"145\" cy=\"95\" r=\"3\" fill=\"#222\" opacity=\"0.6\"/>\n  <circle cx=\"160\" cy=\"80\" r=\"4\" fill=\"#222\" opacity=\"0.6\"/>\n  <circle cx=\"175\" cy=\"90\" r=\"3\" fill=\"#222\" opacity=\"0.6\"/>\n  <!-- Erosion Pits on Impeller -->\n  <path d=\"M125,105 Q128,110 132,105\" stroke-width=\"2\"/>\n  <path d=\"M175,105 Q178,110 182,105\" stroke-width=\"2\"/>\n  <!-- Head Loss Indicator (Dropping Curve) -->\n  <polyline points=\"240,60 260,90 280,130\" fill=\"none\" stroke=\"#222\"/>\n  <!-- Labels -->\n  <text x=\"180\" y=\"35\" text-anchor=\"middle\">Impeller</text>\n  <text x=\"180\" y=\"145\" text-anchor=\"middle\">Voids (Cavitation)</text>\n  <text x=\"270\" y=\"100\" text-anchor=\"start\">Head Loss ↓</text>\n  <text x=\"270\" y=\"120\" text-anchor=\"start\">Erosion Pits</text>\n</svg>",
+   "n": "how does cavitation affect the performance of a pump?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "f967409e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Centrifugal Pump Selection</text><rect x=\"40\" y=\"70\" width=\"60\" height=\"60\" rx=\"5\"/><circle cx=\"70\" cy=\"95\" r=\"20\"/><line x1=\"70\" y1=\"115\" x2=\"70\" y2=\"135\"/><text x=\"45\" y=\"105\" text-anchor=\"end\">Impeller</text><rect x=\"160\" y=\"70\" width=\"60\" height=\"60\" rx=\"5\"/><circle cx=\"190\" cy=\"95\" r=\"20\"/><line x1=\"190\" y1=\"115\" x2=\"190\" y2=\"135\"/><text x=\"165\" y=\"105\" text-anchor=\"end\">Volute</text><line x1=\"100\" y1=\"145\" x2=\"260\" y2=\"145\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"135\" text-anchor=\"middle\">Fluid Flow</text><rect x=\"40\" y=\"160\" width=\"100\" height=\"40\"/><text x=\"90\" y=\"178\" text-anchor=\"middle\">Duty (Q, H)</text><rect x=\"220\" y=\"160\" width=\"100\" height=\"40\"/><text x=\"270\" y=\"178\" text-anchor=\"middle\">NPSH & Fluid</text></svg>",
+   "n": "what factors govern the selection of a centrifugal pump?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "c05e6611": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Vane Passage</text><path d=\"M 60 140 L 300 140\" /><path d=\"M 60 140 L 90 100 L 120 140\" /><path d=\"M 300 140 L 270 100 L 240 140\" /><circle cx=\"90\" cy=\"100\" r=\"5\" /><circle cx=\"270\" cy=\"100\" r=\"5\" /><path d=\"M 90 100 Q 180 60 270 100\" fill=\"none\" stroke-dasharray=\"4,2\" /><text x=\"180\" y=\"35\" text-anchor=\"middle\">Slip Stream</text><path d=\"M 90 100 L 90 160\" /><path d=\"M 270 100 L 270 160\" /><text x=\"85\" y=\"145\" text-anchor=\"end\">Vw2 (Ideal)</text><text x=\"265\" y=\"145\" text-anchor=\"start\">Vw2 (Real)</text><path d=\"M 90 100 L 130 100\" stroke-dasharray=\"2,2\" /><path d=\"M 270 100 L 230 100\" stroke-dasharray=\"2,2\" /><text x=\"180\" y=\"195\" text-anchor=\"middle\">Slip reduces whirl velocity</text></svg>",
+   "n": "how does circulatory slip reduce the head of a pump below the euler value?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }

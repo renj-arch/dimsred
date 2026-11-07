@@ -1,145 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T11:14:31.407Z",
-   "model": "batiai/qwen3.8-27b:iq3",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "archive-writer",
-     "count": 3
-    }
-   ],
-   "details": [
-    {
-     "agent": "archive-writer",
-     "fixes": [
-      {
-       "page": "archive (Defence & Security / Defence & Security)",
-       "fix": "Explained \"What do you know about The Egyptian Air Force (EAF) (Egyptian Arabic: القوات الجوية المصري\"",
-       "text": "VERDICT: The Egyptian Air Force is the aviation branch of the Egyptian Armed Forces, handling all airborne defence missions and operating all military aircraft. WHY: It is the central air power of Egypt, coordinating with the Army, Navy, and Air Defense Forces for integrated security. TRAPS: Do not confuse it with the separate Air Defense Forces; the EAF operates the aircraft, while Air Defense handles specific missile systems. HOOK: Remember 'EAF flies, EAD defends' to distinguish their roles. "
-      },
-      {
-       "page": "archive (Defence & Security / Defence & Security)",
-       "fix": "Explained \"The force's motto is 'To highness for the sake of glory' (_____: إلى العلا في سبيل المجد, \"",
-       "text": "VERDICT: Arabic. WHY: The Egyptian Air Force operates within Egypt, where Arabic is the official language, and its motto is written in Arabic script. TRAPS: Candidates might guess English due to global military influence, or French due to historical colonial ties, but the script provided is unmistakably Arabic. HOOK: Remember that national mottos often reflect the state's primary language; if you see Arabic script, the answer is Arabic. Exam-day trap: Do not confuse the language of the motto wit"
-      },
-      {
-       "page": "archive (Defence & Security / Defence & Security)",
-       "fix": "Explained \"It was known as the Royal Egyptian Air Force until 18 June _____, following the declaratio\"",
-       "text": "VERDICT: 1953. WHY: The Royal Egyptian Air Force shed its royal title on 18 June 1953, when Muhammad Naguib declared Egypt a republic, ending the monarchy. TRAPS: Do not confuse this with the 1952 revolution start; the formal republic declaration and name change occurred in 1953. HOOK: Remember 'Naguib's 53' — the year the crown fell and the Republic rose. Exam trap: Questions often swap 1952 (revolution) with 1953 (republic declaration)."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T11:46:48.889Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) demand immediate attention to restore site integrity and content depth. BankFigures is the only agent capable of addressing both critical faults and figure gaps, so it must lead. Invention should follow to generate fresh material for pending ideas, while MockPapers and ExamPatterns will be starved as they produced zero fixes in recent runs; they are moved to the end of the queue despite potential input starvation.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (842 total)",
-       "text": "Give the specific-speed ranges of Pelton, Francis and Kaplan turbines. | For which head is a low specific speed used? | How does the specific speed choose the runner shape?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Engineering Mathematics (360 in pool)",
-       "text": "Engineering Mathematics"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T12:29:57.311Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing diagrams immediately as they block content depth. Invention is next to generate fresh question banks for the 4 pending ideas, followed by MockPapers to convert those into full exam simulations. MetaLearn will handle the remaining critical faults (likely broken links or logic errors) after content generation. Exampatterns and MainsFresh are deferred as they produced zero fixes in recent runs; Inv",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (845 total)",
-       "text": "What is the unit speed of a hydraulic turbine? | Define the unit discharge of a turbine. | What is the unit power of a turbine?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T13:36:53.147Z",
    "model": "qwen3.5:9b",
    "totalFixes": 4,
@@ -771,8 +632,144 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T18:44:02.138Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately while MockPapers tackles critical exam content. Invention and MetaLearn are deferred as they produced zero fixes in recent runs, indicating a need for starvation before re-engagement. The strategy prioritizes clearing high-impact technical gaps over generating new ideas or meta-learning until core content stability is restored.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (878 total)",
+       "text": "Why are centrifugal pumps arranged in parallel? | Write the specific speed of a pump and its use. | What is NPSH and why is it important for a pump?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Machine Design (360 in pool)",
+       "text": "Machine Design"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T19:02:52.112Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) indicate immediate content decay; BankFigures must address the 80 missing figures first to restore visual integrity. MetaLearn is required next to generate the missing syllabus, questions, papers, and sidecar files which are currently absent. Invention should follow to convert pending ideas into new exam materials, keeping content fresh. MockPapers and ExamPatterns will be queued last as they depend on the foundational content (syllabus/questions) being ",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (881 total)",
+       "text": "State the affinity laws of a centrifugal pump. | How is the working point of a pump found? | What happens when a centrifugal pump runs at shut-off?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T19:32:22.813Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visuals blocking content consumption. Since papers/sidecar files are missing, MockPapers is next to generate core study assets, followed by ExamPatterns to structure those assets into solvable units. Invention will address pending ideas for fresh material, while MetaLearn handles remaining critical faults or syllabus gaps if they exist.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (884 total)",
+       "text": "How does cavitation affect the performance of a pump? | What factors govern the selection of a centrifugal pump? | How does circulatory slip reduce the head of a pump below the Euler value?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T18:24:24.315Z",
+ "lastRun": "2026-11-07T19:32:22.813Z",
  "model": "qwen3.5:9b"
 }
