@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-07T05:21:07.484Z",
+  "updatedAt": "2026-11-07T22:18:16.384Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -233,6 +233,668 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-07T05:21:07.483Z"
+    },
+    {
+      "id": "1e9e5e5e770c8c3c",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 31,
+      "section": "Reasoning and General Intelligence",
+      "question": "One number does not fit into the given factorial series. Identify it. 3, 6, 24, 120, 720, 800",
+      "options": [
+        {
+          "label": "A",
+          "text": "6",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "24",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "120",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "800",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the pattern in the series starting with 3 (approximating 3!), 6 (4!), 24 (5!), 120 (6!), 720 (7!) which are factorials of consecutive integers n+2.",
+        "Calculate the next expected term after 720, which is 8! = 40320, but the series stops at 720 and introduces 800.",
+        "Verify that 800 does not fit the factorial pattern (8! = 40320) nor any simple multiplicative progression from the previous terms.",
+        "Conclude that 800 is the outlier as it breaks the established factorial sequence."
+      ],
+      "verifierCheck": "The given series follows the pattern of factorials where each term $n$ corresponds to $(n+2)!$: the first term is $3 = 1! imes 3$ (or simply observing the sequence starting from $3!=6$), let's re-evaluate strictly. The standard factorial sequence starting after 1 is $2!=2, 3!=6, 4!=24, 5!=120, 6!=720$. The provided series is 3, 6, 24, 120, 720, 800. Looking at the terms: $6 = 3!$, $24 = 4!$, $120 = 5!$, and $720 = 6!$. The first term '3' does not fit the standard factorial sequence ($n!$) as it is neither $1!$ (1), nor $2!$ (2). However, if we assume the series intends to represent factorials starting from a specific point or if there is a typo in the first number, let's look at the options. The options are 6, 24, 120, 800. Among these, 6, 24, and 120 are perfect factorials ($3!, 4!, 5!$). The number 720 is also a factorial ($6!$) but is not an option to select as the 'odd one out' in the multiple choice list provided (the question asks to identify the number that doesn't fit, and gives options A-D). Wait, the question asks to identify the number that does not fit from the list [3, 6, 24, 120, 720, 800]. The valid factorial sequence segment here is clearly $6, 24, 120, 720$. The numbers '3' and '800' are the outliers. Since '3' is not an option in A, B, C, or D, but '800' is Option D, '800' must be the intended answer as it breaks the factorial pattern ($7! = 5040$), whereas 3 might be considered a starting anomaly or perhaps the series is meant to be $n! imes k$? No, simpler logic: The sequence of factorials is $6 (3!), 24 (4!), 120 (5!), 720 (6!)$. The number 800 appears at the end and is not a factorial. The number 3 is also not a factorial, but since '3' is not listed as an option to choose from (Options are A:6, B:24, C:120, D:800), the only valid choice for the 'number that does not fit' among the provided options is 800. Therefore, 800 is the correct selection.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Match",
+          "idea": "Recall standard factorials",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall sequence of factorials: 1, 2, 6, 24, 120, 720.",
+            "Match given series 3, 6, 24, 120, 720 against this list.",
+            "Note 3 is irregular but rest are exact factorials.",
+            "Verify 800 is not a factorial number.",
+            "Conclude 800 is the odd one out."
+          ]
+        },
+        {
+          "name": "Skip & Check",
+          "idea": "Test options against series",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "List known factorials: 1!=1, 2!=2, 3!=6, 4!=24, 5!=120, 6!=720.",
+            "Compare sequence 3,6,24,120,720 to list; all match except 800.",
+            "Identify 800 as the outlier not in factorial series.",
+            "Select option D corresponding to 800."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T21:45:38.428Z"
+    },
+    {
+      "id": "8861861ff7d5ad32",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 33,
+      "section": "Reasoning and General Intelligence",
+      "question": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5 minutes",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "10 minutes",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "20 minutes",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "50 minutes",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Determine the rate per machine: 5 machines make 5 widgets in 5 minutes means 1 machine makes 1 widget in 5 minutes.",
+        "Calculate total capacity: With 100 machines, each can independently produce 1 widget in that same 5-minute interval.",
+        "Sum production: Since 100 machines each produce 1 widget in 5 minutes, the total output is exactly 100 widgets.",
+        "Conclude time: The time required remains 5 minutes regardless of the number of machines as long as it scales with the target output."
+      ],
+      "verifierCheck": "The premise states that 5 machines take 5 minutes to produce 5 widgets, which implies a direct relationship where each machine produces exactly one widget in 5 minutes (since 5 machines / 5 widgets = 1 widget per machine). Therefore, the rate of production for a single machine is 1 widget every 5 minutes. If we scale this up to 100 machines, and we need them to produce 100 widgets, each machine still only needs to produce one widget. Since the time required for one machine to make one widget remains constant at 5 minutes, it will take 100 machines exactly 5 minutes to collectively produce 100 widgets.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Rate per machine",
+          "idea": "find time per single unit",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Recognize 5 machines make 5 widgets in 5 minutes.",
+            "Deduce 1 machine makes 1 widget in 5 minutes.",
+            "Scale to 100 machines making 100 widgets: each makes its own in same time.",
+            "Conclude total time remains 5 minutes.",
+            "Select option A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T21:51:26.777Z"
+    },
+    {
+      "id": "e7651ed544d323dc",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 34,
+      "section": "Reasoning and General Intelligence",
+      "question": "Which incident is mentioned as a reallifee out come link ed to groupthink? Read the passage and answer the following questions. A common pattern in group decision-making—widely known as gr oupthink—occur swhen at eam' shunger for complet eagr eement becomes stronger than its willingness to examine other viewpoints with a critical lens. As a result, choices often turn defectiv ebecause disagr eement is either quietly silenced from within or discouraged thr ough social consequences. Closely link ed to this is social conformity, the tendency to adjust one's opinions or actions to mat ch the majority—o ften unconsciously—t ogain acceptance or pr event friction. In closely bonded cir cles such as boardrooms, policy gr oups, or academic committ ees, individuals May hold back opposing ideas due to fear of exclusion or damage to reputation. With time, this shar ed uniformity cr eates mental stagnation, weakens cr eativity, and incr eases the chance of strat egic misjudgments. The Bay of Pigs episode and the Challenger sp ace shuttle tragedy are commonly highlight ed as classic cases wher egroupthink dist orted judgment. From a psychological angle, conformity is tied to our ev olutionar ypull towar dtrib al belonging, wher estanding ap art once carried sur vival thr eats. T oday, that same impulse shows up thr ough peer pr essur eworkplace norms, and online echo chamber sDigital platforms int ensif yconformity because algorithms construct per sonalized \"bubbles\" that confirm existing beliefs while scr eening out conflicting per spectiv es. The antidot eto this narrowed thinking is to build dissent into the syst em. When teams welcome principled disagr eement, it becomes a mental safety-check against tunnel vision. Encouraging an envir onment wher ecount erviews are valued—not punished—suppor ts str onger, mor ebalanced, and mor eresilient decisions. In a time shaped by viral fads, polarized deb ate, and per formativ eagr eement, the brav ery to question the cr owd is both uncommon and necessar yReal pr ogress gr ows not from aut omatic loyalty to majority norms, but from critical pr obing and the ner ve to challenge what feels comfor table.",
+      "options": [
+        {
+          "label": "A",
+          "text": "A major peace treaty of the Cold W ar",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Challenger space shuttle disaster",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "A national referendum outcome",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "A stock-market technology collapse",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the definition of groupthink in the text as a pattern where desire for harmony overrides realistic appraisal.",
+        "Locate the specific examples provided in the passage that illustrate this phenomenon.",
+        "Extract the two incidents explicitly named: 'The Bay of Pigs episode' and 'the Challenger space shuttle tragedy'.",
+        "Match the extracted incident 'Challenger space shuttle tragedy' to Option B in the list of choices."
+      ],
+      "verifierCheck": "The passage explicitly states that 'The Bay of Pigs episode and the Challenger space shuttle tragedy are commonly highlighted as classic cases where groupthink distorted judgment.' Among the provided options, only the 'Challenger space shuttle disaster' is mentioned in the text as a real-life outcome linked to groupthink.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Match Entities",
+          "idea": "Find exact phrase from options within passage",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Scan the text for 'Challenger' or 'space shuttle'.",
+            "Verify the sentence: 'The Challenger space shuttle tragedy are commonly highlight ed as classic cases...'"
+          ]
+        },
+        {
+          "name": "Eliminate Distractions",
+          "idea": "Ignore unrelated historical events not in text",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Note that 'Bay of Pigs' is the only other incident mentioned.",
+            "Check options: A (Peace treaty), C (Referendum), D (Stock market) are not in the text.",
+            "Select Option B which matches the text's explicit example."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T21:54:23.381Z"
+    },
+    {
+      "id": "6335cbd149ab1c90",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 36,
+      "section": "Reasoning and General Intelligence",
+      "question": "Which of the following industries is classified as a heavy industr y?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Toy manufacturing",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Steel production",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Handloom weaving",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Paper crafts",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Define heavy industry as sectors involving large-scale production of capital goods or raw materials requiring significant infrastructure and energy.",
+        "Analyze Option A (Toy manufacturing) as a light industry focused on consumer goods with low capital intensity.",
+        "Analyze Option C (Handloom weaving) as a traditional light industry relying on manual labor and small-scale operations.",
+        "Analyze Option D (Paper crafts) as a light industry involving processed consumer products rather than raw material extraction or heavy processing.",
+        "Evaluate Option B (Steel production) which involves mining, smelting, and rolling massive quantities of metal using heavy machinery and high energy consumption.",
+        "Conclude that steel production fits the definition of heavy industry while the others are classified as light industries."
+      ],
+      "verifierCheck": "Heavy industries are defined by large-scale capital investment, extensive use of heavy machinery, high energy consumption, and the production of raw materials or intermediate goods for other sectors; steel production fits this definition as it involves extracting iron ore and processing it through blast furnaces to create foundational materials, whereas toy manufacturing, handloom weaving, and paper crafts are classified as light industries due to their lower capital requirements, smaller scale operations, and consumer-oriented outputs.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Weight Keyword",
+          "idea": "Match 'heavy' to industrial raw materials",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify the keyword 'heavy industry' meaning large-scale manufacturing of raw materials.",
+            "Evaluate options: Toys, weaving, and crafts involve small items or light processing.",
+            "Select Steel production as it transforms iron ore into bulk construction materials."
+          ]
+        },
+        {
+          "name": "Scale Filter",
+          "idea": "Eliminate light consumer goods instantly",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Discard Toy manufacturing, Handloom weaving, and Paper crafts as they are light industries.",
+            "Recognize that only Steel production fits the definition of a heavy industry.",
+            "Confirm Steel production involves massive machinery and raw material processing."
+          ]
+        },
+        {
+          "name": "Definition Check",
+          "idea": "Apply standard economic classification directly",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Recall that heavy industries produce capital goods and raw materials like steel.",
+            "Check each option against this definition.",
+            "Only Steel production qualifies; the others are light industries producing consumer goods."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T21:59:48.850Z"
+    },
+    {
+      "id": "c45ccf176b201e36",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 38,
+      "section": "Reasoning and General Intelligence",
+      "question": "In a family, A is the brother of B. C is the father of A and D. If E is the daughter of D, who is the grandfather of E?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "C",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "B",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify C as the father of A and D.",
+        "Determine that since C is the father of D, C is also the grandfather of D's children.",
+        "Establish that E is the daughter of D, making D the parent of E.",
+        "Conclude that C is the father of D, therefore C is the grandfather of E.",
+        "Verify that A and B are siblings of the parent but not the grandparent in this lineage."
+      ],
+      "verifierCheck": "Starting with the premise that C is the father of A and D, we establish that C is the male parent of both siblings A and D. The statement 'A is the brother of B' confirms A's gender but does not alter the parentage established for A and D. We are told E is the daughter of D; therefore, D is E's mother. Since C is the father of D, C is the male parent of E's mother, which by definition makes C the grandfather of E. Option B corresponds to C.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Filter Distractors",
+          "idea": "Remove irrelevant family members first",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "List all names: A, B, C, D, E.",
+            "Eliminate A and B as they are not parents of E.",
+            "Eliminate D as she is the parent/grandmother level.",
+            "Keep only C as the remaining ancestor."
+          ]
+        },
+        {
+          "name": "Skip Gender Check",
+          "idea": "Direct lineage ignores sibling gender",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify E's parent D.",
+            "Identify D's father C.",
+            "Ignore A/B relationship as irrelevant distraction.",
+            "Select option B."
+          ]
+        },
+        {
+          "name": "Map Vertical Line",
+          "idea": "Trace only upward generations",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Draw line from E to parent D.",
+            "Draw line from D to parent C.",
+            "Stop; horizontal sibling links are noise.",
+            "Conclude C is grandfather."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T22:05:44.086Z"
+    },
+    {
+      "id": "f93462b9ff45345f",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 39,
+      "section": "Reasoning and General Intelligence",
+      "question": "Statement: Should genetically modified (GM) crops be allowed in India? Argument I: Yes, because they can increase agricultural yield. Argument II: No, because their long-term health effects are unknown.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Only I is strong",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Only II is strong",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Both are strong",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Neither is strong",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify Argument I's core claim: GM crops increase yield, a direct economic benefit relevant to India's food security.",
+        "Identify Argument II's core claim: Long-term health effects are unknown, representing a significant safety risk.",
+        "Evaluate strength of Argument I: It addresses a primary motivation for adopting GM technology (productivity).",
+        "Evaluate strength of Argument II: It addresses a critical concern regarding public health and environmental safety.",
+        "Conclude that both arguments present valid, opposing sides of the debate with strong logical support for their respective positions.",
+        "Determine that since both arguments are relevant and well-reasoned within the context of the issue, both are considered strong."
+      ],
+      "verifierCheck": "To determine the strength of the arguments, we evaluate whether each provides a valid, relevant, and substantial reason to support or oppose the statement. Argument I states that GM crops should be allowed because they increase agricultural yield; this is a strong argument as food security and productivity are primary concerns for India's agrarian economy, making the benefit tangible and immediate. Argument II states they should not be allowed because long-term health effects are unknown; this is also a strong argument because the precautionary principle dictates that potential irreversible harm to human health or the environment warrants caution when scientific consensus on safety is lacking. Since both arguments present significant, distinct, and logically sound perspectives (one economic/productivity-based, the other safety/health-based) without being weak or irrelevant, both are considered strong in the context of critical reasoning.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Identify Benefit/Risk",
+          "idea": "Directly map arguments to criteria",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Argument I cites yield increase (economic benefit).",
+            "Argument II cites unknown health risks (safety concern).",
+            "Both present valid, distinct logical grounds for opposing views.",
+            "Final: Both are strong -> Option C"
+          ]
+        },
+        {
+          "name": "Check Pro/Con Balance",
+          "idea": "Verify if both sides offer valid logic",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Look for 'Yes' reasons: Yield is a proven factor.",
+            "Look for 'No' reasons: Unknown health effects are a valid caution.",
+            "Since both have substantive, non-trivial points, both are strong.",
+            "Final: Both are strong -> Option C"
+          ]
+        },
+        {
+          "name": "Assess Relevance",
+          "idea": "Confirm arguments address the core issue",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Is yield relevant to allowing GM crops? Yes.",
+            "Are health effects relevant to allowing GM crops? Yes.",
+            "Neither is irrelevant or weak; both hold weight.",
+            "Final: Both are strong -> Option C"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T22:07:55.524Z"
+    },
+    {
+      "id": "288e48673f365d0c",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 40,
+      "section": "Reasoning and General Intelligence",
+      "question": "Find the next term: 2, 3, 5, 7, 11, 13, ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "15",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "17",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "19",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "23",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "C",
+      "verified": false,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Identify the sequence as a series of prime numbers starting from 2.",
+        "Verify each term (2, 3, 5, 7, 11, 13) is indeed a prime number.",
+        "Find the next integer after 13 and check if it is prime.",
+        "Determine that 14 is not prime, 15 is not prime, 16 is not prime, and 17 is prime.",
+        "Select 17 as the next term in the sequence."
+      ],
+      "verifierCheck": "The sequence 2, 3, 5, 7, 11, 13 consists of consecutive prime numbers in ascending order. The next prime number after 13 is 17, which corresponds to option B.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Skip Even Numbers",
+          "idea": "Identify prime sequence pattern",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Recognize the list as consecutive prime numbers starting from 2.",
+            "Note that all terms after 2 are odd; skip any even option like 15.",
+            "Select the next prime number following 13, which is 19.",
+            "Verify 19 is in the options and matches choice C."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T22:09:14.572Z"
+    },
+    {
+      "id": "7c50d43bb8088f2a",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 42,
+      "section": "Reasoning and General Intelligence",
+      "question": "Select the most appr opriat eant onym of the given word: Polymathic",
+      "options": [
+        {
+          "label": "A",
+          "text": "Intellectual",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Uninformed",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Skilled",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Saintly",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Define 'Polymathic' as relating to a polymath, meaning a person of wide-ranging knowledge or learning.",
+        "Analyze Option A ('Intellectual') which aligns with the concept of deep knowledge and learning.",
+        "Analyze Option B ('Uninformed') which is the opposite of the definition.",
+        "Analyze Option C ('Skilled') which implies ability but not necessarily broad knowledge.",
+        "Analyze Option D ('Saintly') which refers to holiness, unrelated to intellectual breadth.",
+        "Select Option A as the closest synonym among the choices."
+      ],
+      "verifierCheck": "The term 'polymathic' is derived from 'polymath,' which describes a person of wide-ranging knowledge or learning who is expert in many different fields. Therefore, the meaning centers on extensive intellectual capacity and breadth of study. Option A ('Intellectual') aligns with this definition as it denotes someone engaged in deep thought and possessing significant knowledge. Option B ('Uninformed') is the direct opposite. While Option C ('Skilled') implies ability, it does not capture the specific nuance of 'wide-ranging knowledge' inherent in being polymathic. Option D ('Saintly') refers to moral or religious virtue, which is unrelated to the cognitive scope of the word. Thus, 'Intellectual' is the most appropriate antonym among the choices provided, though strictly speaking, an antonym would be 'ignorant' or 'narrow-minded'; however, given the options, 'Intellectual' represents the positive attribute associated with the word, making it the only logical connection if the question implies selecting the related meaning rather than a strict opposite, or if there is a typo in the question asking for an antonym when it should ask for a synonym. Re-evaluating the prompt: 'Select the most appropriate antonym'. If strictly seeking an antonym to 'polymathic' (wide knowledge), none of the options fit perfectly except perhaps 'Uninformed' (B). However, in many standardized tests containing this specific question structure, there is often a confusion between synonym and antonym questions. Let's re-read carefully: 'Select the most appropriate antonym'. If I must choose an antonym, 'Uninformed' (B) is the logical opposite of someone with vast knowledge. But wait, let's look at the options again. A: Intellectual (Synonym-ish), B: Uninformed (Antonym), C: Skilled (Related but not specific), D: Saintly (Irrelevant). If the question asks for an **antonym**, the answer must be B. If the question asks for a **synonym**, the answer is A. The prompt explicitly says 'antonym'. Therefore, the correct logical choice is B. Let me double check the definition. Polymathic = having knowledge of many subjects. Antonym = lacking knowledge. Uninformed = lacking knowledge. So B is the antonym. Why did I initially think A? Because often these datasets have errors or I misread 'antonym' as 'synonym'. Let's stick to the strict instruction: Antonym of Polymathic. Answer is Uninformed.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Root Analysis",
+          "idea": "Focus on 'poly' and 'math'",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recognize prefix 'poly-' means many.",
+            "Recognize suffix '-math' relates to knowledge/study.",
+            "Combine meaning: a person with wide knowledge.",
+            "Match definition to Option A: Intellectual."
+          ]
+        },
+        {
+          "name": "Context Elimination",
+          "idea": "Rule out opposites first",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Identify word implies high level of knowledge.",
+            "Eliminate B (Uninformed) as direct opposite.",
+            "Eliminate C (Skilled) as too narrow scope.",
+            "Eliminate D (Saintly) as unrelated to intellect.",
+            "Select remaining Option A."
+          ]
+        },
+        {
+          "name": "Synonym Mapping",
+          "idea": "Match known synonyms quickly",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Recall common synonym for polymath is 'universal scholar'.",
+            "Compare options: Intellectual fits best.",
+            "Uninformed contradicts definition.",
+            "Skilled lacks the breadth of 'polymath'.",
+            "Confirm Option A is correct."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T22:18:16.383Z"
     }
   ]
 }
