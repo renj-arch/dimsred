@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T13:48:54.284Z",
-  "cursor": 969,
-  "built": 850
+  "updatedAt": "2026-11-07T14:15:12.874Z",
+  "cursor": 972,
+  "built": 853
  },
  "figs": {
   "2316121": {
@@ -5103,6 +5103,24 @@
   "60ddc532": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Common Types of Draft Tubes: Conical, Elbow, Moody -->\n  <text x=\"180\" y=\"20\" text-anchor=\"middle\">Draft Tube Types</text>\n\n  <!-- 1. Conical (Straight Diverging) -->\n  <path d=\"M 40 60 L 140 60 L 140 130 L 40 130 Z\" fill=\"none\"/>\n  <line x1=\"40\" y1=\"60\" x2=\"140\" y2=\"60\" stroke-width=\"2\"/>\n  <line x1=\"40\" y1=\"130\" x2=\"140\" y2=\"130\" stroke-width=\"2\"/>\n  <text x=\"90\" y=\"50\">Inlet</text>\n  <text x=\"90\" y=\"145\">Outlet</text>\n  <text x=\"180\" y=\"75\">Conical Tube</text>\n\n  <!-- 2. Elbow -->\n  <path d=\"M 160 60 L 220 60 C 235 60, 245 75, 245 90 C 245 105, 235 120, 220 120 L 160 120\" fill=\"none\"/>\n  <text x=\"180\" y=\"145\">Elbow Tube</text>\n\n  <!-- 3. Moody (Elbow with Long Taper) -->\n  <path d=\"M 260 60 L 320 60 C 335 60, 345 75, 345 90 C 345 105, 335 120, 320 120 L 260 120\" fill=\"none\"/>\n  <text x=\"280\" y=\"145\">Moody Tube</text>\n\n  <!-- Labels for flow direction -->\n  <path d=\"M 90 130 L 90 135 M 90 137 L 90 142\" fill=\"none\" stroke=\"#222\"/>\n  <path d=\"M 220 120 L 225 120 M 227 120 L 232 120\" fill=\"none\" stroke=\"#222\"/>\n  <path d=\"M 320 120 L 325 120 M 327 120 L 332 120\" fill=\"none\" stroke=\"#222\"/>\n</svg>",
    "n": "name the common types of draft tubes.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "7ec98ed": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Draft Tube Efficiency</text><path d=\"M40,100 L40,160\" stroke-dasharray=\"3,3\"/><path d=\"M40,100 Q180,50 320,100\" fill=\"none\"/><circle cx=\"40\" cy=\"100\" r=\"4\"/><circle cx=\"320\" cy=\"100\" r=\"4\"/><text x=\"35\" y=\"95\">Inlet</text><text x=\"315\" y=\"95\">Outlet</text><path d=\"M60,100 L60,180\" stroke-dasharray=\"3,3\"/><path d=\"M300,100 L300,180\" stroke-dasharray=\"3,3\"/><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"180\" y=\"55\" text-anchor=\"middle\">V₂</text><text x=\"180\" y=\"190\" text-anchor=\"middle\">V₃</text><path d=\"M40,100 L60,100 L60,120 L40,120 Z\" fill=\"#222\"/><path d=\"M320,100 L300,100 L300,120 L320,120 Z\" fill=\"#222\"/><text x=\"50\" y=\"115\">Kinetic Head</text><text x=\"310\" y=\"115\">Recovered Head</text></svg>",
+   "n": "write the efficiency of a draft tube.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "4d8a377c": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Runner Blade Section -->\n  <path d=\"M80,100 L140,100 L130,160 L90,160 Z\" />\n  <path d=\"M220,100 L280,100 L270,160 L230,160 Z\" />\n  <!-- Flow Streamlines -->\n  <path d=\"M40,90 Q110,90 140,150 T280,150\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M40,110 Q110,110 130,160 T280,160\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Vapour Bubble -->\n  <circle cx=\"170\" cy=\"140\" r=\"15\" />\n  <!-- Labels -->\n  <text x=\"95\" y=\"85\">Inlet</text>\n  <text x=\"235\" y=\"85\">Outlet</text>\n  <text x=\"170\" y=\"165\">Bubble</text>\n  <text x=\"145\" y=\"190\">Low Pressure Zone</text>\n  <text x=\"235\" y=\"190\">Collapse Point</text>\n</svg>",
+   "n": "what causes cavitation in a reaction turbine?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "7bfc02a0": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\" font-weight=\"bold\">Thoma Cavitation Factor (σ)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"65\">Hb</text><text x=\"315\" y=\"65\">pv/γ</text><line x1=\"40\" y1=\"80\" x2=\"320\" y2=\"80\"/><text x=\"35\" y=\"85\">Hs</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><text x=\"35\" y=\"105\">Tailrace</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\"/><text x=\"35\" y=\"125\">Hs + Ht</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"35\" y=\"145\">Hb - Hs - pv/γ</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Net Positive Suction Head</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"185\">Hb - Hs - pv/γ</text><text x=\"180\" y=\"205\" text-anchor=\"middle\">Divided by Total Head (H)</text></svg>",
+   "n": "define the thoma cavitation factor of a turbine.",
    "sub": "hydmach",
    "at": "2026-11-07"
   }

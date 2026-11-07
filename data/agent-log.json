@@ -1,107 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T07:04:20.218Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 2
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 226079 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 48 overlapping subtopics into correct categories"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T07:05:58.784Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 61,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 61
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      },
-      {
-       "page": "agniveer/mock-tests/full-2026-11-07-agniveer-cee.html",
-       "fix": "Nav: \"AGNIVEER\" → /agniveer/ (was ../index.html)"
-      },
-      {
-       "page": "agniveer/papers/practice-set-01.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-13.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-14.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-15.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cds/papers/practice-set-01.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cds/papers/practice-set-02.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html",
-       "fix": "Nav: \"CGL\" → /cgl/ (was ../index.html)"
-      },
-      {
-       "page": "cgl/papers/13-sep-2025-s1.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T07:39:00.974Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -835,8 +734,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T14:31:53.524Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "We have 60 critical faults and 80 figure gaps; the previous run exhausted 'bankfigures' (1 fix) and 'invention' (0), so we must prioritize content generation to fill these deep gaps before tackling general faults. Since 'papers', 'questions', and 'syllabus' files are missing, we cannot use those agents yet; we must first generate the raw material via 'BankFigures' and 'Invention'. We will follow with 'MockPapers' and 'ExamPatterns' to structure that content, saving 'MetaLearn' for last as it has",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MockPapers",
+     "ExamPatterns",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (853 total)",
+       "text": "Write the efficiency of a draft tube. | What causes cavitation in a reaction turbine? | Define the Thoma cavitation factor of a turbine."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T14:02:44.365Z",
+ "lastRun": "2026-11-07T14:31:53.524Z",
  "model": "qwen3.5:9b"
 }
