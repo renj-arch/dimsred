@@ -6,13 +6,15 @@ name: Research Team (original solutions)
 # no world-first claim is made.
 on:
   schedule:
-    - cron: '0 15 * * *'
+    # Four investigations a day build a real corpus quickly; the lane has its
+    # own concurrency group and does not block the paper runs.
+    - cron: '0 */6 * * *'
   workflow_dispatch:
     inputs:
       limit:
         description: 'Questions to investigate this run'
         required: false
-        default: '6'
+        default: '12'
       model:
         description: 'Ollama model tag'
         required: false
@@ -102,7 +104,7 @@ jobs:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
         run: |
-          ARGS="--limit=${{ inputs.limit || '6' }} --max-minutes=110"
+          ARGS="--limit=${{ inputs.limit || '12' }} --max-minutes=110"
           if [ -n "${{ inputs.exams }}" ]; then ARGS="$ARGS --exams=${{ inputs.exams }}"; fi
           node scripts/research-run.js $ARGS
 
