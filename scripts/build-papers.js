@@ -56,6 +56,14 @@ function buildQuestion(q, sections) {
     ? '<span class="section-badge" style="background:' + section.color + '">' + esc(section.name) + '</span>'
     : '';
 
+  // Every model-written item carries its generation date on the page. The
+  // paper-level date is not enough: a set can mix bank and model questions.
+  var modelBadge = '';
+  if (q.source === 'model' || q.reviewed === false) {
+    var madeOn = String(q.generatedAt || '').slice(0, 10);
+    modelBadge = '<span class="model-badge" style="display:inline-block;margin-left:6px;font-size:.72em;color:#b45309;background:#fef3c7;border:1px solid #fcd34d;border-radius:100px;padding:2px 7px">model-generated' + (madeOn ? ' · ' + esc(madeOn) : '') + '</span>';
+  }
+
   var opts = '';
   for (var i = 0; i < q.options.length; i++) {
     var o = q.options[i];
@@ -72,7 +80,7 @@ function buildQuestion(q, sections) {
     ? '<br><span style="color:#4b5563">' + esc(q.solution) + '</span>'
     : '';
 
-  return '<div class="question" data-q="' + q.q + '"><div class="q-number">Q' + q.q + '. ' + badge + '</div><div class="q-text">' + esc(q.text) + '</div><div class="q-options">' + opts + '</div><button class="show-soln">Show Answer</button><div class="solution-box"><strong>Correct Answer:</strong> ' + correctAnswer + sol + '</div></div>';
+  return '<div class="question" data-q="' + q.q + '"><div class="q-number">Q' + q.q + '. ' + badge + modelBadge + '</div><div class="q-text">' + esc(q.text) + '</div><div class="q-options">' + opts + '</div><button class="show-soln">Show Answer</button><div class="solution-box"><strong>Correct Answer:</strong> ' + correctAnswer + sol + '</div></div>';
 }
 
 function buildPaper(data) {

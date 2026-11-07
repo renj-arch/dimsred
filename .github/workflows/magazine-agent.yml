@@ -23,7 +23,10 @@ permissions:
 
 concurrency:
   group: magazine-issue
-  cancel-in-progress: true
+  # A workflow_run burst used to cancel runs that were already fetching or
+  # pushing. Queue them instead; each run is short and the newest still wins
+  # because it writes the latest issue.
+  cancel-in-progress: false
 
 jobs:
   refresh:
@@ -60,12 +63,14 @@ jobs:
             exit 0
           fi
           git commit -m "magazine: set issue $(date -u +'%Y-%m-%dT%H:%MZ')"
+          pushed=""
           for i in 1 2 3; do
-            git pull --rebase --autostash || true
-            if git push; then
-              echo "Pushed magazine update"
-              break
-            fi
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed magazine update"; break; fi
             echo "push attempt $i failed, retrying..."
             sleep 5
           done
+          if [ -z "$pushed" ]; then
+            echo "::error::magazine issue could not be pushed to main"
+            exit 1
+          fi

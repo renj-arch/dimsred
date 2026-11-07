@@ -11,11 +11,12 @@ on:
 permissions:
   contents: write
 
-# Prevent pile-ups: periodic content jobs must not queue behind each
-# other — the newest run wins.
+# Never cancel a weekly publish half-way through its push: the data was
+# already fetched and committed locally, so a cancellation silently loses a
+# week of updates.
 concurrency:
   group: sensitive-gk
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   update:
@@ -64,10 +65,16 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add current-affairs.html
           git commit -m "chore: update time-sensitive GK data [auto]"
+          pushed=""
           for i in 1 2 3; do
             # Nothing is uncommitted here, so autostash only stats the whole
             # tree (very slow on this repo). A plain rebase is enough.
-            git pull --rebase 2>/dev/null || true
-            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed"; break; fi
+            echo "push attempt $i failed, retrying..."
             sleep 5
           done
+          if [ -z "$pushed" ]; then
+            echo "::error::time-sensitive GK update could not be pushed to main"
+            exit 1
+          fi

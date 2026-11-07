@@ -151,11 +151,11 @@ async function fillExam(examKey, opts) {
   if (opts.section) {
     const def = paper.sections.find(function (s) { return s.name === opts.section; });
     if (!def) throw new Error('no section "' + opts.section + '" in ' + examKey + '/' + paper.id);
-    plan = [{ name: def.name, count: parseInt(opts.count, 10) || 10, bank: def.bank || [def.name] }];
+    plan = [{ name: def.name, count: parseInt(opts.count, 10) || 10, bank: (def.bank && def.bank.length) ? def.bank : [def.name] }];
   } else if (opts.count) {
     plan = bp.allocate(parseInt(opts.count, 10), paper.sections);
   } else {
-    plan = paper.sections.map(function (s) { return { name: s.name, count: s.count, bank: s.bank || [s.name] }; });
+    plan = paper.sections.map(function (s) { return { name: s.name, count: s.count, bank: (s.bank && s.bank.length) ? s.bank : [s.name] }; });
   }
 
   const budget = { left: parseInt(opts.budget, 10) || 40 };

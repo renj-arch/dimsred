@@ -8,11 +8,11 @@ on:
 permissions:
   contents: write
 
-# Prevent pile-ups: periodic content jobs must not queue behind each
-# other — the newest run wins.
+# Never cancel a weekly publish half-way through its push: the cleanup was
+# already computed locally, so a cancellation silently skips the week.
 concurrency:
   group: weekly-cleanup
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   cleanup:
@@ -52,9 +52,19 @@ jobs:
           # walks the entire multi-GB question corpus and was a large part of
           # the 2026-11-01 timeout.
           git add -A -- . ':(exclude)data/questions'
-          git diff --staged --quiet || git commit -m "Weekly stale paper cleanup $(date +'%Y-%m-%d')"
+          if git diff --staged --quiet; then
+            echo "No stale papers to remove"
+            exit 0
+          fi
+          git commit -m "Weekly stale paper cleanup $(date +'%Y-%m-%d')"
+          pushed=""
           for i in 1 2 3; do
-            git pull --rebase 2>/dev/null || true
-            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed"; break; fi
+            echo "push attempt $i failed, retrying..."
             sleep 5
           done
+          if [ -z "$pushed" ]; then
+            echo "::error::stale-paper cleanup could not be pushed to main"
+            exit 1
+          fi

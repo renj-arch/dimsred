@@ -44,7 +44,7 @@ function norm(s) {
 function sectionAccepts(section, bankSection) {
   var b = norm(bankSection);
   if (!b) return false;
-  var names = section.bank || [section.name];
+  var names = (section.bank && section.bank.length) ? section.bank : [section.name];
   for (var i = 0; i < names.length; i++) {
     if (norm(names[i]) === b) return true;
   }
@@ -77,7 +77,7 @@ function allocate(total, sections) {
     }
   }
   return out.filter(function (x) { return x.count > 0; })
-    .map(function (x) { return { name: x.section.name, count: x.count, bank: x.section.bank || [x.section.name] }; });
+    .map(function (x) { return { name: x.section.name, count: x.count, bank: (x.section.bank && x.section.bank.length) ? x.section.bank : [x.section.name] }; });
 }
 
 function verify(paperObj) {

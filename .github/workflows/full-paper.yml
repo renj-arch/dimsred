@@ -28,7 +28,9 @@ on:
         default: '60'
 
 concurrency:
-  group: full-paper
+  # One paper per exam at a time. Different exams may run in parallel so the
+  # remaining full papers can be produced without waiting a day each.
+  group: full-paper-${{ github.event.inputs.exam || 'scheduled' }}
   cancel-in-progress: false
 
 permissions:
@@ -37,11 +39,18 @@ permissions:
 jobs:
   paper:
     runs-on: ubuntu-latest
-    timeout-minutes: 180
+    # Checkout + model warm-up + fill + build. The 9 GB data/questions corpus
+    # is excluded below; the paper lane never reads it.
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions
+          sparse-checkout-cone-mode: false
 
       - uses: actions/setup-node@v4
         with:
@@ -106,10 +115,14 @@ jobs:
             echo "exam=${{ inputs.exam }}" >> $GITHUB_OUTPUT
             echo "paper=${{ inputs.paper }}" >> $GITHUB_OUTPUT
           else
-            EXAMS=(cgl rbi jee neet gate agniveer upsc ibps-po sbi-clerk ssc-gd ctet nda cds clat)
-            IDX=$(( $(date +%j) % ${#EXAMS[@]} ))
-            echo "exam=${EXAMS[$IDX]}" >> $GITHUB_OUTPUT
-            echo "paper=" >> $GITHUB_OUTPUT
+            # Rotate over every real paper, not just the first paper of each
+            # exam: UPSC (GS1 + CSAT), NDA (Maths + GAT) and CDS (English +
+            # GK + Maths) each have more than one paper.
+            PAPERS=(cgl:tier1 rbi:phase1 ibps-po:prelims sbi-clerk:prelims ssc-gd:cbt ctet:paper1 jee:paper1 neet:paper1 gate:paper1 agniveer:cee upsc:gs1 upsc:csat nda:maths nda:gat cds:english cds:gk cds:maths clat:paper1)
+            IDX=$(( 10#$(date +%j) % ${#PAPERS[@]} ))
+            PAIR=${PAPERS[$IDX]}
+            echo "exam=${PAIR%%:*}" >> $GITHUB_OUTPUT
+            echo "paper=${PAIR##*:}" >> $GITHUB_OUTPUT
           fi
 
       # Exit 3 means "short, refused to publish" - not a crash. The bank fill
@@ -144,11 +157,17 @@ jobs:
           git add -A
           git add -f question-bank/*.json
           git diff --staged --quiet || git commit -m "full-paper: ${{ steps.target.outputs.exam }} ${{ steps.target.outputs.paper }} $(date +'%Y-%m-%d')"
+          pushed=""
           for i in 1 2 3; do
-            git pull --rebase --autostash 2>/dev/null || true
-            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed"; break; fi
+            echo "push attempt $i failed, retrying..."
             sleep 5
           done
+          if [ -z "$pushed" ]; then
+            echo "::error::generated paper could not be pushed to main"
+            exit 1
+          fi
 
       - name: Report
         if: always()

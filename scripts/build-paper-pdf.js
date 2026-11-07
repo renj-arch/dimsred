@@ -94,6 +94,10 @@ function build(data) {
     (q.options || []).forEach(function (o) {
       doc.font('Helvetica').fontSize(9.5).fillColor('#333').text('   ' + o.label + '. ' + safe(o.text), { width: W, indent: 8 });
     });
+    if (q.source === 'model' || q.reviewed === false) {
+      doc.font('Helvetica-Oblique').fontSize(8).fillColor('#92400e')
+        .text('   Model-generated · ' + safe(String(q.generatedAt || '').slice(0, 10)), { width: W, indent: 8 });
+    }
     doc.moveDown(0.35);
   });
 

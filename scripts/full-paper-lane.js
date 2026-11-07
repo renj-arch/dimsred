@@ -58,15 +58,17 @@ function usable(q) {
 
 function isModel(q) { return q.source === 'model' || q.reviewed === false; }
 
-function pickForSection(bank, sectionDef, count, random) {
+function pickForSection(bank, sectionDef, count, random, used) {
   const pool = (bank.questions || []).filter(function (q) {
-    return usable(q) && bp.sectionAccepts(sectionDef, q.section);
+    return usable(q) && !used[q.id] && bp.sectionAccepts(sectionDef, q.section);
   });
   // Reviewed/extracted questions lead; model questions fill the rest and stay
   // badged in the built page.
   const real = shuffled(pool.filter(function (q) { return !isModel(q); }), random);
   const ai = shuffled(pool.filter(isModel), random);
-  return real.concat(ai).slice(0, count);
+  const picked = real.concat(ai).slice(0, count);
+  picked.forEach(function (q) { used[q.id] = 1; });
+  return picked;
 }
 
 function assemble(examKey, paperId, date) {
@@ -78,8 +80,9 @@ function assemble(examKey, paperId, date) {
   const random = rng(examKey + '|' + paper.id + '|' + date);
   const sections = [];
   const gaps = [];
+  const used = {};
   for (const s of paper.sections) {
-    const picked = pickForSection(bank, s, s.count, random);
+    const picked = pickForSection(bank, s, s.count, random, used);
     if (picked.length < s.count) gaps.push({ section: s.name, need: s.count, have: picked.length, short: s.count - picked.length });
     sections.push({ name: s.name, count: s.count, marks: s.marks, questions: picked });
   }
