@@ -140,8 +140,12 @@ jobs:
           git commit -m "research: original methods $(date +'%Y-%m-%d')"
           pushed=""
           for i in 1 2 3; do
-            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
-            if git push; then pushed=1; echo "Pushed"; break; fi
+            # The build step leaves regenerated mock-test HTML and sitemap.xml
+            # unstaged; a plain `pull --rebase` refuses to run with a dirty
+            # tree (2026-11-07 run 42373324262). Autostash carries them
+            # across the rebase instead of losing the publish.
+            git -c rebase.autoStash=true pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push origin HEAD:main; then pushed=1; echo "Pushed"; break; fi
             echo "push attempt $i failed, retrying..."
             sleep 5
           done
