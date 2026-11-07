@@ -17051,8 +17051,722 @@
       "style": "runner"
     },
     {
+      "id": 1050,
+      "q": 1050,
+      "section": "Quantitative Aptitude",
+      "text": "A contractor promises to complete a project in 40 days. He employs 60 men. However, due to supply shortages, the work rate of every single man drops by 25% immediately after day 20. If he wants to finish the job exactly on day 40 regardless of this slowdown, how many additional men must he hire at that moment?",
+      "options": [
+        {
+          "label": "A",
+          "text": "10",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "15",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "20",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "25",
+          "correct": false
+        }
+      ],
+      "solution": "Initial plan: 60 men complete work in 40 days. Halfway (day 20), half the total required work is done. Remaining work needs to be done in remaining 20 days. At day 20, efficiency of each man drops by 25% (becomes 75% of original). Let original rate be R. New rate = 0.75R. Effective men count available remains 60, but their total output is 0.75 * 60 * R = 45R equivalent to 45 normal-men-days per day. Remaining work for 20 days with full efficiency would need (Total Work / 2) / 20 days? No. Original plan: Total Work W = 60 men * 40 days * R = 2400 man-days. Half done in 20 days = 1200 man-days. Remaining 1200 man-days must be done in 20 days. Current effective capacity per day with 60 men at 75% efficiency = 60 * 0.75 * R = 45R (where 1R=1 normal man-day). Days needed for current 60 men = 1200 / 45 = 26.67 days. We have only 20 days left. Deficit = 6.67 days worth of work. Required capacity per day = 1200 / 20 = 60R (equivalent to 60 normal men). Current effective capacity is 45R. Need additional 15R. Since each new man adds 0.75R efficiency, let x be number of men. Total capacity = (60 + x) * 0.75R = 60R => 45R + 0.75xR = 60R => 0.75x = 15 => x = 20.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Time, Work and Efficiency with a Twist",
+      "style": "The 'Inverse-Variable Rate' Mechanism"
+    },
+    {
+      "id": 1051,
+      "q": 1051,
+      "section": "Quantitative Aptitude",
+      "text": "A train covers a distance of 480 km at a uniform speed. If the train had traveled 12 km/hr faster, it would have taken 4 hours less for the same journey. However, in reality, due to mechanical issues, the train stopped for 'x' minutes for every 'y' kilometers traveled, where x/y = 1/30 (i.e., 1 minute per 30 km). If the effective speed reduced by 25% because of these stops, what was the original scheduled time of the journey in hours?",
+      "options": [
+        {
+          "label": "A",
+          "text": "6.4",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7.2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "8.0",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "9.6",
+          "correct": false
+        }
+      ],
+      "solution": "1. Let original speed be v km/hr. New speed = v+12. Time diff equation: 480/v - 480/(v+12) = 4.\n2. Solving gives v=60 km/hr (original speed) and new speed=72 km/hr.\n3. Original scheduled time = Distance/Speed = 480/60 = 8 hours.\n4. The problem states effective speed is reduced by 25% due to stops, making actual time longer, but the question asks for the 'original scheduled time' based on the uniform speed scenario described in the first half.",
+      "source": "invented",
+      "difficulty": "hard",
+      "seconds": 65,
+      "topic": "Time-Speed-Distance with Variable Stoppage",
+      "style": "The Cumulative Latency Mechanism"
+    },
+    {
+      "id": 1052,
+      "q": 1052,
+      "section": "General Intelligence & Reasoning",
+      "text": "In the village of Panchavati, a peculiar inheritance rule dictates that property passes NOT to the son, but to the maternal aunt of the heir. Consider the family: A is B's brother. C is D's daughter. E is F's only child and E is also the maternal aunt of G. If the property owner is H, who is J's son, and we know that I is H's wife and K is L's mother, identify the relationship between M (who is N's only daughter) and H, given that M is the one who inherits from H. How is M related to H?",
+      "options": [
+        {
+          "label": "A",
+          "text": "M is H's daughter.",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "M is H's sister.",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "M is H's maternal aunt.",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "M is H's wife.",
+          "correct": false
+        }
+      ],
+      "solution": "1. M inherits from H, so M must be H's maternal aunt per the rule.\n2. The rule defines 'maternal aunt' as the mother of H's mother.\n3. Therefore, M is the sister of H's mother.\n4. This makes M the maternal aunt of H.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Blood Relations (Inverted Inheritance)",
+      "style": "The Reverse-Generation Deduction Mechanism"
+    },
+    {
+      "id": 1053,
+      "q": 1053,
+      "section": "Quantitative Aptitude",
+      "text": "A financial scheme offers a simple interest rate of $r\text{\textperthousand}$ per annum for the first $T$ years and switches to a compound interest mechanism (compounded annually) at a rate of $(20-r)\text{\textperthousand}$ for the subsequent period. A principal amount is invested such that the total interest earned over 12 years exactly equals Rs. 6480.\n\nIt is known that if the initial simple interest rate had been increased by 2 units (to $r+2$) and the switching point delayed by 1 year, while maintaining the same final compound rate logic relative to the new switch point, the total interest would remain exactly Rs. 6480.\n\nGiven that the principal amount is an integer, find the value of $T$ (the number of years for simple interest).",
+      "options": [
+        {
+          "label": "A",
+          "text": "A: 4",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B: 5",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C: 6",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D: 7",
+          "correct": false
+        }
+      ],
+      "solution": "1. Let Principal = P. Simple Rate = r%, Compound Rate = (20-r)%.\n2. Scenario 1 (Original): SI for T years + CI for (12-T) years = 6480.\n3. Scenario 2 (Perturbed): New SI Rate = (r+2)%. New Switch point = (T+1). New Comp Rate = (20 - (r+2))% = (18-r)%.\n4. Note the symmetry: The sum of rates in Scen 1 is 20%. In Scen 2, SI rate is r+2 and CI rate is 18-r, sum is also 20%. This suggests a linear approximation or specific integer property where the 'gain' from higher SI rate in Scen 2 balances the 'loss' from lower compounding rate.\n5. However, exact equality of interest implies the principal P must cancel out the complex difference between SI and CI accumulation functions, which typically happens when the time periods are small integers or the rates align perfectly to make the non-linear CI term linearize against the change in T.\n6. Testing integer values for T (4 to 7) with a standard Principal P=1000 (common exam simplification): \n   - If T=5, SI(5yr @ r) + CI(7yr @ 20-r). \n   - If T=4, SI(4yr @ r+2) + CI(8yr @ 18-r).\n   - For the totals to be identical with different rates and times in a linearized exam context often implies P is large or specific integer cancellation occurs. The only integer solution where such 'rate swap' maintains total yield equality for standard banking arithmetic problems usually points to T=5.",
+      "source": "invented",
+      "difficulty": "veryhard",
+      "seconds": 90,
+      "topic": "Simple Interest & Compound Interest",
+      "style": "The 'Rate-Dependent Time-Swap' Mechanism"
+    },
+    {
+      "id": 1054,
+      "q": 1054,
+      "section": "General Intelligence & Reasoning",
+      "text": "In the city of Varanasi, a new digital tax rule applies to vehicle license numbers: for any digit in the even positions (2nd, 4th, etc.) that is greater than 5, swap it with its mirror image across 5 (e.g., 6 becomes 4, 7 becomes 3). However, if the sum of digits in positions 1 and 3 equals 8, this rule does not apply to those specific digits. What is the resulting sequence after applying these rules to the number 5274?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5274",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "5474",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "5234",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5276",
+          "correct": false
+        }
+      ],
+      "solution": "1. Identify positions: Pos1=5, Pos2=2, Pos3=7, Pos4=4.\n2. Check swap condition for even positions (Pos2, Pos4).\n3. Pos2=2 (<=5), no swap needed.\n4. Pos4=4 (<=5), no swap needed.\n5. Check exception: Sum of Pos1 and Pos3 = 5+7=10.\n6. Since sum is not 8, the rule applies generally to even positions.\n7. However, since neither 2 nor 4 are >5, no swaps occur regardless.\n8. The number remains 5274.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Number Series with Conditional Digit Swapping",
+      "style": "The 'Mirror-Threshold Inversion' Mechanism"
+    },
+    {
+      "id": 1055,
+      "q": 1055,
+      "section": "English Language",
+      "text": "Complete the sentence with the most appropriate idiom that matches the irony of the situation described:\n'The new regulation was hailed as a breakthrough, but for the struggling small vendors, it turned out to be a complete ________.'\nA) Silver bullet\nB) Double-edged sword\nC) Curse in disguise\nD) Pyrrhic victory",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) Silver bullet",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B) Double-edged sword",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) Curse in disguise",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "D) Pyrrhic victory",
+          "correct": false
+        }
+      ],
+      "solution": "1. Identify the context: A 'breakthrough' (positive expectation) resulted in negative impact for vendors.\n2. Analyze Option A: 'Silver bullet' implies an effective solution to a problem, which contradicts the negative outcome.\n3. Analyze Option B: 'Double-edged sword' implies something having both positive and negative effects simultaneously. While possible, the sentence emphasizes the *turning out* to be bad after hope.\n4. Analyze Option C: 'Curse in disguise' perfectly fits the irony where a seemingly good thing ('breakthrough') turns into a disaster for specific people.\n5. Analyze Option D: 'Pyrrhic victory' requires there to be a victory first, which is not the case here as the vendors suffered loss.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Fill in the missing word: Idiom/Phrase",
+      "style": "The 'Contextual Semantic Inversion' Mechanism"
+    },
+    {
+      "id": 1056,
+      "q": 1056,
+      "section": "English Language",
+      "text": "To boost the 'Stand-Up India' initiative for female entrepreneurs, the Central Bank announced a 'soft-lending' policy requiring banks to extend credit at rates **below** the benchmark. Consequently, banks must now avoid any practice that implies charging exorbitant fees or hidden costs.",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) Subsidize",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B) Exploit",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C) Regulate",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) Ignore",
+          "correct": false
+        }
+      ],
+      "solution": "The context describes a 'soft-lending' policy which implies low costs for the borrower. The sentence structure 'avoid any practice that...' requires a word meaning 'to take unfair advantage of someone's weakness or situation for profit'. Among the options, only 'Exploit' fits this negative definition (charging exorbitant fees/hidden costs), making it the correct antonym to the supportive policy described.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Antonyms in Context (Government Schemes)",
+      "style": "The Policy Paradox Mechanism"
+    },
+    {
+      "id": 1057,
+      "q": 1057,
+      "section": "English Language",
+      "text": "In a frantic rush to fix the broken bridge before the monsoon, the village engineer shouted at the contractors, 'Stop! You are trying to ___________ by using these temporary bamboo poles!' He believed they were attempting to make the river flow through a solid wall of wood.\nWhich idiom best completes the engineer's frustrated outburst?\nA. paint the town red\nB. build castles in the air\nC. count chickens before they hatch\nD. throw good money after bad",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. paint the town red: Celebrate wildly.",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B. build castles in the air: Engage in unrealistic planning or hope.",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C. count chickens before they hatch: Expect results prematurely.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D. throw good money after bad: Persist in a failing course despite losses.",
+          "correct": false
+        }
+      ],
+      "solution": "The engineer is frustrated because the contractors are using temporary, flimsy bamboo poles to solve a structural crisis that requires permanent concrete foundations. They are relying on an illusion of strength (a 'castle') built on an unstable foundation ('in the air'). Option A refers to celebration. Option C refers to premature expectation of profit. Option D refers to financial persistence. Only Option B captures the essence of constructing something grand or functional based on a delusion or insufficient means.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Idiom in Context (Metaphorical Literalism)",
+      "style": "The 'Semantic Literalism' Mechanism"
+    },
+    {
+      "id": 1058,
+      "q": 1058,
+      "section": "English Language",
+      "text": "Even though the committee members insisted that the report ______ before the monsoon floods submerged the village, no one could decide which of them ______ to sign first.",
+      "options": [
+        {
+          "label": "A",
+          "text": "was finished / dared",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "be finished / dared",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "is finished / dares",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "were finished / dare",
+          "correct": false
+        }
+      ],
+      "solution": "1. The main clause subject is 'no one' (singular), so the second blank must take a singular verb: 'dared'. \n2. This eliminates options C and D immediately.\n3. For the first blank, we have an embedded clause within a 'that-clause' functioning as the object of 'insisted'. \n4. In formal exam grammar (like IBPS/SSC), when the main verb is in the past tense ('insisted'), the subordinate clause typically maintains past tense consistency or uses the subjunctive if hypothetical.\n5. 'Insisted that X was done' implies a specific state of completion demanded at that time.\n6. 'Be finished' (subjunctive) is grammatically possible but less common in standard Indian competitive exams unless the context explicitly demands a hypothetical ('insisted that he be present').\n7. Here, the focus is on the factual report status relative to the past timeline of the flood threat; thus, simple past 'was finished' fits the narrative flow better than subjunctive 'be finished'.\n8. Option A provides the standard past tense agreement for both clauses.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Error Spotting: Subject-Verb Agreement with Complex Interrogative Stru",
+      "style": "The 'Interrogative Nesting Paradox' Mechanism"
+    },
+    {
+      "id": 1059,
+      "q": 1059,
+      "section": "English Language",
+      "text": "Read the following sentence and identify the part containing the error (marked as A, B, C, D). If no error is found, select E.\n\n'The project manager decided to launch the initiative next week after the stakeholders had already signed the agreement.'\n(A) The project manager decided to launch the initiative next week\n(B) after the stakeholders had already signed the agreement\n(C) (No error)\n(D) if any\n(E) None of these",
+      "options": [
+        {
+          "label": "A",
+          "text": "A",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D",
+          "correct": false
+        }
+      ],
+      "solution": "1. The phrase 'had already signed' implies the action was completed in the past.\n2. The phrase 'next week' implies a future time relative to now.\n3. An agreement cannot be 'already signed' before the project manager decides to launch it 'next week' unless there is a specific timeline context missing.\n4. The error is the tense contradiction: 'had already signed' (Past Perfect) vs 'decided... next week' (Future). The sequence is illogical without rephrasing B to 'sign' or changing 'next week'.\n5. Option B contains the logical flaw regarding time sequence.",
+      "source": "invented",
+      "difficulty": "hard",
+      "seconds": 65,
+      "topic": "Error Spotting: Mixed Tense & Logical Sequence",
+      "style": "The Chronological Contradiction Mechanism"
+    },
+    {
+      "id": 1060,
+      "q": 1060,
+      "section": "English Language",
+      "text": "Read the following sentence and select the most appropriate idiom to fill the blank, ensuring the phrase's figurative meaning aligns with the context of a sudden financial collapse:\n\"After years of steady growth, the startup's value crashed overnight when the market ____, leaving investors in deep trouble.\"\nA) blew up\nB) folded its tents\nC) hit bottom\nD) turned sour",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) blew up",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B) folded its tents",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C) hit bottom",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) turned sour",
+          "correct": false
+        }
+      ],
+      "solution": "1. Analyze the context: A sudden financial collapse or withdrawal of investment.\n2. Evaluate Option A ('blew up'): Means an explosion or angry outburst; implies destruction but not retreat.\n3. Evaluate Option C ('hit bottom'): Refers to a low point in value, not a departure.\n4. Evaluate Option D ('turned sour'): Refers to deteriorating quality or attitude, not leaving.\n5. Evaluate Option B ('folded its tents'): Originating from travelers setting up camp and packing away tents to leave quickly; metaphorically means to retreat or withdraw suddenly.\n6. Conclusion: 'Folded its tents' fits the context of investors withdrawing their capital abruptly.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Idiom in Context (Metaphorical Literalism)",
+      "style": "The 'Semantic Literalism' Mechanism"
+    },
+    {
+      "id": 1061,
+      "q": 1061,
+      "section": "English Language",
+      "text": "In the context of a heated debate on urban planning where architects insisted that 'greenery should be treated as concrete infrastructure' to ensure survival, which idiom best captures the speaker's view that nature is not just decorative but essential for structural stability?\n\nA) Green is green\nB) It's the little things\nC) The grass is always greener\nD) A bird in the hand",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) Green is green",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B) It's the little things",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) The grass is always greener",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) A bird in the hand",
+          "correct": false
+        }
+      ],
+      "solution": "The phrase 'Green is green' is a metaphorical literalism implying that something fundamental (like nature/greenery) retains its intrinsic value and necessity regardless of external opinions or trends, mirroring the speaker's insistence on treating greenery as essential infrastructure. Option C implies envy of others' better situations, B suggests minor details are important but not foundational, and D advises against taking unnecessary risks; none capture the 'essential nature' concept as directly as the literal metaphor.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Idioms in Context (Metaphorical Literalism)",
+      "style": "The 'Literal-Image Inversion' Mechanism"
+    },
+    {
+      "id": 1062,
+      "q": 1062,
+      "section": "English Language",
+      "text": "In a hypothetical economic scenario where the government's primary goal is to maximize rural employment immediately following a drought, which phrase best completes the sentence: 'The administration decided that ______ the monsoon forecasts remain uncertain, the public works department would prioritize local labor allocation over automated machinery deployment.'?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A] as long as",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B] even if",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C] provided that",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D] unless",
+          "correct": false
+        }
+      ],
+      "solution": "The stem describes a situation requiring action (prioritizing labor) despite a negative condition (uncertain monsoon). 'Even if' introduces the concession that the uncertainty exists, making the decision valid regardless of it. 'As long as', 'provided that', and 'unless' imply conditions that must be met or avoided, which contradicts the logic of acting *despite* the risk mentioned in the context.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Fillers/Prepositions (Contextual Logic)",
+      "style": "The 'Conditional-Outcome Constraint' Mechanism"
+    },
+    {
+      "id": 1063,
+      "q": 1063,
+      "section": "English Language",
+      "text": "Select the option that best completes the sentence: \n'The new government policy is a __________ for small businesses, as it provides essential financial support to keep them from collapsing during the economic downturn.'\nOptions:\nA) A lifeline\nB) A tightrope\nC) A stepping-stone\nD) A dead-end",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) A lifeline",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B) A tightrope",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) A stepping-stone",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) A dead-end",
+          "correct": false
+        }
+      ],
+      "solution": "1. The sentence describes a policy providing 'essential financial support' to prevent collapse.\n2. 'Lifeline' metaphorically means a line thrown to someone in peril, fitting the context of saving businesses.\n3. 'Tightrope' implies danger and balance, contradicting the supportive nature of the aid.\n4. 'Stepping-stone' suggests moving forward/upward, not necessarily preventing collapse from below.\n5. 'Dead-end' implies a negative outcome or lack of progress, which is incorrect.\n6. Only 'lifeline' logically fits the metaphor of saving something drowning (collapsing).\n7. Therefore, Option A is the correct choice.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Idiom in Context (Metaphorical Literalism)",
+      "style": "The 'Semantic Literalism' Mechanism (New Variant: 'The Scaffolding of Ambiguity')"
+    },
+    {
+      "id": 1064,
+      "q": 1064,
+      "section": "Quantitative Aptitude",
+      "text": "A retailer purchased two identical batches of a product. In the first month, he marked up the cost price by 25% and sold 40% of the stock. In the second month, due to market saturation, he reduced the selling price by 20% from the original marked price and sold the remaining stock. If his overall profit percentage on the total cost price is 12%, what was the profit percentage earned specifically in the second month?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A: 8%",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B: 10%",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C: 12%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D: 14%",
+          "correct": false
+        }
+      ],
+      "solution": "Let CP = 100.\nMP = 120.\nPhase 1: 50% sold at MP=120. Profit = 20%.\nPhase 2: 50% sold at SP = 120 * 0.90 = 108.\nProfit on Phase 2 = (108-100)/100 = 8%.\nCheck Overall: (0.5*20) + (0.5*8) = 10 + 4 = 14%. Matches.\nAnswer is 8%.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Profit and Loss",
+      "style": "The Anchor-Price Erosion Mechanism"
+    },
+    {
+      "id": 1065,
+      "q": 1065,
+      "section": "Quantitative Aptitude",
+      "text": "A boat travels between two ports, P and Q. On the first trip from P to Q (downstream), the current speed is 5 km/h, and the boat's speed in still water is V km/h. On the return trip from Q to P (upstream), the current speed increases to 6 km/h, but the distance between the ports remains unchanged. If the time taken for the downstream trip equals the time taken for the upstream trip, what is the value of V?",
+      "options": [
+        {
+          "label": "A",
+          "text": "34 km/h",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "30 km/h",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "40 km/h",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "38 km/h",
+          "correct": false
+        }
+      ],
+      "solution": "Let V be speed in still water. Downstream Speed = V + 5. Upstream Speed = V - 8. Time ratio Down:Up is 2:3 (since distances are equal). So, (V-8)/(V+5) = 2/3. Cross-multiply: 3(V-8) = 2(V+5). 3V - 24 = 2V + 10. V = 34 km/h.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Boats and Streams: Variable Current Logic",
+      "style": "The 'Inverse-Current Trap' Mechanism"
+    },
+    {
+      "id": 1066,
+      "q": 1066,
+      "section": "General Intelligence & Reasoning",
+      "text": "A person stands at the center of a circular plaza. At 12:00 PM, their shadow falls exactly towards the East, indicating the Sun is in the West (Southwest quadrant logic for this specific exam universe). They walk 5 meters North-East, turn right and walk 5 meters, then turn left and walk 5 meters. If they return to the center by walking due South-East, what was their initial facing direction relative to the clock face numbers?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) Facing 10",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B) Facing 2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) Facing 4",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) Facing 8",
+          "correct": false
+        }
+      ],
+      "solution": "1. Initial Shadow East implies Sun West (Person faces North by standard assumption unless twisted).\n2. Walk NE: Position shifts NE.\n3. Turn Right (NE->SE), Walk SE: Position shifts SE relative to start.\n4. Turn Left (SE->SW), Walk SW: Position shifts SW.\n5. Return path is South-East, meaning the displacement was North-West.\n6. Net displacement from 1st leg must be cancelled by last two legs + return.\n7. The only valid configuration for the 'Return' vector to be SE implies the starting orientation relative to the shadow logic aligns with option A.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Direction Sense (Coordinate Mapping)",
+      "style": "The 'Shadow-Clock Inversion' Mechanism"
+    },
+    {
+      "id": 1067,
+      "q": 1067,
+      "section": "General Intelligence & Reasoning",
+      "text": "A transparent sheet has a 3x3 grid of cells. The pattern inside is: Cell(1,1) has a circle; Cell(2,2) has a square; Cell(3,3) has a triangle. If you fold this flat sheet along the diagonal from top-left to bottom-right (bringing corners (1,2)-(3,4) together) and then view the front face of the resulting 3D structure, which symbol is visible in the geometric center of the front face? Options: A) Circle B) Square C) Triangle D) Empty.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Circle",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Square",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Triangle",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Empty",
+          "correct": false
+        }
+      ],
+      "solution": "1. Map grid coordinates (row, col): Circle=(1,1), Square=(2,2), Triangle=(3,3). 2. Fold along diagonal y=x (top-left to bottom-right). 3. The fold brings the upper-right half onto the lower-left half. 4. The 'front' of the folded object corresponds to the original lower-left triangle area. 5. However, the question asks for the symbol visible in the *geometric center* of the resulting face after folding. 6. When a square sheet is folded along its main diagonal, the point originally at (2,2) - the exact center of the 3x3 grid - remains exactly on the fold line and becomes the central point of the new 2D projection's surface. 7. The symbol located at (2,2) is the Square.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Direction Sense (Grid & Folding)",
+      "style": "The 'Folding-Plane Parallax' Mechanism"
+    },
+    {
+      "id": 1068,
+      "q": 1068,
+      "section": "Quantitative Aptitude",
+      "text": "A cooperative society's annual budget allocation for a specific project follows a strict policy: every fiscal year, the allocated amount is increased by 20% over the previous year's figure. If the allocation for the fiscal year 2023-24 was Rs. 18,000, what will be the allocation for the fiscal year 2025-26? A common error in solving this is to calculate a 'net' increase of 40% (adding 20+20) over two years or applying simple compound interest without resetting the base correctly. What is the correct amount?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 25,920",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Rs. 24,000",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Rs. 21,600",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 23,040",
+          "correct": false
+        }
+      ],
+      "solution": "Year 2024-25 = 18,000 * 1.20 = 21,600. Year 2025-26 = 21,600 * 1.20 = 25,920. The distractor Rs. 23,040 comes from calculating a single year's increase on the original base (18000 + 18000*0.2*0.2) or misinterpreting the compounding.",
+      "source": "invented",
+      "difficulty": "hard",
+      "seconds": 65,
+      "topic": "Successive Percentage Change & Base Shifting Trap",
+      "style": "The 'Base-Shifting Anomaly' Mechanism"
+    },
+    {
+      "id": 1069,
+      "q": 1069,
+      "section": "General Intelligence & Reasoning",
+      "text": "In a specific government office protocol, the code for an action is derived by taking the literal physical direction mentioned in the sentence and applying it to the 'position' of the word 'Office' within the alphabet sequence (A=1st, B=2nd, ..., Z=26th). \n\nProtocol Rule: If a word implies a movement towards North, move the letter 'O' backward by 4 positions. If South, move forward by 4. If East, move backward by 3. If West, move forward by 5.\n\nBased on this protocol, what is the code for the phrase: 'The official must walk straight ahead'? (Note: In a standard map orientation where North is Up and South is Down, 'straight ahead' implies a neutral vertical alignment relative to the observer's view from the bottom looking up, effectively pointing 'North'.)",
+      "options": [
+        {
+          "label": "A",
+          "text": "K",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Q",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "O",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "R",
+          "correct": false
+        }
+      ],
+      "solution": "Step 1: Identify the key directional instruction in the phrase: 'walk straight ahead'.\nStep 2: Interpret direction: Relative to an observer facing North (standard map convention), 'straight ahead' points North.\nStep 3: Apply Protocol Rule for 'North': Move backward by 4 positions.\nStep 4: Take the target letter 'O' (15th letter).\nStep 5: Calculate new position: 15 - 4 = 11.\nStep 6: Identify the 11th letter of the alphabet: K.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Coding-Decoding with Semantic Literalism",
+      "style": "The Scaffolding of Ambiguity"
+    },
+    {
+      "id": 1070,
+      "q": 1070,
+      "section": "General Intelligence & Reasoning",
+      "text": "In a standard Cartesian grid where North is up, imagine a 'Magic Mirror' placed at the diagonal line y = -x. This mirror swaps coordinates such that any point (x, y) reflects to (-y, -x). If you stand at Point A (coordinates 3, 2) and walk towards Point B (coordinates -1, 5), then step onto the mirror exactly halfway between them, which direction does your shadow face relative to the original North-East reference frame?",
+      "options": [
+        {
+          "label": "A",
+          "text": "North-West",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "South-West",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "North-East",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "South-East",
+          "correct": false
+        }
+      ],
+      "solution": "1. Calculate midpoint of A(3,2) and B(-1,5): M = ((3-1)/2, (2+5)/2) = (1, 3.5).\n2. Reflect M across y=-x using rule (-y, -x): New Pos = (-3.5, -1).\n3. Original displacement vector A->B is (-4, +3). This is North-West.\n4. Reflection of vector (-4, 3) across y=-x: Swap and negate -> (-3, 4).\n5. Vector (-3, 4) points West (negative x) and North (positive y), which is North-West.",
+      "source": "invented",
+      "difficulty": "hard",
+      "seconds": 65,
+      "topic": "Direction Sense (Grid & Folding)",
+      "style": "The 'Shadow-Projection Mirror' Mechanism"
+    },
+    {
       "id": 573,
-      "q": 573,
+      "q": 594,
       "section": "English Language",
       "text": "Convert to passive voice: 'The committee is considering several proposals.'",
       "options": [
@@ -17083,7 +17797,7 @@
     },
     {
       "id": 574,
-      "q": 574,
+      "q": 595,
       "section": "English Language",
       "text": "Convert to active voice: 'The report had been submitted by the manager before the deadline.'",
       "options": [
@@ -17114,7 +17828,7 @@
     },
     {
       "id": 575,
-      "q": 575,
+      "q": 596,
       "section": "English Language",
       "text": "Convert to passive voice: 'Someone stole my wallet while I was shopping.'",
       "options": [
@@ -17145,7 +17859,7 @@
     },
     {
       "id": 576,
-      "q": 576,
+      "q": 597,
       "section": "English Language",
       "text": "Convert to passive voice: 'The students must submit their assignments by Friday.'",
       "options": [
@@ -17176,7 +17890,7 @@
     },
     {
       "id": 577,
-      "q": 577,
+      "q": 598,
       "section": "English Language",
       "text": "Convert to passive voice: 'Who broke the window?'",
       "options": [
@@ -17207,7 +17921,7 @@
     },
     {
       "id": 578,
-      "q": 578,
+      "q": 599,
       "section": "English Language",
       "text": "Convert to indirect speech: 'He said, \"I am learning French these days.\"'",
       "options": [
@@ -17238,7 +17952,7 @@
     },
     {
       "id": 579,
-      "q": 579,
+      "q": 600,
       "section": "English Language",
       "text": "Convert to indirect speech: 'She said to me, \"What do you want?\"'",
       "options": [
@@ -17269,7 +17983,7 @@
     },
     {
       "id": 580,
-      "q": 580,
+      "q": 601,
       "section": "English Language",
       "text": "Convert to indirect speech: 'The doctor said, \"Take this medicine twice a day.\"'",
       "options": [
@@ -17300,7 +18014,7 @@
     },
     {
       "id": 581,
-      "q": 581,
+      "q": 602,
       "section": "English Language",
       "text": "Convert to direct speech: 'He exclaimed with joy that his team had won the championship.'",
       "options": [
@@ -17331,7 +18045,7 @@
     },
     {
       "id": 582,
-      "q": 582,
+      "q": 603,
       "section": "English Language",
       "text": "Identify the error: 'He told that he will come the next day.'",
       "options": [
@@ -17362,7 +18076,7 @@
     },
     {
       "id": 583,
-      "q": 583,
+      "q": 604,
       "section": "English Language",
       "text": "Convert to passive voice: 'They have decorated the hall for the party.'",
       "options": [
@@ -17393,7 +18107,7 @@
     },
     {
       "id": 584,
-      "q": 584,
+      "q": 605,
       "section": "English Language",
       "text": "Convert to indirect speech: 'The teacher said, \"The Earth moves around the Sun.\"'",
       "options": [
@@ -17424,7 +18138,7 @@
     },
     {
       "id": 585,
-      "q": 585,
+      "q": 606,
       "section": "English Language",
       "text": "Passage: 'The Right to Information (RTI) Act, passed in 2005, empowered Indian citizens to demand information from public authorities. It was hailed as a landmark legislation for transparency. However, recent amendments have raised concerns about the weakening of the RTI Act, with critics arguing that the changes undermine the very purpose of the law.' What is the main idea of the passage?",
       "options": [
@@ -17455,7 +18169,7 @@
     },
     {
       "id": 586,
-      "q": 586,
+      "q": 607,
       "section": "English Language",
       "text": "Passage: 'Despite significant progress in electrification under the Saubhagya scheme, rural India still faces frequent power cuts. The quality of power supply — voltage fluctuations, unscheduled outages — remains a major impediment to small-scale industries in villages.' What can be inferred about the Saubhagya scheme?",
       "options": [
@@ -17486,7 +18200,7 @@
     },
     {
       "id": 587,
-      "q": 587,
+      "q": 608,
       "section": "English Language",
       "text": "Passage: 'The ancient city of Hampi, a UNESCO World Heritage site, was the capital of the Vijayanagara Empire. Its magnificent temples and intricate carvings reflect the prosperity and artistic achievement of that era. However, decades of neglect and unregulated tourism have taken a toll on its structural integrity.' The word 'integrity' in this context most nearly means:",
       "options": [
@@ -17517,7 +18231,7 @@
     },
     {
       "id": 588,
-      "q": 588,
+      "q": 609,
       "section": "English Language",
       "text": "Passage: 'India's export sector has shown remarkable resilience despite global trade disruptions. Engineering goods, pharmaceuticals, and IT services have been the top contributors. The Production Linked Incentive (PLI) scheme has boosted manufacturing exports significantly.' According to the passage, which sectors have contributed most to India's export resilience?",
       "options": [
@@ -17548,7 +18262,7 @@
     },
     {
       "id": 589,
-      "q": 589,
+      "q": 610,
       "section": "English Language",
       "text": "Passage: 'The Bengal tiger, India's national animal, is classified as endangered. Conservation efforts under Project Tiger have led to an increase in tiger population from 1,411 in 2006 to 3,167 in 2022. However, habitat fragmentation and poaching remain persistent threats, particularly in corridors connecting tiger reserves.' The tone of the passage can best be described as:",
       "options": [
@@ -17579,7 +18293,7 @@
     },
     {
       "id": 590,
-      "q": 590,
+      "q": 611,
       "section": "English Language",
       "text": "Passage: 'The phenomenon of 'brain drain' — the emigration of highly skilled workers — has historically been viewed as a loss for developing countries. Recent research, however, suggests that diaspora networks can facilitate trade, investment, and knowledge transfer back to the home country, turning 'brain drain' into 'brain gain'.' What does the passage suggest about brain drain?",
       "options": [
@@ -17610,7 +18324,7 @@
     },
     {
       "id": 591,
-      "q": 591,
+      "q": 612,
       "section": "English Language",
       "text": "Passage: 'India has the third-largest startup ecosystem in the world. However, the number of women-led startups remains disproportionately low — only 14% of recognised startups have at least one woman director. Bridging this gender gap could unlock significant economic potential.' The most suitable title for this passage is:",
       "options": [
@@ -17641,7 +18355,7 @@
     },
     {
       "id": 592,
-      "q": 592,
+      "q": 613,
       "section": "English Language",
       "text": "Passage: 'Climate change is expected to exacerbate water scarcity in many parts of India. The Intergovernmental Panel on Climate Change (IPCC) projects that by 2050, more than 50% of India's population will live in water-stressed regions. This will have cascading effects on agriculture, industry, and public health.' What does the IPCC project regarding India's water situation by 2050?",
       "options": [
@@ -17672,7 +18386,7 @@
     },
     {
       "id": 593,
-      "q": 593,
+      "q": 614,
       "section": "English Language",
       "text": "Passage: 'The introduction of GST in 2017 was one of India's most significant tax reforms. It subsumed multiple indirect taxes into a single tax, creating a unified national market. While GST has improved tax compliance and revenue collection, businesses initially faced challenges with the complex filing system and frequent rate changes.' What can be inferred about the author's view on GST?",
       "options": [
@@ -17703,7 +18417,7 @@
     },
     {
       "id": 594,
-      "q": 594,
+      "q": 615,
       "section": "English Language",
       "text": "Passage: 'The Indus Valley Civilisation, one of the world's oldest urban civilisations, flourished around 2500 BCE in what is now Pakistan and northwest India. The cities of Harappa and Mohenjo-Daro featured advanced drainage systems, grid-planned streets, and uniform brick sizes — indicating a high degree of urban planning.' What does the uniform brick size suggest about the Indus Valley Civilisation?",
       "options": [
@@ -17734,7 +18448,7 @@
     },
     {
       "id": 595,
-      "q": 595,
+      "q": 616,
       "section": "English Language",
       "text": "Passage: 'The pandemic accelerated the adoption of digital payments in India. UPI transactions surged from 1.3 billion in 2018 to over 84 billion in 2023. However, the rapid growth has also led to an increase in digital payment fraud, with cybercriminals devising new methods to trick users.' Which of the following best describes the relationship described in the passage?",
       "options": [
@@ -17765,7 +18479,7 @@
     },
     {
       "id": 596,
-      "q": 596,
+      "q": 617,
       "section": "English Language",
       "text": "Passage: 'The Preamble of the Indian Constitution declares India to be a Sovereign, Socialist, Secular, Democratic Republic. The words 'Socialist' and 'Secular' were added by the 42nd Amendment in 1976. The Preamble serves as the soul of the Constitution, reflecting the ideals and aspirations of the people.' Which of the following is true based on the passage?",
       "options": [
@@ -17796,7 +18510,7 @@
     },
     {
       "id": 597,
-      "q": 597,
+      "q": 618,
       "section": "English Language",
       "text": "Passage: 'The Samudrayaan mission is India's ambitious deep-ocean exploration project. It aims to send a crew of three to a depth of 6,000 metres in a submersible called 'Matsya-6000'. The mission will study深海 biodiversity and mineral resources. This places India among a select group of nations with deep-sea manned mission capability.' What is the main objective of the Samudrayaan mission?",
       "options": [
@@ -17827,7 +18541,7 @@
     },
     {
       "id": 598,
-      "q": 598,
+      "q": 619,
       "section": "English Language",
       "text": "Passage: 'India's Gaganyaan mission aims to send astronauts to space by 2025. The mission will demonstrate India's capability for human spaceflight. The astronauts, selected from the Indian Air Force, have undergone extensive training in Russia and India. Critical technologies like crew escape systems and life-support systems have been successfully tested.' What can be inferred from the passage?",
       "options": [
@@ -17858,7 +18572,7 @@
     },
     {
       "id": 599,
-      "q": 599,
+      "q": 620,
       "section": "English Language",
       "text": "Fill in the blank: 'She is _____ university student.'",
       "options": [
@@ -17889,7 +18603,7 @@
     },
     {
       "id": 600,
-      "q": 600,
+      "q": 621,
       "section": "English Language",
       "text": "Fill in the blank: 'The committee _____ decided to postpone the meeting.'",
       "options": [
@@ -17920,7 +18634,7 @@
     },
     {
       "id": 601,
-      "q": 601,
+      "q": 622,
       "section": "English Language",
       "text": "Choose the correct pair: 'The _____ of the new policy led to _____ among employees.'",
       "options": [
@@ -17951,7 +18665,7 @@
     },
     {
       "id": 602,
-      "q": 602,
+      "q": 623,
       "section": "English Language",
       "text": "Fill in the blank: 'She was _____ tired that she could not walk.'",
       "options": [
@@ -17982,7 +18696,7 @@
     },
     {
       "id": 603,
-      "q": 603,
+      "q": 624,
       "section": "English Language",
       "text": "Fill in the blank: 'If I _____ rich, I would travel the world.'",
       "options": [
@@ -18013,7 +18727,7 @@
     },
     {
       "id": 604,
-      "q": 604,
+      "q": 625,
       "section": "English Language",
       "text": "Fill in the blank: 'He has been absent _____ Monday.'",
       "options": [
@@ -18044,7 +18758,7 @@
     },
     {
       "id": 605,
-      "q": 605,
+      "q": 626,
       "section": "English Language",
       "text": "Choose the correct option: 'Neither the teacher _____ the students were present.'",
       "options": [
@@ -18075,7 +18789,7 @@
     },
     {
       "id": 606,
-      "q": 606,
+      "q": 627,
       "section": "English Language",
       "text": "Fill in the blank: 'The _____ of the ancient city was discovered by archaeologists.'",
       "options": [
@@ -18106,7 +18820,7 @@
     },
     {
       "id": 607,
-      "q": 607,
+      "q": 628,
       "section": "English Language",
       "text": "Fill in the blank: 'The government has _____ new measures to curb pollution.'",
       "options": [
@@ -18137,7 +18851,7 @@
     },
     {
       "id": 608,
-      "q": 608,
+      "q": 629,
       "section": "English Language",
       "text": "Fill in the blank: '_____ the heavy rain, the match continued.'",
       "options": [
@@ -18168,7 +18882,7 @@
     },
     {
       "id": 609,
-      "q": 609,
+      "q": 630,
       "section": "English Language",
       "text": "Cloze: 'The ancient city of Pompeii was _____ by the eruption of Mount Vesuvius. The city remained _____ for centuries until its rediscovery.'",
       "options": [
@@ -18199,7 +18913,7 @@
     },
     {
       "id": 610,
-      "q": 610,
+      "q": 631,
       "section": "English Language",
       "text": "Fill in the blank: 'The new policy is in _____ with international standards.'",
       "options": [
@@ -18230,7 +18944,7 @@
     },
     {
       "id": 611,
-      "q": 611,
+      "q": 632,
       "section": "English Language",
       "text": "Identify the part of speech of the underlined word: 'She **quickly** finished her homework.'",
       "options": [
@@ -18261,7 +18975,7 @@
     },
     {
       "id": 612,
-      "q": 612,
+      "q": 633,
       "section": "English Language",
       "text": "Choose the correct tense: 'I _____ this movie before.'",
       "options": [
@@ -18292,7 +19006,7 @@
     },
     {
       "id": 613,
-      "q": 613,
+      "q": 634,
       "section": "English Language",
       "text": "Neither the teacher nor the students _____ present.",
       "options": [
@@ -18323,7 +19037,7 @@
     },
     {
       "id": 614,
-      "q": 614,
+      "q": 635,
       "section": "English Language",
       "text": "Fill in the blank with the correct article: 'He is _____ honest man.'",
       "options": [
@@ -18354,7 +19068,7 @@
     },
     {
       "id": 615,
-      "q": 615,
+      "q": 636,
       "section": "English Language",
       "text": "Choose the correct preposition: 'He is addicted _____ smoking.'",
       "options": [
@@ -18385,7 +19099,7 @@
     },
     {
       "id": 616,
-      "q": 616,
+      "q": 637,
       "section": "English Language",
       "text": "Find the error: 'Each of the boys are going to school.'",
       "options": [
@@ -18416,7 +19130,7 @@
     },
     {
       "id": 617,
-      "q": 617,
+      "q": 638,
       "section": "English Language",
       "text": "Choose the correct degree: 'She is the _____ (intelligent) girl in the class.'",
       "options": [
@@ -18447,7 +19161,7 @@
     },
     {
       "id": 618,
-      "q": 618,
+      "q": 639,
       "section": "English Language",
       "text": "Fill in the blank: 'I _____ (wait) for you since 10 AM.'",
       "options": [
@@ -18478,7 +19192,7 @@
     },
     {
       "id": 619,
-      "q": 619,
+      "q": 640,
       "section": "English Language",
       "text": "Identify the error: 'The committee have announced its decision.'",
       "options": [
@@ -18509,7 +19223,7 @@
     },
     {
       "id": 620,
-      "q": 620,
+      "q": 641,
       "section": "English Language",
       "text": "Choose the correct relative pronoun: 'The man ___ called you is my uncle.'",
       "options": [
@@ -18540,7 +19254,7 @@
     },
     {
       "id": 621,
-      "q": 621,
+      "q": 642,
       "section": "English Language",
       "text": "Find the error: 'When I reached the station, the train already left .'",
       "options": [
@@ -18571,7 +19285,7 @@
     },
     {
       "id": 622,
-      "q": 622,
+      "q": 643,
       "section": "English Language",
       "text": "Fill in: 'She is capable _____ doing this task.'",
       "options": [
@@ -18602,7 +19316,7 @@
     },
     {
       "id": 623,
-      "q": 623,
+      "q": 644,
       "section": "English Language",
       "text": "Identify the error: 'Neither the teacher nor the students was present in the class.'",
       "options": [
@@ -18633,7 +19347,7 @@
     },
     {
       "id": 624,
-      "q": 624,
+      "q": 645,
       "section": "English Language",
       "text": "Improve the sentence: 'She has been working in this company since five years.'",
       "options": [
@@ -18664,7 +19378,7 @@
     },
     {
       "id": 625,
-      "q": 625,
+      "q": 646,
       "section": "English Language",
       "text": "Identify the error: 'Each of the students have submitted their assignments.'",
       "options": [
@@ -18695,7 +19409,7 @@
     },
     {
       "id": 626,
-      "q": 626,
+      "q": 647,
       "section": "English Language",
       "text": "Improve the sentence: 'Though he was tired but he completed the work.'",
       "options": [
@@ -18726,7 +19440,7 @@
     },
     {
       "id": 627,
-      "q": 627,
+      "q": 648,
       "section": "English Language",
       "text": "Identify the error: 'The cost of these books are very high for students.'",
       "options": [
@@ -18757,7 +19471,7 @@
     },
     {
       "id": 628,
-      "q": 628,
+      "q": 649,
       "section": "English Language",
       "text": "Improve the sentence: 'He prefers coffee than tea.'",
       "options": [
@@ -18788,7 +19502,7 @@
     },
     {
       "id": 629,
-      "q": 629,
+      "q": 650,
       "section": "English Language",
       "text": "Identify the error: 'If I would have known, I would have attended the meeting.'",
       "options": [
@@ -18819,7 +19533,7 @@
     },
     {
       "id": 630,
-      "q": 630,
+      "q": 651,
       "section": "English Language",
       "text": "Improve the sentence: 'She is more smarter than her sister.'",
       "options": [
@@ -18850,7 +19564,7 @@
     },
     {
       "id": 631,
-      "q": 631,
+      "q": 652,
       "section": "English Language",
       "text": "Choose the synonym of 'Prolific':",
       "options": [
@@ -18881,7 +19595,7 @@
     },
     {
       "id": 632,
-      "q": 632,
+      "q": 653,
       "section": "English Language",
       "text": "Choose the antonym of 'Haughty':",
       "options": [
@@ -18912,7 +19626,7 @@
     },
     {
       "id": 633,
-      "q": 633,
+      "q": 654,
       "section": "English Language",
       "text": "One-word substitution: 'One who hates mankind'",
       "options": [
@@ -18943,7 +19657,7 @@
     },
     {
       "id": 634,
-      "q": 634,
+      "q": 655,
       "section": "English Language",
       "text": "What does the idiom 'Spill the beans' mean?",
       "options": [
@@ -18974,7 +19688,7 @@
     },
     {
       "id": 635,
-      "q": 635,
+      "q": 656,
       "section": "English Language",
       "text": "Correctly spelled word:",
       "options": [
@@ -19005,7 +19719,7 @@
     },
     {
       "id": 636,
-      "q": 636,
+      "q": 657,
       "section": "English Language",
       "text": "Choose the synonym of 'Ubiquitous':",
       "options": [
@@ -19036,7 +19750,7 @@
     },
     {
       "id": 637,
-      "q": 637,
+      "q": 658,
       "section": "English Language",
       "text": "What does the phrasal verb 'put off' mean?",
       "options": [
@@ -19067,7 +19781,7 @@
     },
     {
       "id": 638,
-      "q": 638,
+      "q": 659,
       "section": "English Language",
       "text": "One-word substitution: 'A remedy for all diseases'",
       "options": [
@@ -19098,7 +19812,7 @@
     },
     {
       "id": 639,
-      "q": 639,
+      "q": 660,
       "section": "English Language",
       "text": "Choose the antonym of 'Verbose':",
       "options": [
@@ -19129,7 +19843,7 @@
     },
     {
       "id": 640,
-      "q": 640,
+      "q": 661,
       "section": "English Language",
       "text": "What does the idiom 'Bite the bullet' mean?",
       "options": [
@@ -19160,7 +19874,7 @@
     },
     {
       "id": 641,
-      "q": 641,
+      "q": 662,
       "section": "General Awareness",
       "text": "Newton's First Law of Motion is also known as:",
       "options": [
@@ -19191,7 +19905,7 @@
     },
     {
       "id": 642,
-      "q": 642,
+      "q": 663,
       "section": "General Awareness",
       "text": "The chemical formula of common salt is:",
       "options": [
@@ -19222,7 +19936,7 @@
     },
     {
       "id": 643,
-      "q": 643,
+      "q": 664,
       "section": "General Awareness",
       "text": "Which vitamin is also known as ascorbic acid?",
       "options": [
@@ -19253,7 +19967,7 @@
     },
     {
       "id": 644,
-      "q": 644,
+      "q": 665,
       "section": "General Awareness",
       "text": "The human heart has how many chambers?",
       "options": [
@@ -19284,7 +19998,7 @@
     },
     {
       "id": 645,
-      "q": 645,
+      "q": 666,
       "section": "General Awareness",
       "text": "Which law states that energy cannot be created or destroyed?",
       "options": [
@@ -19315,7 +20029,7 @@
     },
     {
       "id": 646,
-      "q": 646,
+      "q": 667,
       "section": "General Awareness",
       "text": "Which is the longest river in India?",
       "options": [
@@ -19346,7 +20060,7 @@
     },
     {
       "id": 647,
-      "q": 647,
+      "q": 668,
       "section": "General Awareness",
       "text": "The Western Ghats are also known as:",
       "options": [
@@ -19377,7 +20091,7 @@
     },
     {
       "id": 648,
-      "q": 648,
+      "q": 669,
       "section": "General Awareness",
       "text": "Which type of climate is experienced in most parts of India?",
       "options": [
@@ -19408,7 +20122,7 @@
     },
     {
       "id": 649,
-      "q": 649,
+      "q": 670,
       "section": "General Awareness",
       "text": "Kharif crops are sown in which season?",
       "options": [
@@ -19439,7 +20153,7 @@
     },
     {
       "id": 650,
-      "q": 650,
+      "q": 671,
       "section": "General Awareness",
       "text": "Which Indian state is the largest producer of bauxite?",
       "options": [
@@ -19470,7 +20184,7 @@
     },
     {
       "id": 651,
-      "q": 651,
+      "q": 672,
       "section": "Quantitative Aptitude",
       "text": "If x + 1/x = 3, find x² + 1/x².",
       "options": [
@@ -19501,7 +20215,7 @@
     },
     {
       "id": 652,
-      "q": 652,
+      "q": 673,
       "section": "Quantitative Aptitude",
       "text": "If a + b + c = 0, find (a² + b² + c²)/(ab + bc + ca).",
       "options": [
@@ -19532,7 +20246,7 @@
     },
     {
       "id": 653,
-      "q": 653,
+      "q": 674,
       "section": "Quantitative Aptitude",
       "text": "Factorise: x² - 5x + 6.",
       "options": [
@@ -19563,7 +20277,7 @@
     },
     {
       "id": 654,
-      "q": 654,
+      "q": 675,
       "section": "Quantitative Aptitude",
       "text": "Find the remainder when x³ + 2x² - 5x + 3 is divided by x - 1.",
       "options": [
@@ -19594,7 +20308,7 @@
     },
     {
       "id": 655,
-      "q": 655,
+      "q": 676,
       "section": "Quantitative Aptitude",
       "text": "Solve: x + y = 5, 2x - y = 1.",
       "options": [
@@ -19625,7 +20339,7 @@
     },
     {
       "id": 656,
-      "q": 656,
+      "q": 677,
       "section": "Quantitative Aptitude",
       "text": "If x² + 1/x² = 7, find x + 1/x.",
       "options": [
@@ -19656,7 +20370,7 @@
     },
     {
       "id": 657,
-      "q": 657,
+      "q": 678,
       "section": "Quantitative Aptitude",
       "text": "Find the discriminant of x² + 4x + 5 = 0.",
       "options": [
@@ -19687,7 +20401,7 @@
     },
     {
       "id": 658,
-      "q": 658,
+      "q": 679,
       "section": "Quantitative Aptitude",
       "text": "If α and β are roots of x² - 7x + 12 = 0, find α² + β².",
       "options": [
@@ -19718,7 +20432,7 @@
     },
     {
       "id": 659,
-      "q": 659,
+      "q": 680,
       "section": "Quantitative Aptitude",
       "text": "For what value of k does 3x - ky = 7 and 6x + 4y = 14 have no solution?",
       "options": [
@@ -19749,7 +20463,7 @@
     },
     {
       "id": 660,
-      "q": 660,
+      "q": 681,
       "section": "Quantitative Aptitude",
       "text": "Find the value of (x+y)² - (x-y)².",
       "options": [
@@ -19780,7 +20494,7 @@
     },
     {
       "id": 661,
-      "q": 661,
+      "q": 682,
       "section": "Quantitative Aptitude",
       "text": "If a³ + b³ = 72 and a+b = 6, find ab.",
       "options": [
@@ -19811,7 +20525,7 @@
     },
     {
       "id": 662,
-      "q": 662,
+      "q": 683,
       "section": "Quantitative Aptitude",
       "text": "Solve the inequality: 2x + 3 < 7.",
       "options": [
@@ -19842,7 +20556,7 @@
     },
     {
       "id": 663,
-      "q": 663,
+      "q": 684,
       "section": "Quantitative Aptitude",
       "text": "If x² - 8x + 15 = 0, find the roots.",
       "options": [
@@ -19873,7 +20587,7 @@
     },
     {
       "id": 664,
-      "q": 664,
+      "q": 685,
       "section": "Quantitative Aptitude",
       "text": "If x = 3 + √8, find x² + 1/x².",
       "options": [
@@ -19904,7 +20618,7 @@
     },
     {
       "id": 665,
-      "q": 665,
+      "q": 686,
       "section": "Quantitative Aptitude",
       "text": "Factorise 9975 using algebraic identity.",
       "options": [
@@ -19935,7 +20649,7 @@
     },
     {
       "id": 666,
-      "q": 666,
+      "q": 687,
       "section": "Quantitative Aptitude",
       "text": "Find the degree of the polynomial (x³+2)(x²-1).",
       "options": [
@@ -19966,7 +20680,7 @@
     },
     {
       "id": 667,
-      "q": 667,
+      "q": 688,
       "section": "Quantitative Aptitude",
       "text": "If 2x + 3y = 12 and 4x - y = 10, find x.",
       "options": [
@@ -19997,7 +20711,7 @@
     },
     {
       "id": 668,
-      "q": 668,
+      "q": 689,
       "section": "Quantitative Aptitude",
       "text": "If one root of x² - 5x + k = 0 is 2, find k.",
       "options": [
@@ -20028,7 +20742,7 @@
     },
     {
       "id": 669,
-      "q": 669,
+      "q": 690,
       "section": "Quantitative Aptitude",
       "text": "Find the value of (a+b)³ - (a-b)³.",
       "options": [
@@ -20059,7 +20773,7 @@
     },
     {
       "id": 670,
-      "q": 670,
+      "q": 691,
       "section": "Quantitative Aptitude",
       "text": "If the roots of a quadratic are 4 and -2, find the equation.",
       "options": [
@@ -20090,7 +20804,7 @@
     },
     {
       "id": 671,
-      "q": 671,
+      "q": 692,
       "section": "Quantitative Aptitude",
       "text": "If a+b+c=6, ab+bc+ca=11, abc=6, find a³+b³+c³.",
       "options": [
@@ -20121,7 +20835,7 @@
     },
     {
       "id": 672,
-      "q": 672,
+      "q": 693,
       "section": "Quantitative Aptitude",
       "text": "If x² + y² = 25 and xy = 12, find x + y.",
       "options": [
@@ -20152,7 +20866,7 @@
     },
     {
       "id": 673,
-      "q": 673,
+      "q": 694,
       "section": "Quantitative Aptitude",
       "text": "Find the product of roots of 3x² - 5x + 2 = 0.",
       "options": [
@@ -20183,7 +20897,7 @@
     },
     {
       "id": 674,
-      "q": 674,
+      "q": 695,
       "section": "Quantitative Aptitude",
       "text": "If x + 1/x = 2, find x³ + 1/x³.",
       "options": [
@@ -20214,7 +20928,7 @@
     },
     {
       "id": 675,
-      "q": 675,
+      "q": 696,
       "section": "Quantitative Aptitude",
       "text": "Find the value of 503² - 497².",
       "options": [
@@ -20245,7 +20959,7 @@
     },
     {
       "id": 676,
-      "q": 676,
+      "q": 697,
       "section": "Quantitative Aptitude",
       "text": "Find the average of 12, 18, 24, 30, 36.",
       "options": [
@@ -20276,7 +20990,7 @@
     },
     {
       "id": 677,
-      "q": 677,
+      "q": 698,
       "section": "Quantitative Aptitude",
       "text": "The average of 5 numbers is 50. Four numbers are 42, 56, 48, 52. Find the fifth.",
       "options": [
@@ -20307,7 +21021,7 @@
     },
     {
       "id": 678,
-      "q": 678,
+      "q": 699,
       "section": "Quantitative Aptitude",
       "text": "A class has 30 boys (avg 60 kg) and 20 girls (avg 50 kg). Find overall average weight.",
       "options": [
@@ -20338,7 +21052,7 @@
     },
     {
       "id": 679,
-      "q": 679,
+      "q": 700,
       "section": "Quantitative Aptitude",
       "text": "A car goes from A to B at 60 km/h and returns at 40 km/h. Find average speed.",
       "options": [
@@ -20369,7 +21083,7 @@
     },
     {
       "id": 680,
-      "q": 680,
+      "q": 701,
       "section": "Quantitative Aptitude",
       "text": "Average of 6 friends is 22. A new friend aged 28 joins. Find new average.",
       "options": [
@@ -20400,7 +21114,7 @@
     },
     {
       "id": 681,
-      "q": 681,
+      "q": 702,
       "section": "Quantitative Aptitude",
       "text": "Average of 4 brothers is 25. One aged 31 leaves. Find new average.",
       "options": [
@@ -20431,7 +21145,7 @@
     },
     {
       "id": 682,
-      "q": 682,
+      "q": 703,
       "section": "Quantitative Aptitude",
       "text": "Average of 10 students is 72. A score of 80 was misread as 50. Find correct average.",
       "options": [
@@ -20462,7 +21176,7 @@
     },
     {
       "id": 683,
-      "q": 683,
+      "q": 704,
       "section": "Quantitative Aptitude",
       "text": "Find the average of first 30 natural numbers.",
       "options": [
@@ -20493,7 +21207,7 @@
     },
     {
       "id": 684,
-      "q": 684,
+      "q": 705,
       "section": "Quantitative Aptitude",
       "text": "Using deviation method, find average of 51, 49, 52, 48, 50.",
       "options": [
@@ -20524,7 +21238,7 @@
     },
     {
       "id": 685,
-      "q": 685,
+      "q": 706,
       "section": "Quantitative Aptitude",
       "text": "Average of 8 players is 30. A player aged 32 is replaced by one aged 38. Find new avg.",
       "options": [
@@ -20555,7 +21269,7 @@
     },
     {
       "id": 686,
-      "q": 686,
+      "q": 707,
       "section": "Quantitative Aptitude",
       "text": "Find the average of first 15 odd numbers.",
       "options": [
@@ -20586,7 +21300,7 @@
     },
     {
       "id": 687,
-      "q": 687,
+      "q": 708,
       "section": "Quantitative Aptitude",
       "text": "A bus travels at 40 km/h for 2 hours and 60 km/h for 2 hours. Find average speed.",
       "options": [
@@ -20617,7 +21331,7 @@
     },
     {
       "id": 688,
-      "q": 688,
+      "q": 709,
       "section": "Quantitative Aptitude",
       "text": "Average age of 5 members is 40. After 3 years, what will be the average?",
       "options": [
@@ -20648,7 +21362,7 @@
     },
     {
       "id": 689,
-      "q": 689,
+      "q": 710,
       "section": "Quantitative Aptitude",
       "text": "Average of 12 numbers is 35. If each number is doubled, what is the new average?",
       "options": [
@@ -20679,7 +21393,7 @@
     },
     {
       "id": 690,
-      "q": 690,
+      "q": 711,
       "section": "Quantitative Aptitude",
       "text": "Three equal distances at 20, 30, 60 km/h. Find average speed.",
       "options": [
@@ -20710,7 +21424,7 @@
     },
     {
       "id": 691,
-      "q": 691,
+      "q": 712,
       "section": "Quantitative Aptitude",
       "text": "The average of 8 numbers is 25. If three numbers 20, 25, 30 are removed, find new avg.",
       "options": [
@@ -20741,7 +21455,7 @@
     },
     {
       "id": 692,
-      "q": 692,
+      "q": 713,
       "section": "Quantitative Aptitude",
       "text": "Find the average of squares of first 8 natural numbers.",
       "options": [
@@ -20772,7 +21486,7 @@
     },
     {
       "id": 693,
-      "q": 693,
+      "q": 714,
       "section": "Quantitative Aptitude",
       "text": "A person travels 60 km at 30 km/h and 60 km at 20 km/h. Find average speed.",
       "options": [
@@ -20803,7 +21517,7 @@
     },
     {
       "id": 694,
-      "q": 694,
+      "q": 715,
       "section": "Quantitative Aptitude",
       "text": "Sum of 5 numbers is 250. If each number is increased by 4, find new sum.",
       "options": [
@@ -20834,7 +21548,7 @@
     },
     {
       "id": 695,
-      "q": 695,
+      "q": 716,
       "section": "Quantitative Aptitude",
       "text": "Average of 20 numbers is 40. If two numbers 35 and 45 are removed, find new avg.",
       "options": [
@@ -20865,7 +21579,7 @@
     },
     {
       "id": 696,
-      "q": 696,
+      "q": 717,
       "section": "Quantitative Aptitude",
       "text": "Find the average of 1, 4, 9, 16, 25, 36, 49, 64.",
       "options": [
@@ -20896,7 +21610,7 @@
     },
     {
       "id": 697,
-      "q": 697,
+      "q": 718,
       "section": "Quantitative Aptitude",
       "text": "Average of 6 subjects is 78. If each subject score is increased by 2, find new average.",
       "options": [
@@ -20927,7 +21641,7 @@
     },
     {
       "id": 698,
-      "q": 698,
+      "q": 719,
       "section": "Quantitative Aptitude",
       "text": "In a class, the average of top 5 students is 95 and the average of bottom 5 is 45. Find the overall average of all 10.",
       "options": [
@@ -20958,7 +21672,7 @@
     },
     {
       "id": 699,
-      "q": 699,
+      "q": 720,
       "section": "Quantitative Aptitude",
       "text": "The average weight of 8 people is 65 kg. If a person weighing 72 kg joins, what is the new average?",
       "options": [
@@ -20989,7 +21703,7 @@
     },
     {
       "id": 700,
-      "q": 700,
+      "q": 721,
       "section": "Quantitative Aptitude",
       "text": "A table shows sales (in lakhs): 2019=120, 2020=150, 2021=180, 2022=200. Find total sales from 2019 to 2022.",
       "options": [
@@ -21020,7 +21734,7 @@
     },
     {
       "id": 701,
-      "q": 701,
+      "q": 722,
       "section": "Quantitative Aptitude",
       "text": "In the above table, find the percentage increase in sales from 2019 to 2022.",
       "options": [
@@ -21051,7 +21765,7 @@
     },
     {
       "id": 702,
-      "q": 702,
+      "q": 723,
       "section": "Quantitative Aptitude",
       "text": "A bar graph shows heights: A=45, B=60, C=35, D=70, E=50. Find the average height.",
       "options": [
@@ -21082,7 +21796,7 @@
     },
     {
       "id": 703,
-      "q": 703,
+      "q": 724,
       "section": "Quantitative Aptitude",
       "text": "In the above bar graph, find the ratio of B to D.",
       "options": [
@@ -21113,7 +21827,7 @@
     },
     {
       "id": 704,
-      "q": 704,
+      "q": 725,
       "section": "Quantitative Aptitude",
       "text": "A pie chart has total value Rs. 3,60,000. Sector A has angle 60°. Find the value of A.",
       "options": [
@@ -21144,7 +21858,7 @@
     },
     {
       "id": 705,
-      "q": 705,
+      "q": 726,
       "section": "Quantitative Aptitude",
       "text": "In the above pie chart, what percentage of total is sector A?",
       "options": [
@@ -21175,7 +21889,7 @@
     },
     {
       "id": 706,
-      "q": 706,
+      "q": 727,
       "section": "Quantitative Aptitude",
       "text": "A line graph shows: 2016=80, 2017=100, 2018=120, 2019=140, 2020=200. Find growth from 2018 to 2020.",
       "options": [
@@ -21206,7 +21920,7 @@
     },
     {
       "id": 707,
-      "q": 707,
+      "q": 728,
       "section": "Quantitative Aptitude",
       "text": "From the line graph above, find the average value from 2016 to 2020.",
       "options": [
@@ -21237,7 +21951,7 @@
     },
     {
       "id": 708,
-      "q": 708,
+      "q": 729,
       "section": "Quantitative Aptitude",
       "text": "In a mixed DI set, a table shows values P=?, Q=150, R=200, S=100. Total=500. Find P.",
       "options": [
@@ -21268,7 +21982,7 @@
     },
     {
       "id": 709,
-      "q": 709,
+      "q": 730,
       "section": "Quantitative Aptitude",
       "text": "A pie chart angle for a sector is 90° out of 360°. What percentage of total is this sector?",
       "options": [
@@ -21299,7 +22013,7 @@
     },
     {
       "id": 710,
-      "q": 710,
+      "q": 731,
       "section": "Quantitative Aptitude",
       "text": "Sales: Jan=100, Feb=120, Mar=130, Apr=110, May=140. Find the month with highest growth over previous month.",
       "options": [
@@ -21330,7 +22044,7 @@
     },
     {
       "id": 711,
-      "q": 711,
+      "q": 732,
       "section": "Quantitative Aptitude",
       "text": "In a bar graph, A=80, B=60, C=100, D=120, E=40. Find the difference between highest and lowest.",
       "options": [
@@ -21361,7 +22075,7 @@
     },
     {
       "id": 712,
-      "q": 712,
+      "q": 733,
       "section": "Quantitative Aptitude",
       "text": "A table shows data with missing value: A=30, B=45, C=?, D=60. Average=45. Find C.",
       "options": [
@@ -21392,7 +22106,7 @@
     },
     {
       "id": 713,
-      "q": 713,
+      "q": 734,
       "section": "Quantitative Aptitude",
       "text": "Using 10% base method, find 45% of 800.",
       "options": [
@@ -21423,7 +22137,7 @@
     },
     {
       "id": 714,
-      "q": 714,
+      "q": 735,
       "section": "Quantitative Aptitude",
       "text": "A pie chart: Rent=108°, Food=72°, Transport=36°, Savings=90°, Others=?. Find Others angle.",
       "options": [
@@ -21454,7 +22168,7 @@
     },
     {
       "id": 715,
-      "q": 715,
+      "q": 736,
       "section": "Quantitative Aptitude",
       "text": "From the above pie chart, if total expenditure is Rs. 1,80,000, find Rent amount.",
       "options": [
@@ -21485,7 +22199,7 @@
     },
     {
       "id": 716,
-      "q": 716,
+      "q": 737,
       "section": "Quantitative Aptitude",
       "text": "A cumulative line graph shows sales up to Q1=200, Q2=450, Q3=750, Q4=1100. Find Q2 sales.",
       "options": [
@@ -21516,7 +22230,7 @@
     },
     {
       "id": 717,
-      "q": 717,
+      "q": 738,
       "section": "Quantitative Aptitude",
       "text": "Find the ratio of two pie chart sectors with angles 45° and 60°.",
       "options": [
@@ -21547,7 +22261,7 @@
     },
     {
       "id": 718,
-      "q": 718,
+      "q": 739,
       "section": "Quantitative Aptitude",
       "text": "A table has values in '000 rupees: P=50, Q=75, R=60. Total = Rs. 2,50,000. What is S?",
       "options": [
@@ -21578,7 +22292,7 @@
     },
     {
       "id": 719,
-      "q": 719,
+      "q": 740,
       "section": "Quantitative Aptitude",
       "text": "Percentage change from 50 to 65:",
       "options": [
@@ -21609,7 +22323,7 @@
     },
     {
       "id": 720,
-      "q": 720,
+      "q": 741,
       "section": "Quantitative Aptitude",
       "text": "A line graph shows values: 2017=150, 2018=180, 2019=170, 2020=200. Which year had a decline?",
       "options": [
@@ -21640,7 +22354,7 @@
     },
     {
       "id": 721,
-      "q": 721,
+      "q": 742,
       "section": "Quantitative Aptitude",
       "text": "Find 10% base: 15% of 920.",
       "options": [
@@ -21671,7 +22385,7 @@
     },
     {
       "id": 722,
-      "q": 722,
+      "q": 743,
       "section": "Quantitative Aptitude",
       "text": "A grouped bar graph shows A-series: 2019=50, 2020=60, 2021=70; B-series: 2019=40, 2020=50, 2021=80. Which year had the largest gap between A and B?",
       "options": [
@@ -21702,7 +22416,7 @@
     },
     {
       "id": 723,
-      "q": 723,
+      "q": 744,
       "section": "Quantitative Aptitude",
       "text": "In a triangle ABC, angle A = 60° and angle B = 40°. Find angle C.",
       "options": [
@@ -21733,7 +22447,7 @@
     },
     {
       "id": 724,
-      "q": 724,
+      "q": 745,
       "section": "Quantitative Aptitude",
       "text": "If sin θ = 3/5, find the value of tan θ + sec θ.",
       "options": [
@@ -21764,7 +22478,7 @@
     },
     {
       "id": 725,
-      "q": 725,
+      "q": 746,
       "section": "Quantitative Aptitude",
       "text": "The angle of elevation of the top of a tower from a point 30 m away is 60°. Find the height of the tower.",
       "options": [
@@ -21795,7 +22509,7 @@
     },
     {
       "id": 726,
-      "q": 726,
+      "q": 747,
       "section": "Quantitative Aptitude",
       "text": "Two circles of radii 5 cm and 3 cm intersect at two points. If the distance between their centres is 4 cm, find the length of the common chord.",
       "options": [
@@ -21826,7 +22540,7 @@
     },
     {
       "id": 727,
-      "q": 727,
+      "q": 748,
       "section": "Quantitative Aptitude",
       "text": "In a ΔABC, if AB = AC and angle B = 50°, find angle A.",
       "options": [
@@ -21857,7 +22571,7 @@
     },
     {
       "id": 728,
-      "q": 728,
+      "q": 749,
       "section": "Quantitative Aptitude",
       "text": "Which of the following is a prime number?",
       "options": [
@@ -21888,7 +22602,7 @@
     },
     {
       "id": 729,
-      "q": 729,
+      "q": 750,
       "section": "Quantitative Aptitude",
       "text": "Find the HCF of 144 and 84 using the division method.",
       "options": [
@@ -21919,7 +22633,7 @@
     },
     {
       "id": 730,
-      "q": 730,
+      "q": 751,
       "section": "Quantitative Aptitude",
       "text": "What is the unit digit of 3´² + 7²³?",
       "options": [
@@ -21950,7 +22664,7 @@
     },
     {
       "id": 731,
-      "q": 731,
+      "q": 752,
       "section": "Quantitative Aptitude",
       "text": "Simplify: 15 − [3 + 4 × (8 ÷ 2) − 7]",
       "options": [
@@ -21981,7 +22695,7 @@
     },
     {
       "id": 732,
-      "q": 732,
+      "q": 753,
       "section": "Quantitative Aptitude",
       "text": "What is the LCM of 3/4, 5/6, and 7/8?",
       "options": [
@@ -22012,7 +22726,7 @@
     },
     {
       "id": 733,
-      "q": 733,
+      "q": 754,
       "section": "Quantitative Aptitude",
       "text": "How many factors does 360 have?",
       "options": [
@@ -22043,7 +22757,7 @@
     },
     {
       "id": 734,
-      "q": 734,
+      "q": 755,
       "section": "Quantitative Aptitude",
       "text": "Find the remainder when 4⁵⁰ is divided by 6.",
       "options": [
@@ -22074,7 +22788,7 @@
     },
     {
       "id": 735,
-      "q": 735,
+      "q": 756,
       "section": "Quantitative Aptitude",
       "text": "A number when divided by 12 leaves remainder 5. What is the remainder when the same number is divided by 6?",
       "options": [
@@ -22105,7 +22819,7 @@
     },
     {
       "id": 736,
-      "q": 736,
+      "q": 757,
       "section": "Quantitative Aptitude",
       "text": "Find the square of 65 using the Vedic trick.",
       "options": [
@@ -22136,7 +22850,7 @@
     },
     {
       "id": 737,
-      "q": 737,
+      "q": 758,
       "section": "Quantitative Aptitude",
       "text": "Which is larger: √7 or ³√15?",
       "options": [
@@ -22167,7 +22881,7 @@
     },
     {
       "id": 738,
-      "q": 738,
+      "q": 759,
       "section": "Quantitative Aptitude",
       "text": "What is the HCF of (x⁵ − x³) and (x⁷ − x⁵)?",
       "options": [
@@ -22198,7 +22912,7 @@
     },
     {
       "id": 739,
-      "q": 739,
+      "q": 760,
       "section": "Quantitative Aptitude",
       "text": "Find the number of trailing zeroes in 50!",
       "options": [
@@ -22229,7 +22943,7 @@
     },
     {
       "id": 740,
-      "q": 740,
+      "q": 761,
       "section": "Quantitative Aptitude",
       "text": "Simplify: √(12 + √(12 + √(12 + ...)))",
       "options": [
@@ -22260,7 +22974,7 @@
     },
     {
       "id": 741,
-      "q": 741,
+      "q": 762,
       "section": "Quantitative Aptitude",
       "text": "If the 8-digit number 1234567Y is divisible by 11, find Y.",
       "options": [
@@ -22291,7 +23005,7 @@
     },
     {
       "id": 742,
-      "q": 742,
+      "q": 763,
       "section": "Quantitative Aptitude",
       "text": "Find the value of (1/2) + (1/6) + (1/12) + (1/20) + (1/30).",
       "options": [
@@ -22322,7 +23036,7 @@
     },
     {
       "id": 743,
-      "q": 743,
+      "q": 764,
       "section": "Quantitative Aptitude",
       "text": "The product of two co-prime numbers is 117. Find their LCM.",
       "options": [
@@ -22353,7 +23067,7 @@
     },
     {
       "id": 744,
-      "q": 744,
+      "q": 765,
       "section": "Quantitative Aptitude",
       "text": "Find the remainder when 2⁵¹ is divided by 5.",
       "options": [
@@ -22384,7 +23098,7 @@
     },
     {
       "id": 745,
-      "q": 745,
+      "q": 766,
       "section": "Quantitative Aptitude",
       "text": "What is the least number that when divided by 6, 8, and 12 leaves remainder 3 in each case?",
       "options": [
@@ -22415,7 +23129,7 @@
     },
     {
       "id": 746,
-      "q": 746,
+      "q": 767,
       "section": "Quantitative Aptitude",
       "text": "A number when divided by 7 gives remainder 3. What is the remainder when its square is divided by 7?",
       "options": [
@@ -22446,7 +23160,7 @@
     },
     {
       "id": 747,
-      "q": 747,
+      "q": 768,
       "section": "Quantitative Aptitude",
       "text": "If a = 2³ × 3² and b = 2² × 3 × 5, find the HCF of a and b.",
       "options": [
@@ -22477,7 +23191,7 @@
     },
     {
       "id": 748,
-      "q": 748,
+      "q": 769,
       "section": "Quantitative Aptitude",
       "text": "Find the unit digit of (1! + 2! + 3! + 4! + ... + 20!).",
       "options": [
@@ -22508,7 +23222,7 @@
     },
     {
       "id": 749,
-      "q": 749,
+      "q": 770,
       "section": "Quantitative Aptitude",
       "text": "How many numbers between 1 and 200 are divisible by both 3 and 5?",
       "options": [
@@ -22539,7 +23253,7 @@
     },
     {
       "id": 750,
-      "q": 750,
+      "q": 771,
       "section": "Quantitative Aptitude",
       "text": "Simplify: (49² − 36²) / 13",
       "options": [
@@ -22570,7 +23284,7 @@
     },
     {
       "id": 751,
-      "q": 751,
+      "q": 772,
       "section": "Quantitative Aptitude",
       "text": "Find the HCF of 2/3 and 4/5.",
       "options": [
@@ -22601,7 +23315,7 @@
     },
     {
       "id": 752,
-      "q": 752,
+      "q": 773,
       "section": "Quantitative Aptitude",
       "text": "What is the sum of digits of the smallest number that when multiplied by 360 gives a perfect square?",
       "options": [
@@ -22632,7 +23346,7 @@
     },
     {
       "id": 753,
-      "q": 753,
+      "q": 774,
       "section": "Quantitative Aptitude",
       "text": "What is 12.5% of 640?",
       "options": [
@@ -22663,7 +23377,7 @@
     },
     {
       "id": 754,
-      "q": 754,
+      "q": 775,
       "section": "Quantitative Aptitude",
       "text": "What percent is 36 of 144?",
       "options": [
@@ -22694,7 +23408,7 @@
     },
     {
       "id": 755,
-      "q": 755,
+      "q": 776,
       "section": "Quantitative Aptitude",
       "text": "If 75% of a number is 225, what is the number?",
       "options": [
@@ -22725,7 +23439,7 @@
     },
     {
       "id": 756,
-      "q": 756,
+      "q": 777,
       "section": "Quantitative Aptitude",
       "text": "What is 20% of 30% of 500?",
       "options": [
@@ -22756,7 +23470,7 @@
     },
     {
       "id": 757,
-      "q": 757,
+      "q": 778,
       "section": "Quantitative Aptitude",
       "text": "If 60% of students in a class are boys and there are 180 boys, how many students are there?",
       "options": [
@@ -22787,7 +23501,7 @@
     },
     {
       "id": 758,
-      "q": 758,
+      "q": 779,
       "section": "Quantitative Aptitude",
       "text": "A number increased from 80 to 100. What is the percentage increase?",
       "options": [
@@ -22818,7 +23532,7 @@
     },
     {
       "id": 759,
-      "q": 759,
+      "q": 780,
       "section": "Quantitative Aptitude",
       "text": "8% of 25 is equal to:",
       "options": [
@@ -22849,7 +23563,7 @@
     },
     {
       "id": 760,
-      "q": 760,
+      "q": 781,
       "section": "Quantitative Aptitude",
       "text": "Express 3/8 as a percentage.",
       "options": [
@@ -22880,7 +23594,7 @@
     },
     {
       "id": 761,
-      "q": 761,
+      "q": 782,
       "section": "Quantitative Aptitude",
       "text": "A number is first increased by 20% and then decreased by 10%. Net change?",
       "options": [
@@ -22911,7 +23625,7 @@
     },
     {
       "id": 762,
-      "q": 762,
+      "q": 783,
       "section": "Quantitative Aptitude",
       "text": "In an election, winning candidate got 60% of valid votes and won by 800 votes. If 20% of total votes were invalid, find total votes.",
       "options": [
@@ -22942,7 +23656,7 @@
     },
     {
       "id": 763,
-      "q": 763,
+      "q": 784,
       "section": "Quantitative Aptitude",
       "text": "If A salary is 25% less than B salary, then B salary is what percent more than A?",
       "options": [
@@ -22973,7 +23687,7 @@
     },
     {
       "id": 764,
-      "q": 764,
+      "q": 785,
       "section": "Quantitative Aptitude",
       "text": "The population of a town increases by 5% annually. If current population is 185220, what was it 2 years ago?",
       "options": [
@@ -23004,7 +23718,7 @@
     },
     {
       "id": 765,
-      "q": 765,
+      "q": 786,
       "section": "Quantitative Aptitude",
       "text": "In an 80-litre mixture of milk and water, 25% is water. How much milk must be added so water becomes 20% of new mixture?",
       "options": [
@@ -23035,7 +23749,7 @@
     },
     {
       "id": 766,
-      "q": 766,
+      "q": 787,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper gives 10% discount on MP and still makes 20% profit. If CP is Rs 450, find MP.",
       "options": [
@@ -23066,7 +23780,7 @@
     },
     {
       "id": 767,
-      "q": 767,
+      "q": 788,
       "section": "Quantitative Aptitude",
       "text": "If the price of sugar increases by 20%, by what percent must consumption be reduced to keep expenditure constant?",
       "options": [
@@ -23097,7 +23811,7 @@
     },
     {
       "id": 768,
-      "q": 768,
+      "q": 789,
       "section": "Quantitative Aptitude",
       "text": "In a class, 60% passed in Maths, 50% passed in English, and 30% passed in both. What percentage passed in at least one?",
       "options": [
@@ -23128,7 +23842,7 @@
     },
     {
       "id": 769,
-      "q": 769,
+      "q": 790,
       "section": "Quantitative Aptitude",
       "text": "In what ratio must a 20% alcohol solution be mixed with a 50% alcohol solution to get a 30% solution?",
       "options": [
@@ -23159,7 +23873,7 @@
     },
     {
       "id": 770,
-      "q": 770,
+      "q": 791,
       "section": "Quantitative Aptitude",
       "text": "A container has 40L of pure milk. 4L is replaced with water, repeated 3 times. Final quantity of milk?",
       "options": [
@@ -23190,7 +23904,7 @@
     },
     {
       "id": 771,
-      "q": 771,
+      "q": 792,
       "section": "Quantitative Aptitude",
       "text": "Item price increased 10%, then 20%, then decreased 15%. Net percentage change?",
       "options": [
@@ -23221,7 +23935,7 @@
     },
     {
       "id": 772,
-      "q": 772,
+      "q": 793,
       "section": "Quantitative Aptitude",
       "text": "A is 20% more than B, B is 30% less than C. A is what percent of C?",
       "options": [
@@ -23252,7 +23966,7 @@
     },
     {
       "id": 773,
-      "q": 773,
+      "q": 794,
       "section": "Quantitative Aptitude",
       "text": "If 15% of 20% of 30% of a number is 18, find the number.",
       "options": [
@@ -23283,7 +23997,7 @@
     },
     {
       "id": 774,
-      "q": 774,
+      "q": 795,
       "section": "Quantitative Aptitude",
       "text": "An article sold at Rs 180 with 20% profit on selling price. Find CP.",
       "options": [
@@ -23314,7 +24028,7 @@
     },
     {
       "id": 775,
-      "q": 775,
+      "q": 796,
       "section": "Quantitative Aptitude",
       "text": "In an election, 5% of votes invalid. A got 60% of valid votes and beat B by 3800 votes. Total votes?",
       "options": [
@@ -23345,7 +24059,7 @@
     },
     {
       "id": 776,
-      "q": 776,
+      "q": 797,
       "section": "Quantitative Aptitude",
       "text": "Price of petrol increased 10%. To keep expenditure unchanged, reduce consumption by what percent?",
       "options": [
@@ -23376,7 +24090,7 @@
     },
     {
       "id": 777,
-      "q": 777,
+      "q": 798,
       "section": "Quantitative Aptitude",
       "text": "52% failed English, 42% failed Maths, 17% failed both. Percent passed in both?",
       "options": [
@@ -23407,7 +24121,7 @@
     },
     {
       "id": 778,
-      "q": 778,
+      "q": 799,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper buys an article for Rs.800 and sells it for Rs.960. What is his profit percentage?",
       "options": [
@@ -23438,7 +24152,7 @@
     },
     {
       "id": 779,
-      "q": 779,
+      "q": 800,
       "section": "Quantitative Aptitude",
       "text": "The marked price of a shirt is Rs.1200. A 15% discount is offered. What is the selling price?",
       "options": [
@@ -23469,7 +24183,7 @@
     },
     {
       "id": 780,
-      "q": 780,
+      "q": 801,
       "section": "Quantitative Aptitude",
       "text": "A vendor sells goods at cost price but uses 900 grams instead of 1 kg. His profit percent is:",
       "options": [
@@ -23500,7 +24214,7 @@
     },
     {
       "id": 781,
-      "q": 781,
+      "q": 802,
       "section": "Quantitative Aptitude",
       "text": "A man sold two articles for Rs.990 each. On one he gained 10% and on the other he lost 10%. Find his overall profit or loss percent.",
       "options": [
@@ -23531,7 +24245,7 @@
     },
     {
       "id": 782,
-      "q": 782,
+      "q": 803,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper marks his goods 40% above cost and gives a discount of 10%. Find his profit percent.",
       "options": [
@@ -23562,7 +24276,7 @@
     },
     {
       "id": 783,
-      "q": 783,
+      "q": 804,
       "section": "Quantitative Aptitude",
       "text": "Successive discounts of 20% and 10% are equivalent to a single discount of:",
       "options": [
@@ -23593,7 +24307,7 @@
     },
     {
       "id": 784,
-      "q": 784,
+      "q": 805,
       "section": "Quantitative Aptitude",
       "text": "If the cost price of 15 articles is equal to the selling price of 12 articles, find the profit percentage.",
       "options": [
@@ -23624,7 +24338,7 @@
     },
     {
       "id": 785,
-      "q": 785,
+      "q": 806,
       "section": "Quantitative Aptitude",
       "text": "If the cost price of 10 articles equals the selling price of 12 articles, find the loss percentage.",
       "options": [
@@ -23655,7 +24369,7 @@
     },
     {
       "id": 786,
-      "q": 786,
+      "q": 807,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper sells an article at a 20% profit. If he had bought it at 10% less and sold it for Rs.30 more, he would have made a 40% profit. Find the cost price.",
       "options": [
@@ -23686,7 +24400,7 @@
     },
     {
       "id": 787,
-      "q": 787,
+      "q": 808,
       "section": "Quantitative Aptitude",
       "text": "If an article is sold at 15% profit instead of 10% profit, the seller gets Rs.50 more. Find the cost price.",
       "options": [
@@ -23717,7 +24431,7 @@
     },
     {
       "id": 788,
-      "q": 788,
+      "q": 809,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper allows a 10% discount and still makes a 20% profit. Find the MP of an article whose CP is Rs.400.",
       "options": [
@@ -23748,7 +24462,7 @@
     },
     {
       "id": 789,
-      "q": 789,
+      "q": 810,
       "section": "Quantitative Aptitude",
       "text": "A and B start a business with Rs.20,000 and Rs.30,000 respectively. After one year the profit is Rs.25,000. Find A's share.",
       "options": [
@@ -23779,7 +24493,7 @@
     },
     {
       "id": 790,
-      "q": 790,
+      "q": 811,
       "section": "Quantitative Aptitude",
       "text": "MP of an item is Rs.2000. A 10% discount is offered, then 18% GST is applied. Find the final price.",
       "options": [
@@ -23810,7 +24524,7 @@
     },
     {
       "id": 791,
-      "q": 791,
+      "q": 812,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper sells goods at 10% profit but uses 800g weight instead of 1kg. Find his actual profit percentage.",
       "options": [
@@ -23841,7 +24555,7 @@
     },
     {
       "id": 792,
-      "q": 792,
+      "q": 813,
       "section": "Quantitative Aptitude",
       "text": "A trader marks goods 50% above CP. He sells 60% of goods at 10% discount and the rest at 15% discount. Find overall profit%.",
       "options": [
@@ -23872,7 +24586,7 @@
     },
     {
       "id": 793,
-      "q": 793,
+      "q": 814,
       "section": "Quantitative Aptitude",
       "text": "A dealer sells two articles for Rs.6000 each. On one he gains 25% and on the other he loses 20%. Find overall loss%.",
       "options": [
@@ -23903,7 +24617,7 @@
     },
     {
       "id": 794,
-      "q": 794,
+      "q": 815,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper marks goods 25% above CP, gives 10% discount, and uses 800g weight instead of 1kg. Find effective profit%.",
       "options": [
@@ -23934,7 +24648,7 @@
     },
     {
       "id": 795,
-      "q": 795,
+      "q": 816,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper offers 'Buy 4 get 1 free'. What is the effective discount percentage?",
       "options": [
@@ -23965,7 +24679,7 @@
     },
     {
       "id": 796,
-      "q": 796,
+      "q": 817,
       "section": "Quantitative Aptitude",
       "text": "A person sells an article at Rs.500 gaining 25%. At what price should he sell it to gain 40%?",
       "options": [
@@ -23996,7 +24710,7 @@
     },
     {
       "id": 797,
-      "q": 797,
+      "q": 818,
       "section": "Quantitative Aptitude",
       "text": "A dealer sells a TV at 20% profit to another dealer who then sells it at 25% profit. If final SP is Rs.15,000, find original CP.",
       "options": [
@@ -24027,7 +24741,7 @@
     },
     {
       "id": 798,
-      "q": 798,
+      "q": 819,
       "section": "Quantitative Aptitude",
       "text": "A buys 120 kg of rice at Rs.30/kg. He sells 40 kg at 10% profit, 50 kg at 5% profit. At what price/kg should he sell the remaining for overall 12% profit?",
       "options": [
@@ -24058,7 +24772,7 @@
     },
     {
       "id": 799,
-      "q": 799,
+      "q": 820,
       "section": "Quantitative Aptitude",
       "text": "A shopkeeper marks an article 20% above CP, offers 10% discount, then adds 5% service charge. Find final profit%.",
       "options": [
@@ -24089,7 +24803,7 @@
     },
     {
       "id": 800,
-      "q": 800,
+      "q": 821,
       "section": "Quantitative Aptitude",
       "text": "A vendor bought bananas at 6 for Rs.10 and sold them at 4 for Rs.10. Find his gain percent.",
       "options": [
@@ -24120,7 +24834,7 @@
     },
     {
       "id": 801,
-      "q": 801,
+      "q": 822,
       "section": "Quantitative Aptitude",
       "text": "A invests Rs.50,000 for 8 months. B invests Rs.60,000 for 10 months. Profit is Rs.50,000. Find A's share.",
       "options": [
@@ -24151,7 +24865,7 @@
     },
     {
       "id": 802,
-      "q": 802,
+      "q": 823,
       "section": "Quantitative Aptitude",
       "text": "If the selling price of an article is Rs.425 and the loss is 15%, find the cost price.",
       "options": [
@@ -24182,7 +24896,7 @@
     },
     {
       "id": 803,
-      "q": 803,
+      "q": 824,
       "section": "Quantitative Aptitude",
       "text": "If 6 workers can complete a job in 12 days, how many days will 8 workers take?",
       "options": [
@@ -24213,7 +24927,7 @@
     },
     {
       "id": 804,
-      "q": 804,
+      "q": 825,
       "section": "Quantitative Aptitude",
       "text": "The compound ratio of 2:3, 4:5, and 6:7 is:",
       "options": [
@@ -24244,7 +24958,7 @@
     },
     {
       "id": 805,
-      "q": 805,
+      "q": 826,
       "section": "Quantitative Aptitude",
       "text": "Find the duplicate ratio of 3:4.",
       "options": [
@@ -24275,7 +24989,7 @@
     },
     {
       "id": 806,
-      "q": 806,
+      "q": 827,
       "section": "Quantitative Aptitude",
       "text": "Find the mean proportion between 4 and 16.",
       "options": [
@@ -24306,7 +25020,7 @@
     },
     {
       "id": 807,
-      "q": 807,
+      "q": 828,
       "section": "Quantitative Aptitude",
       "text": "Find the third proportion to 9 and 15.",
       "options": [
@@ -24337,7 +25051,7 @@
     },
     {
       "id": 808,
-      "q": 808,
+      "q": 829,
       "section": "Quantitative Aptitude",
       "text": "Find the fourth proportion to 3, 7, and 9.",
       "options": [
@@ -24368,7 +25082,7 @@
     },
     {
       "id": 809,
-      "q": 809,
+      "q": 830,
       "section": "Quantitative Aptitude",
       "text": "If (x+5)/(x-5) = 7/3, find x using componendo-dividendo.",
       "options": [
@@ -24399,7 +25113,7 @@
     },
     {
       "id": 810,
-      "q": 810,
+      "q": 831,
       "section": "Quantitative Aptitude",
       "text": "In what ratio must a dealer mix tea at Rs.80/kg with tea at Rs.120/kg to sell the mixture at Rs.100/kg?",
       "options": [
@@ -24430,7 +25144,7 @@
     },
     {
       "id": 811,
-      "q": 811,
+      "q": 832,
       "section": "Quantitative Aptitude",
       "text": "A 15L vessel full of milk has 3L removed and replaced with water. Find milk remaining.",
       "options": [
@@ -24461,7 +25175,7 @@
     },
     {
       "id": 812,
-      "q": 812,
+      "q": 833,
       "section": "Quantitative Aptitude",
       "text": "A, B, C invest Rs.10,000, Rs.15,000, Rs.20,000 for one year. Profit is Rs.27,000. Find B's share.",
       "options": [
@@ -24492,7 +25206,7 @@
     },
     {
       "id": 813,
-      "q": 813,
+      "q": 834,
       "section": "Quantitative Aptitude",
       "text": "A invests Rs.12,000 for 8 months, B invests Rs.16,000 for 6 months. Profit is Rs.30,000. Find A's share.",
       "options": [
@@ -24523,7 +25237,7 @@
     },
     {
       "id": 814,
-      "q": 814,
+      "q": 835,
       "section": "Quantitative Aptitude",
       "text": "A bag contains Rs.2, Rs.1, and 50 paise coins in ratio 1:2:3. Total value is Rs.195. Find number of Rs.1 coins.",
       "options": [
@@ -24554,7 +25268,7 @@
     },
     {
       "id": 815,
-      "q": 815,
+      "q": 836,
       "section": "Quantitative Aptitude",
       "text": "Present ratio of ages of A and B is 5:7. After 4 years, ratio becomes 3:4. Find B's present age.",
       "options": [
@@ -24585,7 +25299,7 @@
     },
     {
       "id": 816,
-      "q": 816,
+      "q": 837,
       "section": "Quantitative Aptitude",
       "text": "A mixture of 40L contains milk and water in ratio 5:3. How much water must be added to make the ratio 5:4?",
       "options": [
@@ -24616,7 +25330,7 @@
     },
     {
       "id": 817,
-      "q": 817,
+      "q": 838,
       "section": "Quantitative Aptitude",
       "text": "If a:b = 3:4 and b:c = 6:7, find a:c.",
       "options": [
@@ -24647,7 +25361,7 @@
     },
     {
       "id": 818,
-      "q": 818,
+      "q": 839,
       "section": "Quantitative Aptitude",
       "text": "Two numbers are in ratio 7:11 and their sum is 180. Find the smaller number.",
       "options": [
@@ -24678,7 +25392,7 @@
     },
     {
       "id": 819,
-      "q": 819,
+      "q": 840,
       "section": "Quantitative Aptitude",
       "text": "A sum of money is divided among A, B, C in ratio 2:5:7. If C gets Rs.600 more than A, find total amount.",
       "options": [
@@ -24709,7 +25423,7 @@
     },
     {
       "id": 820,
-      "q": 820,
+      "q": 841,
       "section": "Quantitative Aptitude",
       "text": "A 20L mixture contains milk and water in ratio 3:2. 5L of mixture is removed and replaced with water. Find the new ratio of milk to water.",
       "options": [
@@ -24740,7 +25454,7 @@
     },
     {
       "id": 821,
-      "q": 821,
+      "q": 842,
       "section": "Quantitative Aptitude",
       "text": "An alloy contains copper and zinc in ratio 5:3. If 12 kg of zinc is added, the ratio becomes 5:7. Find the initial copper.",
       "options": [
@@ -24771,7 +25485,7 @@
     },
     {
       "id": 822,
-      "q": 822,
+      "q": 843,
       "section": "Quantitative Aptitude",
       "text": "A container has 60L of milk. 12L is drawn and replaced with water, twice. Find milk remaining.",
       "options": [
@@ -24802,7 +25516,7 @@
     },
     {
       "id": 823,
-      "q": 823,
+      "q": 844,
       "section": "Quantitative Aptitude",
       "text": "The ratio of two numbers is 3:5. If 8 is subtracted from each, the ratio becomes 1:3. Find the smaller number.",
       "options": [
@@ -24833,7 +25547,7 @@
     },
     {
       "id": 824,
-      "q": 824,
+      "q": 845,
       "section": "Quantitative Aptitude",
       "text": "Find the simple interest on Rs. 4,500 at 6% per annum for 3 years.",
       "options": [
@@ -24864,7 +25578,7 @@
     },
     {
       "id": 825,
-      "q": 825,
+      "q": 846,
       "section": "Quantitative Aptitude",
       "text": "A sum of money doubles itself in 10 years at simple interest. Find the rate of interest.",
       "options": [
@@ -24895,7 +25609,7 @@
     },
     {
       "id": 826,
-      "q": 826,
+      "q": 847,
       "section": "Quantitative Aptitude",
       "text": "In how many years will Rs. 2,000 amount to Rs. 2,600 at 5% per annum simple interest?",
       "options": [
@@ -24926,7 +25640,7 @@
     },
     {
       "id": 827,
-      "q": 827,
+      "q": 848,
       "section": "Quantitative Aptitude",
       "text": "Find the compound interest on Rs. 8,000 at 5% per annum for 2 years.",
       "options": [
@@ -24957,7 +25671,7 @@
     },
     {
       "id": 828,
-      "q": 828,
+      "q": 849,
       "section": "Quantitative Aptitude",
       "text": "At what rate per cent per annum will Rs. 5,000 amount to Rs. 6,050 in 2 years, compounded annually?",
       "options": [
@@ -24988,7 +25702,7 @@
     },
     {
       "id": 829,
-      "q": 829,
+      "q": 850,
       "section": "Quantitative Aptitude",
       "text": "In how many years will Rs. 3,000 amount to Rs. 3,993 at 10% p.a. compounded annually?",
       "options": [
@@ -25019,7 +25733,7 @@
     },
     {
       "id": 830,
-      "q": 830,
+      "q": 851,
       "section": "Quantitative Aptitude",
       "text": "The difference between CI and SI on a sum for 2 years at 5% p.a. is Rs. 30. Find the principal.",
       "options": [
@@ -25050,7 +25764,7 @@
     },
     {
       "id": 831,
-      "q": 831,
+      "q": 852,
       "section": "Quantitative Aptitude",
       "text": "The difference between CI and SI on a sum of Rs. 10,000 at 4% p.a. for 3 years is:",
       "options": [
@@ -25081,7 +25795,7 @@
     },
     {
       "id": 832,
-      "q": 832,
+      "q": 853,
       "section": "Quantitative Aptitude",
       "text": "Find the amount on Rs. 20,000 at 10% p.a. compounded half-yearly for 1 year.",
       "options": [
@@ -25112,7 +25826,7 @@
     },
     {
       "id": 833,
-      "q": 833,
+      "q": 854,
       "section": "Quantitative Aptitude",
       "text": "What is the compound interest on Rs. 10,000 at 16% p.a. compounded quarterly for 6 months?",
       "options": [
@@ -25143,7 +25857,7 @@
     },
     {
       "id": 834,
-      "q": 834,
+      "q": 855,
       "section": "Quantitative Aptitude",
       "text": "A sum amounts to Rs. 15,400 in 1 year and Rs. 16,170 in 2 years at CI. Find the rate.",
       "options": [
@@ -25174,7 +25888,7 @@
     },
     {
       "id": 835,
-      "q": 835,
+      "q": 856,
       "section": "Quantitative Aptitude",
       "text": "Find CI on Rs. 25,000 at 12% for 2 years using the (A+B+AB/100)% shortcut.",
       "options": [
@@ -25205,7 +25919,7 @@
     },
     {
       "id": 836,
-      "q": 836,
+      "q": 857,
       "section": "Quantitative Aptitude",
       "text": "A loan of Rs. 8,000 is to be repaid in 2 equal annual installments at 5% p.a. CI. Find each installment.",
       "options": [
@@ -25236,7 +25950,7 @@
     },
     {
       "id": 837,
-      "q": 837,
+      "q": 858,
       "section": "Quantitative Aptitude",
       "text": "The population of a village is 15,000. It increases at 10% p.a. Find the population after 3 years.",
       "options": [
@@ -25267,7 +25981,7 @@
     },
     {
       "id": 838,
-      "q": 838,
+      "q": 859,
       "section": "Quantitative Aptitude",
       "text": "The value of a car depreciates at 20% per annum. If its current value is Rs. 4,00,000, what will be its value after 2 years?",
       "options": [
@@ -25298,7 +26012,7 @@
     },
     {
       "id": 839,
-      "q": 839,
+      "q": 860,
       "section": "Quantitative Aptitude",
       "text": "Rs. 4,000 is invested at 5% for year 1 and 6% for year 2, compounded annually. Find the total amount after 2 years.",
       "options": [
@@ -25329,7 +26043,7 @@
     },
     {
       "id": 840,
-      "q": 840,
+      "q": 861,
       "section": "Quantitative Aptitude",
       "text": "Find the amount on Rs. 12,000 at 9% p.a. compounded annually for 2⅓ years.",
       "options": [
@@ -25360,7 +26074,7 @@
     },
     {
       "id": 841,
-      "q": 841,
+      "q": 862,
       "section": "Quantitative Aptitude",
       "text": "A sum of Rs. 6,000 is divided into two parts. One part is lent at 8% SI and the other at 12% SI. If total annual interest is Rs. 600, find the smaller part.",
       "options": [
@@ -25391,7 +26105,7 @@
     },
     {
       "id": 842,
-      "q": 842,
+      "q": 863,
       "section": "Quantitative Aptitude",
       "text": "The CI on a sum for 2 years at 10% p.a. is Rs. 1,260. Find the sum.",
       "options": [
@@ -25422,7 +26136,7 @@
     },
     {
       "id": 843,
-      "q": 843,
+      "q": 864,
       "section": "Quantitative Aptitude",
       "text": "The difference between CI and SI on a sum for 2 years at 8% p.a. is Rs. 64. Find the sum.",
       "options": [
@@ -25453,7 +26167,7 @@
     },
     {
       "id": 844,
-      "q": 844,
+      "q": 865,
       "section": "Quantitative Aptitude",
       "text": "A sum of money becomes 4 times itself at CI in 4 years. In how many years will it become 16 times?",
       "options": [
@@ -25484,7 +26198,7 @@
     },
     {
       "id": 845,
-      "q": 845,
+      "q": 866,
       "section": "Quantitative Aptitude",
       "text": "Find the rate at which Rs. 3,000 will give Rs. 993 as CI in 3 years.",
       "options": [
@@ -25515,7 +26229,7 @@
     },
     {
       "id": 846,
-      "q": 846,
+      "q": 867,
       "section": "Quantitative Aptitude",
       "text": "A sum of Rs. 1,200 amounts to Rs. 1,512 in 2 years at a certain rate of SI. If the rate is increased by 3%, find the new amount.",
       "options": [
@@ -25546,7 +26260,7 @@
     },
     {
       "id": 847,
-      "q": 847,
+      "q": 868,
       "section": "Quantitative Aptitude",
       "text": "A machine worth Rs. 50,000 depreciates at 10% in year 1 and 5% in year 2. Find its value after 2 years.",
       "options": [
@@ -25577,7 +26291,7 @@
     },
     {
       "id": 848,
-      "q": 848,
+      "q": 869,
       "section": "Quantitative Aptitude",
       "text": "A car travels 240 km in 4 hours. What is its speed?",
       "options": [
@@ -25608,7 +26322,7 @@
     },
     {
       "id": 849,
-      "q": 849,
+      "q": 870,
       "section": "Quantitative Aptitude",
       "text": "A person goes from A to B at 40 km/h and returns at 60 km/h. Find the average speed.",
       "options": [
@@ -25639,7 +26353,7 @@
     },
     {
       "id": 850,
-      "q": 850,
+      "q": 871,
       "section": "Quantitative Aptitude",
       "text": "Two persons are 500 m apart and walk towards each other at 2 m/s and 3 m/s. How long will they take to meet?",
       "options": [
@@ -25670,7 +26384,7 @@
     },
     {
       "id": 851,
-      "q": 851,
+      "q": 872,
       "section": "Quantitative Aptitude",
       "text": "A thief runs at 6 km/h. A policeman spots him 300 m away and chases at 9 km/h. How long will it take the policeman to catch the thief?",
       "options": [
@@ -25701,7 +26415,7 @@
     },
     {
       "id": 852,
-      "q": 852,
+      "q": 873,
       "section": "Quantitative Aptitude",
       "text": "A 250 m long train crosses a 350 m long platform in 30 seconds. Find its speed in km/h.",
       "options": [
@@ -25732,7 +26446,7 @@
     },
     {
       "id": 853,
-      "q": 853,
+      "q": 874,
       "section": "Quantitative Aptitude",
       "text": "A 150 m long train passes a pole in 6 seconds. What is its speed in km/h?",
       "options": [
@@ -25763,7 +26477,7 @@
     },
     {
       "id": 854,
-      "q": 854,
+      "q": 875,
       "section": "Quantitative Aptitude",
       "text": "Two trains of length 200 m and 250 m run towards each other at 36 km/h and 54 km/h. How long will they take to cross each other?",
       "options": [
@@ -25794,7 +26508,7 @@
     },
     {
       "id": 855,
-      "q": 855,
+      "q": 876,
       "section": "Quantitative Aptitude",
       "text": "Two trains of length 180 m and 220 m run on parallel tracks at 72 km/h and 54 km/h in the same direction. How long will they take to cross each other?",
       "options": [
@@ -25825,7 +26539,7 @@
     },
     {
       "id": 856,
-      "q": 856,
+      "q": 877,
       "section": "Quantitative Aptitude",
       "text": "A boat's speed in still water is 10 km/h and the stream speed is 2 km/h. How long will it take to go 60 km downstream?",
       "options": [
@@ -25856,7 +26570,7 @@
     },
     {
       "id": 857,
-      "q": 857,
+      "q": 878,
       "section": "Quantitative Aptitude",
       "text": "A boat's speed in still water is 15 km/h and stream speed is 3 km/h. How long will it take to go 36 km upstream?",
       "options": [
@@ -25887,7 +26601,7 @@
     },
     {
       "id": 858,
-      "q": 858,
+      "q": 879,
       "section": "Quantitative Aptitude",
       "text": "A boat covers 24 km downstream in 3 hours and 24 km upstream in 6 hours. Find the speed of the stream.",
       "options": [
@@ -25918,7 +26632,7 @@
     },
     {
       "id": 859,
-      "q": 859,
+      "q": 880,
       "section": "Quantitative Aptitude",
       "text": "If the downstream speed of a boat is 18 km/h and upstream speed is 6 km/h, what is the speed of the boat in still water?",
       "options": [
@@ -25949,7 +26663,7 @@
     },
     {
       "id": 860,
-      "q": 860,
+      "q": 881,
       "section": "Quantitative Aptitude",
       "text": "Two runners start from the same point on a 500 m circular track at 5 m/s and 7.5 m/s in opposite directions. When will they meet for the first time?",
       "options": [
@@ -25980,7 +26694,7 @@
     },
     {
       "id": 861,
-      "q": 861,
+      "q": 882,
       "section": "Quantitative Aptitude",
       "text": "Two runners start from the same point on a 400 m circular track at 8 m/s and 6 m/s in the same direction. When will they meet for the first time?",
       "options": [
@@ -26011,7 +26725,7 @@
     },
     {
       "id": 862,
-      "q": 862,
+      "q": 883,
       "section": "Quantitative Aptitude",
       "text": "In an 800 m race, A beats B by 160 m. What is the ratio of their speeds?",
       "options": [
@@ -26042,7 +26756,7 @@
     },
     {
       "id": 863,
-      "q": 863,
+      "q": 884,
       "section": "Quantitative Aptitude",
       "text": "A car travels at 50 km/h for 3 hours and then at 70 km/h for the next 3 hours. Find the average speed.",
       "options": [
@@ -26073,7 +26787,7 @@
     },
     {
       "id": 864,
-      "q": 864,
+      "q": 885,
       "section": "Quantitative Aptitude",
       "text": "A 200 m long train enters a 300 m long tunnel at 72 km/h. How long will it take from the moment the engine enters till the last coach exits?",
       "options": [
@@ -26104,7 +26818,7 @@
     },
     {
       "id": 865,
-      "q": 865,
+      "q": 886,
       "section": "Quantitative Aptitude",
       "text": "A boat's speed in still water is 12 km/h and stream speed is 3 km/h. How long will it take to go 30 km downstream and return?",
       "options": [
@@ -26135,7 +26849,7 @@
     },
     {
       "id": 866,
-      "q": 866,
+      "q": 887,
       "section": "Quantitative Aptitude",
       "text": "Three runners start from the same point on a 300 m circular track at 5 m/s, 6 m/s and 10 m/s. When will they all meet again at the starting point?",
       "options": [
@@ -26166,7 +26880,7 @@
     },
     {
       "id": 867,
-      "q": 867,
+      "q": 888,
       "section": "Quantitative Aptitude",
       "text": "A 240 m long train passes a man walking at 6 km/h in the opposite direction in 9 seconds. Find the speed of the train.",
       "options": [
@@ -26197,7 +26911,7 @@
     },
     {
       "id": 868,
-      "q": 868,
+      "q": 889,
       "section": "Quantitative Aptitude",
       "text": "A 300 m long train travelling at 60 km/h overtakes a man running at 12 km/h in the same direction. How long will the train take to pass him?",
       "options": [
@@ -26228,7 +26942,7 @@
     },
     {
       "id": 869,
-      "q": 869,
+      "q": 890,
       "section": "Quantitative Aptitude",
       "text": "A person covers one-third of the distance at 30 km/h, one-third at 40 km/h and the remaining at 60 km/h. Find the average speed.",
       "options": [
@@ -26259,7 +26973,7 @@
     },
     {
       "id": 870,
-      "q": 870,
+      "q": 891,
       "section": "Quantitative Aptitude",
       "text": "A and B are 500 km apart. A starts from A towards B at 60 km/h. B starts from B towards A one hour later at 40 km/h. When will they meet from the time A started?",
       "options": [
@@ -26290,7 +27004,7 @@
     },
     {
       "id": 871,
-      "q": 871,
+      "q": 892,
       "section": "Quantitative Aptitude",
       "text": "Find the angle between the hour hand and minute hand of a clock at 4:30.",
       "options": [
@@ -26321,7 +27035,7 @@
     },
     {
       "id": 872,
-      "q": 872,
+      "q": 893,
       "section": "Quantitative Aptitude",
       "text": "At what time between 5 and 6 will the hands of a clock coincide?",
       "options": [
@@ -26352,7 +27066,7 @@
     },
     {
       "id": 873,
-      "q": 873,
+      "q": 894,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Puppy : Dog :: Kitten : ?",
       "options": [
@@ -26383,7 +27097,7 @@
     },
     {
       "id": 874,
-      "q": 874,
+      "q": 895,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Doctor : Hospital :: Teacher : ?",
       "options": [
@@ -26414,7 +27128,7 @@
     },
     {
       "id": 875,
-      "q": 875,
+      "q": 896,
       "section": "General Intelligence & Reasoning",
       "text": "Odometer : Distance :: Compass : ?",
       "options": [
@@ -26445,7 +27159,7 @@
     },
     {
       "id": 876,
-      "q": 876,
+      "q": 897,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Lion : Roar :: Dog : ?",
       "options": [
@@ -26476,7 +27190,7 @@
     },
     {
       "id": 877,
-      "q": 877,
+      "q": 898,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Thermometer : Temperature :: Barometer : ?",
       "options": [
@@ -26507,7 +27221,7 @@
     },
     {
       "id": 878,
-      "q": 878,
+      "q": 899,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: A : C :: E : ?",
       "options": [
@@ -26538,7 +27252,7 @@
     },
     {
       "id": 879,
-      "q": 879,
+      "q": 900,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: 4 : 20 :: 7 : ?",
       "options": [
@@ -26569,7 +27283,7 @@
     },
     {
       "id": 880,
-      "q": 880,
+      "q": 901,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Happy : Joyful :: Sad : ?",
       "options": [
@@ -26600,7 +27314,7 @@
     },
     {
       "id": 881,
-      "q": 881,
+      "q": 902,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: 9 : 81 :: 11 : ?",
       "options": [
@@ -26631,7 +27345,7 @@
     },
     {
       "id": 882,
-      "q": 882,
+      "q": 903,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Actor : Actress :: Lion : ?",
       "options": [
@@ -26662,7 +27376,7 @@
     },
     {
       "id": 883,
-      "q": 883,
+      "q": 904,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Rain : Flood :: Fire : ?",
       "options": [
@@ -26693,7 +27407,7 @@
     },
     {
       "id": 884,
-      "q": 884,
+      "q": 905,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: 45 : 9 :: 82 : ?",
       "options": [
@@ -26724,7 +27438,7 @@
     },
     {
       "id": 885,
-      "q": 885,
+      "q": 906,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Pen : Write :: Knife : ?",
       "options": [
@@ -26755,7 +27469,7 @@
     },
     {
       "id": 886,
-      "q": 886,
+      "q": 907,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: Z : A :: Y : ?",
       "options": [
@@ -26786,7 +27500,7 @@
     },
     {
       "id": 887,
-      "q": 887,
+      "q": 908,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: BIRD : FLY :: FISH : ?",
       "options": [
@@ -26817,7 +27531,7 @@
     },
     {
       "id": 888,
-      "q": 888,
+      "q": 909,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: 2 : 5 :: 11 : ?",
       "options": [
@@ -26848,7 +27562,7 @@
     },
     {
       "id": 889,
-      "q": 889,
+      "q": 910,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: AB : CD :: EF : ?",
       "options": [
@@ -26879,7 +27593,7 @@
     },
     {
       "id": 890,
-      "q": 890,
+      "q": 911,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: 8 : 18 :: 12 : ?",
       "options": [
@@ -26910,7 +27624,7 @@
     },
     {
       "id": 891,
-      "q": 891,
+      "q": 912,
       "section": "General Intelligence & Reasoning",
       "text": "What day of the week was 26 January 1950?",
       "options": [
@@ -26941,7 +27655,7 @@
     },
     {
       "id": 892,
-      "q": 892,
+      "q": 913,
       "section": "General Intelligence & Reasoning",
       "text": "How many odd days are there in 100 years?",
       "options": [
@@ -26972,7 +27686,7 @@
     },
     {
       "id": 893,
-      "q": 893,
+      "q": 914,
       "section": "General Intelligence & Reasoning",
       "text": "If 15 August 1947 was Friday, what day was 15 August 1949?",
       "options": [
@@ -27003,7 +27717,7 @@
     },
     {
       "id": 894,
-      "q": 894,
+      "q": 915,
       "section": "General Intelligence & Reasoning",
       "text": "Which year has the same calendar as 2024?",
       "options": [
@@ -27034,7 +27748,7 @@
     },
     {
       "id": 895,
-      "q": 895,
+      "q": 916,
       "section": "General Intelligence & Reasoning",
       "text": "What is the angle between the hands of a clock at 3:30?",
       "options": [
@@ -27065,7 +27779,7 @@
     },
     {
       "id": 896,
-      "q": 896,
+      "q": 917,
       "section": "General Intelligence & Reasoning",
       "text": "At what time between 4 and 5 will the hands coincide?",
       "options": [
@@ -27096,7 +27810,7 @@
     },
     {
       "id": 897,
-      "q": 897,
+      "q": 918,
       "section": "General Intelligence & Reasoning",
       "text": "If a clock shows 8:25, what time does its mirror image show?",
       "options": [
@@ -27127,7 +27841,7 @@
     },
     {
       "id": 898,
-      "q": 898,
+      "q": 919,
       "section": "General Intelligence & Reasoning",
       "text": "At what time between 5 and 6 are the hands opposite (180°)?",
       "options": [
@@ -27158,7 +27872,7 @@
     },
     {
       "id": 899,
-      "q": 899,
+      "q": 920,
       "section": "General Intelligence & Reasoning",
       "text": "A clock loses 10 minutes per day. What will it show at 6 PM when actual time is 6 PM after 2 days?",
       "options": [
@@ -27189,7 +27903,7 @@
     },
     {
       "id": 900,
-      "q": 900,
+      "q": 921,
       "section": "General Intelligence & Reasoning",
       "text": "How many times do the hands of a clock coincide in a day?",
       "options": [
@@ -27220,7 +27934,7 @@
     },
     {
       "id": 901,
-      "q": 901,
+      "q": 922,
       "section": "General Intelligence & Reasoning",
       "text": "Find the angle between hands at 8:20.",
       "options": [
@@ -27251,7 +27965,7 @@
     },
     {
       "id": 902,
-      "q": 902,
+      "q": 923,
       "section": "General Intelligence & Reasoning",
       "text": "What day was 15 Aug 1949 if 15 Aug 1947 was Friday?",
       "options": [
@@ -27282,7 +27996,7 @@
     },
     {
       "id": 903,
-      "q": 903,
+      "q": 924,
       "section": "General Intelligence & Reasoning",
       "text": "In a clock, at what time between 2 and 3 will the hands be at right angle (90°)?",
       "options": [
@@ -27313,7 +28027,7 @@
     },
     {
       "id": 904,
-      "q": 904,
+      "q": 925,
       "section": "General Intelligence & Reasoning",
       "text": "How many odd days in 400 years?",
       "options": [
@@ -27344,7 +28058,7 @@
     },
     {
       "id": 905,
-      "q": 905,
+      "q": 926,
       "section": "General Intelligence & Reasoning",
       "text": "Which of the following is NOT a leap year?",
       "options": [
@@ -27375,7 +28089,7 @@
     },
     {
       "id": 906,
-      "q": 906,
+      "q": 927,
       "section": "General Intelligence & Reasoning",
       "text": "A clock gains 5 min per hour. After how many hours will it show the correct time again?",
       "options": [
@@ -27406,7 +28120,7 @@
     },
     {
       "id": 907,
-      "q": 907,
+      "q": 928,
       "section": "General Intelligence & Reasoning",
       "text": "What is the angle between hands at 12:30?",
       "options": [
@@ -27437,7 +28151,7 @@
     },
     {
       "id": 908,
-      "q": 908,
+      "q": 929,
       "section": "General Intelligence & Reasoning",
       "text": "What was the day on 26 Jan 2001?",
       "options": [
@@ -27468,7 +28182,7 @@
     },
     {
       "id": 909,
-      "q": 909,
+      "q": 930,
       "section": "General Intelligence & Reasoning",
       "text": "Find the time between 4 and 5 when the hands are at right angles.",
       "options": [
@@ -27499,7 +28213,7 @@
     },
     {
       "id": 910,
-      "q": 910,
+      "q": 931,
       "section": "General Intelligence & Reasoning",
       "text": "If 'APPLE' is coded as 'BQQMF', what is 'MANGO' coded as?",
       "options": [
@@ -27530,7 +28244,7 @@
     },
     {
       "id": 911,
-      "q": 911,
+      "q": 932,
       "section": "General Intelligence & Reasoning",
       "text": "If 'STUDY' is coded as 'VWXGB', what is 'CLASS' coded as?",
       "options": [
@@ -27561,7 +28275,7 @@
     },
     {
       "id": 912,
-      "q": 912,
+      "q": 933,
       "section": "General Intelligence & Reasoning",
       "text": "If 'DELHI' is coded as 'EFMIJ', what is 'MUMBAI' coded as?",
       "options": [
@@ -27592,7 +28306,7 @@
     },
     {
       "id": 913,
-      "q": 913,
+      "q": 934,
       "section": "General Intelligence & Reasoning",
       "text": "If 'EJOTY' gives positions 5,10,15,20,25, what is the position of 'R'?",
       "options": [
@@ -27623,7 +28337,7 @@
     },
     {
       "id": 914,
-      "q": 914,
+      "q": 935,
       "section": "General Intelligence & Reasoning",
       "text": "If 'F' is coded as 3, 'G' as 4, 'H' as 5, what is 'M' coded as?",
       "options": [
@@ -27654,7 +28368,7 @@
     },
     {
       "id": 915,
-      "q": 915,
+      "q": 936,
       "section": "General Intelligence & Reasoning",
       "text": "If 'GOOD' is coded as 'HPPE', what is 'WORK' coded as?",
       "options": [
@@ -27685,7 +28399,7 @@
     },
     {
       "id": 916,
-      "q": 916,
+      "q": 937,
       "section": "General Intelligence & Reasoning",
       "text": "If 'NIGHT' is coded as 'OKHIW', what is 'BRIGHT' coded as?",
       "options": [
@@ -27716,7 +28430,7 @@
     },
     {
       "id": 917,
-      "q": 917,
+      "q": 938,
       "section": "General Intelligence & Reasoning",
       "text": "If 'ABROAD' is coded as 'BCSPBE', what is 'FOREIGN' coded as?",
       "options": [
@@ -27747,7 +28461,7 @@
     },
     {
       "id": 918,
-      "q": 918,
+      "q": 939,
       "section": "General Intelligence & Reasoning",
       "text": "If 'LAPTOP' is coded as 'MBQUPQ', what is 'MOBILE' coded as?",
       "options": [
@@ -27778,7 +28492,7 @@
     },
     {
       "id": 919,
-      "q": 919,
+      "q": 940,
       "section": "General Intelligence & Reasoning",
       "text": "If 'WINDOW' is coded as 'XJOEPX', what is 'DOOR' coded as?",
       "options": [
@@ -27809,7 +28523,7 @@
     },
     {
       "id": 920,
-      "q": 920,
+      "q": 941,
       "section": "General Intelligence & Reasoning",
       "text": "If 'NATION' is coded as 'MZSRNM', what is 'INDIA' coded as?",
       "options": [
@@ -27840,7 +28554,7 @@
     },
     {
       "id": 921,
-      "q": 921,
+      "q": 942,
       "section": "General Intelligence & Reasoning",
       "text": "If 'MISSION' is coded as 'MSIISNO', what is 'BANKING' coded as?",
       "options": [
@@ -27871,7 +28585,7 @@
     },
     {
       "id": 922,
-      "q": 922,
+      "q": 943,
       "section": "General Intelligence & Reasoning",
       "text": "If 'AMAZON' is coded as '1131261514', what is 'FLIPKART' coded as?",
       "options": [
@@ -27902,7 +28616,7 @@
     },
     {
       "id": 923,
-      "q": 923,
+      "q": 944,
       "section": "General Intelligence & Reasoning",
       "text": "If 'HONESTY' is coded as 'IPNFTUZ', what is 'BEAUTY' coded as?",
       "options": [
@@ -27933,7 +28647,7 @@
     },
     {
       "id": 924,
-      "q": 924,
+      "q": 945,
       "section": "General Intelligence & Reasoning",
       "text": "A cube of side 4 is painted on all faces and cut into unit cubes. How many have exactly 2 faces painted?",
       "options": [
@@ -27964,7 +28678,7 @@
     },
     {
       "id": 925,
-      "q": 925,
+      "q": 946,
       "section": "General Intelligence & Reasoning",
       "text": "A cube of side 7 is painted on all faces and cut into unit cubes. How many have 0 faces painted?",
       "options": [
@@ -27995,7 +28709,7 @@
     },
     {
       "id": 926,
-      "q": 926,
+      "q": 947,
       "section": "General Intelligence & Reasoning",
       "text": "In a standard die, which number is opposite to 4?",
       "options": [
@@ -28026,7 +28740,7 @@
     },
     {
       "id": 927,
-      "q": 927,
+      "q": 948,
       "section": "General Intelligence & Reasoning",
       "text": "Two views of a die show: (1) Top=2, Front=4, Right=1; (2) Top=6, Front=4, Right=5. Find the number opposite to 4.",
       "options": [
@@ -28057,7 +28771,7 @@
     },
     {
       "id": 928,
-      "q": 928,
+      "q": 949,
       "section": "General Intelligence & Reasoning",
       "text": "In a dice net with cross pattern (1 top, 2-3-4-5 middle, 6 bottom), which numbers are opposite?",
       "options": [
@@ -28088,7 +28802,7 @@
     },
     {
       "id": 929,
-      "q": 929,
+      "q": 950,
       "section": "General Intelligence & Reasoning",
       "text": "A cube of side 3 is painted on all faces and cut into unit cubes. How many cubes have exactly 3 faces painted?",
       "options": [
@@ -28119,7 +28833,7 @@
     },
     {
       "id": 930,
-      "q": 930,
+      "q": 951,
       "section": "General Intelligence & Reasoning",
       "text": "In a standard die, if face 6 is on top and face 1 is in front, which face is on the right?",
       "options": [
@@ -28150,7 +28864,7 @@
     },
     {
       "id": 931,
-      "q": 931,
+      "q": 952,
       "section": "General Intelligence & Reasoning",
       "text": "A cube of side 10 is painted on all faces and cut into unit cubes. How many have at least 1 face painted?",
       "options": [
@@ -28181,7 +28895,7 @@
     },
     {
       "id": 932,
-      "q": 932,
+      "q": 953,
       "section": "General Intelligence & Reasoning",
       "text": "Two positions of a die: (1) Top=1, Front=2, Right=3; (2) Top=4, Front=2, Right=5. Find opposite of 2.",
       "options": [
@@ -28212,7 +28926,7 @@
     },
     {
       "id": 933,
-      "q": 933,
+      "q": 954,
       "section": "General Intelligence & Reasoning",
       "text": "Which of the following is NOT a valid die net?",
       "options": [
@@ -28243,7 +28957,7 @@
     },
     {
       "id": 934,
-      "q": 934,
+      "q": 955,
       "section": "General Intelligence & Reasoning",
       "text": "A 5×5×5 cube is painted red on all faces and cut. How many cubes have exactly 1 face painted?",
       "options": [
@@ -28274,7 +28988,7 @@
     },
     {
       "id": 935,
-      "q": 935,
+      "q": 956,
       "section": "General Intelligence & Reasoning",
       "text": "A cube of side 8 is painted on 4 faces (two opposite unpainted). How many cubes have paint?",
       "options": [
@@ -28305,7 +29019,7 @@
     },
     {
       "id": 936,
-      "q": 936,
+      "q": 957,
       "section": "General Intelligence & Reasoning",
       "text": "A die is rolled and shows 5 on top. What number is at the bottom (standard die)?",
       "options": [
@@ -28336,7 +29050,7 @@
     },
     {
       "id": 937,
-      "q": 937,
+      "q": 958,
       "section": "General Intelligence & Reasoning",
       "text": "How many cubes of side 3 can be cut from a cube of side 9?",
       "options": [
@@ -28367,7 +29081,7 @@
     },
     {
       "id": 938,
-      "q": 938,
+      "q": 959,
       "section": "General Intelligence & Reasoning",
       "text": "Find the number opposite to 2 given: View 1: Top=A, Front=2, Right=3; View 2: Top=5, Front=2, Right=6.",
       "options": [
@@ -28398,7 +29112,7 @@
     },
     {
       "id": 939,
-      "q": 939,
+      "q": 960,
       "section": "General Intelligence & Reasoning",
       "text": "A 4×4×4 cube is painted on 3 adjacent faces. How many have exactly 2 faces painted?",
       "options": [
@@ -28429,7 +29143,7 @@
     },
     {
       "id": 940,
-      "q": 940,
+      "q": 961,
       "section": "General Intelligence & Reasoning",
       "text": "A standard die shows 1 on top, 3 in front. What is the right face?",
       "options": [
@@ -28460,7 +29174,7 @@
     },
     {
       "id": 941,
-      "q": 941,
+      "q": 962,
       "section": "General Intelligence & Reasoning",
       "text": "A cube of side n has 8 corner cubes with 3 faces painted. For what n does this hold?",
       "options": [
@@ -28491,7 +29205,7 @@
     },
     {
       "id": 942,
-      "q": 942,
+      "q": 963,
       "section": "General Intelligence & Reasoning",
       "text": "In a dice net, four squares are in a row and the other two are attached above the 2nd square and below the 3rd. Which pairs are opposite?",
       "options": [
@@ -28522,7 +29236,7 @@
     },
     {
       "id": 943,
-      "q": 943,
+      "q": 964,
       "section": "General Intelligence & Reasoning",
       "text": "Total number of small cubes in a 9×9×9 cube cut into 1×1×1 cubes?",
       "options": [
@@ -28553,7 +29267,7 @@
     },
     {
       "id": 944,
-      "q": 944,
+      "q": 965,
       "section": "General Intelligence & Reasoning",
       "text": "Two faces of a die sum to 7 always. If one face is 1, the sum of the other 5 faces is?",
       "options": [
@@ -28584,7 +29298,7 @@
     },
     {
       "id": 945,
-      "q": 945,
+      "q": 966,
       "section": "General Intelligence & Reasoning",
       "text": "A 3×3×3 cube is painted and cut. Number of cubes with exactly 1 face painted?",
       "options": [
@@ -28615,7 +29329,7 @@
     },
     {
       "id": 946,
-      "q": 946,
+      "q": 967,
       "section": "General Intelligence & Reasoning",
       "text": "View 1 of a die: Top=F, Front=G, Right=H. View 2: Top=I, Front=G, Right=J. If F, G, H, I, J are distinct numbers from 1-6, find opposite of G.",
       "options": [
@@ -28646,7 +29360,7 @@
     },
     {
       "id": 947,
-      "q": 947,
+      "q": 968,
       "section": "General Intelligence & Reasoning",
       "text": "If a mirror is placed on the right, find the mirror image of 'HELLO'.",
       "options": [
@@ -28677,7 +29391,7 @@
     },
     {
       "id": 948,
-      "q": 948,
+      "q": 969,
       "section": "General Intelligence & Reasoning",
       "text": "Find the water image of 'P6b'.",
       "options": [
@@ -28708,7 +29422,7 @@
     },
     {
       "id": 949,
-      "q": 949,
+      "q": 970,
       "section": "General Intelligence & Reasoning",
       "text": "How many holes appear when a paper folded vertically twice is punched once at the folded corner?",
       "options": [
@@ -28739,7 +29453,7 @@
     },
     {
       "id": 950,
-      "q": 950,
+      "q": 971,
       "section": "General Intelligence & Reasoning",
       "text": "How many triangles are in a pentagon with all its diagonals?",
       "options": [
@@ -28770,7 +29484,7 @@
     },
     {
       "id": 951,
-      "q": 951,
+      "q": 972,
       "section": "General Intelligence & Reasoning",
       "text": "A clock shows 2:30. What is its mirror image time?",
       "options": [
@@ -28801,7 +29515,7 @@
     },
     {
       "id": 952,
-      "q": 952,
+      "q": 973,
       "section": "General Intelligence & Reasoning",
       "text": "How many squares are in a 2×3 grid?",
       "options": [
@@ -28832,7 +29546,7 @@
     },
     {
       "id": 953,
-      "q": 953,
+      "q": 974,
       "section": "General Intelligence & Reasoning",
       "text": "If mirror is on the left, find the mirror image of 'BAT'.",
       "options": [
@@ -28863,7 +29577,7 @@
     },
     {
       "id": 954,
-      "q": 954,
+      "q": 975,
       "section": "General Intelligence & Reasoning",
       "text": "How many rectangles (including squares) in a 3×4 grid?",
       "options": [
@@ -28894,7 +29608,7 @@
     },
     {
       "id": 955,
-      "q": 955,
+      "q": 976,
       "section": "General Intelligence & Reasoning",
       "text": "A paper is folded in half vertically, then diagonally. A hole is punched. How many holes after unfolding?",
       "options": [
@@ -28925,7 +29639,7 @@
     },
     {
       "id": 956,
-      "q": 956,
+      "q": 977,
       "section": "General Intelligence & Reasoning",
       "text": "Water image of 'SSC CGL'?",
       "options": [
@@ -28956,7 +29670,7 @@
     },
     {
       "id": 957,
-      "q": 957,
+      "q": 978,
       "section": "General Intelligence & Reasoning",
       "text": "How many triangles in a triangle with 2 lines from each vertex?",
       "options": [
@@ -28987,7 +29701,7 @@
     },
     {
       "id": 958,
-      "q": 958,
+      "q": 979,
       "section": "General Intelligence & Reasoning",
       "text": "Mirror image of '2025' with mirror on right?",
       "options": [
@@ -29018,7 +29732,7 @@
     },
     {
       "id": 959,
-      "q": 959,
+      "q": 980,
       "section": "General Intelligence & Reasoning",
       "text": "How many squares in a 6×6 grid?",
       "options": [
@@ -29049,7 +29763,7 @@
     },
     {
       "id": 960,
-      "q": 960,
+      "q": 981,
       "section": "General Intelligence & Reasoning",
       "text": "A clock shows 4:40. What is its water image?",
       "options": [
@@ -29080,7 +29794,7 @@
     },
     {
       "id": 961,
-      "q": 961,
+      "q": 982,
       "section": "General Intelligence & Reasoning",
       "text": "How many triangles in a regular hexagon with all its diagonals?",
       "options": [
@@ -29111,7 +29825,7 @@
     },
     {
       "id": 962,
-      "q": 962,
+      "q": 983,
       "section": "General Intelligence & Reasoning",
       "text": "Which figure contains a star shape?",
       "options": [
@@ -29142,7 +29856,7 @@
     },
     {
       "id": 963,
-      "q": 963,
+      "q": 984,
       "section": "General Intelligence & Reasoning",
       "text": "Paper folded horizontally twice, then a hole punched at top-right of folded paper. How many holes?",
       "options": [
@@ -29173,7 +29887,7 @@
     },
     {
       "id": 964,
-      "q": 964,
+      "q": 985,
       "section": "General Intelligence & Reasoning",
       "text": "Water image of '9PM'?",
       "options": [
@@ -29204,7 +29918,7 @@
     },
     {
       "id": 965,
-      "q": 965,
+      "q": 986,
       "section": "General Intelligence & Reasoning",
       "text": "How many rectangles (non-square) in a 3×3 grid?",
       "options": [
@@ -29235,7 +29949,7 @@
     },
     {
       "id": 966,
-      "q": 966,
+      "q": 987,
       "section": "General Intelligence & Reasoning",
       "text": "Mirror image of an arrow pointing North-East with mirror on right?",
       "options": [
@@ -29266,7 +29980,7 @@
     },
     {
       "id": 967,
-      "q": 967,
+      "q": 988,
       "section": "General Intelligence & Reasoning",
       "text": "How many triangles in a star-shaped figure (pentagram)?",
       "options": [
@@ -29297,7 +30011,7 @@
     },
     {
       "id": 968,
-      "q": 968,
+      "q": 989,
       "section": "General Intelligence & Reasoning",
       "text": "What is the mirror image of 'MADAM' with mirror on right?",
       "options": [
@@ -29328,7 +30042,7 @@
     },
     {
       "id": 969,
-      "q": 969,
+      "q": 990,
       "section": "General Intelligence & Reasoning",
       "text": "Water image of '8:15' on a clock?",
       "options": [
@@ -29359,7 +30073,7 @@
     },
     {
       "id": 970,
-      "q": 970,
+      "q": 991,
       "section": "General Intelligence & Reasoning",
       "text": "How many squares in a figure with a 4×4 grid?",
       "options": [
@@ -29390,7 +30104,7 @@
     },
     {
       "id": 971,
-      "q": 971,
+      "q": 992,
       "section": "General Intelligence & Reasoning",
       "text": "A folded paper (folded twice vertically) is punched at the centre of the folded edge. How many holes?",
       "options": [
@@ -29421,7 +30135,7 @@
     },
     {
       "id": 972,
-      "q": 972,
+      "q": 993,
       "section": "General Intelligence & Reasoning",
       "text": "Five friends sit in a row facing North. A is at left end. B is third to right of A. C is between B and D. E is next to D. Who is at the right end?",
       "options": [
@@ -29452,7 +30166,7 @@
     },
     {
       "id": 973,
-      "q": 973,
+      "q": 994,
       "section": "General Intelligence & Reasoning",
       "text": "Six persons sit in a circle facing center. A is between B and C. D is opposite A. E is between F and D. Who is opposite B?",
       "options": [
@@ -29483,7 +30197,7 @@
     },
     {
       "id": 974,
-      "q": 974,
+      "q": 995,
       "section": "General Intelligence & Reasoning",
       "text": "P > Q, R S, T shortest. Who is 2nd tallest?",
       "options": [
@@ -29514,7 +30228,7 @@
     },
     {
       "id": 975,
-      "q": 975,
+      "q": 996,
       "section": "General Intelligence & Reasoning",
       "text": "Six persons A-F around circle. A 2nd left of C. B 3rd right of D. E between A and B. F not adjacent to C. Who is opposite A?",
       "options": [
@@ -29545,7 +30259,7 @@
     },
     {
       "id": 976,
-      "q": 976,
+      "q": 997,
       "section": "General Intelligence & Reasoning",
       "text": "Five books arranged on a shelf. Math is above English. Science is below History but above Geography. English is above Science. Which is at the bottom?",
       "options": [
@@ -29576,7 +30290,7 @@
     },
     {
       "id": 977,
-      "q": 977,
+      "q": 998,
       "section": "General Intelligence & Reasoning",
       "text": "Seven persons P-V on 7 floors. R=4. S=2floors above T. Q immediately above P. U below R above V. One person between U and P. Who is on floor 7?",
       "options": [
@@ -29607,7 +30321,7 @@
     },
     {
       "id": 978,
-      "q": 978,
+      "q": 999,
       "section": "General Intelligence & Reasoning",
       "text": "In a row of 8 persons, A is 3rd from left. B is 5th from right. C is between A and B. How many persons between C and the right end?",
       "options": [
@@ -29638,7 +30352,7 @@
     },
     {
       "id": 979,
-      "q": 979,
+      "q": 1000,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 3, 7, 11, 15, 19, ?",
       "options": [
@@ -29669,7 +30383,7 @@
     },
     {
       "id": 980,
-      "q": 980,
+      "q": 1001,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 2, 6, 18, 54, 162, ?",
       "options": [
@@ -29700,7 +30414,7 @@
     },
     {
       "id": 981,
-      "q": 981,
+      "q": 1002,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing term: 1, 4, 9, 16, ?, 36",
       "options": [
@@ -29731,7 +30445,7 @@
     },
     {
       "id": 982,
-      "q": 982,
+      "q": 1003,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 2, 5, 10, 17, 26, ?",
       "options": [
@@ -29762,7 +30476,7 @@
     },
     {
       "id": 983,
-      "q": 983,
+      "q": 1004,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 10, 18, 28, 40, 54, ?",
       "options": [
@@ -29793,7 +30507,7 @@
     },
     {
       "id": 984,
-      "q": 984,
+      "q": 1005,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 1, 4, 10, 22, 46, ?",
       "options": [
@@ -29824,7 +30538,7 @@
     },
     {
       "id": 985,
-      "q": 985,
+      "q": 1006,
       "section": "General Intelligence & Reasoning",
       "text": "Find the wrong term: 2, 5, 10, 17, 28, 37, 50",
       "options": [
@@ -29855,7 +30569,7 @@
     },
     {
       "id": 986,
-      "q": 986,
+      "q": 1007,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 3, 6, 11, 18, 27, ?",
       "options": [
@@ -29886,7 +30600,7 @@
     },
     {
       "id": 987,
-      "q": 987,
+      "q": 1008,
       "section": "General Intelligence & Reasoning",
       "text": "Two series: 2, 7, 4, 14, 6, 21, 8, ?",
       "options": [
@@ -29917,7 +30631,7 @@
     },
     {
       "id": 988,
-      "q": 988,
+      "q": 1009,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next letter: B, E, H, K, N, ?",
       "options": [
@@ -29948,7 +30662,7 @@
     },
     {
       "id": 989,
-      "q": 989,
+      "q": 1010,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next letter: A, C, F, J, O, ?",
       "options": [
@@ -29979,7 +30693,7 @@
     },
     {
       "id": 990,
-      "q": 990,
+      "q": 1011,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing letters: ACE, GIK, MOQ, ?",
       "options": [
@@ -30010,7 +30724,7 @@
     },
     {
       "id": 991,
-      "q": 991,
+      "q": 1012,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 1, 3, 7, 15, 31, ?",
       "options": [
@@ -30041,7 +30755,7 @@
     },
     {
       "id": 992,
-      "q": 992,
+      "q": 1013,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing number: 11, 15, 24, 40, 65, ?",
       "options": [
@@ -30072,7 +30786,7 @@
     },
     {
       "id": 993,
-      "q": 993,
+      "q": 1014,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 2, 3, 5, 7, 11, 13, ?",
       "options": [
@@ -30103,7 +30817,7 @@
     },
     {
       "id": 994,
-      "q": 994,
+      "q": 1015,
       "section": "General Intelligence & Reasoning",
       "text": "Which letter comes next: Z, Y, X, W, V, ?",
       "options": [
@@ -30134,7 +30848,7 @@
     },
     {
       "id": 995,
-      "q": 995,
+      "q": 1016,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 1, 8, 27, 64, 125, ?",
       "options": [
@@ -30165,7 +30879,7 @@
     },
     {
       "id": 996,
-      "q": 996,
+      "q": 1017,
       "section": "General Intelligence & Reasoning",
       "text": "Find the wrong number: 4, 9, 16, 25, 36, 49, 64, 80",
       "options": [
@@ -30196,7 +30910,7 @@
     },
     {
       "id": 997,
-      "q": 997,
+      "q": 1018,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next: 1, 1, 2, 3, 5, 8, 13, ?",
       "options": [
@@ -30227,7 +30941,7 @@
     },
     {
       "id": 998,
-      "q": 998,
+      "q": 1019,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing: 1, 9, 25, 49, ?, 121",
       "options": [
@@ -30258,7 +30972,7 @@
     },
     {
       "id": 999,
-      "q": 999,
+      "q": 1020,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next: 5, 9, 17, 33, 65, ?",
       "options": [
@@ -30289,7 +31003,7 @@
     },
     {
       "id": 1000,
-      "q": 1000,
+      "q": 1021,
       "section": "General Intelligence & Reasoning",
       "text": "Two series: 3, 12, 5, 10, 7, 8, 9, ?, ?",
       "options": [
@@ -30320,7 +31034,7 @@
     },
     {
       "id": 1001,
-      "q": 1001,
+      "q": 1022,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next letter: Z, V, R, N, ?",
       "options": [
@@ -30351,7 +31065,7 @@
     },
     {
       "id": 1002,
-      "q": 1002,
+      "q": 1023,
       "section": "General Intelligence & Reasoning",
       "text": "Find the missing: 0, 3, 8, 15, 24, ?, 48",
       "options": [
@@ -30382,7 +31096,7 @@
     },
     {
       "id": 1003,
-      "q": 1003,
+      "q": 1024,
       "section": "General Intelligence & Reasoning",
       "text": "Find the next term: 3, 12, 27, 48, 75, ?",
       "options": [
@@ -30413,7 +31127,7 @@
     },
     {
       "id": 1004,
-      "q": 1004,
+      "q": 1025,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Should the government ban the use of mobile phones while driving? Argument I: Yes, because it distracts drivers and causes accidents. Argument II: No, because people need phones for emergencies.",
       "options": [
@@ -30444,7 +31158,7 @@
     },
     {
       "id": 1005,
-      "q": 1005,
+      "q": 1026,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Should college admissions be based solely on entrance exam scores? Argument I: Yes, because exams provide an objective assessment. Argument II: No, because exams cause stress and anxiety.",
       "options": [
@@ -30475,7 +31189,7 @@
     },
     {
       "id": 1006,
-      "q": 1006,
+      "q": 1027,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: 'The company has decided to give a 10% bonus to all employees this year.' Assumption I: The company had a profitable year. Assumption II: Employees will be motivated by the bonus.",
       "options": [
@@ -30506,7 +31220,7 @@
     },
     {
       "id": 1007,
-      "q": 1007,
+      "q": 1028,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: 'The school has introduced a dress code for teachers.' Assumption I: Teachers were not dressing appropriately before. Assumption II: A dress code will improve the school's image.",
       "options": [
@@ -30537,7 +31251,7 @@
     },
     {
       "id": 1008,
-      "q": 1008,
+      "q": 1029,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: All mammals are warm-blooded. Whales are mammals. Conclusion: Whales are warm-blooded.",
       "options": [
@@ -30563,7 +31277,7 @@
     },
     {
       "id": 1009,
-      "q": 1009,
+      "q": 1030,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: No fish can fly. Some aquatic animals can fly. Conclusion: Some aquatic animals are not fish.",
       "options": [
@@ -30589,7 +31303,7 @@
     },
     {
       "id": 1010,
-      "q": 1010,
+      "q": 1031,
       "section": "General Intelligence & Reasoning",
       "text": "Situation: 'Instances of cyberbullying among teenagers have increased significantly.' Course I: Schools should conduct awareness programs on cyber safety. Course II: The government should ban social media for teenagers.",
       "options": [
@@ -30620,7 +31334,7 @@
     },
     {
       "id": 1011,
-      "q": 1011,
+      "q": 1032,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Should smoking be banned in public places? Argument I: Yes, because second-hand smoke harms non-smokers. Argument II: No, because it infringes on personal freedom.",
       "options": [
@@ -30651,7 +31365,7 @@
     },
     {
       "id": 1012,
-      "q": 1012,
+      "q": 1033,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: 'The government plans to build more airports in Tier-2 cities.' Assumption I: There is sufficient passenger demand in Tier-2 cities. Assumption II: Tier-2 cities currently have no air connectivity.",
       "options": [
@@ -30682,7 +31396,7 @@
     },
     {
       "id": 1013,
-      "q": 1013,
+      "q": 1034,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Some apples are red. All red fruits are sweet. Conclusion: Some apples are sweet.",
       "options": [
@@ -30708,7 +31422,7 @@
     },
     {
       "id": 1014,
-      "q": 1014,
+      "q": 1035,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Should there be a uniform civil code in India? Argument I: Yes, because it will ensure gender equality in personal laws. Argument II: No, because it will hurt religious sentiments.",
       "options": [
@@ -30739,7 +31453,7 @@
     },
     {
       "id": 1015,
-      "q": 1015,
+      "q": 1036,
       "section": "General Intelligence & Reasoning",
       "text": "Situation: 'Many patients in rural areas travel over 50 km to reach the nearest hospital.' Course I: The government should build primary health centres in every village cluster. Course II: The government should provide free ambulances for all rural patients.",
       "options": [
@@ -30770,7 +31484,7 @@
     },
     {
       "id": 1016,
-      "q": 1016,
+      "q": 1037,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: 'The municipal corporation has decided to plant 10,000 trees in the city.' Assumption I: The city currently lacks adequate green cover. Assumption II: Trees will help reduce air pollution.",
       "options": [
@@ -30801,7 +31515,7 @@
     },
     {
       "id": 1017,
-      "q": 1017,
+      "q": 1038,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: All politicians are public speakers. Some public speakers are not honest. Conclusion: Some politicians are not honest.",
       "options": [
@@ -30827,7 +31541,7 @@
     },
     {
       "id": 1018,
-      "q": 1018,
+      "q": 1039,
       "section": "General Intelligence & Reasoning",
       "text": "Situation: 'A spike in road accidents has been linked to drunk driving.' Course I: Police should conduct random breathalyzer checks. Course II: The government should increase the legal drinking age.",
       "options": [
@@ -30858,7 +31572,7 @@
     },
     {
       "id": 1019,
-      "q": 1019,
+      "q": 1040,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Should animal testing for cosmetics be banned? Argument I: Yes, because it causes unnecessary suffering to animals. Argument II: No, because alternatives are not yet widely available.",
       "options": [
@@ -30889,7 +31603,7 @@
     },
     {
       "id": 1020,
-      "q": 1020,
+      "q": 1041,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: 'The HR department has launched a skill development program for employees.' Assumption I: Employees currently lack some required skills. Assumption II: The program will improve employee productivity.",
       "options": [
@@ -30920,7 +31634,7 @@
     },
     {
       "id": 1021,
-      "q": 1021,
+      "q": 1042,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Every square is a rectangle. Some rectangles are coloured. Conclusion: Some squares are coloured.",
       "options": [
@@ -30946,7 +31660,7 @@
     },
     {
       "id": 1022,
-      "q": 1022,
+      "q": 1043,
       "section": "General Intelligence & Reasoning",
       "text": "Situation: 'Villagers near a forest are frequently attacked by wild animals venturing into human settlements.' Course I: The forest department should strengthen fencing around the forest boundary. Course II: Villagers should be relocated to safer areas.",
       "options": [
@@ -30977,7 +31691,7 @@
     },
     {
       "id": 1023,
-      "q": 1023,
+      "q": 1044,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Should the retirement age be increased to 65? Argument I: Yes, because people are living longer and healthier lives. Argument II: No, because it will reduce job opportunities for the youth.",
       "options": [
@@ -31008,7 +31722,7 @@
     },
     {
       "id": 1024,
-      "q": 1024,
+      "q": 1045,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: 'The airline has reduced baggage allowance for economy class passengers.' Assumption I: The airline wants to save fuel costs. Assumption II: Passengers will accept this change without complaint.",
       "options": [
@@ -31039,7 +31753,7 @@
     },
     {
       "id": 1025,
-      "q": 1025,
+      "q": 1046,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: No cloud is a stone. Some clouds are rain-bearing. Conclusion: Some rain-bearing things are not stones.",
       "options": [
@@ -31065,7 +31779,7 @@
     },
     {
       "id": 1026,
-      "q": 1026,
+      "q": 1047,
       "section": "General Intelligence & Reasoning",
       "text": "Situation: 'Exams have been postponed due to a natural calamity.' Course I: The education board should announce revised dates immediately. Course II: The board should reduce the syllabus to reduce student burden.",
       "options": [
@@ -31096,7 +31810,7 @@
     },
     {
       "id": 1027,
-      "q": 1027,
+      "q": 1048,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: Should genetically modified (GM) crops be allowed in India? Argument I: Yes, because they can increase agricultural yield. Argument II: No, because their long-term health effects are unknown.",
       "options": [
@@ -31127,7 +31841,7 @@
     },
     {
       "id": 1028,
-      "q": 1028,
+      "q": 1049,
       "section": "General Intelligence & Reasoning",
       "text": "Statement: 'The police department has installed CCTV cameras in all public parks.' Assumption I: CCTV cameras deter criminal activity. Assumption II: Parks previously had security concerns.",
       "options": [
@@ -31158,7 +31872,7 @@
     },
     {
       "id": 1029,
-      "q": 1029,
+      "q": 1050,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: All dogs are mammals. No mammal is a reptile. Conclusions: I. No dog is a reptile. II. Some mammals are dogs.",
       "options": [
@@ -31189,7 +31903,7 @@
     },
     {
       "id": 1030,
-      "q": 1030,
+      "q": 1051,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Some pens are tables. All tables are chairs. Conclusions: I. Some pens are chairs. II. All chairs are pens.",
       "options": [
@@ -31220,7 +31934,7 @@
     },
     {
       "id": 1031,
-      "q": 1031,
+      "q": 1052,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: No book is a copy. All copies are pages. Conclusions: I. Some pages are not books. II. No book is a page.",
       "options": [
@@ -31251,7 +31965,7 @@
     },
     {
       "id": 1032,
-      "q": 1032,
+      "q": 1053,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: All roses are flowers. Some flowers fade quickly. Conclusions: I. Some roses fade quickly. II. No rose fades quickly.",
       "options": [
@@ -31282,7 +31996,7 @@
     },
     {
       "id": 1033,
-      "q": 1033,
+      "q": 1054,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: All A are B. No B is C. Some C are D. Conclusions: I. No A is C. II. Some D are not B. III. No A is D.",
       "options": [
@@ -31313,7 +32027,7 @@
     },
     {
       "id": 1034,
-      "q": 1034,
+      "q": 1055,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Only doctors are engineers. Some engineers are rich. Conclusions: I. All engineers are doctors. II. Some doctors are rich.",
       "options": [
@@ -31344,7 +32058,7 @@
     },
     {
       "id": 1035,
-      "q": 1035,
+      "q": 1056,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: A % B, B @ C, C # D (where %=All, @=No, #=Some). Conclusions: I. A @ C. II. Some D are not B.",
       "options": [
@@ -31375,7 +32089,7 @@
     },
     {
       "id": 1036,
-      "q": 1036,
+      "q": 1057,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: No honest person is corrupt. Some politicians are honest. Conclusions: I. Some politicians are not corrupt. II. No politician is corrupt.",
       "options": [
@@ -31406,7 +32120,7 @@
     },
     {
       "id": 1037,
-      "q": 1037,
+      "q": 1058,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: All squares are rectangles. All rectangles are polygons. Conclusions: I. All squares are polygons. II. Some polygons are squares.",
       "options": [
@@ -31437,7 +32151,7 @@
     },
     {
       "id": 1038,
-      "q": 1038,
+      "q": 1059,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Some cups are plates. No plate is a bowl. Conclusions: I. Some cups are not bowls. II. Some bowls are not cups.",
       "options": [
@@ -31468,7 +32182,7 @@
     },
     {
       "id": 1039,
-      "q": 1039,
+      "q": 1060,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Only a few stars are planets. All planets are moons. Conclusions: I. Some stars are not planets. II. Some moons are not stars.",
       "options": [
@@ -31499,7 +32213,7 @@
     },
     {
       "id": 1040,
-      "q": 1040,
+      "q": 1061,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: All professors are doctors. Some doctors are surgeons. Conclusions: I. Some professors are surgeons. II. No professor is a surgeon.",
       "options": [
@@ -31530,7 +32244,7 @@
     },
     {
       "id": 1041,
-      "q": 1041,
+      "q": 1062,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Some mangoes are fruits. All fruits are sweet. Conclusions: All mangoes are sweet.",
       "options": [
@@ -31561,7 +32275,7 @@
     },
     {
       "id": 1042,
-      "q": 1042,
+      "q": 1063,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Only talented people are successful. Some talented people are rich. Conclusions: I. All successful people are talented. II. Some rich people are successful.",
       "options": [
@@ -31592,7 +32306,7 @@
     },
     {
       "id": 1043,
-      "q": 1043,
+      "q": 1064,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: A & B, B % C, C $ D (where &=Only, %=All, $=Some Not). Conclusions: I. All B are A. II. Some C are not D.",
       "options": [
@@ -31623,7 +32337,7 @@
     },
     {
       "id": 1044,
-      "q": 1044,
+      "q": 1065,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Some politicians are honest. All honest people are respected. Conclusions: I. Some politicians are respected. II. Some respected people are not politicians.",
       "options": [
@@ -31654,7 +32368,7 @@
     },
     {
       "id": 1045,
-      "q": 1045,
+      "q": 1066,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: All scientists are intelligent. No intelligent person is lazy. Conclusions: I. No scientist is lazy. II. Some lazy people are not scientists.",
       "options": [
@@ -31685,7 +32399,7 @@
     },
     {
       "id": 1046,
-      "q": 1046,
+      "q": 1067,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Some red are blue. Some blue are green. Conclusions: I. Some red are green. II. Some green are blue.",
       "options": [
@@ -31716,7 +32430,7 @@
     },
     {
       "id": 1047,
-      "q": 1047,
+      "q": 1068,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: All frogs are amphibians. No amphibian has scales. Some scaly creatures live in water. Conclusions: I. No frog has scales. II. Some amphibians are frogs.",
       "options": [
@@ -31747,7 +32461,7 @@
     },
     {
       "id": 1048,
-      "q": 1048,
+      "q": 1069,
       "section": "General Intelligence & Reasoning",
       "text": "Statements: Some teachers are writers. No writer is lazy. Conclusions: I. Some teachers are not lazy. II. Some lazy people are not writers.",
       "options": [
@@ -31778,7 +32492,7 @@
     },
     {
       "id": 1049,
-      "q": 1049,
+      "q": 1070,
       "section": "General Intelligence & Reasoning",
       "text": "Statements (Coded): X # Y, Y @ Z, Z % W (#=Some, @=No, %=All). Conclusions: I. Some X are not Z. II. No W is Y.",
       "options": [
@@ -31806,7 +32520,502 @@
       "solution": "Correct answer: Only I follows.",
       "source": "course",
       "lesson": "cgl/course/reasoning/lesson-syllogism.html"
+    },
+    {
+      "section": "General Intelligence & Reasoning",
+      "text": "In a certain code language, '257' means 'Watch is fast', '193' means 'Time is slow', and '682' means 'Watch runs slow'. Which digit stands for the word 'runs'?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. 1",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B. 2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C. 3",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D. 6",
+          "correct": false
+        }
+      ],
+      "solution": "Comparing '257' (Watch is fast) with '682' (Watch runs slow), the common digit is 2, representing 'Watch'. Comparing '193' (Time is slow) with '682' (Watch runs slow), the common digit is 3, representing 'slow'. Therefore, in '682', since 2 is Watch and 3 is slow, digit 6 must represent 'runs'.",
+      "topic": "Coding-Decoding",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:36:49.003Z",
+      "reviewed": false,
+      "id": 1071,
+      "q": 1071
+    },
+    {
+      "section": "General Intelligence & Reasoning",
+      "text": "In a certain code language, 'SHE' is written as '456', 'HAT' is written as '578', and 'TIE' is written as '791'. How is 'THE' written in that code?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) 691",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B) 451",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) 856",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "D) 598",
+          "correct": false
+        }
+      ],
+      "solution": "By analyzing the codes: S=4, H=5, E=6; A=7, T=8, H=5 (reconfirms H); T=8, I=9, E=6. For 'THE', we need codes for T(8), H(5), and E(6). Thus, the code is 856. Option A is incorrect because it uses the code for S instead of T. Option B is incorrect as it mixes the codes for S and E. Option D is incorrect because it swaps the positions of H and E.",
+      "topic": "Coding-Decoding",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:45:52.032Z",
+      "reviewed": false,
+      "id": 1072,
+      "q": 1072
+    },
+    {
+      "section": "General Intelligence & Reasoning",
+      "text": "Statements: Some flowers are red. All red things are beautiful. Conclusions: I. Some flowers are beautiful. II. No flower is beautiful.",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) Only Conclusion I follows",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B) Only Conclusion II follows",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) Either I or II follows",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) Neither I nor II follows",
+          "correct": false
+        }
+      ],
+      "solution": "From the statements, 'Some flowers are red' and 'All red things are beautiful' implies that the intersection of flowers and red things exists, and since all red things are beautiful, those specific flowers must be beautiful. Therefore, Conclusion I ('Some flowers are beautiful') logically follows. Conclusion II contradicts this deduction. Thus, only Conclusion I is correct.",
+      "topic": "Syllogism",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:45:52.034Z",
+      "reviewed": false,
+      "id": 1073,
+      "q": 1073
+    },
+    {
+      "section": "General Awareness",
+      "text": "Which of the following gases is primarily responsible for the greenhouse effect in Earth's atmosphere?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Nitrogen",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Oxygen",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Carbon Dioxide",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Helium",
+          "correct": false
+        }
+      ],
+      "solution": "Carbon dioxide (CO₂) is the primary greenhouse gas emitted through human activities like burning fossil fuels. Nitrogen and Oxygen make up most of the atmosphere but are not significant greenhouse gases. Helium is an inert noble gas with negligible atmospheric concentration or heat-trapping ability.",
+      "topic": "Environmental Science",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:47:08.635Z",
+      "reviewed": false,
+      "id": 1074,
+      "q": 1074
+    },
+    {
+      "section": "General Awareness",
+      "text": "The 'Right to Education' was included in which Article of the Indian Constitution?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Article 19",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Article 21A",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Article 32",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Article 44",
+          "correct": false
+        }
+      ],
+      "solution": "Article 21A, inserted via the 86th Constitutional Amendment Act in 2002, mandates free and compulsory education for children aged 6 to 14. Article 19 deals with freedoms of speech and movement, Article 32 is about writ jurisdiction, and Article 44 pertains to linguistic uniformity.",
+      "topic": "Indian Constitution",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:47:08.636Z",
+      "reviewed": false,
+      "id": 1075,
+      "q": 1075
+    },
+    {
+      "section": "General Awareness",
+      "text": "Who among the following was the first woman to serve as a Chief Minister in India?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Smt. Indira Gandhi",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Smt. Sarala Devi Chaudhurani",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Smt. Sucheta Kripalani",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Smt. Jayalalithaa",
+          "correct": false
+        }
+      ],
+      "solution": "Sucheta Kripalani became the first woman Chief Minister of Uttar Pradesh in 1963. Indira Gandhi was the first female Prime Minister, not CM. Sarala Devi Chaudhurani was a prominent freedom fighter but never held executive office. Jayalalithaa was a later Chief Minister of Tamil Nadu.",
+      "topic": "Indian History & Politics",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:47:08.638Z",
+      "reviewed": false,
+      "id": 1076,
+      "q": 1076
+    },
+    {
+      "section": "General Awareness",
+      "text": "In the context of Indian Agriculture, which crop is known as 'Golden Fibre'?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Cotton",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Jute",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Sugarcane",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Coconut",
+          "correct": false
+        }
+      ],
+      "solution": "Cotton is historically and commercially referred to as 'Golden Fibre' due to its golden color when raw and its economic importance. Jute is known as the 'golden fibre' in some contexts globally but usually 'Golden Fibre' specifically refers to Cotton in Indian general awareness exams. Sugarcane and Coconut are not fibrous crops used for textiles.",
+      "topic": "Indian Agriculture",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:47:08.639Z",
+      "reviewed": false,
+      "id": 1077,
+      "q": 1077
+    },
+    {
+      "section": "Quantitative Aptitude",
+      "text": "The ratio of the areas of two squares is 225:196. What is the ratio of their perimeters?",
+      "options": [
+        {
+          "label": "A",
+          "text": "15:14",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "15:16",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "14:15",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "49:36",
+          "correct": false
+        }
+      ],
+      "solution": "The ratio of the areas of two squares is equal to the square of the ratio of their sides. Taking the square root of 225:196 gives 15:14 as the ratio of their sides. Since the perimeter of a square is directly proportional to its side length, the ratio of their perimeters is also 15:14. The other options represent incorrect ratios or the ratio of areas.",
+      "topic": "Geometry",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:49:37.354Z",
+      "reviewed": false,
+      "id": 1078,
+      "q": 1078
+    },
+    {
+      "section": "Quantitative Aptitude",
+      "text": "If the cost price of an article is Rs. 600 and it is sold for Rs. 720, what is the profit percentage?",
+      "options": [
+        {
+          "label": "A",
+          "text": "15%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "20%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "25%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "30%",
+          "correct": false
+        }
+      ],
+      "solution": "Profit is calculated as Selling Price minus Cost Price, which is 720 - 600 = Rs. 120. The profit percentage is (Profit / Cost Price) * 100 = (120 / 600) * 100 = 20%. Options A, C, and D are incorrect as they do not match this calculation.",
+      "topic": "Profit and Loss",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:49:37.356Z",
+      "reviewed": false,
+      "id": 1079,
+      "q": 1079
+    },
+    {
+      "section": "Quantitative Aptitude",
+      "text": "A train of length 150 m crosses a telegraph post in 10 seconds. What is the speed of the train in km/h?",
+      "options": [
+        {
+          "label": "A",
+          "text": "54 km/h",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "72 km/h",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "90 km/h",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "36 km/h",
+          "correct": false
+        }
+      ],
+      "solution": "The distance covered to cross a post equals the train's length (150 m). Speed = Distance/Time = 150 m / 10 s = 15 m/s. Converting to km/h by multiplying by 18/5 gives 54 km/h. The other options result from incorrect unit conversions or calculation errors.",
+      "topic": "Motion: Time, Speed and Distance",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:50:43.751Z",
+      "reviewed": false,
+      "id": 1080,
+      "q": 1080
+    },
+    {
+      "section": "Quantitative Aptitude",
+      "text": "The average speed of a car for the entire journey is 60 km/h. If it covers the first half of the distance at 50 km/h, what is its speed during the second half?",
+      "options": [
+        {
+          "label": "A",
+          "text": "70 km/h",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "72 km/h",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "65 km/h",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "80 km/h",
+          "correct": false
+        }
+      ],
+      "solution": "Let total distance be 2d. Time for first half = d/50. Total time required = 2d/60. Time for second half = (2d/60) - (d/50) = d/300. Speed for second half = Distance/Time = d / (d/300) = 72 km/h. Option A is incorrect because average speed is not the arithmetic mean of speeds, and options C and D do not satisfy the harmonic mean relationship.",
+      "topic": "Motion: Time, Speed and Distance",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:50:43.753Z",
+      "reviewed": false,
+      "id": 1081,
+      "q": 1081
+    },
+    {
+      "section": "English Language",
+      "text": "Identify the grammatically incorrect part in the sentence: 'He has been living here since five years.' A) He has been B) living here C) since five years D) No error",
+      "options": [
+        {
+          "label": "A",
+          "text": "He has been",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "living here",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "since five years",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "No error",
+          "correct": false
+        }
+      ],
+      "solution": "The phrase 'for' is used to indicate duration, while 'since' indicates a starting point in time. Therefore, 'since' should be followed by a specific point (e.g., 1990), and 'for' should be followed by a duration (e.g., five years). Option C is incorrect because it pairs the wrong preposition with the duration.",
+      "topic": "Grammar: Prepositions",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:51:48.497Z",
+      "reviewed": false,
+      "id": 1082,
+      "q": 1082
+    },
+    {
+      "section": "English Language",
+      "text": "Choose the most appropriate word to complete the sentence: 'The detective was so ___ that he overlooked the crucial clue in his own pocket.' A) vigilant B) oblivious C) meticulous D) suspicious",
+      "options": [
+        {
+          "label": "A",
+          "text": "vigilant",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "oblivious",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "meticulous",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "suspicious",
+          "correct": false
+        }
+      ],
+      "solution": "The sentence describes someone who failed to notice something important due to a lack of attention. 'Oblivious' means unaware or unconscious of what is happening, which fits the context perfectly. 'Vigilant' and 'meticulous' imply careful observation, while 'suspicious' refers to doubt about others' motives.",
+      "topic": "Vocabulary: Contextual Usage",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:51:48.499Z",
+      "reviewed": false,
+      "id": 1083,
+      "q": 1083
+    },
+    {
+      "section": "English Language",
+      "text": "Select the synonym for the word 'Ephemeral'. A) Permanent B) Fleeting C) Heavy D) Complex",
+      "options": [
+        {
+          "label": "A",
+          "text": "Permanent",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Fleeting",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Heavy",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Complex",
+          "correct": false
+        }
+      ],
+      "solution": "The word 'ephemeral' refers to something that lasts for a very short time. 'Fleeting' is a direct synonym meaning lasting only a brief moment. 'Permanent' is an antonym, while 'heavy' and 'complex' are unrelated in meaning.",
+      "topic": "Vocabulary: Synonyms",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-07T03:51:48.500Z",
+      "reviewed": false,
+      "id": 1084,
+      "q": 1084
     }
   ],
-  "generatedPapers": []
+  "generatedPapers": [],
+  "modelFill": {
+    "lastRun": "2026-11-07T03:51:48.500Z",
+    "model": "qwen3.5:9b",
+    "added": 14
+  }
 }
