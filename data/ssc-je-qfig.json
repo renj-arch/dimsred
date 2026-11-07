@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T09:33:28.907Z",
-  "cursor": 951,
-  "built": 833
+  "updatedAt": "2026-11-07T10:03:31.300Z",
+  "cursor": 954,
+  "built": 836
  },
  "figs": {
   "2316121": {
@@ -5001,6 +5001,24 @@
   "a7eacce2": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes for Efficiency Components -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\" />\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"40\" />\n  \n  <!-- Shaft Power Output -->\n  <rect x=\"60\" y=\"60\" width=\"80\" height=\"120\" stroke-dasharray=\"3,3\" />\n  <text x=\"100\" y=\"170\" text-anchor=\"middle\">Shaft Power</text>\n  \n  <!-- Water Power Input -->\n  <rect x=\"160\" y=\"60\" width=\"80\" height=\"120\" stroke-dasharray=\"3,3\" />\n  <text x=\"200\" y=\"170\" text-anchor=\"middle\">Water Power</text>\n  \n  <!-- Efficiency Formula -->\n  <text x=\"45\" y=\"45\" font-weight=\"bold\">ηo =</text>\n  <text x=\"60\" y=\"45\">Shaft P / Water P</text>\n  \n  <!-- Component Breakdown Arrow -->\n  <line x1=\"280\" y1=\"100\" x2=\"310\" y2=\"100\" stroke-width=\"2\" />\n  <text x=\"315\" y=\"105\">=</text>\n  \n  <!-- Product Components -->\n  <circle cx=\"60\" cy=\"140\" r=\"8\" />\n  <text x=\"70\" y=\"145\">ηh</text>\n  <line x1=\"90\" y1=\"140\" x2=\"130\" y2=\"140\" stroke-width=\"1\" />\n  <circle cx=\"130\" cy=\"140\" r=\"8\" />\n  <text x=\"140\" y=\"145\">ηm</text>\n  <line x1=\"150\" y1=\"140\" x2=\"190\" y2=\"140\" stroke-width=\"1\" />\n  <circle cx=\"190\" cy=\"140\" r=\"8\" />\n  <text x=\"200\" y=\"145\">ηv</text>\n  \n  <!-- Legend -->\n  <text x=\"60\" y=\"215\">h = Hydraulic | m = Mechanical | v = Volumetric</text>\n</svg>",
    "n": "define the overall efficiency of a turbine and relate it to the others.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "7b0fb2f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Head (H)</text><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"60\"/><line x1=\"30\" y1=\"60\" x2=\"50\" y2=\"60\"/><circle cx=\"40\" cy=\"60\" r=\"3\"/><text x=\"70\" y=\"65\">H = 10 m</text><text x=\"10\" y=\"100\">Flow (Q)</text><line x1=\"40\" y1=\"180\" x2=\"340\" y2=\"180\"/><line x1=\"40\" y1=\"170\" x2=\"40\" y2=\"190\"/><polygon points=\"40,180 60,180 55,175 55,195\" fill=\"#222\"/><text x=\"80\" y=\"195\">Q = 10 m³/s</text><text x=\"180\" y=\"110\">Power (Pw)</text><line x1=\"160\" y1=\"180\" x2=\"240\" y2=\"180\"/><line x1=\"230\" y1=\"170\" x2=\"230\" y2=\"190\"/><polygon points=\"240,180 260,180 255,175 255,195\" fill=\"#222\"/><text x=\"280\" y=\"195\">Pw = ρgQH</text><line x1=\"40\" y1=\"180\" x2=\"340\" y2=\"60\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"120\">Energy Transfer</text></svg>",
+   "n": "compute the water power for q = 10 m³/s under a head of 10 m.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "ad86a7d9": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Runner Power Calculation</text><path d=\"M40 60 L120 60 M120 60 L120 140 M120 140 L200 140\"/><circle cx=\"120\" cy=\"60\" r=\"5\"/><circle cx=\"120\" cy=\"140\" r=\"5\"/><text x=\"35\" y=\"65\">Inlet</text><text x=\"35\" y=\"145\">Outlet</text><path d=\"M120 60 Q180 90 120 120\" stroke-dasharray=\"4,2\"/><text x=\"140\" y=\"100\">Flow</text><rect x=\"80\" y=\"35\" width=\"80\" height=\"20\" rx=\"2\"/><text x=\"120\" y=\"52\">ρQ = 5000 kg/s</text><rect x=\"80\" y=\"65\" width=\"80\" height=\"20\" rx=\"2\"/><text x=\"120\" y=\"82\">Euler Work = 500 J/kg</text><rect x=\"80\" y=\"95\" width=\"80\" height=\"20\" rx=\"2\"/><text x=\"120\" y=\"112\">Power = 2.5 MW</text></svg>",
+   "n": "compute the runner power for q = 5 m³/s when vw1u1 − vw2u2 = 500 j/kg.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "22eb6b35": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">Water Power (Pw)</text><line x1=\"40\" y1=\"30\" x2=\"180\" y2=\"30\"/><circle cx=\"180\" cy=\"30\" r=\"3\"/><text x=\"195\" y=\"35\">981 kW</text><path d=\"M 180 30 L 180 60\" stroke-dasharray=\"4,2\"/><text x=\"175\" y=\"45\">Efficiency (ηo)</text><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"100\"/><rect x=\"180\" y=\"100\" width=\"80\" height=\"30\" rx=\"4\"/><text x=\"215\" y=\"125\">Shaft Power (Ps)</text><text x=\"215\" y=\"140\">882.9 kW</text></svg>",
+   "n": "what is the shaft power if the water power is 981 kw and the overall efficiency is 0.9?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
