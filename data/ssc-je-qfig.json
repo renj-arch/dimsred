@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T22:35:51.239Z",
-  "cursor": 1026,
-  "built": 904
+  "updatedAt": "2026-11-07T23:12:25.934Z",
+  "cursor": 1029,
+  "built": 907
  },
  "figs": {
   "2316121": {
@@ -5427,6 +5427,24 @@
   "590d4797": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"60\" width=\"80\" height=\"60\" stroke-dasharray=\"2,2\"/><text x=\"70\" y=\"95\" text-anchor=\"middle\">A1</text><text x=\"70\" y=\"130\" text-anchor=\"middle\">F1</text><line x1=\"140\" y1=\"60\" x2=\"140\" y2=\"180\" stroke-width=\"1.5\"/><circle cx=\"140\" cy=\"60\" r=\"5\"/><circle cx=\"140\" cy=\"180\" r=\"5\"/><text x=\"130\" y=\"55\">Small Piston</text><line x1=\"220\" y1=\"60\" x2=\"220\" y2=\"180\" stroke-width=\"1.5\"/><circle cx=\"220\" cy=\"60\" r=\"5\"/><circle cx=\"220\" cy=\"180\" r=\"5\"/><text x=\"210\" y=\"55\">Large Piston</text><text x=\"210\" y=\"190\">A2</text><text x=\"210\" y=\"205\">F2</text><path d=\"M 40 60 L 40 180 M 320 60 L 320 180\" stroke-dasharray=\"2,2\"/><text x=\"20\" y=\"120\" text-anchor=\"end\">Fluid</text><text x=\"340\" y=\"120\" text-anchor=\"start\">Pressure</text><path d=\"M 140 60 L 140 55 M 140 180 L 140 185\"/><path d=\"M 220 60 L 220 55 M 220 180 L 220 185\"/><text x=\"132\" y=\"50\">Undiminished</text><text x=\"212\" y=\"50\">Pressure</text></svg>",
    "n": "state the principle of the hydraulic press.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "7268e13a": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Casing -->\n  <ellipse cx=\"180\" cy=\"110\" rx=\"140\" ry=\"70\" />\n  <!-- Impeller (Pump) - Input -->\n  <path d=\"M 90 110 L 120 70 L 150 110 L 120 150 Z\" />\n  <text x=\"80\" y=\"100\">Impeller</text>\n  <text x=\"60\" y=\"90\">(Input)</text>\n  <!-- Runner (Turbine) - Output -->\n  <path d=\"M 270 110 L 240 70 L 210 110 L 240 150 Z\" />\n  <text x=\"260\" y=\"100\">Runner</text>\n  <text x=\"280\" y=\"90\">(Output)</text>\n  <!-- Oil Flow Path (Swirling) -->\n  <path d=\"M 120 70 Q 180 40 240 70\" fill=\"none\" stroke-dasharray=\"4,2\" />\n  <path d=\"M 150 110 L 180 90 L 210 110\" fill=\"none\" stroke-dasharray=\"4,2\" />\n  <path d=\"M 240 150 Q 180 180 120 150\" fill=\"none\" stroke-dasharray=\"4,2\" />\n  <text x=\"180\" y=\"60\">Swirling Oil</text>\n  <!-- Torque Transfer Arrow -->\n  <path d=\"M 180 110 L 180 130\" stroke-width=\"2\" marker-end=\"url(#arrow)\" />\n  <text x=\"175\" y=\"145\">Torque</text>\n  <!-- Labels -->\n  <text x=\"180\" y=\"205\" text-anchor=\"middle\">No Mechanical Contact</text>\n</svg>",
+   "n": "what is a fluid coupling?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "b35330e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Pump/Impeller -->\n  <path d=\"M80,110 L90,60 L110,60 L100,110 Z\" />\n  <circle cx=\"95\" cy=\"85\" r=\"20\" stroke-dasharray=\"2,2\" />\n  <!-- Turbine/Runner -->\n  <path d=\"M140,110 L150,60 L170,60 L160,110 Z\" />\n  <circle cx=\"155\" cy=\"85\" r=\"20\" stroke-dasharray=\"2,2\" />\n  <!-- Stator (Torque Converter only) -->\n  <path d=\"M190,110 L200,60 L220,60 L210,110 Z\" />\n  <circle cx=\"205\" cy=\"85\" r=\"20\" stroke-dasharray=\"2,2\" />\n  <!-- Labels -->\n  <text x=\"75\" y=\"45\">Pump</text>\n  <text x=\"135\" y=\"45\">Turbine</text>\n  <text x=\"185\" y=\"45\">Stator</text>\n  <!-- Arrows -->\n  <line x1=\"90\" y1=\"60\" x2=\"90\" y2=\"40\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"150\" y1=\"60\" x2=\"150\" y2=\"40\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n  <line x1=\"210\" y1=\"60\" x2=\"210\" y2=\"40\" stroke-width=\"1.5\" marker-end=\"url(#arrow)\"/>\n</svg>",
+   "n": "how does a torque converter differ from a fluid coupling?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "13a47661": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Water Wheel Types</text><g id=\"overshot\"><circle cx=\"180\" cy=\"110\" r=\"60\"/><path d=\"M 120 50 L 120 170\"/><path d=\"M 240 50 L 240 170\"/><path d=\"M 180 50 L 180 170\"/><text x=\"160\" y=\"40\">Overshot</text><text x=\"160\" y=\"190\">Water enters top</text></g><g id=\"breastshot\"><circle cx=\"180\" cy=\"110\" r=\"60\"/><path d=\"M 120 50 L 120 170\"/><path d=\"M 240 50 L 240 170\"/><path d=\"M 180 90 L 180 130\"/><text x=\"160\" y=\"40\">Breastshot</text><text x=\"160\" y=\"190\">Water enters middle</text></g><g id=\"undershot\"><circle cx=\"180\" cy=\"110\" r=\"60\"/><path d=\"M 120 50 L 120 170\"/><path d=\"M 240 50 L 240 170\"/><path d=\"M 180 130 L 180 90\"/><text x=\"160\" y=\"40\">Undershot</text><text x=\"160\" y=\"190\">Water enters bottom</text></g></svg>",
+   "n": "name the common types of water wheels.",
    "sub": "hydmach",
    "at": "2026-11-07"
   }

@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T16:28:06.780Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual assets blocking study flow. Since papers/syllabus files are missing, MockPapers is next to generate core exam materials from scratch. ExamPatterns should follow to ensure question structures align with current syllabi once base content exists. Invention will be last as it targets pending ideas rather than critical gaps.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (863 total)",
-       "text": "Write the theoretical head developed by a pump impeller. | Describe the velocity triangles at the inlet and outlet of a pump impeller. | Which impeller vane shape is preferred and why?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T16:59:31.962Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -753,8 +708,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T23:17:31.467Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as it produced only 1 fix previously and is likely starved. MetaLearn should follow to synthesize corrections for those critical faults, while Invention can tackle pending ideas once immediate gaps are addressed. Questions and Papers agents remain at zero output but will be queued later if gaps persist after high-priority fixes.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (907 total)",
+       "text": "What is a fluid coupling? | How does a torque converter differ from a fluid coupling? | Name the common types of water wheels."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T23:01:06.530Z",
+ "lastRun": "2026-11-07T23:17:31.467Z",
  "model": "qwen3.5:9b"
 }
