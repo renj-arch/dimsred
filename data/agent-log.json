@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T12:29:57.311Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing diagrams immediately as they block content depth. Invention is next to generate fresh question banks for the 4 pending ideas, followed by MockPapers to convert those into full exam simulations. MetaLearn will handle the remaining critical faults (likely broken links or logic errors) after content generation. Exampatterns and MainsFresh are deferred as they produced zero fixes in recent runs; Inv",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MockPapers",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (845 total)",
-       "text": "What is the unit speed of a hydraulic turbine? | Define the unit discharge of a turbine. | What is the unit power of a turbine?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T13:36:53.147Z",
    "model": "qwen3.5:9b",
    "totalFixes": 4,
@@ -763,8 +718,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T19:32:22.813Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visuals blocking content consumption. Since papers/sidecar files are missing, MockPapers is next to generate core study assets, followed by ExamPatterns to structure those assets into solvable units. Invention will address pending ideas for fresh material, while MetaLearn handles remaining critical faults or syllabus gaps if they exist.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (884 total)",
+       "text": "How does cavitation affect the performance of a pump? | What factors govern the selection of a centrifugal pump? | How does circulatory slip reduce the head of a pump below the Euler value?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T19:02:52.112Z",
+ "lastRun": "2026-11-07T19:32:22.813Z",
  "model": "qwen3.5:9b"
 }
