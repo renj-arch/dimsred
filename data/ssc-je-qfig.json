@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T17:11:44.104Z",
-  "cursor": 990,
-  "built": 869
+  "updatedAt": "2026-11-07T17:40:06.081Z",
+  "cursor": 993,
+  "built": 872
  },
  "figs": {
   "2316121": {
@@ -5217,6 +5217,24 @@
   "e519bbdb": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Pump Efficiency Diagram</text><path d=\"M40,60 L140,60\" stroke-dasharray=\"4,2\"/><path d=\"M140,60 L140,140\" stroke-dasharray=\"4,2\"/><path d=\"M40,60 L40,140\" stroke-dasharray=\"4,2\"/><path d=\"M140,60 L140,140\" stroke-width=\"3\"/><circle cx=\"140\" cy=\"60\" r=\"5\" fill=\"#222\"/><circle cx=\"140\" cy=\"140\" r=\"5\" fill=\"#222\"/><text x=\"130\" y=\"55\">Shaft Power Input</text><text x=\"130\" y=\"165\">Hydraulic Output</text><path d=\"M180,60 L280,60\" stroke-dasharray=\"4,2\"/><path d=\"M180,140 L280,140\" stroke-dasharray=\"4,2\"/><path d=\"M280,60 L280,140\" stroke-width=\"3\"/><circle cx=\"280\" cy=\"60\" r=\"5\" fill=\"#222\"/><circle cx=\"280\" cy=\"140\" r=\"5\" fill=\"#222\"/><text x=\"270\" y=\"55\">Hydraulic Power</text><text x=\"270\" y=\"165\">Efficiency ηo</text><path d=\"M30,180 L330,180\" stroke-dasharray=\"4,2\"/><text x=\"30\" y=\"200\">ρgQHm = Output Power</text><text x=\"300\" y=\"200\">P(shaft) = Input Power</text></svg>",
    "n": "define the overall efficiency of a centrifugal pump.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "2e98e08e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\">Volumetric Efficiency (ηv)</text><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><text x=\"35\" y=\"125\">Q (Delivered Discharge)</text><line x1=\"60\" y1=\"140\" x2=\"80\" y2=\"130\" stroke-width=\"3\"/><line x1=\"80\" y1=\"130\" x2=\"300\" y2=\"130\"/><line x1=\"300\" y1=\"130\" x2=\"320\" y2=\"140\"/><text x=\"305\" y=\"125\">Q (Ideal Flow)</text><path d=\"M 60 140 L 80 130 M 80 130 L 300 130\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">ηv = Q / Q_i</text><text x=\"180\" y=\"195\" text-anchor=\"middle\" font-style=\"italic\">(Excludes leakage)</text></svg>",
+   "n": "what is the volumetric efficiency of a centrifugal pump?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "b98ae431": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"180\" height=\"120\" rx=\"5\"/><path d=\"M60,60 L200,60 L200,100 L160,100 L160,140 L120,140 L120,180 L60,180 Z\"/><path d=\"M130,70 L150,90 M150,90 L170,70\" stroke-dasharray=\"2,2\"/><text x=\"140\" y=\"55\" text-anchor=\"middle\">Impeller</text><text x=\"140\" y=\"195\" text-anchor=\"middle\">Casing</text><path d=\"M60,60 L80,80 M120,140 L100,120 M200,60 L180,80 M160,100 L180,120\" stroke-width=\"1\"/><text x=\"55\" y=\"75\">Friction</text><text x=\"115\" y=\"130\">Leakage</text><text x=\"195\" y=\"75\">Shock</text><path d=\"M260,40 L290,40 L290,60 L280,60 L280,80 L290,80 L290,100 L260,100 Z\"/><text x=\"275\" y=\"55\" text-anchor=\"middle\">Bearing</text><path d=\"M300,40 L320,40 L320,60 L310,60 L310,80 L320,80 L320,100 L300,100 Z\"/><text x=\"315\" y=\"55\" text-anchor=\"middle\">Gland</text><path d=\"M340,40 L360,40 L360,60 L340,60 M340,80 L360,80 M340,100 L360,100\" stroke-dasharray=\"2,2\"/><text x=\"350\" y=\"70\">Mechanical</text></svg>",
+   "n": "list the losses in a centrifugal pump.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "fd9e81fc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"40\" y2=\"20\"/><text x=\"32\" y=\"100\" text-anchor=\"end\">Static Head</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"240\" y=\"195\" text-anchor=\"end\">Impeller Head</text><path d=\"M 40 180 L 120 180 L 120 160 Q 160 140 200 160 L 280 160\"/><circle cx=\"120\" cy=\"180\" r=\"3\" fill=\"#222\"/><text x=\"115\" y=\"175\">Start</text><circle cx=\"280\" cy=\"160\" r=\"3\" fill=\"#222\"/><text x=\"275\" y=\"155\">Min. Speed</text><rect x=\"240\" y=\"10\" width=\"80\" height=\"10\" rx=\"5\"/><text x=\"260\" y=\"22\" text-anchor=\"middle\">Threshold</text></svg>",
+   "n": "what is the minimum starting speed of a centrifugal pump?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }

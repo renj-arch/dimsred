@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T09:51:25.983Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) indicate severe content debt; BankFigures must address the 80 missing figures immediately as they block exam prep utility. MockPapers is next to tackle the critical fault backlog, followed by MainsFresh to ensure daily material freshness. ExamPatterns will handle remaining structural gaps, while Invention and MetaLearn are deferred to later runs as per the rule to prioritize unfinished standing goals over new ventures.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (833 total)",
-       "text": "Define mechanical efficiency of a turbine. | Define volumetric efficiency of a turbine. | Define the overall efficiency of a turbine and relate it to the others."
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw684fto (gs3, 15 marks): India is increasingly dependent on critical minerals like lithium, cobalt and rare earths for its green energy transitio",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T10:18:26.118Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -777,8 +721,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T17:55:41.384Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority standing goals; BankFigures must run first to resolve broken visuals blocking study flow. Since papers/questions/syllabus sidecars are missing, MetaLearn is queued next to generate the foundational content structure before MockPapers or ExamPatterns can utilize it. Invention agents have produced zero fixes for 2+ runs and will be placed last to avoid starving them of necessary inputs until core gaps shrink.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (872 total)",
+       "text": "What is the volumetric efficiency of a centrifugal pump? | List the losses in a centrifugal pump. | What is the minimum starting speed of a centrifugal pump?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Thermodynamics (360 in pool)",
+       "text": "Thermodynamics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T17:27:14.044Z",
+ "lastRun": "2026-11-07T17:55:41.384Z",
  "model": "qwen3.5:9b"
 }
