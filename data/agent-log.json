@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T01:13:02.793Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual assets. MockPapers is next because filesPresent shows papers=false, indicating a major content gap in exam prep materials. Invention should follow to generate fresh questions/sidecars once structural assets are stable. MetaLearn and ExamPatterns are deferred as they require existing paper/question data which is currently missing.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (786 total)",
-       "text": "What is the function of the spear in a Pelton wheel? | Describe the bucket construction of a Pelton runner. | What is the velocity of the jet entering a Pelton bucket?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T01:44:27.027Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -713,8 +673,75 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T08:26:57.183Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "We have severe content gaps (80 figure gaps, 23 critical faults) and no source files present; self-check alone cannot generate missing assets. Prioritize BankFigures to fill the massive figure gap backlog, then MockPapers and ExamPatterns to address critical faults and pending ideas. MainsFresh should run last as it is currently producing zero output while others are needed urgently.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (824 total)",
+       "text": "Describe the runner and shaft layout of a Kaplan turbine. | What is the tangential-velocity characteristic of axial-flow turbines? | How is the discharge through a Kaplan runner obtained?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Materials & Metallurgy (360 in pool)",
+       "text": "Materials & Metallurgy"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw653spq (gs3, 15 marks): India launched the National Green Hydrogen Mission to achieve net-zero emissions by 2070. Critically examine the strateg",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T07:57:50.714Z",
+ "lastRun": "2026-11-07T08:26:57.183Z",
  "model": "qwen3.5:9b"
 }

@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T07:51:02.857Z",
-  "cursor": 939,
-  "built": 821
+  "updatedAt": "2026-11-07T08:13:12.009Z",
+  "cursor": 942,
+  "built": 824
  },
  "figs": {
   "2316121": {
@@ -4929,6 +4929,24 @@
   "8bcea67c": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Kaplan/Propeller Turbine</text><path d=\"M40 160 L40 190 L70 190 L70 160 Z\"/><path d=\"M320 160 L320 190 L290 190 L290 160 Z\"/><path d=\"M40 160 Q180 100 320 160\" fill=\"none\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"150\" text-anchor=\"middle\">Low Head</text><text x=\"180\" y=\"170\" text-anchor=\"middle\">(2 - 70 m)</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">High Discharge</text></svg>",
    "n": "what head range suits a kaplan or propeller turbine?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "44f89040": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Spiral Casing (Simplified) -->\n  <path d=\"M40,80 Q100,20 160,80 T280,80\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M40,80 L40,140 M280,80 L280,140\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Draft Tube -->\n  <path d=\"M160,140 Q160,180 160,210\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M155,140 Q155,180 155,210\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Vertical Shaft -->\n  <line x1=\"160\" y1=\"80\" x2=\"160\" y2=\"210\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Runner Blades (Curved) -->\n  <path d=\"M160,90 Q140,100 130,110 M160,90 Q180,100 190,110\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M160,100 Q140,110 130,120 M160,100 Q180,110 190,120\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <path d=\"M160,110 Q140,120 130,130 M160,110 Q180,120 190,130\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Hub -->\n  <circle cx=\"160\" cy=\"110\" r=\"10\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/>\n  <!-- Labels -->\n  <text x=\"30\" y=\"100\">Spiral Casing</text>\n  <text x=\"30\" y=\"145\">Draft Tube</text>\n  <text x=\"175\" y=\"125\">Runner Blades</text>\n  <text x=\"145\" y=\"225\">Vertical Shaft</text>\n</svg>",
+   "n": "describe the runner and shaft layout of a kaplan turbine.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "5c68b0dc": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Axial-Flow Turbine Stage</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"65\">Inlet</text><text x=\"35\" y=\"185\">Outlet</text><circle cx=\"40\" cy=\"60\" r=\"3\"/><circle cx=\"320\" cy=\"60\" r=\"3\"/><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\" stroke-dasharray=\"4 2\"/><text x=\"180\" y=\"50\" text-anchor=\"middle\">u₁ = u₂</text><text x=\"180\" y=\"75\" text-anchor=\"middle\">(Constant Radius)</text><path d=\"M 40 60 L 30 45 M 40 60 L 50 45 M 40 60 L 40 45\" stroke-width=\"2\"/><path d=\"M 320 60 L 310 45 M 320 60 L 330 45 M 320 60 L 320 45\" stroke-width=\"2\"/><text x=\"280\" y=\"40\">Blade</text><text x=\"280\" y=\"55\">Tip</text></svg>",
+   "n": "what is the tangential-velocity characteristic of axial-flow turbines?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "a9d81f48": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Kaplan Runner Section</text><circle cx=\"180\" cy=\"100\" r=\"70\" /><circle cx=\"180\" cy=\"100\" r=\"30\" /><path d=\"M 110 100 L 250 100\" stroke-dasharray=\"4,2\" /><text x=\"180\" y=\"90\" text-anchor=\"middle\">D (Tip Diameter)</text><text x=\"180\" y=\"130\" text-anchor=\"middle\">d (Hub Diameter)</text><text x=\"180\" y=\"165\" text-anchor=\"middle\">Vf (Flow Velocity)</text><path d=\"M 110 100 L 250 100\" stroke-dasharray=\"4,2\" /><text x=\"170\" y=\"115\" text-anchor=\"start\">Annular Area</text><text x=\"170\" y=\"135\" text-anchor=\"start\">= π/4 (D² - d²)</text></svg>",
+   "n": "how is the discharge through a kaplan runner obtained?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
