@@ -39,6 +39,51 @@ function maxId(bank) {
 
 function meaningful(s) { return String(s || '').replace(/[^A-Za-z0-9]+/g, ' ').trim(); }
 
+function extractObject(text) {
+  const s = String(text || '');
+  let depth = 0, start = -1, inStr = false, esc = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === '\\') esc = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') { inStr = true; continue; }
+    if (c === '{') { if (depth === 0) start = i; depth++; continue; }
+    if (c === '}' && depth > 0) {
+      depth--;
+      if (depth === 0 && start !== -1) {
+        try { return JSON.parse(s.slice(start, i + 1)); } catch (e) { return null; }
+      }
+    }
+  }
+  return null;
+}
+
+// Independent solve for arithmetic/science items. Structural checks cannot
+// catch a wrong unit conversion or a key that matches no option, so a second
+// model solves the question without seeing the stated key.
+async function verifyItem(item, opts, correct, section) {
+  if (!/math|quant|arithmetic|physics|chemistry/i.test(section)) return true;
+  const block = [
+    'QUESTION: ' + (item.text || item.q || item.stem),
+    'OPTIONS:',
+    opts.map(function (o, i) { return 'ABCD'[i] + '. ' + o; }).join('\n')
+  ].join('\n');
+  try {
+    const r = await llm.callLLM([{ role: 'user', content: 'You are an independent exam verifier. Solve from scratch; never trust a stated answer. Return ONLY JSON: {"answer":"A|B|C|D","check":"one line of arithmetic"}\n' + block }],
+      { temperature: 0.15, numPredict: 400 });
+    const obj = extractObject(r.text || '');
+    const a = String((obj && obj.answer) || '').toUpperCase().match(/\b([A-D])\b/);
+    return !!(a && a[1] === 'ABCD'[correct]);
+  } catch (e) {
+    return false;
+  }
+}
+
+
 function validItem(item, bank, batch) {
   if (!item || typeof item !== 'object') return 'not an object';
   const text = llm.clean(item.text || item.q || item.stem);
@@ -116,6 +161,10 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
       const opts = item.options.map(function (o) { return llm.clean(typeof o === 'string' ? o : o.text); });
       const correct = typeof item.correct === 'string' && /^[A-Da-d]$/.test(item.correct)
         ? item.correct.toUpperCase().charCodeAt(0) - 65 : parseInt(item.correct, 10);
+      if (!(await verifyItem(item, opts, correct, section))) {
+        llm.log('  rejected: independent verifier disagreed');
+        continue;
+      }
       batch.push({
         section: section,
         text: llm.clean(item.text || item.q || item.stem),
