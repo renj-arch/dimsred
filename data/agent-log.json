@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T15:11:34.075Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address both immediately as it is the only agent producing fixes. MetaLearn and Invention are starved (0 output in last 3 runs) but represent high-leverage content generation for syllabus gaps and fresh ideas, so they follow BankFigures once the critical infrastructure is stabilized. MainsFresh and MockPapers remain at zero; given the file state shows no papers or questions present, these agents will likely fail witho",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (761 total)",
-       "text": "What are the sphere drag-coefficient ranges? | How is lift generated and expressed? | How is open-channel flow classified by depth variation?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T15:30:15.531Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -852,8 +812,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T01:13:02.793Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual assets. MockPapers is next because filesPresent shows papers=false, indicating a major content gap in exam prep materials. Invention should follow to generate fresh questions/sidecars once structural assets are stable. MetaLearn and ExamPatterns are deferred as they require existing paper/question data which is currently missing.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (786 total)",
+       "text": "What is the function of the spear in a Pelton wheel? | Describe the bucket construction of a Pelton runner. | What is the velocity of the jet entering a Pelton bucket?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T00:43:41.138Z",
+ "lastRun": "2026-11-07T01:13:02.793Z",
  "model": "qwen3.5:9b"
 }
