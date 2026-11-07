@@ -45,6 +45,12 @@ var SKIP_EXAMS = (process.env.EXPAND_SKIP_EXAMS || '').split(',').map(function (
 // Lessons shorter than this (characters of HTML) are treated as brief stubs
 // and rewritten by the enrich role. 0 disables enrichment entirely.
 var THIN = parseInt(process.env.EXPAND_THIN_THRESHOLD || '2500', 10);
+// Depth lane: append NEW advanced sections to lessons that are already full,
+// instead of only fixing empty/stub ones. Off unless the workflow asks for it.
+var DEEPEN = /^(1|true|yes)$/i.test(process.env.EXPAND_DEEPEN || '');
+var DEPTH_PASSES = Math.max(1, parseInt(process.env.EXPAND_DEPTH_PASSES || '3', 10));
+var DEPTH_FILE = path.join(__dirname, 'course-depth.json');
+var ADDONS_FILE = path.join(__dirname, 'course-addons.json');
 
 // Transport watchdogs (see curlChat): silence before the first streamed byte
 // is normal on CPU (cold load + prompt eval), mid-stream silence is wedged,
@@ -61,6 +67,20 @@ var ALT = { reasoning: 'reasoning', quant: 'quant', english: 'english', ga: 'ga'
 var configs = JSON.parse(fs.readFileSync(CONFIGS_FILE, 'utf8'));
 var courseData = JSON.parse(fs.readFileSync(DATA_FILE, 'utf8'));
 var coursePractice = JSON.parse(fs.readFileSync(PRACTICE_FILE, 'utf8'));
+
+function loadJson(file, fallback) {
+  try { return JSON.parse(fs.readFileSync(file, 'utf8')); } catch (e) { return fallback; }
+}
+// Per-lesson depth history: how many passes a key has had, and when. Kept out
+// of course-data (which is a plain key -> HTML map) so it survives restores.
+var depthState = loadJson(DEPTH_FILE, { keys: {} });
+if (!depthState || typeof depthState !== 'object') depthState = { keys: {} };
+if (!depthState.keys || typeof depthState.keys !== 'object') depthState.keys = {};
+// Hand-built pages are NOT regenerated. Their extra sections live here and are
+// injected at deploy time, so the page keeps every line a human wrote.
+var addons = loadJson(ADDONS_FILE, { keys: {} });
+if (!addons || typeof addons !== 'object') addons = { keys: {} };
+if (!addons.keys || typeof addons.keys !== 'object') addons.keys = {};
 
 function hasContent(mk, slug) {
   if (courseData[mk + '/' + slug]) return true;
@@ -174,6 +194,76 @@ function collectThins() {
   return out;
 }
 
+// Depth worklist: every declared lesson that already has real content, oldest
+// depth pass first, then shortest. Generated lessons get the new sections
+// appended to course-data (and their page is regenerated). Hand-built pages
+// (a page much larger than its source, or the six pages with no source at all)
+// are never regenerated: their addenda go to scripts/course-addons.json and are
+// injected at deploy time, so nothing a human wrote is lost.
+function pageSize(fp) {
+  try { return fs.statSync(fp).size; } catch (e) { return 0; }
+}
+
+function collectDeepen() {
+  var out = [];
+  var seen = {};
+  Object.keys(configs).forEach(function (ek) {
+    if (SKIP_EXAMS.indexOf(ek) !== -1) return;
+    var cfg = configs[ek];
+    (cfg.moduleOrder || []).forEach(function (mk) {
+      var mod = cfg.modules[mk];
+      if (!mod) return;
+      (mod.lessons || []).forEach(function (lesson) {
+        var key = mk + '/' + lesson.slug;
+        if (seen[key]) return;
+        seen[key] = 1;
+        var users = examsUsing(mk, lesson.slug);
+        if (!users.length) return;
+        var files = users.map(function (u) { return u.dir + '/course/' + mk + '/lesson-' + lesson.slug + '.html'; });
+        var existing = files.filter(function (f) { return fs.existsSync(path.join(ROOT, f)); });
+        if (!existing.length) return;
+        var content = String(courseData[key] || '');
+        // No source + auto filler is a fill job, not a depth job.
+        var allFiller = existing.every(function (f) { return isFillerPage(path.join(ROOT, f)); });
+        if (!content && allFiller) return;
+        var biggest = existing.reduce(function (m, f) { return Math.max(m, pageSize(path.join(ROOT, f))); }, 0);
+        // A generated page is template + content; a page several times larger
+        // than its source carries hand-written material the generator cannot
+        // reproduce.
+        var handBuilt = !content || biggest > Math.max(60000, content.length * 4);
+        var st = depthState.keys[key] || {};
+        var passes = parseInt(st.passes || 0, 10) || 0;
+        if (passes >= DEPTH_PASSES) return;
+        out.push({
+          key: key,
+          mk: mk,
+          slug: lesson.slug,
+          role: handBuilt ? 'deepen-page' : 'deepen',
+          oldLen: content.length,
+          pageSize: biggest,
+          passes: passes,
+          lastAt: String(st.at || ''),
+          lesson: users[0].lesson,
+          modName: users[0].modName,
+          examName: users[0].examName,
+          examCount: users.length,
+          files: files
+        });
+      });
+    });
+  });
+  // Never-deepened first, then the least recently deepened, then shortest.
+  out.sort(function (a, b) {
+    if (a.lastAt !== b.lastAt) {
+      if (!a.lastAt) return -1;
+      if (!b.lastAt) return 1;
+      return a.lastAt < b.lastAt ? -1 : 1;
+    }
+    return a.oldLen - b.oldLen;
+  });
+  return out;
+}
+
 // ---- generation ------------------------------------------------------------
 
 function theoryPrompt(gap) {
@@ -226,6 +316,69 @@ function theoryPrompt(gap) {
   return lines.join('\n');
 }
 
+// ---- depth prompts ---------------------------------------------------------
+
+function stripTags(html) {
+  return String(html || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+}
+
+function headingsIn(html) {
+  var out = [];
+  var re = /<h([234])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
+  var m;
+  while ((m = re.exec(String(html || '')))) {
+    var t = stripTags(m[2]);
+    if (t && out.indexOf(t) === -1) out.push(t);
+  }
+  return out;
+}
+
+function pageSource(gap) {
+  for (var i = 0; i < gap.files.length; i++) {
+    var fp = path.join(ROOT, gap.files[i]);
+    if (!fs.existsSync(fp)) continue;
+    var s = fs.readFileSync(fp, 'utf8');
+    var i0 = s.indexOf('<div class="lesson-body">');
+    if (i0 !== -1) s = s.slice(i0 + 25);
+    return s;
+  }
+  return '';
+}
+
+function deepenPrompt(gap) {
+  var source = gap.role === 'deepen' ? String(courseData[gap.key] || '') : pageSource(gap);
+  var headings = headingsIn(source).slice(0, 90);
+  var digest = stripTags(source).slice(-4500);
+  var lines = [
+    'You are a senior ' + gap.examName + ' ' + gap.modName + ' teacher. The lesson "' + gap.lesson.title + '" already exists; write the NEXT LEVEL, not a rewrite.',
+    'What the lesson covers: ' + gap.lesson.desc,
+    'Key topics: ' + gap.lesson.topics + '.',
+    '',
+    'Sections that ALREADY exist (do NOT repeat these):',
+    headings.length ? '- ' + headings.join('\n- ') : '(none yet)',
+    '',
+    'End of the existing lesson for tone and continuity:',
+    digest || '(no text available)',
+    '',
+    'Write 3 NEW advanced sections that a serious aspirant needs but the list above does not cover:',
+    '- go deeper than the basics: mechanisms, exceptions, comparisons, landmark cases/data where textbook-standard, applied scenarios, and how the examiner twists the concept',
+    '- each section starts with an <h3> title that is clearly different from every existing heading',
+    '- include one <div class="example-box"> with div.ex-title (technique), div.ex-text (question), div.ex-soln (full worked answer)',
+    '- include one <div class="tip-box"> with div.tip-title and div.tip-text for exam-day strategy',
+    '- finish with a "Common Traps" <ul> specific to these advanced sections',
+    '',
+    'Format: HTML fragment only, tags <h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span>.',
+    'div classes allowed: example-box/ex-title/ex-text/ex-soln and tip-box/tip-title/tip-text. No other attributes, no links, images, scripts or markdown.',
+    '700-1000 words of visible text. Be specific and correct; never invent statistics or sources; classic textbook facts only.',
+    '',
+    'After the HTML output exactly this line:',
+    '===QUESTIONS===',
+    'Then a JSON array of exactly 5 NEW exam-style MCQs on only these advanced sections, shaped like:',
+    '[{"text":"question","options":["A","B","C","D"],"correct":0,"sol":"worked solution"}]',
+    '4 plausible options, exactly one correct (0-3), solutions explaining the reasoning, each question tests a different advanced idea.'
+  ];
+  return lines.join('\n');
+}
 // ---- transport -------------------------------------------------------------
 // One HTTP attempt at the chat endpoint, STREAMING via spawn + watchdogs.
 // The old fetch transport carried undici's hidden ~5-min headers timeout: a
@@ -502,10 +655,30 @@ function toPractice(qs) {
   });
 }
 
+// Append new MCQs without reusing ids or dropping the earlier set.
+function mergePractice(key, qs) {
+  var arr = (coursePractice[key] || []).slice();
+  var next = 101;
+  arr.forEach(function (q) { if (q && q.id >= next) next = q.id + 1; });
+  qs.forEach(function (q) {
+    arr.push({
+      id: next++,
+      text: q.text,
+      options: q.options.map(function (o, j) { return { l: ['a', 'b', 'c', 'd'][j], t: o, c: j === q.correct }; }),
+      sol: q.sol
+    });
+  });
+  coursePractice[key] = arr.slice(0, 30);
+}
+
 // ---- generation per gap ----------------------------------------------------
 
 function generateOne(gap, timeoutMs) {
-  return callModel(theoryPrompt(gap), 3400, timeoutMs).then(function (raw) {
+  var prompt = (gap.role === 'deepen' || gap.role === 'deepen-page') ? deepenPrompt(gap) : theoryPrompt(gap);
+  var source = '';
+  if (gap.role === 'deepen') source = String(courseData[gap.key] || '');
+  else if (gap.role === 'deepen-page') source = pageSource(gap);
+  return callModel(prompt, 3400, timeoutMs).then(function (raw) {
     var html = raw;
     var rest = '';
     var qi = raw.indexOf('===QUESTIONS===');
@@ -518,6 +691,16 @@ function generateOne(gap, timeoutMs) {
     if (err) throw new Error('html rejected: ' + err);
     if (gap.role === 'enrich' && html.length < gap.oldLen + 1500) {
       throw new Error('not a real expansion (' + html.length + ' vs ' + gap.oldLen + ' chars)');
+    }
+    if (gap.role === 'deepen' || gap.role === 'deepen-page') {
+      if (html.length < 3000) throw new Error('depth section too short (' + html.length + ' chars)');
+      var old = {};
+      headingsIn(source).forEach(function (h) { old[h.toLowerCase()] = 1; });
+      var repeated = headingsIn(html).filter(function (h) { return old[h.toLowerCase()]; });
+      if (repeated.length) throw new Error('repeats existing section(s): ' + repeated.slice(0, 2).join('; '));
+      if (source && overlap(stripTags(html), stripTags(source)) >= 0.5) {
+        throw new Error('deep section overlaps the existing lesson too closely');
+      }
     }
     var qs = filterFresh(parseQuestions(rest), gap.mk);
     return { html: html, questions: qs };
@@ -537,7 +720,8 @@ function writeTouched(keys, files, exams) {
 async function main() {
   var fills = collectGaps();
   var thins = THIN > 0 ? collectThins() : [];
-  console.log('Course worklist: ' + fills.length + ' empty slot(s), ' + thins.length + ' thin lesson(s) (<' + THIN + ' chars)');
+  var deeps = DEEPEN ? collectDeepen() : [];
+  console.log('Course worklist: ' + fills.length + ' empty slot(s), ' + thins.length + ' thin lesson(s) (<' + THIN + ' chars), ' + deeps.length + ' depth candidate(s)');
   fills.slice(0, 10).forEach(function (g) {
     console.log('  [fill]   ' + g.key + '  (' + g.examCount + ' exam' + (g.examCount > 1 ? 's' : '') + ')');
   });
@@ -546,16 +730,20 @@ async function main() {
     console.log('  [enrich] ' + g.key + '  (' + g.oldLen + ' chars, ' + g.examCount + ' exam' + (g.examCount > 1 ? 's' : '') + ')');
   });
   if (thins.length > 10) console.log('  ... and ' + (thins.length - 10) + ' more thin lesson(s)');
+  deeps.slice(0, 10).forEach(function (g) {
+    console.log('  [' + (g.role === 'deepen-page' ? 'depth-page' : 'depth') + '] ' + g.key + '  (pass ' + (g.passes + 1) + '/' + DEPTH_PASSES + ', ' + g.oldLen + ' chars)');
+  });
+  if (deeps.length > 10) console.log('  ... and ' + (deeps.length - 10) + ' more depth candidate(s)');
 
-  if (DRY || (!fills.length && !thins.length)) {
+  if (DRY || (!fills.length && !thins.length && !deeps.length)) {
     writeTouched([], [], []);
     console.log(DRY ? 'EXPAND_DRY: listing only, nothing generated or written.' : 'Nothing to fill.');
     return;
   }
 
   // Empty slots first (a lesson that says nothing at all), then the
-  // shortest thin lessons (the most visible gain per generation).
-  var queue = fills.concat(thins);
+  // shortest thin lessons (the most visible gain per generation), then depth.
+  var queue = fills.concat(thins).concat(deeps);
 
   var deadline = Date.now() + DEADLINE_MIN * 60000;
   runDeadlineAt = deadline;
@@ -573,15 +761,47 @@ async function main() {
     var remaining = deadline - Date.now();
     try {
       var res = await generateOne(gap, Math.min(remaining, 900000));
-      courseData[gap.key] = res.html;
-      if (res.questions.length >= 3) coursePractice[gap.key] = toPractice(res.questions);
-      saveJson(DATA_FILE, courseData);
-      saveJson(PRACTICE_FILE, coursePractice);
-      gap.users.forEach(function (u) { touchedExams[u.examKey] = 1; });
-      addedKeys.push(gap.key);
-      addedFiles = addedFiles.concat(gap.files);
+      if (gap.role === 'deepen') {
+        // Append, never rewrite: the existing lesson survives verbatim.
+        courseData[gap.key] = String(courseData[gap.key] || '').trim() + '\n' + res.html;
+        mergePractice(gap.key, res.questions);
+        saveJson(DATA_FILE, courseData);
+        saveJson(PRACTICE_FILE, coursePractice);
+        gap.users.forEach(function (u) { touchedExams[u.examKey] = 1; });
+        addedKeys.push(gap.key);
+        addedFiles = addedFiles.concat(gap.files);
+      } else if (gap.role === 'deepen-page') {
+        // Hand-built page: keep the addendum out of the generator's reach.
+        var entry = addons.keys[gap.key] || {};
+        entry.html = String(entry.html || '').trim() + (entry.html ? '\n' : '') + res.html;
+        entry.passes = (parseInt(entry.passes || 0, 10) || 0) + 1;
+        entry.at = new Date().toISOString();
+        entry.title = gap.lesson.title;
+        entry.files = gap.files;
+        addons.keys[gap.key] = entry;
+        mergePractice(gap.key, res.questions);
+        saveJson(ADDONS_FILE, addons);
+        saveJson(PRACTICE_FILE, coursePractice);
+      } else {
+        courseData[gap.key] = res.html;
+        if (res.questions.length >= 3) coursePractice[gap.key] = toPractice(res.questions);
+        saveJson(DATA_FILE, courseData);
+        saveJson(PRACTICE_FILE, coursePractice);
+        gap.users.forEach(function (u) { touchedExams[u.examKey] = 1; });
+        addedKeys.push(gap.key);
+        addedFiles = addedFiles.concat(gap.files);
+      }
+      if (gap.role === 'deepen' || gap.role === 'deepen-page') {
+        depthState.keys[gap.key] = {
+          passes: gap.passes + 1,
+          at: new Date().toISOString(),
+          role: gap.role
+        };
+        saveJson(DEPTH_FILE, depthState);
+      }
       added++;
-      console.log('[' + gap.examName + '] ' + gap.key + (gap.role === 'enrich' ? ' expanded ' : ' written ') +
+      var verb = gap.role === 'enrich' ? ' expanded ' : (gap.role === 'deepen' ? ' deepened ' : (gap.role === 'deepen-page' ? ' deepened (hand-built) ' : ' written '));
+      console.log('[' + gap.examName + '] ' + gap.key + verb +
         '(' + res.html.length + ' chars, ' + res.questions.length + ' validated MCQs)');
     } catch (e) {
       console.log('[' + gap.examName + '] ' + gap.key + ' skipped: ' + e.message);

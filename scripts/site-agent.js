@@ -18,6 +18,7 @@ const fs = require('fs');
 const path = require('path');
 const { execSync, spawn } = require('child_process');
 const memory = require('./agent-memory');
+const mainsPlan = require('./lib/mains-plan');
 
 // Seed initial rules from hard-won experience
 memory.addRule('NEVER replace a dead link with href="#" — link to a real page or convert to plain text', 'Replacing with # broke the homepage navigation');
@@ -758,12 +759,31 @@ async function agentA11Y() {
       fixes.push({ page: page, fix: 'Added alt attributes to images' });
     }
 
-    // Add role="button" and tabindex to clickable divs/spans without them
-    // (common pattern in this site's quiz cards)
-    if (/<div[^>]+onclick(?![^>]+role=)[^>]*>/i.test(html)) {
-      html = html.replace(/<div([^>]+)onclick=/gi, '<div role="button" tabindex="0"$1onclick=');
+    // Collapse the duplicated attribute runs earlier versions of this agent
+    // created (they prepended the pair without checking for an existing one,
+    // so a page touched N times carried N copies).
+    var dupRun = /role="button"[ \t\r\n]+tabindex="0"(?:[ \t\r\n]+role="button"[ \t\r\n]+tabindex="0")+/g;
+    if (dupRun.test(html)) {
+      html = html.replace(dupRun, 'role="button" tabindex="0"');
       changed = true;
-      fixes.push({ page: page, fix: 'Added role/tabindex to clickable divs' });
+      fixes.push({ page: page, fix: 'Collapsed duplicated role/tabindex attributes' });
+    }
+
+    // Add role="button" and tabindex to clickable divs that lack them.
+    // Idempotent: a div that already carries either attribute is left alone,
+    // so repeated runs can never stack another copy.
+    var roleAdded = 0;
+    html = html.replace(/<div([^>]*)>/gi, function (tag, attrs) {
+      if (!/\bonclick\s*=/i.test(attrs)) return tag;
+      var hasRole = /\brole\s*=/i.test(attrs);
+      var hasTab = /\btabindex\s*=/i.test(attrs);
+      if (hasRole && hasTab) return tag;
+      roleAdded++;
+      return '<div' + (hasRole ? '' : ' role="button"') + (hasTab ? '' : ' tabindex="0"') + attrs + '>';
+    });
+    if (roleAdded) {
+      changed = true;
+      fixes.push({ page: page, fix: 'Added role/tabindex to ' + roleAdded + ' clickable div(s)' });
     }
 
     // Ensure skip-to-content link exists on pages with <main> or <nav>
@@ -1758,7 +1778,10 @@ async function agentProposals() {
     hasComparisons: pages.some(p => /comparison|vs-/i.test(p)),
     hasRevision: pages.some(p => /revision/i.test(p)),
     hasMains: pages.some(p => /mains/i.test(p)),
-    hasPYQ: pages.some(p => /pyq|previous-year/i.test(p))
+    hasPYQ: pages.some(p => /pyq|previous-year/i.test(p)),
+    // The site ships a spaced-repetition deck and read-aloud revision notes;
+    // declare them so the invention lane does not rebuild the same tool.
+    hasRecallDeck: pages.some(p => /recall/i.test(p))
   };
 
   // Ask the model: what NEW feature should this site have?
@@ -1985,6 +2008,42 @@ async function agentForesight() {
 // ── AGENT: Question Quality (rule-based, no LLM needed) ──
 // Arranges subtopics into correct categories, creates new ones if needed,
 // and fixes poor questions (fill-in-the-blank) into proper Q&A.
+// Apply the curated category-move registry (data/category-moves.json).
+//
+// This is deliberately deterministic: the agent does not invent a category or
+// infer one from a title. A human/agent writes a move with source, target,
+// shard files and literal evidence; the library refuses the move if the
+// evidence is missing or the target category does not exist. data/questions is
+// only checked out in the Question Quality lane, so normal site passes report
+// "not checked out" and change nothing.
+async function agentQuestionCats() {
+  const fixes = [];
+  const root = path.resolve(__dirname, '..');
+  const registry = path.join(root, 'data', 'category-moves.json');
+  if (!fs.existsSync(registry)) return { agent: 'questioncats', fixes, skipped: 'no registry' };
+  try {
+    const out = require('./lib/question-category-moves').applyRegistry({ root: root });
+    if (out.skipped) {
+      console.log('agent: QuestionCats — ' + out.skipped);
+      return { agent: 'questioncats', fixes, skipped: out.skipped };
+    }
+    for (const item of out.applied) {
+      if (item.alreadyApplied) {
+        console.log('agent: QuestionCats — ' + item.id + ' already applied');
+        continue;
+      }
+      fixes.push({ page: item.id, fix: 'Moved ' + item.moved + ' question(s) from ' + item.from + ' to ' + item.to });
+      console.log('agent: QuestionCats — moved ' + item.moved + ' question(s) ' + item.from + ' -> ' + item.to);
+    }
+  } catch (e) {
+    // The dedicated workflow step re-runs the mover and fails the job, so a
+    // broken registry cannot be mistaken for a successful publish.
+    console.log('agent: QuestionCats FAILED — ' + e.message);
+    fixes.push({ page: 'data/category-moves.json', fix: 'FAILED: ' + e.message });
+  }
+  return { agent: 'questioncats', fixes };
+}
+
 async function agentQuestionQuality() {
   const fixes = [];
   const DIR = 'data/questions';
@@ -2401,6 +2460,12 @@ async function agentPapers() {
   if (!fs.existsSync('data/questions')) return { agent: 'papers', fixes: fixes };
   const papers = loadJson('data/papers.json', { papers: [] });
   if (!Array.isArray(papers.papers)) papers.papers = [];
+  // Fail-closed: never let an unlabelled answer survive a save. Anything not
+  // ingested from a parsed official key (source official-pyq) is agent-solved.
+  try {
+    const { normalizePapers } = require('./check-papers-provenance');
+    normalizePapers(papers);
+  } catch (e) { console.log('agent: Papers - provenance normaliser unavailable: ' + e.message); }
   const haveIds = new Set();
   for (const p of papers.papers) for (const q of (p.questions || [])) if (q && q.id) haveIds.add(q.id);
 
@@ -3363,181 +3428,143 @@ async function agentInvention() {
 // mains.html's "Generate one more question + model answer" used to compile a
 // 1-2 GB language model in the VISITOR's browser and run it on their GPU --
 // the hottest thing on the site, and visitors reported machines heating up.
-// This agent writes the same kind of item here, on the build runners, once per
-// run, into data/mains-fresh.json; the page then serves from that frozen batch
-// instantly and only falls back to on-device generation (behind an explicit
-// permission card) when the batch is empty.
+// This agent writes the same kind of item here, on the build runners, into
+// data/mains-fresh.json; the page then serves from that frozen batch instantly
+// and only falls back to on-device generation (behind an explicit permission
+// card) when the batch is empty.
+//
+// Balance (2026-11-01): the old prompt let the model choose the paper, and its
+// only worked example was gs3. Every one of the first 36 items was gs3. The
+// planner in scripts/lib/mains-plan.js now chooses the least-covered paper
+// (and the least-covered optional subject) before the model is called, and the
+// shape gate rejects a reply that drifts back to gs3. The agent also runs a
+// small batch (MAINS_BATCH, default 3) so a 9-paper cycle completes in days,
+// not weeks, and refuses weak answers with the same rubric the promotion gate
+// uses.
 const MAINS_FRESH = 'data/mains-fresh.json';
-const MAINS_FRESH_CAP = 40;
-const MAINS_PAPERS = ['gs1', 'gs2', 'gs3', 'gs4', 'essay'];
-const MAINS_MARKS = [10, 15, 20, 125, 250];
-function mainsNorm(s) {
-  return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+const MAINS_FRESH_CAP = 90;
+const MAINS_BATCH = Math.max(1, Math.min(4, parseInt(process.env.MAINS_BATCH || '3', 10) || 3));
+
+function parseMainsObject(text) {
+  const t = String(text || '')
+    .replace(/<think(?:ing)?>[\s\S]*?<\/think(?:ing)?>/gi, ' ')
+    .replace(/<think(?:ing)?>[\s\S]*$/i, ' ')
+    .replace(/```[a-z]*|```/gi, '').trim();
+  const a = t.indexOf('{');
+  const b = t.lastIndexOf('}');
+  if (a === -1 || b <= a) throw new Error('no JSON object in the model output');
+  return JSON.parse(t.slice(a, b + 1));
 }
-function mainsItemOk(o) {
-  if (!o || typeof o !== 'object') return 'not an object';
-  const q = String(o.question || '').trim();
-  if (q.length < 40 || q.length > 700) return 'question length';
-  if (/[<>]/.test(q)) return 'question markup';
-  const paper = String(o.paper);
-  if (MAINS_PAPERS.indexOf(paper) === -1) return 'paper';
-  const marks = Number(o.marks);
-  if (MAINS_MARKS.indexOf(marks) === -1) return 'marks';
-  if (paper === 'essay' && marks !== 125 && marks !== 250) return 'essay marks';
-  if (paper !== 'essay' && marks > 20) return 'gs marks';
-  if (['easy', 'medium', 'high'].indexOf(String(o.difficulty)) === -1) return 'difficulty';
-  const ans = Array.isArray(o.answer) ? o.answer.filter(s => s && (s.h || s.p)) : [];
-  if (ans.length < 4 || ans.length > 6) return 'answer sections';
-  for (const s of ans) {
-    if (String(s.h || '').length < 2 || String(s.h || '').length > 90) return 'section heading';
-    if (String(s.p || '').length < 120 || String(s.p || '').length > 1500) return 'section paragraph';
-  }
-  if (!Array.isArray(o.marksGuide) || o.marksGuide.length < 3 || o.marksGuide.length > 6) return 'marksGuide';
-  if (!Array.isArray(o.pitfalls) || o.pitfalls.length < 3 || o.pitfalls.length > 6) return 'pitfalls';
-  if (!Array.isArray(o.keywords) || o.keywords.length < 5 || o.keywords.length > 8) return 'keywords';
-  if (!Array.isArray(o.laws) || o.laws.length > 8) return 'laws';
-  return null;
-}
+
 async function agentMainsFresh() {
   const fixes = [];
-  /*
-   * Aim at the emptiest paper. The hub publishes data/mains-coverage.json, and
-   * the agent reads it here so the batch fills a real gap instead of sampling
-   * whatever the model finds easiest. MAINS_PAPER overrides for a manual run.
-   */
-  const coverage = loadJson('data/mains-coverage.json', null);
-  const paperNames = { gs1: 'GS I', gs2: 'GS II', gs3: 'GS III', gs4: 'GS IV', essay: 'Essay' };
-  let targetPaper = String(process.env.MAINS_PAPER || (coverage && coverage.weakest) || '');
-  if (MAINS_PAPERS.indexOf(targetPaper) === -1) targetPaper = '';
   let pool = loadJson(MAINS_FRESH, null);
   if (!pool || typeof pool !== 'object') pool = {};
   if (!pool.meta || typeof pool.meta !== 'object') pool.meta = {};
   if (!Array.isArray(pool.items)) pool.items = [];
 
-  // Dedupe against the hand-authored bank and the pool itself, by normalized
-  // full text and by opening signature (a reworded opener is still a repeat).
+  // Dedupe against the hand-authored bank and the pool itself. mains-plan
+  // compares normalized question text, the opening signature and topic-token
+  // overlap, so "Geopolitics of Critical Minerals" and "Critical Minerals
+  // Supply Chain" cannot both ship as if they were different questions.
+  // Re-check the pool too: a run that once started from a corrupted, partial
+  // pool generated a reworded duplicate that the union merge then published.
+  // Dropping it here keeps the pool clean even before the next merge.
   const bank = loadJson(MAINS_BANK, null);
-  const known = new Set();
-  const sigs = new Set();
-  function addKnown(question) {
-    const n = mainsNorm(question);
-    if (!n) return;
-    known.add(n);
-    sigs.add(n.slice(0, 80));
-  }
-  if (bank && Array.isArray(bank.questions)) bank.questions.forEach(q => addKnown(q.question));
-  pool.items.forEach(x => { if (x && x.question) addKnown(x.question); });
-
-  const sys = 'You write UPSC Civil Services Mains practice questions with model-answer skeletons for Indian aspirants. ' +
-    'Reply with ONE valid JSON object and nothing else: no markdown fences, no commentary before or after. ' +
-    'Shape: {"paper":"gs3","topic":"short topic label","marks":15,"difficulty":"medium",' +
-    '"question":"full question text including the marking note, e.g. (15 marks, 250 words)",' +
-    '"answer":[{"h":"short heading","p":"2-4 sentence paragraph"}],' +
-    '"marksGuide":["what the examiner rewards"],"pitfalls":["how this is answered badly"],' +
-    '"keywords":["term"],"laws":["law, case or scheme, only if certain"]}. ' +
-    'Constraints: "paper" is one of gs1,gs2,gs3,gs4,essay; marks 10, 15 or 20 for GS papers, 125 or 250 only for the essay; ' +
-    '4 to 6 objects in "answer"; 3 to 5 strings each in marksGuide and pitfalls; 5 to 8 keywords; "laws" may be []. ' +
-    'Keep every "p" paragraph to 2-3 sentences and under 600 characters (the reply has a strict token budget — longer text gets cut off and the item is rejected). Never invent a scheme, case, article or statistic: name a reform only when certain of it, with its year; ' +
-    'a verified older example beats an uncertain new one. Prefer safe, verifiable general knowledge. Stay exam-safe and neutral. ' +
-    'Structure the skeleton like a strong answer: the FIRST object in "answer" opens with context — define the term or topic and say where or when it took shape (an agreement, body or year, and only when certain) — never start mid-argument; ' +
-    'the LAST object is a way forward or conclusion (heading exactly "Way forward" or "Conclusion"), 2-3 sentences on what should change or what to watch; the middle objects carry the analysis. ' +
-    'Length: the whole answer must reach at least 150 words for 10 marks, 250 for 15, 300 for 20, 900 for a 125-mark essay and 1800 for a 250-mark essay. A short skeleton that stops at 150 words for a 15-mark question is rejected. ' +
-    'Across the answer, place 2 to 3 specific anchors — a court, committee, agreement, scheme, fund, index or landmark event — each one only when you are certain of it; a paragraph that names no real thing is a weak paragraph. ' +
-    'For a topic with a governing law, agreement or scheme you are certain of, name at least one in "laws"; keep [] only when nothing is certain. ' +
-    'Do not reason step by step; reply with ONLY the JSON object.';
-  const avoid = Array.from(sigs).slice(0, 60).map((s, i) => (i + 1) + '. ' + s).join('\n');
-  const targetLine = targetPaper
-    ? 'TARGET PAPER: ' + paperNames[targetPaper] + ' (' + targetPaper + '). This paper is the emptiest in the published bank, so write for it. ' +
-      'Set "paper" to "' + targetPaper + '" and choose a topic inside that paper\'s syllabus. Do not switch to another paper.\n\n'
-    : '';
-  const user = targetLine +
-    'Create ONE practice question, choosing a topic where aspirants are weakest, avoiding the most over-used questions ' +
-    'and never repeating any question below (already covered).\n\nALREADY COVERED (do not repeat, do not reword):\n' + (avoid || '(none)');
-
-  let r = null;
-  try { r = await callLLM(sys, user, 3400); }
-  catch (e) { console.log('agent: MainsFresh — call failed: ' + String(e.message || e).slice(0, 160)); }
-
-  let reason = 'no model output';
-  let shipped = null;
-  // The first ever refill failed with 'unparseable output' and left the pool
-  // empty: 2600 output tokens cut the JSON off mid-object because a full item
-  // (question + 4-6 answer paragraphs) can run past that. Fix: a real budget
-  // (3400), bounded paragraphs in the prompt, and one stricter retry when the
-  // reply is cut off or a paragraph overshoots — all other failures (bad
-  // paper, duplicates) are not worth a second call.
-  function parseMainsItem(text) {
-    const t = String(text)
-      .replace(/<think(?:ing)?>[\s\S]*?<\/think(?:ing)?>/gi, ' ')
-      .replace(/```[a-z]*|```/gi, '').trim();
-    return JSON.parse(t.slice(t.indexOf('{'), t.lastIndexOf('}') + 1));
-  }
-  function validateMainsItem(obj) {
-    const bad = mainsItemOk(obj);
-    if (bad) { reason = 'validation: ' + bad; return false; }
-    if (targetPaper && String(obj.paper) !== targetPaper) {
-      reason = 'validation: wrong paper (' + obj.paper + '), target ' + targetPaper;
-      return false;
-    }
-    const nq = mainsNorm(obj && obj.question);
-    if (known.has(nq) || sigs.has(nq.slice(0, 80))) { reason = 'duplicate question'; return false; }
+  const known = [];
+  if (bank && Array.isArray(bank.questions)) bank.questions.forEach(q => { if (q) known.push(q); });
+  const droppedDuplicates = [];
+  pool.items = pool.items.filter(function (q) {
+    if (!q) return false;
+    const dup = mainsPlan.isDuplicate(q, known);
+    if (dup) { droppedDuplicates.push(q.id + ' -> ' + (dup.id || 'covered')); return false; }
+    known.push(q);
     return true;
-  }
-  function shipMainsItem(obj, model) {
-    const item = {
-      id: 'ci-' + Date.now().toString(36),
-      at: new Date().toISOString().slice(0, 10),
-      paper: String(obj.paper),
-      topic: String(obj.topic || 'AI practice').slice(0, 160),
-      marks: Number(obj.marks),
-      difficulty: String(obj.difficulty),
-      years: [],
-      question: String(obj.question).trim(),
-      answer: obj.answer.filter(s => s && (s.h || s.p)).slice(0, 6)
-        .map(s => ({ h: String(s.h || 'Section').slice(0, 120), p: String(s.p || '').slice(0, 1400) })),
-      marksGuide: obj.marksGuide.filter(Boolean).map(String).slice(0, 6),
-      pitfalls: obj.pitfalls.filter(Boolean).map(String).slice(0, 6),
-      laws: (obj.laws || []).filter(Boolean).map(String).slice(0, 8),
-      keywords: obj.keywords.filter(Boolean).map(String).slice(0, 8),
-      origin: 'ci',
-      ai: 1,
-      model: model || ''
-    };
-    pool.items.push(item);
-    if (pool.items.length > MAINS_FRESH_CAP) pool.items = pool.items.slice(-MAINS_FRESH_CAP);
-    shipped = item;
-    fixes.push({ page: MAINS_FRESH, kind: 'mainsfresh', fix: 'Shipped practice question ' + item.id + ' (' + item.paper + ', ' + item.marks + ' marks): ' + item.question.slice(0, 120), model: model || '' });
-  }
-  let got = null;
-  if (r && r.text) {
-    try {
-      const obj = parseMainsItem(r.text);
-      if (validateMainsItem(obj)) got = { obj: obj, model: r.model || '' };
-    } catch (e) { reason = 'unparseable output'; }
-  }
-  if (!got && (reason === 'unparseable output' || /validation: (section paragraph|question length|wrong paper)/.test(reason))) {
-    console.log('agent: MainsFresh — retrying after: ' + reason);
-    let r2 = null;
-    try {
-      r2 = await callLLM(sys + ' IMPORTANT: the previous reply was cut off or invalid. Reply with ONLY the JSON object. Keep each "p" paragraph to 2-3 sentences and under 600 characters.', user, 3400);
-    } catch (e) { console.log('agent: MainsFresh — retry call failed: ' + String(e.message || e).slice(0, 160)); }
-    if (r2 && r2.text) {
+  });
+  if (droppedDuplicates.length) console.log('agent: MainsFresh — dropped duplicate(s): ' + droppedDuplicates.join(', '));
+
+  const shipped = [];
+  let reason = 'no model output';
+  let cursor = String(pool.meta.lastPaper || '');
+  for (let n = 0; n < MAINS_BATCH; n++) {
+    if (pastDeadline()) { reason = 'deadline reached after ' + shipped.length + ' item(s)'; break; }
+    // Recompute from the live pool every time: the paper that was scarce when
+    // the run started must not be chosen again after the first item ships.
+    // Pass the reviewed bank plus the pool, not the pool alone: otherwise a
+    // paper already covered by data/mains-questions.json looks empty and the
+    // runner keeps regenerating it while optional subjects stay uncovered.
+    const target = mainsPlan.nextTarget(known, { cursor: cursor, coverageFirst: true });
+    if (!target) { reason = 'no target paper'; break; }
+    cursor = target.paper;
+
+    // Give the model the covered questions and topics. Questions are capped so
+    // the prompt cannot grow without bound as the pool fills.
+    const recent = known.slice(-60);
+    const seeds = recent.map(q => String(q.question || '')).filter(Boolean).map(q => q.slice(0, 180));
+    const topicSeeds = recent.map(q => String(q.topic || '')).filter(Boolean).slice(-40).map(t => 'Topic: ' + t.slice(0, 120));
+    const prompt = mainsPlan.buildPrompt(target, topicSeeds.concat(seeds), false);
+
+    let got = null;
+    let lastReason = 'no model output';
+    for (let attempt = 0; attempt < 2; attempt++) {
+      let r = null;
       try {
-        const obj2 = parseMainsItem(r2.text);
-        if (validateMainsItem(obj2)) got = { obj: obj2, model: r2.model || '' };
-      } catch (e) { reason = 'unparseable output (retry)'; }
+        const sys = attempt
+          ? prompt.sys + ' IMPORTANT: the previous reply was invalid, cut off, or drifted from the target. Reply with ONLY the JSON object; the paper must be "' + target.paper + '" and the marks must be ' + target.marks + '.'
+          : prompt.sys;
+        r = await callLLM(sys, prompt.user, target.maxTokens);
+      } catch (e) {
+        lastReason = 'call failed: ' + String((e && e.message) || e).slice(0, 140);
+        break;
+      }
+      if (!r || !r.text) { lastReason = 'empty model output'; continue; }
+      let obj = null;
+      try { obj = parseMainsObject(r.text); }
+      catch (e) { lastReason = 'unparseable output'; continue; }
+      const bad = mainsPlan.validate(obj, target, known);
+      if (bad) {
+        lastReason = 'validation: ' + bad;
+        console.log('agent: MainsFresh — rejected ' + target.paper + ': ' + lastReason);
+        continue;
+      }
+      got = { obj: obj, model: r.model || '' };
+      break;
     }
+    if (!got) { reason = lastReason; break; }
+
+    const item = mainsPlan.toItem(got.obj, target, { prefix: 'ci-', origin: 'ci', model: got.model });
+    pool.items.push(item);
+    known.push(item);
+    shipped.push(item);
+    if (pool.items.length > MAINS_FRESH_CAP) pool.items = pool.items.slice(-MAINS_FRESH_CAP);
+    fixes.push({
+      page: MAINS_FRESH,
+      kind: 'mainsfresh',
+      fix: 'Shipped practice question ' + item.id + ' (' + item.paper + (item.subject ? '/' + item.subject : '') + ', ' + item.marks + ' marks): ' + item.question.slice(0, 120),
+      model: got.model
+    });
+    console.log('agent: MainsFresh — shipped ' + item.id + ' for ' + mainsPlan.targetLabel(target));
   }
-  if (got) shipMainsItem(got.obj, got.model);
+
   pool.meta.about = "Frozen AI practice questions for the mains page button. Written by the site's own model " +
-    "(scripts/site-agent.js, agent MainsFresh) on the GitHub build runners, in its own words. Unreviewed practice " +
-    'material, badged on the page, and kept out of the hand-authored bank in data/mains-questions.json.';
+    "(scripts/site-agent.js, agent MainsFresh) on the GitHub build runners, in its own words. The runner picks " +
+    "the least-covered paper (GS1-GS4, Essay, Optional I/II and the two language papers) before it writes, and " +
+    "rejects weak or duplicate items with the same rubric the promotion gate uses. Unreviewed practice " +
+    "material, badged on the page, and kept out of the hand-authored bank in data/mains-questions.json.";
   pool.meta.updated = new Date().toISOString().slice(0, 10);
   pool.meta.count = pool.items.length;
-  pool.meta.lastAttempt = { at: new Date().toISOString(), reason: shipped ? 'shipped ' + shipped.id : reason };
+  pool.meta.lastPaper = cursor;
+  pool.meta.coverage = mainsPlan.coverage(pool.items);
+  pool.meta.lastAttempt = {
+    at: new Date().toISOString(),
+    reason: shipped.length
+      ? 'shipped ' + shipped.length + ' item(s): ' + shipped.map(x => x.paper + (x.subject ? '/' + x.subject : '')).join(', ')
+      : reason
+  };
   saveJson(MAINS_FRESH, pool);
-  console.log('MAINS-FRESH-RESULT shipped=' + (shipped ? shipped.id : 'none') + ' pool=' + pool.items.length + ' reason=' + (shipped ? 'ok' : reason));
-  return { agent: 'mainsfresh', fixes: fixes };
+  console.log('MAINS-FRESH-RESULT shipped=' + shipped.length + ' pool=' + pool.items.length +
+    ' papers=' + JSON.stringify(pool.meta.coverage.byPaper) + ' reason=' + (shipped.length ? 'ok' : reason));
+  return { agent: 'mainsfresh', fixes: fixes, shipped: shipped.length };
 }
 
 // ── AGENT: GraphNotes — proper relationship explanations on flowchart cards ──
@@ -4088,6 +4115,7 @@ async function main() {
   ];
   const alwaysAgents = [
     ['Workflows', agentWorkflows],
+    ['QuestionCats', agentQuestionCats],
     ['SelfCheck', agentSelfCheck],
     ['SEO', agentSEO],
     ['Perf', agentPerf],
@@ -4122,7 +4150,7 @@ async function main() {
   // AGENT_ONLY=<comma list>: manual dispatch pinning (e.g. practicesets for a
   // one-off practice-set run). Empty/absent on normal runs -> full rotation.
   if (process.env.AGENT_ONLY === 'questions') {
-    agents = agents.filter(([name]) => name === 'Foresight' || name === 'Questions' || name === 'Content' || name === 'Papers' || name === 'WikiSyllabus');
+    agents = agents.filter(([name]) => name === 'Foresight' || name === 'QuestionCats' || name === 'Questions' || name === 'Content' || name === 'Papers' || name === 'WikiSyllabus');
   } else if (process.env.AGENT_ONLY && process.env.AGENT_ONLY.trim()) {
     const want = process.env.AGENT_ONLY.toLowerCase().split(',').map(s => s.trim()).filter(Boolean);
     const keep = agents.filter(([name]) => want.indexOf(name.toLowerCase()) !== -1);
