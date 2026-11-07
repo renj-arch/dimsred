@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T14:58:34.274Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; selfcheck cleared 57 items last run but is likely saturated or a placeholder for 'all agents'. BankFigures must address the 80 figure gaps immediately as they are incomplete standing goals. Invention should follow to convert pending ideas into fresh content, keeping the site dynamic. MetaLearn and MockPapers go last as they require input data (papers/questions) which are currently absent; these agents produced 0 in recent runs so they",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (855 total)",
-       "text": "How is the setting height of a reaction turbine determined? | Compare an impulse turbine with a reaction turbine. | Compare the part-load behaviour of the three turbine families."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T15:28:58.999Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -735,8 +690,62 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T22:31:10.529Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 4,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 4
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 226482 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 48 overlapping subtopics into correct categories"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Converted 1 fill-in-blank questions to proper Q&A"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Updated 1 question files"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T21:34:15.416Z",
+ "lastRun": "2026-11-07T22:31:10.529Z",
  "model": "qwen3.5:9b"
 }
