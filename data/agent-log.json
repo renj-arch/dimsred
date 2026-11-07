@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T23:04:38.794Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "We have 81 figure gaps and 23 critical faults; the last run produced zero fixes for 'foresight', 'questions', 'content', 'papers', and 'wikisyllabus', so these agents must be starved or moved to the end of the queue. Since 'mainsfresh' just fixed one item, we prioritize unfinished standing goals (figure gaps) before new ventures like invention.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MockPapers",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (774 total)",
-       "text": "Name the three types of similitude between model and prototype. | When are the Reynolds and Froude model laws applied, and why are distorted model | On what basis are hydraulic turbines classified?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Hydraulic Machines (360 in pool)",
-       "text": "Hydraulic Machines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T23:44:18.736Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -717,8 +656,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T07:02:12.664Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical gaps in figures (80) and papers are missing entirely; BankFigures must run first to fix the broken visual content. Since papers are absent, MockPapers is next to generate the core study material, followed by ExamPatterns to add value once a base exists. Invention and MetaLearn agents have produced zero output for two consecutive runs and should be deprioritized to this slot to avoid wasting budget on starved processes.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (815 total)",
+       "text": "List the losses in a Francis turbine. | What head and discharge conditions suit a Francis turbine? | Compute the peripheral speed u1 at a Francis runner inlet with φ = 0.7 and H = 3"
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw622th4 (gs3, 15 marks): India aims to secure 500 GW of non-fossil energy capacity by 2030, but this transition hinges on accessing critical mine",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T05:52:53.494Z",
+ "lastRun": "2026-11-07T07:02:12.664Z",
  "model": "qwen3.5:9b"
 }
