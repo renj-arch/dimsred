@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T08:58:26.619Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. MockPapers and MainsFresh should follow immediately to address the missing papers and questions indicated by false file flags, as these represent unfinished standing goals. ExamPatterns will be queued last since no specific pattern gaps were flagged in the immediate critical path, though it remains available if new gaps emerge.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "MainsFresh",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (827 total)",
-       "text": "How does the part-load efficiency of a Kaplan turbine compare with a fixed-blade | Why must a Kaplan turbine be set deeper relative to the tail race? | Write the Euler turbine equation."
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw668alz (gs3, 15 marks): India's commitment to achieving Net Zero by 2070 requires massive capital mobilization. Critically examine the role of t",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T09:06:43.539Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -751,8 +695,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T16:28:06.780Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual assets blocking study flow. Since papers/syllabus files are missing, MockPapers is next to generate core exam materials from scratch. ExamPatterns should follow to ensure question structures align with current syllabi once base content exists. Invention will be last as it targets pending ideas rather than critical gaps.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (863 total)",
+       "text": "Write the theoretical head developed by a pump impeller. | Describe the velocity triangles at the inlet and outlet of a pump impeller. | Which impeller vane shape is preferred and why?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T15:54:37.907Z",
+ "lastRun": "2026-11-07T16:28:06.780Z",
  "model": "qwen3.5:9b"
 }
