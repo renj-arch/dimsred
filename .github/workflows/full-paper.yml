@@ -125,11 +125,11 @@ jobs:
             echo "paper=${PAIR##*:}" >> $GITHUB_OUTPUT
           fi
 
-      # Exit 3 means "short, refused to publish" - not a crash. The bank fill
-      # and the status file are still committed below.
+      # Exit 3 means "short, refused to publish". The job must end red so a
+      # short paper is visible; the bank fill and status file are still
+      # committed by the always() step below.
       - name: Assemble full paper
         id: lane
-        continue-on-error: true
         env:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
