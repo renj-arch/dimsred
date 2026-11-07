@@ -161,10 +161,22 @@ async function fillExam(examKey, opts) {
   const budget = { left: parseInt(opts.budget, 10) || 40 };
   const batch = [];
   let added = 0;
-  for (const p of plan) {
-    if (added >= budget.left) break;
-    const def = paper.sections.find(function (s) { return s.name === p.name; });
-    added += await generateSection(p.name, def, p.count, examDef.name, paper.name, bank, batch, budget);
+  // Track the shortfall per section and make several passes. One pass used to
+  // stop at 14/15 when the model rejected a few items; the stale bank then
+  // filled the last slot with a non-model question. Passes drain the budget
+  // only where it is still needed.
+  const remaining = {};
+  plan.forEach(function (p) { remaining[p.name] = (remaining[p.name] || 0) + p.count; });
+  for (let pass = 0; pass < 3; pass++) {
+    const open = plan.filter(function (p) { return remaining[p.name] > 0; });
+    if (!open.length || budget.left <= 0) break;
+    for (const p of open) {
+      if (remaining[p.name] <= 0 || budget.left <= 0) continue;
+      const def = paper.sections.find(function (s) { return s.name === p.name; });
+      const got = await generateSection(p.name, def, remaining[p.name], examDef.name, paper.name, bank, batch, budget);
+      remaining[p.name] -= got;
+      added += got;
+    }
   }
 
   if (!batch.length) {
