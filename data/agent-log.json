@@ -1,66 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T13:58:23.109Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 57,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 57
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      },
-      {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      },
-      {
-       "page": "agniveer/papers/practice-set-01.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-13.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-14.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "agniveer/papers/practice-set-15.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cds/papers/practice-set-01.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cds/papers/practice-set-02.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cgl/papers/13-sep-2025-s1.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      },
-      {
-       "page": "cgl/papers/practice-set-01.html",
-       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T14:02:44.365Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -764,8 +704,48 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T20:45:03.391Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) indicate severe content decay; BankFigures must address the 80 missing figures immediately as they likely block question rendering. The high critical fault count suggests broken links or missing assets, which MockPapers can resolve by regenerating or patching incomplete exam papers. Invention is deferred to the end of the queue as per rules for agents with zero recent output, allowing BankFigures and MockPapers to clear the backlog first.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (889 total)",
+       "text": "Write the discharge of a double-acting reciprocating pump. | What is the slip of a reciprocating pump? | When does a reciprocating pump show negative slip?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T20:04:25.340Z",
+ "lastRun": "2026-11-07T20:45:03.391Z",
  "model": "qwen3.5:9b"
 }
