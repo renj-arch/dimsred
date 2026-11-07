@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T02:15:45.129Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has 81 figure gaps and 23 critical faults, with no papers or questions present. BankFigures is the only agent producing results recently (1 fix/run), so it must lead to clear the backlog of broken figures. Since filesPresent shows false for all content types, we prioritize generating core assets over new ideas; MetaLearn should run last as it produced 0 fixes in the last two runs and likely needs input from BankFigures first.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "ExamPatterns",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (792 total)",
-       "text": "Write the hydraulic efficiency of a Pelton wheel. | Why does a Pelton wheel not need a casing or draft tube? | What is the jet ratio of a Pelton wheel and its usual value?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T02:42:58.322Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -746,8 +696,32 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T09:06:43.539Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw66iy1f (gs3, 15 marks): India's strategic pivot towards critical minerals like lithium, cobalt and rare earth elements is reshaping its geopolit",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T08:58:26.619Z",
+ "lastRun": "2026-11-07T09:06:43.539Z",
  "model": "qwen3.5:9b"
 }
