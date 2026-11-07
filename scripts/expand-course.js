@@ -265,6 +265,160 @@ function collectDeepen() {
   return out;
 }
 
+// Hand-built root pages are not in exam-configs.json at all: 204 lesson-*.html
+// pages plus the concept-map and paper hubs linked from the home page. They have
+// no course-data key, so the generator can never rewrite them; their depth goes
+// to course-addons.json and is injected at deploy time. Hubs have no
+// .lesson-body wrapper, so their entries target the document body instead.
+var HAND_HUBS = [
+  { file: 'papers.html', subject: 'Exam Papers' },
+  { file: 'physics.html', subject: 'Physics' },
+  { file: 'chemistry.html', subject: 'Chemistry' },
+  { file: 'math.html', subject: 'Mathematics' }
+];
+
+function metaContent(html, name) {
+  var tags = String(html || '').match(/<meta\b[^>]*>/gi) || [];
+  for (var i = 0; i < tags.length; i++) {
+    var nm = /name=["']([^"']+)["']/i.exec(tags[i]);
+    if (!nm || nm[1].toLowerCase() !== String(name).toLowerCase()) continue;
+    var cm = /content=["']([^"']*)["']/i.exec(tags[i]);
+    if (cm) return stripTags(cm[1]);
+  }
+  return '';
+}
+
+function pageTitle(html) {
+  var m = /<title[^>]*>([\s\S]*?)<\/title>/i.exec(String(html || ''));
+  if (!m) return '';
+  return stripTags(m[1])
+    .replace(/\s*[|\u2014\u2013-]\s*(?:vlymbooq|dimsred)\s*$/i, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
+
+// The concept maps keep their node labels in a JS array; the object literal has
+// title/label/name before href, so pair them to recover the full topic list.
+function hubTopics(html) {
+  var s = String(html || '');
+  var names = [];
+  var re = /(?:name|title|label)\s*:\s*['"]([^'"]+)['"][^{}]{0,600}?href\s*:\s*['"](?:\.\/)?lesson-/gi;
+  var m;
+  while ((m = re.exec(s))) {
+    var t = stripTags(m[1]).trim();
+    if (t && names.indexOf(t) === -1) names.push(t);
+  }
+  if (!names.length) {
+    var tabRe = /<div class="tab\b[^"]*"[^>]*>([\s\S]*?)<\/div>/gi;
+    while ((m = tabRe.exec(s))) {
+      var tab = stripTags(m[1]).trim();
+      if (tab && names.indexOf(tab) === -1) names.push(tab);
+    }
+  }
+  if (!names.length) names = headingsIn(html);
+  return names.slice(0, 20).join(', ');
+}
+
+function handTopics(html, title) {
+  var heads = headingsIn(html).filter(function (h) {
+    return h.toLowerCase() !== String(title || '').toLowerCase();
+  });
+  return heads.slice(0, 14).join(', ') || title;
+}
+
+// A root lesson is linked from exactly one concept map (203 of 204); that link
+// is the most reliable subject label available without editing the pages.
+function hubSubjectMap() {
+  var map = {};
+  [['math.html', 'Mathematics'], ['physics.html', 'Physics'], ['chemistry.html', 'Chemistry']].forEach(function (pair) {
+    var fp = path.join(ROOT, pair[0]);
+    if (!fs.existsSync(fp)) return;
+    var s = fs.readFileSync(fp, 'utf8');
+    var re = /href\s*:\s*['"](?:\.\/)?lesson-([^'"#]+)\.html['"]/gi;
+    var m;
+    while ((m = re.exec(s))) {
+      if (!map[m[1]]) map[m[1]] = pair[1];
+    }
+  });
+  return map;
+}
+
+function collectHandPages() {
+  var out = [];
+  var seen = {};
+  var subjectOf = hubSubjectMap();
+
+  function add(rel, slug, target, subject, title, desc, topics, priority) {
+    if (seen[rel]) return;
+    seen[rel] = 1;
+    var key = 'hand/' + slug;
+    var st = depthState.keys[key] || {};
+    var passes = parseInt(st.passes || 0, 10) || 0;
+    if (passes >= DEPTH_PASSES) return;
+    out.push({
+      key: key,
+      mk: 'hand',
+      slug: slug,
+      role: 'deepen-page',
+      target: target,
+      oldLen: 0,
+      pageSize: pageSize(path.join(ROOT, rel)),
+      passes: passes,
+      lastAt: String(st.at || ''),
+      lesson: { title: title, desc: desc, topics: topics },
+      modName: subject,
+      examName: 'competitive exam',
+      examCount: 1,
+      files: [rel],
+      priority: priority
+    });
+  }
+
+  // Hubs first so the pages the user actually lands on get depth immediately.
+  HAND_HUBS.forEach(function (h) {
+    var fp = path.join(ROOT, h.file);
+    if (!fs.existsSync(fp)) return;
+    var html = fs.readFileSync(fp, 'utf8');
+    var title = pageTitle(html) || h.subject;
+    var desc = metaContent(html, 'description') || title;
+    var topics = hubTopics(html) || title;
+    add(h.file, h.file.replace(/\.html$/, ''), 'body', h.subject, title, desc, topics, 0);
+  });
+
+  fs.readdirSync(ROOT).filter(function (f) {
+    return /^lesson-.*\.html$/.test(f);
+  }).sort().forEach(function (f) {
+    var slug = f.replace(/^lesson-/, '').replace(/\.html$/, '');
+    var html = fs.readFileSync(path.join(ROOT, f), 'utf8');
+    var title = pageTitle(html) || slug.replace(/-/g, ' ');
+    var desc = metaContent(html, 'description') || title;
+    add(f, slug, 'lesson-body', subjectOf[slug] || 'General Studies', title, desc, handTopics(html, title), 1);
+  });
+
+  out.sort(function (a, b) {
+    if (a.priority !== b.priority) return a.priority - b.priority;
+    if (a.lastAt !== b.lastAt) {
+      if (!a.lastAt) return -1;
+      if (!b.lastAt) return 1;
+      return a.lastAt < b.lastAt ? -1 : 1;
+    }
+    return a.pageSize - b.pageSize;
+  });
+  return out;
+}
+
+// Fair-share the two lanes: one hand page, one generated lesson, so neither
+// starves while both still have depth passes left.
+function interleave(a, b) {
+  var out = [];
+  var i = 0, j = 0;
+  while (i < a.length || j < b.length) {
+    if (i < a.length) out.push(a[i++]);
+    if (j < b.length) out.push(b[j++]);
+  }
+  return out;
+}
+
 // ---- generation ------------------------------------------------------------
 
 function theoryPrompt(gap) {
@@ -325,7 +479,7 @@ function stripTags(html) {
 
 function headingsIn(html) {
   var out = [];
-  var re = /<h([234])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
+  var re = /<h([1-4])\b[^>]*>([\s\S]*?)<\/h\1>/gi;
   var m;
   while ((m = re.exec(String(html || '')))) {
     var t = stripTags(m[2]);
@@ -334,20 +488,71 @@ function headingsIn(html) {
   return out;
 }
 
+function closingDiv(html, openEnd) {
+  var re = /<\/?div\b[^>]*>/gi;
+  re.lastIndex = openEnd;
+  var depth = 1;
+  var m;
+  while ((m = re.exec(html))) {
+    if (m[0].slice(0, 2) === '</') depth--;
+    else depth++;
+    if (depth === 0) return m.index;
+  }
+  return -1;
+}
+
+function bodyInner(html) {
+  var m = /<body\b[^>]*>([\s\S]*?)<\/body>/i.exec(String(html || ''));
+  return m ? m[1] : String(html || '');
+}
+
+// Scripts and styles are the bulk of a hand-built page; they carry no lesson
+// prose and would swamp both the prompt and the overlap check.
+function cleanPageSource(html) {
+  return String(html || '')
+    .replace(/<script\b[\s\S]*?<\/script>/gi, ' ')
+    .replace(/<style\b[\s\S]*?<\/style>/gi, ' ')
+    .replace(/<svg\b[\s\S]*?<\/svg>/gi, ' ')
+    .replace(/<noscript\b[\s\S]*?<\/noscript>/gi, ' ')
+    .replace(/<!--[\s\S]*?-->/g, ' ');
+}
+
 function pageSource(gap) {
   for (var i = 0; i < gap.files.length; i++) {
     var fp = path.join(ROOT, gap.files[i]);
     if (!fs.existsSync(fp)) continue;
     var s = fs.readFileSync(fp, 'utf8');
-    var i0 = s.indexOf('<div class="lesson-body">');
-    if (i0 !== -1) s = s.slice(i0 + 25);
-    return s;
+    var inner;
+    if (gap.target === 'body') {
+      inner = cleanPageSource(bodyInner(s));
+    } else {
+      var openTag = '<div class="lesson-body">';
+      var i0 = s.indexOf(openTag);
+      if (i0 !== -1) {
+        var start = i0 + openTag.length;
+        var close = closingDiv(s, start);
+        inner = cleanPageSource(close === -1 ? s.slice(start) : s.slice(start, close));
+      } else {
+        inner = cleanPageSource(bodyInner(s));
+      }
+    }
+    return inner.slice(-120000);
   }
   return '';
 }
 
+function addonSource(key) {
+  var entry = addons.keys[key];
+  return entry && entry.html ? String(entry.html) : '';
+}
+
 function deepenPrompt(gap) {
   var source = gap.role === 'deepen' ? String(courseData[gap.key] || '') : pageSource(gap);
+  // Pass 2 and 3 must see what pass 1 already added, or the model repeats it.
+  if (gap.role === 'deepen-page') {
+    var prior = addonSource(gap.key);
+    if (prior) source = source + '\n' + prior;
+  }
   var headings = headingsIn(source).slice(0, 90);
   var digest = stripTags(source).slice(-4500);
   var lines = [
@@ -724,8 +929,11 @@ function writeTouched(keys, files, exams) {
 async function main() {
   var fills = collectGaps();
   var thins = THIN > 0 ? collectThins() : [];
-  var deeps = DEEPEN ? collectDeepen() : [];
+  var deeps = DEEPEN ? interleave(collectHandPages(), collectDeepen()) : [];
   console.log('Course worklist: ' + fills.length + ' empty slot(s), ' + thins.length + ' thin lesson(s) (<' + THIN + ' chars), ' + deeps.length + ' depth candidate(s)');
+  if (DRY && process.env.EXPAND_DRY_JSON) {
+    fs.writeFileSync(path.resolve(process.env.EXPAND_DRY_JSON), JSON.stringify(deeps, null, 2) + '\n', 'utf8');
+  }
   fills.slice(0, 10).forEach(function (g) {
     console.log('  [fill]   ' + g.key + '  (' + g.examCount + ' exam' + (g.examCount > 1 ? 's' : '') + ')');
   });

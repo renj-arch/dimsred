@@ -223,7 +223,7 @@ function generateExam(examKey) {
   for (var mi = 0; mi < modKeys.length; mi++) {
     var mk = modKeys[mi];
     var mod = modules[mk];
-    idx += '        <div class="module-card">\n';
+    idx += '        <div class="module-card" id="' + esc(mk) + '">\n';
     idx += '            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">\n';
     idx += '                <span style="font-size:1.4em">' + mod.icon + '</span>\n';
     idx += '                <div class="m-title" style="color:' + mod.color + '">Module ' + mod.num + ': ' + esc(mod.name) + '</div>\n';
@@ -267,7 +267,10 @@ function generateExam(examKey) {
       if (ONLY.length && ONLY.indexOf(mk + '/' + lesson.slug) === -1) continue;
 
       // Get content and practice (with cross-exam reuse)
-      var altKeys = {reasoning:'reasoning', quant:'quant', english:'english', ga:'ga', gk:'ga', maths:'quant', aptitude:'reasoning', gs:'ga', csat:'quant', evs:'ga', language:'english', science:'ga', cdp:'ga'};
+      var altKeys = {reasoning:'reasoning', quant:'quant', english:'english', ga:'ga', gk:'ga', maths:'quant', aptitude:'reasoning', gs:'ga', csat:'quant', evs:'ga', language:'english', science:'ga', cdp:'ga',
+        // The standalone English course reuses the reviewed English lessons
+        // already stored under the `english/` content keys.
+        grammar:'english', vocabulary:'english', comprehension:'english', writing:'english'};
       var contentKey = mk + '/' + lesson.slug;
       var lessonContent = null;
       if (cglContent && cglContent[contentKey]) lessonContent = cglContent[contentKey];

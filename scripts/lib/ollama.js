@@ -93,11 +93,75 @@ async function callLLM(messages, opts) {
   return parsed;
 }
 
+// Local models occasionally emit JSON with a raw newline inside a string, a
+// trailing comma, or a truncated final object. JSON.parse rejects the whole
+// batch for one of those defects. Repair the text rather than discard every
+// otherwise usable question: escape control characters inside strings, drop
+// trailing commas, and close an unterminated string/object/array.
+function repairJsonText(text) {
+  const s = String(text || '');
+  let out = '';
+  let inStr = false, esc = false;
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) {
+      if (esc) { out += c; esc = false; continue; }
+      if (c === '\\') { out += c; esc = true; continue; }
+      if (c === '"') { out += c; inStr = false; continue; }
+      if (c === '\n') { out += '\\n'; continue; }
+      if (c === '\r') { out += '\\r'; continue; }
+      if (c === '\t') { out += '\\t'; continue; }
+      if (c < ' ') { out += ' '; continue; }
+      out += c;
+      continue;
+    }
+    if (c === '"') { inStr = true; out += c; continue; }
+    out += c;
+  }
+  out = out.replace(/,\s*([}\]])/g, '$1');
+  if (inStr) out += '"';
+  // Close whatever nesting the model left open (truncated output).
+  const stack = [];
+  inStr = false; esc = false;
+  for (let i = 0; i < out.length; i++) {
+    const c = out[i];
+    if (inStr) {
+      if (esc) esc = false;
+      else if (c === '\\') esc = true;
+      else if (c === '"') inStr = false;
+      continue;
+    }
+    if (c === '"') { inStr = true; continue; }
+    if (c === '{' || c === '[') stack.push(c);
+    else if (c === '}' || c === ']') stack.pop();
+  }
+  while (stack.length) {
+    const open = stack.pop();
+    out = out.replace(/,\s*$/, '');
+    out += open === '{' ? '}' : ']';
+  }
+  return out;
+}
+
+function parseJsonLoose(text) {
+  const s = String(text || '').trim();
+  try { return JSON.parse(s); } catch (e) {}
+  try { return JSON.parse(repairJsonText(s)); } catch (e) {}
+  return null;
+}
+
 function extractArray(text) {
   const s = String(text || '');
-  const a = s.indexOf('['), b = s.lastIndexOf(']');
-  if (a === -1 || b <= a) throw new Error('no JSON array in model output');
-  return JSON.parse(s.slice(a, b + 1));
+  const a = s.indexOf('[');
+  if (a === -1) throw new Error('no JSON array in model output');
+  const b = s.lastIndexOf(']');
+  const slice = b > a ? s.slice(a, b + 1) : s.slice(a);
+  const parsed = parseJsonLoose(slice);
+  if (Array.isArray(parsed)) return parsed;
+  // A repaired truncated array may still contain usable complete objects.
+  const items = extractLooseItems(slice);
+  if (items.length) return items;
+  throw new Error('no parseable JSON array in model output');
 }
 
 function extractLooseItems(text) {
@@ -116,10 +180,16 @@ function extractLooseItems(text) {
     if (c === '}' && depth > 0) {
       depth--;
       if (depth === 0 && start !== -1) {
-        try { items.push(JSON.parse(s.slice(start, i + 1))); } catch (e) {}
+        const obj = parseJsonLoose(s.slice(start, i + 1));
+        if (obj && typeof obj === 'object' && !Array.isArray(obj)) items.push(obj);
         start = -1;
       }
     }
+  }
+  // Salvage a final object the model never closed.
+  if (depth > 0 && start !== -1) {
+    const obj = parseJsonLoose(s.slice(start));
+    if (obj && typeof obj === 'object' && !Array.isArray(obj)) items.push(obj);
   }
   return items;
 }
@@ -166,4 +236,4 @@ function leak(text) {
 function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
 function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
 
-module.exports = { HOST: HOST, MODEL: MODEL, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, leak: leak, clean: clean, norm: norm };
+module.exports = { HOST: HOST, MODEL: MODEL, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm };

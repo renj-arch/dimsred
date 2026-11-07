@@ -30,10 +30,13 @@ function paper(bp, key, paperId) {
 }
 
 // Rotate papers for multi-paper exams (UPSC GS1/CSAT, NDA, CDS) so daily
-// practice does not keep sampling the same paper.
+// practice does not keep sampling the same paper. Descriptive/mixed papers
+// and papers whose bank sections are not ready yet are skipped.
 function paperForDaily(bp, key, setNumber) {
-  var list = papers(bp, key);
-  if (!list.length) throw new Error('exam "' + key + '" has no papers');
+  var list = papers(bp, key).filter(function (p) {
+    return p.mcqLane !== false && p.daily !== false;
+  });
+  if (!list.length) throw new Error('exam "' + key + '" has no MCQ daily paper');
   return list[Math.max(0, (setNumber || 1) - 1) % list.length];
 }
 
