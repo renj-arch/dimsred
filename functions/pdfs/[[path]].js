@@ -23,6 +23,16 @@ export async function onRequest(context) {
   // /api/serve-pdf and a valid code.
   if (/^full-[A-Za-z0-9-]+\.pdf$/.test(path)) {
     var paper = await context.env.ASSETS.fetch(context.request);
+    // Do NOT wrap a missing asset in a 200: the deploy can land a moment
+    // after the page, and a cached 200-with-HTML poisons the PDF URL for an
+    // hour (observed with the first UPSC full paper). A real 404 with no
+    // store lets the next request find the file as soon as it deploys.
+    if (!paper.ok) {
+      return new Response('Paper not found', {
+        status: 404,
+        headers: { 'Content-Type': 'text/plain', 'Cache-Control': 'no-store', 'Access-Control-Allow-Origin': ORIGIN }
+      });
+    }
     return new Response(paper.body, {
       headers: {
         'Content-Type': 'application/pdf',
