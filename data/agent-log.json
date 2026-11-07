@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T23:44:18.736Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as unfinished standing goals take priority over new ideas. MetaLearn is starved (0 fixes in last 2 runs), so it moves to the end of the execution list to allow other agents to clear the backlog first. The remaining actions target critical faults and pending ideas while respecting the agent starvation rule.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (777 total)",
-       "text": "Into what classes are turbines grouped by flow direction? | Define an impulse turbine. | Define a reaction turbine."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T00:10:34.208Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -698,8 +648,67 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T07:05:58.784Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 61,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 61
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "agniveer/mock-tests/full-2026-11-07-agniveer-cee.html",
+       "fix": "Nav: \"AGNIVEER\" → /agniveer/ (was ../index.html)"
+      },
+      {
+       "page": "agniveer/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-13.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-14.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "agniveer/papers/practice-set-15.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-01.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cds/papers/practice-set-02.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      },
+      {
+       "page": "cgl/mock-tests/full-2026-11-07-cgl-tier1.html",
+       "fix": "Nav: \"CGL\" → /cgl/ (was ../index.html)"
+      },
+      {
+       "page": "cgl/papers/13-sep-2025-s1.html",
+       "fix": "CSP script-src lacked unsafe-inline while page uses inline scripts — all page JS was dead; added it"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T07:04:20.218Z",
+ "lastRun": "2026-11-07T07:05:58.784Z",
  "model": "qwen3.5:9b"
 }
