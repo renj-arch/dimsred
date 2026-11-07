@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T01:56:50.583Z",
-  "cursor": 909,
-  "built": 792
+  "updatedAt": "2026-11-07T02:27:44.716Z",
+  "cursor": 912,
+  "built": 795
  },
  "figs": {
   "2316121": {
@@ -4755,6 +4755,24 @@
   "678ef302": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"10\" y=\"20\">D</text><circle cx=\"180\" cy=\"100\" r=\"70\" /><text x=\"190\" y=\"105\">D</text><line x1=\"110\" y1=\"30\" x2=\"110\" y2=\"170\" stroke-dasharray=\"4\" /><text x=\"105\" y=\"95\">d</text><circle cx=\"180\" cy=\"30\" r=\"3\" fill=\"#222\" /><circle cx=\"180\" cy=\"170\" r=\"3\" fill=\"#222\" /><line x1=\"177\" y1=\"33\" x2=\"183\" y2=\"33\" /><line x1=\"177\" y1=\"167\" x2=\"183\" y2=\"167\" /><text x=\"200\" y=\"50\">Jet (d)</text><text x=\"200\" y=\"180\">Jet (d)</text><text x=\"240\" y=\"110\">Pelton Wheel</text><text x=\"240\" y=\"90\">Pitch Diameter (D)</text></svg>",
    "n": "what is the jet ratio of a pelton wheel and its usual value?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "2c5dbb4e": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Pelton Wheel Runner</text><circle cx=\"180\" cy=\"110\" r=\"90\" stroke-dasharray=\"3,3\"/><line x1=\"180\" y1=\"110\" x2=\"180\" y2=\"40\" stroke-width=\"1.5\"/><line x1=\"180\" y1=\"110\" x2=\"180\" y2=\"180\" stroke-width=\"1.5\"/><line x1=\"90\" y1=\"110\" x2=\"160\" y2=\"110\" stroke-width=\"1.5\"/><line x1=\"220\" y1=\"110\" x2=\"270\" y2=\"110\" stroke-width=\"1.5\"/><circle cx=\"180\" cy=\"110\" r=\"3\" fill=\"#222\"/><text x=\"175\" y=\"100\">D (Pitch Diameter)</text><line x1=\"160\" y1=\"110\" x2=\"175\" y2=\"110\" stroke-width=\"1.5\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">d (Jet Diameter)</text><circle cx=\"180\" cy=\"110\" r=\"3\" fill=\"#222\"/><text x=\"175\" y=\"205\" text-anchor=\"middle\">z = 15 + D/2d</text></svg>",
+   "n": "how is the number of buckets on a pelton runner found?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "93995e8b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">Pelton Wheel Bucket</text>\n <circle cx=\"180\" cy=\"140\" r=\"60\"/>\n <path d=\"M 120 140 L 180 100 L 240 140 Z\" fill=\"#ddd\" stroke-width=\"3\"/>\n <text x=\"180\" y=\"155\" text-anchor=\"middle\">Bucket</text>\n <path d=\"M 160 90 Q 180 70 200 90\" stroke-dasharray=\"4,2\"/>\n <text x=\"180\" y=\"80\" text-anchor=\"middle\">Jet Impact</text>\n <line x1=\"150\" y1=\"60\" x2=\"150\" y2=\"30\" stroke-width=\"2\"/>\n <line x1=\"150\" y1=\"30\" x2=\"180\" y2=\"90\" stroke-width=\"2\"/>\n <text x=\"140\" y=\"45\" text-anchor=\"end\">Jet 1</text>\n <line x1=\"210\" y1=\"60\" x2=\"210\" y2=\"30\" stroke-width=\"2\"/>\n <line x1=\"210\" y1=\"30\" x2=\"180\" y2=\"90\" stroke-width=\"2\"/>\n <text x=\"220\" y=\"45\" text-anchor=\"start\">Jet 2</text>\n <text x=\"180\" y=\"185\" text-anchor=\"middle\">Multiple jets increase total discharge</text>\n</svg>",
+   "n": "why are pelton wheels sometimes given several jets?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "c484649f": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Pelton Wheel Runner -->\n  <path d=\"M180 40 L260 70 L260 150 L180 180 L100 150 L100 70 Z\" fill=\"none\"/>\n  <!-- Main Jet (Off) -->\n  <line x1=\"30\" y1=\"110\" x2=\"60\" y2=\"110\" stroke-dasharray=\"4,2\"/>\n  <text x=\"15\" y=\"105\">Main Jet</text>\n  <!-- Braking Jet (On) -->\n  <line x1=\"30\" y1=\"110\" x2=\"60\" y2=\"110\" stroke-width=\"2\"/>\n  <path d=\"M60 110 L90 85 L120 110 Z\" fill=\"none\"/>\n  <text x=\"130\" y=\"105\">Braking Jet</text>\n  <!-- Bucket Back -->\n  <path d=\"M90 85 Q100 60 110 85 L120 110 Z\" fill=\"none\" stroke-dasharray=\"4,2\"/>\n  <text x=\"135\" y=\"75\">Bucket Back</text>\n  <!-- Force Arrow -->\n  <path d=\"M90 85 L110 60\" stroke-width=\"2\" marker-end=\"url(#arrow)\"/>\n  <text x=\"100\" y=\"55\">Reverse Force</text>\n  <!-- Labels -->\n  <text x=\"180\" y=\"20\" text-anchor=\"middle\">Pelton Wheel Runner</text>\n  <text x=\"180\" y=\"200\" text-anchor=\"middle\">Braking Action: Jet hits bucket back to stop runner</text>\n</svg>",
+   "n": "what is the purpose of the braking jet on a pelton wheel?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
