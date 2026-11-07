@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T18:36:44.032Z",
-  "cursor": 999,
-  "built": 878
+  "updatedAt": "2026-11-07T18:55:55.506Z",
+  "cursor": 1002,
+  "built": 881
  },
  "figs": {
   "2316121": {
@@ -5271,6 +5271,24 @@
   "bf4ecc41": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"325\" y=\"185\">Pump Inlet</text><path d=\"M 60 180 L 60 100\"/><text x=\"45\" y=\"140\">Suction Pipe</text><circle cx=\"60\" cy=\"100\" r=\"8\"/><text x=\"70\" y=\"95\">Eye</text><path d=\"M 60 100 L 60 40\"/><text x=\"45\" y=\"70\">Atmosphere (pa)</text><line x1=\"30\" y1=\"40\" x2=\"90\" y2=\"40\"/><path d=\"M 60 40 L 60 80\"/><text x=\"45\" y=\"60\">Static Head (hs)</text><path d=\"M 60 80 L 100 80\"/><text x=\"105\" y=\"85\">Friction Loss (hfs)</text><path d=\"M 100 80 L 100 40\"/><text x=\"95\" y=\"35\">Vapour Pressure (pv)</text><path d=\"M 60 40 L 120 40\"/><text x=\"125\" y=\"45\">NPSH Available</text><path d=\"M 120 40 L 120 180\"/><text x=\"135\" y=\"110\">Available Head</text></svg>",
    "n": "what is npsh and why is it important for a pump?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "3611eac4": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Affinity Laws (Constant Diameter)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"180\"/><text x=\"35\" y=\"65\">Q</text><text x=\"35\" y=\"185\">P</text><text x=\"325\" y=\"65\">N</text><text x=\"325\" y=\"185\">H</text><path d=\"M 40 60 L 320 60\"/><path d=\"M 40 60 L 40 180\"/><path d=\"M 40 60 L 320 180\"/><circle cx=\"180\" cy=\"110\" r=\"5\"/><text x=\"175\" y=\"115\">Q ∝ N</text><circle cx=\"180\" cy=\"110\" r=\"5\"/><text x=\"195\" y=\"115\">H ∝ N²</text><circle cx=\"180\" cy=\"110\" r=\"5\"/><text x=\"215\" y=\"115\">P ∝ N³</text></svg>",
+   "n": "state the affinity laws of a centrifugal pump.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "224240d2": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"20\" text-anchor=\"middle\">Head (H)</text>\n <line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"190\" />\n <line x1=\"40\" y1=\"190\" x2=\"320\" y2=\"190\" />\n <text x=\"330\" y=\"105\" text-anchor=\"end\">H</text>\n <text x=\"180\" y=\"205\" text-anchor=\"middle\">Discharge (Q)</text>\n <line x1=\"40\" y1=\"190\" x2=\"40\" y2=\"30\" />\n <line x1=\"320\" y1=\"190\" x2=\"320\" y2=\"30\" />\n <text x=\"330\" y=\"35\" text-anchor=\"end\">Q</text>\n <path d=\"M 60 180 Q 140 120 220 60\" fill=\"none\" />\n <text x=\"240\" y=\"75\">Pump Curve</text>\n <line x1=\"30\" y1=\"190\" x2=\"30\" y2=\"190\" stroke-dasharray=\"4\" />\n <path d=\"M 30 190 L 30 185\" />\n <path d=\"M 30 185 Q 100 160 170 120\" fill=\"none\" />\n <text x=\"140\" y=\"155\">System Curve</text>\n <circle cx=\"160\" cy=\"130\" r=\"4\" fill=\"none\" stroke=\"#222\" stroke-width=\"2\" />\n <line x1=\"160\" y1=\"130\" x2=\"160\" y2=\"190\" stroke-dasharray=\"2\" />\n <line x1=\"150\" y1=\"130\" x2=\"170\" y2=\"130\" stroke-dasharray=\"2\" />\n <text x=\"145\" y=\"125\">Working Point</text>\n</svg>",
+   "n": "how is the working point of a pump found?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "81e74733": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Centrifugal Pump: Shut-Off Condition</text><circle cx=\"100\" cy=\"140\" r=\"30\" /><path d=\"M 70 140 L 100 110 L 130 140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><path d=\"M 130 140 L 160 110 L 190 140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><path d=\"M 190 140 L 220 110 L 250 140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><circle cx=\"250\" cy=\"140\" r=\"30\" /><path d=\"M 280 140 L 310 110 L 340 140\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\" /><text x=\"90\" y=\"165\">Impeller</text><text x=\"270\" y=\"165\">Volute Casing</text><path d=\"M 130 140 L 130 180 M 190 140 L 190 180\" stroke=\"#222\" /><text x=\"140\" y=\"195\">Recirculation Flow</text><circle cx=\"100\" cy=\"60\" r=\"15\" /><circle cx=\"250\" cy=\"60\" r=\"15\" /><path d=\"M 115 60 L 115 80 M 265 60 L 265 80\" stroke=\"#222\" /><text x=\"90\" y=\"45\">High Pressure</text><text x=\"250\" y=\"45\">Low Pressure</text><path d=\"M 130 140 Q 130 160 150 160 T 170 140\" fill=\"none\" stroke=\"#222\" /><text x=\"145\" y=\"175\">Heat Generation</text></svg>",
+   "n": "what happens when a centrifugal pump runs at shut-off?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
