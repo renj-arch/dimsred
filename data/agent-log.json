@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T15:54:37.907Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults and significant gaps in figures, questions, and syllabus data, while no papers or sidecars are present. BankFigures is the only agent producing results recently, so it must lead to clear immediate value. Invention should follow to generate new content for the missing files (papers/questions). MetaLearn and ExamPatterns will be queued last as they have produced zero fixes in recent runs and likely need fresh inputs from upstream agents first.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (860 total)",
-       "text": "Define static suction head, static delivery head and static head of a pump. | What is the manometric head of a centrifugal pump? | What work is done per second by a pump impeller?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T16:28:06.780Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -729,8 +684,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T23:01:06.530Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority standing goals; bankfigures must lead to address both immediately. Mockpapers and exampatterns agents have produced zero fixes in the last two runs, so they will be scheduled last after critical content is stabilized. Invention is deferred until the immediate debt of broken figures and missing papers is cleared.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (904 total)",
+       "text": "Describe a hydraulic lift used for raising loads. | What is a hydraulic crane? | State the principle of the hydraulic press."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T22:22:58.761Z",
+ "lastRun": "2026-11-07T23:01:06.530Z",
  "model": "qwen3.5:9b"
 }

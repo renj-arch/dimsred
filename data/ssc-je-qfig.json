@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T22:09:29.873Z",
-  "cursor": 1023,
-  "built": 901
+  "updatedAt": "2026-11-07T22:35:51.239Z",
+  "cursor": 1026,
+  "built": 904
  },
  "figs": {
   "2316121": {
@@ -5409,6 +5409,24 @@
   "99729e7c": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Hydraulic Intensifier</text><rect x=\"40\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><circle cx=\"70\" cy=\"105\" r=\"15\"/><text x=\"35\" y=\"110\" text-anchor=\"end\">Large Area Piston</text><rect x=\"120\" y=\"40\" width=\"60\" height=\"140\" rx=\"3\"/><circle cx=\"150\" cy=\"105\" r=\"8\"/><text x=\"115\" y=\"110\" text-anchor=\"end\">Small Area Piston</text><line x1=\"100\" y1=\"160\" x2=\"260\" y2=\"160\" stroke-dasharray=\"4,2\"/><text x=\"180\" y=\"175\" text-anchor=\"middle\">Common Ram</text><path d=\"M 100 160 L 100 180 L 260 180 L 260 160 Z\"/><text x=\"180\" y=\"195\" text-anchor=\"middle\">Force Balance</text><path d=\"M 40 40 L 100 40 L 100 30 L 40 30 Z\"/><text x=\"25\" y=\"35\" text-anchor=\"end\">Low Pressure Inlet</text><path d=\"M 260 40 L 200 40 L 200 30 L 260 30 Z\"/><text x=\"275\" y=\"35\" text-anchor=\"start\">High Pressure Outlet</text></svg>",
    "n": "what is a hydraulic intensifier?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "667a9c1d": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"180\" height=\"140\" stroke-dasharray=\"2,2\"/><circle cx=\"130\" cy=\"90\" r=\"15\"/><path d=\"M 130 75 L 130 105\"/><path d=\"M 115 85 L 145 85\"/><path d=\"M 130 105 L 130 125\"/><path d=\"M 130 125 L 130 145\"/><text x=\"115\" y=\"95\">Ram</text><text x=\"115\" y=\"155\">Load</text><rect x=\"260\" y=\"80\" width=\"60\" height=\"60\" stroke-dasharray=\"2,2\"/><circle cx=\"290\" cy=\"110\" r=\"10\"/><path d=\"M 270 100 L 310 100\"/><path d=\"M 280 100 L 280 140\"/><path d=\"M 310 100 L 310 140\"/><text x=\"255\" y=\"105\">Pump</text><text x=\"255\" y=\"165\">Fluid</text><path d=\"M 180 145 L 240 145\" stroke-dasharray=\"2,2\"/><text x=\"210\" y=\"165\">High-Pressure Fluid</text></svg>",
+   "n": "describe a hydraulic lift used for raising loads.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "b971088b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"80\" height=\"80\" rx=\"5\"/><line x1=\"120\" y1=\"100\" x2=\"160\" y2=\"60\" stroke-width=\"3\"/><line x1=\"120\" y1=\"100\" x2=\"160\" y2=\"140\" stroke-width=\"3\"/><text x=\"175\" y=\"80\" font-weight=\"bold\">Jib</text><text x=\"175\" y=\"120\" font-weight=\"bold\">Boom</text><path d=\"M 160 60 L 240 60\" stroke-width=\"1.5\"/><path d=\"M 160 140 L 240 140\" stroke-width=\"1.5\"/><path d=\"M 240 60 L 240 140\" stroke-width=\"1.5\"/><text x=\"230\" y=\"100\">Hydraulic</text><text x=\"230\" y=\"110\">Cylinder</text><text x=\"80\" y=\"160\">Piston extends</text><text x=\"80\" y=\"175\">to lift jib</text></svg>",
+   "n": "what is a hydraulic crane?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "590d4797": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"60\" width=\"80\" height=\"60\" stroke-dasharray=\"2,2\"/><text x=\"70\" y=\"95\" text-anchor=\"middle\">A1</text><text x=\"70\" y=\"130\" text-anchor=\"middle\">F1</text><line x1=\"140\" y1=\"60\" x2=\"140\" y2=\"180\" stroke-width=\"1.5\"/><circle cx=\"140\" cy=\"60\" r=\"5\"/><circle cx=\"140\" cy=\"180\" r=\"5\"/><text x=\"130\" y=\"55\">Small Piston</text><line x1=\"220\" y1=\"60\" x2=\"220\" y2=\"180\" stroke-width=\"1.5\"/><circle cx=\"220\" cy=\"60\" r=\"5\"/><circle cx=\"220\" cy=\"180\" r=\"5\"/><text x=\"210\" y=\"55\">Large Piston</text><text x=\"210\" y=\"190\">A2</text><text x=\"210\" y=\"205\">F2</text><path d=\"M 40 60 L 40 180 M 320 60 L 320 180\" stroke-dasharray=\"2,2\"/><text x=\"20\" y=\"120\" text-anchor=\"end\">Fluid</text><text x=\"340\" y=\"120\" text-anchor=\"start\">Pressure</text><path d=\"M 140 60 L 140 55 M 140 180 L 140 185\"/><path d=\"M 220 60 L 220 55 M 220 180 L 220 185\"/><text x=\"132\" y=\"50\">Undiminished</text><text x=\"212\" y=\"50\">Pressure</text></svg>",
+   "n": "state the principle of the hydraulic press.",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
