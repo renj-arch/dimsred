@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T17:21:14.531Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults and figure gaps are the highest priority to prevent user churn and ensure content completeness. MainsFresh has produced zero fixes in the last two runs despite being active, indicating it is likely starved of input rather than broken; therefore, it will be placed last in the queue after the critical agents have addressed the immediate gaps.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (769 total)",
-       "text": "How is open-channel flow classified by the Froude number? | State the principle of dimensional homogeneity. | What is the Rayleigh method of dimensional analysis?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "5 fresh mock questions on Refrigeration & Air Conditioning (360 in pool)",
-       "text": "Refrigeration & Air Conditioning"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T17:26:29.422Z",
    "model": "qwen3:4b",
    "totalFixes": 311,
@@ -900,8 +839,32 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T02:54:18.514Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw5t80i9 (gs3, 15 marks): India's energy transition hinges on securing critical minerals like lithium, cobalt, and nickel. Critically examine the ",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T02:42:58.322Z",
+ "lastRun": "2026-11-07T02:54:18.514Z",
  "model": "qwen3.5:9b"
 }
