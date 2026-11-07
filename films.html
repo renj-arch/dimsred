@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Films — history told as an argument | vlymbooq</title>
+<meta name="description" content="Short, sourced cinematic histories from vlymbooq: the Salt March, Jallianwala Bagh, Bhopal, the Emergency and the Vatican Archives, each with an open argument map and a production dossier." />
+<style>
+  :root{
+    --bg:#070707; --panel:#0f0d0a; --panel2:#16110c; --bone:#f2e6d0;
+    --muted:rgba(242,230,208,.62); --faint:rgba(242,230,208,.36);
+    --gold:#d6a14a; --rust:#b14a2f; --teal:#143f47; --line:rgba(214,161,74,.2);
+    --serif:Georgia,"Liberation Serif","Times New Roman",serif;
+    --sans:"Liberation Sans",Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--bone);font-family:var(--sans);line-height:1.6;
+    background-image:radial-gradient(75% 45% at 50% -8%,rgba(214,161,74,.11),transparent 70%),
+      radial-gradient(45% 35% at 100% 25%,rgba(20,63,71,.18),transparent 70%);}
+  a{color:inherit}
+  .wrap{max-width:1180px;margin:0 auto;padding:0 28px}
+  .top{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:22px 0;
+    border-bottom:1px solid rgba(255,255,255,.07)}
+  .brand{font-size:.72rem;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);text-decoration:none}
+  .brand b{color:var(--gold)}
+  .back{font-size:.7rem;letter-spacing:.2em;text-transform:uppercase;color:var(--muted);text-decoration:none;
+    border:1px solid rgba(255,255,255,.12);padding:9px 14px;border-radius:999px;white-space:nowrap}
+  .back:hover{border-color:var(--gold);color:var(--bone)}
+  header.hero{padding:76px 0 48px}
+  .kicker{font-size:.7rem;letter-spacing:.38em;text-transform:uppercase;color:var(--gold);margin-bottom:18px}
+  h1{font-family:var(--serif);font-weight:900;letter-spacing:-.055em;line-height:.86;
+    font-size:clamp(64px,10.5vw,154px);margin:0 0 26px}
+  .sub{font-family:var(--serif);font-size:clamp(22px,2.8vw,38px);line-height:1.12;
+    max-width:860px;margin:0 0 22px;letter-spacing:-.02em}
+  .dek{max-width:760px;color:var(--muted);margin:0}
+  .rule{height:1px;background:linear-gradient(90deg,var(--gold),rgba(214,161,74,.05));margin:42px 0 0}
+  main{padding:20px 0 90px}
+  .card{display:grid;grid-template-columns:1.05fr .95fr;gap:0;border:1px solid rgba(255,255,255,.08);
+    border-radius:20px;overflow:hidden;margin:0 0 26px;background:linear-gradient(160deg,var(--panel2),var(--panel))}
+  .art{position:relative;min-height:360px;overflow:hidden;isolation:isolate}
+  .art:after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 55%,rgba(15,13,10,.92) 100%)}
+  .art .grain{position:absolute;inset:0;opacity:.15;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.6'/%3E%3C/svg%3E")}
+  .art .num{position:absolute;left:22px;top:18px;z-index:2;font-size:.65rem;letter-spacing:.3em;
+    text-transform:uppercase;color:rgba(242,230,208,.72)}
+  .art .big{position:absolute;left:0;right:0;bottom:-.12em;z-index:1;font-family:var(--serif);font-weight:900;
+    font-size:clamp(80px,13vw,200px);line-height:.8;letter-spacing:-.08em;text-align:center;
+    color:rgba(242,230,208,.9);text-shadow:0 20px 70px rgba(0,0,0,.55)}
+  .art.salt{background:
+    radial-gradient(55% 52% at 48% 44%,rgba(255,247,218,.28),transparent 60%),
+    radial-gradient(90% 80% at 50% 110%,rgba(20,63,71,.6),transparent 70%),
+    linear-gradient(165deg,#10262b,#071012 72%,#040707)}
+  .art.salt .big{color:rgba(242,230,208,.92);font-size:clamp(90px,15vw,230px)}
+  .art.bagh{background:
+    radial-gradient(50% 45% at 58% 30%,rgba(214,161,74,.22),transparent 65%),
+    radial-gradient(80% 80% at 30% 100%,rgba(120,48,24,.35),transparent 70%),
+    linear-gradient(160deg,#21150d,#0b0705 72%,#050403)}
+  .art.bagh:before{content:"";position:absolute;right:13%;top:17%;width:22%;height:66%;z-index:0;
+    border-radius:48% 48% 0 0 / 34% 34% 0 0;
+    background:linear-gradient(180deg,#030303,#000 75%);
+    box-shadow:0 0 0 7px rgba(170,138,92,.14),0 0 55px rgba(214,161,74,.12)}
+  .art.bagh .big{font-size:clamp(52px,7vw,112px);letter-spacing:-.05em;line-height:.86;bottom:1.2em;text-align:left;left:28px}
+  .art.bagh .small{position:absolute;left:28px;bottom:1.6em;z-index:2;font-size:.62rem;letter-spacing:.24em;
+    text-transform:uppercase;color:rgba(242,230,208,.55)}
+  .art.bhopal{background:
+    radial-gradient(45% 45% at 50% 34%,rgba(214,161,74,.18),transparent 66%),
+    radial-gradient(80% 80% at 50% 110%,rgba(20,63,71,.55),transparent 72%),
+    linear-gradient(165deg,#101b18,#070b09 72%,#040505)}
+  .art.bhopal:before{content:"";position:absolute;left:50%;top:21%;width:33%;aspect-ratio:1;z-index:0;
+    transform:translateX(-50%);border-radius:50%;border:10px solid rgba(214,161,74,.18);
+    box-shadow:0 0 0 2px rgba(0,0,0,.6),inset 0 0 0 8px rgba(0,0,0,.45),0 0 55px rgba(214,161,74,.10)}
+  .art.bhopal .big{font-size:clamp(52px,7.2vw,116px);letter-spacing:-.06em;line-height:.86;bottom:1.12em;
+    text-align:center;left:0;right:0}
+  .art.bhopal .small{position:absolute;left:0;right:0;bottom:1.7em;z-index:2;text-align:center;
+    font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,230,208,.55)}
+  .art.emergency{background:
+    radial-gradient(55% 45% at 50% 30%,rgba(242,230,208,.14),transparent 64%),
+    radial-gradient(80% 80% at 50% 110%,rgba(120,48,24,.30),transparent 72%),
+    linear-gradient(165deg,#1c1813,#0b0907 72%,#050403)}
+  .art.emergency:before{content:"";position:absolute;left:50%;top:14%;width:42%;height:62%;z-index:0;
+    transform:translateX(-50%);
+    background:repeating-linear-gradient(180deg,rgba(242,230,208,.14) 0 2px,transparent 2px 15px);
+    box-shadow:0 0 0 1px rgba(214,161,74,.16),0 0 60px rgba(214,161,74,.08)}
+  .art.emergency .big{font-size:clamp(48px,6.6vw,106px);letter-spacing:-.05em;line-height:.86;bottom:1.18em}
+  .art.emergency .small{position:absolute;left:0;right:0;bottom:1.7em;z-index:2;text-align:center;
+    font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,230,208,.55)}
+  .art.vatican{background:
+    radial-gradient(55% 50% at 50% 28%,rgba(214,161,74,.20),transparent 64%),
+    radial-gradient(80% 80% at 50% 110%,rgba(20,63,71,.55),transparent 72%),
+    linear-gradient(165deg,#141a1c,#080b0c 72%,#040505)}
+  .art.vatican:before{content:"";position:absolute;left:16%;right:16%;top:18%;bottom:26%;z-index:0;
+    background:repeating-linear-gradient(90deg,rgba(214,161,74,.16) 0 2px,transparent 2px 13%),
+      repeating-linear-gradient(180deg,rgba(242,230,208,.10) 0 1px,transparent 1px 22%);
+    border:1px solid rgba(214,161,74,.18);box-shadow:0 0 55px rgba(214,161,74,.08)}
+  .art.vatican .big{font-size:clamp(40px,5.6vw,92px);letter-spacing:-.05em;line-height:.86;bottom:1.18em}
+  .art.vatican .small{position:absolute;left:0;right:0;bottom:1.7em;z-index:2;text-align:center;
+    font-size:.62rem;letter-spacing:.24em;text-transform:uppercase;color:rgba(242,230,208,.55)}
+  .copy{padding:38px 40px 40px}
+  .copy .status{font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-bottom:14px}
+  .copy h2{font-family:var(--serif);font-size:clamp(34px,4vw,56px);line-height:.94;letter-spacing:-.04em;margin:0 0 14px}
+  .copy p{color:var(--muted);font-size:.95rem;margin:0 0 16px}
+  .copy .meta{font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint);margin:0 0 24px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px}
+  .btn{display:inline-block;text-decoration:none;border:1px solid rgba(242,230,208,.2);color:var(--bone);
+    padding:11px 15px;border-radius:999px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+  .btn:hover{border-color:var(--gold)}
+  .btn.strong{background:var(--gold);color:#17110a;border-color:var(--gold);font-weight:800}
+  .note{border-left:3px solid var(--teal);padding:16px 20px;color:var(--muted);font-size:.9rem;max-width:820px;
+    background:linear-gradient(90deg,rgba(20,63,71,.14),transparent);border-radius:0 10px 10px 0;margin:34px 0 0}
+  .note b{color:var(--bone)}
+  footer{border-top:1px solid rgba(255,255,255,.08);padding:28px 0 48px;color:var(--faint);font-size:.72rem}
+  @media(max-width:820px){
+    .wrap{padding:0 18px}
+    header.hero{padding:48px 0 30px}
+    .card{grid-template-columns:1fr}
+    .art{min-height:300px}
+    .art:after{background:linear-gradient(180deg,transparent 45%,rgba(15,13,10,.95) 100%)}
+    .copy{padding:26px 22px 30px}
+    .art.bagh .big{left:22px}
+    .art.bagh .small{left:22px}
+    .art.bagh:before{right:8%;top:12%;width:40%;height:66%}
+    .art.bhopal:before{top:15%;width:42%}
+    .art.emergency:before{width:56%}
+    .art.vatican:before{left:12%;right:12%}
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top">
+    <a class="brand" href="index.html"><b>vlymbooq</b> · films</a>
+    <a class="back" href="index.html">&larr; Home</a>
+  </div>
+
+  <header class="hero">
+    <div class="kicker">History is an argument</div>
+    <h1>FILMS</h1>
+    <p class="sub">Short, sourced histories. One object at a time.</p>
+    <p class="dek">These are not summaries with music. Each film starts from a thing you can see — salt, a notice, a wall, a watch, a blank column, a ledger — and follows it into the political fight that made it matter. Every number is sourced. Every argument has a map.</p>
+    <div class="rule"></div>
+  </header>
+</div>
+
+<main class="wrap">
+  <article class="card" data-film="bhopal-gas-tragedy">
+    <div class="art bhopal">
+      <div class="grain"></div>
+      <div class="num">Film 04 · 1984</div>
+      <div class="big">BHOPAL</div>
+      <div class="small">The Night the City Woke</div>
+    </div>
+    <div class="copy">
+      <div class="status">Final · 1080p master on release</div>
+      <h2>Bhopal: The Night the City Woke</h2>
+      <p>A pesticide plant vented methyl isocyanate over Bhopal at midnight. The gas lasted one night; the argument over who counted has lasted four decades.</p>
+      <p>Built from a valve, a gauge, a clock, a ledger, a tap and a flame. No bodies, no reconstructed killing, no stock footage.</p>
+      <div class="meta">9 scenes · 37 shots · 2:01 · 5 sources</div>
+      <div class="actions">
+        <a class="btn strong" href="watch.html?film=bhopal-gas-tragedy">Enter the film &rarr;</a>
+        <a class="btn" href="bhopal-gas-tragedy-production.html">Inside the making &rarr;</a>
+        <a class="btn" href="debates.html?film=bhopal-gas-tragedy">Open the argument</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="card" data-film="jallianwala-bagh">
+    <div class="art bagh">
+      <div class="grain"></div>
+      <div class="num">Film 01 · 1919</div>
+      <div class="big">THE<br>GARDEN</div>
+      <div class="small">Jallianwala Bagh · Amritsar</div>
+    </div>
+    <div class="copy">
+      <div class="status">Final · 1080p master on release</div>
+      <h2>Jallianwala Bagh</h2>
+      <p>A walled garden, a banned meeting, and a general who decided that the Empire's authority was worth more than the people in front of him.</p>
+      <p>The film is built from objects: a typed notice, a wall, a stopped watch, a well, a report, a flame. It never reconstructs the killing.</p>
+      <div class="meta">9 scenes · 50 shots · 3:06 · 4 sources</div>
+      <div class="actions">
+        <a class="btn strong" href="watch.html?film=jallianwala-bagh">Enter the film &rarr;</a>
+        <a class="btn" href="production.html">Inside the making &rarr;</a>
+        <a class="btn" href="debates.html?film=jallianwala-bagh">Open the argument</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="card" data-film="salt-march">
+    <div class="art salt">
+      <div class="grain"></div>
+      <div class="num">Film 02 · 1930</div>
+      <div class="big">SALT</div>
+    </div>
+    <div class="copy">
+      <div class="status">Final · 1080p master on release</div>
+      <h2>The Salt March</h2>
+      <p>In 1930, the Raj taxed the one thing every Indian could gather for free. One man picked up a handful of salt, and the Empire discovered a weapon it could not arrest.</p>
+      <p>Built from ten sets of paper-cutout rooms and objects: the tax ledger, the salt crystal, the map, the gate and the clenched fist at Dharasana. The hosts argue; the narration carries the sources.</p>
+      <div class="meta">40 scenes · 82 shots · 5:04 · 5 sources</div>
+      <div class="actions">
+        <a class="btn strong" href="watch.html?film=salt-march">Enter the film &rarr;</a>
+        <a class="btn" href="salt-march-production.html">Inside the making &rarr;</a>
+        <a class="btn" href="debates.html?film=salt-march">Open the argument</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="card" data-film="emergency-1975">
+    <div class="art emergency">
+      <div class="grain"></div>
+      <div class="num">Film 03 · 1975</div>
+      <div class="big">BLANK</div>
+      <div class="small">The Emergency · A Newspaper With a Blank Column</div>
+    </div>
+    <div class="copy">
+      <div class="status">Final · 1080p master on release</div>
+      <h2>The Emergency</h2>
+      <p>A democracy suspended in the name of stability. The film follows the order, the blank column, the censor's pencil, the 1977 election and the Shah Commission's record.</p>
+      <p>Built from a newspaper page, a typewriter, a locked cabinet and a single burnt page. It never reconstructs a cell.</p>
+      <div class="meta">8 scenes · 42 shots · 4:07 · 5 sources</div>
+      <div class="actions">
+        <a class="btn strong" href="watch.html?film=emergency-1975">Enter the film &rarr;</a>
+        <a class="btn" href="emergency-1975-production.html">Inside the making &rarr;</a>
+        <a class="btn" href="debates.html?film=emergency-1975">Open the argument</a>
+      </div>
+    </div>
+  </article>
+
+  <article class="card" data-film="the-vatican-archives">
+    <div class="art vatican">
+      <div class="grain"></div>
+      <div class="num">Film 05 · 2020</div>
+      <div class="big">ARCHIVE</div>
+      <div class="small">The Vatican · One File at a Time</div>
+    </div>
+    <div class="copy">
+      <div class="status">Final · 1080p master on release</div>
+      <h2>The Vatican Archives</h2>
+      <p>For centuries the Vatican's secret archive was treated as empty or purely religious. It is a political intelligence hub, opened one file at a time.</p>
+      <p>Built from the building, the shelving, the ledgers of the Papal Chancery and the rules that decide who may read them.</p>
+      <div class="meta">8 scenes · 42 shots · 4:22 · 6 sources</div>
+      <div class="actions">
+        <a class="btn strong" href="watch.html?film=the-vatican-archives">Enter the film &rarr;</a>
+        <a class="btn" href="the-vatican-archives-production.html">Inside the making &rarr;</a>
+        <a class="btn" href="debates.html?film=the-vatican-archives">Open the argument</a>
+      </div>
+    </div>
+  </article>
+
+  <p class="note"><b>How these are made.</b> Blender renders the sets, Piper reads the narration, Chromium draws the camera moves, and ffmpeg encodes the film - all on free GitHub Actions, none on the owner's machine. The argument maps are separate, sourced pages. A film is allowed to be beautiful. It is not allowed to invent a fact. Production dossiers: <a href="salt-march-production.html" style="color:var(--gold)">Salt &rarr;</a> <a href="production.html" style="color:var(--gold)">Jallianwala &rarr;</a> <a href="bhopal-gas-tragedy-production.html" style="color:var(--gold)">Bhopal &rarr;</a> <a href="emergency-1975-production.html" style="color:var(--gold)">Emergency &rarr;</a> <a href="the-vatican-archives-production.html" style="color:var(--gold)">Vatican &rarr;</a></p>
+</main>
+
+<footer class="wrap">
+  <p>vlymbooq · a film in the making · <a href="index.html">return home</a></p>
+</footer>
+</body>
+</html>

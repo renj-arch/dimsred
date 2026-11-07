@@ -1,0 +1,175 @@
+name: Author
+
+# The writer tier, end to end: fetch the slate topic's sources, cut a ledger,
+# let the local model write narration inside a fixed scene structure, assemble
+# the storyboard, and stop at the gate.
+#
+# This is the step that used to be a person. The model is allowed to write
+# sentences; it is not allowed to invent a fact, a plate or a cut. Every line
+# names a ledger row, and every number in the line has to occur in that row.
+#
+# A green run commits the storyboard and the sets spec back to the branch it
+# ran on. It does not render unless `render` is set: a storyboard that has not
+# been read once is allowed to sit on the branch without spending an hour of
+# Blender on it.
+
+on:
+  workflow_dispatch:
+    inputs:
+      film:
+        description: Slate topic id
+        required: true
+        default: emergency-1975
+        type: string
+      render:
+        description: Dispatch the film render after the gate passes
+        required: true
+        default: false
+        type: boolean
+      stub:
+        description: Plumbing test only (no model, never shippable)
+        required: true
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: author-${{ github.ref }}-${{ inputs.film }}
+  cancel-in-progress: false
+
+jobs:
+  author:
+    runs-on: ubuntu-latest
+    timeout-minutes: 300
+
+    env:
+      LLAMA_BUILD: b11890
+      HF_REPO: unsloth/Qwen3.6-35B-A3B-GGUF
+      HF_REV: a483e9e6cbd595906af30beda3187c2663a1118c
+      LM_SOURCE: unsloth/Qwen3.6-35B-A3B-GGUF@a483e9e6cbd595906af30beda3187c2663a1118c
+      LM_BUILD: b11890
+      LM_THREADS: '4'
+      LM_CTX: '8192'
+      FILM: ${{ inputs.film }}
+
+    steps:
+      - name: Checkout (skip the giant question bank)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Report the runner
+        run: |
+          nproc
+          lscpu | grep -E 'Model name|^CPU\(s\)' || true
+          free -g
+
+      - name: Reclaim disk for the weights
+        if: ${{ !inputs.stub }}
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc \
+            /usr/local/share/boost "$AGENT_TOOLSDIRECTORY" || true
+          sudo apt-get clean
+
+      - name: Install pinned llama.cpp
+        if: ${{ !inputs.stub }}
+        run: |
+          curl -fL --retry 3 -o /tmp/llama.tar.gz \
+            "https://github.com/ggml-org/llama.cpp/releases/download/${LLAMA_BUILD}/llama-${LLAMA_BUILD}-bin-ubuntu-x64.tar.gz"
+          mkdir -p /opt/llama
+          tar -xzf /tmp/llama.tar.gz -C /opt/llama
+          BIN=$(find /opt/llama -name llama-cli -type f | head -n 1)
+          test -n "$BIN"
+          chmod +x "$BIN"
+          echo "LLAMA_LIB=$(dirname "$BIN")" >> "$GITHUB_ENV"
+          echo "$(dirname "$BIN")" >> "$GITHUB_PATH"
+          "$BIN" --version
+
+      - name: Download pinned weights and verify the digest
+        if: ${{ !inputs.stub }}
+        run: |
+          SHA=96b9c0af5c77a4ecaabe3983175112b5ece763261c1ece12b2494b692a70dad7
+          sudo mkdir -p /mnt/lm
+          sudo chown "$USER" /mnt/lm
+          MODEL="/mnt/lm/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf"
+          curl -fL --retry 3 --retry-delay 5 -C - \
+            -o "$MODEL" \
+            "https://huggingface.co/${HF_REPO}/resolve/${HF_REV}/Qwen3.6-35B-A3B-UD-Q2_K_XL.gguf"
+          echo "${SHA}  ${MODEL}" | sha256sum -c -
+          ls -lh "$MODEL"
+          echo "LM_MODEL=${MODEL}" >> "$GITHUB_ENV"
+
+      - name: Fetch the sources
+        run: |
+          node scripts/film/research.js --topic "$FILM" \
+            --out "out/research/$FILM"
+
+      - name: Author the storyboard
+        env:
+          STUB: ${{ inputs.stub }}
+        run: |
+          set -euo pipefail
+          export LD_LIBRARY_PATH="${LLAMA_LIB:-}"
+          args=(--film "$FILM" --force)
+          if [ "$STUB" = "true" ]; then args+=(--stub); fi
+          /usr/bin/time -v node scripts/film/author.js "${args[@]}" \
+            2> "out/author-$FILM.time.log" || { cat "out/author-$FILM.time.log"; exit 1; }
+          grep -E 'Maximum resident set size|Elapsed \(wall clock\)' "out/author-$FILM.time.log" || true
+
+      - name: Show what the film will say
+        run: |
+          node - <<'NODE'
+          const fs = require('fs');
+          const film = JSON.parse(fs.readFileSync(`data/films/${process.env.FILM}.json`, 'utf8'));
+          console.log(`${film.title} — ${film.subtitle}`);
+          console.log(`${film.scenes.length} scenes, ${film.targetDuration}s, grammar ${film.edit.grammar}`);
+          for (const scene of film.scenes) {
+            console.log(`\n${scene.id} ${scene.title} (${scene.duration}s)`);
+            for (const line of scene.narration) console.log(`  [${line.source}] ${line.text}`);
+            console.log(`  plates: ${[...new Set(scene.shots.map((s) => s.plate))].join(', ')}`);
+          }
+          NODE
+
+      - name: Upload the evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: author-${{ inputs.film }}
+          path: |
+            data/films/${{ inputs.film }}.json
+            data/films/${{ inputs.film }}-ledger.json
+            data/films/${{ inputs.film }}-sets.json
+            data/films/${{ inputs.film }}-debates.json
+            out/author/
+            out/research/${{ inputs.film }}/
+            out/author-${{ inputs.film }}.time.log
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Commit the storyboard to this branch
+        if: ${{ success() && !inputs.stub }}
+        run: |
+          git config user.name "vlymbooq"
+          git config user.email "vlymbooq@users.noreply.github.com"
+          git add "data/films/$FILM.json" "data/films/$FILM-ledger.json" \
+                  "data/films/$FILM-sets.json" "data/films/$FILM-debates.json" data/film-slate.json
+          if git diff --cached --quiet; then
+            echo "nothing new to commit"
+            exit 0
+          fi
+          git commit -m "author $FILM from its sourced ledger"
+          git push
+
+      - name: Dispatch the render
+        if: ${{ success() && !inputs.stub && inputs.render }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh workflow run film.yml --ref "$GITHUB_REF_NAME" \
+            -f "film=$FILM" -f "publish=true"

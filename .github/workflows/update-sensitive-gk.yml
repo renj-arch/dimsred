@@ -1,0 +1,81 @@
+name: Update All Sensitive GK Data
+
+on:
+  schedule:
+    # Run weekly on Sunday midnight
+    - cron: '0 0 * * 0'
+  workflow_dispatch:
+
+# Explicit write for this workflow's own data commit only; the repo default
+# for every other workflow stays least-privilege read.
+permissions:
+  contents: write
+
+# Never cancel a weekly publish half-way through its push: the data was
+# already fetched and committed locally, so a cancellation silently loses a
+# week of updates.
+concurrency:
+  group: sensitive-gk
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    # The repository checkout alone takes ~20 min on these runners and the
+    # shallow `pull --rebase` after the commit has taken another ~24 min.
+    # The old 45-minute cap killed every run at the push step (2026-11-01,
+    # 2026-10-25). Leave room for the slow but successful publish.
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          filter: blob:none
+          # This job only rewrites current-affairs.html. Checking out the
+          # multi-GB question corpus made the checkout alone take ~20 min.
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Fetch & update all time-sensitive GK data
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/update-all-gk.js
+      - name: Verify syntax
+        run: |
+          node -e "
+            const fs = require('fs');
+            const html = fs.readFileSync('current-affairs.html', 'utf8');
+            const matches = html.match(/<script>([\s\S]*?)<\/script>/g);
+            const scripts = matches.map(m => m.replace(/<\/?script>/g, '')).join('\n');
+            fs.writeFileSync('__temp_check.js', scripts);
+            require('child_process').execSync('node --check __temp_check.js', { stdio: 'pipe' });
+            new Function(scripts);
+            fs.unlinkSync('__temp_check.js');
+            console.log('Syntax verified: PASS');
+          "
+      - name: Check for changes
+        id: git-check
+        run: |
+          git diff --quiet && echo "changed=false" >> $GITHUB_OUTPUT || echo "changed=true" >> $GITHUB_OUTPUT
+      - name: Commit and push if changed
+        if: steps.git-check.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add current-affairs.html
+          git commit -m "chore: update time-sensitive GK data [auto]"
+          pushed=""
+          for i in 1 2 3; do
+            # Nothing is uncommitted here, so autostash only stats the whole
+            # tree (very slow on this repo). A plain rebase is enough.
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed"; break; fi
+            echo "push attempt $i failed, retrying..."
+            sleep 5
+          done
+          if [ -z "$pushed" ]; then
+            echo "::error::time-sensitive GK update could not be pushed to main"
+            exit 1
+          fi

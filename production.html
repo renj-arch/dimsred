@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<script>
+(function () {
+  var map = {
+    'salt-march': 'salt-march-production.html',
+    'the-vatican-archives': 'the-vatican-archives-production.html',
+    'emergency-1975': 'emergency-1975-production.html',
+    'bhopal-gas-tragedy': 'bhopal-gas-tragedy-production.html'
+  };
+  var id = new URLSearchParams(location.search).get('film');
+  if (id && map[id]) location.replace(map[id] + location.hash);
+})();
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proof of work — Jallianwala Bagh | vlymbooq</title>
+<meta name="description" content="The production dossier for Jallianwala Bagh: 50 cuts, 9 procedural sets, 39 sourced lines, a rejected first cut and the free-CI pipeline that renders every frame." />
+<style>
+  :root{
+    --bg:#060606; --panel:#0d0b08; --panel2:#15100b; --bone:#f2e6d0;
+    --muted:rgba(242,230,208,.64); --faint:rgba(242,230,208,.38);
+    --gold:#d6a14a; --rust:#b14a2f; --teal:#143f47; --line:rgba(214,161,74,.2);
+    --serif:Georgia,"Liberation Serif","Times New Roman",serif;
+    --sans:"Liberation Sans",Arial,Helvetica,sans-serif;
+    --mono:"Cascadia Mono","Liberation Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--bone);font-family:var(--sans);line-height:1.6;
+    background-image:
+      radial-gradient(80% 45% at 50% -10%,rgba(214,161,74,.13),transparent 70%),
+      radial-gradient(40% 35% at 100% 20%,rgba(20,63,71,.2),transparent 70%),
+      radial-gradient(45% 40% at 0% 65%,rgba(177,74,47,.09),transparent 70%);
+    background-attachment:fixed;}
+  a{color:inherit}
+  ::selection{background:var(--gold);color:#17110a}
+  .grain{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 30px}
+  .top{border-bottom:1px solid rgba(255,255,255,.08);background:rgba(6,6,6,.78);backdrop-filter:blur(10px);
+    position:sticky;top:0;z-index:40}
+  .top .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-top:16px;padding-bottom:16px}
+  .brand{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .brand b{color:var(--gold)}
+  .top nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .top nav a{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--muted);
+    border:1px solid rgba(255,255,255,.12);padding:8px 12px;border-radius:999px}
+  .top nav a:hover{border-color:var(--gold);color:var(--bone)}
+
+  .hero{padding:76px 0 54px}
+  .eyebrow{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;
+    font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:26px}
+  .eyebrow span:last-child{color:var(--faint)}
+  h1{font-family:var(--serif);font-weight:900;font-size:clamp(64px,13.2vw,184px);line-height:.76;
+    letter-spacing:-.075em;margin:0;max-width:1050px}
+  h1 em{font-style:normal;color:var(--gold)}
+  .lede{font-family:var(--serif);font-size:clamp(20px,2.3vw,34px);line-height:1.15;letter-spacing:-.02em;
+    max-width:900px;margin:32px 0 0;color:rgba(242,230,208,.9)}
+  .lede b{color:var(--gold);font-weight:400}
+
+  .hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:34px;align-items:start;margin-top:48px}
+  .poster{margin:0;border:1px solid rgba(214,161,74,.25);background:#000;position:relative;overflow:hidden;
+    aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:flex-end}
+  .poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(.9)}
+  .poster:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(0,0,0,.82) 100%)}
+  .poster figcaption{position:relative;z-index:2;padding:20px 22px;font-size:.62rem;letter-spacing:.22em;
+    text-transform:uppercase;color:rgba(242,230,208,.72);display:flex;justify-content:space-between;gap:16px}
+  .poster .stamp{position:absolute;z-index:2;top:16px;left:16px;border:1px solid rgba(214,161,74,.55);
+    color:var(--gold);font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;padding:7px 9px;background:rgba(0,0,0,.38)}
+  .film-card{border-top:1px solid var(--gold);padding-top:20px;display:flex;flex-direction:column}
+  .status{display:inline-flex;align-items:center;gap:8px;font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:14px}
+  .status i{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);display:block}
+  .film-card h2{font-family:var(--serif);font-size:clamp(36px,4.4vw,64px);line-height:.9;letter-spacing:-.045em;margin:0 0 14px}
+  .film-card p{color:var(--muted);font-size:.95rem;margin:0 0 18px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 24px}
+  .btn{display:inline-block;text-decoration:none;border:1px solid rgba(242,230,208,.2);color:var(--bone);
+    padding:11px 15px;border-radius:999px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+  .btn:hover{border-color:var(--gold)}
+  .btn.strong{background:var(--gold);color:#17110a;border-color:var(--gold);font-weight:800}
+  .receipt{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid rgba(255,255,255,.1);margin-top:auto}
+  .receipt div{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+  .receipt div:nth-child(odd){padding-right:16px}
+  .receipt dt{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 3px}
+  .receipt dd{margin:0;font-size:.8rem;color:rgba(242,230,208,.9)}
+
+  .stats{border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(180deg,rgba(214,161,74,.035),transparent)}
+  .stats .wrap{display:grid;grid-template-columns:repeat(6,1fr);padding-top:0;padding-bottom:0}
+  .stat{padding:22px 18px 22px 0;border-right:1px solid rgba(255,255,255,.08)}
+  .stat:last-child{border-right:none;padding-right:0}
+  .stat b{display:block;font-family:var(--serif);font-size:clamp(30px,3.5vw,52px);line-height:.9;letter-spacing:-.04em;color:var(--bone)}
+  .stat span{display:block;font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-top:8px}
+  .stat small{display:block;color:var(--faint);font-size:.66rem;line-height:1.4;margin-top:6px}
+
+  .section{padding:72px 0;border-top:1px solid rgba(255,255,255,.08)}
+  .section:first-of-type{border-top:none}
+  .section-head{display:grid;grid-template-columns:84px 1fr;gap:24px;align-items:start;margin-bottom:34px}
+  .section-head .no{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;color:var(--gold);padding-top:8px}
+  .section-head h2{font-family:var(--serif);font-size:clamp(38px,5vw,70px);line-height:.9;letter-spacing:-.045em;margin:0 0 10px}
+  .section-head p{max-width:760px;color:var(--muted);margin:0;font-size:.95rem}
+  .section-head .tag{display:inline-block;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+    border:1px solid rgba(214,161,74,.3);padding:5px 8px;border-radius:999px;margin-bottom:10px}
+
+  .compare{display:grid;gap:18px;margin:8px 0 18px}
+  .bar-row{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:center}
+  .bar-label{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);line-height:1.5}
+  .bar-label b{display:block;color:var(--bone);font-size:.7rem;letter-spacing:.14em}
+  .bar-label span{color:var(--faint);font-size:.58rem}
+  .bar{height:38px;display:flex;gap:2px;align-items:stretch;background:rgba(255,255,255,.03);padding:3px;border:1px solid rgba(255,255,255,.08)}
+  .bar i{display:block;min-width:2px;height:100%;background:rgba(242,230,208,.14);position:relative}
+  .bar i.blender{background:linear-gradient(180deg,rgba(214,161,74,.9),rgba(155,100,35,.75))}
+  .bar i.html{background:linear-gradient(180deg,rgba(242,230,208,.85),rgba(160,145,118,.7))}
+  .bar i.title{background:linear-gradient(180deg,rgba(177,74,47,.95),rgba(110,38,25,.8))}
+  .bar.old i:nth-child(3n){opacity:.55}
+  .bar i:hover{outline:1px solid var(--bone);z-index:2}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 0;color:var(--faint);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend b{width:9px;height:9px;display:inline-block;background:var(--gold)}
+  .legend b.html{background:var(--bone)}
+  .legend b.title{background:var(--rust)}
+  .legend b.cut{background:rgba(242,230,208,.28)}
+
+  .scenes{display:grid;gap:0;margin-top:28px;border-top:1px solid rgba(255,255,255,.09)}
+  .scene{border-bottom:1px solid rgba(255,255,255,.09)}
+  .scene summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:52px 1fr auto auto;gap:16px;
+    align-items:center;padding:18px 0;color:var(--bone)}
+  .scene summary::-webkit-details-marker{display:none}
+  .scene summary .n{font-family:var(--mono);font-size:.66rem;color:var(--gold)}
+  .scene summary h3{font-family:var(--serif);font-size:clamp(22px,2.5vw,34px);line-height:1;letter-spacing:-.03em;margin:0;font-weight:400}
+  .scene summary .meta{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .scene summary .plus{font-family:var(--mono);color:var(--gold);font-size:1rem;transition:transform .2s}
+  .scene[open] summary .plus{transform:rotate(45deg)}
+  .scene-body{padding:0 0 24px 68px;display:grid;gap:16px}
+  .scene-purpose{margin:0;color:var(--muted);font-size:.9rem;max-width:840px}
+  .lines{margin:0;padding:0;list-style:none;display:grid;gap:5px}
+  .lines li{display:grid;grid-template-columns:1fr auto;gap:16px;padding:7px 0;border-top:1px solid rgba(255,255,255,.05);
+    color:rgba(242,230,208,.88);font-size:.86rem}
+  .lines li .src{color:var(--faint);font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;white-space:nowrap;text-align:right}
+  .lines li .txt{color:rgba(242,230,208,.88)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.12);padding:5px 7px;
+    font-family:var(--mono);font-size:.55rem;letter-spacing:.04em;color:var(--muted);background:rgba(255,255,255,.02)}
+  .chip b{color:var(--bone);font-weight:400}
+  .chip em{font-style:normal;color:var(--gold);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase}
+
+  .transition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .trans-card{border:1px solid rgba(255,255,255,.1);background:linear-gradient(160deg,var(--panel2),rgba(13,11,8,.7));
+    padding:20px;min-height:160px;position:relative;overflow:hidden}
+  .trans-card:before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--gold);opacity:.75}
+  .trans-card .count{font-family:var(--serif);font-size:40px;line-height:.9;letter-spacing:-.05em;color:var(--gold)}
+  .trans-card h3{margin:8px 0 8px;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone)}
+  .trans-card p{margin:0;color:var(--muted);font-size:.82rem}
+
+  .frame-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .frame{margin:0;border:1px solid rgba(255,255,255,.09);background:#000;position:relative;overflow:hidden}
+  .frame img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;filter:contrast(1.05) saturate(.88)}
+  .frame figcaption{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;font-size:.55rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--faint);border-top:1px solid rgba(255,255,255,.07)}
+  .frame figcaption b{color:var(--gold);font-weight:400}
+  .contact{margin:16px 0 0;border:1px solid rgba(255,255,255,.1);background:#000}
+  .contact img{display:block;width:100%;height:auto;filter:contrast(1.04)}
+  .contact figcaption{padding:12px 14px;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.08)}
+  .contact figcaption b{color:var(--rust);font-weight:400}
+
+  .source-list{border-top:1px solid rgba(255,255,255,.1)}
+  .source-row{display:grid;grid-template-columns:1fr 190px 70px;gap:20px;align-items:start;padding:16px 0;
+    border-bottom:1px solid rgba(255,255,255,.08)}
+  .source-row a{text-decoration:none;color:var(--bone);font-family:var(--serif);font-size:1.1rem;line-height:1.2}
+  .source-row a:hover{color:var(--gold)}
+  .source-row .pub{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+  .source-row .uses{font-family:var(--mono);font-size:.62rem;color:var(--gold);text-align:right;white-space:nowrap}
+
+  .pipeline-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .pipe{border-top:1px solid var(--gold);padding:18px 0 0;min-height:190px}
+  .pipe .step{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;color:var(--gold)}
+  .pipe h3{font-family:var(--serif);font-size:clamp(22px,2.2vw,30px);line-height:1;letter-spacing:-.03em;margin:14px 0 10px}
+  .pipe p{margin:0 0 14px;color:var(--muted);font-size:.84rem}
+  .pipe code{font-family:var(--mono);font-size:.58rem;color:rgba(242,230,208,.45);line-height:1.5;word-break:break-all}
+
+  .iterations{border-left:1px solid rgba(214,161,74,.32);margin-left:8px;padding-left:26px;display:grid;gap:26px}
+  .iter{position:relative}
+  .iter:before{content:"";position:absolute;left:-32px;top:7px;width:9px;height:9px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 0 5px rgba(214,161,74,.1)}
+  .iter .when{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+  .iter h3{font-family:var(--serif);font-size:clamp(24px,2.6vw,36px);line-height:1;letter-spacing:-.03em;margin:8px 0 8px}
+  .iter p{margin:0;color:var(--muted);font-size:.88rem;max-width:800px}
+
+  .build-log{border-top:1px solid rgba(255,255,255,.1)}
+  .build{display:grid;grid-template-columns:96px 1fr 132px;gap:18px;align-items:center;padding:13px 0;
+    border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none}
+  .build:hover{background:rgba(255,255,255,.025)}
+  .build .state{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .build .state.ok{color:#9cbf8e}
+  .build .state.live{color:var(--gold)}
+  .build .state.bad{color:#d9826c}
+  .build .what{font-size:.82rem;color:rgba(242,230,208,.86);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .build .what small{display:block;color:var(--faint);font-family:var(--mono);font-size:.55rem;margin-top:3px}
+  .build .when{font-family:var(--mono);font-size:.56rem;color:var(--faint);text-align:right;white-space:nowrap}
+  .build-note{color:var(--faint);font-size:.68rem;margin:12px 0 0}
+  .build-note a{color:var(--gold)}
+
+  .credits{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:start}
+  .credit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid rgba(255,255,255,.1)}
+  .credit{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .credit dt{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 4px}
+  .credit dd{margin:0;font-family:var(--serif);font-size:1.05rem;color:var(--bone);line-height:1.15}
+  .rules{margin:0;padding:0;list-style:none;border-top:1px solid rgba(255,255,255,.1)}
+  .rules li{padding:11px 0 11px 22px;border-bottom:1px solid rgba(255,255,255,.07);position:relative;color:var(--muted);font-size:.82rem}
+  .rules li:before{content:"—";position:absolute;left:0;color:var(--gold)}
+  .closing{margin-top:28px;border:1px solid rgba(214,161,74,.28);padding:22px 24px;background:
+    linear-gradient(110deg,rgba(214,161,74,.09),transparent 65%)}
+  .closing p{margin:0;font-family:var(--serif);font-size:clamp(20px,2.2vw,28px);line-height:1.25;letter-spacing:-.02em}
+  .closing a{color:var(--gold);text-decoration:none}
+
+  footer{border-top:1px solid rgba(255,255,255,.1);padding:26px 0 54px;color:var(--faint);font-size:.66rem}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--gold)}
+
+  @media(max-width:980px){
+    .hero-grid{grid-template-columns:1fr}
+    .poster{aspect-ratio:16/9}
+    .stats .wrap{grid-template-columns:repeat(3,1fr)}
+    .stat:nth-child(3){border-right:none}
+    .stat:nth-child(-n+3){border-bottom:1px solid rgba(255,255,255,.08)}
+    .transition-grid,.pipeline-grid{grid-template-columns:1fr 1fr}
+    .credits{grid-template-columns:1fr}
+  }
+  @media(max-width:720px){
+    .wrap{padding:0 18px}
+    .hero{padding:48px 0 36px}
+    .top nav{display:none}
+    .hero-grid{gap:24px}
+    .stats .wrap{grid-template-columns:1fr 1fr}
+    .stat{padding:16px 14px 16px 0}
+    .stat:nth-child(3){border-right:1px solid rgba(255,255,255,.08)}
+    .stat:nth-child(-n+4){border-bottom:1px solid rgba(255,255,255,.08)}
+    .section{padding:48px 0}
+    .section-head{grid-template-columns:1fr;gap:4px}
+    .section-head .no{padding-top:0}
+    .bar-row{grid-template-columns:1fr;gap:6px}
+    .scene summary{grid-template-columns:36px 1fr auto}
+    .scene summary .meta{display:none}
+    .scene-body{padding-left:0}
+    .scene-purpose{padding-left:36px}
+    .lines li{grid-template-columns:1fr;gap:2px}
+    .lines li .src{text-align:left}
+    .transition-grid,.pipeline-grid,.frame-strip{grid-template-columns:1fr}
+    .source-row{grid-template-columns:1fr auto}
+    .source-row .pub{grid-column:1;grid-row:2}
+    .source-row .uses{grid-column:2;grid-row:1 / span 2}
+    .build{grid-template-columns:74px 1fr}
+    .build .when{grid-column:2;text-align:left}
+    .credit-grid{grid-template-columns:1fr}
+    .contact figcaption{display:block}
+    .poster{aspect-ratio:16/9}
+  }
+</style>
+</head>
+<body>
+<a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
+<div class="grain"></div>
+
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><b>vlymbooq</b> · production dossier</a>
+    <nav>
+      <a href="#cut">The cut</a>
+      <a href="#transitions">Transitions</a>
+      <a href="#sets">The sets</a>
+      <a href="#sources">Sources</a>
+      <a href="#transparency">Transparency</a>
+      <a href="watch.html?film=jallianwala-bagh" id="navWatch">Watch</a>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap">
+    <div class="eyebrow">
+      <span id="eyebrowWhen">Jallianwala Bagh · 1919</span>
+      <span id="eyebrowProof">Proof of work · Film 01</span>
+    </div>
+    <h1>THE<br><em>MAKING</em></h1>
+    <p class="lede" id="lede">Not a slideshow with narration. A <b>50-cut investigative film</b> built from nine procedural sets, 39 sourced lines and a rejected first cut that had to be beaten.</p>
+
+    <div class="hero-grid">
+      <figure class="poster">
+        <img id="posterImg" src="media/films/jallianwala-bagh/poster.jpg" alt="Jallianwala Bagh film poster: the wall and the title." / loading="lazy">
+        <span class="stamp" id="posterStamp">In render · 1080 gated</span>
+        <figcaption><span id="posterCaption">The Garden the Empire Could Not Bury</span><span>vlymbooq</span></figcaption>
+      </figure>
+      <div class="film-card">
+        <div class="status"><i></i><span id="statusText">Investigative cut in render</span></div>
+        <h2 id="filmTitle">JALLIANWALA BAGH</h2>
+        <p id="filmIntro">A walled garden, a banned meeting, a general who chose punishment. The film follows the notice, the wall, the watch, the well and the report.</p>
+        <div class="actions">
+          <a class="btn strong" href="watch.html?film=jallianwala-bagh" id="watchLink">Watch the cut →</a>
+          <a class="btn" href="debates.html?film=jallianwala-bagh" id="argumentLink">Open the argument</a>
+        </div>
+        <dl class="receipt" id="receipt"></dl>
+      </div>
+    </div>
+  </section>
+
+  <section class="stats" aria-label="Production statistics">
+    <div class="wrap" id="stats"></div>
+  </section>
+
+  <section class="section wrap" id="cut">
+    <div class="section-head">
+      <div class="no">01 / EDIT</div>
+      <div>
+        <span class="tag">The cut is the argument</span>
+        <h2 id="cutHeading">13 shots became 50.</h2>
+        <p id="cutBody">The first cut held each plate for ten seconds and explained it. The new cut makes the plate carry a beat, then moves. The figures land as full-frame cards. The silence before the firing is a cut, not a gap.</p>
+      </div>
+    </div>
+
+    <div class="compare" id="cutCompare">
+      <div class="bar-row">
+        <div class="bar-label"><b>First cut</b><span>13 shots · 2:32 · rejected</span></div>
+        <div class="bar old" id="oldTimeline" aria-label="First cut: 13 shots"></div>
+      </div>
+      <div class="bar-row">
+        <div class="bar-label"><b>Investigative cut</b><span>50 shots · 3:06 · preview live</span></div>
+        <div class="bar" id="timeline" aria-label="Investigative cut: 50 shots"></div>
+      </div>
+    </div>
+    <div class="legend" id="cutLegend">
+      <span><b class="blender"></b> Blender set</span>
+      <span><b class="html"></b> Typographic card</span>
+      <span><b class="title"></b> Title card</span>
+      <span><b class="cut"></b> First cut</span>
+    </div>
+
+    <div class="scenes" id="scenes"></div>
+  </section>
+
+  <section class="section wrap" id="transitions">
+    <div class="section-head">
+      <div class="no">02 / MOTION</div>
+      <div>
+        <span class="tag">Transitions are cuts with intent</span>
+        <h2>The edit has a grammar.</h2>
+        <p>Hard cuts are not the default. The film uses whips across connected spaces, match cuts on the same object, mask wipes on evidence, dips for silence and flash frames for the figures. Each family has a job.</p>
+      </div>
+    </div>
+    <div class="transition-grid" id="transitionGrid"></div>
+  </section>
+
+  <section class="section wrap" id="sets">
+    <div class="section-head">
+      <div class="no">03 / SETS</div>
+      <div>
+        <span class="tag">What the camera actually saw</span>
+        <h2>First-cut frame studies.</h2>
+        <p>These are frames from the rejected 13-shot cut, kept as production evidence. The new cut uses the same procedural sets with tighter framing and more inserts. No stock footage. No generated faces. No bodies.</p>
+      </div>
+    </div>
+    <div class="frame-strip">
+      <figure class="frame"><img loading="lazy" src="media/films/jallianwala-bagh/production/first-cut-01.jpg" alt="First-cut frame: the title." /><figcaption><span>Title</span><b>01</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/jallianwala-bagh/production/first-cut-02.jpg" alt="First-cut frame: the notice." /><figcaption><span>Notice</span><b>02</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/jallianwala-bagh/production/first-cut-03.jpg" alt="First-cut frame: the wall." /><figcaption><span>Wall</span><b>03</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/jallianwala-bagh/production/first-cut-04.jpg" alt="First-cut frame: the watch." /><figcaption><span>Watch</span><b>04</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/jallianwala-bagh/production/first-cut-05.jpg" alt="First-cut frame: the well." /><figcaption><span>Well</span><b>05</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/jallianwala-bagh/production/first-cut-06.jpg" alt="First-cut frame: the report." /><figcaption><span>Report</span><b>06</b></figcaption></figure>
+    </div>
+    <figure class="contact">
+      <img loading="lazy" src="media/films/jallianwala-bagh/production/first-cut-contact-sheet.jpg" alt="Contact sheet of the rejected 13-shot first cut." />
+      <figcaption><span><b>Rejected:</b> the 13-shot contact sheet. Long holds, sparse captions, no burned subtitles.</span><span>Kept as evidence of the iteration.</span></figcaption>
+    </figure>
+  </section>
+
+  <section class="section wrap" id="sources">
+    <div class="section-head">
+      <div class="no">04 / EVIDENCE</div>
+      <div>
+        <span class="tag">No invented facts</span>
+        <h2>Every line has a source.</h2>
+        <p>The storyboard is validated before rendering. Each narration line carries a source id, and the render fails if the line, shot or source is missing. The page below is generated from that same file.</p>
+      </div>
+    </div>
+    <div class="source-list" id="sourceList"></div>
+  </section>
+
+  <section class="section wrap" id="transparency">
+    <div class="section-head">
+      <div class="no">05 / TRANSPARENCY</div>
+      <div>
+        <span class="tag">Freedom of expression, protected by evidence</span>
+        <h2>Every claim is sourced; no claim is invented.</h2>
+      </div>
+    </div>
+    <p style="font-family:var(--serif);font-size:1.05rem;color:var(--bone);line-height:1.45">Every narration line carries a source identifier, and the render refuses a line whose source is missing. Every host line either restates a sourced fact or expresses an attitude toward it. The film does not invent facts; the argument lives in the evidence, not in commentary. The storyboard, the debate map and the source ledger are public and verifiable. A government that calls this film a risk to public order must answer the record it cites. It cannot suppress the record by naming the record dangerous.</p>
+  </section>
+
+  <section class="section wrap" id="pipeline">
+    <div class="section-head">
+      <div class="no">06 / PIPELINE</div>
+      <div>
+        <span class="tag">Free CI, no paid keys</span>
+        <h2>Every frame is assembled on GitHub.</h2>
+        <p>Blender, Piper, Chromium and ffmpeg run on a free Ubuntu CPU runner. The owner's machine writes the code; it does not render the film. The pipeline is public, repeatable and allowed to fail loudly.</p>
+      </div>
+    </div>
+    <div class="pipeline-grid" id="pipelineGrid"></div>
+  </section>
+
+  <section class="section wrap" id="iterations">
+    <div class="section-head">
+      <div class="no">07 / ITERATION</div>
+      <div>
+        <span class="tag">The work is the revisions</span>
+        <h2>What changed, and why.</h2>
+        <p>A production dossier that only shows the final cut is a portfolio, not a process. This is the honest log: the rejection, the plate fixes, the new cut, and the master that is still gated.</p>
+      </div>
+    </div>
+    <div class="iterations" id="iterationList"></div>
+  </section>
+
+  <section class="section wrap" id="credits">
+    <div class="section-head">
+      <div class="no">08 / CREDITS</div>
+      <div>
+        <span class="tag">The production record</span>
+        <h2>Who did what.</h2>
+      </div>
+    </div>
+    <div class="credits">
+      <div>
+        <dl class="credit-grid" id="creditGrid"></dl>
+        <div class="closing">
+          <p>“If the edit is weak, the render does not ship.”</p>
+          <p id="closingNote" style="margin-top:10px;font-family:var(--sans);font-size:.8rem;color:var(--muted)">The first cut was rejected. The 1080 master was cancelled. The new cut is the one that has to earn the release.</p>
+        </div>
+      </div>
+      <div>
+        <ul class="rules" id="rulesList"></ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>vlymbooq · production dossiers</span>
+    <span><a href="films.html">All films</a> &middot; <a href="salt-march-production.html">Salt</a> &middot; <a href="the-vatican-archives-production.html">Vatican</a> &middot; <a href="emergency-1975-production.html">Emergency</a> &middot; <a href="bhopal-gas-tragedy-production.html">Bhopal</a> &middot; <a href="watch.html?film=jallianwala-bagh" id="footerWatch">Watch</a></span>
+  </div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var $ = function(id){ return document.getElementById(id); };
+  var esc = function(s){
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function(c){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];
+    });
+  };
+  var fmt = function(n){ return String(n); };
+  var FILM = new URLSearchParams(window.location.search).get('film') || 'jallianwala-bagh';
+  var IS_JALLIANWALA = FILM === 'jallianwala-bagh';
+
+  function fetchJson(url){
+    return fetch(url, { cache: 'no-store' }).then(function(r){
+      if (!r.ok) throw new Error(url + ' -> ' + r.status);
+      return r.json();
+    });
+  }
+
+  function family(transition){
+    var t = String(transition || 'cut').toLowerCase();
+    if (/whip/.test(t)) return 'Whip';
+    if (/mask/.test(t)) return 'Mask';
+    if (/match/.test(t)) return 'Match';
+    if (/flash/.test(t)) return 'Flash';
+    if (/dip/.test(t)) return 'Dip';
+    if (/cross/.test(t)) return 'Crossfade';
+    return 'Hard cut';
+  }
+
+  function sourceLabel(id, sources){
+    var s = (sources || []).filter(function(x){ return x.id === id; })[0];
+    return s ? (s.publisher || 'source') + ' · ' + s.id : id;
+  }
+
+  function renderReceipt(film, prod){
+    var el = $('receipt');
+    if (!el) return;
+    var total = 0;
+    (film.scenes || []).forEach(function(s){ total += Number(s.duration) || 0; });
+    var fps = Number(film.fps) || 24;
+    var rows = [
+      ['Target duration', (total ? total + 's' : '—')],
+      ['Target frames', total ? Math.round(total * fps).toLocaleString('en-GB') : '—'],
+      ['Capture', fps + ' fps master'],
+      ['Sources', String((film.sources || []).length)],
+      ['Render', 'GitHub Actions · CPU'],
+      ['Cost', '$0 paid APIs']
+    ];
+    el.innerHTML = rows.map(function(r){
+      return '<div><dt>' + esc(r[0]) + '</dt><dd>' + esc(r[1]) + '</dd></div>';
+    }).join('');
+  }
+
+  function renderStats(film, prod){
+    var el = $('stats');
+    if (!el) return;
+    var stats = (prod && prod.stats) || [];
+    el.innerHTML = stats.map(function(s){
+      return '<div class="stat"><b>' + esc(s.value) + '</b><span>' + esc(s.label) + '</span><small>' + esc(s.note || '') + '</small></div>';
+    }).join('');
+  }
+
+  function renderTimeline(film){
+    var el = $('timeline');
+    if (!el) return;
+    var all = [];
+    (film.scenes || []).forEach(function(scene){
+      var shots = scene.shots || [];
+      var weights = shots.map(function(s){ return Number(s.weight) || 3; });
+      var weightTotal = weights.reduce(function(a, b){ return a + b; }, 0) || 1;
+      var local = 0;
+      shots.forEach(function(shot, i){
+        var d = i === shots.length - 1
+          ? (Number(scene.duration) || 0) - local
+          : (Number(scene.duration) || 0) * weights[i] / weightTotal;
+        d = Math.max(0.1, d);
+        all.push({ shot: shot, duration: d });
+        local += d;
+      });
+    });
+    var total = all.reduce(function(n, x){ return n + x.duration; }, 0) || 1;
+    el.innerHTML = all.map(function(x){
+      var s = x.shot;
+      var pct = Math.max(0.3, x.duration / total * 100);
+      var cls = s.render === 'html' ? 'html' : (s.render === 'title' ? 'title' : 'blender');
+      var label = s.id + ' · ' + x.duration.toFixed(1) + 's · ' + (s.transition || 'cut');
+      return '<i class="' + cls + '" style="flex:0 0 ' + pct.toFixed(3) + '%" title="' + esc(label) + '" aria-label="' + esc(label) + '"></i>';
+    }).join('');
+  }
+
+  function renderOldTimeline(){
+    var el = $('oldTimeline');
+    if (!el) return;
+    var html = '';
+    for (var i = 0; i < 13; i++) html += '<i title="First cut shot ' + (i + 1) + '"></i>';
+    el.innerHTML = html;
+  }
+
+  function renderScenes(film){
+    var el = $('scenes');
+    if (!el) return;
+    var sources = film.sources || [];
+    el.innerHTML = (film.scenes || []).map(function(scene, i){
+      var shots = scene.shots || [];
+      var lines = scene.narration || [];
+      var counts = {};
+      lines.forEach(function(l){ counts[l.source] = (counts[l.source] || 0) + 1; });
+      var lineHtml = lines.map(function(l){
+        return '<li><span class="txt">' + esc(l.text) + '</span><span class="src">' + esc(sourceLabel(l.source, sources)) + '</span></li>';
+      }).join('');
+      var chipHtml = shots.map(function(s){
+        return '<span class="chip"><b>' + esc(s.id) + '</b> · ' + esc(s.plate) + ' <em>' + esc(s.transition || 'cut') + '</em></span>';
+      }).join('');
+      return '<details class="scene"' + (i === 0 ? ' open' : '') + '>' +
+        '<summary><span class="n">S' + String(i + 1).padStart(2, '0') + '</span>' +
+        '<h3>' + esc(scene.title) + '</h3>' +
+        '<span class="meta">' + shots.length + ' shots · ' + (Number(scene.duration) || 0) + 's · ' + lines.length + ' lines</span>' +
+        '<span class="plus">+</span></summary>' +
+        '<div class="scene-body"><p class="scene-purpose">' + esc(scene.purpose || '') + '</p>' +
+        '<ul class="lines">' + lineHtml + '</ul>' +
+        '<div class="chips">' + chipHtml + '</div></div></details>';
+    }).join('');
+  }
+
+  function renderTransitions(prod, film){
+    var el = $('transitionGrid');
+    if (!el) return;
+    var counts = {};
+    (film.scenes || []).forEach(function(s){ (s.shots || []).forEach(function(h){
+      var f = family(h.transition);
+      counts[f] = (counts[f] || 0) + 1;
+    }); });
+    var cards = (prod && prod.transitionFamilies) || [];
+    el.innerHTML = cards.map(function(c){
+      var n = counts[c.name] || c.count || 0;
+      return '<article class="trans-card"><div class="count">' + esc(n) + '</div>' +
+        '<h3>' + esc(c.name) + '</h3><p>' + esc(c.use) + '</p></article>';
+    }).join('');
+  }
+
+  function renderSources(film){
+    var el = $('sourceList');
+    if (!el) return;
+    var counts = {};
+    (film.scenes || []).forEach(function(s){ (s.narration || []).forEach(function(l){
+      counts[l.source] = (counts[l.source] || 0) + 1;
+    }); });
+    el.innerHTML = (film.sources || []).map(function(s){
+      return '<div class="source-row"><a href="' + esc(s.url) + '" target="_blank" rel="noopener">' + esc(s.title) + '</a>' +
+        '<span class="pub">' + esc(s.publisher || '') + ' · accessed ' + esc(s.accessed || '') + '</span>' +
+        '<span class="uses">' + (counts[s.id] || 0) + ' lines</span></div>';
+    }).join('');
+  }
+
+  function renderPipeline(prod){
+    var el = $('pipelineGrid');
+    if (!el) return;
+    el.innerHTML = ((prod && prod.pipeline) || []).map(function(p){
+      return '<article class="pipe"><div class="step">' + esc(p.step) + '</div>' +
+        '<h3>' + esc(p.title) + '</h3><p>' + esc(p.body) + '</p>' +
+        '<code>' + esc(p.path) + '</code></article>';
+    }).join('');
+  }
+
+  function renderIterations(prod){
+    var el = $('iterationList');
+    if (!el) return;
+    el.innerHTML = ((prod && prod.iterations) || []).map(function(it){
+      return '<article class="iter"><div class="when">' + esc(it.date) + '</div>' +
+        '<h3>' + esc(it.title) + '</h3><p>' + esc(it.body) + '</p></article>';
+    }).join('');
+  }
+
+  function renderCredits(prod){
+    var el = $('creditGrid');
+    var rules = $('rulesList');
+    if (el) {
+      el.innerHTML = ((prod && prod.credits) || []).map(function(c){
+        return '<div class="credit"><dt>' + esc(c.role) + '</dt><dd>' + esc(c.name) + '</dd></div>';
+      }).join('');
+    }
+    if (rules) {
+      rules.innerHTML = ((prod && prod.rules) || []).map(function(r){ return '<li>' + esc(r) + '</li>'; }).join('');
+    }
+  }
+
+
+  function setText(id, text) {
+    var el = $(id);
+    if (el && text != null) el.textContent = text;
+  }
+
+  function setHtml(id, markup) {
+    var el = $(id);
+    if (el && markup != null) el.innerHTML = markup;
+  }
+
+  function applyHero(film, prod) {
+    var hero = (prod && prod.hero) || {};
+    if (!hero || !hero.title) return;
+    if (hero.when) setText('eyebrowWhen', hero.when);
+    if (hero.proof) setText('eyebrowProof', hero.proof);
+    if (hero.lede) setHtml('lede', hero.lede);
+    if (hero.title) setText('filmTitle', hero.title);
+    if (hero.intro) setText('filmIntro', hero.intro);
+    if (hero.status) setText('statusText', hero.status);
+    if (hero.stamp) setText('posterStamp', hero.stamp);
+    if (hero.caption) setText('posterCaption', hero.caption);
+    var poster = $('posterImg');
+    if (poster && hero.poster) {
+      poster.src = hero.poster;
+      poster.alt = hero.posterAlt || '';
+    }
+    var watch = $('watchLink');
+    if (watch) watch.href = 'watch.html?film=' + encodeURIComponent(FILM);
+    var navWatch = $('navWatch');
+    if (navWatch) navWatch.href = 'watch.html?film=' + encodeURIComponent(FILM);
+    var footerWatch = $('footerWatch');
+    if (footerWatch) footerWatch.href = 'watch.html?film=' + encodeURIComponent(FILM);
+    var argument = $('argumentLink');
+    if (argument) argument.href = 'debates.html?film=' + encodeURIComponent(FILM);
+    document.title = hero.title + ' | vlymbooq production';
+    var meta = document.querySelector('meta[name="description"]');
+    if (meta && hero.description) meta.setAttribute('content', hero.description);
+  }
+
+  function applyDossierLayout(prod) {
+    if (IS_JALLIANWALA) return;
+    if (prod.cutHeading) setText('cutHeading', prod.cutHeading);
+    if (prod.cutBody) setText('cutBody', prod.cutBody);
+    if (prod.closingNote) setText('closingNote', prod.closingNote);
+    var compare = $('cutCompare');
+    if (compare) compare.style.display = 'none';
+    var legend = $('cutLegend');
+    if (legend) legend.style.display = 'none';
+    var transitions = $('transitions');
+    if (transitions) transitions.style.display = 'none';
+    var sets = $('sets');
+    if (sets) sets.style.display = 'none';
+    var no = document.querySelector('#cut .section-head .no');
+    if (no) no.textContent = '01 / STORYBOARD';
+  }
+
+  Promise.all([
+    fetchJson('data/films/' + encodeURIComponent(FILM) + '.json'),
+    fetchJson('data/films/' + encodeURIComponent(FILM) + '-production.json')
+  ]).then(function(res){
+    var film = res[0], prod = res[1];
+    applyHero(film, prod);
+    applyDossierLayout(prod);
+    var status = $('statusText');
+    if (status && prod.status) status.textContent = prod.status;
+    renderReceipt(film, prod);
+    renderStats(film, prod);
+    renderTimeline(film);
+    renderOldTimeline();
+    renderScenes(film);
+    renderTransitions(prod, film);
+    renderSources(film);
+    renderPipeline(prod);
+    renderIterations(prod);
+    renderCredits(prod);
+  }).catch(function(err){
+    console.error(err);
+    var status = $('statusText');
+    if (status) status.textContent = 'Production data failed to load';
+    var scenes = $('scenes');
+    if (scenes) scenes.innerHTML = '<p style="color:var(--muted)">The production data could not be loaded. The film and sources are still available on the <a href="films.html" style="color:var(--gold)">films page</a>.</p>';
+  });
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta name="description" content="UPSC Quick Revision — vlymbooq — study material, quizzes, and AI-powered explanations on Vlymbooq.">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UPSC Quick Revision — vlymbooq</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<style>
+:root{--bg:#09090b;--card:#12121c;--border:rgba(255,255,255,.08);--purple:#a78bfa;--emerald:#34d399;--amber:#f59e0b;--cyan:#22d3ee;--text:#fafafa;--text-sec:#a1a1aa}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;line-height:1.6}
+.nav{position:sticky;top:0;z-index:100;padding:14px 24px;background:rgba(9,9,11,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+.nav-inner{max-width:1100px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{display:flex;align-items:center;gap:8px;font-weight:800}
+.nav-links{display:flex;gap:4px;align-items:center;flex-wrap:wrap}
+.nav-links a{color:var(--text-sec);text-decoration:none;font-size:.85em;font-weight:600;padding:6px 12px;border-radius:100px;white-space:nowrap}
+.nav-links a:hover{color:var(--text);background:rgba(255,255,255,.04)}
+.nav-links a.active{color:var(--purple);background:rgba(167,139,250,.1)}
+.container{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+.header{margin-bottom:24px;padding-bottom:16px;border-bottom:1px solid var(--border)}
+h1{font-size:1.8em;font-weight:800;margin-bottom:8px;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.search-bar{width:100%;padding:12px 16px;border-radius:12px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:1em;margin-bottom:20px;outline:none}
+.search-bar:focus{border-color:var(--purple)}
+.topic-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-bottom:24px}
+.topic-card{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;cursor:pointer;transition:all .2s}
+.topic-card:hover{border-color:var(--purple);transform:translateY(-2px)}
+.topic-card h3{font-size:1.1em;font-weight:700;margin-bottom:8px;color:var(--text)}
+.topic-card p{font-size:.85em;color:var(--text-sec);margin-bottom:12px}
+.revision-modal{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.8);z-index:1000;overflow:auto;padding:20px}
+.revision-modal.active{display:block}
+.modal-content{max-width:800px;margin:40px auto;background:var(--bg);border-radius:16px;padding:24px;border:1px solid var(--border)}
+.close-btn{float:right;font-size:1.5em;cursor:pointer;color:var(--text-sec);margin-bottom:16px}
+.close-btn:hover{color:var(--text)}
+.modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 18px}
+.modal-btn{background:var(--card);border:1px solid var(--border);color:var(--text);font:inherit;font-size:.82em;font-weight:700;padding:7px 13px;border-radius:9px;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.modal-btn:hover:not(:disabled){border-color:var(--purple);color:var(--purple)}
+.modal-btn:disabled{opacity:.55;cursor:default}
+.modal-btn.added{border-color:rgba(52,211,153,.4);color:var(--emerald);background:rgba(52,211,153,.08)}
+.modal-btn.ghost{background:transparent;color:var(--purple);border-color:rgba(167,139,250,.35)}
+.section-title{font-size:1.2em;font-weight:700;margin:20px 0 12px;color:var(--purple)}
+.summary-box{background:var(--card);padding:16px;border-radius:8px;border-left:4px solid var(--emerald);margin-bottom:20px}
+.bullets{list-style:none;padding:0}
+.bullets li{padding:8px 0;border-bottom:1px solid var(--border);font-size:.95em}
+.bullets li:last-child{border-bottom:none}
+.bullets li strong{color:var(--cyan);font-weight:700}
+.bullets li.none{color:var(--text-sec);font-style:italic}
+p.none{color:var(--text-sec);font-style:italic}
+.card-badge{margin-top:6px;font-size:.72em;letter-spacing:.04em;text-transform:uppercase;opacity:.65}
+.fact-type{font-size:.72em;text-transform:uppercase;letter-spacing:.05em;opacity:.75;margin-left:6px}
+.section-note{font-size:.7em;text-transform:none;letter-spacing:0;font-weight:400;opacity:.7;margin-left:6px}
+.facts{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}
+.fact-tag{background:var(--card);padding:6px 12px;border-radius:20px;font-size:.85em;border:1px solid var(--border)}
+.comparison-table{width:100%;border-collapse:collapse;margin:16px 0}
+.comparison-table th,.comparison-table td{padding:10px;text-align:left;border-bottom:1px solid var(--border)}
+.comparison-table th{color:var(--purple);font-weight:700}
+.load-btn{display:block;margin:20px auto 0;padding:10px 20px;border-radius:10px;background:var(--card);border:1px solid var(--border);color:var(--text);font-size:.9em;cursor:pointer}
+.load-btn:hover{border-color:var(--purple)}
+@media(max-width:600px){
+  .topic-grid{grid-template-columns:1fr}
+  .modal-content{margin:20px;padding:16px}
+}
+</style>
+</head>
+<body>
+<a href="#main" style="position:absolute;left:-9999px" onfocus="this.style.left='0'" onblur="this.style.left='-9999px'">Skip to content</a>
+<nav class="nav"><div class="nav-inner"><div class="brand"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="color:var(--purple)"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg><span class="brand-text">vlymbooq</span></div><div class="nav-links"><a href="index.html">Home</a><a href="current-affairs.html">Quiz</a><a href="dashboard.html">Dashboard</a><a href="archive.html">Archive</a><a href="map.html">Map</a>
+                <a href="figures/index.html">Figures</a><a href="ask.html">Ask</a><a class="active" href="revision.html">Revision</a><a href="recall.html">Recall Deck</a><a href="mains.html">Mains</a><a href="about.html">About</a></div></div></nav>
+<div class="container">
+  <div class="header">
+    <h1>UPSC Quick Revision</h1>
+    <p style="color:var(--text-sec)" id="topicCount">Loading topics…</p>
+  </div>
+  
+  <input type="text" class="search-bar" id="search" placeholder="Search topics, key points, facts (e.g., 'independence', 'gandhi', 'economy')...">
+  
+  <div class="topic-grid" id="topicGrid"></div>
+  <button class="load-btn" id="loadMore" style="display:none">Load more topics</button>
+  <p class="footer-note" id="footerNote" style="color:var(--text-sec);font-size:.8em;text-align:center;margin-top:24px"></p>
+</div>
+
+<div class="revision-modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+  <div class="modal-content">
+    <span class="close-btn" id="closeBtn" onclick="closeModal()" role="button" aria-label="Close">×</span>
+    <h2 id="modalTitle"></h2>
+    <div class="modal-actions">
+      <button class="modal-btn" id="listenBtn" type="button" onclick="toggleListen()">🔊 Listen</button>
+      <button class="modal-btn" id="recallBtn" type="button" onclick="addCurrentTopic()">🧠 Add to Recall Deck</button>
+      <a class="modal-btn ghost" id="recallOpen" href="recall.html" hidden>Review deck →</a>
+    </div>
+    
+    <div class="section-title">📝 Quick Summary</div>
+    <div class="summary-box" id="modalSummary"></div>
+
+    <div class="section-title">✅ Primary Facts <span class="section-note">verified as being about this entity</span></div>
+    <ul class="bullets" id="modalBullets"></ul>
+
+    <div class="section-title">🔗 Direct Relationships</div>
+    <ul class="bullets" id="modalRelationships"></ul>
+
+    <div class="section-title">🧩 Context</div>
+    <ul class="bullets" id="modalContext"></ul>
+
+    <div class="section-title">🧠 Connected Notes <span class="section-note">verified facts about related entities, not this one</span></div>
+    <ul class="bullets" id="modalConnected"></ul>
+
+    <div class="section-title">🗂 Neighbor Entities <span class="section-note">graph links, not facts</span></div>
+    <div class="facts" id="modalNeighbors"></div>
+
+    <div class="section-title">🔄 Related Topics</div>
+    <div id="modalComparisons"></div>
+  </div>
+</div>
+
+<script src="js/recall-deck.js"></script>
+<script>
+var revisionData = {};
+var allTopics = [];
+var filteredTopics = [];
+var visibleCount = 50;
+var PAGE = 50;
+var currentTopic = null;
+
+function escapeHtml(s) {
+  return String(s == null ? '' : s)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+function matchesQuery(topicName, data, q) {
+  if (topicName.toLowerCase().includes(q)) return true;
+  // Index the verified facts, not the legacy summary/bullet blobs: searching
+  // should not surface a topic because of text that is not about it.
+  var hay = '';
+  (data.primaryFacts || []).forEach(function (f) { hay += ' ' + (f.fact || ''); });
+  (data.connectedNotes || []).forEach(function (n) {
+    hay += ' ' + (n.entity || '') + ' ' + (n.fact || '');
+  });
+  (data.neighbors || []).forEach(function (n) { hay += ' ' + (n.entity || ''); });
+  return hay.toLowerCase().includes(q);
+}
+
+// Load revision content
+fetch('data/revision-content.json')
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    revisionData = data;
+    allTopics = Object.keys(data).sort(function(a, b) { return a.localeCompare(b); });
+    filteredTopics = allTopics;
+    var genAt = '';
+    for (var k in data) {
+      if (data[k].generatedAt) { genAt = data[k].generatedAt; break; }
+    }
+    document.getElementById('topicCount').textContent = 'Revision content for ' + allTopics.length + ' UPSC topics';
+    document.getElementById('footerNote').textContent = genAt ? 'Generated ' + new Date(genAt).toUTCString() : '';
+    renderTopics();
+
+    // Deep link from the Recall Deck: revision.html?topic=salt%20march
+    try {
+      var wanted = new URLSearchParams(location.search).get('topic');
+      if (wanted && revisionData[wanted]) openModal(wanted);
+    } catch (e) { /* URLSearchParams unavailable */ }
+  })
+  .catch(function(e) {
+    console.error('Failed to load revision data:', e);
+    document.getElementById('topicGrid').innerHTML = '<p style="color:var(--text-sec)">Failed to load revision data. Please ensure data/revision-content.json exists.</p>';
+  });
+
+function renderTopics() {
+  var grid = document.getElementById('topicGrid');
+  grid.innerHTML = '';
+
+  var shown = filteredTopics.slice(0, visibleCount);
+
+  shown.forEach(function(topicName) {
+    var data = revisionData[topicName];
+    if (!data) return;
+
+    var card = document.createElement('div');
+    card.className = 'topic-card';
+
+    var h3 = document.createElement('h3');
+    h3.textContent = topicName;
+    var owned = data.primaryFacts || [];
+    var p = document.createElement('p');
+    var connected = data.connectedNotes || [];
+    // Derived from verified facts, so a card can never advertise text that is
+    // not about the entity. Connected notes are named as such, never merged
+    // into the topic summary.
+    p.textContent = owned.length
+      ? owned.slice(0, 2).map(function (f) { return f.fact; }).join(' ')
+      : (connected.length
+          ? 'No verified fact about this entity yet. ' + connected.length +
+            ' verified notes about connected entities are shown inside.'
+          : 'No verified fact for this entity yet.');
+    if (!owned.length) p.className = 'none';
+    var badge = document.createElement('div');
+    badge.className = 'card-badge';
+    badge.textContent = owned.length + (owned.length === 1 ? ' fact' : ' facts') +
+      ' \u00b7 ' + connected.length + ' connected \u00b7 ' +
+      (data.neighbors || []).length + ' links';
+    card.appendChild(h3);
+    card.appendChild(p);
+    card.appendChild(badge);
+    card.onclick = function() { openModal(topicName); };
+    grid.appendChild(card);
+  });
+
+  var loadBtn = document.getElementById('loadMore');
+  if (filteredTopics.length > visibleCount) {
+    loadBtn.style.display = 'block';
+    loadBtn.textContent = 'Load more (' + (filteredTopics.length - visibleCount) + ' more)';
+  } else {
+    loadBtn.style.display = 'none';
+  }
+
+  if (shown.length === 0) {
+    grid.innerHTML = '<p style="color:var(--text-sec);grid-column:1/-1;text-align:center">No topics match your search.</p>';
+  }
+}
+
+document.getElementById('loadMore').onclick = function() {
+  visibleCount += PAGE;
+  renderTopics();
+};
+
+function setListenLabel(on) {
+  var btn = document.getElementById('listenBtn');
+  btn.textContent = on ? '⏹ Stop listening' : '🔊 Listen';
+  btn.classList.toggle('added', !!on);
+}
+
+function toggleListen() {
+  if (!window.RecallDeck || !currentTopic) return;
+  if (RecallDeck.isSpeaking()) {
+    RecallDeck.stopSpeaking();
+    setListenLabel(false);
+    return;
+  }
+  var data = revisionData[currentTopic];
+  if (!data) return;
+  var facts = (data.primaryFacts || []).map(function (f) {
+    return String(f && f.fact ? f.fact : '').trim();
+  }).filter(Boolean).slice(0, 6);
+  var text = facts.length
+    ? currentTopic + '. ' + facts.join(' ')
+    : currentTopic + '. ' + (data.summary || 'No verified fact yet.');
+  if (!RecallDeck.canSpeak()) {
+    var btn = document.getElementById('listenBtn');
+    btn.textContent = '🔇 Not supported here';
+    setTimeout(function () { if (!RecallDeck.isSpeaking()) setListenLabel(false); }, 1800);
+    return;
+  }
+  var ok = RecallDeck.speak(text, { onend: function () { setListenLabel(false); } });
+  setListenLabel(ok);
+}
+
+function addCurrentTopic() {
+  if (!window.RecallDeck || !currentTopic) return;
+  var result = RecallDeck.add(currentTopic, revisionData[currentTopic]);
+  var btn = document.getElementById('recallBtn');
+  if (result.ok || result.reason === 'exists') {
+    btn.textContent = result.ok && result.saved === false ? '✓ Added (not saved)' : '✓ In Recall Deck';
+    if (result.ok && result.saved === false) btn.title = 'This browser blocked local storage; the card will be lost on reload.';
+    btn.classList.add('added');
+    btn.disabled = true;
+    document.getElementById('recallOpen').hidden = false;
+    return;
+  }
+  if (result.reason === 'no-facts' || result.reason === 'no-data') {
+    btn.textContent = 'No verified fact yet';
+    btn.title = 'This topic has no verified fact to recall.';
+    setTimeout(function () {
+      btn.textContent = '🧠 Add to Recall Deck';
+    }, 1800);
+  }
+}
+
+function openModal(topicName) {
+  var data = revisionData[topicName];
+  if (!data) return;
+
+  document.getElementById('modalTitle').textContent = topicName;
+  currentTopic = topicName;
+  if (window.RecallDeck) RecallDeck.stopSpeaking();
+  setListenLabel(false);
+
+  // The add control is fail-closed: a topic with no verified fact cannot
+  // enter the deck, and an already-added topic points at the deck instead.
+  var factCount = (data.primaryFacts || []).filter(function (f) { return f && f.fact; }).length;
+  var inDeck = window.RecallDeck ? RecallDeck.has(topicName) : false;
+  var recallBtn = document.getElementById('recallBtn');
+  recallBtn.disabled = inDeck || factCount === 0;
+  recallBtn.classList.toggle('added', inDeck);
+  recallBtn.textContent = inDeck ? '✓ In Recall Deck' : (factCount ? '🧠 Add to Recall Deck' : 'No verified fact yet');
+  recallBtn.title = factCount ? '' : 'No verified fact to recall for this topic yet.';
+  document.getElementById('recallOpen').hidden = !inDeck;
+
+  // Quick summary is derived from the primary facts only, so it can never
+  // inherit a neighbour's biography.
+  var owned = data.primaryFacts || [];
+  var connected = data.connectedNotes || [];
+  document.getElementById('modalSummary').textContent =
+    owned.length ? owned.slice(0, 2).map(function (f) { return f.fact; }).join(' ')
+                 : (connected.length
+                     ? 'No verified fact about this entity yet. The connected notes below are verified facts about related entities, each attributed to its own subject.'
+                     : 'No verified fact for this entity yet.');
+
+  function list(items, render, empty) {
+    if (!items || !items.length) return '<li>' + escapeHtml(empty) + '</li>';
+    return items.map(render).join('');
+  }
+
+  document.getElementById('modalBullets').innerHTML =
+    owned.length
+      ? owned.map(function (f) {
+          var tag = (f.factType && f.factType !== 'CORE_FACT')
+            ? ' <span class="fact-type">' + escapeHtml(String(f.factType).toLowerCase()) + '</span>' : '';
+          return '<li>' + escapeHtml(f.fact) + tag + '</li>';
+        }).join('')
+      : '<li class="none">No verified fact for this entity yet.</li>';
+
+  document.getElementById('modalRelationships').innerHTML =
+    list(data.directRelationships, function (r) {
+      return '<li>' + escapeHtml(r.entity || '') +
+        ' <span class="fact-type">' + escapeHtml(r.rel || 'related') + '</span></li>';
+    }, 'No direct relationships recorded');
+
+  document.getElementById('modalContext').innerHTML =
+    list(data.context, function (c) {
+      return '<li>' + escapeHtml(c.fact || c.text || '') + '</li>';
+    }, 'No additional context');
+
+  function prettyName(s) {
+    return String(s || '').replace(/\b\w/g, function (c) { return c.toUpperCase(); });
+  }
+  document.getElementById('modalConnected').innerHTML =
+    list(connected, function (n) {
+      return '<li><strong>' + escapeHtml(prettyName(n.entity || '')) + '</strong>' +
+        ' <span class="fact-type">' + escapeHtml(n.rel || 'connected') + '</span><br>' +
+        escapeHtml(n.fact || '') + '</li>';
+    }, 'No verified notes about connected entities yet');
+
+  var nb = data.neighbors || [];
+  document.getElementById('modalNeighbors').innerHTML = nb.length
+    ? nb.map(function (n) {
+        return '<span class="fact-tag" title="' + escapeHtml(n.rel || '') + '">' +
+          escapeHtml(n.entity || n.name || '') + '</span>';
+      }).join('')
+    : '<span class="fact-tag">No neighbors</span>';
+
+  var compHTML = '';
+  if (data.comparisons && data.comparisons.length > 0) {
+    data.comparisons.forEach(function(comp) {
+      compHTML += '<p style="margin-bottom:8px;color:var(--text-sec)">' + escapeHtml(comp.title) + '</p>';
+      compHTML += '<table class="comparison-table"><thead><tr><th>Topic</th><th>Key Point</th></tr></thead><tbody>';
+      (comp.table || []).forEach(function(row) {
+        compHTML += '<tr><td>' + escapeHtml(row.topic) + '</td><td>' + escapeHtml(row.keyPoint) + '</td></tr>';
+      });
+      compHTML += '</tbody></table>';
+    });
+  } else {
+    compHTML = '<p style="color:var(--text-sec)">No related topics available</p>';
+  }
+  document.getElementById('modalComparisons').innerHTML = compHTML;
+
+  document.getElementById('modal').classList.add('active');
+  document.getElementById('closeBtn').focus();
+}
+
+function closeModal() {
+  document.getElementById('modal').classList.remove('active');
+  currentTopic = null;
+  if (window.RecallDeck) RecallDeck.stopSpeaking();
+  setListenLabel(false);
+}
+
+// Search functionality
+document.getElementById('search').addEventListener('input', function(e) {
+  var query = e.target.value.trim().toLowerCase();
+  visibleCount = PAGE;
+
+  if (query.length < 2) {
+    filteredTopics = allTopics;
+  } else {
+    filteredTopics = allTopics.filter(function(topic) {
+      return matchesQuery(topic, revisionData[topic], query);
+    });
+  }
+  renderTopics();
+});
+
+// Close modal on outside click
+document.getElementById('modal').addEventListener('click', function(e) {
+  if (e.target.id === 'modal') {
+    closeModal();
+  }
+});
+
+// Close modal on Escape
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') {
+    closeModal();
+  }
+});
+</script>
+</body>
+</html>

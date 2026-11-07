@@ -1,0 +1,324 @@
+name: Film repair
+
+# A failed Film pipeline used to stop the autonomous chain. This lane reads the
+# failed run, classifies it, and applies only deterministic plate-map fixes.
+# It never edits narration, sources, host dialogue or workflow code. It gets two
+# attempts; after that it opens an issue and stops instead of guessing.
+#
+# The trigger is workflow_run, so this file must exist on the default branch.
+# It checks out film-ci and reads the run-context artifact written at the top
+# of every film run.
+
+on:
+  workflow_run:
+    workflows: ["Film pipeline"]
+    types: [completed]
+  workflow_dispatch:
+    inputs:
+      failed_run:
+        description: Failed Film pipeline run id
+        required: true
+        type: string
+      film:
+        description: Film id, only needed when the failed run has no run-context artifact
+        required: false
+        default: ''
+        type: string
+      quality:
+        description: Quality to re-dispatch when there is no context artifact
+        required: false
+        default: draft
+        type: choice
+        options:
+          - draft
+          - final
+      release:
+        description: Re-dispatch with release enabled
+        required: false
+        default: false
+        type: boolean
+      publish:
+        description: Re-dispatch with site publish enabled
+        required: false
+        default: false
+        type: boolean
+      attempt:
+        description: Repair attempts already used (0 starts the first repair)
+        required: false
+        default: '0'
+        type: string
+      ref:
+        description: Branch to repair and re-dispatch
+        required: false
+        default: film-ci
+        type: string
+      dry_run:
+        description: Diagnose only; never commit, dispatch or open an issue
+        required: false
+        default: false
+        type: boolean
+
+permissions:
+  contents: write
+  actions: write
+  issues: write
+
+concurrency:
+  group: film-repair-${{ github.event.workflow_run.id || inputs.failed_run }}
+  cancel-in-progress: false
+
+jobs:
+  repair:
+    if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'failure' && github.event.workflow_run.head_branch == 'film-ci') }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    env:
+      GH_TOKEN: ${{ github.token }}
+      REPO: ${{ github.repository }}
+      FAILED_RUN: ${{ github.event.workflow_run.id || inputs.failed_run }}
+      BRANCH: ${{ inputs.ref || 'film-ci' }}
+
+    steps:
+      - name: Checkout the film branch
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ env.BRANCH }}
+          fetch-depth: 1
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # Read the context artifact before the log, because the context says what
+      # the failed run was trying to publish. If it is missing (an older run),
+      # fall back to the manual inputs and then to the film id in the log.
+      - name: Resolve the failed run
+        id: context
+        env:
+          INPUT_FILM: ${{ inputs.film }}
+          INPUT_ATTEMPT: ${{ inputs.attempt }}
+          INPUT_QUALITY: ${{ inputs.quality }}
+          INPUT_RELEASE: ${{ inputs.release }}
+          INPUT_PUBLISH: ${{ inputs.publish }}
+        run: |
+          set -euo pipefail
+          mkdir -p out/repair out/run-context
+          echo "run_id=$FAILED_RUN" >> "$GITHUB_OUTPUT"
+
+          gh run view "$FAILED_RUN" --log-failed > out/repair/failed.log 2>/dev/null || \
+            gh run view "$FAILED_RUN" --log > out/repair/failed.log 2>/dev/null || true
+          if [ ! -s out/repair/failed.log ]; then
+            gh run view "$FAILED_RUN" --log > out/repair/failed.log 2>/dev/null || true
+          fi
+
+          FILM=""
+          ATTEMPT="0"
+          QUALITY="draft"
+          RELEASE="false"
+          PUBLISH="false"
+          SOURCE="input"
+
+          if gh run download "$FAILED_RUN" -n run-context -D out/run-context 2>/dev/null && [ -f out/run-context/context.json ]; then
+            CONTEXT=$(node -e '
+              const c = require("./out/run-context/context.json");
+              console.log([c.film, c.repairAttempt || 0, c.quality || "draft", c.release === true, c.publish === true].join("|"));
+            ')
+            IFS='|' read -r FILM ATTEMPT QUALITY RELEASE PUBLISH <<< "$CONTEXT"
+            SOURCE="artifact"
+          else
+            FILM="${INPUT_FILM:-}"
+            ATTEMPT="${INPUT_ATTEMPT:-0}"
+            QUALITY="${INPUT_QUALITY:-draft}"
+            RELEASE="${INPUT_RELEASE:-false}"
+            PUBLISH="${INPUT_PUBLISH:-false}"
+          fi
+
+          if [ -z "$FILM" ]; then
+            FILM="$(grep -oE -- '--film [A-Za-z0-9_-]+' out/repair/failed.log 2>/dev/null | head -n 1 | awk '{print $2}' || true)"
+            if [ -n "$FILM" ]; then SOURCE="log"; fi
+          fi
+          if [ -z "$FILM" ]; then
+            FILM="$(grep -oE 'data/films/[A-Za-z0-9_-]+\.json' out/repair/failed.log 2>/dev/null | head -n 1 | sed -E 's#data/films/([A-Za-z0-9_-]+)\.json#\1#' || true)"
+            if [ -n "$FILM" ]; then SOURCE="log"; fi
+          fi
+
+          ATTEMPT="${ATTEMPT:-0}"
+          QUALITY="${QUALITY:-draft}"
+          RELEASE="${RELEASE:-false}"
+          PUBLISH="${PUBLISH:-false}"
+
+          echo "film=$FILM" >> "$GITHUB_OUTPUT"
+          echo "attempt=$ATTEMPT" >> "$GITHUB_OUTPUT"
+          echo "quality=$QUALITY" >> "$GITHUB_OUTPUT"
+          echo "release=$RELEASE" >> "$GITHUB_OUTPUT"
+          echo "publish=$PUBLISH" >> "$GITHUB_OUTPUT"
+          echo "source=$SOURCE" >> "$GITHUB_OUTPUT"
+          echo "resolved film=${FILM:-?} attempt=$ATTEMPT quality=$QUALITY source=$SOURCE"
+
+      - name: Diagnose and repair
+        id: repair
+        if: ${{ steps.context.outputs.film != '' }}
+        continue-on-error: true
+        env:
+          REPAIR_RUN_ID: ${{ steps.context.outputs.run_id }}
+          REPAIR_RUN_URL: https://github.com/${{ github.repository }}/actions/runs/${{ steps.context.outputs.run_id }}
+        run: |
+          set -euo pipefail
+          ATTEMPT="${{ steps.context.outputs.attempt }}"
+          STATUS="crash"
+          node scripts/film/repair.js \
+            --film "${{ steps.context.outputs.film }}" \
+            --attempt "$ATTEMPT" \
+            --log out/repair/failed.log \
+            --report out/repair/report.json \
+            --issue out/repair/issue.md \
+            --apply || true
+          if [ -f out/repair/report.json ]; then
+            STATUS=$(node -p "require('./out/repair/report.json').status")
+          fi
+          echo "status=$STATUS" >> "$GITHUB_OUTPUT"
+          echo "repair status $STATUS"
+
+      - name: Commit the plate repair
+        if: ${{ steps.repair.outputs.status == 'repaired' && inputs.dry_run != true }}
+        run: |
+          set -euo pipefail
+          git config user.name "vlymbooq-repair"
+          git config user.email "vlymbooq-repair@users.noreply.github.com"
+          git add "data/films/${{ steps.context.outputs.film }}-sets.json"
+          if git diff --cached --quiet; then
+            echo "nothing to commit"
+            exit 0
+          fi
+          git commit -m "film(${{ steps.context.outputs.film }}): repair plate map (attempt ${{ steps.context.outputs.attempt }})"
+          for i in 1 2 3; do
+            git push origin "HEAD:$BRANCH" && exit 0
+            git pull --rebase --autostash
+          done
+          echo "::error::could not push the plate repair"
+          exit 1
+
+      - name: Re-dispatch the film
+        if: ${{ (steps.repair.outputs.status == 'repaired' || steps.repair.outputs.status == 'retry') && steps.context.outputs.source != 'log' && inputs.dry_run != true }}
+        run: |
+          set -euo pipefail
+          NEXT=$(( ${{ steps.context.outputs.attempt }} + 1 ))
+          echo "re-dispatching ${{ steps.context.outputs.film }} as repair attempt $NEXT"
+          gh workflow run film.yml --ref "$BRANCH" \
+            -f "film=${{ steps.context.outputs.film }}" \
+            -f "quality=${{ steps.context.outputs.quality }}" \
+            -f "release=${{ steps.context.outputs.release }}" \
+            -f "publish=${{ steps.context.outputs.publish }}" \
+            -f "repair_attempt=$NEXT"
+
+      # Exhausted, creative or unresolved failures become one issue per film.
+      # Repeated failures comment on the open issue instead of opening a new one.
+      #
+      # A failure whose film id came only from the log predates the run-context
+      # artifact, so its quality, release and publish inputs are unknown. Never
+      # guess those: withhold the re-dispatch and ask for a manual one.
+      - name: Open or update a repair issue
+        if: ${{ always() && inputs.dry_run != true && (steps.context.outputs.source == 'log' || (steps.repair.outputs.status != 'repaired' && steps.repair.outputs.status != 'retry')) }}
+        env:
+          FILM: ${{ steps.context.outputs.film }}
+          STATUS: ${{ steps.repair.outputs.status }}
+          SOURCE: ${{ steps.context.outputs.source }}
+        run: |
+          set -euo pipefail
+          mkdir -p out/repair
+          if [ ! -f out/repair/issue.md ]; then
+            {
+              echo "# Film repair stopped"
+              echo
+              echo "- Failed run: https://github.com/$REPO/actions/runs/$FAILED_RUN"
+              echo "- Film: \`${FILM:-unresolved}\`"
+              echo "- Status: \`${STATUS:-unresolved}\`"
+              echo
+              if [ -z "$FILM" ]; then
+                echo "The repair lane could not resolve a film id from the run-context artifact, the manual inputs or the log. Re-dispatch this workflow with the film id and the failed run id."
+              else
+                echo "The repair script stopped before it could produce a report. The film or its plate map is missing or unreadable, so this needs a creative or human fix. The lane did not edit narration, sources, host dialogue or workflow code."
+              fi
+              echo
+              echo '```text'
+              tail -n 40 out/repair/failed.log 2>/dev/null || true
+              echo '```'
+            } > out/repair/issue.md
+          fi
+
+          if [ -n "$FILM" ]; then
+            TITLE="[film-repair] $FILM: ${STATUS:-needs attention}"
+            SEARCH="[film-repair] $FILM in:title"
+          else
+            TITLE="[film-repair] unresolved failed run $FAILED_RUN"
+            SEARCH="[film-repair] unresolved failed run in:title"
+          fi
+
+          if [ "$SOURCE" = "log" ]; then
+            if [ -n "$FILM" ]; then
+              TITLE="[film-repair] $FILM: needs a manual re-dispatch"
+            fi
+            cat >> out/repair/issue.md <<'NOTE'
+
+          ## Automatic re-dispatch withheld
+
+          This failed run has no run-context artifact, so the lane knows the film
+          id but not whether the run was a draft or a final, or whether it was
+          meant to publish. It will not guess those inputs and risk downgrading a
+          final master. Re-dispatch `film.yml` by hand with the film id and the
+          intended quality, release and publish inputs. Any plate repair above is
+          already committed.
+          NOTE
+          fi
+
+          EXISTING=$(gh issue list --state open --search "$SEARCH" --json number --jq '.[0].number' || true)
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body-file out/repair/issue.md
+            echo "commented on issue #$EXISTING"
+          else
+            gh issue create --title "$TITLE" --body-file out/repair/issue.md
+          fi
+
+          # A failure that needs a human must not be re-rendered every seven
+          # hours by the autopilot's stale-lease reaper. Block the topic. The
+          # stale-log case is exempt: it means the plate map is already valid
+          # and the failed run predates the fix. A log-only failure is also
+          # exempt: blocking it would make the manual re-dispatch fail its own
+          # --ensure claim, and the issue already asks for that re-dispatch.
+          BLOCK=false
+          if [ "$SOURCE" != "log" ] && { [ "$STATUS" = "exhausted" ] || [ "$STATUS" = "crash" ]; }; then BLOCK=true; fi
+          if [ "$SOURCE" != "log" ] && [ "$STATUS" = "issue" ] && [ -f out/repair/report.json ]; then
+            STALE=$(node -p "require('./out/repair/report.json').reason.includes('stale')" 2>/dev/null || echo false)
+            if [ "$STALE" != "true" ]; then BLOCK=true; fi
+          fi
+          if [ -n "$FILM" ] && [ "$BLOCK" = "true" ]; then
+            git config user.name "vlymbooq-repair"
+            git config user.email "vlymbooq-repair@users.noreply.github.com"
+            if node scripts/film/claim-topic.js --block "$FILM" --reason "repair lane stopped: ${STATUS:-unknown}"; then
+              git add data/film-slate.json
+              if ! git diff --cached --quiet; then
+                git commit -m "slate: block $FILM after the repair lane stopped"
+                for i in 1 2 3; do
+                  git push origin "HEAD:$BRANCH" && break
+                  git pull --rebase --autostash
+                done
+              fi
+            fi
+          fi
+
+      - name: Upload repair evidence
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: film-repair-${{ github.run_id }}
+          path: |
+            out/repair/report.json
+            out/repair/issue.md
+          if-no-files-found: warn
+          retention-days: 14

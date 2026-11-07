@@ -1,0 +1,77 @@
+name: News Wire Agent
+
+# Every 15 minutes, plus immediately after a content workflow finishes.
+# Commits only when data/news.json actually changed. Never publishes an empty
+# or malformed snapshot: the fetcher exits non-zero and leaves the old file.
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_run:
+    workflows:
+      - Daily PIB Feed
+      - Revision Content Rebuild
+      - Search index
+      - Daily Paper Generation
+      - Paper Solve (agent answers official PYQ)
+      - Author
+      - Site Agent
+      - Agent Chain
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: news-wire
+  # A workflow_run burst used to cancel runs that were already fetching or
+  # pushing. Queue them instead; each run is short and the newest still wins
+  # because it writes the latest wire.
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    if: github.event_name != 'workflow_run' || github.event.workflow_run.conclusion == 'success'
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Install dependencies
+        run: npm install --no-audit --no-fund
+
+      - name: Fetch and validate the wire
+        run: node scripts/fetch-news.js
+
+      - name: Re-check the snapshot contract
+        run: node scripts/check-feed-data.js news
+
+      - name: Commit when the wire changed
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/news.json
+          if git diff --staged --quiet; then
+            echo "No change in the wire"
+            exit 0
+          fi
+          git commit -m "news: refresh wire $(date -u +'%Y-%m-%dT%H:%MZ')"
+          pushed=""
+          for i in 1 2 3; do
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed wire update"; break; fi
+            echo "push attempt $i failed, retrying..."
+            sleep 5
+          done
+          if [ -z "$pushed" ]; then
+            echo "::error::news wire commit could not be pushed to main"
+            exit 1
+          fi

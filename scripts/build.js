@@ -1,0 +1,1 @@
+console.log('Build skipped - site is static');

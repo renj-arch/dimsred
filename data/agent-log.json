@@ -1,0 +1,751 @@
+{
+ "runs": [
+  {
+   "at": "2026-11-07T14:02:44.365Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visuals and missing data. Since papers, questions, sidecar, and syllabus files are all absent, Invention is required immediately to generate foundational content before MockPapers or ExamPatterns can function. MetaLearn will be placed last as it produced zero fixes in the last two runs and requires prior content generation to be effective.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (850 total)",
+       "text": "What are iso-efficiency or muschel curves of a turbine? | What is the run-away speed of a turbine? | Name the common types of draft tubes."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T14:31:53.524Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "We have 60 critical faults and 80 figure gaps; the previous run exhausted 'bankfigures' (1 fix) and 'invention' (0), so we must prioritize content generation to fill these deep gaps before tackling general faults. Since 'papers', 'questions', and 'syllabus' files are missing, we cannot use those agents yet; we must first generate the raw material via 'BankFigures' and 'Invention'. We will follow with 'MockPapers' and 'ExamPatterns' to structure that content, saving 'MetaLearn' for last as it has",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MockPapers",
+     "ExamPatterns",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (853 total)",
+       "text": "Write the efficiency of a draft tube. | What causes cavitation in a reaction turbine? | Define the Thoma cavitation factor of a turbine."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T14:58:34.274Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; selfcheck cleared 57 items last run but is likely saturated or a placeholder for 'all agents'. BankFigures must address the 80 figure gaps immediately as they are incomplete standing goals. Invention should follow to convert pending ideas into fresh content, keeping the site dynamic. MetaLearn and MockPapers go last as they require input data (papers/questions) which are currently absent; these agents produced 0 in recent runs so they",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (855 total)",
+       "text": "How is the setting height of a reaction turbine determined? | Compare an impulse turbine with a reaction turbine. | Compare the part-load behaviour of the three turbine families."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T15:28:58.999Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual content blocking study flow. Since papers/sidecar files are absent, Invention is required next to generate foundational question banks and syllabus-aligned materials from scratch. MetaLearn should follow to synthesize these new assets into coherent exam patterns before MockPapers can utilize them for full-length practice.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (858 total)",
+       "text": "What is the best efficiency point of a turbine? | State the working principle and main parts of a centrifugal pump. | Why is a centrifugal pump primed before starting?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Gas Turbines (360 in pool)",
+       "text": "Gas Turbines"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T15:54:37.907Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical faults and significant gaps in figures, questions, and syllabus data, while no papers or sidecars are present. BankFigures is the only agent producing results recently, so it must lead to clear immediate value. Invention should follow to generate new content for the missing files (papers/questions). MetaLearn and ExamPatterns will be queued last as they have produced zero fixes in recent runs and likely need fresh inputs from upstream agents first.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (860 total)",
+       "text": "Define static suction head, static delivery head and static head of a pump. | What is the manometric head of a centrifugal pump? | What work is done per second by a pump impeller?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T16:28:06.780Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visual assets blocking study flow. Since papers/syllabus files are missing, MockPapers is next to generate core exam materials from scratch. ExamPatterns should follow to ensure question structures align with current syllabi once base content exists. Invention will be last as it targets pending ideas rather than critical gaps.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (863 total)",
+       "text": "Write the theoretical head developed by a pump impeller. | Describe the velocity triangles at the inlet and outlet of a pump impeller. | Which impeller vane shape is preferred and why?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T16:59:31.962Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to resolve broken visuals and missing data. Since papers, questions, syllabus, and sidecars are all absent, Invention is required next to generate the foundational content needed for MockPapers and ExamPatterns. MetaLearn will follow to optimize the generation pipeline once raw content exists. Agents producing 0 in recent runs (Invention, MetaLearn) are moved last only after critical infrastructure gap",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (866 total)",
+       "text": "Write the discharge through a centrifugal pump impeller. | Define the coefficient of discharge of a pump impeller. | Define the hydraulic efficiency of a centrifugal pump."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Strength of Materials (360 in pool)",
+       "text": "Strength of Materials"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T17:27:14.044Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority standing goals; BankFigures must address both immediately. MockPapers is starved (0 fixes in last 3 runs) and should be activated next to clear pending papers. Invention and MetaLearn produced zero output recently and will be deprioritized to this run's end if needed, but current focus is on clearing the backlog of broken content.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (869 total)",
+       "text": "Define the manometric efficiency of a centrifugal pump. | Define the mechanical efficiency of a centrifugal pump. | Define the overall efficiency of a centrifugal pump."
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Theory of Machines (360 in pool)",
+       "text": "Theory of Machines"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T17:55:41.384Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority standing goals; BankFigures must run first to resolve broken visuals blocking study flow. Since papers/questions/syllabus sidecars are missing, MetaLearn is queued next to generate the foundational content structure before MockPapers or ExamPatterns can utilize it. Invention agents have produced zero fixes for 2+ runs and will be placed last to avoid starving them of necessary inputs until core gaps shrink.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (872 total)",
+       "text": "What is the volumetric efficiency of a centrifugal pump? | List the losses in a centrifugal pump. | What is the minimum starting speed of a centrifugal pump?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Thermodynamics (360 in pool)",
+       "text": "Thermodynamics"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T18:24:24.315Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority standing goals; bankfigures must run first to address both. Mockpapers is next as it directly resolves critical faults and pending ideas. ExamPatterns should follow to tackle open faults, while Invention and MetaLearn are deferred to the end of this queue since they produced zero fixes in the last three runs and require input from upstream agents before becoming productive.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (875 total)",
+       "text": "Name the types of casings used for centrifugal pumps. | What are the constructional types of a pump impeller? | Why are centrifugal pump stages arranged in series?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T18:44:02.138Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately while MockPapers tackles critical exam content. Invention and MetaLearn are deferred as they produced zero fixes in recent runs, indicating a need for starvation before re-engagement. The strategy prioritizes clearing high-impact technical gaps over generating new ideas or meta-learning until core content stability is restored.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (878 total)",
+       "text": "Why are centrifugal pumps arranged in parallel? | Write the specific speed of a pump and its use. | What is NPSH and why is it important for a pump?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Machine Design (360 in pool)",
+       "text": "Machine Design"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T19:02:52.112Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) indicate immediate content decay; BankFigures must address the 80 missing figures first to restore visual integrity. MetaLearn is required next to generate the missing syllabus, questions, papers, and sidecar files which are currently absent. Invention should follow to convert pending ideas into new exam materials, keeping content fresh. MockPapers and ExamPatterns will be queued last as they depend on the foundational content (syllabus/questions) being ",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (881 total)",
+       "text": "State the affinity laws of a centrifugal pump. | How is the working point of a pump found? | What happens when a centrifugal pump runs at shut-off?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T19:32:22.813Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visuals blocking content consumption. Since papers/sidecar files are missing, MockPapers is next to generate core study assets, followed by ExamPatterns to structure those assets into solvable units. Invention will address pending ideas for fresh material, while MetaLearn handles remaining critical faults or syllabus gaps if they exist.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (884 total)",
+       "text": "How does cavitation affect the performance of a pump? | What factors govern the selection of a centrifugal pump? | How does circulatory slip reduce the head of a pump below the Euler value?"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T20:04:25.340Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures is the only agent with recent output, so it must lead to clear immediate debt. MetaLearn and Invention have produced zero fixes in the last two runs and will be placed at the end of the action list as they may simply be starved of inputs while the system focuses on high-impact content generation.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (887 total)",
+       "text": "Why is pump specific speed based on discharge and turbine specific speed on powe | State the working principle and main parts of a reciprocating pump. | Write the discharge of a single-acting reciprocating pump."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-07T20:45:03.391Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) indicate severe content decay; BankFigures must address the 80 missing figures immediately as they likely block question rendering. The high critical fault count suggests broken links or missing assets, which MockPapers can resolve by regenerating or patching incomplete exam papers. Invention is deferred to the end of the queue as per rules for agents with zero recent output, allowing BankFigures and MockPapers to clear the backlog first.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (889 total)",
+       "text": "Write the discharge of a double-acting reciprocating pump. | What is the slip of a reciprocating pump? | When does a reciprocating pump show negative slip?"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "lastRun": "2026-11-07T20:45:03.391Z",
+ "model": "qwen3.5:9b"
+}
