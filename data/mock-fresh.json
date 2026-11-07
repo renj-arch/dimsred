@@ -1,60 +1,15 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-07T02:33:43.128Z",
-  "cursor": 19,
+  "updatedAt": "2026-11-07T03:53:38.348Z",
+  "cursor": 0,
   "count": 360,
   "lastAttempt": {
-   "at": "2026-11-07T03:26:57.549Z",
-   "reason": "nothing"
+   "at": "2026-11-07T03:53:38.348Z",
+   "reason": "added 5"
   }
  },
  "items": [
-  {
-   "ex": "ssc-je",
-   "sub": "Heat Transfer",
-   "q": "In a boiling process, define 'nucleate boiling' and distinguish it from 'film boiling' based on the vapor layer formation.",
-   "a": "Nucleate boiling involves discrete bubble formation at nucleation sites with high heat transfer coefficients. Film boiling occurs at higher superheats where a stable insulating vapor layer covers the surface, drastically reducing heat transfer.",
-   "h": "Bubble formation vs. continuous vapor film; depends on wall superheat.",
-   "s": "Nucleate boiling is characterized by the formation of discrete vapor bubbles at specific nucleation sites on the heated surface, which detach and carry away latent heat efficiently. In contrast, film boiling occurs when the wall temperature exceeds the Leidenfrost point, causing a continuous stable layer of vapor to insulate the surface from the liquid, leading to much lower heat transfer rates.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Heat Transfer",
-   "q": "Define 'degree of superheat' in the context of condensation and explain why it is necessary for condensation to occur on a cooled surface.",
-   "a": "Degree of superheat = T_sat - T_wall. It must be positive (T_wall < T_sat) to provide the driving potential for vapor molecules to lose latent heat and transition to liquid.",
-   "h": "Difference between saturation temperature and actual wall temperature; drives phase change.",
-   "s": "The degree of superheat in condensation contexts refers to the difference between the saturation temperature of the vapor and the actual temperature of the cooling surface. For condensation to occur, the surface must be cooler than the saturation temperature (positive driving force) so that vapor molecules contacting it can release their latent heat and change phase from gas to liquid.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Engineering Mathematics",
-   "q": "Define the term 'Eigenvalue' in the context of a square matrix and state its physical significance in structural dynamics.",
-   "a": "A scalar λ satisfying A v = λ v; physically represents natural frequencies squared in vibration analysis.",
-   "h": "An eigenvalue is a scalar associated with an eigenvector such that multiplying the matrix by the vector scales it by this scalar.",
-   "s": "In structural dynamics, when solving the equation of motion for free vibration (M x'' + K x = 0), assuming harmonic motion leads to a generalized eigenvalue problem where the eigenvalues correspond to the squares of the system's natural frequencies. These values determine the inherent oscillatory behavior of the structure without external forcing.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Engineering Mathematics",
-   "q": "Calculate the moment of inertia of a solid circular shaft of diameter 100 mm about its centroidal axis.",
-   "a": "9.817 × 10⁶ mm⁴",
-   "h": "Use the formula I = (π/64) * d^4 for a solid circle.",
-   "s": "Given diameter d = 100 mm, substitute into the standard formula for a solid circular section: I = (π/64) * (100)^4. Calculating this yields approximately 9,817,477 mm⁴, which is rounded to 9.817 × 10⁶ mm⁴ for engineering precision.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Engineering Mathematics",
-   "q": "What is the value of the definite integral ∫(from 0 to π) sin(x) dx and what geometric area does it represent?",
-   "a": "2 square units (area under one arch of sine curve)",
-   "h": "The integral of sin(x) is -cos(x); evaluate at limits 0 and π.",
-   "s": "Evaluating the antiderivative -cos(x) from 0 to π gives [-cos(π)] - [-cos(0)] = -(-1) - (-1) = 1 + 1 = 2. Geometrically, this represents the total positive area enclosed between the sine wave and the x-axis over one complete period from 0 to π.",
-   "at": "2026-11-03"
-  },
   {
    "ex": "ssc-je",
    "sub": "Engineering Mathematics",
@@ -3248,6 +3203,51 @@
    "a": "Swept Volume = (π/4) * D² * L, where D is the bore diameter and L is the stroke length.",
    "h": "Recall the geometric formula for the volume displaced by one piston movement.",
    "s": "The swept volume represents the volume of air drawn into the cylinder during one suction stroke. Geometrically, it is the volume of a cylinder with diameter equal to the bore (D) and height equal to the stroke (L). The formula is V_s = π/4 * D² * L.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Define the 'heat rate' of a thermal power plant and state its typical unit of measurement.",
+   "a": "The heat rate is the amount of energy input required to generate one unit of electricity, typically measured in kJ/kWh or Btu/kWh.",
+   "h": "Heat rate measures thermal efficiency; lower is better.",
+   "s": "Heat rate is defined as the ratio of heat input to the power output. It is a direct indicator of plant efficiency; a lower heat rate signifies that less fuel is consumed per kilowatt-hour generated compared to a higher heat rate.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "A coal-fired boiler receives 1200 kg/h of coal with a calorific value of 30,000 kJ/kg. The plant generates 450 kW of electrical power. Calculate the overall thermal efficiency of the plant.",
+   "a": "18.75%",
+   "h": "Efficiency = (Output Energy / Input Energy) × 100.",
+   "s": "First, calculate the total heat input per hour: Mass flow rate (1200 kg/h) × Calorific value (30,000 kJ/kg) = 36,000,000 kJ/h. Convert output power to energy per hour: 450 kW × 3600 s/h = 1,620,000 kJ/h. Efficiency = (1,620,000 / 36,000,000) × 100 = 4.5%. Note: This calculation assumes the electrical output is the final useful energy; if mechanical shaft power were given, efficiency would be higher before generator losses.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Describe the role of a 'scrubber' (or flue gas desulfurization unit) in a thermal power plant and the main chemical reaction involved.",
+   "a": "A scrubber removes sulfur dioxide (SO2) from flue gases to prevent acid rain. The main chemical reaction involves spraying a limestone (CaCO3) or lime (CaO) slurry into the gas stream, where CaCO3 + SO2 → CaSO3 + CO2, followed by oxidation of calcium sulfite (CaSO3) to gypsum (CaSO4·2H2O).",
+   "h": "Removes SO2 from exhaust gases using an alkaline slurry.",
+   "s": "The scrubber is an environmental control device installed in the exhaust path of thermal power plants burning fossil fuels. It neutralizes acidic sulfur dioxide emissions by reacting them with alkaline reagents like limestone slurry, converting harmful SO2 into solid gypsum which can be disposed of or used as a construction material.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "Calculate the mass flow rate of steam required to generate 10 MW of electrical power if the turbine-generator set has an overall efficiency of 35% and the enthalpy drop across the turbine is 800 kJ/kg.",
+   "a": "4.09 kg/s",
+   "h": "Power = (Mass Flow × Enthalpy Drop × Efficiency).",
+   "s": "The mass flow rate is calculated by dividing the electrical power output by the net specific work extracted from the steam (enthalpy drop). Assuming the given enthalpy drop of 800 kJ/kg represents the net work done per kilogram of steam available to drive the generator, the calculation is: Mass Flow Rate = Electrical Power / Enthalpy Drop = 10,000 kW / 800 kJ/kg = 12.5 kg/s. The overall cycle efficiency is a measure of fuel-to-electricity conversion but does not alter the relationship between steam flow and turbine work output if the enthalpy drop is specified as the driving force.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Power Plant Engineering",
+   "q": "What is the primary function of a 'surge tank' in a long-penstock hydroelectric system, and what phenomenon does it prevent?",
+   "a": "A surge tank acts as an air chamber or buffer located near the powerhouse to absorb sudden changes in water flow. It prevents the phenomenon known as 'water hammer,' which is a high-pressure shock wave that can occur when turbines are suddenly shut down, potentially rupturing the penstock pipes.",
+   "h": "Absorbs pressure waves; prevents water hammer.",
+   "s": "When a load on a hydro turbine is suddenly reduced or stopped, the inertia of the flowing water continues to move forward, creating a massive pressure spike (water hammer) in the long, rigid penstock. The surge tank provides a vertical column of water that can rise or fall freely, absorbing this sudden momentum change and equalizing the pressure, thus protecting the pipeline from bursting.",
    "at": "2026-11-07"
   }
  ]

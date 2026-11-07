@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T17:46:29.787Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-06T18:16:27.958Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -651,8 +639,54 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T03:53:38.353Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority to prevent site degradation; BankFigures must address the 80 missing figures immediately. MockPapers should follow to generate fresh exam content since filesPresent indicates no papers exist yet. Invention is deferred as it requires stable foundational content first, while MetaLearn and MainsFresh are low priority given the current backlog of structural gaps.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (800 total)",
+       "text": "What bucket speed gives the maximum efficiency when the jet velocity V1 = 40 m/s | Find the speed of a Pelton wheel with a 1 m pitch diameter at the optimum condit | Compute the shaft power of a Pelton wheel with Q = 0.05 m³/s and a specific work"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "5 fresh mock questions on Power Plant Engineering (360 in pool)",
+       "text": "Power Plant Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T03:36:42.895Z",
+ "lastRun": "2026-11-07T03:53:38.353Z",
  "model": "qwen3.5:9b"
 }

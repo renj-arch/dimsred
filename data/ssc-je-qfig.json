@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T03:12:41.163Z",
-  "cursor": 915,
-  "built": 797
+  "updatedAt": "2026-11-07T03:47:15.696Z",
+  "cursor": 918,
+  "built": 800
  },
  "figs": {
   "2316121": {
@@ -4785,6 +4785,24 @@
   "c063a85d": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Jet Velocity (V₁)</text><path d=\"M40,60 L100,60\" stroke-dasharray=\"4,2\"/><circle cx=\"100\" cy=\"60\" r=\"5\"/><path d=\"M100,60 L180,60\"/><text x=\"130\" y=\"75\" text-anchor=\"middle\">V₁ = Cᵥ√(2gH)</text><path d=\"M40,90 L100,90\" stroke-dasharray=\"4,2\"/><circle cx=\"100\" cy=\"90\" r=\"5\"/><path d=\"M100,90 L180,90\"/><text x=\"130\" y=\"105\" text-anchor=\"middle\">Theoretical Velocity</text><text x=\"20\" y=\"140\" font-size=\"10\">Head (H) = 50 m</text><text x=\"20\" y=\"160\" font-size=\"10\">Coefficient (Cᵥ) = 0.98</text><text x=\"20\" y=\"180\" font-size=\"10\">g = 9.81 m/s²</text></svg>",
    "n": "compute the jet velocity for a pelton wheel working under a 50 m head with cv = 0.98.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "c29dd091": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><rect x=\"40\" y=\"40\" width=\"280\" height=\"140\" stroke-dasharray=\"4,2\"/><text x=\"50\" y=\"60\">Bucket</text><path d=\"M 100 100 L 160 60 L 220 100 L 160 140 L 100 100 Z\"/><text x=\"130\" y=\"115\">u</text><path d=\"M 80 70 L 100 70 L 100 90 L 80 90 Z\"/><text x=\"65\" y=\"82\">V1</text><path d=\"M 240 70 L 260 70 L 260 90 L 240 90 Z\"/><text x=\"235\" y=\"82\">V1-u</text><line x1=\"100\" y1=\"40\" x2=\"100\" y2=\"120\"/><line x1=\"100\" y1=\"160\" x2=\"260\" y2=\"160\"/><text x=\"95\" y=\"38\">u</text><text x=\"265\" y=\"165\">V1-u</text><path d=\"M 100 40 L 100 160 M 100 40 L 260 40 M 260 40 L 260 160\" stroke-dasharray=\"2,2\"/><text x=\"95\" y=\"180\">u = V1/2</text><text x=\"265\" y=\"180\">= V1/2</text></svg>",
+   "n": "what bucket speed gives the maximum efficiency when the jet velocity v1 = 40 m/s?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "e04f93e5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Pelton Wheel Velocity Diagram</text><line x1=\"30\" y1=\"160\" x2=\"330\" y2=\"160\"/><text x=\"30\" y=\"175\">Fixed Vane</text><polygon points=\"180,160 140,120 220,120\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><line x1=\"180\" y1=\"160\" x2=\"180\" y2=\"70\"/><text x=\"195\" y=\"135\">Jet Velocity</text><text x=\"195\" y=\"115\">(V₁)</text><line x1=\"180\" y1=\"160\" x2=\"240\" y2=\"160\"/><text x=\"245\" y=\"175\">Relative Velocity</text><text x=\"245\" y=\"155\">(Vᵣ)</text><line x1=\"180\" y1=\"160\" x2=\"120\" y2=\"160\"/><text x=\"115\" y=\"175\">Relative Velocity</text><text x=\"115\" y=\"155\">(Vᵣ)</text><line x1=\"30\" y1=\"180\" x2=\"330\" y2=\"180\"/><text x=\"30\" y=\"195\">Bucket Speed u</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">Optimum: u = φ√(2gH)</text></svg>",
+   "n": "find the speed of a pelton wheel with a 1 m pitch diameter at the optimum condition for a 50 m head (φ = 0.46).",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "af5a9ce7": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Pelton Wheel Power</text><path d=\"M180 40 L180 160\"/><circle cx=\"180\" cy=\"160\" r=\"35\"/><path d=\"M180 160 A35 35 0 0 1 215 195\"/><path d=\"M180 160 A35 35 0 0 1 145 195\"/><circle cx=\"145\" cy=\"195\" r=\"4\"/><circle cx=\"215\" cy=\"195\" r=\"4\"/><path d=\"M180 40 L180 60\" stroke-dasharray=\"3,3\"/><text x=\"170\" y=\"55\">Jet</text><text x=\"180\" y=\"75\" text-anchor=\"middle\">u</text><path d=\"M215 195 L240 195\" stroke-dasharray=\"3,3\"/><text x=\"245\" y=\"200\">Vw1</text><path d=\"M145 195 L120 195\" stroke-dasharray=\"3,3\"/><text x=\"105\" y=\"200\">Vw2</text><rect x=\"80\" y=\"60\" width=\"200\" height=\"100\" rx=\"5\"/><text x=\"100\" y=\"90\">P = ρQ · W</text><text x=\"100\" y=\"110\">= 1000 × 0.05 × 2000</text><text x=\"100\" y=\"130\">= 100,000 W = 100 kW</text></svg>",
+   "n": "compute the shaft power of a pelton wheel with q = 0.05 m³/s and a specific work of 2000 j/kg.",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
