@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T15:12:38.345Z",
-  "cursor": 978,
-  "built": 858
+  "updatedAt": "2026-11-07T15:47:41.256Z",
+  "cursor": 981,
+  "built": 860
  },
  "figs": {
   "2316121": {
@@ -5151,6 +5151,18 @@
   "85f119b9": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Suction Pipe -->\n  <path d=\"M40 180 L40 80\" />\n  <!-- Pump Casing (Simplified) -->\n  <path d=\"M60 80 L140 80 L150 50 L130 20 L70 50 Z\" />\n  <!-- Impeller (Inside casing) -->\n  <circle cx=\"110\" cy=\"35\" r=\"15\" stroke-dasharray=\"2,2\" />\n  <!-- Air Bubbles (to be removed) -->\n  <circle cx=\"90\" cy=\"40\" r=\"3\" fill=\"#222\" opacity=\"0.5\"/>\n  <circle cx=\"100\" cy=\"30\" r=\"3\" fill=\"#222\" opacity=\"0.5\"/>\n  <circle cx=\"120\" cy=\"45\" r=\"3\" fill=\"#222\" opacity=\"0.5\"/>\n  <!-- Liquid (after priming) -->\n  <path d=\"M60 80 L150 50 L150 20 L70 50 Z\" stroke=\"#222\" stroke-width=\"1\" />\n  <!-- Label: Air -->\n  <text x=\"95\" y=\"35\" text-anchor=\"middle\">Air</text>\n  <!-- Label: Liquid -->\n  <text x=\"110\" y=\"65\" text-anchor=\"middle\">Liquid</text>\n  <!-- Label: Suction Pipe -->\n  <text x=\"25\" y=\"130\" text-anchor=\"middle\">Suction Pipe</text>\n  <!-- Label: Pump Casing -->\n  <text x=\"105\" y=\"70\" text-anchor=\"middle\">Casing</text>\n  <!-- Arrow indicating removal of air -->\n  <line x1=\"90\" y1=\"40\" x2=\"90\" y2=\"60\" stroke-dasharray=\"2,2\" />\n  <text x=\"85\" y=\"55\" text-anchor=\"middle\">Expel</text>\n</svg>",
    "n": "why is a centrifugal pump primed before starting?",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "87b5ad90": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Ground/Surface Line -->\n  <line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\" />\n  \n  <!-- Sump Level (Below Pump) -->\n  <line x1=\"60\" y1=\"150\" x2=\"100\" y2=\"150\" />\n  <text x=\"50\" y=\"140\">Sump</text>\n  \n  <!-- Delivery Level (Above Pump) -->\n  <line x1=\"60\" y1=\"80\" x2=\"100\" y2=\"80\" />\n  <text x=\"50\" y=\"70\">Delivery</text>\n  \n  <!-- Pump Axis -->\n  <line x1=\"140\" y1=\"130\" x2=\"140\" y2=\"90\" />\n  <circle cx=\"140\" cy=\"110\" r=\"5\" />\n  <text x=\"145\" y=\"115\">Pump</text>\n  \n  <!-- Suction Head (Vertical Distance) -->\n  <line x1=\"120\" y1=\"130\" x2=\"120\" y2=\"150\" />\n  <line x1=\"115\" y1=\"140\" x2=\"125\" y2=\"140\" />\n  <text x=\"105\" y=\"135\">Hs</text>\n  \n  <!-- Delivery Head (Vertical Distance) -->\n  <line x1=\"160\" y1=\"90\" x2=\"160\" y2=\"80\" />\n  <line x1=\"155\" y1=\"85\" x2=\"165\" y2=\"85\" />\n  <text x=\"145\" y=\"85\">Hd</text>\n  \n  <!-- Static Head (Total Vertical Distance) -->\n  <line x1=\"190\" y1=\"130\" x2=\"190\" y2=\"80\" />\n  <line x1=\"185\" y1=\"105\" x2=\"195\" y2=\"105\" />\n  <text x=\"175\" y=\"100\">Hst</text>\n  \n  <!-- Labels for levels -->\n  <line x1=\"60\" y1=\"180\" x2=\"100\" y2=\"180\" />\n  <line x1=\"60\" y1=\"80\" x2=\"100\" y2=\"80\" />\n</svg>",
+   "n": "define static suction head, static delivery head and static head of a pump.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "aded1eae": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Manometric Head (Hm)</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><text x=\"35\" y=\"65\">Suction</text><text x=\"35\" y=\"75\">Head (Hs)</text><text x=\"180\" y=\"55\">+</text><line x1=\"40\" y1=\"90\" x2=\"320\" y2=\"90\"/><text x=\"35\" y=\"95\">Discharge</text><text x=\"35\" y=\"105\">Head (Hd)</text><text x=\"180\" y=\"85\">+</text><line x1=\"40\" y1=\"120\" x2=\"320\" y2=\"120\"/><text x=\"35\" y=\"125\">Friction</text><text x=\"35\" y=\"135\">Losses (hfs)</text><text x=\"180\" y=\"115\">+</text><line x1=\"40\" y1=\"150\" x2=\"320\" y2=\"150\"/><text x=\"35\" y=\"155\">Velocity</text><text x=\"35\" y=\"165\">Head (Vd²/2g)</text><text x=\"180\" y=\"145\">=</text><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"35\" y=\"185\">Total Head</text><text x=\"35\" y=\"195\">(Hm)</text></svg>",
+   "n": "what is the manometric head of a centrifugal pump?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }

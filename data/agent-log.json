@@ -1,73 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T08:26:57.183Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "We have severe content gaps (80 figure gaps, 23 critical faults) and no source files present; self-check alone cannot generate missing assets. Prioritize BankFigures to fill the massive figure gap backlog, then MockPapers and ExamPatterns to address critical faults and pending ideas. MainsFresh should run last as it is currently producing zero output while others are needed urgently.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (824 total)",
-       "text": "Describe the runner and shaft layout of a Kaplan turbine. | What is the tangential-velocity characteristic of axial-flow turbines? | How is the discharge through a Kaplan runner obtained?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Materials & Metallurgy (360 in pool)",
-       "text": "Materials & Metallurgy"
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw653spq (gs3, 15 marks): India launched the National Green Hydrogen Mission to achieve net-zero emissions by 2070. Critically examine the strateg",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T08:58:26.619Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -773,8 +706,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T15:54:37.907Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical faults and significant gaps in figures, questions, and syllabus data, while no papers or sidecars are present. BankFigures is the only agent producing results recently, so it must lead to clear immediate value. Invention should follow to generate new content for the missing files (papers/questions). MetaLearn and ExamPatterns will be queued last as they have produced zero fixes in recent runs and likely need fresh inputs from upstream agents first.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (860 total)",
+       "text": "Define static suction head, static delivery head and static head of a pump. | What is the manometric head of a centrifugal pump? | What work is done per second by a pump impeller?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T15:28:58.999Z",
+ "lastRun": "2026-11-07T15:54:37.907Z",
  "model": "qwen3.5:9b"
 }
