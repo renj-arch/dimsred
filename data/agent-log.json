@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T23:04:38.794Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "We have 81 figure gaps and 23 critical faults; the last run produced zero fixes for 'foresight', 'questions', 'content', 'papers', and 'wikisyllabus', so these agents must be starved or moved to the end of the queue. Since 'mainsfresh' just fixed one item, we prioritize unfinished standing goals (figure gaps) before new ventures like invention.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention",
-     "MockPapers",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (774 total)",
-       "text": "Name the three types of similitude between model and prototype. | When are the Reynolds and Froude model laws applied, and why are distorted model | On what basis are hydraulic turbines classified?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "8 fresh mock questions on Hydraulic Machines (360 in pool)",
-       "text": "Hydraulic Machines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-06T23:44:18.736Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -717,8 +656,50 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T07:04:20.218Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 226079 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 48 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T05:52:53.494Z",
+ "lastRun": "2026-11-07T07:04:20.218Z",
  "model": "qwen3.5:9b"
 }
