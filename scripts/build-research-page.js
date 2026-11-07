@@ -85,8 +85,8 @@ function page(storeData) {
     '</style></head><body><div class="wrap">' +
     '<div class="crumb"><a href="index.html">Home</a> / Research Team</div>' +
     '<h1>Research Team</h1>' +
-    '<p class="lead">A scientist solves each question, an inventor finds the fastest valid method, and an independent verifier checks the answer again. Only methods that survive the check appear here.</p>' +
-    '<div class="disc">"Original" means original to this lab - we do not claim a method is the first in the world. Every method is reproducible from the question and checked by a second solve. Time shown is how long a prepared student needs, not model latency.</div>' +
+    '<p class="lead">A mathematician, scientist or logician solves each question, an inventor finds the fastest valid method, and an independent verifier solves it again. Published methods passed both solves; disagreements are kept in a clearly marked review section.</p>' +
+    '<div class="disc">"Original" means original to this lab - we do not claim a method is the first in the world. Every method is reproducible from the question and checked by a second solve. Time shown is an estimate of how long a prepared student needs, not model latency.</div>' +
     '<div class="stats"><span>' + published.length + ' verified questions</span><span>' + totalMethods + ' methods</span><span>' + examList.length + ' exams</span></div>' +
     '<div class="controls"><input id="search" type="search" placeholder="Search a question or topic...">' +
     '<select id="exam"><option value="">All exams</option>' + examList.map(function (e) { return '<option value="' + esc(e) + '">' + esc(e.toUpperCase()) + ' (' + exams[e] + ')</option>'; }).join('') + '</select></div>' +
