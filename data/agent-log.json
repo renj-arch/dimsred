@@ -1,112 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T00:10:34.208Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The site has critical faults and zero content files present (papers, questions, syllabus), indicating a complete rebuild is needed before fixing UI faults. BankFigures must run first to generate the foundational question bank since no 'questions' file exists. MockPapers should follow immediately to assemble exam papers from those figures. Invention is next to create fresh study materials and fill content gaps. MetaLearn will then synthesize these new assets into a cohesive syllabus structure. Fi",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (780 total)",
-       "text": "Which turbine type needs a full-pressure casing? | Give typical examples of each turbine class. | How is a turbine selected according to head?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Engineering Mathematics (360 in pool)",
-       "text": "Engineering Mathematics"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-07T00:43:41.138Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual assets blocking study flow. Since papers/syllabus files are absent, MetaLearn should immediately generate foundational content to fill the 'false' file states before attempting complex mock exams or invention tasks. Invention agents produced 0 for the last two runs and will be placed last in this sequence as per starvation rules.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (783 total)",
-       "text": "What is governing of a turbine? | What is a Pelton wheel? | Name the main parts of a Pelton wheel."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T01:13:02.793Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -763,8 +657,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T07:57:50.714Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; prioritize BankFigures to resolve visual content debt immediately. Since 'selfcheck' cleared 61 items last run, it is likely a cleanup agent that should follow high-impact generation agents if inputs remain, but given the specific gap types, we focus on generation first. The previous run showed 'bankfigures:1' and 'mainsfresh:1' active; moving to MockPapers next addresses the pending paper generation goal. ExamPatterns follows to ensu",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (821 total)",
+       "text": "How does a propeller turbine differ from a Kaplan turbine? | What is the advantage of the adjustable Kaplan blades? | What head range suits a Kaplan or propeller turbine?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "9 fresh mock questions on Engineering Mechanics (360 in pool)",
+       "text": "Engineering Mechanics"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T07:39:00.974Z",
+ "lastRun": "2026-11-07T07:57:50.714Z",
  "model": "qwen3.5:9b"
 }
