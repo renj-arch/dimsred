@@ -28,9 +28,9 @@ on:
         default: '60'
 
 concurrency:
-  # One paper per exam at a time. Different exams may run in parallel so the
-  # remaining full papers can be produced without waiting a day each.
-  group: full-paper-${{ github.event.inputs.exam || 'scheduled' }}
+  # Serialize paper builds: every run rebuilds shared PDF/HTML artifacts, so
+  # two runs pushing at once conflict on binaries. Each run is now ~10 min.
+  group: full-paper
   cancel-in-progress: false
 
 permissions:
@@ -138,11 +138,28 @@ jobs:
           if [ -n "${{ steps.target.outputs.paper }}" ]; then ARGS="$ARGS --paper=${{ steps.target.outputs.paper }}"; fi
           node scripts/full-paper-lane.js "${{ steps.target.outputs.exam }}" $ARGS
 
+      - name: Resolve published paper slug
+        id: slug
+        if: steps.lane.outcome == 'success'
+        run: |
+          SLUG=$(node -e "
+            const s = require('./data/full-paper-status.json');
+            const exam = process.argv[1];
+            const date = process.argv[2];
+            const p = (s.papers || []).find(function (x) {
+              return x.exam === exam && x.date === date && x.status === 'published';
+            });
+            process.stdout.write(p && p.slug ? p.slug : '');
+          " "${{ steps.target.outputs.exam }}" "$(date +%Y-%m-%d)")
+          echo "slug=$SLUG" >> $GITHUB_OUTPUT
+          echo "resolved slug: $SLUG"
+
       - name: Build mock-test pages and PDF
         if: steps.lane.outcome == 'success'
         run: |
-          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-full-papers.js
-          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-paper-pdf.js
+          SLUG="${{ steps.slug.outputs.slug }}"
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-full-papers.js ${SLUG:+--slug="$SLUG"}
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-paper-pdf.js ${SLUG:+--slug="$SLUG"}
 
       - name: Update sitemap
         if: steps.lane.outcome == 'success'

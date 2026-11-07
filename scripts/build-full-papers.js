@@ -116,12 +116,17 @@ function updateIndex(data) {
 }
 
 function run() {
+  // Only touch the paper this run produced. Rebuilding every page rewrites
+  // 20+ files and makes otherwise-independent paper pushes conflict.
+  const slugArg = process.argv.slice(2).find(function (a) { return a.indexOf('--slug=') === 0; });
+  const onlySlug = slugArg ? slugArg.slice('--slug='.length) : '';
   const files = fs.readdirSync(DATA_DIR).filter(function (f) { return f.endsWith('.json'); });
   let built = 0;
   files.forEach(function (f) {
     let data;
     try { data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, f), 'utf-8')); } catch (e) { return; }
     if (data.kind !== 'full') return;
+    if (onlySlug && data.slug !== onlySlug) return;
     const dir = path.join(ROOT, data.folder, 'mock-tests');
     fs.mkdirSync(dir, { recursive: true });
     fs.writeFileSync(path.join(dir, data.slug + '.html'), build(data), 'utf-8');

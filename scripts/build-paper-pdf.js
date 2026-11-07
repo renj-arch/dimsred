@@ -132,12 +132,17 @@ function build(data) {
 
 function run() {
   fs.mkdirSync(OUT_DIR, { recursive: true });
+  // A paper run must only rebuild its own PDF. Rebuilding every PDF changes
+  // bytes on every run and turns parallel paper pushes into binary conflicts.
+  const slugArg = process.argv.slice(2).find(function (a) { return a.indexOf('--slug=') === 0; });
+  const onlySlug = slugArg ? slugArg.slice('--slug='.length) : '';
   const files = fs.readdirSync(DATA_DIR).filter(function (f) { return f.endsWith('.json'); });
   let n = 0;
   files.forEach(function (f) {
     let data;
     try { data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, f), 'utf-8')); } catch (e) { return; }
     if (data.kind !== 'full') return;
+    if (onlySlug && data.slug !== onlySlug) return;
     const out = build(data);
     console.log(path.relative(ROOT, out) + ' (' + data.questions.length + ' Q)');
     n++;

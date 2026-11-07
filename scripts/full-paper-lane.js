@@ -181,6 +181,7 @@ async function run(opts) {
   fs.writeFileSync(out, JSON.stringify(data, null, 2), 'utf-8');
   const entry = {
     exam: examKey, paper: paper.id, date: date, status: 'published',
+    slug: data.slug,
     questions: data.questions.length, marks: data.totalMarks, duration: data.timerMinutes,
     modelQuestions: data.modelQuestions, generatedBy: data.generatedBy,
     file: path.relative(ROOT, out).replace(/\\/g, '/'), checkedAt: new Date().toISOString()
