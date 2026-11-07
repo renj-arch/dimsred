@@ -160,6 +160,12 @@ jobs:
           # source is cleaned run-by-run by the agent; this keeps the deployed
           # bytes clean immediately for pages the agent has not revisited yet.
           node scripts/clean-dup-attrs.js .
+          # Every course lesson gets a client-side "changed since your last
+          # visit" watcher. Doing it here, not in the generator, covers the
+          # hand-built lessons (Indian Polity) and direct page edits too: the
+          # reader's own last-seen headings are the baseline, so a section
+          # inserted anywhere in the body is still noticed.
+          node scripts/inject-lesson-watch.js .
           git add -A -- '*.html' 2>/dev/null || true
 
           TREE=$(git write-tree)
