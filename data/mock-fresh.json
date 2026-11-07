@@ -1,96 +1,15 @@
 {
  "meta": {
   "about": "Fresh exam-style questions for the Mock Test mode on /ssc-je, written by the site's CI agent (scripts/site-agent.js, agent MockPapers) — one technical subject per run, strict validation (q/a/h/s present, no duplicates of the static bank or of earlier pool items, sane lengths). Mock papers blend these in ahead of the static bank, so every paper leads with material the bank does not hold. Entries are written in the model's own words; nothing is copied from any source. The pool is capped and the oldest entries age out.",
-  "updatedAt": "2026-11-07T08:23:18.594Z",
-  "cursor": 12,
+  "updatedAt": "2026-11-07T11:37:38.899Z",
+  "cursor": 13,
   "count": 360,
   "lastAttempt": {
-   "at": "2026-11-07T10:52:55.202Z",
-   "reason": "nothing"
+   "at": "2026-11-07T11:37:38.899Z",
+   "reason": "added 9"
   }
  },
  "items": [
-  {
-   "ex": "ssc-je",
-   "sub": "Steam Turbines",
-   "q": "Calculate the specific steam consumption (SSC) in kg/kWh for a turbine producing 50 MW of power if it consumes 250 tonnes of steam per hour.",
-   "a": "16.67 kg/kWh",
-   "h": "Convert units to match kW and hours, then divide mass flow by power output.",
-   "s": "Specific Steam Consumption (SSC) is calculated as the mass of steam consumed per unit of electrical energy generated. Convert 250 tonnes to kilograms (250,000 kg) and power to kilowatts (50,000 kW). Divide the hourly mass flow by the power output: 250,000 kg/h / 50,000 kW = 5 kg/kWh.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Steam Turbines",
-   "q": "Explain why the last stage blades of a steam turbine are made longer than the first stage blades.",
-   "a": "The last stage blades are longer to accommodate the significantly increased cross-sectional area required by the expanding steam, which has lower density and higher specific volume after passing through multiple stages.",
-   "h": "Relate blade length to the increasing volume and velocity of steam as it expands through the turbine.",
-   "s": "As steam expands through the turbine, its pressure and temperature drop, causing its specific volume (density inverse) to increase dramatically. To maintain a constant mass flow rate (continuity equation), the flow area must increase. Since the blade height is the primary dimension that can be varied along the axial length of the rotor, the blades in the low-pressure (last) stages are made progressively longer to match the expanding steam volume.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Steam Turbines",
-   "q": "What is the effect of increasing the inlet steam pressure on the Rankine cycle efficiency and the moisture content at the turbine exit?",
-   "a": "Increasing inlet steam pressure increases the thermal efficiency of the Rankine cycle but increases the moisture content (wetness fraction) of the steam at the turbine exhaust.",
-   "h": "Analyze the impact of superheating/pressure increase on the T-s diagram expansion line.",
-   "s": "On a T-s diagram, increasing the boiler pressure shifts the saturation dome to the right. While this expands the area under the heat addition curve (increasing efficiency), it also causes the isentropic expansion line to cut deeper into the wet region of the saturation dome. Consequently, while more work is extracted per unit mass, the steam exiting the turbine contains a higher percentage of liquid droplets, which can erode blades if not managed by reheat.",
-   "at": "2026-11-03"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Boilers",
-   "q": "Define the function of a 'feed check valve' in a boiler feed water system and explain why it is critical for safety.",
-   "a": "A feed check valve allows water to flow only from the pump to the boiler drum, preventing reverse flow (backflow) if the pump fails or stops. This is critical because backflow could cause the pump to run dry, leading to overheating and catastrophic failure of the pump impeller.",
-   "h": "Identify the component that prevents backflow into the pump when it stops.",
-   "s": "In a high-pressure boiler system, the feed pump creates significant pressure to push water into the drum. If the pump stops suddenly due to power failure or mechanical jamming, the high pressure inside the boiler drum would force hot water back into the suction side of the stopped pump. The feed check valve acts as a one-way gate, closing immediately upon detecting this reverse flow tendency, thereby protecting the pump from damage and maintaining system integrity.",
-   "at": "2026-11-04"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Boilers",
-   "q": "A boiler produces 2000 kg/h of steam at 15 bar with a dryness fraction of 0.95. If the enthalpy of saturated liquid (hf) is 844.7 kJ/kg and latent heat (hfg) is 1947.3 kJ/kg, calculate the equivalent evaporation from and at 100°C.",
-   "a": "1984.6 kg/h",
-   "h": "Use the formula: Mass × [hg + x·hfg - hf] / 2257, where 2257 kJ/kg is latent heat of water at 100°C.",
-   "s": "First, calculate the total enthalpy of the steam produced: h_steam = hf + x·hfg = 844.7 + (0.95 × 1947.3) = 2687.635 kJ/kg. Next, find the heat absorbed per kg of steam relative to water at 100°C: q_absorbed = h_steam - hf_100C = 2687.635 - 419.04 (approx latent heat reference) or simply use the standard equivalent evaporation formula: E.E. = m × [(hf + x·hfg) - hf_ref] / 2257. Assuming hf at 100°C is ~419 kJ/kg, q_net = 2687.635 - 419 = 2268.635 kJ/kg. E.E. = (2000 × 2268.635) / 2257 ≈ 1984.6 kg/h.",
-   "at": "2026-11-04"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Boilers",
-   "q": "Calculate the percentage increase in boiler efficiency if the heat loss due to dry flue gases decreases from 8% to 5%, assuming all other losses remain constant.",
-   "a": "3.33%",
-   "h": "Recall that boiler efficiency = 100% - sum of all heat losses.",
-   "s": "Boiler efficiency is defined as the ratio of heat utilized to heat supplied. Heat losses include dry flue gases, moisture in fuel, radiation, etc. If the loss due to dry flue gases drops from 8% to 5%, and all other losses are constant, the net heat recovered by the boiler increases by exactly the difference in these losses. Therefore, the efficiency increases by 3 percentage points (from X% to X+3%).",
-   "at": "2026-11-04"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Boilers",
-   "q": "Why are 'economizers' always installed on the flue gas path before the chimney and what fluid flows through them?",
-   "a": "Economizers are installed in the flue gas path (between the boiler furnace and the chimney) to recover waste heat from hot exhaust gases. Water from the feed pump flows through the economizer tubes, entering as cold feed water and leaving as heated feed water before entering the drum.",
-   "h": "Identify the heat recovery device that preheats feed water using waste heat.",
-   "s": "Flue gases exiting the boiler still contain significant thermal energy (often 200-300°C). An economizer captures this heat to preheat the incoming feed water. This reduces the fuel required in the furnace to generate steam, improving overall efficiency. It is placed before the chimney because that is where the hot gas stream exists; placing it after would mean no heat source remains.",
-   "at": "2026-11-04"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Air Compressors",
-   "q": "Define 'Free Air Delivery' (FAD) of an air compressor and explain why it is always specified at standard atmospheric conditions rather than the receiver pressure.",
-   "a": "The volume of free air delivered by a compressor per unit time measured at inlet (atmospheric) temperature and pressure.",
-   "h": "Recall that FAD measures actual output after accounting for intake density and leakage, standardized to ambient conditions.",
-   "s": "Free Air Delivery represents the actual useful work done by the compressor on the atmosphere. It is specified at standard atmospheric conditions because the volumetric efficiency depends on the density of the intake air; specifying it at receiver pressure would overstate the mass flow capability since the gas expands as it leaves the cylinder.",
-   "at": "2026-11-04"
-  },
-  {
-   "ex": "ssc-je",
-   "sub": "Air Compressors",
-   "q": "A single-stage reciprocating air compressor has a clearance volume equal to 5% of the swept volume. If the compression and expansion indices are both 1.3, calculate the theoretical volumetric efficiency.",
-   "a": "Approximately 86.5% (assuming typical pressure ratio of 7 bar discharge / 1 bar suction = 7:1).",
-   "h": "Use the volumetric efficiency formula involving clearance ratio and pressure ratio; assume standard suction/discharge pressures for calculation context if not given, but here focus on the clearance effect.",
-   "s": "Volumetric efficiency is reduced by the re-expansion of gas trapped in the clearance volume. Using the formula η_v = 1 + C - C*(P2/P1)^(1/n), where C=0.05, P2/P1=7, n=1.3, we get η_v ≈ 1 + 0.05 - 0.05*(7)^0.769 ≈ 1.05 - 0.185 = 0.865 or 86.5%.",
-   "at": "2026-11-04"
-  },
   {
    "ex": "ssc-je",
    "sub": "Air Compressors",
@@ -3248,6 +3167,87 @@
    "a": "The primary purpose of adding chromium to iron is to form a thin, stable, and self-repairing passive oxide layer (primarily Cr₂O₃) on the surface, which provides excellent resistance to corrosion and oxidation.",
    "h": "Think about passivation layers and corrosion resistance.",
    "s": "Chromium reacts with oxygen in the atmosphere to form a dense, adherent chromium oxide film. This layer acts as a barrier preventing further diffusion of oxygen and metal ions, thereby inhibiting rust formation. As long as there is sufficient chromium available (typically >10.5%), this layer can reform if scratched, maintaining the material's corrosion resistance.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "Define the term 'Eigenvalue' in the context of a square matrix and state its physical significance in structural dynamics.",
+   "a": "An eigenvalue is a scalar λ such that A·v = λ·v for some non-zero vector v; physically, it relates to the square of natural frequencies in vibration analysis.",
+   "h": "Recall that an eigenvalue represents a scaling factor for eigenvectors under linear transformation, crucial for natural frequency analysis.",
+   "s": "In structural dynamics, if [K] and [M] are stiffness and mass matrices, solving |[K] - ω²[M]| = 0 yields eigenvalues λ = ω². These values determine the system's natural frequencies, indicating resonance risks during operation.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "Calculate the total time taken to fill a tank with two inlet pipes A (15 min) and B (20 min) working together, assuming no leakage.",
+   "a": "6 minutes",
+   "h": "Use the combined work rate formula: 1/T = 1/t₁ + 1/t₂.",
+   "s": "Pipe A fills 1/10 of the tank per minute and Pipe B fills 1/15 per minute. Adding rates: 1/10 + 1/15 = 3/30 + 2/30 = 5/30 = 1/6. Thus, they fill the tank in 6 minutes.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "State the condition for a function f(x) to be continuous at x = c and explain why continuity is necessary but not sufficient for differentiability.",
+   "a": "f(c⁻) = f(c⁺) = f(c)",
+   "h": "Recall the three conditions: defined at c, limit exists, and limit equals function value.",
+   "s": "A function is continuous at x=c if lim(x→c)f(x) = f(c). This ensures no breaks in the graph. However, a function can be continuous (e.g., |x| at x=0) but not differentiable because the left-hand and right-hand derivatives do not match.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "Determine the moment of inertia of a solid circular disc about its centroidal axis perpendicular to its plane.",
+   "a": "(1/2)·m·r²",
+   "h": "Use the standard formula for a solid cylinder/disc rotating about its central longitudinal axis.",
+   "s": "For a solid disc of mass m and radius r, integrating the elemental rings (dm = 2πr'·t·ρ·dr') leads to I = ∫r'² dm. The result is half the product of mass and the square of the radius.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "Explain the concept of 'Gibbs Phenomenon' in Fourier series approximation.",
+   "a": "Oscillatory overshoot near discontinuities",
+   "h": "Recall that truncating a Fourier series near a discontinuity causes overshoots that do not vanish with more terms.",
+   "s": "When approximating a function with a jump discontinuity using a finite Fourier series, the partial sums exhibit ripples near the jump. The maximum overshoot approaches approximately 9% of the jump height and does not disappear even as the number of terms increases indefinitely.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "Calculate the probability of getting exactly two heads when tossing three fair coins simultaneously.",
+   "a": "3/8",
+   "h": "Use the binomial distribution formula or count favorable outcomes over total outcomes (2³).",
+   "s": "Total possible outcomes for 3 coins is 2³ = 8. Favorable outcomes for exactly 2 heads are HHT, HTH, THH (3 cases). Probability P = 3/8.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "Define 'Shear Stress' in a beam cross-section and state where it is maximum for a rectangular section.",
+   "a": "At the neutral axis",
+   "h": "Recall that shear stress varies parabolically across the depth of a rectangular beam.",
+   "s": "Shear stress τ = VQ/It, where Q is the first moment of area. For a rectangle, Q is maximum at the neutral axis (y=0), making shear stress maximum there and zero at the top/bottom fibers.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "State the relationship between Young's Modulus (E), Shear Modulus (G), and Bulk Modulus (K) for an isotropic material.",
+   "a": "E = 2G(1+ν) = 3K(1-2ν)",
+   "h": "Recall that only two elastic constants are independent; relate them using Poisson's ratio ν.",
+   "s": "For isotropic materials, E, G, and K are linked via Poisson's ratio (ν). Combining the relations yields E = 2G(1+ν) and E = 3K(1-2ν), showing that knowing any two determines the third.",
+   "at": "2026-11-07"
+  },
+  {
+   "ex": "ssc-je",
+   "sub": "Engineering Mathematics",
+   "q": "Describe the physical meaning of 'Virtual Work' principle in statics.",
+   "a": "Σ(F·δr) = 0",
+   "h": "Recall that it equates the work done by external forces to zero for a system in equilibrium under virtual displacement.",
+   "s": "The Principle of Virtual Work states that if a system is in equilibrium, the total work done by all active forces during any infinitesimal virtual displacement compatible with constraints is zero. This allows solving complex statics problems without resolving every reaction force explicitly.",
    "at": "2026-11-07"
   }
  ]
