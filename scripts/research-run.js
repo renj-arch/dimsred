@@ -204,13 +204,12 @@ function cleanMethod(m, answer) {
 }
 
 function candidates(examFilter, excludeIds) {
-  const files = fs.readdirSync(DATA_DIR).filter(function (f) { return f.endsWith('.json') && f.indexOf('-full-') !== -1; });
+  const files = fs.readdirSync(DATA_DIR).filter(function (f) { return f.endsWith('.json'); });
   const items = [];
   files.forEach(function (f) {
     let data;
     try { data = JSON.parse(fs.readFileSync(path.join(DATA_DIR, f), 'utf-8')); } catch (e) { return; }
     if (!data || !Array.isArray(data.questions) || !data.slug || !data.folder) return;
-    if (data.kind !== 'full') return;
     if (examFilter.length && examFilter.indexOf(data.folder) === -1) return;
     const created = String(data.generatedAt || data.createdDate || '');
     data.questions.forEach(function (q) {
@@ -266,6 +265,9 @@ async function investigate(item) {
     exam: item.data.folder,
     paperSlug: item.data.slug,
     paperTitle: item.data.title,
+    paperPath: item.data.kind === 'full'
+      ? item.data.folder + '/mock-tests/' + item.data.slug + '.html'
+      : item.data.folder + '/papers/' + item.data.slug + '.html',
     paperFile: path.basename(String(item.data.slug)) + '.json',
     questionNumber: q.q,
     section: q.section,

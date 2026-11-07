@@ -46,7 +46,7 @@ function cardHtml(s) {
     (rest.length ? '<details class="more"><summary>More methods (' + rest.length + ')</summary>' + rest.map(methodHtml).join('') + '</details>' : '') +
     '<div class="foot">Verified by an independent solve · ' + esc(s.model || '') + ' · original to this lab' +
     (s.roles ? ' · ' + esc(s.roles.solver) + ' / Inventor / Verifier' : '') +
-    (s.paperSlug ? ' · <a href="' + esc(s.paperSlug) + '.html">source paper</a>' : '') + '</div>' +
+    (s.paperPath || s.paperSlug ? ' · <a href="' + esc(s.paperPath || (s.paperSlug + '.html')) + '">source paper</a>' : '') + '</div>' +
     '</article>';
 }
 

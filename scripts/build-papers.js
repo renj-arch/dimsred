@@ -1,10 +1,13 @@
 const fs = require('fs');
 const path = require('path');
+const researchStore = require('./lib/research-store');
 
 const CSP = "default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com https://unpkg.com https://static.cloudflareinsights.com https://ep2.adtrafficquality.google https://*.adtrafficquality.google; connect-src 'self' https:; frame-src 'self' https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google https://www.google.com; upgrade-insecure-requests";
 
 const BASE = 'https://vlymbooq.qzz.io';
 const EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet', 'nda', 'cds', 'clat'];
+let RESEARCH = {};
+let SLUG = '';
 
 function esc(s) {
   if (!s) return '';
@@ -79,8 +82,14 @@ function buildQuestion(q, sections) {
   var sol = q.solution
     ? '<br><span style="color:#4b5563">' + esc(q.solution) + '</span>'
     : '';
+  var lab = RESEARCH[SLUG + '#' + q.q];
+  var labHtml = lab && lab.methods && lab.methods[0]
+    ? '<div class="research-lab" style="margin-top:8px;padding:8px 10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;font-size:.9em;color:#1e3a8a"><strong>Research Team · ~' + (parseInt(lab.methods[0].seconds, 10) || 10) + 's · ' + esc(lab.methods[0].name) + '</strong><ol style="margin:4px 0 0;padding-left:18px">' +
+      (lab.methods[0].steps || []).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') +
+      '</ol></div>'
+    : '';
 
-  return '<div class="question" data-q="' + q.q + '"><div class="q-number">Q' + q.q + '. ' + badge + modelBadge + '</div><div class="q-text">' + esc(q.text) + '</div><div class="q-options">' + opts + '</div><button class="show-soln">Show Answer</button><div class="solution-box"><strong>Correct Answer:</strong> ' + correctAnswer + sol + '</div></div>';
+  return '<div class="question" data-q="' + q.q + '"><div class="q-number">Q' + q.q + '. ' + badge + modelBadge + '</div><div class="q-text">' + esc(q.text) + '</div><div class="q-options">' + opts + '</div><button class="show-soln">Show Answer</button><div class="solution-box"><strong>Correct Answer:</strong> ' + correctAnswer + sol + labHtml + '</div></div>';
 }
 
 function buildPaper(data) {
@@ -107,6 +116,9 @@ function buildPaper(data) {
 function run() {
   var root = path.resolve(__dirname, '..');
   var dataDir = path.join(root, 'papers-data');
+  RESEARCH = researchStore.indexByPaper(researchStore.load(root));
+  var slugArg = process.argv.slice(2).find(function (a) { return a.indexOf('--slug=') === 0; });
+  var onlySlug = slugArg ? slugArg.slice('--slug='.length) : '';
   var files = fs.readdirSync(dataDir).filter(function(f) { return f.endsWith('.json'); });
 
   if (files.length === 0) {
@@ -118,8 +130,10 @@ function run() {
     var file = files[i];
     var data = JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf-8'));
     if (data.kind === 'full') continue; // full papers are built by build-full-papers.js
+    if (onlySlug && data.slug !== onlySlug) continue;
     var folder = data.folder;
     var slug = data.slug;
+    SLUG = slug;
 
     var outDir = path.join(root, folder, 'papers');
     if (!fs.existsSync(outDir)) {
