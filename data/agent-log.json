@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-06T15:30:15.531Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-06T16:11:56.137Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -852,8 +840,58 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T01:44:27.027Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visuals and data. Since papers/syllabus files are missing, MockPapers is next to generate core study assets from scratch. Invention should follow to create fresh content for unfinished goals, while MetaLearn and ExamPatterns go last as they rely on existing structured data or have produced zero fixes recently.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "Invention",
+     "MetaLearn",
+     "ExamPatterns"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (789 total)",
+       "text": "Define the speed ratio φ of a Pelton wheel. | State the condition for maximum hydraulic efficiency of a Pelton wheel. | What is the work done per kilogram of water in a Pelton wheel?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T01:13:02.793Z",
+ "lastRun": "2026-11-07T01:44:27.027Z",
  "model": "qwen3.5:9b"
 }

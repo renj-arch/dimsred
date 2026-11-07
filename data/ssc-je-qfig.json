@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T00:55:17.549Z",
-  "cursor": 903,
-  "built": 786
+  "updatedAt": "2026-11-07T01:27:24.820Z",
+  "cursor": 906,
+  "built": 789
  },
  "figs": {
   "2316121": {
@@ -4719,6 +4719,24 @@
   "9da260e8": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axis lines for orientation -->\n  <line x1=\"40\" y1=\"190\" x2=\"320\" y2=\"190\" />\n  <line x1=\"40\" y1=\"190\" x2=\"40\" y2=\"30\" />\n  \n  <!-- Outer Hemispherical Cup Profile (Right side) -->\n  <path d=\"M 80,190 Q 120,60 160,190 Z\" />\n  \n  <!-- Outer Hemispherical Cup Profile (Left side) -->\n  <path d=\"M 200,190 Q 160,60 120,190 Z\" />\n  \n  <!-- Central Splitter Ridge -->\n  <line x1=\"120\" y1=\"70\" x2=\"120\" y2=\"190\" stroke-width=\"3\" />\n  <circle cx=\"120\" cy=\"70\" r=\"1\" fill=\"#222\" />\n  \n  <!-- Jet Impact Point -->\n  <line x1=\"120\" y1=\"65\" x2=\"120\" y2=\"40\" stroke-width=\"2\" />\n  <circle cx=\"120\" cy=\"40\" r=\"3\" fill=\"#222\" />\n  \n  <!-- Labels -->\n  <text x=\"80\" y=\"205\" text-anchor=\"middle\">Bucket Body</text>\n  <text x=\"120\" y=\"225\" text-anchor=\"middle\">Splitter Ridge</text>\n  <text x=\"160\" y=\"205\" text-anchor=\"middle\">Bucket Body</text>\n  <text x=\"120\" y=\"30\" text-anchor=\"middle\">Jet Impact</text>\n  <text x=\"120\" y=\"55\" text-anchor=\"middle\">Symmetrical Split</text>\n</svg>",
    "n": "describe the bucket construction of a pelton runner.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "d81d6726": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Pelton Wheel Speed Ratio (φ)</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\" stroke-width=\"1.5\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\">Bucket Velocity u</text><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\" stroke-width=\"1.5\"/><text x=\"180\" y=\"65\" text-anchor=\"middle\">Theoretical Jet Velocity √(2gH)</text><circle cx=\"180\" cy=\"100\" r=\"4\" fill=\"#222\"/><circle cx=\"230\" cy=\"70\" r=\"4\" fill=\"#222\"/><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\" stroke-width=\"1.5\"/><text x=\"65\" y=\"85\">u</text><text x=\"235\" y=\"85\">√(2gH)</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\" stroke-width=\"1.5\"/><text x=\"180\" y=\"115\" text-anchor=\"middle\">φ = u / √(2gH)</text><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\" stroke-width=\"1.5\"/><text x=\"180\" y=\"130\" text-anchor=\"middle\">Practical φ ≈ 0.45</text><line x1=\"60\" y1=\"130\" x2=\"290\" y2=\"130\" stroke-width=\"1.5\"/><text x=\"65\" y=\"145\">0.43</text><text x=\"285\" y=\"145\">0.47</text></svg>",
+   "n": "define the speed ratio φ of a pelton wheel.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "40bad254": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"40\" text-anchor=\"middle\" font-weight=\"bold\">Pelton Wheel Efficiency</text><line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\"/><line x1=\"60\" y1=\"65\" x2=\"60\" y2=\"85\"/><text x=\"45\" y=\"75\">Jet Velocity</text><text x=\"55\" y=\"75\">V₁</text><line x1=\"60\" y1=\"100\" x2=\"300\" y2=\"100\"/><line x1=\"60\" y1=\"95\" x2=\"60\" y2=\"115\"/><text x=\"45\" y=\"105\">Bucket Speed</text><text x=\"55\" y=\"105\">u</text><line x1=\"180\" y1=\"70\" x2=\"180\" y2=\"100\" stroke-dasharray=\"4,2\"/><circle cx=\"180\" cy=\"70\" r=\"3\" fill=\"#222\"/><circle cx=\"180\" cy=\"100\" r=\"3\" fill=\"#222\"/><text x=\"165\" y=\"85\" text-anchor=\"end\">u = V₁/₂</text><path d=\"M 240 70 L 260 90 L 240 110 Z\" fill=\"none\" stroke=\"#222\"/><text x=\"235\" y=\"95\" text-anchor=\"end\">Bucket</text></svg>",
+   "n": "state the condition for maximum hydraulic efficiency of a pelton wheel.",
+   "sub": "hydmach",
+   "at": "2026-11-07"
+  },
+  "cf32f558": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"20\" text-anchor=\"middle\">Pelton Wheel Work Diagram</text><circle cx=\"100\" cy=\"110\" r=\"40\"/><path d=\"M 60 70 L 140 150 M 140 70 L 60 150\" stroke-dasharray=\"2,2\"/><text x=\"90\" y=\"80\" text-anchor=\"middle\">Vw1</text><text x=\"110\" y=\"120\" text-anchor=\"middle\">Vw2</text><path d=\"M 150 110 L 260 110 M 260 70 L 260 150\"/><circle cx=\"260\" cy=\"70\" r=\"4\"/><circle cx=\"260\" cy=\"150\" r=\"4\"/><text x=\"280\" y=\"100\" text-anchor=\"start\">Bucket</text><path d=\"M 270 110 L 320 110 M 320 70 L 320 150\" stroke-dasharray=\"2,2\"/><text x=\"340\" y=\"100\" text-anchor=\"start\">u</text><path d=\"M 100 110 L 150 110\"/><text x=\"125\" y=\"115\" text-anchor=\"middle\">(Vw1 - Vw2)</text></svg>",
+   "n": "what is the work done per kilogram of water in a pelton wheel?",
    "sub": "hydmach",
    "at": "2026-11-07"
   }
