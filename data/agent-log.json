@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T15:28:58.999Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual content blocking study flow. Since papers/sidecar files are absent, Invention is required next to generate foundational question banks and syllabus-aligned materials from scratch. MetaLearn should follow to synthesize these new assets into coherent exam patterns before MockPapers can utilize them for full-length practice.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (858 total)",
-       "text": "What is the best efficiency point of a turbine? | State the working principle and main parts of a centrifugal pump. | Why is a centrifugal pump primed before starting?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Gas Turbines (360 in pool)",
-       "text": "Gas Turbines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T15:54:37.907Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -740,8 +684,53 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-07T22:22:58.761Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken visual content. Since papers/questions/syllabus are missing, MockPapers is next to generate core study material from available data. ExamPatterns should follow to ensure questions align with current syllabus logic. Invention is scheduled last as it produces new ideas rather than fixing immediate gaps.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (901 total)",
+       "text": "What is a hydraulic ram? | What is a hydraulic accumulator? | What is a hydraulic intensifier?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T21:56:45.778Z",
+ "lastRun": "2026-11-07T22:22:58.761Z",
  "model": "qwen3.5:9b"
 }
