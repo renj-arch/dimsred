@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T04:23:27.196Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "We have 81 figure gaps and 23 critical faults; the last two runs produced zero output from MockPapers, Invention, and MetaLearn, so they must be starved of inputs this run while BankFigures continues its steady work. We will prioritize filling the massive figure gap backlog first, then address pending ideas and critical faults, reserving the underperforming agents for later once inputs stabilize.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (803 total)",
-       "text": "What is the effect of the bucket outlet angle on Pelton performance? | What head and discharge range suits a Pelton wheel? | What overall efficiency is typical for a large Pelton wheel?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Strength of Materials (360 in pool)",
-       "text": "Strength of Materials"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T04:37:41.667Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -746,8 +690,69 @@
     ]
    },
    "details": []
+  },
+  {
+   "at": "2026-11-07T11:06:42.825Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 1
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (23) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as unfinished standing goals take priority over new ideas. MainsFresh is active in recent runs but produced zero output in the last two, so it should be scheduled later to avoid starvation while we clear critical technical debt first.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "Invention",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "3 bank figure(s) added (839 total)",
+       "text": "What is meant by the degree of reaction of a turbine? | Define the specific speed of a hydraulic turbine. | Write the specific-speed formula of a turbine in MKS units."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw6at91k (gs3, 15 marks): India aims to install 500 GW of non-fossil generation capacity by 2030. Critically examine the strategic imperative of s",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-07T10:27:52.259Z",
+ "lastRun": "2026-11-07T11:06:42.825Z",
  "model": "qwen3.5:9b"
 }
