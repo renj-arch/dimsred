@@ -12,6 +12,7 @@ const path = require('path');
 const bp = require('./lib/exam-blueprint');
 const llm = require('./lib/ollama');
 const fill = require('./model-fill-bank');
+const qd = require('./lib/question-dedupe');
 
 const ROOT = path.resolve(__dirname, '..');
 const BANK_DIR = path.join(ROOT, 'question-bank');
@@ -58,7 +59,7 @@ function usable(q) {
 
 function isModel(q) { return q.source === 'model' || q.reviewed === false; }
 
-function pickForSection(bank, sectionDef, count, random, used) {
+function pickForSection(bank, sectionDef, count, random, used, chosen) {
   const pool = (bank.questions || []).filter(function (q) {
     return usable(q) && !used[q.id] && bp.sectionAccepts(sectionDef, q.section);
   });
@@ -66,8 +67,16 @@ function pickForSection(bank, sectionDef, count, random, used) {
   // badged in the built page.
   const real = shuffled(pool.filter(function (q) { return !isModel(q); }), random);
   const ai = shuffled(pool.filter(isModel), random);
-  const picked = real.concat(ai).slice(0, count);
-  picked.forEach(function (q) { used[q.id] = 1; });
+  // Never put two questions that test the same fact in one paper, even when
+  // the bank still carries legacy duplicates from older imports.
+  const picked = [];
+  for (const q of real.concat(ai)) {
+    if (picked.length >= count) break;
+    if (chosen.some(function (p) { return qd.duplicateReason(p, q); })) continue;
+    picked.push(q);
+    used[q.id] = 1;
+    chosen.push(q);
+  }
   return picked;
 }
 
@@ -84,8 +93,9 @@ function assemble(examKey, paperId, date) {
   const sections = [];
   const gaps = [];
   const used = {};
+  const chosen = [];
   for (const s of paper.sections) {
-    const picked = pickForSection(bank, s, s.count, random, used);
+    const picked = pickForSection(bank, s, s.count, random, used, chosen);
     if (picked.length < s.count) gaps.push({ section: s.name, need: s.count, have: picked.length, short: s.count - picked.length });
     sections.push({ name: s.name, count: s.count, marks: s.marks, questions: picked });
   }

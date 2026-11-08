@@ -13,6 +13,7 @@ const fs = require('fs');
 const path = require('path');
 const bp = require('./lib/exam-blueprint');
 const llm = require('./lib/ollama');
+const qd = require('./lib/question-dedupe');
 
 const ROOT = path.resolve(__dirname, '..');
 const BANK_DIR = path.join(ROOT, 'question-bank');
@@ -103,10 +104,20 @@ function validItem(item, bank, batch) {
   const leak = llm.leak(text + ' ' + opts.join(' ') + ' ' + solution);
   if (leak) return 'meta text (' + leak + ')';
   if (/\b(?:lorem ipsum|placeholder|TODO|TBD)\b/i.test(text + ' ' + solution)) return 'placeholder text';
-  const key = llm.norm(text);
-  const inBank = (bank.questions || []).some(function (q) { return llm.norm(q.text) === key; });
-  if (inBank) return 'duplicate of bank';
-  if (batch.some(function (q) { return llm.norm(q.text) === key; })) return 'duplicate in batch';
+  // Reject a duplicate or paraphrase of any question already in the bank or
+  // in this run. Exact matching alone was too weak: the model reused the same
+  // fact with quotes or slightly different wording, so papers shipped with
+  // near-identical questions. The shared helper compares normalized text,
+  // token overlap, quoted key phrases and the correct answer.
+  const candidate = {
+    text: text,
+    options: opts.map(function (t, i) { return { text: t, correct: i === correct }; })
+  };
+  const candidates = (bank.questions || []).concat(batch);
+  for (const prev of candidates) {
+    const dup = qd.duplicateReason(prev, candidate);
+    if (dup) return 'duplicate of ' + (batch.indexOf(prev) >= 0 ? 'batch' : 'bank') + ' (' + dup + ')';
+  }
   // A correct answer that is only "All of the above" cannot be explained by
   // the option text alone; keep it only when the solution names the options.
   if (/^all of the above$/i.test(opts[correct]) && !/all of the above/i.test(solution)) return 'all-of-the-above without explanation';
@@ -119,10 +130,10 @@ function promptFor(section, count, examName, paperName, seeds) {
     'Write ' + count + ' NEW multiple-choice questions for the section "' + section + '".',
     'They must match the real exam standard: single correct answer, four plausible options, no ambiguity.',
     'Use only standard syllabus facts you are certain of. Never invent a scheme, date, person, formula or statistic.',
-    'Do not copy the seed questions; they only show the level and the topics already covered.',
+    'Do not copy, paraphrase or re-test a fact from the seed questions. Each question must cover a different fact.',
     '',
-    'Seeds (do not duplicate):',
-    seeds.length ? seeds.slice(0, 12).map(function (s) { return '- ' + s; }).join('\n') : '(none)',
+    'Already used (do not duplicate or paraphrase any of these):',
+    seeds.length ? seeds.slice(-40).map(function (s) { return '- ' + s; }).join('\n') : '(none)',
     '',
     'Return STRICT JSON array only, no markdown. Each element:',
     '{"text":"question stem","options":["A text","B text","C text","D text"],"correct":0,"solution":"2-4 sentences: why the key is right and why the other three are wrong","topic":"sub-topic","difficulty":"easy|medium|hard"}',
@@ -132,6 +143,7 @@ function promptFor(section, count, examName, paperName, seeds) {
     '- The solution must be self-contained and must not mention "the model", "the prompt" or rewriting.',
     '- Vary the correct index across items; do not always use 0.',
     '- Every question must be answerable from the stem and options alone.',
+    '- Do not repeat a fact already tested by any seed, even with different wording or quotes.',
     '- Return exactly ' + count + ' items.'
   ].join('\n');
 }
