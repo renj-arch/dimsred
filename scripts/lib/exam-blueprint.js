@@ -47,7 +47,12 @@ function norm(s) {
 function sectionAccepts(section, bankSection) {
   var b = norm(bankSection);
   if (!b) return false;
-  var names = (section.bank && section.bank.length) ? section.bank : [section.name];
+  // A section always accepts its own display name. Model-generated questions
+  // are tagged with section.name, which can differ from the legacy bank tags
+  // (e.g. "Social Studies/Social Science" vs ["Social Studies","Social Science"]).
+  // Without this, the lane counted freshly generated questions as zero and
+  // refused to publish the paper.
+  var names = [section.name].concat(section.bank && section.bank.length ? section.bank : []);
   for (var i = 0; i < names.length; i++) {
     if (norm(names[i]) === b) return true;
   }
