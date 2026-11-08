@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T20:45:03.391Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) indicate severe content decay; BankFigures must address the 80 missing figures immediately as they likely block question rendering. The high critical fault count suggests broken links or missing assets, which MockPapers can resolve by regenerating or patching incomplete exam papers. Invention is deferred to the end of the queue as per rules for agents with zero recent output, allowing BankFigures and MockPapers to clear the backlog first.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (889 total)",
-       "text": "Write the discharge of a double-acting reciprocating pump. | What is the slip of a reciprocating pump? | When does a reciprocating pump show negative slip?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T21:22:07.228Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -716,8 +676,43 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-08T02:55:54.307Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) demand immediate attention; BankFigures is the only agent capable of resolving both simultaneously. MockPapers must follow to convert fixed figures into complete exam resources. Exampatterns and MainsFresh are starved (0 fixes for 3+ runs) and should be deprioritized until primary content gaps vanish. Invention is unnecessary as we have urgent maintenance tasks.",
+    "actions": [
+     "BankFigures",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "1 bank figure(s) added (921 total)",
+       "text": "Evaluate 8C3. | How many circular permutations are there for n distinct objects? | State Pascal’s identity for combinations."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T02:40:43.186Z",
+ "lastRun": "2026-11-08T02:55:54.307Z",
  "model": "qwen3.5:9b"
 }

@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-08T02:29:07.320Z",
-  "cursor": 1053,
-  "built": 920
+  "updatedAt": "2026-11-08T02:47:30.655Z",
+  "cursor": 1056,
+  "built": 921
  },
  "figs": {
   "2170214": {
@@ -5523,6 +5523,12 @@
   "4f15abf4": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n  <!-- Axes -->\n  <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/>\n  <line x1=\"40\" y1=\"200\" x2=\"40\" y2=\"20\"/>\n  <!-- Staircase Summation -->\n  <rect x=\"50\" y=\"180\" width=\"30\" height=\"20\"/>\n  <rect x=\"80\" y=\"160\" width=\"30\" height=\"40\"/>\n  <rect x=\"110\" y=\"140\" width=\"30\" height=\"60\"/>\n  <rect x=\"140\" y=\"120\" width=\"30\" height=\"80\"/>\n  <rect x=\"170\" y=\"100\" width=\"30\" height=\"100\"/>\n  <!-- Labels -->\n  <text x=\"65\" y=\"195\">1</text>\n  <text x=\"95\" y=\"175\">2</text>\n  <text x=\"125\" y=\"155\">3</text>\n  <text x=\"155\" y=\"135\">...</text>\n  <text x=\"185\" y=\"115\">n</text>\n  <!-- Arrow indicating sum -->\n  <line x1=\"240\" y1=\"190\" x2=\"260\" y2=\"190\"/>\n  <line x1=\"245\" y1=\"185\" x2=\"245\" y2=\"175\"/>\n  <text x=\"230\" y=\"210\">Sum = n(n+1)/2</text>\n</svg>",
    "n": "find the sum 1 + 2 + 3 + ... + n.",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "5081ca22": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><circle cx=\"180\" cy=\"110\" r=\"80\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Object 1</text><text x=\"180\" y=\"125\" text-anchor=\"middle\">Object 2</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">... Object n</text><text x=\"30\" y=\"110\" text-anchor=\"middle\" dominant-baseline=\"middle\">Rotations are identical</text></svg>",
+   "n": "how many circular permutations are there for n distinct objects?",
    "sub": "maths",
    "at": "2026-11-08"
   }
