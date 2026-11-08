@@ -85,8 +85,8 @@ h1.wordmark .thin{font-weight:400;opacity:.85}
 kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:inherit;font-size:.68em;color:var(--faint);border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;padding:2px 6px;background:var(--panel-2)}
 .state-wrap{display:flex;align-items:center;gap:8px;background:var(--panel);border:1px solid var(--line);border-radius:11px;padding:0 10px}
 .state-wrap label{font-size:.66em;text-transform:uppercase;letter-spacing:.1em;color:var(--faint);font-weight:800;white-space:nowrap}
-#state{background:transparent;border:0;color:var(--text);font:inherit;font-size:.86em;padding:11px 2px;outline:none;max-width:190px}
-#state option{background:#15120f;color:var(--text)}
+#state,#month{background:transparent;border:0;color:var(--text);font:inherit;font-size:.86em;padding:11px 2px;outline:none;max-width:190px}
+#state option,#month option{background:#15120f;color:var(--text)}
 .chips{display:flex;gap:7px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{flex:0 0 auto;border:1px solid var(--line);background:var(--panel);color:var(--muted);font:inherit;font-size:.76em;font-weight:700;padding:7px 13px;border-radius:100px;cursor:pointer;white-space:nowrap;transition:.15s;display:inline-flex;align-items:center;gap:6px}
@@ -94,6 +94,28 @@ kbd{position:absolute;right:12px;top:50%;transform:translateY(-50%);font:inherit
 .chip[aria-pressed="true"]{background:var(--text);color:#12100d;border-color:var(--text)}
 .chip .n{font-size:.82em;opacity:.65}
 .chip.saved[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#151007}
+.chips.relevance{margin-top:2px}
+.chip.relevance-high[aria-pressed="true"]{background:var(--amber);border-color:var(--amber);color:#151007}
+.chip.relevance-medium[aria-pressed="true"]{background:var(--cyan);border-color:var(--cyan);color:#07151a}
+.chip.relevance-general[aria-pressed="true"]{background:#94a3b8;border-color:#94a3b8;color:#0b0f14}
+.relevance-note{font-size:.68em;color:var(--faint);line-height:1.45;margin-top:-4px}
+.relevance-note b{color:var(--muted)}
+.month-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin:22px 0 12px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+.month-head:first-child{margin-top:0}
+.month-head h2{font-family:var(--serif);font-size:1.18em;letter-spacing:-.01em}
+.month-head .count{color:var(--faint);font-size:.68em;font-weight:800;letter-spacing:.08em;text-transform:uppercase}
+.month-head .quiz-link{margin-left:auto;color:var(--cyan);font-size:.72em;font-weight:800;text-decoration:none;white-space:nowrap}
+.month-head .quiz-link:hover{text-decoration:underline;text-underline-offset:3px}
+.imp{font-size:.6em;font-weight:850;letter-spacing:.05em;text-transform:uppercase;padding:2px 7px;border-radius:100px;white-space:nowrap}
+.imp.high{color:#151007;background:var(--amber);border:1px solid var(--amber)}
+.imp.medium{color:#07151a;background:var(--cyan);border:1px solid var(--cyan)}
+.imp.general{color:var(--muted);background:rgba(255,255,255,.04);border:1px solid var(--line)}
+.story .meta .quiz-link{font-size:.64em;font-weight:800;color:var(--cyan);text-decoration:none;white-space:nowrap}
+.story .meta .quiz-link:hover{text-decoration:underline;text-underline-offset:3px}
+.notes .notes-quiz{display:inline-block;margin-top:9px;font-size:.7em;font-weight:800;color:var(--cyan);text-decoration:none}
+.notes .notes-quiz:hover{text-decoration:underline;text-underline-offset:3px}
+.imp-block{border-top:1px solid var(--line);padding-top:18px}
+.imp-block .block-head .more{color:var(--amber)}
 .status{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;color:var(--faint);font-size:.76em;margin:0 0 20px;padding-bottom:12px;border-bottom:1px solid var(--line)}
 .status b{color:var(--text);font-weight:700}
 .retry{background:var(--panel);border:1px solid var(--line);color:var(--text);font:inherit;font-size:.9em;padding:7px 14px;border-radius:8px;cursor:pointer}
@@ -286,8 +308,14 @@ footer a:hover{color:var(--amber)}
         <label for="state">State / UT</label>
         <select id="state" aria-label="Filter by state or union territory"></select>
       </div>
+      <div class="state-wrap">
+        <label for="month">Month</label>
+        <select id="month" aria-label="Filter by month"></select>
+      </div>
     </div>
     <div class="chips" id="chips" role="group" aria-label="News sections"></div>
+    <div class="chips relevance" id="relevanceChips" role="group" aria-label="Exam relevance"></div>
+    <p class="relevance-note"><b>Exam relevance</b> is a deterministic syllabus match from the headline and publisher summary, not an editorial judgement. High-yield stories touch two or more GS papers; the quiz links open the current-affairs archive for that date or month.</p>
   </section>
 
   <div class="status" id="status" role="status" aria-live="polite">Warming up the wire…</div>
@@ -333,7 +361,7 @@ footer a:hover{color:var(--amber)}
   'use strict';
   var DATA_URL = 'data/news.json';
   var SAVE_KEY = 'vlymbooq-wire-saved';
-  var state = { data: null, view: 'all', id: '', query: '', visible: 0, saved: {} };
+  var state = { data: null, view: 'all', id: '', query: '', visible: 0, saved: {}, importance: 'all', month: '' };
 
   function $(id) { return document.getElementById(id); }
   function esc(s) { return String(s == null ? '' : s); }
@@ -379,11 +407,58 @@ footer a:hover{color:var(--amber)}
   function sectionById(id) {
     return (state.data.sections || []).filter(function (s) { return s.id === id; })[0] || null;
   }
+  function itemImportance(item) {
+    return window.NewsEnhance && window.NewsEnhance.importance ? window.NewsEnhance.importance(item) : null;
+  }
+  function monthKey(iso) {
+    return String(iso || '').slice(0, 7);
+  }
+  function monthLabel(key) {
+    if (!/^\d{4}-\d{2}$/.test(key)) return key || 'Undated';
+    var parts = key.split('-');
+    var d = new Date(Date.UTC(Number(parts[0]), Number(parts[1]) - 1, 1));
+    return d.toLocaleDateString(undefined, { month: 'long', year: 'numeric', timeZone: 'UTC' });
+  }
+  function monthsAvailable() {
+    var seen = {};
+    allItems().forEach(function (row) {
+      var key = monthKey(row.item.publishedAt);
+      if (key) seen[key] = (seen[key] || 0) + 1;
+    });
+    return Object.keys(seen).sort().reverse().map(function (key) {
+      return { key: key, count: seen[key] };
+    });
+  }
+  function matchesFilters(item) {
+    if (!item) return false;
+    if (state.month && monthKey(item.publishedAt) !== state.month) return false;
+    if (state.importance !== 'all') {
+      var info = itemImportance(item);
+      if (!info || info.level !== state.importance) return false;
+    }
+    return true;
+  }
+  function filteredSectionItems(section) {
+    return ((section && section.items) || []).filter(matchesFilters);
+  }
+  function groupByMonth(rows) {
+    var groups = [];
+    var index = {};
+    rows.forEach(function (row) {
+      var key = monthKey(row.item.publishedAt) || 'undated';
+      if (!index[key]) {
+        index[key] = { key: key, rows: [] };
+        groups.push(index[key]);
+      }
+      index[key].rows.push(row);
+    });
+    return groups;
+  }
   function mainSections() {
-    return (state.data.sections || []).filter(function (s) { return s.id.indexOf('state:') !== 0 && s.items && s.items.length; });
+    return (state.data.sections || []).filter(function (s) { return s.id.indexOf('state:') !== 0 && filteredSectionItems(s).length; });
   }
   function stateSections() {
-    return (state.data.sections || []).filter(function (s) { return s.id.indexOf('state:') === 0 && s.items && s.items.length; });
+    return (state.data.sections || []).filter(function (s) { return s.id.indexOf('state:') === 0 && filteredSectionItems(s).length; });
   }
 
   // --- persistence helpers -------------------------------------------------
@@ -441,6 +516,13 @@ footer a:hover{color:var(--amber)}
         terms.appendChild(chip);
       });
       box.appendChild(terms);
+    }
+    var notesDay = String(item.publishedAt || '').slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(notesDay)) {
+      var notesQuiz = el('a', 'notes-quiz', 'Quiz current affairs for this date →');
+      notesQuiz.href = 'current-affairs.html?date=' + encodeURIComponent(notesDay);
+      notesQuiz.title = 'Open the current-affairs quiz archive for ' + notesDay;
+      box.appendChild(notesQuiz);
     }
     return box;
   }
@@ -504,6 +586,19 @@ footer a:hover{color:var(--amber)}
     var meta = el('div', 'meta');
     if (section.id.indexOf('state:') === 0 && section.region) meta.appendChild(el('span', 'region', section.region));
     else if (item.section === 'trending' || section.id === 'trending') meta.appendChild(el('span', 'trend', 'Trending · not verified'));
+    var impInfo = itemImportance(item);
+    if (impInfo) {
+      var imp = el('span', 'imp ' + impInfo.level, impInfo.label);
+      imp.title = impInfo.reason;
+      meta.appendChild(imp);
+    }
+    var quizDay = String(item.publishedAt || '').slice(0, 10);
+    if (/^\d{4}-\d{2}-\d{2}$/.test(quizDay)) {
+      var quiz = el('a', 'quiz-link', 'Quiz');
+      quiz.href = 'current-affairs.html?date=' + encodeURIComponent(quizDay);
+      quiz.title = 'Open the current-affairs quiz archive for ' + quizDay;
+      meta.appendChild(quiz);
+    }
     var arrow = el('span', 'arrow', '↗');
     arrow.setAttribute('aria-hidden', 'true');
     meta.appendChild(arrow);
@@ -541,6 +636,12 @@ footer a:hover{color:var(--amber)}
     t.title = new Date(item.publishedAt).toLocaleString();
     t.setAttribute('data-ts', item.publishedAt);
     top.appendChild(t);
+    var leadImp = itemImportance(item);
+    if (leadImp) {
+      var leadChip = el('span', 'imp ' + leadImp.level, leadImp.label);
+      leadChip.title = leadImp.reason;
+      top.appendChild(leadChip);
+    }
     node.appendChild(top);
     var h = el(big ? 'h2' : 'h3');
     if (big) h.textContent = item.title;
@@ -564,22 +665,24 @@ footer a:hover{color:var(--amber)}
       return Object.keys(state.saved).map(function (link) {
         var s = state.saved[link];
         return { item: s, section: { id: s.section || 'saved', label: 'Saved' } };
-      }).sort(function (a, b) { return Date.parse(b.item.publishedAt) - Date.parse(a.item.publishedAt); });
+      }).filter(function (row) { return matchesFilters(row.item); })
+        .sort(function (a, b) { return Date.parse(b.item.publishedAt) - Date.parse(a.item.publishedAt); });
     }
     if (state.query) {
       var q = state.query.toLowerCase();
       return allItems().filter(function (row) {
         var it = row.item;
+        if (!matchesFilters(it)) return false;
         return (it.title + ' ' + it.source + ' ' + (it.summary || '') + ' ' + (row.section.label || '')).toLowerCase().indexOf(q) !== -1;
       }).sort(function (a, b) { return Date.parse(b.item.publishedAt) - Date.parse(a.item.publishedAt); });
     }
     if (state.view === 'state' && state.id) {
       var s = sectionById(state.id);
-      return s ? s.items.map(function (item) { return { item: item, section: s }; }) : [];
+      return s ? filteredSectionItems(s).map(function (item) { return { item: item, section: s }; }) : [];
     }
     if (state.view === 'section' && state.id) {
       var sec = sectionById(state.id);
-      return sec ? sec.items.map(function (item) { return { item: item, section: sec }; }) : [];
+      return sec ? filteredSectionItems(sec).map(function (item) { return { item: item, section: sec }; }) : [];
     }
     return [];
   }
@@ -609,8 +712,35 @@ footer a:hover{color:var(--amber)}
       chip.setAttribute('aria-pressed', state.view === 'section' && state.id === s.id ? 'true' : 'false');
       if (s.icon) chip.appendChild(document.createTextNode(s.icon + ' '));
       chip.appendChild(document.createTextNode(s.label));
-      chip.appendChild(el('span', 'n', String(s.items.length)));
+      chip.appendChild(el('span', 'n', String(filteredSectionItems(s).length)));
       chip.addEventListener('click', function () { setView('section', s.id); });
+      wrap.appendChild(chip);
+    });
+    renderRelevanceChips();
+  }
+
+  function renderRelevanceChips() {
+    var wrap = $('relevanceChips');
+    wrap.innerHTML = '';
+    var counts = { all: 0, high: 0, medium: 0, general: 0 };
+    allItems().forEach(function (row) {
+      if (state.month && monthKey(row.item.publishedAt) !== state.month) return;
+      counts.all++;
+      var info = itemImportance(row.item);
+      if (info) counts[info.level]++;
+    });
+    [['all', 'All relevance'], ['high', 'High yield'], ['medium', 'Useful'], ['general', 'General']].forEach(function (pair) {
+      var chip = el('button', 'chip relevance-' + pair[0]);
+      chip.type = 'button';
+      chip.setAttribute('aria-pressed', state.importance === pair[0] ? 'true' : 'false');
+      chip.appendChild(document.createTextNode(pair[1]));
+      chip.appendChild(el('span', 'n', String(counts[pair[0]] || 0)));
+      chip.addEventListener('click', function () {
+        state.importance = pair[0];
+        state.visible = 0;
+        syncUrl();
+        render();
+      });
       wrap.appendChild(chip);
     });
   }
@@ -622,11 +752,25 @@ footer a:hover{color:var(--amber)}
     all.value = '';
     sel.appendChild(all);
     stateSections().sort(function (a, b) { return a.label.localeCompare(b.label); }).forEach(function (s) {
-      var opt = el('option', null, s.label + ' (' + s.items.length + ')');
+      var opt = el('option', null, s.label + ' (' + filteredSectionItems(s).length + ')');
       opt.value = s.id;
       sel.appendChild(opt);
     });
     sel.value = state.view === 'state' ? state.id : '';
+  }
+
+  function renderMonthSelect() {
+    var sel = $('month');
+    sel.innerHTML = '';
+    var all = el('option', null, 'All months');
+    all.value = '';
+    sel.appendChild(all);
+    monthsAvailable().forEach(function (m) {
+      var opt = el('option', null, monthLabel(m.key) + ' (' + m.count + ')');
+      opt.value = m.key;
+      sel.appendChild(opt);
+    });
+    sel.value = state.month;
   }
 
   function renderLead() {
@@ -634,9 +778,10 @@ footer a:hover{color:var(--amber)}
     lead.innerHTML = '';
     if (state.view !== 'all' || state.query) { lead.hidden = true; return; }
     var top = sectionById('top');
-    var items = top ? top.items.slice(0, 3) : [];
+    var items = top ? filteredSectionItems(top).slice(0, 3) : [];
     if (items.length < 3) {
-      var fallback = allItems().sort(function (a, b) { return Date.parse(b.item.publishedAt) - Date.parse(a.item.publishedAt); }).slice(0, 3);
+      var fallback = allItems().filter(function (r) { return matchesFilters(r.item); })
+        .sort(function (a, b) { return Date.parse(b.item.publishedAt) - Date.parse(a.item.publishedAt); }).slice(0, 3);
       items = fallback.map(function (r) { return r.item; });
     }
     if (!items.length) { lead.hidden = true; return; }
@@ -651,15 +796,16 @@ footer a:hover{color:var(--amber)}
     var block = el('section', 'block');
     var head = el('div', 'block-head');
     if (section.icon) head.appendChild(el('span', 'ico', section.icon));
+    var sectionItems = filteredSectionItems(section);
     head.appendChild(el('h2', null, section.label));
-    head.appendChild(el('span', 'count', section.items.length + ' stories'));
+    head.appendChild(el('span', 'count', sectionItems.length + ' stories'));
     var more = el('button', 'more', 'More →');
     more.type = 'button';
     more.addEventListener('click', function () { setView('section', section.id); });
     head.appendChild(more);
     block.appendChild(head);
     var grid = el('div', 'grid');
-    section.items.slice(0, 6).forEach(function (item) { grid.appendChild(storyCard(item, section)); });
+    sectionItems.slice(0, 6).forEach(function (item) { grid.appendChild(storyCard(item, section)); });
     block.appendChild(grid);
     return block;
   }
@@ -674,12 +820,13 @@ footer a:hover{color:var(--amber)}
     head.appendChild(el('span', 'count', states.length + ' states & UTs with fresh stories'));
     block.appendChild(head);
     var grid = el('div', 'states');
-    states.sort(function (a, b) { return b.items.length - a.items.length; }).slice(0, 12).forEach(function (s) {
+    states.sort(function (a, b) { return filteredSectionItems(b).length - filteredSectionItems(a).length; }).slice(0, 12).forEach(function (s) {
+      var items = filteredSectionItems(s);
       var card = el('button', 'state-card');
       card.type = 'button';
       card.appendChild(el('b', null, s.label));
-      card.appendChild(el('span', null, s.items.length + ' stories'));
-      card.appendChild(el('em', null, s.items[0].title));
+      card.appendChild(el('span', null, items.length + ' stories'));
+      card.appendChild(el('em', null, items[0].title));
       card.addEventListener('click', function () { setView('state', s.id); });
       grid.appendChild(card);
     });
@@ -688,18 +835,90 @@ footer a:hover{color:var(--amber)}
     return block;
   }
 
+  function monthHead(key, count) {
+    var head = el('div', 'month-head');
+    head.appendChild(el('h2', null, monthLabel(key)));
+    head.appendChild(el('span', 'count', count + ' ' + (count === 1 ? 'story' : 'stories')));
+    if (/^\d{4}-\d{2}$/.test(key)) {
+      var quiz = el('a', 'quiz-link', 'Quiz this month →');
+      quiz.href = 'current-affairs.html?month=' + encodeURIComponent(key);
+      quiz.title = 'Open the current-affairs quiz archive for ' + monthLabel(key);
+      head.appendChild(quiz);
+    }
+    return head;
+  }
+
+  function appendMonthGroups(feed, rows) {
+    var visible = state.visible || 18;
+    var slice = rows.slice(0, visible);
+    var counts = {};
+    rows.forEach(function (row) {
+      var key = monthKey(row.item.publishedAt) || 'undated';
+      counts[key] = (counts[key] || 0) + 1;
+    });
+    groupByMonth(slice).forEach(function (group) {
+      feed.appendChild(monthHead(group.key, counts[group.key] || group.rows.length));
+      var grid = el('div', 'grid two');
+      group.rows.forEach(function (row) { grid.appendChild(storyCard(row.item, row.section)); });
+      feed.appendChild(grid);
+    });
+  }
+
   function renderFlat(rows) {
     var feed = $('feed');
     feed.innerHTML = '';
-    var visible = state.visible || 18;
-    rows.slice(0, visible).forEach(function (row) { feed.appendChild(storyCard(row.item, row.section)); });
-    $('moreWrap').hidden = rows.length <= visible;
+    appendMonthGroups(feed, rows);
+    $('moreWrap').hidden = rows.length <= (state.visible || 18);
+  }
+
+  function highYieldRows() {
+    var seen = {};
+    var rows = [];
+    allItems().forEach(function (row) {
+      if (!matchesFilters(row.item)) return;
+      var info = itemImportance(row.item);
+      if (!info || info.level !== 'high') return;
+      var key = row.item.link || row.item.title;
+      if (seen[key]) return;
+      seen[key] = 1;
+      rows.push(row);
+    });
+    return rows.sort(function (a, b) { return Date.parse(b.item.publishedAt) - Date.parse(a.item.publishedAt); });
+  }
+
+  function renderImportanceBlock() {
+    if (state.view !== 'all' || state.query || state.month || state.importance !== 'all') return null;
+    var rows = highYieldRows();
+    if (!rows.length) return null;
+    var block = el('section', 'block imp-block');
+    var head = el('div', 'block-head');
+    head.appendChild(el('span', 'ico', '🎯'));
+    head.appendChild(el('h2', null, 'Exam-important this month'));
+    head.appendChild(el('span', 'count', rows.length + ' high-yield stories'));
+    var more = el('button', 'more', 'Browse all high-yield →');
+    more.type = 'button';
+    more.addEventListener('click', function () {
+      state.importance = 'high';
+      state.visible = 0;
+      syncUrl();
+      render();
+    });
+    head.appendChild(more);
+    block.appendChild(head);
+    groupByMonth(rows).slice(0, 2).forEach(function (group) {
+      block.appendChild(monthHead(group.key, group.rows.length));
+      var grid = el('div', 'grid');
+      group.rows.slice(0, 3).forEach(function (row) { grid.appendChild(storyCard(row.item, row.section)); });
+      block.appendChild(grid);
+    });
+    return block;
   }
 
   function render() {
     if (!state.data) return;
     renderChips();
     renderStateSelect();
+    renderMonthSelect();
     renderLead();
     var feed = $('feed');
     var status = $('status');
@@ -717,7 +936,7 @@ footer a:hover{color:var(--amber)}
         $('moreWrap').hidden = true;
         return;
       }
-      feed.className = 'feed grid';
+      feed.className = 'feed';
       renderFlat(savedRows);
       return;
     }
@@ -735,11 +954,7 @@ footer a:hover{color:var(--amber)}
         $('moreWrap').hidden = true;
         return;
       }
-      var grid = el('div', 'grid two');
-      var visible = state.visible || 18;
-      rows.slice(0, visible).forEach(function (row) { grid.appendChild(storyCard(row.item, row.section)); });
-      feed.appendChild(grid);
-      $('moreWrap').hidden = rows.length <= visible;
+      renderFlat(rows);
       return;
     }
 
@@ -752,26 +967,39 @@ footer a:hover{color:var(--amber)}
         $('moreWrap').hidden = true;
         return;
       }
+      var sectionItems = filteredSectionItems(section);
       var hero = el('div', 'section-hero');
       if (section.icon) hero.appendChild(el('span', null, section.icon));
       hero.appendChild(el('h2', null, section.label));
-      hero.appendChild(el('span', 'count', section.items.length + ' stories · newest first'));
+      hero.appendChild(el('span', 'count', sectionItems.length + ' stories · newest first'));
       feed.appendChild(hero);
-      var sectionGrid = el('div', 'grid two');
-      var shown = state.visible || 24;
-      section.items.slice(0, shown).forEach(function (item) { sectionGrid.appendChild(storyCard(item, section)); });
-      feed.appendChild(sectionGrid);
-      $('moreWrap').hidden = section.items.length <= shown;
-      status.innerHTML = '<span><b>' + section.items.length + '</b> stories in ' + escapeHtml(section.label) + '</span><span>' + (section.disclaimer ? 'See footer note' : 'Every headline links to its publisher') + '</span>';
+      appendMonthGroups(feed, sectionItems);
+      $('moreWrap').hidden = sectionItems.length <= (state.visible || 24);
+      status.innerHTML = '<span><b>' + sectionItems.length + '</b> stories in ' + escapeHtml(section.label) + '</span><span>' + (section.disclaimer ? 'See footer note' : 'Every headline links to its publisher') + '</span>';
       return;
     }
 
-    // All view: lead + each main section + India grid.
+    // All view: lead + each main section + India grid. When a relevance or
+    // month filter is active, show one collective feed grouped by month so the
+    // archive is browsable across sections instead of repeating section blocks.
     feed.className = 'feed';
     feed.innerHTML = '';
+    if (state.month || state.importance !== 'all') {
+      var filteredRows = allItems().filter(function (row) { return matchesFilters(row.item); })
+        .sort(function (a, b) { return Date.parse(b.item.publishedAt) - Date.parse(a.item.publishedAt); });
+      var filterBits = [];
+      if (state.month) filterBits.push(monthLabel(state.month));
+      if (state.importance !== 'all') filterBits.push(state.importance === 'high' ? 'high yield' : state.importance);
+      status.innerHTML = '<span><b>' + filteredRows.length + '</b> live headlines · ' + escapeHtml(filterBits.join(' · ')) + '</span><span>Updated ' + timeAgo(state.data.generatedAt) + '</span>';
+      renderFlat(filteredRows);
+      $('moreWrap').hidden = filteredRows.length <= (state.visible || 18);
+      return;
+    }
     var sections = mainSections();
-    var totalShown = sections.reduce(function (n, s) { return n + Math.min(6, s.items.length); }, 0);
-    status.innerHTML = '<span><b>' + (state.data.stats ? state.data.stats.items : totalShown) + '</b> live headlines from <b>' + (state.data.stats ? state.data.stats.feedsOk : '?') + '</b> feeds</span><span>Updated ' + timeAgo(state.data.generatedAt) + '</span>';
+    var filteredCount = sections.reduce(function (n, s) { return n + filteredSectionItems(s).length; }, 0);
+    var important = renderImportanceBlock();
+    if (important) feed.appendChild(important);
+    status.innerHTML = '<span><b>' + (state.data.stats ? state.data.stats.items : filteredCount) + '</b> live headlines from <b>' + (state.data.stats ? state.data.stats.feedsOk : '?') + '</b> feeds</span><span>Updated ' + timeAgo(state.data.generatedAt) + '</span>';
     sections.forEach(function (s) { feed.appendChild(blockForSection(s)); });
     var india = renderStatesBlock();
     if (india) feed.appendChild(india);
@@ -800,6 +1028,8 @@ footer a:hover{color:var(--amber)}
     if (state.query) params.set('q', state.query);
     else if (state.view === 'section' && state.id) params.set('section', state.id);
     else if (state.view === 'state' && state.id) params.set('state', state.id.replace(/^state:/, ''));
+    if (state.importance !== 'all') params.set('relevance', state.importance);
+    if (state.month) params.set('month', state.month);
     var qs = params.toString();
     try { history.replaceState(null, '', qs ? '?' + qs : location.pathname); } catch (e) { /* file:// */ }
   }
@@ -809,6 +1039,10 @@ footer a:hover{color:var(--amber)}
     if (params.get('q')) { state.query = params.get('q'); $('search').value = state.query; }
     else if (params.get('section')) { state.view = 'section'; state.id = params.get('section'); }
     else if (params.get('state')) { state.view = 'state'; state.id = 'state:' + params.get('state'); }
+    var relevance = params.get('relevance');
+    if (relevance === 'high' || relevance === 'medium' || relevance === 'general') state.importance = relevance;
+    var month = params.get('month');
+    if (month && /^\d{4}-\d{2}$/.test(month)) state.month = month;
   }
 
   // --- chrome ----------------------------------------------------------------
@@ -816,7 +1050,7 @@ footer a:hover{color:var(--amber)}
     var track = $('tickerTrack');
     track.innerHTML = '';
     var top = sectionById('top');
-    var items = top ? top.items.slice(0, 12) : allItems().slice(0, 12).map(function (r) { return r.item; });
+    var items = top ? filteredSectionItems(top).slice(0, 12) : allItems().filter(function (r) { return matchesFilters(r.item); }).slice(0, 12).map(function (r) { return r.item; });
     if (!items.length) { track.parentNode.hidden = true; return; }
     // Duplicate the run so the -50% marquee loops seamlessly.
     items.concat(items).forEach(function (item, i) {
@@ -915,6 +1149,12 @@ footer a:hover{color:var(--amber)}
     var id = e.target.value;
     if (id) { state.view = 'state'; state.id = id; state.query = ''; $('search').value = ''; }
     else { state.view = 'all'; state.id = ''; }
+    state.visible = 0;
+    syncUrl();
+    render();
+  });
+  $('month').addEventListener('change', function (e) {
+    state.month = e.target.value || '';
     state.visible = 0;
     syncUrl();
     render();

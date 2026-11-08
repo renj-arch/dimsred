@@ -87,6 +87,15 @@
     }
   ];
 
+  // Sections whose stories are usually softer than the exam core. They can
+  // still be useful, but they should not win a "high yield" label on a single
+  // keyword hit.
+  var LOW_YIELD_SECTIONS = { sports: 1, entertainment: 1, trending: 1, opinion: 1 };
+
+  // Headline patterns that describe a ceremony, a listicle or a result rather
+  // than a policy development. They cap the label at "useful".
+  var SOFT_NEWS = /\b(diwali|deepotsav|greetings|celebrat|festival|melody|song|video|photos?|topper|topped|tops?|rank|fair|fashion|film|actor|actress|box office|match|cricket|bollywood|wedding|birthday|recipe|trailer)\b/i;
+
   // Stable exam vocabulary. Definitions are deliberately short and conceptual;
   // they do not restate any contested claim from the linked story.
   var GLOSSARY = {
@@ -213,6 +222,73 @@
     return out;
   }
 
+  // All syllabus topics with a substantive keyword hit. A score of 1 is a
+  // single short word such as "bill"; 2 or more means a longer keyword or a
+  // cluster of words, which is a better signal that the story is about the
+  // topic rather than merely mentioning it.
+  function topicScores(item) {
+    var text = haystack(item);
+    return TOPICS.map(function (topic) {
+      var score = 0;
+      topic.keywords.forEach(function (word) {
+        var w = word.toLowerCase();
+        if (text.indexOf(w) !== -1) score += w.length > 5 ? 2 : 1;
+      });
+      return { paper: topic.paper, subject: topic.subject, why: topic.why, score: score };
+    }).filter(function (x) { return x.score >= 2; })
+      .sort(function (a, b) { return b.score - a.score; });
+  }
+
+  // A deterministic "how much syllabus does this touch" label. It is not an
+  // editorial judgement and it does not claim the story will be asked. It only
+  // reports the paper/subject keywords found in the publisher's own title and
+  // summary, so a reader can see why a card is ranked where it is.
+  function importance(item) {
+    var matched = topicScores(item);
+    var papers = [];
+    matched.forEach(function (m) {
+      if (papers.indexOf(m.paper) === -1) papers.push(m.paper);
+    });
+    var termHits = terms(item);
+    var termCount = termHits.length;
+    var lowYield = !!(item && LOW_YIELD_SECTIONS[item.section]);
+    var soft = SOFT_NEWS.test(String(item && item.title || ''));
+    var hardPaper = papers.indexOf('GS3') !== -1 ||
+      papers.indexOf('GS4') !== -1 ||
+      (papers.indexOf('GS2') !== -1 && termCount >= 1);
+
+    var high = !lowYield && !soft && papers.length >= 2 && matched.length >= 2 &&
+      hardPaper && (termCount >= 1 || matched.length >= 3);
+    if (!high && !soft && termCount >= 3) high = true;
+
+    var level = high ? 'high' : (((papers.length >= 1 && matched.length >= 1) || termCount >= 1) ? 'medium' : 'general');
+    if (lowYield && level === 'high' && !(papers.length >= 3 && termCount >= 2)) level = 'medium';
+
+    var labels = { high: 'High yield', medium: 'Useful', general: 'General' };
+    var reasons = [];
+    if (matched.length) {
+      reasons.push('Maps to ' + matched.slice(0, 3).map(function (m) {
+        return m.paper + ' ' + m.subject;
+      }).join(', '));
+    } else {
+      reasons.push('No strong GS-paper keyword match');
+    }
+    reasons.push(termCount ? termCount + ' exam term' + (termCount === 1 ? '' : 's') : 'no glossary terms');
+    if (lowYield) reasons.push('soft section');
+    if (soft) reasons.push('soft-news headline');
+
+    return {
+      level: level,
+      label: labels[level],
+      papers: papers,
+      topics: matched,
+      termCount: termCount,
+      lowYield: lowYield,
+      soft: soft,
+      reason: reasons.join('; ') + '. Deterministic syllabus match, not an editorial judgement.'
+    };
+  }
+
   function terms(item) {
     var text = haystack(item);
     var hits = [];
@@ -281,6 +357,8 @@
     analyze: analyze,
     keyPoints: keyPoints,
     angles: angles,
+    importance: importance,
+    topicScores: topicScores,
     terms: terms,
     highlight: highlight,
     glossary: GLOSSARY,

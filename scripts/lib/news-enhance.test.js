@@ -65,5 +65,33 @@ test('analyze returns summaryHtml only from the supplied summary', function () {
   assert.ok(a.keyPoints.length >= 1);
 });
 
+test('importance maps an economy story to GS3, not general', function () {
+  var r = N.importance({ title: 'RBI holds repo rate as inflation eases', summary: 'The MPC kept the repo rate unchanged. Inflation remains above the target.' });
+  assert.ok(r.papers.indexOf('GS3') !== -1);
+  assert.notStrictEqual(r.level, 'general');
+  assert.ok(/GS3/.test(r.reason));
+});
+
+test('importance keeps a sport result out of high yield', function () {
+  var r = N.importance({ title: 'India win cricket match', summary: 'The team chased the target in the final over.', section: 'sports' });
+  assert.strictEqual(r.level, 'general');
+});
+
+test('importance caps a festival headline below high yield', function () {
+  var r = N.importance({ title: 'Ayodhya lights up for Diwali', summary: 'Lakhs of diyas were lit along the river.', section: 'top' });
+  assert.notStrictEqual(r.level, 'high');
+});
+
+test('importance marks a multi-paper policy story high', function () {
+  var r = N.importance({ title: 'Supreme Court orders air pollution action', summary: 'The court cited vehicular emissions and health costs in Delhi-NCR.', section: 'health' });
+  assert.strictEqual(r.level, 'high');
+  assert.ok(r.papers.indexOf('GS3') !== -1);
+});
+
+test('importance reason states the rule is deterministic', function () {
+  var r = N.importance({ title: 'RBI holds repo rate', summary: 'The MPC kept the repo rate unchanged.' });
+  assert.ok(/Deterministic syllabus match/.test(r.reason));
+});
+
 console.log('\n' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

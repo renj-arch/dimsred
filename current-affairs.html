@@ -7421,6 +7421,47 @@ function prevQuestion() {
             document.getElementById('studyGrid').style.display = 'grid';
         }
 
+        // Deep links from the Wire: ?date=YYYY-MM-DD, ?month=YYYY-MM or
+        // ?from=YYYY-MM-DD&to=YYYY-MM-DD open the dated current-affairs archive.
+        // The archive functions live in a later script block, so poll briefly
+        // instead of assuming they have parsed.
+        function applyNewsQuizParams() {
+            var params = new URLSearchParams(location.search);
+            var date = params.get('date') || '';
+            var month = params.get('month') || '';
+            var from = params.get('from') || '';
+            var to = params.get('to') || '';
+            if (!date && !month && !(from && to)) return;
+            var tries = 0;
+            var timer = setInterval(function() {
+                if (typeof startArchiveFeed !== 'function') {
+                    if (++tries > 200) clearInterval(timer);
+                    return;
+                }
+                clearInterval(timer);
+                var fromEl = document.getElementById('archiveFrom');
+                var toEl = document.getElementById('archiveTo');
+                if (!fromEl || !toEl) return;
+                if (/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+                    fromEl.value = date;
+                    toEl.value = date;
+                } else if (/^\d{4}-\d{2}$/.test(month)) {
+                    var parts = month.split('-');
+                    var lastDay = new Date(Date.UTC(Number(parts[0]), Number(parts[1]), 0)).toISOString().slice(0, 10);
+                    fromEl.value = month + '-01';
+                    toEl.value = lastDay;
+                } else if (/^\d{4}-\d{2}-\d{2}$/.test(from) && /^\d{4}-\d{2}-\d{2}$/.test(to)) {
+                    fromEl.value = from;
+                    toEl.value = to;
+                } else {
+                    return;
+                }
+                try { setMode('quiz'); } catch (e) { /* older page state */ }
+                startArchiveFeed(-2);
+            }, 100);
+        }
+        applyNewsQuizParams();
+
         init();
         try { WIKI.prefetch(); } catch(e) { }
     
