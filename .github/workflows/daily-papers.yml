@@ -2,45 +2,50 @@ name: Daily Paper Generation
 
 on:
   schedule:
+    # Three model batches a day. Each batch writes 15 questions per exam and
+    # then builds the daily practice sets. The old 30-minute cadence could
+    # never finish once the model lane replaced the procedural filler: the
+    # next slot cancelled a run that was still warming the model.
     - cron: '0 4 * * *'
-    - cron: '30 4 * * *'
-    - cron: '0 5 * * *'
-    - cron: '30 5 * * *'
-    - cron: '0 6 * * *'
-    - cron: '30 6 * * *'
-    - cron: '0 7 * * *'
-    - cron: '30 7 * * *'
-    - cron: '0 8 * * *'
-    - cron: '30 8 * * *'
-    - cron: '0 9 * * *'
-    - cron: '30 9 * * *'
     - cron: '0 10 * * *'
-    - cron: '30 10 * * *'
-    - cron: '0 11 * * *'
+    - cron: '0 16 * * *'
   workflow_dispatch:
     inputs:
       exams:
         description: 'Exams to generate (space-separated, default: all)'
         required: false
         default: ''
+      model:
+        description: 'Ollama model for question writing (default qwen3.5:9b)'
+        required: false
+        default: 'qwen3.5:9b'
+      count:
+        description: 'Questions per daily set'
+        required: false
+        default: '15'
 
 permissions:
   contents: write
 
-# Prevent pile-ups: periodic content jobs must not queue behind each
-# other — the newest run wins.
+# Never cancel a model batch half-way: a cancelled run loses the model's
+# questions and the paper it was about to publish. Batches queue instead.
 concurrency:
   group: daily-papers
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   generate:
     runs-on: ubuntu-latest
-    timeout-minutes: 45
+    timeout-minutes: 180
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
+          filter: blob:none
+          sparse-checkout: |
+            /*
+            !/data/questions
+          sparse-checkout-cone-mode: false
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -48,6 +53,57 @@ jobs:
 
       - name: Install dependencies
         run: npm install
+
+      # The paper questions are written by the model on this runner. No
+      # procedural filler remains in this lane.
+      - name: Free runner disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - name: Create swap (16GB)
+        run: bash scripts/ci-make-swap.sh
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL --max-time 120 -o /tmp/ollama-install.sh https://ollama.com/install.sh
+          sudo sh /tmp/ollama-install.sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 60); do
+            curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && { echo "Ollama ready after ${i}s"; break; }
+            sleep 1
+          done
+
+      - name: Pull + warm the model
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
 
       - name: Determine exam for this slot
         id: batch
@@ -60,64 +116,105 @@ jobs:
             fi
           else
             H=$(date +%H)
-            M=$(date +%M)
-            case "$H:$M" in
-              04:0[0-9]|04:1[0-5]) echo "exams=cgl" ;;
-              04:3[0-9]|04:4[0-5]) echo "exams=rbi" ;;
-              05:0[0-9]|05:1[0-5]) echo "exams=jee" ;;
-              05:3[0-9]|05:4[0-5]) echo "exams=neet" ;;
-              06:0[0-9]|06:1[0-5]) echo "exams=gate" ;;
-              06:3[0-9]|06:4[0-5]) echo "exams=agniveer" ;;
-              07:0[0-9]|07:1[0-5]) echo "exams=upsc" ;;
-              07:3[0-9]|07:4[0-5]) echo "exams=ibps-po" ;;
-              08:0[0-9]|08:1[0-5]) echo "exams=sbi-clerk" ;;
-              08:3[0-9]|08:4[0-5]) echo "exams=ssc-gd" ;;
-              09:0[0-9]|09:1[0-5]) echo "exams=ctet" ;;
-              09:3[0-9]|09:4[0-5]) echo "exams=nda" ;;
-              10:0[0-9]|10:1[0-5]) echo "exams=cds" ;;
-              10:3[0-9]|10:4[0-5]) echo "exams=clat" ;;
+            case "$H" in
+              04|05) echo "exams=cgl rbi jee neet gate" ;;
+              10|11) echo "exams=agniveer upsc ibps-po sbi-clerk ssc-gd" ;;
+              16|17) echo "exams=ctet nda cds clat" ;;
               *) echo "exams=skip" ;;
             esac
           fi >> $GITHUB_OUTPUT
 
-      - name: Generate procedural questions (no AI)
+      - name: Backfill missing question banks from existing papers
         if: steps.batch.outputs.exams != 'skip'
-        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-daily-questions.js ${{ steps.batch.outputs.exams }} --count=15
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/extract-question-bank.js --missing-only
+
+      - name: Import validated invented questions into exam banks
+        if: steps.batch.outputs.exams != 'skip'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/import-invented-to-banks.js
+
+      - name: Import authored course questions into exam banks
+        if: steps.batch.outputs.exams != 'skip'
+        run: |
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-course-questions.js
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/import-course-questions-to-banks.js --refresh-course
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/refresh-course-paper-text.js
+
+      # Model-only generation. The procedural filler is gone: if the model
+      # cannot produce a valid question the step fails visibly instead of
+      # publishing template questions. One failing exam must not discard the
+      # questions the model did write for the other exams.
+      - name: Write fresh questions with the model
+        if: steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+        run: |
+          TARGETS="${{ steps.batch.outputs.exams }}"
+          if [ "$TARGETS" = "all" ]; then
+            TARGETS="cgl rbi jee neet gate agniveer upsc ibps-po sbi-clerk ssc-gd ctet nda cds clat"
+          fi
+          failed=""
+          for e in $TARGETS; do
+            if ! NODE_OPTIONS=--max-old-space-size=4096 node scripts/model-fill-bank.js "$e" --count=${{ inputs.count || '15' }} --budget=30; then
+              failed="$failed $e"
+            fi
+          done
+          if [ -n "$failed" ]; then
+            echo "::error::the model produced no valid question for:$failed"
+            exit 1
+          fi
 
       - name: Build practice paper
-        if: steps.batch.outputs.exams != 'skip'
-        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: |
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/sanitize-question-text.js
+          NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-papers.js ${{ steps.batch.outputs.exams }}
 
       - name: Generate calendar data
-        if: steps.batch.outputs.exams != 'skip'
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-calendar-data.js ${{ steps.batch.outputs.exams }}
 
       - name: Update sitemap
-        if: steps.batch.outputs.exams != 'skip'
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-sitemap.js
 
       - name: Build topic index for micro-tests
-        if: steps.batch.outputs.exams != 'skip'
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/build-topic-index.js
 
+      - name: Audit whole-site coverage
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/audit-coverage.js
+
       - name: Ping search engines
-        if: steps.batch.outputs.exams != 'skip'
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
         run: |
           curl -s -o /dev/null "https://www.google.com/ping?sitemap=https://vlymbooq.qzz.io/sitemap.xml"
           curl -s -o /dev/null "https://www.bing.com/ping?siteMap=https://vlymbooq.qzz.io/sitemap.xml"
 
       - name: Commit and push
-        if: steps.batch.outputs.exams != 'skip'
+        if: always() && steps.batch.outcome == 'success' && steps.batch.outputs.exams != 'skip' && steps.batch.outputs.exams != ''
         run: |
-          git stash --include-untracked
-          git pull --rebase
-          git stash pop || true
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git add -A
-          git diff --staged --quiet || git commit -m "Auto-generate practice papers $(date +'%Y-%m-%d') — ${{ steps.batch.outputs.exams }}"
+          # question-bank/ is gitignored, so new exam banks and the *-meta.json
+          # used-id rotation files would vanish on a fresh CI clone. Force-add
+          # the JSON so extraction, course imports and paper rotation persist.
+          git add -f question-bank/*.json
+          if git diff --staged --quiet; then
+            echo "No changes to publish"
+            exit 0
+          fi
+          git commit -m "Auto-generate practice papers $(date +'%Y-%m-%d') — ${{ steps.batch.outputs.exams }}"
+          pushed=""
           for i in 1 2 3; do
-            git pull --rebase --autostash 2>/dev/null || true
-            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed"; break; fi
+            echo "push attempt $i failed, retrying..."
             sleep 5
           done
+          if [ -z "$pushed" ]; then
+            echo "::error::generated practice paper could not be pushed to main"
+            exit 1
+          fi

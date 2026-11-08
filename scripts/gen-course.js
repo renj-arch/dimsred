@@ -1,6 +1,24 @@
 var fs = require('fs');
 var path = require('path');
 var ROOT = path.resolve(__dirname, '..');
+var courseVersions = require('./lib/course-versions');
+
+var TODAY = new Date().toISOString().slice(0, 10);
+var VERSIONS = courseVersions.load();
+
+function recencyDays(dateStr) {
+  if (!dateStr) return 9999;
+  var d = Date.parse(dateStr + 'T00:00:00Z');
+  if (isNaN(d)) return 9999;
+  return Math.floor((Date.parse(TODAY + 'T00:00:00Z') - d) / 86400000);
+}
+
+function prettyDate(dateStr) {
+  var d = new Date(dateStr + 'T00:00:00Z');
+  if (isNaN(d.getTime())) return dateStr;
+  var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  return d.getUTCDate() + ' ' + months[d.getUTCMonth()] + ' ' + d.getUTCFullYear();
+}
 
 var configs = JSON.parse(fs.readFileSync(path.join(__dirname, 'exam-configs.json'), 'utf-8'));
 
@@ -16,6 +34,16 @@ try {
 // only in the committed pages (NEET biology practice blocks, UPSC topic
 // layers, selfcheck's nav/head repairs).
 var ONLY = (process.env.COURSE_ONLY_KEYS || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
+
+// The expander records the keys it actually rewrote. Only those count as a
+// real content change when stamping an update date; running gen-course with a
+// key filter for any other reason must not claim a lesson was updated.
+var TOUCHED_KEYS = (function () {
+  try {
+    var t = JSON.parse(fs.readFileSync(path.join(__dirname, '.course-touched.json'), 'utf-8'));
+    return t.keys || [];
+  } catch (e) { return []; }
+})();
 
 function esc(s) {
   return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/'/g,'&#39;').replace(/"/g,'&quot;');
@@ -102,7 +130,7 @@ function head(exam, examDir, examName, title, desc, canonical, extra, depth) {
   h += '        @media print{.nav,.sidebar-nav,.download-btn{display:none!important}.container{padding:0}.lesson-body h3{break-after:avoid}.q-card{break-inside:avoid}.q-card .q-soln{display:block!important}.q-card .q-opt.disabled{opacity:1}.q-card .q-opt.correct{border-color:#34d399}.q-card .q-result{display:none}}\n';
   if (extra) h += extra;
   h += '    </style>\n</head>\n<body>\n';
-  h += '    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/community.html">Community</a><a href="../index.html">' + examName + '</a><a href="index.html" class="active">Course</a></div></div></nav>\n';
+  h += '    <nav class="nav"><div class="nav-inner"><a href="/index.html" class="brand"><img src="/logo.png" alt="" class="brand-icon"><span class="brand-text">vlymbooq</span></a><div class="nav-links"><a href="/index.html">Home</a><a href="/dashboard.html">Dashboard</a><a href="/dashboard.html">Community</a><a href="../index.html">' + examName + '</a><a href="' + (depth >= 3 ? '../index.html' : 'index.html') + '" class="active">Course</a></div></div></nav>\n';
   h += '    <div class="container">\n';
   return h;
 }
@@ -170,10 +198,32 @@ function generateExam(examKey) {
   idx += '            <div style="display:flex;justify-content:space-between;font-size:.78em;color:var(--text-muted)"><span id="progress-text">0 of ' + totalLessons + ' lessons complete</span></div>\n';
   idx += '        </div>\n';
 
+  // "Recently updated" strip: the expander enriches lessons over time, and a
+  // returning student needs to see which ones moved without opening all of
+  // them. Only real, observed change dates are shown (see course-versions.js).
+  var recent = [];
+  modKeys.forEach(function (mk) {
+    (modules[mk].lessons || []).forEach(function (l) {
+      var v = VERSIONS.lessons[mk + '/' + l.slug];
+      if (v && v.updated && recencyDays(v.updated) <= 30) {
+        recent.push({ mk: mk, slug: l.slug, title: l.title, updated: v.updated });
+      }
+    });
+  });
+  recent.sort(function (a, b) { return b.updated.localeCompare(a.updated); });
+  if (recent.length) {
+    idx += '        <div style="background:#0b1220;border:1px solid #1e3a8a;border-radius:12px;padding:14px 16px;margin:0 0 18px">\n';
+    idx += '            <div style="color:#93c5fd;font-weight:800;font-size:.85em;letter-spacing:.03em;margin-bottom:8px">RECENTLY UPDATED</div>\n';
+    recent.slice(0, 8).forEach(function (r) {
+      idx += '            <div style="display:flex;gap:8px;justify-content:space-between;font-size:.86em;padding:3px 0"><a href="' + r.mk + '/lesson-' + r.slug + '.html" style="color:#dbeafe;text-decoration:none">' + esc(r.title) + '</a><span style="color:#71717a;white-space:nowrap">' + esc(prettyDate(r.updated)) + '</span></div>\n';
+    });
+    idx += '        </div>\n';
+  }
+
   for (var mi = 0; mi < modKeys.length; mi++) {
     var mk = modKeys[mi];
     var mod = modules[mk];
-    idx += '        <div class="module-card">\n';
+    idx += '        <div class="module-card" id="' + esc(mk) + '">\n';
     idx += '            <div style="display:flex;align-items:center;gap:10px;margin-bottom:8px">\n';
     idx += '                <span style="font-size:1.4em">' + mod.icon + '</span>\n';
     idx += '                <div class="m-title" style="color:' + mod.color + '">Module ' + mod.num + ': ' + esc(mod.name) + '</div>\n';
@@ -182,7 +232,11 @@ function generateExam(examKey) {
     idx += '            <div class="m-topics">\n';
     for (var li = 0; li < mod.lessons.length; li++) {
       var lesson = mod.lessons[li];
-      idx += '                <a href="' + mk + '/lesson-' + lesson.slug + '.html">' + esc(lesson.title) + '</a>\n';
+      var lv = VERSIONS.lessons[mk + '/' + lesson.slug];
+      var chip = (lv && lv.updated && recencyDays(lv.updated) <= 30)
+        ? ' <span title="Updated ' + esc(prettyDate(lv.updated)) + '" style="font-size:.7em;color:#93c5fd;border:1px solid #1e3a8a;border-radius:999px;padding:0 6px;margin-left:4px">new</span>'
+        : '';
+      idx += '                <a href="' + mk + '/lesson-' + lesson.slug + '.html">' + esc(lesson.title) + chip + '</a>\n';
     }
     idx += '            </div>\n';
     idx += '        </div>\n';
@@ -193,10 +247,10 @@ function generateExam(examKey) {
   idx += '        </script>\n';
   idx += '<div style="text-align:center;padding:30px 0"><a href="../index.html" class="btn btn-success">&#x2190; Back to ' + esc(cfg.examName) + ' Home</a> <a href="../../dashboard.html" class="btn btn-primary">&#x1f4ca; Dashboard</a></div>\n';
   idx += foot();
-  // The index only lists titles and counts, which content never changes.
-  // Skipping it in filtered mode keeps the regen diff to exactly the lesson
-  // pages the expander filled.
-  if (!ONLY.length) fs.writeFileSync(path.join(COURSE_DIR, 'index.html'), idx, 'utf-8');
+  // The index carries the "Recently updated" strip, so it is rewritten even in
+  // filtered (expander) mode. It costs one small file per exam and is how a
+  // returning student sees that content moved without opening every lesson.
+  fs.writeFileSync(path.join(COURSE_DIR, 'index.html'), idx, 'utf-8');
   console.log('[' + examKey + '] Wrote: course/index.html');
 
   // ========== LESSON PAGES ==========
@@ -213,7 +267,10 @@ function generateExam(examKey) {
       if (ONLY.length && ONLY.indexOf(mk + '/' + lesson.slug) === -1) continue;
 
       // Get content and practice (with cross-exam reuse)
-      var altKeys = {reasoning:'reasoning', quant:'quant', english:'english', ga:'ga', gk:'ga', maths:'quant', aptitude:'reasoning', gs:'ga', csat:'quant', evs:'ga', language:'english', science:'ga', cdp:'ga'};
+      var altKeys = {reasoning:'reasoning', quant:'quant', english:'english', ga:'ga', gk:'ga', maths:'quant', aptitude:'reasoning', gs:'ga', csat:'quant', evs:'ga', language:'english', science:'ga', cdp:'ga',
+        // The standalone English course reuses the reviewed English lessons
+        // already stored under the `english/` content keys.
+        grammar:'english', vocabulary:'english', comprehension:'english', writing:'english'};
       var contentKey = mk + '/' + lesson.slug;
       var lessonContent = null;
       if (cglContent && cglContent[contentKey]) lessonContent = cglContent[contentKey];
@@ -248,10 +305,20 @@ function generateExam(examKey) {
       h += '            </div>\n';
       h += '            <div class="main">\n';
 
+      var lessonBody = lessonContent || generateAutoContent(lesson, mod.name, examKey);
+      var ver = courseVersions.record(VERSIONS, contentKey, lessonBody + '\n' + JSON.stringify(lessonQs),
+        TOUCHED_KEYS.indexOf(contentKey) !== -1, TODAY);
+      var freshDays = recencyDays(ver.updated);
+
       // Header
       h += '                <div style="margin-bottom:16px">\n';
       h += '                    <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module ' + mod.num + ' &middot; ' + cfg.examName + ' ' + esc(mod.name) + '</div>\n';
       h += '                    <h1 style="font-size:1.5em;font-weight:900">' + esc(lesson.title) + '</h1>\n';
+      if (ver.updated) {
+        h += '                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated ' + esc(prettyDate(ver.updated)) + '</span></div>\n';
+      }
+      h += '                    <div id="lesson-meta" hidden data-version="' + esc(ver.version) + '" data-updated="' + esc(ver.updated) + '" data-updated-label="' + esc(ver.updated ? prettyDate(ver.updated) : '') + '" data-headings="' + esc(JSON.stringify(ver.headings)) + '"></div>\n';
+      h += '                    <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.85em;color:#dbeafe"></div>\n';
       h += '                    <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">' + esc(lesson.desc) + '</div>\n';
       h += '                    <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">\n';
       h += '                        <span style="font-size:.75em;color:var(--text-muted)">' + lesson.topics.split(',').map(function(t){return t.trim()}).join(' · ') + '</span>\n';
@@ -273,10 +340,37 @@ function generateExam(examKey) {
       h += '                    <h3>Key Concepts</h3>\n';
 
       if (lessonContent) {
-        h += lessonContent;
+        h += lessonBody;
       } else {
-        h += generateAutoContent(lesson, mod.name, examKey);
+        h += lessonBody;
       }
+      // The lesson is long and the expander can insert sections anywhere.
+      // A returning reader gets a banner listing the headings that did not
+      // exist at their last visit; nothing is auto-dismissed, so a change is
+      // never silently missed.
+      h += '        <script>\n';
+      h += '        (function(){try{\n';
+      h += '          var m=document.getElementById("lesson-meta");if(!m)return;\n';
+      h += '          var cur=m.getAttribute("data-version")||"";\n';
+      h += '          var label=m.getAttribute("data-updated-label")||"";\n';
+      h += '          var heads=JSON.parse(m.getAttribute("data-headings")||"[]");\n';
+      h += '          var k="vlymbooq-lesson-seen:"+location.pathname;\n';
+      h += '          var prev=null;try{prev=JSON.parse(localStorage.getItem(k)||"null");}catch(e){}\n';
+      h += '          var box=document.getElementById("lesson-new");\n';
+      h += '          if(prev&&prev.v&&prev.v!==cur){\n';
+      h += '            var old=prev.h||[];var added=heads.filter(function(x){return old.indexOf(x)===-1;});\n';
+      h += '            var html="<strong>This lesson was updated"+(label?" on "+label:"")+".</strong> ";\n';
+      h += '            if(added.length){html+="New since your last visit:<ul style=\\"margin:6px 0 8px;padding-left:18px\\">"+added.slice(0,8).map(function(x){return "<li>"+x.replace(/</g,"&lt;")+"</li>";}).join("")+"</ul>";}\n';
+      h += '            else{html+="The explanations and practice were revised.";}\n';
+      h += '            html+="<button type=\\"button\\" id=\\"lesson-new-ok\\" style=\\"margin-top:2px;background:#1d4ed8;color:#fff;border:0;border-radius:7px;padding:5px 11px;font-size:.85em;cursor:pointer\\">Got it</button>";\n';
+      h += '            box.innerHTML=html;box.hidden=false;\n';
+      h += '            var save=function(){try{localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));}catch(e){}box.hidden=true;};\n';
+      h += '            document.getElementById("lesson-new-ok").onclick=save;\n';
+      h += '            return; // keep the old version stored until acknowledged\n';
+      h += '          }\n';
+      h += '          localStorage.setItem(k,JSON.stringify({v:cur,h:heads,at:Date.now()}));\n';
+      h += '        }catch(e){}})();\n';
+      h += '        </script>\n';
 
       h += '                </div>\n'; // lesson-body
 
@@ -331,4 +425,5 @@ var examKeys = Object.keys(configs);
 var only = (process.env.COURSE_EXAMS || '').split(',').map(function (s) { return s.trim(); }).filter(Boolean);
 if (only.length) examKeys = examKeys.filter(function (k) { return only.indexOf(k) !== -1; });
 examKeys.forEach(generateExam);
+courseVersions.save(VERSIONS);
 console.log('\n=== Course pages generated: ' + (examKeys.join(', ') || 'none') + ' ===');

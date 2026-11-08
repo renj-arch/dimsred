@@ -1,17 +1,30 @@
 const fs = require('fs');
 const path = require('path');
+const researchStore = require('./lib/research-store');
 
 const CSP = "default-src 'self' https:; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://unpkg.com; font-src https://fonts.gstatic.com https://unpkg.com; script-src 'self' https://pagead2.googlesyndication.com https://www.gstatic.com https://apis.google.com https://unpkg.com https://static.cloudflareinsights.com https://ep2.adtrafficquality.google https://*.adtrafficquality.google; connect-src 'self' https:; frame-src 'self' https://googleads.g.doubleclick.net https://ep2.adtrafficquality.google https://www.google.com; upgrade-insecure-requests";
 
 const BASE = 'https://vlymbooq.qzz.io';
-const EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet'];
+const EXAMS = ['cgl', 'rbi', 'jee', 'neet', 'gate', 'agniveer', 'upsc', 'ibps-po', 'sbi-clerk', 'ssc-gd', 'ctet', 'nda', 'cds', 'clat'];
+let RESEARCH = {};
+let SLUG = '';
 
 function esc(s) {
   if (!s) return '';
-  return s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+  // The course banks already carry HTML entities such as &rarr; and &infin;
+  // (extracted from authored lesson sources). Escaping every bare "&" turned
+  // them into "&amp;rarr;" and printed the entity literally on paper pages.
+  // Preserve anything that is already a valid named/numeric entity.
+  return String(s)
+    // A NUL or other C0 control byte inside a solution (seen in older
+    // extracted Hindi glosses) makes git treat the whole page as binary and
+    // produces invalid HTML. Drop controls, keep tab/newline-free whitespace.
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, ' ')
+    .replace(/&(?!(?:[a-zA-Z][a-zA-Z0-9]{1,31}|#\d{1,7}|#x[0-9a-fA-F]{1,6});)/g, '&amp;')
+    .replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
 }
 
-const NAV_LABELS = { cgl: 'CGL', rbi: 'RBI', jee: 'JEE', neet: 'NEET', gate: 'GATE', agniveer: 'Agniveer', 'upsc': 'UPSC', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', 'ctet': 'CTET' };
+const NAV_LABELS = { cgl: 'CGL', rbi: 'RBI', jee: 'JEE', neet: 'NEET', gate: 'GATE', agniveer: 'Agniveer', 'upsc': 'UPSC', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', 'ctet': 'CTET', nda: 'NDA', cds: 'CDS', clat: 'CLAT' };
 
 function navLinks(folder) {
   // Exam-hub links are emitted root-absolute "/<slug>/" — the exact shape
@@ -46,6 +59,14 @@ function buildQuestion(q, sections) {
     ? '<span class="section-badge" style="background:' + section.color + '">' + esc(section.name) + '</span>'
     : '';
 
+  // Every model-written item carries its generation date on the page. The
+  // paper-level date is not enough: a set can mix bank and model questions.
+  var modelBadge = '';
+  if (q.source === 'model' || q.reviewed === false) {
+    var madeOn = String(q.generatedAt || '').slice(0, 10);
+    modelBadge = '<span class="model-badge" style="display:inline-block;margin-left:6px;font-size:.72em;color:#b45309;background:#fef3c7;border:1px solid #fcd34d;border-radius:100px;padding:2px 7px">model-generated' + (madeOn ? ' · ' + esc(madeOn) : '') + '</span>';
+  }
+
   var opts = '';
   for (var i = 0; i < q.options.length; i++) {
     var o = q.options[i];
@@ -61,8 +82,14 @@ function buildQuestion(q, sections) {
   var sol = q.solution
     ? '<br><span style="color:#4b5563">' + esc(q.solution) + '</span>'
     : '';
+  var lab = RESEARCH[SLUG + '#' + q.q];
+  var labHtml = lab && lab.methods && lab.methods[0]
+    ? '<div class="research-lab" style="margin-top:8px;padding:8px 10px;background:#eef2ff;border:1px solid #c7d2fe;border-radius:8px;font-size:.9em;color:#1e3a8a"><strong>Research Team · ~' + (parseInt(lab.methods[0].seconds, 10) || 10) + 's · ' + esc(lab.methods[0].name) + '</strong><ol style="margin:4px 0 0;padding-left:18px">' +
+      (lab.methods[0].steps || []).map(function (s) { return '<li>' + esc(s) + '</li>'; }).join('') +
+      '</ol></div>'
+    : '';
 
-  return '<div class="question" data-q="' + q.q + '"><div class="q-number">Q' + q.q + '. ' + badge + '</div><div class="q-text">' + esc(q.text) + '</div><div class="q-options">' + opts + '</div><button class="show-soln">Show Answer</button><div class="solution-box"><strong>Correct Answer:</strong> ' + correctAnswer + sol + '</div></div>';
+  return '<div class="question" data-q="' + q.q + '"><div class="q-number">Q' + q.q + '. ' + badge + modelBadge + '</div><div class="q-text">' + esc(q.text) + '</div><div class="q-options">' + opts + '</div><button class="show-soln">Show Answer</button><div class="solution-box"><strong>Correct Answer:</strong> ' + correctAnswer + sol + labHtml + '</div></div>';
 }
 
 function buildPaper(data) {
@@ -83,12 +110,15 @@ function buildPaper(data) {
     qHtml += '\n        ' + buildQuestion(data.questions[i], sections);
   }
 
-  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta http-equiv="Content-Security-Policy" content="' + CSP + '">\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width,initial-scale=1.0">\n    <title>' + esc(data.pageTitle) + '</title>\n    <meta name="description" content="' + esc(data.pageDesc) + '">\n    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">\n    <link rel="canonical" href="' + BASE + '/' + data.folder + '/papers/' + data.slug + '.html">\n    ' + jsonLd('WebPage', { name: data.pageTitle, description: data.pageDesc, url: BASE + '/' + data.folder + '/papers/' + data.slug + '.html', educationalLevel: 'Competitive Exam', audience: { '@type': 'EducationalAudience', educationalRole: 'student' } }) + '\n    <link rel="stylesheet" href="../css/style.css">\n    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>\n</head>\n<body>\n    <nav class="nav">\n        <div class="nav-inner">\n            <a href="../index.html" class="nav-logo"><svg viewBox="0 0 28 28" fill="none"><defs><linearGradient id="n" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a78bfa"/><stop offset="48%" stop-color="#a78bfa"/><stop offset="52%" stop-color="#34d399"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs><path d="M6 5 L14 24 L22 5" stroke="url(#n)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14" cy="4" r="1.2" fill="#a78bfa"/><circle cx="14" cy="4" r="3" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.35"/></svg><span class="grad">vlymbooq</span></a>\n            <div class="nav-links">' + navLinks(f) + '</div>\n        </div>\n    </nav>\n    <div class="paper-page">\n        <div class="paper-header">\n            <h1>' + esc(data.title) + '</h1>\n            <div class="paper-meta">\n                <span>' + esc(data.meta) + '</span>\n            </div>\n        </div>\n        <div class="timer-bar">\n            <span style="font-size:.9em;color:#6b7280">Time Remaining:</span>\n            <span class="timer" id="timer">' + (data.timerMinutes || 60) + ':00</span>\n        </div>\n        <p style="font-size:.9em;color:#4b5563;margin-bottom:24px">Click any option to check your answer.</p>' + sectionBadges + qHtml + '\n    </div>\n    <footer class="site-footer"><p>' + esc(data.title) + ' — Free preparation resource.</p></footer>\n    <script src="../js/main.js"></script>\n    <script src="../../js/supabase.js?v=20260529b"></script>\n    <script src="../../js/shared.js?v=20260529b"></script>\n</body>\n</html>';
+  return '<!DOCTYPE html>\n<html lang="en">\n<head>\n    <meta http-equiv="Content-Security-Policy" content="' + CSP + '">\n    <meta charset="UTF-8">\n    <meta name="viewport" content="width=device-width,initial-scale=1.0">\n    <title>' + esc(data.pageTitle) + '</title>\n    <meta name="description" content="' + esc(data.pageDesc) + '">\n    <link rel="icon" type="image/svg+xml" href="../../favicon.svg">\n    <link rel="canonical" href="' + BASE + '/' + data.folder + '/papers/' + data.slug + '.html">\n    ' + jsonLd('WebPage', { name: data.pageTitle, description: data.pageDesc, url: BASE + '/' + data.folder + '/papers/' + data.slug + '.html', educationalLevel: 'Competitive Exam', audience: { '@type': 'EducationalAudience', educationalRole: 'student' } }) + '\n    <link rel="stylesheet" href="../css/style.css">\n    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-7363013795551054" crossorigin="anonymous"></script>\n</head>\n<body>\n    <nav class="nav">\n        <div class="nav-inner">\n            <a href="../index.html" class="nav-logo"><svg viewBox="0 0 28 28" fill="none"><defs><linearGradient id="n" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#a78bfa"/><stop offset="48%" stop-color="#a78bfa"/><stop offset="52%" stop-color="#34d399"/><stop offset="100%" stop-color="#34d399"/></linearGradient></defs><path d="M6 5 L14 24 L22 5" stroke="url(#n)" stroke-width="5.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="14" cy="4" r="1.2" fill="#a78bfa"/><circle cx="14" cy="4" r="3" fill="none" stroke="#a78bfa" stroke-width="0.5" opacity="0.35"/></svg><span class="grad">vlymbooq</span></a>\n            <div class="nav-links">' + navLinks(f) + '</div>\n        </div>\n    </nav>\n    <div class="paper-page">\n        <div class="paper-header">\n            <h1>' + esc(data.title) + '</h1>\n            <div class="paper-meta">\n                <span>' + esc(data.meta) + '</span>\n            </div>\n            <p style="font-size:.8em;color:#6b7280;margin-top:8px">Generated ' + esc(data.createdDate || '') + (data.blueprint && data.blueprint.name ? ' · ' + esc(data.blueprint.name) + ' pattern' : '') + '</p>\n        </div>\n        <div class="timer-bar">\n            <span style="font-size:.9em;color:#6b7280">Time Remaining:</span>\n            <span class="timer" id="timer">' + (data.timerMinutes || 60) + ':00</span>\n        </div>\n        <p style="font-size:.9em;color:#4b5563;margin-bottom:24px">Click any option to check your answer.</p>' + sectionBadges + qHtml + '\n    </div>\n    <footer class="site-footer"><p>' + esc(data.title) + ' — Free preparation resource.</p></footer>\n    <script src="../js/main.js"></script>\n    <script src="../../js/supabase.js?v=20260529b"></script>\n    <script src="../../js/shared.js?v=20260529b"></script>\n</body>\n</html>';
 }
 
 function run() {
   var root = path.resolve(__dirname, '..');
   var dataDir = path.join(root, 'papers-data');
+  RESEARCH = researchStore.indexByPaper(researchStore.load(root));
+  var slugArg = process.argv.slice(2).find(function (a) { return a.indexOf('--slug=') === 0; });
+  var onlySlug = slugArg ? slugArg.slice('--slug='.length) : '';
   var files = fs.readdirSync(dataDir).filter(function(f) { return f.endsWith('.json'); });
 
   if (files.length === 0) {
@@ -99,8 +129,11 @@ function run() {
   for (var i = 0; i < files.length; i++) {
     var file = files[i];
     var data = JSON.parse(fs.readFileSync(path.join(dataDir, file), 'utf-8'));
+    if (data.kind === 'full') continue; // full papers are built by build-full-papers.js
+    if (onlySlug && data.slug !== onlySlug) continue;
     var folder = data.folder;
     var slug = data.slug;
+    SLUG = slug;
 
     var outDir = path.join(root, folder, 'papers');
     if (!fs.existsSync(outDir)) {

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UPSC Mains Answer Writing — Timer, Word Count, Rubric and Model Feedback | vlymbooq</title>
+<meta name="description" content="Practise UPSC Mains answers with a real question, an UPSC-paced timer, a live word count, an examiner rubric and optional on-device model feedback. Attempts are saved in your browser.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://vlymbooq.qzz.io/upsc/mains/answer-writing.html">
+<link rel="stylesheet" href="mains.css">
+<style>
+.editor{width:100%;min-height:340px;resize:vertical;line-height:1.7;font-size:14.5px;padding:14px 16px}
+.workspace{display:grid;grid-template-columns:minmax(0,1fr) 300px;gap:14px}
+@media(max-width:860px){.workspace{grid-template-columns:1fr}}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:16px 18px}
+.qtext{font-size:16px;line-height:1.6;font-weight:600;margin:8px 0 10px}
+.timer{font-variant-numeric:tabular-nums;font-size:34px;font-weight:800;letter-spacing:-.02em}
+.timer.low{color:var(--rose)}
+.timer.done{color:var(--amber);animation:pulse 1.5s infinite}
+@keyframes pulse{50%{opacity:.55}}
+.stat-row{display:flex;justify-content:space-between;font-size:12.5px;color:var(--text-sec);margin-top:6px}
+.stat-row b{color:var(--text)}
+.rubric label{display:flex;gap:8px;align-items:flex-start;font-size:13px;color:var(--text-sec);padding:5px 0;cursor:pointer;line-height:1.45}
+.rubric input{margin-top:3px;accent-color:var(--purple)}
+.score{font-size:13px;color:var(--text-sec);border-top:1px solid var(--border);margin-top:10px;padding-top:10px}
+.score b{color:var(--emerald)}
+.attempt{font-size:12.5px;color:var(--text-sec);border-bottom:1px solid var(--border);padding:8px 0;display:flex;justify-content:space-between;gap:8px}
+.attempt:last-child{border-bottom:0}
+.feedback{white-space:pre-wrap;font-size:13.5px;line-height:1.7;color:var(--text-sec);margin-top:10px}
+.feedback h4{color:var(--text);font-size:13px;margin:12px 0 4px}
+.model-answer h3{color:var(--emerald);font-size:13px;margin:12px 0 4px}
+.model-answer p{font-size:13.5px;color:var(--text-sec);line-height:1.7;margin-bottom:8px}
+.tabs{display:flex;gap:6px;border-bottom:1px solid var(--border);margin-bottom:14px;flex-wrap:wrap}
+.tab{border:0;background:transparent;color:var(--text-sec);font:inherit;font-size:13px;font-weight:700;padding:8px 12px;cursor:pointer;border-bottom:2px solid transparent}
+.tab[aria-selected="true"]{color:var(--purple);border-bottom-color:var(--purple)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="../../index.html"><img src="../../logo.png" alt="">vlymbooq</a>
+  <div class="nav-links">
+    <a href="../index.html">UPSC</a>
+    <a href="index.html">Mains</a>
+    <a href="answer-writing.html" class="active">Answer Writing</a>
+    <a href="optional.html">Optional</a>
+    <a href="language.html">Language</a>
+    <a href="interview.html">Interview</a>
+  </div>
+</div></nav>
+<div class="wrap">
+
+<section class="hero" style="padding:22px 24px">
+  <div class="kicker">Mains · Practice loop</div>
+  <h1 style="font-size:28px">Answer-writing workspace</h1>
+  <p class="lede">One question, one timer, one page. Write the answer before you open the model answer. The rubric on the right is what the examiner is looking for; the model feedback is optional and runs only if you allow it on your device.</p>
+</section>
+
+<div class="note" style="margin-bottom:14px"><b>Pacing.</b> A 250-mark paper gives you 180 minutes for about 20 questions. That is roughly 7–8 minutes for a 10-mark answer, 11 minutes for 15, and 15 minutes for 20. The timer below uses that pacing. If you cross it, finish the answer, then note where the time went — usually the introduction.</div>
+<section class="panel" style="margin-bottom:14px">
+  <div class="row">
+    <select id="paper" aria-label="Paper">
+      <option value="all">All papers</option>
+      <option value="gs1">GS I</option>
+      <option value="gs2">GS II</option>
+      <option value="gs3">GS III</option>
+      <option value="gs4">GS IV</option>
+      <option value="essay">Essay</option>
+    </select>
+    <select id="question" aria-label="Question" style="flex:1;min-width:240px"></select>
+    <button class="btn ghost" id="pick" type="button">Random</button>
+    <button class="btn sec" id="runGen" type="button" hidden>✍️ Write a new one on the GitHub runner (8–20 min)</button>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <label class="muted"><input type="checkbox" id="includeFresh" checked> include unreviewed AI practice</label>
+    <span class="muted" id="qmeta"></span>
+  </div>
+</section>
+
+<div class="workspace">
+  <div>
+    <section class="panel" style="margin-bottom:14px">
+      <div class="row" style="justify-content:space-between">
+        <span class="pill" id="qpaper">—</span>
+        <span class="muted" id="qid"></span>
+      </div>
+      <div class="qtext" id="qtext">Loading questions…</div>
+      <div class="row">
+        <button class="btn sec" id="showAns" type="button">Show the model answer</button>
+        <a class="btn ghost" href="../../mains.html" target="_blank" rel="noopener">Open full bank</a>
+      </div>
+      <div class="model-answer" id="modelAnswer" hidden></div>
+    </section>
+
+    <section class="panel">
+      <div class="row" style="justify-content:space-between;margin-bottom:8px">
+        <div class="row">
+          <button class="btn g" id="start" type="button">Start timer</button>
+          <button class="btn ghost" id="pause" type="button" disabled>Pause</button>
+          <button class="btn ghost" id="reset" type="button">Reset</button>
+        </div>
+        <span class="timer" id="clock">00:00</span>
+      </div>
+      <textarea class="editor" id="answer" placeholder="Write your answer here. A strong Mains answer opens by defining the issue, carries the argument in headed paragraphs or bullet clusters, and closes with a way forward — not a summary of what you already said."></textarea>
+      <div class="stat-row">
+        <span><b id="words">0</b> words · target <b id="target">—</b></span>
+        <span id="savedNote" class="muted"></span>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <button class="btn" id="save" type="button">Save attempt</button>
+        <button class="btn sec" id="ask" type="button">Ask the model for feedback</button>
+        <span class="muted" id="askStat" role="status" aria-live="polite"></span>
+      </div>
+      <p class="muted" style="margin-top:8px">Model feedback is unreviewed practice guidance written by an on-device model. It has not read the official syllabus and can be wrong on facts. Use it for structure, not for authority.</p>
+    </section>
+  </div>
+  <aside>
+    <section class="panel" style="margin-bottom:14px">
+      <h3>Examiner rubric</h3>
+      <p class="muted" style="margin-bottom:6px">Tick what you actually did, not what you meant to do.</p>
+      <div class="rubric" id="rubric">
+        <label><input type="checkbox" value="Intro defines the issue and its context"> Intro defines the issue and its context</label>
+        <label><input type="checkbox" value="Answer sticks to the directive (examine, discuss, critically analyse)"> Answers the exact directive</label>
+        <label><input type="checkbox" value="Body has a clear structure: headed paragraphs or labelled clusters"> Body is structured, not one block</label>
+        <label><input type="checkbox" value="At least two concrete anchors: a case, article, scheme, committee or event"> Two concrete anchors</label>
+        <label><input type="checkbox" value="Both sides or all dimensions are covered before the judgement"> Both sides before the judgement</label>
+        <label><input type="checkbox" value="A diagram, map or flow adds information rather than decoration"> Diagram adds information</label>
+        <label><input type="checkbox" value="Conclusion is a way forward, not a repetition of the intro"> Way forward, not a summary</label>
+        <label><input type="checkbox" value="Within the word limit and legible"> Within the word limit</label>
+      </div>
+      <div class="score">Self-score: <b id="selfScore">0/8</b></div>
+    </section>
+
+    <section class="panel" style="margin-bottom:14px">
+      <h3>Saved attempts</h3>
+      <div id="attempts"><p class="muted">No attempts saved yet.</p></div>
+      <button class="btn ghost" id="clearAttempts" type="button" style="margin-top:8px">Clear this browser’s attempts</button>
+    </section>
+
+    <section class="panel" id="feedbackPanel" hidden>
+      <h3>Model feedback</h3>
+      <div class="feedback" id="feedback"></div>
+    </section>
+  </aside>
+</div>
+<script src="runner.js"></script>
+<script>
+'use strict';
+var BANK = { questions: [], papers: [] };
+var FRESH = [];
+var CURRENT = null;
+var ATTEMPTS = [];
+var timer = { left: 0, running: false, handle: null, total: 0 };
+
+function el(id) { return document.getElementById(id); }
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
+}
+function minutesFor(q) {
+  var m = Number(q.marks) || 10;
+  if (m <= 10) return 8;
+  if (m <= 15) return 11;
+  if (m <= 20) return 15;
+  if (m <= 125) return 90;
+  return 180;
+}
+function targetWords(q) {
+  var m = Number(q.marks) || 10;
+  if (m <= 10) return 150;
+  if (m <= 15) return 250;
+  if (m <= 20) return 300;
+  if (m <= 125) return 1100;
+  return 2200;
+}
+function wordCount(s) {
+  var t = String(s || '').trim();
+  return t ? t.split(/\s+/).length : 0;
+}
+function fmt(sec) {
+  sec = Math.max(0, Math.round(sec));
+  var m = Math.floor(sec / 60), s = sec % 60;
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
+function storeGet(k) {
+  try { return JSON.parse(localStorage.getItem(k) || 'null'); } catch (e) { return null; }
+}
+function storeSet(k, v) {
+  try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {}
+}
+
+function allQuestions() {
+  var out = BANK.questions.slice();
+  if (el('includeFresh').checked) out = out.concat(FRESH);
+  return out;
+}
+function fillPicker() {
+  var p = el('paper').value;
+  var list = allQuestions().filter(function (q) { return p === 'all' || q.paper === p; });
+  el('question').innerHTML = list.map(function (q, i) {
+    return '<option value="' + esc(q.id) + '">' + esc(q.paper.toUpperCase() + ' · ' + (q.topic || q.question).slice(0, 90)) + '</option>';
+  }).join('');
+  if (!list.length) {
+    CURRENT = null;
+    el('qtext').textContent = 'No question in this paper yet. Include the fresh AI batch, choose another paper, or open the full bank.';
+    el('qpaper').textContent = '—';
+    el('qid').textContent = '';
+    return;
+  }
+  selectQuestion(list[0].id);
+}
+function selectQuestion(id) {
+  var q = allQuestions().filter(function (x) { return x.id === id; })[0];
+  if (!q) return;
+  CURRENT = q;
+  el('qtext').textContent = q.question;
+  el('qpaper').textContent = (q.paper || '').toUpperCase() + ' · ' + q.marks + ' marks';
+  el('qid').textContent = q.ai
+    ? 'fresh AI · unreviewed' + (q.at ? ' · generated ' + q.at : '')
+    : 'reviewed bank';
+  el('target').textContent = targetWords(q) + ' words';
+  el('answer').value = '';
+  updateWords();
+  el('showAns').textContent = 'Show the model answer';
+  el('modelAnswer').hidden = true;
+  renderModelAnswer(q);
+  resetTimer();
+  el('savedNote').textContent = '';
+}
+function renderModelAnswer(q) {
+  var a = q.answer || [];
+  var html = a.map(function (s) {
+    return '<h3>' + esc(s.h || '') + '</h3><p>' + esc(s.p || '') + '</p>';
+  }).join('');
+  if (q.marksGuide && q.marksGuide.length) {
+    html += '<h3>What earns marks</h3><ul>' + q.marksGuide.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+  }
+  if (q.pitfalls && q.pitfalls.length) {
+    html += '<h3>Common pitfalls</h3><ul>' + q.pitfalls.map(function (x) { return '<li>' + esc(x) + '</li>'; }).join('') + '</ul>';
+  }
+  if (q.keywords && q.keywords.length) {
+    html += '<p class="muted" style="margin-top:10px">Keywords: ' + q.keywords.map(function (x) { return esc(x); }).join(' · ') + '</p>';
+  }
+  el('modelAnswer').innerHTML = html || '<p class="muted">No model answer stored for this item.</p>';
+}
+function resetTimer() {
+  clearInterval(timer.handle);
+  timer.running = false;
+  timer.total = CURRENT ? minutesFor(CURRENT) * 60 : 480;
+  timer.left = timer.total;
+  el('clock').textContent = fmt(timer.left);
+  el('clock').className = 'timer';
+  el('start').disabled = false;
+  el('pause').disabled = true;
+}
+function tick() {
+  timer.left -= 1;
+  el('clock').textContent = fmt(timer.left);
+  if (timer.left <= 60) el('clock').className = 'timer low';
+  if (timer.left <= 0) {
+    clearInterval(timer.handle);
+    timer.running = false;
+    el('clock').className = 'timer done';
+    el('clock').textContent = 'TIME';
+    el('start').disabled = true;
+    el('pause').disabled = true;
+  }
+}
+el('start').addEventListener('click', function () {
+  if (timer.running || !CURRENT) return;
+  if (timer.left <= 0) resetTimer();
+  timer.running = true;
+  el('start').disabled = true;
+  el('pause').disabled = false;
+  timer.handle = setInterval(tick, 1000);
+});
+el('pause').addEventListener('click', function () {
+  if (!timer.running) return;
+  clearInterval(timer.handle);
+  timer.running = false;
+  el('start').disabled = false;
+  el('pause').disabled = true;
+});
+el('reset').addEventListener('click', resetTimer);
+
+function updateWords() {
+  el('words').textContent = wordCount(el('answer').value);
+}
+el('answer').addEventListener('input', updateWords);
+
+function updateScore() {
+  var boxes = el('rubric').querySelectorAll('input');
+  var n = 0;
+  for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) n++;
+  el('selfScore').textContent = n + '/' + boxes.length;
+}
+el('rubric').addEventListener('change', updateScore);
+updateScore();
+
+function attemptKey() { return 'upsc-mains-attempts-v1'; }
+function loadAttempts() {
+  ATTEMPTS = storeGet(attemptKey()) || [];
+  renderAttempts();
+}
+function renderAttempts() {
+  var host = el('attempts');
+  if (!ATTEMPTS.length) { host.innerHTML = '<p class="muted">No attempts saved yet.</p>'; return; }
+  host.innerHTML = ATTEMPTS.slice(-6).reverse().map(function (a) {
+    return '<div class="attempt"><span>' + esc((a.paper || '').toUpperCase()) + ' · ' + a.words + ' words · ' + fmt(a.seconds) +
+      '<br><span class="muted">' + esc(a.at || '') + '</span></span>' +
+      '<button class="btn ghost" type="button" data-open="' + a.id + '" style="padding:3px 9px;font-size:11px">Open</button></div>';
+  }).join('');
+}
+el('attempts').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-open]');
+  if (!b) return;
+  var id = b.getAttribute('data-open');
+  var a = ATTEMPTS.filter(function (x) { return x.id === id; })[0];
+  if (!a) return;
+  if (a.qid) { el('question').value = a.qid; selectQuestion(a.qid); }
+  el('answer').value = a.text || '';
+  updateWords();
+  el('savedNote').textContent = 'Opened attempt from ' + (a.at || '');
+});
+el('save').addEventListener('click', function () {
+  if (!CURRENT) return;
+  var text = el('answer').value.trim();
+  if (!text) { el('savedNote').textContent = 'Nothing to save yet.'; return; }
+  var boxes = el('rubric').querySelectorAll('input');
+  var rubric = [];
+  for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) rubric.push(boxes[i].value);
+  var a = {
+    id: 'a' + Date.now().toString(36),
+    qid: CURRENT.id,
+    paper: CURRENT.paper,
+    at: new Date().toISOString().slice(0, 16).replace('T', ' '),
+    words: wordCount(text),
+    seconds: timer.total - Math.max(0, timer.left),
+    text: text,
+    rubric: rubric
+  };
+  ATTEMPTS.push(a);
+  if (ATTEMPTS.length > 60) ATTEMPTS = ATTEMPTS.slice(-60);
+  storeSet(attemptKey(), ATTEMPTS);
+  renderAttempts();
+  el('savedNote').textContent = 'Saved. ' + a.words + ' words in ' + fmt(a.seconds) + '.';
+});
+el('clearAttempts').addEventListener('click', function () {
+  if (!confirm('Clear all saved attempts in this browser?')) return;
+  ATTEMPTS = [];
+  storeSet(attemptKey(), []);
+  renderAttempts();
+});
+function loadLib() {
+  if (window.VlymbooqAskLLM) return Promise.resolve(window.VlymbooqAskLLM);
+  return new Promise(function (resolve, reject) {
+    var s = document.createElement('script');
+    s.src = '../../scripts/lib/ask-llm.js';
+    s.onload = function () { resolve(window.VlymbooqAskLLM); };
+    s.onerror = function () { reject(new Error('The writing model library could not be loaded.')); };
+    document.head.appendChild(s);
+  });
+}
+function setAsk(msg) { el('askStat').textContent = msg || ''; }
+el('ask').addEventListener('click', function () {
+  if (!CURRENT) return;
+  var text = el('answer').value.trim();
+  if (wordCount(text) < 30) { setAsk('Write at least a few lines first.'); return; }
+  var boxes = el('rubric').querySelectorAll('input');
+  var rubric = [];
+  for (var i = 0; i < boxes.length; i++) if (boxes[i].checked) rubric.push(boxes[i].value);
+  el('ask').disabled = true;
+  setAsk('Preparing the model…');
+  loadLib().then(function (lib) {
+    if (!lib || !lib.ensureEngine) throw new Error('The writing model is unavailable on this page.');
+    return lib.ensureEngine(function (m) { setAsk(m || 'Preparing the model…'); }).then(function (eng) {
+      setAsk('Reading your answer…');
+      var prompt = [
+        'You are a UPSC Mains examiner giving one candidate specific, practical feedback.',
+        'Do not invent a fact, case, article, committee or statistic. If an example would help, phrase it as a check ("verify whether X applies"), never as an assertion.',
+        '',
+        'QUESTION: ' + CURRENT.question,
+        'MARKS: ' + CURRENT.marks + ' · WORD LIMIT: about ' + targetWords(CURRENT) + ' words',
+        'CANDIDATE ANSWER (' + wordCount(text) + ' words):',
+        text,
+        '',
+        'The candidate ticked these rubric items: ' + (rubric.length ? rubric.join('; ') : 'none') + '.',
+        '',
+        'Reply in five short sections with these exact headings:',
+        '1. Does it answer the directive? — name the directive and say what the answer does.',
+        '2. Structure — what to keep, what to move, what to cut.',
+        '3. Missing dimension — one substantive angle the answer did not cover.',
+        '4. Three fixes — the highest-value changes, each in one sentence.',
+        '5. A skeleton — five to seven headed points for a better answer, including a way forward.',
+        'Be direct. Do not praise by default. Keep it under 500 words.'
+      ].join('\n');
+      return eng.chat.completions.create({
+        messages: [
+          { role: 'system', content: 'You give concise, concrete exam feedback. You never invent facts.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.25,
+        max_tokens: 900,
+        stream: false
+      });
+    });
+  }).then(function (res) {
+    var txt = res && res.choices && res.choices[0] && res.choices[0].message
+      ? res.choices[0].message.content : '';
+    el('feedbackPanel').hidden = false;
+    el('feedback').textContent = (txt || 'The model returned nothing. Try again.') +
+      '\n\n— generated ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+    setAsk('');
+  }).catch(function (err) {
+    setAsk(String(err && err.message || err).slice(0, 220));
+  }).then(function () {
+    el('ask').disabled = false;
+  });
+});
+
+el('paper').addEventListener('change', fillPicker);
+el('includeFresh').addEventListener('change', fillPicker);
+el('question').addEventListener('change', function () { selectQuestion(el('question').value); });
+el('pick').addEventListener('click', function () {
+  var opts = el('question').options;
+  if (!opts.length) return;
+  var i = Math.floor(Math.random() * opts.length);
+  el('question').selectedIndex = i;
+  selectQuestion(opts[i].value);
+});
+/* Owner-only: same GitHub runner route as mains.html. */
+if (window.MainsRunner) window.MainsRunner.showIfOwner(el('runGen'));
+el('runGen').addEventListener('click', function () {
+  if (!window.MainsRunner) return;
+  var btn = this;
+  var paper = el('paper').value === 'all' ? '' : el('paper').value;
+  var seeds = CURRENT && CURRENT.topic ? [CURRENT.topic] : [];
+  btn.disabled = true;
+  el('savedNote').textContent = 'Sending the request to the GitHub runner…';
+  window.MainsRunner.run('mains-fresh', { paper: paper, seeds: seeds, subject: '' }, function (m) {
+    el('savedNote').textContent = m || 'The GitHub runner is writing…';
+  }).then(function (res) {
+    var item = res && res.item;
+    if (!item) throw new Error('the runner returned no question');
+    item.ai = 1;
+    FRESH = FRESH.filter(function (x) { return x.id !== item.id; }).concat([item]);
+    fillPicker();
+    if (el('question').querySelector('option[value="' + item.id + '"]')) {
+      el('question').value = item.id;
+      selectQuestion(item.id);
+    }
+    el('savedNote').textContent = 'The runner wrote a new question (' + (item.paper || '') + ')' +
+      (item.at ? ' on ' + item.at : '') + '. It is unreviewed practice.';
+  }).catch(function (err) {
+    el('savedNote').textContent = String(err && err.message || err).slice(0, 240);
+  }).then(function () { btn.disabled = false; });
+});
+el('showAns').addEventListener('click', function () {
+  var hidden = el('modelAnswer').hidden;
+  el('modelAnswer').hidden = !hidden;
+  el('showAns').textContent = hidden ? 'Hide the model answer' : 'Show the model answer';
+});
+
+function boot() {
+  loadAttempts();
+  var qs = new URLSearchParams(location.search);
+  var paper = qs.get('paper');
+  if (paper) el('paper').value = paper;
+  Promise.all([
+    fetch('../../data/mains-questions.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }),
+    fetch('../../data/mains-fresh.json', { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; })
+  ]).then(function (res) {
+    if (res[0] && Array.isArray(res[0].questions)) BANK = res[0];
+    if (res[1] && Array.isArray(res[1].items)) FRESH = res[1].items;
+    FRESH = FRESH.map(function (x) { return Object.assign({}, x, { ai: 1 }); });
+    if (!BANK.questions.length && !FRESH.length) {
+      el('qtext').textContent = 'The question files could not be loaded. Open the full bank instead.';
+      return;
+    }
+    fillPicker();
+  }).catch(function () {
+    el('qtext').textContent = 'The question files could not be loaded. Open the full bank instead.';
+  });
+}
+boot();
+</script>
+</div>
+</body>
+</html>

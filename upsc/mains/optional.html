@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UPSC Optional Subject — 500 Marks: List, How to Choose, Practice | vlymbooq</title>
+<meta name="description" content="UPSC Mains optional subject guide: the full list of optional subjects, how the two 250-mark papers work, how to choose, and a practice question generator.">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="canonical" href="https://vlymbooq.qzz.io/upsc/mains/optional.html">
+<link rel="stylesheet" href="mains.css">
+<style>
+.subject{display:flex;align-items:center;justify-content:space-between;gap:8px;padding:9px 12px;border:1px solid var(--border);border-radius:9px;background:var(--card2);font-size:13px;color:var(--text-sec);cursor:pointer;width:100%;text-align:left;font-family:inherit}
+.subject:hover{border-color:rgba(167,139,250,.45);color:var(--text)}
+.subject[aria-pressed="true"]{border-color:var(--purple);background:rgba(167,139,250,.12);color:var(--text)}
+.subject span:last-child{font-size:10px;color:var(--text-muted)}
+#genOut{white-space:pre-wrap;font-size:13.5px;line-height:1.7;color:var(--text-sec);margin-top:12px}
+</style>
+</head>
+<body>
+<nav class="nav"><div class="nav-inner">
+  <a class="brand" href="../../index.html"><img src="../../logo.png" alt="">vlymbooq</a>
+  <div class="nav-links">
+    <a href="../index.html">UPSC</a>
+    <a href="index.html">Mains</a>
+    <a href="answer-writing.html">Answer Writing</a>
+    <a href="optional.html" class="active">Optional</a>
+    <a href="language.html">Language</a>
+    <a href="interview.html">Interview</a>
+  </div>
+</div></nav>
+<div class="wrap">
+
+<section class="hero">
+  <div class="kicker">Mains · Optional subject</div>
+  <h1>Two papers. 500 marks. One choice.</h1>
+  <p class="lede">The optional is the largest block you control. It is two papers of 250 marks each, taken on the same subject, and it can decide the rank. The subject you pick matters less than whether you can write two full papers on it from memory, month after month.</p>
+  <div class="hero-stats">
+    <div class="s"><div class="n">2</div><div class="l">Papers</div></div>
+    <div class="s"><div class="n">500</div><div class="l">Marks</div></div>
+    <div class="s"><div class="n">~29%</div><div class="l">Of written marks</div></div>
+  </div>
+</section>
+
+<div class="note"><b>The rule.</b> You choose one optional subject, and both papers are on it. Paper I and Paper II are 250 marks each; the syllabus for each is published by UPSC and is not the same as a university degree syllabus. The optional is not a qualifying paper: every mark counts for the merit list. Choose before you start writing, and do not switch subjects in the last three months.</div>
+<section class="section">
+  <div class="section-head"><h2>Choose your subject</h2><span class="pill" id="chosen">none chosen</span></div>
+  <p class="section-sub">The Commission's optional list. Tap a subject to save it in this browser; the practice generator below will use it.</p>
+  <div class="grid three" id="subjects" style="gap:8px"></div>
+  <p class="muted" style="margin-top:10px">Literature optionals are available in the languages listed by the Commission, including English. The syllabus for each literature paper is published separately.</p>
+</section>
+
+<section class="section">
+  <div class="section-head"><h2>How to choose</h2></div>
+  <div class="grid two">
+    <div class="card">
+      <div class="t">1 · Overlap with GS</div>
+      <div class="d">A subject that shares ground with GS II or GS III reduces total load: Political Science, Public Administration, Sociology, Geography and Economics all overlap. But overlap is a dividend, not the reason to choose; you still have to master the optional's own syllabus.</div>
+    </div>
+    <div class="card">
+      <div class="t">2 · Material you can actually finish</div>
+      <div class="d">Count the pages, not the prestige. Two papers need a syllabus you can revise three times. A subject with a short, stable syllabus and good past papers beats a fashionable one you cannot close.</div>
+    </div>
+    <div class="card">
+      <div class="t">3 · Writing, not reading</div>
+      <div class="d">Take the subject you can write a 250-mark paper on without the book open. If you have never written a full optional paper under time, you do not yet know whether the choice works.</div>
+    </div>
+    <div class="card">
+      <div class="t">4 · Do not chase scoring folklore</div>
+      <div class="d">Every subject has candidates who score 300+ and candidates who score 120. The distribution matters less than where you will land. Past-paper familiarity and honest self-assessment are better guides than a rumour about which subject "scales".</div>
+    </div>
+  </div>
+</section>
+<section class="section">
+  <div class="section-head"><h2>Practice loop</h2><span class="pill a">AI · unreviewed</span></div>
+  <p class="section-sub">The reviewed bank does not yet carry optional questions, because the subject is yours to choose. This generator writes one practice question and a skeleton in your browser. Treat it as a prompt to write, not as a model answer.</p>
+  <div class="row">
+    <button class="btn" id="gen" type="button">Generate an optional practice question</button>
+    <button class="btn ghost" id="copy" type="button" hidden>Copy</button>
+    <span class="muted" id="genStat" role="status" aria-live="polite"></span>
+  </div>
+  <div class="row" style="margin-top:10px">
+    <select id="runnerPaper" aria-label="Optional paper">
+      <option value="optional1">Optional Paper I</option>
+      <option value="optional2">Optional Paper II</option>
+    </select>
+    <button class="btn sec" id="runGen" type="button" hidden>✍️ Write one on the GitHub runner (8–20 min)</button>
+    <span class="muted" id="runnerStat" role="status" aria-live="polite"></span>
+  </div>
+  <div class="panel" style="margin-top:12px">
+    <div id="genOut" class="muted">Choose a subject above, then generate. The model runs on your device only after you allow it; nothing is sent anywhere.</div>
+  </div>
+  <div class="warn" style="margin-top:12px"><b>Verify before trusting.</b> The generated question is practice. It may name a thinker, case or scheme inaccurately. Check anything you intend to reproduce against the official syllabus and a reliable source.</div>
+</section>
+
+<footer class="site">
+  <span>UPSC Mains pack · optional subject guide.</span>
+  <span><a href="index.html">Mains hub</a> · <a href="answer-writing.html">Answer workspace</a> · <a href="language.html">Language</a></span>
+</footer>
+
+<script src="runner.js"></script>
+<script>
+'use strict';
+var SUBJECTS = [
+  'Agriculture', 'Animal Husbandry and Veterinary Science', 'Anthropology', 'Botany',
+  'Chemistry', 'Civil Engineering', 'Commerce and Accountancy', 'Economics',
+  'Electrical Engineering', 'Geography', 'Geology', 'History', 'Law', 'Management',
+  'Mathematics', 'Mechanical Engineering', 'Medical Science', 'Philosophy', 'Physics',
+  'Political Science and International Relations', 'Psychology', 'Public Administration',
+  'Sociology', 'Statistics', 'Zoology',
+  'Literature: Assamese', 'Literature: Bengali', 'Literature: Bodo', 'Literature: Dogri',
+  'Literature: English', 'Literature: Gujarati', 'Literature: Hindi', 'Literature: Kannada',
+  'Literature: Kashmiri', 'Literature: Konkani', 'Literature: Maithili', 'Literature: Malayalam',
+  'Literature: Manipuri', 'Literature: Marathi', 'Literature: Nepali', 'Literature: Odia',
+  'Literature: Punjabi', 'Literature: Sanskrit', 'Literature: Santali', 'Literature: Sindhi',
+  'Literature: Tamil', 'Literature: Telugu', 'Literature: Urdu'
+];
+var KEY = 'upsc-optional-subject';
+var chosen = '';
+try { chosen = localStorage.getItem(KEY) || ''; } catch (e) {}
+
+function renderSubjects() {
+  var host = document.getElementById('subjects');
+  host.innerHTML = SUBJECTS.map(function (s) {
+    return '<button class="subject" type="button" data-sub="' + s.replace(/"/g, '&quot;') + '" aria-pressed="' +
+      (s === chosen ? 'true' : 'false') + '"><span>' + s + '</span><span>' + (s === chosen ? 'chosen' : '') + '</span></button>';
+  }).join('');
+  document.getElementById('chosen').textContent = chosen ? chosen : 'none chosen';
+}
+document.getElementById('subjects').addEventListener('click', function (e) {
+  var b = e.target.closest('[data-sub]');
+  if (!b) return;
+  chosen = b.getAttribute('data-sub');
+  try { localStorage.setItem(KEY, chosen); } catch (e2) {}
+  renderSubjects();
+});
+renderSubjects();
+
+function loadLib() {
+  if (window.VlymbooqAskLLM) return Promise.resolve(window.VlymbooqAskLLM);
+  return new Promise(function (resolve, reject) {
+    var s = document.createElement('script');
+    s.src = '../../scripts/lib/ask-llm.js';
+    s.onload = function () { resolve(window.VlymbooqAskLLM); };
+    s.onerror = function () { reject(new Error('The writing model library could not be loaded.')); };
+    document.head.appendChild(s);
+  });
+}
+document.getElementById('gen').addEventListener('click', function () {
+  var out = document.getElementById('genOut');
+  var stat = document.getElementById('genStat');
+  if (!chosen) { stat.textContent = 'Choose a subject first.'; return; }
+  var btn = this;
+  btn.disabled = true;
+  stat.textContent = 'Preparing the model…';
+  out.textContent = '';
+  loadLib().then(function (lib) {
+    if (!lib || !lib.ensureEngine) throw new Error('The writing model is unavailable on this page.');
+    return lib.ensureEngine(function (m) { stat.textContent = m || 'Preparing the model…'; }).then(function (eng) {
+      stat.textContent = 'Writing a question…';
+      var prompt = [
+        'You are a UPSC Mains optional-subject examiner for ' + chosen + '.',
+        'Write ONE practice question in the style of the Commission optional paper, with a short answer skeleton.',
+        'Rules: do not invent a court case, a statute, a committee, a statistic or a quotation. If an example is useful, say "verify" rather than asserting it.',
+        'Use this shape exactly:',
+        'QUESTION: ...',
+        '(marks and word limit)',
+        'WHY THIS MATTERS: one sentence.',
+        'SKELETON: five to seven headed points, each one line.',
+        'ANCHORS TO VERIFY: up to three topics or sources the candidate should check.',
+        'Keep the whole reply under 350 words.'
+      ].join('\n');
+      return eng.chat.completions.create({
+        messages: [
+          { role: 'system', content: 'You write exam practice questions. You never present an unverified fact as certain.' },
+          { role: 'user', content: prompt }
+        ],
+        temperature: 0.5,
+        max_tokens: 800,
+        stream: false
+      });
+    });
+  }).then(function (res) {
+    var txt = res && res.choices && res.choices[0] && res.choices[0].message
+      ? res.choices[0].message.content : '';
+    out.textContent = (txt || 'The model returned nothing. Try again.') + '\n\n— generated ' + new Date().toISOString().slice(0, 16).replace('T', ' ') + ' UTC';
+    out.className = '';
+    document.getElementById('copy').hidden = !txt;
+    stat.textContent = chosen;
+  }).catch(function (err) {
+    stat.textContent = String(err && err.message || err).slice(0, 220);
+  }).then(function () { btn.disabled = false; });
+});
+document.getElementById('copy').addEventListener('click', function () {
+  var t = document.getElementById('genOut').textContent;
+  if (navigator.clipboard) navigator.clipboard.writeText(t).then(function () {
+    document.getElementById('genStat').textContent = 'Copied.';
+  });
+});
+
+/* Owner-only GitHub runner: same route as mains.html, no on-device model. */
+function showRunnerItem(item, statusEl) {
+  var out = document.getElementById('genOut');
+  var lines = [item.question || '', '', 'SKELETON:'];
+  (item.answer || []).forEach(function (s) {
+    lines.push('• ' + (s.h || '') + ' — ' + (s.p || ''));
+  });
+  if (item.marksGuide && item.marksGuide.length) {
+    lines.push('', 'WHAT EARNS MARKS:');
+    item.marksGuide.forEach(function (x) { lines.push('• ' + x); });
+  }
+  out.textContent = lines.join('\n');
+  out.className = '';
+  document.getElementById('copy').hidden = false;
+  statusEl.textContent = 'Unreviewed practice from the GitHub runner (' + (item.paper || '') + ')' +
+    (item.at ? ' · generated ' + item.at : '') + '.';
+}
+if (window.MainsRunner) window.MainsRunner.showIfOwner(document.getElementById('runGen'));
+document.getElementById('runGen').addEventListener('click', function () {
+  if (!window.MainsRunner) return;
+  if (!chosen) { document.getElementById('runnerStat').textContent = 'Choose a subject first.'; return; }
+  var btn = this;
+  var statusEl = document.getElementById('runnerStat');
+  btn.disabled = true;
+  statusEl.textContent = 'Sending the request to the GitHub runner…';
+  window.MainsRunner.run('mains-fresh', {
+    paper: document.getElementById('runnerPaper').value,
+    subject: chosen,
+    seeds: [chosen]
+  }, function (m) { statusEl.textContent = m || 'The GitHub runner is writing…'; })
+    .then(function (res) {
+      if (!res || !res.item) throw new Error('the runner returned no question');
+      showRunnerItem(res.item, statusEl);
+    })
+    .catch(function (err) { statusEl.textContent = String(err && err.message || err).slice(0, 240); })
+    .then(function () { btn.disabled = false; });
+});
+</script>
+</div>
+</body>
+</html>

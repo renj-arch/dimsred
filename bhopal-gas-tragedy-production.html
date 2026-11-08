@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Proof of work — BHOPAL | vlymbooq</title>
+<meta name="description" content="BHOPAL production dossier: 9 scenes, 0 shots, 5 sources, 6 frame studies, and the independent QC that gated the 1080 master." />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="Proof of work — BHOPAL" />
+<meta property="og:description" content="BHOPAL production dossier: 9 scenes, 0 shots, 5 sources, 6 frame studies, and the independent QC that gated the 1080 master." />
+<meta property="og:image" content="media/films/bhopal-gas-tragedy/poster.jpg" />
+<style>
+:root{
+    --bg:#060606; --panel:#0d0b08; --panel2:#15100b; --bone:#f2e6d0;
+    --muted:rgba(242,230,208,.64); --faint:rgba(242,230,208,.38);
+    --gold:#d6a14a; --rust:#b14a2f; --teal:#143f47; --line:rgba(214,161,74,.2);
+    --serif:Georgia,"Liberation Serif","Times New Roman",serif;
+    --sans:"Liberation Sans",Arial,Helvetica,sans-serif;
+    --mono:"Cascadia Mono","Liberation Mono",Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--bone);font-family:var(--sans);line-height:1.6;
+    background-image:
+      radial-gradient(80% 45% at 50% -10%,rgba(214,161,74,.13),transparent 70%),
+      radial-gradient(40% 35% at 100% 20%,rgba(20,63,71,.2),transparent 70%),
+      radial-gradient(45% 40% at 0% 65%,rgba(177,74,47,.09),transparent 70%);
+    background-attachment:fixed;}
+  a{color:inherit}
+  ::selection{background:var(--gold);color:#17110a}
+  .grain{position:fixed;inset:0;z-index:50;pointer-events:none;opacity:.05;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 220 220' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E")}
+  .wrap{max-width:1240px;margin:0 auto;padding:0 30px}
+  .top{border-bottom:1px solid rgba(255,255,255,.08);background:rgba(6,6,6,.78);backdrop-filter:blur(10px);
+    position:sticky;top:0;z-index:40}
+  .top .wrap{display:flex;justify-content:space-between;align-items:center;gap:18px;padding-top:16px;padding-bottom:16px}
+  .brand{font-size:.7rem;letter-spacing:.3em;text-transform:uppercase;color:var(--muted);text-decoration:none;white-space:nowrap}
+  .brand b{color:var(--gold)}
+  .top nav{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
+  .top nav a{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;color:var(--muted);
+    border:1px solid rgba(255,255,255,.12);padding:8px 12px;border-radius:999px}
+  .top nav a:hover{border-color:var(--gold);color:var(--bone)}
+
+  .hero{padding:76px 0 54px}
+  .eyebrow{display:flex;justify-content:space-between;gap:20px;align-items:center;flex-wrap:wrap;
+    font-size:.62rem;letter-spacing:.34em;text-transform:uppercase;color:var(--gold);margin-bottom:26px}
+  .eyebrow span:last-child{color:var(--faint)}
+  h1{font-family:var(--serif);font-weight:900;font-size:clamp(64px,13.2vw,184px);line-height:.76;
+    letter-spacing:-.075em;margin:0;max-width:1050px}
+  h1 em{font-style:normal;color:var(--gold)}
+  .lede{font-family:var(--serif);font-size:clamp(20px,2.3vw,34px);line-height:1.15;letter-spacing:-.02em;
+    max-width:900px;margin:32px 0 0;color:rgba(242,230,208,.9)}
+  .lede b{color:var(--gold);font-weight:400}
+
+  .hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:34px;align-items:start;margin-top:48px}
+  .poster{margin:0;border:1px solid rgba(214,161,74,.25);background:#000;position:relative;overflow:hidden;
+    aspect-ratio:16/9;display:flex;flex-direction:column;justify-content:flex-end}
+  .poster img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;filter:contrast(1.05) saturate(.9)}
+  .poster:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 42%,rgba(0,0,0,.82) 100%)}
+  .poster figcaption{position:relative;z-index:2;padding:20px 22px;font-size:.62rem;letter-spacing:.22em;
+    text-transform:uppercase;color:rgba(242,230,208,.72);display:flex;justify-content:space-between;gap:16px}
+  .poster .stamp{position:absolute;z-index:2;top:16px;left:16px;border:1px solid rgba(214,161,74,.55);
+    color:var(--gold);font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;padding:7px 9px;background:rgba(0,0,0,.38)}
+  .film-card{border-top:1px solid var(--gold);padding-top:20px;display:flex;flex-direction:column}
+  .status{display:inline-flex;align-items:center;gap:8px;font-size:.6rem;letter-spacing:.24em;text-transform:uppercase;
+    color:var(--gold);margin-bottom:14px}
+  .status i{width:7px;height:7px;border-radius:50%;background:var(--gold);box-shadow:0 0 12px var(--gold);display:block}
+  .film-card h2{font-family:var(--serif);font-size:clamp(36px,4.4vw,64px);line-height:.9;letter-spacing:-.045em;margin:0 0 14px}
+  .film-card p{color:var(--muted);font-size:.95rem;margin:0 0 18px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin:6px 0 24px}
+  .btn{display:inline-block;text-decoration:none;border:1px solid rgba(242,230,208,.2);color:var(--bone);
+    padding:11px 15px;border-radius:999px;font-size:.66rem;letter-spacing:.2em;text-transform:uppercase}
+  .btn:hover{border-color:var(--gold)}
+  .btn.strong{background:var(--gold);color:#17110a;border-color:var(--gold);font-weight:800}
+  .receipt{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid rgba(255,255,255,.1);margin-top:auto}
+  .receipt div{padding:12px 0;border-bottom:1px solid rgba(255,255,255,.07)}
+  .receipt div:nth-child(odd){padding-right:16px}
+  .receipt dt{font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 3px}
+  .receipt dd{margin:0;font-size:.8rem;color:rgba(242,230,208,.9)}
+
+  .stats{border-top:1px solid rgba(255,255,255,.1);border-bottom:1px solid rgba(255,255,255,.1);
+    background:linear-gradient(180deg,rgba(214,161,74,.035),transparent)}
+  .stats .wrap{display:grid;grid-template-columns:repeat(6,1fr);padding-top:0;padding-bottom:0}
+  .stat{padding:22px 18px 22px 0;border-right:1px solid rgba(255,255,255,.08)}
+  .stat:last-child{border-right:none;padding-right:0}
+  .stat b{display:block;font-family:var(--serif);font-size:clamp(30px,3.5vw,52px);line-height:.9;letter-spacing:-.04em;color:var(--bone)}
+  .stat span{display:block;font-size:.56rem;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);margin-top:8px}
+  .stat small{display:block;color:var(--faint);font-size:.66rem;line-height:1.4;margin-top:6px}
+
+  .section{padding:72px 0;border-top:1px solid rgba(255,255,255,.08)}
+  .section:first-of-type{border-top:none}
+  .section-head{display:grid;grid-template-columns:84px 1fr;gap:24px;align-items:start;margin-bottom:34px}
+  .section-head .no{font-family:var(--mono);font-size:.7rem;letter-spacing:.16em;color:var(--gold);padding-top:8px}
+  .section-head h2{font-family:var(--serif);font-size:clamp(38px,5vw,70px);line-height:.9;letter-spacing:-.045em;margin:0 0 10px}
+  .section-head p{max-width:760px;color:var(--muted);margin:0;font-size:.95rem}
+  .section-head .tag{display:inline-block;font-size:.56rem;letter-spacing:.2em;text-transform:uppercase;color:var(--gold);
+    border:1px solid rgba(214,161,74,.3);padding:5px 8px;border-radius:999px;margin-bottom:10px}
+
+  .compare{display:grid;gap:18px;margin:8px 0 18px}
+  .bar-row{display:grid;grid-template-columns:190px 1fr;gap:18px;align-items:center}
+  .bar-label{font-size:.62rem;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);line-height:1.5}
+  .bar-label b{display:block;color:var(--bone);font-size:.7rem;letter-spacing:.14em}
+  .bar-label span{color:var(--faint);font-size:.58rem}
+  .bar{height:38px;display:flex;gap:2px;align-items:stretch;background:rgba(255,255,255,.03);padding:3px;border:1px solid rgba(255,255,255,.08)}
+  .bar i{display:block;min-width:2px;height:100%;background:rgba(242,230,208,.14);position:relative}
+  .bar i.blender{background:linear-gradient(180deg,rgba(214,161,74,.9),rgba(155,100,35,.75))}
+  .bar i.html{background:linear-gradient(180deg,rgba(242,230,208,.85),rgba(160,145,118,.7))}
+  .bar i.title{background:linear-gradient(180deg,rgba(177,74,47,.95),rgba(110,38,25,.8))}
+  .bar.old i:nth-child(3n){opacity:.55}
+  .bar i:hover{outline:1px solid var(--bone);z-index:2}
+  .legend{display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 0;color:var(--faint);font-size:.62rem;letter-spacing:.12em;text-transform:uppercase}
+  .legend span{display:inline-flex;align-items:center;gap:7px}
+  .legend b{width:9px;height:9px;display:inline-block;background:var(--gold)}
+  .legend b.html{background:var(--bone)}
+  .legend b.title{background:var(--rust)}
+  .legend b.cut{background:rgba(242,230,208,.28)}
+
+  .scenes{display:grid;gap:0;margin-top:28px;border-top:1px solid rgba(255,255,255,.09)}
+  .scene{border-bottom:1px solid rgba(255,255,255,.09)}
+  .scene summary{cursor:pointer;list-style:none;display:grid;grid-template-columns:52px 1fr auto auto;gap:16px;
+    align-items:center;padding:18px 0;color:var(--bone)}
+  .scene summary::-webkit-details-marker{display:none}
+  .scene summary .n{font-family:var(--mono);font-size:.66rem;color:var(--gold)}
+  .scene summary h3{font-family:var(--serif);font-size:clamp(22px,2.5vw,34px);line-height:1;letter-spacing:-.03em;margin:0;font-weight:400}
+  .scene summary .meta{font-size:.58rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);white-space:nowrap}
+  .scene summary .plus{font-family:var(--mono);color:var(--gold);font-size:1rem;transition:transform .2s}
+  .scene[open] summary .plus{transform:rotate(45deg)}
+  .scene-body{padding:0 0 24px 68px;display:grid;gap:16px}
+  .scene-purpose{margin:0;color:var(--muted);font-size:.9rem;max-width:840px}
+  .lines{margin:0;padding:0;list-style:none;display:grid;gap:5px}
+  .lines li{display:grid;grid-template-columns:1fr auto;gap:16px;padding:7px 0;border-top:1px solid rgba(255,255,255,.05);
+    color:rgba(242,230,208,.88);font-size:.86rem}
+  .lines li .src{color:var(--faint);font-family:var(--mono);font-size:.56rem;letter-spacing:.06em;white-space:nowrap;text-align:right}
+  .lines li .txt{color:rgba(242,230,208,.88)}
+  .chips{display:flex;flex-wrap:wrap;gap:6px}
+  .chip{display:inline-flex;align-items:center;gap:6px;border:1px solid rgba(255,255,255,.12);padding:5px 7px;
+    font-family:var(--mono);font-size:.55rem;letter-spacing:.04em;color:var(--muted);background:rgba(255,255,255,.02)}
+  .chip b{color:var(--bone);font-weight:400}
+  .chip em{font-style:normal;color:var(--gold);font-size:.5rem;letter-spacing:.08em;text-transform:uppercase}
+
+  .transition-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .trans-card{border:1px solid rgba(255,255,255,.1);background:linear-gradient(160deg,var(--panel2),rgba(13,11,8,.7));
+    padding:20px;min-height:160px;position:relative;overflow:hidden}
+  .trans-card:before{content:"";position:absolute;left:0;top:0;width:3px;height:100%;background:var(--gold);opacity:.75}
+  .trans-card .count{font-family:var(--serif);font-size:40px;line-height:.9;letter-spacing:-.05em;color:var(--gold)}
+  .trans-card h3{margin:8px 0 8px;font-size:.72rem;letter-spacing:.2em;text-transform:uppercase;color:var(--bone)}
+  .trans-card p{margin:0;color:var(--muted);font-size:.82rem}
+
+  .frame-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .frame{margin:0;border:1px solid rgba(255,255,255,.09);background:#000;position:relative;overflow:hidden}
+  .frame img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;filter:contrast(1.05) saturate(.88)}
+  .frame figcaption{display:flex;justify-content:space-between;gap:12px;padding:9px 11px;font-size:.55rem;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--faint);border-top:1px solid rgba(255,255,255,.07)}
+  .frame figcaption b{color:var(--gold);font-weight:400}
+  .contact{margin:16px 0 0;border:1px solid rgba(255,255,255,.1);background:#000}
+  .contact img{display:block;width:100%;height:auto;filter:contrast(1.04)}
+  .contact figcaption{padding:12px 14px;font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);
+    display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;border-top:1px solid rgba(255,255,255,.08)}
+  .contact figcaption b{color:var(--rust);font-weight:400}
+
+  .source-list{border-top:1px solid rgba(255,255,255,.1)}
+  .source-row{display:grid;grid-template-columns:1fr 190px 70px;gap:20px;align-items:start;padding:16px 0;
+    border-bottom:1px solid rgba(255,255,255,.08)}
+  .source-row a{text-decoration:none;color:var(--bone);font-family:var(--serif);font-size:1.1rem;line-height:1.2}
+  .source-row a:hover{color:var(--gold)}
+  .source-row .pub{font-size:.6rem;letter-spacing:.18em;text-transform:uppercase;color:var(--faint)}
+  .source-row .uses{font-family:var(--mono);font-size:.62rem;color:var(--gold);text-align:right;white-space:nowrap}
+
+  .pipeline-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .pipe{border-top:1px solid var(--gold);padding:18px 0 0;min-height:190px}
+  .pipe .step{font-family:var(--mono);font-size:.6rem;letter-spacing:.14em;color:var(--gold)}
+  .pipe h3{font-family:var(--serif);font-size:clamp(22px,2.2vw,30px);line-height:1;letter-spacing:-.03em;margin:14px 0 10px}
+  .pipe p{margin:0 0 14px;color:var(--muted);font-size:.84rem}
+  .pipe code{font-family:var(--mono);font-size:.58rem;color:rgba(242,230,208,.45);line-height:1.5;word-break:break-all}
+
+  .iterations{border-left:1px solid rgba(214,161,74,.32);margin-left:8px;padding-left:26px;display:grid;gap:26px}
+  .iter{position:relative}
+  .iter:before{content:"";position:absolute;left:-32px;top:7px;width:9px;height:9px;border-radius:50%;
+    background:var(--gold);box-shadow:0 0 0 5px rgba(214,161,74,.1)}
+  .iter .when{font-family:var(--mono);font-size:.56rem;letter-spacing:.12em;color:var(--gold);text-transform:uppercase}
+  .iter h3{font-family:var(--serif);font-size:clamp(24px,2.6vw,36px);line-height:1;letter-spacing:-.03em;margin:8px 0 8px}
+  .iter p{margin:0;color:var(--muted);font-size:.88rem;max-width:800px}
+
+  .build-log{border-top:1px solid rgba(255,255,255,.1)}
+  .build{display:grid;grid-template-columns:96px 1fr 132px;gap:18px;align-items:center;padding:13px 0;
+    border-bottom:1px solid rgba(255,255,255,.07);text-decoration:none}
+  .build:hover{background:rgba(255,255,255,.025)}
+  .build .state{font-size:.56rem;letter-spacing:.16em;text-transform:uppercase;color:var(--faint)}
+  .build .state.ok{color:#9cbf8e}
+  .build .state.live{color:var(--gold)}
+  .build .state.bad{color:#d9826c}
+  .build .what{font-size:.82rem;color:rgba(242,230,208,.86);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .build .what small{display:block;color:var(--faint);font-family:var(--mono);font-size:.55rem;margin-top:3px}
+  .build .when{font-family:var(--mono);font-size:.56rem;color:var(--faint);text-align:right;white-space:nowrap}
+  .build-note{color:var(--faint);font-size:.68rem;margin:12px 0 0}
+  .build-note a{color:var(--gold)}
+
+  .credits{display:grid;grid-template-columns:1.15fr .85fr;gap:34px;align-items:start}
+  .credit-grid{display:grid;grid-template-columns:1fr 1fr;gap:0;border-top:1px solid rgba(255,255,255,.1)}
+  .credit{padding:14px 0;border-bottom:1px solid rgba(255,255,255,.08)}
+  .credit dt{font-size:.55rem;letter-spacing:.2em;text-transform:uppercase;color:var(--faint);margin:0 0 4px}
+  .credit dd{margin:0;font-family:var(--serif);font-size:1.05rem;color:var(--bone);line-height:1.15}
+  .rules{margin:0;padding:0;list-style:none;border-top:1px solid rgba(255,255,255,.1)}
+  .rules li{padding:11px 0 11px 22px;border-bottom:1px solid rgba(255,255,255,.07);position:relative;color:var(--muted);font-size:.82rem}
+  .rules li:before{content:"—";position:absolute;left:0;color:var(--gold)}
+  .closing{margin-top:28px;border:1px solid rgba(214,161,74,.28);padding:22px 24px;background:
+    linear-gradient(110deg,rgba(214,161,74,.09),transparent 65%)}
+  .closing p{margin:0;font-family:var(--serif);font-size:clamp(20px,2.2vw,28px);line-height:1.25;letter-spacing:-.02em}
+  .closing a{color:var(--gold);text-decoration:none}
+
+  footer{border-top:1px solid rgba(255,255,255,.1);padding:26px 0 54px;color:var(--faint);font-size:.66rem}
+  footer .wrap{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  footer a{color:var(--muted);text-decoration:none}
+  footer a:hover{color:var(--gold)}
+
+  @media(max-width:980px){
+    .hero-grid{grid-template-columns:1fr}
+    .poster{aspect-ratio:16/9}
+    .stats .wrap{grid-template-columns:repeat(3,1fr)}
+    .stat:nth-child(3){border-right:none}
+    .stat:nth-child(-n+3){border-bottom:1px solid rgba(255,255,255,.08)}
+    .transition-grid,.pipeline-grid{grid-template-columns:1fr 1fr}
+    .credits{grid-template-columns:1fr}
+  }
+  @media(max-width:720px){
+    .wrap{padding:0 18px}
+    .hero{padding:48px 0 36px}
+    .top nav{display:none}
+    .hero-grid{gap:24px}
+    .stats .wrap{grid-template-columns:1fr 1fr}
+    .stat{padding:16px 14px 16px 0}
+    .stat:nth-child(3){border-right:1px solid rgba(255,255,255,.08)}
+    .stat:nth-child(-n+4){border-bottom:1px solid rgba(255,255,255,.08)}
+    .section{padding:48px 0}
+    .section-head{grid-template-columns:1fr;gap:4px}
+    .section-head .no{padding-top:0}
+    .bar-row{grid-template-columns:1fr;gap:6px}
+    .scene summary{grid-template-columns:36px 1fr auto}
+    .scene summary .meta{display:none}
+    .scene-body{padding-left:0}
+    .scene-purpose{padding-left:36px}
+    .lines li{grid-template-columns:1fr;gap:2px}
+    .lines li .src{text-align:left}
+    .transition-grid,.pipeline-grid,.frame-strip{grid-template-columns:1fr}
+    .source-row{grid-template-columns:1fr auto}
+    .source-row .pub{grid-column:1;grid-row:2}
+    .source-row .uses{grid-column:2;grid-row:1 / span 2}
+    .build{grid-template-columns:74px 1fr}
+    .build .when{grid-column:2;text-align:left}
+    .credit-grid{grid-template-columns:1fr}
+    .contact figcaption{display:block}
+    .poster{aspect-ratio:16/9}
+  }
+</style>
+</head>
+<body>
+<div class="grain"></div>
+<header class="top">
+  <div class="wrap">
+    <a class="brand" href="index.html"><b>vlymbooq</b> · production dossier</a>
+    <nav>
+      <a href="#cut">The cut</a>
+      <a href="#motion">Motion</a>
+      <a href="#frames">Frames</a>
+      <a href="#sources">Sources</a>
+      <a href="#pipeline">Pipeline</a>
+      <a href="#record">Record</a>
+      <a href="films.html">All films</a>
+      <a href="watch.html?film=bhopal-gas-tragedy">Watch</a>
+    </nav>
+  </div>
+</header>
+<main>
+  <section class="hero wrap">
+    <div class="eyebrow">
+      <span>Bhopal · 1984</span>
+      <span>Proof of work · run 26</span>
+    </div>
+    <h1>THE<br><em>MAKING</em></h1>
+    <p class="lede">A 2:01 film in 9 scenes and 37 shots, built from 23 procedural sets, 35 sourced lines and 10 authored transitions. Every frame rendered on free GitHub Actions hardware.</p>
+
+    <div class="hero-grid">
+      <figure class="poster">
+        <img src="media/films/bhopal-gas-tragedy/poster.jpg" alt="BHOPAL film poster." />
+        <span class="stamp">Final · run 26</span>
+        <figcaption><span>The Night the City Woke</span><span>vlymbooq</span></figcaption>
+      </figure>
+      <div class="film-card">
+        <div class="status"><i></i><span>Final · 1080p master on release</span></div>
+        <h2>BHOPAL</h2>
+        <p>A pesticide plant vented methyl isocyanate over Bhopal at midnight. The gas lasted one night; the argument over who counted has lasted four decades.</p>
+        <div class="actions">
+          <a class="btn strong" href="watch.html?film=bhopal-gas-tragedy">Watch the cut →</a>
+          <a class="btn" href="debates.html?film=bhopal-gas-tragedy">Open the argument</a>
+        </div>
+        <dl class="receipt">
+          <div><dt>Final runtime</dt><dd>2:01</dd></div>
+          <div><dt>Total frames</dt><dd>2,897</dd></div>
+          <div><dt>Capture</dt><dd>24 fps · 1920×1080</dd></div>
+          <div><dt>Sources</dt><dd>5</dd></div>
+          <div><dt>Release</dt><dd>run 26</dd></div>
+          <div><dt>Master</dt><dd>144.2 MiB</dd></div>
+        </dl>
+      </div>
+    </div>
+  </section>
+  <section class="stats" aria-label="Production statistics">
+    <div class="wrap">
+      <div class="stat"><b>2:01</b><span>final cut</span><small>1080p master on release</small></div>
+      <div class="stat"><b>9</b><span>scenes</span><small>one argument per scene</small></div>
+      <div class="stat"><b>37</b><span>shots</span><small>average 3.3s</small></div>
+      <div class="stat"><b>35</b><span>sourced lines</span><small>every line carries a source id</small></div>
+      <div class="stat"><b>23</b><span>procedural sets</span><small>23 Blender plates</small></div>
+      <div class="stat"><b>10</b><span>authored transitions</span><small>27 hard cuts</small></div>
+    </div>
+  </section>
+  <section class="section wrap" id="cut">
+    <div class="section-head">
+      <div class="no">01 / EDIT</div>
+      <div>
+        <span class="tag">The cut is the argument</span>
+        <h2>37 shots across 9 scenes.</h2>
+        <p>The final cut runs 2:01 at 24 fps; the average shot is 3.3 seconds. 27 of the 37 joins are hard cuts. The other 10 are authored transitions (iris, match cut, dissolve, paper wipe, whip, dip). The scene list below is generated from the release timeline, not the storyboard.</p>
+      </div>
+    </div>
+    <div class="compare">
+      <div class="bar-row">
+        <div class="bar-label"><b>Final cut</b><span>37 shots · 2:00 · approved</span></div>
+        <div class="bar" aria-label="Final cut: 37 shots"><i class="title" style="flex:0 0 2.667%" title="S01-A · 3.2s · hard-cut" aria-label="S01-A · 3.2s · hard-cut"></i><i class="blender" style="flex:0 0 5.140%" title="S01-B · 6.2s · hard-cut" aria-label="S01-B · 6.2s · hard-cut"></i><i class="blender" style="flex:0 0 1.495%" title="S02-A · 1.8s · hard-cut" aria-label="S02-A · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 2.242%" title="S02-B · 2.7s · hard-cut" aria-label="S02-B · 2.7s · hard-cut"></i><i class="blender" style="flex:0 0 1.495%" title="S02-C · 1.8s · hard-cut" aria-label="S02-C · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 1.495%" title="S02-D · 1.8s · hard-cut" aria-label="S02-D · 1.8s · hard-cut"></i><i class="blender" style="flex:0 0 4.615%" title="S02-E · 5.5s · hard-cut" aria-label="S02-E · 5.5s · hard-cut"></i><i class="blender" style="flex:0 0 3.019%" title="S03-A · 3.6s · iris" aria-label="S03-A · 3.6s · iris"></i><i class="blender" style="flex:0 0 1.413%" title="S03-B · 1.7s · hard-cut" aria-label="S03-B · 1.7s · hard-cut"></i><i class="blender" style="flex:0 0 2.062%" title="S03-C · 2.5s · match-cut" aria-label="S03-C · 2.5s · match-cut"></i><i class="blender" style="flex:0 0 2.874%" title="S03-D · 3.4s · hard-cut" aria-label="S03-D · 3.4s · hard-cut"></i><i class="blender" style="flex:0 0 1.858%" title="S03-E · 2.2s · hard-cut" aria-label="S03-E · 2.2s · hard-cut"></i><i class="blender" style="flex:0 0 1.955%" title="S04-A · 2.3s · dissolve" aria-label="S04-A · 2.3s · dissolve"></i><i class="blender" style="flex:0 0 1.955%" title="S04-B · 2.3s · dissolve" aria-label="S04-B · 2.3s · dissolve"></i><i class="blender" style="flex:0 0 2.932%" title="S04-C · 3.5s · hard-cut" aria-label="S04-C · 3.5s · hard-cut"></i><i class="blender" style="flex:0 0 2.932%" title="S04-D · 3.5s · hard-cut" aria-label="S04-D · 3.5s · hard-cut"></i><i class="blender" style="flex:0 0 2.505%" title="S04-E · 3.0s · whip-right" aria-label="S04-E · 3.0s · whip-right"></i><i class="blender" style="flex:0 0 3.252%" title="S05-A · 3.9s · hard-cut" aria-label="S05-A · 3.9s · hard-cut"></i><i class="blender" style="flex:0 0 3.494%" title="S05-B · 4.2s · hard-cut" aria-label="S05-B · 4.2s · hard-cut"></i><i class="blender" style="flex:0 0 4.529%" title="S05-C · 5.4s · hard-cut" aria-label="S05-C · 5.4s · hard-cut"></i><i class="blender" style="flex:0 0 2.534%" title="S05-D · 3.0s · hard-cut" aria-label="S05-D · 3.0s · hard-cut"></i><i class="blender" style="flex:0 0 2.682%" title="S06-A · 3.2s · paper-wipe" aria-label="S06-A · 3.2s · paper-wipe"></i><i class="blender" style="flex:0 0 1.788%" title="S06-B · 2.1s · iris" aria-label="S06-B · 2.1s · iris"></i><i class="blender" style="flex:0 0 2.381%" title="S06-C · 2.9s · hard-cut" aria-label="S06-C · 2.9s · hard-cut"></i><i class="blender" style="flex:0 0 3.474%" title="S06-D · 4.2s · paper-wipe" aria-label="S06-D · 4.2s · paper-wipe"></i><i class="blender" style="flex:0 0 4.432%" title="S06-E · 5.3s · hard-cut" aria-label="S06-E · 5.3s · hard-cut"></i><i class="blender" style="flex:0 0 2.012%" title="S06-F · 2.4s · hard-cut" aria-label="S06-F · 2.4s · hard-cut"></i><i class="blender" style="flex:0 0 2.613%" title="S07-A · 3.1s · hard-cut" aria-label="S07-A · 3.1s · hard-cut"></i><i class="blender" style="flex:0 0 2.148%" title="S07-B · 2.6s · hard-cut" aria-label="S07-B · 2.6s · hard-cut"></i><i class="blender" style="flex:0 0 2.438%" title="S07-C · 2.9s · hard-cut" aria-label="S07-C · 2.9s · hard-cut"></i><i class="blender" style="flex:0 0 2.379%" title="S07-D · 2.9s · hard-cut" aria-label="S07-D · 2.9s · hard-cut"></i><i class="blender" style="flex:0 0 1.693%" title="S08-A · 2.0s · match-cut" aria-label="S08-A · 2.0s · match-cut"></i><i class="blender" style="flex:0 0 4.045%" title="S08-B · 4.9s · hard-cut" aria-label="S08-B · 4.9s · hard-cut"></i><i class="blender" style="flex:0 0 2.400%" title="S08-C · 2.9s · hard-cut" aria-label="S08-C · 2.9s · hard-cut"></i><i class="blender" style="flex:0 0 3.241%" title="S08-D · 3.9s · hard-cut" aria-label="S08-D · 3.9s · hard-cut"></i><i class="blender" style="flex:0 0 3.474%" title="S09-A · 4.2s · hard-cut" aria-label="S09-A · 4.2s · hard-cut"></i><i class="title" style="flex:0 0 2.333%" title="S09-B · 2.8s · dip" aria-label="S09-B · 2.8s · dip"></i></div>
+      </div>
+    </div>
+    <div class="legend">
+      <span><b class="blender"></b> Blender set</span>
+      <span><b class="html"></b> Typographic card</span>
+      <span><b class="title"></b> Title card</span>
+    </div>
+<div class="scenes">
+<details class="scene" open><summary><span class="n">S01</span><h3>The city</h3><span class="meta">2 shots · 9s · 2 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Open on a sleeping city, then land the date and the title without a lecture.</p><ul class="lines"><li><span class="txt">Bhopal, 2 December 1984.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">A city sleeps beside a pesticide plant.</span><span class="src">Wikipedia · bhopal</span></li></ul><div class="chips"><span class="chip"><b>S01-A</b> · title <em>hard-cut</em></span><span class="chip"><b>S01-B</b> · city-rooftops <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S02</span><h3>The plant</h3><span class="meta">5 shots · 14s · 4 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Establish the factory as a place of work and a place of storage, not a monster.</p><ul class="lines"><li><span class="txt">The Union Carbide plant made pesticides for Indian farms.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">Its tanks held methyl isocyanate, a chemical that attacks the lungs.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">Tank 610 held about forty-two tonnes of it.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">The safety systems were not all working.</span><span class="src">Wikipedia · bhopal</span></li></ul><div class="chips"><span class="chip"><b>S02-A</b> · plant-gate <em>hard-cut</em></span><span class="chip"><b>S02-B</b> · tank-farm <em>hard-cut</em></span><span class="chip"><b>S02-C</b> · company-sign <em>hard-cut</em></span><span class="chip"><b>S02-D</b> · pipe-corridor <em>hard-cut</em></span><span class="chip"><b>S02-E</b> · flare <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S03</span><h3>The warning</h3><span class="meta">5 shots · 14s · 5 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Make the failure mechanical and legible: water, pressure, a shut refrigeration unit, an offline flare.</p><ul class="lines"><li><span class="txt">The official inquiry found water had entered Tank 610.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">Pressure and temperature climbed.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">The refrigeration unit had been shut down.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">The flare tower was offline, and the scrubber could not cope.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">No public warning prepared the city.</span><span class="src">Wikipedia · bhopal</span></li></ul><div class="chips"><span class="chip"><b>S03-A</b> · valve <em>iris</em></span><span class="chip"><b>S03-B</b> · gauge <em>hard-cut</em></span><span class="chip"><b>S03-C</b> · clock <em>match-cut</em></span><span class="chip"><b>S03-D</b> · flare-cold <em>hard-cut</em></span><span class="chip"><b>S03-E</b> · control-panel <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S04</span><h3>The release</h3><span class="meta">5 shots · 15s · 5 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Move the gas through the city without reconstructing death; the sound carries the scale.</p><ul class="lines"><li><span class="txt">Around midnight, the tank vented.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">A cloud of MIC rolled low over the railway colony and the old city.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">People woke with burning eyes and no breath.</span><span class="src">Environmental Health / PMC · pmc</span></li><li><span class="txt">They ran into the dark, away from a smell they could not name.</span><span class="src">Environmental Health / PMC · pmc</span></li><li><span class="txt">The gas moved through the streets before the city understood.</span><span class="src">Wikipedia · bhopal</span></li></ul><div class="chips"><span class="chip"><b>S04-A</b> · flare-cold <em>dissolve</em></span><span class="chip"><b>S04-B</b> · pipe-corridor <em>dissolve</em></span><span class="chip"><b>S04-C</b> · street-lamp <em>hard-cut</em></span><span class="chip"><b>S04-D</b> · city-rooftops <em>hard-cut</em></span><span class="chip"><b>S04-E</b> · siren <em>whip-right</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S05</span><h3>The count</h3><span class="meta">4 shots · 17s · 4 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Put the numbers on screen with their sources and their disagreements intact.</p><ul class="lines"><li><span class="txt">The official immediate death toll was 2,259.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">Madhya Pradesh later confirmed 3,787 deaths.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">Survivors&#39; clinics estimate 8,000 died in the first weeks, and 8,000 more since.</span><span class="src">Sambhavna Trust · sambhavna</span></li><li><span class="txt">More than 500,000 people were exposed.</span><span class="src">Wikipedia · bhopal</span></li></ul><div class="chips"><span class="chip"><b>S05-A</b> · newspaper-desk <em>hard-cut</em></span><span class="chip"><b>S05-B</b> · archive <em>hard-cut</em></span><span class="chip"><b>S05-C</b> · clinic-window <em>hard-cut</em></span><span class="chip"><b>S05-D</b> · memorial-wall <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S06</span><h3>The settlement</h3><span class="meta">6 shots · 20s · 5 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Follow the claim from the courtroom to the ledger, and show what a settlement does not settle.</p><ul class="lines"><li><span class="txt">In 1989, the Supreme Court approved a $470 million settlement.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">The claims were consolidated under the Indian government.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">Union Carbide&#39;s chairman was charged in India, but never extradited.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">In 2010, seven former employees were convicted. The sentence was two years.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">The settlement did not end the argument.</span><span class="src">Encyclopaedia Britannica · britannica</span></li></ul><div class="chips"><span class="chip"><b>S06-A</b> · court-ledger <em>paper-wipe</em></span><span class="chip"><b>S06-B</b> · courtroom <em>iris</em></span><span class="chip"><b>S06-C</b> · archive <em>hard-cut</em></span><span class="chip"><b>S06-D</b> · newspaper-desk <em>paper-wipe</em></span><span class="chip"><b>S06-E</b> · courtroom <em>hard-cut</em></span><span class="chip"><b>S06-F</b> · company-sign <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S07</span><h3>The water</h3><span class="meta">4 shots · 12s · 4 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Bring the disaster into the present through the tap, the sample and the body.</p><ul class="lines"><li><span class="txt">The plant stopped production in 1986.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">Its waste and contaminated water remained.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">Survivors still carry the exposure in their bodies.</span><span class="src">Environmental Health / PMC · pmc</span></li><li><span class="txt">Groundwater near the site is still contaminated.</span><span class="src">Wikipedia · bhopal</span></li></ul><div class="chips"><span class="chip"><b>S07-A</b> · hospital-corridor <em>hard-cut</em></span><span class="chip"><b>S07-B</b> · sample-jar <em>hard-cut</em></span><span class="chip"><b>S07-C</b> · clinic-window <em>hard-cut</em></span><span class="chip"><b>S07-D</b> · water-tap <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S08</span><h3>The memory</h3><span class="meta">4 shots · 14s · 4 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Move from the archive to the memorial without turning the dead into decoration.</p><ul class="lines"><li><span class="txt">Every year, Bhopal remembers.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">The disaster helped push India&#39;s Environment Protection Act in 1986.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">It did not settle the question of who was responsible.</span><span class="src">Encyclopaedia Britannica · britannica</span></li><li><span class="txt">The memorial is a wall, a flame, and an unfinished argument.</span><span class="src">Wikipedia · bhopal</span></li></ul><div class="chips"><span class="chip"><b>S08-A</b> · memorial-flame <em>match-cut</em></span><span class="chip"><b>S08-B</b> · memorial-wall <em>hard-cut</em></span><span class="chip"><b>S08-C</b> · city-rooftops <em>hard-cut</em></span><span class="chip"><b>S08-D</b> · archive <em>hard-cut</em></span></div></div></details>
+<details class="scene"><summary><span class="n">S09</span><h3>The claims</h3><span class="meta">2 shots · 7s · 2 lines</span><span class="plus">+</span></summary><div class="scene-body"><p class="scene-purpose">Close on a sentence, not a spectacle.</p><ul class="lines"><li><span class="txt">The gas lasted one night.</span><span class="src">Wikipedia · bhopal</span></li><li><span class="txt">The claims have lasted four decades.</span><span class="src">Wikipedia · bhopal</span></li></ul><div class="chips"><span class="chip"><b>S09-A</b> · memorial-flame <em>hard-cut</em></span><span class="chip"><b>S09-B</b> · title <em>dip</em></span></div></div></details>
+</div>
+  </section>
+  <section class="section wrap" id="motion">
+    <div class="section-head">
+      <div class="no">02 / MOTION</div>
+      <div>
+        <span class="tag">Transitions are cuts with intent</span>
+        <h2>The edit has a grammar.</h2>
+        <p>The grammar is mechanical-causality. The signature moves are listed below. Transition counts come from the final edit manifest.</p>
+      </div>
+    </div>
+    <div class="chips" style="margin:0 0 18px"><span class="chip">needle match: gauge needle to clock hand</span><span class="chip">valve iris: handwheel rim to flare ring to court seal</span><span class="chip">number smash: hard cuts on 2,259 / 3,787 / 8,000</span><span class="chip">water/flame match: tap drip to memorial flame</span><span class="chip">gas haze: dissolve only where gas is the subject</span><span class="chip">siren whip: horn to street lamp with a pre-lapped siren</span><span class="chip">paper edge: ledger and newspaper wipe the frame</span></div>
+    <div class="transition-grid">
+      <article class="trans-card"><div class="count">2</div><h3>Iris</h3><p>A lamp or valve closes to a circle, moving the eye to the next object.</p></article>
+      <article class="trans-card"><div class="count">2</div><h3>Match cut</h3><p>The same shape or object at a new scale.</p></article>
+      <article class="trans-card"><div class="count">2</div><h3>Dissolve</h3><p>Used only where two images belong to the same thought.</p></article>
+      <article class="trans-card"><div class="count">2</div><h3>Paper wipe</h3><p>A printed edge carries the next set into frame.</p></article>
+      <article class="trans-card"><div class="count">1</div><h3>Whip</h3><p>A fast pan carries the cut across connected spaces.</p></article>
+      <article class="trans-card"><div class="count">1</div><h3>Dip</h3><p>A held gap between two arguments.</p></article>
+      <article class="trans-card"><div class="count">27</div><h3>Hard cut</h3><p>The default join. Used where softening would weaken the argument.</p></article>
+    </div>
+  </section>
+  <section class="section wrap" id="frames">
+    <div class="section-head">
+      <div class="no">03 / FRAMES</div>
+      <div>
+        <span class="tag">What the camera actually saw</span>
+        <h2>Final-cut frame studies.</h2>
+        <p>Six frames from the approved final cut, one from each of six scenes, plus a contact sheet of every scene frame. No stock footage; every set is procedural.</p>
+      </div>
+    </div>
+    <div class="frame-strip">
+      <figure class="frame"><img loading="lazy" src="media/films/bhopal-gas-tragedy/production/current-01.jpg" alt="Frame from scene 2, The plant, in the approved final cut." /><figcaption><span>The plant</span><b>01</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/bhopal-gas-tragedy/production/current-02.jpg" alt="Frame from scene 3, The warning, in the approved final cut." /><figcaption><span>The warning</span><b>02</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/bhopal-gas-tragedy/production/current-03.jpg" alt="Frame from scene 4, The release, in the approved final cut." /><figcaption><span>The release</span><b>03</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/bhopal-gas-tragedy/production/current-04.jpg" alt="Frame from scene 5, The count, in the approved final cut." /><figcaption><span>The count</span><b>04</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/bhopal-gas-tragedy/production/current-05.jpg" alt="Frame from scene 6, The settlement, in the approved final cut." /><figcaption><span>The settlement</span><b>05</b></figcaption></figure>
+      <figure class="frame"><img loading="lazy" src="media/films/bhopal-gas-tragedy/production/current-06.jpg" alt="Frame from scene 8, The memory, in the approved final cut." /><figcaption><span>The memory</span><b>06</b></figcaption></figure>
+    </div>
+    <figure class="contact">
+      <img loading="lazy" src="media/films/bhopal-gas-tragedy/production/contact-sheet.jpg" alt="Contact sheet of every scene frame in the approved final cut." />
+      <figcaption><span><b>Contact sheet:</b> Every scene frame, in order, from the approved final cut.</span><span>9 frames</span></figcaption>
+    </figure>
+  </section>
+  <section class="section wrap" id="sources">
+    <div class="section-head">
+      <div class="no">04 / EVIDENCE</div>
+      <div>
+        <span class="tag">No invented facts</span>
+        <h2>Every line has a source.</h2>
+        <p>The storyboard is validated before rendering. Each narration line carries a source id, and the render fails if the line, shot or source is missing. The counts below come from the final release timeline.</p>
+      </div>
+    </div>
+    <div class="source-list">
+      <div class="source-row"><a href="https://en.wikipedia.org/wiki/Bhopal_disaster" target="_blank" rel="noopener">Bhopal disaster</a><span class="pub">Wikipedia</span><span class="uses">29 lines</span></div>
+      <div class="source-row"><a href="https://www.britannica.com/event/Bhopal-disaster" target="_blank" rel="noopener">Bhopal disaster</a><span class="pub">Encyclopaedia Britannica</span><span class="uses">2 lines</span></div>
+      <div class="source-row"><a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC1142333/" target="_blank" rel="noopener">The Bhopal disaster and its aftermath: a review</a><span class="pub">Environmental Health / PMC</span><span class="uses">3 lines</span></div>
+      <div class="source-row"><a href="https://www.sambhavnatrust.org/" target="_blank" rel="noopener">Sambhavna Trust Clinic</a><span class="pub">Sambhavna Trust</span><span class="uses">1 lines</span></div>
+      <div class="source-row"><a href="https://bhopal.org/" target="_blank" rel="noopener">Bhopal Medical Appeal</a><span class="pub">Bhopal Medical Appeal</span><span class="uses">0 lines</span></div>
+    </div>
+  </section>
+  <section class="section wrap" id="pipeline">
+    <div class="section-head">
+      <div class="no">05 / PIPELINE</div>
+      <div>
+        <span class="tag">Free CI, no paid keys</span>
+        <h2>Every frame is assembled on GitHub.</h2>
+        <p>Blender, Piper, Chromium and ffmpeg run on a free Ubuntu CPU runner. The owner&#39;s machine writes the code; it does not render the film. The pipeline is public, repeatable and allowed to fail loudly.</p>
+      </div>
+    </div>
+    <div class="pipeline-grid">
+      <article class="pipe"><div class="step">01</div><h3>Source lock</h3><p>The storyboard is a JSON contract. Every narration line names a source. The validator refuses unsourced lines, missing shots and filler before a runner is allowed to render.</p><code>release: film-bhopal-gas-tragedy-final-26 · timeline.json + metadata.json</code></article>
+      <article class="pipe"><div class="step">02</div><h3>Procedural sets</h3><p>Blender 4.2 builds the film&#39;s sets as still plates. No stock images.</p><code>scripts/film/render-plates.js</code></article>
+      <article class="pipe"><div class="step">03</div><h3>Narration</h3><p>Piper reads the script locally with en_US-lessac-medium. No cloud narration, no per-word billing, no API key in the repository.</p><code>scripts/film/build-film.js</code></article>
+      <article class="pipe"><div class="step">04</div><h3>Camera and type</h3><p>Chromium drives the timeline frame by frame: push-ins, pans, match cuts, mask wipes, impact cards and captions. The camera is code, so every frame is repeatable.</p><code>js/film.js</code></article>
+      <article class="pipe"><div class="step">05</div><h3>Score and master</h3><p>ffmpeg synthesises the score, mixes the narration, burns the SRT into the master and encodes the MP4.</p><code>scripts/film/build-film.js</code></article>
+      <article class="pipe"><div class="step">06</div><h3>Free CI</h3><p>The render runs on GitHub-hosted Ubuntu CPU. No GPU. No paid runner. The owner&#39;s machine writes the code; it does not render the film.</p><code>.github/workflows/film.yml</code></article>
+    </div>
+  </section>
+  <section class="section wrap" id="record">
+    <div class="section-head">
+      <div class="no">06 / RECORD</div>
+      <div>
+        <span class="tag">Measured, not asserted</span>
+        <h2>What the record shows.</h2>
+        <p>Each entry is taken from the release itself: the timeline, the edit manifest and the independent QC report. A dossier that only shows the final cut is a portfolio, not a process.</p>
+      </div>
+    </div>
+    <div class="iterations">
+      <article class="iter"><div class="when">2026-10-26</div><h3>Source lock</h3><p>35 narration lines across 5 sources. Every line in the final timeline resolves to a source in the release metadata; the validator refuses a line without one.</p></article>
+      <article class="iter"><div class="when">2026-10-26</div><h3>Final cut</h3><p>9 scenes, 37 shots, 2:01. Average shot 3.3s. 27 hard cuts and 10 authored transitions.</p></article>
+      <article class="iter"><div class="when">2026-10-26</div><h3>Independent QC</h3><p>Passed: -1.8 dBTP wanted no higher than -1; I -12.8 LUFS wanted -16.5 to -11; median 45.8 dB wanted at least 36 dB, worst 43.5 dB at S08; 36 cues in bhopal-gas-tragedy.srt; median edge/interior 1.08 wanted at most 1.75.</p></article>
+      <article class="iter"><div class="when">2026-10-26</div><h3>Release</h3><p>Release film-bhopal-gas-tragedy-final-26 carries the 1080 master, SRT, thumbnail, timeline, edit manifest and script. The site deploys only the 720 preview.</p></article>
+    </div>
+  </section>
+  <section class="section wrap" id="build">
+    <div class="section-head">
+      <div class="no">07 / BUILD LOG</div>
+      <div>
+        <span class="tag">Live from GitHub Actions</span>
+        <h2>The render is public.</h2>
+        <p>Recent Film pipeline runs, read from the public GitHub API. The workflow log is part of the record.</p>
+      </div>
+    </div>
+    <div class="build-log" id="buildLog">
+      <div class="build"><span class="state live">reading</span><span class="what">Fetching the public build log…</span><span class="when">GitHub</span></div>
+    </div>
+    <p class="build-note">Source: <a href="https://github.com/renj-arch/dimsred/actions/workflows/film.yml" target="_blank" rel="noopener">github.com/renj-arch/dimsred/actions/workflows/film.yml</a></p>
+  </section>
+  <section class="section wrap" id="credits">
+    <div class="section-head">
+      <div class="no">08 / CREDITS</div>
+      <div>
+        <span class="tag">Made in the open</span>
+        <h2>Who did what.</h2>
+        <p>The same free, local toolchain on every film: no paid API, no GPU and no stock footage.</p>
+      </div>
+    </div>
+    <div class="credits">
+      <div>
+        <dl class="credit-grid">
+          <div class="credit"><dt>Direction, research, edit</dt><dd>Renjith</dd></div>
+          <div class="credit"><dt>Production system</dt><dd>vlymbooq · OpenCode</dd></div>
+          <div class="credit"><dt>Procedural sets</dt><dd>Blender 4.2 LTS</dd></div>
+          <div class="credit"><dt>Narration</dt><dd>Piper · en_US-lessac-medium</dd></div>
+          <div class="credit"><dt>Camera, typography, transitions</dt><dd>Chromium + film.js</dd></div>
+          <div class="credit"><dt>Score, captions, encode</dt><dd>ffmpeg</dd></div>
+        </dl>
+        <div class="closing">
+          <p>“If the edit is weak, the render does not ship.”</p>
+          <p style="margin-top:10px;font-family:var(--sans);font-size:.8rem;color:var(--muted)">The 1080 master is published only after independent QC passes and the release is attached.</p>
+        </div>
+      </div>
+      <div>
+        <ul class="rules">
+          <li>Every narration line carries a source id. The render fails if a line, shot or source is missing.</li>
+          <li>No number on screen without a source or an explicit attribution.</li>
+          <li>No stock footage. Every set is procedural.</li>
+          <li>No paid API keys. The pipeline runs on free CI.</li>
+          <li>If the edit is weak, the render does not ship.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <span>vlymbooq · production dossier · BHOPAL</span>
+    <span>
+      <a href="production.html?film=jallianwala-bagh">Jallianwala</a> ·
+      <a href="salt-march-production.html">Salt</a> ·
+      <a href="the-vatican-archives-production.html">Vatican</a> ·
+      <a href="emergency-1975-production.html">Emergency</a> ·
+      <a href="bhopal-gas-tragedy-production.html">Bhopal</a> ·
+      <a href="films.html">All films</a> ·
+      <a href="https://github.com/renj-arch/dimsred" target="_blank" rel="noopener">Source</a>
+    </span>
+  </div>
+</footer>
+<script>
+(function(){
+  "use strict";
+  var el = document.getElementById("buildLog");
+  if (!el) return;
+  var esc = function(s){ return String(s == null ? "" : s).replace(/[&<>"\']/g, function(c){ return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","\'":"&#39;"}[c]; }); };
+  fetch("https://api.github.com/repos/renj-arch/dimsred/actions/workflows/film.yml/runs?per_page=4", { headers: { "Accept": "application/vnd.github+json" } })
+    .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+    .then(function(data){
+      var runs = (data && data.workflow_runs) || [];
+      if (!runs.length) throw new Error("no runs");
+      el.innerHTML = runs.map(function(run){
+        var status = run.status === "in_progress" ? "running" : (run.conclusion || run.status || "unknown");
+        var cls = /success/.test(status) ? "ok" : (/in_progress|queued|running/.test(status) ? "live" : (/cancel|fail/.test(status) ? "bad" : ""));
+        var when = run.created_at ? new Date(run.created_at).toLocaleDateString("en-GB", { day: "2-digit", month: "short" }) : "";
+        var title = (run.head_commit && run.head_commit.message ? run.head_commit.message.split("\n")[0] : "Film pipeline") + " · #" + run.run_number;
+        return '<a class="build" href="' + esc(run.html_url) + '" target="_blank" rel="noopener">' +
+          '<span class="state ' + cls + '">' + esc(status) + '</span>' +
+          '<span class="what">' + esc(title) + '<small>' + esc(run.event || "workflow_dispatch") + " · " + esc(run.head_branch || "") + '</small></span>' +
+          '<span class="when">' + esc(when) + '</span></a>';
+      }).join("");
+    })
+    .catch(function(){
+      el.innerHTML = '<div class="build"><span class="state bad">unavailable</span>' +
+        '<span class="what">The public API did not answer. The workflow log is still public.<small>GitHub Actions</small></span>' +
+        '<span class="when"><a href="https://github.com/renj-arch/dimsred/actions/workflows/film.yml" target="_blank" rel="noopener" style="color:var(--gold);text-decoration:none">open</a></span></div>';
+    });
+})();
+</script>
+</body>
+</html>

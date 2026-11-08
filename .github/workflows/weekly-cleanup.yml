@@ -8,20 +8,31 @@ on:
 permissions:
   contents: write
 
-# Prevent pile-ups: periodic content jobs must not queue behind each
-# other — the newest run wins.
+# Never cancel a weekly publish half-way through its push: the cleanup was
+# already computed locally, so a cancellation silently skips the week.
 concurrency:
   group: weekly-cleanup
-  cancel-in-progress: true
+  cancel-in-progress: false
 
 jobs:
   cleanup:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    # Checkout ~20 min + the publish can take another ~10 min; the old
+    # 30-minute cap cancelled every run inside the final commit step
+    # (2026-11-01, 2026-10-25).
+    timeout-minutes: 90
     steps:
       - uses: actions/checkout@v4
         with:
           token: ${{ secrets.PAT }}
+          filter: blob:none
+          # The cleanup reads question-bank/ and papers-data/ only. Skipping
+          # the multi-GB data/questions corpus cuts the checkout from ~20 min
+          # and keeps the publish well inside the job timeout.
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
@@ -38,10 +49,23 @@ jobs:
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          git add -A
-          git diff --staged --quiet || git commit -m "Weekly stale paper cleanup $(date +'%Y-%m-%d')"
+          # Scope staging to what the cleanup can touch. A bare `git add -A`
+          # walks the entire multi-GB question corpus and was a large part of
+          # the 2026-11-01 timeout.
+          git add -A -- . ':(exclude)data/questions'
+          if git diff --staged --quiet; then
+            echo "No stale papers to remove"
+            exit 0
+          fi
+          git commit -m "Weekly stale paper cleanup $(date +'%Y-%m-%d')"
+          pushed=""
           for i in 1 2 3; do
-            git pull --rebase --autostash 2>/dev/null || true
-            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
+            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git push; then pushed=1; echo "Pushed"; break; fi
+            echo "push attempt $i failed, retrying..."
             sleep 5
           done
+          if [ -z "$pushed" ]; then
+            echo "::error::stale-paper cleanup could not be pushed to main"
+            exit 1
+          fi

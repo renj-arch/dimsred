@@ -57,6 +57,7 @@ on:
       - Archive Answers (27B quality lane)
       - LLM Auto-fix
       - On-Demand (owner runner)
+      - Expand Course Content
     types: [completed]
   workflow_dispatch:
 
@@ -110,6 +111,30 @@ jobs:
           git checkout -q FETCH_HEAD
           echo "checked out $(git ls-files | wc -l) paths"
 
+      # Cheap contracts that catch the class of bug where a page ships but its
+      # data loader cannot read the deployed files. map.html sat broken behind
+      # "data/timeline.json not found" because its shard merger referenced an
+      # undefined accumulator; these suites execute the real loaders, so the
+      # deploy stops here instead of publishing a blank page.
+      - name: Page data and UI regression suites
+        run: |
+          set -euo pipefail
+          node scripts/lib/site-data.test.js
+          node scripts/lib/site-ui.test.js
+          node scripts/lib/quiz-handlers.test.js
+          node scripts/lib/question-category-moves.test.js
+          node scripts/lib/merge-chunks.test.js
+          node scripts/validate-mains.js
+          node scripts/lib/mains-plan.test.js
+          # User-facing defects on 2026-11-07: a key that its own solution
+          # contradicted and leaked model reasoning. This gate fails the deploy
+          # on either, so they cannot reach live again.
+          node scripts/lib/question-solutions.test.js
+          node scripts/lib/course-versions.test.js
+          node scripts/lib/archive-index-guard.test.js
+          node scripts/lib/html-repair.test.js
+          node scripts/lib/ollama.test.js
+          node scripts/lib/exam-blueprint.test.js
       - name: Rebuild slim live tree (orphan root)
         run: |
           set -euo pipefail
@@ -134,6 +159,23 @@ jobs:
           # 25 MiB per-asset limit on 2026-10-18 (~49.5 MB) and froze every
           # deploy while the site kept serving its last good build. Never
           # deploy it.
+
+          # Collapse the duplicated `role="button" tabindex="0"` runs the old
+          # A11Y rule stacked on pages (see scripts/clean-dup-attrs.js). The
+          # source is cleaned run-by-run by the agent; this keeps the deployed
+          # bytes clean immediately for pages the agent has not revisited yet.
+          node scripts/clean-dup-attrs.js .
+          # Every course lesson gets a client-side "changed since your last
+          # visit" watcher. Doing it here, not in the generator, covers the
+          # hand-built lessons (Indian Polity) and direct page edits too: the
+          # reader's own last-seen headings are the baseline, so a section
+          # inserted anywhere in the body is still noticed.
+          node scripts/inject-lesson-watch.js .
+          # Depth addenda for hand-built lessons (Polity and the other pages
+          # the generator must not rewrite). Kept in scripts/course-addons.json
+          # and inserted inside .lesson-body on every deploy.
+          node scripts/inject-course-addons.js .
+          git add -A -- '*.html' 2>/dev/null || true
 
           TREE=$(git write-tree)
 

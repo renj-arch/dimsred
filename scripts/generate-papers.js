@@ -1,5 +1,6 @@
 var fs = require('fs');
 var path = require('path');
+var examBlueprint = require('./lib/exam-blueprint');
 
 var root = path.resolve(__dirname, '..');
 var bankDir = path.join(root, 'question-bank');
@@ -77,7 +78,49 @@ function pickQuestions(bank, count) {
   return picked;
 }
 
-function updateIndexPage(folder, title, slug, count) {
+// Daily practice keeps the exam's real section proportions even though it is
+// a short set. Only questions written by the model lane are eligible: a
+// daily set is never padded with older bank or extracted items. If a section
+// pool cannot supply its share the whole paper is skipped, visibly.
+function pickProportionalQuestions(bank, plan) {
+  var unused = getUnusedQuestions(bank);
+  var picked = [];
+  var used = {};
+  for (var i = 0; i < plan.length; i++) {
+    var p = plan[i];
+    var def = { name: p.name, bank: p.bank };
+    var candidates = unused.filter(function (q) {
+      if (q.source !== 'model') return false;
+      return !used[q.id] && examBlueprint.sectionAccepts(def, q.section);
+    });
+    if (candidates.length < p.count) {
+      console.log('  SKIPPED: section "' + p.name + '" has ' + candidates.length + ' unused model question(s) (need ' + p.count + ')');
+      return null;
+    }
+    var take = shuffle(candidates).slice(0, p.count);
+    for (var j = 0; j < take.length; j++) {
+      used[take[j].id] = 1;
+      var q = Object.assign({}, take[j]);
+      q.section = p.name;
+      picked.push(q);
+    }
+  }
+  picked = shuffle(picked);
+  for (var k = 0; k < picked.length; k++) picked[k].q = k + 1;
+  return picked;
+}
+
+function colorFor(name, bankSections) {
+  var palette = ['#a855f7', '#60a5fa', '#34d399', '#fbbf24', '#f472b6', '#22d3ee', '#f87171', '#a3e635'];
+  for (var i = 0; i < (bankSections || []).length; i++) {
+    if (bankSections[i].name === name && bankSections[i].color) return bankSections[i].color;
+  }
+  var h = 0;
+  for (var j = 0; j < name.length; j++) h = (h * 31 + name.charCodeAt(j)) >>> 0;
+  return palette[h % palette.length];
+}
+
+function updateIndexPage(folder, title, slug, meta) {
   var indexPath = path.join(root, folder, 'index.html');
   if (!fs.existsSync(indexPath)) {
     console.log('  WARNING: ' + indexPath + ' not found, skipping index update');
@@ -92,7 +135,7 @@ function updateIndexPage(folder, title, slug, count) {
     return;
   }
 
-  var cardHtml = '\n            <div class="paper-card">\n                <div>\n                    <div class="title">' + title.replace(/"/g, '&quot;') + '</div>\n                    <div class="meta">' + count + ' Q \u00B7 ' + count + ' min \u00B7 Solved with answers</div>\n                </div>\n                <a href="papers/' + slug + '.html" class="btn">View Paper</a>\n            </div>';
+  var cardHtml = '\n            <div class="paper-card">\n                <div>\n                    <div class="title">' + title.replace(/"/g, '&quot;') + '</div>\n                    <div class="meta">' + meta + '</div>\n                </div>\n                <a href="papers/' + slug + '.html" class="btn">View Paper</a>\n            </div>';
 
   // Insert card before pagination controls or before closing </section>
   var insertAt = html.indexOf('<div class="pagination-controls"');
@@ -127,24 +170,42 @@ function generatePaper(folder) {
   var slug = 'practice-set-' + String(setNumber).padStart(2, '0');
   var title = bank.paperDefaults.titlePrefix + ' ' + setNumber;
 
-  var questions = pickQuestions(bank, count);
+  var blueprints = examBlueprint.load(root);
+  var pattern = examBlueprint.paperForDaily(blueprints, folder, setNumber);
+  var plan = examBlueprint.allocate(count, pattern.sections);
+  var questions = pickProportionalQuestions(bank, plan);
   if (!questions) {
-    console.log('  SKIPPED ' + title + ': not enough unused questions');
+    console.log('  SKIPPED ' + title + ': section pools are short for the real ' + pattern.name + ' pattern');
     return;
   }
   var usedIds = questions.map(function(q) { return q.id; });
   var totalInBank = bank.questions.length;
+  var dailyMarks = Math.round(pattern.marks * count / pattern.total);
+  var dailyMinutes = Math.max(1, Math.round(pattern.duration * count / pattern.total));
+  var meta = count + ' Q \u00B7 ' + dailyMinutes + ' min \u00B7 ' + dailyMarks + ' marks \u00B7 ' + pattern.name + ' pattern';
 
   var paperJson = {
     folder: folder,
     slug: slug,
     title: title,
     pageTitle: bank.paperDefaults.pageTitleTemplate.replace('{number}', setNumber),
-    pageDesc: bank.paperDefaults.pageDescTemplate.replace('{number}', setNumber),
-    meta: count + ' Q \u00B7 ' + count + ' min \u00B7 Solved with answers',
-    timerMinutes: count,
+    pageDesc: bank.paperDefaults.pageDescTemplate.replace('{number}', setNumber) + ' Pattern: ' + pattern.name + '.',
+    meta: meta,
+    timerMinutes: dailyMinutes,
+    totalMarks: dailyMarks,
     createdDate: new Date().toISOString().split('T')[0],
-    sections: bank.sections,
+    blueprint: {
+      paper: pattern.id,
+      name: pattern.name,
+      total: pattern.total,
+      marks: pattern.marks,
+      duration: pattern.duration,
+      negative: pattern.negative,
+      source: pattern.source,
+      provisional: !!pattern.provisional,
+      sections: plan
+    },
+    sections: plan.map(function (p) { return { name: p.name, color: colorFor(p.name, bank.sections) }; }),
     questions: questions
   };
 
@@ -160,7 +221,7 @@ function generatePaper(folder) {
   require('child_process').execSync('node "' + buildScript + '"', { cwd: root, stdio: 'inherit' });
 
   // Update index
-  updateIndexPage(folder, title, slug, count);
+  updateIndexPage(folder, title, slug, meta);
 
   // Save meta
   saveMeta(folder, setNumber, usedIds);
@@ -249,22 +310,36 @@ function updateExamGridCards() {
   var indexPath = path.join(root, 'index.html');
   if (!fs.existsSync(indexPath)) return;
   var html = fs.readFileSync(indexPath, 'utf-8');
-  var h3Labels = { cgl: 'SSC CGL Tier 1', rbi: 'RBI Grade B Phase 1', jee: 'JEE Main &amp; Advanced', neet: 'NEET UG', gate: 'GATE', agniveer: 'Agniveer', upsc: 'UPSC Civil Services', 'ibps-po': 'IBPS PO', 'sbi-clerk': 'SBI Clerk', 'ssc-gd': 'SSC GD', ctet: 'CTET' };
+  var metaOpen = '<div class="meta">';
+  var updated = 0;
+  var skipped = [];
 
+  // Locate each exam card by its link, not by a hardcoded <h3> label. The old
+  // label map drifted from the markup ("SSC GD" vs "SSC GD Constable",
+  // "JEE Main & Advanced" vs "JEE Main &amp; Advanced") and had no entry at all
+  // for NDA/CDS/CLAT, so label.replace() crashed the whole run. Anchoring on
+  // href="/<folder>/" can never be undefined and keeps working when a card's
+  // display name is edited.
   for (var i = 0; i < EXAMS.length; i++) {
     var folder = EXAMS[i];
-    var label = h3Labels[folder];
     var paperCount = countPapersForExam(folder);
     var questionCount = countQuestionsInBank(folder);
 
-    html = html.replace(
-      new RegExp('(<h3>' + label.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '<\\/h3>\\s*<div class="meta">)[^<]+(<\\/div>)'),
-      function(m, before, after) { return before + paperCount + ' papers \u00B7 ' + questionCount + '+ questions' + after; }
-    );
+    var anchor = html.indexOf('href="/' + folder + '/"');
+    if (anchor === -1) { skipped.push(folder); continue; }
+    var metaAt = html.indexOf(metaOpen, anchor);
+    if (metaAt === -1) { skipped.push(folder); continue; }
+    var metaEnd = html.indexOf('</div>', metaAt + metaOpen.length);
+    if (metaEnd === -1) { skipped.push(folder); continue; }
+
+    html = html.substring(0, metaAt + metaOpen.length) +
+      paperCount + ' papers \u00B7 ' + questionCount + '+ questions' +
+      html.substring(metaEnd);
+    updated++;
   }
 
   fs.writeFileSync(indexPath, html, 'utf-8');
-  console.log('  Updated exam grid cards');
+  console.log('  Updated exam grid cards (' + updated + ')' + (skipped.length ? ', no card: ' + skipped.join(', ') : ''));
 }
 
 function updateTrustBar() {
@@ -319,8 +394,10 @@ function run() {
   if (args.length === 1 && args[0] === 'all') args = [];
   var folders = args.length > 0 ? args : EXAMS;
 
+  var made = 0, skipped = [];
   for (var i = 0; i < folders.length; i++) {
-    generatePaper(folders[i]);
+    var result = generatePaper(folders[i]);
+    if (result) made++; else skipped.push(folders[i]);
   }
 
   updateRootHeroBadge();
@@ -329,7 +406,11 @@ function run() {
   updateRootStats();
   updateExamStats();
 
-  console.log('\nDone! Generated ' + folders.length + ' paper(s).');
+  console.log('\nDone! ' + made + ' paper(s) built, ' + skipped.length + ' skipped.');
+  if (skipped.length) {
+    console.error('::error::no model-only paper for: ' + skipped.join(', ') + '. Refusing to pad with bank items.');
+    process.exitCode = 1;
+  }
 }
 
 run();

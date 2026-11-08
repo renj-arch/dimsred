@@ -83,11 +83,71 @@ union_invented() {
   return 0
 }
 
+# data/mains-fresh.json is rewritten wholesale by long site-agent runs. A run
+# that started before a repair finished used to publish its stale copy through
+# the `-X ours` fallback, silently reverting the repair (2026-11-07: the DPI
+# answer lost the anchors added hours earlier). Union by id with the remote
+# copy, then re-apply the quality rubric; anything that fails is dropped with
+# a log line instead of failing the deploy gate.
+union_mains_fresh() {
+  local f=data/mains-fresh.json
+  [ -f "$f" ] || return 0
+  local ref="" cand
+  for cand in FETCH_HEAD origin/main MERGE_HEAD; do
+    if git cat-file -e "$cand:$f" 2>/dev/null; then ref="$cand"; break; fi
+  done
+  [ -n "$ref" ] || return 0
+  git show "$ref:$f" > "$f.remote.json" 2>/dev/null || { rm -f "$f.remote.json"; return 0; }
+  # Ours may be a conflicted mixture from the -X ours fallback: it can parse
+  # as garbage. Use the committed version for our side instead.
+  if git cat-file -e "HEAD:$f" 2>/dev/null; then
+    git show "HEAD:$f" > "$f.ours.json" 2>/dev/null || cp "$f" "$f.ours.json" 2>/dev/null || true
+  else
+    cp "$f" "$f.ours.json" 2>/dev/null || true
+  fi
+  node scripts/merge-mains-fresh.js "$f.remote.json" "$f.ours.json" "$f" || {
+    echo "[ci-push] WARNING: mains-fresh merge failed; keeping the remote pool"
+    cp "$f.remote.json" "$f" 2>/dev/null || true
+  }
+  rm -f "$f.remote.json" "$f.ours.json"
+  git add "$f" 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit --amend --no-edit >/dev/null 2>&1 || true
+  fi
+  return 0
+}
+
+# data/questions/archive-cat-index.json is the registry the archive page and the
+# Ask question bank read. It must never shrink: on 2026-11-07 a merge resolved a
+# conflict with "-X ours" and published a 424-byte one-category index over the
+# 21 MB, 145-category file, hiding 15.9 million questions. Keep whichever side
+# declares more questions (see scripts/guard-archive-index.js). Only runs when
+# this checkout actually carries the corpus file.
+guard_archive_index() {
+  local f=data/questions/archive-cat-index.json
+  [ -f "$f" ] || return 0
+  local ref="" cand
+  for cand in FETCH_HEAD origin/main HEAD; do
+    if git cat-file -e "$cand:$f" 2>/dev/null; then ref="$cand"; break; fi
+  done
+  [ -n "$ref" ] || return 0
+  git show "$ref:$f" > "$f.remote.json" 2>/dev/null || { rm -f "$f.remote.json"; return 0; }
+  node scripts/guard-archive-index.js "$f" "$f.remote.json" || true
+  rm -f "$f.remote.json"
+  git add "$f" 2>/dev/null || true
+  if ! git diff --cached --quiet 2>/dev/null; then
+    git commit --amend --no-edit >/dev/null 2>&1 || true
+  fi
+  return 0
+}
+
 try_push() {
   # $1 = label for logs. Echoes server output to stdout, returns push status.
   local out
   sync_remote
   union_invented
+  union_mains_fresh
+  guard_archive_index
   out=$(git push 2>&1)
   local st=$?
   echo "$out"
@@ -135,13 +195,20 @@ for i in 1 2 3; do
   echo "[ci-push] fallback push attempt $i (GITHUB_TOKEN)..."
   sync_remote
   union_invented
+  union_mains_fresh
   if git push 2>&1; then
     if [ "$PAT_AUTH" = "1" ]; then
       echo "::error::ci-push: published via GITHUB_TOKEN fallback — PAT IS DEAD, renew secrets.PAT"
+      exit 1
     else
-      echo "::error::ci-push: published via GITHUB_TOKEN fallback after TRANSIENT PAT failures (PAT not proven dead — check auth-sentinel) — downstream triggers skipped for this run"
+      # The work IS published. A transient PAT race (another workflow pushing
+      # at the same second) is not a failure: exiting 1 here turned routine
+      # back-to-back publishes into red runs (Search index, Slim live mirror)
+      # even though main received the commit. Warn so the skipped downstream
+      # trigger stays visible, but keep the run green.
+      echo "::warning::ci-push: published via GITHUB_TOKEN fallback after TRANSIENT PAT failures — downstream triggers skipped for this run"
+      exit 0
     fi
-    exit 1
   fi
   sleep 5
 done

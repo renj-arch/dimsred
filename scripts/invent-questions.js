@@ -38,6 +38,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawn, execSync } = require('child_process');
+const { auditQuestion } = require('./lib/invented-quality');
 
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const HOST = (process.env.OLLAMA_HOST || 'http://127.0.0.1:11434').replace(/\/+$/, '');
@@ -293,7 +294,12 @@ async function callLLM(system, user) {
     model: MODEL,
     stream: true,
     think: false,
-    options: { temperature: 0.95, top_p: 0.92, num_ctx: NUM_CTX, num_predict: NUM_PREDICT },
+    // Structured-output mode: the model must emit one JSON object, so the
+    // parse/repair loop stops burning attempts on prose wrappers. A lower
+    // temperature than the old 0.95 keeps arithmetic self-consistent while
+    // the novelty rules still vary the mechanism.
+    format: 'json',
+    options: { temperature: 0.8, top_p: 0.92, num_ctx: NUM_CTX, num_predict: NUM_PREDICT },
     messages: [
       { role: 'system', content: system },
       { role: 'user', content: user }
@@ -310,6 +316,35 @@ async function callLLM(system, user) {
   }
   if (parsed.httpCode && parsed.httpCode !== '200') throw new Error('HTTP ' + parsed.httpCode);
   return parsed.text || '';
+}
+
+// Independent answer check for quantitative items. The structural and
+// arithmetic audits prove the key is among the options and the solution does
+// not contradict itself; neither can catch a wrong unit conversion (72 km/h
+// converted as 36 km/h) or an option set with no correct value at all. A
+// second solve, with no access to the stated key, can.
+async function verifyQuant(q) {
+  if (FAKE) return { ok: true };
+  const opts = q.options.map((o, i) => 'ABCD'[i] + '. ' + o).join('\n');
+  try {
+    const raw = await callLLM(
+      'You are an independent exam verifier on a solution lab. Solve the question from scratch and never trust any stated answer. Convert units carefully. Return ONLY JSON: {"answer":"A|B|C|D","check":"one line of arithmetic"}',
+      'Question: ' + q.stem + '\nOptions:\n' + opts
+    );
+    const t = extractJson(raw);
+    if (!t) return { ok: false, why: 'verifier unparseable' };
+    let a = String(t.answer == null ? '' : t.answer).trim().toUpperCase();
+    const m = a.match(/\b([A-D])\b/);
+    if (m) a = m[1];
+    const idx = 'ABCD'.indexOf(a);
+    if (idx < 0) return { ok: false, why: 'verifier gave no option' };
+    if (q.options[idx] !== q.answer) {
+      return { ok: false, why: 'verifier picked ' + a + ' (' + q.options[idx] + '), key says ' + q.answer };
+    }
+    return { ok: true };
+  } catch (e) {
+    return { ok: false, why: 'verifier failed: ' + e.message };
+  }
 }
 
 // ── parsing + validation ─────────────────────────────────────────────────
@@ -500,25 +535,32 @@ function validate(raw, section, tier, recentTokenSets) {
       return { ok: false, why: 'duplicate (70% overlap rule)' };
     }
   }
+  const candidate = {
+    stem: stem,
+    options: options,
+    answer: answer,
+    solution: solution,
+    hint: String(t.hint || '').trim().slice(0, 160),
+    section: section,
+    difficulty: tier,
+    style: style.slice(0, 90),
+    topic: topic.slice(0, 70),
+    importance: importance,
+    importantFor: importantFor,
+    seconds: TIER_SECONDS[tier],
+    inventedAt: nowISO(),
+    model: FAKE ? 'fake-llm' : MODEL,
+    run: RUN
+  };
+  // The generator's shape checks cannot prove that the key follows from the
+  // stem. Recompute what can be recomputed before the item is stored: a model
+  // that writes a confident but wrong solution must not reach the pool, and it
+  // will not reach a publish either (revalidate-invented.js runs again there).
+  const audit = auditQuestion(candidate);
+  if (!audit.ok) return { ok: false, why: 'quality: ' + audit.errors.join('; ') };
   return {
     ok: true,
-    q: {
-      stem: stem,
-      options: options,
-      answer: answer,
-      solution: solution,
-      hint: String(t.hint || '').trim().slice(0, 160),
-      section: section,
-      difficulty: tier,
-      style: style.slice(0, 90),
-      topic: topic.slice(0, 70),
-      importance: importance,
-      importantFor: importantFor,
-      seconds: TIER_SECONDS[tier],
-      inventedAt: nowISO(),
-      model: FAKE ? 'fake-llm' : MODEL,
-      run: RUN
-    },
+    q: candidate,
     tokenSet: { key: key, tokens: tk }
   };
 }
@@ -530,6 +572,8 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
   return [
     'You are a veteran Indian exam question setter (IBPS PO/Clerk, SBI, SSC CGL, RRB NTPC, State PSC).',
     'INVENT one completely ORIGINAL multiple-choice question. Do not recall or copy any known exam question — create a new context, new numbers, a new twist.',
+    'Match the toughness of a real previous-year paper: a prepared candidate should need real working, not recall or a one-line formula lookup.',
+    'Do not use a template. The stem must be a self-contained situation, and every distractor must be the answer a real candidate would reach after a specific mistake.',
     '',
     'SECTION: ' + SECTION_BRIEF[section],
     'DIFFICULTY (' + tier + '): ' + TIER_BRIEF[tier],
@@ -610,6 +654,15 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
           }
           const v = validate(raw, section, tier, recentTokenSets.concat(accepted.map(a => a.tokenSet)));
           if (v.ok) {
+            if (section === 'quant') {
+              const chk = await verifyQuant(v.q);
+              if (!chk.ok) {
+                rejects[chk.why] = (rejects[chk.why] || 0) + 1;
+                rejects['last-' + section + tier] = chk.why;
+                log('[invent] ' + section + '/' + tier + ' rejected: ' + chk.why);
+                continue;
+              }
+            }
             made = v;
           } else {
             rejects[v.why] = (rejects[v.why] || 0) + 1;
@@ -633,5 +686,16 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
 
   const mins = ((Date.now() - started) / 60000).toFixed(1);
   log('[invent] done in ' + mins + 'min — slots=' + slots + ' accepted=' + accepted.length + ' rejects=' + JSON.stringify(rejects));
-  if (!accepted.length) { console.error('[invent] ZERO questions invented — refusing to claim success'); process.exit(1); }
+  if (!accepted.length) {
+    // A run where every candidate was rejected is a no-op, not corruption:
+    // nothing enters the pool. The slow 27B lane sets INVENT_ALLOW_EMPTY=1 so
+    // a day of low-quality model output does not paint the workflow red (it
+    // still logs the full reject breakdown); the bulk lane stays fail-closed.
+    if (process.env.INVENT_ALLOW_EMPTY === '1') {
+      console.log('[invent] ZERO questions accepted — soft no-op (INVENT_ALLOW_EMPTY=1); nothing published');
+      return;
+    }
+    console.error('[invent] ZERO questions invented — refusing to claim success');
+    process.exit(1);
+  }
 })().catch(e => { console.error('[invent] fatal: ' + e.stack); process.exit(1); });

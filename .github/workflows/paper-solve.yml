@@ -1,0 +1,172 @@
+name: Paper Solve (agent answers official PYQ)
+
+# The official-key ingestor (ingest-official-paper.py) can only ship answers
+# it can parse from an official answer-key PDF. Some UPSC keys are scanned
+# images with no text layer, so those papers could never be keyed. This lane
+# closes that gap honestly: it downloads the OFFICIAL question paper
+# (data/official-paper-sources.json, status need-solve), parses the questions
+# with the proven QP parser, and has the local model solve them in batches.
+#
+# Fail-closed: scripts/apply-paper-solve.js runs every candidate through the
+# deterministic revalidator (scripts/lib/invented-quality.js) and only merges
+# clean items into data/papers.json, labelled source=agent-solved (the green
+# "official paper" badge is driven by `official`, which stays false). The
+# publish step is skipped if the gate fails — no `if: always()`.
+#
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b).
+
+on:
+  schedule:
+    - cron: '53 2 * * *'   # once a day, off the busy invent block
+  workflow_dispatch:
+    inputs:
+      model:
+        description: 'Ollama model tag (default qwen3.5:9b)'
+        required: false
+        default: 'qwen3.5:9b'
+      paper_id:
+        description: 'Solve only this paper id (default: first need-solve entry)'
+        required: false
+        default: ''
+
+concurrency:
+  group: paper-solve
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  solve:
+    runs-on: ubuntu-latest
+    timeout-minutes: 160
+    steps:
+      - name: Free runner disk space (swap + model + repo)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data
+            papers.html
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Python + pypdf (QP parser)
+        run: |
+          python3 --version
+          pip install --user pypdf
+
+      - name: Create swap (16GB)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama (runner-home service)
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          ollama pull "$MODEL_INPUT"
+          ollama list
+          echo "Warming $MODEL_INPUT..."
+          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+
+      - name: Solve official paper with the agent
+        timeout-minutes: 125
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+          SOLVE_DEADLINE_MIN: '100'
+          SOLVE_BATCH: '5'
+        run: |
+          if [ -n "${{ inputs.paper_id }}" ]; then
+            python3 scripts/solve-paper-agent.py "${{ inputs.paper_id }}"
+          else
+            python3 scripts/solve-paper-agent.py
+          fi
+
+      # Gate: revalidate every candidate; hard failures are loud and the
+      # publish step is skipped when this exits non-zero on rejected input.
+      - name: Gate agent-solved candidates
+        id: gate
+        run: node scripts/apply-paper-solve.js --check
+
+      - name: Apply gated candidates to papers.json
+        if: steps.gate.outcome == 'success'
+        run: node scripts/apply-paper-solve.js
+
+      # Fail-closed provenance audit of the whole papers.json: every answered
+      # question must carry an honest source label and agent-solved items must
+      # never have official=true. Publish is skipped if this fails.
+      - name: Provenance gate on papers.json
+        id: prov
+        if: steps.gate.outcome == 'success'
+        run: node scripts/check-papers-provenance.js
+
+      - name: Publish solved paper questions
+        if: steps.gate.outcome == 'success' && steps.prov.outcome == 'success'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          # Only add files that exist (a run where the QP download failed or no
+          # candidate survived the gate writes no candidates file — run
+          # #41415587800 failed here on `git add` of a missing pathspec), and
+          # skip the push entirely when nothing changed.
+          git add data/papers.json papers.html
+          [ -f data/paper-solve-candidates.json ] && git add data/paper-solve-candidates.json || true
+          [ -f data/official-paper-sources.json ] && git add data/official-paper-sources.json || true
+          if git diff --cached --quiet; then
+            echo "nothing changed (no candidates survived the gate) — skipping publish"
+            exit 0
+          fi
+          bash scripts/ci-push.sh "paper-solve: ${{ inputs.model || 'qwen3.5:9b' }} agent-solved official PYQ answers (run #${{ github.run_number }})"
