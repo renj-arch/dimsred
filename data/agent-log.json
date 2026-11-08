@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T21:34:15.416Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; bankfigures must run first to fix broken diagrams. Since papers and questions files are missing, metalearn should immediately generate fresh exam content to fill the syllabus void. Invention is deferred as it requires stable inputs from prior agents.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (895 total)",
-       "text": "How does the acceleration of the piston affect the indicator diagram? | How does pipe friction affect the indicator diagram? | What is the function and position of an air vessel on a reciprocating pump?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T22:31:10.529Z",
    "model": "qwen3.5:9b",
    "totalFixes": 4,
@@ -688,8 +653,53 @@
     ]
    },
    "details": []
+  },
+  {
+   "at": "2026-11-08T03:53:51.969Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; bankfigures must lead to fix broken visual data immediately. Mockpapers and exampatterns follow to address missing study materials, as filesPresent indicates zero content exists yet. Mainsfresh is scheduled last despite recent 0 output because it targets fresh daily material, a lower-priority standing goal compared to fixing critical infrastructure gaps.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Gas Turbines (360 in pool)",
+       "text": "Gas Turbines"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T03:31:13.195Z",
+ "lastRun": "2026-11-08T03:53:51.969Z",
  "model": "qwen3.5:9b"
 }
