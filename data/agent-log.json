@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T19:32:22.813Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visuals blocking content consumption. Since papers/sidecar files are missing, MockPapers is next to generate core study assets, followed by ExamPatterns to structure those assets into solvable units. Invention will address pending ideas for fresh material, while MetaLearn handles remaining critical faults or syllabus gaps if they exist.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (884 total)",
-       "text": "How does cavitation affect the performance of a pump? | What factors govern the selection of a centrifugal pump? | How does circulatory slip reduce the head of a pump below the Euler value?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T20:04:25.340Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -704,8 +654,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-08T02:16:20.271Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to fix broken visual assets blocking study flow. Once figures are stable, MockPapers and ExamPatterns should generate fresh content to address the 114 open faults and syllabus gaps. MainsFresh will follow to ensure daily material freshness, while Invention is deferred as it requires prior content stability.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (918 total)",
+       "text": "Give the nth term and sum of n terms of a GP. | What is the sum of an infinite GP when |r| < 1? | What are the geometric mean (GM) and harmonic mean (HM) of a and b?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Workshop Technology (360 in pool)",
+       "text": "Workshop Technology"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T01:52:59.276Z",
+ "lastRun": "2026-11-08T02:16:20.271Z",
  "model": "qwen3.5:9b"
 }
