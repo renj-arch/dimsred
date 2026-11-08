@@ -1,66 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T22:42:45.113Z",
-   "model": "rule-based (no LLM)",
-   "totalFixes": 185,
-   "byAgent": [
-    {
-     "agent": "selfcheck",
-     "count": 185
-    }
-   ],
-   "details": [
-    {
-     "agent": "selfcheck",
-     "fixes": [
-      {
-       "page": "Mental Training",
-       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
-       "kind": "runtime"
-      },
-      {
-       "page": "Dashboard",
-       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
-       "kind": "runtime"
-      },
-      {
-       "page": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
-       "fix": "Nav: \"CGL\" → /cgl/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/course/index.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/course/mains-essay/lesson-essay-language.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/course/mains-essay/lesson-essay-practice.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/course/mains-essay/lesson-essay-structure.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/course/mains-essay/lesson-essay-topics.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/course/mains-gs1/lesson-answer-writing-gs1.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      },
-      {
-       "page": "upsc/course/mains-gs1/lesson-heritage-culture.html",
-       "fix": "Nav: \"UPSC\" → /upsc/ (was ../index.html)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T23:01:06.530Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -677,8 +617,53 @@
     ]
    },
    "details": []
+  },
+  {
+   "at": "2026-11-08T04:49:28.037Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The site has critical gaps in papers, questions, and syllabus content (all false), alongside high fault counts. Since the last three runs produced zero fixes for BankFigures, ExamPatterns, and MainFresh agents despite available gaps, they are likely starved of inputs or blocked by missing source files rather than broken; MockPapers succeeded once recently. Per rules, I will prioritize filling the unfinished standing goals (papers/questions/syllabus) using Invention to generate raw material first",
+    "actions": [
+     "Invention",
+     "BankFigures",
+     "ExamPatterns",
+     "MockPapers"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (923 total)",
+       "text": "What is a recursive sequence? Give an example. | If A is 3×2 and B is 2×4, what is the order of AB, and what is (AB)^T? | Define a symmetric and a skew-symmetric matrix."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T04:22:32.995Z",
+ "lastRun": "2026-11-08T04:49:28.037Z",
  "model": "qwen3.5:9b"
 }

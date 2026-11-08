@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-08T02:47:30.655Z",
-  "cursor": 1065,
-  "built": 921
+  "updatedAt": "2026-11-08T04:41:07.035Z",
+  "cursor": 1068,
+  "built": 923
  },
  "figs": {
   "2170214": {
@@ -5529,6 +5529,18 @@
   "5081ca22": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><circle cx=\"180\" cy=\"110\" r=\"80\"/><text x=\"180\" y=\"95\" text-anchor=\"middle\">Object 1</text><text x=\"180\" y=\"125\" text-anchor=\"middle\">Object 2</text><text x=\"180\" y=\"195\" text-anchor=\"middle\">... Object n</text><text x=\"30\" y=\"110\" text-anchor=\"middle\" dominant-baseline=\"middle\">Rotations are identical</text></svg>",
    "n": "how many circular permutations are there for n distinct objects?",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "d00ab1f8": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"20\" y=\"30\" font-weight=\"bold\">Recursive Sequence</text><line x1=\"50\" y1=\"80\" x2=\"310\" y2=\"80\"/><text x=\"40\" y=\"65\">n-2</text><text x=\"290\" y=\"65\">n</text><line x1=\"50\" y1=\"80\" x2=\"75\" y2=\"130\"/><line x1=\"75\" y1=\"80\" x2=\"100\" y2=\"130\"/><line x1=\"100\" y1=\"80\" x2=\"125\" y2=\"130\"/><text x=\"60\" y=\"145\">n-1</text><text x=\"95\" y=\"145\">n</text><text x=\"130\" y=\"145\">n+1</text><path d=\"M 75 80 L 75 130 M 100 80 L 100 130 M 125 80 L 125 130\"/><text x=\"65\" y=\"110\">+</text><text x=\"95\" y=\"110\">=</text><text x=\"125\" y=\"110\">F_n</text><text x=\"145\" y=\"110\">=</text><text x=\"165\" y=\"110\">F_{n-1}</text><text x=\"205\" y=\"110\">+</text><text x=\"230\" y=\"110\">F_{n-2}</text><rect x=\"20\" y=\"150\" width=\"120\" height=\"40\" rx=\"4\"/><text x=\"25\" y=\"172\">F_1 = 1</text><text x=\"35\" y=\"192\">F_2 = 1</text></svg>",
+   "n": "what is a recursive sequence? give an example.",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "6c147879": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Matrix A</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><line x1=\"40\" y1=\"40\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"60\" y=\"45\">a</text><text x=\"90\" y=\"45\">11</text><text x=\"60\" y=\"70\">a</text><text x=\"90\" y=\"70\">12</text><text x=\"60\" y=\"100\">a</text><text x=\"90\" y=\"100\">21</text><text x=\"60\" y=\"130\">a</text><text x=\"90\" y=\"130\">22</text><text x=\"280\" y=\"45\">a</text><text x=\"310\" y=\"45\">12</text><text x=\"280\" y=\"70\">a</text><text x=\"310\" y=\"70\">21</text><text x=\"280\" y=\"100\">a</text><text x=\"310\" y=\"100\">22</text><text x=\"280\" y=\"130\">a</text><text x=\"310\" y=\"130\">21</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"180\"/><line x1=\"320\" y1=\"40\" x2=\"40\" y2=\"180\"/><text x=\"160\" y=\"55\">Symmetric: a</text><text x=\"205\" y=\"55\">ij</text><text x=\"215\" y=\"55\">= a</text><text x=\"245\" y=\"55\">ji</text><text x=\"160\" y=\"85\">(Mirror)</text><text x=\"160\" y=\"115\">Skew: a</text><text x=\"205\" y=\"115\">ij</text><text x=\"215\" y=\"115\">= −a</text><text x=\"245\" y=\"115\">ji</text><text x=\"160\" y=\"145\">(Anti-Mirror)</text></svg>",
+   "n": "define a symmetric and a skew-symmetric matrix.",
    "sub": "maths",
    "at": "2026-11-08"
   }
