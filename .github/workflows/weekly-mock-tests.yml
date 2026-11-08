@@ -32,9 +32,11 @@ jobs:
       - name: Install dependencies
         run: npm install
 
-      - name: Clean question banks (repair corruption, drop junk)
-        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/bank-cleanup.js --fix --strict=cgl
-
+      # Bank cleanup removed 2026-11-08. Its vocabulary heuristics deleted 466
+      # CGL questions, including 20 valid model-written items, and 45 JEE
+      # questions. Question banks are append-only now: repairs must be explicit
+      # and reviewed, never a scheduled bulk delete. scripts/bank-cleanup.js
+      # still exists for manual, audited runs.
       - name: Generate weekly mock tests for all exams
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-weekly-mocks.js
 
