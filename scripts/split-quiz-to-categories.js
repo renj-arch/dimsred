@@ -67,6 +67,28 @@ try {
 
 if (!fs.existsSync(outDir)) fs.mkdirSync(outDir, { recursive: true });
 
+// Never let a partial quiz.json overwrite a larger archive. The 2026-11-08
+// recovery started from the 31-byte data/quiz.json stub, so finalize wrote only
+// the chunk delta and the split replaced full category files (art-culture lost
+// 13,356 questions, constitution lost 6,087). The index is the previous
+// committed total; a smaller split is almost always a broken base, not a
+// cleanup. Rebuild the base from data/questions or opt in explicitly.
+const indexPath = path.join(__dirname, '..', 'data', 'questions', 'archive-index.json');
+if (process.env.SPLIT_ALLOW_SHRINK !== '1' && fs.existsSync(indexPath)) {
+  try {
+    const idx = JSON.parse(fs.readFileSync(indexPath, 'utf8'));
+    const previous = parseInt(idx.total, 10) || 0;
+    if (previous > 0 && total < previous) {
+      console.error('Refusing to split: quiz.json has ' + total + ' questions but archive-index.json records ' +
+        previous + '. Rebuild the quiz base from data/questions (node scripts/rebuild-quiz-json.js) ' +
+        'or set SPLIT_ALLOW_SHRINK=1 for an intentional cleanup.');
+      process.exit(1);
+    }
+  } catch (e) {
+    console.error('Could not read archive-index.json for the shrink guard: ' + e.message);
+  }
+}
+
 let written = 0;
 for (const subject of subjects) {
   const s = subjFiles[subject];

@@ -226,6 +226,16 @@ jobs:
           fi
           df -h / || true
 
+      - name: Rebuild the full quiz base from current category files
+        if: steps.list.outputs.recoverable == 'true'
+        run: |
+          # The checkout's data/quiz.json is a 31-byte stub. finalize writes the
+          # base + chunk delta, so without this the split would overwrite every
+          # category with only the delta (the 2026-11-08 recovery lost 81k
+          # questions this way). Rebuild the full base from the current
+          # data/questions corpus first, exactly like daily-wiki-fill setup.
+          node scripts/rebuild-quiz-json.js
+
       - name: Merge chunks incrementally (download, collect, free — repeat, then finalize once)
         if: steps.list.outputs.recoverable == 'true'
         env:
@@ -237,9 +247,9 @@ jobs:
           # start with?"), never the output base. finalize applies only the new
           # questions to the current checkout's quiz.json, so a salvage adds
           # data instead of reverting main to a snapshot from hours ago.
-          if [ -f "baseline/data/quiz.json" ]; then
-            export MERGE_BASE_QUIZ="$PWD/baseline/data/quiz.json"
-            echo "Deduping chunk questions against $MERGE_BASE_QUIZ"
+          if [ -f "data/quiz.json" ]; then
+            export MERGE_BASE_QUIZ="$PWD/data/quiz.json"
+            echo "Deduping chunk questions against the rebuilt current quiz.json"
           fi
           # One chunk resident at a time: merge-chunks.js collect appends the
           # chunk's delta to chunks/.merge-state and deletes the chunk, so each
