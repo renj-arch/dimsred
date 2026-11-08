@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-08T05:25:49.376Z",
+  "updatedAt": "2026-11-08T13:40:44.422Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -1804,6 +1804,776 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-08T05:25:49.375Z"
+    },
+    {
+      "id": "8e5051bc60b1e2fb",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 31,
+      "section": "Mathematics",
+      "question": "What is the mode of the data set: 2, 4, 4, 6, 7, 7, 7, 9?",
+      "options": [
+        {
+          "label": "A",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "6",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "9",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "count frequency of each number",
+        "identify the number with highest frequency",
+        "select corresponding option"
+      ],
+      "verifierCheck": "To find the mode, we count the frequency of each number in the data set {2, 4, 4, 6, 7, 7, 7, 9}. The number 2 appears once, 4 appears twice, 6 appears once, 7 appears three times, and 9 appears once. Since 7 has the highest frequency (3 occurrences), it is the mode of the data set.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Visual Scan",
+          "idea": "Spot the cluster instantly",
+          "kind": "estimate",
+          "seconds": 2,
+          "steps": [
+            "Look at the sequence: 2, 4, 4, 6, 7, 7, 7, 9.",
+            "Notice the triplet of 7s in the middle.",
+            "The mode is the number with the most occurrences."
+          ]
+        },
+        {
+          "name": "Eliminate Low",
+          "idea": "Remove singletons first",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Ignore numbers appearing once (2, 6, 9).",
+            "Compare remaining counts: 4 appears twice, 7 appears thrice.",
+            "The highest frequency belongs to 7."
+          ]
+        },
+        {
+          "name": "Count Max",
+          "idea": "Tally frequency quickly",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Scan list for repeated numbers.",
+            "Identify '7' appears three times while others appear once or twice.",
+            "Select option matching the highest count."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:03:27.531Z"
+    },
+    {
+      "id": "db80b8c396e69829",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 32,
+      "section": "Mathematics",
+      "question": "What is the value of x in the equation 2x + 5 = 11?",
+      "options": [
+        {
+          "label": "A",
+          "text": "2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "3",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "4",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Subtract 5 from both sides of the equation to isolate the term with x, resulting in 2x = 6.",
+        "Divide both sides by 2 to solve for x, yielding x = 3.",
+        "Verify the solution by substituting x = 3 back into the original equation: 2(3) + 5 = 6 + 5 = 11, which is correct."
+      ],
+      "verifierCheck": "To solve for x in the equation 2x + 5 = 11, I first subtract 5 from both sides to isolate the term with the variable, resulting in 2x = 6. Next, I divide both sides by 2 to find the value of x, which yields x = 3. Comparing this result to the given options, option B corresponds to the value 3, confirming it as the correct answer.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Isolate and Divide",
+          "idea": "Subtract constant then divide by coefficient",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Subtract 5 from both sides to get 2x = 6",
+            "Divide both sides by 2 to solve for x"
+          ]
+        },
+        {
+          "name": "Mental Guess Check",
+          "idea": "Test integer options directly in equation",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Plug option B (3) into 2x + 5",
+            "Calculate 2*3 + 5 which equals 11",
+            "Match result to the right side of equation"
+          ]
+        },
+        {
+          "name": "Visual Balance Shift",
+          "idea": "Treat as balance scale moving weight",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Remove 5 from both sides leaving 2x = 6",
+            "Split 6 into two equal groups of 3",
+            "Identify x as the size of one group"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:05:56.701Z"
+    },
+    {
+      "id": "6c7ca7a93ec43979",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 34,
+      "section": "Mathematics",
+      "question": "What is the sum of interior angles of a pentagon?",
+      "options": [
+        {
+          "label": "A",
+          "text": "360°",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "450°",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "540°",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "720°",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the number of sides in a pentagon, which is n=5.",
+        "Apply the formula for the sum of interior angles: (n-2) * 180°.",
+        "Calculate the value: (5-2) * 180° = 3 * 180°.",
+        "Determine the result is 540° and match it to option C."
+      ],
+      "verifierCheck": "To find the sum of interior angles of a pentagon, we use the general formula for an n-sided polygon: (n-2) × 180°. A pentagon has 5 sides, so n=5. Substituting this into the formula gives (5-2) × 180° = 3 × 180° = 540°. This calculation confirms that option C is the correct answer.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Triangle Split",
+          "idea": "Divide shape into triangles",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Draw diagonals from one vertex to non-adjacent vertices.",
+            "Count the resulting triangles (n-2, where n=5).",
+            "Multiply triangle count by 180° (sum of angles in a triangle)."
+          ]
+        },
+        {
+          "name": "Formula Plug",
+          "idea": "Apply standard polygon formula",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recall formula: Sum = (n - 2) × 180°.",
+            "Substitute n=5 for the pentagon sides.",
+            "Calculate result and match to option C."
+          ]
+        },
+        {
+          "name": "Vertex Pairing",
+          "idea": "Sum angles via exterior turn logic",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Visualize walking around the pentagon perimeter.",
+            "Note total exterior turns equal 360°.",
+            "Subtract exterior sum from 720° (sum of all interior+exterior for hexagon? No, use 5*180=900 minus exterior 360).",
+            "Simpler: Use known fact pentagon has 540° directly from standard knowledge base."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:16:12.201Z"
+    },
+    {
+      "id": "da804d63e65840ed",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 36,
+      "section": "Mathematics",
+      "question": "What is the formula for the area of a rectangle?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A = l + w",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "A = l - w",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "A = l x w",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "A = l / w",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the geometric shape as a rectangle.",
+        "Recall that the area of a rectangle is calculated by multiplying its length by its width.",
+        "Match this calculation (length times width) to the given options.",
+        "Select option C which represents A = l x w."
+      ],
+      "verifierCheck": "The area of a rectangle represents the total two-dimensional space enclosed within its boundaries. By definition, this space is calculated by multiplying the length of one side (l) by the width of the adjacent perpendicular side (w), effectively counting how many unit squares fit inside the shape; addition (A) would yield a linear sum rather than an area, subtraction (B) would result in a difference of dimensions, and division (D) would yield a ratio rather than a total quantity, leaving multiplication (C) as the only mathematically valid formula for area.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Keyword Match",
+          "idea": "Spot 'x' in standard area formula",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall area is length times width.",
+            "Identify option C as l x w.",
+            "Select option C immediately."
+          ]
+        },
+        {
+          "name": "Dimensional Check",
+          "idea": "Verify units match area (square)",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Area requires squared units.",
+            "Length times width yields square units.",
+            "Option C is the only one with correct dimensions.",
+            "Select option C."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:21:11.795Z"
+    },
+    {
+      "id": "fa2cbca543fe0eff",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 37,
+      "section": "Mathematics",
+      "question": "What is the concept of equivalent ratios in mathematics?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Ratios that are identical and have the same value",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Ratios that are different but have the same value",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Ratios that are proportional but not equal",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Ratios that are unequal and have no relationship",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Define equivalent ratios as pairs of ratios that represent the same relationship between quantities.",
+        "Explain that while the numbers in the numerator and denominator may differ (e.g., 1:2 vs 2:4), their simplified forms or calculated values are identical.",
+        "Conclude that this matches option B, which states they are different but have the same value."
+      ],
+      "verifierCheck": "Equivalent ratios are defined as two or more ratios that express the same quantitative relationship between numbers, meaning they simplify to the exact same value despite having different terms; for instance, the ratio 1:2 is equivalent to 2:4 because both reduce to the fraction 1/2 (or 0.5), whereas option A describes identical ratios which are technically equivalent but do not capture the core concept of distinct representations sharing a value, and options C and D describe relationships that contradict the definition of equivalence.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Definition Recall",
+          "idea": "instant recall of ratio properties",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Recall that equivalent ratios are fractions equal in value.",
+            "Note they use different numbers to achieve that equality.",
+            "Match this concept directly to option B text.",
+            "Select option B.",
+            "Finalize answer: B"
+          ]
+        },
+        {
+          "name": "Keyword Match",
+          "idea": "link 'equivalent' to 'same value'",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify key phrase 'same value' in the question.",
+            "Eliminate options implying inequality (A, D) or lack of equality (C).",
+            "Recognize B is the only choice stating 'different but same value'.",
+            "Select option B.",
+            "Finalize answer: B"
+          ]
+        },
+        {
+          "name": "Cross-Multiply Check",
+          "idea": "verify value equality directly",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Read option B as the target definition.",
+            "Recall equivalent ratios represent the same value despite different terms.",
+            "Confirm that 'different but same value' matches standard mathematical definition.",
+            "Select option B.",
+            "Finalize answer: B"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:23:46.747Z"
+    },
+    {
+      "id": "e768a17e1e08688e",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 38,
+      "section": "Mathematics",
+      "question": "A confectioner sells 'Assorted Box' X (cost ₹220/kg) and 'Premium Box' Y (cost ₹320/kg). To reduce inventory of Y, he mixes 2 kg of X with 1 kg of Y to create 'Box Z'. If Box Z is sold at a 10% profit on its cost price, what is the profit percentage earned on the original cost of the 3 kg ingredients?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A: 13.33%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B: 10%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C: 6.67%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D: 5%",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate cost of 2 kg X: 2 * 220 = 440",
+        "Calculate cost of 1 kg Y: 1 * 320 = 320",
+        "Sum total cost of Box Z: 440 + 320 = 760",
+        "Calculate selling price with 10% profit on Box Z: 760 * 1.10 = 836",
+        "Identify that the 'original cost' refers to the sum of ingredient costs (760)",
+        "Calculate profit percentage on original cost: ((836 - 760) / 760) * 100 = 10%"
+      ],
+      "verifierCheck": "First, calculate the total cost of the ingredients for Box Z: 2 kg of X at ₹220/kg costs ₹440, and 1 kg of Y at ₹320/kg costs ₹320, totaling ₹760. The problem states Box Z is sold at a 10% profit on its cost price, meaning the selling price is 1.10 * 760 = ₹836. The question asks for the profit percentage earned on the original cost of these 3 kg ingredients. Since the 'profit' in this context refers to the gain realized from the sale of the mixture relative to the cost of the specific ingredients used (which is the standard definition of profit percentage), and the problem explicitly defines the selling condition as a 10% profit on that cost, the calculation is simply (Selling Price - Cost) / Cost * 100 = (836 - 760) / 760 * 100 = 10%. The options A, C, and D represent incorrect calculations or misinterpretations of the profit margin defined in the problem statement.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Profit Invariant",
+          "idea": "Realize total profit % equals target profit %",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Note that 'Box Z' is sold at exactly 10% profit.",
+            "Since Box Z consists entirely of the mixed ingredients, its overall profit rate on those ingredients must equal the selling rate.",
+            "Therefore, the profit on the original 3 kg ingredients is exactly 10%.",
+            "Select Option B without calculating intermediate totals."
+          ]
+        },
+        {
+          "name": "Weighted Average Check",
+          "idea": "Verify no hidden costs alter the percentage",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Identify that profit is calculated strictly on the cost of ingredients used.",
+            "Confirm the mixture (2kg X + 1kg Y) has no additional processing cost mentioned.",
+            "Conclude that selling the mix at 10% profit implies the base ingredients also yield 10%.",
+            "Select Option B based on this direct inference."
+          ]
+        },
+        {
+          "name": "Direct Cost Ratio",
+          "idea": "Calculate total cost and selling price directly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Sum ingredient costs: (2*220) + (1*320) = ₹760.",
+            "Add 10% profit to total cost: 760 * 1.10 = ₹836.",
+            "Calculate profit percentage on original cost: (836 - 760)/760 ≈ 10%.",
+            "Select Option B as the result matches the given profit margin."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:27:55.709Z"
+    },
+    {
+      "id": "8a76a519d0309a66",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 39,
+      "section": "Mathematics",
+      "question": "What is the formula for finding the area of a rectangle?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Length + Width",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Length x Width",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Length - Width",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Length / Width",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the geometric shape as a rectangle.",
+        "Recall that the area of a rectangle is defined as the product of its adjacent sides.",
+        "Substitute 'Length' and 'Width' for the side dimensions.",
+        "Conclude that the operation required is multiplication (Length x Width)."
+      ],
+      "verifierCheck": "The area of a rectangle represents the total two-dimensional space enclosed within its boundaries. By definition, this space is calculated by multiplying the length of one side by the width of the adjacent perpendicular side; adding these dimensions (Option A) yields a linear sum rather than an area, subtracting them (Option C) results in a difference that does not represent total coverage, and dividing them (Option D) calculates the aspect ratio instead of the magnitude of the surface. Therefore, the correct mathematical operation to determine the area is multiplication, expressed as Length x Width.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Keyword Association",
+          "idea": "Link 'area' to multiplication instantly",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall that area represents total space covered.",
+            "Identify that covering space requires multiplying length by width.",
+            "Select the option showing multiplication symbol (x)."
+          ]
+        },
+        {
+          "name": "Dimensional Analysis",
+          "idea": "Check units to rule out wrong ops quickly",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Note that area has units of square length (e.g., m²).",
+            "Observe that only Length x Width yields squared units.",
+            "Discard addition, subtraction, or division options immediately.",
+            "Choose the multiplication formula."
+          ]
+        },
+        {
+          "name": "Visual Rectangle Model",
+          "idea": "Picture a grid to see why multiply works",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Imagine filling a rectangle with unit squares.",
+            "Count total squares by multiplying rows (length) by columns (width).",
+            "Recognize that adding or subtracting lengths does not fill space.",
+            "Confirm Length x Width is the correct operation."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:30:17.671Z"
+    },
+    {
+      "id": "1709593d7fd3d578",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 40,
+      "section": "Mathematics",
+      "question": "A fixed deposit scheme offers Simple Interest (SI) calculated on a daily basis. If the interest for one full year is Rs. 4,800, what will be the interest earned if the money is withdrawn after exactly one-third of that year? Assume a non-leap year.",
+      "options": [
+        {
+          "label": "A",
+          "text": "₹1,600",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "₹2,400",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "₹3,200",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "₹4,800",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate total annual simple interest given as Rs. 4,800.",
+        "Determine the time fraction for withdrawal, which is exactly one-third of a year.",
+        "Apply the direct proportionality of Simple Interest to time (SI = P*R*T/100).",
+        "Calculate the new interest by multiplying the annual interest by the time fraction: 4800 * (1/3).",
+        "Verify the result equals Rs. 1,600 and match with Option A."
+      ],
+      "verifierCheck": "Simple Interest (SI) is directly proportional to the time period for a fixed principal and rate. The problem states that the interest for one full year (365 days in a non-leap year) is Rs. 4,800. Since Simple Interest scales linearly with time, withdrawing the money after exactly one-third of the year means the interest earned will be exactly one-third of the annual interest. Calculation: 4,800 / 3 = 1,600. Therefore, the interest earned is Rs. 1,600, which corresponds to option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Proportion",
+          "idea": "SI scales linearly with time",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Recognize Simple Interest is directly proportional to time for a fixed rate.",
+            "Calculate one-third of the annual interest: 4800 / 3 = 1600."
+          ]
+        },
+        {
+          "name": "Fraction Logic",
+          "idea": "Withdrawal time is exactly 1/3 of total period",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Identify that 'one-third of a year' means t = T/3.",
+            "Apply formula SI = (P*R*T)/100. Since SI_total corresponds to T, the new SI is simply SI_total * (T/3 / T).",
+            "Compute 4800 * (1/3) = 1600."
+          ]
+        },
+        {
+          "name": "Elimination Check",
+          "idea": "Rule out non-linear options quickly",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Simple Interest never compounds; it grows linearly.",
+            "Divide total interest (4800) by 3 because the duration is 1/3 of a year.",
+            "Result is 1600, which matches Option A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:34:52.945Z"
+    },
+    {
+      "id": "9126607d2fc81d0a",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 42,
+      "section": "Mathematics",
+      "question": "A bank offers a special 'Festival Savings Scheme' where the interest rate for the first year is 5% per annum on the principal. However, the interest earned in the first year is added to the principal at the end of the year. If a customer deposits ₹10,000 and closes the account after exactly one year, what is the total amount received?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) ₹10,500",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B) ₹10,525",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) ₹10,600",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) ₹10,400",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate interest for Year 1: ₹10,000 * 5% = ₹500.",
+        "Add interest to principal: ₹10,000 + ₹500 = ₹10,500.",
+        "Verify account closure condition: Account closed after exactly one year, so no further compounding occurs."
+      ],
+      "verifierCheck": "To find the total amount, calculate 5% interest on the principal of ₹10,000, which equals ₹500. Adding this to the original principal gives a total of ₹10,500 after one year.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Simple Interest",
+          "idea": "Apply rate to principal directly",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify: Principal = 10000, Rate = 5%, Time = 1 year.",
+            "Calculate interest: 10000 * 0.05 = 500.",
+            "Add interest to principal: 10000 + 500 = 10500.",
+            "Match result to Option A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T13:40:44.420Z"
     }
   ]
 }
