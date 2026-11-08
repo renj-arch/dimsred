@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T17:55:41.384Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority standing goals; BankFigures must run first to resolve broken visuals blocking study flow. Since papers/questions/syllabus sidecars are missing, MetaLearn is queued next to generate the foundational content structure before MockPapers or ExamPatterns can utilize it. Invention agents have produced zero fixes for 2+ runs and will be placed last to avoid starving them of necessary inputs until core gaps shrink.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (872 total)",
-       "text": "What is the volumetric efficiency of a centrifugal pump? | List the losses in a centrifugal pump. | What is the minimum starting speed of a centrifugal pump?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "9 fresh mock questions on Thermodynamics (360 in pool)",
-       "text": "Thermodynamics"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T18:24:24.315Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -716,8 +655,36 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-08T00:16:26.921Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual assets blocking study flow. Since pendingIdeas is low (4) but critical content is missing, Invention should follow to generate fresh exam questions before MetaLearn fills remaining conceptual holes. ExamPatterns and MainsFresh are deferred until papers/questions exist or gaps shrink below threshold.",
+    "actions": [
+     "BankFigures",
+     "Invention",
+     "MetaLearn"
+    ]
+   },
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T00:01:06.279Z",
+ "lastRun": "2026-11-08T00:16:26.921Z",
  "model": "qwen3.5:9b"
 }
