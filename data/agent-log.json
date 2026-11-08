@@ -1,60 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T22:31:10.529Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 4,
-   "byAgent": [
-    {
-     "agent": "foresight",
-     "count": 0
-    },
-    {
-     "agent": "questions",
-     "count": 4
-    },
-    {
-     "agent": "content",
-     "count": 0
-    },
-    {
-     "agent": "papers",
-     "count": 0
-    },
-    {
-     "agent": "wikisyllabus",
-     "count": 0
-    },
-    {
-     "agent": "questioncats",
-     "count": 0
-    }
-   ],
-   "details": [
-    {
-     "agent": "questions",
-     "fixes": [
-      {
-       "page": "data/questions",
-       "fix": "Found 226482 thin subtopics (< 15 questions)"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Merged 48 overlapping subtopics into correct categories"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Converted 1 fill-in-blank questions to proper Q&A"
-      },
-      {
-       "page": "data/questions",
-       "fix": "Updated 1 question files"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T22:42:45.113Z",
    "model": "rule-based (no LLM)",
    "totalFixes": 185,
@@ -698,8 +644,41 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-08T04:22:32.995Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 0
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults and figure gaps are the highest priority; bankfigures must lead to fix 60 critical issues and 80 missing diagrams. Mockpapers should follow immediately to address the lack of question files, as it produced a fix in the last run despite zero output previously (likely input-starved). ExamPatterns and MainsFresh will handle remaining open faults and syllabus gaps respectively; Invention is deferred as no pending ideas were acted upon recently.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T03:53:51.969Z",
+ "lastRun": "2026-11-08T04:22:32.995Z",
  "model": "qwen3.5:9b"
 }
