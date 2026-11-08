@@ -315,7 +315,7 @@ footer a:hover{color:var(--amber)}
     </div>
     <div class="chips" id="chips" role="group" aria-label="News sections"></div>
     <div class="chips relevance" id="relevanceChips" role="group" aria-label="Exam relevance"></div>
-    <p class="relevance-note"><b>Exam relevance</b> is a deterministic syllabus match from the headline and publisher summary, not an editorial judgement. High-yield stories touch two or more GS papers; the quiz links open the current-affairs archive for that date or month.</p>
+    <p class="relevance-note"><b>Exam relevance</b> is a deterministic syllabus match from the headline and publisher summary, not an editorial judgement. High-yield stories touch two or more GS papers or carry several glossary terms; the quiz links open the current-affairs archive for that date or month. The Wire keeps a rolling snapshot, so older months stay in the current-affairs quiz archive rather than disappearing.</p>
   </section>
 
   <div class="status" id="status" role="status" aria-live="polite">Warming up the wire…</div>
@@ -893,8 +893,8 @@ footer a:hover{color:var(--amber)}
     var block = el('section', 'block imp-block');
     var head = el('div', 'block-head');
     head.appendChild(el('span', 'ico', '🎯'));
-    head.appendChild(el('h2', null, 'Exam-important this month'));
-    head.appendChild(el('span', 'count', rows.length + ' high-yield stories'));
+    head.appendChild(el('h2', null, 'Exam-important stories'));
+    head.appendChild(el('span', 'count', rows.length + ' high-yield stories · newest months first'));
     var more = el('button', 'more', 'Browse all high-yield →');
     more.type = 'button';
     more.addEventListener('click', function () {
