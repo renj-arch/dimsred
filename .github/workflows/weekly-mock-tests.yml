@@ -37,6 +37,22 @@ jobs:
       # questions. Question banks are append-only now: repairs must be explicit
       # and reviewed, never a scheduled bulk delete. scripts/bank-cleanup.js
       # still exists for manual, audited runs.
+      #
+      # Duplicate cleaning IS still required, but it only ever removes a
+      # generated question that repeats an earlier one. It never drops a
+      # question for its vocabulary, and it never touches reviewed/imported
+      # questions.
+      - name: Dedupe question banks (duplicates only)
+        run: |
+          for f in question-bank/*.json; do
+            case "$f" in
+              *-meta.json) continue ;;
+            esac
+            echo "::group::dedupe $f"
+            NODE_OPTIONS=--max-old-space-size=4096 node scripts/dedupe-bank.js "$f"
+            echo "::endgroup::"
+          done
+
       - name: Generate weekly mock tests for all exams
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-weekly-mocks.js
 

@@ -60,6 +60,13 @@ function main() {
     console.log('dry run: no file written');
     return;
   }
+  // Scheduled runs call this on every bank. When there is nothing to remove,
+  // leave the file byte-for-byte untouched so the job does not create a noisy
+  // reformat-only commit every week.
+  if (removed.length === 0 && !opts.force) {
+    console.log('no duplicates; no file written');
+    return;
+  }
   const drop = new Set(removed.map(function (r) { return r.question.id; }));
   bank.questions = (bank.questions || []).filter(function (q) { return !drop.has(q.id); });
   bank.dedupe = {
