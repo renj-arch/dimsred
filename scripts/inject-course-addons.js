@@ -86,7 +86,12 @@ for (const [rel, items] of byFile) {
   const src = fs.readFileSync(fp, 'utf-8');
   const clean = stripExisting(src);
   pages++;
-  const useBody = items.some((it) => String(it.entry.target || 'lesson-body') === 'body');
+  // Older addon entries (written before target was persisted) have no target.
+  // Infer it from the page: a hub has no .lesson-body, so its block belongs
+  // before </body>. Without this, the first hub addenda would be skipped even
+  // though the addon file holds them.
+  const defaultTarget = clean.indexOf('<div class="lesson-body">') === -1 ? 'body' : 'lesson-body';
+  const useBody = items.some((it) => String(it.entry.target || defaultTarget) === 'body');
   const html = items.map((it) => it.html).join('\n');
 
   let out;

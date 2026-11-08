@@ -1004,6 +1004,9 @@ async function main() {
         entry.passes = (parseInt(entry.passes || 0, 10) || 0) + 1;
         entry.at = new Date().toISOString();
         entry.title = gap.lesson.title;
+        // Persist the injection target: hubs have no .lesson-body and must be
+        // appended before </body>, while course pages go inside .lesson-body.
+        entry.target = gap.target || 'lesson-body';
         entry.files = gap.files;
         addons.keys[gap.key] = entry;
         mergePractice(gap.key, res.questions);
