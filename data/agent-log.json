@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T00:34:52.851Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken diagrams blocking content. Since papers/syllabus files are missing, MetaLearn is next to generate foundational study materials from scratch. Invention follows to create new practice questions once core assets exist. ExamPatterns and MainsFresh are deferred as they require existing content structure to be effective.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (913 total)",
-       "text": "Give the general form of a quadratic equation and its roots. | For ax^2 + bx + c = 0 with roots α, β, state the sum and product of roots. | What is the discriminant D of ax^2 + bx + c = 0 and what does it decide?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T01:17:30.218Z",
    "model": "qwen3.5:9b",
    "totalFixes": 3,
@@ -602,8 +562,20 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T07:47:12.507Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T07:28:13.666Z",
+ "lastRun": "2026-11-08T07:47:12.507Z",
  "model": "qwen3.5:9b"
 }
