@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-07T23:51:21.285Z",
-  "cursor": 1038,
-  "built": 911
+  "updatedAt": "2026-11-08T00:28:06.195Z",
+  "cursor": 1041,
+  "built": 913
  },
  "figs": {
   "2316121": {
@@ -5471,6 +5471,18 @@
    "n": "if log 2 = 0.3010, find log 8.",
    "sub": "maths",
    "at": "2026-11-07"
+  },
+  "77a445a3": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"25\" text-anchor=\"middle\">y</text>\n <line x1=\"40\" y1=\"30\" x2=\"40\" y2=\"200\"/>\n <line x1=\"40\" y1=\"200\" x2=\"320\" y2=\"200\"/>\n <text x=\"35\" y=\"195\">x</text>\n <text x=\"380\" y=\"105\" text-anchor=\"end\">y = ax² + bx + c</text>\n <path d=\"M 40 200 L 60 160 L 80 200\"/>\n <circle cx=\"60\" cy=\"160\" r=\"3\"/>\n <text x=\"55\" y=\"155\">Vertex</text>\n <path d=\"M 40 200 L 100 180 L 160 160 L 220 180 L 280 200\"/>\n <circle cx=\"160\" cy=\"160\" r=\"3\"/>\n <text x=\"155\" y=\"155\">Roots</text>\n <path d=\"M 40 200 L 100 180 L 160 160 L 220 180 L 280 200\"/>\n <line x1=\"40\" y1=\"195\" x2=\"320\" y2=\"195\" stroke-dasharray=\"4,2\" opacity=\"0.5\"/>\n <text x=\"180\" y=\"215\" text-anchor=\"middle\">x = (-b ± √(b²-4ac)) / 2a</text>\n</svg>",
+   "n": "give the general form of a quadratic equation and its roots.",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "f23bc189": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"40\" text-anchor=\"middle\">ax² + bx + c = 0</text>\n <line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\"/>\n <text x=\"50\" y=\"65\">D = b² - 4ac</text>\n <circle cx=\"180\" cy=\"70\" r=\"3\"/>\n <line x1=\"180\" y1=\"73\" x2=\"180\" y2=\"190\"/>\n <text x=\"175\" y=\"140\">D &gt; 0</text>\n <text x=\"175\" y=\"160\">Distinct Real</text>\n <line x1=\"180\" y1=\"130\" x2=\"180\" y2=\"190\"/>\n <circle cx=\"180\" cy=\"145\" r=\"3\"/>\n <text x=\"175\" y=\"175\">D = 0</text>\n <text x=\"175\" y=\"195\">Equal Real</text>\n <line x1=\"180\" y1=\"165\" x2=\"180\" y2=\"190\"/>\n <circle cx=\"180\" cy=\"180\" r=\"3\"/>\n <text x=\"175\" y=\"205\">D &lt; 0</text>\n <text x=\"175\" y=\"225\">Complex</text>\n</svg>",
+   "n": "what is the discriminant d of ax^2 + bx + c = 0 and what does it decide?",
+   "sub": "maths",
+   "at": "2026-11-08"
   }
  }
 }

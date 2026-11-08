@@ -1,56 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T18:24:24.315Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority standing goals; bankfigures must run first to address both. Mockpapers is next as it directly resolves critical faults and pending ideas. ExamPatterns should follow to tackle open faults, while Invention and MetaLearn are deferred to the end of this queue since they produced zero fixes in the last three runs and require input from upstream agents before becoming productive.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (875 total)",
-       "text": "Name the types of casings used for centrifugal pumps. | What are the constructional types of a pump impeller? | Why are centrifugal pump stages arranged in series?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T18:44:02.138Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -683,8 +633,48 @@
     ]
    },
    "details": []
+  },
+  {
+   "at": "2026-11-08T00:34:52.851Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken diagrams blocking content. Since papers/syllabus files are missing, MetaLearn is next to generate foundational study materials from scratch. Invention follows to create new practice questions once core assets exist. ExamPatterns and MainsFresh are deferred as they require existing content structure to be effective.",
+    "actions": [
+     "BankFigures",
+     "MetaLearn",
+     "Invention"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (913 total)",
+       "text": "Give the general form of a quadratic equation and its roots. | For ax^2 + bx + c = 0 with roots α, β, state the sum and product of roots. | What is the discriminant D of ax^2 + bx + c = 0 and what does it decide?"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T00:16:26.921Z",
+ "lastRun": "2026-11-08T00:34:52.851Z",
  "model": "qwen3.5:9b"
 }
