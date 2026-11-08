@@ -1,41 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T02:55:54.307Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) demand immediate attention; BankFigures is the only agent capable of resolving both simultaneously. MockPapers must follow to convert fixed figures into complete exam resources. Exampatterns and MainsFresh are starved (0 fixes for 3+ runs) and should be deprioritized until primary content gaps vanish. Invention is unnecessary as we have urgent maintenance tasks.",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (921 total)",
-       "text": "Evaluate 8C3. | How many circular permutations are there for n distinct objects? | State Pascal’s identity for combinations."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T03:31:13.195Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -405,8 +370,20 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T09:00:15.936Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T08:48:58.510Z",
+ "lastRun": "2026-11-08T09:00:15.936Z",
  "model": "qwen3.5:9b"
 }
