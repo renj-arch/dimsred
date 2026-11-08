@@ -1,67 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T01:17:30.218Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 2
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (914 total)",
-       "text": "What is the nature of roots when D = 0? | What is the nature of roots when D < 0? | If α, β are the roots of x^2 − 7x + 12 = 0, find α^2 + β^2."
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw74s9n4-y7fi (optional1/sociology, 20 marks): Critically examine the relationship between caste and social mobility in contemporary India. Does the reservation policy",
-       "model": "qwen3.5:9b (local)"
-      },
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw74xmyd-7p8s (optional2/history, 20 marks): Critically examine the argument that the architecture of the colonial state, rather than just its content, shaped the in",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T01:52:59.276Z",
    "model": "qwen3.5:9b",
    "totalFixes": 2,
@@ -574,8 +513,32 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T08:04:53.426Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix mains-fresh lane generation quality",
+       "detail": "The digest reports a recent failure in `mains-fresh` where the model could not write an acceptable question due to missing checkable anchors (act, case, committee...), and the fault board has 60 critical items.",
+       "text": "Modify the Ollama prompt template for the `mains-fresh` lane to explicitly require at least two specific anchor keywords (e.g., 'scheme', 'report') in every generated question before outputting JSON. Wrap this in a validation loop that retries up to 3 times if anchors are missing."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T07:47:12.507Z",
+ "lastRun": "2026-11-08T08:04:53.426Z",
  "model": "qwen3.5:9b"
 }
