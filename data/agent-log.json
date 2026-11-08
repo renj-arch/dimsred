@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T00:01:06.279Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must address critical faults first as they block content consumption. Invention is starved (0 fixes for 2+ runs) so it moves last to avoid wasting budget on empty pipelines. MetaLearn and ExamPatterns are also zeroed out recently but have no standing incomplete goals, so they wait until the primary content gaps are filled.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (911 total)",
-       "text": "What is the change of base formula for logarithms? | If log 2 = 0.3010, find log 8. | State the product law of exponents."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T00:16:26.921Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -651,8 +606,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-08T07:17:20.551Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T06:54:00.234Z",
+ "lastRun": "2026-11-08T07:17:20.551Z",
  "model": "qwen3.5:9b"
 }
