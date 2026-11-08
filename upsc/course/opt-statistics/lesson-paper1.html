@@ -98,7 +98,8 @@
                 <div style="margin-bottom:16px">
                     <div style="font-size:.75em;font-weight:600;color:var(--text-muted);margin-bottom:4px">Module 34 &middot; UPSC Optional: Statistics</div>
                     <h1 style="font-size:1.5em;font-weight:900">Statistics Paper I: Core Topics</h1>
-                    <div id="lesson-meta" hidden data-version="a272cdc2892e" data-updated="" data-updated-label="" data-headings="[&quot;Key Concepts Covered&quot;,&quot;Important Formulas &amp; Rules&quot;,&quot;Common Question Types&quot;]"></div>
+                    <div style="margin-top:6px"><span title="Date this lesson content last changed. A notice appears if it changes after your last visit." style="display:inline-block;font-size:.72em;color:#93c5fd;background:#172554;border:1px solid #1e3a8a;border-radius:999px;padding:2px 9px">Updated 8 Nov 2026</span></div>
+                    <div id="lesson-meta" hidden data-version="5a7b7b94d98a" data-updated="2026-11-08" data-updated-label="8 Nov 2026" data-headings="[&quot;Statistics Paper I — Probability, Distributions &amp; Inference&quot;,&quot;Probability Theory&quot;,&quot;Standard Distributions&quot;,&quot;Memory Tricks&quot;]"></div>
                     <div id="lesson-new" hidden style="margin-top:10px;background:#0b1220;border:1px solid #1e3a8a;border-radius:10px;padding:10px 13px;font-size:.85em;color:#dbeafe"></div>
                     <div style="color:var(--text-sec);font-size:.85em;margin-top:4px">Statistics Paper I: core syllabus areas, key concepts, standard references and answer-writing practice.</div>
                     <div style="display:flex;gap:10px;margin-top:8px;flex-wrap:wrap">
@@ -117,23 +118,53 @@
                         <li>Practice with exam-level questions to build speed and accuracy</li>
                     </ul>
                     <h3>Key Concepts</h3>
-<p>This lesson covers <strong>Statistics Paper I: Core Topics</strong>, a key topic in Optional: Statistics for UPSC. Below is a structured overview of the core concepts you need to master.</p>
-<h3>Key Concepts Covered</h3>
+<h3>Statistics Paper I — Probability, Distributions & Inference</h3>
+<h3>Probability Theory</h3>
 <ul>
-  <li><strong>Probability:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Statistical Inference:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
-  <li><strong>Sampling Theory:</strong> Learn the fundamental principles, formulas, and problem-solving approaches for this topic.</li>
+<li><strong>Sample Space &amp; Events:</strong> Sample space S (set of all possible outcomes), events (subsets of S), elementary events, compound events, mutually exclusive events, exhaustive events, mutually exclusive and exhaustive events.</li>
+<li><strong>Axioms of Probability (Kolmogorov):</strong> P(A) ≥ 0, P(S) = 1, P(A ∪ B) = P(A) + P(B) if A ∩ B = ∅, P(∅) = 0.</li>
+<li><strong>Conditional Probability:</strong> P(A|B) = P(A ∩ B) / P(B), P(B) &gt; 0.</li>
+<li><strong>Independence:</strong> P(A ∩ B) = P(A)P(B), P(A|B) = P(A) if independent.</li>
+<li><strong>Bayes' Theorem:</strong> P(Aᵢ|B) = P(B|Aᵢ)P(Aᵢ) / Σ P(B|Aⱼ)P(Aⱼ), prior probability, posterior probability, likelihood.</li>
+<li><strong>Random Variables:</strong> Discrete random variable (pmf), continuous random variable (pdf), mixed random variable, cumulative distribution function (cdf) F(x) = P(X ≤ x), properties of cdf.</li>
+<li><strong>Expectation &amp; Moments:</strong> E[X] = Σ x·p(x) (discrete), E[X] = ∫ x·f(x)dx (continuous), properties: E[aX + b] = aE[X] + b, E[c] = c, variance Var(X) = E[(X - E[X])²] = E[X²] - (E[X])², standard deviation σ = √Var(X), moment generating function M_X(t) = E[e^(tX)], characteristic function φ_X(t) = E[e^(itX)], cumulant generating function K(t) = log M(t).</li>
+<li><strong>Higher Moments:</strong> Skewness (third standardized moment), kurtosis (fourth standardized moment), moment generating function properties, cumulant generating function, cumulants.</li>
 </ul>
-<h3>Important Formulas & Rules</h3>
-<p>Focus on understanding the core formulas and when to apply them. Practice identifying the correct formula based on question type. Create a formula sheet for quick revision before the exam.</p>
-<h3>Common Question Types</h3>
+<h3>Standard Distributions</h3>
 <ul>
-  <li>Direct application of formulas and concepts</li>
-  <li>Multi-step problems requiring combination of concepts</li>
-  <li>Data interpretation and analysis-based questions</li>
+<li><strong>Discrete Distributions:</strong>
+  <ul>
+    <li>Bernoulli(p): P(X = 1) = p, P(X = 0) = 1-p, E = p, Var = p(1-p)</li>
+    <li>Binomial(n, p): P(X = k) = C(n,k) p^k (1-p)^(n-k), E = np, Var = np(1-p)</li>
+    <li>Poisson(λ): P(X = k) = e^(-λ) λ^k / k!, E = λ, Var = λ, rare events, large n small p approximation to binomial</li>
+    <li>Geometric(p): P(X = k) = (1-p)^(k-1) p, k = 1,2,..., E = 1/p, Var = (1-p)/p²</li>
+    <li>Negative Binomial (r, p): number of trials until r-th success, E = r/p</li>
+    <li>Hypergeometric(N, K, n): sampling without replacement, P(X = k) = C(K,k) C(N-K, n-k) / C(N,n)</li>
+  </ul>
+</li>
+<li><strong>Continuous Distributions:</strong>
+  <ul>
+    <li>Uniform(a, b): f(x) = 1/(b-a), a ≤ x ≤ b, E = (a+b)/2, Var = (b-a)²/12</li>
+    <li>Exponential(λ): f(x) = λe^(-λx), x ≥ 0, E = 1/λ, Var = 1/λ², memoryless property</li>
+    <li>Gamma(α, β): f(x) = (β^α / Γ(α)) x^(α-1) e^(-βx), x ≥ 0, E = α/β, Var = α/β²</li>
+    <li>Beta(α, β): f(x) = x^(α-1)(1-x)^(β-1) / B(α,β), 0 &lt; x &lt; 1</li>
+    <li>Normal(μ, σ²): f(x) = (1/√(2πσ²)) e^(-(x-μ)²/(2σ²)), E = μ, Var = σ², standard normal Z ~ N(0,1)</li>
+    <li>Chi-square (k df): sum of k independent standard normal squares, E = k, Var = 2k, used in goodness-of-fit, independence test</li>
+    <li>t-distribution (ν df): ratio of standard normal to sqrt(chi-square/df), heavier tails than normal</li>
+    <li>F-distribution (d1, d2 df): ratio of two independent chi-squares divided by degrees of freedom, used in ANOVA</li>
+  </ul>
+</li>
+<li><strong>Joint Distributions:</strong> Joint pmf/pdf, marginal distributions, conditional distributions, independence (f(x,y) = f_X(x) f_Y(y)), covariance Cov(X,Y) = E[(X-μ_X)(Y-μ_Y)], correlation ρ = Cov(X,Y)/(σ_X σ_Y), -1 ≤ ρ ≤ 1, conditional expectation E[Y|X=x], regression of Y on X, best linear predictor.</li>
+<li><strong>Convergence of Random Variables:</strong> Convergence in probability (X_n →p X), almost sure convergence (X_n → X a.s.), convergence in distribution (X_n →d X), relationships: a.s. convergence ⇒ convergence in probability ⇒ convergence in distribution, weak law of large numbers (WLLN), strong law of large numbers (SLLN), central limit theorem (CLT): (X̄_n - μ)/(σ/√n) →d N(0,1).</li>
 </ul>
-<div class="tip-box"><div class="tip-title">Exam Strategy</div><div class="tip-text">Practice topic-wise questions first, then attempt mixed sets. Focus on accuracy before speed. Review your mistakes and maintain an error log.</div></div>
-        <script>
+<div class="example-box"><div class="ex-title">Technique: MLE for Poisson</div><div class="ex-text">Question: Find MLE of λ for X₁,...,X_n ~ Poisson(λ) i.i.d.</div><div class="ex-soln">Answer: L(λ) = ∏ e^(-λ) λ^(x_i) / x_i! = e^(-nλ) λ^(Σx_i) / ∏x_i!, ℓ(λ) = -nλ + (Σx_i)log λ - Σlog(x_i!), ℓ'(λ) = -n + (Σx_i)/λ = 0, λ̂ = (Σx_i)/n = x̄, ℓ''(λ) = -(Σx_i)/λ² &lt; 0, maximum at λ̂ = x̄.</div></div>
+<h3>Memory Tricks</h3>
+<ul>
+<li><strong>Distribution relationships:</strong> Binomial(n, p) → Poisson(λ) as n→∞, p→0, np→λ; Binomial(n, p) → Normal(np, np(1-p)) as n→∞; Poisson(λ) → Normal(λ, λ) as λ→∞; Chi-square(k) → Normal(k, 2k) as k→∞.</li>
+<li><strong>Properties:</strong> Normal is closed under linear transformation, sum of independent normals is normal, sum of independent Poissons is Poisson, sum of independent binomials with same p is binomial, sum of independent exponentials is Gamma.</li>
+<li><strong>Moments:</strong> Mean = 1st moment, Variance = 2nd central moment, Skewness = 3rd standardized moment, Kurtosis = 4th standardized moment - 3 (excess kurtosis).</li>
+</ul>
+<div class="tip-box"><div class="tip-title">Mains strategy</div><div class="tip-text">Statistics answers: state assumptions clearly, write down the pdf/pmf, show derivation step by step, state theorems by name (CLT, LLN, Neyman-Pearson, Rao-Blackwell, Lehmann-Scheffe), verify assumptions before applying tests, show all steps in derivations. Data: India's population growth rate, literacy rate, sex ratio, infant mortality rate, life expectancy, GDP growth rate, inflation rate, unemployment rate, poverty headcount ratio.</div></div>        <script>
         (function(){try{
           var m=document.getElementById("lesson-meta");if(!m)return;
           var cur=m.getAttribute("data-version")||"";
@@ -170,7 +201,7 @@
             </div>
         </div>
         <script>
-        var practiceQs = [{"id":536,"text":"What is the primary concept tested in Statistics Paper I: Core Topics?","options":[{"l":"a","t":"Direct application","c":false},{"l":"b","t":"Conceptual understanding","c":false},{"l":"c","t":"Formula recall","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Statistics Paper I: Core Topics."},{"id":537,"text":"Which of the following best describes the approach to solve Statistics Paper I: Core Topics problems?","options":[{"l":"a","t":"Memorize all formulas","c":false},{"l":"b","t":"Understand concepts first","c":true},{"l":"c","t":"Practice only difficult questions","c":false},{"l":"d","t":"Skip theory","c":false}],"sol":"The correct approach is: Understand concepts first. Focus on understanding core concepts and regular practice for Statistics Paper I: Core Topics."},{"id":538,"text":"In Statistics Paper I: Core Topics, which step is most critical for accurate problem-solving?","options":[{"l":"a","t":"Reading the question carefully","c":false},{"l":"b","t":"Using the correct formula","c":false},{"l":"c","t":"Performing calculations accurately","c":false},{"l":"d","t":"All of the above","c":true}],"sol":"The correct approach is: All of the above. Focus on understanding core concepts and regular practice for Statistics Paper I: Core Topics."},{"id":539,"text":"How can you improve your speed in Statistics Paper I: Core Topics questions?","options":[{"l":"a","t":"Regular practice with timer","c":true},{"l":"b","t":"Solving only easy questions","c":false},{"l":"c","t":"Memorizing answers","c":false},{"l":"d","t":"Skipping calculations","c":false}],"sol":"The correct approach is: Regular practice with timer. Focus on understanding core concepts and regular practice for Statistics Paper I: Core Topics."},{"id":540,"text":"What is the best strategy for attempting Statistics Paper I: Core Topics questions in the exam?","options":[{"l":"a","t":"Attempt all questions","c":false},{"l":"b","t":"Easy questions first, then difficult","c":true},{"l":"c","t":"Difficult questions first","c":false},{"l":"d","t":"Random order","c":false}],"sol":"The correct approach is: Easy questions first, then difficult. Focus on understanding core concepts and regular practice for Statistics Paper I: Core Topics."}];
+        var practiceQs = [{"id":3501,"text":"If X ~ Poisson(λ), then E(X) =","options":[{"l":"a","t":"λ","c":true},{"l":"b","t":"λ²","c":false},{"l":"c","t":"√λ","c":false},{"l":"d","t":"1/λ","c":false}],"sol":"For Poisson(λ), E(X) = λ, Var(X) = λ."},{"id":3502,"text":"CLT states that sample mean X̄_n:","options":[{"l":"a","t":"Converges to μ","c":false},{"l":"b","t":"Converges in distribution to N(μ, σ²/n)","c":true},{"l":"c","t":"Converges to population median","c":false},{"l":"d","t":"Converges to 0","c":false}],"sol":"CLT: (X̄_n - μ)/(σ/√n) →d N(0,1) as n → ∞."},{"id":3503,"text":"Which of the following is NOT a property of MLE?","options":[{"l":"a","t":"Consistent","c":false},{"l":"b","t":"Efficient","c":false},{"l":"c","t":"Always unbiased","c":true},{"l":"d","t":"Asymptotically normal","c":false}],"sol":"MLE is not always unbiased (e.g., sample variance with denominator n is biased)."},{"id":3504,"text":"For X ~ N(μ, σ²), P(|X - μ| &lt; σ) ≈","options":[{"l":"a","t":"0.68","c":true},{"l":"b","t":"0.95","c":false},{"l":"c","t":"0.997","c":false},{"l":"d","t":"0.5","c":false}],"sol":"P(|X - μ| &lt; σ) ≈ 0.68 (68-95-99.7 rule for normal distribution)."},{"id":3505,"text":"Which distribution has memoryless property?","options":[{"l":"a","t":"Normal","c":false},{"l":"b","t":"Exponential","c":true},{"l":"c","t":"Uniform","c":false},{"l":"d","t":"Binomial","c":false}],"sol":"Exponential distribution has memoryless property: P(X &gt; s+t | X &gt; s) = P(X &gt; t)."}];
         var answered={},correctCount=0,lessonSlug="paper1";
         function renderPractice(){var c=document.getElementById("practice-qs"),h="";if(!practiceQs||!practiceQs.length){h="<p style=\"color:var(--text-muted);font-size:.85em\">Practice questions loading...</p>"}else{for(var i=0;i<practiceQs.length;i++){var q=practiceQs[i],o="";for(var j=0;j<q.options.length;j++){o+="<div class=\"q-opt\" data-qid=\""+q.id+"\" data-idx=\""+j+"\" onclick=\"selectOpt("+q.id+","+j+")\">"+q.options[j].l+". "+q.options[j].t+"</div>"}h+="<div class=\"q-card\" id=\"q-"+q.id+"\"><div class=\"q-text\">"+(i+1)+". "+q.text+"</div><div class=\"q-opts\">"+o+"</div><div class=\"q-soln\" id=\"soln-"+q.id+"\"><strong>Correct: "+getCL(q)+"</strong><br>"+q.sol+"</div><div class=\"q-result\" id=\"result-"+q.id+"\"></div></div>"}}c.innerHTML=h;updateProgress()}
         function getCL(q){for(var i=0;i<q.options.length;i++){if(q.options[i].c)return q.options[i].l+". "+q.options[i].t}return""}
