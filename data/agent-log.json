@@ -1,423 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T23:40:31.184Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; self-check cleared 185 items last run but produced no new content, so it must be deprioritized to allow agents with pending ideas or specific gaps to execute. BankFigures is essential for the 80 figure gaps, while Invention should address the 4 pending ideas and potentially generate material to help fill question/syllabus voids indicated by false file flags.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (909 total)",
-       "text": "Compare the overshot wheel with the undershot wheel. | State the product rule of logarithms. | State the quotient and power rules of logarithms."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-08T00:01:06.279Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must address critical faults first as they block content consumption. Invention is starved (0 fixes for 2+ runs) so it moves last to avoid wasting budget on empty pipelines. MetaLearn and ExamPatterns are also zeroed out recently but have no standing incomplete goals, so they wait until the primary content gaps are filled.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (911 total)",
-       "text": "What is the change of base formula for logarithms? | If log 2 = 0.3010, find log 8. | State the product law of exponents."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-08T00:16:26.921Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visual assets blocking study flow. Since pendingIdeas is low (4) but critical content is missing, Invention should follow to generate fresh exam questions before MetaLearn fills remaining conceptual holes. ExamPatterns and MainsFresh are deferred until papers/questions exist or gaps shrink below threshold.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": []
-  },
-  {
-   "at": "2026-11-08T00:34:52.851Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; BankFigures must run first to fix broken diagrams blocking content. Since papers/syllabus files are missing, MetaLearn is next to generate foundational study materials from scratch. Invention follows to create new practice questions once core assets exist. ExamPatterns and MainsFresh are deferred as they require existing content structure to be effective.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (913 total)",
-       "text": "Give the general form of a quadratic equation and its roots. | For ax^2 + bx + c = 0 with roots α, β, state the sum and product of roots. | What is the discriminant D of ax^2 + bx + c = 0 and what does it decide?"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-08T01:17:30.218Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 3,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 2
-    }
-   ],
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (914 total)",
-       "text": "What is the nature of roots when D = 0? | What is the nature of roots when D < 0? | If α, β are the roots of x^2 − 7x + 12 = 0, find α^2 + β^2."
-      }
-     ]
-    },
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw74s9n4-y7fi (optional1/sociology, 20 marks): Critically examine the relationship between caste and social mobility in contemporary India. Does the reservation policy",
-       "model": "qwen3.5:9b (local)"
-      },
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw74xmyd-7p8s (optional2/history, 20 marks): Critically examine the argument that the architecture of the colonial state, rather than just its content, shaped the in",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-08T01:52:59.276Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "The previous run yielded 3 fixes but left critical faults and figure gaps high; BankFigures must lead to close the 80 figure gaps and reduce open faults, followed by MockPapers and ExamPatterns to address content depth and broken pages. Invention and MetaLearn are deferred this cycle as they produced zero output in the last two runs and should be starved until standing goals are met.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (916 total)",
-       "text": "If α, β, γ are the roots of x^3 + px^2 + qx + r = 0, give α+β+γ and αβγ. | Give the nth term and sum of n terms of an AP. | What is the arithmetic mean of a and b?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Industrial Engineering (360 in pool)",
-       "text": "Industrial Engineering"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-08T02:16:20.271Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to fix broken visual assets blocking study flow. Once figures are stable, MockPapers and ExamPatterns should generate fresh content to address the 114 open faults and syllabus gaps. MainsFresh will follow to ensure daily material freshness, while Invention is deferred as it requires prior content stability.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (918 total)",
-       "text": "Give the nth term and sum of n terms of a GP. | What is the sum of an infinite GP when |r| < 1? | What are the geometric mean (GM) and harmonic mean (HM) of a and b?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Workshop Technology (360 in pool)",
-       "text": "Workshop Technology"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-08T02:40:43.186Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visuals blocking content consumption. MockPapers and ExamPatterns follow to address incomplete exam materials, which are high-value for students. Invention is deferred as it requires stable foundational content before generating new ideas.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (920 total)",
-       "text": "Find the sum 1 + 2 + 3 + ... + n. | What is the formula for nPr? | What is the formula for nCr?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Steam Turbines (360 in pool)",
-       "text": "Steam Turbines"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-08T02:55:54.307Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) demand immediate attention; BankFigures is the only agent capable of resolving both simultaneously. MockPapers must follow to convert fixed figures into complete exam resources. Exampatterns and MainsFresh are starved (0 fixes for 3+ runs) and should be deprioritized until primary content gaps vanish. Invention is unnecessary as we have urgent maintenance tasks.",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "1 bank figure(s) added (921 total)",
-       "text": "Evaluate 8C3. | How many circular permutations are there for n distinct objects? | State Pascal’s identity for combinations."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T03:31:13.195Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -645,8 +228,162 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T06:54:00.234Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 226482 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 48 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-08T07:17:20.551Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-08T07:28:13.666Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-08T07:47:12.507Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-08T08:04:53.426Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix mains-fresh lane generation quality",
+       "detail": "The digest reports a recent failure in `mains-fresh` where the model could not write an acceptable question due to missing checkable anchors (act, case, committee...), and the fault board has 60 critical items.",
+       "text": "Modify the Ollama prompt template for the `mains-fresh` lane to explicitly require at least two specific anchor keywords (e.g., 'scheme', 'report') in every generated question before outputting JSON. Wrap this in a validation loop that retries up to 3 times if anchors are missing."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-08T08:17:17.073Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-08T08:35:00.607Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-08T08:48:58.510Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-08T09:00:15.936Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T05:52:10.217Z",
+ "lastRun": "2026-11-08T09:00:15.936Z",
  "model": "qwen3.5:9b"
 }

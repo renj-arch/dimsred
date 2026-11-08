@@ -1,17 +1,27 @@
 {
  "meta": {
-  "generatedAt": "2026-11-07T07:54:38.829Z",
+  "generatedAt": "2026-11-08T08:04:53.426Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 43,
+  "count": 44,
   "lastAttempt": {
-   "at": "2026-11-07T07:54:38.829Z",
+   "at": "2026-11-08T08:04:53.426Z",
    "ok": true,
-   "count": 2,
+   "count": 1,
    "dropped": 3
   }
  },
  "proposals": [
+  {
+   "id": "prp-mw7jr9yq-1",
+   "at": "2026-11-08T08:04:53.426Z",
+   "title": "Fix mains-fresh lane generation quality",
+   "why": "The digest reports a recent failure in `mains-fresh` where the model could not write an acceptable question due to missing checkable anchors (act, case, committee...), and the fault board has 60 critical items.",
+   "idea": "Modify the Ollama prompt template for the `mains-fresh` lane to explicitly require at least two specific anchor keywords (e.g., 'scheme', 'report') in every generated question before outputting JSON. Wrap this in a validation loop that retries up to 3 times if anchors are missing.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mw63y92l-1",
    "at": "2026-11-07T07:54:38.829Z",
