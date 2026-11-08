@@ -1,51 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T03:53:51.969Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 0
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) are the highest priority; bankfigures must lead to fix broken visual data immediately. Mockpapers and exampatterns follow to address missing study materials, as filesPresent indicates zero content exists yet. Mainsfresh is scheduled last despite recent 0 output because it targets fresh daily material, a lower-priority standing goal compared to fixing critical infrastructure gaps.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Gas Turbines (360 in pool)",
-       "text": "Gas Turbines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T04:22:32.995Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -361,8 +316,48 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T10:14:56.970Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 5,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 5
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "ctet/mock-tests/full-2026-11-08-ctet-paper2-social.html",
+       "fix": "Nav: \"CTET\" → /ctet/ (was ../index.html)"
+      },
+      {
+       "page": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+       "fix": "Nav: \"CTET\" → /ctet/ (was ../index.html)"
+      },
+      {
+       "page": "jee/mock-tests/full-2026-11-08-jee-paper2b.html",
+       "fix": "Nav: \"JEE\" → /jee/ (was ../index.html)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T09:55:21.547Z",
+ "lastRun": "2026-11-08T10:14:56.970Z",
  "model": "qwen3.5:9b"
 }
