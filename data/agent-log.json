@@ -1,91 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T23:40:31.184Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; self-check cleared 185 items last run but produced no new content, so it must be deprioritized to allow agents with pending ideas or specific gaps to execute. BankFigures is essential for the 80 figure gaps, while Invention should address the 4 pending ideas and potentially generate material to help fill question/syllabus voids indicated by false file flags.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (909 total)",
-       "text": "Compare the overshot wheel with the undershot wheel. | State the product rule of logarithms. | State the quotient and power rules of logarithms."
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-08T00:01:06.279Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must address critical faults first as they block content consumption. Invention is starved (0 fixes for 2+ runs) so it moves last to avoid wasting budget on empty pipelines. MetaLearn and ExamPatterns are also zeroed out recently but have no standing incomplete goals, so they wait until the primary content gaps are filled.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn",
-     "ExamPatterns"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (911 total)",
-       "text": "What is the change of base formula for logarithms? | If log 2 = 0.3010, find log 8. | State the product law of exponents."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T00:16:26.921Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -645,8 +560,32 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T06:13:43.420Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-08T06:41:08.886Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T05:52:10.217Z",
+ "lastRun": "2026-11-08T06:41:08.886Z",
  "model": "qwen3.5:9b"
 }
