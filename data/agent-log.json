@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T12:04:27.242Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-08T12:32:08.782Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -199,8 +187,35 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T16:42:18.770Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+       "fix": "Nav: \"CTET\" → /ctet/ (was ../index.html)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T16:29:10.761Z",
+ "lastRun": "2026-11-08T16:42:18.770Z",
  "model": "qwen3.5:9b"
 }
