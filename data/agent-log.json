@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T23:40:31.184Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; self-check cleared 185 items last run but produced no new content, so it must be deprioritized to allow agents with pending ideas or specific gaps to execute. BankFigures is essential for the 80 figure gaps, while Invention should address the 4 pending ideas and potentially generate material to help fill question/syllabus voids indicated by false file flags.",
-    "actions": [
-     "BankFigures",
-     "Invention",
-     "MetaLearn"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (909 total)",
-       "text": "Compare the overshot wheel with the undershot wheel. | State the product rule of logarithms. | State the quotient and power rules of logarithms."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T00:01:06.279Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -645,8 +605,20 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T06:13:43.420Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T05:52:10.217Z",
+ "lastRun": "2026-11-08T06:13:43.420Z",
  "model": "qwen3.5:9b"
 }
