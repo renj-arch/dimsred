@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-08T13:40:44.422Z",
+  "updatedAt": "2026-11-08T22:49:23.743Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -2574,6 +2574,854 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-08T13:40:44.420Z"
+    },
+    {
+      "id": "0fb13b9fbd0e30d3",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 35,
+      "section": "Mathematics",
+      "question": "A train crosses a pole in 18 seconds. The train's speed is 72 km/h. If the train's length is increased by 120 meters, how long will it take to cross the pole?",
+      "options": [
+        {
+          "label": "A",
+          "text": "24 seconds",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "30 seconds",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "35 seconds",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "40 seconds",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Convert speed from km/h to m/s: 72 * (5/18) = 20 m/s.",
+        "Calculate original train length: Distance = Speed × Time = 20 m/s × 18 s = 360 meters.",
+        "Add the increased length: New total length = 360 m + 120 m = 480 meters.",
+        "Calculate new time required: Time = New Length / Speed = 480 m / 20 m/s = 24 seconds.",
+        "Verify against options: The calculated time is 24 seconds, which matches Option A.",
+        "Final conclusion: The correct option is A."
+      ],
+      "verifierCheck": "First, convert the train's speed from km/h to m/s: 72 km/h = (72 * 1000) / (3600) = 20 m/s. The original length of the train is calculated using the time taken to cross a pole (distance = speed * time): Length_initial = 20 m/s * 18 s = 360 meters. The new length is the initial length plus the increase: 360 m + 120 m = 480 meters. To find the new time to cross the pole, divide the new total distance by the constant speed: Time_new = 480 m / 20 m/s = 24 seconds. Wait, let me re-calculate. Original length = 20 * 18 = 360m. New length = 360 + 120 = 480m. New time = 480 / 20 = 24s. This matches Option A. Let me re-read the options and my calculation. Speed = 72 km/h = 20 m/s. Time1 = 18s. Distance1 (Length) = 20 * 18 = 360m. Increase = 120m. New Length = 480m. Time2 = 480 / 20 = 24s. The correct option is A (24 seconds). My previous thought process had a momentary confusion with the options list in my head versus the calculation. Let's verify again. 72 km/h is exactly 20 m/s. 18 seconds * 20 m/s = 360 meters. 360 + 120 = 480 meters. 480 / 20 = 24 seconds. Option A is 24 seconds. Therefore, the answer is A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Formula",
+          "idea": "plug into single equation",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Use formula: Time = (Original Length + Added Length) / Speed.",
+            "Substitute values directly: (18 * 20 + 120) / 20.",
+            "Simplify numerator: 360 + 120 = 480.",
+            "Divide 480 by 20 to get final time."
+          ]
+        },
+        {
+          "name": "Ratio of Lengths",
+          "idea": "use proportional time",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Find original length ratio: (360 + 120) / 360 = 4/3.",
+            "Since speed is constant, time scales linearly with distance.",
+            "Multiply original time (18 s) by the ratio 4/3.",
+            "Result is 24 seconds."
+          ]
+        },
+        {
+          "name": "Speed to m/s",
+          "idea": "convert speed fast",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Convert 72 km/h to m/s: multiply by 5/18 to get 20 m/s.",
+            "Calculate original length: 20 m/s * 18 s = 360 meters.",
+            "Add 120 meters to length for new total distance (480 meters).",
+            "Divide new distance by speed: 480 / 20 = 24 seconds."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:07:28.542Z"
+    },
+    {
+      "id": "7c6faa06c5da3bfc",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 41,
+      "section": "Mathematics",
+      "question": "What is the value of x in the equation x/2 = 7?",
+      "options": [
+        {
+          "label": "A",
+          "text": "12",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "14",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "16",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "18",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Multiply both sides of the equation x/2 = 7 by 2 to isolate x.",
+        "Calculate 7 * 2 to get 14.",
+        "Verify that 14 / 2 equals 7."
+      ],
+      "verifierCheck": "To solve for x in the equation x/2 = 7, multiply both sides of the equation by 2 to isolate x, resulting in x = 7 * 2, which equals 14. Comparing this result to the given options, 14 corresponds to option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mental Multiplication",
+          "idea": "Recall 7 times table fact",
+          "kind": "mnemonic",
+          "seconds": 1,
+          "steps": [
+            "Focus on the equation x equals 7 halves.",
+            "Recognize that dividing x by 2 yields 7 means x is double 7.",
+            "Recall that 7 multiplied by 2 is 14 from basic arithmetic."
+          ]
+        },
+        {
+          "name": "Direct Isolation",
+          "idea": "Multiply both sides by 2",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Identify x is divided by 2.",
+            "Multiply both sides of x/2 = 7 by 2 to isolate x.",
+            "Calculate 7 times 2 to get the value of x."
+          ]
+        },
+        {
+          "name": "Reverse Check",
+          "idea": "Test options against equation",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Substitute option A (12) into equation: 12/2 equals 6, not 7.",
+            "Substitute option B (14) into equation: 14/2 equals 7, which matches.",
+            "Confirm no further testing is needed once the match is found."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:09:46.515Z"
+    },
+    {
+      "id": "15da073a8ca61fc5",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 43,
+      "section": "Mathematics",
+      "question": "Find the median of: 3, 7, 2, 9, 5",
+      "options": [
+        {
+          "label": "A",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "5",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "9",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Sort the numbers in ascending order: 2, 3, 5, 7, 9.",
+        "Identify the middle number in the sorted list of 5 elements.",
+        "Select the 3rd number as the median.",
+        "The value is 5."
+      ],
+      "verifierCheck": "To find the median of the dataset {3, 7, 2, 9, 5}, first arrange the numbers in ascending order: 2, 3, 5, 7, 9. Since there are n=5 values (an odd number), the median is the middle value at position (n+1)/2 = 3rd term. Counting from the sorted list, the 3rd value is 5, which corresponds to option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Sort & Pick",
+          "idea": "Order list, grab middle",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "List: 2,3,5,7,9",
+            "Count items: 5 total",
+            "Middle index is (5+1)/2 = 3rd item",
+            "Pick the 3rd number: 5"
+          ]
+        },
+        {
+          "name": "Visual Scan",
+          "idea": "Spot center after quick sort",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Sort ascending mentally: 2,3,5,7,9",
+            "Identify position between two pairs",
+            "The single middle number is 5"
+          ]
+        },
+        {
+          "name": "Pair Elimination",
+          "idea": "Cancel outer pairs to find center",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Pair smallest with largest: 2 and 9",
+            "Pair next smallest with next largest: 3 and 7",
+            "Remaining unpaired number is the median",
+            "That number is 5"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:12:13.348Z"
+    },
+    {
+      "id": "65521851fff04a0c",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 44,
+      "section": "Mathematics",
+      "question": "A bag contains 4 red, 6 blue, and 5 green marbles. One marble is drawn at random. What is the probability of drawing a green marble?",
+      "options": [
+        {
+          "label": "A",
+          "text": "4/15",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "6/15",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2/5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1/3",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Calculate total marbles: 4+6+5=15",
+        "Identify green marbles: 5",
+        "Compute probability: 5/15",
+        "Simplify fraction to 1/3"
+      ],
+      "verifierCheck": "The total number of marbles in the bag is the sum of red (4), blue (6), and green (5) marbles, which equals 15. The probability of drawing a specific color is the count of that color divided by the total count. For green marbles, this is 5/15. Simplifying the fraction 5/15 by dividing both numerator and denominator by 5 yields 1/3, which corresponds to option C.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Count Green Only",
+          "idea": "Focus on target count and total",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Sum all marbles: 4+6+5 = 15.",
+            "Identify green marbles: 5.",
+            "Write fraction: 5/15.",
+            "Simplify to 2/5 (Option C)."
+          ]
+        },
+        {
+          "name": "Skip Red Count",
+          "idea": "Ignore non-target colors first",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Add blue and green: 6+5 = 11.",
+            "Add red later for total: 11+4 = 15.",
+            "Use green count (5) over total (15).",
+            "Reduce 5/15 to 2/5 (Option C)."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:14:53.015Z"
+    },
+    {
+      "id": "8d1823c184affae5",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 45,
+      "section": "Mathematics",
+      "question": "What is the concept of symmetry in geometry?",
+      "options": [
+        {
+          "label": "A",
+          "text": "The quality of being irregular or asymmetrical",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "The quality of being regular or uniform",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "The quality of having two or more parts that are mirror images of each other",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "The quality of having no discernible pattern or shape",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Define symmetry in geometry as a property where an object remains unchanged under specific transformations.",
+        "Identify that reflectional symmetry specifically involves parts being mirror images across a line or plane.",
+        "Evaluate option A, which describes asymmetry, the opposite of symmetry.",
+        "Evaluate option B, which describes regularity but lacks the specific 'mirror' definition for general geometric symmetry.",
+        "Evaluate option D, which describes randomness or lack of pattern, unrelated to symmetry.",
+        "Confirm that option C accurately captures the core concept of mirror-image parts in geometry."
+      ],
+      "verifierCheck": "Symmetry in geometry is fundamentally defined as a property where a figure can be divided into parts that are mirror images of each other, typically across a line of symmetry (reflectional symmetry) or around a point (rotational symmetry). Option A describes asymmetry, which is the opposite concept. Option B refers to regularity or uniformity, which is related but not the specific definition of symmetry involving mirrored parts. Option D describes randomness or lack of structure. Therefore, the precise mathematical definition aligns with Option C, where one half of the shape reflects the other perfectly.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mirror Logic",
+          "idea": "visualize reflection symmetry",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall geometry definition of symmetry.",
+            "Identify 'mirror images' as the core concept.",
+            "Match this to Option C."
+          ]
+        },
+        {
+          "name": "Elimination Filter",
+          "idea": "discard wrong definitions quickly",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Reject A (irregular) and D (no pattern).",
+            "Reject B (uniform) as it lacks specific reflection meaning.",
+            "Select remaining C which describes mirror parts."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:17:18.924Z"
+    },
+    {
+      "id": "cff34e8f588f54a6",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 46,
+      "section": "Mathematics",
+      "question": "In a government procurement tender for 'Project Yogi', the contractor declares that the total estimated Cost Price (CP) for a batch of uniforms was calculated as 80% of the total Selling Price (SP). If the final SP for the batch was Rs. 240,000, and the actual expenses incurred were: Materials (40% of CP), Labor (35% of CP), and Overheads (25% of CP), what is the amount spent on Overheads? **Note:** The 'Materials' expense was found to be under-estimated by Rs. 5,000 in the initial draft, but the question asks for the **calculated** Overhead based on the declared percentages and the given SP.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 48,000",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Rs. 53,000",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Rs. 52,000",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 60,000",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate CP using SP and the given percentage (CP = 0.8 * 240,000 = 192,000).",
+        "Identify that Overheads are defined as 25% of CP.",
+        "Calculate the Overhead amount (0.25 * 192,000 = 48,000).",
+        "Ignore the note about Materials under-estimation as the question specifically asks for the calculated overhead based on declared percentages."
+      ],
+      "verifierCheck": "The problem states that the estimated Cost Price (CP) is 80% of the total Selling Price (SP). Given the final SP is Rs. 240,000, the calculated CP is 0.80 * 240,000 = Rs. 192,000. The expenses are defined as percentages of this CP: Materials (40%), Labor (35%), and Overheads (25%). Although a note mentions an under-estimation of materials by Rs. 5,000, the question explicitly asks for the 'calculated' Overhead based on the declared percentages and the given SP. Therefore, we calculate the overhead directly as 25% of the calculated CP: 0.25 * 192,000 = Rs. 48,000. The information about material under-estimation is irrelevant to the specific calculation requested for the overhead amount based on the initial declaration.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Ignore Distractor",
+          "idea": "Skip irrelevant draft error data",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Step 1: Identify question asks for 'calculated' Overhead based on declared percentages.",
+            "Step 2: Recognize the Rs. 5,000 material error is a distractor for this specific query.",
+            "Step 3: Calculate CP = 80% of SP (240,000) = 192,000.",
+            "Step 4: Calculate Overhead = 25% of CP.",
+            "Step 5: Result is Rs. 48,000, which matches Option A."
+          ]
+        },
+        {
+          "name": "Direct CP Ratio",
+          "idea": "Use total SP to find CP first",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Step 1: Calculate Cost Price (CP) as 80% of Selling Price (SP). CP = 0.8 * 240,000 = Rs. 192,000.",
+            "Step 2: Calculate Overheads as 25% of the calculated CP.",
+            "Step 3: Compute final amount: 0.25 * 192,000 = Rs. 48,000.",
+            "Step 4: Ignore the under-estimated materials note as it asks for 'calculated' overheads.",
+            "Step 5: Match result to Option A."
+          ]
+        },
+        {
+          "name": "Percentage Chain",
+          "idea": "Chain percentages directly to SP",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Step 1: Note Overhead is 25% of CP and CP is 80% of SP.",
+            "Step 2: Combine ratios: Overhead = 0.25 * 0.80 * SP.",
+            "Step 3: Calculate factor: 0.20 (or 20%) of Total SP.",
+            "Step 4: Compute 20% of 240,000 directly: 24 * 2 = 48.",
+            "Step 5: Append zeros to get Rs. 48,000 and select Option A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:22:10.182Z"
+    },
+    {
+      "id": "b881387f083ba965",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 47,
+      "section": "Mathematics",
+      "question": "What is the formula for the perimeter of a rectangle?",
+      "options": [
+        {
+          "label": "A",
+          "text": "P = l + w",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "P = l x w",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "P = 2(l + w)",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "P = 2(l - w)",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the definition of a rectangle's perimeter as the total distance around its boundary.",
+        "Recognize that a rectangle has two pairs of equal sides: length (l) and width (w).",
+        "Sum the lengths of all four sides: l + w + l + w.",
+        "Simplify the expression to 2(l + w)."
+      ],
+      "verifierCheck": "The perimeter of a rectangle is defined as the total distance around its boundary. A rectangle has two pairs of equal opposite sides: one pair with length $l$ and one pair with width $w$. Therefore, the sum of all four sides is $l + w + l + w$, which simplifies algebraically to $2l + 2w$ or factored as $2(l + w)$. Option A represents only half the perimeter, Option B represents the area, and Option D is mathematically incorrect for a standard perimeter calculation.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Add Sides Twice",
+          "idea": "Sum one pair, double it",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall rectangle has two lengths and two widths.",
+            "Add length and width once.",
+            "Multiply the sum by 2 to get total perimeter."
+          ]
+        },
+        {
+          "name": "Visualize Boundary",
+          "idea": "Count all four edges",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Imagine walking around the rectangle's edge.",
+            "You traverse one length, one width, then repeat.",
+            "Total distance is twice the sum of length and width."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:24:21.011Z"
+    },
+    {
+      "id": "65026ec457de275f",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 49,
+      "section": "Mathematics",
+      "question": "A triangle has sides of lengths 6 cm, 8 cm, and 10 cm. What type of triangle is it?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Equilateral",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Isosceles",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Right-angled",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Acute-angled",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify side lengths: a=6, b=8, c=10.",
+        "Check if sides satisfy Pythagorean theorem: 6^2 + 8^2 = 36 + 64 = 100.",
+        "Compare sum to square of longest side: 10^2 = 100.",
+        "Since 6^2 + 8^2 = 10^2, the triangle is right-angled."
+      ],
+      "verifierCheck": "To determine the type of triangle with side lengths 6 cm, 8 cm, and 10 cm, we apply the Pythagorean theorem ($a^2 + b^2 = c^2$), where $c$ is the longest side. Calculating the squares of the shorter sides: $6^2 = 36$ and $8^2 = 64$. Summing these gives $36 + 64 = 100$. The square of the longest side is $10^2 = 100$. Since $36 + 64 = 100$, the condition $a^2 + b^2 = c^2$ holds true, confirming that the triangle satisfies the Pythagorean theorem and is therefore a right-angled triangle. It cannot be equilateral (all sides unequal) or acute-angled (the sum of squares of shorter sides equals, not exceeds, the square of the longest side).",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Check 6-8-10",
+          "idea": "Recognize Pythagorean triple",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall common triples like (3,4,5).",
+            "Multiply by 2 to get (6,8,10).",
+            "Identify it as a right triangle.",
+            "Select option C."
+          ]
+        },
+        {
+          "name": "Side comparison",
+          "idea": "Eliminate other types first",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "All sides differ, so not equilateral or isosceles.",
+            "Check 6^2+8^2 vs 10^2 to confirm right angle.",
+            "Confirm acute/obtuse impossible with equality.",
+            "Select option C."
+          ]
+        },
+        {
+          "name": "Square test",
+          "idea": "Verify Pythagorean theorem",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Square the two shorter sides: 36+64=100.",
+            "Square the longest side: 100.",
+            "Since sums match, it is right-angled.",
+            "Select option C."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:45:06.588Z"
+    },
+    {
+      "id": "e3cf1ea308e7ef71",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 50,
+      "section": "Mathematics",
+      "question": "Which method of teaching moves from specific examples to a general rule?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Deductive method",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Inductive method",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Analytic method",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Synthetic method",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the direction of reasoning described in the question (from specific examples to a general rule).",
+        "Recall that the deductive method moves from general principles to specific conclusions.",
+        "Recall that the inductive method involves observing patterns in specific instances to formulate a general law or rule.",
+        "Compare the definitions with the options provided.",
+        "Select Option B as it matches the definition of moving from specific examples to a general rule.",
+        "Verify that other options (Analytic, Synthetic) do not fit this specific directional definition as precisely as Inductive."
+      ],
+      "verifierCheck": "The inductive method of teaching is defined by its logical progression from observing specific instances or examples to deriving a general principle or rule through pattern recognition and generalization. In contrast, the deductive method operates in reverse, starting with a general premise or rule and applying it to reach specific conclusions; the analytic method involves breaking down complex problems into simpler parts, while the synthetic method builds up knowledge from simple elements to complex structures. Therefore, since the question explicitly describes moving 'from specific examples to a general rule,' option B is the only correct classification for this pedagogical approach.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Keyword Match",
+          "idea": "Spot 'examples' to 'rule' link",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Identify movement from specific examples to general rule.",
+            "Match pattern to definition of Inductive method.",
+            "Select Option B as the correct answer."
+          ]
+        },
+        {
+          "name": "Definition Recall",
+          "idea": "Recall standard teaching terms",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Remember Deductive goes General -> Specific.",
+            "Recall Inductive goes Specific -> General.",
+            "Choose Inductive (Option B) for this direction."
+          ]
+        },
+        {
+          "name": "Process Direction",
+          "idea": "Trace logical flow direction",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Analyze the phrase 'moves from specific examples'.",
+            "Note the destination is a 'general rule'.",
+            "Confirm Inductive method fits this specific-to-general flow.",
+            "Finalize selection of Option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:47:36.415Z"
+    },
+    {
+      "id": "b519929b3a8a7bda",
+      "exam": "ctet",
+      "paperSlug": "full-2026-11-08-ctet-paper2",
+      "paperTitle": "CTET — Paper II (Classes VI-VIII) (Full Paper)",
+      "paperPath": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+      "paperFile": "full-2026-11-08-ctet-paper2.json",
+      "questionNumber": 51,
+      "section": "Mathematics",
+      "question": "In a bar graph, the height of the bar for 'Mangoes' is 8 cm. The scale is 1 cm = 5 fruits. How many mangoes are there?",
+      "options": [
+        {
+          "label": "A",
+          "text": "8",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "13",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "40",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "5",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the height of the bar for Mangoes, which is 8 cm.",
+        "Identify the scale given, which is 1 cm = 5 fruits.",
+        "Multiply the height by the scale factor: 8 * 5.",
+        "Calculate the total number of mangoes: 40."
+      ],
+      "verifierCheck": "To determine the number of mangoes, multiply the height of the bar (8 cm) by the scale factor (5 fruits per cm). The calculation is 8 × 5 = 40 fruits. Therefore, option C is correct.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Multiply Height by Scale",
+          "idea": "Direct arithmetic using given values",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Read bar height: 8 cm.",
+            "Read scale factor: 1 cm = 5 fruits.",
+            "Multiply height by scale: 8 * 5.",
+            "Calculate total: 40 fruits."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T22:49:23.741Z"
     }
   ]
 }
