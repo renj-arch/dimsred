@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-08T04:41:07.035Z",
-  "cursor": 1068,
-  "built": 923
+  "updatedAt": "2026-11-08T05:00:33.152Z",
+  "cursor": 1071,
+  "built": 925
  },
  "figs": {
   "2170214": {
@@ -5541,6 +5541,18 @@
   "6c147879": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Matrix A</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"40\"/><line x1=\"40\" y1=\"40\" x2=\"40\" y2=\"180\"/><line x1=\"320\" y1=\"40\" x2=\"320\" y2=\"180\"/><line x1=\"40\" y1=\"180\" x2=\"320\" y2=\"180\"/><text x=\"60\" y=\"45\">a</text><text x=\"90\" y=\"45\">11</text><text x=\"60\" y=\"70\">a</text><text x=\"90\" y=\"70\">12</text><text x=\"60\" y=\"100\">a</text><text x=\"90\" y=\"100\">21</text><text x=\"60\" y=\"130\">a</text><text x=\"90\" y=\"130\">22</text><text x=\"280\" y=\"45\">a</text><text x=\"310\" y=\"45\">12</text><text x=\"280\" y=\"70\">a</text><text x=\"310\" y=\"70\">21</text><text x=\"280\" y=\"100\">a</text><text x=\"310\" y=\"100\">22</text><text x=\"280\" y=\"130\">a</text><text x=\"310\" y=\"130\">21</text><line x1=\"40\" y1=\"40\" x2=\"320\" y2=\"180\"/><line x1=\"320\" y1=\"40\" x2=\"40\" y2=\"180\"/><text x=\"160\" y=\"55\">Symmetric: a</text><text x=\"205\" y=\"55\">ij</text><text x=\"215\" y=\"55\">= a</text><text x=\"245\" y=\"55\">ji</text><text x=\"160\" y=\"85\">(Mirror)</text><text x=\"160\" y=\"115\">Skew: a</text><text x=\"205\" y=\"115\">ij</text><text x=\"215\" y=\"115\">= −a</text><text x=\"245\" y=\"115\">ji</text><text x=\"160\" y=\"145\">(Anti-Mirror)</text></svg>",
    "n": "define a symmetric and a skew-symmetric matrix.",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "a43ae2e5": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"30\" text-anchor=\"middle\">Matrix A</text><line x1=\"40\" y1=\"60\" x2=\"320\" y2=\"60\"/><line x1=\"40\" y1=\"140\" x2=\"320\" y2=\"140\"/><line x1=\"40\" y1=\"60\" x2=\"40\" y2=\"140\"/><line x1=\"320\" y1=\"60\" x2=\"320\" y2=\"140\"/><text x=\"80\" y=\"95\">a</text><text x=\"280\" y=\"95\">d</text><text x=\"80\" y=\"135\">c</text><text x=\"280\" y=\"135\">b</text><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"140\"/><text x=\"170\" y=\"95\" font-style=\"italic\">Main Diag</text><text x=\"170\" y=\"135\" font-style=\"italic\">Anti Diag</text><line x1=\"180\" y1=\"60\" x2=\"180\" y2=\"140\"/><text x=\"190\" y=\"95\" fill=\"#555\">a × d</text><text x=\"190\" y=\"135\" fill=\"#555\">c × b</text><line x1=\"180\" y1=\"140\" x2=\"180\" y2=\"160\"/><text x=\"170\" y=\"165\">Det = ad - bc</text></svg>",
+   "n": "what is the determinant of the 2×2 matrix ░a b:c d▒?",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "76629c22": {
+   "svg": "<svg viewBox=\"0 0 360 220\" xmlns=\"http://www.w3.org/2000/svg\"><text x=\"180\" y=\"25\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"14\">Matrix Identity: A × adj(A)</text><rect x=\"40\" y=\"50\" width=\"80\" height=\"60\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"80\" y=\"90\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\">A</text><rect x=\"140\" y=\"50\" width=\"80\" height=\"60\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"90\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\">adj(A)</text><rect x=\"240\" y=\"50\" width=\"80\" height=\"60\" fill=\"none\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"280\" y=\"90\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\">= det(A) × I</text><line x1=\"40\" y1=\"110\" x2=\"320\" y2=\"110\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"180\" y=\"125\" text-anchor=\"middle\" font-family=\"sans-serif\" font-size=\"12\">Scalar multiple of Identity</text></svg>",
+   "n": "state the identity a × adj(a) = ?",
    "sub": "maths",
    "at": "2026-11-08"
   }
