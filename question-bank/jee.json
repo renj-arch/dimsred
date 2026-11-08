@@ -10345,13 +10345,153 @@
       "reviewed": false,
       "id": 1456,
       "q": 345
+    },
+    {
+      "section": "Aptitude Test",
+      "text": "In the context of formal logic, consider the statement: 'If it rains, the ground gets wet.' If we observe that the ground is dry, what can be logically concluded about the weather?",
+      "options": [
+        {
+          "label": "A",
+          "text": "It must be raining.",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "It cannot be raining.",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "The ground condition is irrelevant to the rain.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "We cannot determine if it is raining based on this information alone.",
+          "correct": false
+        }
+      ],
+      "solution": "By Modus Tollens, if 'If P then Q' is true and Q is false (ground is dry), then P must be false (it is not raining). Option A contradicts the logical deduction. Options C and D ignore the strict implication where the falsity of the consequent necessitates the falsity of the antecedent in a valid conditional.",
+      "topic": "Conditional Logic",
+      "difficulty": "easy",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T06:51:30.757Z",
+      "reviewed": false,
+      "id": 1457,
+      "q": 342
+    },
+    {
+      "section": "Aptitude Test",
+      "text": "In a set of statements involving quantifiers, if the statement 'For all integers n, if n is even then n^2 is even' is true, what is the truth value of the statement 'There exists an integer k such that k is odd and k^2 is odd'?",
+      "options": [
+        {
+          "label": "A",
+          "text": "True",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "False",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Undecidable without knowing specific values",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "It depends on the definition of integers",
+          "correct": false
+        }
+      ],
+      "solution": "The original statement establishes a property for even numbers. The new statement concerns odd numbers. Since the square of an odd number is always odd (a standard mathematical fact), the existence of such a k is true. The first statement does not negate the properties of odd numbers; they are independent domains here. Options B, C, and D are incorrect because the property holds universally for odd integers.",
+      "topic": "Quantifiers and Properties",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T06:51:30.770Z",
+      "reviewed": false,
+      "id": 1458,
+      "q": 343
+    },
+    {
+      "section": "Aptitude Test",
+      "text": "Consider the argument: 'Either the team will win or draw. They did not draw. Therefore, the team won.' Which logical law validates this deduction?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Law of Contradiction",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Law of Excluded Middle combined with Disjunctive Syllogism",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Modus Ponens",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Hypothetical Syllogism",
+          "correct": false
+        }
+      ],
+      "solution": "The argument presents a disjunction (A or B) and denies one part (not B), concluding the other (A). This is the structure of Disjunctive Syllogism, which relies on the Law of Excluded Middle (that A or not-A covers all possibilities in this binary context). Option A refers to contradictory statements being mutually exclusive. Option C requires an implication, not a disjunction. Option D links two conditionals.",
+      "topic": "Inference Rules",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T06:51:30.776Z",
+      "reviewed": false,
+      "id": 1459,
+      "q": 344
+    },
+    {
+      "section": "Aptitude Test",
+      "text": "In formal logic, consider the argument: 'All metals are conductors. All conductors are elements.' Which of the following best describes the validity of the conclusion 'Therefore, all metals are elements'?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. The argument is valid because the premises are true.",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B. The argument is invalid due to the fallacy of undistributed middle.",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C. The argument is invalid because it commits the fallacy of illicit major.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D. The argument is valid regardless of whether the premises are actually true in reality.",
+          "correct": false
+        }
+      ],
+      "solution": "The conclusion 'All metals are elements' does not logically follow from the premises provided, even if both premises were true. The term 'conductors' acts as the middle term but is not distributed (fully referenced) in either premise, making it impossible to establish a valid relationship between 'metals' and 'elements'. This specific structural error is known as the fallacy of the undistributed middle. Options A, C, and D are incorrect because validity depends on logical structure, not truth values or other fallacies.",
+      "topic": "Categorical Syllogisms",
+      "difficulty": "medium",
+      "source": "model",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-08T06:53:26.003Z",
+      "reviewed": false,
+      "id": 1460,
+      "q": 345
     }
   ],
   "generatedPapers": [],
   "modelFill": {
-    "lastRun": "2026-11-08T04:43:50.393Z",
+    "lastRun": "2026-11-08T06:53:26.004Z",
     "model": "qwen3.5:9b",
-    "added": 19
+    "added": 4
   },
   "dedupe": {
     "lastRun": "2026-11-08T06:03:48.296Z",
