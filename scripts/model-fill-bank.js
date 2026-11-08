@@ -138,22 +138,32 @@ function promptFor(section, count, examName, paperName, seeds) {
 
 async function generateSection(section, sectionDef, need, examName, paperName, bank, batch, budget) {
   if (need <= 0 || budget.left <= 0) return 0;
-  const want = Math.min(need, budget.left, 12);
+  // Drain the budget, not just one 12-question batch. A 50-60 question section
+  // used to stop at 12 per run, so a full paper needed 4-5 scheduled runs;
+  // generate in batches of 12 until the section is complete or the budget is
+  // gone. Two consecutive empty rounds stop a model that keeps failing.
+  const want = Math.min(need, budget.left);
   const seeds = (bank.questions || []).filter(function (q) {
     return bp.sectionAccepts(sectionDef, q.section);
   }).slice(-12).map(function (q) { return q.text; });
   let added = 0;
-  for (let attempt = 0; attempt < 3 && added < want && budget.left > 0; attempt++) {
-    const ask = Math.min(want - added, budget.left);
-    llm.log('generating ' + ask + ' x ' + section + ' (' + (paperName || examName) + ') attempt ' + (attempt + 1));
+  let attempts = 0;
+  let emptyRounds = 0;
+  while (added < want && budget.left > 0 && attempts < 12) {
+    attempts++;
+    const ask = Math.min(want - added, budget.left, 12);
+    llm.log('generating ' + ask + ' x ' + section + ' (' + (paperName || examName) + ') attempt ' + attempts);
     let items;
     try {
       items = await llm.callArray([{ role: 'user', content: promptFor(section, ask, examName, paperName, seeds.concat(batch.map(function (q) { return q.text; }))) }],
         { temperature: 0.55, numPredict: Math.min(4200, 260 + ask * 260) }, 'fill/' + section);
     } catch (e) {
       llm.log(section + ': generation failed - ' + e.message);
+      emptyRounds++;
+      if (emptyRounds >= 2) break;
       continue;
     }
+    let addedThisRound = 0;
     for (const item of items) {
       if (added >= want || budget.left <= 0) break;
       const reason = validItem(item, bank, batch);
@@ -177,7 +187,13 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
         generatedAt: new Date().toISOString(),
         reviewed: false
       });
-      added++; budget.left--;
+      added++; budget.left--; addedThisRound++;
+    }
+    if (addedThisRound === 0) {
+      emptyRounds++;
+      if (emptyRounds >= 2) break;
+    } else {
+      emptyRounds = 0;
     }
   }
   return added;
