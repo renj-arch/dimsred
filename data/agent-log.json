@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T19:02:52.112Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) indicate immediate content decay; BankFigures must address the 80 missing figures first to restore visual integrity. MetaLearn is required next to generate the missing syllabus, questions, papers, and sidecar files which are currently absent. Invention should follow to convert pending ideas into new exam materials, keeping content fresh. MockPapers and ExamPatterns will be queued last as they depend on the foundational content (syllabus/questions) being ",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (881 total)",
-       "text": "State the affinity laws of a centrifugal pump. | How is the working point of a pump found? | What happens when a centrifugal pump runs at shut-off?"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T19:32:22.813Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -688,8 +648,64 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-08T01:52:59.276Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 1
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "plan": {
+    "reasoning": "The previous run yielded 3 fixes but left critical faults and figure gaps high; BankFigures must lead to close the 80 figure gaps and reduce open faults, followed by MockPapers and ExamPatterns to address content depth and broken pages. Invention and MetaLearn are deferred this cycle as they produced zero output in the last two runs and should be starved until standing goals are met.",
+    "actions": [
+     "BankFigures",
+     "MockPapers",
+     "ExamPatterns",
+     "MainsFresh"
+    ]
+   },
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "2 bank figure(s) added (916 total)",
+       "text": "If α, β, γ are the roots of x^3 + px^2 + qx + r = 0, give α+β+γ and αβγ. | Give the nth term and sum of n terms of an AP. | What is the arithmetic mean of a and b?"
+      }
+     ]
+    },
+    {
+     "agent": "mockpapers",
+     "fixes": [
+      {
+       "page": "data/mock-fresh.json",
+       "kind": "content",
+       "fix": "10 fresh mock questions on Industrial Engineering (360 in pool)",
+       "text": "Industrial Engineering"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T01:17:30.218Z",
+ "lastRun": "2026-11-08T01:52:59.276Z",
  "model": "qwen3.5:9b"
 }

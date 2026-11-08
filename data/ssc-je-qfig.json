@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-08T00:50:44.403Z",
-  "cursor": 1044,
-  "built": 914
+  "updatedAt": "2026-11-08T01:27:33.261Z",
+  "cursor": 1047,
+  "built": 916
  },
  "figs": {
   "2316121": {
@@ -5487,6 +5487,18 @@
   "e771ee6b": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">x</text><text x=\"10\" y=\"40\" text-anchor=\"end\">y</text><path d=\"M 30 40 L 330 40\"/><path d=\"M 30 40 Q 180 210 330 40\"/><circle cx=\"180\" cy=\"155\" r=\"3\"/><text x=\"175\" y=\"165\">x = -b/2a</text><text x=\"185\" y=\"165\">x = -b/2a</text></svg>",
    "n": "what is the nature of roots when d = 0?",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "efa0c208": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">Arithmetic Progression</text><line x1=\"40\" y1=\"70\" x2=\"320\" y2=\"70\"/><text x=\"30\" y=\"65\">a (First Term)</text><text x=\"30\" y=\"85\">a + d</text><text x=\"30\" y=\"105\">a + 2d</text><text x=\"30\" y=\"125\">...</text><text x=\"30\" y=\"145\">a + (n-1)d</text><text x=\"30\" y=\"165\">l (Last Term)</text><line x1=\"40\" y1=\"70\" x2=\"320\" y2=\"70\"/><text x=\"330\" y=\"80\" text-anchor=\"end\">Sum S_n = n/2 [a + l]</text><rect x=\"20\" y=\"95\" width=\"320\" height=\"10\" fill=\"#eee\" stroke=\"#222\" stroke-width=\"1.5\"/><text x=\"25\" y=\"107\">T_n = a + (n-1)d</text></svg>",
+   "n": "give the nth term and sum of n terms of an ap.",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "7f761dfd": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><line x1=\"40\" y1=\"100\" x2=\"320\" y2=\"100\"/><circle cx=\"80\" cy=\"100\" r=\"6\"/><text x=\"74\" y=\"94\" text-anchor=\"end\">a</text><circle cx=\"180\" cy=\"100\" r=\"6\"/><text x=\"174\" y=\"94\" text-anchor=\"end\">AM</text><circle cx=\"280\" cy=\"100\" r=\"6\"/><text x=\"274\" y=\"94\" text-anchor=\"end\">b</text><line x1=\"30\" y1=\"115\" x2=\"330\" y2=\"115\" stroke-dasharray=\"4,2\"/><text x=\"30\" y=\"130\">Arithmetic Mean</text><text x=\"30\" y=\"150\">= (a + b) / 2</text></svg>",
+   "n": "what is the arithmetic mean of a and b?",
    "sub": "maths",
    "at": "2026-11-08"
   }
