@@ -1,62 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T02:40:43.186Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    },
-    {
-     "agent": "exampatterns",
-     "count": 0
-    },
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must run first to resolve broken visuals blocking content consumption. MockPapers and ExamPatterns follow to address incomplete exam materials, which are high-value for students. Invention is deferred as it requires stable foundational content before generating new ideas.",
-    "actions": [
-     "BankFigures",
-     "MockPapers",
-     "ExamPatterns",
-     "MainsFresh"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "2 bank figure(s) added (920 total)",
-       "text": "Find the sum 1 + 2 + 3 + ... + n. | What is the formula for nPr? | What is the formula for nCr?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Steam Turbines (360 in pool)",
-       "text": "Steam Turbines"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T02:55:54.307Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -449,8 +393,20 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T08:48:58.510Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T08:35:00.607Z",
+ "lastRun": "2026-11-08T08:48:58.510Z",
  "model": "qwen3.5:9b"
 }
