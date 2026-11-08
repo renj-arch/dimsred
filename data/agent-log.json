@@ -1,52 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T18:44:02.138Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 2,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "mockpapers",
-     "count": 1
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately while MockPapers tackles critical exam content. Invention and MetaLearn are deferred as they produced zero fixes in recent runs, indicating a need for starvation before re-engagement. The strategy prioritizes clearing high-impact technical gaps over generating new ideas or meta-learning until core content stability is restored.",
-    "actions": [
-     "BankFigures",
-     "MockPapers"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (878 total)",
-       "text": "Why are centrifugal pumps arranged in parallel? | Write the specific speed of a pump and its use. | What is NPSH and why is it important for a pump?"
-      }
-     ]
-    },
-    {
-     "agent": "mockpapers",
-     "fixes": [
-      {
-       "page": "data/mock-fresh.json",
-       "kind": "content",
-       "fix": "10 fresh mock questions on Machine Design (360 in pool)",
-       "text": "Machine Design"
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T19:02:52.112Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -673,8 +627,69 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-08T01:17:30.218Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "bankfigures",
+     "count": 1
+    },
+    {
+     "agent": "mockpapers",
+     "count": 0
+    },
+    {
+     "agent": "exampatterns",
+     "count": 0
+    },
+    {
+     "agent": "invention",
+     "count": 0
+    },
+    {
+     "agent": "metalearn",
+     "count": 0
+    },
+    {
+     "agent": "mainsfresh",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "bankfigures",
+     "fixes": [
+      {
+       "page": "data/ssc-je-qfig.json",
+       "kind": "figure",
+       "fix": "1 bank figure(s) added (914 total)",
+       "text": "What is the nature of roots when D = 0? | What is the nature of roots when D < 0? | If α, β are the roots of x^2 − 7x + 12 = 0, find α^2 + β^2."
+      }
+     ]
+    },
+    {
+     "agent": "mainsfresh",
+     "fixes": [
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw74s9n4-y7fi (optional1/sociology, 20 marks): Critically examine the relationship between caste and social mobility in contemporary India. Does the reservation policy",
+       "model": "qwen3.5:9b (local)"
+      },
+      {
+       "page": "data/mains-fresh.json",
+       "kind": "mainsfresh",
+       "fix": "Shipped practice question ci-mw74xmyd-7p8s (optional2/history, 20 marks): Critically examine the argument that the architecture of the colonial state, rather than just its content, shaped the in",
+       "model": "qwen3.5:9b (local)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-08T00:34:52.851Z",
+ "lastRun": "2026-11-08T01:17:30.218Z",
  "model": "qwen3.5:9b"
 }

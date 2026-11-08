@@ -1,9 +1,9 @@
 {
  "meta": {
   "about": "Figures for the static SSC-JE question bank (js/ssc-je-*.js), which predates inline `f` fields and is too large to rewrite in place. Keyed by a 32-bit FNV-1a hash of the lowercased, whitespace-collapsed question text; each entry also stores the first 120 chars of that normalized text, and js/ssc-je-training.js only trusts a figure when the stored prefix matches the live question — so a hash collision can never display the wrong diagram. SVGs are drawn by the site's CI agent (scripts/site-agent.js, agent BankFigures) and pass cleanFigSvg server-side plus js/fig-svg.js client-side; figures that fail any gate never ship. A missing file simply means no figures.",
-  "updatedAt": "2026-11-08T00:28:06.195Z",
-  "cursor": 1041,
-  "built": 913
+  "updatedAt": "2026-11-08T00:50:44.403Z",
+  "cursor": 1044,
+  "built": 914
  },
  "figs": {
   "2316121": {
@@ -5481,6 +5481,12 @@
   "f23bc189": {
    "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\">\n <text x=\"180\" y=\"40\" text-anchor=\"middle\">ax² + bx + c = 0</text>\n <line x1=\"60\" y1=\"70\" x2=\"300\" y2=\"70\"/>\n <text x=\"50\" y=\"65\">D = b² - 4ac</text>\n <circle cx=\"180\" cy=\"70\" r=\"3\"/>\n <line x1=\"180\" y1=\"73\" x2=\"180\" y2=\"190\"/>\n <text x=\"175\" y=\"140\">D &gt; 0</text>\n <text x=\"175\" y=\"160\">Distinct Real</text>\n <line x1=\"180\" y1=\"130\" x2=\"180\" y2=\"190\"/>\n <circle cx=\"180\" cy=\"145\" r=\"3\"/>\n <text x=\"175\" y=\"175\">D = 0</text>\n <text x=\"175\" y=\"195\">Equal Real</text>\n <line x1=\"180\" y1=\"165\" x2=\"180\" y2=\"190\"/>\n <circle cx=\"180\" cy=\"180\" r=\"3\"/>\n <text x=\"175\" y=\"205\">D &lt; 0</text>\n <text x=\"175\" y=\"225\">Complex</text>\n</svg>",
    "n": "what is the discriminant d of ax^2 + bx + c = 0 and what does it decide?",
+   "sub": "maths",
+   "at": "2026-11-08"
+  },
+  "e771ee6b": {
+   "svg": "<svg viewBox=\"0 0 360 220\" stroke=\"#222\" fill=\"none\" stroke-width=\"1.5\" font-size=\"12\"><text x=\"180\" y=\"25\" text-anchor=\"middle\">x</text><text x=\"10\" y=\"40\" text-anchor=\"end\">y</text><path d=\"M 30 40 L 330 40\"/><path d=\"M 30 40 Q 180 210 330 40\"/><circle cx=\"180\" cy=\"155\" r=\"3\"/><text x=\"175\" y=\"165\">x = -b/2a</text><text x=\"185\" y=\"165\">x = -b/2a</text></svg>",
+   "n": "what is the nature of roots when d = 0?",
    "sub": "maths",
    "at": "2026-11-08"
   }
