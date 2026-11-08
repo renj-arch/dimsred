@@ -1,30 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T08:04:53.426Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "proposals",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "proposals",
-     "fixes": [
-      {
-       "kind": "proposal",
-       "fix": "Fix mains-fresh lane generation quality",
-       "detail": "The digest reports a recent failure in `mains-fresh` where the model could not write an acceptable question due to missing checkable anchors (act, case, committee...), and the fault board has 60 critical items.",
-       "text": "Modify the Ollama prompt template for the `mains-fresh` lane to explicitly require at least two specific anchor keywords (e.g., 'scheme', 'report') in every generated question before outputting JSON. Wrap this in a validation loop that retries up to 3 times if anchors are missing."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-08T08:17:17.073Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -219,8 +195,20 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-08T13:20:20.426Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T13:02:55.139Z",
+ "lastRun": "2026-11-08T13:20:20.426Z",
  "model": "qwen3.5:9b"
 }
