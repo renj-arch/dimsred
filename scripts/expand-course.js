@@ -929,7 +929,13 @@ function writeTouched(keys, files, exams) {
 async function main() {
   var fills = collectGaps();
   var thins = THIN > 0 ? collectThins() : [];
-  var deeps = DEEPEN ? interleave(collectHandPages(), collectDeepen()) : [];
+  // Hubs first, then fair-share the hand and generated depth lanes. The hubs
+  // are the pages readers land on, so they must not wait behind a generated
+  // lesson in the interleave.
+  var handPages = DEEPEN ? collectHandPages() : [];
+  var hubs = handPages.filter(function (g) { return g.priority === 0; });
+  var handRest = handPages.filter(function (g) { return g.priority !== 0; });
+  var deeps = DEEPEN ? hubs.concat(interleave(handRest, collectDeepen())) : [];
   console.log('Course worklist: ' + fills.length + ' empty slot(s), ' + thins.length + ' thin lesson(s) (<' + THIN + ' chars), ' + deeps.length + ' depth candidate(s)');
   if (DRY && process.env.EXPAND_DRY_JSON) {
     fs.writeFileSync(path.resolve(process.env.EXPAND_DRY_JSON), JSON.stringify(deeps, null, 2) + '\n', 'utf8');
@@ -953,9 +959,18 @@ async function main() {
     return;
   }
 
-  // Empty slots first (a lesson that says nothing at all), then the
-  // shortest thin lessons (the most visible gain per generation), then depth.
-  var queue = fills.concat(thins).concat(deeps);
+  // Fill and depth must share every run. When all empty slots go first, a
+  // scheduled run spends its whole deadline filling and the depth lane never
+  // starts (observed: 12 fills, 0 depth pages). Alternate depth and fill so the
+  // hub pages (priority 0) land in the first run and the Mains slots still fill
+  // at the same time. Once the fill queue is empty the rest is depth only.
+  var fillQueue = fills.concat(thins);
+  var queue = [];
+  var fi = 0, di = 0;
+  while (fi < fillQueue.length || di < deeps.length) {
+    if (di < deeps.length) queue.push(deeps[di++]);
+    if (fi < fillQueue.length) queue.push(fillQueue[fi++]);
+  }
 
   var deadline = Date.now() + DEADLINE_MIN * 60000;
   runDeadlineAt = deadline;
