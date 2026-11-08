@@ -1,46 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-07T23:17:31.467Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "bankfigures",
-     "count": 1
-    },
-    {
-     "agent": "metalearn",
-     "count": 0
-    },
-    {
-     "agent": "invention",
-     "count": 0
-    }
-   ],
-   "plan": {
-    "reasoning": "Critical faults (60) and figure gaps (80) dominate the queue; BankFigures must address the 80 missing figures immediately as it produced only 1 fix previously and is likely starved. MetaLearn should follow to synthesize corrections for those critical faults, while Invention can tackle pending ideas once immediate gaps are addressed. Questions and Papers agents remain at zero output but will be queued later if gaps persist after high-priority fixes.",
-    "actions": [
-     "BankFigures",
-     "MetaLearn",
-     "Invention"
-    ]
-   },
-   "details": [
-    {
-     "agent": "bankfigures",
-     "fixes": [
-      {
-       "page": "data/ssc-je-qfig.json",
-       "kind": "figure",
-       "fix": "3 bank figure(s) added (907 total)",
-       "text": "What is a fluid coupling? | How does a torque converter differ from a fluid coupling? | Name the common types of water wheels."
-      }
-     ]
-    }
-   ]
-  },
-  {
    "at": "2026-11-07T23:40:31.184Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -673,8 +633,20 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-08T05:52:10.217Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
   }
  ],
- "lastRun": "2026-11-08T05:35:16.089Z",
+ "lastRun": "2026-11-08T05:52:10.217Z",
  "model": "qwen3.5:9b"
 }
