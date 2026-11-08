@@ -1,5 +1,12 @@
 name: Globe Fill
 
+# RETIRED as an automatic loop (2026-11-08). The workflow is disabled in the
+# Actions UI: one run rebuilds 3d-globe.html from Wikipedia + Wikidata, takes
+# up to 6 hours, and used to re-dispatch itself forever ("Trigger next run"),
+# which crowded out the course, paper and wiki-fill lanes for a page that
+# changes slowly. The pipeline is kept intact for on-demand refreshes:
+#   gh workflow run daily-globe-fill.yml --ref main
+# Run it manually when the globe data is stale, not on a schedule.
 on:
   schedule:
     - cron: '0 0 * * *'  # Daily kickstart fallback
@@ -233,9 +240,3 @@ jobs:
               sleep 5
             done || true
           fi
-
-      - name: Trigger next run
-        if: success()
-        run: gh workflow run "Globe Fill" --ref main
-        env:
-          GITHUB_TOKEN: ${{ secrets.PAT }}
