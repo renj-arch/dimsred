@@ -65,6 +65,30 @@ function build(data) {
     data.negativeNote || 'Negative marking as per the exam'
   ];
 
+  // Interactive test payload for js/mock-test.js. The same question objects
+  // power both the printable paper below and the timed test overlay.
+  const testSections = (data.sectionsMeta || []).map(function (sm) {
+    const sec = (data.sections || []).filter(function (s) { return s.name === sm.name; })[0];
+    return {
+      name: sm.name,
+      count: data.questions.filter(function (q) { return q.section === sm.name; }).length,
+      color: (sec && sec.color) || '#a78bfa'
+    };
+  }).filter(function (s) { return s.count > 0; });
+  const testData = {
+    examName: data.paperName || data.title,
+    totalQuestions: data.questions.length,
+    totalMarks: data.totalMarks,
+    duration: data.timerMinutes,
+    negativeMarking: data.negativeMarking || '0',
+    negativeMarkingDisplay: data.negativeNote || '',
+    perQuestionMarks: data.totalMarks / Math.max(1, data.questions.length),
+    hasNegative: Number(data.negativeMarking) > 0,
+    sections: testSections,
+    questions: data.questions
+  };
+  const testJson = JSON.stringify(testData).replace(/<\//g, '<\\/');
+
   return '<!DOCTYPE html>\n<html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">' +
     '<title>' + esc(data.pageTitle) + '</title><meta name="description" content="' + esc(data.pageDesc) + '">' +
     '<link rel="canonical" href="' + BASE + '/' + data.folder + '/mock-tests/' + data.slug + '.html">' +
@@ -101,6 +125,11 @@ function build(data) {
     '<p class="hint">Generated ' + esc(data.generatedAt || data.createdDate) + ' · ' + esc(data.generatedBy || '') + ' · Source: ' + esc(data.source || '') + '</p>' +
     (data.provisional ? '<div class="provisional">Section counts for this paper are provisional — they vary by year and could not be checked against one official notification.</div>' : '') +
     (data.note ? '<p class="hint">' + esc(data.note) + '</p>' : '') +
+    '<div style="background:#111113;border:1px solid #27272a;border-radius:12px;padding:18px;margin:16px 0;text-align:center">' +
+    '<div style="font-weight:800;font-size:1.1em;margin-bottom:4px">Run this paper as a timed test</div>' +
+    '<div class="hint" style="margin-bottom:12px">' + data.questions.length + ' questions &middot; ' + data.totalMarks + ' marks &middot; ' + data.timerMinutes + ' minutes' + (data.negativeNote ? ' &middot; ' + esc(data.negativeNote) : '') + '</div>' +
+    '<button class="btn" id="startTest" type="button" style="padding:11px 28px;font-size:1em">Start Test &#x2192;</button>' +
+    '</div>' +
     '<div class="timer"><b id="clock">--:--:--</b><button class="btn" id="start" type="button">Start timer</button><button class="btn sec" id="pause" type="button" disabled>Pause</button><span class="hint">Negative marking: ' + esc(data.negativeNote || data.negativeMarking) + '</span></div>' +
     '<p class="hint">Answer the questions, then press “Show answer” on any question or use the key at the bottom. This page and the PDF are printable.</p>' +
     '<div class="grid" style="margin:12px 0"><button class="btn sec" id="all" type="button">Show all explanations</button><button class="btn sec" id="score" type="button">Score my attempt</button><button class="btn sec" onclick="window.print()" type="button">Print</button><a class="btn sec" href="/pdfs/' + data.slug + '.pdf" download>Download PDF</a></div>' +
@@ -109,6 +138,10 @@ function build(data) {
     '<h2 class="sec">Answer key</h2><table><thead><tr><th>Q</th><th>Section</th><th>Answer</th></tr></thead><tbody>' + keyRows + '</tbody></table>' +
     '<h2 class="sec">Solutions &amp; explanations</h2>' + sols +
     '<p class="footer">Paper generated ' + esc(data.createdDate) + '. Model-written questions are marked; reviewed bank questions are unmarked. Verify any factual detail against the official notification before relying on it.</p></div>' +
+    '<div id="mt-root"></div>' +
+    '<script>window._mockTestData = ' + testJson + ';</script>' +
+    '<script src="../../js/mock-test.js"></script>' +
+    '<script>document.getElementById("startTest").onclick=function(){window._mockTest.init();};</script>' +
     '<script>(function(){var left=' + (data.timerMinutes * 60) + ',run=null,el=document.getElementById("clock");function fmt(n){n=Math.max(0,n);return String(Math.floor(n/3600)).padStart(2,"0")+":"+String(Math.floor(n%3600/60)).padStart(2,"0")+":"+String(n%60).padStart(2,"0")}el.textContent=fmt(left);function tick(){if(left<=0){clearInterval(run);run=null;el.textContent="00:00:00";return}left--;el.textContent=fmt(left)}document.getElementById("start").onclick=function(){if(run)return;run=setInterval(tick,1000);this.disabled=true;document.getElementById("pause").disabled=false};document.getElementById("pause").onclick=function(){if(run){clearInterval(run);run=null;this.textContent="Resume"}else{run=setInterval(tick,1000);this.textContent="Pause"}};document.getElementById("all").onclick=function(){document.querySelectorAll(".q").forEach(function(q){var s=q.querySelector(".sol");s.hidden=false});};document.getElementById("score").onclick=function(){var right=0,wrong=0,skip=0;document.querySelectorAll(".q").forEach(function(q){var v=q.querySelector("input:checked");if(!v){skip++;return}if(v.value===q.dataset.correct)right++;else wrong++;});var neg=parseFloat(' + JSON.stringify(Number(data.negativeMarking) || 0) + ');var per=' + JSON.stringify(Number(data.totalMarks) / Math.max(1, data.questions.length)) + ';var score=(right-wrong*neg)*per;document.getElementById("scoreOut").textContent="Correct "+right+" · Wrong "+wrong+" · Skipped "+skip+" · Estimated score "+score.toFixed(2)+" / '+data.totalMarks+'";};})();</script></body></html>';
 }
 
