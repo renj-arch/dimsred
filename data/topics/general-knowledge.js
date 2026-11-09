@@ -1,11 +1,11 @@
 window.__examData = {
   "exam": "general-knowledge",
   "name": "General Knowledge & Studies",
-  "total": 2473,
+  "total": 2310,
   "sections": [
     {
       "name": "General Knowledge & Studies",
-      "count": 2473,
+      "count": 2310,
       "questions": [
         {
           "id": 1938,
@@ -20496,32 +20496,6 @@ window.__examData = {
           "_sourceSection": "General Knowledge"
         },
         {
-          "id": 12,
-          "text": "In Current Affairs, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "NDA",
-          "_sourceSection": "General Knowledge"
-        },
-        {
           "id": 13,
           "text": "How can you improve your speed in Current Affairs questions?",
           "options": [
@@ -20756,32 +20730,6 @@ window.__examData = {
           "_sourceSection": "General Knowledge"
         },
         {
-          "id": 22,
-          "text": "In Indian History, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "NDA",
-          "_sourceSection": "General Knowledge"
-        },
-        {
           "id": 23,
           "text": "How can you improve your speed in Indian History questions?",
           "options": [
@@ -20882,32 +20830,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "NDA",
-          "_sourceSection": "General Knowledge"
-        },
-        {
-          "id": 27,
-          "text": "In Indian Polity, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "NDA",
           "_sourceSection": "General Knowledge"
         },
@@ -43222,32 +43144,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 2907,
-          "text": "In Indian Society, Diversity & Social Issues, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 2908,
           "text": "How can you improve your speed in Indian Society, Diversity & Social Issues questions?",
           "options": [
@@ -43924,32 +43820,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 2934,
-          "text": "In Governance, Transparency & Accountability, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 2935,
           "text": "How can you improve your speed in Governance, Transparency & Accountability questions?",
           "options": [
@@ -44050,32 +43920,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 2939,
-          "text": "In India & the World, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -44310,32 +44154,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 2949,
-          "text": "In Agriculture, Food Processing & MSP, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -45302,32 +45120,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 2987,
-          "text": "In Case Studies: Method & Practice, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 2988,
           "text": "How can you improve your speed in Case Studies: Method & Practice questions?",
           "options": [
@@ -45428,32 +45220,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 2992,
-          "text": "In Emotional Intelligence & Public Service Values, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -45562,32 +45328,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 2997,
-          "text": "In Ethics & Human Interface, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 2998,
           "text": "How can you improve your speed in Ethics & Human Interface questions?",
           "options": [
@@ -45688,32 +45428,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3002,
-          "text": "In Current Affairs for Interview, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -45822,32 +45536,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3007,
-          "text": "In DAF Analysis & Question Mapping, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3008,
           "text": "How can you improve your speed in DAF Analysis & Question Mapping questions?",
           "options": [
@@ -45948,32 +45636,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3012,
-          "text": "In Interview Strategy & Board Dynamics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -46082,32 +45744,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3017,
-          "text": "In Mock Interview Practice, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3018,
           "text": "How can you improve your speed in Mock Interview Practice questions?",
           "options": [
@@ -46208,32 +45844,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3022,
-          "text": "In Paper A: Indian Language, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -46342,32 +45952,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3027,
-          "text": "In Paper B: English, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3028,
           "text": "How can you improve your speed in Paper B: English questions?",
           "options": [
@@ -46468,32 +46052,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3032,
-          "text": "In Precis & Comprehension, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -46602,32 +46160,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3037,
-          "text": "In Translation & Grammar, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3038,
           "text": "How can you improve your speed in Translation & Grammar questions?",
           "options": [
@@ -46728,32 +46260,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3042,
-          "text": "In Choosing Your Optional Subject, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -46862,32 +46368,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3047,
-          "text": "In Agriculture Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3048,
           "text": "How can you improve your speed in Agriculture Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -46988,32 +46468,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3052,
-          "text": "In Agriculture Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -47122,32 +46576,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3057,
-          "text": "In Agriculture Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3058,
           "text": "How can you improve your speed in Agriculture Paper II: Core Topics questions?",
           "options": [
@@ -47248,32 +46676,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3062,
-          "text": "In Animal Husbandry & Veterinary Science Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -47382,32 +46784,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3067,
-          "text": "In Animal Husbandry & Veterinary Science Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3068,
           "text": "How can you improve your speed in Animal Husbandry & Veterinary Science Paper I: Core Topics questions?",
           "options": [
@@ -47508,32 +46884,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3072,
-          "text": "In Animal Husbandry & Veterinary Science Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -47642,32 +46992,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3077,
-          "text": "In Anthropology Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3078,
           "text": "How can you improve your speed in Anthropology Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -47768,32 +47092,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3082,
-          "text": "In Anthropology Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -47902,32 +47200,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3087,
-          "text": "In Anthropology Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3088,
           "text": "How can you improve your speed in Anthropology Paper II: Core Topics questions?",
           "options": [
@@ -48028,32 +47300,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3092,
-          "text": "In Assamese Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -48162,32 +47408,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3097,
-          "text": "In Assamese Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3098,
           "text": "How can you improve your speed in Assamese Literature Paper I: History & Movements questions?",
           "options": [
@@ -48288,32 +47508,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3102,
-          "text": "In Assamese Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -48422,32 +47616,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3107,
-          "text": "In Bengali Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3108,
           "text": "How can you improve your speed in Bengali Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -48548,32 +47716,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3112,
-          "text": "In Bengali Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -48682,32 +47824,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3117,
-          "text": "In Bengali Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3118,
           "text": "How can you improve your speed in Bengali Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -48808,32 +47924,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3122,
-          "text": "In Bodo Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -48942,32 +48032,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3127,
-          "text": "In Bodo Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3128,
           "text": "How can you improve your speed in Bodo Literature Paper I: History & Movements questions?",
           "options": [
@@ -49068,32 +48132,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3132,
-          "text": "In Bodo Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -49202,32 +48240,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3137,
-          "text": "In Botany Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3138,
           "text": "How can you improve your speed in Botany Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -49328,32 +48340,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3142,
-          "text": "In Botany Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -49462,32 +48448,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3147,
-          "text": "In Botany Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3148,
           "text": "How can you improve your speed in Botany Paper II: Core Topics questions?",
           "options": [
@@ -49588,32 +48548,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3152,
-          "text": "In Chemistry Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -49722,32 +48656,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3157,
-          "text": "In Chemistry Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3158,
           "text": "How can you improve your speed in Chemistry Paper I: Core Topics questions?",
           "options": [
@@ -49848,32 +48756,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3162,
-          "text": "In Chemistry Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -49982,32 +48864,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3167,
-          "text": "In Civil Engineering Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3168,
           "text": "How can you improve your speed in Civil Engineering Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -50108,32 +48964,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3172,
-          "text": "In Civil Engineering Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -50242,32 +49072,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3177,
-          "text": "In Civil Engineering Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3178,
           "text": "How can you improve your speed in Civil Engineering Paper II: Core Topics questions?",
           "options": [
@@ -50368,32 +49172,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3182,
-          "text": "In Commerce & Accountancy Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -50502,32 +49280,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3187,
-          "text": "In Commerce & Accountancy Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3188,
           "text": "How can you improve your speed in Commerce & Accountancy Paper I: Core Topics questions?",
           "options": [
@@ -50628,32 +49380,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3192,
-          "text": "In Commerce & Accountancy Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -50762,32 +49488,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3197,
-          "text": "In Dogri Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3198,
           "text": "How can you improve your speed in Dogri Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -50888,32 +49588,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3202,
-          "text": "In Dogri Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -51022,32 +49696,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3207,
-          "text": "In Dogri Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3208,
           "text": "How can you improve your speed in Dogri Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -51148,32 +49796,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3212,
-          "text": "In Economics Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -51282,32 +49904,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3217,
-          "text": "In Economics Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3218,
           "text": "How can you improve your speed in Economics Paper I: Core Topics questions?",
           "options": [
@@ -51408,32 +50004,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3222,
-          "text": "In Economics Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -51542,32 +50112,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3227,
-          "text": "In Electrical Engineering Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3228,
           "text": "How can you improve your speed in Electrical Engineering Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -51668,32 +50212,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3232,
-          "text": "In Electrical Engineering Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -51802,32 +50320,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3237,
-          "text": "In Electrical Engineering Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3238,
           "text": "How can you improve your speed in Electrical Engineering Paper II: Core Topics questions?",
           "options": [
@@ -51928,32 +50420,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3242,
-          "text": "In English Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -52062,32 +50528,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3247,
-          "text": "In English Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3248,
           "text": "How can you improve your speed in English Literature Paper I: History & Movements questions?",
           "options": [
@@ -52188,32 +50628,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3252,
-          "text": "In English Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -52322,32 +50736,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3257,
-          "text": "In Geography Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3258,
           "text": "How can you improve your speed in Geography Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -52448,32 +50836,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3262,
-          "text": "In Geography Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -52582,32 +50944,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3267,
-          "text": "In Geography Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3268,
           "text": "How can you improve your speed in Geography Paper II: Core Topics questions?",
           "options": [
@@ -52708,32 +51044,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3272,
-          "text": "In Geology Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -52842,32 +51152,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3277,
-          "text": "In Geology Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3278,
           "text": "How can you improve your speed in Geology Paper I: Core Topics questions?",
           "options": [
@@ -52968,32 +51252,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3282,
-          "text": "In Geology Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -53102,32 +51360,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3287,
-          "text": "In Gujarati Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3288,
           "text": "How can you improve your speed in Gujarati Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -53228,32 +51460,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3292,
-          "text": "In Gujarati Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -53362,32 +51568,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3297,
-          "text": "In Gujarati Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3298,
           "text": "How can you improve your speed in Gujarati Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -53488,32 +51668,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3302,
-          "text": "In Hindi Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -53622,32 +51776,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3307,
-          "text": "In Hindi Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3308,
           "text": "How can you improve your speed in Hindi Literature Paper I: History & Movements questions?",
           "options": [
@@ -53748,32 +51876,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3312,
-          "text": "In Hindi Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -53882,32 +51984,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3317,
-          "text": "In History Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3318,
           "text": "How can you improve your speed in History Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -54008,32 +52084,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3322,
-          "text": "In History Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -54142,32 +52192,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3327,
-          "text": "In History Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3328,
           "text": "How can you improve your speed in History Paper II: Core Topics questions?",
           "options": [
@@ -54268,32 +52292,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3332,
-          "text": "In Kannada Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -54402,32 +52400,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3337,
-          "text": "In Kannada Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3338,
           "text": "How can you improve your speed in Kannada Literature Paper I: History & Movements questions?",
           "options": [
@@ -54528,32 +52500,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3342,
-          "text": "In Kannada Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -54662,32 +52608,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3347,
-          "text": "In Kashmiri Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3348,
           "text": "How can you improve your speed in Kashmiri Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -54788,32 +52708,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3352,
-          "text": "In Kashmiri Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -54922,32 +52816,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3357,
-          "text": "In Kashmiri Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3358,
           "text": "How can you improve your speed in Kashmiri Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -55048,32 +52916,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3362,
-          "text": "In Konkani Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -55182,32 +53024,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3367,
-          "text": "In Konkani Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3368,
           "text": "How can you improve your speed in Konkani Literature Paper I: History & Movements questions?",
           "options": [
@@ -55308,32 +53124,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3372,
-          "text": "In Konkani Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -55442,32 +53232,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3377,
-          "text": "In Law Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3378,
           "text": "How can you improve your speed in Law Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -55568,32 +53332,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3382,
-          "text": "In Law Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -55702,32 +53440,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3387,
-          "text": "In Law Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3388,
           "text": "How can you improve your speed in Law Paper II: Core Topics questions?",
           "options": [
@@ -55828,32 +53540,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3392,
-          "text": "In Maithili Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -55962,32 +53648,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3397,
-          "text": "In Maithili Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3398,
           "text": "How can you improve your speed in Maithili Literature Paper I: History & Movements questions?",
           "options": [
@@ -56088,32 +53748,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3402,
-          "text": "In Maithili Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -56222,32 +53856,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3407,
-          "text": "In Malayalam Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3408,
           "text": "How can you improve your speed in Malayalam Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -56348,32 +53956,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3412,
-          "text": "In Malayalam Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -56482,32 +54064,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3417,
-          "text": "In Malayalam Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3418,
           "text": "How can you improve your speed in Malayalam Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -56608,32 +54164,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3422,
-          "text": "In Management Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -56742,32 +54272,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3427,
-          "text": "In Management Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3428,
           "text": "How can you improve your speed in Management Paper I: Core Topics questions?",
           "options": [
@@ -56868,32 +54372,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3432,
-          "text": "In Management Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -57002,32 +54480,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3437,
-          "text": "In Manipuri Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3438,
           "text": "How can you improve your speed in Manipuri Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -57128,32 +54580,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3442,
-          "text": "In Manipuri Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -57262,32 +54688,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3447,
-          "text": "In Manipuri Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3448,
           "text": "How can you improve your speed in Manipuri Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -57388,32 +54788,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3452,
-          "text": "In Marathi Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -57522,32 +54896,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3457,
-          "text": "In Marathi Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3458,
           "text": "How can you improve your speed in Marathi Literature Paper I: History & Movements questions?",
           "options": [
@@ -57648,32 +54996,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3462,
-          "text": "In Marathi Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -57782,32 +55104,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3467,
-          "text": "In Mathematics Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3468,
           "text": "How can you improve your speed in Mathematics Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -57908,32 +55204,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3472,
-          "text": "In Mathematics Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -58042,32 +55312,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3477,
-          "text": "In Mathematics Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3478,
           "text": "How can you improve your speed in Mathematics Paper II: Core Topics questions?",
           "options": [
@@ -58168,32 +55412,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3482,
-          "text": "In Mechanical Engineering Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -58302,32 +55520,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3487,
-          "text": "In Mechanical Engineering Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3488,
           "text": "How can you improve your speed in Mechanical Engineering Paper I: Core Topics questions?",
           "options": [
@@ -58428,32 +55620,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3492,
-          "text": "In Mechanical Engineering Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -58562,32 +55728,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3497,
-          "text": "In Medical Science Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3498,
           "text": "How can you improve your speed in Medical Science Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -58688,32 +55828,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3502,
-          "text": "In Medical Science Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -58822,32 +55936,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3507,
-          "text": "In Medical Science Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3508,
           "text": "How can you improve your speed in Medical Science Paper II: Core Topics questions?",
           "options": [
@@ -58948,32 +56036,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3512,
-          "text": "In Nepali Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -59082,32 +56144,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3517,
-          "text": "In Nepali Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3518,
           "text": "How can you improve your speed in Nepali Literature Paper I: History & Movements questions?",
           "options": [
@@ -59208,32 +56244,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3522,
-          "text": "In Nepali Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -59342,32 +56352,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3527,
-          "text": "In Odia Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3528,
           "text": "How can you improve your speed in Odia Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -59468,32 +56452,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3532,
-          "text": "In Odia Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -59602,32 +56560,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3537,
-          "text": "In Odia Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3538,
           "text": "How can you improve your speed in Odia Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -59728,32 +56660,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3542,
-          "text": "In Philosophy Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -59862,32 +56768,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3547,
-          "text": "In Philosophy Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3548,
           "text": "How can you improve your speed in Philosophy Paper I: Core Topics questions?",
           "options": [
@@ -59988,32 +56868,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3552,
-          "text": "In Philosophy Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -60122,32 +56976,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3557,
-          "text": "In Physics Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3558,
           "text": "How can you improve your speed in Physics Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -60248,32 +57076,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3562,
-          "text": "In Physics Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -60382,32 +57184,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3567,
-          "text": "In Physics Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3568,
           "text": "How can you improve your speed in Physics Paper II: Core Topics questions?",
           "options": [
@@ -60508,32 +57284,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3572,
-          "text": "In Political Science & International Relations Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -60642,32 +57392,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3577,
-          "text": "In Political Science & International Relations Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3578,
           "text": "How can you improve your speed in Political Science & International Relations Paper I: Core Topics questions?",
           "options": [
@@ -60768,32 +57492,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3582,
-          "text": "In Political Science & International Relations Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -60902,32 +57600,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3587,
-          "text": "In Psychology Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3588,
           "text": "How can you improve your speed in Psychology Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -61028,32 +57700,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3592,
-          "text": "In Psychology Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -61162,32 +57808,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3597,
-          "text": "In Psychology Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3598,
           "text": "How can you improve your speed in Psychology Paper II: Core Topics questions?",
           "options": [
@@ -61288,32 +57908,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3602,
-          "text": "In Public Administration Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -61422,32 +58016,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3607,
-          "text": "In Public Administration Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3608,
           "text": "How can you improve your speed in Public Administration Paper I: Core Topics questions?",
           "options": [
@@ -61548,32 +58116,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3612,
-          "text": "In Public Administration Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -61682,32 +58224,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3617,
-          "text": "In Punjabi Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3618,
           "text": "How can you improve your speed in Punjabi Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -61808,32 +58324,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3622,
-          "text": "In Punjabi Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -61942,32 +58432,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3627,
-          "text": "In Punjabi Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3628,
           "text": "How can you improve your speed in Punjabi Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -62068,32 +58532,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3632,
-          "text": "In Sanskrit Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -62202,32 +58640,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3637,
-          "text": "In Sanskrit Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3638,
           "text": "How can you improve your speed in Sanskrit Literature Paper I: History & Movements questions?",
           "options": [
@@ -62328,32 +58740,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3642,
-          "text": "In Sanskrit Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -62462,32 +58848,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3647,
-          "text": "In Santali Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3648,
           "text": "How can you improve your speed in Santali Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -62588,32 +58948,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3652,
-          "text": "In Santali Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -62722,32 +59056,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3657,
-          "text": "In Santali Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3658,
           "text": "How can you improve your speed in Santali Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -62848,32 +59156,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3662,
-          "text": "In Sindhi Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -62982,32 +59264,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3667,
-          "text": "In Sindhi Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3668,
           "text": "How can you improve your speed in Sindhi Literature Paper I: History & Movements questions?",
           "options": [
@@ -63108,32 +59364,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3672,
-          "text": "In Sindhi Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -63242,32 +59472,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3677,
-          "text": "In Sociology Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3678,
           "text": "How can you improve your speed in Sociology Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -63368,32 +59572,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3682,
-          "text": "In Sociology Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -63502,32 +59680,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3687,
-          "text": "In Sociology Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3688,
           "text": "How can you improve your speed in Sociology Paper II: Core Topics questions?",
           "options": [
@@ -63628,32 +59780,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3692,
-          "text": "In Statistics Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -63762,32 +59888,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3697,
-          "text": "In Statistics Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3698,
           "text": "How can you improve your speed in Statistics Paper I: Core Topics questions?",
           "options": [
@@ -63888,32 +59988,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3702,
-          "text": "In Statistics Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -64022,32 +60096,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3707,
-          "text": "In Tamil Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3708,
           "text": "How can you improve your speed in Tamil Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -64148,32 +60196,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3712,
-          "text": "In Tamil Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -64282,32 +60304,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3717,
-          "text": "In Tamil Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3718,
           "text": "How can you improve your speed in Tamil Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -64408,32 +60404,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3722,
-          "text": "In Telugu Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -64542,32 +60512,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3727,
-          "text": "In Telugu Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3728,
           "text": "How can you improve your speed in Telugu Literature Paper I: History & Movements questions?",
           "options": [
@@ -64668,32 +60612,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3732,
-          "text": "In Telugu Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -64802,32 +60720,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3737,
-          "text": "In Urdu Literature Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3738,
           "text": "How can you improve your speed in Urdu Literature Optional: Syllabus, Sources & Strategy questions?",
           "options": [
@@ -64928,32 +60820,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3742,
-          "text": "In Urdu Literature Paper I: History & Movements, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -65062,32 +60928,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3747,
-          "text": "In Urdu Literature Paper II: Texts & Criticism, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3748,
           "text": "How can you improve your speed in Urdu Literature Paper II: Texts & Criticism questions?",
           "options": [
@@ -65188,32 +61028,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3752,
-          "text": "In Zoology Optional: Syllabus, Sources & Strategy, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },
@@ -65322,32 +61136,6 @@ window.__examData = {
           "_sourceSection": "General Studies"
         },
         {
-          "id": 3757,
-          "text": "In Zoology Paper I: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
           "id": 3758,
           "text": "How can you improve your speed in Zoology Paper I: Core Topics questions?",
           "options": [
@@ -65448,32 +61236,6 @@ window.__examData = {
           ],
           "answer": 1,
           "solution": "Correct answer: Understand concepts first.",
-          "_source": "UPSC CSE",
-          "_sourceSection": "General Studies"
-        },
-        {
-          "id": 3762,
-          "text": "In Zoology Paper II: Core Topics, which step is most critical for accurate problem-solving?",
-          "options": [
-            {
-              "label": "A",
-              "text": "Reading the question carefully"
-            },
-            {
-              "label": "B",
-              "text": "Using the correct formula"
-            },
-            {
-              "label": "C",
-              "text": "Performing calculations accurately"
-            },
-            {
-              "label": "D",
-              "text": "All of the above"
-            }
-          ],
-          "answer": 3,
-          "solution": "Correct answer: All of the above.",
           "_source": "UPSC CSE",
           "_sourceSection": "General Studies"
         },

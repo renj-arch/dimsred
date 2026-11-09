@@ -1,8 +1,11 @@
 name: Wiki Fill
 
 on:
-  schedule:
-    - cron: '0 0 * * *'
+  # No fixed cron: runs are chained — each run self-dispatches the next one
+  # when it finishes (see the "Queue the next Wiki Fill" step in finalize).
+  # This means a new fill cycle starts as soon as the previous one completes,
+  # instead of waiting for the next 00:00 UTC slot. Use workflow_dispatch to
+  # start the chain manually.
   workflow_dispatch:
     inputs:
       chunk:
@@ -652,3 +655,7 @@ jobs:
           # the job that commits the question data. Its daily cron backstops the
           # non-fatal dispatch above.
           gh workflow run build-ask-qb.yml --ref main 2>/dev/null && echo "Self-dispatched Ask Question-Bank Build" || echo "Ask Q/B dispatch failed (non-fatal)"
+
+          # Chain the next Wiki Fill as soon as this one finishes — back-to-back
+          # instead of waiting for the next 00:00 UTC cron slot.
+          gh workflow run daily-wiki-fill.yml --ref main 2>/dev/null && echo "Queued next Wiki Fill" || echo "Next Wiki Fill dispatch failed (non-fatal)"

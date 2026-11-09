@@ -236,11 +236,17 @@ function resetStartBtn(){
   startBtn.textContent = 'Start Test';
 }
 
+function isTemplateJunk(q){
+  var t=String(q.text||'');
+  return /most critical for accurate problem-solving/.test(t)
+      || /using the correct formula/i.test(t) && /reading the question carefully/i.test(t)
+      || /performing calculations accurately/.test(t);
+}
 function buildQuestions(examData){
   var section = null;
   for (var s of examData.sections) { if (s.name === selectedTopic) { section = s; break; } }
   if (!section || !section.questions.length) { resetStartBtn(); return; }
-  var pool = section.questions.slice();
+  var pool = section.questions.slice().filter(function(q){ return !isTemplateJunk(q); });
   shuffle(pool);
   questions = pool.slice(0, selectedCount);
   currentIdx = 0;
