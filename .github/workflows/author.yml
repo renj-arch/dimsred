@@ -164,7 +164,16 @@ jobs:
             exit 0
           fi
           git commit -m "author $FILM from its sourced ledger"
-          git push
+          if git pull --rebase --autostash 2>/dev/null; then
+            : # clean rebase
+          else
+            git rebase --abort 2>/dev/null || true
+            git fetch origin main 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            git add -A 2>/dev/null || true
+            git commit --no-edit 2>/dev/null || true
+          fi
+          git push origin HEAD:main
 
       - name: Dispatch the render
         if: ${{ success() && !inputs.stub && inputs.render }}
