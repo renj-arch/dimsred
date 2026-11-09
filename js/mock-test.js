@@ -5,6 +5,7 @@ if (!MOCK) return;
 var state = {
   answers: {},
   markedForReview: [],
+  revealed: {},
   currentSection: 0,
   currentQ: 0,
   timeLeft: MOCK.duration * 60,
@@ -108,6 +109,7 @@ function renderUI() {
   h += '<div style="display:flex;justify-content:space-between;padding:10px 16px;border-top:1px solid var(--border,rgba(255,255,255,.06));flex-shrink:0">';
   h += '<button onclick="window._mockTest.prevQuestion()" class="mt-btn mt-btn-secondary" id="mt-prev">&#x2190; Previous</button>';
   h += '<div style="display:flex;gap:8px">';
+  h += '<button onclick="window._mockTest.showAnswer()" class="mt-btn mt-btn-secondary" id="mt-reveal">Show Answer</button>';
   h += '<button onclick="window._mockTest.markForReview()" class="mt-btn mt-btn-warning" id="mt-review">Mark for Review</button>';
   h += '<button onclick="window._mockTest.nextQuestion()" class="mt-btn mt-btn-primary" id="mt-next">Save & Next &#x2192;</button>';
   h += '</div>';
@@ -151,18 +153,30 @@ function renderQuestion() {
   var h = '';
   h += '<div class="mt-section-badge" style="background:' + (sections[si].color || '#a78bfa') + ';display:inline-block;padding:3px 10px;border-radius:100px;font-size:.72em;font-weight:600;margin-bottom:10px">' + sections[si].name + '</div>';
   h += '<div class="mt-qtext" style="font-size:1em;line-height:1.7;margin-bottom:16px;font-weight:500">Q' + (qIdx + 1) + '. ' + q.text + '</div>';
+  var revealed = !!state.revealed[q.id];
   h += '<div class="mt-opts" style="display:grid;grid-template-columns:1fr 1fr;gap:8px">';
   q.options.forEach(function(o, oi){
     var selected = state.answers[q.id] === oi;
     var cls = 'mt-opt';
     if (selected) cls += ' mt-opt-selected';
+    if (revealed && o.correct) cls += ' mt-opt-correct';
+    if (revealed && selected && !o.correct) cls += ' mt-opt-wrong';
     h += '<div class="' + cls + '" onclick="window._mockTest.selectOption(' + q.id + ',' + oi + ')"><span class="mt-opt-label">' + o.label + '.</span> ' + o.text + '</div>';
   });
   h += '</div>';
+  if (revealed) {
+    var correctOpt = q.options.filter(function(o){ return o.correct; })[0];
+    h += '<div class="mt-answer">' +
+      '<div class="mt-answer-head">Answer: ' + (correctOpt ? correctOpt.label : '') + '</div>' +
+      '<div class="mt-answer-sol">' + (q.solution || '') + '</div>' +
+      '</div>';
+  }
   if (state.markedForReview.indexOf(q.id) !== -1) {
     h += '<div style="margin-top:10px;font-size:.8em;color:#f59e0b">&#9873; Marked for Review</div>';
   }
   qEl.innerHTML = h;
+  var revealBtn = document.getElementById('mt-reveal');
+  if (revealBtn) revealBtn.textContent = revealed ? 'Hide Answer' : 'Show Answer';
 
   // Update palette
   renderPalette();
@@ -221,6 +235,17 @@ function markForReview() {
   var ri = state.markedForReview.indexOf(q.id);
   if (ri === -1) state.markedForReview.push(q.id);
   else state.markedForReview.splice(ri, 1);
+  renderQuestion();
+}
+
+function showAnswer() {
+  var si = state.currentSection;
+  var qi = state.currentQ;
+  var bounds = sectionBounds[si];
+  var qIdx = bounds.start + qi;
+  var q = flatQs[qIdx];
+  if (!q) return;
+  state.revealed[q.id] = !state.revealed[q.id];
   renderQuestion();
 }
 
@@ -475,6 +500,10 @@ style.textContent = `
 .mt-opt{padding:10px 14px;border-radius:8px;border:1px solid var(--border,rgba(255,255,255,.06));cursor:pointer;font-size:.88em;transition:all .15s;color:var(--text-sec,#a1a1aa)}
 .mt-opt:hover{border-color:rgba(255,255,255,.15)}
 .mt-opt-selected{border-color:#a78bfa;background:rgba(167,139,250,.1);color:#fafafa}
+.mt-opt-correct{border-color:#34d399;background:rgba(52,211,153,.12);color:#fafafa}
+.mt-opt-wrong{border-color:#ef4444;background:rgba(239,68,68,.12);color:#fafafa}
+.mt-answer{margin-top:14px;padding:12px 14px;border:1px solid rgba(52,211,153,.35);background:rgba(52,211,153,.08);border-radius:10px;font-size:.88em;color:#d4d4d8;line-height:1.55}
+.mt-answer-head{font-weight:700;color:#34d399;margin-bottom:4px}
 .mt-opt-label{font-weight:600;color:var(--text-muted,#52525b)}
 .mt-palette-num{width:100%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;border-radius:4px;font-size:.68em;font-weight:600;cursor:pointer;transition:all .15s}
 .mt-palette-num:hover{opacity:.8}
@@ -492,6 +521,7 @@ window._mockTest = {
   init: init,
   selectOption: selectOption,
   markForReview: markForReview,
+  showAnswer: showAnswer,
   switchSection: switchSection,
   goToQuestion: goToQuestion,
   prevQuestion: prevQuestion,
