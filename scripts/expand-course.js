@@ -61,9 +61,9 @@ var FULL_REWRITE = /^(1|true|yes)$/i.test(process.env.EXPAND_FULL_REWRITE || '')
 // is normal on CPU (cold load + prompt eval), mid-stream silence is wedged,
 // and CALL_CAP_MIN is nobody-legitimate-needs-more. runDeadlineAt lets a
 // mid-call generation stop at the run deadline instead of overshooting it.
-var FIRST_BYTE_MIN = parseFloat(process.env.EXPAND_FIRST_BYTE_MIN || '25') || 25;
-var STALL_MIN = parseFloat(process.env.EXPAND_STALL_MIN || '12') || 12;
-var CALL_CAP_MIN = parseFloat(process.env.EXPAND_CALL_CAP_MIN || '95') || 95;
+var FIRST_BYTE_MIN = parseFloat(process.env.EXPAND_FIRST_BYTE_MIN || '10') || 10;
+var STALL_MIN = parseFloat(process.env.EXPAND_STALL_MIN || '10') || 10;
+var CALL_CAP_MIN = parseFloat(process.env.EXPAND_CALL_CAP_MIN || '90') || 90;
 var runDeadlineAt = 0;
 
 // The same cross-exam aliasing gen-course.js applies when it looks content up.
@@ -705,7 +705,7 @@ function deepenPrompt(gap) {
 function curlChat(payload) {
   return new Promise(function (resolve, reject) {
     var args = [
-      '-sS', '--max-time', '5400', '-w', '\\n%{http_code}',
+      '-sS', '--max-time', String(CALL_CAP_MIN * 60), '-w', '\\n%{http_code}',
       HOST + '/api/chat',
       '-H', 'Content-Type: application/json',
       '-d', '@-'
@@ -1082,6 +1082,13 @@ async function main() {
 
   var deadline = Date.now() + DEADLINE_MIN * 60000;
   runDeadlineAt = deadline;
+  // Process-level kill switch: if the runner is wedged and the watchdogs
+  // somehow don't fire, force exit so GitHub Actions doesn't hang for hours.
+  setTimeout(function () {
+    console.log('expand-course: process-level deadline hit — forcing exit');
+    try { writeTouched(addedKeys, addedFiles, Object.keys(touchedExams)); } catch (e) { /* nothing */ }
+    process.exit(1);
+  }, DEADLINE_MIN * 60000 + 60000).unref();
   var added = 0;
   var addedKeys = [];
   var addedFiles = [];
