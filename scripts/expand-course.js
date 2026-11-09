@@ -52,6 +52,10 @@ var DEEPEN = /^(1|true|yes)$/i.test(process.env.EXPAND_DEEPEN || '');
 var DEPTH_PASSES = Math.max(1, parseInt(process.env.EXPAND_DEPTH_PASSES || '3', 10));
 var DEPTH_FILE = path.join(__dirname, 'course-depth.json');
 var ADDONS_FILE = path.join(__dirname, 'course-addons.json');
+// Full rewrite mode: rewrites ALL lessons (including hand-built ones) with
+// high-quality model-generated content. No gap-filling, no protection of
+// hand-written pages — every lesson gets a complete rewrite.
+var FULL_REWRITE = /^(1|true|yes)$/i.test(process.env.EXPAND_FULL_REWRITE || '');
 
 // Transport watchdogs (see curlChat): silence before the first streamed byte
 // is normal on CPU (cold load + prompt eval), mid-stream silence is wedged,
@@ -120,6 +124,8 @@ function examsUsing(mk, slug) {
 
 // Gap collection. A key qualifies only when it has no content anywhere AND
 // every using exam's page is still the auto filler.
+// In FULL_REWRITE mode, EVERY declared lesson qualifies — we rewrite
+// everything, including hand-built pages, with model-generated content.
 function collectGaps() {
   var seen = {};
   var gaps = [];
@@ -133,13 +139,21 @@ function collectGaps() {
         var key = mk + '/' + lesson.slug;
         if (seen[key]) return;
         seen[key] = 1;
-        if (hasContent(mk, lesson.slug)) return;
-        var users = examsUsing(mk, lesson.slug);
-        if (!users.length) return;
-        var allFiller = users.every(function (u) {
-          return isFillerPage(pagePath(u.dir, mk, lesson.slug));
-        });
-        if (!allFiller) return;
+
+        // In full-rewrite mode, every lesson qualifies — skip the content check.
+        if (!FULL_REWRITE) {
+          if (hasContent(mk, lesson.slug)) return;
+          var users = examsUsing(mk, lesson.slug);
+          if (!users.length) return;
+          var allFiller = users.every(function (u) {
+            return isFillerPage(pagePath(u.dir, mk, lesson.slug));
+          });
+          if (!allFiller) return;
+        } else {
+          var users = examsUsing(mk, lesson.slug);
+          if (!users.length) return;
+        }
+
         gaps.push({
           key: key,
           mk: mk,
@@ -486,49 +500,84 @@ function theoryPrompt(gap) {
     'What it covers: ' + gap.lesson.desc,
     'Key topics: ' + gap.lesson.topics + '.',
     '',
-    'RECENT EXAM PATTERN AWARENESS:',
-    '- SSC CGL: Quant now has more statement-based and caselet DI questions; reasoning has box/uncertain puzzles; English has paragraph jumble with 6 sentences.',
-    '- IBPS PO / SBI Clerk: Quant has quantity comparison and missing number series; reasoning has input-output with new operations; English has word usage and double-filler questions.',
-    '- RBI: Quant has complex DI with 3+ interlinked tables; reasoning has critical reasoning and data sufficiency with 3 statements.',
-    '- CLAT: Quant has data interpretation from passages; reasoning has legal reasoning integrated with logical puzzles.',
-    '- NDA / CDS: Quant is more formula-heavy with direct application; English is grammar and comprehension focused.',
+    'EXAM STRATEGY (follow strictly):',
+    '- This lesson is for competitive exam aspirants. Every concept must be linked to an exam question pattern.',
+    '- Start each section with a "What the examiner asks" line that tells students exactly how this concept appears in the exam.',
+    '- Include mark weightage and time allocation for each topic.',
+    '- Use real previous-year question (PYQ) patterns. If you know a PYQ, reference it generically ("similar to SSC CGL 2022 Slot 2 Q45").',
+    '- Every concept must have a practical application example, not just theory.',
+    '- End with an "Exam Day Checklist" — quick things to verify before answering this topic.',
+    '- Total visible text: 1400-1800 words. Do not be brief.',
     '',
-    'Write the lesson as an HTML fragment (no <html>/<head>), using ONLY these tags:',
-    '<h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span>.',
-    '<div> elements may only carry these classes: example-box (with children',
-    'div.ex-title, div.ex-text, div.ex-soln) and tip-box (with children',
-    'div.tip-title, div.tip-text). No attributes on any other tag.',
+    'STRUCTURE (follow exactly, in order):',
+    '1. Opening hook (2-3 sentences): Why this topic matters in the exam, what students lose marks on.',
+    '2. "Exam pattern" section: How this topic appears in the exam — number of questions, typical difficulty, time per question.',
+    '3. Concept sections: One <h3> per key topic. Each starts with the concept definition, then the formula/rule, then a worked numerical/conceptual example, then a "why this matters" line.',
+    '4. "Comparison Table" or "Comparison Section": Compare similar/confusing concepts side by side (e.g., Simple vs Compound Interest, Direct vs Indirect Tax, Divergent vs Convergent boundaries).',
+    '5. "Common Traps & How to Avoid": 5-7 specific mistakes students make, with the correct approach.',
+    '6. "Quick Formulas/Shortcuts" box: All key formulas in one place for last-minute revision.',
+    '7. "Case Study / Applied Example": One real-world or exam-scenario application showing how the concept is tested.',
+    '8. "Memory Tricks": Mnemonics, visual tricks, or pattern-recognition shortcuts.',
+    '9. Two solved MCQs (in <div class="example-box">): One easy, one moderate/hard. Each with full step-by-step solution.',
+    '10. "Exam Day Checklist": 5-7 bullet points to verify before submitting answers on this topic.',
     '',
-    'Structure (a full lesson, 900-1400 words of visible text):',
-    '- open with a 3-4 sentence overview <p>',
-    '- one <h3> section per key topic above: definitions, the exact formulas /',
-    '  rules / patterns in text, and what the examiner typically asks',
-    '- two solved examples, each a <div class="example-box"> with the question',
-    '  in div.ex-text, the full worked solution in div.ex-soln, and the',
-    '  technique to reuse in div.ex-title',
-    '- a "Common Traps" <h3> with a <ul> of mistakes students make',
-    '- a "Memory Tricks" <h3> with shortcuts, mnemonics or comparisons in <ul>',
-    '- close with a tip-box carrying exam-day strategy for this lesson',
-    '',
-    'Rules:',
-    '- Be specific and correct. This must survive an examiner reading it.',
-    '- Plain text inside tags; no markdown, no images, no links, no scripts.',
-    '- Do not invent statistics; classic textbook facts are welcome.',
-    '- Clarity first: this student has no mentor. Define every term the first',
-    '  time it appears in one plain sentence; build each rule from first',
-    '  principles (say WHY it works); short sentences, one idea each; open each',
-    '  section by connecting it to the previous one.',
+    'HTML FORMAT (use ONLY these tags):',
+    '<h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span> <table> <thead> <tbody> <tr> <th> <td>.',
+    '<div> elements may only carry these classes: example-box (div.ex-title, div.ex-text, div.ex-soln) and tip-box (div.tip-title, div.tip-text).',
+    'No attributes on any tag except class on div.example-box, div.ex-title, div.ex-text, div.ex-soln, div.tip-title, div.tip-text.',
+    'No markdown, no images, no links, no scripts, no inline styles.',
     '',
     'After the HTML output exactly this line:',
     '===QUESTIONS===',
+    'Then a JSON array of exactly 5 exam-style MCQs shaped like:',
+    '[{"text":"question","options":["A","B","C","D"],"correct":0,"sol":"worked solution"}]',
+    'Rules:',
+    '- 4 plausible options, exactly one correct (0-3 index).',
+    '- Solutions explain reasoning step by step.',
+    '- NEVER use "all of the above" / "none of the above" / "cannot be determined".',
+    '- Each question tests a DIFFERENT sub-aspect of the lesson.',
+    '- Questions must match the difficulty and style of the real ' + gap.examName + ' exam.',
+    '- Each question must have a definite, verifiable answer from the lesson content.',
+    '- Mix concept questions, calculation questions, and application questions.'
   ];
-  lines.push(examQuestionRules(gap));
-  if (gap.role === 'enrich') {
-    lines.push('');
-    lines.push('The lesson currently on the site is only ' + gap.oldLen + ' characters -- far too brief.');
-    lines.push('Here it is for continuity; rewrite it as the complete lesson described above:');
-    lines.push(String(courseData[gap.key] || '').slice(0, 2000));
+
+  var quantRules = [
+    'QUANT question patterns for ' + exam + ':',
+    '- Mix concepts in single questions (e.g., percentage + profit-loss, time-work + ratio).',
+    '- Include calculation-heavy and approximation-style questions.',
+    '- Use realistic numbers (prices, populations, distances, interest rates) not round trivial ones.',
+    '- For ' + exam + ': watch for recent pattern shifts — statement-based questions, quantity comparison, caselet DI with 2-3 interlinked tables.',
+    '- Options should be close enough to require real calculation, not guessable by elimination.',
+  ];
+
+  var reasoningRules = [
+    'REASONING question patterns for ' + exam + ':',
+    '- Puzzles: multiple conditions, uncertain arrangements, floor-based or box-based setups.',
+    '- Inequalities: coded symbols, chained comparisons, either-or conclusions.',
+    '- Syllogism: possibility cases, complementary pairs, direct + indirect conclusions.',
+    '- Data sufficiency: 2-3 statements, mark whether each is sufficient alone or together.',
+    '- For ' + exam + ': recent pattern changes include input-output with new operations, and box/uncertain puzzles replacing linear seating.',
+    '- Options must be logically distinct; no two options can both be correct.',
+  ];
+
+  var englishRules = [
+    'ENGLISH question patterns for ' + exam + ':',
+    '- Reading comprehension: inference-based, tone, title, and phrase replacement questions.',
+    '- Grammar: error spotting with multiple errors in one sentence, not just single-word fixes.',
+    '- Vocabulary: word usage in context (same word, different meaning), antonyms with tricky distractors.',
+    '- Fillers: single and double blank, phrase connectors, starters.',
+    '- For ' + exam + ': recent shifts include paragraph jumble with 6+ sentences, and cloze with context-dependent options.',
+    '- Options must test real language discrimination, not obscure vocabulary.',
+  ];
+
+  if (mk === 'quant' || mk === 'maths' || /quant|aptitude|maths/i.test(mod)) {
+    base = base.concat(quantRules);
+  } else if (mk === 'reasoning' || /reasoning|logical|aptitude/i.test(mod)) {
+    base = base.concat(reasoningRules);
+  } else if (mk === 'english' || /english|verbal|language/i.test(mod)) {
+    base = base.concat(englishRules);
   }
+
   return lines.join('\n');
 }
 
