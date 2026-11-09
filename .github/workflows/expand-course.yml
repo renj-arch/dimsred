@@ -47,7 +47,7 @@ permissions:
 jobs:
   expand:
     runs-on: ubuntu-latest
-    timeout-minutes: 300
+    timeout-minutes: 180
     steps:
       - name: Free runner disk space (swap + 17GB model + repo)
         run: |
@@ -82,9 +82,9 @@ jobs:
           node-version: 22
 
       # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
-      - name: Create swap (16GB - same as proven llm-autofix)
+      - name: Create swap (8GB - faster than 16GB, still enough for 9b model)
         run: |
-          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=16384 status=progress
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=8192 status=progress
           sudo chmod 600 /tmp/swapfile
           sudo mkswap /tmp/swapfile
           sudo swapon /tmp/swapfile
@@ -151,8 +151,8 @@ jobs:
         env:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
-          EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '12' }}
-          EXPAND_DEADLINE_MIN: '120'
+          EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '6' }}
+          EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'
           EXPAND_DEPTH_PASSES: '2'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
