@@ -156,6 +156,10 @@ jobs:
           echo "slug=$SLUG" >> $GITHUB_OUTPUT
           echo "resolved slug: $SLUG"
 
+      - name: Clean question banks (repair corruption, drop junk)
+        if: steps.lane.outcome == 'success'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/bank-cleanup.js --fix --strict=cgl
+
       - name: Build mock-test pages and PDF
         if: steps.lane.outcome == 'success'
         run: |
