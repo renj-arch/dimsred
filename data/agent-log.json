@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-09T02:38:19.999Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-09T02:53:37.467Z",
    "model": "qwen3.5:9b",
    "totalFixes": 1,
@@ -267,8 +255,32 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-09T08:50:29.205Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix Mains-Fresh Lane Validation Failure",
+       "detail": "The digest shows a recent failure in the 'mains-fresh' lane where generated questions lacked two checkable anchors (act, case, committee...), causing validation to reject them.",
+       "text": "Update the Node.js generation script to inject a mandatory template for every new question that includes at least one specific anchor (e.g., 'Scheme X', 'Committee Y') before sending the prompt to Ollama, ensuring the output passes the quality validator automatically."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-09T08:22:55.741Z",
+ "lastRun": "2026-11-09T08:50:29.205Z",
  "model": "qwen3.5:9b"
 }
