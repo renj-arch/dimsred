@@ -1,17 +1,27 @@
 {
  "meta": {
-  "generatedAt": "2026-11-08T08:04:53.426Z",
+  "generatedAt": "2026-11-09T08:50:29.205Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 44,
+  "count": 45,
   "lastAttempt": {
-   "at": "2026-11-08T08:04:53.426Z",
+   "at": "2026-11-09T08:50:29.205Z",
    "ok": true,
    "count": 1,
    "dropped": 3
   }
  },
  "proposals": [
+  {
+   "id": "prp-mw90trkl-1",
+   "at": "2026-11-09T08:50:29.205Z",
+   "title": "Fix Mains-Fresh Lane Validation Failure",
+   "why": "The digest shows a recent failure in the 'mains-fresh' lane where generated questions lacked two checkable anchors (act, case, committee...), causing validation to reject them.",
+   "idea": "Update the Node.js generation script to inject a mandatory template for every new question that includes at least one specific anchor (e.g., 'Scheme X', 'Committee Y') before sending the prompt to Ollama, ensuring the output passes the quality validator automatically.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mw7jr9yq-1",
    "at": "2026-11-08T08:04:53.426Z",
