@@ -141,11 +141,11 @@ jobs:
           MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
         run: |
           case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
-          ollama pull "$MODEL_INPUT"
+          timeout 1200 ollama pull "$MODEL_INPUT" || { echo "Model pull timed out"; exit 1; }
           ollama list
           # Warm the model into RAM now so lesson calls start warm.
           echo "Warming $MODEL_INPUT..."
-          ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3
+          timeout 300 ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3 || echo "Warm-up timed out (non-fatal)"
 
       - name: Write course lessons (${{ inputs.model || 'qwen3.5:9b' }} as teacher)
         env:
