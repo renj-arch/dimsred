@@ -421,12 +421,77 @@ function interleave(a, b) {
 
 // ---- generation ------------------------------------------------------------
 
+function examQuestionRules(gap) {
+  var mk = gap.mk;
+  var exam = gap.examName;
+  var mod = gap.modName;
+
+  var base = [
+    'Then a JSON array of exactly 5 exam-style MCQs on this lesson shaped like:',
+    '[{"text":"question","options":["A","B","C","D"],"correct":0,"sol":"worked solution"}]',
+    'Rules:',
+    '- 4 plausible options, exactly one correct (0-3 index).',
+    '- Solutions explain the reasoning step by step.',
+    '- NEVER use "all of the above" / "none of the above" / "cannot be determined" as an option.',
+    '- Each question tests a DIFFERENT sub-aspect of the lesson.',
+    '- Questions must match the difficulty and style of the real ' + exam + ' exam.',
+    '- No generic filler like "which step is most critical for accurate problem-solving".',
+    '- Every question must have a definite, verifiable answer from the lesson content.'
+  ];
+
+  var quantRules = [
+    'QUANT question patterns for ' + exam + ':',
+    '- Mix concepts in single questions (e.g., percentage + profit-loss, time-work + ratio).',
+    '- Include calculation-heavy and approximation-style questions.',
+    '- Use realistic numbers (prices, populations, distances, interest rates) not round trivial ones.',
+    '- For ' + exam + ': watch for recent pattern shifts — statement-based questions, quantity comparison, caselet DI with 2-3 interlinked tables.',
+    '- Options should be close enough to require real calculation, not guessable by elimination.',
+  ];
+
+  var reasoningRules = [
+    'REASONING question patterns for ' + exam + ':',
+    '- Puzzles: multiple conditions, uncertain arrangements, floor-based or box-based setups.',
+    '- Inequalities: coded symbols, chained comparisons, either-or conclusions.',
+    '- Syllogism: possibility cases, complementary pairs, direct + indirect conclusions.',
+    '- Data sufficiency: 2-3 statements, mark whether each is sufficient alone or together.',
+    '- For ' + exam + ': recent pattern changes include input-output with new operations, and box/uncertain puzzles replacing linear seating.',
+    '- Options must be logically distinct; no two options can both be correct.',
+  ];
+
+  var englishRules = [
+    'ENGLISH question patterns for ' + exam + ':',
+    '- Reading comprehension: inference-based, tone, title, and phrase replacement questions.',
+    '- Grammar: error spotting with multiple errors in one sentence, not just single-word fixes.',
+    '- Vocabulary: word usage in context (same word, different meaning), antonyms with tricky distractors.',
+    '- Fillers: single and double blank, phrase connectors, starters.',
+    '- For ' + exam + ': recent shifts include paragraph jumble with 6+ sentences, and cloze with context-dependent options.',
+    '- Options must test real language discrimination, not obscure vocabulary.',
+  ];
+
+  if (mk === 'quant' || mk === 'maths' || /quant|aptitude|maths/i.test(mod)) {
+    base = base.concat(quantRules);
+  } else if (mk === 'reasoning' || /reasoning|logical|aptitude/i.test(mod)) {
+    base = base.concat(reasoningRules);
+  } else if (mk === 'english' || /english|verbal|language/i.test(mod)) {
+    base = base.concat(englishRules);
+  }
+
+  return base.join('\n');
+}
+
 function theoryPrompt(gap) {
   var lines = [
     'You are a senior ' + gap.examName + ' ' + gap.modName + ' teacher writing one lesson for a free study site.',
     'Lesson: "' + gap.lesson.title + '" (' + gap.mk + ' module).',
     'What it covers: ' + gap.lesson.desc,
     'Key topics: ' + gap.lesson.topics + '.',
+    '',
+    'RECENT EXAM PATTERN AWARENESS:',
+    '- SSC CGL: Quant now has more statement-based and caselet DI questions; reasoning has box/uncertain puzzles; English has paragraph jumble with 6 sentences.',
+    '- IBPS PO / SBI Clerk: Quant has quantity comparison and missing number series; reasoning has input-output with new operations; English has word usage and double-filler questions.',
+    '- RBI: Quant has complex DI with 3+ interlinked tables; reasoning has critical reasoning and data sufficiency with 3 statements.',
+    '- CLAT: Quant has data interpretation from passages; reasoning has legal reasoning integrated with logical puzzles.',
+    '- NDA / CDS: Quant is more formula-heavy with direct application; English is grammar and comprehension focused.',
     '',
     'Write the lesson as an HTML fragment (no <html>/<head>), using ONLY these tags:',
     '<h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span>.',
@@ -456,12 +521,8 @@ function theoryPrompt(gap) {
     '',
     'After the HTML output exactly this line:',
     '===QUESTIONS===',
-    'Then a JSON array of exactly 5 exam-style MCQs on this lesson shaped like:',
-    '[{"text":"question","options":["A","B","C","D"],"correct":0,"sol":"worked solution"}]',
-    'Rules: 4 plausible options, exactly one correct (0-3 index), solutions',
-    'that explain the reasoning, never "all of the above", each question tests',
-    'a DIFFERENT aspect of the lesson.'
   ];
+  lines.push(examQuestionRules(gap));
   if (gap.role === 'enrich') {
     lines.push('');
     lines.push('The lesson currently on the site is only ' + gap.oldLen + ' characters -- far too brief.');
@@ -579,10 +640,8 @@ function deepenPrompt(gap) {
     '',
     'After the HTML output exactly this line:',
     '===QUESTIONS===',
-    'Then a JSON array of exactly 5 NEW exam-style MCQs on only these advanced sections, shaped like:',
-    '[{"text":"question","options":["A","B","C","D"],"correct":0,"sol":"worked solution"}]',
-    '4 plausible options, exactly one correct (0-3), solutions explaining the reasoning, each question tests a different advanced idea.'
   ];
+  lines.push(examQuestionRules(gap));
   return lines.join('\n');
 }
 // ---- transport -------------------------------------------------------------
