@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-08T20:39:49.398Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-08T20:55:28.280Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -199,8 +187,40 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-09T00:51:08.776Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 3,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 3
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "ctet/mock-tests/full-2026-11-08-ctet-paper2.html",
+       "fix": "Nav: \"CTET\" → /ctet/ (was ../index.html)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-09T00:27:44.505Z",
+ "lastRun": "2026-11-09T00:51:08.776Z",
  "model": "qwen3.5:9b"
 }
