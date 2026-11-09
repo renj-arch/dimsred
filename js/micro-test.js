@@ -166,12 +166,29 @@ function renderCountOptions(name){
     btn.className = 'count-btn';
     btn.textContent = c + ' questions';
     btn.dataset.count = c;
-    btn.onclick = function(){ selectCount(parseInt(this.dataset.count)); };
+    btn.onclick = function(){
+      var ci = document.getElementById('customCount');
+      if (ci) ci.value = '';
+      var ch = document.getElementById('customCountHint');
+      if (ch) ch.textContent = '';
+      selectCount(parseInt(this.dataset.count));
+    };
     countGrid.appendChild(btn);
   }
   topicSummary.textContent = selectedExamName() + ' → ' + name;
   var customInput = document.getElementById('customCount');
   if(customInput) customInput.value = '';
+  var customHint = document.getElementById('customCountHint');
+  if(customHint) customHint.textContent = '';
+}
+
+function availableCount(){
+  if (!selectedExam || !selectedTopic || !exams || !exams[selectedExam]) return 0;
+  var sections = exams[selectedExam].sections || [];
+  for (var i = 0; i < sections.length; i++) {
+    if (sections[i].name === selectedTopic) return sections[i].count;
+  }
+  return 0;
 }
 
 function selectedExamName(){
@@ -187,6 +204,26 @@ function selectCount(n){
   num3.textContent = '✓';
   num3.className = 'num done';
   startBtn.disabled = false;
+}
+
+var customCountInput = document.getElementById('customCount');
+var customCountHint = document.getElementById('customCountHint');
+if (customCountInput) {
+  customCountInput.addEventListener('input', function(){
+    var raw = parseInt(this.value, 10);
+    var max = availableCount();
+    if (!isFinite(raw) || raw <= 0 || max <= 0) {
+      if (customCountHint) customCountHint.textContent = '';
+      startBtn.disabled = true;
+      selectedCount = 0;
+      return;
+    }
+    var v = Math.min(raw, max);
+    selectCount(v);
+    if (customCountHint) {
+      customCountHint.textContent = 'Will use ' + v + ' of ' + max + ' available' + (raw > max ? ' (capped at ' + max + ')' : '');
+    }
+  });
 }
 
 startBtn.onclick = function(){
@@ -452,3 +489,5 @@ backToTopicBtn.onclick = function(){
 };
 
 loadIndex();
+
+})();
