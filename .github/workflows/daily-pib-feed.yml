@@ -44,7 +44,16 @@ jobs:
       - name: Commit and push
         run: |
           git stash --include-untracked
-          git pull --rebase
+          if git pull --rebase --autostash 2>/dev/null; then
+            : # clean rebase
+          else
+            git rebase --abort 2>/dev/null || true
+            git stash pop || true
+            git fetch origin main 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            git add -A 2>/dev/null || true
+            git commit --no-edit 2>/dev/null || true
+          fi
           git stash pop || true
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
@@ -52,7 +61,15 @@ jobs:
           if ! git diff --staged --quiet; then
             git commit -m "Daily PIB feed update $(date +'%Y-%m-%d')"
             for i in 1 2 3; do
-              git pull --rebase --autostash 2>/dev/null || true
+              if git pull --rebase --autostash 2>/dev/null; then
+                : # clean rebase
+              else
+                git rebase --abort 2>/dev/null || true
+                git fetch origin main 2>/dev/null || true
+                git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+                git add -A 2>/dev/null || true
+                git commit --no-edit 2>/dev/null || true
+              fi
               git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
               sleep 5
             done

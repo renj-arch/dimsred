@@ -65,7 +65,16 @@ jobs:
           git commit -m "magazine: set issue $(date -u +'%Y-%m-%dT%H:%MZ')"
           pushed=""
           for i in 1 2 3; do
-            git pull --rebase || { git rebase --abort 2>/dev/null || true; git fetch origin main; git rebase origin/main || true; }
+            if git pull --rebase --autostash 2>/dev/null; then
+              : # clean rebase
+            else
+              # Conflict: merge instead, keeping our changes (-X ours)
+              git rebase --abort 2>/dev/null || true
+              git fetch origin main 2>/dev/null || true
+              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+              git add -A 2>/dev/null || true
+              git commit --no-edit 2>/dev/null || true
+            fi
             if git push; then pushed=1; echo "Pushed magazine update"; break; fi
             echo "push attempt $i failed, retrying..."
             sleep 5

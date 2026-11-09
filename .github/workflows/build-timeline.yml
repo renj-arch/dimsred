@@ -158,6 +158,14 @@ jobs:
             echo "No timeline changes to commit"
           else
             git commit -m "Timeline + mind-tree + geography rebuild $(date +'%Y-%m-%d %H:%M UTC')"
-            git pull --rebase 2>/dev/null || { echo "Rebase conflict — aborting and merging"; git rebase --abort 2>/dev/null; git fetch origin main 2>/dev/null; git merge --no-edit origin/main 2>/dev/null || true; }
+            if git pull --rebase --autostash 2>/dev/null; then
+              : # clean rebase
+            else
+              git rebase --abort 2>/dev/null || true
+              git fetch origin main 2>/dev/null || true
+              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+              git add -A 2>/dev/null || true
+              git commit --no-edit 2>/dev/null || true
+            fi
             git push && echo "Pushed timeline rebuild" || echo "Push failed"
           fi

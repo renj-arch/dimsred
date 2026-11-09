@@ -198,8 +198,17 @@ jobs:
           fi
           git commit -m "film(${{ steps.context.outputs.film }}): repair plate map (attempt ${{ steps.context.outputs.attempt }})"
           for i in 1 2 3; do
+            if git pull --rebase --autostash 2>/dev/null; then
+              : # clean rebase
+            else
+              git rebase --abort 2>/dev/null || true
+              git fetch origin main 2>/dev/null || true
+              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+              git add -A 2>/dev/null || true
+              git commit --no-edit 2>/dev/null || true
+            fi
             git push origin "HEAD:$BRANCH" && exit 0
-            git pull --rebase --autostash
+            echo "Push rejected (attempt $i); rebasing on main"
           done
           echo "::error::could not push the plate repair"
           exit 1
@@ -305,8 +314,17 @@ jobs:
               if ! git diff --cached --quiet; then
                 git commit -m "slate: block $FILM after the repair lane stopped"
                 for i in 1 2 3; do
+                  if git pull --rebase --autostash 2>/dev/null; then
+                    : # clean rebase
+                  else
+                    git rebase --abort 2>/dev/null || true
+                    git fetch origin main 2>/dev/null || true
+                    git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+                    git add -A 2>/dev/null || true
+                    git commit --no-edit 2>/dev/null || true
+                  fi
                   git push origin "HEAD:$BRANCH" && break
-                  git pull --rebase --autostash
+                  echo "Push rejected (attempt $i); rebasing on main"
                 done
               fi
             fi

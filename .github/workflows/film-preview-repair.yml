@@ -108,9 +108,17 @@ jobs:
           git commit -m "Films: restore full 720p previews from release masters"
           pushed=0
           for attempt in 1 2 3; do
+            if git pull --rebase --autostash origin main 2>/dev/null; then
+              : # clean rebase
+            else
+              git rebase --abort 2>/dev/null || true
+              git fetch origin main 2>/dev/null || true
+              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+              git add -A 2>/dev/null || true
+              git commit --no-edit 2>/dev/null || true
+            fi
             if git push origin HEAD:main; then pushed=1; break; fi
             echo "Push rejected (attempt $attempt); rebasing on main"
-            git pull --rebase origin main
           done
           [ "$pushed" -eq 1 ] || { echo "Could not push preview repair" >&2; exit 1; }
 

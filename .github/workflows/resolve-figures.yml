@@ -82,7 +82,15 @@ jobs:
           else
             git commit -m "Resolve Commons figures for all curated UPSC topics"
             for i in 1 2 3; do
-              git pull --rebase --autostash 2>/dev/null || true
+              if git pull --rebase --autostash 2>/dev/null; then
+                : # clean rebase
+              else
+                git rebase --abort 2>/dev/null || true
+                git fetch origin main 2>/dev/null || true
+                git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+                git add -A 2>/dev/null || true
+                git commit --no-edit 2>/dev/null || true
+              fi
               git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed, retrying..."
               sleep 5
             done

@@ -393,7 +393,7 @@ jobs:
                   git rebase --abort || true
                 fi
                 git fetch origin main 2>/dev/null
-                if ! git merge --no-edit origin/main 2>/dev/null; then
+                if ! git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
                   node scripts/resolve-data-merge.js
                   git add -A -- data archive.html
                   git commit --no-edit 2>/dev/null || true

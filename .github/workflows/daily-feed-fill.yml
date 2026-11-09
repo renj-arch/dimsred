@@ -221,13 +221,13 @@ jobs:
             git commit -m "Feed fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
             pushed=""
             for i in 1 2 3; do
-              if git pull --rebase 2>/dev/null; then
+              if git pull --rebase --autostash 2>/dev/null; then
                 echo "Rebased cleanly"
               else
                 echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
                 git rebase --abort
                 git fetch origin main 2>/dev/null
-                git merge --no-edit origin/main 2>/dev/null || {
+                git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
                   node scripts/resolve-data-merge.js
                   git commit --no-edit 2>/dev/null || true
                 }

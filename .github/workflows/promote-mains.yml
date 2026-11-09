@@ -63,7 +63,15 @@ jobs:
           git commit -m "Mains: promote ${{ inputs.id }} to the reviewed bank"
           pushed=0
           for attempt in 1 2 3; do
-            git pull --rebase origin main 2>/dev/null || true
+            if git pull --rebase --autostash origin main 2>/dev/null; then
+              : # clean rebase
+            else
+              git rebase --abort 2>/dev/null || true
+              git fetch origin main 2>/dev/null || true
+              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+              git add -A 2>/dev/null || true
+              git commit --no-edit 2>/dev/null || true
+            fi
             if git push origin HEAD:main; then pushed=1; break; fi
             echo "Push rejected (attempt $attempt); retrying in 5s..."
             sleep 5
