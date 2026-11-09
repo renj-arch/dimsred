@@ -1,0 +1,23147 @@
+window.__examData = {
+  "exam": "reasoning",
+  "name": "Reasoning",
+  "total": 889,
+  "sections": [
+    {
+      "name": "Reasoning",
+      "count": 889,
+      "questions": [
+        {
+          "id": 1949,
+          "text": "If A is the father of B and C is the mother of B, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother and Sister"
+            },
+            {
+              "label": "B",
+              "text": "Husband and Wife"
+            },
+            {
+              "label": "C",
+              "text": "Father and Daughter"
+            },
+            {
+              "label": "D",
+              "text": "Mother and Son"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that A is the father of B and C is the mother of B, it implies that A and C are married, hence they are husband and wife.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1951,
+          "text": "If a car travels from city A to city B at an average speed of 50 km/h and returns at an average speed of 60 km/h, what is the average speed of the car for the entire trip?",
+          "options": [
+            {
+              "label": "A",
+              "text": "50 km/h"
+            },
+            {
+              "label": "B",
+              "text": "54.55 km/h"
+            },
+            {
+              "label": "C",
+              "text": "55 km/h"
+            },
+            {
+              "label": "D",
+              "text": "60 km/h"
+            }
+          ],
+          "answer": 1,
+          "solution": "The average speed is calculated using the formula total distance / total time. Let the distance between city A and city B be d. The time taken to travel from A to B is d / 50, and the time taken to travel from B to A is d / 60. The total time is d / 50 + d / 60, which simplifies to (6d + 5d) / 300 = 11d / 300. The average speed is 2d / (11d / 300) = 600 / 11 = 54.55 km/h.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1952,
+          "text": "A person has a set of 5 keys, and only one of them opens a certain door. If the person tries the keys one by one, what is the probability that the person will open the door on the third attempt?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1/5"
+            },
+            {
+              "label": "B",
+              "text": "1/3"
+            },
+            {
+              "label": "C",
+              "text": "2/5"
+            },
+            {
+              "label": "D",
+              "text": "3/5"
+            }
+          ],
+          "answer": 0,
+          "solution": "The probability of opening the door on the third attempt is the probability that the first two keys do not work and the third key works. Since there is only one correct key, the probability of not opening the door with the first key is 4/5, and the probability of not opening the door with the second key is 3/4 (given that the first key did not work). The probability of opening the door with the third key is 1/3 (given that the first two keys did not work). So, the probability of opening the door on the third attempt is (4/5) * (3/4) * (1/3) = 1/5.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1953,
+          "text": "A bat and a ball together cost $1.10. The bat costs $1.00 more than the ball. How much does the ball cost?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0.05"
+            },
+            {
+              "label": "B",
+              "text": "$0.10"
+            },
+            {
+              "label": "C",
+              "text": "$0.15"
+            },
+            {
+              "label": "D",
+              "text": "$0.20"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let&#39;s say the ball costs x cents. Since the bat costs $1.00 more than the ball, the bat costs x + $1.00. The total cost of the bat and the ball is $1.10, so we can set up the equation: x + (x + $1.00) = $1.10. Simplifying the equation, we get 2x + $1.00 = $1.10. Subtracting $1.00 from both sides, we get 2x = $0.10. Dividing both sides by 2, we get x = $0.05.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1954,
+          "text": "If a car travels from city A to city B at an average speed of 60 km/h and returns at an average speed of 40 km/h, what is the average speed of the car for the entire trip?",
+          "options": [
+            {
+              "label": "A",
+              "text": "45 km/h"
+            },
+            {
+              "label": "B",
+              "text": "48 km/h"
+            },
+            {
+              "label": "C",
+              "text": "50 km/h"
+            },
+            {
+              "label": "D",
+              "text": "55 km/h"
+            }
+          ],
+          "answer": 1,
+          "solution": "The average speed is calculated using the formula total distance / total time. Let the distance between city A and city B be d. The time taken to travel from A to B is d / 60, and the time taken to travel from B to A is d / 40. The total time is d / 60 + d / 40, which simplifies to (2d + 3d) / 120 = 5d / 120 = d / 24. The average speed is 2d / (d / 24) = 48 km/h.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1967,
+          "text": "If a bicycle is traveling at 20 km/h and the wind is blowing at 5 km/h in the same direction, what is the effective speed of the bicycle?",
+          "options": [
+            {
+              "label": "A",
+              "text": "15 km/h"
+            },
+            {
+              "label": "B",
+              "text": "20 km/h"
+            },
+            {
+              "label": "C",
+              "text": "25 km/h"
+            },
+            {
+              "label": "D",
+              "text": "30 km/h"
+            }
+          ],
+          "answer": 2,
+          "solution": "The effective speed of the bicycle is the sum of its speed and the wind speed, so the effective speed is 20 + 5 = 25 km/h.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1969,
+          "text": "If a person has 5 hats of different colors and wants to wear 2 hats at a time, how many different combinations of hats can the person wear?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10"
+            },
+            {
+              "label": "B",
+              "text": "12"
+            },
+            {
+              "label": "C",
+              "text": "15"
+            },
+            {
+              "label": "D",
+              "text": "20"
+            }
+          ],
+          "answer": 0,
+          "solution": "The person can wear any of the 5 hats as the first hat, and for each of these, they can wear any of the remaining 4 hats as the second hat. However, this counts each combination twice (e.g., wearing hat A and then hat B is the same as wearing hat B and then hat A), so we divide by 2 to get the total number of combinations: (5 * 4) / 2 = 20 / 2 = 10.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1976,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "20 minutes"
+            },
+            {
+              "label": "D",
+              "text": "50 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "If 5 machines can make 5 widgets in 5 minutes, then 1 machine can make 1 widget in 5 minutes. Therefore, 100 machines can make 100 widgets in 5 minutes.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1978,
+          "text": "If A is 3 years older than B, and C is 2 years younger than B, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A is 1 year older than C"
+            },
+            {
+              "label": "B",
+              "text": "A is 5 years older than C"
+            },
+            {
+              "label": "C",
+              "text": "A is 3 years younger than C"
+            },
+            {
+              "label": "D",
+              "text": "A is 2 years younger than C"
+            }
+          ],
+          "answer": 1,
+          "solution": "If A is 3 years older than B, and C is 2 years younger than B, then A is 3 + 2 = 5 years older than C.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2182,
+          "text": "Find the next number in the series: 7, 14, 28, 56, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "84"
+            },
+            {
+              "label": "B",
+              "text": "112"
+            },
+            {
+              "label": "C",
+              "text": "96"
+            },
+            {
+              "label": "D",
+              "text": "100"
+            }
+          ],
+          "answer": 1,
+          "solution": "Each term is multiplied by 2: 7x2=14, 14x2=28, 28x2=56, 56x2=112.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2183,
+          "text": "In a certain code, &#x27;ROAD&#x27; is written as &#x27;SPBE&#x27;. How is &#x27;LANE&#x27; written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "MBOF"
+            },
+            {
+              "label": "B",
+              "text": "NCPG"
+            },
+            {
+              "label": "C",
+              "text": "LZMD"
+            },
+            {
+              "label": "D",
+              "text": "MCPF"
+            }
+          ],
+          "answer": 0,
+          "solution": "Each letter shifted by +1: R→S, O→P, A→B, D→E. L→M, A→B, N→O, E→F = MBOF.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2184,
+          "text": "Pointing to a woman, a man said, &quot;She is the mother of my daughter&#x27;s only brother.&quot; How is the woman related to the man?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Wife"
+            },
+            {
+              "label": "C",
+              "text": "Mother"
+            },
+            {
+              "label": "D",
+              "text": "Daughter"
+            }
+          ],
+          "answer": 1,
+          "solution": "My daughter&#x27;s only brother is my son. Mother of my son is my wife.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2185,
+          "text": "A man walks 10 km towards North, then turns right and walks 6 km, then turns right and walks 10 km. How far is he from his starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10 km"
+            },
+            {
+              "label": "B",
+              "text": "6 km"
+            },
+            {
+              "label": "C",
+              "text": "16 km"
+            },
+            {
+              "label": "D",
+              "text": "4 km"
+            }
+          ],
+          "answer": 1,
+          "solution": "10N, right (E) 6, right (S) 10. Net: 6 km East.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2186,
+          "text": "Statements: All squares are rectangles. All rectangles are polygons. Conclusions: I. All squares are polygons. II. Some polygons are rectangles.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "All squares are rectangles and all rectangles are polygons, so all squares are polygons (I). Since all rectangles are polygons, some polygons are rectangles (II).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2187,
+          "text": "Find the odd one out: 121, 144, 169, 185, 196",
+          "options": [
+            {
+              "label": "A",
+              "text": "121"
+            },
+            {
+              "label": "B",
+              "text": "144"
+            },
+            {
+              "label": "C",
+              "text": "185"
+            },
+            {
+              "label": "D",
+              "text": "196"
+            }
+          ],
+          "answer": 2,
+          "solution": "121=11², 144=12², 169=13², 196=14². 185 is not a perfect square.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2188,
+          "text": "If the day after tomorrow is Sunday, what day was it yesterday?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Tuesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Friday"
+            },
+            {
+              "label": "D",
+              "text": "Wednesday"
+            }
+          ],
+          "answer": 1,
+          "solution": "If day after tomorrow is Sunday, then tomorrow is Sat, today is Fri. Yesterday was Thu.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2189,
+          "text": "Find the next term: 3, 9, 27, 81, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "162"
+            },
+            {
+              "label": "B",
+              "text": "243"
+            },
+            {
+              "label": "C",
+              "text": "216"
+            },
+            {
+              "label": "D",
+              "text": "189"
+            }
+          ],
+          "answer": 1,
+          "solution": "Each term multiplied by 3: 3x3=9, 9x3=27, 27x3=81, 81x3=243.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2190,
+          "text": "If &#x27;TREE&#x27; is coded as &#x27;USFF&#x27;, then &#x27;FLOWER&#x27; is coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "GMPXFS"
+            },
+            {
+              "label": "B",
+              "text": "GMPWFS"
+            },
+            {
+              "label": "C",
+              "text": "GNQYGT"
+            },
+            {
+              "label": "D",
+              "text": "FMPXFS"
+            }
+          ],
+          "answer": 0,
+          "solution": "Each letter +1: T→U, R→S, E→F, E→F. F→G, L→M, O→P, W→X, E→F, R→S = GMPXFS.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2191,
+          "text": "A is the brother of B. B is the sister of C. C is the father of D. How is A related to D?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Father"
+            },
+            {
+              "label": "B",
+              "text": "Uncle"
+            },
+            {
+              "label": "C",
+              "text": "Grandfather"
+            },
+            {
+              "label": "D",
+              "text": "Brother"
+            }
+          ],
+          "answer": 1,
+          "solution": "A and C are siblings. C is father of D, so A is uncle of D.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2192,
+          "text": "Find the next pair: AZ, BY, CX, DW, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "EV"
+            },
+            {
+              "label": "B",
+              "text": "EU"
+            },
+            {
+              "label": "C",
+              "text": "FU"
+            },
+            {
+              "label": "D",
+              "text": "ET"
+            }
+          ],
+          "answer": 0,
+          "solution": "First letter forward A→B→C→D→E. Second letter backward Z→Y→X→W→V. So EV.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2193,
+          "text": "If &#x27;+&#x27; means &#x27;x&#x27;, &#x27;-&#x27; means &#x27;/&#x27;, &#x27;x&#x27; means &#x27;-&#x27;, &#x27;/&#x27; means &#x27;+&#x27;, then 15 x 3 / 5 - 2 + 4 = ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "16"
+            },
+            {
+              "label": "B",
+              "text": "12"
+            },
+            {
+              "label": "C",
+              "text": "10"
+            },
+            {
+              "label": "D",
+              "text": "18"
+            }
+          ],
+          "answer": 1,
+          "solution": "Replace: x→-, /→+, -→/, +→x. Expression: 15 - 3 + 5 / 2 x 4. BODMAS: 5/2=2.5, 2.5x4=10, 15-3+10=12.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2194,
+          "text": "How many triangles can be formed by joining the vertices of a regular pentagon?",
+          "options": [
+            {
+              "label": "A",
+              "text": "8"
+            },
+            {
+              "label": "B",
+              "text": "10"
+            },
+            {
+              "label": "C",
+              "text": "12"
+            },
+            {
+              "label": "D",
+              "text": "5"
+            }
+          ],
+          "answer": 1,
+          "solution": "Number of triangles = 5C3 = 5x4x3/6 = 10.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2195,
+          "text": "In a row of students, Ravi is 12th from the left and 9th from the right. How many students are in the row?",
+          "options": [
+            {
+              "label": "A",
+              "text": "21"
+            },
+            {
+              "label": "B",
+              "text": "20"
+            },
+            {
+              "label": "C",
+              "text": "22"
+            },
+            {
+              "label": "D",
+              "text": "19"
+            }
+          ],
+          "answer": 1,
+          "solution": "Total = Left rank + Right rank - 1 = 12 + 9 - 1 = 20.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2196,
+          "text": "Find the odd one out: Tiger, Lion, Leopard, Wolf, Cheetah",
+          "options": [
+            {
+              "label": "A",
+              "text": "Tiger"
+            },
+            {
+              "label": "B",
+              "text": "Lion"
+            },
+            {
+              "label": "C",
+              "text": "Leopard"
+            },
+            {
+              "label": "D",
+              "text": "Wolf"
+            }
+          ],
+          "answer": 3,
+          "solution": "Tiger, Lion, Leopard, Cheetah are cats (Felidae). Wolf is a dog (Canidae).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2197,
+          "text": "If 1st January 2025 was Wednesday, what day was 1st March 2025?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Friday"
+            },
+            {
+              "label": "B",
+              "text": "Saturday"
+            },
+            {
+              "label": "C",
+              "text": "Thursday"
+            },
+            {
+              "label": "D",
+              "text": "Wednesday"
+            }
+          ],
+          "answer": 1,
+          "solution": "Jan has 31 days, Feb 2025 has 28. Total = 59. 59 mod 7 = 3. Wed + 3 = Sat.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2198,
+          "text": "Find the next term: 8, 27, 64, 125, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "216"
+            },
+            {
+              "label": "B",
+              "text": "343"
+            },
+            {
+              "label": "C",
+              "text": "256"
+            },
+            {
+              "label": "D",
+              "text": "196"
+            }
+          ],
+          "answer": 0,
+          "solution": "2^3=8, 3^3=27, 4^3=64, 5^3=125, 6^3=216.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2199,
+          "text": "If &#x27;PINK&#x27; is coded as &#x27;QJOL&#x27;, then &#x27;BLUE&#x27; is coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "CMVF"
+            },
+            {
+              "label": "B",
+              "text": "CNVF"
+            },
+            {
+              "label": "C",
+              "text": "CLVE"
+            },
+            {
+              "label": "D",
+              "text": "BMVF"
+            }
+          ],
+          "answer": 0,
+          "solution": "Each letter +1: P→Q, I→J, N→O, K→L. B→C, L→M, U→V, E→F = CMVF.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2200,
+          "text": "A clock shows 4:20. What is the angle between the hour hand and the minute hand?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10 deg"
+            },
+            {
+              "label": "B",
+              "text": "20 deg"
+            },
+            {
+              "label": "C",
+              "text": "30 deg"
+            },
+            {
+              "label": "D",
+              "text": "40 deg"
+            }
+          ],
+          "answer": 0,
+          "solution": "Hour hand at 4x30 + 20x0.5 = 130 deg. Minute hand at 20x6 = 120 deg. Diff = 10 deg.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2201,
+          "text": "Doctor : Hospital :: Teacher : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Books"
+            },
+            {
+              "label": "B",
+              "text": "Students"
+            },
+            {
+              "label": "C",
+              "text": "School"
+            },
+            {
+              "label": "D",
+              "text": "Blackboard"
+            }
+          ],
+          "answer": 2,
+          "solution": "A doctor works in a hospital. A teacher works in a school.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2202,
+          "text": "Find the next number: 1, 1, 2, 3, 5, 8, 13, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20"
+            },
+            {
+              "label": "B",
+              "text": "21"
+            },
+            {
+              "label": "C",
+              "text": "22"
+            },
+            {
+              "label": "D",
+              "text": "18"
+            }
+          ],
+          "answer": 1,
+          "solution": "Fibonacci: each term = sum of previous two. 8+13=21.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2203,
+          "text": "In a code, &#x27;123&#x27; means &#x27;bright sunny day&#x27;, &#x27;245&#x27; means &#x27;day is warm&#x27;, &#x27;356&#x27; means &#x27;sunny is bright&#x27;. Which digit stands for &#x27;warm&#x27;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "4"
+            },
+            {
+              "label": "C",
+              "text": "5"
+            },
+            {
+              "label": "D",
+              "text": "3"
+            }
+          ],
+          "answer": 1,
+          "solution": "Common between 123 and 356: 3=sunny. Common between 245 and 356: 5=is. So 123: 1=bright, 2=day. 245: 4=warm.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2204,
+          "text": "Find the missing number: 2, 6, 18, 54, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "108"
+            },
+            {
+              "label": "B",
+              "text": "162"
+            },
+            {
+              "label": "C",
+              "text": "144"
+            },
+            {
+              "label": "D",
+              "text": "172"
+            }
+          ],
+          "answer": 1,
+          "solution": "Each term multiplied by 3: 2x3=6, 6x3=18, 18x3=54, 54x3=162.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2205,
+          "text": "If &#x27;HEIGHT&#x27; is coded as &#x27;JGKJV&#x27;, how is &#x27;WEIGHT&#x27; coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "YGKJV"
+            },
+            {
+              "label": "B",
+              "text": "YGKIV"
+            },
+            {
+              "label": "C",
+              "text": "XJIUU"
+            },
+            {
+              "label": "D",
+              "text": "YAJIV"
+            }
+          ],
+          "answer": 1,
+          "solution": "Each letter +2: H→J, E→G, I→K, G→I, H→J, T→V. W→Y, E→G, I→K, G→I, H→J, T→V = YGKIV.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2206,
+          "text": "A man faces East. He turns 135 deg clockwise, then 90 deg anticlockwise. Which direction is he facing now?",
+          "options": [
+            {
+              "label": "A",
+              "text": "South-East"
+            },
+            {
+              "label": "B",
+              "text": "South-West"
+            },
+            {
+              "label": "C",
+              "text": "North-East"
+            },
+            {
+              "label": "D",
+              "text": "North-West"
+            }
+          ],
+          "answer": 0,
+          "solution": "E→135 CW=SE→90 ACW=net 45 CW from E = SE.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2207,
+          "text": "Statements: Some cats are dogs. All dogs are animals. Conclusions: I. Some animals are cats. II. Some cats are animals.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Some cats are dogs, all dogs are animals, so some cats are animals (II). Hence some animals are cats (I).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2208,
+          "text": "Find the odd one out: 27, 64, 125, 216, 300",
+          "options": [
+            {
+              "label": "A",
+              "text": "27"
+            },
+            {
+              "label": "B",
+              "text": "64"
+            },
+            {
+              "label": "C",
+              "text": "125"
+            },
+            {
+              "label": "D",
+              "text": "300"
+            }
+          ],
+          "answer": 3,
+          "solution": "27=3^3, 64=4^3, 125=5^3, 216=6^3. 300 is not a perfect cube.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2209,
+          "text": "If 1st April 2025 is Tuesday, what day was 1st March 2025?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Saturday"
+            },
+            {
+              "label": "B",
+              "text": "Sunday"
+            },
+            {
+              "label": "C",
+              "text": "Friday"
+            },
+            {
+              "label": "D",
+              "text": "Monday"
+            }
+          ],
+          "answer": 0,
+          "solution": "March has 31 days. 31 mod 7 = 3. Tue - 3 = Sat.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2210,
+          "text": "Find the next term: 4, 16, 36, 64, 100, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "121"
+            },
+            {
+              "label": "B",
+              "text": "144"
+            },
+            {
+              "label": "C",
+              "text": "169"
+            },
+            {
+              "label": "D",
+              "text": "196"
+            }
+          ],
+          "answer": 1,
+          "solution": "Squares of even numbers: 2^2=4, 4^2=16, 6^2=36, 8^2=64, 10^2=100, 12^2=144.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2211,
+          "text": "Find the next term: Z, Y, X, W, V, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "U"
+            },
+            {
+              "label": "B",
+              "text": "T"
+            },
+            {
+              "label": "C",
+              "text": "A"
+            },
+            {
+              "label": "D",
+              "text": "Z"
+            }
+          ],
+          "answer": 0,
+          "solution": "Alphabet in reverse order: Z, Y, X, W, V, U.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2212,
+          "text": "A man introduced a woman as &quot;She is the daughter of my mother&#x27;s only son.&quot; How is the woman related to the man?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Daughter"
+            },
+            {
+              "label": "C",
+              "text": "Niece"
+            },
+            {
+              "label": "D",
+              "text": "Cousin"
+            }
+          ],
+          "answer": 1,
+          "solution": "My mother&#x27;s only son is me. Daughter of me is my daughter.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2213,
+          "text": "Find the missing term: ABC, DEF, GHI, JKL, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "MNO"
+            },
+            {
+              "label": "B",
+              "text": "NOP"
+            },
+            {
+              "label": "C",
+              "text": "LMN"
+            },
+            {
+              "label": "D",
+              "text": "PQR"
+            }
+          ],
+          "answer": 0,
+          "solution": "Groups of 3 consecutive letters: ABC, DEF, GHI, JKL, MNO.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2214,
+          "text": "A is 2 years older than B who is twice as old as C. If the total of their ages is 27, how old is B?",
+          "options": [
+            {
+              "label": "A",
+              "text": "8"
+            },
+            {
+              "label": "B",
+              "text": "12"
+            },
+            {
+              "label": "C",
+              "text": "10"
+            },
+            {
+              "label": "D",
+              "text": "14"
+            }
+          ],
+          "answer": 2,
+          "solution": "Let C=x, B=2x, A=2x+2. Total = 5x+2 = 27. x=5. B=10.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2215,
+          "text": "How many meaningful English words can be formed using E, A, T each exactly once?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1"
+            },
+            {
+              "label": "B",
+              "text": "2"
+            },
+            {
+              "label": "C",
+              "text": "3"
+            },
+            {
+              "label": "D",
+              "text": "4"
+            }
+          ],
+          "answer": 2,
+          "solution": "The words are EAT, ATE, TEA — 3 words.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2216,
+          "text": "In a row, Raj is 15th from the left and 8th from the right. How many people are in the row?",
+          "options": [
+            {
+              "label": "A",
+              "text": "23"
+            },
+            {
+              "label": "B",
+              "text": "22"
+            },
+            {
+              "label": "C",
+              "text": "24"
+            },
+            {
+              "label": "D",
+              "text": "21"
+            }
+          ],
+          "answer": 1,
+          "solution": "Total = Left + Right - 1 = 15 + 8 - 1 = 22.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2217,
+          "text": "If a mirror is placed vertically, what is the mirror image of &#x27;APPLE&#x27;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "ELPPA"
+            },
+            {
+              "label": "B",
+              "text": "3LLbA"
+            },
+            {
+              "label": "C",
+              "text": "APPLE"
+            },
+            {
+              "label": "D",
+              "text": "bLL3A"
+            }
+          ],
+          "answer": 0,
+          "solution": "In a vertical mirror image, the word is reversed: APPLE → ELPPA.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2218,
+          "text": "Find the next pair: AB, DE, GH, JK, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "LM"
+            },
+            {
+              "label": "B",
+              "text": "MN"
+            },
+            {
+              "label": "C",
+              "text": "NO"
+            },
+            {
+              "label": "D",
+              "text": "OP"
+            }
+          ],
+          "answer": 1,
+          "solution": "Pairs with gap of 2 letters between: AB, skip CD, DE, skip FG, GH, skip IJ, JK, skip LM, MN.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2219,
+          "text": "Rs. 500 is divided among A, B, C such that A gets twice B, and B gets thrice C. How much does C get?",
+          "options": [
+            {
+              "label": "A",
+              "text": "100"
+            },
+            {
+              "label": "B",
+              "text": "75"
+            },
+            {
+              "label": "C",
+              "text": "50"
+            },
+            {
+              "label": "D",
+              "text": "60"
+            }
+          ],
+          "answer": 2,
+          "solution": "Let C=x, B=3x, A=6x. Total = 10x = 500. x=50.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2220,
+          "text": "How many triangles are in a regular hexagon with all its diagonals drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "110"
+            },
+            {
+              "label": "B",
+              "text": "82"
+            },
+            {
+              "label": "C",
+              "text": "96"
+            },
+            {
+              "label": "D",
+              "text": "78"
+            }
+          ],
+          "answer": 0,
+          "solution": "A regular hexagon with all diagonals has 110 triangles.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2221,
+          "text": "If South-East becomes North, what will West become?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North-East"
+            },
+            {
+              "label": "B",
+              "text": "South-West"
+            },
+            {
+              "label": "C",
+              "text": "East"
+            },
+            {
+              "label": "D",
+              "text": "South-East"
+            }
+          ],
+          "answer": 3,
+          "solution": "SE(135 deg)→N: rotation 225 deg CW. W(270)+225=495=135=SE.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2222,
+          "text": "Find the next number: 11, 22, 44, 88, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "132"
+            },
+            {
+              "label": "B",
+              "text": "176"
+            },
+            {
+              "label": "C",
+              "text": "160"
+            },
+            {
+              "label": "D",
+              "text": "156"
+            }
+          ],
+          "answer": 1,
+          "solution": "Each term multiplied by 2: 11x2=22, 22x2=44, 44x2=88, 88x2=176.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2223,
+          "text": "In a certain code, &#x27;TIGER&#x27; is written as &#x27;UJHFS&#x27;. What does &#x27;LION&#x27; become?",
+          "options": [
+            {
+              "label": "A",
+              "text": "MJPO"
+            },
+            {
+              "label": "B",
+              "text": "MJPM"
+            },
+            {
+              "label": "C",
+              "text": "NJPM"
+            },
+            {
+              "label": "D",
+              "text": "MHPO"
+            }
+          ],
+          "answer": 0,
+          "solution": "Each letter +1: T→U, I→J, G→H, E→F, R→S. L→M, I→J, O→P, N→O = MJPO.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2224,
+          "text": "X is the brother of Y. Y is the sister of Z. Z is the mother of W. How is X related to W?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Father"
+            },
+            {
+              "label": "B",
+              "text": "Uncle"
+            },
+            {
+              "label": "C",
+              "text": "Grandfather"
+            },
+            {
+              "label": "D",
+              "text": "Brother"
+            }
+          ],
+          "answer": 1,
+          "solution": "X and Z are siblings. Z is mother of W, so X is uncle of W.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2225,
+          "text": "Rohit walked 5 km East, then turned left and walked 3 km, then turned left and walked 5 km. How far is he from start?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "3 km"
+            },
+            {
+              "label": "C",
+              "text": "8 km"
+            },
+            {
+              "label": "D",
+              "text": "0 km"
+            }
+          ],
+          "answer": 1,
+          "solution": "5E, left(N)3, left(W)5. Net: 3 km North.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2226,
+          "text": "Statements: No birds are mammals. All sparrows are birds. Conclusions: I. No sparrow is a mammal. II. Some mammals are sparrows.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "No birds are mammals, all sparrows are birds, so no sparrow is a mammal (I). II contradicts.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2227,
+          "text": "Find the odd one out: Mercury, Venus, Earth, Mars, Moon",
+          "options": [
+            {
+              "label": "A",
+              "text": "Mercury"
+            },
+            {
+              "label": "B",
+              "text": "Venus"
+            },
+            {
+              "label": "C",
+              "text": "Earth"
+            },
+            {
+              "label": "D",
+              "text": "Moon"
+            }
+          ],
+          "answer": 3,
+          "solution": "Mercury, Venus, Earth, Mars are planets. Moon is a natural satellite.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2228,
+          "text": "How many days between 1st Jan 2025 and 1st Mar 2025 (excluding both)?",
+          "options": [
+            {
+              "label": "A",
+              "text": "58"
+            },
+            {
+              "label": "B",
+              "text": "57"
+            },
+            {
+              "label": "C",
+              "text": "59"
+            },
+            {
+              "label": "D",
+              "text": "60"
+            }
+          ],
+          "answer": 0,
+          "solution": "Jan 2-31 = 30 days, Feb 1-28 = 28 days. Total = 58.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2229,
+          "text": "Find the next number: 1, 4, 9, 16, 25, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "35"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "49"
+            },
+            {
+              "label": "D",
+              "text": "30"
+            }
+          ],
+          "answer": 1,
+          "solution": "Squares: 1^2=1, 2^2=4, 3^2=9, 4^2=16, 5^2=25, 6^2=36.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2230,
+          "text": "If each letter is shifted by 4 forward, what is &#x27;DOOR&#x27; coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "HSSV"
+            },
+            {
+              "label": "B",
+              "text": "FQQT"
+            },
+            {
+              "label": "C",
+              "text": "GSSV"
+            },
+            {
+              "label": "D",
+              "text": "HSSU"
+            }
+          ],
+          "answer": 0,
+          "solution": "D+4=H, O+4=S, O+4=S, R+4=V = HSSV.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2231,
+          "text": "How many times do the hour and minute hands overlap in 12 hours?",
+          "options": [
+            {
+              "label": "A",
+              "text": "12"
+            },
+            {
+              "label": "B",
+              "text": "11"
+            },
+            {
+              "label": "C",
+              "text": "10"
+            },
+            {
+              "label": "D",
+              "text": "13"
+            }
+          ],
+          "answer": 1,
+          "solution": "They overlap 11 times in 12 hours (about every 65.45 min).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2232,
+          "text": "Tennis : Racket :: Cricket : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Ball"
+            },
+            {
+              "label": "B",
+              "text": "Bat"
+            },
+            {
+              "label": "C",
+              "text": "Stumps"
+            },
+            {
+              "label": "D",
+              "text": "Pitch"
+            }
+          ],
+          "answer": 1,
+          "solution": "Tennis is played with a racket. Cricket is played with a bat.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2233,
+          "text": "Find the next number: 100, 96, 88, 76, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "64"
+            },
+            {
+              "label": "B",
+              "text": "60"
+            },
+            {
+              "label": "C",
+              "text": "68"
+            },
+            {
+              "label": "D",
+              "text": "72"
+            }
+          ],
+          "answer": 1,
+          "solution": "Differences increase by 4: -4, -8, -12, -16. 76-16=60.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2234,
+          "text": "P is father of Q. Q is mother of R. R is sister of S. How is P related to S?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Father"
+            },
+            {
+              "label": "B",
+              "text": "Grandfather"
+            },
+            {
+              "label": "C",
+              "text": "Uncle"
+            },
+            {
+              "label": "D",
+              "text": "Brother"
+            }
+          ],
+          "answer": 1,
+          "solution": "P→Q→R,S. P is grandfather of S.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2235,
+          "text": "A starts from X, walks 4 km N, turns right 3 km, turns right 4 km, turns left 5 km. How far from X?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "8 km"
+            },
+            {
+              "label": "C",
+              "text": "7 km"
+            },
+            {
+              "label": "D",
+              "text": "9 km"
+            }
+          ],
+          "answer": 1,
+          "solution": "4N cancels 4S. E displacement = 3+5 = 8 km. So 8 km.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2236,
+          "text": "Statements: All fruits are edible. Some fruits are sweet. Conclusions: I. Some sweet things are edible. II. All edible things are fruits.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Some fruits are sweet, all fruits are edible, so some sweet things are edible (I). II not necessarily true.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2237,
+          "text": "Find the odd one out: 4, 9, 16, 25, 36, 42",
+          "options": [
+            {
+              "label": "A",
+              "text": "4"
+            },
+            {
+              "label": "B",
+              "text": "9"
+            },
+            {
+              "label": "C",
+              "text": "16"
+            },
+            {
+              "label": "D",
+              "text": "42"
+            }
+          ],
+          "answer": 3,
+          "solution": "2^2=4, 3^2=9, 4^2=16, 5^2=25, 6^2=36. 42 is not a perfect square.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2238,
+          "text": "If today is Monday, what day will it be after 100 days?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Tuesday"
+            },
+            {
+              "label": "C",
+              "text": "Thursday"
+            },
+            {
+              "label": "D",
+              "text": "Friday"
+            }
+          ],
+          "answer": 0,
+          "solution": "100 mod 7 = 2. Mon + 2 = Wed.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2239,
+          "text": "A bag has 5 red, 4 blue, 3 green balls. How many must be picked to ensure at least one of each color?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5"
+            },
+            {
+              "label": "B",
+              "text": "8"
+            },
+            {
+              "label": "C",
+              "text": "10"
+            },
+            {
+              "label": "D",
+              "text": "12"
+            }
+          ],
+          "answer": 2,
+          "solution": "Worst: pick all 5 red + 4 blue = 9, then 10th must be green.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2240,
+          "text": "Find the next term: A, C, F, J, O, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "U"
+            },
+            {
+              "label": "B",
+              "text": "T"
+            },
+            {
+              "label": "C",
+              "text": "V"
+            },
+            {
+              "label": "D",
+              "text": "S"
+            }
+          ],
+          "answer": 0,
+          "solution": "Differences increase by 1: A→C(+2), C→F(+3), F→J(+4), J→O(+5), O→U(+6).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2241,
+          "text": "In a class of 50, 30 like Maths, 25 like Science, 10 like both. How many like neither?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5"
+            },
+            {
+              "label": "B",
+              "text": "10"
+            },
+            {
+              "label": "C",
+              "text": "15"
+            },
+            {
+              "label": "D",
+              "text": "20"
+            }
+          ],
+          "answer": 0,
+          "solution": "Neither = 50 - (30 + 25 - 10) = 5.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2242,
+          "text": "Anil&#x27;s rank is 7th from top and 15th from bottom. How many students in class?",
+          "options": [
+            {
+              "label": "A",
+              "text": "21"
+            },
+            {
+              "label": "B",
+              "text": "22"
+            },
+            {
+              "label": "C",
+              "text": "20"
+            },
+            {
+              "label": "D",
+              "text": "23"
+            }
+          ],
+          "answer": 0,
+          "solution": "Total = 7 + 15 - 1 = 21.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2243,
+          "text": "If &#x27;BLUE&#x27; is coded as &#x27;EULB&#x27;, how is &#x27;PINK&#x27; coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "KNIP"
+            },
+            {
+              "label": "B",
+              "text": "NIKP"
+            },
+            {
+              "label": "C",
+              "text": "KINP"
+            },
+            {
+              "label": "D",
+              "text": "PKNI"
+            }
+          ],
+          "answer": 0,
+          "solution": "The word is reversed: PINK → KNIP.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2244,
+          "text": "A told B, &quot;Your mother&#x27;s husband is the brother of my sister.&quot; How is A related to B?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother"
+            },
+            {
+              "label": "B",
+              "text": "Cousin"
+            },
+            {
+              "label": "C",
+              "text": "Uncle"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 2,
+          "solution": "B&#x27;s father is A&#x27;s sister&#x27;s brother = A&#x27;s brother. So A is B&#x27;s uncle.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2245,
+          "text": "A ship sails 20 km S, 10 km E, 20 km N. How far from start?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20 km"
+            },
+            {
+              "label": "B",
+              "text": "10 km"
+            },
+            {
+              "label": "C",
+              "text": "30 km"
+            },
+            {
+              "label": "D",
+              "text": "0 km"
+            }
+          ],
+          "answer": 1,
+          "solution": "20S+20N cancels. Net = 10 km East.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2246,
+          "text": "Statements: Some pencils are pens. No pen is an eraser. Conclusions: I. Some pencils are not erasers. II. No pencil is an eraser.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Pencils that are pens are not erasers (I). Not all pencils are pens, so II doesn&#x27;t follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2247,
+          "text": "Find odd one out: Piano, Guitar, Violin, Flute, Drum",
+          "options": [
+            {
+              "label": "A",
+              "text": "Piano"
+            },
+            {
+              "label": "B",
+              "text": "Guitar"
+            },
+            {
+              "label": "C",
+              "text": "Flute"
+            },
+            {
+              "label": "D",
+              "text": "Drum"
+            }
+          ],
+          "answer": 2,
+          "solution": "Piano, Guitar, Violin, Drum are string/percussion. Flute is a wind instrument.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2248,
+          "text": "What angle do hour and minute hands form at 3:00?",
+          "options": [
+            {
+              "label": "A",
+              "text": "60 deg"
+            },
+            {
+              "label": "B",
+              "text": "90 deg"
+            },
+            {
+              "label": "C",
+              "text": "45 deg"
+            },
+            {
+              "label": "D",
+              "text": "30 deg"
+            }
+          ],
+          "answer": 1,
+          "solution": "At 3:00, hour at 3, minute at 12. Angle = 3 x 30 = 90 deg.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2249,
+          "text": "Find next number: 5, 25, 125, 625, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1250"
+            },
+            {
+              "label": "B",
+              "text": "3125"
+            },
+            {
+              "label": "C",
+              "text": "3120"
+            },
+            {
+              "label": "D",
+              "text": "2500"
+            }
+          ],
+          "answer": 1,
+          "solution": "Each multiplied by 5: 5^1=5, 5^2=25, 5^3=125, 5^4=625, 5^5=3125.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2250,
+          "text": "Milk : White :: Coal : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Black"
+            },
+            {
+              "label": "B",
+              "text": "Brown"
+            },
+            {
+              "label": "C",
+              "text": "Dark"
+            },
+            {
+              "label": "D",
+              "text": "Hard"
+            }
+          ],
+          "answer": 0,
+          "solution": "Milk is white. Coal is black.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2251,
+          "text": "If 2*3 = 13, 3*4 = 25, what is 4*5?",
+          "options": [
+            {
+              "label": "A",
+              "text": "41"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "45"
+            },
+            {
+              "label": "D",
+              "text": "49"
+            }
+          ],
+          "answer": 0,
+          "solution": "a*b = a^2 + b^2. 2^2+3^2=13, 3^2+4^2=25, 4^2+5^2=41.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2252,
+          "text": "In a group of 60, 35 like coffee, 40 like tea, 20 like both. How many like only tea?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20"
+            },
+            {
+              "label": "B",
+              "text": "25"
+            },
+            {
+              "label": "C",
+              "text": "15"
+            },
+            {
+              "label": "D",
+              "text": "10"
+            }
+          ],
+          "answer": 0,
+          "solution": "Only tea = 40 - 20 = 20.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2253,
+          "text": "P, Q, R, S, T sit in a row facing N. P at left end. Q 2nd from right. R left of S. T left of Q. Who is in middle?",
+          "options": [
+            {
+              "label": "A",
+              "text": "R"
+            },
+            {
+              "label": "B",
+              "text": "S"
+            },
+            {
+              "label": "C",
+              "text": "T"
+            },
+            {
+              "label": "D",
+              "text": "Q"
+            }
+          ],
+          "answer": 1,
+          "solution": "Arrangement L→R: P, R, S, T, Q. Middle (3rd) is S.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2254,
+          "text": "Find next: 1A, 2B, 3C, 4D, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5E"
+            },
+            {
+              "label": "B",
+              "text": "5F"
+            },
+            {
+              "label": "C",
+              "text": "6E"
+            },
+            {
+              "label": "D",
+              "text": "4E"
+            }
+          ],
+          "answer": 0,
+          "solution": "Number+1, letter+1: 1A, 2B, 3C, 4D, 5E.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2255,
+          "text": "A is mother of B and C. D is husband of C. E is son of D. How is A related to E?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Mother"
+            },
+            {
+              "label": "B",
+              "text": "Grandmother"
+            },
+            {
+              "label": "C",
+              "text": "Aunt"
+            },
+            {
+              "label": "D",
+              "text": "Sister"
+            }
+          ],
+          "answer": 1,
+          "solution": "A is mother of C, C is mother of E. So A is grandmother of E.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2256,
+          "text": "Man walks 6 km N, right 3 km, right 6 km, left 4 km. Direction from start?",
+          "options": [
+            {
+              "label": "A",
+              "text": "East"
+            },
+            {
+              "label": "B",
+              "text": "West"
+            },
+            {
+              "label": "C",
+              "text": "North"
+            },
+            {
+              "label": "D",
+              "text": "South"
+            }
+          ],
+          "answer": 0,
+          "solution": "6N cancels 6S. E displacement = 3+4 = 7 km. He is East of start.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2257,
+          "text": "Statements: All flowers are pretty. Some flowers are red. Conclusions: I. Some pretty things are red. II. All red things are pretty.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Some flowers are red and all are pretty, so some pretty things are red (I). II is not necessarily true.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2258,
+          "text": "Odd one out: Apple, Banana, Mango, Potato, Orange",
+          "options": [
+            {
+              "label": "A",
+              "text": "Apple"
+            },
+            {
+              "label": "B",
+              "text": "Banana"
+            },
+            {
+              "label": "C",
+              "text": "Potato"
+            },
+            {
+              "label": "D",
+              "text": "Orange"
+            }
+          ],
+          "answer": 2,
+          "solution": "Apple, Banana, Mango, Orange are fruits. Potato is a vegetable.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2259,
+          "text": "At what time between 5 and 6 do the hands coincide?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5:25"
+            },
+            {
+              "label": "B",
+              "text": "5:27"
+            },
+            {
+              "label": "C",
+              "text": "5:30"
+            },
+            {
+              "label": "D",
+              "text": "5:24"
+            }
+          ],
+          "answer": 1,
+          "solution": "Formula: 30H - 11M/2 = 0. M = 300/11 = 27.27. So approx 5:27.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2260,
+          "text": "Find next: 0, 3, 8, 15, 24, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "35"
+            },
+            {
+              "label": "B",
+              "text": "33"
+            },
+            {
+              "label": "C",
+              "text": "36"
+            },
+            {
+              "label": "D",
+              "text": "30"
+            }
+          ],
+          "answer": 0,
+          "solution": "1^2-1=0, 2^2-1=3, 3^2-1=8, 4^2-1=15, 5^2-1=24, 6^2-1=35.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2261,
+          "text": "If each letter of &#x27;STAR&#x27; is shifted back by 1, what is the result?",
+          "options": [
+            {
+              "label": "A",
+              "text": "RSZQ"
+            },
+            {
+              "label": "B",
+              "text": "RSAQ"
+            },
+            {
+              "label": "C",
+              "text": "TUSA"
+            },
+            {
+              "label": "D",
+              "text": "RTSZ"
+            }
+          ],
+          "answer": 0,
+          "solution": "S-1=R, T-1=S, A-1=Z, R-1=Q = RSZQ.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2262,
+          "text": "Raju walks 10 m N, turns W 5 m, turns S 10 m. How far from start?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10 m"
+            },
+            {
+              "label": "B",
+              "text": "5 m"
+            },
+            {
+              "label": "C",
+              "text": "15 m"
+            },
+            {
+              "label": "D",
+              "text": "0 m"
+            }
+          ],
+          "answer": 1,
+          "solution": "10N+10S cancels. Net = 5 m West.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2263,
+          "text": "A number divided by 7 leaves remainder 3. What is remainder when divided by 14?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3 or 10"
+            },
+            {
+              "label": "B",
+              "text": "3"
+            },
+            {
+              "label": "C",
+              "text": "10"
+            },
+            {
+              "label": "D",
+              "text": "Cannot be determined"
+            }
+          ],
+          "answer": 0,
+          "solution": "n = 7k+3. If k even: remainder 3. If k odd: remainder 10.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2264,
+          "text": "A girl said, &quot;He is the son of my mother&#x27;s only daughter.&quot; How is she related to the boy?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Aunt"
+            },
+            {
+              "label": "D",
+              "text": "Cousin"
+            }
+          ],
+          "answer": 1,
+          "solution": "My mother&#x27;s only daughter = me. Son of me = my son. So she is mother of the boy.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2265,
+          "text": "Statements: All birds can fly. Penguins are birds. Conclusions: I. Penguins can fly. II. Some flying things are penguins.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "All birds can fly, penguins are birds, so penguins can fly (I). Hence some flying things are penguins (II).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2266,
+          "text": "Odd one out: 2, 6, 12, 20, 30, 41",
+          "options": [
+            {
+              "label": "A",
+              "text": "6"
+            },
+            {
+              "label": "B",
+              "text": "12"
+            },
+            {
+              "label": "C",
+              "text": "20"
+            },
+            {
+              "label": "D",
+              "text": "41"
+            }
+          ],
+          "answer": 3,
+          "solution": "Pattern: 1x2=2, 2x3=6, 3x4=12, 4x5=20, 5x6=30, 6x7=42. 41 should be 42.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2267,
+          "text": "Find next: 2, 3, 5, 7, 11, 13, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "15"
+            },
+            {
+              "label": "B",
+              "text": "17"
+            },
+            {
+              "label": "C",
+              "text": "19"
+            },
+            {
+              "label": "D",
+              "text": "14"
+            }
+          ],
+          "answer": 1,
+          "solution": "Prime numbers: 2, 3, 5, 7, 11, 13, next prime is 17.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2268,
+          "text": "Sun : Day :: Moon : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Night"
+            },
+            {
+              "label": "B",
+              "text": "Sky"
+            },
+            {
+              "label": "C",
+              "text": "Stars"
+            },
+            {
+              "label": "D",
+              "text": "Dark"
+            }
+          ],
+          "answer": 0,
+          "solution": "Sun is associated with day. Moon with night.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2269,
+          "text": "What day was 26 Jan 2025 if 1 Jan 2025 was Wednesday?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sunday"
+            },
+            {
+              "label": "B",
+              "text": "Saturday"
+            },
+            {
+              "label": "C",
+              "text": "Friday"
+            },
+            {
+              "label": "D",
+              "text": "Monday"
+            }
+          ],
+          "answer": 0,
+          "solution": "Jan 1 Wed + 25 days. 25 mod 7 = 4. Wed + 4 = Sun.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2270,
+          "text": "Find next: 2Z, 4Y, 6X, 8W, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10V"
+            },
+            {
+              "label": "B",
+              "text": "10U"
+            },
+            {
+              "label": "C",
+              "text": "12V"
+            },
+            {
+              "label": "D",
+              "text": "8V"
+            }
+          ],
+          "answer": 0,
+          "solution": "Number+2: 2,4,6,8,10. Letter-1: Z,Y,X,W,V.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2271,
+          "text": "How many times in 24 hours do hands form a straight line (180 deg)?",
+          "options": [
+            {
+              "label": "A",
+              "text": "22"
+            },
+            {
+              "label": "B",
+              "text": "24"
+            },
+            {
+              "label": "C",
+              "text": "44"
+            },
+            {
+              "label": "D",
+              "text": "11"
+            }
+          ],
+          "answer": 2,
+          "solution": "22 times in 12 hours, so 44 times in 24 hours.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2272,
+          "text": "If A=1, B=2... Z=26, what is the code for &#x27;DOG&#x27;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4-15-7"
+            },
+            {
+              "label": "B",
+              "text": "4-15-3"
+            },
+            {
+              "label": "C",
+              "text": "4-15-5"
+            },
+            {
+              "label": "D",
+              "text": "4-15-9"
+            }
+          ],
+          "answer": 0,
+          "solution": "D=4, O=15, G=7. Code = 4-15-7.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2273,
+          "text": "Family has 2 children. One is a boy. Probability the other is also a boy?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1/2"
+            },
+            {
+              "label": "B",
+              "text": "1/3"
+            },
+            {
+              "label": "C",
+              "text": "1/4"
+            },
+            {
+              "label": "D",
+              "text": "2/3"
+            }
+          ],
+          "answer": 0,
+          "solution": "Each child&#x27;s gender is independent. P(other is boy) = 1/2.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2274,
+          "text": "P walks 30 m E, left 20 m, left 30 m, right 10 m. Distance from start?",
+          "options": [
+            {
+              "label": "A",
+              "text": "30 m"
+            },
+            {
+              "label": "B",
+              "text": "20 m"
+            },
+            {
+              "label": "C",
+              "text": "10 m"
+            },
+            {
+              "label": "D",
+              "text": "40 m"
+            }
+          ],
+          "answer": 0,
+          "solution": "30E cancels 30W. N displacement = 20+10 = 30 m.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2275,
+          "text": "Statements: Some books are interesting. No interesting thing is boring. Conclusions: I. Some books are not boring. II. No boring thing is interesting.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Some books are interesting, no interesting is boring, so those books are not boring (I). &#x27;No A is B&#x27; = &#x27;No B is A&#x27; (II).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2276,
+          "text": "Odd one out: January, March, May, June, July",
+          "options": [
+            {
+              "label": "A",
+              "text": "January"
+            },
+            {
+              "label": "B",
+              "text": "March"
+            },
+            {
+              "label": "C",
+              "text": "May"
+            },
+            {
+              "label": "D",
+              "text": "June"
+            }
+          ],
+          "answer": 3,
+          "solution": "Jan(31), Mar(31), May(31), Jul(31) have 31 days. June has 30.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2277,
+          "text": "Find next: 729, 512, 343, 216, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "125"
+            },
+            {
+              "label": "B",
+              "text": "64"
+            },
+            {
+              "label": "C",
+              "text": "216"
+            },
+            {
+              "label": "D",
+              "text": "343"
+            }
+          ],
+          "answer": 0,
+          "solution": "9^3=729, 8^3=512, 7^3=343, 6^3=216, 5^3=125.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2278,
+          "text": "If 3x4 = 24, 5x6 = 60, what is 7x8?",
+          "options": [
+            {
+              "label": "A",
+              "text": "56"
+            },
+            {
+              "label": "B",
+              "text": "112"
+            },
+            {
+              "label": "C",
+              "text": "96"
+            },
+            {
+              "label": "D",
+              "text": "72"
+            }
+          ],
+          "answer": 1,
+          "solution": "Pattern: a x b x 2. 3x4=12, 12x2=24. 5x6=30, 30x2=60. 7x8=56, 56x2=112.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2279,
+          "text": "In a survey of 100, 80 like tea, 60 like coffee, 40 like both. How many like neither?",
+          "options": [
+            {
+              "label": "A",
+              "text": "0"
+            },
+            {
+              "label": "B",
+              "text": "10"
+            },
+            {
+              "label": "C",
+              "text": "20"
+            },
+            {
+              "label": "D",
+              "text": "30"
+            }
+          ],
+          "answer": 0,
+          "solution": "Neither = 100 - (80+60-40) = 0.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2280,
+          "text": "Rita is 9th from left, Meena 14th from right. After swap, Rita is 18th from left. Total people?",
+          "options": [
+            {
+              "label": "A",
+              "text": "31"
+            },
+            {
+              "label": "B",
+              "text": "32"
+            },
+            {
+              "label": "C",
+              "text": "30"
+            },
+            {
+              "label": "D",
+              "text": "33"
+            }
+          ],
+          "answer": 0,
+          "solution": "Rita&#x27;s new pos = Meena&#x27;s old = 14th from right and 18th from left. Total = 18+14-1 = 31.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2281,
+          "text": "If 1=3, 2=5, 3=7, 4=9, then 5=?",
+          "options": [
+            {
+              "label": "A",
+              "text": "9"
+            },
+            {
+              "label": "B",
+              "text": "11"
+            },
+            {
+              "label": "C",
+              "text": "13"
+            },
+            {
+              "label": "D",
+              "text": "10"
+            }
+          ],
+          "answer": 1,
+          "solution": "Pattern: n maps to 2n+1. 5 = 2x5+1 = 11.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2389,
+          "text": "If a snail is at the bottom of a 20-foot well, and it climbs 3 feet up the well each day, but slips back 2 feet each night, how many days will it take for the snail to reach the top of the well?",
+          "options": [
+            {
+              "label": "A",
+              "text": "18 days"
+            },
+            {
+              "label": "B",
+              "text": "20 days"
+            },
+            {
+              "label": "C",
+              "text": "22 days"
+            },
+            {
+              "label": "D",
+              "text": "18 days, but on the 18th day it will reach the top and not slip back"
+            }
+          ],
+          "answer": 3,
+          "solution": "The snail climbs 3 feet up the well each day and slips back 2 feet each night, so it effectively climbs 1 foot per day. To climb 20 feet, it will take 18 days to climb 18 feet, and on the 18th day, it will climb the final 2 feet to reach the top, but it will not slip back because it has reached the top.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2396,
+          "text": "A person has two coins that add up to 30 pence. One coin is twice the value of the other. What are the two coins?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10p and 20p"
+            },
+            {
+              "label": "B",
+              "text": "5p and 25p"
+            },
+            {
+              "label": "C",
+              "text": "15p and 15p"
+            },
+            {
+              "label": "D",
+              "text": "20p and 10p"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let&#39;s say the smaller coin is x pence. Since the larger coin is twice the value of the smaller coin, the larger coin is 2x pence. The total value of the two coins is 30 pence, so we can set up the equation: x + 2x = 30. Simplifying the equation, we get 3x = 30. Dividing both sides by 3 yields x = 10. So, the smaller coin is 10p and the larger coin is 20p.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2400,
+          "text": "Find the odd word from the given options: Apple, Mango, Potato, Orange",
+          "options": [
+            {
+              "label": "A",
+              "text": "Apple"
+            },
+            {
+              "label": "B",
+              "text": "Mango"
+            },
+            {
+              "label": "C",
+              "text": "Potato"
+            },
+            {
+              "label": "D",
+              "text": "Orange"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2404,
+          "text": "Complete the series: 3, 9, 27, 81, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "162"
+            },
+            {
+              "label": "B",
+              "text": "189"
+            },
+            {
+              "label": "C",
+              "text": "243"
+            },
+            {
+              "label": "D",
+              "text": "324"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2408,
+          "text": "If '1234' is coded as '2345', '5678' is coded as '6789', how is '3456' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4567"
+            },
+            {
+              "label": "B",
+              "text": "4678"
+            },
+            {
+              "label": "C",
+              "text": "3457"
+            },
+            {
+              "label": "D",
+              "text": "2345"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2412,
+          "text": "A man starts from his house and walks 5 km north, then 3 km east, then 5 km south. How far is he from his starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "0 km"
+            },
+            {
+              "label": "B",
+              "text": "2 km"
+            },
+            {
+              "label": "C",
+              "text": "3 km"
+            },
+            {
+              "label": "D",
+              "text": "5 km"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2416,
+          "text": "If 'HOSPITAL' is coded as 'ITPQUJBM', how is 'DOCTOR' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "EPDUPS"
+            },
+            {
+              "label": "B",
+              "text": "EPDUPT"
+            },
+            {
+              "label": "C",
+              "text": "EQDUPS"
+            },
+            {
+              "label": "D",
+              "text": "EPUEPS"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2420,
+          "text": "How many 5's are there in the following sequence that are immediately followed by 8? 5 8 5 6 5 8 5 8 5 5 8 7 5 8 5",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "3"
+            },
+            {
+              "label": "C",
+              "text": "4"
+            },
+            {
+              "label": "D",
+              "text": "5"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2424,
+          "text": "Which of the following Venn diagrams best represents the relationship among: Animals, Dogs, Pets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Three overlapping circles with Dogs inside Animals, and Pets overlapping both"
+            },
+            {
+              "label": "B",
+              "text": "Three separate circles"
+            },
+            {
+              "label": "C",
+              "text": "Animals containing Dogs and Pets separately"
+            },
+            {
+              "label": "D",
+              "text": "Two circles with Animals and Pets overlapping, Dogs separate"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2428,
+          "text": "Select the odd one out: 121, 144, 169, 185, 196",
+          "options": [
+            {
+              "label": "A",
+              "text": "144"
+            },
+            {
+              "label": "B",
+              "text": "169"
+            },
+            {
+              "label": "C",
+              "text": "185"
+            },
+            {
+              "label": "D",
+              "text": "196"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2432,
+          "text": "Today is Monday. What day will it be after 50 days?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sunday"
+            },
+            {
+              "label": "B",
+              "text": "Monday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Wednesday"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2436,
+          "text": "If '+' means '×', '×' means '−', '−' means '÷', and '÷' means '+', what is the value of 8 + 2 − 2 ÷ 5?",
+          "options": [
+            {
+              "label": "A",
+              "text": "7"
+            },
+            {
+              "label": "B",
+              "text": "9"
+            },
+            {
+              "label": "C",
+              "text": "11"
+            },
+            {
+              "label": "D",
+              "text": "13"
+            }
+          ],
+          "answer": 3,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2440,
+          "text": "If 'SCIENCE' is coded as 'VFLHQFH', how is 'STUDY' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "VWXGB"
+            },
+            {
+              "label": "B",
+              "text": "VWXHB"
+            },
+            {
+              "label": "C",
+              "text": "VXWGB"
+            },
+            {
+              "label": "D",
+              "text": "VVXGB"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2444,
+          "text": "If the day after tomorrow is Thursday, what day was yesterday?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Saturday"
+            },
+            {
+              "label": "B",
+              "text": "Sunday"
+            },
+            {
+              "label": "C",
+              "text": "Monday"
+            },
+            {
+              "label": "D",
+              "text": "Tuesday"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2450,
+          "text": "Which number will replace the question mark in the series: 0, 1, 1, 2, 3, 5, 8, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10"
+            },
+            {
+              "label": "B",
+              "text": "11"
+            },
+            {
+              "label": "C",
+              "text": "13"
+            },
+            {
+              "label": "D",
+              "text": "15"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2454,
+          "text": "If 'ORANGE' is coded as 'PSBOHF', how is 'LEMON' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "MFNPO"
+            },
+            {
+              "label": "B",
+              "text": "MFOPN"
+            },
+            {
+              "label": "C",
+              "text": "MEPNO"
+            },
+            {
+              "label": "D",
+              "text": "NFNPO"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2458,
+          "text": "Statements: All cats are mammals. Some mammals are black. Conclusions: I. Some cats are black. II. All mammals are cats. Which conclusion(s) follow?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Neither I nor II follows"
+            },
+            {
+              "label": "D",
+              "text": "Both I and II follow"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2462,
+          "text": "Rohit is taller than Sumit but shorter than Ajay. Who is the tallest among them?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rohit"
+            },
+            {
+              "label": "B",
+              "text": "Sumit"
+            },
+            {
+              "label": "C",
+              "text": "Ajay"
+            },
+            {
+              "label": "D",
+              "text": "Cannot be determined"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2466,
+          "text": "Find the missing term: 1, 4, 9, 16, 25, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "30"
+            },
+            {
+              "label": "B",
+              "text": "32"
+            },
+            {
+              "label": "C",
+              "text": "36"
+            },
+            {
+              "label": "D",
+              "text": "42"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2470,
+          "text": "How many letters are there in the word 'MATHEMATICS' that come before M in the alphabet?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3"
+            },
+            {
+              "label": "B",
+              "text": "4"
+            },
+            {
+              "label": "C",
+              "text": "5"
+            },
+            {
+              "label": "D",
+              "text": "6"
+            }
+          ],
+          "answer": 1,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2474,
+          "text": "Select the odd one out: Kilogram, Metre, Litre, Second",
+          "options": [
+            {
+              "label": "A",
+              "text": "Kilogram"
+            },
+            {
+              "label": "B",
+              "text": "Metre"
+            },
+            {
+              "label": "C",
+              "text": "Litre"
+            },
+            {
+              "label": "D",
+              "text": "Second"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2478,
+          "text": "If the first day of a month is Tuesday, what day will the 25th day of the same month be?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Friday"
+            },
+            {
+              "label": "D",
+              "text": "Saturday"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2482,
+          "text": "A man said, \"This girl is the daughter of the wife of the only son of my grandfather.\" How is the girl related to the man?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Cousin"
+            },
+            {
+              "label": "C",
+              "text": "Niece"
+            },
+            {
+              "label": "D",
+              "text": "Daughter"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2486,
+          "text": "Find the odd one out: 8, 27, 64, 125, 200, 343",
+          "options": [
+            {
+              "label": "A",
+              "text": "27"
+            },
+            {
+              "label": "B",
+              "text": "125"
+            },
+            {
+              "label": "C",
+              "text": "200"
+            },
+            {
+              "label": "D",
+              "text": "343"
+            }
+          ],
+          "answer": 2,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2490,
+          "text": "Which one of the following will come in place of the question mark in the given series? AZ, CX, EV, GT, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "IR"
+            },
+            {
+              "label": "B",
+              "text": "HS"
+            },
+            {
+              "label": "C",
+              "text": "IP"
+            },
+            {
+              "label": "D",
+              "text": "IS"
+            },
+            {
+              "label": "A",
+              "text": "1920"
+            },
+            {
+              "label": "B",
+              "text": "1925"
+            },
+            {
+              "label": "C",
+              "text": "1930"
+            },
+            {
+              "label": "D",
+              "text": "1935"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2493,
+          "text": "In a certain code, 'TIGER' is written as 'UJHFS'. How is 'LION' written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "MJPO"
+            },
+            {
+              "label": "B",
+              "text": "MKPO"
+            },
+            {
+              "label": "C",
+              "text": "MJOO"
+            },
+            {
+              "label": "D",
+              "text": "MJPM"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2499,
+          "text": "Pointing to a photograph, a man said, &quot;I have no brother or sister, but that man&#39;s father is my father&#39;s son.&quot; Whose photograph was it?",
+          "options": [
+            {
+              "label": "A",
+              "text": "His own son"
+            },
+            {
+              "label": "B",
+              "text": "His father"
+            },
+            {
+              "label": "C",
+              "text": "His uncle"
+            },
+            {
+              "label": "D",
+              "text": "His nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: The man says &#39;I have no brother or sister&#39; -&gt; He is an only child.\r\nStep 2: &#39;my father&#39;s son&#39; - Since he has no siblings, &#39;my father&#39;s son&#39; can only be HIMSELF.\r\nStep 3: So the statement &#39;that man&#39;s father is my father&#39;s son&#39; becomes: &#39;that man&#39;s father is ME&#39;.\r\nStep 4: Therefore, the man in the photograph is the son of the speaker. The photograph is of his son.\r\n\r\nShortcut Trick - Family Tree Method:\r\nDraw a simple tree:\r\nSpeaker (no siblings) &lt;- father\r\nSpeaker (only child) = &#39;my father&#39;s son&#39;\r\nThat man&#39;s father = Speaker\r\n-&gt; That man = Speaker&#39;s son OK\r\n\r\nAlternative Approach - Substitute Yourself:\r\nReplace &#39;my father&#39;s son&#39; with &#39;me&#39; (since no siblings). The sentence becomes: &#39;that man&#39;s father is me.&#39; If I am someone&#39;s father, that someone must be my child. Answer: his son.\r\n\r\nCommon Mistake: Many overcomplicate this by introducing cousins or uncles. The key phrase &#39;no brother or sister&#39; eliminates all possibilities except the speaker himself. Always simplify &#39;my father&#39;s son&#39; to &#39;me&#39; when the person has no siblings.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2505,
+          "text": "Complete the series: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "37"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "39"
+            },
+            {
+              "label": "D",
+              "text": "38"
+            }
+          ],
+          "answer": 0,
+          "solution": "Method 1 (Difference Method):\r\n2 -&gt; 5 = +3\r\n5 -&gt; 10 = +5\r\n10 -&gt; 17 = +7\r\n17 -&gt; 26 = +9\r\n26 -&gt; ? = +11 (next odd number)\r\n? = 26 + 11 = 37\r\n\r\nThe differences are consecutive odd numbers: 3, 5, 7, 9, 11.\r\n\r\nMethod 2 (Pattern Recognition - Shortcut):\r\nThe pattern follows n^2 + 1:\r\n1^2 + 1 = 2\r\n2^2 + 1 = 5\r\n3^2 + 1 = 10\r\n4^2 + 1 = 17\r\n5^2 + 1 = 26\r\n6^2 + 1 = 36 + 1 = 37\r\n\r\nSuper Shortcut: Once you identify the pattern as n^2 + 1, the next term is always (n+1)^2 + 1. Here n=5, so term 6 = 6^2 + 1 = 37. Takes 3 seconds!\r\n\r\nCommon Mistake: Students sometimes see the pattern but make calculation errors: 6^2 = 36, then forget to add 1, getting 36. Or they add 10 (instead of 11) to 26, getting 36. Always check your differences carefully.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2506,
+          "text": "Pointing to a photograph, a man said, &quot;I have no brother or sister, but that man&#39;s father is my father&#39;s son.&quot; Whose photograph was it?",
+          "options": [
+            {
+              "label": "A",
+              "text": "His own son"
+            },
+            {
+              "label": "B",
+              "text": "His father"
+            },
+            {
+              "label": "C",
+              "text": "His uncle"
+            },
+            {
+              "label": "D",
+              "text": "His nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: The man says &#39;I have no brother or sister&#39; -&gt; He is an only child.Step 2: &#39;my father&#39;s son&#39; - Since he has no siblings, &#39;my father&#39;s son&#39; can only be HIMSELF.Step 3: So the statement &#39;that man&#39;s father is my father&#39;s son&#39; becomes: &#39;that man&#39;s father is ME&#39;.Step 4: Therefore, the man in the photograph is the son of the speaker. The photograph is of his son.Shortcut Trick - Family Tree Method:Draw a simple tree:Speaker (no siblings) &lt;- fatherSpeaker (only child) = &#39;my father&#39;s son&#39;That man&#39;s father = Speaker-&gt; That man = Speaker&#39;s son OKAlternative Approach - Substitute Yourself:Replace &#39;my father&#39;s son&#39; with &#39;me&#39; (since no siblings). The sentence becomes: &#39;that man&#39;s father is me.&#39; If I am someone&#39;s father, that someone must be my child. Answer: his son.Common Mistake: Many overcomplicate this by introducing cousins or uncles. The key phrase &#39;no brother or sister&#39; eliminates all possibilities except the speaker himself. Always simplify &#39;my father&#39;s son&#39; to &#39;me&#39; when the person has no siblings.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2513,
+          "text": "Complete the series: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "37"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "39"
+            },
+            {
+              "label": "D",
+              "text": "38"
+            }
+          ],
+          "answer": 0,
+          "solution": "Method 1 (Difference Method):2 -&gt; 5 = +35 -&gt; 10 = +510 -&gt; 17 = +717 -&gt; 26 = +926 -&gt; ? = +11 (next odd number)? = 26 + 11 = 37The differences are consecutive odd numbers: 3, 5, 7, 9, 11.Method 2 (Pattern Recognition - Shortcut):The pattern follows n^2 + 1:1^2 + 1 = 22^2 + 1 = 53^2 + 1 = 104^2 + 1 = 175^2 + 1 = 266^2 + 1 = 36 + 1 = 37Super Shortcut: Once you identify the pattern as n^2 + 1, the next term is always (n+1)^2 + 1. Here n=5, so term 6 = 6^2 + 1 = 37. Takes 3 seconds!Common Mistake: Students sometimes see the pattern but make calculation errors: 6^2 = 36, then forget to add 1, getting 36. Or they add 10 (instead of 11) to 26, getting 36. Always check your differences carefully.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2522,
+          "text": "Complete the series: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "37"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "39"
+            },
+            {
+              "label": "D",
+              "text": "38"
+            }
+          ],
+          "answer": 0,
+          "solution": "Method 1 (Difference Method):2 -&gt; 5 = +35 -&gt; 10 = +510 -&gt; 17 = +717 -&gt; 26 = +926 -&gt; ? = +11 (next odd number)? = 26 + 11 = 37The differences are consecutive odd numbers: 3, 5, 7, 9, 11.Method 2 (Pattern Recognition - Shortcut):The pattern follows n^2 + 1:1^2 + 1 = 22^2 + 1 = 53^2 + 1 = 104^2 + 1 = 175^2 + 1 = 266^2 + 1 = 36 + 1 = 37Super Shortcut: Once you identify the pattern as n^2 + 1, the next term is always (n+1)^2 + 1. Here n=5, so term 6 = 6^2 + 1 = 37. Takes 3 seconds!Common Mistake: Students sometimes see the pattern but make calculation errors: 6^2 = 36, then forget to add 1, getting 36. Or they add 10 (instead of 11) to 26, getting 36. Always check your differences carefully.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2526,
+          "text": "In a certain code, &#39;LION&#39; is written as &#39;12-9-15-14&#39;. How is &#39;TIGER&#39; written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20-9-7-5-18"
+            },
+            {
+              "label": "B",
+              "text": "20-10-8-6-19"
+            },
+            {
+              "label": "C",
+              "text": "19-8-6-4-17"
+            },
+            {
+              "label": "D",
+              "text": "21-9-7-6-18"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Each letter is replaced by its position in the English alphabet (A=1, B=2, ..., Z=26).Step 2: For &#39;LION&#39;: L=12, I=9, O=15, N=14 -&gt; 12-9-15-14 OKStep 3: For &#39;TIGER&#39;: T=20, I=9, G=7, E=5, R=18 -&gt; 20-9-7-5-18Shortcut Trick: Learn the shortcut positions using the mnemonic &#39;EJOTY&#39; - E=5, J=10, O=15, T=20, Y=25. From these anchor points, you can quickly find any letter. T=20, then I is 11 letters back from T, G is 13 back, etc.Alternative Method: Instead of counting from A each time, use the reverse: A=1, B=2, C=3... Z=26. Practice with common words: TIGER -&gt; T(20)-I(9)-G(7)-E(5)-R(18).Common Mistake: Many students forget to count correctly around the middle of the alphabet (M/N). Double-check: G comes after F(6), so G=7, not 8.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2528,
+          "text": "Pointing to a photograph, a man said, &quot;I have no brother or sister, but that man&#39;s father is my father&#39;s son.&quot; Whose photograph was it?",
+          "options": [
+            {
+              "label": "A",
+              "text": "His own son"
+            },
+            {
+              "label": "B",
+              "text": "His father"
+            },
+            {
+              "label": "C",
+              "text": "His uncle"
+            },
+            {
+              "label": "D",
+              "text": "His nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: The man says &#39;I have no brother or sister&#39; -&gt; He is an only child.Step 2: &#39;my father&#39;s son&#39; - Since he has no siblings, &#39;my father&#39;s son&#39; can only be HIMSELF.Step 3: So the statement &#39;that man&#39;s father is my father&#39;s son&#39; becomes: &#39;that man&#39;s father is ME&#39;.Step 4: Therefore, the man in the photograph is the son of the speaker. The photograph is of his son.Shortcut Trick - Family Tree Method:Draw a simple tree:Speaker (no siblings) &lt;- fatherSpeaker (only child) = &#39;my father&#39;s son&#39;That man&#39;s father = Speaker-&gt; That man = Speaker&#39;s son OKAlternative Approach - Substitute Yourself:Replace &#39;my father&#39;s son&#39; with &#39;me&#39; (since no siblings). The sentence becomes: &#39;that man&#39;s father is me.&#39; If I am someone&#39;s father, that someone must be my child. Answer: his son.Common Mistake: Many overcomplicate this by introducing cousins or uncles. The key phrase &#39;no brother or sister&#39; eliminates all possibilities except the speaker himself. Always simplify &#39;my father&#39;s son&#39; to &#39;me&#39; when the person has no siblings.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2536,
+          "text": "Pointing to a photograph, a man said, &quot;I have no brother or sister, but that man&#39;s father is my father&#39;s son.&quot; Whose photograph was it?",
+          "options": [
+            {
+              "label": "A",
+              "text": "His own son"
+            },
+            {
+              "label": "B",
+              "text": "His father"
+            },
+            {
+              "label": "C",
+              "text": "His uncle"
+            },
+            {
+              "label": "D",
+              "text": "His nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: The man says &#39;I have no brother or sister&#39; -&gt; He is an only child.Step 2: &#39;my father&#39;s son&#39; - Since he has no siblings, &#39;my father&#39;s son&#39; can only be HIMSELF.Step 3: So the statement &#39;that man&#39;s father is my father&#39;s son&#39; becomes: &#39;that man&#39;s father is ME&#39;.Step 4: Therefore, the man in the photograph is the son of the speaker. The photograph is of his son.Shortcut Trick - Family Tree Method:Draw a simple tree:Speaker (no siblings) &lt;- fatherSpeaker (only child) = &#39;my father&#39;s son&#39;That man&#39;s father = Speaker-&gt; That man = Speaker&#39;s son OKAlternative Approach - Substitute Yourself:Replace &#39;my father&#39;s son&#39; with &#39;me&#39; (since no siblings). The sentence becomes: &#39;that man&#39;s father is me.&#39; If I am someone&#39;s father, that someone must be my child. Answer: his son.Common Mistake: Many overcomplicate this by introducing cousins or uncles. The key phrase &#39;no brother or sister&#39; eliminates all possibilities except the speaker himself. Always simplify &#39;my father&#39;s son&#39; to &#39;me&#39; when the person has no siblings.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2540,
+          "text": "Complete the series: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "37"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "39"
+            },
+            {
+              "label": "D",
+              "text": "38"
+            }
+          ],
+          "answer": 0,
+          "solution": "Method 1 (Difference Method):2 -&gt; 5 = +35 -&gt; 10 = +510 -&gt; 17 = +717 -&gt; 26 = +926 -&gt; ? = +11 (next odd number)? = 26 + 11 = 37The differences are consecutive odd numbers: 3, 5, 7, 9, 11.Method 2 (Pattern Recognition - Shortcut):The pattern follows n^2 + 1:1^2 + 1 = 22^2 + 1 = 53^2 + 1 = 104^2 + 1 = 175^2 + 1 = 266^2 + 1 = 36 + 1 = 37Super Shortcut: Once you identify the pattern as n^2 + 1, the next term is always (n+1)^2 + 1. Here n=5, so term 6 = 6^2 + 1 = 37. Takes 3 seconds!Common Mistake: Students sometimes see the pattern but make calculation errors: 6^2 = 36, then forget to add 1, getting 36. Or they add 10 (instead of 11) to 26, getting 36. Always check your differences carefully.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2541,
+          "text": "In a certain code, &#39;LION&#39; is written as &#39;12-9-15-14&#39;. How is &#39;TIGER&#39; written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20-9-7-5-18"
+            },
+            {
+              "label": "B",
+              "text": "20-10-8-6-19"
+            },
+            {
+              "label": "C",
+              "text": "19-8-6-4-17"
+            },
+            {
+              "label": "D",
+              "text": "21-9-7-6-18"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Each letter is replaced by its position in the English alphabet (A=1, B=2, ..., Z=26).Step 2: For &#39;LION&#39;: L=12, I=9, O=15, N=14 -&gt; 12-9-15-14 OKStep 3: For &#39;TIGER&#39;: T=20, I=9, G=7, E=5, R=18 -&gt; 20-9-7-5-18Shortcut Trick: Learn the shortcut positions using the mnemonic &#39;EJOTY&#39; - E=5, J=10, O=15, T=20, Y=25. From these anchor points, you can quickly find any letter. T=20, then I is 11 letters back from T, G is 13 back, etc.Alternative Method: Instead of counting from A each time, use the reverse: A=1, B=2, C=3... Z=26. Practice with common words: TIGER -&gt; T(20)-I(9)-G(7)-E(5)-R(18).Common Mistake: Many students forget to count correctly around the middle of the alphabet (M/N). Double-check: G comes after F(6), so G=7, not 8.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2548,
+          "text": "If A is the father of B and C is the mother of B, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother and Sister"
+            },
+            {
+              "label": "B",
+              "text": "Husband and Wife"
+            },
+            {
+              "label": "C",
+              "text": "Father and Daughter"
+            },
+            {
+              "label": "D",
+              "text": "Mother and Son"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that A is the father of B and C is the mother of B, it implies that A and C are married, hence they are husband and wife.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2556,
+          "text": "Pointing to a photograph, a man said, &quot;I have no brother or sister, but that man&#39;s father is my father&#39;s son.&quot; Whose photograph was it?",
+          "options": [
+            {
+              "label": "A",
+              "text": "His own son"
+            },
+            {
+              "label": "B",
+              "text": "His father"
+            },
+            {
+              "label": "C",
+              "text": "His uncle"
+            },
+            {
+              "label": "D",
+              "text": "His nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: The man says &#39;I have no brother or sister&#39; -&gt; He is an only child.Step 2: &#39;my father&#39;s son&#39; - Since he has no siblings, &#39;my father&#39;s son&#39; can only be HIMSELF.Step 3: So the statement &#39;that man&#39;s father is my father&#39;s son&#39; becomes: &#39;that man&#39;s father is ME&#39;.Step 4: Therefore, the man in the photograph is the son of the speaker. The photograph is of his son.Shortcut Trick - Family Tree Method:Draw a simple tree:Speaker (no siblings) &lt;- fatherSpeaker (only child) = &#39;my father&#39;s son&#39;That man&#39;s father = Speaker-&gt; That man = Speaker&#39;s son OKAlternative Approach - Substitute Yourself:Replace &#39;my father&#39;s son&#39; with &#39;me&#39; (since no siblings). The sentence becomes: &#39;that man&#39;s father is me.&#39; If I am someone&#39;s father, that someone must be my child. Answer: his son.Common Mistake: Many overcomplicate this by introducing cousins or uncles. The key phrase &#39;no brother or sister&#39; eliminates all possibilities except the speaker himself. Always simplify &#39;my father&#39;s son&#39; to &#39;me&#39; when the person has no siblings.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2558,
+          "text": "Complete the series: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "37"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "39"
+            },
+            {
+              "label": "D",
+              "text": "38"
+            }
+          ],
+          "answer": 0,
+          "solution": "Method 1 (Difference Method):2 -&gt; 5 = +35 -&gt; 10 = +510 -&gt; 17 = +717 -&gt; 26 = +926 -&gt; ? = +11 (next odd number)? = 26 + 11 = 37The differences are consecutive odd numbers: 3, 5, 7, 9, 11.Method 2 (Pattern Recognition - Shortcut):The pattern follows n^2 + 1:1^2 + 1 = 22^2 + 1 = 53^2 + 1 = 104^2 + 1 = 175^2 + 1 = 266^2 + 1 = 36 + 1 = 37Super Shortcut: Once you identify the pattern as n^2 + 1, the next term is always (n+1)^2 + 1. Here n=5, so term 6 = 6^2 + 1 = 37. Takes 3 seconds!Common Mistake: Students sometimes see the pattern but make calculation errors: 6^2 = 36, then forget to add 1, getting 36. Or they add 10 (instead of 11) to 26, getting 36. Always check your differences carefully.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2561,
+          "text": "If A is the father of B and C is the mother of B, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother and Sister"
+            },
+            {
+              "label": "B",
+              "text": "Husband and Wife"
+            },
+            {
+              "label": "C",
+              "text": "Father and Daughter"
+            },
+            {
+              "label": "D",
+              "text": "Mother and Son"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that A is the father of B and C is the mother of B, it implies that A and C are married, hence they are husband and wife.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2564,
+          "text": "If it is true that A &gt; B and B &gt; C, what can be concluded about A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A = C"
+            },
+            {
+              "label": "B",
+              "text": "A &lt; C"
+            },
+            {
+              "label": "C",
+              "text": "A &gt; C"
+            },
+            {
+              "label": "D",
+              "text": "A and C are unrelated"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given A &gt; B and B &gt; C, by transitive property, it can be concluded that A &gt; C.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2570,
+          "text": "In a certain code, &#39;LION&#39; is written as &#39;12-9-15-14&#39;. How is &#39;TIGER&#39; written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20-9-7-5-18"
+            },
+            {
+              "label": "B",
+              "text": "20-10-8-6-19"
+            },
+            {
+              "label": "C",
+              "text": "19-8-6-4-17"
+            },
+            {
+              "label": "D",
+              "text": "21-9-7-6-18"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Each letter is replaced by its position in the English alphabet (A=1, B=2, ..., Z=26).\r\nStep 2: For &#39;LION&#39;: L=12, I=9, O=15, N=14 -&gt; 12-9-15-14 OK\r\nStep 3: For &#39;TIGER&#39;: T=20, I=9, G=7, E=5, R=18 -&gt; 20-9-7-5-18\r\n\r\nShortcut Trick: Learn the shortcut positions using the mnemonic &#39;EJOTY&#39; - E=5, J=10, O=15, T=20, Y=25. From these anchor points, you can quickly find any letter. T=20, then I is 11 letters back from T, G is 13 back, etc.\r\n\r\nAlternative Method: Instead of counting from A each time, use the reverse: A=1, B=2, C=3... Z=26. Practice with common words: TIGER -&gt; T(20)-I(9)-G(7)-E(5)-R(18).\r\n\r\nCommon Mistake: Many students forget to count correctly around the middle of the alphabet (M/N). Double-check: G comes after F(6), so G=7, not 8.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2578,
+          "text": "Find the next number in the series: 2, 5, 8, 11, 14?",
+          "options": [
+            {
+              "label": "A",
+              "text": "15"
+            },
+            {
+              "label": "B",
+              "text": "17"
+            },
+            {
+              "label": "C",
+              "text": "18"
+            },
+            {
+              "label": "D",
+              "text": "20"
+            }
+          ],
+          "answer": 1,
+          "solution": "The series is formed by adding 3 to the previous term, hence the next number in the series would be: 14 + 3 = 17.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2580,
+          "text": "Complete the series: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "37"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "39"
+            },
+            {
+              "label": "D",
+              "text": "38"
+            }
+          ],
+          "answer": 0,
+          "solution": "Method 1 (Difference Method):\r\n2 -&gt; 5 = +3\r\n5 -&gt; 10 = +5\r\n10 -&gt; 17 = +7\r\n17 -&gt; 26 = +9\r\n26 -&gt; ? = +11 (next odd number)\r\n? = 26 + 11 = 37\r\n\r\nThe differences are consecutive odd numbers: 3, 5, 7, 9, 11.\r\n\r\nMethod 2 (Pattern Recognition - Shortcut):\r\nThe pattern follows n^2 + 1:\r\n1^2 + 1 = 2\r\n2^2 + 1 = 5\r\n3^2 + 1 = 10\r\n4^2 + 1 = 17\r\n5^2 + 1 = 26\r\n6^2 + 1 = 36 + 1 = 37\r\n\r\nSuper Shortcut: Once you identify the pattern as n^2 + 1, the next term is always (n+1)^2 + 1. Here n=5, so term 6 = 6^2 + 1 = 37. Takes 3 seconds!\r\n\r\nCommon Mistake: Students sometimes see the pattern but make calculation errors: 6^2 = 36, then forget to add 1, getting 36. Or they add 10 (instead of 11) to 26, getting 36. Always check your differences carefully.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2589,
+          "text": "Pointing to a photograph, a man said, &quot;I have no brother or sister, but that man&#39;s father is my father&#39;s son.&quot; Whose photograph was it?",
+          "options": [
+            {
+              "label": "A",
+              "text": "His own son"
+            },
+            {
+              "label": "B",
+              "text": "His father"
+            },
+            {
+              "label": "C",
+              "text": "His uncle"
+            },
+            {
+              "label": "D",
+              "text": "His nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: The man says &#39;I have no brother or sister&#39; -&gt; He is an only child.\r\nStep 2: &#39;my father&#39;s son&#39; - Since he has no siblings, &#39;my father&#39;s son&#39; can only be HIMSELF.\r\nStep 3: So the statement &#39;that man&#39;s father is my father&#39;s son&#39; becomes: &#39;that man&#39;s father is ME&#39;.\r\nStep 4: Therefore, the man in the photograph is the son of the speaker. The photograph is of his son.\r\n\r\nShortcut Trick - Family Tree Method:\r\nDraw a simple tree:\r\nSpeaker (no siblings) &lt;- father\r\nSpeaker (only child) = &#39;my father&#39;s son&#39;\r\nThat man&#39;s father = Speaker\r\n-&gt; That man = Speaker&#39;s son OK\r\n\r\nAlternative Approach - Substitute Yourself:\r\nReplace &#39;my father&#39;s son&#39; with &#39;me&#39; (since no siblings). The sentence becomes: &#39;that man&#39;s father is me.&#39; If I am someone&#39;s father, that someone must be my child. Answer: his son.\r\n\r\nCommon Mistake: Many overcomplicate this by introducing cousins or uncles. The key phrase &#39;no brother or sister&#39; eliminates all possibilities except the speaker himself. Always simplify &#39;my father&#39;s son&#39; to &#39;me&#39; when the person has no siblings.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2593,
+          "text": "In a certain code, &#39;LION&#39; is written as &#39;12-9-15-14&#39;. How is &#39;TIGER&#39; written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20-9-7-5-18"
+            },
+            {
+              "label": "B",
+              "text": "20-10-8-6-19"
+            },
+            {
+              "label": "C",
+              "text": "19-8-6-4-17"
+            },
+            {
+              "label": "D",
+              "text": "21-9-7-6-18"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Each letter is replaced by its position in the English alphabet (A=1, B=2, ..., Z=26).\r\nStep 2: For &#39;LION&#39;: L=12, I=9, O=15, N=14 -&gt; 12-9-15-14 OK\r\nStep 3: For &#39;TIGER&#39;: T=20, I=9, G=7, E=5, R=18 -&gt; 20-9-7-5-18\r\n\r\nShortcut Trick: Learn the shortcut positions using the mnemonic &#39;EJOTY&#39; - E=5, J=10, O=15, T=20, Y=25. From these anchor points, you can quickly find any letter. T=20, then I is 11 letters back from T, G is 13 back, etc.\r\n\r\nAlternative Method: Instead of counting from A each time, use the reverse: A=1, B=2, C=3... Z=26. Practice with common words: TIGER -&gt; T(20)-I(9)-G(7)-E(5)-R(18).\r\n\r\nCommon Mistake: Many students forget to count correctly around the middle of the alphabet (M/N). Double-check: G comes after F(6), so G=7, not 8.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2598,
+          "text": "Pointing to a photograph, a man said, &quot;I have no brother or sister, but that man&#39;s father is my father&#39;s son.&quot; Whose photograph was it?",
+          "options": [
+            {
+              "label": "A",
+              "text": "His own son"
+            },
+            {
+              "label": "B",
+              "text": "His father"
+            },
+            {
+              "label": "C",
+              "text": "His uncle"
+            },
+            {
+              "label": "D",
+              "text": "His nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: The man says &#39;I have no brother or sister&#39; -&gt; He is an only child.\r\nStep 2: &#39;my father&#39;s son&#39; - Since he has no siblings, &#39;my father&#39;s son&#39; can only be HIMSELF.\r\nStep 3: So the statement &#39;that man&#39;s father is my father&#39;s son&#39; becomes: &#39;that man&#39;s father is ME&#39;.\r\nStep 4: Therefore, the man in the photograph is the son of the speaker. The photograph is of his son.\r\n\r\nShortcut Trick - Family Tree Method:\r\nDraw a simple tree:\r\nSpeaker (no siblings) &lt;- father\r\nSpeaker (only child) = &#39;my father&#39;s son&#39;\r\nThat man&#39;s father = Speaker\r\n-&gt; That man = Speaker&#39;s son OK\r\n\r\nAlternative Approach - Substitute Yourself:\r\nReplace &#39;my father&#39;s son&#39; with &#39;me&#39; (since no siblings). The sentence becomes: &#39;that man&#39;s father is me.&#39; If I am someone&#39;s father, that someone must be my child. Answer: his son.\r\n\r\nCommon Mistake: Many overcomplicate this by introducing cousins or uncles. The key phrase &#39;no brother or sister&#39; eliminates all possibilities except the speaker himself. Always simplify &#39;my father&#39;s son&#39; to &#39;me&#39; when the person has no siblings.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2606,
+          "text": "If A is the father of B and C is the mother of B, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother and Sister"
+            },
+            {
+              "label": "B",
+              "text": "Husband and Wife"
+            },
+            {
+              "label": "C",
+              "text": "Father and Daughter"
+            },
+            {
+              "label": "D",
+              "text": "Mother and Son"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that A is the father of B and C is the mother of B, it implies that A and C are married, hence they are husband and wife.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2608,
+          "text": "If it is true that A &gt; B and B &gt; C, what can be concluded about A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A = C"
+            },
+            {
+              "label": "B",
+              "text": "A &lt; C"
+            },
+            {
+              "label": "C",
+              "text": "A &gt; C"
+            },
+            {
+              "label": "D",
+              "text": "A and C are unrelated"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given A &gt; B and B &gt; C, by transitive property, it can be concluded that A &gt; C.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2610,
+          "text": "Find the next number in the series: 2, 5, 8, 11, 14?",
+          "options": [
+            {
+              "label": "A",
+              "text": "15"
+            },
+            {
+              "label": "B",
+              "text": "17"
+            },
+            {
+              "label": "C",
+              "text": "18"
+            },
+            {
+              "label": "D",
+              "text": "20"
+            }
+          ],
+          "answer": 1,
+          "solution": "The series is formed by adding 3 to the previous term, hence the next number in the series would be: 14 + 3 = 17.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2613,
+          "text": "Pointing to a photograph, a man said, &quot;I have no brother or sister, but that man&#39;s father is my father&#39;s son.&quot; Whose photograph was it?",
+          "options": [
+            {
+              "label": "A",
+              "text": "His own son"
+            },
+            {
+              "label": "B",
+              "text": "His father"
+            },
+            {
+              "label": "C",
+              "text": "His uncle"
+            },
+            {
+              "label": "D",
+              "text": "His nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: The man says &#39;I have no brother or sister&#39; -&gt; He is an only child.\r\nStep 2: &#39;my father&#39;s son&#39; - Since he has no siblings, &#39;my father&#39;s son&#39; can only be HIMSELF.\r\nStep 3: So the statement &#39;that man&#39;s father is my father&#39;s son&#39; becomes: &#39;that man&#39;s father is ME&#39;.\r\nStep 4: Therefore, the man in the photograph is the son of the speaker. The photograph is of his son.\r\n\r\nShortcut Trick - Family Tree Method:\r\nDraw a simple tree:\r\nSpeaker (no siblings) &lt;- father\r\nSpeaker (only child) = &#39;my father&#39;s son&#39;\r\nThat man&#39;s father = Speaker\r\n-&gt; That man = Speaker&#39;s son OK\r\n\r\nAlternative Approach - Substitute Yourself:\r\nReplace &#39;my father&#39;s son&#39; with &#39;me&#39; (since no siblings). The sentence becomes: &#39;that man&#39;s father is me.&#39; If I am someone&#39;s father, that someone must be my child. Answer: his son.\r\n\r\nCommon Mistake: Many overcomplicate this by introducing cousins or uncles. The key phrase &#39;no brother or sister&#39; eliminates all possibilities except the speaker himself. Always simplify &#39;my father&#39;s son&#39; to &#39;me&#39; when the person has no siblings.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2620,
+          "text": "In a certain code, &#39;LION&#39; is written as &#39;12-9-15-14&#39;. How is &#39;TIGER&#39; written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20-9-7-5-18"
+            },
+            {
+              "label": "B",
+              "text": "20-10-8-6-19"
+            },
+            {
+              "label": "C",
+              "text": "19-8-6-4-17"
+            },
+            {
+              "label": "D",
+              "text": "21-9-7-6-18"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Each letter is replaced by its position in the English alphabet (A=1, B=2, ..., Z=26).\r\nStep 2: For &#39;LION&#39;: L=12, I=9, O=15, N=14 -&gt; 12-9-15-14 OK\r\nStep 3: For &#39;TIGER&#39;: T=20, I=9, G=7, E=5, R=18 -&gt; 20-9-7-5-18\r\n\r\nShortcut Trick: Learn the shortcut positions using the mnemonic &#39;EJOTY&#39; - E=5, J=10, O=15, T=20, Y=25. From these anchor points, you can quickly find any letter. T=20, then I is 11 letters back from T, G is 13 back, etc.\r\n\r\nAlternative Method: Instead of counting from A each time, use the reverse: A=1, B=2, C=3... Z=26. Practice with common words: TIGER -&gt; T(20)-I(9)-G(7)-E(5)-R(18).\r\n\r\nCommon Mistake: Many students forget to count correctly around the middle of the alphabet (M/N). Double-check: G comes after F(6), so G=7, not 8.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2621,
+          "text": "If a snail is at the bottom of a 20-foot well, and it climbs 3 feet up the well each day, but slides back 2 feet at night, how many days will it take for the snail to reach the top of the well?",
+          "options": [
+            {
+              "label": "A",
+              "text": "18 days"
+            },
+            {
+              "label": "B",
+              "text": "20 days"
+            },
+            {
+              "label": "C",
+              "text": "22 days"
+            },
+            {
+              "label": "D",
+              "text": "25 days"
+            }
+          ],
+          "answer": 1,
+          "solution": "The snail climbs 3 feet up and slides back 2 feet, so it effectively climbs 1 foot per day. To climb 20 feet, it will take 20 - 1 = 19 days to climb 19 feet, and on the 20th day, it will climb the final foot to reach the top.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2624,
+          "text": "If A is the father of B and C is the mother of B, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother and Sister"
+            },
+            {
+              "label": "B",
+              "text": "Husband and Wife"
+            },
+            {
+              "label": "C",
+              "text": "Father and Daughter"
+            },
+            {
+              "label": "D",
+              "text": "Mother and Son"
+            }
+          ],
+          "answer": 1,
+          "solution": "Since A is the father of B and C is the mother of B, A and C must be husband and wife.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2626,
+          "text": "If A is 3 years older than B, and C is 2 years younger than B, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A is 1 year older than C"
+            },
+            {
+              "label": "B",
+              "text": "A is 5 years older than C"
+            },
+            {
+              "label": "C",
+              "text": "A is 3 years younger than C"
+            },
+            {
+              "label": "D",
+              "text": "A is 2 years younger than C"
+            }
+          ],
+          "answer": 1,
+          "solution": "If A is 3 years older than B, and C is 2 years younger than B, then A is 3 + 2 = 5 years older than C.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2628,
+          "text": "A bat and a ball together cost $1.10. The bat costs $1.00 more than the ball. How much does the ball cost?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$0.05"
+            },
+            {
+              "label": "B",
+              "text": "$0.10"
+            },
+            {
+              "label": "C",
+              "text": "$0.15"
+            },
+            {
+              "label": "D",
+              "text": "$0.20"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let&#39;s say the ball costs x cents. Since the bat costs $1.00 more than the ball, the bat costs x + $1.00. The total cost is $1.10, so we can set up the equation: x + (x + $1.00) = $1.10. Simplifying the equation, we get 2x + $1.00 = $1.10. Subtracting $1.00 from both sides gives us 2x = $0.10. Dividing both sides by 2 yields x = $0.05.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2631,
+          "text": "If A is the father of B and C is the mother of B, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother and Sister"
+            },
+            {
+              "label": "B",
+              "text": "Husband and Wife"
+            },
+            {
+              "label": "C",
+              "text": "Father and Daughter"
+            },
+            {
+              "label": "D",
+              "text": "Mother and Son"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that A is the father of B and C is the mother of B, it implies that A and C are married, hence they are husband and wife.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2632,
+          "text": "If a bakery sells 250 loaves of bread per day and each loaf costs $2, how much money does the bakery make in a day?",
+          "options": [
+            {
+              "label": "A",
+              "text": "$450"
+            },
+            {
+              "label": "B",
+              "text": "$500"
+            },
+            {
+              "label": "C",
+              "text": "$550"
+            },
+            {
+              "label": "D",
+              "text": "$600"
+            }
+          ],
+          "answer": 1,
+          "solution": "The bakery sells 250 loaves of bread per day at $2 each, so the total amount of money made in a day is 250 * $2 = $500.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2636,
+          "text": "If a person has 12 pencils and gives 1/4 of them to their friend, how many pencils does the person have left?",
+          "options": [
+            {
+              "label": "A",
+              "text": "9"
+            },
+            {
+              "label": "B",
+              "text": "10"
+            },
+            {
+              "label": "C",
+              "text": "11"
+            },
+            {
+              "label": "D",
+              "text": "12"
+            }
+          ],
+          "answer": 0,
+          "solution": "To find the number of pencils the person gives to their friend, calculate 1/4 of 12: 1/4 * 12 = 3. Subtract the number of pencils given from the total: 12 - 3 = 9.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2641,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "50 minutes"
+            },
+            {
+              "label": "D",
+              "text": "100 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "If 5 machines can make 5 widgets in 5 minutes, then 1 machine can make 1 widget in 5 minutes. Therefore, 100 machines can make 100 widgets in 5 minutes.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2644,
+          "text": "A person has a set of 5 keys, and only one of them opens a certain door. If the person tries the keys one by one, what is the probability that the person will open the door on the third attempt?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1/5"
+            },
+            {
+              "label": "B",
+              "text": "1/3"
+            },
+            {
+              "label": "C",
+              "text": "2/5"
+            },
+            {
+              "label": "D",
+              "text": "3/5"
+            }
+          ],
+          "answer": 0,
+          "solution": "The probability of opening the door on the third attempt is the probability that the first two keys do not work and the third key works. Since there is only one correct key, the probability of not opening the door with the first key is 4/5, and the probability of not opening the door with the second key is 3/4 (given that the first key did not work). The probability of opening the door with the third key is 1/3 (given that the first two keys did not work). So, the probability of opening the door on the third attempt is (4/5) * (3/4) * (1/3) = 1/5.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2647,
+          "text": "If a snail is at the bottom of a 20-foot well, and it climbs 3 feet up the well each day, but slips back 2 feet at night, how many days will it take for the snail to reach the top of the well?",
+          "options": [
+            {
+              "label": "A",
+              "text": "18 days"
+            },
+            {
+              "label": "B",
+              "text": "20 days"
+            },
+            {
+              "label": "C",
+              "text": "22 days"
+            },
+            {
+              "label": "D",
+              "text": "25 days"
+            }
+          ],
+          "answer": 0,
+          "solution": "The snail climbs 3 feet up the well each day, but slips back 2 feet at night, so it effectively climbs 1 foot per day. To climb 20 feet, it will take 20 - 3 + 1 = 18 days (since on the 18th day, it will climb the final 3 feet and reach the top).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2648,
+          "text": "If it takes 3 hours to walk 9 miles, how many hours will it take to walk 12 miles at the same rate?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3 hours"
+            },
+            {
+              "label": "B",
+              "text": "4 hours"
+            },
+            {
+              "label": "C",
+              "text": "5 hours"
+            },
+            {
+              "label": "D",
+              "text": "6 hours"
+            }
+          ],
+          "answer": 1,
+          "solution": "To find the time it will take to walk 12 miles, first find the rate at which the person walks: rate = distance / time = 9 miles / 3 hours = 3 miles per hour. Now, use the rate to find the time it will take to walk 12 miles: time = distance / rate = 12 miles / 3 miles per hour = 4 hours.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2832,
+          "text": "In a certain code language, '247' means 'sky is blue', '689' means 'sea is deep', and '485' means 'blue sea green'. Which digit stands for the word 'is' in that code language?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "6"
+            },
+            {
+              "label": "C",
+              "text": "8"
+            },
+            {
+              "label": "D",
+              "text": "5"
+            }
+          ],
+          "answer": 2,
+          "solution": "The common element between '247' (sky is blue) and '689' (sea is deep) is the digit '8', which represents 'is'. Similarly, comparing '689' (sea is deep) and '485' (blue sea green), the common digit is '8', confirming it stands for 'is'. Options A, C, and D represent 'sky', 'green', and 'deep' respectively based on elimination.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2833,
+          "text": "If all 'Clouds' are 'Rain', and some 'Rain' is 'Wind', then which of the following conclusions logically follows? I. Some Clouds are Wind. II. Some Rain is not Cloud.",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "B) Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "C) Either I or II follows"
+            },
+            {
+              "label": "D",
+              "text": "D) Neither I nor II follows"
+            }
+          ],
+          "answer": 3,
+          "solution": "From 'All Clouds are Rain', we know the set of Clouds is inside Rain. From 'Some Rain is Wind', there is an intersection between Rain and Wind, but this does not guarantee any overlap with Clouds; thus, I does not follow. Similarly, the statement 'Some Rain is Wind' tells us nothing about whether some Rain is NOT Cloud (it could be that all Rain is Cloud), so II does not follow. Therefore, neither conclusion follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2837,
+          "text": "Directions: In each of the following questions, a statement is given followed by two conclusions. You have to take the given statements to be true even if they seem to be at variance from commonly known facts. Read the conclusion and decide which of the given conclusions logically follows from the given statements, disregarding common knowledge. Statements: Some stars are moons. All moons are planets. Conclusions: I. Some stars are planets. II. No planet is a star.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only Conclusion I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only Conclusion II follows"
+            },
+            {
+              "label": "C",
+              "text": "Either I or II follows"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "From 'Some stars are moons' and 'All moons are planets', we can infer that the intersection of stars and moons exists, and since all those moons are planets, some stars must be planets. Thus, Conclusion I follows. Conclusion II claims 'No planet is a star', which contradicts the inference from Conclusion I (since some stars are planets, it is false that no planet is a star).",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2736,
+          "text": "Find the missing term: Book : Chapter :: Tree : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Leaf"
+            },
+            {
+              "label": "B",
+              "text": "Branch"
+            },
+            {
+              "label": "C",
+              "text": "Root"
+            },
+            {
+              "label": "D",
+              "text": "Forest"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Branch.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2737,
+          "text": "Find the missing term: 5 : 35 :: 8 : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "72"
+            },
+            {
+              "label": "B",
+              "text": "80"
+            },
+            {
+              "label": "C",
+              "text": "56"
+            },
+            {
+              "label": "D",
+              "text": "64"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 80.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2738,
+          "text": "Find the missing term: ACE : HKN :: ? : QTW",
+          "options": [
+            {
+              "label": "A",
+              "text": "NPR"
+            },
+            {
+              "label": "B",
+              "text": "MPS"
+            },
+            {
+              "label": "C",
+              "text": "LNR"
+            },
+            {
+              "label": "D",
+              "text": "OQT"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: MPS.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2739,
+          "text": "Find the missing term: Odometer : Distance :: Compass : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Speed"
+            },
+            {
+              "label": "B",
+              "text": "Direction"
+            },
+            {
+              "label": "C",
+              "text": "Angle"
+            },
+            {
+              "label": "D",
+              "text": "Height"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Direction.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2740,
+          "text": "Find the missing term: 16 : 64 :: 25 : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "100"
+            },
+            {
+              "label": "B",
+              "text": "125"
+            },
+            {
+              "label": "C",
+              "text": "150"
+            },
+            {
+              "label": "D",
+              "text": "75"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 125.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2741,
+          "text": "Five friends A,B,C,D,E sit in a row facing north. A at left end. B immediate right of A. C two places right of B. D left of E. Who is at right end?",
+          "options": [
+            {
+              "label": "A",
+              "text": "C"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "B"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: E.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2742,
+          "text": "In a queue, Ram is 8th from front and 12th from back. Total people?",
+          "options": [
+            {
+              "label": "A",
+              "text": "19"
+            },
+            {
+              "label": "B",
+              "text": "20"
+            },
+            {
+              "label": "C",
+              "text": "18"
+            },
+            {
+              "label": "D",
+              "text": "21"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 19.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2743,
+          "text": "Six people sit in a circle facing center. P between Q and R. S left of Q. T opposite S. Who opposite P?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Q"
+            },
+            {
+              "label": "B",
+              "text": "R"
+            },
+            {
+              "label": "C",
+              "text": "U"
+            },
+            {
+              "label": "D",
+              "text": "T"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: U.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2744,
+          "text": "A older than B. C older than A. D younger than B but older than E. Who is second youngest?",
+          "options": [
+            {
+              "label": "A",
+              "text": "B"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "A"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: D.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2745,
+          "text": "In class of 40, Ravi ranks 5th from top. Rank from bottom?",
+          "options": [
+            {
+              "label": "A",
+              "text": "35"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "34"
+            },
+            {
+              "label": "D",
+              "text": "37"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 36.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2746,
+          "text": "Four people on floors 1-4. A on even floor. B above C. D on floor 1. Who on floor 3?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: B.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2747,
+          "text": "In a line, every 3rd person gets prize. First prize at person 3. 10th prize at which position?",
+          "options": [
+            {
+              "label": "A",
+              "text": "30"
+            },
+            {
+              "label": "B",
+              "text": "27"
+            },
+            {
+              "label": "C",
+              "text": "33"
+            },
+            {
+              "label": "D",
+              "text": "31"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 30.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2748,
+          "text": "Five books: Math left of Science. English right of Science. History left of Math. Geography between Math and Science. Middle book?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Geography"
+            },
+            {
+              "label": "B",
+              "text": "Math"
+            },
+            {
+              "label": "C",
+              "text": "Science"
+            },
+            {
+              "label": "D",
+              "text": "English"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Geography.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2749,
+          "text": "A taller than B, shorter than C. D shorter than E, taller than C. Second tallest?",
+          "options": [
+            {
+              "label": "A",
+              "text": "C"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "B"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: D.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2750,
+          "text": "Seema 10th from left, 15th from right. Total girls?",
+          "options": [
+            {
+              "label": "A",
+              "text": "24"
+            },
+            {
+              "label": "B",
+              "text": "25"
+            },
+            {
+              "label": "C",
+              "text": "23"
+            },
+            {
+              "label": "D",
+              "text": "26"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 24.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2751,
+          "text": "A man faces north, turns 135° clockwise, then 90° anticlockwise. Which direction now?",
+          "options": [
+            {
+              "label": "A",
+              "text": "East"
+            },
+            {
+              "label": "B",
+              "text": "West"
+            },
+            {
+              "label": "C",
+              "text": "North-East"
+            },
+            {
+              "label": "D",
+              "text": "North-West"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: North-East.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2752,
+          "text": "Walking 50 m south, right 30 m, right 50 m, left 20 m. How far from start?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10 m West"
+            },
+            {
+              "label": "B",
+              "text": "50 m West"
+            },
+            {
+              "label": "C",
+              "text": "30 m East"
+            },
+            {
+              "label": "D",
+              "text": "20 m North"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 50 m West.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2753,
+          "text": "A faces east, turns 45° anticlockwise, then 135° clockwise, then 90° anticlockwise. Direction now?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North"
+            },
+            {
+              "label": "B",
+              "text": "South"
+            },
+            {
+              "label": "C",
+              "text": "East"
+            },
+            {
+              "label": "D",
+              "text": "West"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: East.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2754,
+          "text": "A is the mother of B. C is the brother of A. D is the daughter of C. E is the sister of D. How is E related to B?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Cousin"
+            },
+            {
+              "label": "C",
+              "text": "Niece"
+            },
+            {
+              "label": "D",
+              "text": "Aunt"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Cousin.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2755,
+          "text": "Ravi says, 'Sita is the daughter of the only son of my mother's husband.' How is Sita related to Ravi?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Daughter"
+            },
+            {
+              "label": "C",
+              "text": "Niece"
+            },
+            {
+              "label": "D",
+              "text": "Wife"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Daughter.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2756,
+          "text": "A is father of B. C is sister of A. D is mother of C. How is D related to B?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Grandmother"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Aunt"
+            },
+            {
+              "label": "D",
+              "text": "Sister"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Grandmother.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2757,
+          "text": "P brother of Q. R sister of Q. S father of R. How is S related to P?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Father"
+            },
+            {
+              "label": "B",
+              "text": "Uncle"
+            },
+            {
+              "label": "C",
+              "text": "Grandfather"
+            },
+            {
+              "label": "D",
+              "text": "Brother"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Father.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2758,
+          "text": "X mother of Y. Y sister of Z. Z brother of W. W daughter of V. How is V related to X?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Husband"
+            },
+            {
+              "label": "B",
+              "text": "Father"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Son"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Husband.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2759,
+          "text": "A father of B,C. D daughter of B. E son of C. How is E related to A?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Grandson"
+            },
+            {
+              "label": "B",
+              "text": "Son"
+            },
+            {
+              "label": "C",
+              "text": "Nephew"
+            },
+            {
+              "label": "D",
+              "text": "Cousin"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Grandson.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2760,
+          "text": "Ramesh to Suresh: \"Your mother is sister of my father.\" How is Suresh related to Ramesh?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Cousin"
+            },
+            {
+              "label": "B",
+              "text": "Brother"
+            },
+            {
+              "label": "C",
+              "text": "Nephew"
+            },
+            {
+              "label": "D",
+              "text": "Uncle"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Cousin.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2761,
+          "text": "A brother of B. B wife of C. C father of D. How is A related to D?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Uncle"
+            },
+            {
+              "label": "B",
+              "text": "Brother"
+            },
+            {
+              "label": "C",
+              "text": "Grandfather"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Uncle.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2762,
+          "text": "Woman: \"He is son of my mother's only daughter.\" How is man related to woman?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Brother"
+            },
+            {
+              "label": "C",
+              "text": "Nephew"
+            },
+            {
+              "label": "D",
+              "text": "Husband"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Son.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2763,
+          "text": "M father of N. N mother of O. O sister of P. How is M related to P?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Grandfather"
+            },
+            {
+              "label": "B",
+              "text": "Father"
+            },
+            {
+              "label": "C",
+              "text": "Uncle"
+            },
+            {
+              "label": "D",
+              "text": "Brother"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Grandfather.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2764,
+          "text": "A husband of B. C brother of A. D son of C. E wife of A. How is E related to D?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Aunt"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Sister-in-law"
+            },
+            {
+              "label": "D",
+              "text": "Cousin"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Aunt.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2765,
+          "text": "Man: \"She is daughter of the mother of my sister's only brother.\" Relation?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Daughter"
+            },
+            {
+              "label": "D",
+              "text": "Niece"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Sister.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2766,
+          "text": "X,Y brothers. Z daughter of Y. W wife of X. How is W related to Z?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Aunt"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Sister"
+            },
+            {
+              "label": "D",
+              "text": "Niece"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Aunt.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2767,
+          "text": "Pointing to girl, Raj: \"Her mother's husband's daughter is my sister.\" Relation?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Cousin"
+            },
+            {
+              "label": "C",
+              "text": "Niece"
+            },
+            {
+              "label": "D",
+              "text": "Mother"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Sister.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2768,
+          "text": "A mother of B. B sister of C. D son of C. E brother of D. How is E related to B?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Nephew"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Son"
+            },
+            {
+              "label": "D",
+              "text": "Cousin"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Nephew.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2769,
+          "text": "A is husband of B. B mother of C. C sister of D. E father of D. Relation of E to A?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Cannot be determined"
+            },
+            {
+              "label": "B",
+              "text": "Father"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Son"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Cannot be determined.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2770,
+          "text": "X is daughter of Y. Y is husband of Z. Z is sister of W. How is X related to W?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Niece"
+            },
+            {
+              "label": "B",
+              "text": "Daughter"
+            },
+            {
+              "label": "C",
+              "text": "Sister"
+            },
+            {
+              "label": "D",
+              "text": "Cousin"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Niece.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2771,
+          "text": "If 36 is coded as 81, 24 is coded as 36, then what is the code for 48?",
+          "options": [
+            {
+              "label": "A",
+              "text": "100"
+            },
+            {
+              "label": "B",
+              "text": "121"
+            },
+            {
+              "label": "C",
+              "text": "144"
+            },
+            {
+              "label": "D",
+              "text": "169"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 144.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2772,
+          "text": "If \"APPLE\" is coded as \"BQQMF\", how is \"MANGO\" coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "NBOHP"
+            },
+            {
+              "label": "B",
+              "text": "NBPHP"
+            },
+            {
+              "label": "C",
+              "text": "NCOIP"
+            },
+            {
+              "label": "D",
+              "text": "MBNHP"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: NBOHP.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2773,
+          "text": "If \"DELHI\" is coded as \"EFMIJ\", find \"MUMBAI\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "NVNCBJ"
+            },
+            {
+              "label": "B",
+              "text": "NVNCBK"
+            },
+            {
+              "label": "C",
+              "text": "NVMCBJ"
+            },
+            {
+              "label": "D",
+              "text": "OVNCBJ"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: NVNCBJ.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2774,
+          "text": "If \"STUDENT\" is coded as \"TVWFOSV\", find \"CLASS\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "DMBTT"
+            },
+            {
+              "label": "B",
+              "text": "DMBTU"
+            },
+            {
+              "label": "C",
+              "text": "DNBTT"
+            },
+            {
+              "label": "D",
+              "text": "DLBTT"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: DMBTT.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2775,
+          "text": "If \"INDIA\" is coded as \"JOEJB\", find \"CHINA\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "DIJOB"
+            },
+            {
+              "label": "B",
+              "text": "DIJOA"
+            },
+            {
+              "label": "C",
+              "text": "DJJOB"
+            },
+            {
+              "label": "D",
+              "text": "DIJOC"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: DIJOB.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2776,
+          "text": "If \"WORLD\" is coded as \"YQTNF\", find \"PEACE\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "RGCEG"
+            },
+            {
+              "label": "B",
+              "text": "RGCEF"
+            },
+            {
+              "label": "C",
+              "text": "RFDFH"
+            },
+            {
+              "label": "D",
+              "text": "RGCDG"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: RGCEG.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2777,
+          "text": "If \"GOOD\" is coded as \"HPPE\", find \"WORK\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "XPSL"
+            },
+            {
+              "label": "B",
+              "text": "XPSK"
+            },
+            {
+              "label": "C",
+              "text": "XQSL"
+            },
+            {
+              "label": "D",
+              "text": "XPTL"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: XPSL.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2778,
+          "text": "If \"BOMBAY\" is coded as \"CPNCBZ\", find \"DELHI\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "EFMIJ"
+            },
+            {
+              "label": "B",
+              "text": "EFMJH"
+            },
+            {
+              "label": "C",
+              "text": "EFMJI"
+            },
+            {
+              "label": "D",
+              "text": "EFMJJ"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: EFMIJ.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2779,
+          "text": "If \"RIVERS\" is coded as \"SKWFST\", find \"WATER\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "XBUFS"
+            },
+            {
+              "label": "B",
+              "text": "XBUFU"
+            },
+            {
+              "label": "C",
+              "text": "XCVFS"
+            },
+            {
+              "label": "D",
+              "text": "XBVFS"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: XBUFS.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2780,
+          "text": "If \"HONESTY\" is coded as \"IPNFTUZ\", find \"BEAUTY\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "CFBVUZ"
+            },
+            {
+              "label": "B",
+              "text": "CFBVVZ"
+            },
+            {
+              "label": "C",
+              "text": "CEBVUZ"
+            },
+            {
+              "label": "D",
+              "text": "CFBVTZ"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: CFBVUZ.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2781,
+          "text": "If \"NIGHT\" is coded as \"OKHIW\", find \"BRIGHT\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "CSLHIW"
+            },
+            {
+              "label": "B",
+              "text": "CSKHIW"
+            },
+            {
+              "label": "C",
+              "text": "CSKIIW"
+            },
+            {
+              "label": "D",
+              "text": "CSKHIV"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: CSKHIW.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2782,
+          "text": "If \"ABROAD\" is coded as \"BCSPBE\", find \"FOREIGN\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "GPSFJHO"
+            },
+            {
+              "label": "B",
+              "text": "GPSFJGO"
+            },
+            {
+              "label": "C",
+              "text": "GPSEJHO"
+            },
+            {
+              "label": "D",
+              "text": "GPSFKHO"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: GPSFJHO.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2783,
+          "text": "If \"GOODNESS\" is coded as \"HPPOFTT\", find \"PROJECT\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "QSPKDFU"
+            },
+            {
+              "label": "B",
+              "text": "QSPKD EU"
+            },
+            {
+              "label": "C",
+              "text": "QSPKCEU"
+            },
+            {
+              "label": "D",
+              "text": "QSPKDEV"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: QSPKDFU.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2784,
+          "text": "If \"LAPTOP\" is coded as \"MBQUPQ\", find \"MOBILE\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "NPCJMF"
+            },
+            {
+              "label": "B",
+              "text": "NPCJMG"
+            },
+            {
+              "label": "C",
+              "text": "NPDJMF"
+            },
+            {
+              "label": "D",
+              "text": "NPCIMF"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: NPCJMF.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2785,
+          "text": "If \"WINDOW\" is coded as \"XJOEPX\", find \"DOOR\".",
+          "options": [
+            {
+              "label": "A",
+              "text": "EPPS"
+            },
+            {
+              "label": "B",
+              "text": "EPPT"
+            },
+            {
+              "label": "C",
+              "text": "EPRS"
+            },
+            {
+              "label": "D",
+              "text": "EQPS"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: EPPS.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2786,
+          "text": "A man walks 5 km towards North, turns right and walks 3 km, then turns left and walks 2 km, then turns left and walks 3 km. How far is he from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "7 km"
+            },
+            {
+              "label": "C",
+              "text": "10 km"
+            },
+            {
+              "label": "D",
+              "text": "3 km"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 7 km.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2787,
+          "text": "Raju walked 30 m towards North, then 20 m towards East, then 30 m towards South. How far and in which direction is he from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20 m East"
+            },
+            {
+              "label": "B",
+              "text": "20 m West"
+            },
+            {
+              "label": "C",
+              "text": "30 m East"
+            },
+            {
+              "label": "D",
+              "text": "30 m West"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 20 m East.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2788,
+          "text": "Five friends A, B, C, D, E are sitting in a row facing North. A is between D and B. E is at the right end. C is second to the left of E. Who is at the left end?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: D.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2789,
+          "text": "In a class, Rohan is taller than Sohan but shorter than Mohan. Sohan is taller than Priya but shorter than Ankit. Priya is not the shortest. Who is the tallest?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rohan"
+            },
+            {
+              "label": "B",
+              "text": "Mohan"
+            },
+            {
+              "label": "C",
+              "text": "Ankit"
+            },
+            {
+              "label": "D",
+              "text": "Cannot be determined"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Mohan.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2790,
+          "text": "In a row of 25 students, Ravi is 12th from the left. What is his position from the right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "12th"
+            },
+            {
+              "label": "B",
+              "text": "13th"
+            },
+            {
+              "label": "C",
+              "text": "14th"
+            },
+            {
+              "label": "D",
+              "text": "15th"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 14th.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2791,
+          "text": "Find the next term: 3, 8, 15, 24, 35, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "46"
+            },
+            {
+              "label": "B",
+              "text": "48"
+            },
+            {
+              "label": "C",
+              "text": "42"
+            },
+            {
+              "label": "D",
+              "text": "44"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 48.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2792,
+          "text": "Find the next term: A, D, I, P, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "V"
+            },
+            {
+              "label": "B",
+              "text": "W"
+            },
+            {
+              "label": "C",
+              "text": "X"
+            },
+            {
+              "label": "D",
+              "text": "Y"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: Y.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2793,
+          "text": "Find the missing term: 2, 6, 12, ?, 30, 42",
+          "options": [
+            {
+              "label": "A",
+              "text": "18"
+            },
+            {
+              "label": "B",
+              "text": "20"
+            },
+            {
+              "label": "C",
+              "text": "22"
+            },
+            {
+              "label": "D",
+              "text": "24"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 20.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2794,
+          "text": "Find the next term: Z, X, V, T, R, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "O"
+            },
+            {
+              "label": "B",
+              "text": "P"
+            },
+            {
+              "label": "C",
+              "text": "Q"
+            },
+            {
+              "label": "D",
+              "text": "N"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: P.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2795,
+          "text": "Find the missing term: 1, 1, 2, 3, 5, 8, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10"
+            },
+            {
+              "label": "B",
+              "text": "11"
+            },
+            {
+              "label": "C",
+              "text": "12"
+            },
+            {
+              "label": "D",
+              "text": "13"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: 13.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2796,
+          "text": "Statements: 1. All birds are animals. 2. No animal is a fish. Conclusions: I. No bird is a fish. II. Some animals are birds.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both I and II follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2797,
+          "text": "Statements: 1. Some books are pens. 2. All pens are tables. Conclusions: I. Some books are tables. II. Some tables are pens.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both I and II follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2798,
+          "text": "Statements: 1. No apple is a mango. 2. All mangoes are fruits. Conclusions: I. No apple is a fruit. II. Some fruits are mangoes.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Only II follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2799,
+          "text": "Statements: 1. Some cups are plates. 2. No plate is a bowl. Conclusions: I. Some cups are not bowls. II. No cup is a bowl.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Either I or II follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2800,
+          "text": "Statements: 1. All dogs are cats. 2. All cats are animals. Conclusions: I. All dogs are animals. II. Some animals are dogs.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both I and II follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2801,
+          "text": "Statements: All pens are pencils. No pencil is an eraser. Conclusions: I. No pen is an eraser. II. Some pencils are pens.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2802,
+          "text": "Statements: Some apples are bananas. All bananas are cherries. Conclusions: I. Some apples are cherries. II. All cherries are bananas.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2803,
+          "text": "Statements: No cat is dog. All dogs are animals. Conclusions: I. No cat is animal. II. Some animals are dogs.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Only II follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2804,
+          "text": "Statements: All books are pages. No page is a cover. Conclusions: I. No book is a cover. II. Some pages are books.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2805,
+          "text": "Statements: Some doctors are engineers. All engineers are scientists. Conclusions: I. Some doctors are scientists. II. All scientists are engineers.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2806,
+          "text": "Statements: All birds are animals. All animals are living beings. Conclusions: I. All birds are living beings. II. Some living beings are birds.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2807,
+          "text": "Statements: Some professors are researchers. No researcher is a student. Conclusions: I. Some professors are not students. II. Some students are professors.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2808,
+          "text": "Statements: All tigers are mammals. No mammal is a reptile. Conclusions: I. No tiger is a reptile. II. Some mammals are tigers.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2809,
+          "text": "Statements: Some vegetables are fruits. No fruit is a grain. Conclusions: I. Some vegetables are not grains. II. Some fruits are not grains.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2810,
+          "text": "Statements: All balls are round. Some round objects are red. Conclusions: I. Some balls are red. II. Some red objects are round.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Only II follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2811,
+          "text": "Statements: Some chairs are tables. No table is a stool. Conclusions: I. Some chairs are not stools. II. All stools are chairs.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2812,
+          "text": "Statements: All students are hardworking. Some hardworking people are successful. Conclusions: I. Some students are successful. II. Some successful people are hardworking.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Only II follows.",
+          "_source": "Agniveer",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1,
+          "text": "If a % b = a² - band a % b = 63, find a and b.",
+          "options": [
+            {
+              "label": "A",
+              "text": "9, 6"
+            },
+            {
+              "label": "B",
+              "text": "10, 7"
+            },
+            {
+              "label": "C",
+              "text": "8, 1"
+            },
+            {
+              "label": "D",
+              "text": "7, 4"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given: If a % b = a² - band a % b = 63 Now, we check each options. Option (a): 9, 6 9 - 6= 81 - 36 = 45 63 Option (b): 10, 7 10 - 7 = 100 - 49 = 51 63 Option (c): 8, 1 8 - 1 = 64 - 1 = 63 Option (d): 7, 4 7 - 4 = 49 - 16 = 33 63 So, the value of a = 8 and b = 1. Thus, correct option is (c).2 2= 2 2= 2 2 2 2 =",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 2,
+          "text": "How many letters will remain unchanged if the word EDUCATION is arranged alphabetically?",
+          "options": [
+            {
+              "label": "A",
+              "text": "One"
+            },
+            {
+              "label": "B",
+              "text": "Zero"
+            },
+            {
+              "label": "C",
+              "text": "Three"
+            },
+            {
+              "label": "D",
+              "text": "Two"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: EDUCATION Given Letters EDUCATION Alphabetical Order ACDEINOTU Transformed letters: A, C, D, E, I,N, O, T, U So, zero letters will remain unchanged if the word is arranged alphabetically. Thus, correct option is (b).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 3,
+          "text": "Select the letter-cluster that will replace (?): B, F, J, N, R, V, Z,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "B"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: B, F, J, N, R, V, Z,? Logic: Letters are increasing + 4 place. B + 4 = F F + 4 = J J + 4 = N N + 4 = R R + 4 = V V + 4 = Z Z + 4 = D So, the missing term is D. Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 5,
+          "text": "If 4 ⊕ 3 = 19 and 5 ⊕ 2 = 17, then 6 ⊕ 4 =?",
+          "options": [
+            {
+              "label": "A",
+              "text": "24"
+            },
+            {
+              "label": "B",
+              "text": "28"
+            },
+            {
+              "label": "C",
+              "text": "34"
+            },
+            {
+              "label": "D",
+              "text": "32"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given: If 4 ⊕ 3 = 19 and 5 ⊕ 2 = 17 Logic: (1st number × 2nd number) + (1st number + 2nd number) = 3rd number For, 4 ⊕ 3 = 19 (4 × 3) + (4 + 3) = 12 + 7 = 19 For, 5 ⊕ 2 = 17 (5 × 2) + (5 + 2) = 10 + 7 = 17 Similarly, 6 ⊕ 4 =? (6 × 4) + (6 + 4) = 24 + 10 = 34 Thus, correct option is (c).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 6,
+          "text": "If 3x + 7 = 28, find x.",
+          "options": [
+            {
+              "label": "A",
+              "text": "7"
+            },
+            {
+              "label": "B",
+              "text": "6"
+            },
+            {
+              "label": "C",
+              "text": "5"
+            },
+            {
+              "label": "D",
+              "text": "8"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: If 3x + 7 = 28 Solution: 3x + 7 = 28 3x = 28 - 7 3x = 21 x = x = 7 So, the value of x = 7 Thus, correct option is (a). 321",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 8,
+          "text": "If '+' = '-' and '-' = '×', find the value of: 12 + 4 - 3 =?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5"
+            },
+            {
+              "label": "B",
+              "text": "0"
+            },
+            {
+              "label": "C",
+              "text": "1"
+            },
+            {
+              "label": "D",
+              "text": "3"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: 12 + 4 - 3 =? Given Sign +- New Sign -× Using BODMAS rule. New equation: 12 - 4 × 3 =? 12 - 12 =?? = 0 Thus, correct option is bOperation preference wise Brackets Orders, of Division Multiplication Addition SubtractionSymbol [],,() (power),√(root),of ÷ × + −",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 9,
+          "text": "Find the odd one out.",
+          "options": [
+            {
+              "label": "A",
+              "text": "4: 16: 256"
+            },
+            {
+              "label": "B",
+              "text": "3: 9: 81"
+            },
+            {
+              "label": "C",
+              "text": "5: 25: 125"
+            },
+            {
+              "label": "D",
+              "text": "6: 36: 1296"
+            }
+          ],
+          "answer": 2,
+          "solution": "Logic: (1st number) = 2nd number, (2nd number) = 3rd number Now, we check each options. Option (a): 4: 16: 256 (Follow) (4)= 16, (16) = 256 Option (b): 3: 9: 81 (Follow) (3)= 9, (9) = 81 Option (c): 5: 25: 125 (Not Follow) (5)= 25, (25) 125 Option (d): 6: 36: 1296 (Follow) (6)= 36, (36) = 1296 So, 5: 25: 125 is odd one out. Thus, correct option is (c).2 2 2 2 2 2 2 2= 2 2",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 10,
+          "text": "Eight people P, Q, R, S, T, U, V, W sit around a circle facing the center. P is second right of Q. R is opposite P. S is immediate left of R. T is third to the right of Q. U is sits to the immediate left of S. W is opposite T. Who is immediate right of Q?",
+          "options": [
+            {
+              "label": "A",
+              "text": "P"
+            },
+            {
+              "label": "B",
+              "text": "R"
+            },
+            {
+              "label": "C",
+              "text": "W"
+            },
+            {
+              "label": "D",
+              "text": "V"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: Eight people P, Q, R, S, T, U, V, W sit around a circle facing the center. P is second right of Q. R is opposite P. S is immediate left of R. T is third to the right of Q. U is sits to the immediate left of S. W is opposite T. From the given information seating arrangement will be. So, V is immediate right of Q. Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 11,
+          "text": "Find the missing term in the series. ACE, EGI, IKM, MOQ,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "QSU"
+            },
+            {
+              "label": "B",
+              "text": "PQS"
+            },
+            {
+              "label": "C",
+              "text": "QRT"
+            },
+            {
+              "label": "D",
+              "text": "RSU"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: ACE, EGI, IKM, MOQ,? Logic: Letters are increasing + 4 place. A + 4 = E, E + 4 = I, I + 4 = M, M + 4 = Q C + 4 = G, G + 4 = K, K + 4 = O, O + 4 = S E + 4 = I, I + 4 = M, M + 4 = Q, Q + 4 = U So, the missing term is QSU. Thus, correct option is (a).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 12,
+          "text": "What will come in place of (?) 2, 6, 18, 54,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "108"
+            },
+            {
+              "label": "B",
+              "text": "324"
+            },
+            {
+              "label": "C",
+              "text": "216"
+            },
+            {
+              "label": "D",
+              "text": "162"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: 6, 18, 54,?, 486 Logic: Number are multiply by 3. 6 × 3 = 18 18 × 3 = 54 54 × 3 = 162 162 × 3 = 486 So, the missing term is 162. Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 13,
+          "text": "Which word cannot be formed from DEMOCRACY?",
+          "options": [
+            {
+              "label": "A",
+              "text": "READY"
+            },
+            {
+              "label": "B",
+              "text": "CORE"
+            },
+            {
+              "label": "C",
+              "text": "MAYOR"
+            },
+            {
+              "label": "D",
+              "text": "CAREER"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: DEMOCRACY Now, we check each options: Option (a): READY → R, E, A, D, Y (possible) Option bCORE → C, O,R, E (possible) Option cMAYOR → M, A, Y, O,R (possible) Option dCAREER → C, A, R, E, E, R (not possible) Needs E twice, but DEMOCRACY has only one E So, CAREER word cannot be formed. Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 14,
+          "text": "What comes next? 8, 20, 44, 92,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "180"
+            },
+            {
+              "label": "B",
+              "text": "188"
+            },
+            {
+              "label": "C",
+              "text": "196"
+            },
+            {
+              "label": "D",
+              "text": "204"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: 8, 20, 44, 92,? Logic: Numbers are multiply by 2 and + 4 place. 8 × 2 + 4 = 20 20 × 2 + 4 = 44 44 × 2 + 4 = 92 92 × 2 + 4 = 188 So, the missing term is 188. Thus, correct option is (b).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 17,
+          "text": "If A is the brother of B, and B is the mother of C, how is A related to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother"
+            },
+            {
+              "label": "B",
+              "text": "Father"
+            },
+            {
+              "label": "C",
+              "text": "Uncle"
+            },
+            {
+              "label": "D",
+              "text": "Cousin"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given: If A is the brother of B, and B is the mother of C. From the given information blood relation diagram will be, So, A is the uncle of C. Thus, correct option is (c).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 20,
+          "text": "Identify the similar address: 12, Lake View Road, Anna Nagar, Chennai - 600040",
+          "options": [
+            {
+              "label": "A",
+              "text": "12 Lake View R dAnna Nagar Chennai 600040"
+            },
+            {
+              "label": "B",
+              "text": "Anna Nagar, 12 Lake Road, Chennai"
+            },
+            {
+              "label": "C",
+              "text": "12 Lake Road, Chennai - 600004"
+            },
+            {
+              "label": "D",
+              "text": "21 Lake View Road, Anna Nagar, Chennai"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: 12, Lake View Road, Anna Nagar, Chennai - 600040 Check the options: Option (a): 12 Lake View R dAnna Nagar Chennai 600040 Same house number, road (abbreviated), locality, city, and PIN code. Option bMissing \"View\", order changed, and PIN code missing Option cDifferent road name and different PIN code (600004) Option dDifferent house number (21 instead of 12) So, 12 Lake View Rd Anna Nagar",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 21,
+          "text": "Statement: Online education is expanding rapidly; hence quality standards must be maintained. Assumptions: I. Online education affects learning out comes. II. Quality control is necessary in education.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I"
+            },
+            {
+              "label": "B",
+              "text": "Only II"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II"
+            }
+          ],
+          "answer": 2,
+          "solution": "Statement: Online education is expanding rapidly; hence quality standards must be maintained. Assumptions: I. Online education affects learning outcomes. The statement argues that because online education is expanding, quality standards must be maintained. This implies that online education does have an impact on learning outcomes → Assumption I is implicit. II. Quality control is necessary in edu",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 22,
+          "text": "If 8 $ 3 = 32 and 6 $ 4 = 30, then 5 $ 4 =?",
+          "options": [
+            {
+              "label": "A",
+              "text": "28"
+            },
+            {
+              "label": "B",
+              "text": "20"
+            },
+            {
+              "label": "C",
+              "text": "24"
+            },
+            {
+              "label": "D",
+              "text": "25"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: If 8 $ 3 = 32 and 6 $ 4 = 30 Logic: (1st number × 2nd number) + 1st number = 3rd number For, 8 $ 3 = 32 (8 × 3) + 8 = 24 + 8 = 32 For, 6 $ 4 = 20 (6 × 4) + 6 = 24 + 6 = 30 Similarly, 5 $ 4 =? (5 × 4) + 5 = 20 + 5 = 25 Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 24,
+          "text": "Apply the same pattern used in the following group and find the correct option. COUNTRY: FRXQWUB:: SCHOOL:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "VFIPPM"
+            },
+            {
+              "label": "B",
+              "text": "VFKRR O"
+            },
+            {
+              "label": "C",
+              "text": "VFJPPN"
+            },
+            {
+              "label": "D",
+              "text": "VEKPPM"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: COUNTRY: FRXQWUB:: SCHOOL:? Logic: Letters are increasing + 3 place. For, COUNTRY: FRXQWUB C + 3 = F, O + 3 = R, U + 3 = X, N + 3 = Q, T + 3 = W, R + 3 = U, Y + 3 = B Similarly, For, SCHOOL:? S + 3 = V, C + 3 = F, H + 3 = K, O + 3 = R, O + 3 = R, L + 3 = O So, SCHOOL: VFKRRO Thus, correct option is (b).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 25,
+          "text": "Find the missing term: 3, 7, 15, 31,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "47"
+            },
+            {
+              "label": "B",
+              "text": "63"
+            },
+            {
+              "label": "C",
+              "text": "61"
+            },
+            {
+              "label": "D",
+              "text": "64"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: 3, 7, 15, 31,? Logic: Numbers are multiply by 2 and + 1 place. 3 × 2 + 1 = 7 7 × 2 + 1 = 15 15 × 2 + 1 = 31 31 × 2 + 1 = 63 So, the missing term is 63. Thus, correct option is (b).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 28,
+          "text": "Which is generally not classified as a weather parameter?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Temperature"
+            },
+            {
+              "label": "B",
+              "text": "Humidity"
+            },
+            {
+              "label": "C",
+              "text": "Soil pH"
+            },
+            {
+              "label": "D",
+              "text": "Wind"
+            }
+          ],
+          "answer": 2,
+          "solution": "The correct answer is cSoil pH. Explanation: • Weather parameters describe the state of the atmosphere at a given time and place. • Temperature, humidity, and wind are atmospheric variables and are core weather elements. • Soil pH relates to soil chemistry and agricultural science, not atmospheric conditions. Information Booster: • Major weather parameters include temperature, atmospheric pressure",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 35,
+          "text": "Assertion (A): Iron and steel qualifies as a heavy industry reason (R): It uses lightweight inputs such as cotton and rubber.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Both true, R explains A"
+            },
+            {
+              "label": "B",
+              "text": "Both true, R does not explain A"
+            },
+            {
+              "label": "C",
+              "text": "A true, R false"
+            },
+            {
+              "label": "D",
+              "text": "A false, R true"
+            }
+          ],
+          "answer": 2,
+          "solution": "The correct answer is (c) A true, R false. Explanation: • Iron and steel is classified as a heavy industry due to the use of bulky raw materials, high capital investment, and large-scale production. • The reason is incorrect because iron and steel depend on heavy inputs like iron ore, coal, and limestone, not cotton or rubber. Information Booster: • Heavy industries are usually energy-intensive an",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 42,
+          "text": "Assertion (A): Chotanagpur Plat eau forms the eastern continuation of Central Highlands. Reason (R): It is chiefly drained by Chambal and Betwa rivers.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Both A and R true, R explains A"
+            },
+            {
+              "label": "B",
+              "text": "Both true, R does not explain A"
+            },
+            {
+              "label": "C",
+              "text": "A true, R false"
+            },
+            {
+              "label": "D",
+              "text": "A false, R true"
+            }
+          ],
+          "answer": 2,
+          "solution": "The correct answer is (c) A true, R false. Explanation: • The Chotanagpur Plateau is indeed the eastern extension of the Central Highlands of Peninsular India. • However, it is mainly drained by rivers like the Damodar, Subarnarekha, and Brahmani, not Chambal and Betwa. • Hence, the assertion is correct, but the reason is incorrect. Information Booster: • Chotanagpur Plateau spans Jharkhand, Odish",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 54,
+          "text": "If 40% of P = 0.5 of Q = 1/8 of R, find P: Q: R.",
+          "options": [
+            {
+              "label": "A",
+              "text": "5: 4: 16"
+            },
+            {
+              "label": "B",
+              "text": "4: 5: 16"
+            },
+            {
+              "label": "C",
+              "text": "2: 5: 8"
+            },
+            {
+              "label": "D",
+              "text": "4: 5: 8"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: 40% of P=0.5 of Q= of R81 Formula Used: 40% = 52 Solution: Let common value=k 2 P=52k P= kQk5Q=k Q=21k Q=2k R=81k R=8k P:Q:R=:25k2k:8k =5:4:16",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 60,
+          "text": "A train cov ers 1.2 km in 1 minute how far will it travel in 2 hour s 15 minutes?",
+          "options": [
+            {
+              "label": "A",
+              "text": "162 km"
+            },
+            {
+              "label": "B",
+              "text": "156 km"
+            },
+            {
+              "label": "C",
+              "text": "171 km"
+            },
+            {
+              "label": "D",
+              "text": "168 km"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: Distance covered in 1 minute=1.2km Total time=2hours 15minutes Formula Used: Distance=Speed×Time Solution: 2hours 15minutes=(2×60)+15=135minutes Distance travelled=1.2×135 =162",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 67,
+          "text": "Simplify:",
+          "options": [
+            {
+              "label": "A",
+              "text": "0"
+            },
+            {
+              "label": "B",
+              "text": "1"
+            },
+            {
+              "label": "C",
+              "text": "2"
+            },
+            {
+              "label": "D",
+              "text": "√3"
+            }
+          ],
+          "answer": 0,
+          "solution": "+ ( 5+ 31) − ( 5− 31) (25−310) Given: + (5+ 31) − (5− 31) (25−310) Solution: + (5+ 31) − (5− 31) (25−310) = − (5+ )(5− ) 3 3(5− )+(5+ ) 3 3 2210 = −25−310 2210 = −2210 2210 =0",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 87,
+          "text": "Choose the most suitable option to replace the highlighted part of the sentence: No one knows where is he staying.",
+          "options": [
+            {
+              "label": "A",
+              "text": "where is he stay"
+            },
+            {
+              "label": "B",
+              "text": "where he is staying at"
+            },
+            {
+              "label": "C",
+              "text": "where he is staying"
+            },
+            {
+              "label": "D",
+              "text": "where he had stayed is"
+            }
+          ],
+          "answer": 2,
+          "solution": "The correct option is cExplanation: The given sentence is an embedded (indirect) question after the clause \"No one knows...\". In embedded questions, we do not use question word order (auxiliary + subject). Instead, we use statement word order (subject + verb). Incorrect: \"where is he staying \" (question order) Correct: \"where he is staying \" (statement order) Grammatical rule used: In indirect qu",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 102,
+          "text": "One number does not fit into the given factorial series. Identify it. 3, 6, 24, 120, 720, 800",
+          "options": [
+            {
+              "label": "A",
+              "text": "6"
+            },
+            {
+              "label": "B",
+              "text": "24"
+            },
+            {
+              "label": "C",
+              "text": "120"
+            },
+            {
+              "label": "D",
+              "text": "800"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: 3, 6, 24, 120, 720, 800 Look at the numbers: 6 = 3! 24 = 4! 120 = 5! 720 = 6! All these numbers are factorials of natural numbers. But, 800 is not the factorial of any whole number. Therefore, 800 does not fit the factorial series. Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 104,
+          "text": "Find the option that best completes the analogy. AC: FH:: BD:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "GJ"
+            },
+            {
+              "label": "B",
+              "text": "HK"
+            },
+            {
+              "label": "C",
+              "text": "GI"
+            },
+            {
+              "label": "D",
+              "text": "IK"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given: AC: FH:: BD:? Logic: Letters are increasing + 5 place. For, AC: FH A + 5 = F, C + 5 = H Similarly, BD:? B + 5 = G, D + 5 = I So, BD: G I Thus, correct option is (c).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 113,
+          "text": "What should come at the place of the question mark (?) in the following series? 2, 3, 8, 9, 26, 27,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "54"
+            },
+            {
+              "label": "B",
+              "text": "56"
+            },
+            {
+              "label": "C",
+              "text": "80"
+            },
+            {
+              "label": "D",
+              "text": "82"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given: 2, 3, 8, 9, 26, 27,? Separate them into two sequences: 1st sequence: 2, 8, 26,? 2 × 3 + 2 = 8 8 × 3 + 2 = 26 26 × 3 + 2 = 80 2nd sequence: 3, 9, 27 Each number is multiplied by 3. 3 × 3 = 9 9 × 3 = 27 So, the missing term is 80. Thus, correct option is (c).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 114,
+          "text": "Select the letter-cluster from the given options that will replace the question mark (?) in the following series. ABZ, BCY, CDX, DEW,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "EEV"
+            },
+            {
+              "label": "B",
+              "text": "EFV"
+            },
+            {
+              "label": "C",
+              "text": "EFU"
+            },
+            {
+              "label": "D",
+              "text": "EFX"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: ABZ, BCY, CD X, DEW,? Logic: 1st letter + 1, 2nd letter + 1 and 3rd letter - 1 place. For, 1st letter A + 1 = B, B + 1 = C, C + 1 = D, D + 1 = E For, 1st letter B + 1 = C, C + 1 = D, D + 1 = E, E + 1 = F For, 1st letter Z - 1 = Y, Y - 1 = X, X - 1 = W, W - 1 = V So, the missing term is EFV. Thus, correct option is (b).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 116,
+          "text": "Select the letter-cluster that can replace the question mark (?) in the given series. LMP, NOR, PQ T,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "RVU"
+            },
+            {
+              "label": "B",
+              "text": "RUV"
+            },
+            {
+              "label": "C",
+              "text": "STV"
+            },
+            {
+              "label": "D",
+              "text": "RSV"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: LMP, NOR, PQ T,? Logic: Letters are increasing + 2 place. L + 2 = N, N + 2 = P, P + 2 = R M + 2 = O, O + 2 = Q, Q + 2 = S P + 2 = R, R + 2 = T, T + 2 = V So, the missing term is RSV. Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 119,
+          "text": "What comes next in the given number series? 1, 8, 27, 64, 125,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "196"
+            },
+            {
+              "label": "B",
+              "text": "216"
+            },
+            {
+              "label": "C",
+              "text": "225"
+            },
+            {
+              "label": "D",
+              "text": "256"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: 1, 8, 27, 64, 125,? Logic: Numbers are perfect cube of natural number from 1. 1 = 1 8 = 2 27 = 3 64 = 4 125 = 5 Next number = 6 6= 216 So, the missing term is 216. Thus, correct option is (b).3 3 3 3 3 3",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 141,
+          "text": "Which statement correctly represents the Nobel Prize in Literature?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Awarded annually for scientific discoveries"
+            },
+            {
+              "label": "B",
+              "text": "Recognizes outstanding literary contributions"
+            },
+            {
+              "label": "C",
+              "text": "Given only to novelists"
+            },
+            {
+              "label": "D",
+              "text": "Limited to European authors"
+            }
+          ],
+          "answer": 1,
+          "solution": "The correct answer is (B) Recognizes outstanding literary contributions Explanation: • The Nobel Prize in Literature is one of the five Nobel Prizes established by the will of Alfred Nobel in 1895. • It is awarded annually to an author from any country who has, in the words of Alfred Nobel's will, produced \"in the field of literature the most outstanding work in an ideal direction.\" • The Swedish",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 171,
+          "text": "A is the wife of B. B is the brother of C. C is the father of D. How is A related to D?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Aunt"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Sister-in-law"
+            },
+            {
+              "label": "D",
+              "text": "Grandmother"
+            }
+          ],
+          "answer": 0,
+          "solution": "Level 1 (The Parents' Generation): A is the wife of B. (A is female, B is male). B is the brother of C. (Band Care siblings. C is male since he is a father). So, A (Wife) = B (Brother) — C (Father). Level 2 (The Children's Generation): C is the father of D. (D is the child of C). Place D below C. The Connection: B is D's paternal Uncle (father's brother). A is the wife of B. Therefore, A is D's",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 172,
+          "text": "Select the letters from among the given options that can replace the question mark (?) in the following series. K, M, O,?, S, U,?, Y",
+          "options": [
+            {
+              "label": "A",
+              "text": "Q, X"
+            },
+            {
+              "label": "B",
+              "text": "Q, W"
+            },
+            {
+              "label": "C",
+              "text": "P, W"
+            },
+            {
+              "label": "D",
+              "text": "R, W"
+            }
+          ],
+          "answer": 1,
+          "solution": "Information Given: Series: K, M, O,?, S, U,?, Y (letter positions 11,13,15,?,19,21,?,25). Logic: Odd-position alphabet numbers increase by 2 each step (arithmetic progression +2). Explanation: Logic: map letters → positions and add 2 each term. Step-by-step: Apply the rule (+2) step-by-step: 11 → 11 + 2 = 13 (M) 13 → 13 + 2 = 15 (O) 15 → 15 + 2 = 17 → 17 corresponds to Q (this fills the 4th term)",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 175,
+          "text": "Complete the pattern: 120, 96, 76.8, 61.44,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "60.27"
+            },
+            {
+              "label": "B",
+              "text": "78.91"
+            },
+            {
+              "label": "C",
+              "text": "47.89"
+            },
+            {
+              "label": "D",
+              "text": "49.152"
+            }
+          ],
+          "answer": 3,
+          "solution": "Information Given: Series: 120, 96, 76.8, 61.44,? Logic: Each term is multiplied by 0.8 constant factor. Explanation: Logic: Multiply by 0.8 each time. Step-by-step: 120 × 0.8 = 96 96 × 0.8 = 76.8 76.8 × 0.8 = 61.44 61.44 × 0.8 = 49.152",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 176,
+          "text": "Select the letter-cluster from among the given options that can replace the question mark (?) in the following series. YMW, VJT, SGQ, PDN,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "TYD"
+            },
+            {
+              "label": "B",
+              "text": "HGF"
+            },
+            {
+              "label": "C",
+              "text": "MJH"
+            },
+            {
+              "label": "D",
+              "text": "MAK"
+            }
+          ],
+          "answer": 3,
+          "solution": "Information Given: Series: YMW, VJT, SGQ, PDN,? Logic: Each letter in a position moves back by 3 in the alphabet each term. Explanation: First-position column: Y → Y(25) − 3 = 22 → V. V(22) − 3 = 19 → S. S(19) − 3 = 16 → P. P(16) − 3 = 13 → M. So sequence: Y, V, S, P, M. Second-position column: M → M(13) − 3 = 10 → J. J(10) − 3 = 7 → G. G(7) − 3 = 4 → D. D(4) − 3 = 1 → A. So sequence: M, J, G, D,",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 177,
+          "text": "Ten per sons are sitting in two parallel rows containing five persons each, such that there is an equal distance between adjacent per sons. Line 1: Five men (A-E) are seated and all of them are facing South. Line 2: Five women (M-Q) are seated and all of them are facing North. Based on the arrangement, answer the question: D is opposite to M. M is at one of the extreme ends of Line 2. O is at the center position of Line 2. Who is second to the right of M in Line 2 (facing North)?",
+          "options": [
+            {
+              "label": "A",
+              "text": "O"
+            },
+            {
+              "label": "B",
+              "text": "M"
+            },
+            {
+              "label": "C",
+              "text": "A"
+            },
+            {
+              "label": "D",
+              "text": "N"
+            }
+          ],
+          "answer": 0,
+          "solution": "Information Given: • Two parallel rows of 5 each • Line 1: Men A–E facing South • Line 2: Women M–Q facing North • D is opposite to M • M is at one extreme end of Line 2 • O is at the center of Line 2 Question: Who is second to the right of M in Line 2 (facing North)? Explanation: Logic: Facing North → right side is towards our right. Step-by-step: • Line 2 has 5 seats → positions 1 2 3 4 5 • O",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 178,
+          "text": "Which of the following is/are identical to the address given: Sunil Kumar 21/4, Ashok Vihar, Delhi, 110052 1. Sunil Kumar 21/4, Ashok Vihar, Delhi, 1100522 2. Sunil Kumar 21/4, Ashok Vihar, Delhi, 110052 3. Sunil Kumar 21/4, Ashok Vihar, New Delhi, 110052 4. Sunil Kumar 21/4, Ashok Vihar, Delhi, 110053",
+          "options": [
+            {
+              "label": "A",
+              "text": "1 Only"
+            },
+            {
+              "label": "B",
+              "text": "3 Only"
+            },
+            {
+              "label": "C",
+              "text": "2 Only"
+            },
+            {
+              "label": "D",
+              "text": "4 Only"
+            }
+          ],
+          "answer": 2,
+          "solution": "Information Given: Original address details: Name: Sunil Kumar House No.: 21/4 Locality: Ashok Vihar City: Delhi PIN code: 110052 Formula Used: Exact character-by-character comparison (Name + locality + city + PIN code) Explanation: Option 1: PIN code has an extra digit (1100522) ❌ Option 2: Name, address, city, and PIN code all match exactly ✔ Option 3: \"New Delhi\" ≠ \"Delhi\" ❌ Option 4: PIN code",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 180,
+          "text": "Find the best option that best completes the analogy. CAB: EDF:: GIH:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "JKL"
+            },
+            {
+              "label": "B",
+              "text": "KJI"
+            },
+            {
+              "label": "C",
+              "text": "ILL"
+            },
+            {
+              "label": "D",
+              "text": "JLI"
+            }
+          ],
+          "answer": 2,
+          "solution": "Analogy: CAB: EDF:: GIH:? Logic: Each letter is shifted forward by increasing steps (+2, +3, +4). Explanation: Logic: Compare corresponding letters position-wise. Step-by-step: CAB → EDF C(3) → E(5) = +2 A(1) → D(4) = +3 B(2) → F(6) = +4 Apply same to GIH: G(7) +2 = I(9) I(9) +3 = L(12) H(8) +4 = L(12) Result = ILL",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 181,
+          "text": "Select the letter-cluster from among the given options that can replace the question mark (?) in the following series: RBEH, RGOW, RLYL, RQIA,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "RVSP"
+            },
+            {
+              "label": "B",
+              "text": "RVSH"
+            },
+            {
+              "label": "C",
+              "text": "RVHS"
+            },
+            {
+              "label": "D",
+              "text": "RSVP"
+            }
+          ],
+          "answer": 0,
+          "solution": "Information Given: Series: RBEH, RGOW, RLYL, RQIA,? Logic: Columns progress independently: 1st fixed, 2nd +5, 3rd +10 (mod26), 4th +15 (mod26). Explanation: 1st column (k = 0): R → R → R → R → R (always R). (R = 18 → 18 + 0 = 18 → R) 2nd column (k = +5): B(2) +5 = 7 → G. G(7) +5 = 12 → L. L(12) +5 = 17 → Q. Q(17) +5 = 22 → V. Next letter in column 2 = V. 3rd column (k = +10): E(5) +10 = 15 → O. O(",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 183,
+          "text": "Select the letter-cluster from among the given options that can replace the question mark (?) in the following series: CDEF, CKSA, CRGV, CYUQ,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "CEHK"
+            },
+            {
+              "label": "B",
+              "text": "CFHK"
+            },
+            {
+              "label": "C",
+              "text": "CFHL"
+            },
+            {
+              "label": "D",
+              "text": "CFIL"
+            }
+          ],
+          "answer": 3,
+          "solution": "Information Given: CDEF, CKSA, CRGV, CYUQ,? Logic: Letters in each position follow a fixed independent pattern. Explanation: • 1st letter: C, C, C, C → constant → C • 2nd letter: D(4) → K(11) → R(18) → Y(25) Pattern: +7 each time → next = 25 + 7 = 32 → wrap = F(6) • 3rd letter: E(5) → S(19) → G(7) → U(21) Pattern: +14, +14, +14 → next = 21 − 12 = I(9) • 4th letter: F(6) → A(1) → V(22) → Q(17) Patt",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 184,
+          "text": "Each of the letters in the word CONTRAST is arranged in alphabetical or der. How many letters are therein the English alphabetical series between the letter that is first from the left and the one that is fifth from the right in the new letter-cluster formed?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10"
+            },
+            {
+              "label": "B",
+              "text": "12"
+            },
+            {
+              "label": "C",
+              "text": "15"
+            },
+            {
+              "label": "D",
+              "text": "11"
+            }
+          ],
+          "answer": 1,
+          "solution": "Information Given: Word: CONTRAST Task: Arrange letters in alphabetical order, then find how many letters lie between • the 1st letter from the left and • the 5th letter from the right. Explanation: • Letters of CONTRAST in alphabetical order: A, C, N,O, R, S, T • 1st from the left = A • 5th from the right = N (from right: T(1), S(2), R(3), O(4),N(5)) • Alphabetical positions: A = 1, N = 14 • Lett",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 185,
+          "text": "Find the option that best completes the analogy. DP: XZ:: EN:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "YZ"
+            },
+            {
+              "label": "B",
+              "text": "YB"
+            },
+            {
+              "label": "C",
+              "text": "ZB"
+            },
+            {
+              "label": "D",
+              "text": "YX"
+            }
+          ],
+          "answer": 3,
+          "solution": "Analogy: DP: XZ:: EN:? Logic: 1st letter +20, 2nd letter +10. Explanation: Logic: First letter → +20, Second letter → +10. Step-by-step: DP → XZ • D(4) + 20 = X(24) • P(16) + 10 = Z(26) Apply same to EN: • E(5) + 20 = Y(25) • N(14) + 10 = X(24) So, EN → YX",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 188,
+          "text": "In each of the following questions, a group of three numbers/symbols is given in each option. Identify the group that does NOT follow the same pattern as the other s.",
+          "options": [
+            {
+              "label": "A",
+              "text": "M13: J10: G7"
+            },
+            {
+              "label": "B",
+              "text": "Z26: W23: T20"
+            },
+            {
+              "label": "C",
+              "text": "D4: A1: X24"
+            },
+            {
+              "label": "D",
+              "text": "H8:E6: B4"
+            }
+          ],
+          "answer": 3,
+          "solution": "Information Given: A)M13: J10: G7 B) Z26: W23: T20 C) D4: A1: X24 D) H8:E6: B4 Logic: Letters move backward by 3 positions, numbers also decrease by 3 each step. Explanation: Logic: Check backward movement in letters and −3 in numbers. Step-by-step: • A:M(13) → J(10) → G(7) ✔ • B: Z(26) → W(23) → T(20) ✔ • C: D(4) → A(1) → X(24) ✔ • D: H(8) → E(6) → B(4) but numbers given are 8,6,4 ❌ (−2 pattern)",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 191,
+          "text": "In the following question, select the related word from the given alternatives. Utilitarianism: Consequence:: Deontology:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Virtue"
+            },
+            {
+              "label": "B",
+              "text": "Duty"
+            },
+            {
+              "label": "C",
+              "text": "Intention"
+            },
+            {
+              "label": "D",
+              "text": "Value"
+            }
+          ],
+          "answer": 1,
+          "solution": "Information Given: Utilitarianism: Consequence:: Deontology:? Logic: Utilitarianism = result-based, Deontology = rule/duty-based. Explanation: Logic: Match theory with what it primarily emphasizes. Step-by-step: • Utilitarianism judges actions by their consequences ✔ • Deontology judges actions by duty/rules, not outcomes ✔ Thus, Deontology → Duty.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 192,
+          "text": "Select the letter-cluster from among the given options that can replace the question mark (?) in the following series. PQR, STU, VWX,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "YZD"
+            },
+            {
+              "label": "B",
+              "text": "YVA"
+            },
+            {
+              "label": "C",
+              "text": "YZA"
+            },
+            {
+              "label": "D",
+              "text": "DFR"
+            }
+          ],
+          "answer": 2,
+          "solution": "Information Given: Series: PQR, STU, VWX; find next cluster. Reference: uploaded question set. Logic: Each letter in a position advances by +3 in the alphabet (wrap after Z). Explanation: Treat letters as their alphabetical positions and add 3 (showing mapping): Applying +3 to each letter of the last given cluster VWX yields: P → P(16) + 3 = 19 → S. S → S(19) + 3 = 22 → V. V → V(22) + 3 = 25 → Y.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 193,
+          "text": "B is the daughter of A. C is the husband of B. D is the son of C. How is A related to D?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Father"
+            },
+            {
+              "label": "B",
+              "text": "Grandfather"
+            },
+            {
+              "label": "C",
+              "text": "Grandmother"
+            },
+            {
+              "label": "D",
+              "text": "Cannot be determined"
+            }
+          ],
+          "answer": 3,
+          "solution": "Information Given: • B is the daughter of A • C is the husband of B • D is the son of C",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 208,
+          "text": "What is the term for rhythmic cycles in Hindustani classical music?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Raga"
+            },
+            {
+              "label": "B",
+              "text": "Tala"
+            },
+            {
+              "label": "C",
+              "text": "Alap"
+            },
+            {
+              "label": "D",
+              "text": "Shruti"
+            }
+          ],
+          "answer": 1,
+          "solution": "The correct answer is (B) Tala Explanation: • Tala: It is the term used in Indian classical music for the rhythmic pattern of any composition and for the entire subject of rhythm. • It is a cycle of beats (Matras) that repeats throughout the performance. • Common Tal as include Teental (16 beats), Dadra (6 beats), and Keherwa (8 beats). Information Booster: • Laya: Refers to the tempo or speed o",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 214,
+          "text": "The Human Development Index (HDI) measures progress in:",
+          "options": [
+            {
+              "label": "A",
+              "text": "Income, health, and education"
+            },
+            {
+              "label": "B",
+              "text": "Agriculture and industry"
+            },
+            {
+              "label": "C",
+              "text": "Defence and security"
+            },
+            {
+              "label": "D",
+              "text": "Trade and commerce"
+            }
+          ],
+          "answer": 0,
+          "solution": "The correct answer is (A) Income, health, and education Explanation: • The HDI is a summary measure of average achievement in key dimensions of human development. • It uses three indicators: (1) Health: Life expectancy at birth, (2) Education: Mean years of schooling and expected years of schooling, (3) Income: Gross National Income (GNI) per capita (PPP $). • It was developed by Pakistani econom",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 220,
+          "text": "What is the value of 5 + 55 + 555 + 5555 + 55555?",
+          "options": [
+            {
+              "label": "A",
+              "text": "61725"
+            },
+            {
+              "label": "B",
+              "text": "62215"
+            },
+            {
+              "label": "C",
+              "text": "63215"
+            },
+            {
+              "label": "D",
+              "text": "64120"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: 5+55+555+5555 +55555 Solution: 5+55=60 60+555=615 615+5555 =6170 6170 +55555 =61725",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 221,
+          "text": "Simplify:",
+          "options": [
+            {
+              "label": "A",
+              "text": "3.45"
+            },
+            {
+              "label": "B",
+              "text": "3.65"
+            },
+            {
+              "label": "C",
+              "text": "3.85"
+            },
+            {
+              "label": "D",
+              "text": "4.05"
+            }
+          ],
+          "answer": 2,
+          "solution": "2 +3.8− (41) 2 51 Given: 2 +3.8− (41) 2 51 Solution: 2 +3.8− (41) 2 51 =2.25+3.8− ( )2.2 =6.05−2.2 =3.85",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 226,
+          "text": "A cricketer's averages core over a series of matches is 42. If she scores 138 runs in the next match, her average increases to 46. How many matches did she play before this?",
+          "options": [
+            {
+              "label": "A",
+              "text": "23"
+            },
+            {
+              "label": "B",
+              "text": "22"
+            },
+            {
+              "label": "C",
+              "text": "24"
+            },
+            {
+              "label": "D",
+              "text": "26"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: Initial average=42 Score in next match=138 New average=46 Formula Used: Average= Number of matchesTotal score Solution: Let initial matches= nTotal score=42 n =n+142 n+13846 42 n+138=46 n+46 92=4 n n",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 243,
+          "text": "What is the equation of a line passing thr ough (0,4) with slope -2?",
+          "options": [
+            {
+              "label": "A",
+              "text": "y = -2x + 4"
+            },
+            {
+              "label": "B",
+              "text": "y = 2x - 4"
+            },
+            {
+              "label": "C",
+              "text": "y = -2x - 4"
+            },
+            {
+              "label": "D",
+              "text": "y = 2x + 4"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: Point (0,4) Slope mFormula Used: y= m x+ cSolution: c=4 y=−2 x",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 278,
+          "text": "Find the option that best completes the analogy. AC: FH:: BD:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "GJ"
+            },
+            {
+              "label": "B",
+              "text": "HK"
+            },
+            {
+              "label": "C",
+              "text": "GI"
+            },
+            {
+              "label": "D",
+              "text": "IK"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given: AC: FH:: BD:? Logic: Letters are increasing + 5 place. For, AC: FH A + 5 = F, C + 5 = H Similarly, BD:? B + 5 = G, D + 5 = I So, BD: G I Thus, correct option is (c).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 282,
+          "text": "Which number replaces the question mark in the following series: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "35"
+            },
+            {
+              "label": "B",
+              "text": "37"
+            },
+            {
+              "label": "C",
+              "text": "39"
+            },
+            {
+              "label": "D",
+              "text": "41"
+            }
+          ],
+          "answer": 1,
+          "solution": "The series follows the pattern n^2 + 1, where n starts from 1. For n=1, 1^2 + 1 = 2. For n=2, 2^2 + 1 = 5. For n=3, 3^2 + 1 = 10. For n=4, 4^2 + 1 = 17. For n=5, 5^2 + 1 = 26. Therefore, for n=6, 6^2 + 1 = 36 + 1 = 37.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 283,
+          "text": "Find the odd one out.",
+          "options": [
+            {
+              "label": "A",
+              "text": "4: 16: 256"
+            },
+            {
+              "label": "B",
+              "text": "3: 9: 81"
+            },
+            {
+              "label": "C",
+              "text": "5: 25: 125"
+            },
+            {
+              "label": "D",
+              "text": "6: 36: 1296"
+            }
+          ],
+          "answer": 2,
+          "solution": "Logic: (1st number) = 2nd number, (2nd number) = 3rd number Now, we check each options. Option (a): 4: 16: 256 (Follow) (4)= 16, (16) = 256 Option (b): 3: 9: 81 (Follow) (3)= 9, (9) = 81 Option (c): 5: 25: 125 (Not Follow) (5)= 25, (25) 125 Option (d): 6: 36: 1296 (Follow) (6)= 36, (36) = 1296 So, 5: 25: 125 is odd one out. Thus, correct option is (c).2 2 2 2 2 2 2 2= 2 2",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 285,
+          "text": "Find the best option that best completes the analogy. CAB: EDF:: GIH:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "JKL"
+            },
+            {
+              "label": "B",
+              "text": "KJI"
+            },
+            {
+              "label": "C",
+              "text": "ILL"
+            },
+            {
+              "label": "D",
+              "text": "JLI"
+            }
+          ],
+          "answer": 2,
+          "solution": "Analogy: CAB: EDF:: GIH:? Logic: Each letter is shifted forward by increasing steps (+2, +3, +4). Explanation: Logic: Compare corresponding letters position-wise. Step-by-step: CAB → EDF C(3) → E(5) = +2 A(1) → D(4) = +3 B(2) → F(6) = +4 Apply same to GIH: G(7) +2 = I(9) I(9) +3 = L(12) H(8) +4 = L(12) Result = ILL",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 287,
+          "text": "Each of the letters in the word CONTRAST is arranged in alphabetical or der. How many letters are therein the English alphabetical series between the letter that is first from the left and the one that is fifth from the right in the new letter-cluster formed?",
+          "options": [
+            {
+              "label": "A",
+              "text": "10"
+            },
+            {
+              "label": "B",
+              "text": "12"
+            },
+            {
+              "label": "C",
+              "text": "15"
+            },
+            {
+              "label": "D",
+              "text": "11"
+            }
+          ],
+          "answer": 1,
+          "solution": "Information Given: Word: CONTRAST Task: Arrange letters in alphabetical order, then find how many letters lie between • the 1st letter from the left and • the 5th letter from the right. Explanation: • Letters of CONTRAST in alphabetical order: A, C, N,O, R, S, T • 1st from the left = A • 5th from the right = N (from right: T(1), S(2), R(3), O(4),N(5)) • Alphabetical positions: A = 1, N = 14 • Lett",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 317,
+          "text": "Select the letters from among the given options that can replace the question mark (?) in the following series. K, M, O,?, S, U,?, Y",
+          "options": [
+            {
+              "label": "A",
+              "text": "Q, X"
+            },
+            {
+              "label": "B",
+              "text": "Q, W"
+            },
+            {
+              "label": "C",
+              "text": "P, W"
+            },
+            {
+              "label": "D",
+              "text": "R, W"
+            }
+          ],
+          "answer": 1,
+          "solution": "Information Given: Series: K, M, O,?, S, U,?, Y (letter positions 11,13,15,?,19,21,?,25). Logic: Odd-position alphabet numbers increase by 2 each step (arithmetic progression +2). Explanation: Logic: map letters → positions and add 2 each term. Step-by-step: Apply the rule (+2) step-by-step: 11 → 11 + 2 = 13 (M) 13 → 13 + 2 = 15 (O) 15 → 15 + 2 = 17 → 17 corresponds to Q (this fills the 4th term)",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 321,
+          "text": "Select the letter-cluster from the given options that will replace the question mark (?) in the following series. ABZ, BCY, CDX, DEW,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "EEV"
+            },
+            {
+              "label": "B",
+              "text": "EFV"
+            },
+            {
+              "label": "C",
+              "text": "EFU"
+            },
+            {
+              "label": "D",
+              "text": "EFX"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: ABZ, BCY, CD X, DEW,? Logic: 1st letter + 1, 2nd letter + 1 and 3rd letter - 1 place. For, 1st letter A + 1 = B, B + 1 = C, C + 1 = D, D + 1 = E For, 1st letter B + 1 = C, C + 1 = D, D + 1 = E, E + 1 = F For, 1st letter Z - 1 = Y, Y - 1 = X, X - 1 = W, W - 1 = V So, the missing term is EFV. Thus, correct option is (b).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 341,
+          "text": "A cricketer's average score over a series of matches is 42. If she scores 138 runs in the next match, her average increases to 46. How many matches did she play before this?",
+          "options": [
+            {
+              "label": "A",
+              "text": "23"
+            },
+            {
+              "label": "B",
+              "text": "22"
+            },
+            {
+              "label": "C",
+              "text": "24"
+            },
+            {
+              "label": "D",
+              "text": "26"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: Initial average=42 Score in next match=138 New average=46 Formula Used: Average= Number of matchesTotal score Solution: Let initial matches= nTotal score=42 n =n+142 n+13846 42 n+138=46 n+46 92=4 n n",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 344,
+          "text": "Select the letter-cluster that can replace the question mark (?) in the given series. LMP, NOR, PQ T,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "RVU"
+            },
+            {
+              "label": "B",
+              "text": "RUV"
+            },
+            {
+              "label": "C",
+              "text": "STV"
+            },
+            {
+              "label": "D",
+              "text": "RSV"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: LMP, NOR, PQ T,? Logic: Letters are increasing + 2 place. L + 2 = N, N + 2 = P, P + 2 = R M + 2 = O, O + 2 = Q, Q + 2 = S P + 2 = R, R + 2 = T, T + 2 = V So, the missing term is RSV. Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 348,
+          "text": "Which number replaces the question mark in the following series: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "35"
+            },
+            {
+              "label": "B",
+              "text": "37"
+            },
+            {
+              "label": "C",
+              "text": "39"
+            },
+            {
+              "label": "D",
+              "text": "41"
+            }
+          ],
+          "answer": 1,
+          "solution": "The series follows the pattern n^2 + 1, where n starts from 1. For n=1, 1^2 + 1 = 2. For n=2, 2^2 + 1 = 5. For n=3, 3^2 + 1 = 10. For n=4, 4^2 + 1 = 17. For n=5, 5^2 + 1 = 26. Therefore, for n=6, 6^2 + 1 = 36 + 1 = 37.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 353,
+          "text": "Select the letter-cluster that can replace the question mark (?) in the given series. LMP, NOR, PQ T,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "RVU"
+            },
+            {
+              "label": "B",
+              "text": "RUV"
+            },
+            {
+              "label": "C",
+              "text": "STV"
+            },
+            {
+              "label": "D",
+              "text": "RSV"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given: LMP, NOR, PQ T,? Logic: Letters are increasing + 2 place. L + 2 = N, N + 2 = P, P + 2 = R M + 2 = O, O + 2 = Q, Q + 2 = S P + 2 = R, R + 2 = T, T + 2 = V So, the missing term is RSV. Thus, correct option is (d).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 357,
+          "text": "Select the letter-cluster from among the given options that can replace the question mark (?) in the following series: CDEF, CKSA, CRGV, CYUQ,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "CEHK"
+            },
+            {
+              "label": "B",
+              "text": "CFHK"
+            },
+            {
+              "label": "C",
+              "text": "CFHL"
+            },
+            {
+              "label": "D",
+              "text": "CFIL"
+            }
+          ],
+          "answer": 3,
+          "solution": "Information Given: CDEF, CKSA, CRGV, CYUQ,? Logic: Letters in each position follow a fixed independent pattern. Explanation: * 1st letter: C, C, C, C -> constant -> C * 2nd letter: D(4) -> K(11) -> R(18) -> Y(25) Pattern: +7 each time -> next = 25 + 7 = 32 -> wrap = F(6) * 3rd letter: E(5) -> S(19) -> G(7) -> U(21) Pattern: +14, +14, +14 -> next = 21  12 = I(9) * 4th letter: F(6) -> A(1) -> V(22) -> Q(17) Patt",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 359,
+          "text": "Select the letters from among the given options that can replace the question mark (?) in the following series. K, M, O,?, S, U,?, Y",
+          "options": [
+            {
+              "label": "A",
+              "text": "Q, X"
+            },
+            {
+              "label": "B",
+              "text": "Q, W"
+            },
+            {
+              "label": "C",
+              "text": "P, W"
+            },
+            {
+              "label": "D",
+              "text": "R, W"
+            }
+          ],
+          "answer": 1,
+          "solution": "Information Given: Series: K, M, O,?, S, U,?, Y (letter positions 11,13,15,?,19,21,?,25). Logic: Odd-position alphabet numbers increase by 2 each step (arithmetic progression +2). Explanation: Logic: map letters -> positions and add 2 each term. Step-by-step: Apply the rule (+2) step-by-step: 11 -> 11 + 2 = 13 (M) 13 -> 13 + 2 = 15 (O) 15 -> 15 + 2 = 17 -> 17 corresponds to Q (this fills the 4th term)",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 360,
+          "text": "Select the letter-cluster from among the given options that can replace the question mark (?) in the following series. YMW, VJT, SGQ, PDN,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "TYD"
+            },
+            {
+              "label": "B",
+              "text": "HGF"
+            },
+            {
+              "label": "C",
+              "text": "MJH"
+            },
+            {
+              "label": "D",
+              "text": "MAK"
+            }
+          ],
+          "answer": 3,
+          "solution": "Information Given: Series: YMW, VJT, SGQ, PDN,? Logic: Each letter in a position moves back by 3 in the alphabet each term. Explanation: First-position column: Y -> Y(25)  3 = 22 -> V. V(22)  3 = 19 -> S. S(19)  3 = 16 -> P. P(16)  3 = 13 -> M. So sequence: Y, V, S, P, M. Second-position column: M -> M(13)  3 = 10 -> J. J(10)  3 = 7 -> G. G(7)  3 = 4 -> D. D(4)  3 = 1 -> A. So sequence: M, J, G, D,",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 373,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "20 minutes"
+            },
+            {
+              "label": "D",
+              "text": "50 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "If 5 machines can make 5 widgets in 5 minutes, then 1 machine can make 1 widget in 5 minutes. Therefore, 100 machines can make 100 widgets in 5 minutes.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 376,
+          "text": "A cricketer's averages core over a series of matches is 42. If she scores 138 runs in the next match, her average increases to 46. How many matches did she play before this?",
+          "options": [
+            {
+              "label": "A",
+              "text": "23"
+            },
+            {
+              "label": "B",
+              "text": "22"
+            },
+            {
+              "label": "C",
+              "text": "24"
+            },
+            {
+              "label": "D",
+              "text": "26"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: Initial average=42 Score in next match=138 New average=46 Formula Used: Average= Number of matchesTotal score Solution: Let initial matches= nTotal score=42 n =n+142 n+13846 42 n+138=46 n+46 92=4 n n",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 407,
+          "text": "Find the option that best completes the analogy. AC: FH:: BD:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "GJ"
+            },
+            {
+              "label": "B",
+              "text": "HK"
+            },
+            {
+              "label": "C",
+              "text": "GI"
+            },
+            {
+              "label": "D",
+              "text": "IK"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given: AC: FH:: BD:? Logic: Letters are increasing + 5 place. For, AC: FH A + 5 = F, C + 5 = H Similarly, BD:? B + 5 = G, D + 5 = I So, BD: G I Thus, correct option is (c).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 413,
+          "text": "A cricketer's averages core over a series of matches is 42. If she scores 138 runs in the next match, her average increases to 46. How many matches did she play before this?",
+          "options": [
+            {
+              "label": "A",
+              "text": "23"
+            },
+            {
+              "label": "B",
+              "text": "22"
+            },
+            {
+              "label": "C",
+              "text": "24"
+            },
+            {
+              "label": "D",
+              "text": "26"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given: Initial average=42 Score in next match=138 New average=46 Formula Used: Average= Number of matchesTotal score Solution: Let initial matches= nTotal score=42 n =n+142 n+13846 42 n+138=46 n+46 92=4 n n",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 435,
+          "text": "Statement: Online education is expanding rapidly; hence quality standards must be maintained. Assumptions: I. Online education affects learning out comes. II. Quality control is necessary in education.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I"
+            },
+            {
+              "label": "B",
+              "text": "Only II"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II"
+            }
+          ],
+          "answer": 2,
+          "solution": "Statement: Online education is expanding rapidly; hence quality standards must be maintained. Assumptions: I. Online education affects learning outcomes. The statement argues that because online education is expanding, quality standards must be maintained. This implies that online education does have an impact on learning outcomes -> Assumption I is implicit. II. Quality control is necessary in edu",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 443,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "20 minutes"
+            },
+            {
+              "label": "D",
+              "text": "50 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "If 5 machines can make 5 widgets in 5 minutes, then 1 machine can make 1 widget in 5 minutes. Therefore, 100 machines can make 100 widgets in 5 minutes.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 445,
+          "text": "Select the letter-cluster from the given options that will replace the question mark (?) in the following series. ABZ, BCY, CDX, DEW,?",
+          "options": [
+            {
+              "label": "A",
+              "text": "EEV"
+            },
+            {
+              "label": "B",
+              "text": "EFV"
+            },
+            {
+              "label": "C",
+              "text": "EFU"
+            },
+            {
+              "label": "D",
+              "text": "EFX"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given: ABZ, BCY, CD X, DEW,? Logic: 1st letter + 1, 2nd letter + 1 and 3rd letter - 1 place. For, 1st letter A + 1 = B, B + 1 = C, C + 1 = D, D + 1 = E For, 1st letter B + 1 = C, C + 1 = D, D + 1 = E, E + 1 = F For, 1st letter Z - 1 = Y, Y - 1 = X, X - 1 = W, W - 1 = V So, the missing term is EFV. Thus, correct option is (b).",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 482,
+          "text": "Find the best option that best completes the analogy. CAB: EDF:: GIH:?",
+          "options": [
+            {
+              "label": "A",
+              "text": "JKL"
+            },
+            {
+              "label": "B",
+              "text": "KJI"
+            },
+            {
+              "label": "C",
+              "text": "ILL"
+            },
+            {
+              "label": "D",
+              "text": "JLI"
+            }
+          ],
+          "answer": 2,
+          "solution": "Analogy: CAB: EDF:: GIH:? Logic: Each letter is shifted forward by increasing steps (+2, +3, +4). Explanation: Logic: Compare corresponding letters position-wise. Step-by-step: CAB -> EDF C(3) -> E(5) = +2 A(1) -> D(4) = +3 B(2) -> F(6) = +4 Apply same to GIH: G(7) +2 = I(9) I(9) +3 = L(12) H(8) +4 = L(12) Result = ILL",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 489,
+          "text": "Identify the next number in the series: 2, 6, 12, 20, 30, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "42"
+            },
+            {
+              "label": "B",
+              "text": "44"
+            },
+            {
+              "label": "C",
+              "text": "46"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between consecutive terms are 4, 6, 8, 10. The next difference should be 12. Adding 12 to the last term (30) gives 42.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 491,
+          "text": "Identify the odd one out:",
+          "options": [
+            {
+              "label": "A",
+              "text": "Breeze"
+            },
+            {
+              "label": "B",
+              "text": "Storm"
+            },
+            {
+              "label": "C",
+              "text": "Hurricane"
+            },
+            {
+              "label": "D",
+              "text": "Gale"
+            }
+          ],
+          "answer": 0,
+          "solution": "'Breeze', 'Storm', 'Hurricane', and 'Gale' are types of winds. However, a 'Breeze' is a light wind, while the others (Storm, Hurricane, Gale) are strong or violent winds causing significant weather disturbance.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 510,
+          "text": "In a family, A is the brother of B. C is the father of A and D. If E is the daughter of D, who is the grandfather of E?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "B"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 1,
+          "solution": "C is the father of A and D, so C is D's father. E is D's daughter, so C is E's grandfather.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 520,
+          "text": "If today is Monday, what was the day 473 days ago?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Monday"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Divide the total days (473) by 7 to find full weeks.\n2. Calculation: 473 ÷ 7 = 67 weeks with a remainder of 4 days.\n3. Since we are going backwards, subtract the remainder from 'Monday'.\n4. Monday - 1 day = Sunday; - 2 days = Saturday; - 3 days = Friday; - 4 days = Thursday.\n5. The year's leap status does not affect day calculation as it depends purely on the modulo arithmetic of 7.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 522,
+          "text": "Point A is at 12 o'clock on a clock face. If you start walking from the center towards A, then make a sharp 'Right' turn (90 degrees), which direction are you now facing relative to the clock's frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3 o'clock position"
+            },
+            {
+              "label": "B",
+              "text": "6 o'clock position"
+            },
+            {
+              "label": "C",
+              "text": "9 o'clock position"
+            },
+            {
+              "label": "D",
+              "text": "12 o'clock position"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial movement is from center towards 12 o'clock (North). 2. A 'Right' turn of 90 degrees rotates the heading 90 degrees clockwise. 3. North + 90 deg Right = East. 4. On a clock face, East corresponds exactly to the 3 o'clock position.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 523,
+          "text": "Find the missing term in the series: 10, 23, 46, 87, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "154"
+            },
+            {
+              "label": "B",
+              "text": "171"
+            },
+            {
+              "label": "C",
+              "text": "189"
+            },
+            {
+              "label": "D",
+              "text": "188"
+            }
+          ],
+          "answer": 2,
+          "solution": "Each term is doubled and the sum of its digits is added: 10 x 2 + (1 + 0) = 23; 23 x 2 + (2 + 3) = 46; 46 x 2 + (4 + 6) = 87; 87 x 2 + (8 + 7) = 189.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 526,
+          "text": "Find the next term in the series: 5, 9, 13, 17, ?, 25 (where digits are values in base-10, but the pattern follows Base-12 arithmetic rules where any digit exceeding 9 wraps around to letters A-E representing 10-14).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 21"
+            },
+            {
+              "label": "B",
+              "text": "B) 21A"
+            },
+            {
+              "label": "C",
+              "text": "C) 21E"
+            },
+            {
+              "label": "D",
+              "text": "D) 21F"
+            }
+          ],
+          "answer": 0,
+          "solution": "The series is an arithmetic progression starting at 5 with a common difference of 4: 5, 9 (5+4), 13 (9+4), 17 (13+4). The next term is 17 + 4 = 21. Although the prompt mentions Base-12 rules as a potential trap, standard integer addition applies here as no digit exceeds 9 in the sequence up to this point.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 528,
+          "text": "In a certain code language, words are encoded based on the sum of their digits. The rule is: If a number'sdi git-sum (repeatedly adding digits until a single digit is obtained) is odd, write the letter corresponding to that sum (A=1, B=2... Z=26). If even, write the word 'EVE'.\nExample: \n'7' -> 7 (Odd) -> G\n'8' -> 8 (Even) -> EVE\n'5' -> 5 (Odd) -> E\n'4' -> 4 (Even) -> EVE\nWhat is the code for the number 29?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "EVE"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 2,
+          "solution": "Step 1: Sum digits of 29 = 2 + 9 = 11.\nStep 2: Since 11 > 9, repeat process: 1 + 1 = 2.\nStep 3: Final single digit is 2.\nStep 4: 2 is Even.\nStep 5: Apply rule for even -> Code is 'EVE'.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 531,
+          "text": "Complete the series: 24, 36, 54, 81, 121.5, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "160"
+            },
+            {
+              "label": "B",
+              "text": "170"
+            },
+            {
+              "label": "C",
+              "text": "180"
+            },
+            {
+              "label": "D",
+              "text": "182.25"
+            }
+          ],
+          "answer": 3,
+          "solution": "Each term is multiplied by 1.5: 24 x 1.5 = 36, 36 x 1.5 = 54, 54 x 1.5 = 81, 81 x 1.5 = 121.5, 121.5 x 1.5 = 182.25.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 533,
+          "text": "A spy, Agent X, starts at point O facing North. He moves 20m forward, turns 90° Left, walks 15m, then turns 90° Left again and walks 20m. Finally, he turns 90° Left one more time and walks 15m to reach a hidden vault. If the Sun is at his back as he enters the vault, in which cardinal direction did Agent X originally face while walking along the LAST segment of his path?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) North"
+            },
+            {
+              "label": "B",
+              "text": "B) South"
+            },
+            {
+              "label": "C",
+              "text": "C) West"
+            },
+            {
+              "label": "D",
+              "text": "D) East"
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Start facing North. 2. Move 20m forward (Path 1). 3. Turn 90° Left -> Face West. Walk 15m (Path 2). 4. Turn 90° Left -> Face South. Walk 20m (Path 3). 5. Turn 90° Left -> Face East. Walk 15m (Path 4, the last segment). 6. Therefore, Agent X was facing East while walking along the last segment.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 549,
+          "text": "In a secret code used by the Railway Safety Wing, words are encoded based on their reverse causal function. For example: 'Stop' is encoded as 'Go' (the opposite action), 'Dark' is encoded as 'Light', and 'Win' is encoded as 'Lose'. Using this logic, how would 'Sleep' be encoded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rest"
+            },
+            {
+              "label": "B",
+              "text": "Wake"
+            },
+            {
+              "label": "C",
+              "text": "Tiredness"
+            },
+            {
+              "label": "D",
+              "text": "Bed"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern is strictly Anti-Synonym (Action) reversal. Stop <-> Go, Dark <-> Light, Win <-> Lose. The word 'Sleep' describes a state of rest; its direct functional opposite action is to 'Wake'. Options A and Care states related to sleep, while D is the object.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 550,
+          "text": "In a rural village of Madhya Pradesh, the community council maps social connections as directional vectors relative to the Village Hall (Origin). Known relations:\n1. Ramu is 40 meters EAST of the Hall.\n2. Meera is 30 meters NORTH of Ramu.\n3. Aarav stands exactly midway between Ramu and Meera.\n\nLater, a storm forces everyone to walk along the line connecting their current position and the Village Hall in a straight path (shortest route). After walking this shortest distance, who will be standing closest to the Village Hall?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Meera"
+            },
+            {
+              "label": "B",
+              "text": "Aarav"
+            },
+            {
+              "label": "C",
+              "text": "Ramu"
+            },
+            {
+              "label": "D",
+              "text": "None of them"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Plot positions: Ramu (40E), Meera (40E, 30N). \n2. Aarav is midway: Pos = (40/2, 30/2) = (20E, 15N). \n3. Calculate shortest path to Hall (0,0) as distance: \n   - Ramu distance = sqrt(40² + 0²) = 40m.\n   - Meera distance = sqrt(40² + 30²) = 50m.\n   - Aarav distance = sqrt(20² + 15²) = sqrt(400+225) = sqrt(625) = 25m.\n4. Shortest path implies walking directly to origin. \n5. Comparison: 25m < 40m < 50m. Aarav is closest.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 559,
+          "text": "In a specific cipher code, words are mapped to their directional 'Shadow Codes'. The rule is derived from the first letter of the word: if the first letter is in the set {A, B, C}, the shadow points North-East (NE); if in {D, E, F}, South-West (SW); if in {G, H, I}, South-East (SE); and so on, repeating this cycle every three letters. Additionally, words with exactly 3 vowels are appended with 'Long', those with 4 vowels with 'Short', and others get the suffix '-'. Given: 'CART' -> NE-Long, 'BIRD' -> NE-Low, 'POTATO' -> SW-Swift. What is the code for the word 'GARDEN'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "SE-Swift"
+            },
+            {
+              "label": "B",
+              "text": "SE-Long"
+            },
+            {
+              "label": "C",
+              "text": "SW-Swift"
+            },
+            {
+              "label": "D",
+              "text": "NE-Swift"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Check first letter of 'GARDEN': 'G'. 2. Map 'G' to direction cycle: A,B,C=NE; D,E,F=SW; G,H,I=SE. Thus, Direction = SE. 3. Count vowels in 'GARDEN' (A, E, E) = 3 vowels. 4. Rule for 3 vowels is suffix 'Swift'. 5. Combine: SE-Swift.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 560,
+          "text": "In a specific logic-gate language, the symbols represent operations as follows:\n'+' means 'is less than or equal to'\n'-\nmeans 'is greater than'\n'*' means 'is not equal to'\n'/\nmeans 'is exactly equal to'\n'The statements below are true in this language:\nI. A + B (A <= B)\nII. B - C (B > C)\nIII. D / B\nIV. E * A (E != A)\nGiven these, which of the following conclusions MUST be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A < Cand D < E"
+            },
+            {
+              "label": "B",
+              "text": "D > Cand E < A"
+            },
+            {
+              "label": "C",
+              "text": "D >= Cand E != A"
+            },
+            {
+              "label": "D",
+              "text": "Data Inadequate"
+            }
+          ],
+          "answer": 2,
+          "solution": "1. Translate statements: I(A<=B), II(B>C), III(D=B), IV(E!=A).\n2. Combine I & II via B: Since A<=Band B>C, we have A<=B>C. No direct relation between A and C.\n3. Substitute III into chain: D=B. Thus A<=D>C. Therefore D>=C is logically valid (since B>=C implies D>=C).\n4. Analyze IV with substitution: E!=A. No fixed inequality exists between E and A, so 'E < A' or 'E > A' cannot be determined.\n5. Evaluate options: Option C states 'D >= Cand E != A'. This matches our derived facts perfectly.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 565,
+          "text": "Identify the next term in the series: 15, 22, 33, 48, 67, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "88"
+            },
+            {
+              "label": "B",
+              "text": "90"
+            },
+            {
+              "label": "C",
+              "text": "92"
+            },
+            {
+              "label": "D",
+              "text": "95"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between terms are 7, 11, 15, 19 (increasing by 4). The next difference is 23. 67 + 23 = 88.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 566,
+          "text": "A and Bare siblings. C is the father of B. D is the mother of A. E is the son of D. Who is E to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "D is the mother of A, so D is also the mother of B (since A and Bare siblings). C is the father of B, so C is married to D. E is the son of D, which makes E the son of C.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 568,
+          "text": "In a certain code language, 'CAT' is written as '3120'. What is the code for 'DOG'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4157"
+            },
+            {
+              "label": "B",
+              "text": "4150"
+            },
+            {
+              "label": "C",
+              "text": "3157"
+            },
+            {
+              "label": "D",
+              "text": "4158"
+            }
+          ],
+          "answer": 0,
+          "solution": "C=3, A=1, T=20. D=4, O=15, G=7. So DOG is 4157.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1066,
+          "text": "A person stands at the center of a circular plaza. At 12:00 PM, their shadow falls exactly towards the East, indicating the Sun is in the West (Southwest quadrant logic for this specific exam universe). They walk 5 meters North-East, turn right and walk 5 meters, then turn left and walk 5 meters. If they return to the center by walking due South-East, what was their initial facing direction relative to the clock face numbers?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Facing 10"
+            },
+            {
+              "label": "B",
+              "text": "B) Facing 2"
+            },
+            {
+              "label": "C",
+              "text": "C) Facing 4"
+            },
+            {
+              "label": "D",
+              "text": "D) Facing 8"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial Shadow East implies Sun West (Person faces North by standard assumption unless twisted).\n2. Walk NE: Position shifts NE.\n3. Turn Right (NE->SE), Walk SE: Position shifts SE relative to start.\n4. Turn Left (SE->SW), Walk SW: Position shifts SW.\n5. Return path is South-East, meaning the displacement was North-West.\n6. Net displacement from 1st leg must be cancelled by last two legs + return.\n7. The only valid configuration for the 'Return' vector to be SE implies the starting orientation relative to the shadow logic aligns with option A.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1071,
+          "text": "In a certain code language, '257' means 'Watch is fast', '193' means 'Time is slow', and '682' means 'Watch runs slow'. Which digit stands for the word 'runs'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A. 1"
+            },
+            {
+              "label": "B",
+              "text": "B. 2"
+            },
+            {
+              "label": "C",
+              "text": "C. 3"
+            },
+            {
+              "label": "D",
+              "text": "D. 6"
+            }
+          ],
+          "answer": 0,
+          "solution": "Comparing '257' (Watch is fast) with '682' (Watch runs slow), the common digit is 2, representing 'Watch'. Comparing '193' (Time is slow) with '682' (Watch runs slow), the common digit is 3, representing 'slow'. Therefore, in '682', since 2 is Watch and 3 is slow, digit 6 must represent 'runs'.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1073,
+          "text": "Statements: Some flowers are red. All red things are beautiful. Conclusions: I. Some flowers are beautiful. II. No flower is beautiful.",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Only Conclusion I follows"
+            },
+            {
+              "label": "B",
+              "text": "B) Only Conclusion II follows"
+            },
+            {
+              "label": "C",
+              "text": "C) Either I or II follows"
+            },
+            {
+              "label": "D",
+              "text": "D) Neither I nor II follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "From the statements, 'Some flowers are red' and 'All red things are beautiful' implies that the intersection of flowers and red things exists, and since all red things are beautiful, those specific flowers must be beautiful. Therefore, Conclusion I ('Some flowers are beautiful') logically follows. Conclusion II contradicts this deduction. Thus, only Conclusion I is correct.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1085,
+          "text": "In a certain code language, 'KITE' is written as 'JHSD' and 'BALL' is written as 'AZKK'. How will 'CODE' be written in that code language?",
+          "options": [
+            {
+              "label": "A",
+              "text": "BNDC"
+            },
+            {
+              "label": "B",
+              "text": "ANCD"
+            },
+            {
+              "label": "C",
+              "text": "BNC D"
+            },
+            {
+              "label": "D",
+              "text": "ABDD"
+            }
+          ],
+          "answer": 0,
+          "solution": "Comparing KITE to JHSD, the pattern is shifting each letter backward by 1 position (K->J, I->H, T->S, E->D). Applying this same -1 shift to CODE results in BNC D. Option A shifts only the first two letters, Option C has a typo and incorrect last letter, and Option D does not follow the consistent pattern.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1086,
+          "text": "If 'A' denotes '+', 'B' denotes '-', 'C' denotes '×', and 'D' denotes '÷', what is the value of 10 C 2 A 3 B 6 D 4?",
+          "options": [
+            {
+              "label": "A",
+              "text": "18"
+            },
+            {
+              "label": "B",
+              "text": "22"
+            },
+            {
+              "label": "C",
+              "text": "20"
+            },
+            {
+              "label": "D",
+              "text": "25"
+            }
+          ],
+          "answer": 2,
+          "solution": "The given code replaces standard operators: '+' becomes '-', '-' becomes '+', '×' becomes '÷', and '÷' becomes '×'. The expression 10 + 8 × 4 - 2 ÷ 6 transforms to 10 - 8 ÷ 4 + 2 × 6. Following BODMAS rules: First, division (8 ÷ 4 = 2) and multiplication (2 × 6 = 12). The expression simplifies to 10 - 2 + 12, which equals 20. Options A and B result from incorrect order of operations or wrong substitution. Option D is a random number.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1087,
+          "text": "A clock strikes once at 1 o'clock, twice at 2 o'clock, and so on. If it takes 3 seconds to strike once (the interval between strikes), how much time will the clock take to strike 4 times?",
+          "options": [
+            {
+              "label": "A",
+              "text": "6 seconds"
+            },
+            {
+              "label": "B",
+              "text": "9 seconds"
+            },
+            {
+              "label": "C",
+              "text": "10.5 seconds"
+            },
+            {
+              "label": "D",
+              "text": "12 seconds"
+            }
+          ],
+          "answer": 1,
+          "solution": "When a clock strikes 4 times, there are 3 intervals between the strikes, not 4. Since each interval takes 3 seconds, the total time is 3 intervals × 3 seconds/interval = 9 seconds. Option A assumes 4 intervals (common mistake). Option Cand D do not follow the arithmetic progression of intervals required for this specific problem.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1088,
+          "text": "In a certain code language, 'PEN' is written as 'QFO' and 'SHE' is written as 'TIF'. How will 'CAT' be written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "DBU"
+            },
+            {
+              "label": "B",
+              "text": "EBV"
+            },
+            {
+              "label": "C",
+              "text": "DBW"
+            },
+            {
+              "label": "D",
+              "text": "EAV"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern involves shifting each letter forward by 2 positions in the alphabet: P(+2)->Q, E(+2)->G, N(+2)->O. Applying this to CAT: C(+2)->E, A(+2)->C, T(+2)->V. Thus, 'CAT' becomes 'ECV'.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1072,
+          "text": "In a certain code language, 'SHE' is written as '456', 'HAT' is written as '578', and 'TIE' is written as '791'. How is 'THE' written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 691"
+            },
+            {
+              "label": "B",
+              "text": "B) 451"
+            },
+            {
+              "label": "C",
+              "text": "C) 856"
+            },
+            {
+              "label": "D",
+              "text": "D) 598"
+            }
+          ],
+          "answer": 2,
+          "solution": "By analyzing the codes: S=4, H=5, E=6; A=7, T=8, H=5 (reconfirms H); T=8, I=9, E=6. For 'THE', we need codes for T(8), H(5), and E(6). Thus, the code is 856. Option A is incorrect because it uses the code for S instead of T. Option B is incorrect as it mixes the codes for S and E. Option D is incorrect because it swaps the positions of H and E.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1120,
+          "text": "In a family, A is the father of B. C is the brother of D. E is the sister of F. G is the son of H. If A, B, and C are all deceased, and only their direct descendants (children) remain alive to inherit from them, who among F or G stands in a relationship with D such that they could be considered 'siblings' to each other under this specific inheritance scenario? (Note: Assume standard biological relations unless implied otherwise by the death conditions).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A. F and D are half-siblings."
+            },
+            {
+              "label": "B",
+              "text": "B. G and D are full siblings."
+            },
+            {
+              "label": "C",
+              "text": "C. F and G are step-siblings."
+            },
+            {
+              "label": "D",
+              "text": "D. Neither F nor G is a sibling of D."
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Identify family unit 1: A (Father) -> B (Child). C is not explicitly linked to A/B, so they are distinct unless stated. C and D are siblings.\n2. Identify family unit 2: E and F are sisters.\n3. Identify family unit 3: G is the son of H.\n4. Analyze links: There is no information linking A's line with C's line or E/F's line or H's line.\n5. The condition 'A, B, C deceased' affects inheritance distribution within their lines but does not create biological relations between distinct family groups described separately.\n6. Therefore, F (sister of E) and G (son of H) have no defined connection to D (sibling of C).\n7. Without a connecting parent figure shared by these groups, no sibling relationship exists between F or G and D.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1122,
+          "text": "Arrange the following words in dictionary order: 1. Apple, 2. Apricot, 3. Ant, 4. Arm.",
+          "options": [
+            {
+              "label": "A",
+              "text": "3, 1, 2, 4"
+            },
+            {
+              "label": "B",
+              "text": "3, 4, 1, 2"
+            },
+            {
+              "label": "C",
+              "text": "1, 3, 4, 2"
+            },
+            {
+              "label": "D",
+              "text": "2, 3, 1, 4"
+            }
+          ],
+          "answer": 0,
+          "solution": "Comparing first letters: 'Ant' (A-n), 'Apple' (A-p), 'Apricot' (A-p-r). 'n' comes before 'p', so Ant is first. Between Apple and Apricot, 'pp' vs 'pr', 'p' comes before 'r'. So Apple then Apricot. Then Arm. Order: Ant, Apple, Apricot, Arm.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1123,
+          "text": "A spy starts at a secure point 'X' facing North. His mission requires him to execute the following sequence of commands relative to his CURRENT direction, where every command rotates his internal compass by 90 degrees clockwise AFTER execution:\n1. Move forward 5 units.\n2. Turn Left (relative to current face) and move forward 5 units.\n3. Turn Right (relative to current face) and move forward 5 units.\n4. Turn Left (relative to current face) and move forward 5 units.\n\nHowever, due to a magnetic anomaly affecting Sector X, every time the spy executes a command that involves turning LEFT, his body rotates an additional 90 degrees clockwise immediately after the turn but BEFORE moving. If he turns RIGHT normally, no such rotation occurs.\n\nAfter completing all 4 steps, in which cardinal direction is the spy facing?\nA) North\nB) South\nC) East\nD) West",
+          "options": [
+            {
+              "label": "A",
+              "text": "North"
+            },
+            {
+              "label": "B",
+              "text": "South"
+            },
+            {
+              "label": "C",
+              "text": "East"
+            },
+            {
+              "label": "D",
+              "text": "West"
+            }
+          ],
+          "answer": 2,
+          "solution": "Start: Facing North. Step 1 (Forward): Still facing North. Step 2 (Turn Left relative to North -> West; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: West rotated by +90 deg = North. Move 5 units while facing North. Step 3 (Turn Right relative to current North -> East). No anomaly for 'Right'. Orientation remains East. Move 5 units while facing East. Step 4 (Turn Left relative to East -> North; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: North rotated by +90 deg = East. Move 5 units. Final Facing Direction: East.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1143,
+          "text": "In a specific code language used for railway signaling, the position of letters in a word is shifted based on their distance from the center. For words with an even number of letters (4 letters), the letter at index 1 moves to index 4, and the letter at index 2 moves to index 3 (swapping the first pair). The second pair (indices 3 and 4) also swaps places (index 3 goes to 4, index 4 goes to 3). This creates a mirror swap across the vertical midline. Using this 'Inverse-Coordinate Flip' logic for 4-letter words, if 'TRAIN' becomes 'NARIT', how is 'MADRAS' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "ATAD"
+            },
+            {
+              "label": "B",
+              "text": "DAT A"
+            },
+            {
+              "label": "C",
+              "text": "ADTA"
+            },
+            {
+              "label": "D",
+              "text": "TADA"
+            }
+          ],
+          "answer": 0,
+          "solution": "The rule reverses a four-letter word: positions 1 and 4 swap, and positions 2 and 3 swap. DATA becomes ATAD.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1151,
+          "text": "In a certain community, all 'Kartars' are also 'Yogis'. No 'Yogi' is a 'Vedantist'. Some 'Vedantists' are 'Brahmins'. What must be true?\nI. All Kartars are Brahmins.\nII. No Kartar is a Vedantist.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Draw circle 'Kartar' entirely inside 'Yogi'.\n2. Draw circle 'Vedantist' entirely outside 'Yogi' (since no Yogi is Vedantist).\n3. Conclude: Since Kartar is a subset of Yogi, and Yogi excludes Vedantist, Kartar must exclude Vedantist. Thus II follows.\n4. There is no relationship defined between 'Kartar' and 'Brahmin' directly; the link is broken by 'Vedantist'.\n5. Therefore, statement I cannot be deduced as necessarily true.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1152,
+          "text": "In a certain code language, words are encoded based on the sum of their digits. The rule is: If a number's digit-sum (repeatedly adding digits until a single digit is obtained) is odd, write the letter corresponding to that sum (A=1, B=2... Z=26). If even, write the word 'EVE'.\nExample: \n'7' -> 7 (Odd) -> G\n'8' -> 8 (Even) -> EVE\n'5' -> 5 (Odd) -> E\n'4' -> 4 (Even) -> EVE\nWhat is the code for the number 29?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "EVE"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 2,
+          "solution": "Step 1: Sum digits of 29 = 2 + 9 = 11.\nStep 2: Since 11 > 9, repeat process: 1 + 1 = 2.\nStep 3: Final single digit is 2.\nStep 4: 2 is Even.\nStep 5: Apply rule for even -> Code is 'EVE'.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1155,
+          "text": "In a specific code language used for railway safety alerts, dates are encoded such that the letter corresponds to the sum of the Day's position in the month and its alphabetical value (A=1, B=2...), then converted back to a single letter based on the remainder when divided by 26. If the sum is > 26, subtract 26 once. Note: Only dates where the resulting letter is 'M' or later are considered valid alerts. On 10th March, an alert code is generated as 'L'. What date generates the alert code 'Q' under the same rules?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 13th April"
+            },
+            {
+              "label": "B",
+              "text": "B) 20th May"
+            },
+            {
+              "label": "C",
+              "text": "C) 17th June"
+            },
+            {
+              "label": "D",
+              "text": "D) 15th July"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let day = d, month position in year (Jan=1...Mar=3). \nCode Letter Q is the 17th letter of alphabet.\nFormula: (d + Month_Pos) % 26 = Q_Val. If result > 26, subtract 26.\nCheck Option A (13th April): April is month 4. Day=13.\nSum = 13 + 4 = 17.\nLetter for 17 is 'Q'. Matches.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1169,
+          "text": "In a corporate hierarchy where rank is determined by strict rules: (1) No employee of 'Grade X' can supervise an employee of 'Grade Y' unless they are in the same department. (2) An employee of 'Grade X' and an employee of 'Grade Y' are never in the same department if they work on different projects. (3) Supervision implies a direct project linkage. If it is known that Employee A supervises Employee B, and both have ranks corresponding to Grade X and Grade Y respectively, which of the following conclusions about their working conditions must be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "They are in the same department and work on the same project."
+            },
+            {
+              "label": "B",
+              "text": "They are in different departments but work on the same project."
+            },
+            {
+              "label": "C",
+              "text": "They are in the same department and work on different projects."
+            },
+            {
+              "label": "D",
+              "text": "They are in different departments and work on different projects."
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Condition (1) requires them to be in the same department for A to supervise B.\n2. Condition (3) states supervision implies a direct project linkage, meaning they must share the same project.\n3. Condition (2) creates a hypothetical constraint: if they were on different projects, they could not be in the same department. Since we established they are in the same department from step 1, the premise of condition (2) regarding 'different projects' must be false for them to remain in the same department.\n4. Therefore, to satisfy all conditions while maintaining the supervision hierarchy, they must be in the same department and working on the same project.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1177,
+          "text": "In the formal register of Indian Bureaucracy, specific verbs denote official actions with strict procedural connotations: 'Sanction' is to approval as 'Cognizance' is to …?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a) Accepting a legal case for trial"
+            },
+            {
+              "label": "B",
+              "text": "b) Issuing a travel pass"
+            },
+            {
+              "label": "C",
+              "text": "c) Denying a leave application"
+            },
+            {
+              "label": "D",
+              "text": "d) Filing a criminal complaint"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Analyze the first pair: 'Sanction' in bureaucracy strictly means granting official approval.\n2. Identify the register of the second word: 'Cognizance' is a technical term used by courts/police.\n3. Apply the meaning: To 'take cognizance' means a court formally acknowledges receipt of a case and accepts jurisdiction over it.\n4. Compare options: Option (a) defines accepting a legal case, matching the formal definition of taking cognizance.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1178,
+          "text": "A train engineer observes a specific rule for speed adjustments based on the type of station passed: If the station has an odd number of platforms, add 10 km/h; if even, subtract 5 km/h. Starting at Station X (3 platforms) traveling at 60 km/h, the train passes 4 subsequent stations before reaching the final destination. The sequence of platform counts is 2, 5, 4, and 3 respectively. What is the speed of the train upon reaching the final destination?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 65 km/h"
+            },
+            {
+              "label": "B",
+              "text": "B) 50 km/h"
+            },
+            {
+              "label": "C",
+              "text": "C) 70 km/h"
+            },
+            {
+              "label": "D",
+              "text": "D) 85 km/h"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start: 60 km/h. Station 1 (2 platforms, even): -5 -> 55. Station 2 (5 platforms, odd): +10 -> 65. Station 3 (4 platforms, even): -5 -> 60. Station 4 (3 platforms, odd): +10 -> 70. Destination reached at 70 km/h.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1179,
+          "text": "A and B are siblings. C is the father of B. D is the mother of A. E is the son of D. Who is E to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "D is the mother of A, so D is also the mother of B (since A and B are siblings). C is the father of B, so C is married to D. E is the son of D, which makes E the son of C.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1180,
+          "text": "If you walk 10 km North, turn left and walk 5 km, then turn right and walk 10 km, how far are you from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "10 km"
+            },
+            {
+              "label": "C",
+              "text": "15 km"
+            },
+            {
+              "label": "D",
+              "text": "20 km"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start North 10. Left is West 5. Left is South 10. Net displacement is 5 km West. Distance from start is 5 km.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1182,
+          "text": "Arrange the following words in a logical sequence: 1. Egg, 2. Chicken, 3. Bird, 4. Baby",
+          "options": [
+            {
+              "label": "A",
+              "text": "1, 2, 4, 3"
+            },
+            {
+              "label": "B",
+              "text": "1, 4, 2, 3"
+            },
+            {
+              "label": "C",
+              "text": "4, 1, 2, 3"
+            },
+            {
+              "label": "D",
+              "text": "1, 3, 4, 2"
+            }
+          ],
+          "answer": 1,
+          "solution": "An egg hatches into a baby chicken (chick), which grows into a chicken, which is a type of bird. Sequence: 1, 4, 2, 3.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1184,
+          "text": "In the village of Panchavati, a peculiar inheritance rule dictates that property passes NOT to the son, but to the maternal aunt of the heir. Consider the family: A is B's brother. C is D's daughter. E is F's only child and E is also the maternal aunt of G. If the property owner is H, who is J's son, and we know that I is H's wife and K is L's mother, identify the relationship between M (who is N's only daughter) and H, given that M is the one who inherits from H. How is M related to H?",
+          "options": [
+            {
+              "label": "A",
+              "text": "M is H's daughter."
+            },
+            {
+              "label": "B",
+              "text": "M is H's sister."
+            },
+            {
+              "label": "C",
+              "text": "M is H's maternal aunt."
+            },
+            {
+              "label": "D",
+              "text": "M is H's wife."
+            }
+          ],
+          "answer": 2,
+          "solution": "1. M inherits from H, so M must be H's maternal aunt per the rule.\n2. The rule defines 'maternal aunt' as the mother of H's mother.\n3. Therefore, M is the sister of H's mother.\n4. This makes M the maternal aunt of H.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1196,
+          "text": "In a standard Cartesian grid where North is up, imagine a 'Magic Mirror' placed at the diagonal line y = -x. This mirror swaps coordinates such that any point (x, y) reflects to (-y, -x). If you stand at Point A (coordinates 3, 2) and walk towards Point B (coordinates -1, 5), then step onto the mirror exactly halfway between them, which direction does your shadow face relative to the original North-East reference frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North-West"
+            },
+            {
+              "label": "B",
+              "text": "South-West"
+            },
+            {
+              "label": "C",
+              "text": "North-East"
+            },
+            {
+              "label": "D",
+              "text": "South-East"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Calculate midpoint of A(3,2) and B(-1,5): M = ((3-1)/2, (2+5)/2) = (1, 3.5).\n2. Reflect M across y=-x using rule (-y, -x): New Pos = (-3.5, -1).\n3. Original displacement vector A->B is (-4, +3). This is North-West.\n4. Reflection of vector (-4, 3) across y=-x: Swap and negate -> (-3, 4).\n5. Vector (-3, 4) points West (negative x) and North (positive y), which is North-West.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 922,
+          "text": "Find the missing term: Puppy : Dog :: Kitten : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Cow"
+            },
+            {
+              "label": "B",
+              "text": "Cat"
+            },
+            {
+              "label": "C",
+              "text": "Horse"
+            },
+            {
+              "label": "D",
+              "text": "Sheep"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Cat.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 923,
+          "text": "Find the missing term: Doctor : Hospital :: Teacher : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "School"
+            },
+            {
+              "label": "B",
+              "text": "College"
+            },
+            {
+              "label": "C",
+              "text": "Library"
+            },
+            {
+              "label": "D",
+              "text": "Office"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: School.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 924,
+          "text": "Odometer : Distance :: Compass : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Speed"
+            },
+            {
+              "label": "B",
+              "text": "Direction"
+            },
+            {
+              "label": "C",
+              "text": "Angle"
+            },
+            {
+              "label": "D",
+              "text": "Height"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Direction.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 925,
+          "text": "Find the missing term: Lion : Roar :: Dog : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Howl"
+            },
+            {
+              "label": "B",
+              "text": "Growl"
+            },
+            {
+              "label": "C",
+              "text": "Bark"
+            },
+            {
+              "label": "D",
+              "text": "Whine"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Bark.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 926,
+          "text": "Find the missing term: Thermometer : Temperature :: Barometer : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wind"
+            },
+            {
+              "label": "B",
+              "text": "Pressure"
+            },
+            {
+              "label": "C",
+              "text": "Humidity"
+            },
+            {
+              "label": "D",
+              "text": "Speed"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Pressure.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 927,
+          "text": "Find the missing term: A : C :: E : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "F"
+            },
+            {
+              "label": "B",
+              "text": "G"
+            },
+            {
+              "label": "C",
+              "text": "H"
+            },
+            {
+              "label": "D",
+              "text": "I"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: G.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 928,
+          "text": "Find the missing term: 4 : 20 :: 7 : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "49"
+            },
+            {
+              "label": "B",
+              "text": "56"
+            },
+            {
+              "label": "C",
+              "text": "63"
+            },
+            {
+              "label": "D",
+              "text": "42"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 56.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 929,
+          "text": "Find the missing term: Happy : Joyful :: Sad : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Angry"
+            },
+            {
+              "label": "B",
+              "text": "Melancholy"
+            },
+            {
+              "label": "C",
+              "text": "Excited"
+            },
+            {
+              "label": "D",
+              "text": "Tired"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Melancholy.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 930,
+          "text": "Find the missing term: 9 : 81 :: 11 : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "121"
+            },
+            {
+              "label": "B",
+              "text": "111"
+            },
+            {
+              "label": "C",
+              "text": "99"
+            },
+            {
+              "label": "D",
+              "text": "100"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 121.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 931,
+          "text": "Find the missing term: Actor : Actress :: Lion : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Lioness"
+            },
+            {
+              "label": "B",
+              "text": "Cub"
+            },
+            {
+              "label": "C",
+              "text": "Tiger"
+            },
+            {
+              "label": "D",
+              "text": "Leopard"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Lioness.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 932,
+          "text": "Find the missing term: Rain : Flood :: Fire : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Heat"
+            },
+            {
+              "label": "B",
+              "text": "Smoke"
+            },
+            {
+              "label": "C",
+              "text": "Light"
+            },
+            {
+              "label": "D",
+              "text": "Ash"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Smoke.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 933,
+          "text": "Find the missing term: 45 : 9 :: 82 : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "8"
+            },
+            {
+              "label": "B",
+              "text": "9"
+            },
+            {
+              "label": "C",
+              "text": "10"
+            },
+            {
+              "label": "D",
+              "text": "11"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 10.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 934,
+          "text": "Find the missing term: Pen : Write :: Knife : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Stab"
+            },
+            {
+              "label": "B",
+              "text": "Cut"
+            },
+            {
+              "label": "C",
+              "text": "Slice"
+            },
+            {
+              "label": "D",
+              "text": "Chop"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Cut.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 936,
+          "text": "Find the missing term: Z : A :: Y : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Z"
+            },
+            {
+              "label": "B",
+              "text": "X"
+            },
+            {
+              "label": "C",
+              "text": "B"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: B.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 937,
+          "text": "Find the missing term: BIRD : FLY :: FISH : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "WALK"
+            },
+            {
+              "label": "B",
+              "text": "SWIM"
+            },
+            {
+              "label": "C",
+              "text": "CRAWL"
+            },
+            {
+              "label": "D",
+              "text": "JUMP"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: SWIM.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 938,
+          "text": "Find the missing term: 2 : 5 :: 11 : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "13"
+            },
+            {
+              "label": "B",
+              "text": "15"
+            },
+            {
+              "label": "C",
+              "text": "17"
+            },
+            {
+              "label": "D",
+              "text": "19"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 17.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 939,
+          "text": "Find the missing term: AB : CD :: EF : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "FG"
+            },
+            {
+              "label": "B",
+              "text": "GH"
+            },
+            {
+              "label": "C",
+              "text": "HI"
+            },
+            {
+              "label": "D",
+              "text": "IJ"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: GH.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 940,
+          "text": "Find the missing term: 8 : 18 :: 12 : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "24"
+            },
+            {
+              "label": "B",
+              "text": "26"
+            },
+            {
+              "label": "C",
+              "text": "28"
+            },
+            {
+              "label": "D",
+              "text": "30"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 26.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 941,
+          "text": "What day of the week was 26 January 1950?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Friday"
+            },
+            {
+              "label": "D",
+              "text": "Saturday"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Thursday.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 942,
+          "text": "How many odd days are there in 100 years?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1"
+            },
+            {
+              "label": "B",
+              "text": "3"
+            },
+            {
+              "label": "C",
+              "text": "5"
+            },
+            {
+              "label": "D",
+              "text": "7"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 5.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 943,
+          "text": "If 15 August 1947 was Friday, what day was 15 August 1949?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sunday"
+            },
+            {
+              "label": "B",
+              "text": "Monday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Wednesday"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Monday.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 944,
+          "text": "Which year has the same calendar as 2024?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2030"
+            },
+            {
+              "label": "B",
+              "text": "2052"
+            },
+            {
+              "label": "C",
+              "text": "2035"
+            },
+            {
+              "label": "D",
+              "text": "2040"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 2052.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 945,
+          "text": "What is the angle between the hands of a clock at 3:30?",
+          "options": [
+            {
+              "label": "A",
+              "text": "75°"
+            },
+            {
+              "label": "B",
+              "text": "90°"
+            },
+            {
+              "label": "C",
+              "text": "105°"
+            },
+            {
+              "label": "D",
+              "text": "60°"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 75°.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 946,
+          "text": "At what time between 4 and 5 will the hands coincide?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4:21 9/11"
+            },
+            {
+              "label": "B",
+              "text": "4:20"
+            },
+            {
+              "label": "C",
+              "text": "4:22"
+            },
+            {
+              "label": "D",
+              "text": "4:21"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 4:21 9/11.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 947,
+          "text": "If a clock shows 8:25, what time does its mirror image show?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3:35"
+            },
+            {
+              "label": "B",
+              "text": "3:25"
+            },
+            {
+              "label": "C",
+              "text": "4:35"
+            },
+            {
+              "label": "D",
+              "text": "3:45"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 3:35.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 948,
+          "text": "At what time between 5 and 6 are the hands opposite (180°)?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5:00"
+            },
+            {
+              "label": "B",
+              "text": "5:30"
+            },
+            {
+              "label": "C",
+              "text": "6:00"
+            },
+            {
+              "label": "D",
+              "text": "5:60"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 6:00.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 950,
+          "text": "A clock loses 10 minutes per day. What will it show at 6 PM when actual time is 6 PM after 2 days?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5:40 PM"
+            },
+            {
+              "label": "B",
+              "text": "6:20 PM"
+            },
+            {
+              "label": "C",
+              "text": "5:20 PM"
+            },
+            {
+              "label": "D",
+              "text": "6:40 PM"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 5:40 PM.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 951,
+          "text": "How many times do the hands of a clock coincide in a day?",
+          "options": [
+            {
+              "label": "A",
+              "text": "22"
+            },
+            {
+              "label": "B",
+              "text": "24"
+            },
+            {
+              "label": "C",
+              "text": "12"
+            },
+            {
+              "label": "D",
+              "text": "11"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 22.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 952,
+          "text": "Find the angle between hands at 8:20.",
+          "options": [
+            {
+              "label": "A",
+              "text": "120°"
+            },
+            {
+              "label": "B",
+              "text": "130°"
+            },
+            {
+              "label": "C",
+              "text": "110°"
+            },
+            {
+              "label": "D",
+              "text": "100°"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 130°.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 953,
+          "text": "What day was 15 Aug 1949 if 15 Aug 1947 was Friday?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sunday"
+            },
+            {
+              "label": "B",
+              "text": "Monday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Wednesday"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Monday.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 954,
+          "text": "In a clock, at what time between 2 and 3 will the hands be at right angle (90°)?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2:27 3/11"
+            },
+            {
+              "label": "B",
+              "text": "2:30"
+            },
+            {
+              "label": "C",
+              "text": "2:25"
+            },
+            {
+              "label": "D",
+              "text": "2:28"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 2:27 3/11.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 956,
+          "text": "How many odd days in 400 years?",
+          "options": [
+            {
+              "label": "A",
+              "text": "0"
+            },
+            {
+              "label": "B",
+              "text": "1"
+            },
+            {
+              "label": "C",
+              "text": "3"
+            },
+            {
+              "label": "D",
+              "text": "5"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 0.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 957,
+          "text": "Which of the following is NOT a leap year?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1600"
+            },
+            {
+              "label": "B",
+              "text": "2000"
+            },
+            {
+              "label": "C",
+              "text": "2100"
+            },
+            {
+              "label": "D",
+              "text": "2400"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 2100.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 958,
+          "text": "A clock gains 5 min per hour. After how many hours will it show the correct time again?",
+          "options": [
+            {
+              "label": "A",
+              "text": "144 hr"
+            },
+            {
+              "label": "B",
+              "text": "72 hr"
+            },
+            {
+              "label": "C",
+              "text": "288 hr"
+            },
+            {
+              "label": "D",
+              "text": "12 hr"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 144 hr.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 959,
+          "text": "What is the angle between hands at 12:30?",
+          "options": [
+            {
+              "label": "A",
+              "text": "165°"
+            },
+            {
+              "label": "B",
+              "text": "180°"
+            },
+            {
+              "label": "C",
+              "text": "150°"
+            },
+            {
+              "label": "D",
+              "text": "175°"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 165°.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 960,
+          "text": "What was the day on 26 Jan 2001?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Friday"
+            },
+            {
+              "label": "B",
+              "text": "Saturday"
+            },
+            {
+              "label": "C",
+              "text": "Thursday"
+            },
+            {
+              "label": "D",
+              "text": "Wednesday"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Friday.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 961,
+          "text": "Find the time between 4 and 5 when the hands are at right angles.",
+          "options": [
+            {
+              "label": "A",
+              "text": "4:38 2/11"
+            },
+            {
+              "label": "B",
+              "text": "4:30"
+            },
+            {
+              "label": "C",
+              "text": "4:35"
+            },
+            {
+              "label": "D",
+              "text": "4:40"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 4:38 2/11.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 962,
+          "text": "If 'APPLE' is coded as 'BQQMF', what is 'MANGO' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "NBOHP"
+            },
+            {
+              "label": "B",
+              "text": "NBPHP"
+            },
+            {
+              "label": "C",
+              "text": "NCOIP"
+            },
+            {
+              "label": "D",
+              "text": "MBNHP"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: NBOHP.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 964,
+          "text": "If 'STUDY' is coded as 'VWXGB', what is 'CLASS' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "FODVV"
+            },
+            {
+              "label": "B",
+              "text": "FPEVV"
+            },
+            {
+              "label": "C",
+              "text": "FODVU"
+            },
+            {
+              "label": "D",
+              "text": "EODVV"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: FODVV.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 965,
+          "text": "If 'DELHI' is coded as 'EFMIJ', what is 'MUMBAI' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "NVNCBJ"
+            },
+            {
+              "label": "B",
+              "text": "NVNCBK"
+            },
+            {
+              "label": "C",
+              "text": "NVMCBJ"
+            },
+            {
+              "label": "D",
+              "text": "OVNCBJ"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: NVNCBJ.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 966,
+          "text": "If 'EJOTY' gives positions 5,10,15,20,25, what is the position of 'R'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "17"
+            },
+            {
+              "label": "B",
+              "text": "18"
+            },
+            {
+              "label": "C",
+              "text": "19"
+            },
+            {
+              "label": "D",
+              "text": "16"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 18.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 968,
+          "text": "If 'F' is coded as 3, 'G' as 4, 'H' as 5, what is 'M' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "9"
+            },
+            {
+              "label": "B",
+              "text": "10"
+            },
+            {
+              "label": "C",
+              "text": "11"
+            },
+            {
+              "label": "D",
+              "text": "12"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: 12.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 969,
+          "text": "If 'GOOD' is coded as 'HPPE', what is 'WORK' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "XPSL"
+            },
+            {
+              "label": "B",
+              "text": "XPSK"
+            },
+            {
+              "label": "C",
+              "text": "XQSL"
+            },
+            {
+              "label": "D",
+              "text": "XPTL"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: XPSL.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 970,
+          "text": "If 'NIGHT' is coded as 'OKHIW', what is 'BRIGHT' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "CSLHIW"
+            },
+            {
+              "label": "B",
+              "text": "CSKHIW"
+            },
+            {
+              "label": "C",
+              "text": "CSKIIW"
+            },
+            {
+              "label": "D",
+              "text": "CSKHIV"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: CSKHIW.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 972,
+          "text": "If 'ABROAD' is coded as 'BCSPBE', what is 'FOREIGN' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "GPSFJHO"
+            },
+            {
+              "label": "B",
+              "text": "GPSFJGO"
+            },
+            {
+              "label": "C",
+              "text": "GPSEJHO"
+            },
+            {
+              "label": "D",
+              "text": "GPSFKHO"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: GPSFJHO.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 973,
+          "text": "If 'LAPTOP' is coded as 'MBQUPQ', what is 'MOBILE' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "NPCJMF"
+            },
+            {
+              "label": "B",
+              "text": "NPCJMG"
+            },
+            {
+              "label": "C",
+              "text": "NPDJMF"
+            },
+            {
+              "label": "D",
+              "text": "NPCIMF"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: NPCJMF.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 974,
+          "text": "If 'WINDOW' is coded as 'XJOEPX', what is 'DOOR' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "EPPS"
+            },
+            {
+              "label": "B",
+              "text": "EPPT"
+            },
+            {
+              "label": "C",
+              "text": "EPRS"
+            },
+            {
+              "label": "D",
+              "text": "EQPS"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: EPPS.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 975,
+          "text": "If 'NATION' is coded as 'MZSRNM', what is 'INDIA' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "HMCRZ"
+            },
+            {
+              "label": "B",
+              "text": "HMCRA"
+            },
+            {
+              "label": "C",
+              "text": "IMDRA"
+            },
+            {
+              "label": "D",
+              "text": "HMDRZ"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: HMCRZ.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 976,
+          "text": "If 'MISSION' is coded as 'MSIISNO', what is 'BANKING' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "BNAKNIG"
+            },
+            {
+              "label": "B",
+              "text": "BNANKIG"
+            },
+            {
+              "label": "C",
+              "text": "BNAKNGI"
+            },
+            {
+              "label": "D",
+              "text": "BNAKIGN"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: BNAKIGN.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 977,
+          "text": "If 'AMAZON' is coded as '1131261514', what is 'FLIPKART' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "6129161111820"
+            },
+            {
+              "label": "B",
+              "text": "6129161112810"
+            },
+            {
+              "label": "C",
+              "text": "6129116111820"
+            },
+            {
+              "label": "D",
+              "text": "6191216111820"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 6129161111820.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 978,
+          "text": "If 'HONESTY' is coded as 'IPNFTUZ', what is 'BEAUTY' coded as?",
+          "options": [
+            {
+              "label": "A",
+              "text": "CFBVUZ"
+            },
+            {
+              "label": "B",
+              "text": "CFBVVZ"
+            },
+            {
+              "label": "C",
+              "text": "CEBVUZ"
+            },
+            {
+              "label": "D",
+              "text": "CFBVTZ"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: CFBVUZ.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 979,
+          "text": "A cube of side 4 is painted on all faces and cut into unit cubes. How many have exactly 2 faces painted?",
+          "options": [
+            {
+              "label": "A",
+              "text": "24"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "12"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 24.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 980,
+          "text": "A cube of side 7 is painted on all faces and cut into unit cubes. How many have 0 faces painted?",
+          "options": [
+            {
+              "label": "A",
+              "text": "125"
+            },
+            {
+              "label": "B",
+              "text": "64"
+            },
+            {
+              "label": "C",
+              "text": "216"
+            },
+            {
+              "label": "D",
+              "text": "27"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 125.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 981,
+          "text": "In a standard die, which number is opposite to 4?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1"
+            },
+            {
+              "label": "B",
+              "text": "2"
+            },
+            {
+              "label": "C",
+              "text": "3"
+            },
+            {
+              "label": "D",
+              "text": "5"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 3.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 982,
+          "text": "Two views of a die show: (1) Top=2, Front=4, Right=1; (2) Top=6, Front=4, Right=5. Find the number opposite to 4.",
+          "options": [
+            {
+              "label": "A",
+              "text": "1"
+            },
+            {
+              "label": "B",
+              "text": "2"
+            },
+            {
+              "label": "C",
+              "text": "3"
+            },
+            {
+              "label": "D",
+              "text": "6"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 3.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 983,
+          "text": "In a dice net with cross pattern (1 top, 2-3-4-5 middle, 6 bottom), which numbers are opposite?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1 and 3"
+            },
+            {
+              "label": "B",
+              "text": "2 and 5"
+            },
+            {
+              "label": "C",
+              "text": "1 and 6"
+            },
+            {
+              "label": "D",
+              "text": "3 and 5"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 1 and 6.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 984,
+          "text": "A cube of side 3 is painted on all faces and cut into unit cubes. How many cubes have exactly 3 faces painted?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4"
+            },
+            {
+              "label": "B",
+              "text": "6"
+            },
+            {
+              "label": "C",
+              "text": "8"
+            },
+            {
+              "label": "D",
+              "text": "12"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 8.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 985,
+          "text": "In a standard die, if face 6 is on top and face 1 is in front, which face is on the right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "3"
+            },
+            {
+              "label": "C",
+              "text": "4"
+            },
+            {
+              "label": "D",
+              "text": "5"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 3.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 986,
+          "text": "A cube of side 10 is painted on all faces and cut into unit cubes. How many have at least 1 face painted?",
+          "options": [
+            {
+              "label": "A",
+              "text": "488"
+            },
+            {
+              "label": "B",
+              "text": "500"
+            },
+            {
+              "label": "C",
+              "text": "512"
+            },
+            {
+              "label": "D",
+              "text": "600"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 488.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 987,
+          "text": "Two positions of a die: (1) Top=1, Front=2, Right=3; (2) Top=4, Front=2, Right=5. Find opposite of 2.",
+          "options": [
+            {
+              "label": "A",
+              "text": "1"
+            },
+            {
+              "label": "B",
+              "text": "3"
+            },
+            {
+              "label": "C",
+              "text": "5"
+            },
+            {
+              "label": "D",
+              "text": "6"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: 6.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 988,
+          "text": "Which of the following is NOT a valid die net?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Cross of 6 squares"
+            },
+            {
+              "label": "B",
+              "text": "T-shape with 4+2"
+            },
+            {
+              "label": "C",
+              "text": "Row of 6 squares"
+            },
+            {
+              "label": "D",
+              "text": "Staircase of 6 squares"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Row of 6 squares.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 989,
+          "text": "A 5×5×5 cube is painted red on all faces and cut. How many cubes have exactly 1 face painted?",
+          "options": [
+            {
+              "label": "A",
+              "text": "48"
+            },
+            {
+              "label": "B",
+              "text": "54"
+            },
+            {
+              "label": "C",
+              "text": "60"
+            },
+            {
+              "label": "D",
+              "text": "36"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 54.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 990,
+          "text": "A cube of side 8 is painted on 4 faces (two opposite unpainted). How many cubes have paint?",
+          "options": [
+            {
+              "label": "A",
+              "text": "160"
+            },
+            {
+              "label": "B",
+              "text": "176"
+            },
+            {
+              "label": "C",
+              "text": "192"
+            },
+            {
+              "label": "D",
+              "text": "144"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 176.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 991,
+          "text": "A die is rolled and shows 5 on top. What number is at the bottom (standard die)?",
+          "options": [
+            {
+              "label": "A",
+              "text": "1"
+            },
+            {
+              "label": "B",
+              "text": "2"
+            },
+            {
+              "label": "C",
+              "text": "3"
+            },
+            {
+              "label": "D",
+              "text": "4"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 2.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 992,
+          "text": "How many cubes of side 3 can be cut from a cube of side 9?",
+          "options": [
+            {
+              "label": "A",
+              "text": "9"
+            },
+            {
+              "label": "B",
+              "text": "27"
+            },
+            {
+              "label": "C",
+              "text": "81"
+            },
+            {
+              "label": "D",
+              "text": "18"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 27.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 993,
+          "text": "Find the number opposite to 2 given: View 1: Top=A, Front=2, Right=3; View 2: Top=5, Front=2, Right=6.",
+          "options": [
+            {
+              "label": "A",
+              "text": "1"
+            },
+            {
+              "label": "B",
+              "text": "3"
+            },
+            {
+              "label": "C",
+              "text": "4"
+            },
+            {
+              "label": "D",
+              "text": "6"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 4.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 994,
+          "text": "A 4×4×4 cube is painted on 3 adjacent faces. How many have exactly 2 faces painted?",
+          "options": [
+            {
+              "label": "A",
+              "text": "6"
+            },
+            {
+              "label": "B",
+              "text": "9"
+            },
+            {
+              "label": "C",
+              "text": "12"
+            },
+            {
+              "label": "D",
+              "text": "15"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 9.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 995,
+          "text": "A standard die shows 1 on top, 3 in front. What is the right face?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "4"
+            },
+            {
+              "label": "C",
+              "text": "5"
+            },
+            {
+              "label": "D",
+              "text": "6"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 2.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 996,
+          "text": "A cube of side n has 8 corner cubes with 3 faces painted. For what n does this hold?",
+          "options": [
+            {
+              "label": "A",
+              "text": "n ≥ 1"
+            },
+            {
+              "label": "B",
+              "text": "n ≥ 2"
+            },
+            {
+              "label": "C",
+              "text": "n > 2"
+            },
+            {
+              "label": "D",
+              "text": "n = 2 only"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: n ≥ 2.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 997,
+          "text": "In a dice net, four squares are in a row and the other two are attached above the 2nd square and below the 3rd. Which pairs are opposite?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Top-left and bottom-right"
+            },
+            {
+              "label": "B",
+              "text": "Top square and the square 3 positions away"
+            },
+            {
+              "label": "C",
+              "text": "Squares separated by 1 in the net"
+            },
+            {
+              "label": "D",
+              "text": "Many pairs possible"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: Many pairs possible.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 998,
+          "text": "Total number of small cubes in a 9×9×9 cube cut into 1×1×1 cubes?",
+          "options": [
+            {
+              "label": "A",
+              "text": "486"
+            },
+            {
+              "label": "B",
+              "text": "729"
+            },
+            {
+              "label": "C",
+              "text": "648"
+            },
+            {
+              "label": "D",
+              "text": "512"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 729.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 999,
+          "text": "Two faces of a die sum to 7 always. If one face is 1, the sum of the other 5 faces is?",
+          "options": [
+            {
+              "label": "A",
+              "text": "18"
+            },
+            {
+              "label": "B",
+              "text": "19"
+            },
+            {
+              "label": "C",
+              "text": "20"
+            },
+            {
+              "label": "D",
+              "text": "21"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 20.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1000,
+          "text": "A 3×3×3 cube is painted and cut. Number of cubes with exactly 1 face painted?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4"
+            },
+            {
+              "label": "B",
+              "text": "6"
+            },
+            {
+              "label": "C",
+              "text": "8"
+            },
+            {
+              "label": "D",
+              "text": "12"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 6.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1001,
+          "text": "View 1 of a die: Top=F, Front=G, Right=H. View 2: Top=I, Front=G, Right=J. If F, G, H, I, J are distinct numbers from 1-6, find opposite of G.",
+          "options": [
+            {
+              "label": "A",
+              "text": "F"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "The number not shown"
+            },
+            {
+              "label": "D",
+              "text": "J"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: The number not shown.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1002,
+          "text": "If a mirror is placed on the right, find the mirror image of 'HELLO'.",
+          "options": [
+            {
+              "label": "A",
+              "text": "OLLEH"
+            },
+            {
+              "label": "B",
+              "text": "O⅂⅂ƐH"
+            },
+            {
+              "label": "C",
+              "text": "HƐ⅂⅂O"
+            },
+            {
+              "label": "D",
+              "text": "O⅂⅂∀H"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: O⅂⅂ƐH.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1003,
+          "text": "Find the water image of 'P6b'.",
+          "options": [
+            {
+              "label": "A",
+              "text": "q6b"
+            },
+            {
+              "label": "B",
+              "text": "b9q"
+            },
+            {
+              "label": "C",
+              "text": "q9d"
+            },
+            {
+              "label": "D",
+              "text": "q9b"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: q9d.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1007,
+          "text": "How many holes appear when a paper folded vertically twice is punched once at the folded corner?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "4"
+            },
+            {
+              "label": "C",
+              "text": "8"
+            },
+            {
+              "label": "D",
+              "text": "1"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 4.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1008,
+          "text": "How many triangles are in a pentagon with all its diagonals?",
+          "options": [
+            {
+              "label": "A",
+              "text": "25"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "30"
+            },
+            {
+              "label": "D",
+              "text": "40"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 35.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1009,
+          "text": "A clock shows 2:30. What is its mirror image time?",
+          "options": [
+            {
+              "label": "A",
+              "text": "9:30"
+            },
+            {
+              "label": "B",
+              "text": "10:30"
+            },
+            {
+              "label": "C",
+              "text": "8:30"
+            },
+            {
+              "label": "D",
+              "text": "11:30"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 9:30.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1012,
+          "text": "How many squares are in a 2×3 grid?",
+          "options": [
+            {
+              "label": "A",
+              "text": "6"
+            },
+            {
+              "label": "B",
+              "text": "8"
+            },
+            {
+              "label": "C",
+              "text": "10"
+            },
+            {
+              "label": "D",
+              "text": "12"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 8.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1013,
+          "text": "If mirror is on the left, find the mirror image of 'BAT'.",
+          "options": [
+            {
+              "label": "A",
+              "text": "TAB"
+            },
+            {
+              "label": "B",
+              "text": "TⱯᗺ"
+            },
+            {
+              "label": "C",
+              "text": "T∀B"
+            },
+            {
+              "label": "D",
+              "text": "ⱯTᗺ"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: TⱯᗺ.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1016,
+          "text": "How many rectangles (including squares) in a 3×4 grid?",
+          "options": [
+            {
+              "label": "A",
+              "text": "60"
+            },
+            {
+              "label": "B",
+              "text": "50"
+            },
+            {
+              "label": "C",
+              "text": "70"
+            },
+            {
+              "label": "D",
+              "text": "80"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 60.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1017,
+          "text": "A paper is folded in half vertically, then diagonally. A hole is punched. How many holes after unfolding?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "4"
+            },
+            {
+              "label": "C",
+              "text": "6"
+            },
+            {
+              "label": "D",
+              "text": "8"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 4.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1021,
+          "text": "Water image of 'SSC CGL'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "SSC CGL"
+            },
+            {
+              "label": "B",
+              "text": "SSC ⅂⅂Ɔ"
+            },
+            {
+              "label": "C",
+              "text": "SSƆ ᗺ⅂ɔ"
+            },
+            {
+              "label": "D",
+              "text": "SSƆ ⅂⅂Ɔ"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: SSƆ ᗺ⅂ɔ.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1025,
+          "text": "How many triangles in a triangle with 2 lines from each vertex?",
+          "options": [
+            {
+              "label": "A",
+              "text": "8"
+            },
+            {
+              "label": "B",
+              "text": "10"
+            },
+            {
+              "label": "C",
+              "text": "12"
+            },
+            {
+              "label": "D",
+              "text": "14"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 12.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1026,
+          "text": "Mirror image of '2025' with mirror on right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2025"
+            },
+            {
+              "label": "B",
+              "text": "5202"
+            },
+            {
+              "label": "C",
+              "text": "5022"
+            },
+            {
+              "label": "D",
+              "text": "2250"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 5202.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1027,
+          "text": "How many squares in a 6×6 grid?",
+          "options": [
+            {
+              "label": "A",
+              "text": "55"
+            },
+            {
+              "label": "B",
+              "text": "91"
+            },
+            {
+              "label": "C",
+              "text": "78"
+            },
+            {
+              "label": "D",
+              "text": "65"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 91.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1029,
+          "text": "A clock shows 4:40. What is its water image?",
+          "options": [
+            {
+              "label": "A",
+              "text": "7:20"
+            },
+            {
+              "label": "B",
+              "text": "8:20"
+            },
+            {
+              "label": "C",
+              "text": "4:40"
+            },
+            {
+              "label": "D",
+              "text": "7:40"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 7:20.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1030,
+          "text": "How many triangles in a regular hexagon with all its diagonals?",
+          "options": [
+            {
+              "label": "A",
+              "text": "80"
+            },
+            {
+              "label": "B",
+              "text": "96"
+            },
+            {
+              "label": "C",
+              "text": "110"
+            },
+            {
+              "label": "D",
+              "text": "120"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 110.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1031,
+          "text": "Which figure contains a star shape?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A pentagon with intersecting diagonals"
+            },
+            {
+              "label": "B",
+              "text": "A hexagon with all sides equal"
+            },
+            {
+              "label": "C",
+              "text": "A square with two diagonals"
+            },
+            {
+              "label": "D",
+              "text": "A circle with inscribed square"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: A pentagon with intersecting diagonals.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1033,
+          "text": "Paper folded horizontally twice, then a hole punched at top-right of folded paper. How many holes?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "4"
+            },
+            {
+              "label": "C",
+              "text": "8"
+            },
+            {
+              "label": "D",
+              "text": "16"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 4.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1034,
+          "text": "Water image of '9PM'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "6bW"
+            },
+            {
+              "label": "B",
+              "text": "6qW"
+            },
+            {
+              "label": "C",
+              "text": "9qW"
+            },
+            {
+              "label": "D",
+              "text": "6qM"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 6qW.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1035,
+          "text": "How many rectangles (non-square) in a 3×3 grid?",
+          "options": [
+            {
+              "label": "A",
+              "text": "22"
+            },
+            {
+              "label": "B",
+              "text": "24"
+            },
+            {
+              "label": "C",
+              "text": "20"
+            },
+            {
+              "label": "D",
+              "text": "26"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 22.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1036,
+          "text": "Mirror image of an arrow pointing North-East with mirror on right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North-East"
+            },
+            {
+              "label": "B",
+              "text": "North-West"
+            },
+            {
+              "label": "C",
+              "text": "South-East"
+            },
+            {
+              "label": "D",
+              "text": "South-West"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: North-West.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1037,
+          "text": "How many triangles in a star-shaped figure (pentagram)?",
+          "options": [
+            {
+              "label": "A",
+              "text": "25"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "30"
+            },
+            {
+              "label": "D",
+              "text": "40"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 35.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1040,
+          "text": "What is the mirror image of 'MADAM' with mirror on right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "MADAM"
+            },
+            {
+              "label": "B",
+              "text": "M∀ᗺ∀M"
+            },
+            {
+              "label": "C",
+              "text": "MAD∀M"
+            },
+            {
+              "label": "D",
+              "text": "MAᗺAM"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: MADAM.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1041,
+          "text": "Water image of '8:15' on a clock?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3:45"
+            },
+            {
+              "label": "B",
+              "text": "4:45"
+            },
+            {
+              "label": "C",
+              "text": "8:15"
+            },
+            {
+              "label": "D",
+              "text": "3:15"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 3:45.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1043,
+          "text": "How many squares in a figure with a 4×4 grid?",
+          "options": [
+            {
+              "label": "A",
+              "text": "16"
+            },
+            {
+              "label": "B",
+              "text": "25"
+            },
+            {
+              "label": "C",
+              "text": "30"
+            },
+            {
+              "label": "D",
+              "text": "36"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 30.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1045,
+          "text": "A folded paper (folded twice vertically) is punched at the centre of the folded edge. How many holes?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "4"
+            },
+            {
+              "label": "C",
+              "text": "6"
+            },
+            {
+              "label": "D",
+              "text": "8"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 4.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1046,
+          "text": "Five friends sit in a row facing North. A is at left end. B is third to right of A. C is between B and D. E is next to D. Who is at the right end?",
+          "options": [
+            {
+              "label": "A",
+              "text": "B"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "C"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: D.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1048,
+          "text": "Six persons sit in a circle facing center. A is between B and C. D is opposite A. E is between F and D. Who is opposite B?",
+          "options": [
+            {
+              "label": "A",
+              "text": "C"
+            },
+            {
+              "label": "B",
+              "text": "E"
+            },
+            {
+              "label": "C",
+              "text": "F"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: F.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1049,
+          "text": "P > Q, R S, T shortest. Who is 2nd tallest?",
+          "options": [
+            {
+              "label": "A",
+              "text": "P"
+            },
+            {
+              "label": "B",
+              "text": "Q"
+            },
+            {
+              "label": "C",
+              "text": "S"
+            },
+            {
+              "label": "D",
+              "text": "R"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Q.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1198,
+          "text": "Six persons A-F around circle. A 2nd left of C. B 3rd right of D. E between A and B. F not adjacent to C. Who is opposite A?",
+          "options": [
+            {
+              "label": "A",
+              "text": "B"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "F"
+            },
+            {
+              "label": "D",
+              "text": "C"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: D.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1199,
+          "text": "Five books arranged on a shelf. Math is above English. Science is below History but above Geography. English is above Science. Which is at the bottom?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Geography"
+            },
+            {
+              "label": "B",
+              "text": "Science"
+            },
+            {
+              "label": "C",
+              "text": "English"
+            },
+            {
+              "label": "D",
+              "text": "History"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Geography.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1200,
+          "text": "Seven persons P-V on 7 floors. R=4. S=2floors above T. Q immediately above P. U below R above V. One person between U and P. Who is on floor 7?",
+          "options": [
+            {
+              "label": "A",
+              "text": "T"
+            },
+            {
+              "label": "B",
+              "text": "S"
+            },
+            {
+              "label": "C",
+              "text": "Q"
+            },
+            {
+              "label": "D",
+              "text": "P"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: S.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1201,
+          "text": "In a row of 8 persons, A is 3rd from left. B is 5th from right. C is between A and B. How many persons between C and the right end?",
+          "options": [
+            {
+              "label": "A",
+              "text": "2"
+            },
+            {
+              "label": "B",
+              "text": "3"
+            },
+            {
+              "label": "C",
+              "text": "4"
+            },
+            {
+              "label": "D",
+              "text": "1"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 3.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1202,
+          "text": "Find the next term: 3, 7, 11, 15, 19, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "21"
+            },
+            {
+              "label": "B",
+              "text": "23"
+            },
+            {
+              "label": "C",
+              "text": "22"
+            },
+            {
+              "label": "D",
+              "text": "24"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 23.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1203,
+          "text": "Find the next term: 2, 6, 18, 54, 162, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "324"
+            },
+            {
+              "label": "B",
+              "text": "486"
+            },
+            {
+              "label": "C",
+              "text": "432"
+            },
+            {
+              "label": "D",
+              "text": "540"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 486.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1204,
+          "text": "Find the missing term: 1, 4, 9, 16, ?, 36",
+          "options": [
+            {
+              "label": "A",
+              "text": "20"
+            },
+            {
+              "label": "B",
+              "text": "24"
+            },
+            {
+              "label": "C",
+              "text": "25"
+            },
+            {
+              "label": "D",
+              "text": "30"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 25.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1205,
+          "text": "Find the next term: 2, 5, 10, 17, 26, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "35"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "37"
+            },
+            {
+              "label": "D",
+              "text": "33"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 37.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1206,
+          "text": "Find the next term: 10, 18, 28, 40, 54, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "68"
+            },
+            {
+              "label": "B",
+              "text": "70"
+            },
+            {
+              "label": "C",
+              "text": "72"
+            },
+            {
+              "label": "D",
+              "text": "66"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 70.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1207,
+          "text": "Find the next term: 1, 4, 10, 22, 46, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "92"
+            },
+            {
+              "label": "B",
+              "text": "94"
+            },
+            {
+              "label": "C",
+              "text": "96"
+            },
+            {
+              "label": "D",
+              "text": "88"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 94.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1208,
+          "text": "Find the wrong term: 2, 5, 10, 17, 28, 37, 50",
+          "options": [
+            {
+              "label": "A",
+              "text": "28"
+            },
+            {
+              "label": "B",
+              "text": "37"
+            },
+            {
+              "label": "C",
+              "text": "50"
+            },
+            {
+              "label": "D",
+              "text": "17"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 28.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1209,
+          "text": "Find the next term: 3, 6, 11, 18, 27, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "36"
+            },
+            {
+              "label": "B",
+              "text": "38"
+            },
+            {
+              "label": "C",
+              "text": "40"
+            },
+            {
+              "label": "D",
+              "text": "34"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 38.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1210,
+          "text": "Two series: 2, 7, 4, 14, 6, 21, 8, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "16"
+            },
+            {
+              "label": "B",
+              "text": "28"
+            },
+            {
+              "label": "C",
+              "text": "24"
+            },
+            {
+              "label": "D",
+              "text": "30"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 28.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1211,
+          "text": "Find the next letter: B, E, H, K, N, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "P"
+            },
+            {
+              "label": "B",
+              "text": "Q"
+            },
+            {
+              "label": "C",
+              "text": "R"
+            },
+            {
+              "label": "D",
+              "text": "O"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Q.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1212,
+          "text": "Find the next letter: A, C, F, J, O, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "S"
+            },
+            {
+              "label": "B",
+              "text": "T"
+            },
+            {
+              "label": "C",
+              "text": "U"
+            },
+            {
+              "label": "D",
+              "text": "V"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: U.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1213,
+          "text": "Find the missing letters: ACE, GIK, MOQ, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "PRT"
+            },
+            {
+              "label": "B",
+              "text": "SUV"
+            },
+            {
+              "label": "C",
+              "text": "SUW"
+            },
+            {
+              "label": "D",
+              "text": "STU"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: SUW.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1214,
+          "text": "Find the next term: 1, 3, 7, 15, 31, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "63"
+            },
+            {
+              "label": "B",
+              "text": "62"
+            },
+            {
+              "label": "C",
+              "text": "64"
+            },
+            {
+              "label": "D",
+              "text": "61"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 63.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1215,
+          "text": "Find the missing number: 11, 15, 24, 40, 65, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "99"
+            },
+            {
+              "label": "B",
+              "text": "101"
+            },
+            {
+              "label": "C",
+              "text": "105"
+            },
+            {
+              "label": "D",
+              "text": "97"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 101.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1216,
+          "text": "Find the next term: 2, 3, 5, 7, 11, 13, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "15"
+            },
+            {
+              "label": "B",
+              "text": "17"
+            },
+            {
+              "label": "C",
+              "text": "19"
+            },
+            {
+              "label": "D",
+              "text": "23"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 17.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1217,
+          "text": "Which letter comes next: Z, Y, X, W, V, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "U"
+            },
+            {
+              "label": "B",
+              "text": "T"
+            },
+            {
+              "label": "C",
+              "text": "A"
+            },
+            {
+              "label": "D",
+              "text": "Z"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: U.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1218,
+          "text": "Find the next term: 1, 8, 27, 64, 125, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "180"
+            },
+            {
+              "label": "B",
+              "text": "216"
+            },
+            {
+              "label": "C",
+              "text": "200"
+            },
+            {
+              "label": "D",
+              "text": "225"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 216.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1219,
+          "text": "Find the wrong number: 4, 9, 16, 25, 36, 49, 64, 80",
+          "options": [
+            {
+              "label": "A",
+              "text": "64"
+            },
+            {
+              "label": "B",
+              "text": "80"
+            },
+            {
+              "label": "C",
+              "text": "49"
+            },
+            {
+              "label": "D",
+              "text": "36"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 80.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1220,
+          "text": "Find the next: 1, 1, 2, 3, 5, 8, 13, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "20"
+            },
+            {
+              "label": "B",
+              "text": "21"
+            },
+            {
+              "label": "C",
+              "text": "22"
+            },
+            {
+              "label": "D",
+              "text": "19"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 21.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1221,
+          "text": "Find the missing: 1, 9, 25, 49, ?, 121",
+          "options": [
+            {
+              "label": "A",
+              "text": "64"
+            },
+            {
+              "label": "B",
+              "text": "81"
+            },
+            {
+              "label": "C",
+              "text": "100"
+            },
+            {
+              "label": "D",
+              "text": "72"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 81.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1222,
+          "text": "Find the next: 5, 9, 17, 33, 65, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "127"
+            },
+            {
+              "label": "B",
+              "text": "129"
+            },
+            {
+              "label": "C",
+              "text": "131"
+            },
+            {
+              "label": "D",
+              "text": "125"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 129.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1223,
+          "text": "Two series: 3, 12, 5, 10, 7, 8, 9, ?, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "6,11"
+            },
+            {
+              "label": "B",
+              "text": "10,7"
+            },
+            {
+              "label": "C",
+              "text": "11,6"
+            },
+            {
+              "label": "D",
+              "text": "8,9"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 6,11.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1224,
+          "text": "Find the next letter: Z, V, R, N, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "J"
+            },
+            {
+              "label": "B",
+              "text": "K"
+            },
+            {
+              "label": "C",
+              "text": "L"
+            },
+            {
+              "label": "D",
+              "text": "M"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: J.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1225,
+          "text": "Find the missing: 0, 3, 8, 15, 24, ?, 48",
+          "options": [
+            {
+              "label": "A",
+              "text": "32"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "36"
+            },
+            {
+              "label": "D",
+              "text": "40"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 35.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1226,
+          "text": "Find the next term: 3, 12, 27, 48, 75, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "100"
+            },
+            {
+              "label": "B",
+              "text": "108"
+            },
+            {
+              "label": "C",
+              "text": "96"
+            },
+            {
+              "label": "D",
+              "text": "112"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 108.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1227,
+          "text": "Statement: Should the government ban the use of mobile phones while driving? Argument I: Yes, because it distracts drivers and causes accidents. Argument II: No, because people need phones for emergencies.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is strong"
+            },
+            {
+              "label": "B",
+              "text": "Only II is strong"
+            },
+            {
+              "label": "C",
+              "text": "Both are strong"
+            },
+            {
+              "label": "D",
+              "text": "Neither is strong"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I is strong.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1228,
+          "text": "Statement: Should college admissions be based solely on entrance exam scores? Argument I: Yes, because exams provide an objective assessment. Argument II: No, because exams cause stress and anxiety.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is strong"
+            },
+            {
+              "label": "B",
+              "text": "Only II is strong"
+            },
+            {
+              "label": "C",
+              "text": "Both are strong"
+            },
+            {
+              "label": "D",
+              "text": "Neither is strong"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I is strong.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1229,
+          "text": "Statement: 'The company has decided to give a 10% bonus to all employees this year.' Assumption I: The company had a profitable year. Assumption II: Employees will be motivated by the bonus.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is implicit"
+            },
+            {
+              "label": "B",
+              "text": "Only II is implicit"
+            },
+            {
+              "label": "C",
+              "text": "Both are implicit"
+            },
+            {
+              "label": "D",
+              "text": "Neither is implicit"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I is implicit.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1230,
+          "text": "Statement: 'The school has introduced a dress code for teachers.' Assumption I: Teachers were not dressing appropriately before. Assumption II: A dress code will improve the school's image.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is implicit"
+            },
+            {
+              "label": "B",
+              "text": "Only II is implicit"
+            },
+            {
+              "label": "C",
+              "text": "Both are implicit"
+            },
+            {
+              "label": "D",
+              "text": "Neither is implicit"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I is implicit.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1231,
+          "text": "Statement: All mammals are warm-blooded. Whales are mammals. Conclusion: Whales are warm-blooded.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Definitely true"
+            },
+            {
+              "label": "B",
+              "text": "Possibly true"
+            },
+            {
+              "label": "C",
+              "text": "Does not follow"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Definitely true.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1232,
+          "text": "Statement: No fish can fly. Some aquatic animals can fly. Conclusion: Some aquatic animals are not fish.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Definitely true"
+            },
+            {
+              "label": "B",
+              "text": "Possibly true"
+            },
+            {
+              "label": "C",
+              "text": "Does not follow"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Definitely true.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1233,
+          "text": "Situation: 'Instances of cyberbullying among teenagers have increased significantly.' Course I: Schools should conduct awareness programs on cyber safety. Course II: The government should ban social media for teenagers.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1234,
+          "text": "Statement: Should smoking be banned in public places? Argument I: Yes, because second-hand smoke harms non-smokers. Argument II: No, because it infringes on personal freedom.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is strong"
+            },
+            {
+              "label": "B",
+              "text": "Only II is strong"
+            },
+            {
+              "label": "C",
+              "text": "Both are strong"
+            },
+            {
+              "label": "D",
+              "text": "Neither is strong"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I is strong.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1235,
+          "text": "Statement: 'The government plans to build more airports in Tier-2 cities.' Assumption I: There is sufficient passenger demand in Tier-2 cities. Assumption II: Tier-2 cities currently have no air connectivity.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is implicit"
+            },
+            {
+              "label": "B",
+              "text": "Only II is implicit"
+            },
+            {
+              "label": "C",
+              "text": "Both are implicit"
+            },
+            {
+              "label": "D",
+              "text": "Neither is implicit"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I is implicit.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1236,
+          "text": "Statement: Some apples are red. All red fruits are sweet. Conclusion: Some apples are sweet.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Definitely true"
+            },
+            {
+              "label": "B",
+              "text": "Possibly true"
+            },
+            {
+              "label": "C",
+              "text": "Does not follow"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Possibly true.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1237,
+          "text": "Statement: Should there be a uniform civil code in India? Argument I: Yes, because it will ensure gender equality in personal laws. Argument II: No, because it will hurt religious sentiments.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is strong"
+            },
+            {
+              "label": "B",
+              "text": "Only II is strong"
+            },
+            {
+              "label": "C",
+              "text": "Both are strong"
+            },
+            {
+              "label": "D",
+              "text": "Neither is strong"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I is strong.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1238,
+          "text": "Situation: 'Many patients in rural areas travel over 50 km to reach the nearest hospital.' Course I: The government should build primary health centres in every village cluster. Course II: The government should provide free ambulances for all rural patients.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1239,
+          "text": "Statement: 'The municipal corporation has decided to plant 10,000 trees in the city.' Assumption I: The city currently lacks adequate green cover. Assumption II: Trees will help reduce air pollution.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is implicit"
+            },
+            {
+              "label": "B",
+              "text": "Only II is implicit"
+            },
+            {
+              "label": "C",
+              "text": "Both are implicit"
+            },
+            {
+              "label": "D",
+              "text": "Neither is implicit"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both are implicit.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1240,
+          "text": "Statement: All politicians are public speakers. Some public speakers are not honest. Conclusion: Some politicians are not honest.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Definitely true"
+            },
+            {
+              "label": "B",
+              "text": "Possibly true"
+            },
+            {
+              "label": "C",
+              "text": "Does not follow"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Does not follow.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1241,
+          "text": "Situation: 'A spike in road accidents has been linked to drunk driving.' Course I: Police should conduct random breathalyzer checks. Course II: The government should increase the legal drinking age.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1242,
+          "text": "Statement: Should animal testing for cosmetics be banned? Argument I: Yes, because it causes unnecessary suffering to animals. Argument II: No, because alternatives are not yet widely available.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is strong"
+            },
+            {
+              "label": "B",
+              "text": "Only II is strong"
+            },
+            {
+              "label": "C",
+              "text": "Both are strong"
+            },
+            {
+              "label": "D",
+              "text": "Neither is strong"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both are strong.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1243,
+          "text": "Statement: 'The HR department has launched a skill development program for employees.' Assumption I: Employees currently lack some required skills. Assumption II: The program will improve employee productivity.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is implicit"
+            },
+            {
+              "label": "B",
+              "text": "Only II is implicit"
+            },
+            {
+              "label": "C",
+              "text": "Both are implicit"
+            },
+            {
+              "label": "D",
+              "text": "Neither is implicit"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both are implicit.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1244,
+          "text": "Statement: Every square is a rectangle. Some rectangles are coloured. Conclusion: Some squares are coloured.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Definitely true"
+            },
+            {
+              "label": "B",
+              "text": "Possibly true"
+            },
+            {
+              "label": "C",
+              "text": "Does not follow"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Possibly true.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1245,
+          "text": "Situation: 'Villagers near a forest are frequently attacked by wild animals venturing into human settlements.' Course I: The forest department should strengthen fencing around the forest boundary. Course II: Villagers should be relocated to safer areas.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1246,
+          "text": "Statement: Should the retirement age be increased to 65? Argument I: Yes, because people are living longer and healthier lives. Argument II: No, because it will reduce job opportunities for the youth.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is strong"
+            },
+            {
+              "label": "B",
+              "text": "Only II is strong"
+            },
+            {
+              "label": "C",
+              "text": "Both are strong"
+            },
+            {
+              "label": "D",
+              "text": "Neither is strong"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both are strong.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1247,
+          "text": "Statement: 'The airline has reduced baggage allowance for economy class passengers.' Assumption I: The airline wants to save fuel costs. Assumption II: Passengers will accept this change without complaint.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is implicit"
+            },
+            {
+              "label": "B",
+              "text": "Only II is implicit"
+            },
+            {
+              "label": "C",
+              "text": "Both are implicit"
+            },
+            {
+              "label": "D",
+              "text": "Neither is implicit"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I is implicit.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1248,
+          "text": "Statement: No cloud is a stone. Some clouds are rain-bearing. Conclusion: Some rain-bearing things are not stones.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Definitely true"
+            },
+            {
+              "label": "B",
+              "text": "Possibly true"
+            },
+            {
+              "label": "C",
+              "text": "Does not follow"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Definitely true.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1249,
+          "text": "Situation: 'Exams have been postponed due to a natural calamity.' Course I: The education board should announce revised dates immediately. Course II: The board should reduce the syllabus to reduce student burden.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1250,
+          "text": "Statement: Should genetically modified (GM) crops be allowed in India? Argument I: Yes, because they can increase agricultural yield. Argument II: No, because their long-term health effects are unknown.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is strong"
+            },
+            {
+              "label": "B",
+              "text": "Only II is strong"
+            },
+            {
+              "label": "C",
+              "text": "Both are strong"
+            },
+            {
+              "label": "D",
+              "text": "Neither is strong"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both are strong.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1251,
+          "text": "Statement: 'The police department has installed CCTV cameras in all public parks.' Assumption I: CCTV cameras deter criminal activity. Assumption II: Parks previously had security concerns.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I is implicit"
+            },
+            {
+              "label": "B",
+              "text": "Only II is implicit"
+            },
+            {
+              "label": "C",
+              "text": "Both are implicit"
+            },
+            {
+              "label": "D",
+              "text": "Neither is implicit"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both are implicit.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1252,
+          "text": "Statements: All dogs are mammals. No mammal is a reptile. Conclusions: I. No dog is a reptile. II. Some mammals are dogs.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1253,
+          "text": "Statements: Some pens are tables. All tables are chairs. Conclusions: I. Some pens are chairs. II. All chairs are pens.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1254,
+          "text": "Statements: No book is a copy. All copies are pages. Conclusions: I. Some pages are not books. II. No book is a page.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1255,
+          "text": "Statements: All roses are flowers. Some flowers fade quickly. Conclusions: I. Some roses fade quickly. II. No rose fades quickly.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Either I or II follows"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Either I or II follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1256,
+          "text": "Statements: All A are B. No B is C. Some C are D. Conclusions: I. No A is C. II. Some D are not B. III. No A is D.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only I and II follow"
+            },
+            {
+              "label": "C",
+              "text": "All follow"
+            },
+            {
+              "label": "D",
+              "text": "Only I and III follow"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Only I and II follow.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1257,
+          "text": "Statements: Only doctors are engineers. Some engineers are rich. Conclusions: I. All engineers are doctors. II. Some doctors are rich.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1258,
+          "text": "Statements: A % B, B @ C, C # D (where %=All, @=No, #=Some). Conclusions: I. A @ C. II. Some D are not B.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1259,
+          "text": "Statements: No honest person is corrupt. Some politicians are honest. Conclusions: I. Some politicians are not corrupt. II. No politician is corrupt.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1260,
+          "text": "Statements: All squares are rectangles. All rectangles are polygons. Conclusions: I. All squares are polygons. II. Some polygons are squares.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1261,
+          "text": "Statements: Some cups are plates. No plate is a bowl. Conclusions: I. Some cups are not bowls. II. Some bowls are not cups.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1262,
+          "text": "Statements: Only a few stars are planets. All planets are moons. Conclusions: I. Some stars are not planets. II. Some moons are not stars.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1263,
+          "text": "Statements: All professors are doctors. Some doctors are surgeons. Conclusions: I. Some professors are surgeons. II. No professor is a surgeon.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Either I or II follows"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Either I or II follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1264,
+          "text": "Statements: Some mangoes are fruits. All fruits are sweet. Conclusions: All mangoes are sweet.",
+          "options": [
+            {
+              "label": "A",
+              "text": "True"
+            },
+            {
+              "label": "B",
+              "text": "False"
+            },
+            {
+              "label": "C",
+              "text": "Maybe"
+            },
+            {
+              "label": "D",
+              "text": "Can't say"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: False.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1265,
+          "text": "Statements: Only talented people are successful. Some talented people are rich. Conclusions: I. All successful people are talented. II. Some rich people are successful.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1266,
+          "text": "Statements: A & B, B % C, C $ D (where &=Only, %=All, $=Some Not). Conclusions: I. All B are A. II. Some C are not D.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1267,
+          "text": "Statements: Some politicians are honest. All honest people are respected. Conclusions: I. Some politicians are respected. II. Some respected people are not politicians.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1268,
+          "text": "Statements: All scientists are intelligent. No intelligent person is lazy. Conclusions: I. No scientist is lazy. II. Some lazy people are not scientists.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1269,
+          "text": "Statements: Some red are blue. Some blue are green. Conclusions: I. Some red are green. II. Some green are blue.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Only II follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1270,
+          "text": "Statements: All frogs are amphibians. No amphibian has scales. Some scaly creatures live in water. Conclusions: I. No frog has scales. II. Some amphibians are frogs.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both follow.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1271,
+          "text": "Statements: Some teachers are writers. No writer is lazy. Conclusions: I. Some teachers are not lazy. II. Some lazy people are not writers.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 1272,
+          "text": "Statements (Coded): X # Y, Y @ Z, Z % W (#=Some, @=No, %=All). Conclusions: I. Some X are not Z. II. No W is Y.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I follows.",
+          "_source": "SSC CGL",
+          "_sourceSection": "General Intelligence & Reasoning"
+        },
+        {
+          "id": 58,
+          "text": "In a family, A is the father of B. C is the brother of D. E is the sister of F. G is the son of H. If A, B, and C are all deceased, and only their direct descendants (children) remain alive to inherit from them, who among F or G stands in a relationship with D such that they could be considered 'siblings' to each other under this specific inheritance scenario? (Note: Assume standard biological relations unless implied otherwise by the death conditions).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A. F and D are half-siblings."
+            },
+            {
+              "label": "B",
+              "text": "B. G and D are full siblings."
+            },
+            {
+              "label": "C",
+              "text": "C. F and G are step-siblings."
+            },
+            {
+              "label": "D",
+              "text": "D. Neither F nor G is a sibling of D."
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Identify family unit 1: A (Father) -> B (Child). C is not explicitly linked to A/B, so they are distinct unless stated. C and D are siblings.\n2. Identify family unit 2: E and F are sisters.\n3. Identify family unit 3: G is the son of H.\n4. Analyze links: There is no information linking A's line with C's line or E/F's line or H's line.\n5. The condition 'A, B, C deceased' affects inheritance distribution within their lines but does not create biological relations between distinct family groups described separately.\n6. Therefore, F (sister of E) and G (son of H) have no defined connection to D (sibling of C).\n7. Without a connecting parent figure shared by these groups, no sibling relationship exists between F or G and D.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 61,
+          "text": "Identify the next number in the series: 2, 6, 12, 20, 30, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "42"
+            },
+            {
+              "label": "B",
+              "text": "44"
+            },
+            {
+              "label": "C",
+              "text": "46"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between consecutive terms are 4, 6, 8, 10. The next difference should be 12. Adding 12 to the last term (30) gives 42.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 62,
+          "text": "Arrange the following words in dictionary order: 1. Apple, 2. Apricot, 3. Ant, 4. Arm.",
+          "options": [
+            {
+              "label": "A",
+              "text": "3, 1, 2, 4"
+            },
+            {
+              "label": "B",
+              "text": "3, 4, 1, 2"
+            },
+            {
+              "label": "C",
+              "text": "1, 3, 4, 2"
+            },
+            {
+              "label": "D",
+              "text": "2, 3, 1, 4"
+            }
+          ],
+          "answer": 0,
+          "solution": "Comparing first letters: 'Ant' (A-n), 'Apple' (A-p), 'Apricot' (A-p-r). 'n' comes before 'p', so Ant is first. Between Apple and Apricot, 'pp' vs 'pr', 'p' comes before 'r'. So Apple then Apricot. Then Arm. Order: Ant, Apple, Apricot, Arm.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 63,
+          "text": "Identify the odd one out:",
+          "options": [
+            {
+              "label": "A",
+              "text": "Breeze"
+            },
+            {
+              "label": "B",
+              "text": "Storm"
+            },
+            {
+              "label": "C",
+              "text": "Hurricane"
+            },
+            {
+              "label": "D",
+              "text": "Gale"
+            }
+          ],
+          "answer": 0,
+          "solution": "'Breeze', 'Storm', 'Hurricane', and 'Gale' are types of winds. However, a 'Breeze' is a light wind, while the others (Storm, Hurricane, Gale) are strong or violent winds causing significant weather disturbance.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 64,
+          "text": "A spy starts at a secure point 'X' facing North. His mission requires him to execute the following sequence of commands relative to his CURRENT direction, where every command rotates his internal compass by 90 degrees clockwise AFTER execution:\n1. Move forward 5 units.\n2. Turn Left (relative to current face) and move forward 5 units.\n3. Turn Right (relative to current face) and move forward 5 units.\n4. Turn Left (relative to current face) and move forward 5 units.\n\nHowever, due to a magnetic anomaly affecting Sector X, every time the spy executes a command that involves turning LEFT, his body rotates an additional 90 degrees clockwise immediately after the turn but BEFORE moving. If he turns RIGHT normally, no such rotation occurs.\n\nAfter completing all 4 steps, in which cardinal direction is the spy facing?\nA) North\nB) South\nC) East\nD) West",
+          "options": [
+            {
+              "label": "A",
+              "text": "North"
+            },
+            {
+              "label": "B",
+              "text": "South"
+            },
+            {
+              "label": "C",
+              "text": "East"
+            },
+            {
+              "label": "D",
+              "text": "West"
+            }
+          ],
+          "answer": 2,
+          "solution": "Start: Facing North. Step 1 (Forward): Still facing North. Step 2 (Turn Left relative to North -> West; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: West rotated by +90 deg = North. Move 5 units while facing North. Step 3 (Turn Right relative to current North -> East). No anomaly for 'Right'. Orientation remains East. Move 5 units while facing East. Step 4 (Turn Left relative to East -> North; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: North rotated by +90 deg = East. Move 5 units. Final Facing Direction: East.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 82,
+          "text": "In a family, A is the brother of B. C is the father of A and D. If E is the daughter of D, who is the grandfather of E?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "B"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 1,
+          "solution": "C is the father of A and D, so C is D's father. E is D's daughter, so C is E's grandfather.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 87,
+          "text": "In a specific code language used for railway signaling, the position of letters in a word is shifted based on their distance from the center. For words with an even number of letters (4 letters), the letter at index 1 moves to index 4, and the letter at index 2 moves to index 3 (swapping the first pair). The second pair (indices 3 and 4) also swaps places (index 3 goes to 4, index 4 goes to 3). This creates a mirror swap across the vertical midline. Using this 'Inverse-Coordinate Flip' logic for 4-letter words, if 'TRAIN' becomes 'NARIT', how is 'MADRAS' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "ATAD"
+            },
+            {
+              "label": "B",
+              "text": "DAT A"
+            },
+            {
+              "label": "C",
+              "text": "ADTA"
+            },
+            {
+              "label": "D",
+              "text": "TADA"
+            }
+          ],
+          "answer": 0,
+          "solution": "The rule reverses a four-letter word: positions 1 and 4 swap, and positions 2 and 3 swap. DATA becomes ATAD.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 92,
+          "text": "If today is Monday, what was the day 473 days ago?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Monday"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Divide the total days (473) by 7 to find full weeks.\n2. Calculation: 473 ÷ 7 = 67 weeks with a remainder of 4 days.\n3. Since we are going backwards, subtract the remainder from 'Monday'.\n4. Monday - 1 day = Sunday; - 2 days = Saturday; - 3 days = Friday; - 4 days = Thursday.\n5. The year's leap status does not affect day calculation as it depends purely on the modulo arithmetic of 7.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 94,
+          "text": "Point A is at 12 o'clock on a clock face. If you start walking from the center towards A, then make a sharp 'Right' turn (90 degrees), which direction are you now facing relative to the clock's frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3 o'clock position"
+            },
+            {
+              "label": "B",
+              "text": "6 o'clock position"
+            },
+            {
+              "label": "C",
+              "text": "9 o'clock position"
+            },
+            {
+              "label": "D",
+              "text": "12 o'clock position"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial movement is from center towards 12 o'clock (North). 2. A 'Right' turn of 90 degrees rotates the heading 90 degrees clockwise. 3. North + 90 deg Right = East. 4. On a clock face, East corresponds exactly to the 3 o'clock position.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 95,
+          "text": "Find the missing term in the series: 10, 23, 46, 87, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "154"
+            },
+            {
+              "label": "B",
+              "text": "171"
+            },
+            {
+              "label": "C",
+              "text": "189"
+            },
+            {
+              "label": "D",
+              "text": "188"
+            }
+          ],
+          "answer": 2,
+          "solution": "Each term is doubled and the sum of its digits is added: 10 x 2 + (1 + 0) = 23; 23 x 2 + (2 + 3) = 46; 46 x 2 + (4 + 6) = 87; 87 x 2 + (8 + 7) = 189.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 98,
+          "text": "Find the next term in the series: 5, 9, 13, 17, ?, 25 (where digits are values in base-10, but the pattern follows Base-12 arithmetic rules where any digit exceeding 9 wraps around to letters A-E representing 10-14).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 21"
+            },
+            {
+              "label": "B",
+              "text": "B) 21A"
+            },
+            {
+              "label": "C",
+              "text": "C) 21E"
+            },
+            {
+              "label": "D",
+              "text": "D) 21F"
+            }
+          ],
+          "answer": 0,
+          "solution": "The series is an arithmetic progression starting at 5 with a common difference of 4: 5, 9 (5+4), 13 (9+4), 17 (13+4). The next term is 17 + 4 = 21. Although the prompt mentions Base-12 rules as a potential trap, standard integer addition applies here as no digit exceeds 9 in the sequence up to this point.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 99,
+          "text": "In a certain community, all 'Kartars' are also 'Yogis'. No 'Yogi' is a 'Vedantist'. Some 'Vedantists' are 'Brahmins'. What must be true?\nI. All Kartars are Brahmins.\nII. No Kartar is a Vedantist.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Draw circle 'Kartar' entirely inside 'Yogi'.\n2. Draw circle 'Vedantist' entirely outside 'Yogi' (since no Yogi is Vedantist).\n3. Conclude: Since Kartar is a subset of Yogi, and Yogi excludes Vedantist, Kartar must exclude Vedantist. Thus II follows.\n4. There is no relationship defined between 'Kartar' and 'Brahmin' directly; the link is broken by 'Vedantist'.\n5. Therefore, statement I cannot be deduced as necessarily true.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 100,
+          "text": "In a certain code language, words are encoded based on the sum of their digits. The rule is: If a number's digit-sum (repeatedly adding digits until a single digit is obtained) is odd, write the letter corresponding to that sum (A=1, B=2... Z=26). If even, write the word 'EVE'.\nExample: \n'7' -> 7 (Odd) -> G\n'8' -> 8 (Even) -> EVE\n'5' -> 5 (Odd) -> E\n'4' -> 4 (Even) -> EVE\nWhat is the code for the number 29?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "EVE"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 2,
+          "solution": "Step 1: Sum digits of 29 = 2 + 9 = 11.\nStep 2: Since 11 > 9, repeat process: 1 + 1 = 2.\nStep 3: Final single digit is 2.\nStep 4: 2 is Even.\nStep 5: Apply rule for even -> Code is 'EVE'.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 103,
+          "text": "Complete the series: 24, 36, 54, 81, 121.5, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "160"
+            },
+            {
+              "label": "B",
+              "text": "170"
+            },
+            {
+              "label": "C",
+              "text": "180"
+            },
+            {
+              "label": "D",
+              "text": "182.25"
+            }
+          ],
+          "answer": 3,
+          "solution": "Each term is multiplied by 1.5: 24 x 1.5 = 36, 36 x 1.5 = 54, 54 x 1.5 = 81, 81 x 1.5 = 121.5, 121.5 x 1.5 = 182.25.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 105,
+          "text": "A spy, Agent X, starts at point O facing North. He moves 20m forward, turns 90° Left, walks 15m, then turns 90° Left again and walks 20m. Finally, he turns 90° Left one more time and walks 15m to reach a hidden vault. If the Sun is at his back as he enters the vault, in which cardinal direction did Agent X originally face while walking along the LAST segment of his path?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) North"
+            },
+            {
+              "label": "B",
+              "text": "B) South"
+            },
+            {
+              "label": "C",
+              "text": "C) West"
+            },
+            {
+              "label": "D",
+              "text": "D) East"
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Start facing North. 2. Move 20m forward (Path 1). 3. Turn 90° Left -> Face West. Walk 15m (Path 2). 4. Turn 90° Left -> Face South. Walk 20m (Path 3). 5. Turn 90° Left -> Face East. Walk 15m (Path 4, the last segment). 6. Therefore, Agent X was facing East while walking along the last segment.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 107,
+          "text": "In a specific code language used for railway safety alerts, dates are encoded such that the letter corresponds to the sum of the Day's position in the month and its alphabetical value (A=1, B=2...), then converted back to a single letter based on the remainder when divided by 26. If the sum is > 26, subtract 26 once. Note: Only dates where the resulting letter is 'M' or later are considered valid alerts. On 10th March, an alert code is generated as 'L'. What date generates the alert code 'Q' under the same rules?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 13th April"
+            },
+            {
+              "label": "B",
+              "text": "B) 20th May"
+            },
+            {
+              "label": "C",
+              "text": "C) 17th June"
+            },
+            {
+              "label": "D",
+              "text": "D) 15th July"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let day = d, month position in year (Jan=1...Mar=3). \nCode Letter Q is the 17th letter of alphabet.\nFormula: (d + Month_Pos) % 26 = Q_Val. If result > 26, subtract 26.\nCheck Option A (13th April): April is month 4. Day=13.\nSum = 13 + 4 = 17.\nLetter for 17 is 'Q'. Matches.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 121,
+          "text": "In a secret code used by the Railway Safety Wing, words are encoded based on their reverse causal function. For example: 'Stop' is encoded as 'Go' (the opposite action), 'Dark' is encoded as 'Light', and 'Win' is encoded as 'Lose'. Using this logic, how would 'Sleep' be encoded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rest"
+            },
+            {
+              "label": "B",
+              "text": "Wake"
+            },
+            {
+              "label": "C",
+              "text": "Tiredness"
+            },
+            {
+              "label": "D",
+              "text": "Bed"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern is strictly Anti-Synonym (Action) reversal. Stop <-> Go, Dark <-> Light, Win <-> Lose. The word 'Sleep' describes a state of rest; its direct functional opposite action is to 'Wake'. Options A and C are states related to sleep, while D is the object.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 122,
+          "text": "In a rural village of Madhya Pradesh, the community council maps social connections as directional vectors relative to the Village Hall (Origin). Known relations:\n1. Ramu is 40 meters EAST of the Hall.\n2. Meera is 30 meters NORTH of Ramu.\n3. Aarav stands exactly midway between Ramu and Meera.\n\nLater, a storm forces everyone to walk along the line connecting their current position and the Village Hall in a straight path (shortest route). After walking this shortest distance, who will be standing closest to the Village Hall?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Meera"
+            },
+            {
+              "label": "B",
+              "text": "Aarav"
+            },
+            {
+              "label": "C",
+              "text": "Ramu"
+            },
+            {
+              "label": "D",
+              "text": "None of them"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Plot positions: Ramu (40E), Meera (40E, 30N). \n2. Aarav is midway: Pos = (40/2, 30/2) = (20E, 15N). \n3. Calculate shortest path to Hall (0,0) as distance: \n   - Ramu distance = sqrt(40² + 0²) = 40m.\n   - Meera distance = sqrt(40² + 30²) = 50m.\n   - Aarav distance = sqrt(20² + 15²) = sqrt(400+225) = sqrt(625) = 25m.\n4. Shortest path implies walking directly to origin. \n5. Comparison: 25m < 40m < 50m. Aarav is closest.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 123,
+          "text": "In a corporate hierarchy where rank is determined by strict rules: (1) No employee of 'Grade X' can supervise an employee of 'Grade Y' unless they are in the same department. (2) An employee of 'Grade X' and an employee of 'Grade Y' are never in the same department if they work on different projects. (3) Supervision implies a direct project linkage. If it is known that Employee A supervises Employee B, and both have ranks corresponding to Grade X and Grade Y respectively, which of the following conclusions about their working conditions must be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "They are in the same department and work on the same project."
+            },
+            {
+              "label": "B",
+              "text": "They are in different departments but work on the same project."
+            },
+            {
+              "label": "C",
+              "text": "They are in the same department and work on different projects."
+            },
+            {
+              "label": "D",
+              "text": "They are in different departments and work on different projects."
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Condition (1) requires them to be in the same department for A to supervise B.\n2. Condition (3) states supervision implies a direct project linkage, meaning they must share the same project.\n3. Condition (2) creates a hypothetical constraint: if they were on different projects, they could not be in the same department. Since we established they are in the same department from step 1, the premise of condition (2) regarding 'different projects' must be false for them to remain in the same department.\n4. Therefore, to satisfy all conditions while maintaining the supervision hierarchy, they must be in the same department and working on the same project.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 131,
+          "text": "In a specific cipher code, words are mapped to their directional 'Shadow Codes'. The rule is derived from the first letter of the word: if the first letter is in the set {A, B, C}, the shadow points North-East (NE); if in {D, E, F}, South-West (SW); if in {G, H, I}, South-East (SE); and so on, repeating this cycle every three letters. Additionally, words with exactly 3 vowels are appended with 'Long', those with 4 vowels with 'Short', and others get the suffix '-'. Given: 'CART' -> NE-Long, 'BIRD' -> NE-Low, 'POTATO' -> SW-Swift. What is the code for the word 'GARDEN'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "SE-Swift"
+            },
+            {
+              "label": "B",
+              "text": "SE-Long"
+            },
+            {
+              "label": "C",
+              "text": "SW-Swift"
+            },
+            {
+              "label": "D",
+              "text": "NE-Swift"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Check first letter of 'GARDEN': 'G'. 2. Map 'G' to direction cycle: A,B,C=NE; D,E,F=SW; G,H,I=SE. Thus, Direction = SE. 3. Count vowels in 'GARDEN' (A, E, E) = 3 vowels. 4. Rule for 3 vowels is suffix 'Swift'. 5. Combine: SE-Swift.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 132,
+          "text": "In a specific logic-gate language, the symbols represent operations as follows:\n'+' means 'is less than or equal to'\n'-\nmeans 'is greater than'\n'*' means 'is not equal to'\n'/\nmeans 'is exactly equal to'\n'The statements below are true in this language:\nI. A + B (A <= B)\nII. B - C (B > C)\nIII. D / B\nIV. E * A (E != A)\nGiven these, which of the following conclusions MUST be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A < C and D < E"
+            },
+            {
+              "label": "B",
+              "text": "D > C and E < A"
+            },
+            {
+              "label": "C",
+              "text": "D >= C and E != A"
+            },
+            {
+              "label": "D",
+              "text": "Data Inadequate"
+            }
+          ],
+          "answer": 2,
+          "solution": "1. Translate statements: I(A<=B), II(B>C), III(D=B), IV(E!=A).\n2. Combine I & II via B: Since A<=B and B>C, we have A<=B>C. No direct relation between A and C.\n3. Substitute III into chain: D=B. Thus A<=D>C. Therefore D>=C is logically valid (since B>=C implies D>=C).\n4. Analyze IV with substitution: E!=A. No fixed inequality exists between E and A, so 'E < A' or 'E > A' cannot be determined.\n5. Evaluate options: Option C states 'D >= C and E != A'. This matches our derived facts perfectly.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 134,
+          "text": "In the formal register of Indian Bureaucracy, specific verbs denote official actions with strict procedural connotations: 'Sanction' is to approval as 'Cognizance' is to …?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a) Accepting a legal case for trial"
+            },
+            {
+              "label": "B",
+              "text": "b) Issuing a travel pass"
+            },
+            {
+              "label": "C",
+              "text": "c) Denying a leave application"
+            },
+            {
+              "label": "D",
+              "text": "d) Filing a criminal complaint"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Analyze the first pair: 'Sanction' in bureaucracy strictly means granting official approval.\n2. Identify the register of the second word: 'Cognizance' is a technical term used by courts/police.\n3. Apply the meaning: To 'take cognizance' means a court formally acknowledges receipt of a case and accepts jurisdiction over it.\n4. Compare options: Option (a) defines accepting a legal case, matching the formal definition of taking cognizance.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 135,
+          "text": "A train engineer observes a specific rule for speed adjustments based on the type of station passed: If the station has an odd number of platforms, add 10 km/h; if even, subtract 5 km/h. Starting at Station X (3 platforms) traveling at 60 km/h, the train passes 4 subsequent stations before reaching the final destination. The sequence of platform counts is 2, 5, 4, and 3 respectively. What is the speed of the train upon reaching the final destination?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 65 km/h"
+            },
+            {
+              "label": "B",
+              "text": "B) 50 km/h"
+            },
+            {
+              "label": "C",
+              "text": "C) 70 km/h"
+            },
+            {
+              "label": "D",
+              "text": "D) 85 km/h"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start: 60 km/h. Station 1 (2 platforms, even): -5 -> 55. Station 2 (5 platforms, odd): +10 -> 65. Station 3 (4 platforms, even): -5 -> 60. Station 4 (3 platforms, odd): +10 -> 70. Destination reached at 70 km/h.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 136,
+          "text": "A and B are siblings. C is the father of B. D is the mother of A. E is the son of D. Who is E to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "D is the mother of A, so D is also the mother of B (since A and B are siblings). C is the father of B, so C is married to D. E is the son of D, which makes E the son of C.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 138,
+          "text": "In a certain code language, 'CAT' is written as '3120'. What is the code for 'DOG'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4157"
+            },
+            {
+              "label": "B",
+              "text": "4150"
+            },
+            {
+              "label": "C",
+              "text": "3157"
+            },
+            {
+              "label": "D",
+              "text": "4158"
+            }
+          ],
+          "answer": 0,
+          "solution": "C=3, A=1, T=20. D=4, O=15, G=7. So DOG is 4157.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 139,
+          "text": "If you walk 10 km North, turn left and walk 5 km, then turn right and walk 10 km, how far are you from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "10 km"
+            },
+            {
+              "label": "C",
+              "text": "15 km"
+            },
+            {
+              "label": "D",
+              "text": "20 km"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start North 10. Left is West 5. Left is South 10. Net displacement is 5 km West. Distance from start is 5 km.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 141,
+          "text": "Arrange the following words in a logical sequence: 1. Egg, 2. Chicken, 3. Bird, 4. Baby",
+          "options": [
+            {
+              "label": "A",
+              "text": "1, 2, 4, 3"
+            },
+            {
+              "label": "B",
+              "text": "1, 4, 2, 3"
+            },
+            {
+              "label": "C",
+              "text": "4, 1, 2, 3"
+            },
+            {
+              "label": "D",
+              "text": "1, 3, 4, 2"
+            }
+          ],
+          "answer": 1,
+          "solution": "An egg hatches into a baby chicken (chick), which grows into a chicken, which is a type of bird. Sequence: 1, 4, 2, 3.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 144,
+          "text": "In the village of Panchavati, a peculiar inheritance rule dictates that property passes NOT to the son, but to the maternal aunt of the heir. Consider the family: A is B's brother. C is D's daughter. E is F's only child and E is also the maternal aunt of G. If the property owner is H, who is J's son, and we know that I is H's wife and K is L's mother, identify the relationship between M (who is N's only daughter) and H, given that M is the one who inherits from H. How is M related to H?",
+          "options": [
+            {
+              "label": "A",
+              "text": "M is H's daughter."
+            },
+            {
+              "label": "B",
+              "text": "M is H's sister."
+            },
+            {
+              "label": "C",
+              "text": "M is H's maternal aunt."
+            },
+            {
+              "label": "D",
+              "text": "M is H's wife."
+            }
+          ],
+          "answer": 2,
+          "solution": "1. M inherits from H, so M must be H's maternal aunt per the rule.\n2. The rule defines 'maternal aunt' as the mother of H's mother.\n3. Therefore, M is the sister of H's mother.\n4. This makes M the maternal aunt of H.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 146,
+          "text": "In the city of Varanasi, a new digital tax rule applies to vehicle license numbers: for any digit in the even positions (2nd, 4th, etc.) that is greater than 5, swap it with its mirror image across 5 (e.g., 6 becomes 4, 7 becomes 3). However, if the sum of digits in positions 1 and 3 equals 8, this rule does not apply to those specific digits. What is the resulting sequence after applying these rules to the number 5274?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5274"
+            },
+            {
+              "label": "B",
+              "text": "5474"
+            },
+            {
+              "label": "C",
+              "text": "5234"
+            },
+            {
+              "label": "D",
+              "text": "5276"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Identify positions: Pos1=5, Pos2=2, Pos3=7, Pos4=4.\n2. Check swap condition for even positions (Pos2, Pos4).\n3. Pos2=2 (<=5), no swap needed.\n4. Pos4=4 (<=5), no swap needed.\n5. Check exception: Sum of Pos1 and Pos3 = 5+7=10.\n6. Since sum is not 8, the rule applies generally to even positions.\n7. However, since neither 2 nor 4 are >5, no swaps occur regardless.\n8. The number remains 5274.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 158,
+          "text": "A person stands at the center of a circular plaza. At 12:00 PM, their shadow falls exactly towards the East, indicating the Sun is in the West (Southwest quadrant logic for this specific exam universe). They walk 5 meters North-East, turn right and walk 5 meters, then turn left and walk 5 meters. If they return to the center by walking due South-East, what was their initial facing direction relative to the clock face numbers?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Facing 10"
+            },
+            {
+              "label": "B",
+              "text": "B) Facing 2"
+            },
+            {
+              "label": "C",
+              "text": "C) Facing 4"
+            },
+            {
+              "label": "D",
+              "text": "D) Facing 8"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial Shadow East implies Sun West (Person faces North by standard assumption unless twisted).\n2. Walk NE: Position shifts NE.\n3. Turn Right (NE->SE), Walk SE: Position shifts SE relative to start.\n4. Turn Left (SE->SW), Walk SW: Position shifts SW.\n5. Return path is South-East, meaning the displacement was North-West.\n6. Net displacement from 1st leg must be cancelled by last two legs + return.\n7. The only valid configuration for the 'Return' vector to be SE implies the starting orientation relative to the shadow logic aligns with option A.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 159,
+          "text": "A transparent sheet has a 3x3 grid of cells. The pattern inside is: Cell(1,1) has a circle; Cell(2,2) has a square; Cell(3,3) has a triangle. If you fold this flat sheet along the diagonal from top-left to bottom-right (bringing corners (1,2)-(3,4) together) and then view the front face of the resulting 3D structure, which symbol is visible in the geometric center of the front face? Options: A) Circle B) Square C) Triangle D) Empty.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Circle"
+            },
+            {
+              "label": "B",
+              "text": "Square"
+            },
+            {
+              "label": "C",
+              "text": "Triangle"
+            },
+            {
+              "label": "D",
+              "text": "Empty"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Map grid coordinates (row, col): Circle=(1,1), Square=(2,2), Triangle=(3,3). 2. Fold along diagonal y=x (top-left to bottom-right). 3. The fold brings the upper-right half onto the lower-left half. 4. The 'front' of the folded object corresponds to the original lower-left triangle area. 5. However, the question asks for the symbol visible in the *geometric center* of the resulting face after folding. 6. When a square sheet is folded along its main diagonal, the point originally at (2,2) - the exact center of the 3x3 grid - remains exactly on the fold line and becomes the central point of the new 2D projection's surface. 7. The symbol located at (2,2) is the Square.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 161,
+          "text": "In a specific government office protocol, the code for an action is derived by taking the literal physical direction mentioned in the sentence and applying it to the 'position' of the word 'Office' within the alphabet sequence (A=1st, B=2nd, ..., Z=26th). \n\nProtocol Rule: If a word implies a movement towards North, move the letter 'O' backward by 4 positions. If South, move forward by 4. If East, move backward by 3. If West, move forward by 5.\n\nBased on this protocol, what is the code for the phrase: 'The official must walk straight ahead'? (Note: In a standard map orientation where North is Up and South is Down, 'straight ahead' implies a neutral vertical alignment relative to the observer's view from the bottom looking up, effectively pointing 'North'.)",
+          "options": [
+            {
+              "label": "A",
+              "text": "K"
+            },
+            {
+              "label": "B",
+              "text": "Q"
+            },
+            {
+              "label": "C",
+              "text": "O"
+            },
+            {
+              "label": "D",
+              "text": "R"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Identify the key directional instruction in the phrase: 'walk straight ahead'.\nStep 2: Interpret direction: Relative to an observer facing North (standard map convention), 'straight ahead' points North.\nStep 3: Apply Protocol Rule for 'North': Move backward by 4 positions.\nStep 4: Take the target letter 'O' (15th letter).\nStep 5: Calculate new position: 15 - 4 = 11.\nStep 6: Identify the 11th letter of the alphabet: K.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 162,
+          "text": "In a standard Cartesian grid where North is up, imagine a 'Magic Mirror' placed at the diagonal line y = -x. This mirror swaps coordinates such that any point (x, y) reflects to (-y, -x). If you stand at Point A (coordinates 3, 2) and walk towards Point B (coordinates -1, 5), then step onto the mirror exactly halfway between them, which direction does your shadow face relative to the original North-East reference frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North-West"
+            },
+            {
+              "label": "B",
+              "text": "South-West"
+            },
+            {
+              "label": "C",
+              "text": "North-East"
+            },
+            {
+              "label": "D",
+              "text": "South-East"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Calculate midpoint of A(3,2) and B(-1,5): M = ((3-1)/2, (2+5)/2) = (1, 3.5).\n2. Reflect M across y=-x using rule (-y, -x): New Pos = (-3.5, -1).\n3. Original displacement vector A->B is (-4, +3). This is North-West.\n4. Reflection of vector (-4, 3) across y=-x: Swap and negate -> (-3, 4).\n5. Vector (-3, 4) points West (negative x) and North (positive y), which is North-West.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 45,
+          "text": "What comes next in the number series: 3, 6, 12, 24, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "30"
+            },
+            {
+              "label": "B",
+              "text": "42"
+            },
+            {
+              "label": "C",
+              "text": "48"
+            },
+            {
+              "label": "D",
+              "text": "54"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 48.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 46,
+          "text": "Identify the Odd One Out from the following set: A) Apple B) Banana C) Carrot D) Grape",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: C.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 47,
+          "text": "Complete the letter series: Z, Y, X, W, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "V"
+            },
+            {
+              "label": "B",
+              "text": "U"
+            },
+            {
+              "label": "C",
+              "text": "T"
+            },
+            {
+              "label": "D",
+              "text": "S"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: V.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 48,
+          "text": "What is the primary concept tested in Arguments & Assumptions?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Direct application"
+            },
+            {
+              "label": "B",
+              "text": "Conceptual understanding"
+            },
+            {
+              "label": "C",
+              "text": "Formula recall"
+            },
+            {
+              "label": "D",
+              "text": "All of the above"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: All of the above.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 49,
+          "text": "Which of the following best describes the approach to solve Arguments & Assumptions problems?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Memorize all formulas"
+            },
+            {
+              "label": "B",
+              "text": "Understand concepts first"
+            },
+            {
+              "label": "C",
+              "text": "Practice only difficult questions"
+            },
+            {
+              "label": "D",
+              "text": "Skip theory"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Understand concepts first.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 50,
+          "text": "In Arguments & Assumptions, which step is most critical for accurate problem-solving?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Reading the question carefully"
+            },
+            {
+              "label": "B",
+              "text": "Using the correct formula"
+            },
+            {
+              "label": "C",
+              "text": "Performing calculations accurately"
+            },
+            {
+              "label": "D",
+              "text": "All of the above"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: All of the above.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 51,
+          "text": "How can you improve your speed in Arguments & Assumptions questions?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Regular practice with timer"
+            },
+            {
+              "label": "B",
+              "text": "Solving only easy questions"
+            },
+            {
+              "label": "C",
+              "text": "Memorizing answers"
+            },
+            {
+              "label": "D",
+              "text": "Skipping calculations"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Regular practice with timer.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 52,
+          "text": "What is the best strategy for attempting Arguments & Assumptions questions in the exam?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Attempt all questions"
+            },
+            {
+              "label": "B",
+              "text": "Easy questions first, then difficult"
+            },
+            {
+              "label": "C",
+              "text": "Difficult questions first"
+            },
+            {
+              "label": "D",
+              "text": "Random order"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Easy questions first, then difficult.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 53,
+          "text": "What is the primary concept tested in Inferences & Syllogisms?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Direct application"
+            },
+            {
+              "label": "B",
+              "text": "Conceptual understanding"
+            },
+            {
+              "label": "C",
+              "text": "Formula recall"
+            },
+            {
+              "label": "D",
+              "text": "All of the above"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: All of the above.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 54,
+          "text": "Which of the following best describes the approach to solve Inferences & Syllogisms problems?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Memorize all formulas"
+            },
+            {
+              "label": "B",
+              "text": "Understand concepts first"
+            },
+            {
+              "label": "C",
+              "text": "Practice only difficult questions"
+            },
+            {
+              "label": "D",
+              "text": "Skip theory"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Understand concepts first.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 55,
+          "text": "In Inferences & Syllogisms, which step is most critical for accurate problem-solving?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Reading the question carefully"
+            },
+            {
+              "label": "B",
+              "text": "Using the correct formula"
+            },
+            {
+              "label": "C",
+              "text": "Performing calculations accurately"
+            },
+            {
+              "label": "D",
+              "text": "All of the above"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: All of the above.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 56,
+          "text": "How can you improve your speed in Inferences & Syllogisms questions?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Regular practice with timer"
+            },
+            {
+              "label": "B",
+              "text": "Solving only easy questions"
+            },
+            {
+              "label": "C",
+              "text": "Memorizing answers"
+            },
+            {
+              "label": "D",
+              "text": "Skipping calculations"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Regular practice with timer.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 57,
+          "text": "What is the best strategy for attempting Inferences & Syllogisms questions in the exam?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Attempt all questions"
+            },
+            {
+              "label": "B",
+              "text": "Easy questions first, then difficult"
+            },
+            {
+              "label": "C",
+              "text": "Difficult questions first"
+            },
+            {
+              "label": "D",
+              "text": "Random order"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Easy questions first, then difficult.",
+          "_source": "CLAT",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 171,
+          "text": "A farmer claims that his crops failed due to excessive rainfall, while a meteorologist argues that the failure was caused by poor soil drainage exacerbated by the rain. The meteorologist's argument implies that the farmer ignored the necessity of ______ before relying solely on weather patterns for agricultural success.",
+          "options": [
+            {
+              "label": "A",
+              "text": "addressing structural vulnerabilities"
+            },
+            {
+              "label": "B",
+              "text": "predicting seasonal variations"
+            },
+            {
+              "label": "C",
+              "text": "importing foreign seeds"
+            },
+            {
+              "label": "D",
+              "text": "reducing water usage"
+            }
+          ],
+          "answer": 0,
+          "solution": "The meteorologist attributes the crop failure to 'poor soil drainage,' which is a structural flaw in the land's preparation. Therefore, the argument implies one must address such internal weaknesses (structural vulnerabilities) before blaming external factors like weather. Options B, C, and D are incorrect because they do not directly address the specific cause of drainage issues mentioned in the scenario.",
+          "_source": "CLAT",
+          "_sourceSection": "Legal Reasoning"
+        },
+        {
+          "id": 172,
+          "text": "In a dispute over a disputed will, the plaintiff argues that the testator was of sound mind when signing the document. The defendant counters that the testator had recently suffered from severe depression. Which legal principle does the defendant's argument invoke to challenge the validity of the will?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Mental Capacity at the time of execution"
+            },
+            {
+              "label": "B",
+              "text": "Formalities of Execution"
+            },
+            {
+              "label": "C",
+              "text": "Witness Testimony"
+            },
+            {
+              "label": "D",
+              "text": "Statute of Frauds"
+            }
+          ],
+          "answer": 0,
+          "solution": "The core issue in challenging a will based on mental health status is whether the testator possessed 'testamentary capacity'—the ability to understand the nature of the act and its consequences—at the specific moment of signing. The defendant's mention of recent severe depression directly targets this requirement of sound mind (Mental Capacity). Options B, C, and D relate to procedural requirements or evidence types but do not address the substantive mental state argument presented.",
+          "_source": "CLAT",
+          "_sourceSection": "Legal Reasoning"
+        },
+        {
+          "id": 173,
+          "text": "The Supreme Court of India recently reaffirmed that the right to privacy is an intrinsic part of which fundamental freedom guaranteed under Article 21 of the Constitution?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Protection of life and personal liberty"
+            },
+            {
+              "label": "B",
+              "text": "Right to property"
+            },
+            {
+              "label": "C",
+              "text": "Freedom of speech and expression"
+            },
+            {
+              "label": "D",
+              "text": "Right to constitutional remedies"
+            }
+          ],
+          "answer": 0,
+          "solution": "In its landmark judgments (such as Justice K.S. Puttaswamy v. Union of India), the Supreme Court explicitly held that the right to privacy is a facet of the right to life and personal liberty under Article 21. Option A correctly identifies this constitutional provision. Options B, C, and D refer to different articles or rights (Articles 300A, 19(1)(a), and 32 respectively) that were not the primary locus for the privacy ruling.",
+          "_source": "CLAT",
+          "_sourceSection": "Legal Reasoning"
+        },
+        {
+          "id": 174,
+          "text": "A new regulation mandates that all artificial intelligence systems used in public infrastructure must undergo a 'risk assessment' before deployment. If an AI system is deployed without this assessment, it violates the principle that ______ must be established prior to operation.",
+          "options": [
+            {
+              "label": "A",
+              "text": "safety and accountability measures"
+            },
+            {
+              "label": "B",
+              "text": "cost efficiency"
+            },
+            {
+              "label": "C",
+              "text": "speed of implementation"
+            },
+            {
+              "label": "D",
+              "text": "aesthetic design"
+            }
+          ],
+          "answer": 0,
+          "solution": "The requirement for a 'risk assessment' implies that safety protocols and accountability mechanisms are prerequisites for operating AI systems in critical infrastructure. Therefore, the principle being violated is that safety and accountability measures must be established first. Options B, C, and D (cost, speed, aesthetics) represent operational goals or secondary considerations that do not constitute the fundamental legal safeguard of a risk assessment.",
+          "_source": "CLAT",
+          "_sourceSection": "Legal Reasoning"
+        },
+        {
+          "id": 187,
+          "text": "A contract between Party A and Party B stipulates that Party A must deliver goods by Friday. However, an unforeseen flood destroys the factory where the goods were to be manufactured on Thursday. Under the doctrine of frustration of contract, what is the legal consequence regarding Party A's liability for non-delivery?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Party A is liable for breach of contract because the duty was absolute."
+            },
+            {
+              "label": "B",
+              "text": "Party A is not liable because the impossibility of performance was caused by an act of God (force majeure)."
+            },
+            {
+              "label": "C",
+              "text": "Party A must pay damages to Party B but can claim reimbursement from the insurance company."
+            },
+            {
+              "label": "D",
+              "text": "Party A is automatically discharged from liability only if they had taken reasonable steps to mitigate the loss before the flood occurred."
+            }
+          ],
+          "answer": 1,
+          "solution": "The doctrine of frustration discharges parties from their obligations when a supervening event, unforeseen and without fault (like an act of God), makes performance impossible. Since the flood destroyed the goods before the performance date, Party A is not liable for breach. Option 0 is incorrect because absolute duty does not override impossibility due to force majeure. Options 2 and 3 introduce mitigation or insurance concepts that do not negate the primary effect of frustration in this specific scenario.",
+          "_source": "CLAT",
+          "_sourceSection": "Legal Reasoning"
+        },
+        {
+          "id": 188,
+          "text": "Which of the following scenarios best illustrates the legal concept of 'Laches' as a defense against a claim for specific performance?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A plaintiff files a suit three years after the breach occurred, during which time the defendant purchased and renovated the property in good faith."
+            },
+            {
+              "label": "B",
+              "text": "A plaintiff sues immediately after discovering a breach of contract."
+            },
+            {
+              "label": "C",
+              "text": "A defendant argues that the statute of limitations has expired based on the date of the breach."
+            },
+            {
+              "label": "D",
+              "text": "A plaintiff fails to produce documentary evidence despite having access to it for over a decade."
+            }
+          ],
+          "answer": 0,
+          "solution": "Laches is an equitable defense based on the delay in bringing a suit, which prejudices the defendant (e.g., by changing their position or spending money). The first option shows significant delay causing prejudice. Option 1 describes prompt action, not laches. Option 2 refers to the Statute of Limitations, a distinct legal principle. Option 4 relates to failure to prove evidence (res ipsa loquitur or burden of proof issues), not necessarily delay-based equity.",
+          "_source": "CLAT",
+          "_sourceSection": "Legal Reasoning"
+        },
+        {
+          "id": 189,
+          "text": "In a criminal trial, the prosecution presents a witness who testifies that they saw the accused commit the crime. However, it is later revealed that the witness had a motive to lie against the accused due to a personal grudge. How does this affect the admissibility of the testimony?",
+          "options": [
+            {
+              "label": "A",
+              "text": "The testimony becomes inadmissible as hearsay because it relies on a biased source."
+            },
+            {
+              "label": "B",
+              "text": "The testimony remains admissible but carries less weight; the judge or jury may consider the bias during evaluation."
+            },
+            {
+              "label": "C",
+              "text": "The court must automatically dismiss the entire prosecution case due to the witness's credibility issue."
+            },
+            {
+              "label": "D",
+              "text": "The testimony is inadmissible unless corroborated by independent physical evidence."
+            }
+          ],
+          "answer": 1,
+          "solution": "Witness credibility and bias are matters for the fact-finder (judge/jury) to evaluate; the testimony itself remains admissible in court. The presence of a motive to lie does not render the statement hearsay or automatically inadmissible under the law, though it affects its probative value. Option 0 is incorrect as hearsay refers to out-of-court statements offered for their truth, not live testimony with credibility issues. Options 2 and 3 are too absolute; courts do not automatically dismiss cases solely due to bias without a full trial on credibility.",
+          "_source": "CLAT",
+          "_sourceSection": "Legal Reasoning"
+        },
+        {
+          "id": 190,
+          "text": "A property owner claims that a neighboring factory's noise levels violate statutory limits. The factory argues that the noise is a 'reasonable' use of its land given its industrial nature. Which legal concept, often invoked to balance private rights with public utility or community welfare, does the factory's argument rely upon?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Strict Liability"
+            },
+            {
+              "label": "B",
+              "text": "B) Easement by Prescription"
+            },
+            {
+              "label": "C",
+              "text": "C) Reasonable Expectation / Nuisance Defense based on Reasonableness"
+            },
+            {
+              "label": "D",
+              "text": "D) Doctrine of Laches"
+            }
+          ],
+          "answer": 2,
+          "solution": "The factory's argument relies on the concept of 'Reasonableness' often applied in nuisance cases to determine if an activity is a lawful use of property, balancing private harm against public utility. Option A (Strict Liability) ignores fault entirely and would hold the factory liable regardless of reasonableness. Option B refers to acquiring rights through long-term usage, not defending against noise claims. Option D relates to unreasonable delay in filing a suit, which is irrelevant to the nature of the noise itself.",
+          "_source": "CLAT",
+          "_sourceSection": "Legal Reasoning"
+        },
+        {
+          "id": 175,
+          "text": "In a certain code language, 'SUN' is written as 'QML' and 'MOON' is written as 'KLLK'. How will 'STAR' be written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "RZPZ"
+            },
+            {
+              "label": "B",
+              "text": "RYQY"
+            },
+            {
+              "label": "C",
+              "text": "RZPY"
+            },
+            {
+              "label": "D",
+              "text": "RSOZ"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern involves shifting each letter backward by 2 positions in the alphabet (S->Q, T->R; U->S, A->Y; N->L, R->P). Applying this to 'STAR': S-2=R, T-2=R, A-2=Y, R-2=P. Option B matches this derivation exactly.",
+          "_source": "CLAT",
+          "_sourceSection": "Logical Reasoning"
+        },
+        {
+          "id": 177,
+          "text": "If 'All roses are flowers' is true, which of the following statements MUST also be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) All flowers are roses."
+            },
+            {
+              "label": "B",
+              "text": "B) Some flowers are roses."
+            },
+            {
+              "label": "C",
+              "text": "C) No roses are flowers."
+            },
+            {
+              "label": "D",
+              "text": "D) Some roses are not flowers."
+            }
+          ],
+          "answer": 1,
+          "solution": "The statement 'All roses are flowers' implies that the set of roses is entirely contained within the set of flowers. Therefore, there must be an overlap where some flowers (specifically those that are roses) exist. Option A is incorrect because it reverses the relationship; not all flowers need to be roses. Options C and D are logically false as they contradict the premise that all roses belong to the category of flowers.",
+          "_source": "CLAT",
+          "_sourceSection": "Logical Reasoning"
+        },
+        {
+          "id": 191,
+          "text": "Consider the following statement: 'The committee decided to postpone the meeting until further notice due to unforeseen circumstances.' Which word best completes the phrase 'until ______ notice' in this context, implying that the decision is temporary and subject to change based on new information?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) written"
+            },
+            {
+              "label": "B",
+              "text": "B) further"
+            },
+            {
+              "label": "C",
+              "text": "C) verbal"
+            },
+            {
+              "label": "D",
+              "text": "D) immediate"
+            }
+          ],
+          "answer": 1,
+          "solution": "The idiom 'until further notice' is a standard English phrase indicating that an action or arrangement continues indefinitely until someone provides new instructions. Option A ('written') changes the meaning to require specific documentation, which is not implied by the context of unforeseen circumstances. Option C ('verbal') is not a fixed phrase and alters the nuance. Option D ('immediate') contradicts the idea of waiting for a future update. Thus, 'further' is the only correct completion.",
+          "_source": "CLAT",
+          "_sourceSection": "Logical Reasoning"
+        },
+        {
+          "id": 192,
+          "text": "In a logical reasoning test involving sets, consider the following premises: 1) All cats are mammals. 2) Some mammals are pets. What can be logically inferred from these two statements alone?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) All cats are pets."
+            },
+            {
+              "label": "B",
+              "text": "B) Some cats are pets."
+            },
+            {
+              "label": "C",
+              "text": "C) No cats are pets."
+            },
+            {
+              "label": "D",
+              "text": "D) It cannot be determined whether any cats are pets based on the given information."
+            }
+          ],
+          "answer": 3,
+          "solution": "From premise 1, we know cats belong to the set of mammals. From premise 2, we know there is an overlap between mammals and pets, but we do not know if that overlap includes cats. The intersection of 'cats' and 'pets' could be empty, partial, or total; the premises do not provide enough information to confirm any specific relationship between cats and pets. Therefore, options A, B, and C make definitive claims that are not supported by the logic. Only option D correctly reflects the logical limitation.",
+          "_source": "CLAT",
+          "_sourceSection": "Logical Reasoning"
+        },
+        {
+          "id": 2788,
+          "text": "If it is true that all squares are rectangles, and all rectangles are quadrilaterals, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All quadrilaterals are squares"
+            },
+            {
+              "label": "B",
+              "text": "All squares are quadrilaterals"
+            },
+            {
+              "label": "C",
+              "text": "All rectangles are squares"
+            },
+            {
+              "label": "D",
+              "text": "All quadrilaterals are rectangles"
+            }
+          ],
+          "answer": 1,
+          "solution": "Using the transitive property, we can conclude that all squares are quadrilaterals.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2789,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "20 minutes"
+            },
+            {
+              "label": "D",
+              "text": "50 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "If it takes 5 machines 5 minutes to make 5 widgets, then it takes 1 machine 5 minutes to make 1 widget. If we have 100 machines, it would still take each machine 5 minutes to make 1 widget. Therefore, it would take 100 machines 5 minutes to make 100 widgets.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2794,
+          "text": "Pointing to a photograph, Rajesh said, &quot;She is the daughter of my grandfather&#39;s only son.&quot; How is the girl related to Rajesh?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Sister"
+            },
+            {
+              "label": "B",
+              "text": "Cousin"
+            },
+            {
+              "label": "C",
+              "text": "Niece"
+            },
+            {
+              "label": "D",
+              "text": "Mother"
+            }
+          ],
+          "answer": 0,
+          "solution": "Rajesh&#39;s grandfather&#39;s only son is Rajesh&#39;s father. The daughter of Rajesh&#39;s father is Rajesh&#39;s sister.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2798,
+          "text": "Find the odd one out: 27, 64, 125, 216, 341",
+          "options": [
+            {
+              "label": "A",
+              "text": "27"
+            },
+            {
+              "label": "B",
+              "text": "341"
+            },
+            {
+              "label": "C",
+              "text": "125"
+            },
+            {
+              "label": "D",
+              "text": "216"
+            }
+          ],
+          "answer": 1,
+          "solution": "27 = 3^3, 64 = 4^3, 125 = 5^3 and 216 = 6^3 are perfect cubes. 341 is not a perfect cube (7^3 = 343), so 341 is the odd one out.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2799,
+          "text": "If 5 @ 3 = 28 and 7 @ 4 = 53, then 6 @ 2 = ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "34"
+            },
+            {
+              "label": "B",
+              "text": "40"
+            },
+            {
+              "label": "C",
+              "text": "36"
+            },
+            {
+              "label": "D",
+              "text": "38"
+            }
+          ],
+          "answer": 1,
+          "solution": "5^2 + 3 = 25 + 3 = 28. 7^2 + 4 = 49 + 4 = 53. So 6^2 + 2 = 36 + 2 = 38.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2803,
+          "text": "If it is true that all squares are rectangles, and all rectangles are quadrilaterals, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All quadrilaterals are squares"
+            },
+            {
+              "label": "B",
+              "text": "All squares are quadrilaterals"
+            },
+            {
+              "label": "C",
+              "text": "All rectangles are squares"
+            },
+            {
+              "label": "D",
+              "text": "All quadrilaterals are rectangles"
+            }
+          ],
+          "answer": 1,
+          "solution": "Using the transitive property, we can conclude that all squares are quadrilaterals.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2806,
+          "text": "If it is true that all cats are animals, and all animals are living things, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All living things are cats"
+            },
+            {
+              "label": "B",
+              "text": "All cats are living things"
+            },
+            {
+              "label": "C",
+              "text": "All animals are cats"
+            },
+            {
+              "label": "D",
+              "text": "All living things are animals"
+            }
+          ],
+          "answer": 1,
+          "solution": "Using the transitive property, we can conclude that all cats are living things.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2808,
+          "text": "If A is less than B, and B is less than C, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A is greater than C"
+            },
+            {
+              "label": "B",
+              "text": "A is less than or equal to C"
+            },
+            {
+              "label": "C",
+              "text": "A is equal to C"
+            },
+            {
+              "label": "D",
+              "text": "A is greater than or equal to C"
+            }
+          ],
+          "answer": 1,
+          "solution": "Using the transitive property, we can conclude that A is less than or equal to C.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2809,
+          "text": "In a certain code language, &#39;I am going to the store&#39; is written as &#39;zi ik pa ta&#39;. What is the code for &#39;I am going home&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "zi ik pa ho"
+            },
+            {
+              "label": "B",
+              "text": "zi ik ho ta"
+            },
+            {
+              "label": "C",
+              "text": "zi ik ho pa"
+            },
+            {
+              "label": "D",
+              "text": "zi pa ta ik"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given code, &#39;I am going to the store&#39; = &#39;zi ik pa ta&#39;, we can infer that &#39;I&#39; = &#39;zi&#39;, &#39;am&#39; = &#39;ik&#39;, &#39;going&#39; = &#39;pa&#39;, &#39;to&#39; = &#39;ta&#39;, and &#39;the store&#39; = (implied, not directly given). If &#39;the store&#39; is replaced by &#39;home&#39;, and assuming &#39;home&#39; has a unique code &#39;ho&#39;, and &#39;the&#39; is implied in the code for the location, then the code for &#39;home&#39; would replace &#39;store&#39; in the given code, resulting in &#39;zi ik ho pa&#39;.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2816,
+          "text": "If A is greater than B, and C is less than D, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A &gt; D"
+            },
+            {
+              "label": "B",
+              "text": "C &lt; A"
+            },
+            {
+              "label": "C",
+              "text": "B &gt; C"
+            },
+            {
+              "label": "D",
+              "text": "D &lt; B"
+            }
+          ],
+          "answer": 1,
+          "solution": "From the given information, we know that A &gt; B and C &lt; D. We cannot determine the relationship between A and D, or B and C, but we can determine the relationship between C and A. Since C &lt; D and A &gt; B, it is possible that C &lt; A, regardless of the values of B and D. Therefore, the only statement that is always true is C &lt; A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2824,
+          "text": "If A is greater than B, and B is greater than C, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A is less than C"
+            },
+            {
+              "label": "B",
+              "text": "A is equal to C"
+            },
+            {
+              "label": "C",
+              "text": "A is greater than or equal to C"
+            },
+            {
+              "label": "D",
+              "text": "A is less than or equal to C"
+            }
+          ],
+          "answer": 2,
+          "solution": "Using the transitive property, we can conclude that A is greater than or equal to C.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2826,
+          "text": "A, B, C, D, E, and F are six friends who are sitting in a circle. A is to the immediate left of B, C is to the immediate left of D, and E is to the immediate left of F. If A is not next to E or F, then who is to the immediate right of A?",
+          "options": [
+            {
+              "label": "A",
+              "text": "C"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "B"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given that A is to the immediate left of B and A is not next to E or F, the only option left for A to be next to is B, so B must be to the immediate right of A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2827,
+          "text": "Five persons - A, B, C, D, and E - are sitting in a row. B is to the immediate right of A, C is to the immediate left of D, and E is to the immediate left of B. Who is sitting at the extreme left?",
+          "options": [
+            {
+              "label": "A",
+              "text": "E"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "A"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given information, we know that E is to the immediate left of B, and B is to the immediate right of A. So, the order is E-B-A. We also know that C is to the immediate left of D, but we do not know where C and D are in relation to the others. However, since C and D must be together, and E, B, and A are already in a sequence, C and D must be to the right of A. Therefore, A is at the extreme left.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2830,
+          "text": "If A is less than B, and B is less than C, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A is greater than C"
+            },
+            {
+              "label": "B",
+              "text": "A is equal to C"
+            },
+            {
+              "label": "C",
+              "text": "A is less than or equal to C"
+            },
+            {
+              "label": "D",
+              "text": "A is greater than or equal to C"
+            }
+          ],
+          "answer": 2,
+          "solution": "Using the transitive property, we can conclude that A is less than or equal to C.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2841,
+          "text": "Five persons - A, B, C, D, and E - are sitting in a row. B is to the immediate right of A, C is to the immediate left of D, and E is to the immediate left of B. Who is sitting at the extreme left?",
+          "options": [
+            {
+              "label": "A",
+              "text": "E"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "A"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given information, we know that E is to the immediate left of B, and B is to the immediate right of A. So, the order is E-B-A. We also know that C is to the immediate left of D, but we do not know where C and D are in relation to the others. However, since C and D must be together, and E, B, and A are already in a sequence, C and D must be to the right of A. Therefore, A is at the extreme left.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2843,
+          "text": "In a certain code language, &#39;I am going to the store&#39; is written as &#39;zi ik pa ta&#39;. What is the code for &#39;I am going home&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "zi ik pa ho"
+            },
+            {
+              "label": "B",
+              "text": "zi ik ho ta"
+            },
+            {
+              "label": "C",
+              "text": "zi ik ho pa"
+            },
+            {
+              "label": "D",
+              "text": "zi pa ta ik"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given code, &#39;I am going to the store&#39; = &#39;zi ik pa ta&#39;, we can infer that &#39;I&#39; = &#39;zi&#39;, &#39;am&#39; = &#39;ik&#39;, &#39;going&#39; = &#39;pa&#39;, &#39;to&#39; = &#39;ta&#39;, and &#39;the store&#39; = (implied, not directly given). If &#39;the store&#39; is replaced by &#39;home&#39;, and assuming &#39;home&#39; has a unique code &#39;ho&#39;, and &#39;the&#39; is implied in the code for the location, then the code for &#39;home&#39; would replace &#39;store&#39; in the given code, resulting in &#39;zi ik ho pa&#39;.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2844,
+          "text": "If A is greater than B, and C is less than D, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A &gt; D"
+            },
+            {
+              "label": "B",
+              "text": "C &lt; A"
+            },
+            {
+              "label": "C",
+              "text": "B &gt; C"
+            },
+            {
+              "label": "D",
+              "text": "D &lt; B"
+            }
+          ],
+          "answer": 1,
+          "solution": "From the given information, we know that A &gt; B and C &lt; D. We cannot determine the relationship between A and D, or B and C, but we can determine the relationship between C and A. Since C &lt; D and A &gt; B, it is possible that C &lt; A, regardless of the values of B and D. Therefore, the only statement that is always true is C &lt; A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2850,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "20 minutes"
+            },
+            {
+              "label": "D",
+              "text": "50 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "If it takes 5 machines 5 minutes to make 5 widgets, then it takes 1 machine 5 minutes to make 1 widget. If we have 100 machines, it would still take each machine 5 minutes to make 1 widget. Therefore, it would take 100 machines 5 minutes to make 100 widgets.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2852,
+          "text": "Five persons - A, B, C, D, and E - are sitting in a row. B is to the immediate right of A, C is to the immediate left of D, and E is to the immediate left of B. Who is sitting at the extreme left?",
+          "options": [
+            {
+              "label": "A",
+              "text": "E"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "A"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given information, we know that E is to the immediate left of B, and B is to the immediate right of A. So, the order is E-B-A. We also know that C is to the immediate left of D, but we do not know where C and D are in relation to the others. However, since C and D must be together, and E, B, and A are already in a sequence, C and D must be to the right of A. Therefore, A is at the extreme left.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2857,
+          "text": "If A is greater than B, and C is less than D, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A &gt; D"
+            },
+            {
+              "label": "B",
+              "text": "C &lt; A"
+            },
+            {
+              "label": "C",
+              "text": "B &gt; C"
+            },
+            {
+              "label": "D",
+              "text": "D &lt; B"
+            }
+          ],
+          "answer": 1,
+          "solution": "From the given information, we know that A &gt; B and C &lt; D. We cannot determine the relationship between A and D, or B and C, but we can determine the relationship between C and A. Since C &lt; D and A &gt; B, it is possible that C &lt; A, regardless of the values of B and D. Therefore, the only statement that is always true is C &lt; A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2859,
+          "text": "A, B, C, D, E, and F are six friends who are sitting in a circle. A is to the immediate left of B, C is to the immediate left of D, and E is to the immediate left of F. If A is not next to E or F, then who is to the immediate right of A?",
+          "options": [
+            {
+              "label": "A",
+              "text": "C"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "B"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given that A is to the immediate left of B and A is not next to E or F, the only option left for A to be next to is B, so B must be to the immediate right of A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2862,
+          "text": "Five persons - A, B, C, D, and E - are sitting in a row. B is to the immediate right of A, C is to the immediate left of D, and E is to the immediate left of B. Who is sitting at the extreme left?",
+          "options": [
+            {
+              "label": "A",
+              "text": "E"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "A"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given information, we know that E is to the immediate left of B, and B is to the immediate right of A. So, the order is E-B-A. We also know that C is to the immediate left of D, but we do not know where C and D are in relation to the others. However, since C and D must be together, and E, B, and A are already in a sequence, C and D must be to the right of A. Therefore, A is at the extreme left.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2864,
+          "text": "If A is greater than B, and C is less than D, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A &gt; D"
+            },
+            {
+              "label": "B",
+              "text": "C &lt; A"
+            },
+            {
+              "label": "C",
+              "text": "B &gt; C"
+            },
+            {
+              "label": "D",
+              "text": "D &lt; B"
+            }
+          ],
+          "answer": 1,
+          "solution": "From the given information, we know that A &gt; B and C &lt; D. We cannot determine the relationship between A and D, or B and C, but we can determine the relationship between C and A. Since C &lt; D and A &gt; B, it is possible that C &lt; A, regardless of the values of B and D. Therefore, the only statement that is always true is C &lt; A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2866,
+          "text": "In a certain code language, &#39;I am going to the store&#39; is written as &#39;zi ik pa ta&#39;. What is the code for &#39;I am going home&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "zi ik pa ho"
+            },
+            {
+              "label": "B",
+              "text": "zi ik ho ta"
+            },
+            {
+              "label": "C",
+              "text": "zi ik ho pa"
+            },
+            {
+              "label": "D",
+              "text": "zi pa ta ik"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given code, &#39;I am going to the store&#39; = &#39;zi ik pa ta&#39;, we can infer that &#39;I&#39; = &#39;zi&#39;, &#39;am&#39; = &#39;ik&#39;, &#39;going&#39; = &#39;pa&#39;, &#39;to&#39; = &#39;ta&#39;, and &#39;the store&#39; = (implied, not directly given). If &#39;the store&#39; is replaced by &#39;home&#39;, and assuming &#39;home&#39; has a unique code &#39;ho&#39;, and &#39;the&#39; is implied in the code for the location, then the code for &#39;home&#39; would replace &#39;store&#39; in the given code, resulting in &#39;zi ik ho pa&#39;.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2872,
+          "text": "A, B, C, D, E, and F are six friends who are sitting in a circle. A is to the immediate left of B, C is to the immediate left of D, and E is to the immediate left of F. If A is not next to E or F, then who is to the immediate right of A?",
+          "options": [
+            {
+              "label": "A",
+              "text": "C"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "B"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given that A is to the immediate left of B and A is not next to E or F, the only option left for A to be next to is B, so B must be to the immediate right of A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2876,
+          "text": "If A is greater than B, and B is greater than C, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A is greater than C"
+            },
+            {
+              "label": "B",
+              "text": "A is less than C"
+            },
+            {
+              "label": "C",
+              "text": "A is equal to C"
+            },
+            {
+              "label": "D",
+              "text": "A is less than or equal to C"
+            }
+          ],
+          "answer": 0,
+          "solution": "Using the transitive property, we can conclude that A is greater than C.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2885,
+          "text": "Five people - A, B, C, D, and E - are standing in a line. A is standing next to B, and C is standing next to D. If E is standing at one of the ends, who is standing at the other end?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given the constraints, the only possible arrangement is A-B-C-D-E or E-D-C-B-A. Therefore, D is standing at the other end.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2887,
+          "text": "Five friends - A, B, C, D, and E - are sitting in a row. A is sitting next to B, C is sitting next to D, and E is sitting at one of the ends. Who is sitting at the other end?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given the constraints, the only possible arrangement is A-B-C-D-E or E-D-C-B-A. Therefore, D is sitting at the other end.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2901,
+          "text": "If it is true that all cats are animals, and all animals are living things, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All living things are cats"
+            },
+            {
+              "label": "B",
+              "text": "All cats are living things"
+            },
+            {
+              "label": "C",
+              "text": "All animals are cats"
+            },
+            {
+              "label": "D",
+              "text": "All living things are animals"
+            }
+          ],
+          "answer": 1,
+          "solution": "Using the transitive property, we can conclude that all cats are living things.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2902,
+          "text": "If A is greater than B, and C is less than D, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A &gt; D"
+            },
+            {
+              "label": "B",
+              "text": "C &lt; A"
+            },
+            {
+              "label": "C",
+              "text": "B &gt; C"
+            },
+            {
+              "label": "D",
+              "text": "D &lt; B"
+            }
+          ],
+          "answer": 1,
+          "solution": "From the given information, we know that A &gt; B and C &lt; D. We cannot determine the relationship between A and D, or B and C, but we can determine the relationship between C and A. Since C &lt; D and A &gt; B, it is possible that C &lt; A, regardless of the values of B and D. Therefore, the only statement that is always true is C &lt; A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2903,
+          "text": "If it is true that all squares are rectangles, and all rectangles are quadrilaterals, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All quadrilaterals are squares"
+            },
+            {
+              "label": "B",
+              "text": "All squares are quadrilaterals"
+            },
+            {
+              "label": "C",
+              "text": "All rectangles are squares"
+            },
+            {
+              "label": "D",
+              "text": "All quadrilaterals are rectangles"
+            }
+          ],
+          "answer": 1,
+          "solution": "Using the transitive property, we can conclude that all squares are quadrilaterals.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2904,
+          "text": "Five persons - A, B, C, D, and E - are sitting in a row. B is to the immediate right of A, C is to the immediate left of D, and E is to the immediate left of B. Who is sitting at the extreme left?",
+          "options": [
+            {
+              "label": "A",
+              "text": "E"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "A"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given information, we know that E is to the immediate left of B, and B is to the immediate right of A. So, the order is E-B-A. We also know that C is to the immediate left of D, but we do not know where C and D are in relation to the others. However, since C and D must be together, and E, B, and A are already in a sequence, C and D must be to the right of A. Therefore, A is at the extreme left.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2905,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "20 minutes"
+            },
+            {
+              "label": "D",
+              "text": "50 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "If it takes 5 machines 5 minutes to make 5 widgets, then it takes 1 machine 5 minutes to make 1 widget. If we have 100 machines, it would still take each machine 5 minutes to make 1 widget. Therefore, it would take 100 machines 5 minutes to make 100 widgets.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2908,
+          "text": "If A is less than B, and B is less than C, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A is greater than C"
+            },
+            {
+              "label": "B",
+              "text": "A is less than or equal to C"
+            },
+            {
+              "label": "C",
+              "text": "A is equal to C"
+            },
+            {
+              "label": "D",
+              "text": "A is greater than or equal to C"
+            }
+          ],
+          "answer": 1,
+          "solution": "Using the transitive property, we can conclude that A is less than or equal to C.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2910,
+          "text": "In a certain code language, &#39;I am going to the store&#39; is written as &#39;zi ik pa ta&#39;. What is the code for &#39;I am going home&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "zi ik pa ho"
+            },
+            {
+              "label": "B",
+              "text": "zi ik ho ta"
+            },
+            {
+              "label": "C",
+              "text": "zi ik ho pa"
+            },
+            {
+              "label": "D",
+              "text": "zi pa ta ik"
+            }
+          ],
+          "answer": 2,
+          "solution": "From the given code, &#39;I am going to the store&#39; = &#39;zi ik pa ta&#39;, we can infer that &#39;I&#39; = &#39;zi&#39;, &#39;am&#39; = &#39;ik&#39;, &#39;going&#39; = &#39;pa&#39;, &#39;to&#39; = &#39;ta&#39;, and &#39;the store&#39; = (implied, not directly given). If &#39;the store&#39; is replaced by &#39;home&#39;, and assuming &#39;home&#39; has a unique code &#39;ho&#39;, and &#39;the&#39; is implied in the code for the location, then the code for &#39;home&#39; would replace &#39;store&#39; in the given code, resulting in &#39;zi ik ho pa&#39;.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2912,
+          "text": "A, B, C, D, E, and F are six friends who are sitting in a circle. A is to the immediate left of B, C is to the immediate left of D, and E is to the immediate left of F. If A is not next to E or F, then who is to the immediate right of A?",
+          "options": [
+            {
+              "label": "A",
+              "text": "C"
+            },
+            {
+              "label": "B",
+              "text": "D"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "B"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given that A is to the immediate left of B and A is not next to E or F, the only option left for A to be next to is B, so B must be to the immediate right of A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2918,
+          "text": "If A is less than B, and B is less than C, then what can be concluded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A is greater than C"
+            },
+            {
+              "label": "B",
+              "text": "A is equal to C"
+            },
+            {
+              "label": "C",
+              "text": "A is less than or equal to C"
+            },
+            {
+              "label": "D",
+              "text": "A is greater than or equal to C"
+            }
+          ],
+          "answer": 2,
+          "solution": "Using the transitive property, we can conclude that A is less than or equal to C.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2921,
+          "text": "In a family, A is the father of B. C is the brother of D. E is the sister of F. G is the son of H. If A, B, and C are all deceased, and only their direct descendants (children) remain alive to inherit from them, who among F or G stands in a relationship with D such that they could be considered 'siblings' to each other under this specific inheritance scenario? (Note: Assume standard biological relations unless implied otherwise by the death conditions).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A. F and D are half-siblings."
+            },
+            {
+              "label": "B",
+              "text": "B. G and D are full siblings."
+            },
+            {
+              "label": "C",
+              "text": "C. F and G are step-siblings."
+            },
+            {
+              "label": "D",
+              "text": "D. Neither F nor G is a sibling of D."
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Identify family unit 1: A (Father) -> B (Child). C is not explicitly linked to A/B, so they are distinct unless stated. C and D are siblings.\n2. Identify family unit 2: E and F are sisters.\n3. Identify family unit 3: G is the son of H.\n4. Analyze links: There is no information linking A's line with C's line or E/F's line or H's line.\n5. The condition 'A, B, C deceased' affects inheritance distribution within their lines but does not create biological relations between distinct family groups described separately.\n6. Therefore, F (sister of E) and G (son of H) have no defined connection to D (sibling of C).\n7. Without a connecting parent figure shared by these groups, no sibling relationship exists between F or G and D.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2924,
+          "text": "Identify the next number in the series: 2, 6, 12, 20, 30, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "42"
+            },
+            {
+              "label": "B",
+              "text": "44"
+            },
+            {
+              "label": "C",
+              "text": "46"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between consecutive terms are 4, 6, 8, 10. The next difference should be 12. Adding 12 to the last term (30) gives 42.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2925,
+          "text": "Arrange the following words in dictionary order: 1. Apple, 2. Apricot, 3. Ant, 4. Arm.",
+          "options": [
+            {
+              "label": "A",
+              "text": "3, 1, 2, 4"
+            },
+            {
+              "label": "B",
+              "text": "3, 4, 1, 2"
+            },
+            {
+              "label": "C",
+              "text": "1, 3, 4, 2"
+            },
+            {
+              "label": "D",
+              "text": "2, 3, 1, 4"
+            }
+          ],
+          "answer": 0,
+          "solution": "Comparing first letters: 'Ant' (A-n), 'Apple' (A-p), 'Apricot' (A-p-r). 'n' comes before 'p', so Ant is first. Between Apple and Apricot, 'pp' vs 'pr', 'p' comes before 'r'. So Apple then Apricot. Then Arm. Order: Ant, Apple, Apricot, Arm.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2926,
+          "text": "Identify the odd one out:",
+          "options": [
+            {
+              "label": "A",
+              "text": "Breeze"
+            },
+            {
+              "label": "B",
+              "text": "Storm"
+            },
+            {
+              "label": "C",
+              "text": "Hurricane"
+            },
+            {
+              "label": "D",
+              "text": "Gale"
+            }
+          ],
+          "answer": 0,
+          "solution": "'Breeze', 'Storm', 'Hurricane', and 'Gale' are types of winds. However, a 'Breeze' is a light wind, while the others (Storm, Hurricane, Gale) are strong or violent winds causing significant weather disturbance.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2927,
+          "text": "A spy starts at a secure point 'X' facing North. His mission requires him to execute the following sequence of commands relative to his CURRENT direction, where every command rotates his internal compass by 90 degrees clockwise AFTER execution:\n1. Move forward 5 units.\n2. Turn Left (relative to current face) and move forward 5 units.\n3. Turn Right (relative to current face) and move forward 5 units.\n4. Turn Left (relative to current face) and move forward 5 units.\n\nHowever, due to a magnetic anomaly affecting Sector X, every time the spy executes a command that involves turning LEFT, his body rotates an additional 90 degrees clockwise immediately after the turn but BEFORE moving. If he turns RIGHT normally, no such rotation occurs.\n\nAfter completing all 4 steps, in which cardinal direction is the spy facing?\nA) North\nB) South\nC) East\nD) West",
+          "options": [
+            {
+              "label": "A",
+              "text": "North"
+            },
+            {
+              "label": "B",
+              "text": "South"
+            },
+            {
+              "label": "C",
+              "text": "East"
+            },
+            {
+              "label": "D",
+              "text": "West"
+            }
+          ],
+          "answer": 2,
+          "solution": "Start: Facing North. Step 1 (Forward): Still facing North. Step 2 (Turn Left relative to North -> West; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: West rotated by +90 deg = North. Move 5 units while facing North. Step 3 (Turn Right relative to current North -> East). No anomaly for 'Right'. Orientation remains East. Move 5 units while facing East. Step 4 (Turn Left relative to East -> North; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: North rotated by +90 deg = East. Move 5 units. Final Facing Direction: East.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2945,
+          "text": "In a family, A is the brother of B. C is the father of A and D. If E is the daughter of D, who is the grandfather of E?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "B"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 1,
+          "solution": "C is the father of A and D, so C is D's father. E is D's daughter, so C is E's grandfather.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2950,
+          "text": "In a specific code language used for railway signaling, the position of letters in a word is shifted based on their distance from the center. For words with an even number of letters (4 letters), the letter at index 1 moves to index 4, and the letter at index 2 moves to index 3 (swapping the first pair). The second pair (indices 3 and 4) also swaps places (index 3 goes to 4, index 4 goes to 3). This creates a mirror swap across the vertical midline. Using this 'Inverse-Coordinate Flip' logic for 4-letter words, if 'TRAIN' becomes 'NARIT', how is 'MADRAS' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "ATAD"
+            },
+            {
+              "label": "B",
+              "text": "DAT A"
+            },
+            {
+              "label": "C",
+              "text": "ADTA"
+            },
+            {
+              "label": "D",
+              "text": "TADA"
+            }
+          ],
+          "answer": 0,
+          "solution": "The rule reverses a four-letter word: positions 1 and 4 swap, and positions 2 and 3 swap. DATA becomes ATAD.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2955,
+          "text": "If today is Monday, what was the day 473 days ago?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Monday"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Divide the total days (473) by 7 to find full weeks.\n2. Calculation: 473 ÷ 7 = 67 weeks with a remainder of 4 days.\n3. Since we are going backwards, subtract the remainder from 'Monday'.\n4. Monday - 1 day = Sunday; - 2 days = Saturday; - 3 days = Friday; - 4 days = Thursday.\n5. The year's leap status does not affect day calculation as it depends purely on the modulo arithmetic of 7.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2957,
+          "text": "Point A is at 12 o'clock on a clock face. If you start walking from the center towards A, then make a sharp 'Right' turn (90 degrees), which direction are you now facing relative to the clock's frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3 o'clock position"
+            },
+            {
+              "label": "B",
+              "text": "6 o'clock position"
+            },
+            {
+              "label": "C",
+              "text": "9 o'clock position"
+            },
+            {
+              "label": "D",
+              "text": "12 o'clock position"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial movement is from center towards 12 o'clock (North). 2. A 'Right' turn of 90 degrees rotates the heading 90 degrees clockwise. 3. North + 90 deg Right = East. 4. On a clock face, East corresponds exactly to the 3 o'clock position.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2958,
+          "text": "Find the missing term in the series: 10, 23, 46, 87, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "154"
+            },
+            {
+              "label": "B",
+              "text": "171"
+            },
+            {
+              "label": "C",
+              "text": "189"
+            },
+            {
+              "label": "D",
+              "text": "188"
+            }
+          ],
+          "answer": 2,
+          "solution": "Each term is doubled and the sum of its digits is added: 10 x 2 + (1 + 0) = 23; 23 x 2 + (2 + 3) = 46; 46 x 2 + (4 + 6) = 87; 87 x 2 + (8 + 7) = 189.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2961,
+          "text": "Find the next term in the series: 5, 9, 13, 17, ?, 25 (where digits are values in base-10, but the pattern follows Base-12 arithmetic rules where any digit exceeding 9 wraps around to letters A-E representing 10-14).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 21"
+            },
+            {
+              "label": "B",
+              "text": "B) 21A"
+            },
+            {
+              "label": "C",
+              "text": "C) 21E"
+            },
+            {
+              "label": "D",
+              "text": "D) 21F"
+            }
+          ],
+          "answer": 0,
+          "solution": "The series is an arithmetic progression starting at 5 with a common difference of 4: 5, 9 (5+4), 13 (9+4), 17 (13+4). The next term is 17 + 4 = 21. Although the prompt mentions Base-12 rules as a potential trap, standard integer addition applies here as no digit exceeds 9 in the sequence up to this point.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2962,
+          "text": "In a certain community, all 'Kartars' are also 'Yogis'. No 'Yogi' is a 'Vedantist'. Some 'Vedantists' are 'Brahmins'. What must be true?\nI. All Kartars are Brahmins.\nII. No Kartar is a Vedantist.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Draw circle 'Kartar' entirely inside 'Yogi'.\n2. Draw circle 'Vedantist' entirely outside 'Yogi' (since no Yogi is Vedantist).\n3. Conclude: Since Kartar is a subset of Yogi, and Yogi excludes Vedantist, Kartar must exclude Vedantist. Thus II follows.\n4. There is no relationship defined between 'Kartar' and 'Brahmin' directly; the link is broken by 'Vedantist'.\n5. Therefore, statement I cannot be deduced as necessarily true.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2963,
+          "text": "In a certain code language, words are encoded based on the sum of their digits. The rule is: If a number's digit-sum (repeatedly adding digits until a single digit is obtained) is odd, write the letter corresponding to that sum (A=1, B=2... Z=26). If even, write the word 'EVE'.\nExample: \n'7' -> 7 (Odd) -> G\n'8' -> 8 (Even) -> EVE\n'5' -> 5 (Odd) -> E\n'4' -> 4 (Even) -> EVE\nWhat is the code for the number 29?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "EVE"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 2,
+          "solution": "Step 1: Sum digits of 29 = 2 + 9 = 11.\nStep 2: Since 11 > 9, repeat process: 1 + 1 = 2.\nStep 3: Final single digit is 2.\nStep 4: 2 is Even.\nStep 5: Apply rule for even -> Code is 'EVE'.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2966,
+          "text": "Complete the series: 24, 36, 54, 81, 121.5, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "160"
+            },
+            {
+              "label": "B",
+              "text": "170"
+            },
+            {
+              "label": "C",
+              "text": "180"
+            },
+            {
+              "label": "D",
+              "text": "182.25"
+            }
+          ],
+          "answer": 3,
+          "solution": "Each term is multiplied by 1.5: 24 x 1.5 = 36, 36 x 1.5 = 54, 54 x 1.5 = 81, 81 x 1.5 = 121.5, 121.5 x 1.5 = 182.25.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2968,
+          "text": "A spy, Agent X, starts at point O facing North. He moves 20m forward, turns 90° Left, walks 15m, then turns 90° Left again and walks 20m. Finally, he turns 90° Left one more time and walks 15m to reach a hidden vault. If the Sun is at his back as he enters the vault, in which cardinal direction did Agent X originally face while walking along the LAST segment of his path?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) North"
+            },
+            {
+              "label": "B",
+              "text": "B) South"
+            },
+            {
+              "label": "C",
+              "text": "C) West"
+            },
+            {
+              "label": "D",
+              "text": "D) East"
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Start facing North. 2. Move 20m forward (Path 1). 3. Turn 90° Left -> Face West. Walk 15m (Path 2). 4. Turn 90° Left -> Face South. Walk 20m (Path 3). 5. Turn 90° Left -> Face East. Walk 15m (Path 4, the last segment). 6. Therefore, Agent X was facing East while walking along the last segment.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2970,
+          "text": "In a specific code language used for railway safety alerts, dates are encoded such that the letter corresponds to the sum of the Day's position in the month and its alphabetical value (A=1, B=2...), then converted back to a single letter based on the remainder when divided by 26. If the sum is > 26, subtract 26 once. Note: Only dates where the resulting letter is 'M' or later are considered valid alerts. On 10th March, an alert code is generated as 'L'. What date generates the alert code 'Q' under the same rules?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 13th April"
+            },
+            {
+              "label": "B",
+              "text": "B) 20th May"
+            },
+            {
+              "label": "C",
+              "text": "C) 17th June"
+            },
+            {
+              "label": "D",
+              "text": "D) 15th July"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let day = d, month position in year (Jan=1...Mar=3). \nCode Letter Q is the 17th letter of alphabet.\nFormula: (d + Month_Pos) % 26 = Q_Val. If result > 26, subtract 26.\nCheck Option A (13th April): April is month 4. Day=13.\nSum = 13 + 4 = 17.\nLetter for 17 is 'Q'. Matches.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2984,
+          "text": "In a secret code used by the Railway Safety Wing, words are encoded based on their reverse causal function. For example: 'Stop' is encoded as 'Go' (the opposite action), 'Dark' is encoded as 'Light', and 'Win' is encoded as 'Lose'. Using this logic, how would 'Sleep' be encoded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rest"
+            },
+            {
+              "label": "B",
+              "text": "Wake"
+            },
+            {
+              "label": "C",
+              "text": "Tiredness"
+            },
+            {
+              "label": "D",
+              "text": "Bed"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern is strictly Anti-Synonym (Action) reversal. Stop <-> Go, Dark <-> Light, Win <-> Lose. The word 'Sleep' describes a state of rest; its direct functional opposite action is to 'Wake'. Options A and C are states related to sleep, while D is the object.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2985,
+          "text": "In a rural village of Madhya Pradesh, the community council maps social connections as directional vectors relative to the Village Hall (Origin). Known relations:\n1. Ramu is 40 meters EAST of the Hall.\n2. Meera is 30 meters NORTH of Ramu.\n3. Aarav stands exactly midway between Ramu and Meera.\n\nLater, a storm forces everyone to walk along the line connecting their current position and the Village Hall in a straight path (shortest route). After walking this shortest distance, who will be standing closest to the Village Hall?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Meera"
+            },
+            {
+              "label": "B",
+              "text": "Aarav"
+            },
+            {
+              "label": "C",
+              "text": "Ramu"
+            },
+            {
+              "label": "D",
+              "text": "None of them"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Plot positions: Ramu (40E), Meera (40E, 30N). \n2. Aarav is midway: Pos = (40/2, 30/2) = (20E, 15N). \n3. Calculate shortest path to Hall (0,0) as distance: \n   - Ramu distance = sqrt(40² + 0²) = 40m.\n   - Meera distance = sqrt(40² + 30²) = 50m.\n   - Aarav distance = sqrt(20² + 15²) = sqrt(400+225) = sqrt(625) = 25m.\n4. Shortest path implies walking directly to origin. \n5. Comparison: 25m < 40m < 50m. Aarav is closest.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2986,
+          "text": "In a corporate hierarchy where rank is determined by strict rules: (1) No employee of 'Grade X' can supervise an employee of 'Grade Y' unless they are in the same department. (2) An employee of 'Grade X' and an employee of 'Grade Y' are never in the same department if they work on different projects. (3) Supervision implies a direct project linkage. If it is known that Employee A supervises Employee B, and both have ranks corresponding to Grade X and Grade Y respectively, which of the following conclusions about their working conditions must be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "They are in the same department and work on the same project."
+            },
+            {
+              "label": "B",
+              "text": "They are in different departments but work on the same project."
+            },
+            {
+              "label": "C",
+              "text": "They are in the same department and work on different projects."
+            },
+            {
+              "label": "D",
+              "text": "They are in different departments and work on different projects."
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Condition (1) requires them to be in the same department for A to supervise B.\n2. Condition (3) states supervision implies a direct project linkage, meaning they must share the same project.\n3. Condition (2) creates a hypothetical constraint: if they were on different projects, they could not be in the same department. Since we established they are in the same department from step 1, the premise of condition (2) regarding 'different projects' must be false for them to remain in the same department.\n4. Therefore, to satisfy all conditions while maintaining the supervision hierarchy, they must be in the same department and working on the same project.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2994,
+          "text": "In a specific cipher code, words are mapped to their directional 'Shadow Codes'. The rule is derived from the first letter of the word: if the first letter is in the set {A, B, C}, the shadow points North-East (NE); if in {D, E, F}, South-West (SW); if in {G, H, I}, South-East (SE); and so on, repeating this cycle every three letters. Additionally, words with exactly 3 vowels are appended with 'Long', those with 4 vowels with 'Short', and others get the suffix '-'. Given: 'CART' -> NE-Long, 'BIRD' -> NE-Low, 'POTATO' -> SW-Swift. What is the code for the word 'GARDEN'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "SE-Swift"
+            },
+            {
+              "label": "B",
+              "text": "SE-Long"
+            },
+            {
+              "label": "C",
+              "text": "SW-Swift"
+            },
+            {
+              "label": "D",
+              "text": "NE-Swift"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Check first letter of 'GARDEN': 'G'. 2. Map 'G' to direction cycle: A,B,C=NE; D,E,F=SW; G,H,I=SE. Thus, Direction = SE. 3. Count vowels in 'GARDEN' (A, E, E) = 3 vowels. 4. Rule for 3 vowels is suffix 'Swift'. 5. Combine: SE-Swift.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2995,
+          "text": "In a specific logic-gate language, the symbols represent operations as follows:\n'+' means 'is less than or equal to'\n'-\nmeans 'is greater than'\n'*' means 'is not equal to'\n'/\nmeans 'is exactly equal to'\n'The statements below are true in this language:\nI. A + B (A <= B)\nII. B - C (B > C)\nIII. D / B\nIV. E * A (E != A)\nGiven these, which of the following conclusions MUST be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A < C and D < E"
+            },
+            {
+              "label": "B",
+              "text": "D > C and E < A"
+            },
+            {
+              "label": "C",
+              "text": "D >= C and E != A"
+            },
+            {
+              "label": "D",
+              "text": "Data Inadequate"
+            }
+          ],
+          "answer": 2,
+          "solution": "1. Translate statements: I(A<=B), II(B>C), III(D=B), IV(E!=A).\n2. Combine I & II via B: Since A<=B and B>C, we have A<=B>C. No direct relation between A and C.\n3. Substitute III into chain: D=B. Thus A<=D>C. Therefore D>=C is logically valid (since B>=C implies D>=C).\n4. Analyze IV with substitution: E!=A. No fixed inequality exists between E and A, so 'E < A' or 'E > A' cannot be determined.\n5. Evaluate options: Option C states 'D >= C and E != A'. This matches our derived facts perfectly.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2997,
+          "text": "In the formal register of Indian Bureaucracy, specific verbs denote official actions with strict procedural connotations: 'Sanction' is to approval as 'Cognizance' is to …?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a) Accepting a legal case for trial"
+            },
+            {
+              "label": "B",
+              "text": "b) Issuing a travel pass"
+            },
+            {
+              "label": "C",
+              "text": "c) Denying a leave application"
+            },
+            {
+              "label": "D",
+              "text": "d) Filing a criminal complaint"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Analyze the first pair: 'Sanction' in bureaucracy strictly means granting official approval.\n2. Identify the register of the second word: 'Cognizance' is a technical term used by courts/police.\n3. Apply the meaning: To 'take cognizance' means a court formally acknowledges receipt of a case and accepts jurisdiction over it.\n4. Compare options: Option (a) defines accepting a legal case, matching the formal definition of taking cognizance.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2998,
+          "text": "A train engineer observes a specific rule for speed adjustments based on the type of station passed: If the station has an odd number of platforms, add 10 km/h; if even, subtract 5 km/h. Starting at Station X (3 platforms) traveling at 60 km/h, the train passes 4 subsequent stations before reaching the final destination. The sequence of platform counts is 2, 5, 4, and 3 respectively. What is the speed of the train upon reaching the final destination?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 65 km/h"
+            },
+            {
+              "label": "B",
+              "text": "B) 50 km/h"
+            },
+            {
+              "label": "C",
+              "text": "C) 70 km/h"
+            },
+            {
+              "label": "D",
+              "text": "D) 85 km/h"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start: 60 km/h. Station 1 (2 platforms, even): -5 -> 55. Station 2 (5 platforms, odd): +10 -> 65. Station 3 (4 platforms, even): -5 -> 60. Station 4 (3 platforms, odd): +10 -> 70. Destination reached at 70 km/h.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3000,
+          "text": "Identify the next term in the series: 15, 22, 33, 48, 67, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "88"
+            },
+            {
+              "label": "B",
+              "text": "90"
+            },
+            {
+              "label": "C",
+              "text": "92"
+            },
+            {
+              "label": "D",
+              "text": "95"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between terms are 7, 11, 15, 19 (increasing by 4). The next difference is 23. 67 + 23 = 88.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3001,
+          "text": "A and B are siblings. C is the father of B. D is the mother of A. E is the son of D. Who is E to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "D is the mother of A, so D is also the mother of B (since A and B are siblings). C is the father of B, so C is married to D. E is the son of D, which makes E the son of C.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3003,
+          "text": "In a certain code language, 'CAT' is written as '3120'. What is the code for 'DOG'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4157"
+            },
+            {
+              "label": "B",
+              "text": "4150"
+            },
+            {
+              "label": "C",
+              "text": "3157"
+            },
+            {
+              "label": "D",
+              "text": "4158"
+            }
+          ],
+          "answer": 0,
+          "solution": "C=3, A=1, T=20. D=4, O=15, G=7. So DOG is 4157.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3005,
+          "text": "If you walk 10 km North, turn left and walk 5 km, then turn right and walk 10 km, how far are you from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "10 km"
+            },
+            {
+              "label": "C",
+              "text": "15 km"
+            },
+            {
+              "label": "D",
+              "text": "20 km"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start North 10. Left is West 5. Left is South 10. Net displacement is 5 km West. Distance from start is 5 km.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3007,
+          "text": "Arrange the following words in a logical sequence: 1. Egg, 2. Chicken, 3. Bird, 4. Baby",
+          "options": [
+            {
+              "label": "A",
+              "text": "1, 2, 4, 3"
+            },
+            {
+              "label": "B",
+              "text": "1, 4, 2, 3"
+            },
+            {
+              "label": "C",
+              "text": "4, 1, 2, 3"
+            },
+            {
+              "label": "D",
+              "text": "1, 3, 4, 2"
+            }
+          ],
+          "answer": 1,
+          "solution": "An egg hatches into a baby chicken (chick), which grows into a chicken, which is a type of bird. Sequence: 1, 4, 2, 3.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3046,
+          "text": "In the village of Panchavati, a peculiar inheritance rule dictates that property passes NOT to the son, but to the maternal aunt of the heir. Consider the family: A is B's brother. C is D's daughter. E is F's only child and E is also the maternal aunt of G. If the property owner is H, who is J's son, and we know that I is H's wife and K is L's mother, identify the relationship between M (who is N's only daughter) and H, given that M is the one who inherits from H. How is M related to H?",
+          "options": [
+            {
+              "label": "A",
+              "text": "M is H's daughter."
+            },
+            {
+              "label": "B",
+              "text": "M is H's sister."
+            },
+            {
+              "label": "C",
+              "text": "M is H's maternal aunt."
+            },
+            {
+              "label": "D",
+              "text": "M is H's wife."
+            }
+          ],
+          "answer": 2,
+          "solution": "1. M inherits from H, so M must be H's maternal aunt per the rule.\n2. The rule defines 'maternal aunt' as the mother of H's mother.\n3. Therefore, M is the sister of H's mother.\n4. This makes M the maternal aunt of H.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3048,
+          "text": "In the city of Varanasi, a new digital tax rule applies to vehicle license numbers: for any digit in the even positions (2nd, 4th, etc.) that is greater than 5, swap it with its mirror image across 5 (e.g., 6 becomes 4, 7 becomes 3). However, if the sum of digits in positions 1 and 3 equals 8, this rule does not apply to those specific digits. What is the resulting sequence after applying these rules to the number 5274?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5274"
+            },
+            {
+              "label": "B",
+              "text": "5474"
+            },
+            {
+              "label": "C",
+              "text": "5234"
+            },
+            {
+              "label": "D",
+              "text": "5276"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Identify positions: Pos1=5, Pos2=2, Pos3=7, Pos4=4.\n2. Check swap condition for even positions (Pos2, Pos4).\n3. Pos2=2 (<=5), no swap needed.\n4. Pos4=4 (<=5), no swap needed.\n5. Check exception: Sum of Pos1 and Pos3 = 5+7=10.\n6. Since sum is not 8, the rule applies generally to even positions.\n7. However, since neither 2 nor 4 are >5, no swaps occur regardless.\n8. The number remains 5274.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3060,
+          "text": "A person stands at the center of a circular plaza. At 12:00 PM, their shadow falls exactly towards the East, indicating the Sun is in the West (Southwest quadrant logic for this specific exam universe). They walk 5 meters North-East, turn right and walk 5 meters, then turn left and walk 5 meters. If they return to the center by walking due South-East, what was their initial facing direction relative to the clock face numbers?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Facing 10"
+            },
+            {
+              "label": "B",
+              "text": "B) Facing 2"
+            },
+            {
+              "label": "C",
+              "text": "C) Facing 4"
+            },
+            {
+              "label": "D",
+              "text": "D) Facing 8"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial Shadow East implies Sun West (Person faces North by standard assumption unless twisted).\n2. Walk NE: Position shifts NE.\n3. Turn Right (NE->SE), Walk SE: Position shifts SE relative to start.\n4. Turn Left (SE->SW), Walk SW: Position shifts SW.\n5. Return path is South-East, meaning the displacement was North-West.\n6. Net displacement from 1st leg must be cancelled by last two legs + return.\n7. The only valid configuration for the 'Return' vector to be SE implies the starting orientation relative to the shadow logic aligns with option A.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3061,
+          "text": "A transparent sheet has a 3x3 grid of cells. The pattern inside is: Cell(1,1) has a circle; Cell(2,2) has a square; Cell(3,3) has a triangle. If you fold this flat sheet along the diagonal from top-left to bottom-right (bringing corners (1,2)-(3,4) together) and then view the front face of the resulting 3D structure, which symbol is visible in the geometric center of the front face? Options: A) Circle B) Square C) Triangle D) Empty.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Circle"
+            },
+            {
+              "label": "B",
+              "text": "Square"
+            },
+            {
+              "label": "C",
+              "text": "Triangle"
+            },
+            {
+              "label": "D",
+              "text": "Empty"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Map grid coordinates (row, col): Circle=(1,1), Square=(2,2), Triangle=(3,3). 2. Fold along diagonal y=x (top-left to bottom-right). 3. The fold brings the upper-right half onto the lower-left half. 4. The 'front' of the folded object corresponds to the original lower-left triangle area. 5. However, the question asks for the symbol visible in the *geometric center* of the resulting face after folding. 6. When a square sheet is folded along its main diagonal, the point originally at (2,2) - the exact center of the 3x3 grid - remains exactly on the fold line and becomes the central point of the new 2D projection's surface. 7. The symbol located at (2,2) is the Square.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3063,
+          "text": "In a specific government office protocol, the code for an action is derived by taking the literal physical direction mentioned in the sentence and applying it to the 'position' of the word 'Office' within the alphabet sequence (A=1st, B=2nd, ..., Z=26th). \n\nProtocol Rule: If a word implies a movement towards North, move the letter 'O' backward by 4 positions. If South, move forward by 4. If East, move backward by 3. If West, move forward by 5.\n\nBased on this protocol, what is the code for the phrase: 'The official must walk straight ahead'? (Note: In a standard map orientation where North is Up and South is Down, 'straight ahead' implies a neutral vertical alignment relative to the observer's view from the bottom looking up, effectively pointing 'North'.)",
+          "options": [
+            {
+              "label": "A",
+              "text": "K"
+            },
+            {
+              "label": "B",
+              "text": "Q"
+            },
+            {
+              "label": "C",
+              "text": "O"
+            },
+            {
+              "label": "D",
+              "text": "R"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Identify the key directional instruction in the phrase: 'walk straight ahead'.\nStep 2: Interpret direction: Relative to an observer facing North (standard map convention), 'straight ahead' points North.\nStep 3: Apply Protocol Rule for 'North': Move backward by 4 positions.\nStep 4: Take the target letter 'O' (15th letter).\nStep 5: Calculate new position: 15 - 4 = 11.\nStep 6: Identify the 11th letter of the alphabet: K.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3064,
+          "text": "In a standard Cartesian grid where North is up, imagine a 'Magic Mirror' placed at the diagonal line y = -x. This mirror swaps coordinates such that any point (x, y) reflects to (-y, -x). If you stand at Point A (coordinates 3, 2) and walk towards Point B (coordinates -1, 5), then step onto the mirror exactly halfway between them, which direction does your shadow face relative to the original North-East reference frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North-West"
+            },
+            {
+              "label": "B",
+              "text": "South-West"
+            },
+            {
+              "label": "C",
+              "text": "North-East"
+            },
+            {
+              "label": "D",
+              "text": "South-East"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Calculate midpoint of A(3,2) and B(-1,5): M = ((3-1)/2, (2+5)/2) = (1, 3.5).\n2. Reflect M across y=-x using rule (-y, -x): New Pos = (-3.5, -1).\n3. Original displacement vector A->B is (-4, +3). This is North-West.\n4. Reflection of vector (-4, 3) across y=-x: Swap and negate -> (-3, 4).\n5. Vector (-3, 4) points West (negative x) and North (positive y), which is North-West.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3024,
+          "text": "What is the age of A? Statement I: A is 5 years older than B. Statement II: B is 10 years younger than C, and C's age is 30.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I"
+            },
+            {
+              "label": "B",
+              "text": "Only II"
+            },
+            {
+              "label": "C",
+              "text": "Both together"
+            },
+            {
+              "label": "D",
+              "text": "Neither"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both together.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3025,
+          "text": "Is N divisible by 15? Statement I: N is divisible by 5. Statement II: N is divisible by 3.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Both together"
+            },
+            {
+              "label": "B",
+              "text": "Only I"
+            },
+            {
+              "label": "C",
+              "text": "Only II"
+            },
+            {
+              "label": "D",
+              "text": "Neither"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Both together.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3026,
+          "text": "Who is the tallest among A, B, C, D? Statement I: A is taller than C and D. Statement II: B is taller than A but shorter than D.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I"
+            },
+            {
+              "label": "B",
+              "text": "Only II"
+            },
+            {
+              "label": "C",
+              "text": "Both together"
+            },
+            {
+              "label": "D",
+              "text": "Neither"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: Neither.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3027,
+          "text": "What is the profit percentage? Statement I: SP = ₹1200. Statement II: CP = ₹1000.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Both together"
+            },
+            {
+              "label": "B",
+              "text": "Only I"
+            },
+            {
+              "label": "C",
+              "text": "Only II"
+            },
+            {
+              "label": "D",
+              "text": "Neither"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Both together.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3028,
+          "text": "What is the value of x? Statement I: 2x + 3y = 12. Statement II: x - y = 1.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I"
+            },
+            {
+              "label": "B",
+              "text": "Only II"
+            },
+            {
+              "label": "C",
+              "text": "Both together"
+            },
+            {
+              "label": "D",
+              "text": "Neither"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both together.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3029,
+          "text": "Statements: A > B ≥ C = D D II. C < F III. B = D",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only I and II follow"
+            },
+            {
+              "label": "C",
+              "text": "Only II and III follow"
+            },
+            {
+              "label": "D",
+              "text": "All follow"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Only I and II follow.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3030,
+          "text": "Statements: P ≥ Q > R = S ≤ T T III. R < U",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I and II follow"
+            },
+            {
+              "label": "B",
+              "text": "Only III follows"
+            },
+            {
+              "label": "C",
+              "text": "Only I and III follow"
+            },
+            {
+              "label": "D",
+              "text": "Only II and III follow"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: Only II and III follow.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3031,
+          "text": "Key: A @ B means A > B; A % B means A = B; A # B means A W II. Z ≤ Y",
+          "options": [
+            {
+              "label": "A",
+              "text": "Both follow"
+            },
+            {
+              "label": "B",
+              "text": "Neither follows"
+            },
+            {
+              "label": "C",
+              "text": "Only I follows"
+            },
+            {
+              "label": "D",
+              "text": "Only II follows"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Both follow.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3032,
+          "text": "Statements: M ≥ N > O = P ≤ Q P II. O < R III. N ≤ Q",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Only I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "All follow"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Only I and II follow.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3033,
+          "text": "Statements: A ≤ B = C > D ≥ E > F. Conclusions: I. A F III. C > E",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only II follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II and III follow"
+            },
+            {
+              "label": "C",
+              "text": "Only I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "All follow"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Only II and III follow.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3034,
+          "text": "Six persons A, B, C, D, E, F sit in a row facing north. C sits at one end. A sits second to the left of E. B sits to the immediate right of F. D sits third to the right of C. Who sits at the extreme right end?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: D.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3035,
+          "text": "Eight friends sit around a circular table facing the centre. P sits third to the left of T. Q sits to the immediate right of P. R sits between S and U. V sits second to the right of W. Who sits opposite P?",
+          "options": [
+            {
+              "label": "A",
+              "text": "S"
+            },
+            {
+              "label": "B",
+              "text": "T"
+            },
+            {
+              "label": "C",
+              "text": "U"
+            },
+            {
+              "label": "D",
+              "text": "V"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: U.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3036,
+          "text": "Seven persons live in a 7-storey building (G to 6). M lives on floor 4. Two persons live between M and N. O lives immediately above P. Q lives on floor 2. R lives above S. Who lives on floor 6?",
+          "options": [
+            {
+              "label": "A",
+              "text": "N"
+            },
+            {
+              "label": "B",
+              "text": "O"
+            },
+            {
+              "label": "C",
+              "text": "R"
+            },
+            {
+              "label": "D",
+              "text": "S"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: O.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3037,
+          "text": "In a rectangular table, six persons A-G sit around it, three on each longer side. A faces the person who sits second to the left of B. C sits opposite D. E does not sit adjacent to F. Who sits opposite A?",
+          "options": [
+            {
+              "label": "A",
+              "text": "B"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "E"
+            },
+            {
+              "label": "D",
+              "text": "F"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: E.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3038,
+          "text": "Five friends P, Q, R, S, T in a linear arrangement facing north. R is not at ends. T is to the left of P. Q is to the right of S. R is between S and Q. Who sits in the middle?",
+          "options": [
+            {
+              "label": "A",
+              "text": "P"
+            },
+            {
+              "label": "B",
+              "text": "Q"
+            },
+            {
+              "label": "C",
+              "text": "R"
+            },
+            {
+              "label": "D",
+              "text": "S"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: R.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3039,
+          "text": "Find the next term: A, E, I, M, Q, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "S"
+            },
+            {
+              "label": "B",
+              "text": "T"
+            },
+            {
+              "label": "C",
+              "text": "U"
+            },
+            {
+              "label": "D",
+              "text": "V"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: U.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3040,
+          "text": "Find the missing term: 2 : 8 :: 4 : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "64"
+            },
+            {
+              "label": "B",
+              "text": "32"
+            },
+            {
+              "label": "C",
+              "text": "16"
+            },
+            {
+              "label": "D",
+              "text": "24"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 64.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3041,
+          "text": "Find the next term in the alpha-numeric series: Z1, Y2, X4, W8, V16, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "U32"
+            },
+            {
+              "label": "B",
+              "text": "U24"
+            },
+            {
+              "label": "C",
+              "text": "T32"
+            },
+            {
+              "label": "D",
+              "text": "T24"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: U32.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3042,
+          "text": "Find the missing term: ACE : DFH :: MOQ : ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "NPR"
+            },
+            {
+              "label": "B",
+              "text": "NOQ"
+            },
+            {
+              "label": "C",
+              "text": "MNP"
+            },
+            {
+              "label": "D",
+              "text": "PRT"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: NPR.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3043,
+          "text": "Find the next term: 1A, 4D, 9I, 16P, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "25Y"
+            },
+            {
+              "label": "B",
+              "text": "25X"
+            },
+            {
+              "label": "C",
+              "text": "36Y"
+            },
+            {
+              "label": "D",
+              "text": "24Y"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: 25Y.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3073,
+          "text": "Eight persons A, B, C, D, E, F, G, H sit around a square table with two persons on each side facing the centre. A sits opposite C. B sits second to the right of A. D sits immediately to the left of B. Who sits opposite D?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "E"
+            }
+          ],
+          "answer": 2,
+          "solution": "If A is at position 1, C is at 5 (opposite). B is second to the right of A, placing B at position 4. D is immediately left of B, placing D at position 3. The person opposite D (position 3) is at position 7, which corresponds to E based on the remaining positions.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning Ability"
+        },
+        {
+          "id": 3074,
+          "text": "In a certain code language, 'MANGO' is written as 'NZPQH'. How will 'ORANGE' be written in that code?",
+          "options": [
+            {
+              "label": "A",
+              "text": "QSCBOF"
+            },
+            {
+              "label": "B",
+              "text": "PSBHPG"
+            },
+            {
+              "label": "C",
+              "text": "QTCIPG"
+            },
+            {
+              "label": "D",
+              "text": "RUDJQH"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern involves shifting each letter by +3 positions in the alphabet: M->P, A->D, N->Q, G->J, O->R. Applying this to ORANGE: O->R, R->U, A->D, N->Q, G->J, E->H. Thus, ORANGE becomes RUDJQH.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning Ability"
+        },
+        {
+          "id": 3075,
+          "text": "Eight friends P, Q, R, S, T, U, V, W sit around a square table with two persons on each side facing the centre. P sits at one of the corners. Q is an immediate neighbour of P. R sits second to the left of Q. S sits opposite P. Who sits immediately to the right of S?",
+          "options": [
+            {
+              "label": "A",
+              "text": "V"
+            },
+            {
+              "label": "B",
+              "text": "U"
+            },
+            {
+              "label": "C",
+              "text": "W"
+            },
+            {
+              "label": "D",
+              "text": "T"
+            }
+          ],
+          "answer": 0,
+          "solution": "Since P is at a corner and Q is an immediate neighbour, they occupy adjacent spots on one side or across a corner. With R second to the left of Q, we can map the positions relative to the square's geometry. S sits opposite P. By tracing the 'left' direction from Q through R, we determine the remaining positions. The person immediately to the right of S is V. Options U, W, and T do not fit the positional constraints derived from the seating arrangement.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning Ability"
+        },
+        {
+          "id": 3076,
+          "text": "In a certain code language, 'DELHI' is written as '34516'. If each letter in a word is replaced by its position in the English alphabet (A=1, B=2, ..., Z=26), how will the word 'MUMBAI' be coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "25"
+            },
+            {
+              "label": "B",
+              "text": "26"
+            },
+            {
+              "label": "C",
+              "text": "27"
+            },
+            {
+              "label": "D",
+              "text": "28"
+            }
+          ],
+          "answer": 0,
+          "solution": "The logic is the sum of alphabetical positions. D=4, O=15, G=7. Sum = 4+15+7 = 26. Option B is correct. Options A, C, and D are incorrect as they do not match the calculated sum.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning Ability"
+        },
+        {
+          "id": 3077,
+          "text": "Eight friends P, Q, R, S, T, U, V, W sit around a circular table facing the centre. P sits third to the left of T. Q sits immediately to the right of P. R sits between S and U. V sits second to the right of W. Who sits opposite P?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Q"
+            },
+            {
+              "label": "B",
+              "text": "R"
+            },
+            {
+              "label": "C",
+              "text": "S"
+            },
+            {
+              "label": "D",
+              "text": "T"
+            }
+          ],
+          "answer": 1,
+          "solution": "Arranging the circle: Fix T at top. P is 3rd left (counter-clockwise). Q is immediate right (clockwise) of P. R is between S and U. V is 2nd right of W. Through logical deduction, R sits opposite P. Option B is correct. Options A, C, and D are incorrect based on the seating arrangement.",
+          "_source": "IBPS PO",
+          "_sourceSection": "Reasoning Ability"
+        },
+        {
+          "id": 885,
+          "text": "The National Institutional Ranking Framework (NIRF) was approved by the MHRD and introduced by the Honourable Minister of Human Resource Development on 29th September 2015. As per the NIRF's \"India Rankings 2023\", which one of the following has been matched incorrectly: 1. Top performing University: IISc Bengaluru 2. Top performing College: St. Stephens 3. Top performing institute in Overall Category: IIT Madras",
+          "options": [
+            {
+              "label": "A",
+              "text": "2 only"
+            },
+            {
+              "label": "B",
+              "text": "1 and 2 only"
+            },
+            {
+              "label": "C",
+              "text": "2 and 3 only"
+            },
+            {
+              "label": "D",
+              "text": "1, 2 and 3"
+            },
+            {
+              "label": "E",
+              "text": "None of the above"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 886,
+          "text": "Identify which among the following statement is/are correct about interest rate and bond price? 1. Interest rate is negatively related to bond prices. 2. If interest rate and yield is rising bond prices will fall. 3. Interest rate positively related to bond prices.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only 1 and 3"
+            },
+            {
+              "label": "B",
+              "text": "Only 1 and 2"
+            },
+            {
+              "label": "C",
+              "text": "Only 2 and 3"
+            },
+            {
+              "label": "D",
+              "text": "All 1, 2 and 3"
+            },
+            {
+              "label": "E",
+              "text": "None of the above"
+            }
+          ],
+          "answer": 1,
+          "solution": "",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 904,
+          "text": "NTPC Limited, India's largest power generation company, has climbed 52 positions to secure the 433rd rank in Forbes' “The Global 2000” List for 2023. Which of these is/are not the parameters taken into account for determining Forbes 2000 ranking of the top public companies in the world?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Goodwill"
+            },
+            {
+              "label": "B",
+              "text": "Sales"
+            },
+            {
+              "label": "C",
+              "text": "Profits"
+            },
+            {
+              "label": "D",
+              "text": "Assets"
+            },
+            {
+              "label": "E",
+              "text": "Market value"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 987,
+          "text": "In a certain code, 'FLOWER' is written as '649537' and 'WONDER' is written as '539278'. How is 'REFLOW' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "729645"
+            },
+            {
+              "label": "B",
+              "text": "785649"
+            },
+            {
+              "label": "C",
+              "text": "789645"
+            },
+            {
+              "label": "D",
+              "text": "789465"
+            }
+          ],
+          "answer": 2,
+          "solution": "By comparing the letters and their corresponding codes in 'FLOWER' and 'WONDER', we can deduce the code for each letter. R=7, E=8, F=6, L=4, O=9, W=5. Therefore, 'REFLOW' would be coded as 789645.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1001,
+          "text": "TRAI in its endeavor toc urb menace of spams through Unsolicited Commercial Communication (UCC) has taken various measures in the recent past. In recent news, (June 2023), TRAI has now issued a Direction to all the Access Providers to develop and deploy the DCA facility for creating a unified platform and process to register customers consent digitally across all service providers and Principal Entities. What does \"DCA\" stand for?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Digital Consent Acquisition"
+            },
+            {
+              "label": "B",
+              "text": "Data Consent Acquisition"
+            },
+            {
+              "label": "C",
+              "text": "Digital Content Acquisition"
+            },
+            {
+              "label": "D",
+              "text": "Data Content Acquisition"
+            },
+            {
+              "label": "E",
+              "text": "Digital Communication Acquisition"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1022,
+          "text": "A bat and a ball together cost Rs. 100. The bat costs Rs. 20 more than the ball. How much does the ball cost?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rs. 40"
+            },
+            {
+              "label": "B",
+              "text": "Rs. 50"
+            },
+            {
+              "label": "C",
+              "text": "Rs. 60"
+            },
+            {
+              "label": "D",
+              "text": "Rs. 70"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let's say the ball costs x. The bat costs x + 20. The total cost is x + (x + 20) = 100. Simplifying the equation, we get 2x + 20 = 100. Subtracting 20 from both sides, we get 2x = 80. Dividing both sides by 2, we get x = 40.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1025,
+          "text": "NTPC Limited, India's largest power generation company, has climbed 52 positions to secure the 433rd rank in Forbes' \"The Global 2000\" List for 2023. Which of these is/are not the parameters taken into account for determining Forbes 2000 ranking of the top public companies in the world?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Goodwill"
+            },
+            {
+              "label": "B",
+              "text": "Sales"
+            },
+            {
+              "label": "C",
+              "text": "Profits"
+            },
+            {
+              "label": "D",
+              "text": "Assets"
+            },
+            {
+              "label": "E",
+              "text": "Market value"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1079,
+          "text": "The National Institutional Ranking Framework (NIRF) was approved by the MHRD and introduced by the Honourable Minister of Human Resource Development on 29th September 2015. As per the NIRF's \"India Rankings 2023\", which one of the following has been matched incorrectly: 1. Top performing University: IISc Bengaluru 2. Top performing College: St. Stephens 3. Top performing institute in Overall Category: IIT Madras",
+          "options": [
+            {
+              "label": "A",
+              "text": "2 only"
+            },
+            {
+              "label": "B",
+              "text": "1 and 2 only"
+            },
+            {
+              "label": "C",
+              "text": "2 and 3 only"
+            },
+            {
+              "label": "D",
+              "text": "1, 2 and 3"
+            },
+            {
+              "label": "E",
+              "text": "None of the above"
+            }
+          ],
+          "answer": 0,
+          "solution": "",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1081,
+          "text": "Identify which among the following statement is/are correct about interest rate and bond price? 1. Interest rate is negatively related to bond prices. 2. If interest rate and yield is rising bond prices will fall. 3. Interest rate positively related to bond prices.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only 1 and 3"
+            },
+            {
+              "label": "B",
+              "text": "Only 1 and 2"
+            },
+            {
+              "label": "C",
+              "text": "Only 2 and 3"
+            },
+            {
+              "label": "D",
+              "text": "All 1, 2 and 3"
+            },
+            {
+              "label": "E",
+              "text": "None of the above"
+            }
+          ],
+          "answer": 1,
+          "solution": "",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1087,
+          "text": "In a certain code, 'FLOWER' is written as '649537' and 'WONDER' is written as '539278'. How is 'REFLOW' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "729645"
+            },
+            {
+              "label": "B",
+              "text": "785649"
+            },
+            {
+              "label": "C",
+              "text": "789645"
+            },
+            {
+              "label": "D",
+              "text": "789465"
+            }
+          ],
+          "answer": 2,
+          "solution": "By comparing the letters and their corresponding codes in 'FLOWER' and 'WONDER', we can deduce the code for each letter. R=7, E=8, F=6, L=4, O=9, W=5. Therefore, 'REFLOW' would be coded as 789645.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1093,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "50 minutes"
+            },
+            {
+              "label": "C",
+              "text": "100 minutes"
+            },
+            {
+              "label": "D",
+              "text": "500 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "If 5 machines can make 5 widgets in 5 minutes, then 1 machine can make 1 widget in 5 minutes. Therefore, 100 machines can make 100 widgets in 5 minutes.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1112,
+          "text": "In a family, A is the father of B. C is the brother of D. E is the sister of F. G is the son of H. If A, B, and Care all deceased, and only their direct descendants (children) remain alive to inherit from them, who among F or G stands in a relationship with D such that they could be considered 'siblings' to each other under this specific inheritance scenario? (Note: Assume standard biological relations unless implied otherwise by the death conditions).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A. Fand D are half-siblings."
+            },
+            {
+              "label": "B",
+              "text": "B. G and D are full siblings."
+            },
+            {
+              "label": "C",
+              "text": "C. Fand G are step-siblings."
+            },
+            {
+              "label": "D",
+              "text": "D. Neither F nor G is a sibling of D."
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Identify family unit 1: A (Father) -> B (Child). C is not explicitly linked to A/B, so they are distinct unless stated. Cand D are siblings.\n2. Identify family unit 2: E and F are sisters.\n3. Identify family unit 3: G is the son of H.\n4. Analyze links: There is no information linking A's line with C's line or E/F's line or H's line.\n5. The condition 'A, B, C deceased' affects inheritance distribution within their lines but does not create biological relations between distinct family groups described separately.\n6. Therefore, F (sister of E) and G (son of H) have no defined connection to D (sibling of C).\n7. Without a connecting parent figure shared by these groups, no sibling relationship exists between F or G and D.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1115,
+          "text": "Identify the next number in the series: 2, 6, 12, 20, 30, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "42"
+            },
+            {
+              "label": "B",
+              "text": "44"
+            },
+            {
+              "label": "C",
+              "text": "46"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between consecutive terms are 4, 6, 8, 10. The next difference should be 12. Adding 12 to the last term (30) gives 42.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1117,
+          "text": "Identify the odd one out:",
+          "options": [
+            {
+              "label": "A",
+              "text": "Breeze"
+            },
+            {
+              "label": "B",
+              "text": "Storm"
+            },
+            {
+              "label": "C",
+              "text": "Hurricane"
+            },
+            {
+              "label": "D",
+              "text": "Gale"
+            }
+          ],
+          "answer": 0,
+          "solution": "'Breeze', 'Storm', 'Hurricane', and 'Gale' are types of winds. However, a 'Breeze' is a light wind, while the others (Storm, Hurricane, Gale) are strong or violent winds causing significant weather disturbance.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1118,
+          "text": "A spy starts at a secure point 'X' facing North. His mission requires him to execute the following sequence of commands relative to his CURRENT direction, where every command rotates his internal compass by 90 degrees clockwise AFTER execution:\n1. Move forward 5 units.\n2. Turn Left (relative to current face) and move forward 5 units.\n3. Turn Right (relative to current face) and move forward 5 units.\n4. Turn Left (relative to current face) and move forward 5 units.\n\nHowever, due to a magnetic anomaly affecting Sector X, every time the spy executes a command that involves turning LEFT, his body rotates an additional 90 degrees clockwise immediately after the turn but BEFORE moving. If he turns RIGHT normally, no such rotation occurs.\n\nAfter completing all 4 steps, in which cardinal direction is the spy facing?\nA) North\nB) South\nC) East\nD) West",
+          "options": [
+            {
+              "label": "A",
+              "text": "North"
+            },
+            {
+              "label": "B",
+              "text": "South"
+            },
+            {
+              "label": "C",
+              "text": "East"
+            },
+            {
+              "label": "D",
+              "text": "West"
+            }
+          ],
+          "answer": 2,
+          "solution": "Start: Facing North. Step 1 (Forward): Still facing North. Step 2 (Turn Left relative to North -> West; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: West rotated by +90 deg = North. Move 5 units while facing North. Step 3 (Turn Right relative to current North -> East). No anomaly for 'Right'. Orientation remains East. Move 5 units while facing East. Step 4 (Turn Left relative to East -> North; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: North rotated by +90 deg = East. Move 5 units. Final Facing Direction: East.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1136,
+          "text": "In a family, A is the brother of B. C is the father of A and D. If E is the daughter of D, who is the grandfather of E?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "B"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 1,
+          "solution": "C is the father of A and D, so C is D's father. E is D's daughter, so C is E's grandfather.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1141,
+          "text": "In a specific code language used for railway signaling, the position of letters in a word is shifted based on their distance from the center. For words with an even number of letters (4 letters), the letter at index 1 moves to index 4, and the letter at index 2 moves to index 3 (swapping the first pair). The second pair (indices 3 and 4) also swaps places (index 3 goes to 4, index 4 goes to 3). This creates a mirror swap across the vertical midline. Using this 'Inverse-Coordinate Flip' logic for 4-letter words, if 'TRAIN' becomes 'NARIT', how is 'MADRAS' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "ATAD"
+            },
+            {
+              "label": "B",
+              "text": "DAT A"
+            },
+            {
+              "label": "C",
+              "text": "ADTA"
+            },
+            {
+              "label": "D",
+              "text": "TADA"
+            }
+          ],
+          "answer": 0,
+          "solution": "The rule reverses a four-letter word: positions 1 and 4 swap, and positions 2 and 3 swap. DATA becomes ATAD.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1146,
+          "text": "If today is Monday, what was the day 473 days ago?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Monday"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Divide the total days (473) by 7 to find full weeks.\n2. Calculation: 473 ÷ 7 = 67 weeks with a remainder of 4 days.\n3. Since we are going backwards, subtract the remainder from 'Monday'.\n4. Monday - 1 day = Sunday; - 2 days = Saturday; - 3 days = Friday; - 4 days = Thursday.\n5. The year's leap status does not affect day calculation as it depends purely on the modulo arithmetic of 7.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1148,
+          "text": "Point A is at 12 o'clock on a clock face. If you start walking from the center towards A, then make a sharp 'Right' turn (90 degrees), which direction are you now facing relative to the clock's frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3 o'clock position"
+            },
+            {
+              "label": "B",
+              "text": "6 o'clock position"
+            },
+            {
+              "label": "C",
+              "text": "9 o'clock position"
+            },
+            {
+              "label": "D",
+              "text": "12 o'clock position"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial movement is from center towards 12 o'clock (North). 2. A 'Right' turn of 90 degrees rotates the heading 90 degrees clockwise. 3. North + 90 deg Right = East. 4. On a clock face, East corresponds exactly to the 3 o'clock position.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1149,
+          "text": "Find the missing term in the series: 10, 23, 46, 87, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "154"
+            },
+            {
+              "label": "B",
+              "text": "171"
+            },
+            {
+              "label": "C",
+              "text": "189"
+            },
+            {
+              "label": "D",
+              "text": "188"
+            }
+          ],
+          "answer": 2,
+          "solution": "Each term is doubled and the sum of its digits is added: 10 x 2 + (1 + 0) = 23; 23 x 2 + (2 + 3) = 46; 46 x 2 + (4 + 6) = 87; 87 x 2 + (8 + 7) = 189.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1152,
+          "text": "Find the next term in the series: 5, 9, 13, 17, ?, 25 (where digits are values in base-10, but the pattern follows Base-12 arithmetic rules where any digit exceeding 9 wraps around to letters A-E representing 10-14).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 21"
+            },
+            {
+              "label": "B",
+              "text": "B) 21A"
+            },
+            {
+              "label": "C",
+              "text": "C) 21E"
+            },
+            {
+              "label": "D",
+              "text": "D) 21F"
+            }
+          ],
+          "answer": 0,
+          "solution": "The series is an arithmetic progression starting at 5 with a common difference of 4: 5, 9 (5+4), 13 (9+4), 17 (13+4). The next term is 17 + 4 = 21. Although the prompt mentions Base-12 rules as a potential trap, standard integer addition applies here as no digit exceeds 9 in the sequence up to this point.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1153,
+          "text": "In a certain community, all 'Kartars' are also 'Yogis'. No 'Yogi' is a 'Vedantist'. Some 'Vedantists' are 'Brahmins'. What must be true?\nI. All Kartars are Brahmins.\nII. No Kartar is a Vedantist.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Draw circle 'Kartar' entirely inside 'Yogi'.\n2. Draw circle 'Vedantist' entirely outside 'Yogi' (since no Yogi is Vedantist).\n3. Conclude: Since Kartar is a subset of Yogi, and Yogi excludes Vedantist, Kartar must exclude Vedantist. Thus II follows.\n4. There is no relationship defined between 'Kartar' and 'Brahmin' directly; the link is broken by 'Vedantist'.\n5. Therefore, statement I cannot be deduced as necessarily true.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1154,
+          "text": "In a certain code language, words are encoded based on the sum of their digits. The rule is: If a number'sdi git-sum (repeatedly adding digits until a single digit is obtained) is odd, write the letter corresponding to that sum (A=1, B=2... Z=26). If even, write the word 'EVE'.\nExample: \n'7' -> 7 (Odd) -> G\n'8' -> 8 (Even) -> EVE\n'5' -> 5 (Odd) -> E\n'4' -> 4 (Even) -> EVE\nWhat is the code for the number 29?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "EVE"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 2,
+          "solution": "Step 1: Sum digits of 29 = 2 + 9 = 11.\nStep 2: Since 11 > 9, repeat process: 1 + 1 = 2.\nStep 3: Final single digit is 2.\nStep 4: 2 is Even.\nStep 5: Apply rule for even -> Code is 'EVE'.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1157,
+          "text": "Complete the series: 24, 36, 54, 81, 121.5, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "160"
+            },
+            {
+              "label": "B",
+              "text": "170"
+            },
+            {
+              "label": "C",
+              "text": "180"
+            },
+            {
+              "label": "D",
+              "text": "182.25"
+            }
+          ],
+          "answer": 3,
+          "solution": "Each term is multiplied by 1.5: 24 x 1.5 = 36, 36 x 1.5 = 54, 54 x 1.5 = 81, 81 x 1.5 = 121.5, 121.5 x 1.5 = 182.25.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1159,
+          "text": "A spy, Agent X, starts at point O facing North. He moves 20m forward, turns 90° Left, walks 15m, then turns 90° Left again and walks 20m. Finally, he turns 90° Left one more time and walks 15m to reach a hidden vault. If the Sun is at his back as he enters the vault, in which cardinal direction did Agent X originally face while walking along the LAST segment of his path?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) North"
+            },
+            {
+              "label": "B",
+              "text": "B) South"
+            },
+            {
+              "label": "C",
+              "text": "C) West"
+            },
+            {
+              "label": "D",
+              "text": "D) East"
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Start facing North. 2. Move 20m forward (Path 1). 3. Turn 90° Left -> Face West. Walk 15m (Path 2). 4. Turn 90° Left -> Face South. Walk 20m (Path 3). 5. Turn 90° Left -> Face East. Walk 15m (Path 4, the last segment). 6. Therefore, Agent X was facing East while walking along the last segment.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1161,
+          "text": "In a specific code language used for railway safety alerts, dates are encoded such that the letter corresponds to the sum of the Day's position in the month and its alphabetical value (A=1, B=2...), then converted back to a single letter based on the remainder when divided by 26. If the sum is > 26, subtract 26 once. Note: Only dates where the resulting letter is 'M' or later are considered valid alerts. On 10th March, an alert code is generated as 'L'. What date generates the alert code 'Q' under the same rules?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 13th April"
+            },
+            {
+              "label": "B",
+              "text": "B) 20th May"
+            },
+            {
+              "label": "C",
+              "text": "C) 17th June"
+            },
+            {
+              "label": "D",
+              "text": "D) 15th July"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let day = d, month position in year (Jan=1...Mar=3). \nCode Letter Q is the 17th letter of alphabet.\nFormula: (d + Month_Pos) % 26 = Q_Val. If result > 26, subtract 26.\nCheck Option A (13th April): April is month 4. Day=13.\nSum = 13 + 4 = 17.\nLetter for 17 is 'Q'. Matches.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1175,
+          "text": "In a secret code used by the Railway Safety Wing, words are encoded based on their reverse causal function. For example: 'Stop' is encoded as 'Go' (the opposite action), 'Dark' is encoded as 'Light', and 'Win' is encoded as 'Lose'. Using this logic, how would 'Sleep' be encoded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rest"
+            },
+            {
+              "label": "B",
+              "text": "Wake"
+            },
+            {
+              "label": "C",
+              "text": "Tiredness"
+            },
+            {
+              "label": "D",
+              "text": "Bed"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern is strictly Anti-Synonym (Action) reversal. Stop <-> Go, Dark <-> Light, Win <-> Lose. The word 'Sleep' describes a state of rest; its direct functional opposite action is to 'Wake'. Options A and Care states related to sleep, while D is the object.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1176,
+          "text": "In a rural village of Madhya Pradesh, the community council maps social connections as directional vectors relative to the Village Hall (Origin). Known relations:\n1. Ramu is 40 meters EAST of the Hall.\n2. Meera is 30 meters NORTH of Ramu.\n3. Aarav stands exactly midway between Ramu and Meera.\n\nLater, a storm forces everyone to walk along the line connecting their current position and the Village Hall in a straight path (shortest route). After walking this shortest distance, who will be standing closest to the Village Hall?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Meera"
+            },
+            {
+              "label": "B",
+              "text": "Aarav"
+            },
+            {
+              "label": "C",
+              "text": "Ramu"
+            },
+            {
+              "label": "D",
+              "text": "None of them"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Plot positions: Ramu (40E), Meera (40E, 30N). \n2. Aarav is midway: Pos = (40/2, 30/2) = (20E, 15N). \n3. Calculate shortest path to Hall (0,0) as distance: \n   - Ramu distance = sqrt(40² + 0²) = 40m.\n   - Meera distance = sqrt(40² + 30²) = 50m.\n   - Aarav distance = sqrt(20² + 15²) = sqrt(400+225) = sqrt(625) = 25m.\n4. Shortest path implies walking directly to origin. \n5. Comparison: 25m < 40m < 50m. Aarav is closest.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1177,
+          "text": "In a corporate hierarchy where rank is determined by strict rules: (1) No employee of 'Grade X' can supervise an employee of 'Grade Y' unless they are in the same department. (2) An employee of 'Grade X' and an employee of 'Grade Y' are never in the same department if they work on different projects. (3) Supervision implies a direct project linkage. If it is known that Employee A supervises Employee B, and both have ranks corresponding to Grade X and Grade Y respectively, which of the following conclusions about their working conditions must be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "They are in the same department and work on the same project."
+            },
+            {
+              "label": "B",
+              "text": "They are in different departments but work on the same project."
+            },
+            {
+              "label": "C",
+              "text": "They are in the same department and work on different projects."
+            },
+            {
+              "label": "D",
+              "text": "They are in different departments and work on different projects."
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Condition (1) requires them to be in the same department for A to supervise B.\n2. Condition (3) states supervision implies a direct project linkage, meaning they must share the same project.\n3. Condition (2) creates a hypothetical constraint: if they were on different projects, they could not be in the same department. Since we established they are in the same department from step 1, the premise of condition (2) regarding 'different projects' must be false for them to remain in the same department.\n4. Therefore, to satisfy all conditions while maintaining the supervision hierarchy, they must be in the same department and working on the same project.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1185,
+          "text": "In a specific cipher code, words are mapped to their directional 'Shadow Codes'. The rule is derived from the first letter of the word: if the first letter is in the set {A, B, C}, the shadow points North-East (NE); if in {D, E, F}, South-West (SW); if in {G, H, I}, South-East (SE); and so on, repeating this cycle every three letters. Additionally, words with exactly 3 vowels are appended with 'Long', those with 4 vowels with 'Short', and others get the suffix '-'. Given: 'CART' -> NE-Long, 'BIRD' -> NE-Low, 'POTATO' -> SW-Swift. What is the code for the word 'GARDEN'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "SE-Swift"
+            },
+            {
+              "label": "B",
+              "text": "SE-Long"
+            },
+            {
+              "label": "C",
+              "text": "SW-Swift"
+            },
+            {
+              "label": "D",
+              "text": "NE-Swift"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Check first letter of 'GARDEN': 'G'. 2. Map 'G' to direction cycle: A,B,C=NE; D,E,F=SW; G,H,I=SE. Thus, Direction = SE. 3. Count vowels in 'GARDEN' (A, E, E) = 3 vowels. 4. Rule for 3 vowels is suffix 'Swift'. 5. Combine: SE-Swift.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1186,
+          "text": "In a specific logic-gate language, the symbols represent operations as follows:\n'+' means 'is less than or equal to'\n'-\nmeans 'is greater than'\n'*' means 'is not equal to'\n'/\nmeans 'is exactly equal to'\n'The statements below are true in this language:\nI. A + B (A <= B)\nII. B - C (B > C)\nIII. D / B\nIV. E * A (E != A)\nGiven these, which of the following conclusions MUST be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A < Cand D < E"
+            },
+            {
+              "label": "B",
+              "text": "D > Cand E < A"
+            },
+            {
+              "label": "C",
+              "text": "D >= Cand E != A"
+            },
+            {
+              "label": "D",
+              "text": "Data Inadequate"
+            }
+          ],
+          "answer": 2,
+          "solution": "1. Translate statements: I(A<=B), II(B>C), III(D=B), IV(E!=A).\n2. Combine I & II via B: Since A<=Band B>C, we have A<=B>C. No direct relation between A and C.\n3. Substitute III into chain: D=B. Thus A<=D>C. Therefore D>=C is logically valid (since B>=C implies D>=C).\n4. Analyze IV with substitution: E!=A. No fixed inequality exists between E and A, so 'E < A' or 'E > A' cannot be determined.\n5. Evaluate options: Option C states 'D >= Cand E != A'. This matches our derived facts perfectly.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1188,
+          "text": "In the formal register of Indian Bureaucracy, specific verbs denote official actions with strict procedural connotations: 'Sanction' is to approval as 'Cognizance' is to …?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a) Accepting a legal case for trial"
+            },
+            {
+              "label": "B",
+              "text": "b) Issuing a travel pass"
+            },
+            {
+              "label": "C",
+              "text": "c) Denying a leave application"
+            },
+            {
+              "label": "D",
+              "text": "d) Filing a criminal complaint"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Analyze the first pair: 'Sanction' in bureaucracy strictly means granting official approval.\n2. Identify the register of the second word: 'Cognizance' is a technical term used by courts/police.\n3. Apply the meaning: To 'take cognizance' means a court formally acknowledges receipt of a case and accepts jurisdiction over it.\n4. Compare options: Option (a) defines accepting a legal case, matching the formal definition of taking cognizance.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1191,
+          "text": "Identify the next term in the series: 15, 22, 33, 48, 67, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "88"
+            },
+            {
+              "label": "B",
+              "text": "90"
+            },
+            {
+              "label": "C",
+              "text": "92"
+            },
+            {
+              "label": "D",
+              "text": "95"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between terms are 7, 11, 15, 19 (increasing by 4). The next difference is 23. 67 + 23 = 88.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1192,
+          "text": "A and Bare siblings. C is the father of B. D is the mother of A. E is the son of D. Who is E to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "D is the mother of A, so D is also the mother of B (since A and Bare siblings). C is the father of B, so C is married to D. E is the son of D, which makes E the son of C.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1194,
+          "text": "In a certain code language, 'CAT' is written as '3120'. What is the code for 'DOG'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4157"
+            },
+            {
+              "label": "B",
+              "text": "4150"
+            },
+            {
+              "label": "C",
+              "text": "3157"
+            },
+            {
+              "label": "D",
+              "text": "4158"
+            }
+          ],
+          "answer": 0,
+          "solution": "C=3, A=1, T=20. D=4, O=15, G=7. So DOG is 4157.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1196,
+          "text": "If you walk 10 kmno rth, turn left and walk 5 km, then turn right and walk 10 km, how far are you from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "10 km"
+            },
+            {
+              "label": "C",
+              "text": "15 km"
+            },
+            {
+              "label": "D",
+              "text": "20 km"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start North 10. Left is West 5. Left is South 10. Net displacement is 5 km West. Distance from start is 5 km.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1198,
+          "text": "Arrange the following words in a logical sequence: 1. Egg, 2. Chicken, 3. Bird, 4. Baby",
+          "options": [
+            {
+              "label": "A",
+              "text": "1, 2, 4, 3"
+            },
+            {
+              "label": "B",
+              "text": "1, 4, 2, 3"
+            },
+            {
+              "label": "C",
+              "text": "4, 1, 2, 3"
+            },
+            {
+              "label": "D",
+              "text": "1, 3, 4, 2"
+            }
+          ],
+          "answer": 1,
+          "solution": "An egg hatches into a baby chicken (chick), which grows into a chicken, which is a type of bird. Sequence: 1, 4, 2, 3.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1205,
+          "text": "In the village of Panchavati, a peculiar inheritance rule dictates that property passes NOT to the son, but to the maternal aunt of the heir. Consider the family: A is B's brother. C is D's daughter. E is F's only child and E is also the maternal aunt of G. If the property owner is H, who is J's son, and we know that I is H's wife and K is L's mother, identify the relationship between M (who is N's only daughter) and H, given that M is the one who inherits from H. How is M related to H?",
+          "options": [
+            {
+              "label": "A",
+              "text": "M is H's daughter."
+            },
+            {
+              "label": "B",
+              "text": "M is H's sister."
+            },
+            {
+              "label": "C",
+              "text": "M is H's maternal aunt."
+            },
+            {
+              "label": "D",
+              "text": "M is H's wife."
+            }
+          ],
+          "answer": 2,
+          "solution": "1. M inherits from H, so M must be H's maternal aunt per the rule.\n2. The rule defines 'maternal aunt' as the mother of H's mother.\n3. Therefore, M is the sister of H's mother.\n4. This makes M the maternal aunt of H.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1219,
+          "text": "A person stands at the center of a circular plaza. At 12:00 PM, their shadow falls exactly towards the East, indicating the Sun is in the West (Southwest quadrant logic for this specific exam universe). They walk 5 meters North-East, turn right and walk 5 meters, then turn left and walk 5 meters. If they return to the center by walking due South-East, what was their initial facing direction relative to the clock face numbers?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Facing 10"
+            },
+            {
+              "label": "B",
+              "text": "B) Facing 2"
+            },
+            {
+              "label": "C",
+              "text": "C) Facing 4"
+            },
+            {
+              "label": "D",
+              "text": "D) Facing 8"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial Shadow East implies Sun West (Person faces North by standard assumption unless twisted).\n2. Walk NE: Position shifts NE.\n3. Turn Right (NE->SE), Walk SE: Position shifts SE relative to start.\n4. Turn Left (SE->SW), Walk SW: Position shifts SW.\n5. Return path is South-East, meaning the displacement was North-West.\n6. Net displacement from 1st leg must be cancelled by last two legs + return.\n7. The only valid configuration for the 'Return' vector to be SE implies the starting orientation relative to the shadow logic aligns with option A.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1223,
+          "text": "In a standard Cartesian grid where North is up, imagine a 'Magic Mirror' placed at the diagonal line y = -x. This mirror swaps coordinates such that any point (x, y) reflects to (-y, -x). If you stand at Point A (coordinates 3, 2) and walk towards Point B (coordinates -1, 5), then step onto the mirror exactly halfway between them, which direction does your shadow face relative to the original North-East reference frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North-West"
+            },
+            {
+              "label": "B",
+              "text": "South-West"
+            },
+            {
+              "label": "C",
+              "text": "North-East"
+            },
+            {
+              "label": "D",
+              "text": "South-East"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Calculate midpoint of A(3,2) and B(-1,5): M = ((3-1)/2, (2+5)/2) = (1, 3.5).\n2. Reflect Mac ross y=-x using rule (-y, -x): New Pos = (-3.5, -1).\n3. Original displacement vector A->B is (-4, +3). This is North-West.\n4. Reflection of vector (-4, 3) across y=-x: Swap and negate -> (-3, 4).\n5. Vector (-3, 4) points West (negative x) and North (positive y), which is North-West.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1224,
+          "text": "In a family, A is the father of B. C is the brother of D. E is the sister of F. G is the son of H. If A, B, and C are all deceased, and only their direct descendants (children) remain alive to inherit from them, who among F or G stands in a relationship with D such that they could be considered 'siblings' to each other under this specific inheritance scenario? (Note: Assume standard biological relations unless implied otherwise by the death conditions).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A. F and D are half-siblings."
+            },
+            {
+              "label": "B",
+              "text": "B. G and D are full siblings."
+            },
+            {
+              "label": "C",
+              "text": "C. F and G are step-siblings."
+            },
+            {
+              "label": "D",
+              "text": "D. Neither F nor G is a sibling of D."
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Identify family unit 1: A (Father) -> B (Child). C is not explicitly linked to A/B, so they are distinct unless stated. C and D are siblings.\n2. Identify family unit 2: E and F are sisters.\n3. Identify family unit 3: G is the son of H.\n4. Analyze links: There is no information linking A's line with C's line or E/F's line or H's line.\n5. The condition 'A, B, C deceased' affects inheritance distribution within their lines but does not create biological relations between distinct family groups described separately.\n6. Therefore, F (sister of E) and G (son of H) have no defined connection to D (sibling of C).\n7. Without a connecting parent figure shared by these groups, no sibling relationship exists between F or G and D.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1226,
+          "text": "Arrange the following words in dictionary order: 1. Apple, 2. Apricot, 3. Ant, 4. Arm.",
+          "options": [
+            {
+              "label": "A",
+              "text": "3, 1, 2, 4"
+            },
+            {
+              "label": "B",
+              "text": "3, 4, 1, 2"
+            },
+            {
+              "label": "C",
+              "text": "1, 3, 4, 2"
+            },
+            {
+              "label": "D",
+              "text": "2, 3, 1, 4"
+            }
+          ],
+          "answer": 0,
+          "solution": "Comparing first letters: 'Ant' (A-n), 'Apple' (A-p), 'Apricot' (A-p-r). 'n' comes before 'p', so Ant is first. Between Apple and Apricot, 'pp' vs 'pr', 'p' comes before 'r'. So Apple then Apricot. Then Arm. Order: Ant, Apple, Apricot, Arm.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1237,
+          "text": "In a certain code language, words are encoded based on the sum of their digits. The rule is: If a number's digit-sum (repeatedly adding digits until a single digit is obtained) is odd, write the letter corresponding to that sum (A=1, B=2... Z=26). If even, write the word 'EVE'.\nExample: \n'7' -> 7 (Odd) -> G\n'8' -> 8 (Even) -> EVE\n'5' -> 5 (Odd) -> E\n'4' -> 4 (Even) -> EVE\nWhat is the code for the number 29?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "EVE"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 2,
+          "solution": "Step 1: Sum digits of 29 = 2 + 9 = 11.\nStep 2: Since 11 > 9, repeat process: 1 + 1 = 2.\nStep 3: Final single digit is 2.\nStep 4: 2 is Even.\nStep 5: Apply rule for even -> Code is 'EVE'.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1244,
+          "text": "A and B are siblings. C is the father of B. D is the mother of A. E is the son of D. Who is E to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "D is the mother of A, so D is also the mother of B (since A and B are siblings). C is the father of B, so C is married to D. E is the son of D, which makes E the son of C.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1245,
+          "text": "If you walk 10 km North, turn left and walk 5 km, then turn right and walk 10 km, how far are you from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "10 km"
+            },
+            {
+              "label": "C",
+              "text": "15 km"
+            },
+            {
+              "label": "D",
+              "text": "20 km"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start North 10. Left is West 5. Left is South 10. Net displacement is 5 km West. Distance from start is 5 km.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1199,
+          "text": "Statement: 'All employees must submit their project reports by Friday to avoid penalty.' Assumptions: I. Employees currently have pending project reports. II. Friday is the deadline for submission. Which is/are implicit?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I"
+            },
+            {
+              "label": "B",
+              "text": "Only II"
+            },
+            {
+              "label": "C",
+              "text": "Both"
+            },
+            {
+              "label": "D",
+              "text": "Neither"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: Both.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1200,
+          "text": "Situation: The city has seen a sharp rise in road accidents in the past year. Course of Action: I. Install speed cameras at all major intersections. II. Ban all private vehicles in the city. Which course(s) of action is/are appropriate?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I"
+            },
+            {
+              "label": "B",
+              "text": "Only II"
+            },
+            {
+              "label": "C",
+              "text": "Both"
+            },
+            {
+              "label": "D",
+              "text": "Neither"
+            }
+          ],
+          "answer": 0,
+          "solution": "Correct answer: Only I.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1201,
+          "text": "Statement: 'The government should increase spending on public healthcare to improve health outcomes.' Which of the following is the strongest argument in favour?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Increased spending always leads to better outcomes"
+            },
+            {
+              "label": "B",
+              "text": "Many countries with higher healthcare spending have better health indicators"
+            },
+            {
+              "label": "C",
+              "text": "Private hospitals are too expensive for most people"
+            },
+            {
+              "label": "D",
+              "text": "The current government has a surplus budget"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Many countries with higher healthcare spending have better health indicators.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 1202,
+          "text": "Passage: 'Studies show that students who participate in extracurricular activities perform better academically. Therefore, schools should mandate participation in at least one extracurricular activity.' Which of the following, if true, weakens the argument?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Extracurricular activities teach teamwork and leadership"
+            },
+            {
+              "label": "B",
+              "text": "Students with better time management skills tend to join more activities"
+            },
+            {
+              "label": "C",
+              "text": "Many schools lack adequate sports facilities"
+            },
+            {
+              "label": "D",
+              "text": "Some students dislike extracurricular activities"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: Students with better time management skills tend to join more activities.",
+          "_source": "RBI Grade B",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2923,
+          "text": "If the statements &#39;all tables are chairs&#39; and &#39;some chairs are beds&#39; are true, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All beds are tables"
+            },
+            {
+              "label": "B",
+              "text": "Some tables are beds"
+            },
+            {
+              "label": "C",
+              "text": "All chairs are beds"
+            },
+            {
+              "label": "D",
+              "text": "No tables are beds"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that all tables are chairs and some chairs are beds, we can conclude that some tables are beds, since some chairs (which include tables) are beds.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2927,
+          "text": "If &quot;PENCIL&quot; is coded as &quot;RGP EKN&quot;, how is &quot;ERASER&quot; coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "GTCUGT"
+            },
+            {
+              "label": "B",
+              "text": "GTBUGT"
+            },
+            {
+              "label": "C",
+              "text": "GTCVGT"
+            },
+            {
+              "label": "D",
+              "text": "GTCUHT"
+            }
+          ],
+          "answer": 0,
+          "solution": "PENCIL: each letter +2: P+2=R, E+2=G, N+2=P, C+2=E, I+2=K, L+2=N =&gt; RGP EKN. Similarly ERASER: E+2=G, R+2=T, A+2=C, S+2=U, E+2=G, R+2=T =&gt; GTCUGT.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2930,
+          "text": "Find the missing number: 3, 12, 27, 48, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "72"
+            },
+            {
+              "label": "B",
+              "text": "75"
+            },
+            {
+              "label": "C",
+              "text": "81"
+            },
+            {
+              "label": "D",
+              "text": "84"
+            }
+          ],
+          "answer": 1,
+          "solution": "3 = 3*1^2, 12 = 3*2^2, 27 = 3*3^2, 48 = 3*4^2, so next = 3*5^2 = 3*25 = 75.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2936,
+          "text": "If the statements &#39;all pens are pencils&#39; and &#39;some pencils are erasers&#39; are true, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All erasers are pens"
+            },
+            {
+              "label": "B",
+              "text": "Some pens are erasers"
+            },
+            {
+              "label": "C",
+              "text": "All pencils are erasers"
+            },
+            {
+              "label": "D",
+              "text": "No pens are erasers"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that all pens are pencils and some pencils are erasers, we can conclude that some pens are erasers, since some pencils (which include pens) are erasers.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2939,
+          "text": "If it is true that all cats are animals and some animals are dogs, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All dogs are cats"
+            },
+            {
+              "label": "B",
+              "text": "Some cats are dogs"
+            },
+            {
+              "label": "C",
+              "text": "Some animals are cats"
+            },
+            {
+              "label": "D",
+              "text": "All animals are dogs"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given that all cats are animals and some animals are dogs, we can conclude that some animals are cats, since all cats are a subset of animals.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2941,
+          "text": "If &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, what is the code for &#39;y&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a"
+            },
+            {
+              "label": "B",
+              "text": "b"
+            },
+            {
+              "label": "C",
+              "text": "c"
+            },
+            {
+              "label": "D",
+              "text": "b"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given the pattern of coding where &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, it seems that each letter is shifted 3 positions forward in the alphabet. Applying this pattern to &#39;y&#39;, we get &#39;y&#39; coded as &#39;b&#39; since &#39;y&#39; is the 25th letter and &#39;b&#39; is the 2nd letter in the alphabet, with &#39;y&#39; shifted 3 positions back resulting in &#39;b&#39;.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2943,
+          "text": "If the statements &#39;all dogs are animals&#39; and &#39;some animals are cats&#39; are true, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All cats are dogs"
+            },
+            {
+              "label": "B",
+              "text": "Some dogs are cats"
+            },
+            {
+              "label": "C",
+              "text": "All animals are dogs"
+            },
+            {
+              "label": "D",
+              "text": "No dogs are cats"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that all dogs are animals and some animals are cats, we can conclude that some dogs are cats, since some animals (which include dogs) are cats.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2944,
+          "text": "If it is given that &#39;p&#39; is greater than &#39;q&#39; and &#39;q&#39; is greater than &#39;r&#39;, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "p &lt; q"
+            },
+            {
+              "label": "B",
+              "text": "p &gt; r"
+            },
+            {
+              "label": "C",
+              "text": "q &lt; r"
+            },
+            {
+              "label": "D",
+              "text": "r &gt; p"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given &#39;p&#39; is greater than &#39;q&#39; and &#39;q&#39; is greater than &#39;r&#39;, we can deduce that &#39;p&#39; is greater than &#39;r&#39;. This is a basic transitive property where if p &gt; q and q &gt; r, then p &gt; r.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2948,
+          "text": "A is the father of B, B is the mother of C, and D is the brother of A. What is the relationship between D and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Grandfather"
+            },
+            {
+              "label": "B",
+              "text": "Uncle"
+            },
+            {
+              "label": "C",
+              "text": "Father"
+            },
+            {
+              "label": "D",
+              "text": "Son"
+            }
+          ],
+          "answer": 1,
+          "solution": "Since A is the father of B, and B is the mother of C, A is the grandfather of C. D is the brother of A, so D is the uncle of B and the great-uncle of C, but the closest relationship given in the options is uncle.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2963,
+          "text": "Five friends - A, B, C, D, and E - are sitting in a row. A is to the left of B, C is to the right of B, D is to the left of E, and E is to the left of C. What is the order of the friends from left to right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A B C D E"
+            },
+            {
+              "label": "B",
+              "text": "A B E C D"
+            },
+            {
+              "label": "C",
+              "text": "A B E D C"
+            },
+            {
+              "label": "D",
+              "text": "A D E B C"
+            }
+          ],
+          "answer": 3,
+          "solution": "From the given conditions, we know A is to the left of B, and C is to the right of B. Also, D is to the left of E, and E is to the left of C. Combining these, the order that satisfies all conditions is A D E B C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2964,
+          "text": "If A &gt; B, B &gt; C, and C &gt; D, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A &gt; D"
+            },
+            {
+              "label": "B",
+              "text": "B &lt; D"
+            },
+            {
+              "label": "C",
+              "text": "C &gt; A"
+            },
+            {
+              "label": "D",
+              "text": "D &gt; B"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given A &gt; B, B &gt; C, and C &gt; D, we can conclude that A &gt; B &gt; C &gt; D, so A &gt; D.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2967,
+          "text": "A is father of B, B is father of C, and D is mother of A. What is the relation of D with C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Grandmother"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Sister"
+            },
+            {
+              "label": "D",
+              "text": "Aunt"
+            }
+          ],
+          "answer": 0,
+          "solution": "Since A is the father of B and B is the father of C, A is the grandfather of C. Given that D is the mother of A, D is the grandmother of B and thus the great grandmother of C. However, among the given options, &#39;Grandmother&#39; is the closest and most suitable relation of D with C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2971,
+          "text": "Five friends - A, B, C, D, and E - are sitting in a row. A is to the left of B, C is to the right of B, D is to the left of E, and E is to the left of C. What is the order of the friends from left to right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A B C D E"
+            },
+            {
+              "label": "B",
+              "text": "A B E C D"
+            },
+            {
+              "label": "C",
+              "text": "A B E D C"
+            },
+            {
+              "label": "D",
+              "text": "A D E B C"
+            }
+          ],
+          "answer": 3,
+          "solution": "From the given conditions, we know A is to the left of B, and C is to the right of B. Also, D is to the left of E, and E is to the left of C. Combining these, the order that satisfies all conditions is A D E B C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2973,
+          "text": "If it is given that &#39;p&#39; is greater than &#39;q&#39; and &#39;q&#39; is greater than &#39;r&#39;, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "p &lt; q"
+            },
+            {
+              "label": "B",
+              "text": "p &gt; r"
+            },
+            {
+              "label": "C",
+              "text": "q &lt; r"
+            },
+            {
+              "label": "D",
+              "text": "r &gt; p"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given &#39;p&#39; is greater than &#39;q&#39; and &#39;q&#39; is greater than &#39;r&#39;, we can deduce that &#39;p&#39; is greater than &#39;r&#39;. This is a basic transitive property where if p &gt; q and q &gt; r, then p &gt; r.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2984,
+          "text": "If &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, what is the code for &#39;y&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a"
+            },
+            {
+              "label": "B",
+              "text": "b"
+            },
+            {
+              "label": "C",
+              "text": "c"
+            },
+            {
+              "label": "D",
+              "text": "b"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given the pattern of coding where &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, it seems that each letter is shifted 3 positions forward in the alphabet. Applying this pattern to &#39;y&#39;, we get &#39;y&#39; coded as &#39;b&#39; since &#39;y&#39; is the 25th letter and &#39;b&#39; is the 2nd letter in the alphabet, with &#39;y&#39; shifted 3 positions back resulting in &#39;b&#39;.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2989,
+          "text": "Five friends - A, B, C, D, and E - are sitting in a row. A is to the left of B, C is to the right of B, D is to the left of E, and E is to the left of C. What is the order of the friends from left to right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A B C D E"
+            },
+            {
+              "label": "B",
+              "text": "A B E C D"
+            },
+            {
+              "label": "C",
+              "text": "A B E D C"
+            },
+            {
+              "label": "D",
+              "text": "A D E B C"
+            }
+          ],
+          "answer": 3,
+          "solution": "From the given conditions, we know A is to the left of B, and C is to the right of B. Also, D is to the left of E, and E is to the left of C. Combining these, the order that satisfies all conditions is A D E B C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2990,
+          "text": "If it is given that &#39;p&#39; is greater than &#39;q&#39; and &#39;q&#39; is greater than &#39;r&#39;, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "p &lt; q"
+            },
+            {
+              "label": "B",
+              "text": "p &gt; r"
+            },
+            {
+              "label": "C",
+              "text": "q &lt; r"
+            },
+            {
+              "label": "D",
+              "text": "r &gt; p"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given &#39;p&#39; is greater than &#39;q&#39; and &#39;q&#39; is greater than &#39;r&#39;, we can deduce that &#39;p&#39; is greater than &#39;r&#39;. This is a basic transitive property where if p &gt; q and q &gt; r, then p &gt; r.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2991,
+          "text": "A is father of B, B is father of C, and D is mother of A. What is the relation of D with C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Grandmother"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Sister"
+            },
+            {
+              "label": "D",
+              "text": "Aunt"
+            }
+          ],
+          "answer": 0,
+          "solution": "Since A is the father of B and B is the father of C, A is the grandfather of C. Given that D is the mother of A, D is the grandmother of B and thus the great grandmother of C. However, among the given options, &#39;Grandmother&#39; is the closest and most suitable relation of D with C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 2998,
+          "text": "A is father of B, B is father of C, and D is mother of A. What is the relation of D with C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Grandmother"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Sister"
+            },
+            {
+              "label": "D",
+              "text": "Aunt"
+            }
+          ],
+          "answer": 0,
+          "solution": "Since A is the father of B and B is the father of C, A is the grandfather of C. Given that D is the mother of A, D is the grandmother of B and thus the great grandmother of C. However, among the given options, &#39;Grandmother&#39; is the closest and most suitable relation of D with C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3000,
+          "text": "If it is given that &#39;p&#39; is greater than &#39;q&#39; and &#39;q&#39; is greater than &#39;r&#39;, then which of the following is true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "p &lt; q"
+            },
+            {
+              "label": "B",
+              "text": "p &gt; r"
+            },
+            {
+              "label": "C",
+              "text": "q &lt; r"
+            },
+            {
+              "label": "D",
+              "text": "r &gt; p"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given &#39;p&#39; is greater than &#39;q&#39; and &#39;q&#39; is greater than &#39;r&#39;, we can deduce that &#39;p&#39; is greater than &#39;r&#39;. This is a basic transitive property where if p &gt; q and q &gt; r, then p &gt; r.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3004,
+          "text": "If &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, what is the code for &#39;y&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a"
+            },
+            {
+              "label": "B",
+              "text": "b"
+            },
+            {
+              "label": "C",
+              "text": "c"
+            },
+            {
+              "label": "D",
+              "text": "b"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given the pattern of coding where &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, it seems that each letter is shifted 3 positions forward in the alphabet. Applying this pattern to &#39;y&#39;, we get &#39;y&#39; coded as &#39;b&#39; since &#39;y&#39; is the 25th letter and &#39;b&#39; is the 2nd letter in the alphabet, with &#39;y&#39; shifted 3 positions back resulting in &#39;b&#39;.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3005,
+          "text": "Five friends - A, B, C, D, and E - are sitting in a row. A is to the left of B, C is to the right of B, D is to the left of E, and E is to the left of C. What is the order of the friends from left to right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A B C D E"
+            },
+            {
+              "label": "B",
+              "text": "A B E C D"
+            },
+            {
+              "label": "C",
+              "text": "A B E D C"
+            },
+            {
+              "label": "D",
+              "text": "A D E B C"
+            }
+          ],
+          "answer": 3,
+          "solution": "From the given conditions, we know A is to the left of B, and C is to the right of B. Also, D is to the left of E, and E is to the left of C. Combining these, the order that satisfies all conditions is A D E B C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3011,
+          "text": "If the statements &#39;all books are magazines&#39; and &#39;some magazines are newspapers&#39; are true, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All newspapers are books"
+            },
+            {
+              "label": "B",
+              "text": "Some books are newspapers"
+            },
+            {
+              "label": "C",
+              "text": "All magazines are newspapers"
+            },
+            {
+              "label": "D",
+              "text": "No books are newspapers"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that all books are magazines and some magazines are newspapers, we can conclude that some books are newspapers, since some magazines (which include books) are newspapers.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3014,
+          "text": "A is father of B, B is father of C, and D is mother of A. What is the relation of D with C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Grandmother"
+            },
+            {
+              "label": "B",
+              "text": "Mother"
+            },
+            {
+              "label": "C",
+              "text": "Sister"
+            },
+            {
+              "label": "D",
+              "text": "Aunt"
+            }
+          ],
+          "answer": 0,
+          "solution": "Since A is the father of B and B is the father of C, A is the grandfather of C. Given that D is the mother of A, D is the grandmother of B and thus the great grandmother of C. However, among the given options, &#39;Grandmother&#39; is the closest and most suitable relation of D with C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3020,
+          "text": "If the statements &#39;all cars are vehicles&#39; and &#39;some vehicles are bikes&#39; are true, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All bikes are cars"
+            },
+            {
+              "label": "B",
+              "text": "Some cars are bikes"
+            },
+            {
+              "label": "C",
+              "text": "All vehicles are cars"
+            },
+            {
+              "label": "D",
+              "text": "No cars are bikes"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that all cars are vehicles and some vehicles are bikes, we can conclude that some cars are bikes, since some vehicles (which include cars) are bikes.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3033,
+          "text": "If the statements &#39;all tables are chairs&#39; and &#39;some chairs are beds&#39; are true, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All beds are tables"
+            },
+            {
+              "label": "B",
+              "text": "Some tables are beds"
+            },
+            {
+              "label": "C",
+              "text": "All chairs are beds"
+            },
+            {
+              "label": "D",
+              "text": "No tables are beds"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that all tables are chairs and some chairs are beds, we can conclude that some tables are beds, since some chairs (which include tables) are beds.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3034,
+          "text": "If the statements &#39;all pens are pencils&#39; and &#39;some pencils are erasers&#39; are true, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All erasers are pens"
+            },
+            {
+              "label": "B",
+              "text": "Some pens are erasers"
+            },
+            {
+              "label": "C",
+              "text": "All pencils are erasers"
+            },
+            {
+              "label": "D",
+              "text": "No pens are erasers"
+            }
+          ],
+          "answer": 1,
+          "solution": "Given that all pens are pencils and some pencils are erasers, we can conclude that some pens are erasers, since some pencils (which include pens) are erasers.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3035,
+          "text": "If it is true that all cats are animals and some animals are dogs, which of the following conclusions can be drawn?",
+          "options": [
+            {
+              "label": "A",
+              "text": "All dogs are cats"
+            },
+            {
+              "label": "B",
+              "text": "Some cats are dogs"
+            },
+            {
+              "label": "C",
+              "text": "Some animals are cats"
+            },
+            {
+              "label": "D",
+              "text": "All animals are dogs"
+            }
+          ],
+          "answer": 2,
+          "solution": "Given that all cats are animals and some animals are dogs, we can conclude that some animals are cats, since all cats are a subset of animals.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3036,
+          "text": "Five friends - A, B, C, D, and E - are sitting in a row. A is to the left of B, C is to the right of B, D is to the left of E, and E is to the left of C. What is the order of the friends from left to right?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A B C D E"
+            },
+            {
+              "label": "B",
+              "text": "A B E C D"
+            },
+            {
+              "label": "C",
+              "text": "A B E D C"
+            },
+            {
+              "label": "D",
+              "text": "A D E B C"
+            }
+          ],
+          "answer": 3,
+          "solution": "From the given conditions, we know A is to the left of B, and C is to the right of B. Also, D is to the left of E, and E is to the left of C. Combining these, the order that satisfies all conditions is A D E B C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3040,
+          "text": "If &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, what is the code for &#39;y&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a"
+            },
+            {
+              "label": "B",
+              "text": "b"
+            },
+            {
+              "label": "C",
+              "text": "c"
+            },
+            {
+              "label": "D",
+              "text": "b"
+            }
+          ],
+          "answer": 3,
+          "solution": "Given the pattern of coding where &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, it seems that each letter is shifted 3 positions forward in the alphabet. Applying this pattern to &#39;y&#39;, we get &#39;y&#39; coded as &#39;b&#39; since &#39;y&#39; is the 25th letter and &#39;b&#39; is the 2nd letter in the alphabet, with &#39;y&#39; shifted 3 positions back resulting in &#39;b&#39;.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3041,
+          "text": "In a family, A is the father of B. C is the brother of D. E is the sister of F. G is the son of H. If A, B, and C are all deceased, and only their direct descendants (children) remain alive to inherit from them, who among F or G stands in a relationship with D such that they could be considered 'siblings' to each other under this specific inheritance scenario? (Note: Assume standard biological relations unless implied otherwise by the death conditions).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A. F and D are half-siblings."
+            },
+            {
+              "label": "B",
+              "text": "B. G and D are full siblings."
+            },
+            {
+              "label": "C",
+              "text": "C. F and G are step-siblings."
+            },
+            {
+              "label": "D",
+              "text": "D. Neither F nor G is a sibling of D."
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Identify family unit 1: A (Father) -> B (Child). C is not explicitly linked to A/B, so they are distinct unless stated. C and D are siblings.\n2. Identify family unit 2: E and F are sisters.\n3. Identify family unit 3: G is the son of H.\n4. Analyze links: There is no information linking A's line with C's line or E/F's line or H's line.\n5. The condition 'A, B, C deceased' affects inheritance distribution within their lines but does not create biological relations between distinct family groups described separately.\n6. Therefore, F (sister of E) and G (son of H) have no defined connection to D (sibling of C).\n7. Without a connecting parent figure shared by these groups, no sibling relationship exists between F or G and D.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3044,
+          "text": "Identify the next number in the series: 2, 6, 12, 20, 30, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "42"
+            },
+            {
+              "label": "B",
+              "text": "44"
+            },
+            {
+              "label": "C",
+              "text": "46"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between consecutive terms are 4, 6, 8, 10. The next difference should be 12. Adding 12 to the last term (30) gives 42.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3045,
+          "text": "Arrange the following words in dictionary order: 1. Apple, 2. Apricot, 3. Ant, 4. Arm.",
+          "options": [
+            {
+              "label": "A",
+              "text": "3, 1, 2, 4"
+            },
+            {
+              "label": "B",
+              "text": "3, 4, 1, 2"
+            },
+            {
+              "label": "C",
+              "text": "1, 3, 4, 2"
+            },
+            {
+              "label": "D",
+              "text": "2, 3, 1, 4"
+            }
+          ],
+          "answer": 0,
+          "solution": "Comparing first letters: 'Ant' (A-n), 'Apple' (A-p), 'Apricot' (A-p-r). 'n' comes before 'p', so Ant is first. Between Apple and Apricot, 'pp' vs 'pr', 'p' comes before 'r'. So Apple then Apricot. Then Arm. Order: Ant, Apple, Apricot, Arm.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3046,
+          "text": "Identify the odd one out:",
+          "options": [
+            {
+              "label": "A",
+              "text": "Breeze"
+            },
+            {
+              "label": "B",
+              "text": "Storm"
+            },
+            {
+              "label": "C",
+              "text": "Hurricane"
+            },
+            {
+              "label": "D",
+              "text": "Gale"
+            }
+          ],
+          "answer": 0,
+          "solution": "'Breeze', 'Storm', 'Hurricane', and 'Gale' are types of winds. However, a 'Breeze' is a light wind, while the others (Storm, Hurricane, Gale) are strong or violent winds causing significant weather disturbance.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3047,
+          "text": "A spy starts at a secure point 'X' facing North. His mission requires him to execute the following sequence of commands relative to his CURRENT direction, where every command rotates his internal compass by 90 degrees clockwise AFTER execution:\n1. Move forward 5 units.\n2. Turn Left (relative to current face) and move forward 5 units.\n3. Turn Right (relative to current face) and move forward 5 units.\n4. Turn Left (relative to current face) and move forward 5 units.\n\nHowever, due to a magnetic anomaly affecting Sector X, every time the spy executes a command that involves turning LEFT, his body rotates an additional 90 degrees clockwise immediately after the turn but BEFORE moving. If he turns RIGHT normally, no such rotation occurs.\n\nAfter completing all 4 steps, in which cardinal direction is the spy facing?\nA) North\nB) South\nC) East\nD) West",
+          "options": [
+            {
+              "label": "A",
+              "text": "North"
+            },
+            {
+              "label": "B",
+              "text": "South"
+            },
+            {
+              "label": "C",
+              "text": "East"
+            },
+            {
+              "label": "D",
+              "text": "West"
+            }
+          ],
+          "answer": 2,
+          "solution": "Start: Facing North. Step 1 (Forward): Still facing North. Step 2 (Turn Left relative to North -> West; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: West rotated by +90 deg = North. Move 5 units while facing North. Step 3 (Turn Right relative to current North -> East). No anomaly for 'Right'. Orientation remains East. Move 5 units while facing East. Step 4 (Turn Left relative to East -> North; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: North rotated by +90 deg = East. Move 5 units. Final Facing Direction: East.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3065,
+          "text": "In a family, A is the brother of B. C is the father of A and D. If E is the daughter of D, who is the grandfather of E?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "B"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 1,
+          "solution": "C is the father of A and D, so C is D's father. E is D's daughter, so C is E's grandfather.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3070,
+          "text": "In a specific code language used for railway signaling, the position of letters in a word is shifted based on their distance from the center. For words with an even number of letters (4 letters), the letter at index 1 moves to index 4, and the letter at index 2 moves to index 3 (swapping the first pair). The second pair (indices 3 and 4) also swaps places (index 3 goes to 4, index 4 goes to 3). This creates a mirror swap across the vertical midline. Using this 'Inverse-Coordinate Flip' logic for 4-letter words, if 'TRAIN' becomes 'NARIT', how is 'MADRAS' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "ATAD"
+            },
+            {
+              "label": "B",
+              "text": "DAT A"
+            },
+            {
+              "label": "C",
+              "text": "ADTA"
+            },
+            {
+              "label": "D",
+              "text": "TADA"
+            }
+          ],
+          "answer": 0,
+          "solution": "The rule reverses a four-letter word: positions 1 and 4 swap, and positions 2 and 3 swap. DATA becomes ATAD.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3075,
+          "text": "If today is Monday, what was the day 473 days ago?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Monday"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Divide the total days (473) by 7 to find full weeks.\n2. Calculation: 473 ÷ 7 = 67 weeks with a remainder of 4 days.\n3. Since we are going backwards, subtract the remainder from 'Monday'.\n4. Monday - 1 day = Sunday; - 2 days = Saturday; - 3 days = Friday; - 4 days = Thursday.\n5. The year's leap status does not affect day calculation as it depends purely on the modulo arithmetic of 7.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3077,
+          "text": "Point A is at 12 o'clock on a clock face. If you start walking from the center towards A, then make a sharp 'Right' turn (90 degrees), which direction are you now facing relative to the clock's frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3 o'clock position"
+            },
+            {
+              "label": "B",
+              "text": "6 o'clock position"
+            },
+            {
+              "label": "C",
+              "text": "9 o'clock position"
+            },
+            {
+              "label": "D",
+              "text": "12 o'clock position"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial movement is from center towards 12 o'clock (North). 2. A 'Right' turn of 90 degrees rotates the heading 90 degrees clockwise. 3. North + 90 deg Right = East. 4. On a clock face, East corresponds exactly to the 3 o'clock position.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3078,
+          "text": "Find the missing term in the series: 10, 23, 46, 87, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "154"
+            },
+            {
+              "label": "B",
+              "text": "171"
+            },
+            {
+              "label": "C",
+              "text": "189"
+            },
+            {
+              "label": "D",
+              "text": "188"
+            }
+          ],
+          "answer": 2,
+          "solution": "Each term is doubled and the sum of its digits is added: 10 x 2 + (1 + 0) = 23; 23 x 2 + (2 + 3) = 46; 46 x 2 + (4 + 6) = 87; 87 x 2 + (8 + 7) = 189.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3081,
+          "text": "Find the next term in the series: 5, 9, 13, 17, ?, 25 (where digits are values in base-10, but the pattern follows Base-12 arithmetic rules where any digit exceeding 9 wraps around to letters A-E representing 10-14).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 21"
+            },
+            {
+              "label": "B",
+              "text": "B) 21A"
+            },
+            {
+              "label": "C",
+              "text": "C) 21E"
+            },
+            {
+              "label": "D",
+              "text": "D) 21F"
+            }
+          ],
+          "answer": 0,
+          "solution": "The series is an arithmetic progression starting at 5 with a common difference of 4: 5, 9 (5+4), 13 (9+4), 17 (13+4). The next term is 17 + 4 = 21. Although the prompt mentions Base-12 rules as a potential trap, standard integer addition applies here as no digit exceeds 9 in the sequence up to this point.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3082,
+          "text": "In a certain community, all 'Kartars' are also 'Yogis'. No 'Yogi' is a 'Vedantist'. Some 'Vedantists' are 'Brahmins'. What must be true?\nI. All Kartars are Brahmins.\nII. No Kartar is a Vedantist.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Draw circle 'Kartar' entirely inside 'Yogi'.\n2. Draw circle 'Vedantist' entirely outside 'Yogi' (since no Yogi is Vedantist).\n3. Conclude: Since Kartar is a subset of Yogi, and Yogi excludes Vedantist, Kartar must exclude Vedantist. Thus II follows.\n4. There is no relationship defined between 'Kartar' and 'Brahmin' directly; the link is broken by 'Vedantist'.\n5. Therefore, statement I cannot be deduced as necessarily true.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3083,
+          "text": "In a certain code language, words are encoded based on the sum of their digits. The rule is: If a number's digit-sum (repeatedly adding digits until a single digit is obtained) is odd, write the letter corresponding to that sum (A=1, B=2... Z=26). If even, write the word 'EVE'.\nExample: \n'7' -> 7 (Odd) -> G\n'8' -> 8 (Even) -> EVE\n'5' -> 5 (Odd) -> E\n'4' -> 4 (Even) -> EVE\nWhat is the code for the number 29?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "EVE"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 2,
+          "solution": "Step 1: Sum digits of 29 = 2 + 9 = 11.\nStep 2: Since 11 > 9, repeat process: 1 + 1 = 2.\nStep 3: Final single digit is 2.\nStep 4: 2 is Even.\nStep 5: Apply rule for even -> Code is 'EVE'.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3086,
+          "text": "Complete the series: 24, 36, 54, 81, 121.5, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "160"
+            },
+            {
+              "label": "B",
+              "text": "170"
+            },
+            {
+              "label": "C",
+              "text": "180"
+            },
+            {
+              "label": "D",
+              "text": "182.25"
+            }
+          ],
+          "answer": 3,
+          "solution": "Each term is multiplied by 1.5: 24 x 1.5 = 36, 36 x 1.5 = 54, 54 x 1.5 = 81, 81 x 1.5 = 121.5, 121.5 x 1.5 = 182.25.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3088,
+          "text": "A spy, Agent X, starts at point O facing North. He moves 20m forward, turns 90° Left, walks 15m, then turns 90° Left again and walks 20m. Finally, he turns 90° Left one more time and walks 15m to reach a hidden vault. If the Sun is at his back as he enters the vault, in which cardinal direction did Agent X originally face while walking along the LAST segment of his path?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) North"
+            },
+            {
+              "label": "B",
+              "text": "B) South"
+            },
+            {
+              "label": "C",
+              "text": "C) West"
+            },
+            {
+              "label": "D",
+              "text": "D) East"
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Start facing North. 2. Move 20m forward (Path 1). 3. Turn 90° Left -> Face West. Walk 15m (Path 2). 4. Turn 90° Left -> Face South. Walk 20m (Path 3). 5. Turn 90° Left -> Face East. Walk 15m (Path 4, the last segment). 6. Therefore, Agent X was facing East while walking along the last segment.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3090,
+          "text": "In a specific code language used for railway safety alerts, dates are encoded such that the letter corresponds to the sum of the Day's position in the month and its alphabetical value (A=1, B=2...), then converted back to a single letter based on the remainder when divided by 26. If the sum is > 26, subtract 26 once. Note: Only dates where the resulting letter is 'M' or later are considered valid alerts. On 10th March, an alert code is generated as 'L'. What date generates the alert code 'Q' under the same rules?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 13th April"
+            },
+            {
+              "label": "B",
+              "text": "B) 20th May"
+            },
+            {
+              "label": "C",
+              "text": "C) 17th June"
+            },
+            {
+              "label": "D",
+              "text": "D) 15th July"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let day = d, month position in year (Jan=1...Mar=3). \nCode Letter Q is the 17th letter of alphabet.\nFormula: (d + Month_Pos) % 26 = Q_Val. If result > 26, subtract 26.\nCheck Option A (13th April): April is month 4. Day=13.\nSum = 13 + 4 = 17.\nLetter for 17 is 'Q'. Matches.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3104,
+          "text": "In a secret code used by the Railway Safety Wing, words are encoded based on their reverse causal function. For example: 'Stop' is encoded as 'Go' (the opposite action), 'Dark' is encoded as 'Light', and 'Win' is encoded as 'Lose'. Using this logic, how would 'Sleep' be encoded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rest"
+            },
+            {
+              "label": "B",
+              "text": "Wake"
+            },
+            {
+              "label": "C",
+              "text": "Tiredness"
+            },
+            {
+              "label": "D",
+              "text": "Bed"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern is strictly Anti-Synonym (Action) reversal. Stop <-> Go, Dark <-> Light, Win <-> Lose. The word 'Sleep' describes a state of rest; its direct functional opposite action is to 'Wake'. Options A and C are states related to sleep, while D is the object.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3105,
+          "text": "In a rural village of Madhya Pradesh, the community council maps social connections as directional vectors relative to the Village Hall (Origin). Known relations:\n1. Ramu is 40 meters EAST of the Hall.\n2. Meera is 30 meters NORTH of Ramu.\n3. Aarav stands exactly midway between Ramu and Meera.\n\nLater, a storm forces everyone to walk along the line connecting their current position and the Village Hall in a straight path (shortest route). After walking this shortest distance, who will be standing closest to the Village Hall?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Meera"
+            },
+            {
+              "label": "B",
+              "text": "Aarav"
+            },
+            {
+              "label": "C",
+              "text": "Ramu"
+            },
+            {
+              "label": "D",
+              "text": "None of them"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Plot positions: Ramu (40E), Meera (40E, 30N). \n2. Aarav is midway: Pos = (40/2, 30/2) = (20E, 15N). \n3. Calculate shortest path to Hall (0,0) as distance: \n   - Ramu distance = sqrt(40² + 0²) = 40m.\n   - Meera distance = sqrt(40² + 30²) = 50m.\n   - Aarav distance = sqrt(20² + 15²) = sqrt(400+225) = sqrt(625) = 25m.\n4. Shortest path implies walking directly to origin. \n5. Comparison: 25m < 40m < 50m. Aarav is closest.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3106,
+          "text": "In a corporate hierarchy where rank is determined by strict rules: (1) No employee of 'Grade X' can supervise an employee of 'Grade Y' unless they are in the same department. (2) An employee of 'Grade X' and an employee of 'Grade Y' are never in the same department if they work on different projects. (3) Supervision implies a direct project linkage. If it is known that Employee A supervises Employee B, and both have ranks corresponding to Grade X and Grade Y respectively, which of the following conclusions about their working conditions must be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "They are in the same department and work on the same project."
+            },
+            {
+              "label": "B",
+              "text": "They are in different departments but work on the same project."
+            },
+            {
+              "label": "C",
+              "text": "They are in the same department and work on different projects."
+            },
+            {
+              "label": "D",
+              "text": "They are in different departments and work on different projects."
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Condition (1) requires them to be in the same department for A to supervise B.\n2. Condition (3) states supervision implies a direct project linkage, meaning they must share the same project.\n3. Condition (2) creates a hypothetical constraint: if they were on different projects, they could not be in the same department. Since we established they are in the same department from step 1, the premise of condition (2) regarding 'different projects' must be false for them to remain in the same department.\n4. Therefore, to satisfy all conditions while maintaining the supervision hierarchy, they must be in the same department and working on the same project.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3114,
+          "text": "In a specific cipher code, words are mapped to their directional 'Shadow Codes'. The rule is derived from the first letter of the word: if the first letter is in the set {A, B, C}, the shadow points North-East (NE); if in {D, E, F}, South-West (SW); if in {G, H, I}, South-East (SE); and so on, repeating this cycle every three letters. Additionally, words with exactly 3 vowels are appended with 'Long', those with 4 vowels with 'Short', and others get the suffix '-'. Given: 'CART' -> NE-Long, 'BIRD' -> NE-Low, 'POTATO' -> SW-Swift. What is the code for the word 'GARDEN'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "SE-Swift"
+            },
+            {
+              "label": "B",
+              "text": "SE-Long"
+            },
+            {
+              "label": "C",
+              "text": "SW-Swift"
+            },
+            {
+              "label": "D",
+              "text": "NE-Swift"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Check first letter of 'GARDEN': 'G'. 2. Map 'G' to direction cycle: A,B,C=NE; D,E,F=SW; G,H,I=SE. Thus, Direction = SE. 3. Count vowels in 'GARDEN' (A, E, E) = 3 vowels. 4. Rule for 3 vowels is suffix 'Swift'. 5. Combine: SE-Swift.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3115,
+          "text": "In a specific logic-gate language, the symbols represent operations as follows:\n'+' means 'is less than or equal to'\n'-\nmeans 'is greater than'\n'*' means 'is not equal to'\n'/\nmeans 'is exactly equal to'\n'The statements below are true in this language:\nI. A + B (A <= B)\nII. B - C (B > C)\nIII. D / B\nIV. E * A (E != A)\nGiven these, which of the following conclusions MUST be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A < C and D < E"
+            },
+            {
+              "label": "B",
+              "text": "D > C and E < A"
+            },
+            {
+              "label": "C",
+              "text": "D >= C and E != A"
+            },
+            {
+              "label": "D",
+              "text": "Data Inadequate"
+            }
+          ],
+          "answer": 2,
+          "solution": "1. Translate statements: I(A<=B), II(B>C), III(D=B), IV(E!=A).\n2. Combine I & II via B: Since A<=B and B>C, we have A<=B>C. No direct relation between A and C.\n3. Substitute III into chain: D=B. Thus A<=D>C. Therefore D>=C is logically valid (since B>=C implies D>=C).\n4. Analyze IV with substitution: E!=A. No fixed inequality exists between E and A, so 'E < A' or 'E > A' cannot be determined.\n5. Evaluate options: Option C states 'D >= C and E != A'. This matches our derived facts perfectly.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3117,
+          "text": "In the formal register of Indian Bureaucracy, specific verbs denote official actions with strict procedural connotations: 'Sanction' is to approval as 'Cognizance' is to …?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a) Accepting a legal case for trial"
+            },
+            {
+              "label": "B",
+              "text": "b) Issuing a travel pass"
+            },
+            {
+              "label": "C",
+              "text": "c) Denying a leave application"
+            },
+            {
+              "label": "D",
+              "text": "d) Filing a criminal complaint"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Analyze the first pair: 'Sanction' in bureaucracy strictly means granting official approval.\n2. Identify the register of the second word: 'Cognizance' is a technical term used by courts/police.\n3. Apply the meaning: To 'take cognizance' means a court formally acknowledges receipt of a case and accepts jurisdiction over it.\n4. Compare options: Option (a) defines accepting a legal case, matching the formal definition of taking cognizance.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3118,
+          "text": "A train engineer observes a specific rule for speed adjustments based on the type of station passed: If the station has an odd number of platforms, add 10 km/h; if even, subtract 5 km/h. Starting at Station X (3 platforms) traveling at 60 km/h, the train passes 4 subsequent stations before reaching the final destination. The sequence of platform counts is 2, 5, 4, and 3 respectively. What is the speed of the train upon reaching the final destination?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 65 km/h"
+            },
+            {
+              "label": "B",
+              "text": "B) 50 km/h"
+            },
+            {
+              "label": "C",
+              "text": "C) 70 km/h"
+            },
+            {
+              "label": "D",
+              "text": "D) 85 km/h"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start: 60 km/h. Station 1 (2 platforms, even): -5 -> 55. Station 2 (5 platforms, odd): +10 -> 65. Station 3 (4 platforms, even): -5 -> 60. Station 4 (3 platforms, odd): +10 -> 70. Destination reached at 70 km/h.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3120,
+          "text": "Identify the next term in the series: 15, 22, 33, 48, 67, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "88"
+            },
+            {
+              "label": "B",
+              "text": "90"
+            },
+            {
+              "label": "C",
+              "text": "92"
+            },
+            {
+              "label": "D",
+              "text": "95"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between terms are 7, 11, 15, 19 (increasing by 4). The next difference is 23. 67 + 23 = 88.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3121,
+          "text": "A and B are siblings. C is the father of B. D is the mother of A. E is the son of D. Who is E to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "D is the mother of A, so D is also the mother of B (since A and B are siblings). C is the father of B, so C is married to D. E is the son of D, which makes E the son of C.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3123,
+          "text": "In a certain code language, 'CAT' is written as '3120'. What is the code for 'DOG'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4157"
+            },
+            {
+              "label": "B",
+              "text": "4150"
+            },
+            {
+              "label": "C",
+              "text": "3157"
+            },
+            {
+              "label": "D",
+              "text": "4158"
+            }
+          ],
+          "answer": 0,
+          "solution": "C=3, A=1, T=20. D=4, O=15, G=7. So DOG is 4157.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3125,
+          "text": "If you walk 10 km North, turn left and walk 5 km, then turn right and walk 10 km, how far are you from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "10 km"
+            },
+            {
+              "label": "C",
+              "text": "15 km"
+            },
+            {
+              "label": "D",
+              "text": "20 km"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start North 10. Left is West 5. Left is South 10. Net displacement is 5 km West. Distance from start is 5 km.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3127,
+          "text": "Arrange the following words in a logical sequence: 1. Egg, 2. Chicken, 3. Bird, 4. Baby",
+          "options": [
+            {
+              "label": "A",
+              "text": "1, 2, 4, 3"
+            },
+            {
+              "label": "B",
+              "text": "1, 4, 2, 3"
+            },
+            {
+              "label": "C",
+              "text": "4, 1, 2, 3"
+            },
+            {
+              "label": "D",
+              "text": "1, 3, 4, 2"
+            }
+          ],
+          "answer": 1,
+          "solution": "An egg hatches into a baby chicken (chick), which grows into a chicken, which is a type of bird. Sequence: 1, 4, 2, 3.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3135,
+          "text": "In the village of Panchavati, a peculiar inheritance rule dictates that property passes NOT to the son, but to the maternal aunt of the heir. Consider the family: A is B's brother. C is D's daughter. E is F's only child and E is also the maternal aunt of G. If the property owner is H, who is J's son, and we know that I is H's wife and K is L's mother, identify the relationship between M (who is N's only daughter) and H, given that M is the one who inherits from H. How is M related to H?",
+          "options": [
+            {
+              "label": "A",
+              "text": "M is H's daughter."
+            },
+            {
+              "label": "B",
+              "text": "M is H's sister."
+            },
+            {
+              "label": "C",
+              "text": "M is H's maternal aunt."
+            },
+            {
+              "label": "D",
+              "text": "M is H's wife."
+            }
+          ],
+          "answer": 2,
+          "solution": "1. M inherits from H, so M must be H's maternal aunt per the rule.\n2. The rule defines 'maternal aunt' as the mother of H's mother.\n3. Therefore, M is the sister of H's mother.\n4. This makes M the maternal aunt of H.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3137,
+          "text": "In the city of Varanasi, a new digital tax rule applies to vehicle license numbers: for any digit in the even positions (2nd, 4th, etc.) that is greater than 5, swap it with its mirror image across 5 (e.g., 6 becomes 4, 7 becomes 3). However, if the sum of digits in positions 1 and 3 equals 8, this rule does not apply to those specific digits. What is the resulting sequence after applying these rules to the number 5274?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5274"
+            },
+            {
+              "label": "B",
+              "text": "5474"
+            },
+            {
+              "label": "C",
+              "text": "5234"
+            },
+            {
+              "label": "D",
+              "text": "5276"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Identify positions: Pos1=5, Pos2=2, Pos3=7, Pos4=4.\n2. Check swap condition for even positions (Pos2, Pos4).\n3. Pos2=2 (<=5), no swap needed.\n4. Pos4=4 (<=5), no swap needed.\n5. Check exception: Sum of Pos1 and Pos3 = 5+7=10.\n6. Since sum is not 8, the rule applies generally to even positions.\n7. However, since neither 2 nor 4 are >5, no swaps occur regardless.\n8. The number remains 5274.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3149,
+          "text": "A person stands at the center of a circular plaza. At 12:00 PM, their shadow falls exactly towards the East, indicating the Sun is in the West (Southwest quadrant logic for this specific exam universe). They walk 5 meters North-East, turn right and walk 5 meters, then turn left and walk 5 meters. If they return to the center by walking due South-East, what was their initial facing direction relative to the clock face numbers?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Facing 10"
+            },
+            {
+              "label": "B",
+              "text": "B) Facing 2"
+            },
+            {
+              "label": "C",
+              "text": "C) Facing 4"
+            },
+            {
+              "label": "D",
+              "text": "D) Facing 8"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial Shadow East implies Sun West (Person faces North by standard assumption unless twisted).\n2. Walk NE: Position shifts NE.\n3. Turn Right (NE->SE), Walk SE: Position shifts SE relative to start.\n4. Turn Left (SE->SW), Walk SW: Position shifts SW.\n5. Return path is South-East, meaning the displacement was North-West.\n6. Net displacement from 1st leg must be cancelled by last two legs + return.\n7. The only valid configuration for the 'Return' vector to be SE implies the starting orientation relative to the shadow logic aligns with option A.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3150,
+          "text": "A transparent sheet has a 3x3 grid of cells. The pattern inside is: Cell(1,1) has a circle; Cell(2,2) has a square; Cell(3,3) has a triangle. If you fold this flat sheet along the diagonal from top-left to bottom-right (bringing corners (1,2)-(3,4) together) and then view the front face of the resulting 3D structure, which symbol is visible in the geometric center of the front face? Options: A) Circle B) Square C) Triangle D) Empty.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Circle"
+            },
+            {
+              "label": "B",
+              "text": "Square"
+            },
+            {
+              "label": "C",
+              "text": "Triangle"
+            },
+            {
+              "label": "D",
+              "text": "Empty"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Map grid coordinates (row, col): Circle=(1,1), Square=(2,2), Triangle=(3,3). 2. Fold along diagonal y=x (top-left to bottom-right). 3. The fold brings the upper-right half onto the lower-left half. 4. The 'front' of the folded object corresponds to the original lower-left triangle area. 5. However, the question asks for the symbol visible in the *geometric center* of the resulting face after folding. 6. When a square sheet is folded along its main diagonal, the point originally at (2,2) - the exact center of the 3x3 grid - remains exactly on the fold line and becomes the central point of the new 2D projection's surface. 7. The symbol located at (2,2) is the Square.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3152,
+          "text": "In a specific government office protocol, the code for an action is derived by taking the literal physical direction mentioned in the sentence and applying it to the 'position' of the word 'Office' within the alphabet sequence (A=1st, B=2nd, ..., Z=26th). \n\nProtocol Rule: If a word implies a movement towards North, move the letter 'O' backward by 4 positions. If South, move forward by 4. If East, move backward by 3. If West, move forward by 5.\n\nBased on this protocol, what is the code for the phrase: 'The official must walk straight ahead'? (Note: In a standard map orientation where North is Up and South is Down, 'straight ahead' implies a neutral vertical alignment relative to the observer's view from the bottom looking up, effectively pointing 'North'.)",
+          "options": [
+            {
+              "label": "A",
+              "text": "K"
+            },
+            {
+              "label": "B",
+              "text": "Q"
+            },
+            {
+              "label": "C",
+              "text": "O"
+            },
+            {
+              "label": "D",
+              "text": "R"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Identify the key directional instruction in the phrase: 'walk straight ahead'.\nStep 2: Interpret direction: Relative to an observer facing North (standard map convention), 'straight ahead' points North.\nStep 3: Apply Protocol Rule for 'North': Move backward by 4 positions.\nStep 4: Take the target letter 'O' (15th letter).\nStep 5: Calculate new position: 15 - 4 = 11.\nStep 6: Identify the 11th letter of the alphabet: K.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3153,
+          "text": "In a standard Cartesian grid where North is up, imagine a 'Magic Mirror' placed at the diagonal line y = -x. This mirror swaps coordinates such that any point (x, y) reflects to (-y, -x). If you stand at Point A (coordinates 3, 2) and walk towards Point B (coordinates -1, 5), then step onto the mirror exactly halfway between them, which direction does your shadow face relative to the original North-East reference frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North-West"
+            },
+            {
+              "label": "B",
+              "text": "South-West"
+            },
+            {
+              "label": "C",
+              "text": "North-East"
+            },
+            {
+              "label": "D",
+              "text": "South-East"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Calculate midpoint of A(3,2) and B(-1,5): M = ((3-1)/2, (2+5)/2) = (1, 3.5).\n2. Reflect M across y=-x using rule (-y, -x): New Pos = (-3.5, -1).\n3. Original displacement vector A->B is (-4, +3). This is North-West.\n4. Reflection of vector (-4, 3) across y=-x: Swap and negate -> (-3, 4).\n5. Vector (-3, 4) points West (negative x) and North (positive y), which is North-West.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3128,
+          "text": "Find the next term: 3, 9, 27, 81, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "162"
+            },
+            {
+              "label": "B",
+              "text": "243"
+            },
+            {
+              "label": "C",
+              "text": "216"
+            },
+            {
+              "label": "D",
+              "text": "324"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 243.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3129,
+          "text": "Find the missing term: 2, 6, 12, 20, ?, 42",
+          "options": [
+            {
+              "label": "A",
+              "text": "28"
+            },
+            {
+              "label": "B",
+              "text": "30"
+            },
+            {
+              "label": "C",
+              "text": "32"
+            },
+            {
+              "label": "D",
+              "text": "36"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 30.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3130,
+          "text": "Find the wrong term in the series: 2, 6, 18, 54, 162, 484",
+          "options": [
+            {
+              "label": "A",
+              "text": "6"
+            },
+            {
+              "label": "B",
+              "text": "18"
+            },
+            {
+              "label": "C",
+              "text": "162"
+            },
+            {
+              "label": "D",
+              "text": "484"
+            }
+          ],
+          "answer": 3,
+          "solution": "Correct answer: 484.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3131,
+          "text": "Find the next term: 5, 7, 11, 17, 25, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "33"
+            },
+            {
+              "label": "B",
+              "text": "35"
+            },
+            {
+              "label": "C",
+              "text": "37"
+            },
+            {
+              "label": "D",
+              "text": "31"
+            }
+          ],
+          "answer": 1,
+          "solution": "Correct answer: 35.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3132,
+          "text": "Find the next term: 1, 1, 2, 6, 24, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "60"
+            },
+            {
+              "label": "B",
+              "text": "96"
+            },
+            {
+              "label": "C",
+              "text": "120"
+            },
+            {
+              "label": "D",
+              "text": "144"
+            }
+          ],
+          "answer": 2,
+          "solution": "Correct answer: 120.",
+          "_source": "SBI Clerk",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3044,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "50 minutes"
+            },
+            {
+              "label": "D",
+              "text": "100 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "The rate of production per machine does not change, so if 5 machines can make 5 widgets in 5 minutes, 100 machines can make 100 widgets in the same amount of time, which is 5 minutes.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3046,
+          "text": "Which of the following is the next letter in the series: A, C, E, G, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "H"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "J"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is incrementing by 2 letters in the alphabet, so the next letter in the series is &#39;I&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3049,
+          "text": "Which of the following is the odd one out: Mango, Apple, Banana, Guava",
+          "options": [
+            {
+              "label": "A",
+              "text": "Mango"
+            },
+            {
+              "label": "B",
+              "text": "Apple"
+            },
+            {
+              "label": "C",
+              "text": "Banana"
+            },
+            {
+              "label": "D",
+              "text": "Guava"
+            }
+          ],
+          "answer": 1,
+          "solution": "The odd one out is &#39;Apple&#39; because the other three options are all tropical fruits, while &#39;Apple&#39; is a temperate fruit.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3058,
+          "text": "Which of the following is the next letter in the series: A, C, E, G, I?",
+          "options": [
+            {
+              "label": "A",
+              "text": "K"
+            },
+            {
+              "label": "B",
+              "text": "J"
+            },
+            {
+              "label": "C",
+              "text": "L"
+            },
+            {
+              "label": "D",
+              "text": "M"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is obtained by adding 2 to the previous letter in the alphabet, so the next letter in the series would be K.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3062,
+          "text": "Which of the following is the next number in the series: 2, 6, 12, 20, 30?",
+          "options": [
+            {
+              "label": "A",
+              "text": "40"
+            },
+            {
+              "label": "B",
+              "text": "42"
+            },
+            {
+              "label": "C",
+              "text": "44"
+            },
+            {
+              "label": "D",
+              "text": "46"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is obtained by adding 4, 6, 8, 10, ... to the previous term, so the next number in the series would be 30 + 12 = 42.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3067,
+          "text": "A code language uses the following substitution: A=1, B=2, C=3, etc. What is the code for &#39;HELLO&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "8 5 12 12 15"
+            },
+            {
+              "label": "B",
+              "text": "7 5 11 11 14"
+            },
+            {
+              "label": "C",
+              "text": "6 4 10 10 13"
+            },
+            {
+              "label": "D",
+              "text": "5 3 9 9 12"
+            }
+          ],
+          "answer": 0,
+          "solution": "Using the substitution, H=8, E=5, L=12, L=12, O=15, so the code for &#39;HELLO&#39; is 8 5 12 12 15.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3068,
+          "text": "In a certain code, &#39;A&#39; is represented by &#39;D&#39;, &#39;B&#39; by &#39;E&#39;, and so on. What will &#39;Z&#39; be represented by?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "C"
+            }
+          ],
+          "answer": 3,
+          "solution": "Since each letter is shifted 3 places forward in the alphabet (A to D, B to E), &#39;Z&#39; would be shifted to &#39;C&#39; because the sequence wraps around the alphabet when it reaches &#39;Z&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3074,
+          "text": "Which of the following is the correct analogy: &#39;Finger : Hand :: ? : Foot&#39;",
+          "options": [
+            {
+              "label": "A",
+              "text": "Toe : Foot"
+            },
+            {
+              "label": "B",
+              "text": "Ankle : Foot"
+            },
+            {
+              "label": "C",
+              "text": "Knee : Foot"
+            },
+            {
+              "label": "D",
+              "text": "Leg : Foot"
+            }
+          ],
+          "answer": 0,
+          "solution": "The correct analogy is &#39;Finger : Hand :: Toe : Foot&#39; because just as a finger is a part of a hand, a toe is a part of a foot.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3077,
+          "text": "Which of the following words is the odd one out: Rose, Lily, Sunflower, Car?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rose"
+            },
+            {
+              "label": "B",
+              "text": "Lily"
+            },
+            {
+              "label": "C",
+              "text": "Sunflower"
+            },
+            {
+              "label": "D",
+              "text": "Car"
+            }
+          ],
+          "answer": 3,
+          "solution": "The other three options are all types of flowers, while &#39;Car&#39; is a vehicle, making it the odd one out.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3079,
+          "text": "Which of the following is the next number in the series: 2, 4, 8, 16, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "32"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "40"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is doubling the previous number, so the next number in the series is 32.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3081,
+          "text": "If &#39;a&#39; denotes addition, &#39;b&#39; denotes subtraction, &#39;c&#39; denotes multiplication, and &#39;d&#39; denotes division, then what does &#39;a b c d&#39; stand for?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Add Subtract Multiply Divide"
+            },
+            {
+              "label": "B",
+              "text": "Subtract Multiply Divide Add"
+            },
+            {
+              "label": "C",
+              "text": "Multiply Divide Add Subtract"
+            },
+            {
+              "label": "D",
+              "text": "Divide Add Subtract Multiply"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given the denotations, &#39;a b c d&#39; directly translates to &#39;Add Subtract Multiply Divide&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3084,
+          "text": "If A is the brother of B, and B is the sister of C, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother and Sister"
+            },
+            {
+              "label": "B",
+              "text": "Sister and Brother"
+            },
+            {
+              "label": "C",
+              "text": "Brothers"
+            },
+            {
+              "label": "D",
+              "text": "Sisters"
+            }
+          ],
+          "answer": 2,
+          "solution": "Since A is the brother of B, and B is the sister of C, it means A and C are brothers because they share the same siblings, making them siblings themselves.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3087,
+          "text": "Which of the following is the next number in the series: 2, 4, 8, 16, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "32"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "40"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is doubling the previous number, so the next number in the series is 32.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3089,
+          "text": "Which of the following is the next number in the series: 2, 6, 12, 20, 30?",
+          "options": [
+            {
+              "label": "A",
+              "text": "40"
+            },
+            {
+              "label": "B",
+              "text": "42"
+            },
+            {
+              "label": "C",
+              "text": "44"
+            },
+            {
+              "label": "D",
+              "text": "46"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is obtained by adding 4, 6, 8, 10, ... to the previous term, so the next number in the series would be 30 + 12 = 42.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3091,
+          "text": "Which of the following is the mirror image of the word &#39;MAD&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "DAM"
+            },
+            {
+              "label": "B",
+              "text": "AMD"
+            },
+            {
+              "label": "C",
+              "text": "MAD"
+            },
+            {
+              "label": "D",
+              "text": "DMA"
+            }
+          ],
+          "answer": 0,
+          "solution": "The mirror image of the word &#39;MAD&#39; is &#39;DAM&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3092,
+          "text": "Which of the following is the odd one out: Mango, Apple, Banana, Guava",
+          "options": [
+            {
+              "label": "A",
+              "text": "Mango"
+            },
+            {
+              "label": "B",
+              "text": "Apple"
+            },
+            {
+              "label": "C",
+              "text": "Banana"
+            },
+            {
+              "label": "D",
+              "text": "Guava"
+            }
+          ],
+          "answer": 1,
+          "solution": "The odd one out is &#39;Apple&#39; because the other three options are all tropical fruits, while &#39;Apple&#39; is a temperate fruit.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3099,
+          "text": "Which of the following is the next letter in the series: A, C, E, G, I?",
+          "options": [
+            {
+              "label": "A",
+              "text": "K"
+            },
+            {
+              "label": "B",
+              "text": "J"
+            },
+            {
+              "label": "C",
+              "text": "L"
+            },
+            {
+              "label": "D",
+              "text": "M"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is obtained by adding 2 to the previous letter in the alphabet, so the next letter in the series would be K.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3106,
+          "text": "Which of the following is the odd one out: Mango, Apple, Banana, Guava",
+          "options": [
+            {
+              "label": "A",
+              "text": "Mango"
+            },
+            {
+              "label": "B",
+              "text": "Apple"
+            },
+            {
+              "label": "C",
+              "text": "Banana"
+            },
+            {
+              "label": "D",
+              "text": "Guava"
+            }
+          ],
+          "answer": 1,
+          "solution": "The odd one out is &#39;Apple&#39; because the other three options are all tropical fruits, while &#39;Apple&#39; is a temperate fruit.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3109,
+          "text": "Which of the following words is the odd one out: Rose, Lily, Sunflower, Car?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rose"
+            },
+            {
+              "label": "B",
+              "text": "Lily"
+            },
+            {
+              "label": "C",
+              "text": "Sunflower"
+            },
+            {
+              "label": "D",
+              "text": "Car"
+            }
+          ],
+          "answer": 3,
+          "solution": "The other three options are all types of flowers, while &#39;Car&#39; is a vehicle, making it the odd one out.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3115,
+          "text": "Which of the following is the next number in the series: 2, 6, 12, 20, 30?",
+          "options": [
+            {
+              "label": "A",
+              "text": "40"
+            },
+            {
+              "label": "B",
+              "text": "42"
+            },
+            {
+              "label": "C",
+              "text": "44"
+            },
+            {
+              "label": "D",
+              "text": "46"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is obtained by adding 4, 6, 8, 10, ... to the previous term, so the next number in the series would be 30 + 12 = 42.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3117,
+          "text": "Which of the following is the next number in the series: 2, 4, 8, 16, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "32"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "40"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is doubling the previous number, so the next number in the series is 32.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3122,
+          "text": "Which of the following words is the odd one out: Rose, Lily, Sunflower, Car?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rose"
+            },
+            {
+              "label": "B",
+              "text": "Lily"
+            },
+            {
+              "label": "C",
+              "text": "Sunflower"
+            },
+            {
+              "label": "D",
+              "text": "Car"
+            }
+          ],
+          "answer": 3,
+          "solution": "The other three options are all types of flowers, while &#39;Car&#39; is a vehicle, making it the odd one out.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3126,
+          "text": "Which of the following is the next letter in the series: A, C, E, G, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "H"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "J"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is incrementing by 2 letters in the alphabet, so the next letter in the series is &#39;I&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3128,
+          "text": "Which of the following is the next number in the series: 2, 6, 12, 20, 30?",
+          "options": [
+            {
+              "label": "A",
+              "text": "40"
+            },
+            {
+              "label": "B",
+              "text": "42"
+            },
+            {
+              "label": "C",
+              "text": "44"
+            },
+            {
+              "label": "D",
+              "text": "46"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is obtained by adding 4, 6, 8, 10, ... to the previous term, so the next number in the series would be 30 + 12 = 42.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3129,
+          "text": "Which of the following is the odd one out: Mango, Apple, Banana, Guava",
+          "options": [
+            {
+              "label": "A",
+              "text": "Mango"
+            },
+            {
+              "label": "B",
+              "text": "Apple"
+            },
+            {
+              "label": "C",
+              "text": "Banana"
+            },
+            {
+              "label": "D",
+              "text": "Guava"
+            }
+          ],
+          "answer": 1,
+          "solution": "The odd one out is &#39;Apple&#39; because the other three options are all tropical fruits, while &#39;Apple&#39; is a temperate fruit.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3134,
+          "text": "Which of the following is the next number in the series: 2, 4, 8, 16, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "32"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "40"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is doubling the previous number, so the next number in the series is 32.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3142,
+          "text": "Which of the following is the next letter in the series: A, C, E, G, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "H"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "J"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is incrementing by 2 letters in the alphabet, so the next letter in the series is &#39;I&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3144,
+          "text": "Which of the following is the next letter in the series: A, C, E, G, I?",
+          "options": [
+            {
+              "label": "A",
+              "text": "K"
+            },
+            {
+              "label": "B",
+              "text": "J"
+            },
+            {
+              "label": "C",
+              "text": "L"
+            },
+            {
+              "label": "D",
+              "text": "M"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is obtained by adding 2 to the previous letter in the alphabet, so the next letter in the series would be K.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3147,
+          "text": "Which of the following is the mirror image of the word &#39;MAD&#39;?",
+          "options": [
+            {
+              "label": "A",
+              "text": "DAM"
+            },
+            {
+              "label": "B",
+              "text": "AMD"
+            },
+            {
+              "label": "C",
+              "text": "MAD"
+            },
+            {
+              "label": "D",
+              "text": "DMA"
+            }
+          ],
+          "answer": 0,
+          "solution": "The mirror image of the word &#39;MAD&#39; is &#39;DAM&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3153,
+          "text": "What comes next in the series: +3, +5, +7, +9?",
+          "options": [
+            {
+              "label": "A",
+              "text": "+10"
+            },
+            {
+              "label": "B",
+              "text": "+11"
+            },
+            {
+              "label": "C",
+              "text": "+12"
+            },
+            {
+              "label": "D",
+              "text": "+13"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is adding 2 to the previous increment: +3 (start), +5 (+2 from +3), +7 (+2 from +5), +9 (+2 from +7), so the next would be +11 (+2 from +9).",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3158,
+          "text": "Which of the following is the next number in the series: 2, 5, 8, 11, 14?",
+          "options": [
+            {
+              "label": "A",
+              "text": "15"
+            },
+            {
+              "label": "B",
+              "text": "17"
+            },
+            {
+              "label": "C",
+              "text": "18"
+            },
+            {
+              "label": "D",
+              "text": "20"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern of the series is adding 3 to the previous term: 2 + 3 = 5, 5 + 3 = 8, 8 + 3 = 11, 11 + 3 = 14, 14 + 3 = 17.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3168,
+          "text": "If it takes 5 machines 5 minutes to make 5 widgets, how long would it take 100 machines to make 100 widgets?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 minutes"
+            },
+            {
+              "label": "B",
+              "text": "10 minutes"
+            },
+            {
+              "label": "C",
+              "text": "50 minutes"
+            },
+            {
+              "label": "D",
+              "text": "100 minutes"
+            }
+          ],
+          "answer": 0,
+          "solution": "The rate of production per machine does not change, so if 5 machines can make 5 widgets in 5 minutes, 100 machines can make 100 widgets in the same amount of time, which is 5 minutes.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3169,
+          "text": "A bat and a ball together cost Rs. 100. The bat costs Rs. 90 more than the ball. How much does the ball cost?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rs. 5"
+            },
+            {
+              "label": "B",
+              "text": "Rs. 10"
+            },
+            {
+              "label": "C",
+              "text": "Rs. 15"
+            },
+            {
+              "label": "D",
+              "text": "Rs. 20"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let&#39;s denote the cost of the ball as x. Since the bat costs Rs. 90 more than the ball, the bat&#39;s cost is x + 90. The sum of their costs is Rs. 100: x + (x + 90) = 100. Simplifying, we get 2x + 90 = 100, then 2x = 10, and x = 5.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3174,
+          "text": "If A is the brother of B, and B is the sister of C, what is the relationship between A and C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Brother and Sister"
+            },
+            {
+              "label": "B",
+              "text": "Sister and Brother"
+            },
+            {
+              "label": "C",
+              "text": "Brothers"
+            },
+            {
+              "label": "D",
+              "text": "Sisters"
+            }
+          ],
+          "answer": 2,
+          "solution": "Since A is the brother of B, and B is the sister of C, it means A and C are brothers because they share the same siblings, making them siblings themselves.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3178,
+          "text": "Which of the following is the next number in the series: 2, 4, 8, 16, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "32"
+            },
+            {
+              "label": "B",
+              "text": "36"
+            },
+            {
+              "label": "C",
+              "text": "40"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is doubling the previous number, so the next number in the series is 32.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3180,
+          "text": "If &#39;a&#39; denotes addition, &#39;b&#39; denotes subtraction, &#39;c&#39; denotes multiplication, and &#39;d&#39; denotes division, then what does &#39;a b c d&#39; stand for?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Add Subtract Multiply Divide"
+            },
+            {
+              "label": "B",
+              "text": "Subtract Multiply Divide Add"
+            },
+            {
+              "label": "C",
+              "text": "Multiply Divide Add Subtract"
+            },
+            {
+              "label": "D",
+              "text": "Divide Add Subtract Multiply"
+            }
+          ],
+          "answer": 0,
+          "solution": "Given the denotations, &#39;a b c d&#39; directly translates to &#39;Add Subtract Multiply Divide&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3184,
+          "text": "In a certain code, &#39;A&#39; is represented by &#39;D&#39;, &#39;B&#39; by &#39;E&#39;, and so on. What will &#39;Z&#39; be represented by?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "B"
+            },
+            {
+              "label": "C",
+              "text": "C"
+            },
+            {
+              "label": "D",
+              "text": "C"
+            }
+          ],
+          "answer": 3,
+          "solution": "Since each letter is shifted 3 places forward in the alphabet (A to D, B to E), &#39;Z&#39; would be shifted to &#39;C&#39; because the sequence wraps around the alphabet when it reaches &#39;Z&#39;.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3186,
+          "text": "Which of the following is the next letter in the series: A, C, E, G, I?",
+          "options": [
+            {
+              "label": "A",
+              "text": "K"
+            },
+            {
+              "label": "B",
+              "text": "J"
+            },
+            {
+              "label": "C",
+              "text": "L"
+            },
+            {
+              "label": "D",
+              "text": "M"
+            }
+          ],
+          "answer": 0,
+          "solution": "The pattern of the series is obtained by adding 2 to the previous letter in the alphabet, so the next letter in the series would be K.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3189,
+          "text": "Which of the following is the correct analogy: &#39;Finger : Hand :: ? : Foot&#39;",
+          "options": [
+            {
+              "label": "A",
+              "text": "Toe : Foot"
+            },
+            {
+              "label": "B",
+              "text": "Ankle : Foot"
+            },
+            {
+              "label": "C",
+              "text": "Knee : Foot"
+            },
+            {
+              "label": "D",
+              "text": "Leg : Foot"
+            }
+          ],
+          "answer": 0,
+          "solution": "The correct analogy is &#39;Finger : Hand :: Toe : Foot&#39; because just as a finger is a part of a hand, a toe is a part of a foot.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3191,
+          "text": "In a family, A is the father of B. C is the brother of D. E is the sister of F. G is the son of H. If A, B, and C are all deceased, and only their direct descendants (children) remain alive to inherit from them, who among F or G stands in a relationship with D such that they could be considered 'siblings' to each other under this specific inheritance scenario? (Note: Assume standard biological relations unless implied otherwise by the death conditions).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A. F and D are half-siblings."
+            },
+            {
+              "label": "B",
+              "text": "B. G and D are full siblings."
+            },
+            {
+              "label": "C",
+              "text": "C. F and G are step-siblings."
+            },
+            {
+              "label": "D",
+              "text": "D. Neither F nor G is a sibling of D."
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Identify family unit 1: A (Father) -> B (Child). C is not explicitly linked to A/B, so they are distinct unless stated. C and D are siblings.\n2. Identify family unit 2: E and F are sisters.\n3. Identify family unit 3: G is the son of H.\n4. Analyze links: There is no information linking A's line with C's line or E/F's line or H's line.\n5. The condition 'A, B, C deceased' affects inheritance distribution within their lines but does not create biological relations between distinct family groups described separately.\n6. Therefore, F (sister of E) and G (son of H) have no defined connection to D (sibling of C).\n7. Without a connecting parent figure shared by these groups, no sibling relationship exists between F or G and D.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3194,
+          "text": "Identify the next number in the series: 2, 6, 12, 20, 30, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "42"
+            },
+            {
+              "label": "B",
+              "text": "44"
+            },
+            {
+              "label": "C",
+              "text": "46"
+            },
+            {
+              "label": "D",
+              "text": "48"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between consecutive terms are 4, 6, 8, 10. The next difference should be 12. Adding 12 to the last term (30) gives 42.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3195,
+          "text": "Arrange the following words in dictionary order: 1. Apple, 2. Apricot, 3. Ant, 4. Arm.",
+          "options": [
+            {
+              "label": "A",
+              "text": "3, 1, 2, 4"
+            },
+            {
+              "label": "B",
+              "text": "3, 4, 1, 2"
+            },
+            {
+              "label": "C",
+              "text": "1, 3, 4, 2"
+            },
+            {
+              "label": "D",
+              "text": "2, 3, 1, 4"
+            }
+          ],
+          "answer": 0,
+          "solution": "Comparing first letters: 'Ant' (A-n), 'Apple' (A-p), 'Apricot' (A-p-r). 'n' comes before 'p', so Ant is first. Between Apple and Apricot, 'pp' vs 'pr', 'p' comes before 'r'. So Apple then Apricot. Then Arm. Order: Ant, Apple, Apricot, Arm.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3196,
+          "text": "Identify the odd one out:",
+          "options": [
+            {
+              "label": "A",
+              "text": "Breeze"
+            },
+            {
+              "label": "B",
+              "text": "Storm"
+            },
+            {
+              "label": "C",
+              "text": "Hurricane"
+            },
+            {
+              "label": "D",
+              "text": "Gale"
+            }
+          ],
+          "answer": 0,
+          "solution": "'Breeze', 'Storm', 'Hurricane', and 'Gale' are types of winds. However, a 'Breeze' is a light wind, while the others (Storm, Hurricane, Gale) are strong or violent winds causing significant weather disturbance.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3197,
+          "text": "A spy starts at a secure point 'X' facing North. His mission requires him to execute the following sequence of commands relative to his CURRENT direction, where every command rotates his internal compass by 90 degrees clockwise AFTER execution:\n1. Move forward 5 units.\n2. Turn Left (relative to current face) and move forward 5 units.\n3. Turn Right (relative to current face) and move forward 5 units.\n4. Turn Left (relative to current face) and move forward 5 units.\n\nHowever, due to a magnetic anomaly affecting Sector X, every time the spy executes a command that involves turning LEFT, his body rotates an additional 90 degrees clockwise immediately after the turn but BEFORE moving. If he turns RIGHT normally, no such rotation occurs.\n\nAfter completing all 4 steps, in which cardinal direction is the spy facing?\nA) North\nB) South\nC) East\nD) West",
+          "options": [
+            {
+              "label": "A",
+              "text": "North"
+            },
+            {
+              "label": "B",
+              "text": "South"
+            },
+            {
+              "label": "C",
+              "text": "East"
+            },
+            {
+              "label": "D",
+              "text": "West"
+            }
+          ],
+          "answer": 2,
+          "solution": "Start: Facing North. Step 1 (Forward): Still facing North. Step 2 (Turn Left relative to North -> West; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: West rotated by +90 deg = North. Move 5 units while facing North. Step 3 (Turn Right relative to current North -> East). No anomaly for 'Right'. Orientation remains East. Move 5 units while facing East. Step 4 (Turn Left relative to East -> North; Magnetic anomaly adds +90 deg clockwise due to 'Left' turn command). New orientation: North rotated by +90 deg = East. Move 5 units. Final Facing Direction: East.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3215,
+          "text": "In a family, A is the brother of B. C is the father of A and D. If E is the daughter of D, who is the grandfather of E?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "C"
+            },
+            {
+              "label": "C",
+              "text": "B"
+            },
+            {
+              "label": "D",
+              "text": "D"
+            }
+          ],
+          "answer": 1,
+          "solution": "C is the father of A and D, so C is D's father. E is D's daughter, so C is E's grandfather.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3220,
+          "text": "In a specific code language used for railway signaling, the position of letters in a word is shifted based on their distance from the center. For words with an even number of letters (4 letters), the letter at index 1 moves to index 4, and the letter at index 2 moves to index 3 (swapping the first pair). The second pair (indices 3 and 4) also swaps places (index 3 goes to 4, index 4 goes to 3). This creates a mirror swap across the vertical midline. Using this 'Inverse-Coordinate Flip' logic for 4-letter words, if 'TRAIN' becomes 'NARIT', how is 'MADRAS' coded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "ATAD"
+            },
+            {
+              "label": "B",
+              "text": "DAT A"
+            },
+            {
+              "label": "C",
+              "text": "ADTA"
+            },
+            {
+              "label": "D",
+              "text": "TADA"
+            }
+          ],
+          "answer": 0,
+          "solution": "The rule reverses a four-letter word: positions 1 and 4 swap, and positions 2 and 3 swap. DATA becomes ATAD.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3225,
+          "text": "If today is Monday, what was the day 473 days ago?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Wednesday"
+            },
+            {
+              "label": "B",
+              "text": "Thursday"
+            },
+            {
+              "label": "C",
+              "text": "Tuesday"
+            },
+            {
+              "label": "D",
+              "text": "Monday"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Divide the total days (473) by 7 to find full weeks.\n2. Calculation: 473 ÷ 7 = 67 weeks with a remainder of 4 days.\n3. Since we are going backwards, subtract the remainder from 'Monday'.\n4. Monday - 1 day = Sunday; - 2 days = Saturday; - 3 days = Friday; - 4 days = Thursday.\n5. The year's leap status does not affect day calculation as it depends purely on the modulo arithmetic of 7.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3227,
+          "text": "Point A is at 12 o'clock on a clock face. If you start walking from the center towards A, then make a sharp 'Right' turn (90 degrees), which direction are you now facing relative to the clock's frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "3 o'clock position"
+            },
+            {
+              "label": "B",
+              "text": "6 o'clock position"
+            },
+            {
+              "label": "C",
+              "text": "9 o'clock position"
+            },
+            {
+              "label": "D",
+              "text": "12 o'clock position"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial movement is from center towards 12 o'clock (North). 2. A 'Right' turn of 90 degrees rotates the heading 90 degrees clockwise. 3. North + 90 deg Right = East. 4. On a clock face, East corresponds exactly to the 3 o'clock position.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3228,
+          "text": "Find the missing term in the series: 10, 23, 46, 87, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "154"
+            },
+            {
+              "label": "B",
+              "text": "171"
+            },
+            {
+              "label": "C",
+              "text": "189"
+            },
+            {
+              "label": "D",
+              "text": "188"
+            }
+          ],
+          "answer": 2,
+          "solution": "Each term is doubled and the sum of its digits is added: 10 x 2 + (1 + 0) = 23; 23 x 2 + (2 + 3) = 46; 46 x 2 + (4 + 6) = 87; 87 x 2 + (8 + 7) = 189.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3231,
+          "text": "Find the next term in the series: 5, 9, 13, 17, ?, 25 (where digits are values in base-10, but the pattern follows Base-12 arithmetic rules where any digit exceeding 9 wraps around to letters A-E representing 10-14).",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 21"
+            },
+            {
+              "label": "B",
+              "text": "B) 21A"
+            },
+            {
+              "label": "C",
+              "text": "C) 21E"
+            },
+            {
+              "label": "D",
+              "text": "D) 21F"
+            }
+          ],
+          "answer": 0,
+          "solution": "The series is an arithmetic progression starting at 5 with a common difference of 4: 5, 9 (5+4), 13 (9+4), 17 (13+4). The next term is 17 + 4 = 21. Although the prompt mentions Base-12 rules as a potential trap, standard integer addition applies here as no digit exceeds 9 in the sequence up to this point.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3232,
+          "text": "In a certain community, all 'Kartars' are also 'Yogis'. No 'Yogi' is a 'Vedantist'. Some 'Vedantists' are 'Brahmins'. What must be true?\nI. All Kartars are Brahmins.\nII. No Kartar is a Vedantist.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Only I follows"
+            },
+            {
+              "label": "B",
+              "text": "Only II follows"
+            },
+            {
+              "label": "C",
+              "text": "Both I and II follow"
+            },
+            {
+              "label": "D",
+              "text": "Neither I nor II follows"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Draw circle 'Kartar' entirely inside 'Yogi'.\n2. Draw circle 'Vedantist' entirely outside 'Yogi' (since no Yogi is Vedantist).\n3. Conclude: Since Kartar is a subset of Yogi, and Yogi excludes Vedantist, Kartar must exclude Vedantist. Thus II follows.\n4. There is no relationship defined between 'Kartar' and 'Brahmin' directly; the link is broken by 'Vedantist'.\n5. Therefore, statement I cannot be deduced as necessarily true.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3233,
+          "text": "In a certain code language, words are encoded based on the sum of their digits. The rule is: If a number's digit-sum (repeatedly adding digits until a single digit is obtained) is odd, write the letter corresponding to that sum (A=1, B=2... Z=26). If even, write the word 'EVE'.\nExample: \n'7' -> 7 (Odd) -> G\n'8' -> 8 (Even) -> EVE\n'5' -> 5 (Odd) -> E\n'4' -> 4 (Even) -> EVE\nWhat is the code for the number 29?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A"
+            },
+            {
+              "label": "B",
+              "text": "I"
+            },
+            {
+              "label": "C",
+              "text": "EVE"
+            },
+            {
+              "label": "D",
+              "text": "K"
+            }
+          ],
+          "answer": 2,
+          "solution": "Step 1: Sum digits of 29 = 2 + 9 = 11.\nStep 2: Since 11 > 9, repeat process: 1 + 1 = 2.\nStep 3: Final single digit is 2.\nStep 4: 2 is Even.\nStep 5: Apply rule for even -> Code is 'EVE'.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3236,
+          "text": "Complete the series: 24, 36, 54, 81, 121.5, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "160"
+            },
+            {
+              "label": "B",
+              "text": "170"
+            },
+            {
+              "label": "C",
+              "text": "180"
+            },
+            {
+              "label": "D",
+              "text": "182.25"
+            }
+          ],
+          "answer": 3,
+          "solution": "Each term is multiplied by 1.5: 24 x 1.5 = 36, 36 x 1.5 = 54, 54 x 1.5 = 81, 81 x 1.5 = 121.5, 121.5 x 1.5 = 182.25.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3238,
+          "text": "A spy, Agent X, starts at point O facing North. He moves 20m forward, turns 90° Left, walks 15m, then turns 90° Left again and walks 20m. Finally, he turns 90° Left one more time and walks 15m to reach a hidden vault. If the Sun is at his back as he enters the vault, in which cardinal direction did Agent X originally face while walking along the LAST segment of his path?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) North"
+            },
+            {
+              "label": "B",
+              "text": "B) South"
+            },
+            {
+              "label": "C",
+              "text": "C) West"
+            },
+            {
+              "label": "D",
+              "text": "D) East"
+            }
+          ],
+          "answer": 3,
+          "solution": "1. Start facing North. 2. Move 20m forward (Path 1). 3. Turn 90° Left -> Face West. Walk 15m (Path 2). 4. Turn 90° Left -> Face South. Walk 20m (Path 3). 5. Turn 90° Left -> Face East. Walk 15m (Path 4, the last segment). 6. Therefore, Agent X was facing East while walking along the last segment.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3240,
+          "text": "In a specific code language used for railway safety alerts, dates are encoded such that the letter corresponds to the sum of the Day's position in the month and its alphabetical value (A=1, B=2...), then converted back to a single letter based on the remainder when divided by 26. If the sum is > 26, subtract 26 once. Note: Only dates where the resulting letter is 'M' or later are considered valid alerts. On 10th March, an alert code is generated as 'L'. What date generates the alert code 'Q' under the same rules?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 13th April"
+            },
+            {
+              "label": "B",
+              "text": "B) 20th May"
+            },
+            {
+              "label": "C",
+              "text": "C) 17th June"
+            },
+            {
+              "label": "D",
+              "text": "D) 15th July"
+            }
+          ],
+          "answer": 0,
+          "solution": "Let day = d, month position in year (Jan=1...Mar=3). \nCode Letter Q is the 17th letter of alphabet.\nFormula: (d + Month_Pos) % 26 = Q_Val. If result > 26, subtract 26.\nCheck Option A (13th April): April is month 4. Day=13.\nSum = 13 + 4 = 17.\nLetter for 17 is 'Q'. Matches.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3254,
+          "text": "In a secret code used by the Railway Safety Wing, words are encoded based on their reverse causal function. For example: 'Stop' is encoded as 'Go' (the opposite action), 'Dark' is encoded as 'Light', and 'Win' is encoded as 'Lose'. Using this logic, how would 'Sleep' be encoded?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Rest"
+            },
+            {
+              "label": "B",
+              "text": "Wake"
+            },
+            {
+              "label": "C",
+              "text": "Tiredness"
+            },
+            {
+              "label": "D",
+              "text": "Bed"
+            }
+          ],
+          "answer": 1,
+          "solution": "The pattern is strictly Anti-Synonym (Action) reversal. Stop <-> Go, Dark <-> Light, Win <-> Lose. The word 'Sleep' describes a state of rest; its direct functional opposite action is to 'Wake'. Options A and C are states related to sleep, while D is the object.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3255,
+          "text": "In a rural village of Madhya Pradesh, the community council maps social connections as directional vectors relative to the Village Hall (Origin). Known relations:\n1. Ramu is 40 meters EAST of the Hall.\n2. Meera is 30 meters NORTH of Ramu.\n3. Aarav stands exactly midway between Ramu and Meera.\n\nLater, a storm forces everyone to walk along the line connecting their current position and the Village Hall in a straight path (shortest route). After walking this shortest distance, who will be standing closest to the Village Hall?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Meera"
+            },
+            {
+              "label": "B",
+              "text": "Aarav"
+            },
+            {
+              "label": "C",
+              "text": "Ramu"
+            },
+            {
+              "label": "D",
+              "text": "None of them"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Plot positions: Ramu (40E), Meera (40E, 30N). \n2. Aarav is midway: Pos = (40/2, 30/2) = (20E, 15N). \n3. Calculate shortest path to Hall (0,0) as distance: \n   - Ramu distance = sqrt(40² + 0²) = 40m.\n   - Meera distance = sqrt(40² + 30²) = 50m.\n   - Aarav distance = sqrt(20² + 15²) = sqrt(400+225) = sqrt(625) = 25m.\n4. Shortest path implies walking directly to origin. \n5. Comparison: 25m < 40m < 50m. Aarav is closest.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3256,
+          "text": "In a corporate hierarchy where rank is determined by strict rules: (1) No employee of 'Grade X' can supervise an employee of 'Grade Y' unless they are in the same department. (2) An employee of 'Grade X' and an employee of 'Grade Y' are never in the same department if they work on different projects. (3) Supervision implies a direct project linkage. If it is known that Employee A supervises Employee B, and both have ranks corresponding to Grade X and Grade Y respectively, which of the following conclusions about their working conditions must be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "They are in the same department and work on the same project."
+            },
+            {
+              "label": "B",
+              "text": "They are in different departments but work on the same project."
+            },
+            {
+              "label": "C",
+              "text": "They are in the same department and work on different projects."
+            },
+            {
+              "label": "D",
+              "text": "They are in different departments and work on different projects."
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Condition (1) requires them to be in the same department for A to supervise B.\n2. Condition (3) states supervision implies a direct project linkage, meaning they must share the same project.\n3. Condition (2) creates a hypothetical constraint: if they were on different projects, they could not be in the same department. Since we established they are in the same department from step 1, the premise of condition (2) regarding 'different projects' must be false for them to remain in the same department.\n4. Therefore, to satisfy all conditions while maintaining the supervision hierarchy, they must be in the same department and working on the same project.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3264,
+          "text": "In a specific cipher code, words are mapped to their directional 'Shadow Codes'. The rule is derived from the first letter of the word: if the first letter is in the set {A, B, C}, the shadow points North-East (NE); if in {D, E, F}, South-West (SW); if in {G, H, I}, South-East (SE); and so on, repeating this cycle every three letters. Additionally, words with exactly 3 vowels are appended with 'Long', those with 4 vowels with 'Short', and others get the suffix '-'. Given: 'CART' -> NE-Long, 'BIRD' -> NE-Low, 'POTATO' -> SW-Swift. What is the code for the word 'GARDEN'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "SE-Swift"
+            },
+            {
+              "label": "B",
+              "text": "SE-Long"
+            },
+            {
+              "label": "C",
+              "text": "SW-Swift"
+            },
+            {
+              "label": "D",
+              "text": "NE-Swift"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Check first letter of 'GARDEN': 'G'. 2. Map 'G' to direction cycle: A,B,C=NE; D,E,F=SW; G,H,I=SE. Thus, Direction = SE. 3. Count vowels in 'GARDEN' (A, E, E) = 3 vowels. 4. Rule for 3 vowels is suffix 'Swift'. 5. Combine: SE-Swift.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3265,
+          "text": "In a specific logic-gate language, the symbols represent operations as follows:\n'+' means 'is less than or equal to'\n'-\nmeans 'is greater than'\n'*' means 'is not equal to'\n'/\nmeans 'is exactly equal to'\n'The statements below are true in this language:\nI. A + B (A <= B)\nII. B - C (B > C)\nIII. D / B\nIV. E * A (E != A)\nGiven these, which of the following conclusions MUST be true?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A < C and D < E"
+            },
+            {
+              "label": "B",
+              "text": "D > C and E < A"
+            },
+            {
+              "label": "C",
+              "text": "D >= C and E != A"
+            },
+            {
+              "label": "D",
+              "text": "Data Inadequate"
+            }
+          ],
+          "answer": 2,
+          "solution": "1. Translate statements: I(A<=B), II(B>C), III(D=B), IV(E!=A).\n2. Combine I & II via B: Since A<=B and B>C, we have A<=B>C. No direct relation between A and C.\n3. Substitute III into chain: D=B. Thus A<=D>C. Therefore D>=C is logically valid (since B>=C implies D>=C).\n4. Analyze IV with substitution: E!=A. No fixed inequality exists between E and A, so 'E < A' or 'E > A' cannot be determined.\n5. Evaluate options: Option C states 'D >= C and E != A'. This matches our derived facts perfectly.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3267,
+          "text": "In the formal register of Indian Bureaucracy, specific verbs denote official actions with strict procedural connotations: 'Sanction' is to approval as 'Cognizance' is to …?",
+          "options": [
+            {
+              "label": "A",
+              "text": "a) Accepting a legal case for trial"
+            },
+            {
+              "label": "B",
+              "text": "b) Issuing a travel pass"
+            },
+            {
+              "label": "C",
+              "text": "c) Denying a leave application"
+            },
+            {
+              "label": "D",
+              "text": "d) Filing a criminal complaint"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Analyze the first pair: 'Sanction' in bureaucracy strictly means granting official approval.\n2. Identify the register of the second word: 'Cognizance' is a technical term used by courts/police.\n3. Apply the meaning: To 'take cognizance' means a court formally acknowledges receipt of a case and accepts jurisdiction over it.\n4. Compare options: Option (a) defines accepting a legal case, matching the formal definition of taking cognizance.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3268,
+          "text": "A train engineer observes a specific rule for speed adjustments based on the type of station passed: If the station has an odd number of platforms, add 10 km/h; if even, subtract 5 km/h. Starting at Station X (3 platforms) traveling at 60 km/h, the train passes 4 subsequent stations before reaching the final destination. The sequence of platform counts is 2, 5, 4, and 3 respectively. What is the speed of the train upon reaching the final destination?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) 65 km/h"
+            },
+            {
+              "label": "B",
+              "text": "B) 50 km/h"
+            },
+            {
+              "label": "C",
+              "text": "C) 70 km/h"
+            },
+            {
+              "label": "D",
+              "text": "D) 85 km/h"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start: 60 km/h. Station 1 (2 platforms, even): -5 -> 55. Station 2 (5 platforms, odd): +10 -> 65. Station 3 (4 platforms, even): -5 -> 60. Station 4 (3 platforms, odd): +10 -> 70. Destination reached at 70 km/h.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3270,
+          "text": "Identify the next term in the series: 15, 22, 33, 48, 67, ?",
+          "options": [
+            {
+              "label": "A",
+              "text": "88"
+            },
+            {
+              "label": "B",
+              "text": "90"
+            },
+            {
+              "label": "C",
+              "text": "92"
+            },
+            {
+              "label": "D",
+              "text": "95"
+            }
+          ],
+          "answer": 0,
+          "solution": "The differences between terms are 7, 11, 15, 19 (increasing by 4). The next difference is 23. 67 + 23 = 88.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3271,
+          "text": "A and B are siblings. C is the father of B. D is the mother of A. E is the son of D. Who is E to C?",
+          "options": [
+            {
+              "label": "A",
+              "text": "Son"
+            },
+            {
+              "label": "B",
+              "text": "Grandson"
+            },
+            {
+              "label": "C",
+              "text": "Brother"
+            },
+            {
+              "label": "D",
+              "text": "Nephew"
+            }
+          ],
+          "answer": 0,
+          "solution": "D is the mother of A, so D is also the mother of B (since A and B are siblings). C is the father of B, so C is married to D. E is the son of D, which makes E the son of C.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3273,
+          "text": "In a certain code language, 'CAT' is written as '3120'. What is the code for 'DOG'?",
+          "options": [
+            {
+              "label": "A",
+              "text": "4157"
+            },
+            {
+              "label": "B",
+              "text": "4150"
+            },
+            {
+              "label": "C",
+              "text": "3157"
+            },
+            {
+              "label": "D",
+              "text": "4158"
+            }
+          ],
+          "answer": 0,
+          "solution": "C=3, A=1, T=20. D=4, O=15, G=7. So DOG is 4157.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3275,
+          "text": "If you walk 10 km North, turn left and walk 5 km, then turn right and walk 10 km, how far are you from the starting point?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5 km"
+            },
+            {
+              "label": "B",
+              "text": "10 km"
+            },
+            {
+              "label": "C",
+              "text": "15 km"
+            },
+            {
+              "label": "D",
+              "text": "20 km"
+            }
+          ],
+          "answer": 0,
+          "solution": "Start North 10. Left is West 5. Left is South 10. Net displacement is 5 km West. Distance from start is 5 km.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3277,
+          "text": "Arrange the following words in a logical sequence: 1. Egg, 2. Chicken, 3. Bird, 4. Baby",
+          "options": [
+            {
+              "label": "A",
+              "text": "1, 2, 4, 3"
+            },
+            {
+              "label": "B",
+              "text": "1, 4, 2, 3"
+            },
+            {
+              "label": "C",
+              "text": "4, 1, 2, 3"
+            },
+            {
+              "label": "D",
+              "text": "1, 3, 4, 2"
+            }
+          ],
+          "answer": 1,
+          "solution": "An egg hatches into a baby chicken (chick), which grows into a chicken, which is a type of bird. Sequence: 1, 4, 2, 3.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3280,
+          "text": "In the village of Panchavati, a peculiar inheritance rule dictates that property passes NOT to the son, but to the maternal aunt of the heir. Consider the family: A is B's brother. C is D's daughter. E is F's only child and E is also the maternal aunt of G. If the property owner is H, who is J's son, and we know that I is H's wife and K is L's mother, identify the relationship between M (who is N's only daughter) and H, given that M is the one who inherits from H. How is M related to H?",
+          "options": [
+            {
+              "label": "A",
+              "text": "M is H's daughter."
+            },
+            {
+              "label": "B",
+              "text": "M is H's sister."
+            },
+            {
+              "label": "C",
+              "text": "M is H's maternal aunt."
+            },
+            {
+              "label": "D",
+              "text": "M is H's wife."
+            }
+          ],
+          "answer": 2,
+          "solution": "1. M inherits from H, so M must be H's maternal aunt per the rule.\n2. The rule defines 'maternal aunt' as the mother of H's mother.\n3. Therefore, M is the sister of H's mother.\n4. This makes M the maternal aunt of H.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3282,
+          "text": "In the city of Varanasi, a new digital tax rule applies to vehicle license numbers: for any digit in the even positions (2nd, 4th, etc.) that is greater than 5, swap it with its mirror image across 5 (e.g., 6 becomes 4, 7 becomes 3). However, if the sum of digits in positions 1 and 3 equals 8, this rule does not apply to those specific digits. What is the resulting sequence after applying these rules to the number 5274?",
+          "options": [
+            {
+              "label": "A",
+              "text": "5274"
+            },
+            {
+              "label": "B",
+              "text": "5474"
+            },
+            {
+              "label": "C",
+              "text": "5234"
+            },
+            {
+              "label": "D",
+              "text": "5276"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Identify positions: Pos1=5, Pos2=2, Pos3=7, Pos4=4.\n2. Check swap condition for even positions (Pos2, Pos4).\n3. Pos2=2 (<=5), no swap needed.\n4. Pos4=4 (<=5), no swap needed.\n5. Check exception: Sum of Pos1 and Pos3 = 5+7=10.\n6. Since sum is not 8, the rule applies generally to even positions.\n7. However, since neither 2 nor 4 are >5, no swaps occur regardless.\n8. The number remains 5274.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3294,
+          "text": "A person stands at the center of a circular plaza. At 12:00 PM, their shadow falls exactly towards the East, indicating the Sun is in the West (Southwest quadrant logic for this specific exam universe). They walk 5 meters North-East, turn right and walk 5 meters, then turn left and walk 5 meters. If they return to the center by walking due South-East, what was their initial facing direction relative to the clock face numbers?",
+          "options": [
+            {
+              "label": "A",
+              "text": "A) Facing 10"
+            },
+            {
+              "label": "B",
+              "text": "B) Facing 2"
+            },
+            {
+              "label": "C",
+              "text": "C) Facing 4"
+            },
+            {
+              "label": "D",
+              "text": "D) Facing 8"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Initial Shadow East implies Sun West (Person faces North by standard assumption unless twisted).\n2. Walk NE: Position shifts NE.\n3. Turn Right (NE->SE), Walk SE: Position shifts SE relative to start.\n4. Turn Left (SE->SW), Walk SW: Position shifts SW.\n5. Return path is South-East, meaning the displacement was North-West.\n6. Net displacement from 1st leg must be cancelled by last two legs + return.\n7. The only valid configuration for the 'Return' vector to be SE implies the starting orientation relative to the shadow logic aligns with option A.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3295,
+          "text": "A transparent sheet has a 3x3 grid of cells. The pattern inside is: Cell(1,1) has a circle; Cell(2,2) has a square; Cell(3,3) has a triangle. If you fold this flat sheet along the diagonal from top-left to bottom-right (bringing corners (1,2)-(3,4) together) and then view the front face of the resulting 3D structure, which symbol is visible in the geometric center of the front face? Options: A) Circle B) Square C) Triangle D) Empty.",
+          "options": [
+            {
+              "label": "A",
+              "text": "Circle"
+            },
+            {
+              "label": "B",
+              "text": "Square"
+            },
+            {
+              "label": "C",
+              "text": "Triangle"
+            },
+            {
+              "label": "D",
+              "text": "Empty"
+            }
+          ],
+          "answer": 1,
+          "solution": "1. Map grid coordinates (row, col): Circle=(1,1), Square=(2,2), Triangle=(3,3). 2. Fold along diagonal y=x (top-left to bottom-right). 3. The fold brings the upper-right half onto the lower-left half. 4. The 'front' of the folded object corresponds to the original lower-left triangle area. 5. However, the question asks for the symbol visible in the *geometric center* of the resulting face after folding. 6. When a square sheet is folded along its main diagonal, the point originally at (2,2) - the exact center of the 3x3 grid - remains exactly on the fold line and becomes the central point of the new 2D projection's surface. 7. The symbol located at (2,2) is the Square.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3297,
+          "text": "In a specific government office protocol, the code for an action is derived by taking the literal physical direction mentioned in the sentence and applying it to the 'position' of the word 'Office' within the alphabet sequence (A=1st, B=2nd, ..., Z=26th). \n\nProtocol Rule: If a word implies a movement towards North, move the letter 'O' backward by 4 positions. If South, move forward by 4. If East, move backward by 3. If West, move forward by 5.\n\nBased on this protocol, what is the code for the phrase: 'The official must walk straight ahead'? (Note: In a standard map orientation where North is Up and South is Down, 'straight ahead' implies a neutral vertical alignment relative to the observer's view from the bottom looking up, effectively pointing 'North'.)",
+          "options": [
+            {
+              "label": "A",
+              "text": "K"
+            },
+            {
+              "label": "B",
+              "text": "Q"
+            },
+            {
+              "label": "C",
+              "text": "O"
+            },
+            {
+              "label": "D",
+              "text": "R"
+            }
+          ],
+          "answer": 0,
+          "solution": "Step 1: Identify the key directional instruction in the phrase: 'walk straight ahead'.\nStep 2: Interpret direction: Relative to an observer facing North (standard map convention), 'straight ahead' points North.\nStep 3: Apply Protocol Rule for 'North': Move backward by 4 positions.\nStep 4: Take the target letter 'O' (15th letter).\nStep 5: Calculate new position: 15 - 4 = 11.\nStep 6: Identify the 11th letter of the alphabet: K.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        },
+        {
+          "id": 3298,
+          "text": "In a standard Cartesian grid where North is up, imagine a 'Magic Mirror' placed at the diagonal line y = -x. This mirror swaps coordinates such that any point (x, y) reflects to (-y, -x). If you stand at Point A (coordinates 3, 2) and walk towards Point B (coordinates -1, 5), then step onto the mirror exactly halfway between them, which direction does your shadow face relative to the original North-East reference frame?",
+          "options": [
+            {
+              "label": "A",
+              "text": "North-West"
+            },
+            {
+              "label": "B",
+              "text": "South-West"
+            },
+            {
+              "label": "C",
+              "text": "North-East"
+            },
+            {
+              "label": "D",
+              "text": "South-East"
+            }
+          ],
+          "answer": 0,
+          "solution": "1. Calculate midpoint of A(3,2) and B(-1,5): M = ((3-1)/2, (2+5)/2) = (1, 3.5).\n2. Reflect M across y=-x using rule (-y, -x): New Pos = (-3.5, -1).\n3. Original displacement vector A->B is (-4, +3). This is North-West.\n4. Reflection of vector (-4, 3) across y=-x: Swap and negate -> (-3, 4).\n5. Vector (-3, 4) points West (negative x) and North (positive y), which is North-West.",
+          "_source": "SSC GD",
+          "_sourceSection": "Reasoning"
+        }
+      ]
+    }
+  ]
+}
