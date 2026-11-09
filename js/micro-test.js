@@ -245,7 +245,11 @@ function loadFullExamData(){
   fetch('data/topics/' + selectedExam + '.json?' + Date.now())
     .then(function(r){ if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function(d){ buildQuestions(d); })
-    .catch(function(){ resetStartBtn(); });
+    .catch(function(err){
+      resetStartBtn();
+      var topicSummary = document.getElementById('topicSummary');
+      if (topicSummary) topicSummary.textContent = 'Start failed (' + (err && err.message ? err.message : 'check connection') + ') — retry.';
+    });
 }
 
 function resetStartBtn(){
