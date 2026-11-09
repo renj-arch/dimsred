@@ -22,11 +22,18 @@ function esc(s) {
 function mcq(text, correct, distractors, sol) {
   // Rotate the correct answer position by a deterministic hash of the text.
   const pos = text.length % 4;
+  // Deduplicate, drop any distractor that repeats the key, then pad so every
+  // question always has four distinct options.
+  const pool = [];
+  distractors.concat(['None of the above', 'All of the above', 'Cannot be determined'])
+    .forEach(function (d) {
+      if (d && d !== correct && pool.indexOf(d) === -1 && pool.length < 3) pool.push(d);
+    });
   const opts = [];
   let d = 0;
   for (let i = 0; i < 4; i++) {
     if (i === pos) opts.push(correct);
-    else opts.push(distractors[d++]);
+    else opts.push(pool[d++]);
   }
   return { text, options: opts, correct: pos, sol };
 }
@@ -154,8 +161,8 @@ function makeQs(lang) {
     mcq(`Which of the following is a major period or movement in ${lang.name} literature?`, lang.movements[0], ['Romanticism', 'Modernism', 'Post-modernism'].filter(x => x !== lang.movements[0]).slice(0, 3), `${lang.movements[0]} is a major movement/period in ${lang.name} literature.`),
     mcq(`The earliest phase of ${lang.name} literature is best described as:`, lang.periods[0].name, ['Modern period', 'Colonial period', 'Post-independence period'].filter(x => x !== lang.periods[0].name).slice(0, 3), `${lang.periods[0].name}: ${lang.periods[0].desc}`),
     mcq(`Which work is associated with ${lang.authors[0].name}?`, lang.works.find(w => w.author === lang.authors[0].name) ? lang.works.find(w => w.author === lang.authors[0].name).title : lang.works[0].title, lang.works.filter(w => w.author !== lang.authors[0].name).slice(0, 3).map(w => w.title), `The work is associated with ${lang.authors[0].name}.`),
-    mcq(`Which of the following is a major author of ${lang.name}?`, lang.authors[1].name, ['William Wordsworth', 'Rabindranath Tagore', 'Kalidasa'].filter(x => x !== lang.authors[1].name).slice(0, 3), `${lang.authors[1].name} is a major ${lang.name} author.`),
-    mcq(`The language ${lang.name} is mainly spoken in:`, lang.region, ['Kerala', 'Punjab', 'Odisha'].filter(x => x !== lang.region).slice(0, 3), `${lang.name} is mainly spoken in ${lang.region}.`),
+    mcq(`Which of the following is a major author of ${lang.name}?`, lang.authors[1].name, ['William Wordsworth', 'Rabindranath Tagore', 'Kalidasa', 'Tulsidas', 'Premchand'].filter(x => x !== lang.authors[1].name).slice(0, 3), `${lang.authors[1].name} is a major ${lang.name} author.`),
+    mcq(`The language ${lang.name} is mainly spoken in:`, lang.region, ['Kerala', 'Punjab', 'Odisha', 'Gujarat', 'Assam', 'Karnataka', 'Tamil Nadu', 'West Bengal'].filter(x => x !== lang.region).slice(0, 3), `${lang.name} is mainly spoken in ${lang.region}.`),
     mcq(`Which statement about ${lang.name} is correct?`, lang.status, ['It is not recognised by the Constitution.', 'It is a classical language only.', 'It has no written literature.'], `${lang.name}: ${lang.status}.`),
     mcq(`In a Paper II explanation question on ${lang.name}, the first step is to:`, 'identify the text, author and context', ['summarise the plot', 'list all characters', 'give a personal opinion'], 'Explanation begins with context: text, author, period and speaker.'),
     mcq(`Which approach is best for a ${lang.name} literary essay?`, 'thesis, textual evidence, counter-argument, conclusion', ['plot summary only', 'biography of the author only', 'quotation collection without argument'], 'A literary essay needs a thesis, evidence, a counter-argument and a conclusion.'),
