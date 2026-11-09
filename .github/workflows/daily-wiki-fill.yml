@@ -219,7 +219,7 @@ jobs:
     # (41424766644, 41584958983) AFTER all ten chunks had succeeded, losing the
     # whole harvest. collect is now fixed (it used to die on a missing
     # .merge-state dir), so this is real work, not a hang.
-    timeout-minutes: 90
+    timeout-minutes: 360
     # Merge whatever chunks succeeded ΓÇö a failed/timed-out chunk must not throw
     # away the rest (run #434). merge-chunks.js skips missing chunks, but if NO
     # chunk was collected finalize now fails instead of committing the bare
@@ -382,7 +382,7 @@ jobs:
   # fresh 70-min budget and re-uploads the final payload under `merged`.
   archive:
     needs: [merge]
-    timeout-minutes: 70
+    timeout-minutes: 180
     if: ${{ !cancelled() && needs.merge.result == 'success' }}
     runs-on: ubuntu-latest
     steps:
@@ -439,7 +439,7 @@ jobs:
     # on the hard 6h kill. The 6h-cap guard on the timeline step (below) keeps
     # normal runs far under this: timeline only starts when it can FINISH, and
     # build-timeline.yml is self-dispatched at the end as the continuation path.
-    timeout-minutes: 110
+    timeout-minutes: 240
     steps:
       - uses: actions/checkout@v4
         with:
@@ -659,3 +659,4 @@ jobs:
           # Chain the next Wiki Fill as soon as this one finishes — back-to-back
           # instead of waiting for the next 00:00 UTC cron slot.
           gh workflow run daily-wiki-fill.yml --ref main 2>/dev/null && echo "Queued next Wiki Fill" || echo "Next Wiki Fill dispatch failed (non-fatal)"
+
