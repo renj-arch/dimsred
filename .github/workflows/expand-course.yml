@@ -21,11 +21,11 @@ name: Expand Course Content
 # old 27B could not complete runs here, so nothing dispatches it anymore.
 
 on:
-  schedule:
-    # Every 6 hours. A depth run needs ~3 h including model load, so a 6-hour
-    # gap keeps at most one run waiting; the concurrency group below stops
-    # them from overlapping.
-    - cron: '17 0,6,12,18 * * *'
+  # No fixed cron: runs are chained — each run self-dispatches the next one
+  # when it finishes (see the "Queue the next deepen run" step below). This
+  # means a new deepen cycle starts as soon as the previous one completes,
+  # instead of waiting for the next 6-hour clock slot. Use workflow_dispatch
+  # to start the chain manually.
   workflow_dispatch:
     inputs:
       per_run:
@@ -152,9 +152,9 @@ jobs:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
           EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '12' }}
-          EXPAND_DEADLINE_MIN: '170'
+          EXPAND_DEADLINE_MIN: '120'
           EXPAND_DEEPEN: '1'
-          EXPAND_DEPTH_PASSES: '3'
+          EXPAND_DEPTH_PASSES: '2'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
 
       - name: Regenerate exactly the filled lesson pages
@@ -199,3 +199,19 @@ jobs:
           if [ -f /tmp/course-files.txt ]; then xargs -a /tmp/course-files.txt git add; fi
           rm -f scripts/.course-touched.json
           bash scripts/ci-push.sh "course-expand: ${{ inputs.model || 'qwen3.5:9b' }} wrote new exam lessons (run #${{ github.run_number }})"
+
+      # Queue the next deepen run as soon as this one finishes — chained
+      # instead of waiting for a fixed 6-hour cron slot.
+      - name: Queue the next deepen run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          for i in 1 2 3; do
+            if gh workflow run expand-course.yml --ref main; then
+              echo "Queued the next course-deepen run (starts when this run completes)"
+              break
+            fi
+            echo "Dispatch attempt $i failed, retrying..."
+            sleep 10
+          done
