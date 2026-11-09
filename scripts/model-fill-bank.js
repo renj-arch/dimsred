@@ -118,6 +118,14 @@ function validItem(item, bank, batch) {
     const dup = qd.duplicateReason(prev, candidate);
     if (dup) return 'duplicate of ' + (batch.indexOf(prev) >= 0 ? 'batch' : 'bank') + ' (' + dup + ')';
   }
+  // DI sections must carry an image/table/chart so the question is solvable.
+  const isDI = /data-interpretation|data-handling|numerical-ability|basic-maths/i.test(section);
+  if (isDI) {
+    const hasImage = item.imageUrl && item.imageUrl.length > 5;
+    const hasTable = item.tableData && Array.isArray(item.tableData.headers) && Array.isArray(item.tableData.rows) && item.tableData.rows.length > 0;
+    const hasChart = item.chartData && item.chartData.type && Array.isArray(item.chartData.labels) && item.chartData.labels.length > 0;
+    if (!hasImage && !hasTable && !hasChart) return 'DI question missing imageUrl/tableData/chartData';
+  }
   // A correct answer that is only "All of the above" cannot be explained by
   // the option text alone; keep it only when the solution names the options.
   if (/^all of the above$/i.test(opts[correct]) && !/all of the above/i.test(solution)) return 'all-of-the-above without explanation';
@@ -136,7 +144,7 @@ function promptFor(section, count, examName, paperName, seeds) {
     seeds.length ? seeds.slice(-40).map(function (s) { return '- ' + s; }).join('\n') : '(none)',
     '',
     'Return STRICT JSON array only, no markdown. Each element:',
-    '{"text":"question stem","options":["A text","B text","C text","D text"],"correct":0,"solution":"2-4 sentences: why the key is right and why the other three are wrong","topic":"sub-topic","difficulty":"easy|medium|hard"}',
+    '{"text":"question stem","options":["A text","B text","C text","D text"],"correct":0,"solution":"2-4 sentences","topic":"sub-topic","difficulty":"easy|medium|hard","imageUrl":"https://...png","tableData":{"headers":["A","B"],"rows":[["x","1"]]}","chartData":{"type":"bar","labels":["x"],"datasets":[{"label":"y","data":[1]}]}}',
     '',
     'Rules:',
     '- "correct" is the 0-based index of the right option.',
@@ -144,6 +152,7 @@ function promptFor(section, count, examName, paperName, seeds) {
     '- Vary the correct index across items; do not always use 0.',
     '- Every question must be answerable from the stem and options alone.',
     '- Do not repeat a fact already tested by any seed, even with different wording or quotes.',
+    '- For Data Interpretation sections: every question MUST include an imageUrl (bar chart / pie chart / line graph) OR tableData (headers + rows). The stem must reference the image/table (e.g. "As per the chart...").',
     '- Return exactly ' + count + ' items.'
   ].join('\n');
 }
@@ -197,7 +206,10 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
         source: 'model',
         model: llm.MODEL,
         generatedAt: new Date().toISOString(),
-        reviewed: false
+        reviewed: false,
+        imageUrl: item.imageUrl || null,
+        tableData: item.tableData || null,
+        chartData: item.chartData || null
       });
       added++; budget.left--; addedThisRound++;
     }

@@ -285,6 +285,7 @@ function showQuestion(){
   qProgressFill.style.width = ((currentIdx / questions.length) * 100) + '%';
   qTopicTag.textContent = selectedTopic;
   qText.textContent = q.text;
+  renderDiagram(q);
   qOptions.innerHTML = '';
   for (var i = 0; i < q.options.length; i++) {
     var opt = q.options[i];
@@ -300,6 +301,52 @@ function showQuestion(){
   } else {
     nextBtn.textContent = 'Next Question';
   }
+}
+
+function renderDiagram(q){
+  var qCard = document.getElementById('qCard');
+  var existing = qCard.querySelector('.diagram-wrap');
+  if(existing) existing.remove();
+  if(!q) return;
+  var wrap = document.createElement('div');
+  wrap.className = 'diagram-wrap';
+  var html = '';
+  if(q.imageUrl){
+    html += '<div class="diagram-img"><img src="'+q.imageUrl+'" alt="Diagram" style="max-width:100%;height:auto;border:1px solid rgba(255,255,255,.08);border-radius:8px;margin-bottom:8px"></div>';
+  }
+  if(q.tableData && q.tableData.headers && q.tableData.rows){
+    html += '<div class="diagram-table"><table style="width:100%;border-collapse:collapse;font-size:.85em;margin-bottom:8px"><thead>';
+    q.tableData.headers.forEach(function(h){ html += '<th style="padding:8px 10px;border:1px solid rgba(255,255,255,.08);text-align:left;background:rgba(167,139,250,.1);color:var(--purple);font-weight:600">'+h+'</th>'; });
+    html += '</thead><tbody>';
+    q.tableData.rows.forEach(function(row){
+      html += '<tr>';
+      row.forEach(function(cell){ html += '<td style="padding:8px 10px;border:1px solid rgba(255,255,255,.08);text-align:left;background:rgba(255,255,255,.02)">'+cell+'</td>'; });
+      html += '</tr>';
+    });
+    html += '</tbody></table>';
+  }
+  if(q.chartData && q.chartData.type && q.chartData.labels){
+    html += '<div class="diagram-chart"><canvas id="diagCanvas" width="400" height="200"></canvas></div>';
+  }
+  wrap.innerHTML = html;
+  qCard.insertBefore(wrap, qCard.firstChild);
+  if(q.chartData && q.chartData.labels){
+    renderChart(q.chartData);
+  }
+}
+
+function renderChart(data){
+  var canvas = document.getElementById('diagCanvas');
+  if(!canvas || !window.Chart) return;
+  var ctx = canvas.getContext('2d');
+  new Chart(ctx, {
+    type: data.type || 'bar',
+    data: {
+      labels: data.labels,
+      datasets: data.datasets.map(function(d){ return { label: d.label||'Series', data: d.data, backgroundColor: d.color||'rgba(167,139,250,.6)', borderColor: d.border||'rgba(167,139,250,1)', borderWidth: 1 }; })
+    },
+    options: { responsive: true, plugins: { legend: { display: true, position: 'top' }, title: { display: false } }, scales: { y: { beginAtZero: true } } }
+  });
 }
 
 function selectAnswer(idx){

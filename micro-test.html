@@ -83,6 +83,15 @@
         .q-opt.wrong{border-color:var(--red);background:rgba(239,68,68,.1);color:var(--red)}
         .q-opt:disabled{cursor:default;opacity:.7}
         .q-opt.show-correct{border-color:var(--emerald);background:rgba(52,211,153,.04);color:var(--emerald)}
+        .diagram-wrap{margin:14px 0;padding:14px;border:1px solid var(--border);border-radius:var(--radius);background:rgba(255,255,255,.02)}
+        .diagram-img{margin-bottom:10px}
+        .diagram-img img{max-width:100%;height:auto;border:1px solid rgba(255,255,255,.08);border-radius:8px}
+        .diagram-table{overflow-x:auto;margin-bottom:8px}
+        .diagram-table table{width:100%;border-collapse:collapse;font-size:.85em}
+        .diagram-table th{background:rgba(167,139,250,.1);color:var(--purple);font-weight:600;padding:8px 10px;border:1px solid var(--border);text-align:left}
+        .diagram-table td{padding:8px 10px;border:1px solid rgba(255,255,255,.08);text-align:left;background:rgba(255,255,255,.02)}
+        .diagram-table tr:nth-child(even){background:rgba(255,255,255,.01)}
+        .diagram-chart{max-width:420px;margin:0 auto}
 
         .result-card{padding:28px 24px;border-radius:var(--radius);border:1px solid var(--border);background:var(--bg-card);text-align:center}
         .result-card .score-big{font-size:3em;font-weight:900;background:linear-gradient(135deg,var(--purple),var(--emerald));-webkit-background-clip:text;-webkit-text-fill-color:transparent}
@@ -188,9 +197,8 @@
 
 <script src="js/micro-test.js" defer></script>
 <script src="js/bundles/core.js" defer></script>
-<script  defer></script>
-<script  defer></script>
-    <script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>if('serviceWorker'in navigator){navigator.serviceWorker.register('/sw.js').catch(function(){})}</script>
 </body>
 </html>
 
