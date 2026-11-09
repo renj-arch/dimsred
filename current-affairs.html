@@ -5813,6 +5813,10 @@ var _staticGen_polity = GK_GENERATORS.polity;
             state.streak = saved.streak || 0;
             state.answered = true;
             state.questions = saved.questions;
+            // Re-apply UPSC-only filter on session restore so the toggle state
+            // is honored after a page refresh (the saved pool may contain items
+            // that were loaded before UPSC-only was turned on).
+            if (_upscOnlyActive()) state.questions = _upscFilterList(state.questions);
             state._feedTotal = (saved.totalCount != null) ? saved.totalCount : null;
             state.infinite = false;
             state._feedSource = 'archive';
@@ -5845,6 +5849,7 @@ var _staticGen_polity = GK_GENERATORS.polity;
             state.streak = saved.streak || 0;
             state.answered = false;
             state.questions = saved.questions;
+            if (_upscOnlyActive()) state.questions = _upscFilterList(state.questions);
             state.infinite = saved.infinite || false;
             state._feedSource = null;
             for (var i = 0; i < state.questions.length; i++) {
