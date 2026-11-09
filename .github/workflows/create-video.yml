@@ -1,0 +1,242 @@
+name: Create Video from Topic
+
+# Model-agent video creation: the agent reads a topic-bank entry, writes a
+# film storyboard with the local model, validates it, renders with Blender +
+# Chromium + Piper + ffmpeg, and publishes as a GitHub release.
+#
+# Manual dispatch only: inputs.topic is the topic-bank id (e.g. green-revolution).
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic:
+        description: Topic-bank id (e.g. green-revolution)
+        required: true
+        type: string
+      quality:
+        description: Draft is 720p/12fps; final is 1080p/24fps
+        required: true
+        default: draft
+        type: choice
+        options:
+          - draft
+          - final
+      release:
+        description: Publish MP4/SRT/thumbnail as a GitHub release
+        required: true
+        default: true
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: create-video-${{ inputs.topic }}
+  cancel-in-progress: false
+
+jobs:
+  create:
+    runs-on: ubuntu-latest
+    timeout-minutes: 360
+
+    env:
+      TOPIC: ${{ inputs.topic }}
+      QUALITY: ${{ inputs.quality }}
+      BLENDER: /opt/blender-4.2.3-linux-x64/blender
+      PYTHON: python3
+
+    steps:
+      - name: Checkout (skip the giant question bank)
+        uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            /*
+            !/data/questions/
+          sparse-checkout-cone-mode: false
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+
+      - name: Install ffmpeg, fonts and Blender runtime libraries
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ffmpeg fonts-liberation libxi6 libxxf86vm1 libxfixes3 \
+            libxkbcommon0 libsm6 libice6 libgl1 libegl1 libgomp1 \
+            libx11-6 libxext6 libxrender1
+
+      - name: Install Blender 4.2.3 LTS
+        run: |
+          curl -fL --retry 3 -o /tmp/blender.tar.xz \
+            https://download.blender.org/release/Blender4.2/blender-4.2.3-linux-x64.tar.xz
+          tar -xf /tmp/blender.tar.xz -C /opt
+          "$BLENDER" --version | head -n 3
+
+      - name: Install Node dependencies
+        run: npm ci
+
+      - name: Install Chromium for frame capture
+        run: npx playwright install --with-deps chromium
+
+      - name: Install Piper
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install piper-tts==1.8.0
+
+      - name: Cache the Piper voice
+        uses: actions/cache@v4
+        with:
+          path: .cache/piper
+          key: piper-en_US-lessac-medium-v1
+
+      - name: Read topic-bank entry
+        id: topic
+        run: |
+          node -e "
+            const fs = require('fs');
+            const bank = JSON.parse(fs.readFileSync('data/films/topic-bank.json', 'utf8'));
+            const t = bank.topics.find(x => x.id === process.env.TOPIC);
+            if (!t) { console.error('topic not found: ' + process.env.TOPIC); process.exit(1); }
+            console.log('title=' + t.title);
+            console.log('angle=' + t.angle);
+            console.log('why=' + t.why);
+            console.log('sources=' + JSON.stringify(t.sources));
+            console.log('category=' + t.category);
+            echo 'title=' + t.title >> \$GITHUB_OUTPUT
+            echo 'angle=' + t.angle >> \$GITHUB_OUTPUT
+            echo 'why=' + t.why >> \$GITHUB_OUTPUT
+            echo 'category=' + t.category >> \$GITHUB_OUTPUT
+          "
+
+      - name: Resolve quality settings
+        run: |
+          set -euo pipefail
+          case "$QUALITY" in
+            draft)
+              echo "WIDTH=1280" >> "$GITHUB_ENV"
+              echo "HEIGHT=720" >> "$GITHUB_ENV"
+              echo "SAMPLES=16" >> "$GITHUB_ENV"
+              echo "CAPTURE_FPS=12" >> "$GITHUB_ENV"
+              echo "CRF=22" >> "$GITHUB_ENV"
+              echo "OUT_NAME=${TOPIC}-draft.mp4" >> "$GITHUB_ENV"
+              ;;
+            final)
+              echo "WIDTH=1920" >> "$GITHUB_ENV"
+              echo "HEIGHT=1080" >> "$GITHUB_ENV"
+              echo "SAMPLES=32" >> "$GITHUB_ENV"
+              echo "CAPTURE_FPS=24" >> "$GITHUB_ENV"
+              echo "CRF=18" >> "$GITHUB_ENV"
+              echo "OUT_NAME=${TOPIC}-master.mp4" >> "$GITHUB_ENV"
+              ;;
+            *)
+              echo "Unknown quality: $QUALITY" >&2
+              exit 2
+              ;;
+          esac
+
+      - name: Write film storyboard from topic (model agent)
+        id: storyboard
+        timeout-minutes: 120
+        env:
+          TOPIC: ${{ steps.topic.outputs.title }}
+          TOPIC_ANGLE: ${{ steps.topic.outputs.angle }}
+          TOPIC_WHY: ${{ steps.topic.outputs.why }}
+          TOPIC_CATEGORY: ${{ steps.topic.outputs.category }}
+          TOPIC_ID: ${{ inputs.topic }}
+          OLLAMA_MODEL: qwen3.5:9b
+          OLLAMA_HOST: http://127.0.0.1:11434
+        run: |
+          # Install Ollama
+          curl -fsSL https://ollama.com/install.sh | sh
+          mkdir -p ~/.ollama/models
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+          for i in $(seq 1 30); do
+            curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && break
+            sleep 1
+          done
+          ollama pull qwen3.5:9b
+          # Generate the storyboard JSON using the local model
+          node scripts/film/topic-to-film.js \
+            --topic "$TOPIC_ID" \
+            --title "$TOPIC" \
+            --angle "$TOPIC_ANGLE" \
+            --why "$TOPIC_WHY" \
+            --category "$TOPIC_CATEGORY" \
+            --out "data/films/${TOPIC_ID}.json"
+
+      - name: Validate storyboard
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-film.js "data/films/${TOPIC_ID}.json"
+
+      - name: Validate political argument map
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-debates.js "data/films/${TOPIC_ID}-debates.json"
+
+      - name: Render 3D plates with Blender
+        run: |
+          node scripts/film/render-plates.js \
+            --film "$TOPIC_ID" \
+            --out-dir "out/film/$TOPIC_ID/plates" \
+            --width "$WIDTH" \
+            --height "$HEIGHT" \
+            --samples "$SAMPLES"
+
+      - name: Build film (map, Piper, Chromium frames, ffmpeg)
+        run: |
+          node scripts/film/build-film.js \
+            --film "$TOPIC_ID" \
+            --work "out/film/$TOPIC_ID" \
+            --out "out/film/$TOPIC_ID/$OUT_NAME" \
+            --width "$WIDTH" \
+            --height "$HEIGHT" \
+            --fps 24 \
+            --capture-fps "$CAPTURE_FPS" \
+            --crf "$CRF" \
+            --samples "$SAMPLES" \
+            --skip-plates \
+            --tts piper \
+            --voice en_US-lessac-medium
+
+      - name: Upload film artefact
+        uses: actions/upload-artifact@v4
+        with:
+          name: film-${{ inputs.topic }}-${{ inputs.quality }}
+          if-no-files-found: error
+          retention-days: 14
+          path: |
+            out/film/${{ inputs.topic }}/*.mp4
+            out/film/${{ inputs.topic }}/*.srt
+            out/film/${{ inputs.topic }}/*-thumb.jpg
+            out/film/${{ inputs.topic }}/metadata.json
+            out/film/${{ inputs.topic }}/youtube.md
+            out/film/${{ inputs.topic }}/script.md
+
+      - name: Publish film release
+        if: ${{ inputs.release == true }}
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: film-${{ inputs.topic }}-${{ inputs.quality }}-${{ github.run_number }}
+          name: ${{ inputs.topic }} · ${{ inputs.quality }} · run ${{ github.run_number }}
+          prerelease: true
+          generate_release_notes: false
+          body: |
+            Generated on a GitHub-hosted CPU runner by the Create Video workflow.
+
+            - Topic: ${{ steps.topic.outputs.title }}
+            - Blender 4.2.3 LTS (Cycles CPU)
+            - Piper local narration
+            - Chromium frame capture
+            - ffmpeg H.264/AAC master
+
+            Download the MP4, SRT and thumbnail below. YouTube upload remains a deliberate owner action.
+          files: |
+            out/film/${{ inputs.topic }}/*.mp4
+            out/film/${{ inputs.topic }}/*.srt
+            out/film/${{ inputs.topic }}/*-thumb.jpg
+            out/film/${{ inputs.topic }}/metadata.json
+            out/film/${{ inputs.topic }}/youtube.md
+            out/film/${{ inputs.topic }}/script.md
