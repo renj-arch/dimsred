@@ -7175,7 +7175,7 @@ window.__examData = {
         },
         {
           "id": 67,
-          "text": "Simplify:",
+          "text": "Simplify: (√5 + √3)/(√5 − √3) − (√5 − √3)/(√5 + √3) − 2√15",
           "options": [
             {
               "label": "A",
@@ -7195,7 +7195,7 @@ window.__examData = {
             }
           ],
           "answer": 0,
-          "solution": "+ ( 5+ 31) − ( 5− 31) (25−310) Given: + (5+ 31) − (5− 31) (25−310) Solution: + (5+ 31) − (5− 31) (25−310) = − (5+ )(5− ) 3 3(5− )+(5+ ) 3 3 2210 = −25−310 2210 = −2210 2210 =0",
+          "solution": "Let a = √5 and b = √3. Then (a+b)/(a−b) − (a−b)/(a+b) = [(a+b)² − (a−b)²]/(a²−b²) = 4ab/(a²−b²) = 4√15/2 = 2√15. Therefore 2√15 − 2√15 = 0.",
           "_source": "SSC CGL",
           "_sourceSection": "General Intelligence & Reasoning"
         },
@@ -7877,7 +7877,7 @@ window.__examData = {
         },
         {
           "id": 221,
-          "text": "Simplify:",
+          "text": "Simplify: 2¼ + 3.8 − (4/5) × 2¾",
           "options": [
             {
               "label": "A",
@@ -7897,7 +7897,7 @@ window.__examData = {
             }
           ],
           "answer": 2,
-          "solution": "2 +3.8− (41) 2 51 Given: 2 +3.8− (41) 2 51 Solution: 2 +3.8− (41) 2 51 =2.25+3.8− ( )2.2 =6.05−2.2 =3.85",
+          "solution": "2¼ = 2.25 and 2¾ = 2.75. First (4/5) × 2.75 = 2.2. Then 2.25 + 3.8 − 2.2 = 6.05 − 2.2 = 3.85.",
           "_source": "SSC CGL",
           "_sourceSection": "General Intelligence & Reasoning"
         },
@@ -19589,7 +19589,7 @@ window.__examData = {
             },
             {
               "label": "B",
-              "text": "b"
+              "text": "x"
             },
             {
               "label": "C",
@@ -19601,7 +19601,7 @@ window.__examData = {
             }
           ],
           "answer": 3,
-          "solution": "Given the pattern of coding where &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, it seems that each letter is shifted 3 positions forward in the alphabet. Applying this pattern to &#39;y&#39;, we get &#39;y&#39; coded as &#39;b&#39; since &#39;y&#39; is the 25th letter and &#39;b&#39; is the 2nd letter in the alphabet, with &#39;y&#39; shifted 3 positions back resulting in &#39;b&#39;.",
+          "solution": "Each letter is shifted 3 places forward, wrapping around after z. So y → z → a → b. The code for 'y' is 'b'.",
           "_source": "SBI Clerk",
           "_sourceSection": "Reasoning"
         },
@@ -19823,7 +19823,7 @@ window.__examData = {
             },
             {
               "label": "B",
-              "text": "b"
+              "text": "x"
             },
             {
               "label": "C",
@@ -19835,7 +19835,7 @@ window.__examData = {
             }
           ],
           "answer": 3,
-          "solution": "Given the pattern of coding where &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, it seems that each letter is shifted 3 positions forward in the alphabet. Applying this pattern to &#39;y&#39;, we get &#39;y&#39; coded as &#39;b&#39; since &#39;y&#39; is the 25th letter and &#39;b&#39; is the 2nd letter in the alphabet, with &#39;y&#39; shifted 3 positions back resulting in &#39;b&#39;.",
+          "solution": "Each letter is shifted 3 places forward, wrapping around after z. So y → z → a → b. The code for 'y' is 'b'.",
           "_source": "SBI Clerk",
           "_sourceSection": "Reasoning"
         },
@@ -19979,7 +19979,7 @@ window.__examData = {
             },
             {
               "label": "B",
-              "text": "b"
+              "text": "x"
             },
             {
               "label": "C",
@@ -19991,7 +19991,7 @@ window.__examData = {
             }
           ],
           "answer": 3,
-          "solution": "Given the pattern of coding where &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, it seems that each letter is shifted 3 positions forward in the alphabet. Applying this pattern to &#39;y&#39;, we get &#39;y&#39; coded as &#39;b&#39; since &#39;y&#39; is the 25th letter and &#39;b&#39; is the 2nd letter in the alphabet, with &#39;y&#39; shifted 3 positions back resulting in &#39;b&#39;.",
+          "solution": "Each letter is shifted 3 places forward, wrapping around after z. So y → z → a → b. The code for 'y' is 'b'.",
           "_source": "SBI Clerk",
           "_sourceSection": "Reasoning"
         },
@@ -20213,7 +20213,7 @@ window.__examData = {
             },
             {
               "label": "B",
-              "text": "b"
+              "text": "x"
             },
             {
               "label": "C",
@@ -20225,7 +20225,7 @@ window.__examData = {
             }
           ],
           "answer": 3,
-          "solution": "Given the pattern of coding where &#39;a&#39; is coded as &#39;d&#39;, &#39;b&#39; is coded as &#39;e&#39;, and so on, it seems that each letter is shifted 3 positions forward in the alphabet. Applying this pattern to &#39;y&#39;, we get &#39;y&#39; coded as &#39;b&#39; since &#39;y&#39; is the 25th letter and &#39;b&#39; is the 2nd letter in the alphabet, with &#39;y&#39; shifted 3 positions back resulting in &#39;b&#39;.",
+          "solution": "Each letter is shifted 3 places forward, wrapping around after z. So y → z → a → b. The code for 'y' is 'b'.",
           "_source": "SBI Clerk",
           "_sourceSection": "Reasoning"
         },
@@ -21413,7 +21413,7 @@ window.__examData = {
             },
             {
               "label": "C",
-              "text": "C"
+              "text": "D"
             },
             {
               "label": "D",
@@ -21421,7 +21421,7 @@ window.__examData = {
             }
           ],
           "answer": 3,
-          "solution": "Since each letter is shifted 3 places forward in the alphabet (A to D, B to E), &#39;Z&#39; would be shifted to &#39;C&#39; because the sequence wraps around the alphabet when it reaches &#39;Z&#39;.",
+          "solution": "Each letter is shifted 3 places forward, wrapping around after Z. So Z → A → B → C. 'Z' is represented by 'C'.",
           "_source": "SSC GD",
           "_sourceSection": "Reasoning"
         },
@@ -22193,7 +22193,7 @@ window.__examData = {
             },
             {
               "label": "C",
-              "text": "C"
+              "text": "D"
             },
             {
               "label": "D",
@@ -22201,7 +22201,7 @@ window.__examData = {
             }
           ],
           "answer": 3,
-          "solution": "Since each letter is shifted 3 places forward in the alphabet (A to D, B to E), &#39;Z&#39; would be shifted to &#39;C&#39; because the sequence wraps around the alphabet when it reaches &#39;Z&#39;.",
+          "solution": "Each letter is shifted 3 places forward, wrapping around after Z. So Z → A → B → C. 'Z' is represented by 'C'.",
           "_source": "SSC GD",
           "_sourceSection": "Reasoning"
         },

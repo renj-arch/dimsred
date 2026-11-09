@@ -1770,8 +1770,8 @@ window.__examData = {
               "text": "Calcium and Magnesium"
             }
           ],
-          "answer": -1,
-          "solution": "The Earth's core is primarily composed of iron (about 85%) and nickel (about 15%).",
+          "answer": 0,
+          "solution": "The Earth's core is composed mainly of iron (about 85%) and nickel (about 15%), with lighter elements such as sulphur and oxygen in the outer core.",
           "_source": "Agniveer",
           "_sourceSection": "General Knowledge"
         },
@@ -12229,7 +12229,7 @@ window.__examData = {
         },
         {
           "id": 147,
-          "text": "Evaluate:",
+          "text": "Simplify: 7 − 3/4 ÷ 1/2",
           "options": [
             {
               "label": "A",
@@ -12249,7 +12249,7 @@ window.__examData = {
             }
           ],
           "answer": 0,
-          "solution": "7− ÷ + ×1− [43{81(21(41))}] Given: 7− ÷ + ×1− [43{81(21(41))}] Solution: 7− ÷ + ×1− [43{81(21(41))}] =7− ÷ + × [43{81(21 43)}] =7− ÷ + [43{81 83}] =7− ÷[43 84] =7− ÷[43 21] =7− 23 = 211",
+          "solution": "By BODMAS, divide first: 3/4 ÷ 1/2 = 3/4 × 2/1 = 3/2. Then 7 − 3/2 = 14/2 − 3/2 = 11/2.",
           "_source": "SSC CGL",
           "_sourceSection": "General Awareness"
         },
@@ -12515,7 +12515,7 @@ window.__examData = {
         },
         {
           "id": 276,
-          "text": "Evaluate: =?",
+          "text": "Simplify: (√16 − √11) + 2√11",
           "options": [
             {
               "label": "A",
@@ -12535,7 +12535,7 @@ window.__examData = {
             }
           ],
           "answer": 0,
-          "solution": "− ( − 16 151) + ( − 15 141) − ( − 14 131) + ( − 13 121) ( − 12 111) Solution: − ( − 16 151) + ( − 15 141) − ( − 14 131) + ( − 13 121) ( − 12 111) = − (16−15 + 16 15) + (15−14 + 15 14) − (14−13 + 14 13) + (13−12 + 13 12) (12−11 + 12 11) =4+ − ( 15) + + (15 14) + − (14 13) + + (13 12) + (12 11) =4+ 11",
+          "solution": "√16 = 4, so (4 − √11) + 2√11 = 4 + √11.",
           "_source": "SSC CGL",
           "_sourceSection": "General Awareness"
         },
@@ -12905,7 +12905,7 @@ window.__examData = {
         },
         {
           "id": 329,
-          "text": "Simplify:",
+          "text": "Simplify: 2¼ + 3.8 − (4/5) × 2¾",
           "options": [
             {
               "label": "A",
@@ -12925,7 +12925,7 @@ window.__examData = {
             }
           ],
           "answer": 2,
-          "solution": "2 +3.8− (41) 2 51 Given: 2 +3.8− (41) 2 51 Solution: 2 +3.8− (41) 2 51 =2.25+3.8− ( )2.2 =6.05−2.2 =3.85",
+          "solution": "2¼ = 2.25 and 2¾ = 2.75. First (4/5) × 2.75 = 2.2. Then 2.25 + 3.8 − 2.2 = 6.05 − 2.2 = 3.85.",
           "_source": "SSC CGL",
           "_sourceSection": "General Awareness"
         },
