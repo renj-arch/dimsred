@@ -37,6 +37,10 @@ function readTopic(topicId) {
   const bank = JSON.parse(fs.readFileSync(TOPIC_BANK, 'utf8'));
   const t = bank.topics.find(x => x.id === topicId);
   if (!t) fail('topic not found in topic-bank: ' + topicId);
+  // If no sources (agent-created topic), add a generic Wikipedia source so the model has something to cite
+  if (!t.sources || !t.sources.length) {
+    t.sources = [{ id: slugify(t.title) + '-wiki', title: t.title, publisher: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(t.title), accessed: new Date().toISOString().slice(0, 10) }];
+  }
   return t;
 }
 
@@ -58,7 +62,7 @@ function buildPrompt(t) {
     'Why it matters: ' + t.why,
     '',
     'Sources (use ONLY these — every narration line must cite one of these source ids):',
-    t.sources.map(function (s) { return '  - [' + s.id + '] ' + s.title + ' (' + s.url + ')'; }).join('\n'),
+    t.sources.map(function (s) { return '  - [' + s.id + '] ' + s.title + (s.url ? ' (' + s.url + ')' : ''); }).join('\n'),
     '',
     'Schema (output exactly this JSON shape, no markdown, no prose before/after):',
     JSON.stringify({
@@ -135,8 +139,11 @@ function buildPrompt(t) {
     }, null, 2),
     '',
     'Rules:',
-    '- 3-6 scenes, each 15-45 seconds, total targetDuration 90-240 seconds.',
+    '- 8-12 scenes, each 20-60 seconds, total targetDuration 300-600 seconds.',
     '- Each scene needs at least 2 shots.',
+    '- EVERY scene must introduce a DIFFERENT object, place, or document — no repeating the same plate, visual, or narration fact.',
+    '- No duplicate plates across scenes (e.g. only one desk-01, one wall-01, one ledger-01).',
+    '- No duplicate narration lines — each scene must state a new fact, not rephrase the same fact.',
     '- Each shot needs: id, plate, render (title or blender), hold, weight, camera, visual, sfx (1-3 cues), transition, framing.',
     '- Narration lines are short (under 200 chars), specific, and cite a source id.',
     '- No banned filler phrases: "here is the one-line core", "first the faces, then the events", "that is all of it", "the essentials, spoken", "a lecture in chapters", "remember these".',
@@ -261,6 +268,66 @@ function main() {
   // Validate minimal schema
   if (!film.scenes || !Array.isArray(film.scenes) || film.scenes.length < 3) {
     fail('generated storyboard has fewer than 3 scenes');
+  }
+
+  // ---- DEDUPLICATION: remove duplicate scenes, plates, narration ----
+  var seenPlates = {};
+  var seenVisuals = {};
+  var seenNarration = {};
+  var dedupedScenes = [];
+  for (var si = 0; si < film.scenes.length; si++) {
+    var scene = film.scenes[si];
+    // Skip scenes with duplicate title or purpose
+    var sceneKey = (scene.title || '') + '||' + (scene.purpose || '');
+    if (seenVisuals[sceneKey]) continue;
+    seenVisuals[sceneKey] = true;
+
+    var keptShots = [];
+    for (var sj = 0; sj < scene.shots.length; sj++) {
+      var shot = scene.shots[sj];
+      var plate = shot.plate || 'object-01';
+      // Skip duplicate plates across the whole film
+      if (seenPlates[plate]) continue;
+      seenPlates[plate] = true;
+
+      // Skip duplicate visual descriptions
+      var vKey = (shot.visual || '').toLowerCase().replace(/\s+/g, ' ').trim();
+      if (seenVisuals[vKey]) continue;
+      seenVisuals[vKey] = true;
+
+      keptShots.push(shot);
+    }
+    // Only keep scene if it has at least 2 shots after dedup
+    if (keptShots.length >= 2) {
+      scene.shots = keptShots;
+      dedupedScenes.push(scene);
+    }
+  }
+
+  // Remove scenes with duplicate narration text
+  var finalScenes = [];
+  for (var i = 0; i < dedupedScenes.length; i++) {
+    var s = dedupedScenes[i];
+    var narrKey = (s.narration && s.narration[0] && s.narration[0].text || '').toLowerCase().replace(/\s+/g, ' ').trim();
+    if (narrKey && seenNarration[narrKey]) continue;
+    if (narrKey) seenNarration[narrKey] = true;
+    finalScenes.push(s);
+  }
+
+  film.scenes = finalScenes;
+
+  // Re-index scene ids and shot ids after dedup
+  for (var i = 0; i < film.scenes.length; i++) {
+    var sc = film.scenes[i];
+    sc.id = 'S' + (i + 1).toString().padStart(2, '0');
+    for (var j = 0; j < sc.shots.length; j++) {
+      sc.shots[j].id = sc.id + '-' + (j + 1);
+    }
+  }
+
+  // Validate after dedup
+  if (!film.scenes || film.scenes.length < 3) {
+    fail('deduplication left fewer than 3 scenes (' + film.scenes.length + ') — topic may need more varied sources');
   }
 
   // Normalize: ensure required top-level fields

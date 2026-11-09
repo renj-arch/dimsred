@@ -1,17 +1,40 @@
 name: Create Video from Topic
 
-# Model-agent video creation: the agent reads a topic-bank entry, writes a
-# film storyboard with the local model, validates it, renders with Blender +
-# Chromium + Piper + ffmpeg, and publishes as a GitHub release.
+# Model-agent video creation: the agent reads a topic (from topic-bank or
+# dispatch inputs), writes a film storyboard with the local model, validates
+# it, renders with Blender + Chromium + Piper + ffmpeg, and publishes as a
+# GitHub release.
 #
-# Manual dispatch only: inputs.topic is the topic-bank id (e.g. green-revolution).
+# Manual dispatch only: inputs.topic is the topic-bank id. If the topic is not
+# in topic-bank.json, inputs.title/angle/why/category/sources are used to add
+# it.
 
 on:
   workflow_dispatch:
     inputs:
       topic:
-        description: Topic-bank id (e.g. green-revolution)
+        description: Topic-bank id or new topic slug (e.g. green-revolution)
         required: true
+        type: string
+      title:
+        description: Topic title (for new topics or to override)
+        required: false
+        type: string
+      angle:
+        description: Topic angle / approach (for new topics)
+        required: false
+        type: string
+      why:
+        description: Why it matters (for new topics)
+        required: false
+        type: string
+      category:
+        description: Topic category (for new topics)
+        required: false
+        type: string
+      sources:
+        description: JSON array of sources (for new topics; auto-generated if empty)
+        required: false
         type: string
       quality:
         description: Draft is 720p/12fps; final is 1080p/24fps
@@ -92,24 +115,68 @@ jobs:
           path: .cache/piper
           key: piper-en_US-lessac-medium-v1
 
-      - name: Read topic-bank entry
+      - name: Ensure topic exists in topic-bank (add if new)
         id: topic
         run: |
           node -e "
             const fs = require('fs');
-            const bank = JSON.parse(fs.readFileSync('data/films/topic-bank.json', 'utf8'));
-            const t = bank.topics.find(x => x.id === process.env.TOPIC);
-            if (!t) { console.error('topic not found: ' + process.env.TOPIC); process.exit(1); }
-            console.log('title=' + t.title);
-            console.log('angle=' + t.angle);
-            console.log('why=' + t.why);
-            console.log('sources=' + JSON.stringify(t.sources));
-            console.log('category=' + t.category);
-            echo 'title=' + t.title >> \$GITHUB_OUTPUT
-            echo 'angle=' + t.angle >> \$GITHUB_OUTPUT
-            echo 'why=' + t.why >> \$GITHUB_OUTPUT
-            echo 'category=' + t.category >> \$GITHUB_OUTPUT
+            const bankPath = 'data/films/topic-bank.json';
+            const bank = JSON.parse(fs.readFileSync(bankPath, 'utf8'));
+            const existing = bank.topics.find(x => x.id === process.env.TOPIC);
+            if (existing) {
+              console.log('topic already exists: ' + process.env.TOPIC);
+              console.log('title=' + existing.title);
+              console.log('angle=' + existing.angle);
+              console.log('why=' + existing.why);
+              console.log('category=' + existing.category);
+              console.log('sources=' + JSON.stringify(existing.sources));
+              process.exit(0);
+            }
+            // Topic not found — create it from dispatch inputs (agent-created topic)
+            const title = process.env.TITLE || process.env.TOPIC.replace(/-/g, ' ');
+            const angle = process.env.ANGLE || '';
+            const why = process.env.WHY || '';
+            const category = process.env.CATEGORY || 'history';
+            const sourcesRaw = process.env.SOURCES || '[]';
+            let sources = [];
+            try { sources = JSON.parse(sourcesRaw); } catch (e) { sources = []; }
+            // Auto-generate Wikipedia sources if none provided (agent-created topic)
+            if (!sources.length) {
+              const wikiTitle = title.replace(/ /g, '_');
+              sources = [
+                { id: slugify(title) + '-wiki', title: title, publisher: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/' + wikiTitle, accessed: new Date().toISOString().slice(0,10) }
+              ];
+            }
+            const newTopic = {
+              id: process.env.TOPIC,
+              title: title,
+              category: category,
+              priority: 99,
+              why: why,
+              angle: angle,
+              sources: sources
+            };
+            function slugify(s) { return String(s || '').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/-+/g,'-').replace(/^-|-$/g,''); }
+            bank.topics.push(newTopic);
+            fs.writeFileSync(bankPath, JSON.stringify(bank, null, 2) + '\n');
+            console.log('created new topic: ' + process.env.TOPIC);
+            console.log('title=' + title);
+            console.log('angle=' + angle);
+            console.log('why=' + why);
+            console.log('category=' + category);
+            console.log('sources=' + JSON.stringify(newTopic.sources));
+            echo 'title=' + title >> \$GITHUB_OUTPUT
+            echo 'angle=' + angle >> \$GITHUB_OUTPUT
+            echo 'why=' + why >> \$GITHUB_OUTPUT
+            echo 'category=' + category >> \$GITHUB_OUTPUT
+            echo 'sources=' + JSON.stringify(newTopic.sources) >> \$GITHUB_OUTPUT
           "
+        env:
+          TITLE: ${{ inputs.title }}
+          ANGLE: ${{ inputs.angle }}
+          WHY: ${{ inputs.why }}
+          CATEGORY: ${{ inputs.category }}
+          SOURCES: ${{ inputs.sources }}
 
       - name: Resolve quality settings
         run: |
@@ -141,7 +208,7 @@ jobs:
         id: storyboard
         timeout-minutes: 120
         env:
-          TOPIC: ${{ steps.topic.outputs.title }}
+          TOPIC_TITLE: ${{ steps.topic.outputs.title }}
           TOPIC_ANGLE: ${{ steps.topic.outputs.angle }}
           TOPIC_WHY: ${{ steps.topic.outputs.why }}
           TOPIC_CATEGORY: ${{ steps.topic.outputs.category }}
@@ -164,7 +231,7 @@ jobs:
           # Generate the storyboard JSON using the local model
           node scripts/film/topic-to-film.js \
             --topic "$TOPIC_ID" \
-            --title "$TOPIC" \
+            --title "$TOPIC_TITLE" \
             --angle "$TOPIC_ANGLE" \
             --why "$TOPIC_WHY" \
             --category "$TOPIC_CATEGORY" \
@@ -172,6 +239,18 @@ jobs:
 
       - name: Validate storyboard
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-film.js "data/films/${TOPIC_ID}.json"
+
+      - name: Commit topic bank and storyboard
+        run: |
+          git config user.name "vlymbooq-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add data/films/topic-bank.json data/films/${TOPIC_ID}.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "create-video: topic ${{ inputs.topic }} storyboard"
+            git push
+          fi
 
       - name: Validate political argument map
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/film/validate-debates.js "data/films/${TOPIC_ID}-debates.json"
@@ -220,7 +299,7 @@ jobs:
         uses: softprops/action-gh-release@v2
         with:
           tag_name: film-${{ inputs.topic }}-${{ inputs.quality }}-${{ github.run_number }}
-          name: ${{ inputs.topic }} · ${{ inputs.quality }} · run ${{ github.run_number }}
+          name: ${{ steps.topic.outputs.title }} · ${{ inputs.quality }} · run ${{ github.run_number }}
           prerelease: true
           generate_release_notes: false
           body: |
