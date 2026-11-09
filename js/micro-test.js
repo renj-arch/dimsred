@@ -38,6 +38,8 @@ var accuracyDisplay = document.getElementById('accuracyDisplay');
 var reviewList = document.getElementById('reviewList');
 var retryBtn = document.getElementById('retryBtn');
 var homeBtn = document.getElementById('homeBtn');
+var customCountInput = document.getElementById('customCount');
+var customCountHint = document.getElementById('customCountHint');
 
 function qsa(s) { return document.querySelectorAll(s); }
 
@@ -177,6 +179,19 @@ function renderCountOptions(name){
     countGrid.appendChild(btn);
   }
   topicSummary.textContent = selectedExamName() + ' → ' + name;
+  customCountHint.textContent = 'Max ' + max + ' available';
+  customCountInput.value = '';
+  customCountInput.oninput = function(){
+    var n = parseInt(this.value, 10);
+    if (!isFinite(n) || n < 1) { startBtn.disabled = true; return; }
+    if (n > max) { startBtn.disabled = true; return; }
+    selectedCount = n;
+    num3.textContent = '✓';
+    num3.className = 'num done';
+    var btns = qsa('.count-btn');
+    for (var b of btns) b.classList.remove('selected');
+    startBtn.disabled = false;
+  };
 }
 
 function selectedExamName(){
