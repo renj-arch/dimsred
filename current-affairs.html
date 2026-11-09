@@ -6144,6 +6144,14 @@ var _staticGen_polity = GK_GENERATORS.polity;
                     state.questions.push(q);
                 }
             }
+            // UPSC-only: drop non-syllabus generator/Wiki questions so the toggle
+            // actually filters the category quiz, not just archive loads.
+            if (_upscOnlyActive()) {
+                for (var qi = 0; qi < state.questions.length; qi++) {
+                    if (!state.questions[qi].subject) state.questions[qi].subject = state.categoryName;
+                }
+                state.questions = _upscFilterList(state.questions);
+            }
             if (state.questions.length === 0) {
                 if (typeof WIKI === 'undefined' || !WIKI._pool) { alert('No questions available for this category right now. The data feed may still be loading.'); return; }
                 document.getElementById('welcome').style.display = 'none';
@@ -9519,6 +9527,12 @@ var fact = q.fact || q.solution || q.explanation || '';
                     if (!isValidAnswer(q.a) || isTrash(q)) continue;
                     state.questions.push(q);
                 }
+            }
+            if (_upscOnlyActive()) {
+                for (var qi = 0; qi < state.questions.length; qi++) {
+                    if (!state.questions[qi].subject) state.questions[qi].subject = state.categoryName;
+                }
+                state.questions = _upscFilterList(state.questions);
             }
             } finally { Math.random = _origRandom; }
             if (state.questions.length === 0) return;
