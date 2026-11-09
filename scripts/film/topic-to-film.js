@@ -54,7 +54,7 @@ function slugify(s) {
 
 function buildPrompt(t) {
   return [
-    'You are a senior documentary film writer for vlymbooq. Write a film storyboard as ONE JSON object.',
+    'You are a senior documentary film writer in the style of Dhruv Rathee — investigative, fast-paced, visually creative, and emotionally engaging. Write a film storyboard as ONE JSON object.',
     '',
     'Topic: ' + t.title,
     'Category: ' + t.category,
@@ -64,48 +64,62 @@ function buildPrompt(t) {
     'Sources (use ONLY these — every narration line must cite one of these source ids):',
     t.sources.map(function (s) { return '  - [' + s.id + '] ' + s.title + (s.url ? ' (' + s.url + ')' : ''); }).join('\n'),
     '',
+    'STYLE — Dhruv Rathee inspired:',
+    '- Hook in the first 5 seconds: start with a bold question, shocking fact, or visual mystery.',
+    '- Creative visual metaphors: don\'t just show the object — show what it represents (a seed = hope, a milk can = infrastructure, a forest = resistance).',
+    '- Fast pacing: shots 3-8 seconds each, camera always moving (push, pull, pan, orbit, reveal).',
+    '- On-screen graphics: data maps, number pop-ups, timeline animations, split screens, text callouts.',
+    '- Emotional arc: Problem → Investigation → Twist/Revelation → Conclusion with a call to think.',
+    '- Use chapter titles that sound like video sections, not textbook chapters.',
+    '- Mix shot types: macro close-ups, wide establishing shots, POV, map view, data overlay.',
+    '- Sound design matters: room tone, specific SFX, silence before turns, music cues.',
+    '',
     'Schema (output exactly this JSON shape, no markdown, no prose before/after):',
     JSON.stringify({
       schema: 'vlymbooq.film.v1',
       id: slugify(t.title),
       topicId: t.id,
       title: t.title,
-      subtitle: 'A sourced cinematic history.',
-      logline: 'One-sentence hook.',
+      subtitle: 'A cinematic investigation.',
+      logline: 'One-sentence hook that makes people click.',
       series: { name: 'THE RECORD ROOM', tagline: 'History, one page at a time.', number: '00', intro: false },
-      targetDuration: 180,
+      targetDuration: 480,
       aspect: '16:9',
       fps: 24,
       voice: 'en_US-lessac-medium',
       style: {
-        genre: 'cinematic 3D documentary',
-        look: 'specific visual style',
+        genre: 'investigative documentary',
+        look: 'creative 3D with maps, data overlays, and cinematic lighting',
         rules: [
-          'Show the object before the explanation.',
-          'One idea per shot. No wall of text.',
-          'The camera moves with purpose.',
-          'Violence is implied through sound and aftermath, never lingered on.'
+          'Hook in first 5 seconds — bold question or mystery.',
+          'One idea per shot, but shots change fast (3-8s each).',
+          'Every scene introduces a NEW object, place, or document — no repeats.',
+          'Use visual metaphors, not just literal objects.',
+          'Camera always moves: push, pull, pan, orbit, reveal, whip.',
+          'Include on-screen graphics: maps, numbers, timelines, text callouts.',
+          'Violence implied through sound/aftermath, never shown.',
+          'End each scene with a transition that asks a new question.'
         ]
       },
       toolchain: {
-        blender: { version: '4.2 LTS', role: '3D sets, hero stills, camera moves', automation: 'scripts/film/blender/stock_scenes.py' },
-        node: { role: 'orchestration, ffmpeg assembly, captions', automation: 'scripts/film/*.js' }
+        blender: { version: '4.2 LTS', role: '3D sets, hero stills, camera moves, map animations', automation: 'scripts/film/blender/stock_scenes.py' },
+        node: { role: 'orchestration, ffmpeg assembly, captions, data graphics', automation: 'scripts/film/*.js' }
       },
       sources: t.sources.map(function (s) { return { id: s.id, title: s.title, publisher: s.publisher, url: s.url, accessed: new Date().toISOString().slice(0, 10) }; }),
       scenes: [
         {
           id: 'S01',
-          title: 'Opening Object',
-          purpose: 'Introduce the central object and the question.',
+          title: 'The Hook',
+          purpose: 'Grab attention with a bold question or mystery about the topic.',
           chapter: 1,
-          chapterTitle: 'The Object',
+          chapterTitle: 'Act 1 — The Question',
           chapterStart: true,
           start: 0,
-          duration: 15,
-          narrationStart: 2,
-          minDuration: 5,
+          duration: 45,
+          narrationStart: 3,
+          minDuration: 10,
           narration: [
-            { text: 'A specific opening line about the object.', source: t.sources[0].id, ledger: '', quote: '' }
+            { text: 'A hook question about ' + t.title + '.', source: t.sources[0].id, ledger: '', quote: '' }
           ],
           shots: [
             {
@@ -113,24 +127,24 @@ function buildPrompt(t) {
               plate: 'title',
               render: 'title',
               hold: 3,
-              weight: 2,
-              camera: 'locked title card, slow push',
-              visual: 'Title card over black with a thin rule of light.',
-              sfx: ['low room tone', 'a single metal tick'],
-              transition: { type: 'hard-cut', frames: 0, sound: 'title-tone', audioDuration: 0.9, reason: 'Film opens from black.' },
-              framing: { zoom: [1.0, 1.05], x: [49, 50], y: [50, 49] }
+              weight: 3,
+              camera: 'whip reveal from black, fast push',
+              visual: 'Title slams onto screen with a data-glitch effect, then settles.',
+              sfx: ['deep bass hit', 'metal click', 'room tone'],
+              transition: { type: 'whip-pan', frames: 6, sound: 'whoosh', audioDuration: 0.3, reason: 'Fast opening grabs attention.' },
+              framing: { zoom: [0.9, 1.15], x: [48, 52], y: [48, 52] }
             },
             {
               id: 'S01-A',
               plate: 'object-01',
               render: 'blender',
               narrationLine: 1,
-              weight: 3,
-              camera: 'slow push, lens 35, eye height',
-              visual: 'The central object in detail, lit from the side.',
-              sfx: ['room tone', 'breath of cloth'],
-              transition: { type: 'hard-cut', frames: 0, sound: null, audioDuration: 0, reason: 'Cut lands on the first word.' },
-              framing: { zoom: [1.03, 1.09], x: [49, 50], y: [50, 49] }
+              weight: 4,
+              camera: 'orbit around object, 360 degrees in 6 seconds',
+              visual: 'The central object floating, rotating, with data points appearing around it like a hologram.',
+              sfx: ['digital chime', 'wind', 'object resonance'],
+              transition: { type: 'match-cut', frames: 4, sound: 'click', audioDuration: 0.2, reason: 'Match the object shape to the next scene.' },
+              framing: { zoom: [1.0, 1.08], x: [45, 55], y: [40, 60] }
             }
           ],
           dialogue: []
@@ -138,16 +152,19 @@ function buildPrompt(t) {
       ]
     }, null, 2),
     '',
-    'Rules:',
-    '- 8-12 scenes, each 20-60 seconds, total targetDuration 300-600 seconds.',
-    '- Each scene needs at least 2 shots.',
-    '- EVERY scene must introduce a DIFFERENT object, place, or document — no repeating the same plate, visual, or narration fact.',
-    '- No duplicate plates across scenes (e.g. only one desk-01, one wall-01, one ledger-01).',
-    '- No duplicate narration lines — each scene must state a new fact, not rephrase the same fact.',
-    '- Each shot needs: id, plate, render (title or blender), hold, weight, camera, visual, sfx (1-3 cues), transition, framing.',
-    '- Narration lines are short (under 200 chars), specific, and cite a source id.',
-    '- No banned filler phrases: "here is the one-line core", "first the faces, then the events", "that is all of it", "the essentials, spoken", "a lecture in chapters", "remember these".',
-    '- Plates must be simple object names: title, object-01, desk-01, wall-01, gate-01, ledger-01, flame-01, map-01, clock-01.',
+    'STRUCTURE (8-12 scenes, 300-600 seconds total):',
+    'Act 1 — The Hook (Scene 1): Bold question, mystery, why this matters NOW.',
+    'Act 2 — Investigation (Scenes 2-6): Deep dive, evidence, different angles, data, maps.',
+    'Act 3 — Revelation (Scenes 7-9): The twist, the hidden connection, the human cost.',
+    'Act 4 — Conclusion (Scenes 10-12): What it means, what changes, final question to viewer.',
+    '',
+    'EACH SCENE:',
+    '- 2-5 shots minimum.',
+    '- Each shot: id, plate, render (title or blender), hold (3-8s), weight, camera, visual, sfx (1-3 cues), transition, framing.',
+    '- Narration: short (under 180 chars), specific, cites a source id.',
+    '- Plate names: title, object-01, desk-01, wall-01, gate-01, ledger-01, flame-01, map-01, clock-01, chart-01, timeline-01, portrait-01, document-01.',
+    '- No duplicate plates or visuals across the whole film.',
+    '- No duplicate narration — each scene states a NEW fact.',
     '- Output valid JSON only. No markdown code fences.'
   ].join('\n');
 }
@@ -266,8 +283,13 @@ function main() {
   }
 
   // Validate minimal schema
-  if (!film.scenes || !Array.isArray(film.scenes) || film.scenes.length < 3) {
-    fail('generated storyboard has fewer than 3 scenes');
+  if (!film.scenes || !Array.isArray(film.scenes) || film.scenes.length < 5) {
+    fail('generated storyboard has fewer than 5 scenes — need 8-12 for a creative film');
+  }
+
+  // Validate scene count is creative enough
+  if (film.scenes.length < 8) {
+    console.log('topic-to-film: warning — only ' + film.scenes.length + ' scenes, consider 8-12 for a Dhruv Rathee style film');
   }
 
   // ---- DEDUPLICATION: remove duplicate scenes, plates, narration ----
