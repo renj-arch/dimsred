@@ -386,7 +386,16 @@ jobs:
                   exit 0
                 fi
               fi
-              echo "Rebase/push attempt $attempt failed; retrying"
+              echo "Rebase/push attempt $attempt failed; trying merge-with-ours"
+              git rebase --abort 2>/dev/null || true
+              git fetch origin "$GITHUB_REF_NAME" 2>/dev/null || true
+              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+              git add -A 2>/dev/null || true
+              git commit --no-edit 2>/dev/null || true
+              if git push origin "HEAD:$GITHUB_REF_NAME"; then
+                echo "Pushed figures rebuild (attempt $attempt)"
+                exit 0
+              fi
               sleep 5
             done
             echo "::warning::could not push figures after 3 attempts; the build is preserved in this run's logs"
