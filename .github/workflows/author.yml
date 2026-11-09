@@ -164,12 +164,10 @@ jobs:
             exit 0
           fi
           git commit -m "author $FILM from its sourced ledger"
-          if git pull --rebase --autostash 2>/dev/null; then
-            : # clean rebase
+          git fetch origin main 2>/dev/null || true
+          if git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
+            : # clean merge
           else
-            git rebase --abort 2>/dev/null || true
-            git fetch origin main 2>/dev/null || true
-            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
             git add -A 2>/dev/null || true
             git commit --no-edit 2>/dev/null || true
           fi
@@ -181,4 +179,4 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           gh workflow run film.yml --ref "$GITHUB_REF_NAME" \
-            -f "film=$FILM" -f "publish=true"
+            -f "film=$FILM" -f "quality=draft" -f "release=false"

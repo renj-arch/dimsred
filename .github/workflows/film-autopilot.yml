@@ -114,8 +114,7 @@ jobs:
             --ref film-ci \
             -f film='${{ steps.choose.outputs.film }}' \
             -f quality=final \
-            -f release=true \
-            -f publish=true
+            -f release=true
 
       - name: Dispatch authoring pass
         if: steps.choose.outputs.kind == 'research'

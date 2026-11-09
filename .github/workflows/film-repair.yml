@@ -198,12 +198,10 @@ jobs:
           fi
           git commit -m "film(${{ steps.context.outputs.film }}): repair plate map (attempt ${{ steps.context.outputs.attempt }})"
           for i in 1 2 3; do
-            if git pull --rebase --autostash 2>/dev/null; then
-              : # clean rebase
+            git fetch origin main 2>/dev/null || true
+            if git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
+              : # clean merge
             else
-              git rebase --abort 2>/dev/null || true
-              git fetch origin main 2>/dev/null || true
-              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
               git add -A 2>/dev/null || true
               git commit --no-edit 2>/dev/null || true
             fi
@@ -314,17 +312,15 @@ jobs:
               if ! git diff --cached --quiet; then
                 git commit -m "slate: block $FILM after the repair lane stopped"
                 for i in 1 2 3; do
-                  if git pull --rebase --autostash 2>/dev/null; then
-                    : # clean rebase
+                  git fetch origin "$BRANCH" 2>/dev/null || true
+                  if git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
+                    : # clean merge
                   else
-                    git rebase --abort 2>/dev/null || true
-                    git fetch origin main 2>/dev/null || true
-                    git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
                     git add -A 2>/dev/null || true
                     git commit --no-edit 2>/dev/null || true
                   fi
                   git push origin "HEAD:$BRANCH" && break
-                  echo "Push rejected (attempt $i); rebasing on main"
+                  echo "Push rejected (attempt $i); merging on $BRANCH"
                 done
               fi
             fi
