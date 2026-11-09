@@ -38,10 +38,8 @@ var accuracyDisplay = document.getElementById('accuracyDisplay');
 var reviewList = document.getElementById('reviewList');
 var retryBtn = document.getElementById('retryBtn');
 var homeBtn = document.getElementById('homeBtn');
-var customCountInput = document.getElementById('customCount');
-var customCountHint = document.getElementById('customCountHint');
 
-function qsa(s) { return document.querySelectorAll(s); }
+var qsa = function(s) { return document.querySelectorAll(s); };
 
 function loadScript(src, cb){
   var s = document.createElement('script');
@@ -64,10 +62,6 @@ function loadIndex(){
     .catch(function(){});
 }
 
-// Deep link from the adaptive plan:
-//   micro-test.html?exam=cgl&topic=Mathematics&n=10
-// Selects the exam, topic and nearest offered question count so the plan's
-// "Practise" action lands ready to start instead of on the exam grid.
 function applyDeepLink(){
   if (typeof URLSearchParams === 'undefined') return;
   var params = new URLSearchParams(location.search);
@@ -75,20 +69,16 @@ function applyDeepLink(){
   var topic = params.get('topic');
   var wanted = parseInt(params.get('n'), 10);
   if (!exam || !exams[exam]) return;
-
   selectExam(exam);
   if (!topic) return;
-
   var sections = exams[exam].sections || [];
   var found = null;
   for (var i = 0; i < sections.length; i++) {
     if (sections[i].name === topic) { found = sections[i]; break; }
   }
   if (!found) return;
-
   selectTopic(topic);
   if (!isFinite(wanted) || wanted <= 0) return;
-
   var options = [];
   qsa('.count-btn').forEach(function (b) { options.push(parseInt(b.dataset.count, 10)); });
   var pick = null;
@@ -168,6 +158,7 @@ function renderCountOptions(name){
   if (max >= 10) opts.push(10);
   if (max >= 15) opts.push(15);
   if (max >= 20) opts.push(20);
+  if (max >= 50) opts.push(50);
   if (max < 5) opts.push(max);
   opts = opts.filter(function(v,i,a){ return a.indexOf(v) === i; });
   for (var c of opts) {
@@ -179,19 +170,8 @@ function renderCountOptions(name){
     countGrid.appendChild(btn);
   }
   topicSummary.textContent = selectedExamName() + ' → ' + name;
-  customCountHint.textContent = 'Max ' + max + ' available';
-  customCountInput.value = '';
-  customCountInput.oninput = function(){
-    var n = parseInt(this.value, 10);
-    if (!isFinite(n) || n < 1) { startBtn.disabled = true; return; }
-    if (n > max) { startBtn.disabled = true; return; }
-    selectedCount = n;
-    num3.textContent = '✓';
-    num3.className = 'num done';
-    var btns = qsa('.count-btn');
-    for (var b of btns) b.classList.remove('selected');
-    startBtn.disabled = false;
-  };
+  var customInput = document.getElementById('customCount');
+  if(customInput) customInput.value = '';
 }
 
 function selectedExamName(){
@@ -214,7 +194,7 @@ startBtn.onclick = function(){
   startBtn.disabled = true;
   startBtn.textContent = 'Loading questions...';
   loadFullExamData();
-};
+}
 
 function loadFullExamData(){
   if (location.protocol === 'file:') {
@@ -236,17 +216,11 @@ function resetStartBtn(){
   startBtn.textContent = 'Start Test';
 }
 
-function isTemplateJunk(q){
-  var t=String(q.text||'');
-  return /most critical for accurate problem-solving/.test(t)
-      || /using the correct formula/i.test(t) && /reading the question carefully/i.test(t)
-      || /performing calculations accurately/.test(t);
-}
 function buildQuestions(examData){
   var section = null;
   for (var s of examData.sections) { if (s.name === selectedTopic) { section = s; break; } }
   if (!section || !section.questions.length) { resetStartBtn(); return; }
-  var pool = section.questions.slice().filter(function(q){ return !isTemplateJunk(q); });
+  var pool = section.questions.slice();
   shuffle(pool);
   questions = pool.slice(0, selectedCount);
   currentIdx = 0;
@@ -296,6 +270,8 @@ function showQuestion(){
     div.onclick = function(){ selectAnswer(parseInt(this.dataset.idx)); };
     qOptions.appendChild(div);
   }
+  var explDiv = document.getElementById('qExplanation');
+  if(explDiv) explDiv.style.display = 'none';
   if (currentIdx === questions.length - 1) {
     nextBtn.textContent = 'See Results';
   } else {
@@ -312,15 +288,15 @@ function renderDiagram(q){
   wrap.className = 'diagram-wrap';
   var html = '';
   if(q.imageUrl){
-    html += '<div class="diagram-img"><img src="'+q.imageUrl+'" alt="Diagram" style="max-width:100%;height:auto;border:1px solid rgba(255,255,255,.08);border-radius:8px;margin-bottom:8px"></div>';
+    html += '<div class="diagram-img"><img src="' + q.imageUrl + '" alt="Diagram" style="max-width:100%;height:auto;border:1px solid rgba(255,255,255,.08);border-radius:8px;margin-bottom:8px"></div>';
   }
   if(q.tableData && q.tableData.headers && q.tableData.rows){
     html += '<div class="diagram-table"><table style="width:100%;border-collapse:collapse;font-size:.85em;margin-bottom:8px"><thead>';
-    q.tableData.headers.forEach(function(h){ html += '<th style="padding:8px 10px;border:1px solid rgba(255,255,255,.08);text-align:left;background:rgba(167,139,250,.1);color:var(--purple);font-weight:600">'+h+'</th>'; });
+    q.tableData.headers.forEach(function(h){ html += '<th style="padding:8px 10px;border:1px solid rgba(255,255,255,.08);text-align:left;background:rgba(167,139,250,.1);color:var(--purple);font-weight:600">' + h + '</th>'; });
     html += '</thead><tbody>';
     q.tableData.rows.forEach(function(row){
       html += '<tr>';
-      row.forEach(function(cell){ html += '<td style="padding:8px 10px;border:1px solid rgba(255,255,255,.08);text-align:left;background:rgba(255,255,255,.02)">'+cell+'</td>'; });
+      row.forEach(function(cell){ html += '<td style="padding:8px 10px;border:1px solid rgba(255,255,255,.08);text-align:left;background:rgba(255,255,255,.02)">' + cell + '</td>'; });
       html += '</tr>';
     });
     html += '</tbody></table>';
@@ -363,6 +339,11 @@ function selectAnswer(idx){
   }
   results.push({ question: q, chosen: idx, correct: idx === q.answer });
   nextBtn.disabled = false;
+  var explDiv = document.getElementById('qExplanation');
+  if(explDiv){
+    explDiv.innerHTML = '<div class="rev-sol">' + (q.solution || 'Correct answer: ' + q.options[q.answer].label + '. ' + q.options[q.answer].text) + '</div>';
+    explDiv.style.display = 'block';
+  }
 }
 
 nextBtn.onclick = function(){
@@ -386,7 +367,6 @@ function showResults(){
   correctCount.textContent = correct;
   wrongCount.textContent = wrong;
   accuracyDisplay.textContent = pct + '%';
-
   reviewList.innerHTML = '';
   for (var i = 0; i < results.length; i++) {
     var r = results[i];
@@ -402,7 +382,6 @@ function showResults(){
       (q.solution ? '<div class="rev-sol">' + q.solution + '</div>' : '');
     reviewList.appendChild(div);
   }
-
   saveResult(selectedExam, selectedTopic, correct, wrong, total);
   resultCard.scrollIntoView({behavior:'smooth', block:'start'});
   startBtn.disabled = false;
@@ -473,4 +452,3 @@ backToTopicBtn.onclick = function(){
 };
 
 loadIndex();
-})();
