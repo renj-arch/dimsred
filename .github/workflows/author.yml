@@ -187,6 +187,13 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      # The author writes and checks in one pass; re-read the committed shape
+      # with the standalone auditor so an assembly bug cannot carry a line off
+      # its ledger row. Same rules, separate code path.
+      - name: Re-audit the storyboard independently
+        if: ${{ success() && !inputs.stub }}
+        run: node scripts/film/audit-storyboard.js "$FILM"
+
       - name: Clear the authoring strikes
         if: ${{ success() && !inputs.stub }}
         run: node scripts/film/author-strike.js --pass "$FILM"
@@ -208,7 +215,14 @@ jobs:
             exit 0
           fi
           git commit -m "record $FILM authoring strike"
-          git push
+          # Another author/claim run can advance film-ci between checkout and
+          # push. Retry on the rebased tip so the strike is never lost.
+          for i in 1 2 3; do
+            git push origin "HEAD:film-ci" && exit 0
+            git fetch origin film-ci
+            git rebase --autostash origin/film-ci
+          done
+          exit 1
 
       - name: Commit the storyboard to this branch
         if: ${{ success() && !inputs.stub }}
@@ -222,7 +236,24 @@ jobs:
             exit 0
           fi
           git commit -m "author $FILM from its sourced ledger"
-          git push
+          for i in 1 2 3; do
+            git push origin "HEAD:film-ci" && exit 0
+            git fetch origin film-ci
+            git rebase --autostash origin/film-ci
+          done
+          exit 1
+
+      # A failed attempt used to wait for the 12:00/00:00 UTC cron before the
+      # next topic was even selected, so three strikes took a day and a half.
+      # Dispatch the selector immediately: it retries a topic that still has
+      # strikes left, or moves on once author-strike.js has blocked it.
+      - name: Continue the chain after a failed attempt
+        if: ${{ failure() && !inputs.stub && steps.fetch.outcome == 'success' }}
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "::notice title=Authoring failed::Strike recorded; selecting the next topic now."
+          gh workflow run film-autopilot.yml --ref film-ci
 
       - name: Dispatch the render
         if: ${{ success() && !inputs.stub && inputs.render }}
