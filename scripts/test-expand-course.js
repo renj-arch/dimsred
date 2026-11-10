@@ -50,6 +50,19 @@ ok('repair maps common wrappers and keeps table tags', function () {
   assert.ok(out.indexOf('<td><td>') === -1, out);
 });
 
+ok('repair converts LaTeX to plain text and superscripts', function () {
+  const out = repair.sanitize('<p>State $|A\\rangle = T|+\\rangle$, $10^{-3}$ and $\\pi/8$.</p>');
+  assert.ok(out.indexOf('|A⟩ = T|+⟩') !== -1, out);
+  assert.ok(out.indexOf('10<sup>-3</sup>') !== -1, out);
+  assert.ok(out.indexOf('π/8') !== -1, out);
+  assert.strictEqual(out.indexOf('$'), -1, out);
+});
+
+ok('repair leaves currency amounts alone', function () {
+  const out = repair.sanitize('<p>It costs $5 and $10.</p>');
+  assert.ok(out.indexOf('$5 and $10') !== -1, out);
+});
+
 ok('validator accepts a complete lesson with a comparison table', function () {
   assert.strictEqual(expand.validateHtml(lessonHtml(3)), null);
 });
