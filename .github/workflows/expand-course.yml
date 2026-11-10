@@ -1,4 +1,4 @@
-name: Expand Course Content
+﻿name: Expand Course Content
 
 # The site's course-writing agent: qwen3.5:9b (Ollama on the runner) writes
 # the lesson bodies and practice MCQs that the exam courses are missing, and
@@ -16,12 +16,12 @@ name: Expand Course Content
 # 70% word-overlap rule (same as the rest of the site) drops any accidental
 # duplicate before it can be stored.
 #
-# The model is dispatch-pinnable (input "model", default qwen3.5:9b — the
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b ΓÇö the
 # mid tier). The 4b fast-tier trials decide whether it can go smaller; the
 # old 27B could not complete runs here, so nothing dispatches it anymore.
 
 on:
-  # No fixed cron: runs are chained — each run self-dispatches the next one
+  # No fixed cron: runs are chained ΓÇö each run self-dispatches the next one
   # when it finishes (see the "Queue the next deepen run" step below). This
   # means a new deepen cycle starts as soon as the previous one completes,
   # instead of waiting for the next 6-hour clock slot. Use workflow_dispatch
@@ -43,6 +43,9 @@ concurrency:
 
 permissions:
   contents: write
+  # The chain self-dispatches the next run with GITHUB_TOKEN. Without this the
+  # dispatch is rejected with HTTP 403 and the chain silently dies.
+  actions: write
 
 jobs:
   expand:
@@ -96,7 +99,7 @@ jobs:
           ollama --version
           mkdir -p ~/.ollama/models
           # The install script starts a systemd service running as the
-          # "ollama" user (home /usr/share/ollama) — models were stored THERE,
+          # "ollama" user (home /usr/share/ollama) ΓÇö models were stored THERE,
           # invisible to the Actions cache (first cache save was a 197-byte
           # empty dir). Run the service as the runner user, pointed at the
           # runner home: models become cache-visible and owned by the same
@@ -106,7 +109,7 @@ jobs:
           sudo systemctl daemon-reload
           sudo systemctl restart ollama
 
-      # Model cache: one entry per size class (repo budget 10GB) — "fast" for
+      # Model cache: one entry per size class (repo budget 10GB) ΓÇö "fast" for
       # small models, "mid" for qwen3.5:9b. Both current default tags are cacheable.
       - name: Cache Ollama models
         if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
@@ -200,7 +203,7 @@ jobs:
           rm -f scripts/.course-touched.json
           bash scripts/ci-push.sh "course-expand: ${{ inputs.model || 'qwen3.5:9b' }} wrote new exam lessons (run #${{ github.run_number }})"
 
-      # Queue the next deepen run as soon as this one finishes — chained
+      # Queue the next deepen run as soon as this one finishes ΓÇö chained
       # instead of waiting for a fixed 6-hour cron slot.
       - name: Queue the next deepen run
         if: always()
@@ -210,8 +213,10 @@ jobs:
           for i in 1 2 3; do
             if gh workflow run expand-course.yml --ref main; then
               echo "Queued the next course-deepen run (starts when this run completes)"
-              break
+              exit 0
             fi
             echo "Dispatch attempt $i failed, retrying..."
             sleep 10
           done
+          echo "::error title=Chain broken::Could not dispatch the next expand-course run after 3 attempts."
+          exit 1
