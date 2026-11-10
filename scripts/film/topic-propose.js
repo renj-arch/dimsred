@@ -322,6 +322,8 @@ async function askModel(events) {
     '',
     'Choose up to three, best first, that can carry an eight-scene film: an object, an order, a mechanism, a cost, an argument, a record.',
     'Reject anything whose only subject is death, injury or spectacle.',
+    'Reject horse-trading, coalition talks, elections, appointments and one-day political news: they rarely produce the object, document or process an eight-scene film needs.',
+    'Prefer a policy, a technology, a place, a court ruling with a document, a disaster aftermath, or a scientific finding.',
     'Do not invent an event. Use only the numbered events above. Do not add a number, a name or a source.',
     'For each pick give the event number, a specific angle (what the film explains), and why it matters now.',
     'Return one JSON object: {"picks":[{"event":2,"angle":"...","why":"..."}]}',
@@ -497,6 +499,16 @@ async function main() {
     }
     const title = cleanTitle(event.text);
     const id = slugify(title);
+    /*
+     * A blocked or published topic must not be re-proposed with a "-2"
+     * suffix. That looped on the same thin current-affairs story and burned
+     * an authoring strike on every run. If the event is already in the slate,
+     * try the next pick; the curated bank is the fallback when all are known.
+     */
+    if (knownIds(slate).has(id)) {
+      console.log(`  rejected: ${id} is already in the slate (blocked or published); not retrying the same event`);
+      continue;
+    }
     const topic = dryRun ? {
       id, title, category: 'current-affairs', why: pick.why, angle: pick.angle,
       sources: checked.sources, found: stub ? 'stub' : 'model',
