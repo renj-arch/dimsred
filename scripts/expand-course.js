@@ -262,6 +262,7 @@ function collectDeepen() {
           modName: users[0].modName,
           examName: users[0].examName,
           examCount: users.length,
+          users: users,
           files: files
         });
       });
@@ -1181,7 +1182,7 @@ async function main() {
         mergePractice(gap.key, res.questions);
         saveJson(DATA_FILE, courseData);
         saveJson(PRACTICE_FILE, coursePractice);
-        gap.users.forEach(function (u) { touchedExams[u.examKey] = 1; });
+        (gap.users || []).forEach(function (u) { touchedExams[u.examKey] = 1; });
         addedKeys.push(gap.key);
         addedFiles = addedFiles.concat(gap.files);
       } else if (gap.role === 'deepen-page') {
@@ -1199,7 +1200,7 @@ async function main() {
         if (res.questions.length >= 3) coursePractice[gap.key] = toPractice(res.questions);
         saveJson(DATA_FILE, courseData);
         saveJson(PRACTICE_FILE, coursePractice);
-        gap.users.forEach(function (u) { touchedExams[u.examKey] = 1; });
+        (gap.users || []).forEach(function (u) { touchedExams[u.examKey] = 1; });
         addedKeys.push(gap.key);
         addedFiles = addedFiles.concat(gap.files);
       }
