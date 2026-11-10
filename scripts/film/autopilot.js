@@ -1,21 +1,22 @@
-#!/usr/bin/env node
-/**
- * autopilot.js — fully autonomous film topic selection.
+﻿#!/usr/bin/env node
+/*
+ * Film autopilot.
  *
- * Uses the local model (qwen3.5:9b via Ollama) to decide what to film next.
- * No pre-kept topic-bank, no manual topic input — the model picks from its
- * own knowledge of UPSC syllabus gaps, exam-relevant stories, and visual
- * documentary potential.
+ * The agent owns data/film-slate.json. This selector does the boring part:
+ * it picks the next useful topic, refuses to render an unfinished brief, and
+ * dispatches the existing film pipeline when a complete storyboard + debate
+ * map exist.
  *
- * Output JSON consumed by film-autopilot.yml:
- *   { "kind": "ready",   "topic": { "id": "...", "title": "...", "angle": "...", "why": "...", "category": "...", "sources": [...] } }
- *   { "kind": "cap" }                                                  → daily cap reached
+ * It deliberately does not generate facts. A film without a sourced
+ * storyboard is a research task, not a render. That is the difference between
+ * automation and a content mill.
  *
  * Usage:
- *   node scripts/film/autopilot.js --json > out/autopilot/pick.json
- *   node scripts/film/autopilot.js --text
+ *   node scripts/film/autopilot.js
+ *   node scripts/film/autopilot.js --json
+ *   node scripts/film/autopilot.js --dispatch
+ *   node scripts/film/autopilot.js --require-ready
  */
-
 'use strict';
 
 const fs = require('fs');
@@ -24,202 +25,152 @@ const { spawnSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 const SLATE = path.join(ROOT, 'data', 'film-slate.json');
+const FILMS = path.join(ROOT, 'data', 'films');
+const OUT = path.join(ROOT, 'out', 'autopilot');
+const CAP = Number(process.env.FILM_DAILY_CAP || 2);
 
-function arg(name, fallback) {
-  const i = process.argv.indexOf('--' + name);
-  if (i === -1) return fallback;
-  const next = process.argv[i + 1];
-  return next && !next.startsWith('--') ? next : true;
+function readJson(file, fallback) {
+  try {
+    return JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
+  } catch (err) {
+    if (fallback !== undefined) return fallback;
+    throw new Error(`Cannot read ${path.relative(ROOT, file)}: ${err.message}`);
+  }
 }
 
-function flag(name) {
-  return process.argv.includes('--' + name);
+function hasSourcePair(id) {
+  return fs.existsSync(path.join(FILMS, `${id}.json`)) &&
+    fs.existsSync(path.join(FILMS, `${id}-debates.json`));
 }
 
-function fail(msg) {
-  console.error('autopilot: ' + msg);
-  process.exitCode = 1;
+function validate(id) {
+  const file = path.join(FILMS, `${id}.json`);
+  const res = spawnSync(process.execPath,
+    [path.join(ROOT, 'scripts', 'film', 'validate-film.js'), file],
+    { cwd: ROOT, encoding: 'utf8' });
+  if (res.status !== 0) {
+    return {
+      ok: false,
+      detail: (res.stdout || '') + (res.stderr || '')
+    };
+  }
+  return { ok: true, detail: (res.stdout || '').trim() };
 }
 
-function readSlate() {
-  if (!fs.existsSync(SLATE)) return { topics: [] };
-  try { return JSON.parse(fs.readFileSync(SLATE, 'utf8')); } catch (e) { return { topics: [] }; }
-}
+function choose() {
+  const slate = readJson(SLATE);
+  if (!Array.isArray(slate.topics) || !slate.topics.length) {
+    throw new Error('data/film-slate.json has no topics');
+  }
+  const videoData = readJson(path.join(ROOT, 'data', 'lecture-videos.json'), { videos: {} });
+  const videos = videoData && videoData.videos ? videoData.videos : {};
+  const published = Array.isArray(videos)
+    ? videos.map((entry) => entry.film || entry.id).filter(Boolean)
+    : Object.keys(videos);
 
-function writeSlate(slate) {
-  slate.updated = new Date().toISOString().slice(0, 10);
-  fs.writeFileSync(SLATE, JSON.stringify(slate, null, 2) + '\n');
-}
+  const sorted = slate.topics.slice().sort((a, b) =>
+    (a.priority || 0) - (b.priority || 0));
 
-function callModel(prompt) {
-  const payload = JSON.stringify({
-    model: 'qwen3.5:9b',
-    stream: false,
-    think: false,
-    options: { temperature: 0.7, top_p: 0.9, num_predict: 2000 },
-    messages: [{ role: 'user', content: prompt }]
-  });
+  const ready = sorted.find((topic) =>
+    ['ready', 'storyboard'].includes(topic.status) &&
+    !published.includes(topic.id) &&
+    hasSourcePair(topic.id));
 
-  const res = spawnSync('curl', [
-    '-sS', '--max-time', '300',
-    'http://127.0.0.1:11434/api/chat',
-    '-H', 'Content-Type: application/json',
-    '-d', '@-'
-  ], { input: payload, encoding: 'utf8', maxBuffer: 8 * 1024 * 1024, timeout: 310000 });
-
-  if (res.error) return null;
-  if (res.status !== 0) return null;
-  return res.stdout || '';
-}
-
-function extractJson(text) {
-  const first = text.indexOf('{');
-  if (first === -1) return null;
-  let depth = 0;
-  let inString = false;
-  let escaped = false;
-  for (let i = first; i < text.length; i++) {
-    const ch = text[i];
-    if (inString) {
-      if (escaped) escaped = false;
-      else if (ch === '\\') escaped = true;
-      else if (ch === '"') inString = false;
-      continue;
+  if (ready) {
+    const checked = validate(ready.id);
+    if (!checked.ok) {
+      return { kind: 'invalid', topic: ready, validation: checked };
     }
-    if (ch === '"') inString = true;
-    else if (ch === '{') depth += 1;
-    else if (ch === '}') {
-      depth -= 1;
-      if (depth === 0) {
-        try { return JSON.parse(text.slice(first, i + 1)); } catch (e) { return null; }
-      }
-    }
-  }
-  return null;
-}
-
-function slugify(s) {
-  return String(s || '')
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, '-')
-    .replace(/-+/g, '-')
-    .replace(/^-|-$/g, '');
-}
-
-function ensureOllama() {
-  const ping = spawnSync('curl', ['-sf', '--max-time', '5', 'http://127.0.0.1:11434/api/tags'], { encoding: 'utf8' });
-  if (ping.status === 0) return true;
-  console.log('autopilot: starting Ollama...');
-  spawnSync('nohup ollama serve >> /tmp/ollama.log 2>&1 &', { shell: true });
-  for (let i = 0; i < 30; i++) {
-    const p2 = spawnSync('curl', ['-sf', '--max-time', '5', 'http://127.0.0.1:11434/api/tags'], { encoding: 'utf8' });
-    if (p2.status === 0) return true;
-    spawnSync('sleep', ['1']);
-  }
-  return false;
-}
-
-function pickFromSlate(slate) {
-  const topics = Array.isArray(slate.topics) ? slate.topics : [];
-  const ready = topics.find((t) => t.status === 'ready');
-  if (ready) return { kind: 'ready', topic: ready };
-  const authored = topics.find((t) => t.status === 'authored');
-  if (authored) return { kind: 'ready', topic: authored };
-  const needsResearch = topics.find((t) => t.status === 'research' || t.status === 'new' || !t.status);
-  if (needsResearch) return { kind: 'research', topic: needsResearch };
-  return null;
-}
-
-function generateTopicFromModel() {
-  const prompt = [
-    'You are a documentary film producer for UPSC competitive exam preparation.',
-    '',
-    'Pick ONE film topic that is:',
-    '  - Relevant to UPSC GS syllabus (Polity, Economy, Geography, History, Environment, Science & Tech, Society, International Relations)',
-    '  - Visually filmable (has objects, places, documents, maps, processes to show)',
-    '  - Has enough publicly available sources (Wikipedia, PIB, government reports)',
-    '  - Would make a compelling 3-8 minute documentary',
-    '',
-    'Output ONE JSON object only, no markdown, no prose:',
-    JSON.stringify({
-      id: 'slug-like-identifier',
-      title: 'Compelling title',
-      category: 'polity|economy|geography|history|environment|science|society|international-relations',
-      angle: 'Specific angle or approach',
-      why: 'Why this matters for UPSC aspirants',
-      sources: [
-        { id: 'source-1', title: 'Source title', publisher: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/...' },
-        { id: 'source-2', title: 'Source title 2', publisher: 'PIB', url: 'https://pib.gov.in/...' }
-      ]
-    }, null, 2),
-    '',
-    'Do not repeat topics already filmed: Salt March, Jallianwala Bagh, Emergency 1975, Bhopal Gas Tragedy, Vatican Archives.'
-  ].join('\n');
-
-  const raw = callModel(prompt);
-  if (!raw) return null;
-
-  const picked = extractJson(raw);
-  if (!picked || !picked.id || !picked.title) return null;
-
-  // Ensure sources is an array
-  if (!Array.isArray(picked.sources) || picked.sources.length === 0) {
-    picked.sources = [
-      { id: 'wiki-' + slugify(picked.title), title: picked.title, publisher: 'Wikipedia', url: 'https://en.wikipedia.org/wiki/' + encodeURIComponent(picked.title) }
-    ];
+    return { kind: 'ready', topic: ready, validation: checked };
   }
 
-  return { kind: 'ready', topic: picked };
+  /*
+   * A blocked topic is not retried. The strike counter in author.yml moved it
+   * there after three failed authoring passes; the chain must spend the next
+   * slot on a different brief instead of looping on the same corpus.
+   */
+  const research = sorted.find((topic) =>
+    ['research', 'authoring'].includes(topic.status));
+  if (research) return { kind: 'research', topic: research };
+
+  /*
+   * Nothing researched is waiting. Either start a new brief from the news
+   * feeds (the authoring workflow does the sourcing) or stop for the day once
+   * the cap is reached. A blocked topic never reaches this branch: it has
+   * already spent its three attempts.
+   */
+  const today = new Date().toISOString().slice(0, 10);
+  const producedToday = slate.topics.filter((topic) =>
+    topic.status === 'published' && topic.publishedAt === today).length;
+  if (producedToday >= CAP) return { kind: 'cap', topic: null };
+  return { kind: 'invent', topic: null };
+}
+
+function writeReport(payload) {
+  fs.mkdirSync(OUT, { recursive: true });
+  const file = path.join(OUT, payload.kind === 'ready' ? 'selected.json' : 'next-topic.json');
+  fs.writeFileSync(file, JSON.stringify(payload, null, 2) + '\n');
+  return file;
+}
+
+function dispatch(topic) {
+  // Draft first: film.yml only promotes to final after its QC gate passes.
+  const args = [
+    'workflow', 'run', 'film.yml',
+    '--ref', 'film-ci',
+    '-f', `film=${topic.id}`,
+    '-f', 'quality=draft',
+    '-f', 'release=false',
+    '-f', 'publish=false',
+    '-f', 'promote=true',
+    '-f', 'autopilot=true'
+  ];
+  const res = spawnSync('gh', args, { cwd: ROOT, encoding: 'utf8' });
+  if (res.status !== 0) {
+    throw new Error(`Could not dispatch film.yml: ${res.stderr || res.stdout}`);
+  }
+  return (res.stdout || '').trim();
 }
 
 function main() {
-  const json = flag('json');
+  const json = process.argv.includes('--json');
+  const shouldDispatch = process.argv.includes('--dispatch');
+  const requireReady = process.argv.includes('--require-ready');
+  const result = choose();
+  const report = writeReport(result);
 
-  // 1. Try the slate first (if it exists and has pending topics)
-  const slate = readSlate();
-  const slatePick = pickFromSlate(slate);
-  if (slatePick) {
-    const topic = slatePick.topic;
-    // Mark as claimed so it's not picked twice
-    if (slate.topics) {
-      const t = slate.topics.find((x) => x.id === topic.id);
-      if (t) t.status = 'rendering';
-      writeSlate(slate);
+  if (json) {
+    process.stdout.write(JSON.stringify(result, null, 2) + '\n');
+  } else if (result.kind === 'ready') {
+    process.stdout.write(`NEXT READY FILM: ${result.topic.id}\n${result.validation.detail}\n`);
+  } else if (result.kind === 'invalid') {
+    process.stderr.write(`READY FILM IS INVALID: ${result.topic.id}\n${result.validation.detail}\n`);
+  } else if (result.kind === 'research') {
+    process.stdout.write(
+      `NO READY FILM.\nNext research topic: ${result.topic.id}\n` +
+      `Report: ${path.relative(ROOT, report)}\n` +
+      'The authoring workflow will write the sourced brief and storyboard.\n'
+    );
+  } else if (result.kind === 'invent') {
+    process.stdout.write(
+      'SLATE EMPTY.\nThe authoring workflow will invent and source-lock the next brief.\n'
+    );
+  } else if (result.kind === 'cap') {
+    process.stdout.write(`DAILY CAP REACHED (${CAP}).\nThe queue resumes at 00:00 UTC.\n`);
+  } else {
+    process.stdout.write('NO ACTION.\n');
+  }
+
+  if (result.kind === 'invalid' || (requireReady && result.kind !== 'ready')) {
+    process.exitCode = 2;
+    return;
+  }
+  if (shouldDispatch) {
+    if (result.kind !== 'ready') {
+      throw new Error('Refusing to dispatch: no validated ready film.');
     }
-    if (json) console.log(JSON.stringify(slatePick));
-    else console.log('kind=' + slatePick.kind + ' film=' + topic.id + ' title=' + topic.title);
-    return;
+    process.stdout.write(dispatch(result.topic) + '\n');
   }
-
-  // 2. Slate empty — use the model's brain to pick a topic autonomously
-  console.log('autopilot: slate empty — asking model to pick a film topic...');
-  if (!ensureOllama()) {
-    fail('Ollama not available — cannot autonomously pick a topic');
-    return;
-  }
-
-  const pick = generateTopicFromModel();
-  if (!pick) {
-    fail('model did not return a valid topic');
-    return;
-  }
-
-  const topic = pick.topic;
-
-  // Persist to slate so future runs know it's in flight
-  if (!slate.topics) slate.topics = [];
-  slate.topics.push({ id: topic.id, status: 'rendering', renderStartedAt: new Date().toISOString(), source: 'autopilot-model' });
-  writeSlate(slate);
-
-  // Model-generated topics need storyboarding first → dispatch author.yml
-  const autonomousPick = { kind: 'research', topic: pick.topic };
-
-  if (json) console.log(JSON.stringify(autonomousPick));
-  else console.log('kind=' + autonomousPick.kind + ' film=' + topic.id + ' title=' + topic.title);
 }
 
-try {
-  main();
-} catch (err) {
-  fail(err.message);
-}
+main();

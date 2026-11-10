@@ -1,4 +1,4 @@
-name: Film autopilot
+﻿name: Film autopilot
 
 # The agent maintains data/film-slate.json. This job chooses the next topic,
 # validates that its sourced storyboard is complete, and dispatches the normal
@@ -65,8 +65,8 @@ jobs:
           git commit -m "slate: reclaim stale render leases"
           for i in 1 2 3; do
             git push origin "HEAD:film-ci" && exit 0
-            git fetch origin film-ci
-            git rebase --autostash "origin/film-ci"
+            git fetch origin film-ci || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
           done
           exit 1
 
@@ -93,8 +93,8 @@ jobs:
           git commit -m "slate: refill from the topic brain"
           for i in 1 2 3; do
             git push origin "HEAD:film-ci" && exit 0
-            git fetch origin film-ci
-            git rebase --autostash "origin/film-ci"
+            git fetch origin film-ci || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
           done
           exit 1
 
@@ -129,8 +129,8 @@ jobs:
           git commit -m "slate: claim ${{ steps.choose.outputs.film }} for render"
           for i in 1 2 3; do
             git push origin "HEAD:film-ci" && exit 0
-            git fetch origin film-ci
-            git rebase --autostash "origin/film-ci"
+            git fetch origin film-ci || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
           done
           exit 1
 
