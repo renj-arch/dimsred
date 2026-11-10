@@ -1059,6 +1059,14 @@ function generateOne(gap, timeoutMs) {
       // Close missing tags and drop attributes the validator would reject. The
       // model's prose is kept; only malformed markup is repaired.
       html = htmlRepair.sanitize(html);
+      // A reply that hit the token limit is structurally balanced by sanitize
+      // but can still end mid-sentence. Keep the complete prose and drop only
+      // the unfinished tail before the validator sees it.
+      var trimmed = htmlRepair.trimIncompleteTail(html);
+      if (trimmed.trimmed) {
+        console.log('expand: ' + gap.key + ' trimmed an incomplete final sentence (' + trimmed.removed + ' chars)');
+        html = trimmed.html;
+      }
       var err = validateHtml(html, { minH3: isDepth ? 2 : 3 });
       if (err) {
         var e = new Error('html rejected: ' + err);
@@ -1102,7 +1110,16 @@ function saveJson(file, obj) {
 }
 
 function writeTouched(keys, files, exams) {
-  fs.writeFileSync(TOUCHED_FILE, JSON.stringify({ keys: keys, files: files, exams: exams }), 'utf8');
+  // The cleaner may have recorded addon keys before this run started; keep
+  // them so their pages regenerate in the same commit.
+  var prev = {};
+  try { prev = JSON.parse(fs.readFileSync(TOUCHED_FILE, 'utf8')); } catch (e) { prev = {}; }
+  var uniq = function (a, b) { return Array.from(new Set([].concat(a || [], b || []))); };
+  fs.writeFileSync(TOUCHED_FILE, JSON.stringify({
+    keys: uniq(prev.keys, keys),
+    files: uniq(prev.files, files),
+    exams: uniq(prev.exams, exams)
+  }), 'utf8');
 }
 
 // ---- main ------------------------------------------------------------------
