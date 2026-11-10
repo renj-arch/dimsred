@@ -36,15 +36,10 @@ jobs:
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          if git pull --rebase --autostash 2>/dev/null; then
-            : # clean rebase
-          else
-            git rebase --abort 2>/dev/null || true
-            git fetch origin main 2>/dev/null || true
-            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
-            git add -A 2>/dev/null || true
-            git commit --no-edit 2>/dev/null || true
-          fi
+          git fetch origin main 2>/dev/null || true
+          git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+          git add -A 2>/dev/null || true
+          git commit --no-edit 2>/dev/null || true
 
       - uses: actions/upload-artifact@v4
         with:
@@ -167,15 +162,10 @@ jobs:
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          if git pull --rebase --autostash 2>/dev/null; then
-            : # clean rebase
-          else
-            git rebase --abort 2>/dev/null || true
-            git fetch origin main 2>/dev/null || true
-            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
-            git add -A 2>/dev/null || true
-            git commit --no-edit 2>/dev/null || true
-          fi
+          git fetch origin main 2>/dev/null || true
+          git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+          git add -A 2>/dev/null || true
+          git commit --no-edit 2>/dev/null || true
 
       - uses: actions/setup-node@v4
         with:
@@ -241,17 +231,12 @@ jobs:
           else
             git commit -m "Globe fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
             for i in 1 2 3; do
-              if git pull --rebase --autostash 2>/dev/null; then
-                echo "Rebased cleanly"
-              else
-                echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
-                git rebase --abort
-                git fetch origin main 2>/dev/null
-                git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
-                  node scripts/resolve-data-merge.js
-                  git commit --no-edit 2>/dev/null || true
-                }
-              fi
+              git fetch origin main 2>/dev/null || true
+              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
+                echo "Merge conflict — union-merging to keep BOTH runs' data."
+                node scripts/resolve-data-merge.js
+                git commit --no-edit 2>/dev/null || true
+              }
               git push && { echo "Push succeeded"; break; } || echo "Push attempt $i failed, retrying..."
               sleep 5
             done || true
