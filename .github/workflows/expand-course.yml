@@ -160,6 +160,14 @@ jobs:
           EXPAND_DEPTH_PASSES: '2'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
 
+      # Published addons accumulate small defects: raw LaTeX, a sentence cut
+      # off at the token limit, a dangling label, emoji in a heading. Repair
+      # them here and merge the changed keys into .course-touched.json so the
+      # pages regenerate below instead of drifting from the JSON.
+      - name: Clean published addon content
+        if: always()
+        run: node scripts/clean-course-content.js
+
       - name: Regenerate exactly the filled lesson pages
         if: always()
         run: |
