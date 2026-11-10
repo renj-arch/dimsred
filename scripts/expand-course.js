@@ -450,6 +450,7 @@ function examQuestionRules(gap) {
     '- Each question tests a DIFFERENT sub-aspect of the lesson.',
     '- Questions must match the difficulty and style of the real ' + exam + ' exam.',
     '- No generic filler like "which step is most critical for accurate problem-solving".',
+    '- Write mathematics in plain text with Unicode symbols; do not use LaTeX, $...$ delimiters, or emojis.',
     '- Every question must have a definite, verifiable answer from the lesson content.'
   ];
 
@@ -526,6 +527,7 @@ function theoryPrompt(gap) {
     '<div> elements may only carry these classes: example-box (div.ex-title, div.ex-text, div.ex-soln) and tip-box (div.tip-title, div.tip-text).',
     'No attributes on any tag except class on div.example-box, div.ex-title, div.ex-text, div.ex-soln, div.tip-title, div.tip-text.',
     'No markdown, no images, no links, no scripts, no inline styles.',
+    'Write mathematics in plain text with Unicode symbols (×, ÷, ≤, ≥, π, √). Do not use LaTeX or $...$ delimiters. Do not use emojis.',
     '',
     'Do not append a practice-question JSON or a ===QUESTIONS=== marker; practice questions are generated in a separate pass.'
   ];
@@ -644,6 +646,7 @@ function deepenPrompt(gap) {
     '',
     'Format: HTML fragment only, tags <h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span> <sup> <sub> <table> <caption> <thead> <tbody> <tr> <th> <td>.',
     'div classes allowed: example-box/ex-title/ex-text/ex-soln and tip-box/tip-title/tip-text. No other attributes, no links, images, scripts or markdown.',
+    'Write mathematics in plain text with Unicode symbols (×, ÷, ≤, ≥, π, √). Do not use LaTeX or $...$ delimiters. Do not use emojis.',
     '700-1000 words of visible text. Be specific and correct; never invent statistics or sources; classic textbook facts only.',
     '',
     'Do not append a practice-question JSON or a ===QUESTIONS=== marker; practice questions are generated in a separate pass.'

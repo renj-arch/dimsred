@@ -1,54 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-10T00:46:34.506Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 1,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 1
-    }
-   ],
-   "details": [
-    {
-     "agent": "mainsfresh",
-     "fixes": [
-      {
-       "page": "data/mains-fresh.json",
-       "kind": "mainsfresh",
-       "fix": "Shipped practice question ci-mw9ygn3s-5qpc (optional2/civil-eng, 15 marks): Critically examine the role of seismic zoning in urban planning for Indian cities located on active fault lines. Discuss",
-       "model": "qwen3.5:9b (local)"
-      }
-     ]
-    }
-   ]
-  },
-  {
-   "at": "2026-11-10T01:07:28.775Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
-   "at": "2026-11-10T01:20:57.399Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-10T01:38:36.137Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -203,8 +155,105 @@
     }
    ],
    "details": []
+  },
+  {
+   "at": "2026-11-10T08:07:55.877Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "foresight",
+     "count": 0
+    },
+    {
+     "agent": "questions",
+     "count": 2
+    },
+    {
+     "agent": "content",
+     "count": 0
+    },
+    {
+     "agent": "papers",
+     "count": 0
+    },
+    {
+     "agent": "wikisyllabus",
+     "count": 0
+    },
+    {
+     "agent": "questioncats",
+     "count": 0
+    }
+   ],
+   "details": [
+    {
+     "agent": "questions",
+     "fixes": [
+      {
+       "page": "data/questions",
+       "fix": "Found 226168 thin subtopics (< 15 questions)"
+      },
+      {
+       "page": "data/questions",
+       "fix": "Merged 53 overlapping subtopics into correct categories"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-10T08:58:30.010Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Add Missing Figures for Top Syllabus Topics",
+       "detail": "The fault board lists 74 syllabus topics missing figures, which degrades the user experience on static pages.",
+       "text": "Generate a simple HTML template with placeholder SVG graphics or generic diagrams for the top 10 most frequent missing figure categories. Manually review and insert these into the relevant HTML files to reduce the fault count without needing external assets."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "at": "2026-11-10T09:44:17.236Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      },
+      {
+       "page": "jee/mock-tests/full-2026-11-08-jee-paper2b.html",
+       "fix": "Nav: \"JEE\" → /jee/ (was ../index.html)"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-10T05:17:49.159Z",
+ "lastRun": "2026-11-10T09:44:17.236Z",
  "model": "qwen3.5:9b"
 }

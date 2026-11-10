@@ -42,6 +42,50 @@ function escapeTag(text) {
   return String(text).replace(/</g, '&lt;').replace(/>/g, '&gt;');
 }
 
+// The course pages do not load MathJax. Convert the LaTeX a model reaches for
+// into plain text/Unicode so students do not see "$|A\rangle$" on the page.
+// Delimiters are only stripped when the contents look mathematical, so prices
+// such as "$5 and $10" are left alone.
+const LATEX_SYMBOLS = {
+  times: '×', cdot: '·', div: '÷', pm: '±', mp: '∓',
+  le: '≤', leq: '≤', ge: '≥', geq: '≥', ne: '≠', neq: '≠',
+  approx: '≈', equiv: '≡', propto: '∝', infty: '∞',
+  partial: '∂', nabla: '∇', sum: 'Σ', prod: 'Π', int: '∫',
+  alpha: 'α', beta: 'β', gamma: 'γ', delta: 'δ', epsilon: 'ε',
+  theta: 'θ', lambda: 'λ', mu: 'μ', pi: 'π', rho: 'ρ', sigma: 'σ',
+  tau: 'τ', phi: 'φ', omega: 'ω',
+  Delta: 'Δ', Gamma: 'Γ', Lambda: 'Λ', Pi: 'Π', Sigma: 'Σ',
+  Phi: 'Φ', Omega: 'Ω',
+  rightarrow: '→', to: '→', leftarrow: '←', leftrightarrow: '↔',
+  Rightarrow: '⇒', implies: '⇒', iff: '⇔',
+  langle: '⟨', rangle: '⟩', lvert: '|', rvert: '|',
+  forall: '∀', exists: '∃', in: '∈', notin: '∉',
+  subset: '⊂', cup: '∪', cap: '∩', degree: '°', circ: '°',
+  prime: '′', ldots: '…', dots: '…', quad: ' ', qquad: ' '
+};
+
+function plainMath(html) {
+  let s = String(html || '');
+  s = s.replace(/\$([^$]*[\\^_{}][^$]*)\$/g, '$1');
+  s = s.replace(/\$([a-zA-Z])\$/g, '$1');
+  s = s.replace(/\\\(([\s\S]*?)\\\)/g, '$1');
+  s = s.replace(/\\\[([\s\S]*?)\\\]/g, '$1');
+  s = s.replace(/\\(?:frac)\{([^{}]+)\}\{([^{}]+)\}/g, '($1)/($2)');
+  s = s.replace(/\\(?:sqrt)\{([^{}]+)\}/g, '√($1)');
+  s = s.replace(/\\(?:text|mathrm|mathbf|mathit|overline|vec|bar|hat)\{([^{}]+)\}/g, '$1');
+  s = s.replace(/\\(?:left|right)\b/g, '');
+  s = s.replace(/\\([a-zA-Z]+)/g, function (m, name) {
+    return Object.prototype.hasOwnProperty.call(LATEX_SYMBOLS, name) ? LATEX_SYMBOLS[name] : name;
+  });
+  s = s.replace(/\\([{}%_&$#])/g, '$1');
+  s = s.replace(/\\[,;! ]/g, ' ');
+  s = s.replace(/\^\{([^{}]+)\}/g, '<sup>$1</sup>');
+  s = s.replace(/\^([0-9+-])/g, '<sup>$1</sup>');
+  s = s.replace(/_\{([^{}]+)\}/g, '<sub>$1</sub>');
+  s = s.replace(/_([0-9])/g, '<sub>$1</sub>');
+  return s;
+}
+
 function stripAttrs(html) {
   return String(html || '')
     .replace(/<!--[\s\S]*?-->/g, '')
@@ -113,12 +157,13 @@ function balance(html) {
 }
 
 function sanitize(html) {
-  return balance(stripAttrs(html)).trim();
+  return balance(stripAttrs(plainMath(html))).trim();
 }
 
 module.exports = {
   sanitize: sanitize,
   stripAttrs: stripAttrs,
   balance: balance,
+  plainMath: plainMath,
   ALLOWED_TAGS: ALLOWED_TAGS
 };
