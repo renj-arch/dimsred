@@ -63,6 +63,33 @@ ok('repair leaves currency amounts alone', function () {
   assert.ok(out.indexOf('$5 and $10') !== -1, out);
 });
 
+ok('repair strips delimiters around tuples and intervals', function () {
+  const out = repair.sanitize('<p>Take $(1,29)$, the interval $[0, 1]$ and $P dV$.</p>');
+  assert.ok(out.indexOf('$') === -1, out);
+  assert.ok(out.indexOf('(1,29)') !== -1, out);
+  assert.ok(out.indexOf('[0, 1]') !== -1, out);
+  assert.ok(out.indexOf('P dV') !== -1, out);
+});
+
+ok('repair closes missing tags instead of rejecting the lesson', function () {
+  const out = repair.sanitize('<h3>Heading</h3><p><strong>Bold text</p><div class="tip-box"><div class="tip-text">Tip</div>');
+  assert.strictEqual((out.match(/<strong>/g) || []).length, (out.match(/<\/strong>/g) || []).length, out);
+  assert.strictEqual((out.match(/<div\b/g) || []).length, (out.match(/<\/div>/g) || []).length, out);
+});
+
+ok('repair trims a reply that stopped mid-sentence', function () {
+  const truncated = '<h3>Heading</h3><p>' + 'A complete sentence explains the rule. '.repeat(8) + 'This built-in potential</p>';
+  const trimmed = repair.trimIncompleteTail(truncated);
+  assert.strictEqual(trimmed.trimmed, true);
+  assert.strictEqual(trimmed.html.indexOf('This built-in potential'), -1);
+  assert.ok(/[.!?…]<\/p>$/.test(trimmed.html), trimmed.html.slice(-80));
+});
+
+ok('repair leaves a complete ending alone', function () {
+  const complete = '<h3>Heading</h3><p>A complete sentence.</p>';
+  assert.strictEqual(repair.trimIncompleteTail(complete).trimmed, false);
+});
+
 ok('validator accepts a complete lesson with a comparison table', function () {
   assert.strictEqual(expand.validateHtml(lessonHtml(3)), null);
 });

@@ -68,25 +68,55 @@ function trimDangling(html) {
     // cut-off formula (unbalanced parens or an unmatched $).
     var dollars = (frag.match(/\$/g) || []).length;
     var parens = (frag.match(/\(/g) || []).length - (frag.match(/\)/g) || []).length;
-    var punctOk = /[.!?…:;,>"'’”]/.test(last);
+    // Only a sentence end is a clean ending. A trailing comma, semicolon or
+    // colon is usually the middle of a clause the model never finished; the
+    // old code accepted it and published pages ending in "...quadratic costs,".
+    // A bare list marker ("3.") is also a truncated item, not a sentence, and
+    // a number ending in a bare decimal ("Silver is +0.") was cut mid-value.
+    var marker = /^(?:\d{1,3}|[a-zA-Z])\.$/.test(frag);
+    if (marker) {
+      var li = s.lastIndexOf('<li');
+      if (li !== -1) { s = s.slice(0, li).replace(/\s+$/, ''); continue; }
+      s = s.slice(0, (gt === -1 ? 0 : gt + 1 + off)).replace(/\s+$/, '');
+      continue;
+    }
+    var bare = /[+\-−]?\d+\.$/.exec(frag);
+    var punctOk = !marker && !bare && /[.!?…]["'”’)\]]?$/.test(frag);
     var parenOk = (last === ')' || last === ']') && parens === 0 && dollars % 2 === 0;
     if (punctOk || parenOk) { s = s + suffix; break; }
-    // Dangling fragment: cut back to the last sentence end inside it.
+    // Dangling fragment: cut back to the last sentence end inside it. If there
+    // is no sentence boundary, drop the whole fragment rather than keep a
+    // clause that stops at a comma.
     var cut = -1;
-    var res = [/[.!?…]/g, /[,;:]/g];
-    for (var r = 0; r < res.length; r++) {
-      var mm; var lastIdx = -1;
-      res[r].lastIndex = 0;
-      while ((mm = res[r].exec(frag)) !== null) lastIdx = mm.index;
-      if (lastIdx !== -1 && frag.length - lastIdx <= 160) { cut = lastIdx + 1; break; }
+    var res = /[.!?…]/g;
+    var mm; var lastIdx = -1;
+    // Do not treat the period in a bare decimal ("+0.") as a sentence end.
+    var searchEnd = bare ? frag.length - bare[0].length : frag.length;
+    res.lastIndex = 0;
+    while ((mm = res.exec(frag)) !== null) {
+      if (mm.index >= searchEnd) break;
+      lastIdx = mm.index;
     }
+    if (lastIdx !== -1 && searchEnd - lastIdx <= 160) cut = lastIdx + 1;
     if (cut === -1) cut = 0; // no boundary: drop the whole fragment
     s = s.slice(0, (gt === -1 ? 0 : gt + 1 + off) + cut).replace(/<br\s*\/?>\s*$/, '');
   }
   return s;
 }
 
-function cleanAddonHtml(key, html) {
+// The lesson prompt bans emoji, but the model still decorates headings and tip
+// titles with them. A pictograph in a published lesson reads as a bug, not a
+// style. Extended_Pictographic deliberately excludes arrows and maths symbols.
+var PICTO = /[\p{Extended_Pictographic}\uFE0F\u200D]/gu;
+function stripEmoji(html) {
+  return String(html || '')
+    .replace(PICTO, '')
+    .replace(/[ \t]{2,}/g, ' ')
+    .replace(/(<(?:p|h[34]|div|li)\b[^>]*>)[ \t]+/gi, '$1')
+    .replace(/[ \t]+(<\/(?:p|h[34]|div|li)>)/gi, '$1');
+}
+
+function cleanAddonPass(key, html) {
   var s = String(html || '');
   ADDON_FIXES.forEach(function (f) {
     if (f[0] === key) s = s.replace(f[1], f[2]);
@@ -94,9 +124,43 @@ function cleanAddonHtml(key, html) {
   // Malformed nested closers the model writes when cut off: </h</h3>, </li</li>
   s = s.replace(/<\/([a-zA-Z][a-zA-Z0-9]*)<\/([a-zA-Z][a-zA-Z0-9]*)>/g, '</$2>');
   s = plainMath(s);
+  // A tip box with a title but no body is a section the model never wrote.
+  // Remove it before the tail trim: its title has no full stop, so the trim
+  // would otherwise cut back through the finished paragraph above it.
+  s = s.replace(/<div class="tip-box">\s*(?:<div class="tip-title">[^<]{0,200}<\/div>\s*)?<div class="tip-text">\s*<\/div>\s*<\/div>\s*$/gi, '');
+  // Cut a reply that stopped mid-sentence at the last complete sentence, then
+  // let trimDangling handle tag-level leftovers (a bare <li>, a label).
+  var tail = repair.trimIncompleteTail(s);
+  if (tail.trimmed) s = tail.html;
   s = trimDangling(s);
+  // Balance first: trimDangling can leave a bare opening <p>, and the dangling
+  // label cleanup below needs the tag closed to match.
   s = repair.balance(repair.stripAttrs(s)).trim();
+  // A trailing label with no body is a heading the model never explained;
+  // keep the complete prose before it rather than publish a dangling title.
+  s = s.replace(/(?:<p[^>]*>\s*<\/p>\s*)+$/gi, '');
+  s = s.replace(/<(p|h[34])[^>]*>\s*<strong>[^<]{3,140}<\/strong>\s*<\/\1>\s*$/i, '');
+  // A heading at the very end has no body: the model stopped before writing
+  // the section. Drop the orphan title, keep the finished prose above it.
+  s = s.replace(/<h[34][^>]*>[^<]{3,160}<\/h[34]>\s*$/i, '');
+  // A worked example whose solution was cut off leaves an empty slot.
+  s = s.replace(/<div class="ex-soln">\s*(?:<strong>Solution:<\/strong>\s*(?:<br\s*\/?>)?)?\s*<\/div>/gi, '');
+  s = stripEmoji(s);
+  s = repair.balance(s).trim();
   return s;
+}
+
+// One pass can expose a second defect (stripping an emoji reveals a truncated
+// sentence underneath), so iterate to a fixed point. The workflow runs this
+// once; a single invocation must leave the file clean.
+function cleanAddonHtml(key, html) {
+  var prev = String(html || '');
+  for (var pass = 0; pass < 3; pass++) {
+    var next = cleanAddonPass(key, prev);
+    if (next === prev) return next;
+    prev = next;
+  }
+  return prev;
 }
 
 function writeJson(file, obj) {
@@ -109,7 +173,24 @@ function readJson(file) {
   return JSON.parse(fs.readFileSync(file, 'utf8').replace(/^\uFEFF/, ''));
 }
 
+// The expand workflow regenerates only the pages listed in .course-touched.json.
+// A cleaned addon must be added to that list or the JSON and the published page
+// drift apart, so record every key this run actually changed.
+function mergeTouched(keys, files) {
+  var touchedFile = path.join(__dirname, '.course-touched.json');
+  var prev = {};
+  try { prev = readJson(touchedFile); } catch (e) { prev = {}; }
+  var uniq = function (a, b) { return Array.from(new Set([].concat(a || [], b || []))); };
+  fs.writeFileSync(touchedFile, JSON.stringify({
+    keys: uniq(prev.keys, keys),
+    files: uniq(prev.files, files),
+    exams: uniq(prev.exams, [])
+  }), 'utf8');
+}
+
 var dirty = 0;
+var touchedKeys = [];
+var touchedFiles = [];
 
 // --- addons -------------------------------------------------------------
 var addonsFile = path.join(ROOT, 'scripts', 'course-addons.json');
@@ -126,9 +207,16 @@ Object.keys(keys).forEach(function (key) {
   console.log('addon ' + key + ': ' + html.length + ' -> ' + clean.length + ' chars, latex ' +
     countLatex(html) + ' -> ' + countLatex(clean) + (v ? '  [validateHtml: ' + v + ']' : ''));
   console.log('  tail: ...' + clean.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim().slice(-110));
-  if (!CHECK) entry.html = clean;
+  if (!CHECK) {
+    entry.html = clean;
+    touchedKeys.push(key);
+    (entry.files || []).forEach(function (f) { touchedFiles.push(f); });
+  }
 });
-if (!CHECK && dirty) writeJson(addonsFile, addons);
+if (!CHECK && dirty) {
+  writeJson(addonsFile, addons);
+  mergeTouched(touchedKeys, touchedFiles);
+}
 
 // --- hand-built course data: math LaTeX only, never restructure ----------
 var dataFile = path.join(ROOT, 'scripts', 'course-data.json');

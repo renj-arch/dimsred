@@ -35,12 +35,44 @@ const FILMS = {
     scenes: {
       'notice-desk': 'notice',
       'bagh-wall': 'bagh-wall',
+      'bagh-wall-empty': 'bagh-wall-empty',
       'bagh-gate': 'bagh-gate',
+      'bagh-gate-empty': 'bagh-gate-empty',
+      'wall-scar': 'wall-scar',
       'watch': 'watch',
       'well': 'well',
       'report-desk': 'report',
       'lamp': 'lamp',
       'memorial': 'memorial'
+    }
+  },
+  'bhopal-gas-tragedy': {
+    script: 'bhopal_scenes.py',
+    scenes: {
+      'plant-gate': 'plant-gate',
+      'tank-farm': 'tank-farm',
+      'tank-610': 'tank-610',
+      'gauge': 'gauge',
+      'valve': 'valve',
+      'flare': 'flare',
+      'flare-cold': 'flare-cold',
+      'control-panel': 'control-panel',
+      'pipe-corridor': 'pipe-corridor',
+      'company-sign': 'company-sign',
+      'city-rooftops': 'city-rooftops',
+      'street-lamp': 'street-lamp',
+      'hospital-corridor': 'hospital-corridor',
+      'clinic-window': 'clinic-window',
+      'newspaper-desk': 'newspaper-desk',
+      'courtroom': 'courtroom',
+      'court-ledger': 'court-ledger',
+      'water-tap': 'water-tap',
+      'sample-jar': 'sample-jar',
+      'memorial-wall': 'memorial-wall',
+      'memorial-flame': 'memorial-flame',
+      'archive': 'archive',
+      'siren': 'siren',
+      'clock': 'clock'
     }
   }
 };
@@ -54,6 +86,7 @@ function parse(argv) {
     samples: 32,
     only: '',
     force: false,
+    dryRun: false,
     blender: process.env.BLENDER || 'blender'
   };
   for (let i = 0; i < argv.length; i++) {
@@ -69,6 +102,7 @@ function parse(argv) {
     else if (a === '--samples') o.samples = Number(next());
     else if (a === '--only') o.only = next();
     else if (a === '--force') o.force = true;
+    else if (a === '--dry-run') o.dryRun = true;
     else if (a === '--blender') o.blender = next();
     else if (a === '--help' || a === '-h') {
       console.log('node scripts/film/render-plates.js --film salt-march [--samples 32] [--width 1920] [--height 1080] [--force]');
@@ -79,29 +113,91 @@ function parse(argv) {
   return o;
 }
 
+/*
+ * A film either brings its own scene file (the three bespoke films do) or a
+ * sets file that points at the stock archetypes. The sets file carries the
+ * palette and one entry per plate, so re-dressing a film never touches Python.
+ */
+function loadSetMap(filmId) {
+  const setsFile = path.join(ROOT, 'data', 'films', `${filmId}-sets.json`);
+  if (!fs.existsSync(setsFile)) return null;
+  const sets = JSON.parse(fs.readFileSync(setsFile, 'utf8'));
+  if (!sets.plates || typeof sets.plates !== 'object') {
+    throw new Error(`${path.relative(ROOT, setsFile)} has no plates map`);
+  }
+  const map = new Map();
+  for (const [plate, entry] of Object.entries(sets.plates)) {
+    if (!entry || !entry.scene) throw new Error(`plate ${plate} has no scene in ${path.relative(ROOT, setsFile)}`);
+    map.set(plate, {
+      scene: entry.scene,
+      // A film may mix a bespoke salt scene with the stock backlot: the
+      // exterior is authored, the document room is borrowed. One plate, one
+      // script, chosen from the sets file.
+      script: entry.script || sets.script || 'stock_sets.py',
+      params: { ...(entry.params || {}), palette: sets.palette || {} }
+    });
+  }
+  return {
+    script: sets.script || 'stock_sets.py',
+    map,
+    palette: sets.palette || {},
+    // scene_compiler.py reads the whole spec, not one bespoke scene name.
+    file: setsFile,
+    scenes: sets.scenes || {}
+  };
+}
+
 function main() {
   const opts = parse(process.argv.slice(2));
   const filmPath = path.join(ROOT, 'data', 'films', `${opts.film}.json`);
   if (!fs.existsSync(filmPath)) throw new Error(`Film not found: ${filmPath}`);
   const film = JSON.parse(fs.readFileSync(filmPath, 'utf8'));
   const config = FILMS[opts.film];
-  if (!config) throw new Error(`No Blender scene set registered for film ${opts.film}`);
-  const blenderScript = path.join(__dirname, 'blender', config.script);
-  if (!fs.existsSync(blenderScript)) throw new Error(`Blender script not found: ${blenderScript}`);
+  const sets = loadSetMap(opts.film);
+  // After the 40-scene migration every film carries generic stock plates
+  // (night-01, wall-03, ...) and a matching sets file, even the three films that
+  // still have a bespoke scene script. Prefer the sets file when it covers every
+  // plate in the film; fall back to the bespoke map only when it does not.
+  const filmPlates = [];
+  for (const scene of film.scenes || []) {
+    for (const shot of scene.shots || []) {
+      if (shot.render === 'blender' && shot.plate) filmPlates.push(shot.plate);
+    }
+  }
+  const usesSets = Boolean(sets) && filmPlates.every((p) => sets.map.has(p));
+  const source = usesSets ? sets : null;
+  if (!source && !config) {
+    throw new Error(`No Blender scene set registered for film ${opts.film} (add data/films/${opts.film}-sets.json)`);
+  }
+  const defaultScript = source ? source.script : config.script;
+  const lookup = (plate) => source
+    ? source.map.get(plate)
+    : { scene: config.scenes[plate], script: defaultScript, params: null };
   fs.mkdirSync(opts.outDir, { recursive: true });
 
   const plates = new Map();
   for (const scene of film.scenes || []) {
     for (const shot of scene.shots || []) {
       if (shot.render !== 'blender') continue;
-      if (!config.scenes[shot.plate]) throw new Error(`No Blender scene mapped for plate ${shot.plate} in ${opts.film}`);
-      plates.set(shot.plate, config.scenes[shot.plate]);
+      const entry = lookup(shot.plate);
+      if (!entry || !entry.scene) throw new Error(`No Blender scene mapped for plate ${shot.plate} in ${opts.film}`);
+      plates.set(shot.plate, entry);
     }
   }
   const wanted = opts.only
-    ? [{ plate: opts.only, scene: config.scenes[opts.only] }]
-    : [...plates].map(([plate, scene]) => ({ plate, scene }));
+    ? [{ plate: opts.only, ...lookup(opts.only) }]
+    : [...plates].map(([plate, entry]) => ({ plate, ...entry }));
   if (!wanted.length) throw new Error('No Blender plates requested');
+  for (const entry of wanted) {
+    const scriptPath = path.join(__dirname, 'blender', entry.script || defaultScript);
+    if (!fs.existsSync(scriptPath)) {
+      throw new Error(`Blender script not found for plate ${entry.plate}: ${scriptPath}`);
+    }
+  }
+  if (opts.dryRun) {
+    console.log(JSON.stringify({ film: opts.film, plates: wanted.length, wanted }, null, 2));
+    return;
+  }
 
   const blenderCheck = spawnSync(opts.blender, ['--version'], { encoding: 'utf8' });
   if (blenderCheck.error) {
@@ -109,14 +205,20 @@ function main() {
   }
   console.log(blenderCheck.stdout.split('\n')[0]);
 
-  for (const { plate, scene } of wanted) {
+  for (const { plate, scene, script, params } of wanted) {
     if (!scene) throw new Error(`No Blender scene mapped for plate ${plate}`);
+    const blenderScript = path.join(__dirname, 'blender', script || defaultScript);
     const out = path.join(opts.outDir, `${plate}.png`);
     if (fs.existsSync(out) && !opts.force) {
       console.log(`[skip] ${plate} already exists`);
       continue;
     }
-    console.log(`\n[blender] ${plate} ← scene ${scene}  ${opts.width}x${opts.height} @ ${opts.samples} samples`);
+    const paramArgs = params ? ['--params', JSON.stringify(params)] : [];
+    // Compiled scenes read data/films/<id>-sets.json; legacy bespoke scripts
+    // take only --scene. Passing --spec to a bespoke script is harmless to
+    // ignore but confusing, so add it only for the compiler.
+    const specArgs = source && script === 'scene_compiler.py' ? ['--spec', source.file] : [];
+    console.log(`\n[blender] ${plate} ← scene ${scene}${params ? ` (${JSON.stringify(params)})` : ''}  ${opts.width}x${opts.height} @ ${opts.samples} samples`);
     const result = spawnSync(
       opts.blender,
       [
@@ -127,7 +229,9 @@ function main() {
         '--out', out,
         '--width', String(opts.width),
         '--height', String(opts.height),
-        '--samples', String(opts.samples)
+        '--samples', String(opts.samples),
+        ...specArgs,
+        ...paramArgs
       ],
       { stdio: 'inherit', cwd: ROOT, timeout: 2 * 60 * 60 * 1000 }
     );

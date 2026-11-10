@@ -86,6 +86,12 @@ function plainMath(html) {
     // such spans contain prose markers, not math.
     if (/<br|\bmeans\b/i.test(inner)) return m;
     if (/[\\^_{}|=<>+\-*/]/.test(inner)) return inner;
+    // A tuple or interval: $(1,29)$, $[0, 1]$, $(G, k)$. Prices never start
+    // with a bracket, so this cannot eat "$5 and $10".
+    if (/^\s*[([{]/.test(inner)) return inner;
+    // Two or three short variable tokens, e.g. $P dV$. A price span starts
+    // with a digit and a prose span contains a longer word.
+    if (/^\s*[A-Za-z](?:\s+[A-Za-z]{1,4}){1,3}\s*$/.test(inner)) return inner;
     if (!/\s/.test(inner) && inner.length <= 40 && /[a-zA-Z0-9]/.test(inner)) return inner;
     return m;
   });
@@ -178,6 +184,45 @@ function balance(html) {
   return out;
 }
 
+/*
+ * A model that runs out of tokens stops mid-sentence; balance() then closes
+ * the tag, so the page passes the structural validator while the last
+ * paragraph ends in "...This built-in potential". Cut back to the last
+ * complete sentence. This is not filler: it removes an unfinished fragment
+ * and keeps every complete paragraph the model actually wrote.
+ *
+ * The visible text must already end without terminal punctuation, and a
+ * sentence boundary must exist. Tables and list cells are left alone because
+ * a numeric cell can legitimately end without a period.
+ */
+const TERMINAL = /[.!?…](?:["'”’)\]]*)(?=\s|<|$)/g;
+const ABBREVIATION = /(?:^|\s)(?:Mr|Mrs|Ms|Dr|Prof|Sr|Jr|St|vs|etc|e\.g|i\.e|No|Fig|Eq)\.$/i;
+
+function trimIncompleteTail(html) {
+  const source = String(html || '');
+  const visible = source.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+  if (!visible || /[.!?…]["'”’)\]]?$/.test(visible)) {
+    return { html: source, trimmed: false, removed: 0 };
+  }
+  if (/<(?:table|thead|tbody|tr|td|th)\b[^>]*>[^<]*$/i.test(source)) {
+    return { html: source, trimmed: false, removed: 0 };
+  }
+  let cut = -1;
+  let match;
+  TERMINAL.lastIndex = 0;
+  while ((match = TERMINAL.exec(source))) {
+    const before = source.slice(Math.max(0, match.index - 24), match.index + 1);
+    if (ABBREVIATION.test(before)) continue;
+    cut = match.index + match[0].length;
+  }
+  if (cut === -1) return { html: source, trimmed: false, removed: 0 };
+  const head = balance(source.slice(0, cut));
+  if (!head || head.length >= source.length) {
+    return { html: source, trimmed: false, removed: 0 };
+  }
+  return { html: head, trimmed: true, removed: source.length - head.length };
+}
+
 function sanitize(html) {
   return balance(stripAttrs(plainMath(html))).trim();
 }
@@ -186,6 +231,7 @@ module.exports = {
   sanitize: sanitize,
   stripAttrs: stripAttrs,
   balance: balance,
+  trimIncompleteTail: trimIncompleteTail,
   plainMath: plainMath,
   ALLOWED_TAGS: ALLOWED_TAGS
 };
