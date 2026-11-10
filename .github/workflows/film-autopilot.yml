@@ -6,8 +6,9 @@ name: Film autopilot
 # authoring pass, which writes and validates the storyboard on the same runner
 # and dispatches the render itself. A finished film dispatches this workflow
 # again, so production runs back-to-back until the daily cap is reached. When
-# the slate has no brief left, the authoring pass invents and source-locks one
-# instead of stopping.
+# the slate has no brief left, the topic brain checks the news feeds; if none
+# qualifies, the authoring pass asks the local model to choose from the day's
+# cited events, with the curated bank as the last resort.
 
 on:
   schedule:
@@ -32,7 +33,7 @@ permissions:
 jobs:
   choose:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    timeout-minutes: 20
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -62,6 +63,34 @@ jobs:
           fi
           git add data/film-slate.json
           git commit -m "slate: reclaim stale render leases"
+          for i in 1 2 3; do
+            git push origin "HEAD:film-ci" && exit 0
+            git fetch origin film-ci
+            git rebase --autostash "origin/film-ci"
+          done
+          exit 1
+
+      # Keep the idea source from collapsing to one feed. News first, with the
+      # existing second-outlet or official-document gate. If nothing qualifies,
+      # leave the slate empty: the authoring pass has the local model and the
+      # cited current-events digest, and it proposes the next brief there. No
+      # facts are written in this step.
+      - name: Refill the slate
+        run: |
+          set -euo pipefail
+          mkdir -p out/autopilot
+          node scripts/film/topic-brain.js --json | tee out/autopilot/topic-brain-result.json
+
+      - name: Commit a refilled slate
+        run: |
+          set -euo pipefail
+          if git diff --quiet -- data/film-slate.json; then
+            exit 0
+          fi
+          git config user.name "vlymbooq"
+          git config user.email "vlymbooq@users.noreply.github.com"
+          git add data/film-slate.json
+          git commit -m "slate: refill from the topic brain"
           for i in 1 2 3; do
             git push origin "HEAD:film-ci" && exit 0
             git fetch origin film-ci

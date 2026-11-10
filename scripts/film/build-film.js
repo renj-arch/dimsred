@@ -171,7 +171,7 @@ function loadFilm(opts) {
   const { film, repairs } = repairFilm(original);
   if (repairs.length) {
     console.log(`edit repair: ${repairs.length} mechanical transition fix(es)`);
-    repairs.forEach((repair) => console.log(`  · ${repair}`));
+    repairs.forEach((repair) => console.log(`  Â· ${repair}`));
   }
   return film;
 }
@@ -445,7 +445,7 @@ function buildTimeline(film, tts, opts) {
 function writeTimeline(timeline, opts) {
   const file = path.join(opts.work, 'timeline.json');
   fs.writeFileSync(file, JSON.stringify(timeline, null, 2) + '\n');
-  console.log(`timeline: ${timeline.duration.toFixed(1)}s · ${timeline.scenes.length} scenes · ${timeline.scenes.reduce((n, s) => n + s.shots.length, 0)} shots`);
+  console.log(`timeline: ${timeline.duration.toFixed(1)}s Â· ${timeline.scenes.length} scenes Â· ${timeline.scenes.reduce((n, s) => n + s.shots.length, 0)} shots`);
   return file;
 }
 
@@ -562,7 +562,7 @@ function writeBridgeTrack(events, duration, file) {
   const scale = peak > 0 ? 0.82 / peak : 1;
   for (let i = 0; i < samples.length; i++) samples[i] *= scale;
   writeWav16(file, samples, rate);
-  console.log(`sound bridges: ${events.length} events · peak ${(peak * scale).toFixed(2)}`);
+  console.log(`sound bridges: ${events.length} events Â· peak ${(peak * scale).toFixed(2)}`);
 }
 
 function makeBed(timeline, file) {
@@ -669,7 +669,13 @@ function buildAudio(timeline, tts, opts) {
   const labels = ['[bed]'].concat(lines.map((_, i) => `[n${i}]`)).join('');
   filters.push(
     `${labels}amix=inputs=${lines.length + 1}:normalize=0,` +
-    `alimiter=limit=0.78:level=false,afade=t=in:st=0:d=0.6,` +
+    // Sample-peak limiting is not enough: AAC inter-sample peaks landed at
+    // +0.6 dBTP even after loudnorm. Upsample, limit hard, then return to
+    // 48 kHz so the encoder cannot overshoot.
+    `alimiter=limit=0.78:level=false,` +
+    `loudnorm=I=-15:TP=-2.5:LRA=11,` +
+    `aresample=192000,alimiter=limit=0.62:level=false,aresample=48000,` +
+    `afade=t=in:st=0:d=0.6,` +
     `afade=t=out:st=${Math.max(0, timeline.duration - 2.5)}:d=2.5[a]`
   );
   args.push('-filter_complex', filters.join(';'), '-map', '[a]', '-t', timeline.duration.toFixed(3),
@@ -706,14 +712,19 @@ function encode(framesDir, audio, timeline, opts, subtitles) {
     // render never depends on a runner's installed fonts.
     const rel = path.relative(ROOT, subtitles.assFile).replace(/\\/g, '/');
     const fonts = path.relative(ROOT, path.join(ROOT, 'assets', 'film-fonts')).replace(/\\/g, '/');
-    args.push('-vf', `ass=${rel}:fontsdir=${fonts}`);
+    // JPEG plates arrive tagged full-range (yuvj420p). force the limited-range
+    // 4:2:0 output here; -pix_fmt alone keeps the full-range tag.
+    args.push('-vf', `ass=${rel}:fontsdir=${fonts},scale=w=iw:h=ih:out_range=limited,format=yuv420p`);
   } else if (subtitles && subtitles.file) {
     // Sidecar-only fallback: still burn readable captions rather than ship a
     // film with narration and no on-screen text.
     const rel = path.relative(ROOT, subtitles.file).replace(/\\/g, '/');
     const style = 'FontName=DejaVu Sans,FontSize=22,PrimaryColour=&H00F2E6D0,' +
       'OutlineColour=&H00000000,BorderStyle=1,Outline=1,Shadow=0,MarginV=42,Alignment=2';
-    args.push('-vf', `subtitles=${rel}:force_style='${style}'`);
+    args.push('-vf', `subtitles=${rel}:force_style='${style}',scale=w=iw:h=ih:out_range=limited,format=yuv420p`);
+  } else {
+    // No captions: still normalise the JPEG plate range before encoding.
+    args.push('-vf', 'scale=w=iw:h=ih:out_range=limited,format=yuv420p');
   }
   args.push(
     '-c:v', 'libx264',
@@ -734,6 +745,10 @@ function encode(framesDir, audio, timeline, opts, subtitles) {
   }
   args.push(
     '-pix_fmt', 'yuv420p',
+    '-color_range', 'tv',
+    '-colorspace', 'bt709',
+    '-color_primaries', 'bt709',
+    '-color_trc', 'bt709',
     '-r', String(opts.fps),
     '-c:a', 'aac',
     '-b:a', '192k',
@@ -819,7 +834,7 @@ function packCaption(text, max = 46) {
     const prev = words[i - 1];
     const next = words[i];
     let score = -Math.abs(i - mid) * 0.3;
-    if (/[,;—]$/.test(prev)) score += 6;
+    if (/[,;â€”]$/.test(prev)) score += 6;
     if (/^(to|of|in|on|from|with|by|and|but|or|that|which|when|while|as|for|at)$/i.test(next)) score += 3;
     if (/^(a|an|the|of|to|in|on|from|with|by|and|but|or|that|which)$/i.test(prev)) score -= 4;
     if (/^\d/.test(prev) && /^\d/.test(next)) score -= 3;
@@ -1076,7 +1091,7 @@ function checkEdit(timeline, film, cues, opts) {
   fs.writeFileSync(path.join(opts.work, 'edit-qc.json'), JSON.stringify({
     ok: errors.length === 0, errors, warnings, effectCounts, collisions
   }, null, 2) + '\n');
-  console.log(`edit: ${shots.length} cuts · effects ${Object.keys(effectCounts).map((k) => `${k}×${effectCounts[k]}`).join(', ') || 'none'}`);
+  console.log(`edit: ${shots.length} cuts Â· effects ${Object.keys(effectCounts).map((k) => `${k}Ã—${effectCounts[k]}`).join(', ') || 'none'}`);
   if (collisions.length) {
     console.log(`edit: ${collisions.length} caption/transition overlaps, longest ${Math.max(...collisions.map((c) => c.overlap)).toFixed(2)}s`);
   }
@@ -1104,7 +1119,7 @@ function writeMetadata(timeline, film, opts) {
     `Sources\n${sourceLines}\n`;
   const meta = {
     film: film.id,
-    title: `${film.title} — ${film.subtitle}`,
+    title: `${film.title} â€” ${film.subtitle}`,
     duration: timeline.duration,
     width: timeline.width,
     height: timeline.height,
@@ -1135,12 +1150,12 @@ function writeMetadata(timeline, film, opts) {
 
 function writeScript(timeline, film, opts) {
   const lines = [];
-  lines.push(`# ${film.title} — ${film.subtitle}`);
+  lines.push(`# ${film.title} â€” ${film.subtitle}`);
   lines.push('');
   lines.push(`**Logline.** ${film.logline}`);
   lines.push('');
   timeline.scenes.forEach((scene, i) => {
-    lines.push(`## ${String(i + 1).padStart(2, '0')} · ${scene.title} (${mmss(scene.start)})`);
+    lines.push(`## ${String(i + 1).padStart(2, '0')} Â· ${scene.title} (${mmss(scene.start)})`);
     lines.push('');
     scene.narration.forEach((line) => {
       lines.push(`> ${line.text}`);
@@ -1148,7 +1163,7 @@ function writeScript(timeline, film, opts) {
       lines.push('');
     });
     scene.shots.forEach((shot) => {
-      lines.push(`- **${shot.id}** ${shot.render} · ${shot.plate} · ${shot.camera}`);
+      lines.push(`- **${shot.id}** ${shot.render} Â· ${shot.plate} Â· ${shot.camera}`);
       lines.push(`  ${shot.visual}`);
       lines.push(`  Sound: ${shot.sfx.join(', ')}`);
     });
@@ -1160,12 +1175,12 @@ function writeScript(timeline, film, opts) {
 }
 
 function printTimeline(timeline) {
-  console.log(`\n${timeline.title} — ${timeline.subtitle}`);
-  console.log(`duration ${timeline.duration.toFixed(1)}s · ${timeline.fps} fps · ${timeline.width}x${timeline.height}\n`);
+  console.log(`\n${timeline.title} â€” ${timeline.subtitle}`);
+  console.log(`duration ${timeline.duration.toFixed(1)}s Â· ${timeline.fps} fps Â· ${timeline.width}x${timeline.height}\n`);
   timeline.scenes.forEach((s) => {
     console.log(`${s.id} ${mmss(s.start)} +${s.duration.toFixed(1)}s  ${s.title}`);
     s.shots.forEach((h) => console.log(`   ${h.id} ${h.render.padEnd(7)} ${h.plate}`));
-    s.narration.forEach((l) => console.log(`   · ${l.text.slice(0, 100)}${l.text.length > 100 ? '…' : ''}`));
+    s.narration.forEach((l) => console.log(`   Â· ${l.text.slice(0, 100)}${l.text.length > 100 ? 'â€¦' : ''}`));
   });
 }
 
