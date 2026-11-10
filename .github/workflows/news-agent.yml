@@ -66,15 +66,10 @@ jobs:
           git commit -m "news: refresh wire $(date -u +'%Y-%m-%dT%H:%MZ')"
           pushed=""
           for i in 1 2 3; do
-            if git pull --rebase --autostash 2>/dev/null; then
-              : # clean rebase
-            else
-              git rebase --abort 2>/dev/null || true
-              git fetch origin main 2>/dev/null || true
-              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
-              git add -A 2>/dev/null || true
-              git commit --no-edit 2>/dev/null || true
-            fi
+            git fetch origin main 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            git add -A 2>/dev/null || true
+            git commit --no-edit 2>/dev/null || true
             if git push; then pushed=1; echo "Pushed wire update"; break; fi
             echo "push attempt $i failed, retrying..."
             sleep 5

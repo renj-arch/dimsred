@@ -380,14 +380,6 @@ jobs:
             # non-fast-forward, which is the other way this workflow used to be
             # starved silently.
             for attempt in 1 2 3; do
-              if git pull --rebase --autostash origin "$GITHUB_REF_NAME" 2>&1 | tail -3; then
-                if git push origin "HEAD:$GITHUB_REF_NAME"; then
-                  echo "Pushed figures rebuild (attempt $attempt)"
-                  exit 0
-                fi
-              fi
-              echo "Rebase/push attempt $attempt failed; trying merge-with-ours"
-              git rebase --abort 2>/dev/null || true
               git fetch origin "$GITHUB_REF_NAME" 2>/dev/null || true
               git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
               git add -A 2>/dev/null || true
@@ -395,6 +387,8 @@ jobs:
               if git push origin "HEAD:$GITHUB_REF_NAME"; then
                 echo "Pushed figures rebuild (attempt $attempt)"
                 exit 0
+              fi
+              echo "Merge/push attempt $attempt failed; retrying..."
               fi
               sleep 5
             done

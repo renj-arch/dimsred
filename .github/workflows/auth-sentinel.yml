@@ -61,19 +61,11 @@ jobs:
             echo "No auth status change"
           else
             git commit -m "auth-sentinel: PAT status check" 2>/dev/null || true
-            for i in 1 2 3; do
-              if git pull --rebase --autostash 2>/dev/null; then
-                : # clean rebase
-              else
-                git rebase --abort 2>/dev/null || true
-                git fetch origin main 2>/dev/null || true
-                git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
-                git add -A 2>/dev/null || true
-                git commit --no-edit 2>/dev/null || true
-              fi
-              git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed..."
-              sleep 5
-            done || true
+            git fetch origin main 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            git add -A 2>/dev/null || true
+            git commit --no-edit 2>/dev/null || true
+            git push 2>/dev/null && { echo "Pushed"; break; } || echo "push attempt $i failed..."
           fi
           # A dead PAT must NEVER look green: fail the job so Actions shows
           # red and notifies. (The publish above cannot succeed without a

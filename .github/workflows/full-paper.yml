@@ -182,17 +182,12 @@ jobs:
           git diff --staged --quiet || git commit -m "full-paper: ${{ steps.target.outputs.exam }} ${{ steps.target.outputs.paper }} $(date +'%Y-%m-%d')"
           pushed=""
           for i in 1 2 3; do
-            if git pull --rebase --autostash 2>/dev/null; then
-              : # clean rebase
-            else
-              git rebase --abort 2>/dev/null || true
-              git fetch origin main
-              git merge --no-edit -X ours FETCH_HEAD || {
-                node scripts/merge-full-paper-status.js
-                git add data/full-paper-status.json
-                git commit --no-edit
-              }
-            fi
+            git fetch origin main 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
+              node scripts/merge-full-paper-status.js
+              git add data/full-paper-status.json
+              git commit --no-edit 2>/dev/null || true
+            }
             if git push; then pushed=1; echo "Pushed"; break; fi
             echo "push attempt $i failed, retrying..."
             sleep 5

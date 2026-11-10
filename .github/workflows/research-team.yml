@@ -144,17 +144,23 @@ jobs:
             # unstaged; a plain `pull --rebase` refuses to run with a dirty
             # tree (2026-11-07 run 42373324262). Autostash carries them
             # across the rebase instead of losing the publish.
-            git -c rebase.autoStash=true pull --rebase --autostash 2>/dev/null || {
-              git rebase --abort 2>/dev/null || true
-              git fetch origin main 2>/dev/null || true
-              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
-              git add -A 2>/dev/null || true
-              git commit --no-edit 2>/dev/null || true
-            }
+            git fetch origin main 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            git add -A 2>/dev/null || true
+            git commit --no-edit 2>/dev/null || true
             if git push origin HEAD:main; then pushed=1; echo "Pushed"; break; fi
             echo "push attempt $i failed, retrying..."
             sleep 5
           done
+
+      - name: Final publish fallback (merge-with-ours only, no rebase)
+        if: always()
+        run: |
+          git fetch origin main 2>/dev/null || true
+          git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+          git add -A 2>/dev/null || true
+          git commit --no-edit 2>/dev/null || true
+          git push origin HEAD:main 2>/dev/null || true
           if [ -z "$pushed" ]; then
             echo "::error::research methods could not be pushed to main"
             exit 1
