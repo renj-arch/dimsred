@@ -48,7 +48,9 @@ jobs:
         run: npm install
 
       - name: Pull latest changes
-        run: git -c rebase.autoStash=true pull --rebase
+        run: |
+          git fetch origin main 2>/dev/null || true
+          git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
 
       - name: Build practice papers (all exams)
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/generate-papers.js
@@ -85,15 +87,10 @@ jobs:
           git commit -m "Weekly PDF digest $(date +'%Y-%m-%d')"
           pushed=""
           for i in 1 2 3; do
-            if git -c rebase.autoStash=true pull --rebase --autostash 2>/dev/null; then
-              : # clean rebase
-            else
-              git rebase --abort 2>/dev/null || true
-              git fetch origin main 2>/dev/null || true
-              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
-              git add -A 2>/dev/null || true
-              git commit --no-edit 2>/dev/null || true
-            fi
+            git fetch origin main 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+            git add -A 2>/dev/null || true
+            git commit --no-edit 2>/dev/null || true
             if git push origin HEAD:main; then pushed=1; echo "Pushed"; break; fi
             echo "push attempt $i failed, retrying..."
             sleep 5

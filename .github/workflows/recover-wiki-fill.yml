@@ -385,20 +385,13 @@ jobs:
             git commit -m "Wiki fill recovery — run ${{ steps.resolve.outputs.run-id }} $(date +'%Y-%m-%d %H:%M UTC')"
             PUSHED=0
             for i in 1 2 3; do
-              if git pull --rebase --autostash origin main 2>/dev/null; then
-                echo "Rebased cleanly"
-              else
-                echo "Rebase conflict — aborting and union-merging to keep BOTH runs' data."
-                if [ -d .git/rebase-merge ] || [ -d .git/rebase-apply ]; then
-                  git rebase --abort || true
-                fi
-                git fetch origin main 2>/dev/null
-                if ! git merge --no-edit -X ours FETCH_HEAD 2>/dev/null; then
-                  node scripts/resolve-data-merge.js
-                  git add -A -- data archive.html
-                  git commit --no-edit 2>/dev/null || true
-                fi
-              fi
+              git fetch origin main 2>/dev/null || true
+              git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
+                echo "Merge conflict — running union merge to keep BOTH runs' data."
+                node scripts/resolve-data-merge.js
+                git add -A -- data archive.html
+                git commit --no-edit 2>/dev/null || true
+              }
               if git push; then echo "Push succeeded"; PUSHED=1; break; fi
               echo "Push attempt $i failed, retrying..."
               sleep 5
