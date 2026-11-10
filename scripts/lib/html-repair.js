@@ -61,18 +61,40 @@ const LATEX_SYMBOLS = {
   langle: '⟨', rangle: '⟩', lvert: '|', rvert: '|',
   forall: '∀', exists: '∃', in: '∈', notin: '∉',
   subset: '⊂', cup: '∪', cap: '∩', degree: '°', circ: '°',
-  prime: '′', ldots: '…', dots: '…', quad: ' ', qquad: ' '
+  prime: '′', ldots: '…', dots: '…', quad: ' ', qquad: ' ',
+  setminus: '∖', emptyset: '∅', cong: '≅', simeq: '≃', sim: '∼',
+  perp: '⊥', parallel: '∥', oplus: '⊕', otimes: '⊗', neg: '¬',
+  land: '∧', lor: '∨', cdots: '⋯', mapsto: '↦', hookrightarrow: '↪',
+  gg: '≫', ll: '≪', hbar: 'ℏ', aleph: 'ℵ', ell: 'ℓ', Re: 'ℜ', Im: 'ℑ',
+  wp: '℘', odot: '⊙', bullet: '∙', dag: '†', ddag: '‡', varphi: 'φ', vartheta: 'ϑ'
 };
 
 function plainMath(html) {
   let s = String(html || '');
-  s = s.replace(/\$([^$]*[\\^_{}][^$]*)\$/g, '$1');
-  s = s.replace(/\$([a-zA-Z])\$/g, '$1');
+  // The model sometimes over-escapes commands (\\frac). Collapse one level so
+  // the rules below see \frac.
+  s = s.replace(/\\\\([a-zA-Z]+)/g, '\\$1');
+  // Display math $$...$$ becomes inline $...$ first.
+  s = s.replace(/\$\$/g, '$');
+  // Strip $...$ delimiters only when the contents look like math: they contain
+  // an operator or backslash, or they are a single token such as $AgCl$ or $3$.
+  // A pair like "$5 and $10" has a space and no operator, so prices survive.
+  // An opening $ must not follow a letter/digit (US$5); a closing $ must not
+  // be followed by a digit (the "$10" in "$5 and $10").
+  s = s.replace(/(?<![A-Za-z0-9])\$([^$\n]{1,400})\$(?!\d)/g, function (m, inner) {
+    // Coded-inequality puzzles use $ as a symbol ("A $ B means A = B");
+    // such spans contain prose markers, not math.
+    if (/<br|\bmeans\b/i.test(inner)) return m;
+    if (/[\\^_{}|=<>+\-*/]/.test(inner)) return inner;
+    if (!/\s/.test(inner) && inner.length <= 40 && /[a-zA-Z0-9]/.test(inner)) return inner;
+    return m;
+  });
   s = s.replace(/\\\(([\s\S]*?)\\\)/g, '$1');
   s = s.replace(/\\\[([\s\S]*?)\\\]/g, '$1');
-  s = s.replace(/\\(?:frac)\{([^{}]+)\}\{([^{}]+)\}/g, '($1)/($2)');
-  s = s.replace(/\\(?:sqrt)\{([^{}]+)\}/g, '√($1)');
-  s = s.replace(/\\(?:text|mathrm|mathbf|mathit|overline|vec|bar|hat)\{([^{}]+)\}/g, '$1');
+  const group = '(?:[^{}]|\\{[^{}]*\\})*';
+  s = s.replace(new RegExp('\\\\(?:frac)\\{(' + group + ')\\}\\{(' + group + ')\\}', 'g'), '($1)/($2)');
+  s = s.replace(new RegExp('\\\\(?:sqrt)\\{(' + group + ')\\}', 'g'), '√($1)');
+  s = s.replace(/\\(?:text|mathrm|mathbf|mathit|mathbb|mathcal|mathfrak|mathscr|mathsf|mathtt|overline|vec|bar|hat)\{([^{}]+)\}/g, '$1');
   s = s.replace(/\\(?:left|right)\b/g, '');
   s = s.replace(/\\([a-zA-Z]+)/g, function (m, name) {
     return Object.prototype.hasOwnProperty.call(LATEX_SYMBOLS, name) ? LATEX_SYMBOLS[name] : name;
