@@ -39,7 +39,7 @@ var OUTDIR = path.join(ROOT, 'figures');
 
 var PER_TOPIC = parseInt(process.env.PUBLISH_PER_TOPIC || '12', 10);
 var PER_PAGE = parseInt(process.env.PUBLISH_PER_PAGE || '200', 10);
-var TOTAL_CAP = parseInt(process.env.PUBLISH_TOTAL_CAP || '0', 10); // 0 = no cap
+var TOTAL_CAP = parseInt(process.env.PUBLISH_TOTAL_CAP || '4194', 10); // curated corpus ceiling — never let bulk harvest exceed hand-built content
 
 // One slug function for the id, the href and the filename. These were previously
 // built with an inline `replace(/\W+/g, '-')` in three places, which is how they

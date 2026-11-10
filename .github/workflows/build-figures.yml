@@ -249,7 +249,7 @@ jobs:
       # schedule, and `BULK_MAX_CALLS=''` would reach parseInt as NaN rather than
       # falling through to the script's own default.
       - name: Harvest figure candidates (bulk, resumable)
-        if: inputs.bulk_harvest == 'true' || github.event_name == 'schedule'
+        if: inputs.bulk_harvest == 'true'
         continue-on-error: true
         env:
           BULK_MAX_CALLS: ${{ inputs.bulk_calls || '900' }}
@@ -266,13 +266,10 @@ jobs:
       # from scratch, so a scheduled run can only add figures it has not seen,
       # which is what makes running it repeatedly safe.
       - name: Publish paginated figure pages
-        if: inputs.bulk_publish == 'true' || github.event_name == 'schedule'
+        if: inputs.bulk_publish == 'true'
         continue-on-error: true
         env:
-          # The fallback must match what the manual runs used, not the script's own
-      # default. Leaving it at the script default of 12 meant the first scheduled
-      # run would quietly stop topping every topic up at 60 and the listing would
-      # appear to shrink its per-topic counts relative to what is already live.
+          PUBLISH_TOTAL_CAP: '4194'
           PUBLISH_PER_TOPIC: ${{ inputs.publish_per_topic || '60' }}
           PUBLISH_PER_PAGE: '200'
         run: node scripts/build-figure-pages.js
