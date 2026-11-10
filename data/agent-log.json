@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-09T21:13:47.921Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-09T21:34:07.459Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -235,8 +223,36 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-10T02:04:02.134Z",
+   "model": "rule-based (no LLM)",
+   "totalFixes": 2,
+   "byAgent": [
+    {
+     "agent": "selfcheck",
+     "count": 2
+    }
+   ],
+   "details": [
+    {
+     "agent": "selfcheck",
+     "fixes": [
+      {
+       "page": "Mental Training",
+       "fix": "Browser: load-error — page.goto: Timeout 15000ms exceeded.\nCall log:\n  - navigating to \"http://127.0.0.1:8080/mental.html\", waiting until \"dom",
+       "kind": "runtime"
+      },
+      {
+       "page": "Dashboard",
+       "fix": "Runtime: Cannot read properties of undefined (reading 'dashboard.html')",
+       "kind": "runtime"
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-10T01:55:46.612Z",
+ "lastRun": "2026-11-10T02:04:02.134Z",
  "model": "qwen3.5:9b"
 }
