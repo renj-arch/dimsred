@@ -68,6 +68,28 @@ const TIERS = ['easy', 'moderate', 'hard', 'veryhard'];
 // Exam-realistic clock per difficulty, served by the mental page as timeLimit.
 const TIER_SECONDS = { easy: 40, moderate: 50, hard: 65, veryhard: 90 };
 
+// Structured-output schema for one invented question. Ollama accepts a JSON
+// schema in `format` and constrains decoding to it, which is stronger than
+// `format: 'json'`: the model can no longer wrap the object in prose or omit
+// a field the validator needs. The schema deliberately omits minItems /
+// maxItems (the validator enforces exactly four options) because older
+// daemons reject the whole schema over unsupported keywords.
+const QUESTION_SCHEMA = {
+  type: 'object',
+  properties: {
+    topic: { type: 'string' },
+    style: { type: 'string' },
+    stem: { type: 'string' },
+    options: { type: 'array', items: { type: 'string' } },
+    answer: { type: 'string' },
+    solution: { type: 'string' },
+    hint: { type: 'string' },
+    importance: { type: 'string', enum: ['high', 'medium', 'low'] },
+    importantFor: { type: 'array', items: { type: 'string' } }
+  },
+  required: ['topic', 'style', 'stem', 'options', 'answer', 'solution', 'hint']
+};
+
 const TIER_BRIEF = {
   easy: 'Single concept, one direct step. A prepared candidate answers in under 35 seconds. Distractors are off-by-one / common-slip answers.',
   moderate: 'Two steps or one concept with a small twist. 40-60 seconds in the exam. Distractors are the two most common partial answers.',
@@ -288,7 +310,7 @@ function parseChatStream(out) {
   return { text: content.trim() || thinking.trim(), httpCode: httpCode };
 }
 
-async function callLLM(system, user) {
+async function callLLM(system, user, schema) {
   if (FAKE) return callFake();
   const payload = JSON.stringify({
     model: MODEL,
@@ -298,7 +320,7 @@ async function callLLM(system, user) {
     // parse/repair loop stops burning attempts on prose wrappers. A lower
     // temperature than the old 0.95 keeps arithmetic self-consistent while
     // the novelty rules still vary the mechanism.
-    format: 'json',
+    format: schema || 'json',
     options: { temperature: 0.8, top_p: 0.92, num_ctx: NUM_CTX, num_predict: NUM_PREDICT },
     messages: [
       { role: 'system', content: system },
@@ -312,6 +334,13 @@ async function callLLM(system, user) {
     // without the parameter (same hatch as site-agent.js).
     log('[invent] Ollama rejected think:false (HTTP 400) — retrying without the parameter');
     out = await curlChat(JSON.stringify(Object.assign(JSON.parse(payload), { think: undefined })));
+    parsed = parseChatStream(out);
+  }
+  if (!parsed.text && parsed.httpCode === '400' && schema) {
+    // A daemon that does not understand a schema answers 400 too. Falling
+    // back to plain JSON mode is better than losing the call outright.
+    log('[invent] Ollama rejected the JSON schema (HTTP 400) -- retrying with format=json');
+    out = await curlChat(JSON.stringify(Object.assign(JSON.parse(payload), { format: 'json' })));
     parsed = parseChatStream(out);
   }
   if (parsed.httpCode && parsed.httpCode !== '200') throw new Error('HTTP ' + parsed.httpCode);
@@ -624,7 +653,8 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
           try {
             raw = await callLLM(
               'You are an exam setter. You reply with a single strict JSON object and nothing else.',
-              prompt
+              prompt,
+              QUESTION_SCHEMA
             );
             transportFails = 0;
           } catch (e) {
