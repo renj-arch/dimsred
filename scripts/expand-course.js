@@ -956,6 +956,18 @@ function overlap(a, b) {
   return inter / Math.min(ka.length, kb.length);
 }
 
+// How much of the new section is already present in the old lesson. Using the
+// larger vocabulary as the denominator (instead of min) avoids punishing a
+// genuinely new section for sharing topic words with the lesson it extends.
+function overlapMax(a, b) {
+  var A = wordSet(a), B = wordSet(b);
+  var ka = Object.keys(A), kb = Object.keys(B);
+  if (!ka.length || !kb.length) return 0;
+  var inter = 0;
+  ka.forEach(function (w) { if (B[w]) inter++; });
+  return inter / Math.max(ka.length, kb.length);
+}
+
 var subjectTextCache = {};
 function subjectTexts(mk) {
   if (subjectTextCache[mk]) return subjectTextCache[mk];
@@ -1061,10 +1073,10 @@ function generateOne(gap, timeoutMs) {
         headingsIn(source).forEach(function (h) { old[h.toLowerCase()] = 1; });
         var repeated = headingsIn(html).filter(function (h) { return old[h.toLowerCase()]; });
         if (repeated.length) throw new Error('repeats existing section(s): ' + repeated.slice(0, 2).join('; '));
-        // 0.5 was too tight: a genuinely new section on the same topic shares
-        // vocabulary with the lesson it extends (successful addons sit at
-        // 0.32-0.45). Keep the site-wide 70% rule instead.
-        if (source && overlap(stripTags(html), stripTags(source)) >= 0.7) {
+        // A new section on the same topic shares vocabulary with the lesson it
+        // extends (successful addons sit at 0.21-0.31 containment). Only a
+        // section that is mostly copied from the existing lesson is rejected.
+        if (source && overlapMax(stripTags(html), stripTags(source)) >= 0.7) {
           throw new Error('deep section overlaps the existing lesson too closely');
         }
       }
@@ -1229,6 +1241,7 @@ module.exports = {
   parseQuestions: parseQuestions,
   filterFresh: filterFresh,
   overlap: overlap,
+  overlapMax: overlapMax,
   theoryPrompt: theoryPrompt,
   deepenPrompt: deepenPrompt,
   questionsPrompt: questionsPrompt
