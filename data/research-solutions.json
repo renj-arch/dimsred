@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-10T15:09:29.249Z",
+  "updatedAt": "2026-11-10T23:41:44.194Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -6732,6 +6732,803 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-10T15:09:29.247Z"
+    },
+    {
+      "id": "e064e76f8d2192e5",
+      "exam": "nda",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "NDA Practice Set 3",
+      "paperPath": "nda/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 6,
+      "section": "Mathematics",
+      "question": "A bag contains 4 white balls and 6 black balls. If two balls are drawn at random without replacement, what is the probability that both balls are of the same color?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/5",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "7/15",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "8/15",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "3/10",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Total balls = 4 white + 6 black = 10.",
+        "Probability of two white balls = (4/10) * (3/9) = 2/15.",
+        "Probability of two black balls = (6/10) * (5/9) = 30/90 = 1/3 = 5/15.",
+        "Sum of probabilities for same color = 2/15 + 5/15 = 7/15.",
+        "Match result with option B."
+      ],
+      "verifierCheck": "To find the probability that both balls are of the same color, we calculate the probability of drawing two white balls plus the probability of drawing two black balls without replacement. The total number of balls is 10 (4 white + 6 black). The probability of drawing two white balls is P(WW) = (4/10) * (3/9) = 12/90. The probability of drawing two black balls is P(BB) = (6/10) * (5/9) = 30/90. Adding these probabilities gives the total probability of same color: 12/90 + 30/90 = 42/90. Simplifying the fraction 42/90 by dividing numerator and denominator by 6 yields 7/15, which corresponds to option B.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Color Weighting",
+          "idea": "Weight each color probability",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Prob first is white then white: (4/10)*(3/9) = 12/90.",
+            "Prob first is black then black: (6/10)*(5/9) = 30/90.",
+            "Add probabilities: (12+30)/90 = 42/90.",
+            "Simplify fraction: 42/90 reduces to 7/15."
+          ]
+        },
+        {
+          "name": "Direct Sum",
+          "idea": "Sum same-color combos",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Calculate total pairs: (10 choose 2) = 45.",
+            "Calculate white pairs: (4 choose 2) = 6.",
+            "Calculate black pairs: (6 choose 2) = 15.",
+            "Add favorable outcomes: 6 + 15 = 21.",
+            "Divide by total: 21/45 simplifies to 7/15."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:13:45.187Z"
+    },
+    {
+      "id": "dd6581fd3553f48c",
+      "exam": "nda",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "NDA Practice Set 3",
+      "paperPath": "nda/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 8,
+      "section": "Mathematics",
+      "question": "In a triangle ABC, if angle A = 90 degrees, b = 3, and c = 4, then the length of side a is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "5",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "6",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "7",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "8",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify triangle ABC as a right-angled triangle with angle A = 90 degrees.",
+        "Recognize that side 'a' is the hypotenuse opposite the right angle.",
+        "Apply the Pythagorean theorem: a² = b² + c².",
+        "Substitute given values: a² = 3² + 4².",
+        "Calculate: a² = 9 + 16 = 25.",
+        "Solve for a: a = √25 = 5."
+      ],
+      "verifierCheck": "Given a right-angled triangle ABC with angle A = 90 degrees, side 'a' is the hypotenuse opposite the right angle, while sides 'b' and 'c' are the legs. Using the Pythagorean theorem (a² = b² + c²), we substitute the given values: a² = 3² + 4² = 9 + 16 = 25. Taking the square root of both sides yields a = √25 = 5, which corresponds to option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Pythagorean Recall",
+          "idea": "Recognize 3-4-5 right triangle",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Identify angle A=90 makes it a right triangle.",
+            "Recall standard Pythagorean triple (3, 4, 5).",
+            "Match given sides b=3 and c=4 to the pair.",
+            "Conclude hypotenuse a is 5."
+          ]
+        },
+        {
+          "name": "Visual Pattern Match",
+          "idea": "Spot the classic triangle shape",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Note sides 3 and 4 are integers.",
+            "Recall common geometric pattern for right triangles.",
+            "Identify that hypotenuse must be 5.",
+            "Select option matching length 5."
+          ]
+        },
+        {
+          "name": "Quick Square Sum",
+          "idea": "Mental math addition of squares",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Square side b: 3 times 3 equals 9.",
+            "Square side c: 4 times 4 equals 16.",
+            "Add results: 9 plus 16 equals 25.",
+            "Take square root of 25 to get 5."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:15:43.252Z"
+    },
+    {
+      "id": "87d9dd8ae15e3699",
+      "exam": "ctet",
+      "paperSlug": "practice-set-08",
+      "paperTitle": "CTET Practice Set 8",
+      "paperPath": "ctet/papers/practice-set-08.html",
+      "paperFile": "practice-set-08.json",
+      "questionNumber": 11,
+      "section": "Mathematics",
+      "question": "If a rectangle has a length of 12 cm and a breadth of 8 cm, what is its perimeter?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) 40 cm",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "B) 32 cm",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "C) 96 cm",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) 20 cm",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify length (l) = 12 cm and breadth (b) = 8 cm.",
+        "Apply perimeter formula P = 2(l + b).",
+        "Calculate sum inside parentheses: 12 + 8 = 20.",
+        "Multiply by 2: 2 * 20 = 40.",
+        "Match result with Option A."
+      ],
+      "verifierCheck": "The perimeter of a rectangle is calculated using the formula P = 2 * (length + breadth). Given a length of 12 cm and a breadth of 8 cm, the calculation is 2 * (12 + 8) = 2 * 20 = 40 cm. This matches option A, while options B, C, and D correspond to incorrect calculations such as area or simple addition.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Sum and Double",
+          "idea": "Add length and breadth, then multiply by two",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Step 1: Add length (12) and breadth (8) to get semi-perimeter.",
+            "Step 2: Multiply the sum by 2 to find the full perimeter.",
+            "Step 3: Calculate 2 * (12 + 8) which equals 40.",
+            "Step 4: Match result 40 cm to Option A."
+          ]
+        },
+        {
+          "name": "Direct Formula",
+          "idea": "Apply standard perimeter formula immediately",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Step 1: Recall formula P = 2 * (L + B).",
+            "Step 2: Substitute L=12 and B=8 into the equation.",
+            "Step 3: Compute 2 * 20 to get 40 cm.",
+            "Step 4: Select Option A as the correct match."
+          ]
+        },
+        {
+          "name": "Edge Pairing",
+          "idea": "Sum two adjacent sides then double for symmetry",
+          "kind": "mnemonic",
+          "seconds": 5,
+          "steps": [
+            "Step 1: Visualize one length and one breadth side together.",
+            "Step 2: Add them mentally: 12 plus 8 is 20.",
+            "Step 3: Since a rectangle has two of each, multiply 20 by 2.",
+            "Step 4: The total perimeter is 40 cm, confirming Option A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:22:59.969Z"
+    },
+    {
+      "id": "4402b68c7b766720",
+      "exam": "nda",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "NDA Practice Set 3",
+      "paperPath": "nda/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 11,
+      "section": "Mathematics",
+      "question": "If a circle of radius r has a chord subtending a right angle at the center, what is the length of the minor arc corresponding to this chord?",
+      "options": [
+        {
+          "label": "A",
+          "text": "πr/2",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "πr",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "πr/4",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "3πr/2",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the central angle θ corresponding to a right angle as π/2 radians.",
+        "Use the arc length formula L = rθ.",
+        "Substitute θ = π/2 into the formula to get L = r(π/2).",
+        "Simplify the expression to obtain πr/2."
+      ],
+      "verifierCheck": "The length of an arc (s) is calculated using the formula s = rθ, where r is the radius and θ is the central angle measured in radians. The problem states that the chord subtends a right angle at the center, which corresponds to 90 degrees. To use the arc length formula, this angle must be converted to radians: 90° × (π/180) = π/2 radians. Substituting θ = π/2 into the formula yields s = r(π/2), which simplifies to πr/2. This matches option A.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Formula",
+          "idea": "Use arc-length formula s=rθ",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify central angle θ as π/2 radians (90 degrees).",
+            "Apply arc length formula s = r * θ.",
+            "Substitute θ: s = r * (π/2) to get πr/2"
+          ]
+        },
+        {
+          "name": "Fraction of Circumference",
+          "idea": "Minor arc is 1/4 of full circle",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recall circumference C = 2πr.",
+            "Note a right angle subtends 1/4 of the circle.",
+            "Calculate 1/4 * 2πr = πr/2"
+          ]
+        },
+        {
+          "name": "Proportion Method",
+          "idea": "Compare arc to full circle ratio",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Full circle is 360 degrees; right angle is 90 degrees.",
+            "Set up ratio: arc length / (2πr) = 90 / 360.",
+            "Simplify ratio to 1/4 and multiply by circumference 2πr.",
+            "Result is πr/2"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:24:50.621Z"
+    },
+    {
+      "id": "98423f5b169fe762",
+      "exam": "clat",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "CLAT Practice Set 3",
+      "paperPath": "clat/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 12,
+      "section": "Quantitative Techniques",
+      "question": "A train travels at an average speed of 60 km/hr without stoppages and 40 km/hr with stoppages. How many minutes does the train stop per hour?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A. 15 minutes",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B. 20 minutes",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C. 25 minutes",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D. 30 minutes",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate distance covered in 1 hour without stoppages: 60 km/hr * 1 hr = 60 km.",
+        "Calculate time taken to cover this same 60 km distance at the average speed with stoppages (40 km/hr): Time = Distance / Speed = 60 km / 40 km/hr = 1.5 hours.",
+        "Convert the extra time spent due to stoppages into minutes: 1.5 hours - 1 hour (moving time) = 0.5 hours; 0.5 hours * 60 minutes/hour = 30 minutes? Wait, re-evaluate logic.",
+        "Correct Logic: In one actual hour of travel time (including stops), the train covers only 40 km. To cover these 40 km without stopping, it would take 40/60 hours = 2/3 hours.",
+        "Calculate stoppage time: Total time (1 hour) - Moving time (2/3 hour) = 1/3 hour.",
+        "Convert to minutes: 1/3 hour * 60 minutes = 20 minutes."
+      ],
+      "verifierCheck": "To determine the stoppage time, we compare the distance covered in one hour under both conditions. Without stoppages, the train travels 60 km in 60 minutes. With stoppages, it covers only 40 km in the same 60-minute interval. The difference in distance (60 km - 40 km = 20 km) represents the distance the train would have traveled during its stopped time if it were moving at its average speed of 60 km/hr. Therefore, the time lost due to stoppages is calculated as (Distance Difference / Speed without stoppages) * 60 minutes, which equals (20 / 60) * 60 = 20 minutes. Alternatively, the effective speed ratio is 40/60 = 2/3, meaning the train moves for only 2/3 of the hour and stops for the remaining 1/3; 1/3 of 60 minutes is 20 minutes.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Relative Speed Ratio",
+          "idea": "Compare speeds to find time lost",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Find distance covered in 1 hour without stops: 60 km.",
+            "Calculate actual distance covered with stops in same hour: 40 km.",
+            "Difference is 20 km, which equals distance traveled while stopped.",
+            "Time to cover 20 km at 60 km/hr is (20/60) hours = 1/3 hour.",
+            "Convert 1/3 hour to minutes: 20 minutes.",
+            "Final answer matches option B."
+          ]
+        },
+        {
+          "name": "Time Loss Formula",
+          "idea": "Use simple time loss equation",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Recall formula: Stop Time = (V_no_stop - V_with_stop) / V_no_stop * 60 min.",
+            "Substitute values: (60 - 40) / 60 * 60.",
+            "Simplify: 20 / 60 * 60 = 20 minutes.",
+            "Final answer matches option B."
+          ]
+        },
+        {
+          "name": "Direct Proportion",
+          "idea": "Proportional reasoning on time lost",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "In 1 hour without stops, train goes 60 km.",
+            "With stops, it goes only 40 km in that same hour.",
+            "Missing 20 km represents time spent stopped.",
+            "At 60 km/hr, covering 20 km takes (20/60)*60 = 20 minutes.",
+            "Final answer matches option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:27:39.047Z"
+    },
+    {
+      "id": "a1c9a01b3fc15435",
+      "exam": "nda",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "NDA Practice Set 3",
+      "paperPath": "nda/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 12,
+      "section": "Mathematics",
+      "question": "The variance of the data set {4, 6, 8, 10, 12} is multiplied by what factor if each number is increased by 5 and then divided by 2?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1/4",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "1/2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "4",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate original variance for {4, 6, 8, 10, 12} which is 8.",
+        "Apply transformation x' = (x + 5)/2 to the data set.",
+        "Recall that adding a constant shifts the mean but does not change variance.",
+        "Recall that multiplying by a scalar k scales the variance by k^2.",
+        "Here the scaling factor is 1/2, so the new variance is multiplied by (1/2)^2 = 1/4.",
+        "Conclude the factor is 1/4."
+      ],
+      "verifierCheck": "Let the original data set be X. The transformation applied to each element x is y = (x + 5) / 2, which simplifies to y = 0.5x + 2.5. This is a linear transformation of the form y = ax + b where a = 0.5 and b = 2.5. A key property of variance is that adding a constant (b) does not change the spread of the data, so Var(y) = Var(ax + b) = a^2 * Var(x). Substituting a = 0.5, we get Var(y) = (0.5)^2 * Var(x) = 0.25 * Var(x). Therefore, the variance is multiplied by a factor of 1/4.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Linear Transform Rule",
+          "idea": "Variance scales by square of slope",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Recall variance scales by $k^2$ when data is transformed to $ax+b$.",
+            "Identify transformation: add 5 (shift, no effect) then divide by 2 ($a=1/2$).",
+            "Calculate factor: $(1/2)^2 = 1/4$.",
+            "Select option A."
+          ]
+        },
+        {
+          "name": "Slope Square Trick",
+          "idea": "Ignore constant shift, square divisor",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Note adding a constant (5) does not change variance spread.",
+            "Focus only on the division by 2 operation.",
+            "Apply rule: scaling data by $1/2$ scales variance by $(1/2)^2$.",
+            "Compute $(1/2)^2 = 1/4$.",
+            "Select option A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:31:07.208Z"
+    },
+    {
+      "id": "4ecf3ef5ea795105",
+      "exam": "nda",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "NDA Practice Set 3",
+      "paperPath": "nda/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 13,
+      "section": "Mathematics",
+      "question": "The integral of (1/(x^2 + 4)) dx is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "arctan(x/2)/2 + C",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "arctan(x) + C",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "ln|x^2+4| + C",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "x + C",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the integral form ∫(1/(x²+a²))dx = (1/a)arctan(x/a)+C with a=2.",
+        "Apply the standard integration formula for rational functions involving quadratic denominators.",
+        "Substitute a=2 into the result to get (1/2)arctan(x/2)+C."
+      ],
+      "verifierCheck": "To solve the integral of 1/(x^2 + 4) dx, we recognize the standard form for the arctangent function, which is ∫(1/(u^2 + a^2)) du = (1/a)arctan(u/a) + C. Here, u = x and a^2 = 4, so a = 2. Substituting these values into the standard formula yields (1/2)arctan(x/2) + C. Comparing this result with the given options, it matches option A exactly, while options B, C, and D correspond to incorrect forms or missing scaling factors.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Formula Match",
+          "idea": "Direct a^2 coefficient check",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recall standard integral of 1/(x^2+a^2) equals (1/a)arctan(x/a).",
+            "Identify a^2=4, so a=2.",
+            "Apply formula directly: (1/2)arctan(x/2).",
+            "Add constant C and match to option A.",
+            "Final answer is A"
+          ]
+        },
+        {
+          "name": "Standard Sub",
+          "idea": "Recognize arctan pattern",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Identify form 1/(u^2+a^2) with u=x, a=2.",
+            "Substitute x=2t to get integral of 2/(4(t^2+1)).",
+            "Factor out 2 and cancel to get integral of 1/(t^2+1).",
+            "Integrate to arctan(t), then substitute back t=x/2.",
+            "Multiply by the factor 1/2 from step 2.",
+            "Final answer is A: arctan(x/2)/2 + C"
+          ]
+        },
+        {
+          "name": "Derivative Check",
+          "idea": "Verify options by differentiation",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Differentiate option A: d/dx[(1/2)arctan(x/2)] = (1/2)*(1/(1+(x/2)^2))*(1/2).",
+            "Simplify denominator: 1 + x^2/4 = (4+x^2)/4.",
+            "Combine terms to get 1/(x^2+4), which matches the integrand.",
+            "Check other options B, C, D; their derivatives do not match.",
+            "Confirm option A is correct.",
+            "Final answer is A"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:38:28.939Z"
+    },
+    {
+      "id": "eee15beba207fe1e",
+      "exam": "clat",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "CLAT Practice Set 3",
+      "paperPath": "clat/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 14,
+      "section": "Legal Reasoning",
+      "question": "A farmer claims that his crops failed due to excessive rainfall, while a meteorologist argues that the failure was caused by poor soil drainage exacerbated by the rain. The meteorologist's argument implies that the farmer ignored the necessity of ______ before relying solely on weather patterns for agricultural success.",
+      "options": [
+        {
+          "label": "A",
+          "text": "addressing structural vulnerabilities",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "predicting seasonal variations",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "importing foreign seeds",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "reducing water usage",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the farmer's claim that failure was solely due to weather (rainfall).",
+        "Analyze the meteorologist's counter-argument attributing failure to poor soil drainage exacerbated by rain.",
+        "Recognize that 'poor soil drainage' represents a structural vulnerability in the farm system.",
+        "Deduce that relying on weather without fixing this underlying flaw implies ignoring necessary structural improvements.",
+        "Conclude that the missing necessity is addressing these structural vulnerabilities.",
+        "Match the conclusion to Option A."
+      ],
+      "verifierCheck": "The meteorologist's argument posits that poor soil drainage (a structural vulnerability of the farm) exacerbated the damage caused by rainfall. This implies that even if weather patterns were different, the underlying structural issue would still lead to failure; therefore, relying solely on favorable weather without fixing these inherent weaknesses was a mistake. Addressing structural vulnerabilities is the necessary step ignored by the farmer.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Keyword Mapping",
+          "idea": "match text to options quickly",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Highlight keywords: 'poor soil', 'drainage', 'exacerbated'.",
+            "Discard options about seeds, water usage, or weather prediction.",
+            "Map 'drainage' strictly to 'structural vulnerabilities'.",
+            "Select option A: addressing structural vulnerabilities."
+          ]
+        },
+        {
+          "name": "Vulnerability Focus",
+          "idea": "identify structural cause",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Read meteorologist's claim about 'poor soil drainage'.",
+            "Identify this as a fixable physical flaw rather than weather.",
+            "Match 'drainage' to the concept of fixing weak points in the system.",
+            "Select option A: addressing structural vulnerabilities."
+          ]
+        },
+        {
+          "name": "Cause-Effect Bridge",
+          "idea": "link argument to missing action",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Recognize argument contrasts rain (external) vs drainage (internal).",
+            "Infer farmer ignored internal preparation before blaming external factors.",
+            "Translate 'poor drainage' directly to ignoring structural issues.",
+            "Choose option A: addressing structural vulnerabilities."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:40:18.546Z"
+    },
+    {
+      "id": "71d8661e8b2438d8",
+      "exam": "nda",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "NDA Practice Set 3",
+      "paperPath": "nda/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 14,
+      "section": "Mathematics",
+      "question": "If the probability of rain on any given day is 0.3, what is the probability that it will NOT rain on a specific day?",
+      "options": [
+        {
+          "label": "A",
+          "text": "0.3",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "0.5",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "0.7",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "1.0",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the probability of rain as P(Rain) = 0.3.",
+        "Calculate the probability of not raining using the complement rule: P(Not Rain) = 1 - P(Rain)."
+      ],
+      "verifierCheck": "The sum of probabilities for all mutually exclusive outcomes in a sample space must equal 1.0. Given that the probability of rain (P(rain)) is 0.3, the probability of it not raining (P(not rain)) is calculated by subtracting P(rain) from 1.0: 1.0 - 0.3 = 0.7. Therefore, option C is the correct answer.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Complement Rule",
+          "idea": "Subtract from unity",
+          "kind": "invariant",
+          "seconds": 2,
+          "steps": [
+            "Identify probability of rain: 0.3.",
+            "Calculate complement by subtracting from 1: 1 - 0.3 = 0.7.",
+            "Select option matching result: C"
+          ]
+        },
+        {
+          "name": "Total Probability",
+          "idea": "Use total sum rule",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Recall total probability is always 1.",
+            "Subtract given rain chance (0.3) from total.",
+            "Result 0.7 matches option C.",
+            "Final choice: C"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-10T23:41:44.192Z"
     }
   ]
 }
