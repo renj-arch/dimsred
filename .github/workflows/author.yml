@@ -196,6 +196,8 @@ jobs:
             data/films/${{ inputs.film }}-debates.json
             out/author/
             out/research/${{ inputs.film }}/
+            out/autopilot/
+            out/llama/
             out/author-${{ inputs.film }}.time.log
           if-no-files-found: warn
           retention-days: 30
@@ -203,8 +205,12 @@ jobs:
       # The author writes and checks in one pass; re-read the committed shape
       # with the standalone auditor so an assembly bug cannot carry a line off
       # its ledger row. Same rules, separate code path.
+      #
+      # Only when a film was actually proposed: "nothing cleared the source
+      # gate" is a normal no-op, not a missing storyboard. Without this guard
+      # the audit opens data/films/invent.json and fails the whole run.
       - name: Re-audit the storyboard independently
-        if: ${{ success() && !inputs.stub }}
+        if: ${{ steps.invent.outputs.found != 'false' && success() && !inputs.stub }}
         run: node scripts/film/audit-storyboard.js "$FILM"
 
       - name: Clear the authoring strikes

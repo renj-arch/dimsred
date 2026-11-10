@@ -2,11 +2,13 @@
 /*
  * One local model call, with the fallback the pinned runtime needs.
  *
- * b11890 refuses to start the grammar sampler for a schema and still exits 0,
- * so the caller cannot tell "the sampler failed" from "the model said nothing"
- * except by looking at the answer. This tries the schema first, then one flat
- * prompt in Qwen chat markers, and returns the first answer that parses as a
- * JSON object. The caller audits the content; this only gets a shape back.
+ * b11890 refuses to start the grammar sampler for `--json-schema` (it feeds
+ * the chat-template prefill into the grammar) and still exits 0, so the caller
+ * cannot tell "the sampler failed" from "the model said nothing" except by
+ * looking at the answer. The same schema is compiled to GBNF and run over a
+ * flat Qwen chat prompt first; the old schema path and two unconstrained flat
+ * samples remain as fallbacks. The first answer that parses as a JSON object
+ * wins. The caller audits the content; this only gets a shape back.
  *
  * Environment: LM_BIN (default llama-cli), LM_MODEL (required), LM_CTX,
  * LM_THREADS.
@@ -16,6 +18,7 @@
 const fs = require('fs');
 const path = require('path');
 const { spawnSync } = require('child_process');
+const gbnf = require('./gbnf');
 
 const ROOT = path.resolve(__dirname, '..', '..');
 
@@ -113,6 +116,33 @@ function ask({
   ].join('\n'));
 
   const attempts = [];
+  // b11890's --json-schema sampler dies on the chat-template prefill. Compile
+  // the same schema to GBNF and run it over the flat prompt instead: the
+  // grammar starts at the answer, not at the role marker.
+  let grammarFile = null;
+  if (schema) {
+    try {
+      grammarFile = path.join(dir, `grammar-${label}.gbnf`);
+      fs.writeFileSync(grammarFile, gbnf.compile(schema));
+    } catch (err) {
+      grammarFile = null;
+      console.error(`[llama] could not compile the ${label} schema to GBNF: ${err.message}`);
+    }
+  }
+  if (grammarFile && cap.has('--grammar-file')) {
+    attempts.push({
+      label: 'gbnf',
+      args: [
+        ...common,
+        ...(noConversation ? [noConversation] : []),
+        // Do not pass --ignore-eos here: the grammar already forbids a
+        // truncated object, and suppressing EOS after a complete answer can
+        // leave the sampler with no legal token.
+        '--grammar-file', grammarFile,
+        '-f', flatFile,
+      ],
+    });
+  }
   if (schema && cap.has('--json-schema')) {
     attempts.push({
       label: 'grammar',
