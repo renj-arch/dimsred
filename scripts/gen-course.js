@@ -89,6 +89,10 @@ function head(exam, examDir, examName, title, desc, canonical, extra, depth) {
   h += '        .lesson-body h3{font-size:1.05em;font-weight:600;margin:16px 0 8px;color:var(--emerald)}\n';
   h += '        .lesson-body p{color:var(--text-sec);font-size:.9em;line-height:1.7;margin-bottom:10px}\n';
   h += '        .lesson-body ul{padding-left:20px;color:var(--text-sec);font-size:.9em;line-height:1.8;margin-bottom:12px}\n';
+  h += '        .lesson-body table{width:100%;border-collapse:collapse;margin:14px 0;font-size:.85em}\n';
+  h += '        .lesson-body caption{caption-side:top;text-align:left;font-weight:700;color:var(--text);padding:4px 0}\n';
+  h += '        .lesson-body th,.lesson-body td{border:1px solid var(--border);padding:8px 10px;text-align:left;vertical-align:top}\n';
+  h += '        .lesson-body th{background:rgba(255,255,255,.05);font-weight:700;color:var(--text)}\n';
   h += '        .example-box{background:rgba(96,165,250,.04);border-left:3px solid var(--purple,#a78bfa);padding:14px 16px;margin:12px 0;border-radius:0 8px 8px 0}\n';
   h += '        .example-box .ex-title{font-weight:600;font-size:.85em;color:var(--pureple,#a78bfa);margin-bottom:4px}\n';
   h += '        .example-box .ex-text{font-size:.88em;color:var(--text-sec);line-height:1.6}\n';
