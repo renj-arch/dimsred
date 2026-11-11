@@ -1,0 +1,127 @@
+name: Expand Language Pages
+
+# The site's language-expansion agent: qwen3.5:9b (Ollama on the runner) writes
+# NEW advanced sections into the language HTML pages that never grow:
+#   languages/*.html       (8 hand-built beginner courses)
+#   ctet/course/language/*.html   (CTET language pedagogy lessons)
+#   upsc/mains/language/*.html    (UPSC Mains Paper A practice pages)
+#
+# It is a SEPARATE plugin from expand-course (AGENTS.md: languages are not
+# part of expand-course.js).
+#
+# Safety:
+#   - Only appends new sections; never deletes or overwrites human content.
+#   - Every section passes a hard HTML validator before anything is written.
+#   - Model-generated practice passages are labelled model-generated-practice
+#     and script-checked with scripts/lib/language-verify.js (90% threshold).
+#   - Incremental ledger (data/language-expansion.json) keeps every run's
+#     work even if the run times out.
+#
+# Zero API keys: the model runs locally on the runner through Ollama.
+
+on:
+  workflow_dispatch:
+    inputs:
+      per_run:
+        description: 'Pages to extend this run (default 6)'
+        required: false
+        default: '6'
+      model:
+        description: 'Ollama model tag (default mid tier qwen3.5:9b)'
+        required: false
+        default: 'qwen3.5:9b'
+
+concurrency:
+  group: expand-language-pages
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  actions: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Free runner disk space (swap + 17GB model + repo)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Create swap (8GB)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=8192 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1 && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          timeout 1200 ollama pull "$MODEL_INPUT" || { echo "Model pull timed out"; exit 1; }
+          ollama list
+          echo "Warming $MODEL_INPUT..."
+          timeout 300 ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3 || echo "Warm-up timed out (non-fatal)"
+
+      - name: Write language page sections (${{ inputs.model || 'qwen3.5:9b' }} as teacher)
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+          EXPAND_LANG_DEADLINE_MIN: '90'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-language-pages.js
+
+      - name: Publish extended language pages
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git -c core.hooksPath=/dev/null commit -m "languages: expand pages with model-written advanced sections (run ${{ github.run_id }})" || true
+          git push origin HEAD:$(git rev-parse --abbrev-ref HEAD) || echo "nothing to push / push not permitted from this context"
