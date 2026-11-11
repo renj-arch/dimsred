@@ -1,18 +1,6 @@
 {
  "runs": [
   {
-   "at": "2026-11-11T01:44:15.366Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
-  },
-  {
    "at": "2026-11-11T02:01:03.901Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -252,8 +240,32 @@
      ]
     }
    ]
+  },
+  {
+   "at": "2026-11-11T08:33:59.177Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 1,
+   "byAgent": [
+    {
+     "agent": "proposals",
+     "count": 1
+    }
+   ],
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Resolve broken links in browser test",
+       "detail": "The browser test run on 2026-11-11 identified exactly 2 broken links across the site, which degrades user trust and accessibility; these must be fixed to maintain a clean static experience.",
+       "text": "Run a Node.js script using the site's own sitemap or crawl logic to detect the specific URLs of the 2 broken links (likely dead question IDs or outdated anchor references), then update the corresponding JSON data files to remove them or redirect to valid content."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-11T06:48:17.955Z",
+ "lastRun": "2026-11-11T08:33:59.177Z",
  "model": "qwen3.5:9b"
 }
