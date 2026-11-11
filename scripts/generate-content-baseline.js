@@ -37,6 +37,26 @@ const PAGES = [
     markers: ['id="toc"', 'id="national-income"', 'id="banking"']
   },
   {
+    path: 'upsc/course/gs/lesson-indian-geography.html',
+    markers: ['id="toc"', 'id="physical"', 'id="drainage"', 'id="climate"']
+  },
+  {
+    path: 'upsc/course/gs/lesson-general-science.html',
+    markers: ['id="physics"', 'id="chemistry"', 'id="biology"', 'id="space"']
+  },
+  {
+    path: 'upsc/course/gs/lesson-environment-ecology.html',
+    markers: ['id="ecology-basics"', 'id="population"', 'id="biodiversity"', 'id="climate"']
+  },
+  {
+    path: 'upsc/course/gs/lesson-world-history.html',
+    markers: ['id="toc"', 'id="enlightenment"', 'id="american-revolution"', 'id="french-revolution"']
+  },
+  {
+    path: 'upsc/course/gs/lesson-current-affairs.html',
+    markers: ['id="national"', 'id="international"', 'id="economy"', 'id="environment"']
+  },
+  {
     path: 'micro-test.html',
     markers: ['id="stepExam"', 'id="topicList"', 'id="startBtn"', 'js/micro-test.js']
   },
