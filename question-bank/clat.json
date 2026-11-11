@@ -5035,8 +5035,348 @@
       "style": "The Semantic Pivot Mechanism"
     },
     {
+      "id": 204,
+      "q": 204,
+      "section": "Reasoning",
+      "text": "In a coding system used for railway security, 'Alpha' refers to personnel who are strictly authorized to enter Zone A. All 'Alpha' personnel are armed. However, the protocol states that any armed personnel in Zone A must carry a shield IF they are not currently on patrol. If an officer is in Zone A and does not have a shield, it logically follows about his status regarding the other conditions.",
+      "options": [
+        {
+          "label": "A",
+          "text": "The officer is definitely NOT on patrol.",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "The officer is definitely on patrol.",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "The officer may or may not be on patrol.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "None of the above",
+          "correct": false
+        }
+      ],
+      "solution": "1. Premise 1: All Alpha -> Armed.\n2. Premise 2: If (In Zone A AND Armed) AND (Not Shield) -> Then (Not Patrol).\n3. The scenario describes an officer in Zone A who is Armed (implied by being Alpha or simply being armed in Zone A context) and does not have a shield.\n4. Applying the conditional rule: Since he is in Zone A, is Armed, and lacks a shield, the consequent MUST be true.\n5. Therefore, the officer cannot be on patrol.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Syllogism with Conditional Attributes",
+      "style": "The Attribute-Exclusion Filter Mechanism"
+    },
+    {
+      "id": 205,
+      "q": 205,
+      "section": "Reasoning",
+      "text": "Starting from a village office, Vikram travels 4 km North, then turns Right and walks 3 km to reach a petrol pump. He immediately turns Left (now facing South-West relative to his previous heading) and walks 5 km to reach a temple. The map is distorted such that every time he turns 'Right', the compass needle rotates 90 degrees clockwise for his subsequent steps; every time he turns 'Left', the compass needle rotates 90 degrees counter-clockwise. If Vikram had followed the path exactly as described without the compass distortion affecting his orientation, in which direction from the petrol pump is the temple located?",
+      "options": [
+        {
+          "label": "A",
+          "text": "North",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "South",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "East",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "West",
+          "correct": false
+        }
+      ],
+      "solution": "1. Start: Face North.\n2. Move 4km North.\n3. Turn Right: Standard logic dictates facing East.\n4. Move 3km East to Bus Stop (Coordinates: x=3, y=4).\n5. Turn Left: From East, a Left turn standardly dictates facing North.\n6. Move 5km North to Temple.\n7. Relative to Bus Stop, the displacement is purely in the North direction.",
+      "source": "invented",
+      "difficulty": "veryhard",
+      "seconds": 90,
+      "topic": "Direction Sense & Conditional Displacement",
+      "style": "The Recursive Compass Inversion Mechanism"
+    },
+    {
+      "id": 206,
+      "q": 206,
+      "section": "Reasoning",
+      "text": "In a round table meeting of 8 officials, they sit facing the center. Initially, their positions are fixed such that moving clockwise from North gives: P1, P2, P3, P4, P5, P6, P7, P8. \nNow, a 'Rotation Protocol' is activated. Under this protocol:\n1. Every person who was originally at an EVEN position (2, 4, 6, 8) immediately moves to the seat that is exactly ONE seat to their RIGHT.\n2. Every person who was originally at an ODD position (1, 3, 5, 7) immediately moves to the seat that is exactly ONE seat to their LEFT.\n\nAfter this shift, a 'Directional Inversion' occurs: The entire table's orientation flips. What was facing North now faces South, and vice-versa.\n\nIf P4 (originally at Even Position 4) sits next to whom immediately after the full protocol execution?",
+      "options": [
+        {
+          "label": "A",
+          "text": "P1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "P3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "P5",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "P7",
+          "correct": false
+        }
+      ],
+      "solution": "1. Initial positions (Clockwise): P1, P2, P3, P4, P5, P6, P7, P8.\n2. Even Positions move Right (+1): P2->Pos3, P4->Pos5, P6->Pos7, P8->Pos1.\n3. Odd Positions move Left (-1): P1->Pos8, P3->Pos2, P5->Pos4, P7->Pos6.\n   New arrangement (Clockwise): P8(P1), P3(P2), P2(P3), P5(P4), P4(P5), P7(P6), P6(P7), P1(P8).\n   Specifically, P4 is now at Physical Position 5.\n4. Directional Inversion flips North/South but preserves physical adjacency relationships.\n5. Neighbors of P4 (at Pos5) are the person at Pos4 and Pos6.\n   From step 3: Person at Pos4 is P5. Person at Pos6 is P7.\n   Therefore, P4 sits next to P5 and P7.",
+      "source": "invented",
+      "difficulty": "veryhard",
+      "seconds": 90,
+      "topic": "Circular Arrangement with Conditional Directional Inversion",
+      "style": "The Radial Clockwise-Counter-Clockwise Toggle Mechanism"
+    },
+    {
+      "id": 207,
+      "q": 207,
+      "section": "English Language",
+      "text": "In the context of the monsoon season, 'Aarohi' is a local term used to describe a specific weather phenomenon where heavy rainfall occurs for only three days before the sun returns with intense heat. Given that 'Aarohi' literally translates to 'ascending', which of the following ONE-WORD SUBSTITUTIONS best captures the essence of this transient, fleeting nature of such an event?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Eternal",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Perennial",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Ephemeral",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Durable",
+          "correct": false
+        }
+      ],
+      "solution": "Step 1: Analyze the definition provided in the stem. The phenomenon lasts only three days (very short) before changing completely.\nStep 2: Evaluate 'Eternal' and 'Durable'. Both imply long duration, contradicting the 'three days' constraint.\nStep 3: Evaluate 'Perennial'. This implies recurring annually or continuously, missing the specific focus on brevity within a single instance.\nStep 4: Evaluate 'Ephemeral'. It means lasting for a very short time (like a morning flower). Step 5: Since the question asks for the word capturing the 'transient' nature, 'Ephemeral' is the correct substitution.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "One-Word Substitution: Ephemeral (Brief but significant)",
+      "style": "The Chronological-Value Inversion Mechanism"
+    },
+    {
+      "id": 208,
+      "q": 208,
+      "section": "English Language",
+      "text": "In a government report regarding 'Drought-Resilient' agriculture, the term 'Bhoomi-Pushpa' is used to describe a specific type of initiative. Which word best captures the essence of 'Bhoomi-Pushpa' in this context?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A barren land offering no hope",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B land yielding natural rewards or crops without forced irrigation",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C a flower blooming only in winter",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D a legal document for land transfer",
+          "correct": false
+        }
+      ],
+      "solution": "1. Analyze the phrase: 'Bhoomi' = Earth/Land, 'Pushpa' = Flower/Beauty/Result.\n2. Context is 'Drought-Resilient': implies scarcity of water.\n3. Combine meanings: Land that produces beauty/harvest naturally despite conditions.\n4. Match with options: Option B aligns perfectly with the metaphor of a land blooming (producing) naturally.\n5. Verify others: A contradicts 'Pushpa', C is literal/seasonal, D is legal.\n6. Conclusion: B is the correct semantic equivalent.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Synonyms in Context",
+      "style": "The Semantic Shadow Mechanism"
+    },
+    {
+      "id": 209,
+      "q": 209,
+      "section": "English Language",
+      "text": "In the context of the recent flood relief efforts, the administration announced a 'Kshama' scheme to offer ______ to victims who were unfairly accused of negligence. Which term best completes the sentence?\nA) Forgiveness\nB) Retribution\nC) Indifference\nD) Compromise",
+      "options": [
+        {
+          "label": "A",
+          "text": "Forgiveness",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Retribution",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Indifference",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Compromise",
+          "correct": false
+        }
+      ],
+      "solution": "The word 'Kshama' in Sanskrit and Hindi directly translates to 'forgiveness' or 'patience'. The context is a relief scheme for victims wrongly accused; therefore, the administration would offer pardon/forgiveness. Option A is correct. Option B (Retribution) is the opposite of the intended meaning. Options C and D do not fit the emotional/legal context of restoring reputation after false accusation.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "One-Word Substitution: Synonym in Context with Antonym Trap",
+      "style": "The Semantic Shadow Mechanism (using an antonym as the primary distractor based on a commo"
+    },
+    {
+      "id": 210,
+      "q": 210,
+      "section": "English Language",
+      "text": "Select the most grammatically correct and logically sound sentence to replace the underlined portion: 'The team ___ (A) that the deadline was approaching, yet they failed to submit their report on time.' The missing phrase must correctly link a specific emotional state with an action.",
+      "options": [
+        {
+          "label": "A",
+          "text": "was overwhelmed by anxiety because",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "were overwhelmed by anxiety but",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "is overwhelmed by anxiety despite",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "are overwhelmed by anxiety though",
+          "correct": false
+        }
+      ],
+      "solution": "1. Identify the subject 'team'. In Indian English exam contexts (like SSC CGL/IBPS), collective nouns like 'team' or 'family' typically take a plural verb when the focus is on individual members acting together.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Error Spotting & Sentence Improvement",
+      "style": "The Conditional Logic Trap Mechanism"
+    },
+    {
+      "id": 211,
+      "q": 211,
+      "section": "English Language",
+      "text": "In a fiscal report analyzing the impact of a new digital tax, the minister noted that while 'Revenue' had increased by 15% in the first quarter, the term 'Yield' was used to describe a specific negative outcome where farmers' actual profit margins decreased despite higher crop sales. If the market price per unit remained constant, what did the term 'Yield' logically refer to in this context regarding the farmer's income?\nA) The total volume of crops harvested\nB) The net profit remaining after deducting all production and tax costs\nC) The gross sales revenue before any deductions\nD) The government subsidy received per hectare",
+      "options": [
+        {
+          "label": "A",
+          "text": "The total volume of crops harvested",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "The net profit remaining after deducting all production and tax costs",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "The gross sales revenue before any deductions",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "The government subsidy received per hectare",
+          "correct": false
+        }
+      ],
+      "solution": "1. Identify the premise: Crop sales (Revenue) increased by 15%.\n2. Apply the constant condition: Market price per unit is unchanged, meaning Gross Sales = Revenue.\n3. Analyze the outcome: Farmer's 'actual profit margins' decreased despite higher sales.\n4. Deduce the cause: If Revenue is up and Profit is down, the deductions (costs + taxes) must have increased disproportionately.\n5. Define 'Yield' in this specific context: In agricultural economics, yield often refers to the return or net gain. Here, it specifically denotes the Net Profit (Sales minus Costs/Taxes).",
+      "source": "invented",
+      "difficulty": "hard",
+      "seconds": 65,
+      "topic": "Synonyms in Context with Economic Inversion Twist",
+      "style": "The Economic-Imbalance Mirror Mechanism"
+    },
+    {
+      "id": 212,
+      "q": 212,
+      "section": "English Language",
+      "text": "In a frantic attempt to reduce costs for the upcoming Diwali festival decorations, the committee decided to 'cut corners'. However, this decision resulted in the fabric tearing within hours and the lights burning out. Which word best captures the ironic outcome of their action?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) The event was a resounding success despite the budget constraints.",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B) Their strategy of taking shortcuts led to a catastrophic failure that negated any savings.",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C) They managed to finish just in time by compromising on quality only slightly.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) The phrase 'cut corners' here refers to an innovative design technique.",
+          "correct": false
+        }
+      ],
+      "solution": "1. Identify the idiom: 'Cut corners' means doing something cheaply or poorly.\n2. Analyze the context: The committee did this to save money for Diwali decorations.\n3. Observe the result: Fabric tore and lights failed immediately.\n4. Evaluate options: Options A, C, and D imply success or innovation, contradicting the text.\n5. Select option B: It correctly identifies that taking shortcuts caused total failure.",
+      "source": "invented",
+      "difficulty": "veryhard",
+      "seconds": 90,
+      "topic": "Idioms & Phrases: 'Cut corners' (Process Optimization Trap)",
+      "style": "The Semantic Pivot Mechanism with Process Optimization Trap"
+    },
+    {
+      "id": 213,
+      "q": 213,
+      "section": "Quantitative Aptitude",
+      "text": "A retailer purchases a smartphone for Rs. 15,000. He first applies a markup of 20% on the cost price. Later, to clear inventory before a festival, he offers a discount of 20% on the marked price. What is the final selling price of the smartphone?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 15,000",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Rs. 14,400",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Rs. 15,600",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 13,800",
+          "correct": false
+        }
+      ],
+      "solution": "Cost Price = 15,000.\nMarked Price = 15,000 * 1.20 = 18,000.\nSelling Price = Marked Price * (1 - 0.20).\nSelling Price = 18,000 * 0.80.\nSelling Price = 14,400.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Profit Loss and Percentage",
+      "style": "The Cumulative Markup-Discount Asymmetry"
+    },
+    {
       "id": 1,
-      "q": 147,
+      "q": 157,
       "section": "English Language",
       "text": "Passage: 'Financial literacy is essential for economic empowerment. When individuals understand concepts like budgeting, saving, and investing, they make better financial decisions. Governments worldwide are incorporating financial education into school curricula to equip young people with these skills.' What is the main idea of the passage?",
       "options": [
@@ -5067,7 +5407,7 @@
     },
     {
       "id": 2,
-      "q": 148,
+      "q": 158,
       "section": "English Language",
       "text": "Passage: 'Despite the rapid adoption of digital payments, a significant portion of India's population still relies on cash transactions. The challenge lies in bridging the digital divide — ensuring internet access, smartphone availability, and digital literacy for all.' What challenge does the passage highlight?",
       "options": [
@@ -5098,7 +5438,7 @@
     },
     {
       "id": 3,
-      "q": 149,
+      "q": 159,
       "section": "English Language",
       "text": "Passage: 'The new tax reform aims to simplify the compliance process, reduce litigation, and create a more transparent system. Tax experts have welcomed the move, though some concerns remain about implementation timelines.' What does 'compliance' mean in this context?",
       "options": [
@@ -5129,7 +5469,7 @@
     },
     {
       "id": 4,
-      "q": 150,
+      "q": 160,
       "section": "English Language",
       "text": "Passage: 'Artificial intelligence is transforming industries from healthcare to finance. However, concerns about job displacement and ethical use of AI persist. Policymakers face the challenge of harnessing AI's potential while mitigating its risks.' Which of the following best describes the author's tone?",
       "options": [
@@ -5160,7 +5500,7 @@
     },
     {
       "id": 5,
-      "q": 151,
+      "q": 161,
       "section": "English Language",
       "text": "Passage: 'The bank's decision to lower interest rates was driven by the need to stimulate economic growth. Lower rates make borrowing cheaper for businesses and individuals, encouraging investment and consumption.' What can be inferred from the passage?",
       "options": [
@@ -5191,7 +5531,7 @@
     },
     {
       "id": 6,
-      "q": 152,
+      "q": 162,
       "section": "Current Affairs & GK",
       "text": "Which of the following legal terms best describes a situation where a person is prevented from denying something they previously admitted to in court?",
       "options": [
@@ -5222,7 +5562,7 @@
     },
     {
       "id": 7,
-      "q": 153,
+      "q": 163,
       "section": "Current Affairs & GK",
       "text": "The Kesavananda Bharati case (1973) established which limitation on Parliament's power under Article 368?",
       "options": [
@@ -5253,7 +5593,7 @@
     },
     {
       "id": 8,
-      "q": 154,
+      "q": 164,
       "section": "Current Affairs & GK",
       "text": "Under which Act was the National Human Rights Commission (NHRC) of India established?",
       "options": [
@@ -5284,7 +5624,7 @@
     },
     {
       "id": 9,
-      "q": 155,
+      "q": 165,
       "section": "Current Affairs & GK",
       "text": "Which Constitutional Amendment made education a Fundamental Right for children aged 6 to 14 years?",
       "options": [
@@ -5315,7 +5655,7 @@
     },
     {
       "id": 10,
-      "q": 156,
+      "q": 166,
       "section": "Current Affairs & GK",
       "text": "Which of the following bodies is considered a 'Quasi-Judicial' body rather than a full court?",
       "options": [
@@ -5346,7 +5686,7 @@
     },
     {
       "id": 11,
-      "q": 157,
+      "q": 167,
       "section": "Current Affairs & GK",
       "text": "What is the capital of Australia?",
       "options": [
@@ -5377,7 +5717,7 @@
     },
     {
       "id": 12,
-      "q": 158,
+      "q": 168,
       "section": "Current Affairs & GK",
       "text": "World Population Day is observed on which date?",
       "options": [
@@ -5408,7 +5748,7 @@
     },
     {
       "id": 13,
-      "q": 159,
+      "q": 169,
       "section": "Current Affairs & GK",
       "text": "Which of the following books was written by Rabindranath Tagore?",
       "options": [
@@ -5439,7 +5779,7 @@
     },
     {
       "id": 14,
-      "q": 160,
+      "q": 170,
       "section": "Current Affairs & GK",
       "text": "Which is the largest national park in India by area?",
       "options": [
@@ -5470,7 +5810,7 @@
     },
     {
       "id": 15,
-      "q": 161,
+      "q": 171,
       "section": "Current Affairs & GK",
       "text": "The headquarters of the World Health Organization (WHO) is located in:",
       "options": [
@@ -5501,7 +5841,7 @@
     },
     {
       "id": 16,
-      "q": 162,
+      "q": 172,
       "section": "Current Affairs & GK",
       "text": "A contracts to sell a specific painting to B for Rs. 50,000. Before delivery, the painting is destroyed by fire. A refuses to deliver. Who bears the loss?",
       "options": [
@@ -5532,7 +5872,7 @@
     },
     {
       "id": 17,
-      "q": 163,
+      "q": 173,
       "section": "Current Affairs & GK",
       "text": "X promises to pay Y Rs. 10,000 if Y stops smoking for one year. Is this a valid contract?",
       "options": [
@@ -5563,7 +5903,7 @@
     },
     {
       "id": 18,
-      "q": 164,
+      "q": 174,
       "section": "Current Affairs & GK",
       "text": "A minor signs a contract to buy a bicycle. Later, the minor wants to return it claiming the contract was void. What is the legal status?",
       "options": [
@@ -5594,7 +5934,7 @@
     },
     {
       "id": 19,
-      "q": 165,
+      "q": 175,
       "section": "Current Affairs & GK",
       "text": "In a dispute between two private companies regarding a supply agreement, Company A sues Company B in a civil court. Which law primarily governs this?",
       "options": [
@@ -5625,7 +5965,7 @@
     },
     {
       "id": 20,
-      "q": 166,
+      "q": 176,
       "section": "Current Affairs & GK",
       "text": "A statute passed in 2023 is found to violate a provision of the Constitution of India. What happens to the statute?",
       "options": [
@@ -5656,7 +5996,7 @@
     },
     {
       "id": 21,
-      "q": 167,
+      "q": 177,
       "section": "Current Affairs & GK",
       "text": "A driver accidentally hits a pedestrian while trying to avoid an obstacle. The driver had no intention to harm anyone. Which legal maxim best supports the argument that this is not a criminal offense?",
       "options": [
@@ -5687,7 +6027,7 @@
     },
     {
       "id": 22,
-      "q": 168,
+      "q": 178,
       "section": "Current Affairs & GK",
       "text": "A buyer purchases a defective watch from a seller who had no right to sell it. The buyer later discovers the seller was not the owner. What legal principle explains why the transfer of ownership failed?",
       "options": [
@@ -5718,7 +6058,7 @@
     },
     {
       "id": 23,
-      "q": 169,
+      "q": 179,
       "section": "Current Affairs & GK",
       "text": "A previous court has already decided a case between two parties regarding a land dispute. The same parties try to file a new lawsuit with the exact same facts and arguments. What rule prevents the second trial?",
       "options": [
@@ -5749,7 +6089,7 @@
     },
     {
       "id": 24,
-      "q": 170,
+      "q": 180,
       "section": "Current Affairs & GK",
       "text": "A customer buys a product online without inspecting it first. The product turns out to be defective, but the seller did not make any false claims about its quality. Which principle places the burden of inspection on the buyer?",
       "options": [
@@ -5780,7 +6120,7 @@
     },
     {
       "id": 25,
-      "q": 171,
+      "q": 181,
       "section": "Current Affairs & GK",
       "text": "A lower court refuses to decide a case differently from a higher court in the same jurisdiction. Which maxim describes this practice of following established decisions?",
       "options": [
@@ -5811,7 +6151,7 @@
     },
     {
       "id": 26,
-      "q": 172,
+      "q": 182,
       "section": "Current Affairs & GK",
       "text": "X offers to sell a laptop to Y for $500. Y accepts the offer via email. Before X ships the laptop, X changes his mind and tells Y he will not sell it. What is the legal status of this situation?",
       "options": [
@@ -5842,7 +6182,7 @@
     },
     {
       "id": 27,
-      "q": 173,
+      "q": 183,
       "section": "Current Affairs & GK",
       "text": "In a criminal trial, D is accused of stealing a wallet. D admits he took the wallet but claims he did so because he was starving and needed food for his child. Which defense principle is most relevant to this argument?",
       "options": [
@@ -5873,7 +6213,7 @@
     },
     {
       "id": 28,
-      "q": 174,
+      "q": 184,
       "section": "Current Affairs & GK",
       "text": "Husband H and Wife W are married under the Hindu Marriage Act. H wants to divorce W on the grounds of cruelty. W has filed a petition for maintenance. Which statement is legally accurate regarding their status?",
       "options": [
@@ -5904,7 +6244,7 @@
     },
     {
       "id": 29,
-      "q": 175,
+      "q": 185,
       "section": "Current Affairs & GK",
       "text": "A law passed by Parliament prohibits all forms of religious procession in public spaces. A citizen challenges this law claiming it violates their Fundamental Right to Freedom of Religion. What is the likely outcome?",
       "options": [
@@ -5935,7 +6275,7 @@
     },
     {
       "id": 30,
-      "q": 176,
+      "q": 186,
       "section": "Quantitative Aptitude",
       "text": "What is the primary concept tested in Basic Mathematics?",
       "options": [
@@ -5966,7 +6306,7 @@
     },
     {
       "id": 31,
-      "q": 177,
+      "q": 187,
       "section": "Quantitative Aptitude",
       "text": "Which of the following best describes the approach to solve Basic Mathematics problems?",
       "options": [
@@ -5997,7 +6337,7 @@
     },
     {
       "id": 32,
-      "q": 178,
+      "q": 188,
       "section": "Quantitative Aptitude",
       "text": "In Basic Mathematics, which step is most critical for accurate problem-solving?",
       "options": [
@@ -6028,7 +6368,7 @@
     },
     {
       "id": 33,
-      "q": 179,
+      "q": 189,
       "section": "Quantitative Aptitude",
       "text": "How can you improve your speed in Basic Mathematics questions?",
       "options": [
@@ -6059,7 +6399,7 @@
     },
     {
       "id": 34,
-      "q": 180,
+      "q": 190,
       "section": "Quantitative Aptitude",
       "text": "What is the best strategy for attempting Basic Mathematics questions in the exam?",
       "options": [
@@ -6090,7 +6430,7 @@
     },
     {
       "id": 35,
-      "q": 181,
+      "q": 191,
       "section": "Quantitative Aptitude",
       "text": "Table: Production of wheat (in tonnes) by 5 states: State A=120, B=150, C=90, D=180, E=110. What is the average production of all 5 states?",
       "options": [
@@ -6121,7 +6461,7 @@
     },
     {
       "id": 36,
-      "q": 182,
+      "q": 192,
       "section": "Quantitative Aptitude",
       "text": "A pie chart shows: Rent=30%, Food=25%, Transport=15%, Education=12%, Savings=10%, Others=8%. If total monthly income is ₹40,000, what is the amount spent on Food?",
       "options": [
@@ -6152,7 +6492,7 @@
     },
     {
       "id": 37,
-      "q": 183,
+      "q": 193,
       "section": "Quantitative Aptitude",
       "text": "Bar Graph: Sales of Company X (in crores): 2016=50, 2017=60, 2018=75, 2019=90, 2020=100. What is the percentage increase in sales from 2017 to 2019?",
       "options": [
@@ -6183,7 +6523,7 @@
     },
     {
       "id": 38,
-      "q": 184,
+      "q": 194,
       "section": "Quantitative Aptitude",
       "text": "Line Graph: Population of a town (in thousands): 2015=20, 2016=25, 2017=30, 2018=36, 2019=40. What was the average population per year from 2015 to 2019?",
       "options": [
@@ -6214,7 +6554,7 @@
     },
     {
       "id": 39,
-      "q": 185,
+      "q": 195,
       "section": "Quantitative Aptitude",
       "text": "Mixed DI: A table shows the marks (out of 100) of 5 students in 3 subjects. Student 1: Math=85, Science=78, English=72. Student 2: Math=92, Science=88, English=80. What is the total marks of Student 2 across all subjects?",
       "options": [
@@ -6245,7 +6585,7 @@
     },
     {
       "id": 40,
-      "q": 186,
+      "q": 196,
       "section": "Quantitative Aptitude",
       "text": "What is the primary concept tested in Numerical Ability?",
       "options": [
@@ -6276,7 +6616,7 @@
     },
     {
       "id": 41,
-      "q": 187,
+      "q": 197,
       "section": "Quantitative Aptitude",
       "text": "Which of the following best describes the approach to solve Numerical Ability problems?",
       "options": [
@@ -6307,7 +6647,7 @@
     },
     {
       "id": 42,
-      "q": 188,
+      "q": 198,
       "section": "Quantitative Aptitude",
       "text": "In Numerical Ability, which step is most critical for accurate problem-solving?",
       "options": [
@@ -6338,7 +6678,7 @@
     },
     {
       "id": 43,
-      "q": 189,
+      "q": 199,
       "section": "Quantitative Aptitude",
       "text": "How can you improve your speed in Numerical Ability questions?",
       "options": [
@@ -6369,7 +6709,7 @@
     },
     {
       "id": 44,
-      "q": 190,
+      "q": 200,
       "section": "Quantitative Aptitude",
       "text": "What is the best strategy for attempting Numerical Ability questions in the exam?",
       "options": [
@@ -6400,7 +6740,7 @@
     },
     {
       "id": 45,
-      "q": 191,
+      "q": 201,
       "section": "Reasoning",
       "text": "What comes next in the number series: 3, 6, 12, 24, ?",
       "options": [
@@ -6431,7 +6771,7 @@
     },
     {
       "id": 46,
-      "q": 192,
+      "q": 202,
       "section": "Reasoning",
       "text": "Identify the Odd One Out from the following set: A) Apple B) Banana C) Carrot D) Grape",
       "options": [
@@ -6462,7 +6802,7 @@
     },
     {
       "id": 47,
-      "q": 193,
+      "q": 203,
       "section": "Reasoning",
       "text": "Complete the letter series: Z, Y, X, W, ?",
       "options": [
@@ -6493,7 +6833,7 @@
     },
     {
       "id": 48,
-      "q": 194,
+      "q": 204,
       "section": "Reasoning",
       "text": "What is the primary concept tested in Arguments & Assumptions?",
       "options": [
@@ -6524,7 +6864,7 @@
     },
     {
       "id": 49,
-      "q": 195,
+      "q": 205,
       "section": "Reasoning",
       "text": "Which of the following best describes the approach to solve Arguments & Assumptions problems?",
       "options": [
@@ -6555,7 +6895,7 @@
     },
     {
       "id": 50,
-      "q": 196,
+      "q": 206,
       "section": "Reasoning",
       "text": "In Arguments & Assumptions, which step is most critical for accurate problem-solving?",
       "options": [
@@ -6586,7 +6926,7 @@
     },
     {
       "id": 51,
-      "q": 197,
+      "q": 207,
       "section": "Reasoning",
       "text": "How can you improve your speed in Arguments & Assumptions questions?",
       "options": [
@@ -6617,7 +6957,7 @@
     },
     {
       "id": 52,
-      "q": 198,
+      "q": 208,
       "section": "Reasoning",
       "text": "What is the best strategy for attempting Arguments & Assumptions questions in the exam?",
       "options": [
@@ -6648,7 +6988,7 @@
     },
     {
       "id": 53,
-      "q": 199,
+      "q": 209,
       "section": "Reasoning",
       "text": "What is the primary concept tested in Inferences & Syllogisms?",
       "options": [
@@ -6679,7 +7019,7 @@
     },
     {
       "id": 54,
-      "q": 200,
+      "q": 210,
       "section": "Reasoning",
       "text": "Which of the following best describes the approach to solve Inferences & Syllogisms problems?",
       "options": [
@@ -6710,7 +7050,7 @@
     },
     {
       "id": 55,
-      "q": 201,
+      "q": 211,
       "section": "Reasoning",
       "text": "In Inferences & Syllogisms, which step is most critical for accurate problem-solving?",
       "options": [
@@ -6741,7 +7081,7 @@
     },
     {
       "id": 56,
-      "q": 202,
+      "q": 212,
       "section": "Reasoning",
       "text": "How can you improve your speed in Inferences & Syllogisms questions?",
       "options": [
@@ -6772,7 +7112,7 @@
     },
     {
       "id": 57,
-      "q": 203,
+      "q": 213,
       "section": "Reasoning",
       "text": "What is the best strategy for attempting Inferences & Syllogisms questions in the exam?",
       "options": [

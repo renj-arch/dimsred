@@ -25339,8 +25339,348 @@
       "style": "The Semantic Pivot Mechanism"
     },
     {
+      "id": 1264,
+      "q": 751,
+      "section": "Reasoning",
+      "text": "In a coding system used for railway security, 'Alpha' refers to personnel who are strictly authorized to enter Zone A. All 'Alpha' personnel are armed. However, the protocol states that any armed personnel in Zone A must carry a shield IF they are not currently on patrol. If an officer is in Zone A and does not have a shield, it logically follows about his status regarding the other conditions.",
+      "options": [
+        {
+          "label": "A",
+          "text": "The officer is definitely NOT on patrol.",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "The officer is definitely on patrol.",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "The officer may or may not be on patrol.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "None of the above",
+          "correct": false
+        }
+      ],
+      "solution": "1. Premise 1: All Alpha -> Armed.\n2. Premise 2: If (In Zone A AND Armed) AND (Not Shield) -> Then (Not Patrol).\n3. The scenario describes an officer in Zone A who is Armed (implied by being Alpha or simply being armed in Zone A context) and does not have a shield.\n4. Applying the conditional rule: Since he is in Zone A, is Armed, and lacks a shield, the consequent MUST be true.\n5. Therefore, the officer cannot be on patrol.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Syllogism with Conditional Attributes",
+      "style": "The Attribute-Exclusion Filter Mechanism"
+    },
+    {
+      "id": 1265,
+      "q": 752,
+      "section": "Reasoning",
+      "text": "Starting from a village office, Vikram travels 4 km North, then turns Right and walks 3 km to reach a petrol pump. He immediately turns Left (now facing South-West relative to his previous heading) and walks 5 km to reach a temple. The map is distorted such that every time he turns 'Right', the compass needle rotates 90 degrees clockwise for his subsequent steps; every time he turns 'Left', the compass needle rotates 90 degrees counter-clockwise. If Vikram had followed the path exactly as described without the compass distortion affecting his orientation, in which direction from the petrol pump is the temple located?",
+      "options": [
+        {
+          "label": "A",
+          "text": "North",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "South",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "East",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "West",
+          "correct": false
+        }
+      ],
+      "solution": "1. Start: Face North.\n2. Move 4km North.\n3. Turn Right: Standard logic dictates facing East.\n4. Move 3km East to Bus Stop (Coordinates: x=3, y=4).\n5. Turn Left: From East, a Left turn standardly dictates facing North.\n6. Move 5km North to Temple.\n7. Relative to Bus Stop, the displacement is purely in the North direction.",
+      "source": "invented",
+      "difficulty": "veryhard",
+      "seconds": 90,
+      "topic": "Direction Sense & Conditional Displacement",
+      "style": "The Recursive Compass Inversion Mechanism"
+    },
+    {
+      "id": 1266,
+      "q": 753,
+      "section": "Reasoning",
+      "text": "In a round table meeting of 8 officials, they sit facing the center. Initially, their positions are fixed such that moving clockwise from North gives: P1, P2, P3, P4, P5, P6, P7, P8. \nNow, a 'Rotation Protocol' is activated. Under this protocol:\n1. Every person who was originally at an EVEN position (2, 4, 6, 8) immediately moves to the seat that is exactly ONE seat to their RIGHT.\n2. Every person who was originally at an ODD position (1, 3, 5, 7) immediately moves to the seat that is exactly ONE seat to their LEFT.\n\nAfter this shift, a 'Directional Inversion' occurs: The entire table's orientation flips. What was facing North now faces South, and vice-versa.\n\nIf P4 (originally at Even Position 4) sits next to whom immediately after the full protocol execution?",
+      "options": [
+        {
+          "label": "A",
+          "text": "P1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "P3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "P5",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "P7",
+          "correct": false
+        }
+      ],
+      "solution": "1. Initial positions (Clockwise): P1, P2, P3, P4, P5, P6, P7, P8.\n2. Even Positions move Right (+1): P2->Pos3, P4->Pos5, P6->Pos7, P8->Pos1.\n3. Odd Positions move Left (-1): P1->Pos8, P3->Pos2, P5->Pos4, P7->Pos6.\n   New arrangement (Clockwise): P8(P1), P3(P2), P2(P3), P5(P4), P4(P5), P7(P6), P6(P7), P1(P8).\n   Specifically, P4 is now at Physical Position 5.\n4. Directional Inversion flips North/South but preserves physical adjacency relationships.\n5. Neighbors of P4 (at Pos5) are the person at Pos4 and Pos6.\n   From step 3: Person at Pos4 is P5. Person at Pos6 is P7.\n   Therefore, P4 sits next to P5 and P7.",
+      "source": "invented",
+      "difficulty": "veryhard",
+      "seconds": 90,
+      "topic": "Circular Arrangement with Conditional Directional Inversion",
+      "style": "The Radial Clockwise-Counter-Clockwise Toggle Mechanism"
+    },
+    {
+      "id": 1267,
+      "q": 754,
+      "section": "English Language",
+      "text": "In the context of the monsoon season, 'Aarohi' is a local term used to describe a specific weather phenomenon where heavy rainfall occurs for only three days before the sun returns with intense heat. Given that 'Aarohi' literally translates to 'ascending', which of the following ONE-WORD SUBSTITUTIONS best captures the essence of this transient, fleeting nature of such an event?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Eternal",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Perennial",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Ephemeral",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Durable",
+          "correct": false
+        }
+      ],
+      "solution": "Step 1: Analyze the definition provided in the stem. The phenomenon lasts only three days (very short) before changing completely.\nStep 2: Evaluate 'Eternal' and 'Durable'. Both imply long duration, contradicting the 'three days' constraint.\nStep 3: Evaluate 'Perennial'. This implies recurring annually or continuously, missing the specific focus on brevity within a single instance.\nStep 4: Evaluate 'Ephemeral'. It means lasting for a very short time (like a morning flower). Step 5: Since the question asks for the word capturing the 'transient' nature, 'Ephemeral' is the correct substitution.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "One-Word Substitution: Ephemeral (Brief but significant)",
+      "style": "The Chronological-Value Inversion Mechanism"
+    },
+    {
+      "id": 1268,
+      "q": 755,
+      "section": "English Language",
+      "text": "In a government report regarding 'Drought-Resilient' agriculture, the term 'Bhoomi-Pushpa' is used to describe a specific type of initiative. Which word best captures the essence of 'Bhoomi-Pushpa' in this context?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A barren land offering no hope",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B land yielding natural rewards or crops without forced irrigation",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C a flower blooming only in winter",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D a legal document for land transfer",
+          "correct": false
+        }
+      ],
+      "solution": "1. Analyze the phrase: 'Bhoomi' = Earth/Land, 'Pushpa' = Flower/Beauty/Result.\n2. Context is 'Drought-Resilient': implies scarcity of water.\n3. Combine meanings: Land that produces beauty/harvest naturally despite conditions.\n4. Match with options: Option B aligns perfectly with the metaphor of a land blooming (producing) naturally.\n5. Verify others: A contradicts 'Pushpa', C is literal/seasonal, D is legal.\n6. Conclusion: B is the correct semantic equivalent.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Synonyms in Context",
+      "style": "The Semantic Shadow Mechanism"
+    },
+    {
+      "id": 1269,
+      "q": 756,
+      "section": "English Language",
+      "text": "In the context of the recent flood relief efforts, the administration announced a 'Kshama' scheme to offer ______ to victims who were unfairly accused of negligence. Which term best completes the sentence?\nA) Forgiveness\nB) Retribution\nC) Indifference\nD) Compromise",
+      "options": [
+        {
+          "label": "A",
+          "text": "Forgiveness",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Retribution",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Indifference",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Compromise",
+          "correct": false
+        }
+      ],
+      "solution": "The word 'Kshama' in Sanskrit and Hindi directly translates to 'forgiveness' or 'patience'. The context is a relief scheme for victims wrongly accused; therefore, the administration would offer pardon/forgiveness. Option A is correct. Option B (Retribution) is the opposite of the intended meaning. Options C and D do not fit the emotional/legal context of restoring reputation after false accusation.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "One-Word Substitution: Synonym in Context with Antonym Trap",
+      "style": "The Semantic Shadow Mechanism (using an antonym as the primary distractor based on a commo"
+    },
+    {
+      "id": 1270,
+      "q": 757,
+      "section": "English Language",
+      "text": "Select the most grammatically correct and logically sound sentence to replace the underlined portion: 'The team ___ (A) that the deadline was approaching, yet they failed to submit their report on time.' The missing phrase must correctly link a specific emotional state with an action.",
+      "options": [
+        {
+          "label": "A",
+          "text": "was overwhelmed by anxiety because",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "were overwhelmed by anxiety but",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "is overwhelmed by anxiety despite",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "are overwhelmed by anxiety though",
+          "correct": false
+        }
+      ],
+      "solution": "1. Identify the subject 'team'. In Indian English exam contexts (like SSC CGL/IBPS), collective nouns like 'team' or 'family' typically take a plural verb when the focus is on individual members acting together.",
+      "source": "invented",
+      "difficulty": "moderate",
+      "seconds": 50,
+      "topic": "Error Spotting & Sentence Improvement",
+      "style": "The Conditional Logic Trap Mechanism"
+    },
+    {
+      "id": 1271,
+      "q": 758,
+      "section": "English Language",
+      "text": "In a fiscal report analyzing the impact of a new digital tax, the minister noted that while 'Revenue' had increased by 15% in the first quarter, the term 'Yield' was used to describe a specific negative outcome where farmers' actual profit margins decreased despite higher crop sales. If the market price per unit remained constant, what did the term 'Yield' logically refer to in this context regarding the farmer's income?\nA) The total volume of crops harvested\nB) The net profit remaining after deducting all production and tax costs\nC) The gross sales revenue before any deductions\nD) The government subsidy received per hectare",
+      "options": [
+        {
+          "label": "A",
+          "text": "The total volume of crops harvested",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "The net profit remaining after deducting all production and tax costs",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "The gross sales revenue before any deductions",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "The government subsidy received per hectare",
+          "correct": false
+        }
+      ],
+      "solution": "1. Identify the premise: Crop sales (Revenue) increased by 15%.\n2. Apply the constant condition: Market price per unit is unchanged, meaning Gross Sales = Revenue.\n3. Analyze the outcome: Farmer's 'actual profit margins' decreased despite higher sales.\n4. Deduce the cause: If Revenue is up and Profit is down, the deductions (costs + taxes) must have increased disproportionately.\n5. Define 'Yield' in this specific context: In agricultural economics, yield often refers to the return or net gain. Here, it specifically denotes the Net Profit (Sales minus Costs/Taxes).",
+      "source": "invented",
+      "difficulty": "hard",
+      "seconds": 65,
+      "topic": "Synonyms in Context with Economic Inversion Twist",
+      "style": "The Economic-Imbalance Mirror Mechanism"
+    },
+    {
+      "id": 1272,
+      "q": 759,
+      "section": "English Language",
+      "text": "In a frantic attempt to reduce costs for the upcoming Diwali festival decorations, the committee decided to 'cut corners'. However, this decision resulted in the fabric tearing within hours and the lights burning out. Which word best captures the ironic outcome of their action?",
+      "options": [
+        {
+          "label": "A",
+          "text": "A) The event was a resounding success despite the budget constraints.",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "B) Their strategy of taking shortcuts led to a catastrophic failure that negated any savings.",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "C) They managed to finish just in time by compromising on quality only slightly.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "D) The phrase 'cut corners' here refers to an innovative design technique.",
+          "correct": false
+        }
+      ],
+      "solution": "1. Identify the idiom: 'Cut corners' means doing something cheaply or poorly.\n2. Analyze the context: The committee did this to save money for Diwali decorations.\n3. Observe the result: Fabric tore and lights failed immediately.\n4. Evaluate options: Options A, C, and D imply success or innovation, contradicting the text.\n5. Select option B: It correctly identifies that taking shortcuts caused total failure.",
+      "source": "invented",
+      "difficulty": "veryhard",
+      "seconds": 90,
+      "topic": "Idioms & Phrases: 'Cut corners' (Process Optimization Trap)",
+      "style": "The Semantic Pivot Mechanism with Process Optimization Trap"
+    },
+    {
+      "id": 1273,
+      "q": 760,
+      "section": "Quantitative Aptitude",
+      "text": "A retailer purchases a smartphone for Rs. 15,000. He first applies a markup of 20% on the cost price. Later, to clear inventory before a festival, he offers a discount of 20% on the marked price. What is the final selling price of the smartphone?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 15,000",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Rs. 14,400",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Rs. 15,600",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 13,800",
+          "correct": false
+        }
+      ],
+      "solution": "Cost Price = 15,000.\nMarked Price = 15,000 * 1.20 = 18,000.\nSelling Price = Marked Price * (1 - 0.20).\nSelling Price = 18,000 * 0.80.\nSelling Price = 14,400.",
+      "source": "invented",
+      "difficulty": "easy",
+      "seconds": 40,
+      "topic": "Profit Loss and Percentage",
+      "style": "The Cumulative Markup-Discount Asymmetry"
+    },
+    {
       "id": 1199,
-      "q": 747,
+      "q": 757,
       "section": "Reasoning",
       "text": "Statement: 'All employees must submit their project reports by Friday to avoid penalty.' Assumptions: I. Employees currently have pending project reports. II. Friday is the deadline for submission. Which is/are implicit?",
       "options": [
@@ -25371,7 +25711,7 @@
     },
     {
       "id": 1200,
-      "q": 748,
+      "q": 758,
       "section": "Reasoning",
       "text": "Situation: The city has seen a sharp rise in road accidents in the past year. Course of Action: I. Install speed cameras at all major intersections. II. Ban all private vehicles in the city. Which course(s) of action is/are appropriate?",
       "options": [
@@ -25402,7 +25742,7 @@
     },
     {
       "id": 1201,
-      "q": 749,
+      "q": 759,
       "section": "Reasoning",
       "text": "Statement: 'The government should increase spending on public healthcare to improve health outcomes.' Which of the following is the strongest argument in favour?",
       "options": [
@@ -25433,7 +25773,7 @@
     },
     {
       "id": 1202,
-      "q": 750,
+      "q": 760,
       "section": "Reasoning",
       "text": "Passage: 'Studies show that students who participate in extracurricular activities perform better academically. Therefore, schools should mandate participation in at least one extracurricular activity.' Which of the following, if true, weakens the argument?",
       "options": [
