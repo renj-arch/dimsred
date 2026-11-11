@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-10T23:41:44.194Z",
+  "updatedAt": "2026-11-11T06:01:55.007Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -7529,6 +7529,437 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-10T23:41:44.192Z"
+    },
+    {
+      "id": "9fbd6d4a60b3895e",
+      "exam": "nda",
+      "paperSlug": "practice-set-03",
+      "paperTitle": "NDA Practice Set 3",
+      "paperPath": "nda/papers/practice-set-03.html",
+      "paperFile": "practice-set-03.json",
+      "questionNumber": 15,
+      "section": "Mathematics",
+      "question": "A solid cylinder has radius r and height h. If both dimensions are doubled, the new volume is how many times the original volume?",
+      "options": [
+        {
+          "label": "A",
+          "text": "2 times",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4 times",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "8 times",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "16 times",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Original volume V = πr²h",
+        "New radius r' = 2r",
+        "New height h' = 2h",
+        "New volume V' = π(2r)²(2h)",
+        "Simplify V' = π(4r²)(2h) = 8πr²h"
+      ],
+      "verifierCheck": "The volume of a cylinder is calculated using the formula V = πr²h. When both the radius (r) and height (h) are doubled, the new dimensions become 2r and 2h. Substituting these into the formula gives the new volume V' = π(2r)²(2h) = π(4r²)(2h) = 8πr²h. Since the original volume is V = πr²h, the new volume is exactly 8 times the original volume.",
+      "roles": {
+        "solver": "Mathematician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Dimension Scaling",
+          "idea": "Cube linear factors",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recall volume formula V = πr²h.",
+            "Identify scaling factor k=2 for both r and h.",
+            "Calculate new volume factor as k² × k = 2³ = 8."
+          ]
+        },
+        {
+          "name": "Unit Cube Logic",
+          "idea": "Think in blocks",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Imagine cylinder made of unit cubes.",
+            "Doubling radius adds 2 layers wide (2×2=4 base area).",
+            "Doubling height adds 2 layers tall.",
+            "Total change is 2×2×2 = 8 times."
+          ]
+        },
+        {
+          "name": "Direct Substitution",
+          "idea": "Plug and compare",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Write original V₁ = πr²h.",
+            "Write new dimensions r'=2r, h'=2h.",
+            "Substitute into formula: V₂ = π(2r)²(2h).",
+            "Simplify to find V₂ = 8πr²h = 8V���."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T05:32:48.671Z"
+    },
+    {
+      "id": "8aba800ce3d63407",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 32,
+      "section": "Reasoning and General Intelligence",
+      "question": "In an election, 75% of eligible voters participated. Of these, 4% were inv alid votes. If a winning candidat egot 13,500 votes which was 55% of valid votes, what was the total number of eligible voterstoo the near est int eger)?",
+      "options": [
+        {
+          "label": "A",
+          "text": "30,000",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "35,050",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "34091",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "45,024",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate total valid votes by dividing winning votes (13,500) by their percentage of valid votes (55%), resulting in 24,545.45.",
+        "Determine the percentage of valid votes relative to total eligible voters: Participation is 75%, and invalid votes are 4% of participants, so valid votes are 96% of the 75% participation rate.",
+        "Calculate the ratio of valid votes to eligible voters: 0.96 * 0.75 = 0.72 (or 72%).",
+        "Divide the total number of valid votes (24,545.45) by the ratio (0.72) to find the total eligible voters.",
+        "Round the result to the nearest integer."
+      ],
+      "verifierCheck": "First, determine the percentage of valid votes relative to eligible voters: 75% participated, and of those, 4% were invalid, meaning 96% of the participants cast valid votes. Thus, valid votes represent $0.75 \\times 0.96 = 0.72$ (or 72%) of the total eligible voters. We are given that the winning candidate received 13,500 votes, which constitutes 55% of these valid votes. Therefore, the total number of valid votes is $13,500 / 0.55 \\approx 24,545.45$. Since this amount represents 72% of the eligible voters, we calculate the total eligible voters as $24,545.45 / 0.72 \\approx 34,090.9$. Rounding to the nearest integer gives 34,091. However, checking the options provided (A: 30,000; B: 35,050; C: 34091; D: 45,024), option C matches the calculated value exactly. Wait, re-reading the prompt's specific constraint 'Return STRICT JSON only' and the options list in the user prompt vs my internal calculation. Let me re-calculate carefully. Valid votes = $V$. $0.55V = 13500 \\Rightarrow V = 24545.4545...$. Total Eligible ($E$) satisfies $0.75 \\times 0.96 \\times E = V$. So $0.72E = 24545.4545... \\Rightarrow E = 34090.909...$. Rounding to the nearest integer is 34,091. This corresponds to Option C. The previous thought process in the scratchpad mistakenly aligned with A initially but corrected to C. Let me double check the math one more time. $13500 / 0.55 = 24545.45$. $24545.45 / 0.72 = 34090.9$. Nearest integer is 34091. Option C is the correct answer.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Reverse Fraction Chain",
+          "idea": "Chain valid vote fractions to find total eligible.",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Calculate valid votes: 13,500 is 55% of valid, so valid = 13500 * 100/55 = 24,545.",
+            "Calculate turnout fraction: 75% participated, 4% invalid means 96% of turnout were valid.",
+            "Total Eligible = Valid / (Turnout * 0.96) = 24545 / 0.72 ≈ 34091."
+          ]
+        },
+        {
+          "name": "Direct Algebra",
+          "idea": "Set up one equation linking eligible voters to winner's votes.",
+          "kind": "invariant",
+          "seconds": 6,
+          "steps": [
+            "Let E be eligible voters. Valid votes = 0.75 * E * 0.96.",
+            "Winner's votes = 0.55 * (Valid votes) = 13,500.",
+            "Solve: E = 13500 / (0.55 * 0.75 * 0.96) ≈ 34091."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T05:36:34.824Z"
+    },
+    {
+      "id": "c9737eff7e1640a3",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 37,
+      "section": "Reasoning and General Intelligence",
+      "question": "Which of the following is NOT a leap year?",
+      "options": [
+        {
+          "label": "A",
+          "text": "1600",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "2000",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "2100",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "2400",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the rule for leap years: divisible by 4, except end-of-century years which must be divisible by 400.",
+        "Check 1600: Divisible by 400, so it is a leap year.",
+        "Check 2000: Divisible by 400, so it is a leap year.",
+        "Check 2100: Divisible by 4 but not by 400, so it is NOT a leap year.",
+        "Check 2400: Divisible by 400, so it is a leap year.",
+        "Select option C as the non-leap year."
+      ],
+      "verifierCheck": "To determine which year is not a leap year, we apply the Gregorian calendar rules: a year is a leap year if it is divisible by 4, except for end-of-century years, which must be divisible by 400. Option A (1600) and Option B (2000) are both divisible by 400, making them leap years. Option D (2400) is also divisible by 400, so it is a leap year. Option C (2100) is divisible by 4 but not by 400 (since 2100 / 400 = 5.25), which means it fails the exception rule for century years and is therefore NOT a leap year.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Hundred Check",
+          "idea": "Divide by 400 for centuries",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Check if year is divisible by 100.",
+            "If yes, check divisibility by 400.",
+            "2100/400=5.25, so it fails. Others pass.",
+            "Final: C"
+          ]
+        },
+        {
+          "name": "Quick Modulo",
+          "idea": "Test century years only",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Identify century years (ending 00).",
+            "Years A, B, D are divisible by 400.",
+            "Year C is not. It fails leap rule.",
+            "Final: C"
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T05:43:55.006Z"
+    },
+    {
+      "id": "106958dfc56ca6d6",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 39,
+      "section": "Reasoning and General Intelligence",
+      "question": "How many squares in a 6×6 grid?",
+      "options": [
+        {
+          "label": "A",
+          "text": "55",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "91",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "78",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "65",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify grid dimensions as n=6.",
+        "Calculate number of 1x1 squares: 6*6 = 36.",
+        "Calculate number of 2x2 squares: 5*5 = 25.",
+        "Calculate number of 3x3 squares: 4*4 = 16.",
+        "Calculate number of 4x4 squares: 3*3 = 9.",
+        "Calculate number of 5x5 squares: 2*2 = 4."
+      ],
+      "verifierCheck": "To find the total number of squares in a 6×6 grid, we sum the counts of all possible square sizes (1×1 up to 6×6). For an n×n grid, the number of k×k squares is given by (n-k+1)². For a 6×6 grid: there are 36 one-by-one squares (6²), 25 two-by-two squares (5²), 16 three-by-three squares (4²), 9 four-by-four squares (3²), 4 five-by-five squares (2²), and 1 six-by-six square (1²). Summing these values: 36 + 25 + 16 + 9 + 4 + 1 = 91. This matches option B.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Sum of Squares",
+          "idea": "Use standard formula n(n+1)(2n+1)/6",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify grid size n=6.",
+            "Apply formula 6*7*13/6.",
+            "Simplify to 6*7*13/6 = 91."
+          ]
+        },
+        {
+          "name": "Count by Size",
+          "idea": "Sum squares of side lengths from 1 to 6",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Count 1x1 squares: 6*6=36.",
+            "Count 2x2 squares: 5*5=25.",
+            "Add 3x3,4x4,5x5,6x6 counts (16,9,4,1).",
+            "Sum all counts: 36+25+16+9+4+1=91."
+          ]
+        },
+        {
+          "name": "Pattern Check",
+          "idea": "Verify against known n=3 case then scale",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Recall n=3 grid has 14 squares.",
+            "Note growth pattern for higher n.",
+            "Calculate n=6 using sum of first 6 squares.",
+            "Result matches option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T05:46:17.733Z"
+    },
+    {
+      "id": "5a6bcb84ec6ed893",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 44,
+      "section": "Reasoning and General Intelligence",
+      "question": "Find the missing term: Thermometer : Temperature :: Barometer : ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Wind",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Pressure",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Humidity",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Speed",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the relationship in the first pair: A thermometer is an instrument used to measure temperature.",
+        "Apply the same relationship to the second term: A barometer is an instrument used to measure atmospheric pressure.",
+        "Select the option that corresponds to the quantity measured by a barometer, which is Pressure.",
+        "Verify that other options (Wind, Humidity, Speed) are measured by different instruments like anemometers or hygrometers.",
+        "Confirm that 'Pressure' is the correct logical completion for the analogy."
+      ],
+      "verifierCheck": "The relationship in the analogy 'Thermometer : Temperature' is that of an instrument to the physical quantity it measures; a thermometer is specifically designed to measure temperature. Applying this same logical structure to 'Barometer', we must identify the specific physical quantity that a barometer measures. A barometer is an instrument used to measure atmospheric pressure, which is essential for weather forecasting. Therefore, by direct functional equivalence, the missing term corresponding to Barometer is Pressure.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Prefix Match",
+          "idea": "link instrument name to its standard prefix",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall that baro- is a Greek prefix meaning 'weight' or 'pressure'.",
+            "Identify that the atmosphere's weight per unit area is called pressure.",
+            "Select the option corresponding to atmospheric pressure."
+          ]
+        },
+        {
+          "name": "Analogy Logic",
+          "idea": "match instrument function directly to measured quantity",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Recognize a thermometer measures thermal energy state (temperature).",
+            "Apply same logic: a barometer measures atmospheric force exerted.",
+            "Conclude the missing term is the specific physical quantity measured."
+          ]
+        },
+        {
+          "name": "Elimination Filter",
+          "idea": "remove options unrelated to static atmospheric variables",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Discard Wind and Speed as they describe motion, not static state.",
+            "Discard Humidity as it requires a hygrometer, not a barometer.",
+            "Keep Pressure as the only remaining variable measured by a barometer."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T06:01:55.004Z"
     }
   ]
 }
