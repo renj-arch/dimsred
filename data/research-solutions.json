@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-11T06:01:55.007Z",
+  "updatedAt": "2026-11-11T14:31:28.152Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -7960,6 +7960,422 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-11T06:01:55.004Z"
+    },
+    {
+      "id": "9f60c240aba596ad",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 40,
+      "section": "Reasoning and General Intelligence",
+      "question": "Find the number opposite to 2 given: View 1: Top=A, Front=2, Right=3; View 2: Top=5, Front=2, Right=6.",
+      "options": [
+        {
+          "label": "A",
+          "text": "1",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "3",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "4",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "6",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Identify common face '2' in both views.",
+        "List adjacent faces to '2': 3 (View 1), 6 (View 1), 5 (View 2).",
+        "Determine remaining numbers: 1 and 4.",
+        "Conclude opposite of 2 is either 1 or 4 based on standard dice logic where 1-4 are opposites.",
+        "Select option A as the valid answer from choices.",
+        "Verify no other option fits adjacent constraints."
+      ],
+      "verifierCheck": "To find the number opposite to 2, we analyze the two views provided. In View 1, the faces are Top=A, Front=2, Right=3. This implies that 2 is adjacent to A, 3, and consequently their opposites (Bottom and Left). In View 2, the faces are Top=5, Front=2, Right=6. Here, 2 is again Front, but now adjacent to 5 (Top) and 6 (Right). Since a cube face has exactly four adjacent faces and one opposite face, the set of numbers adjacent to 2 must be {A, 3, 5, 6}. The only number from the standard set of six faces (1 through 6) that is not listed as an adjacent neighbor in either view is 1. Therefore, 1 must be the face opposite to 2.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Shared Edge Rule",
+          "idea": "use shared faces to link opposites",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Identify View 1: Top=5 is opposite Bottom.",
+            "Identify View 2: Top=4 is opposite Bottom (since Front=2, Right=6 implies Top must be 4 for consistency).",
+            "Since both views share Front=2 and Right faces differ, deduce 3 is adjacent to 2.",
+            "The only number not adjacent to 2 in the cube is 1.",
+            "Verify View 1 adjacency: A(5), 2, 3 are mutually adjacent.",
+            "Conclusion: Opposite of 2 is 1."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T14:09:47.020Z"
+    },
+    {
+      "id": "52cea63be753c5cb",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 45,
+      "section": "Reasoning and General Intelligence",
+      "question": "Rs. 4,000 is invested at 5% for year 1 and 6% for year 2, compounded annually. Find the total amount after 2 years.",
+      "options": [
+        {
+          "label": "A",
+          "text": "Rs. 4,452",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "Rs. 4,400",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Rs. 4,500",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Rs. 4,550",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate amount after year 1: Rs. 4000 * (1 + 0.05) = Rs. 4200.",
+        "Calculate amount after year 2: Rs. 4200 * (1 + 0.06) = Rs. 4452."
+      ],
+      "verifierCheck": "To find the total amount after 2 years with annual compounding, we calculate the interest year by year. Starting with Rs. 4,000 at 5% for the first year: Amount = 4000 * (1 + 0.05) = 4000 * 1.05 = Rs. 4,200. This new amount becomes the principal for the second year at 6%: Amount = 4200 * (1 + 0.06) = 4200 * 1.06 = Rs. 4,452. Thus, the total amount after 2 years is Rs. 4,452, which corresponds to option A.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Sequential Compound",
+          "idea": "Apply rates step-by-step",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Start with Rs. 4000 and add 5% interest: 4000 * 1.05 = 4200.",
+            "Take new balance 4200 and add 6% interest: 4200 * 1.06 = 4452.",
+            "Match result to option A which is Rs. 4452."
+          ]
+        },
+        {
+          "name": "Decimal Multiplier",
+          "idea": "Multiply by factors directly",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Convert percentages to decimals: 5% becomes 1.05, 6% becomes 1.06.",
+            "Multiply principal 4000 by both factors: 4000 * 1.05 * 1.06.",
+            "Calculate product: 4200 * 1.06 equals exactly 4452."
+          ]
+        },
+        {
+          "name": "Two-Step Arithmetic",
+          "idea": "Add interest then re-calculate",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Year 1: Calculate 5% of 4000 (which is 200) and add to principal.",
+            "Year 2: Calculate 6% of the new total (4200) which is 252 and add.",
+            "Sum original principal and total interest: 4000 + 200 + 252 = 4452."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T14:19:44.127Z"
+    },
+    {
+      "id": "f16191f516a213d9",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 46,
+      "section": "Reasoning and General Intelligence",
+      "question": "A crick eter&#39;s average scor eover a series of mat ches is 42. If she scor es 138 runs in the next mat ch, her av erage incr eases to 46. How many mat ches did she play befor ethis?",
+      "options": [
+        {
+          "label": "A",
+          "text": "23",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "22",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "24",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "26",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Let x be the number of matches played before the current match.",
+        "The total runs scored in x matches is 42x based on the initial average.",
+        "After scoring 138 runs, the new total runs become 42x + 138 over (x + 1) matches.",
+        "The new average is given as 46, so the equation is (42x + 138) / (x + 1) = 46.",
+        "Solving the equation: 42x + 138 = 46(x + 1), which simplifies to 42x + 138 = 46x + 46.",
+        "Rearranging terms gives 4x = 92, resulting in x = 23."
+      ],
+      "verifierCheck": "Let x be the number of matches played before the current match. The total runs scored in those x matches is 42x. After scoring 138 runs in the next match, the total runs become 42x + 138, and the total number of matches becomes x + 1. The new average is given as 46, so we set up the equation: (42x + 138) / (x + 1) = 46. Multiplying both sides by (x + 1) gives 42x + 138 = 46(x + 1), which simplifies to 42x + 138 = 46x + 46. Rearranging terms yields 46 - 138 = 46x - 42x, or -92 = 4x. Solving for x gives x = -23, which is impossible since the number of matches cannot be negative. Re-evaluating the problem statement, if the average increases to 46 after scoring 138, the calculation implies a contradiction with the provided options under standard interpretation. However, checking the arithmetic again: 42x + 138 = 46x + 46 -> 138 - 46 = 46x - 42x -> 92 = 4x -> x = 23. The error in the previous step was sign handling; 42x + 138 = 46x + 46 leads to 138 - 46 = 46x - 42x, so 92 = 4x, thus x = 23. This matches Option A.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Rounding Check",
+          "idea": "Estimate then verify quickly",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Guess N=20. Total runs approx 840. Add 138 = 978.",
+            "New average with 21 matches would be ~46.5 (too high).",
+            "Try slightly higher N to lower average to 46.",
+            "Test N=23: 23*42=966. Add 138=1104.",
+            "Divide by 24 matches: 1104/24 = 46 exactly."
+          ]
+        },
+        {
+          "name": "Difference Equation",
+          "idea": "Use average difference to find count",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Calculate total run increase: (46-42)=4 runs per match.",
+            "Total extra runs needed = 138 - (42*N).",
+            "Set equation: 138 - 42N = 4N + 42.",
+            "Solve: 96N = 138? No. Correct logic: New Average * (N+1) = Old Total + New Score.",
+            "Equation: 46(N+1) = 42N + 138 => 46N + 46 = 42N + 138.",
+            "Simplify: 4N = 92 => N = 23."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T14:22:26.563Z"
+    },
+    {
+      "id": "987b137c11a0075f",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 47,
+      "section": "Reasoning and General Intelligence",
+      "question": "In a corporate hierarchy where rank is determined by strict rules: (1) No employee of 'Grade X' can supervise an employee of 'Grade Y' unless they are in the same department. (2) An employee of 'Grade X' and an employee of 'Grade Y' are never in the same department if they work on different projects. (3) Supervision implies a direct project linkage. If it is known that Employee A supervises Employee B, and both have ranks corresponding to Grade X and Grade Y respectively, which of the following conclusions about their working conditions must be true?",
+      "options": [
+        {
+          "label": "A",
+          "text": "They are in the same department and work on the same project.",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "They are in different departments but work on the same project.",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "They are in the same department and work on different projects.",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "They are in different departments and work on different projects.",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Premise (1) states supervision between Grade X and Grade Y requires them to be in the same department.",
+        "Premise (3) states supervision implies a direct project linkage, meaning they must work on the same project.",
+        "Combining these two necessary conditions for the specific scenario where A supervises B yields that they share both the department and the project.",
+        "Therefore, option A is the only conclusion that must be true based on the strict rules provided."
+      ],
+      "verifierCheck": "Given that Employee A (Grade X) supervises Employee B (Grade Y), Rule (1) mandates they must be in the same department because cross-departmental supervision is prohibited regardless of project status. Furthermore, Rule (3) states that supervision implies a direct project linkage; combined with Rule (2), which asserts that employees on different projects are never in the same department, it logically follows that if they are in the same department (as established by Rule 1), they cannot be working on different projects. Therefore, both conditions—being in the same department and working on the same project—must be true.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Violation Check",
+          "idea": "Test options against rules",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Step 1: Test Option B (different depts).",
+            "Step 2: Rule (2) forces different projects.",
+            "Step 3: Rule (3) forbids supervision on different projects.",
+            "Step 4: Option B invalid. Check other options similarly.",
+            "Step 5: Only Option A satisfies all rules."
+          ]
+        },
+        {
+          "name": "Contrapositive Chain",
+          "idea": "Chain implications directly",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Step 1: Assume different departments.",
+            "Step 2: Rule (2) says different projects if different depts.",
+            "Step 3: Rule (3) says supervision needs same project.",
+            "Step 4: Conflict means assumption false; must be same dept and project.",
+            "Step 5: Conclusion matches Option A."
+          ]
+        },
+        {
+          "name": "Necessary Condition Scan",
+          "idea": "Find necessary condition for supervision",
+          "kind": "mnemonic",
+          "seconds": 4,
+          "steps": [
+            "Step 1: Identify 'Same Project' is required by Rule (3).",
+            "Step 2: Identify 'Same Dept' is required if Ranks differ by Rule (1).",
+            "Step 3: Combine requirements: Same Dept AND Same Project.",
+            "Step 4: Match combined requirement to Option A.",
+            "Step 5: Select Option A as the only valid conclusion."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T14:24:12.781Z"
+    },
+    {
+      "id": "11e1fc47ed8a783e",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 49,
+      "section": "Reasoning and General Intelligence",
+      "question": "A sum amounts to Rs. 15,400 in 1 year and Rs. 16,170 in 2 years at CI. Find the rate.",
+      "options": [
+        {
+          "label": "A",
+          "text": "3%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "4%",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "5%",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "6%",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Calculate interest for year 1: 15400 - P = I_1",
+        "Calculate interest for year 2: 16170 - 15400 = 770",
+        "Note that in CI, interest on year 2 includes interest on year 1's interest",
+        "Difference between Year 2 and Year 1 interest is Interest on Interest",
+        "Interest on Interest = 770 - (P*r) = P*r^2",
+        "Alternatively, use formula A = P(1+r/100)^n for n=2"
+      ],
+      "verifierCheck": "The interest earned in the second year is Rs. 16,170 - Rs. 15,400 = Rs. 770. Under compound interest, this amount is calculated on the accumulated principal of Rs. 15,400 for one year. Using the formula Rate = (Interest / Amount after Year 1) * 100, we get (770 / 15,400) * 100 = 5%. Thus, the rate is 5%.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Difference Ratio",
+          "idea": "Compare amount growth to rate",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Find difference: 16170 - 15400 = 770.",
+            "Note this equals interest for Year 2 only.",
+            "Divide by previous year's amount: 770/15400.",
+            "Simplify fraction: 770/15400 = 1/20 = 5%."
+          ]
+        },
+        {
+          "name": "Simple Interest Approx",
+          "idea": "Estimate rate via average growth",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Calculate total interest over 2 years: 670.",
+            "Assume simple interest approximation for quick check.",
+            "Rate ≈ (Total Interest / Principal) / Time.",
+            "(670/15400)/2 ≈ 4.3% → Closest integer is 5%."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-11T14:31:28.149Z"
     }
   ]
 }
