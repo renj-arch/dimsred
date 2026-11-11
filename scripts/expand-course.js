@@ -49,7 +49,7 @@ var THIN = parseInt(process.env.EXPAND_THIN_THRESHOLD || '2500', 10);
 // Depth lane: append NEW advanced sections to lessons that are already full,
 // instead of only fixing empty/stub ones. Off unless the workflow asks for it.
 var DEEPEN = /^(1|true|yes)$/i.test(process.env.EXPAND_DEEPEN || '');
-var DEPTH_PASSES = Math.max(1, parseInt(process.env.EXPAND_DEPTH_PASSES || '3', 10));
+var DEPTH_PASSES = Math.max(1, parseInt(process.env.EXPAND_DEPTH_PASSES || '5', 10));
 var DEPTH_FILE = path.join(__dirname, 'course-depth.json');
 var ADDONS_FILE = path.join(__dirname, 'course-addons.json');
 // Full rewrite mode: rewrites ALL lessons (including hand-built ones) with
@@ -241,6 +241,10 @@ function collectDeepen() {
         // No source + auto filler is a fill job, not a depth job.
         var allFiller = existing.every(function (f) { return isFillerPage(path.join(ROOT, f)); });
         if (!content && allFiller) return;
+        // A thin/stub lesson belongs to the enrich lane, not depth. It used to
+        // be picked up by both, so the enrich rewrite and an "advanced sections"
+        // append raced over the same page.
+        if (content && content.length < THIN) return;
         var biggest = existing.reduce(function (m, f) { return Math.max(m, pageSize(path.join(ROOT, f))); }, 0);
         // A generated page is template + content; a page several times larger
         // than its source carries hand-written material the generator cannot
@@ -376,7 +380,7 @@ function collectHandPages() {
       slug: slug,
       role: 'deepen-page',
       target: target,
-      oldLen: 0,
+      oldLen: pageSize(path.join(ROOT, rel)),
       pageSize: pageSize(path.join(ROOT, rel)),
       passes: passes,
       lastAt: String(st.at || ''),
@@ -638,17 +642,18 @@ function deepenPrompt(gap) {
     'End of the existing lesson for tone and continuity:',
     digest || '(no text available)',
     '',
-    'Write 3 NEW advanced sections that a serious aspirant needs but the list above does not cover (at least 2 if a third would repeat an existing heading):',
-    '- go deeper than the basics: mechanisms, exceptions, comparisons, landmark cases/data where textbook-standard, applied scenarios, and how the examiner twists the concept',
+    'Write 4-5 NEW advanced sections that a serious aspirant needs but the list above does not cover (at least 3 if a later one would repeat an existing heading):',
+    '- go deeper than the basics: mechanisms, exceptions, comparisons, landmark cases/data where textbook-standard, applied scenarios, chronology, cause and effect, and how the examiner twists the concept',
     '- each section starts with an <h3> title that is clearly different from every existing heading',
+    '- each section must be substantial: 400-700 words of specific, correct detail (dates, names, events, statutes, judgments, movements), not generic statements',
     '- include one <div class="example-box"> with div.ex-title (technique), div.ex-text (question), div.ex-soln (full worked answer)',
     '- include one <div class="tip-box"> with div.tip-title and div.tip-text for exam-day strategy',
-    '- finish with a "Common Traps" <ul> specific to these advanced sections',
+    '- finish with a "Common Traps" <ul> specific to these advanced sections (5-7 traps)',
     '',
     'Format: HTML fragment only, tags <h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span> <sup> <sub> <table> <caption> <thead> <tbody> <tr> <th> <td>.',
     'div classes allowed: example-box/ex-title/ex-text/ex-soln and tip-box/tip-title/tip-text. No other attributes, no links, images, scripts or markdown.',
     'Write mathematics in plain text with Unicode symbols (×, ÷, ≤, ≥, π, √). Do not use LaTeX or $...$ delimiters. Do not use emojis.',
-    '700-1000 words of visible text. Be specific and correct; never invent statistics or sources; classic textbook facts only.',
+    '2000-3500 words of visible text across all sections. Be specific and correct; never invent statistics or sources; classic textbook facts only.',
     '',
     'Do not append a practice-question JSON or a ===QUESTIONS=== marker; practice questions are generated in a separate pass.'
   ];
@@ -1051,7 +1056,7 @@ function generateOne(gap, timeoutMs) {
   else if (gap.role === 'deepen-page') source = pageSource(gap);
 
   function attempt(extra, n) {
-    return callModel(prompt + (extra || ''), isDepth ? 4200 : 5600, timeoutMs).then(function (raw) {
+    return callModel(prompt + (extra || ''), isDepth ? 8000 : 5600, timeoutMs).then(function (raw) {
       var html = raw;
       var qi = raw.indexOf('===QUESTIONS===');
       if (qi !== -1) html = raw.slice(0, qi);
