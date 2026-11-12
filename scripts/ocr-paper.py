@@ -94,13 +94,18 @@ def process(entry, only=None):
     pid = entry.get('id')
     if only and pid not in only:
         return False
-    qp_url, key_url = entry.get('qpUrl'), entry.get('keyUrl')
-    if not qp_url or not key_url:
+    # QP-only entries (agent-solve lane, e.g. exams with no official key)
+    # still need their question paper OCR'd.
+    docs = [('qp', entry.get('qpUrl'))]
+    if entry.get('keyUrl'):
+        docs.append(('key', entry['keyUrl']))
+    docs = [(k, u) for k, u in docs if u]
+    if not docs:
         return False
     changed = False
     os.makedirs(CACHE, exist_ok=True)
     os.makedirs(TMP, exist_ok=True)
-    for kind, url in (('qp', qp_url), ('key', key_url)):
+    for kind, url in docs:
         cp = cache_path(pid, kind)
         if os.path.exists(cp):
             continue
