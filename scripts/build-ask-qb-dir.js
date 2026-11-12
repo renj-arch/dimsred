@@ -31,9 +31,23 @@ var MANIFEST = path.join(QBDIR, 'manifest.json');
 var DIR_JSON = path.join(QBDIR, 'dir.json');
 var ENTITIES = path.join(QBDIR, 'entities.tsv');
 
+// A manifest with one category is the signature of the 2026-11-07 stub
+// rebuild. Writing entities.tsv/dir.json from it overwrites the full routing
+// table with a handful of names, and every Ask answer then claims the corpus
+// is nearly empty. Refuse unless --force says this is a deliberate partial
+// build.
+var MIN_MANIFEST_CATEGORIES = 100;
+
 function main() {
   var man = JSON.parse(fs.readFileSync(MANIFEST, 'utf8'));
-  var cats = man.categories;
+  var cats = man.categories || [];
+  if (cats.length < MIN_MANIFEST_CATEGORIES && process.argv.indexOf('--force') === -1) {
+    process.stderr.write('ask-qb-dir: REFUSING to build from a ' + cats.length +
+      '-category manifest (minimum ' + MIN_MANIFEST_CATEGORIES + ')\n');
+    process.stderr.write('  data/ask-qb/manifest.json looks like the 2026-11-07 stub.\n');
+    process.stderr.write('  Rebuild the shards first, or pass --force for a partial corpus.\n');
+    process.exit(1);
+  }
 
   // De-duplicate on the normalised name: the same entity name occurs in several
   // categories and a few occur twice in one shard, and repeats only inflate the
