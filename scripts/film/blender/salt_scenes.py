@@ -826,17 +826,15 @@ def main() -> int:
 if __name__ == "__main__":
     raise SystemExit(main())
 
-# --- generic compiler exports (added 2026-10-30) ---
-def reset():
-    pass
-def camera(loc, target, lens=35, fstop=4.0, focus=None):
-    pass
+# --- generic compiler exports ---
+# This block used to redefine reset(), camera(), limb() and render() as no-ops
+# or an exception-swallowing wrapper. Python runs top to bottom, so these
+# SHADOWED the real implementations defined above: camera() built nothing, the
+# scene had no camera, and render() caught the resulting error, discarded it and
+# returned None. Blender then exited 0 without writing the plate, so the
+# workflow could only report "Blender did not write ..." with no traceback.
+# reset()/camera()/render() above are the real ones; only `limb` is genuinely
+# absent here, and that one delegates to the jallianwala implementation.
 def limb(name, start, end, radius=0.12, mat=None, vertices=8):
-    import bpy
-    pass
-def render(samples, width, height, out):
-    try:
-        from jallianwala_scenes import render as _r
-        return _r(samples, width, height, out)
-    except Exception:
-        pass
+    from jallianwala_scenes import limb as _l
+    return _l(name, start, end, radius, mat, vertices)
