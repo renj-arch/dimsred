@@ -137,8 +137,23 @@ var rows = [
     ['Cat 79'],
     [{ source: 'Wiki', pubDate: '2026-08-26' }, { source: 'Wiki', pubDate: '2026-08-26' }]]
 ];
-var entityDir = new qb.EntityDir().load(
-  fs.readFileSync(path.join(ROOT, 'data/ask-qb/entities.tsv'), 'utf8'));
+var entitiesPath = path.join(ROOT, 'data/ask-qb/entities.tsv');
+if (!fs.existsSync(entitiesPath)) {
+  console.error('check-ask-mains: ' + entitiesPath + ' is missing.');
+  console.error('  The composer tests resolve real entity names, so they cannot run');
+  console.error('  without the table. Rebuild it with scripts/build-ask-qb.js.');
+  process.exit(1);
+}
+var entityTable = fs.readFileSync(entitiesPath, 'utf8');
+var entityLines = entityTable.split('\n').filter(function (l) { return l.trim(); }).length;
+if (entityLines < 1000) {
+  console.error('check-ask-mains: entities.tsv holds only ' + entityLines + ' entities.');
+  console.error('  That is the 2026-11-07 stub signature, not a corpus. Refusing to');
+  console.error('  report composer failures against a table that cannot resolve names.');
+  console.error('  Rebuild it with scripts/build-ask-qb.js.');
+  process.exit(1);
+}
+var entityDir = new qb.EntityDir().load(entityTable);
 var outline = [
   ['1. Threats', 'piracy', []],
   ['2. Islands', 'Andaman and Nicobar Islands', []],

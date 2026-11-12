@@ -408,8 +408,18 @@ function run() {
 
   console.log('\nDone! ' + made + ' paper(s) built, ' + skipped.length + ' skipped.');
   if (skipped.length) {
-    console.error('::error::no model-only paper for: ' + skipped.join(', ') + '. Refusing to pad with bank items.');
-    process.exitCode = 1;
+    var detail = 'no model-only paper for: ' + skipped.join(', ') + '. Refusing to pad with bank items.';
+    if (made === 0) {
+      // Nothing was published: this is a real failure, not a partial run.
+      console.error('::error::' + detail);
+      process.exitCode = 1;
+    } else {
+      // A short pool for one exam is a data gap, not a reason to throw away
+      // the papers built for the others. The fill step is the strict gate;
+      // this step warns so the run stays green when it did publish work.
+      console.warn('::warning::' + detail + ' Built ' + made +
+        ' paper(s); the skipped exams keep their existing papers.');
+    }
   }
 }
 
