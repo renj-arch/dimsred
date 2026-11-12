@@ -57,7 +57,7 @@ def clean(s):
     return s
 
 
-def parse_qp(pdf_path):
+def qp_pages_from_pdf(pdf_path):
     from pypdf import PdfReader
     reader = PdfReader(pdf_path)
     pages = []  # (text, has_images)
@@ -71,6 +71,29 @@ def parse_qp(pdf_path):
         except Exception:
             has_img = False
         pages.append((t, has_img))
+    return pages
+
+
+def ocr_cache_path(pid, kind):
+    return os.path.join(ROOT, 'data', 'ocr-cache', '%s-%s.json' % (pid, kind))
+
+
+def qp_pages_from_ocr(pid):
+    """OCR'd page texts written by scripts/ocr-paper.py for scanned PDFs.
+    Every page is a scan image, so has_img is always True — the
+    image-dependence gate stays conservative."""
+    path = ocr_cache_path(pid, 'qp')
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, encoding='utf-8') as f:
+            data = json.load(f)
+        return [(p.get('text') or '', True) for p in data.get('pages', [])]
+    except Exception:
+        return None
+
+
+def parse_qp_pages(pages):
     # English pages only.
     eng = [(t, img) for (t, img) in pages if t and eng_ratio(t) >= 0.6]
     if not eng:
@@ -238,10 +261,19 @@ def parse_qp(pdf_path):
     return {'set': booklet_set, 'questions': kept}, None
 
 
-def parse_key(pdf_path):
-    from pypdf import PdfReader
-    reader = PdfReader(pdf_path)
-    text = '\n'.join([(p.extract_text() or '') for p in reader.pages])
+def parse_qp(pdf_path, pid=None):
+    """Parse a QP PDF; on 'no-english-pages' (scanned PDF) fall back to the
+    OCR cache written by scripts/ocr-paper.py. pid selects the cache file."""
+    qp, err = parse_qp_pages(qp_pages_from_pdf(pdf_path))
+    if qp is None and err == 'no-english-pages' and pid:
+        pages = qp_pages_from_ocr(pid)
+        if pages:
+            log('  %s: falling back to OCR cache' % pid)
+            return parse_qp_pages(pages)
+    return qp, err
+
+
+def parse_key_text(text):
     # Per-series sections: "Series A" ... tables of Q.No./Key pairs.
     sections = re.split(r'Series\s+([A-D])\b', text, flags=re.I)
     # sections[0] = preamble, then (letter, body) pairs.
@@ -272,6 +304,36 @@ def parse_key(pdf_path):
     if not tables:
         return None, 'no-key-table'
     return tables, None
+
+
+def pdf_text(pdf_path):
+    from pypdf import PdfReader
+    reader = PdfReader(pdf_path)
+    return '\n'.join([(p.extract_text() or '') for p in reader.pages])
+
+
+def ocr_key_text(pid):
+    path = ocr_cache_path(pid, 'key')
+    if not os.path.exists(path):
+        return None
+    try:
+        with open(path, encoding='utf-8') as f:
+            data = json.load(f)
+        return '\n'.join((p.get('text') or '') for p in data.get('pages', []))
+    except Exception:
+        return None
+
+
+def parse_key(pdf_path, pid=None):
+    """Parse a key PDF; on 'no-key-table' (scanned PDF) fall back to the OCR
+    cache written by scripts/ocr-paper.py."""
+    keys, err = parse_key_text(pdf_text(pdf_path))
+    if keys is None and pid:
+        ocr = ocr_key_text(pid)
+        if ocr:
+            log('  %s: falling back to OCR cache for key' % pid)
+            return parse_key_text(ocr)
+    return keys, err
 
 
 def word_overlap(a, b):
@@ -308,14 +370,14 @@ def main():
         except Exception as e:
             log('%s download failed: %s' % (pid, str(e)[:120]))
             continue
-        qp, qerr = parse_qp(qp_path)
+        qp, qerr = parse_qp(qp_path, pid)
         if qerr:
             log('%s QP parse failed: %s' % (pid, qerr))
             entry['status'] = 'qp-failed'
             entry['note'] = qerr
             changed = True
             continue
-        keys, kerr = parse_key(key_path)
+        keys, kerr = parse_key(key_path, pid)
         if kerr:
             log('%s key parse failed: %s' % (pid, kerr))
             entry['status'] = 'key-failed'
