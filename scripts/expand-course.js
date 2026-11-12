@@ -344,7 +344,9 @@ function collectDeepen() {
 // to course-addons.json and is injected at deploy time. Hubs have no
 // .lesson-body wrapper, so their entries target the document body instead.
 var HAND_HUBS = [
-  { file: 'papers.html', subject: 'Exam Papers' },
+  // papers.html is deliberately absent: it is an exam archive of real
+  // question papers, not a lesson. Model-written "advanced sections" there
+  // invented exam technique questions and leaked reasoning into the page.
   { file: 'physics.html', subject: 'Physics' },
   { file: 'chemistry.html', subject: 'Chemistry' },
   { file: 'math.html', subject: 'Mathematics' }
@@ -940,10 +942,19 @@ function punctuationDensity(text) {
   return ((String(text).match(/[:;]/g) || []).length / words) * 100;
 }
 
+// The 9B model occasionally leaks its scratchpad into published prose:
+// "But wait, Article 270 was amended? Actually, the correct trap is...",
+// "The mechanism again.", "let's re-evaluate the solution logic". Those are
+// not lesson content -- they are the model thinking out loud, and they reached
+// papers.html as a 73KB "Examiner's Mindset" addon. Reject the chunk rather
+// than publish the leak; the depth lane retries with the same gates.
+var LEAK_RE = /\b(but wait|wait[—–-]|let'?s (assume|re-?evaluate|reconsider|refine|rephrase|construct|verify|check|think|say|stick)|let me (re-?)?(check|verify|think|consider|reconsider)|i need to|on second thought|the mechanism again|revised solution|solution analysis|for the purpose of this|hmm+[,!.])\b/i;
+
 function validateHtml(html, opts) {
   opts = opts || {};
   var minH3 = opts.minH3 || 3;
   if (!html || html.length < 2500) return 'too short (' + (html ? html.length : 0) + ' chars)';
+  if (LEAK_RE.test(html)) return 'reasoning leak in prose';
   if (html.length > 60000) return 'too long (' + html.length + ' chars)';
   // Tag-aware checks: a text line such as "one = 1" is not an event handler.
   if (/<(script|style|iframe|img|a|object|embed|form|input|button|link|meta|base)\b/i.test(html)) return 'disallowed markup';
@@ -1356,7 +1367,21 @@ async function main() {
       } else if (gap.role === 'deepen-page') {
         // Hand-built page: keep the addendum out of the generator's reach.
         var entry = addons.keys[gap.key] || {};
-        entry.html = String(entry.html || '').trim() + (entry.html ? '\n' : '') + res.html;
+        var priorHtml = String(entry.html || '');
+        // Repetition guard: the prompt says "do NOT repeat these sections"
+        // and the model repeats them anyway -- papers.html accumulated the
+        // same "Examiner's Mindset"-style sections across 7 passes. When most
+        // of the new chunk's headings already exist in the addon, the pass
+        // added nothing; drop it instead of stacking duplicates.
+        var newHeads = headingsIn(res.html);
+        var oldHeads = {};
+        headingsIn(priorHtml).forEach(function (t) { oldHeads[t.toLowerCase()] = 1; });
+        var dupHeads = newHeads.filter(function (t) { return oldHeads[t.toLowerCase()]; }).length;
+        if (newHeads.length >= 3 && dupHeads / newHeads.length >= 0.6) {
+          console.log('  SKIP ' + gap.key + ': ' + dupHeads + '/' + newHeads.length + ' headings already in the addon (repetitive pass)');
+          continue;
+        }
+        entry.html = priorHtml.trim() + (priorHtml.trim() ? '\n' : '') + res.html;
         entry.passes = (parseInt(entry.passes || 0, 10) || 0) + 1;
         entry.at = new Date().toISOString();
         entry.title = gap.lesson.title;
