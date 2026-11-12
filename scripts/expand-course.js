@@ -1025,9 +1025,13 @@ function normalizeQuestions(arr) {
     for (var i = 0; i < 4; i++) if (!opts[i] || opts[i].length > 200) return;
     // Two identical options make the question a coin flip — the model's
     // "accomodation"/"accomodation" defect. Reject the whole question.
+    // Only case, whitespace and dash style are normalised: "(x-3)", "x<2"
+    // and "x>2" must stay distinct from their lookalikes.
     var seenOpt = {};
     for (var oi = 0; oi < 4; oi++) {
-      var on = opts[oi].toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+      var on = opts[oi].toLowerCase()
+        .replace(/−|–|—/g, '-')
+        .replace(/\s+/g, '');
       if (seenOpt[on]) return;
       seenOpt[on] = 1;
     }

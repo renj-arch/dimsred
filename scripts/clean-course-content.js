@@ -255,7 +255,12 @@ if (!CHECK && dataHits.n) writeJson(dataFile, cdataClean);
 // stay in sync without a page regeneration (a regen could revert hand-built
 // sections; the embedded array is the only stale part).
 function normOptText(o) {
-  return String(o && o.t != null ? o.t : o).toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim();
+  // Only case, whitespace and dash style are normalised: "(x-3)", "x<2"
+  // and "x>2" must stay distinct from their lookalikes.
+  return String(o && o.t != null ? o.t : o)
+    .toLowerCase()
+    .replace(/−|–|—/g, '-')
+    .replace(/\s+/g, '');
 }
 function dupOptions(q) {
   var seen = {};
