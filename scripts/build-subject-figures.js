@@ -22,10 +22,19 @@ var fs = require('fs');
 var path = require('path');
 var FAS = require('./lib/figure-auto-score.js');
 var RESOLVER = require('./lib/figure-resolve.js');
+var SVGGEN = require('./lib/svg-figure-gen.js');
 
 var QUESTIONS_DIR = path.join(__dirname, '..', 'data', 'questions');
 var CACHE_FILE = path.join(__dirname, '..', 'data', 'subject-figures-cache.json');
 var AUTO_FILE = path.join(__dirname, '..', 'data', 'figure-files-auto.json');
+// Hand-authored SVG specs for topics Commons cannot answer
+// (data/figure-svg-specs.json). Rendered inline by svg-figure-gen.js — a
+// deterministic diagram, badged GENERATED, never confused with a photo.
+var SPECS_FILE = path.join(__dirname, '..', 'data', 'figure-svg-specs.json');
+var SVG_SPECS = {};
+try {
+  if (fs.existsSync(SPECS_FILE)) SVG_SPECS = JSON.parse(fs.readFileSync(SPECS_FILE, 'utf8'));
+} catch (e) { SVG_SPECS = {}; }
 // Hand-pick-only topics + banned files (data/figure-files-excluded.json). A
 // topic listed here refuses auto/cache/live picks; a hand pick still wins. A
 // gap is the honest outcome, per the same rule as AUTO_MIN_CONF below.
@@ -304,20 +313,23 @@ function marksHtml(marks) {
 }
 function pageFor(f) {
   var resolved = f.source === 'auto' || f.source === 'live';
+  var generated = f.source === 'generated';
   // Badge colours live here rather than only in CSS because each variant needs
   // a different accent. They are rgba fills rather than solid light hex so the
   // dark card shows through; the @media print block in CSS reasserts solid
   // light values, since these packs are print-ready A4.
   var badge = f.hand
     ? '<div class="auto-badge" style="background:rgba(52,211,153,.12);border-color:var(--emerald);color:var(--emerald)">HAND-PICKED \u00b7 file chosen &amp; checked for this topic \u00b7 still verify labels</div>'
-    : resolved
-      ? '<div class="auto-badge" style="background:rgba(34,211,238,.12);border-color:var(--cyan);color:var(--cyan)">AUTO-RESOLVED \u00b7 matched from the topic\u2019s own Wikipedia article / Wikimedia structured data \u00b7 check labels</div>'
+    : generated
+      ? '<div class="auto-badge" style="background:rgba(167,139,250,.12);border-color:#a78bfa;color:#a78bfa">GENERATED DIAGRAM · hand-authored spec rendered by svg-figure-gen.js · verify labels</div>'
+      : resolved
+        ? '<div class="auto-badge" style="background:rgba(34,211,238,.12);border-color:var(--cyan);color:var(--cyan)">AUTO-RESOLVED \u00b7 matched from the topic\u2019s own Wikipedia article / Wikimedia structured data \u00b7 check labels</div>'
       : '<div class="auto-badge">AUTO-SUGGESTED \u00b7 verify image &amp; labels before exam use</div>';
   return '<section class="page">' +
     '<div class="num">' + esc(f.sec) + '</div>' +
     '<div class="fig-title">' + esc(f.title) + '</div>' +
     badge +
-    '<div class="fig-img"><img src="' + f.url + '" alt="' + esc(f.title) + '"></div>' +
+    '<div class="fig-img">' + (f.svg ? f.svg : '<img src="' + f.url + '" alt="' + esc(f.title) + '">') + '</div>' +
     marksHtml(f.marks) +
     '<div class="fig-src">' + esc(f.src) + '</div>' +
     '</section>';
@@ -325,16 +337,19 @@ function pageFor(f) {
 function subjectPage(subj) {
   var handN = subj.figs.filter(function (x) { return x.hand; }).length;
   var resN = subj.figs.filter(function (x) { return x.source === 'auto' || x.source === 'live'; }).length;
-  var legacyN = subj.figs.length - handN - resN;
+  var genN = subj.figs.filter(function (x) { return x.source === 'generated'; }).length;
+  var legacyN = subj.figs.length - handN - resN - genN;
   var pages = subj.figs.map(function (x) {
     return {
-      url: C(x.file),
+      url: x.file ? C(x.file) : '',
+      svg: x.svg || null,
       sec: 'GS Figures \u00b7 ' + subj.name,
       title: x.name + ' \u2014 Suggested Figure',
       hand: x.hand,
       source: x.source,
       marks: ['sketch / label the key parts of this feature', 'note its location, dates or structure as relevant to the subject', 'verify the image really is the feature'],
       src: (x.hand ? 'Source: Wikimedia Commons (hand-picked file)'
+        : x.source === 'generated' ? 'Source: generated diagram — hand-authored spec (data/figure-svg-specs.json)'
         : x.source && x.source !== 'legacy' ? 'Source: auto-resolved from Wikimedia Commons (structured match) \u00b7 CC BY-SA'
         : 'Source: auto-suggested from Wikimedia Commons \u00b7 CC BY-SA') + ' \u2014 verify before exam',
     };
@@ -345,6 +360,7 @@ function subjectPage(subj) {
       esc(subj.unmatched.slice(0, 20).join(' \u00b7 ')) + (subj.unmatched.length > 20 ? ' \u00b7 +' + (subj.unmatched.length - 20) + ' more' : '') + '</div>';
   }
   var counts = subj.figs.length + ' figures (' + handN + ' hand-picked, ' + resN + ' auto-resolved' +
+    (genN ? ', ' + genN + ' generated' : '') +
     (legacyN ? ', ' + legacyN + ' auto-suggested' : '') + ')';
   return '<!DOCTYPE html><html lang="en"><head><meta charset="utf-8">' +
     '<meta name="viewport" content="width=device-width,initial-scale=1">' +
@@ -369,9 +385,11 @@ function indexPage(all) {
   var items = all.map(function (s) {
     var handN = s.figs.filter(function (x) { return x.hand; }).length;
     var resN = s.figs.filter(function (x) { return x.source === 'auto' || x.source === 'live'; }).length;
-    var otherN = s.figs.length - handN - resN;
+    var genN = s.figs.filter(function (x) { return x.source === 'generated'; }).length;
+    var otherN = s.figs.length - handN - resN - genN;
     var prov = [handN ? handN + ' hand-picked' : '',
                 resN ? resN + ' auto-resolved' : '',
+                genN ? genN + ' generated' : '',
                 otherN ? otherN + ' auto-suggested' : ''].filter(Boolean).join(' \u00b7 ');
     if (!s.figs.length) prov = 'no verified figures yet';
     return '<li><a href="' + esc(s.slug) + '-figures.html">' + esc(s.name) +
@@ -562,6 +580,18 @@ async function main() {
         AUTO_EXCLUDE_IMG[fname] = 1;
         figs.push({ name: tname, file: fname, hand: !!hand, source: source || 'cache' });
       }
+    }
+    // Generated SVG fallback: hand-authored specs (data/figure-svg-specs.json)
+    // cover topics Commons cannot answer. Rendered deterministically and
+    // badged GENERATED — never confused with a photograph or a Commons pick.
+    var specSubj = SVG_SPECS[slug(subjects[sname].display || sname)] || {};
+    if (Object.keys(specSubj).length) {
+      unmatched = unmatched.filter(function (tname) {
+        var g = SVGGEN.render(specSubj[tname], tname);
+        if (!g) return true;
+        figs.push({ name: tname, svg: g.svg, source: 'generated' });
+        return false;
+      });
     }
     // Every subject in the curated list gets a page, even when no topic
     // cleared the confidence bar. Dropping them used to leave the previous
