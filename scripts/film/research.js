@@ -157,7 +157,17 @@ async function main() {
     const url = topic.sources[i];
     const id = sourceId(url, i);
     try {
-      const page = await readSource(url);
+      // One retry: a single aborted fetch (slow CDN, transient reset) used to
+      // sink the whole topic when it dropped the readable-source count below
+      // two. The second attempt gets a fresh timeout.
+      let page;
+      try {
+        page = await readSource(url);
+      } catch (firstErr) {
+        console.log(`retry ${id}  ${firstErr.message}`);
+        await new Promise((resolve) => setTimeout(resolve, 3000));
+        page = await readSource(url);
+      }
       const text = normalize(page.text);
       if (text.length < 1200) throw new Error(`only ${text.length} characters of text`);
       const record = {
