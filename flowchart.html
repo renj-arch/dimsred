@@ -683,6 +683,19 @@ function curateRelations(topics){
 function loadData(){
   return fetchJson('data/timeline.json').then(function(t){
     if(Array.isArray(t.nodes))return t;
+    // Slim index first: data/flowchart-index.json carries every node that can
+    // appear (typed-edge endpoints, topic-layer members, top-25k by count)
+    // without the other ~520k unreachable shard nodes. ~19 MB instead of
+    // ~206 MB. The full shards remain the fallback while the index is absent.
+    return fetchJson('data/flowchart-index.json').then(function(idx){
+      if(idx&&Array.isArray(idx.nodes)&&idx.nodes.length){
+        t.nodes=idx.nodes;
+        if(idx.eras&&!t.eras)t.eras=idx.eras;
+        t.links=[];
+        return t;
+      }
+      throw new Error('index empty');
+    }).catch(function(){
     var nodeUrls=[];
     for(var i=0;i<(t.nodesParts||0);i++)nodeUrls.push('data/timeline.nodes.'+i+'.json');
     // Link shards are not fetched at all — see the note in the node loader.
@@ -696,6 +709,7 @@ function loadData(){
       // payload for data that is thrown away.
       t.links=[];
       return t;
+    });
     });
   });
 }
