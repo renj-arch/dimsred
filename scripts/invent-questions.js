@@ -288,18 +288,41 @@ function parseChatStream(out) {
   return { text: content.trim() || thinking.trim(), httpCode: httpCode };
 }
 
-async function callLLM(system, user) {
+// Ollama structured outputs: a JSON Schema is compiled into a sampler grammar,
+// so the model physically cannot emit a missing brace, a bare number where an
+// array belongs, or a prose wrapper. The previous `format: 'json'` only promised
+// "some JSON" — it guarantees the first token is valid, not that the object is
+// the shape this script validates, and a 9B model on CPU then truncates it.
+const QUESTION_SCHEMA = {
+  type: 'object',
+  properties: {
+    topic: { type: 'string' },
+    style: { type: 'string' },
+    stem: { type: 'string' },
+    options: { type: 'array', items: { type: 'string' }, minItems: 4, maxItems: 4 },
+    answer: { type: 'string' },
+    solution: { type: 'string' },
+    hint: { type: 'string' },
+    importance: { type: 'string', enum: ['high', 'medium', 'low'] },
+    importantFor: { type: 'array', items: { type: 'string' }, maxItems: 3 }
+  },
+  required: ['topic', 'style', 'stem', 'options', 'answer', 'solution', 'hint', 'importance', 'importantFor']
+};
+
+async function callLLM(system, user, opts) {
   if (FAKE) return callFake();
+  const o = opts || {};
   const payload = JSON.stringify({
     model: MODEL,
     stream: true,
     think: false,
-    // Structured-output mode: the model must emit one JSON object, so the
-    // parse/repair loop stops burning attempts on prose wrappers. A lower
-    // temperature than the old 0.95 keeps arithmetic self-consistent while
-    // the novelty rules still vary the mechanism.
-    format: 'json',
-    options: { temperature: 0.8, top_p: 0.92, num_ctx: NUM_CTX, num_predict: NUM_PREDICT },
+    format: QUESTION_SCHEMA,
+    options: {
+      temperature: 0.8,
+      top_p: 0.92,
+      num_ctx: NUM_CTX,
+      num_predict: o.numPredict || NUM_PREDICT
+    },
     messages: [
       { role: 'system', content: system },
       { role: 'user', content: user }
@@ -308,10 +331,12 @@ async function callLLM(system, user) {
   let out = await curlChat(payload);
   let parsed = parseChatStream(out);
   if (!parsed.text && parsed.httpCode === '400') {
-    // Older daemons reject think:false with HTTP 400 — one clean retry
-    // without the parameter (same hatch as site-agent.js).
-    log('[invent] Ollama rejected think:false (HTTP 400) — retrying without the parameter');
-    out = await curlChat(JSON.stringify(Object.assign(JSON.parse(payload), { think: undefined })));
+    // Older daemons reject think:false and/or a schema object in `format` with
+    // HTTP 400. Drop both and keep the weaker format:'json' rather than losing
+    // the whole run (same hatch as site-agent.js).
+    log('[invent] Ollama rejected the request (HTTP 400) — retrying with format:"json" and no think parameter');
+    const fallback = Object.assign(JSON.parse(payload), { think: undefined, format: 'json' });
+    out = await curlChat(JSON.stringify(fallback));
     parsed = parseChatStream(out);
   }
   if (parsed.httpCode && parsed.httpCode !== '200') throw new Error('HTTP ' + parsed.httpCode);
@@ -488,7 +513,16 @@ function optionsAreBareLetters(options) {
 
 function validate(raw, section, tier, recentTokenSets) {
   const t = extractJson(raw);
-  if (!t) return { ok: false, why: 'unparseable JSON' };
+  if (!t) {
+    // Separate "the model never wrote JSON" from "the reply was cut off
+    // mid-object". The second is a token-budget problem, not a prompt problem,
+    // and the retry has to know the difference: every quant slot in run
+    // 43008128583 (2026-11-11) died here with the generic message, so the
+    // second attempt repeated the same overspend instead of shortening.
+    const txt = String(raw || '').trim();
+    const cut = txt.length > 0 && txt.indexOf('{') >= 0 && !/\}\s*$/.test(txt);
+    return { ok: false, why: cut ? 'truncated JSON (num_predict cap)' : 'unparseable JSON' };
+  }
   const stem = String(t.stem || t.question || '').trim();
   const solution = String(t.solution || t.explanation || '').trim();
   const style = String(t.style || '').trim();
@@ -584,6 +618,7 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
     recentTopics.length ? ('- Topics already covered recently (avoid repeats): ' + recentTopics.join(' | ')) : '',
     lastStems.length ? ('- Do not resemble these recent questions: ' + lastStems.join(' // ')) : '',
     attempt > 1 ? ('- Your previous attempt was rejected (' + priorFailures + '). Fix it and invent differently.') : '',
+    attempt > 1 && /truncated/i.test(String(priorFailures)) ? '- Your last reply was cut off mid-JSON. Keep the solution to 5 short lines and close the object.' : '',
     '',
     'HARD RULES:',
     '- Exactly 4 options; exactly ONE is unambiguously correct.',
@@ -624,7 +659,11 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
           try {
             raw = await callLLM(
               'You are an exam setter. You reply with a single strict JSON object and nothing else.',
-              prompt
+              prompt,
+              // A rejected-for-truncation reply gets a bigger budget on the
+              // retry; the happy path keeps the cheaper cap so a CPU runner
+              // still finishes the slot inside the deadline.
+              { numPredict: attempt > 1 ? Math.round(NUM_PREDICT * 1.8) : NUM_PREDICT }
             );
             transportFails = 0;
           } catch (e) {
@@ -667,7 +706,13 @@ function buildPrompt(store, section, tier, attempt, priorFailures) {
           } else {
             rejects[v.why] = (rejects[v.why] || 0) + 1;
             rejects['last-' + section + tier] = v.why;
-            log('[invent] ' + section + '/' + tier + ' rejected: ' + v.why);
+            // Fail loudly: a bare "unparseable JSON" gave no way to tell a
+            // truncated object from prose from a wrong shape. Keep 300 chars of
+            // the actual reply in the log so the next run is diagnosable.
+            const snippet = /JSON/i.test(v.why)
+              ? ' | raw: ' + String(raw).replace(/\s+/g, ' ').slice(0, 300)
+              : '';
+            log('[invent] ' + section + '/' + tier + ' rejected: ' + v.why + snippet);
           }
         }
         if (made) {

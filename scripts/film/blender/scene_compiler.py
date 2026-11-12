@@ -156,7 +156,14 @@ def compose(spec, palette):
                loc=(dims["w"] * 0.32, max(0.4, anchor[1] - 4.2), dims["h"] * 0.7),
                target=(anchor[0], anchor[1] - 0.3, anchor[2] + 1.0),
                size=dims["w"] * 0.42)
-    for i in range(clamp(int(light.get("practicals", 0)), 0, 3)):
+    # `practicals` arrives either as a count (older storyboards) or as a list of
+    # named sources (salt-march-sets.json ships ["sodium"]). int() on that list
+    # was the plate-test crash: "TypeError: int() argument must be ... not 'list'"
+    # (run 42871227104, scene_compiler.py line 159).
+    practicals = light.get("practicals", 0)
+    if isinstance(practicals, (list, tuple)):
+        practicals = len(practicals)
+    for i in range(clamp(int(practicals), 0, 3)):
         practical(m, anchor[0] + (i - 1) * 1.6, anchor[1] - 2.2 - i * 0.5,
                   dims["h"] - 0.55, power=40, drop=0.45, radius=0.07,
                   name=f"practical-{i}")

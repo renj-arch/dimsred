@@ -1,4 +1,6 @@
 var fs = require('fs');
+var path = require('path');
+var root = require('./lib/cli-root').requireRoot({ readOnly: true });
 var files = [
   'cgl/papers/13-sep-2025-s2.html',
   'agniveer/papers/2025-paper.html',
@@ -10,7 +12,7 @@ var files = [
   'gate/papers/2025-cs.html'
 ];
 for (var i = 0; i < files.length; i++) {
-  var h = fs.readFileSync('C:/Users/Renjith/Desktop/icode (2)/study/' + files[i], 'utf-8');
+  var h = fs.readFileSync(path.join(root, files[i]), 'utf-8');
   var t = h.match(/<title>(.*?)<\/title>/)[1];
   var d = h.match(/<meta name="description" content="(.*?)">/)[1];
   console.log(files[i]);

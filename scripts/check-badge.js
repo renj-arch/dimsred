@@ -1,5 +1,7 @@
 var fs = require('fs');
-var p = 'C:\\Users\\Renjith\\Desktop\\icode (2)\\study\\agniveer\\index.html';
+var path = require('path');
+var root = require('./lib/cli-root').requireRoot({ readOnly: true });
+var p = path.join(root, 'agniveer', 'index.html');
 var buf = fs.readFileSync(p);
 var f = buf.toString('utf-8');
 var idx = f.indexOf('class="badge"');
