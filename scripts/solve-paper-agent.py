@@ -222,7 +222,7 @@ def main():
 
     parser = load_parser()
     try:
-        qp, qerr = parser.parse_qp(qp_path)
+        qp, qerr = parser.parse_qp(qp_path, pid)
     except Exception as ex:
         # Never let a corrupt PDF take the workflow down: skip cleanly so the
         # QA gate and the next scheduled retry still run.
