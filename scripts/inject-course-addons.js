@@ -68,6 +68,17 @@ try {
 }
 const keys = (addons && addons.keys) || {};
 
+// Keys that must never reach a deployed page, whatever course-addons.json
+// says. hand/papers was deleted once already and a stale expand-course run
+// resurrected it by writing the whole addons file back -- an exam archive is
+// not a lesson hub, and model "advanced sections" there invented questions
+// and leaked scratchpad prose. The denylist is the durable guard: the JSON
+// can be polluted by an old in-flight run and the page still stays clean.
+const DENYLIST = {
+  'hand/papers': 'exam archive -- model prose does not belong on real question papers'
+};
+for (const k of Object.keys(DENYLIST)) delete keys[k];
+
 // One file can serve several keys (shared lessons). Group first so the second
 // entry appends instead of stripping the first entry's block.
 const byFile = new Map();
