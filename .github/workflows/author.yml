@@ -266,8 +266,14 @@ jobs:
       # next topic was even selected, so three strikes took a day and a half.
       # Dispatch the selector immediately: it retries a topic that still has
       # strikes left, or moves on once author-strike.js has blocked it.
+      # Fetch failures used to end the run with no successor: the chain only
+      # continued when fetch had succeeded, so one timed-out source stalled
+      # authoring until the next autopilot slot. Invented briefs are safe to
+      # re-select immediately (the next run proposes a fresh topic); slate
+      # topics keep the old gate so a permanently unreadable source cannot
+      # tight-loop the selector.
       - name: Continue the chain after a failed attempt
-        if: ${{ failure() && !inputs.stub && steps.fetch.outcome == 'success' }}
+        if: ${{ failure() && !inputs.stub && (steps.fetch.outcome == 'success' || steps.invent.outputs.found != 'false') }}
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
