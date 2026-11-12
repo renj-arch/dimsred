@@ -108,6 +108,12 @@ jobs:
       - name: Rebuild mind-tree (topic-layers.json)
         run: node scripts/gen-topic-layers.js
 
+      # flowchart.html's slim node index: keeps only nodes reachable through
+      # typed edges, topic-layers, or the top-25k by count (~19 MB vs the
+      # ~206 MB of shards it replaces). Must run after both producers above.
+      - name: Rebuild flowchart slim index
+        run: node scripts/build-flowchart-index.js
+
       # Figure packs are NOT built here any more. They live in build-figures.yml,
       # on their own 4x-daily schedule, because sharing this job meant figures
       # waited behind a 12 GB timeline rebuild they do not need, were limited to
@@ -159,7 +165,8 @@ jobs:
             'data/ask-index-nodes.*.json' \
             data/knowledge-graph.json \
             data/topic-search.json \
-            data/topic-layers.json
+            data/topic-layers.json \
+            data/flowchart-index.json
           if git diff --staged --quiet; then
             echo "No timeline changes to commit"
           else
