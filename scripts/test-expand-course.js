@@ -102,6 +102,86 @@ ok('validator still rejects two sections for a full lesson', function () {
   assert.ok(/needs at least 3 <h3>/.test(expand.validateHtml(lessonHtml(2))));
 });
 
+// Full-lesson quality floor. Thresholds are calibrated on the two pages that
+// bracket the quality range: upsc/course/gs/lesson-indian-polity.html (44,485
+// words, 2.4 marks per 100 words, 20 h2, 33 tables) versus
+// upsc/course/opt-sanskrit/lesson-overview.html (1,580 words, 5.4 marks per 100
+// words, 0 h2, 0 tables).
+const fullOpts = { fullLesson: true };
+const FILLER = 'This paragraph explains the concept with a worked example and the exam pattern a student should expect. ';
+const TAIL = '<table><caption>Comparison</caption><thead><tr><th>Concept</th><th>Rule</th></tr></thead>' +
+  '<tbody><tr><td>Simple</td><td>P x R x T</td></tr></tbody></table>' +
+  '<div class="example-box"><div class="ex-title">Technique</div><div class="ex-text">Solve it.</div>' +
+  '<div class="ex-soln">Step by step.</div></div>' +
+  '<div class="tip-box"><div class="tip-title">Tip</div><div class="tip-text">Check the units.</div></div>';
+
+// A textbook-shaped lesson: <h2> topic groups with numbered <h3> sub-sections.
+function longLesson(h2Count, tail) {
+  let html = '';
+  for (let i = 0; i < h2Count; i++) {
+    html += '<h2>' + (i + 1) + '. Topic ' + (i + 1) + '</h2>';
+    for (let j = 0; j < 3; j++) {
+      html += '<h3>' + (i + 1) + '.' + (j + 1) + ' Sub-topic ' + (i + 1) + '</h3>' + p(FILLER.repeat(6));
+    }
+  }
+  for (let i = 0; i < 14; i++) html += p(FILLER.repeat(6));
+  return html + (tail === undefined ? TAIL : tail);
+}
+
+ok('full-lesson validator accepts a textbook-shaped lesson', function () {
+  assert.strictEqual(expand.validateHtml(longLesson(4), fullOpts), null);
+});
+
+ok('full-lesson validator rejects a thin lesson', function () {
+  assert.ok(/too thin for a full lesson/.test(expand.validateHtml(lessonHtml(3), fullOpts)));
+});
+
+ok('full-lesson validator rejects a flat list of sections with no topic groups', function () {
+  const flat = longLesson(4).replace(/<h2>[^<]*<\/h2>/g, '');
+  assert.ok(/needs a two-level outline/.test(expand.validateHtml(flat, fullOpts)));
+});
+
+ok('full-lesson validator rejects the old boilerplate headings', function () {
+  const html = longLesson(4).replace('<h3>1.1 Sub-topic 1</h3>', '<h3>Common Traps</h3>');
+  assert.ok(/template heading reused/.test(expand.validateHtml(html, fullOpts)));
+});
+
+ok('full-lesson validator rejects an "Advanced Section" prefix', function () {
+  const html = longLesson(4).replace('<h3>1.1 Sub-topic 1</h3>', '<h3>Advanced Section: The Examiner Trap</h3>');
+  assert.ok(/template heading reused/.test(expand.validateHtml(html, fullOpts)));
+});
+
+ok('full-lesson validator rejects note-form packed with colons', function () {
+  const notes = 'GDP: domestic output; GNP: GDP plus NFIA; NNP: GNP minus depreciation; PCI: per capita income; ' +
+    'deflator: nominal over real; inflation: sustained price rise; MPC: change in consumption over change in income; ' +
+    'APC: consumption over income; fiscal: government; monetary: central bank. ';
+  let html = '';
+  for (let i = 0; i < 4; i++) {
+    html += '<h2>' + (i + 1) + '. Topic</h2>';
+    for (let j = 0; j < 3; j++) html += '<h3>' + (i + 1) + '.' + (j + 1) + ' Sub</h3>' + p(notes.repeat(8));
+  }
+  assert.ok(/note-form, not prose/.test(expand.validateHtml(html + TAIL, fullOpts)));
+});
+
+ok('full-lesson validator requires a comparison table', function () {
+  const html = longLesson(4).replace(/<table>[\s\S]*<\/table>/, '');
+  assert.ok(/needs at least one <table>/.test(expand.validateHtml(html, fullOpts)));
+});
+
+ok('the lesson prompt demands a two-level outline and drops the old template', function () {
+  const prompt = expand.theoryPrompt({
+    examName: 'SSC CGL', modName: 'Quantitative Aptitude',
+    lesson: { title: 'Percentages', desc: 'x', topics: 'y' },
+    mk: 'quant', key: 'quant/percentages', role: 'fill', oldLen: 0
+  });
+  assert.ok(/4-7 <h2> topic groups/.test(prompt), 'prompt must ask for h2 topic groups');
+  assert.ok(/<h2> <h3> <h4>/.test(prompt), 'the allowed-tag list must include h2');
+  assert.ok(/Do NOT use the headings "Common Traps"/.test(prompt), 'prompt must ban the boilerplate headings');
+  assert.ok(/2500-4000 words/.test(prompt), 'prompt must raise the length target');
+  assert.ok(!/Total visible text: 1200-1600 words/.test(prompt), 'the old 1200-1600 word cap must be gone');
+  assert.ok(/Do not write "similar to SSC CGL 2022 Slot 2 Q45"/.test(prompt), 'prompt must forbid fabricated past-paper references');
+});
+
 ok('validator does not treat "one = 1" in prose as an event handler', function () {
   const html = lessonHtml(3).replace('<p>', '<p>one = 1 and two = 2. ');
   assert.strictEqual(expand.validateHtml(html), null);
@@ -147,7 +227,7 @@ ok('full-lesson prompt builds without undefined variables and does not ask for i
     role: 'fill',
     lesson: { title: 'Percentage', desc: 'Basic percentage rules', topics: 'Percentage change' }
   });
-  assert.ok(prompt.indexOf('1200-1600 words') !== -1, prompt.slice(0, 200));
+  assert.ok(prompt.indexOf('2500-4000 words') !== -1, prompt.slice(0, 200));
   assert.strictEqual(prompt.indexOf('After the HTML output exactly this line'), -1);
   assert.ok(prompt.indexOf('practice questions are generated in a separate pass') !== -1);
 });
