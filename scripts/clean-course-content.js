@@ -246,6 +246,80 @@ Object.keys(cdata).forEach(function (k) {
 });
 if (!CHECK && dataHits.n) writeJson(dataFile, cdataClean);
 
+// --- practice MCQs: duplicate options ------------------------------------
+// The model occasionally emits two identical options ("accomodation",
+// "accomodation"), which turns the MCQ into a coin flip.
+// normalizeQuestions now rejects these at generation time; this pass removes
+// the ones already published — both from course-practice.json and from the
+// practiceQs array embedded in every lesson page, so the JSON and the pages
+// stay in sync without a page regeneration (a regen could revert hand-built
+// sections; the embedded array is the only stale part).
+function normOptText(o) {
+  // Only case, whitespace and dash style are normalised: "(x-3)", "x<2"
+  // and "x>2" must stay distinct from their lookalikes.
+  return String(o && o.t != null ? o.t : o)
+    .toLowerCase()
+    .replace(/−|–|—/g, '-')
+    .replace(/\s+/g, '');
+}
+function dupOptions(q) {
+  var seen = {};
+  var dup = false;
+  (q.options || []).forEach(function (o) {
+    var n = normOptText(o);
+    if (n) { if (seen[n]) dup = true; seen[n] = 1; }
+  });
+  return dup;
+}
+
+var practiceFile = path.join(__dirname, 'course-practice.json');
+var cpractice = readJson(practiceFile);
+var practiceDirty = false;
+Object.keys(cpractice).forEach(function (key) {
+  var arr = cpractice[key] || [];
+  var kept = arr.filter(function (q) { return !dupOptions(q); });
+  if (kept.length !== arr.length) {
+    practiceDirty = true;
+    dirty++;
+    console.log('course-practice ' + key + ': dropped ' + (arr.length - kept.length) + ' duplicate-option question(s)');
+    cpractice[key] = kept;
+  }
+});
+if (!CHECK && practiceDirty) writeJson(practiceFile, cpractice);
+
+// Pages embed their questions as `var practiceQs = [...]`; patch any array
+// that still carries a duplicate-option question. Every config lesson page is
+// scanned because a page may embed questions through a module alias, and the
+// JSON may already be clean while an old page still carries the defect.
+var examConfigs = readJson(path.join(__dirname, 'exam-configs.json'));
+var pagesPatched = 0;
+Object.keys(examConfigs).forEach(function (ek) {
+  var cfg = examConfigs[ek];
+  (cfg.moduleOrder || []).forEach(function (mk) {
+    var mod = cfg.modules && cfg.modules[mk];
+    if (!mod) return;
+    (mod.lessons || []).forEach(function (l) {
+      var fp = path.join(ROOT, cfg.dir, 'course', mk, 'lesson-' + l.slug + '.html');
+      if (!fs.existsSync(fp)) return;
+      var html = fs.readFileSync(fp, 'utf8');
+      var m = /var practiceQs = (\[.*\]);/.exec(html);
+      if (!m) return;
+      var qs;
+      try { qs = JSON.parse(m[1]); } catch (e) { return; }
+      var keptQs = qs.filter(function (q) { return !dupOptions(q); });
+      if (keptQs.length === qs.length) return;
+      pagesPatched++;
+      dirty++;
+      console.log('practiceQs ' + cfg.dir + '/course/' + mk + '/lesson-' + l.slug + '.html: dropped ' + (qs.length - keptQs.length));
+      if (!CHECK) {
+        var next = html.slice(0, m.index) + 'var practiceQs = ' + JSON.stringify(keptQs) + ';' + html.slice(m.index + m[0].length);
+        fs.writeFileSync(fp, next, 'utf8');
+      }
+    });
+  });
+});
+if (pagesPatched) console.log('course-practice: ' + pagesPatched + ' page(s) ' + (CHECK ? 'need' : 'had') + ' embedded questions patched');
+
 console.log((CHECK ? '[check] ' : '') + 'clean-course-content: ' + dirty + ' entr' + (dirty === 1 ? 'y' : 'ies') +
   (dataHits.n ? ', ' + dataHits.n + ' data string(s)' : '') + (dirty ? ' would change' : ' clean') + (CHECK && dirty ? ' (dirty)' : ''));
 if (CHECK && dirty) process.exit(1);

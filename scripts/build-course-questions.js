@@ -149,7 +149,12 @@ function main() {
       const opts = q.options.map(function (o) { return clean(o && o.t); });
       const answer = clean(correct[0].t);
       if (!answer || opts.some(function (o) { return !o; })) { drop('option text'); continue; }
-      if (new Set(opts).size !== opts.length) { drop('duplicate options'); continue; }
+      // Case/whitespace/dash-style duplicate check — "(x-3)", "x<2" and
+      // "x>2" stay distinct because only those normalisations are applied.
+      const normOpts = opts.map(function (o) {
+        return o.toLowerCase().replace(/−|–|—/g, '-').replace(/\s+/g, '');
+      });
+      if (new Set(normOpts).size !== normOpts.length) { drop('duplicate options'); continue; }
 
       const key = text.toLowerCase().replace(/\s+/g, ' ').trim();
       if (seen.has(key)) { drop('duplicate question'); continue; }

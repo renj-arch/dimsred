@@ -52,7 +52,7 @@ function valid(q) {
   if (!q || typeof q !== 'object') return false;
   if (!q.stem || !q.solution) return false;
   if (!Array.isArray(q.options) || q.options.length !== 4) return false;
-  if (new Set(q.options.map(o => String(o).toLowerCase())).size !== 4) return false;
+  if (new Set(q.options.map(o => String(o).toLowerCase().replace(/−|–|—/g, '-').replace(/\s+/g, ''))).size !== 4) return false;
   if (!q.answer) return false;
   return q.options.some(o => String(o) === String(q.answer));
 }
