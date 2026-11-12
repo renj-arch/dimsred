@@ -1,11 +1,23 @@
 name: Wiki Fill
 
 on:
-  # No fixed cron: runs are chained — each run self-dispatches the next one
-  # when it finishes (see the "Queue the next Wiki Fill" step in finalize).
-  # This means a new fill cycle starts as soon as the previous one completes,
-  # instead of waiting for the next 00:00 UTC slot. Use workflow_dispatch to
-  # start the chain manually.
+  # Runs are chained: each run self-dispatches the next one when it finishes
+  # (see the "Queue the next Wiki Fill" step in finalize), so a new fill cycle
+  # starts as soon as the previous one completes instead of waiting for a slot.
+  #
+  # The chain is not self-healing, though. If a run dies before its finalize
+  # step — a cancelled chunk, a failed merge, a killed runner — nothing
+  # restarts it, and the scheduled safety net below is the only thing that
+  # brings filling back. That is not hypothetical: the 2026-11-09 run's
+  # finalize job timed out on `git pull --rebase` (run #650, 35m15s) and the
+  # chain stayed dead for two days, because
+  # Wiki Fill Recovery's workflow_run trigger never fired for it.
+  #
+  # The scheduled slot cannot stack work: concurrency below keeps one run
+  # active, and GitHub replaces a merely *pending* run in the same group with
+  # the newer one, so a healthy chain simply makes these ticks no-ops.
+  schedule:
+    - cron: '23 */6 * * *'
   workflow_dispatch:
     inputs:
       chunk:

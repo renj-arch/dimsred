@@ -1,6 +1,17 @@
 const fs = require('fs');
 const path = require('path');
-const root = 'C:\\Users\\Renjith\\Desktop\\icode (2)\\study';
+const { requireRoot, isApply } = require('./lib/cli-root');
+
+// One-off CSP tidier: strips ad-network domains from CSP meta tags.
+//
+// It used to hardcode one developer machine's absolute path, so a bare run
+// rewrote every HTML file under a directory you did not choose. Root is now
+// explicit and writing is opt-in.
+//
+//   node scripts/cleanup-csp.js --root <dir>            # dry run
+//   node scripts/cleanup-csp.js --root <dir> --apply    # write
+const root = requireRoot();
+const apply = isApply();
 
 function walk(dir) {
     const files = [];
@@ -39,10 +50,11 @@ for (const f of files) {
         c = c.replace(new RegExp('https://' + d.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*', 'g'), '');
     }
     if (c !== content) {
-        fs.writeFileSync(f, c, 'utf8');
+        if (apply) fs.writeFileSync(f, c, 'utf8');
+        console.log((apply ? 'Cleaned CSP: ' : 'would clean CSP: ') + path.relative(root, f));
         cleaned++;
-        console.log('Cleaned CSP: ' + path.relative(root, f));
     }
 }
 
-console.log('Total CSP files cleaned: ' + cleaned);
+console.log('Total CSP files ' + (apply ? 'cleaned: ' : 'to clean: ') + cleaned);
+if (!apply && cleaned) console.log('Dry run — re-run with --apply to write these changes.');
