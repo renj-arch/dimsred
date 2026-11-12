@@ -108,6 +108,28 @@ var addons = loadJson(ADDONS_FILE, { keys: {} });
 if (!addons || typeof addons !== 'object') addons = { keys: {} };
 if (!addons.keys || typeof addons.keys !== 'object') addons.keys = {};
 
+// Keys that must never carry generated prose onto a deployed page. Kept in
+// sync with the DENYLIST in inject-course-addons.js: an exam archive is not a
+// lesson hub. A stale in-flight run once resurrected hand/papers by writing
+// the whole addons file back after it had been deleted on main.
+var ADDON_DENYLIST = { 'hand/papers': 1 };
+Object.keys(ADDON_DENYLIST).forEach(function (k) { delete addons.keys[k]; });
+
+// This run's writes are merged onto a FRESH read of the file at save time, so
+// a key deleted or rewritten by another commit mid-run is not resurrected by
+// this job's stale whole-file snapshot.
+var addonTouched = {};
+function saveAddons() {
+  var fresh = loadJson(ADDONS_FILE, { keys: {} });
+  if (!fresh || typeof fresh !== 'object') fresh = { keys: {} };
+  if (!fresh.keys || typeof fresh.keys !== 'object') fresh.keys = {};
+  Object.keys(ADDON_DENYLIST).forEach(function (k) { delete fresh.keys[k]; });
+  Object.keys(addonTouched).forEach(function (k) {
+    fresh.keys[k] = addons.keys[k];
+  });
+  saveJson(ADDONS_FILE, fresh);
+}
+
 function hasContent(mk, slug) {
   if (courseData[mk + '/' + slug]) return true;
   return !!(ALT[mk] && courseData[ALT[mk] + '/' + slug]);
@@ -1387,7 +1409,8 @@ async function main() {
         entry.title = gap.lesson.title;
         entry.files = gap.files;
         addons.keys[gap.key] = entry;
-        saveJson(ADDONS_FILE, addons);
+        addonTouched[gap.key] = 1;
+        saveAddons();
       } else {
         courseData[gap.key] = res.html;
         if (res.questions.length >= 3) coursePractice[gap.key] = toPractice(res.questions);
