@@ -4984,6 +4984,91 @@ var nodeParts = [], curPart = [], curBytes = 0, nodeJson = '';
     return allEdges.filter(function (e) { return !bad.get(e); });
   }
   edges = sanitizeLineage(edges);
+
+  // data/relations.json — the curated relation store flowchart.html fetches for
+  // its verified-arrow layer. Corpus edges only carry their mining sentence
+  // (`src`) when REL_SRC=1; the store's own gate refuses evidence-free edges,
+  // so the file is emitted only when the sentences are present.
+  var REL_PROSE_FAMILY = {
+    genealogical: 'aunt,brother,brother-in-law,child,cousin,daughter,descends from,divorced,father,father-in-law,granddaughter,grandfather,grandmother,grandson,great-granddaughter,great-grandfather,great-nephew,guardian of,half-brother,half-sister,heir of,husband,mother,mother-in-law,nephew,niece,parent,partner of,relative of,sibling,sister,sister-in-law,son,son-in-law,spouse,step-daughter,uncle,wife',
+    historical: 'founded,founder of,preceded,predecessor of,succeeded by,successor of',
+    institutional: 'colleague of',
+    semantic: 'friend of,mentored by,pupil of,rival of'
+  };
+  var REL_FAM_OF = {};
+  Object.keys(REL_PROSE_FAMILY).forEach(function (f) {
+    REL_PROSE_FAMILY[f].split(',').forEach(function (r) { REL_FAM_OF[r] = f; });
+  });
+  var REL_INV_OF = {
+    son: 'father', daughter: 'mother', child: 'parent', father: 'son', mother: 'daughter',
+    parent: 'child', brother: 'sibling', sister: 'sibling', sibling: 'sibling',
+    wife: 'husband', husband: 'wife', spouse: 'spouse', divorced: 'divorced',
+    'partner of': 'partner of', grandfather: 'grandson', grandmother: 'granddaughter',
+    grandson: 'grandfather', granddaughter: 'grandmother', uncle: 'nephew', aunt: 'niece',
+    nephew: 'uncle', niece: 'aunt', cousin: 'cousin',
+    'father-in-law': 'son-in-law', 'mother-in-law': 'daughter-in-law',
+    'son-in-law': 'father-in-law', 'sister-in-law': 'brother-in-law',
+    'brother-in-law': 'sister-in-law', 'half-brother': 'half-sibling',
+    'half-sister': 'half-sibling', 'step-daughter': 'step-parent',
+    'descends from': 'ancestor of', 'succeeded by': 'successor of',
+    'successor of': 'succeeded by', 'predecessor of': 'followed by', preceded: 'followed by',
+    founded: 'founded by', 'founder of': 'founded', 'pupil of': 'taught',
+    'mentored by': 'mentored', 'colleague of': 'colleague of', 'friend of': 'friend of',
+    'rival of': 'rival of', 'guardian of': 'ward of', 'relative of': 'relative of',
+    'great-nephew': 'great-uncle', 'great-grandfather': 'great-grandson',
+    'great-granddaughter': 'great-grandparent'
+  };
+  var REL_FAMILY_META = {
+    genealogical: { label: 'Family & marriage', color: '#b565d8' },
+    historical: { label: 'Historical roles', color: '#d84f4f' },
+    institutional: { label: 'Institutions', color: '#4f7fd8' },
+    geographical: { label: 'Geography', color: '#4fae62' },
+    semantic: { label: 'Other relations', color: '#9aa4b8' }
+  };
+  var evidencedEdges = edges.filter(function (e) { return e.src && String(e.src).trim().length >= 20; });
+  if (evidencedEdges.length) {
+    var relNameById = {}, relCatById = {};
+    nodes.forEach(function (n) {
+      relNameById[n.id] = n.name;
+      relCatById[n.id] = (n.cats && n.cats[0] && n.cats[0].key) || null;
+    });
+    function relEndpointName(id) {
+      var nm = relNameById[id];
+      if (nm) return nm;
+      var bar = String(id).indexOf('|');
+      return bar >= 0 ? String(id).slice(bar + 1) : String(id);
+    }
+    var relTopics = {}, relSeenVerbs = {};
+    evidencedEdges.forEach(function (e) {
+      relSeenVerbs[e.rel] = 1;
+      var tk = relCatById[e.a] || relCatById[e.b] || 'general';
+      var T = relTopics[tk] || (relTopics[tk] = { edges: [] });
+      T.edges.push({ a: relEndpointName(e.a), b: relEndpointName(e.b), rel: e.rel, ev: String(e.src).trim() });
+    });
+    // Any verb the table missed still needs a family: the store validator
+    // refuses edges whose rel belongs to no family, so they land in semantic.
+    var famVerbs = {};
+    Object.keys(relSeenVerbs).forEach(function (r) {
+      var f = REL_FAM_OF[r] || 'semantic';
+      (famVerbs[f] = famVerbs[f] || []).push(r);
+    });
+    var families = {};
+    Object.keys(famVerbs).forEach(function (f) {
+      var meta = REL_FAMILY_META[f] || { label: f, color: '#9aa4b8' };
+      families[f] = { verbs: famVerbs[f].sort(), label: meta.label, color: meta.color };
+    });
+    var relationsPath = path.join(TIMELINE_DIR, 'relations.json');
+    fs.writeFileSync(relationsPath, JSON.stringify({
+      generatedAt: new Date().toISOString(),
+      families: families,
+      inverse: REL_INV_OF,
+      topics: relTopics
+    }));
+    console.log('relations store: ' + evidencedEdges.length + ' evidenced edges across ' + Object.keys(relTopics).length + ' topics -> ' + relationsPath);
+  } else {
+    console.log('relations store: skipped (REL_SRC not set or no evidenced edges)');
+  }
+
   // Shard links array to stay under Cloudflare Pages 25 MiB per-file limit.
   // Current links array is ~23 MiB; split into chunks well under the cap.
   var LINKS_PART_BYTES = 8 * 1024 * 1024;

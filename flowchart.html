@@ -685,19 +685,17 @@ function loadData(){
     if(Array.isArray(t.nodes))return t;
     var nodeUrls=[];
     for(var i=0;i<(t.nodesParts||0);i++)nodeUrls.push('data/timeline.nodes.'+i+'.json');
-    var linkUrls=[];
-    for(var i=0;i<(t.linksParts||0);i++)linkUrls.push('data/timeline-links.'+i+'.json');
+    // Link shards are not fetched at all — see the note in the node loader.
     return Promise.all(nodeUrls.map(fetchJson)).then(function(nodeParts){
       var allNodes=[];
       for(var p of nodeParts)allNodes=allNodes.concat(p);
       t.nodes=allNodes;
-      if(linkUrls.length===0)return t;
-      return Promise.all(linkUrls.map(fetchJson)).then(function(linkParts){
-        var allLinks=[];
-        for(var p of linkParts)allLinks=allLinks.concat(p);
-        t.links=allLinks;
-        return t;
-      });
+      // Link shards (~25 MB of co-mention counts) are deliberately not fetched:
+      // the caller overwrites t.links with LINKS=[] right after load because
+      // co-occurrence is not topology. Downloading them was ~11% of the page's
+      // payload for data that is thrown away.
+      t.links=[];
+      return t;
     });
   });
 }
