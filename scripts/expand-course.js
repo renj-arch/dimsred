@@ -46,6 +46,17 @@ var SKIP_EXAMS = (process.env.EXPAND_SKIP_EXAMS || '').split(',').map(function (
 // Lessons shorter than this (characters of HTML) are treated as brief stubs
 // and rewritten by the enrich role. 0 disables enrichment entirely.
 var THIN = parseInt(process.env.EXPAND_THIN_THRESHOLD || '2500', 10);
+// Comma-separated "module/slug" keys restrict every lane to just those
+// lessons — the workflow's "keys" input, for targeted fix runs.
+var ONLY_KEYS = {};
+String(process.env.EXPAND_ONLY_KEYS || '').split(',').forEach(function (k) {
+  k = k.trim();
+  if (k) ONLY_KEYS[k] = 1;
+});
+function onlyAllowed(key) {
+  var n = Object.keys(ONLY_KEYS).length;
+  return !n || !!ONLY_KEYS[key];
+}
 // Depth lane: append NEW advanced sections to lessons that are already full,
 // instead of only fixing empty/stub ones. Off unless the workflow asks for it.
 var DEEPEN = /^(1|true|yes)$/i.test(process.env.EXPAND_DEEPEN || '');
@@ -201,6 +212,14 @@ function collectThins() {
     var slug = parts.slice(1).join('/');
     var users = examsUsing(mk, slug);
     if (!users.length) return;
+    // A page much larger than its source carries hand-written material the
+    // generator cannot reproduce (same test collectDeepen uses). Enriching
+    // the source would drift the JSON away from the committed page, so those
+    // keys belong to the deepen-page lane, never to a rewrite.
+    var biggest = users.reduce(function (m, u) {
+      return Math.max(m, pageSize(pagePath(u.dir, mk, slug)));
+    }, 0);
+    if (biggest > Math.max(60000, len * 4)) return;
     out.push({
       key: key,
       mk: mk,
@@ -269,15 +288,16 @@ function collectDeepen() {
         // No source + auto filler is a fill job, not a depth job.
         var allFiller = existing.every(function (f) { return isFillerPage(path.join(ROOT, f)); });
         if (!content && allFiller) return;
-        // A thin/stub lesson belongs to the enrich lane, not depth. It used to
-        // be picked up by both, so the enrich rewrite and an "advanced sections"
-        // append raced over the same page.
-        if (content && content.length < THIN) return;
         var biggest = existing.reduce(function (m, f) { return Math.max(m, pageSize(path.join(ROOT, f))); }, 0);
         // A generated page is template + content; a page several times larger
         // than its source carries hand-written material the generator cannot
         // reproduce.
         var handBuilt = !content || biggest > Math.max(60000, content.length * 4);
+        // A thin/stub lesson belongs to the enrich lane, not depth — unless it
+        // is hand-built, in which case enrich refuses it (the rewrite would
+        // drift the JSON away from the committed page) and depth-page is the
+        // only lane left that can still add to it.
+        if (content && content.length < THIN && !handBuilt) return;
         var st = depthState.keys[key] || {};
         var passes = parseInt(st.passes || 0, 10) || 0;
         if (passes >= DEPTH_PASS_MAX) return;
@@ -1003,6 +1023,18 @@ function normalizeQuestions(arr) {
     if (!Array.isArray(q.options) || q.options.length !== 4) return;
     var opts = q.options.map(function (o) { return String(o == null ? '' : o).trim(); });
     for (var i = 0; i < 4; i++) if (!opts[i] || opts[i].length > 200) return;
+    // Two identical options make the question a coin flip — the model's
+    // "accomodation"/"accomodation" defect. Reject the whole question.
+    // Only case, whitespace and dash style are normalised: "(x-3)", "x<2"
+    // and "x>2" must stay distinct from their lookalikes.
+    var seenOpt = {};
+    for (var oi = 0; oi < 4; oi++) {
+      var on = opts[oi].toLowerCase()
+        .replace(/−|–|—/g, '-')
+        .replace(/\s+/g, '');
+      if (seenOpt[on]) return;
+      seenOpt[on] = 1;
+    }
     var correct = parseInt(q.correct, 10);
     if (!(correct >= 0 && correct <= 3)) return;
     var sol = String(q.sol || '').trim();
@@ -1246,6 +1278,11 @@ async function main() {
   var hubs = handPages.filter(function (g) { return g.priority === 0; });
   var handRest = handPages.filter(function (g) { return g.priority !== 0; });
   var deeps = DEEPEN ? hubs.concat(interleave(handRest, collectDeepen())) : [];
+  if (Object.keys(ONLY_KEYS).length) {
+    fills = fills.filter(function (g) { return onlyAllowed(g.key); });
+    thins = thins.filter(function (g) { return onlyAllowed(g.key); });
+    deeps = deeps.filter(function (g) { return onlyAllowed(g.key); });
+  }
   console.log('Course worklist: ' + fills.length + ' empty slot(s), ' + thins.length + ' thin lesson(s) (<' + THIN + ' chars), ' + deeps.length + ' depth candidate(s)');
   if (DRY && process.env.EXPAND_DRY_JSON) {
     fs.writeFileSync(path.resolve(process.env.EXPAND_DRY_JSON), JSON.stringify(deeps, null, 2) + '\n', 'utf8');

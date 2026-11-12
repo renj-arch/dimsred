@@ -36,6 +36,10 @@ on:
         description: 'Ollama model tag. Default = mid tier (qwen3.5:9b); qwen3:4b is the cached fast tier.'
         required: false
         default: 'qwen3.5:9b'
+      keys:
+        description: 'Only these lesson keys, comma-separated (e.g. opt-sanskrit/overview,opt-sanskrit/paper1). Empty = whole site.'
+        required: false
+        default: ''
 
 concurrency:
   group: expand-course
@@ -166,6 +170,14 @@ jobs:
           EXPAND_DEPTH_TARGET_WORDS: '20000'
           EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
           EXPAND_DEPTH_PASS_MAX: '60'
+          # Keys restricts the run to named lessons; the thin threshold lifts
+          # the enrich rewrite ceiling from 2.5K to 6K chars so stub-length
+          # lessons (the opt-* papers sit at 2.7-3.4K) get a full rewrite
+          # instead of deepen passes appended onto a weak base. Hand-built
+          # pages are excluded inside collectThins, so hand-enriched content
+          # is safe.
+          EXPAND_ONLY_KEYS: ${{ github.event.inputs.keys || '' }}
+          EXPAND_THIN_THRESHOLD: '6000'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
 
       # Published addons accumulate small defects: raw LaTeX, a sentence cut
