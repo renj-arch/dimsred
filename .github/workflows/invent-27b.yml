@@ -131,7 +131,13 @@ jobs:
           else
             echo "::warning::TRIAL MODEL: $MODEL_INPUT (digest pin not enforced for trials)"
           fi
-          ollama pull "$MODEL_INPUT"
+          # Registry 503s after an 11GB pull killed run 43185862170 — retry the
+          # pull instead of failing the whole invent cycle on a transient error.
+          for attempt in 1 2 3; do
+            if ollama pull "$MODEL_INPUT"; then break; fi
+            if [ "$attempt" -eq 3 ]; then echo "ollama pull failed after 3 attempts"; exit 1; fi
+            echo "pull attempt $attempt failed, retrying in 20s"; sleep 20
+          done
           ollama list
           # Downstream steps (agent + publish message) read OLLAMA_MODEL.
           echo "OLLAMA_MODEL=$MODEL_INPUT" >> "$GITHUB_ENV"
