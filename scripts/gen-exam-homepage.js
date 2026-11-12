@@ -54,6 +54,22 @@ var configs = {
     ],
     about: 'CLAT (Common Law Admission Test) is a centralized national-level entrance exam for admission to 22 NLUs (National Law Universities). The 2-hour test has 120 MCQs covering English Language (28), Current Affairs & GK (35), Legal Reasoning (35), Logical Reasoning (12), and Quantitative Techniques (10). Candidates must have 45% marks in 12th standard (40% for SC/ST). No age limit.',
     canonical: 'clat/'
+  },
+  apfc: {
+    name: 'APFC', full: 'APFC (Assistant Provident Fund Commissioner)',
+    desc: 'Free APFC practice papers with answers. UPSC APFC Recruitment Test: English, GK, Economy, Polity, Science, Maths, Labour Laws, Accountancy & Insurance.',
+    badge: 'dY"� EPFO Aspirant Hub',
+    topics: ['General English', 'Indian Culture & Heritage', 'Indian Economy', 'Polity & Constitution', 'General Science & Computers', 'Mathematics & Statistics', 'Industrial Relations & Labour Codes', 'Accountancy, Auditing & Insurance', 'Current Affairs'],
+    modules: ['General English', 'General Knowledge', 'Mathematics', 'Mental Ability', 'Current Affairs', 'Industrial Relations', 'Accountancy'],
+    mockLabel: 'APFC Mock Test',
+    why: [
+      { title: 'Exact Exam Pattern', desc: '160 questions, 300 marks, 2 hours, -1/3 negative marking — the real Recruitment Test pattern.' },
+      { title: 'All 9 Syllabus Areas', desc: 'English, culture, economy, polity, science, maths, labour laws, accountancy and current affairs.' },
+      { title: 'Specialist Sections', desc: 'Industrial Relations, Labour Codes and Accountancy covered — the areas generic GS practice misses.' },
+      { title: 'Free & Mobile Friendly', desc: 'No registration required. Timed mocks with answers and explanations on any device.' }
+    ],
+    about: 'APFC (Assistant Provident Fund Commissioner) is a Group A post under the Employees\' Provident Fund Organisation, recruited through the UPSC Recruitment Test. The RT is a single 2-hour objective paper of 160 questions worth 300 marks with -1/3 negative marking, covering nine syllabus areas including Industrial Relations, Labour Codes, Social Security, Accountancy, Auditing and Insurance. Candidates scoring above the cutoff go to an interview carrying 25% weightage.',
+    canonical: 'apfc/'
   }
 };
 
