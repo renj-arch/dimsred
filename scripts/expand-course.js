@@ -546,29 +546,28 @@ function theoryPrompt(gap) {
     'What it covers: ' + gap.lesson.desc,
     'Key topics: ' + gap.lesson.topics + '.',
     '',
-    'EXAM STRATEGY (follow strictly):',
-    '- This lesson is for competitive exam aspirants. Every concept must be linked to an exam question pattern.',
-    '- Start each section with a "What the examiner asks" line that tells students exactly how this concept appears in the exam.',
-    '- Include mark weightage and time allocation for each topic.',
-    '- Use real previous-year question (PYQ) patterns. If you know a PYQ, reference it generically ("similar to SSC CGL 2022 Slot 2 Q45").',
-    '- Every concept must have a practical application example, not just theory.',
-    '- End with an "Exam Day Checklist" — quick things to verify before answering this topic.',
-    '- Total visible text: 1200-1600 words. Do not be brief.',
+    'WRITE LIKE A TEXTBOOK, NOT LIKE NOTES:',
+    '- Every section is continuous prose: full sentences in <p> paragraphs that explain, connect and give reasons.',
+    '- REJECTED as note-form: "GDP vs GNP: GDP = domestic production; GNP = GDP + NFIA. Real vs Nominal: deflator = (Nominal / Real) x 100."',
+    '- ACCEPTED: "Gross domestic product measures output produced inside the country, so it ignores what residents earn abroad. Gross national product adds net factor income from abroad, which is why the two diverge sharply in a country with large remittances."',
+    '- Explain cause and consequence, not only definition. Say why something happens and what follows from it.',
+    '- Name the specifics a student can be examined on: people, places, dates, Acts, articles, cases, formulae, units.',
+    '- Never invent a quotation, statistic, casualty figure, date or citation. If you are not certain of a specific, describe the concept without it.',
+    '- Do not write "similar to SSC CGL 2022 Slot 2 Q45" or any other past-paper reference. You cannot verify it, and a wrong one is worse than none.',
     '',
-    'STRUCTURE (follow exactly, in order):',
-    '1. Opening hook (2-3 sentences): Why this topic matters in the exam, what students lose marks on.',
-    '2. "Exam pattern" section: How this topic appears in the exam — number of questions, typical difficulty, time per question.',
-    '3. Concept sections: One <h3> per key topic. Each starts with the concept definition, then the formula/rule, then a worked numerical/conceptual example, then a "why this matters" line.',
-    '4. "Comparison Table" or "Comparison Section": Compare similar/confusing concepts side by side (e.g., Simple vs Compound Interest, Direct vs Indirect Tax, Divergent vs Convergent boundaries).',
-    '5. "Common Traps & How to Avoid": 5-7 specific mistakes students make, with the correct approach.',
-    '6. "Quick Formulas/Shortcuts" box: All key formulas in one place for last-minute revision.',
-    '7. "Case Study / Applied Example": One real-world or exam-scenario application showing how the concept is tested.',
-    '8. "Memory Tricks": Mnemonics, visual tricks, or pattern-recognition shortcuts.',
-    '9. Two solved MCQs (in <div class="example-box">): One easy, one moderate/hard. Each with full step-by-step solution.',
-    '10. "Exam Day Checklist": 5-7 bullet points to verify before submitting answers on this topic.',
+    'STRUCTURE -- two levels, like a textbook chapter:',
+    '- 4-7 <h2> topic groups that cover the whole subject in teaching order. Title each with the actual topic (for example "3. Preamble and Key Features").',
+    '- Under each <h2>, 3-6 numbered <h3> sub-sections (for example "3.1 The Preamble", "3.2 Nature of the Constitution"). Number them continuously through the lesson.',
+    '- Every heading must fit THIS lesson only, never a generic label.',
+    '- Do NOT use the headings "Common Traps", "Memory Tricks", "Exam Day Checklist", "Quick Formulas", "Exam Pattern", "Standard Sources", "Periods at a Glance", "Key Concepts", or any "Advanced Section" prefix. They appeared in hundreds of lessons and made every page identical.',
+    '- Include at least two <table> elements comparing things genuinely comparable in this topic (two theories, two periods, two methods, two organisms), each with a <caption>.',
+    '- Include one <div class="example-box"> with div.ex-title, div.ex-text and div.ex-soln: an exam-style question with a full worked solution.',
+    '- Include one <div class="tip-box"> with div.tip-title and div.tip-text: a specific exam-day insight, not generic advice.',
+    '',
+    'LENGTH: 2500-4000 words of visible text. A thin lesson on a large topic is a failed lesson. Never pad with repetition to reach the length.',
     '',
     'HTML FORMAT (use ONLY these tags):',
-    '<h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span> <sup> <sub> <table> <caption> <thead> <tbody> <tr> <th> <td>.',
+    '<h2> <h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span> <sup> <sub> <table> <caption> <thead> <tbody> <tr> <th> <td>.',
     '<div> elements may only carry these classes: example-box (div.ex-title, div.ex-text, div.ex-soln) and tip-box (div.tip-title, div.tip-text).',
     'No attributes on any tag except class on div.example-box, div.ex-title, div.ex-text, div.ex-soln, div.tip-title, div.tip-text.',
     'No markdown, no images, no links, no scripts, no inline styles.',
@@ -690,6 +689,7 @@ function deepenPrompt(gap) {
     'Write 4-5 NEW advanced sections that a serious aspirant needs but the list above does not cover (at least 3 if a later one would repeat an existing heading):',
     '- go deeper than the basics: mechanisms, exceptions, comparisons, landmark cases/data where textbook-standard, applied scenarios, chronology, cause and effect, and how the examiner twists the concept',
     '- each section starts with an <h3> title that is clearly different from every existing heading',
+    '- the title must name the actual content ("The Pashupati Seal and What It Shows"), never a label. Do NOT prefix titles with "Advanced Section"; do NOT use "Common Traps", "Memory Tricks", "Exam Day Checklist", "Quick Formulas", "Periods at a Glance", "Standard Sources" or "Key Concepts" -- those were used in hundreds of lessons and made every page look the same',
     '- each section must be substantial: 400-700 words of specific, correct detail (dates, names, events, statutes, judgments, movements), not generic statements',
     '- include one <div class="example-box"> with div.ex-title (technique), div.ex-text (question), div.ex-soln (full worked answer)',
     '- include one <div class="tip-box"> with div.tip-title and div.tip-text for exam-day strategy',
@@ -882,17 +882,49 @@ function callModel(prompt, numPredict, timeoutMs, temp) { // timeoutMs kept for 
 // ---- validation ------------------------------------------------------------
 
 var ALLOWED_TAGS = {
-  h3: 1, h4: 1, p: 1, ul: 1, ol: 1, li: 1, strong: 1, em: 1, br: 1,
+  h2: 1, h3: 1, h4: 1, p: 1, ul: 1, ol: 1, li: 1, strong: 1, em: 1, br: 1,
   div: 1, span: 1, sup: 1, sub: 1,
   table: 1, caption: 1, thead: 1, tbody: 1, tr: 1, th: 1, td: 1
 };
 var ALLOWED_CLASSES = { 'example-box': 1, 'ex-title': 1, 'ex-text': 1, 'ex-soln': 1, 'tip-box': 1, 'tip-title': 1, 'tip-text': 1 };
 
+// The old fixed template produced these headings in every lesson: "Common
+// Traps" appeared in 90 lessons and "Memory Tricks" in 60, so the corpus read as
+// one template filled in 356 times. A new lesson may not reach for them again.
+// Thresholds are calibrated on the two pages that bracket the quality range:
+// upsc/course/gs/lesson-indian-polity.html (44,485 words, 2.4 marks per 100
+// words, 20 h2, 33 tables) versus
+// upsc/course/opt-sanskrit/lesson-overview.html (1,580 words, 5.4 marks per 100
+// words, 0 h2, 0 tables).
+var TEMPLATE_HEADINGS = [
+  'common traps', 'common traps & how to avoid', 'common traps and how to avoid',
+  'memory tricks', 'exam day checklist', 'quick formulas', 'quick formulas/shortcuts',
+  'exam pattern', 'standard sources', 'periods at a glance', 'key concepts',
+  'advanced section'
+];
+var NOTE_DENSITY_MAX = 4.2;   // good prose 2.4, template notes 5.4
+
+function headingList(html) {
+  var out = [];
+  var re = /<h3\b[^>]*>([\s\S]*?)<\/h3>/gi;
+  var m;
+  while ((m = re.exec(html))) out.push(stripTags(m[1]).toLowerCase().trim());
+  return out;
+}
+
+// Marks per 100 words. Textbook prose runs 1-4 colons/semicolons; the note-form
+// the old prompt asked for runs far higher ("Term: x; Term: y; Term: z").
+function punctuationDensity(text) {
+  var words = String(text).split(/\s+/).filter(function (w) { return w.length > 1; }).length;
+  if (words < 40) return 0;
+  return ((String(text).match(/[:;]/g) || []).length / words) * 100;
+}
+
 function validateHtml(html, opts) {
   opts = opts || {};
   var minH3 = opts.minH3 || 3;
   if (!html || html.length < 2500) return 'too short (' + (html ? html.length : 0) + ' chars)';
-  if (html.length > 40000) return 'too long (' + html.length + ' chars)';
+  if (html.length > 60000) return 'too long (' + html.length + ' chars)';
   // Tag-aware checks: a text line such as "one = 1" is not an event handler.
   if (/<(script|style|iframe|img|a|object|embed|form|input|button|link|meta|base)\b/i.test(html)) return 'disallowed markup';
   if (/<[^>]+\son\w+\s*=/i.test(html)) return 'disallowed markup';
@@ -914,7 +946,8 @@ function validateHtml(html, opts) {
   }
 
   var pairs = [['p', '<p\\b', '</p>'], ['div', '<div\\b', '</div>'], ['ul', '<ul\\b', '</ul>'],
-    ['ol', '<ol\\b', '</ol>'], ['li', '<li\\b', '</li>'], ['h3', '<h3\\b', '</h3>'],
+    ['ol', '<ol\\b', '</ol>'], ['li', '<li\\b', '</li>'],
+    ['h2', '<h2\\b', '</h2>'], ['h3', '<h3\\b', '</h3>'],
     ['h4', '<h4\\b', '</h4>'], ['strong', '<strong\\b', '</strong>'],
     ['em', '<em\\b', '</em>'], ['span', '<span\\b', '</span>'],
     ['sup', '<sup\\b', '</sup>'], ['sub', '<sub\\b', '</sub>'],
@@ -932,6 +965,31 @@ function validateHtml(html, opts) {
   if ((html.match(/<p\b/g) || []).length < 5) return 'needs at least 5 <p> paragraphs';
   if (html.indexOf('class="example-box"') === -1) return 'needs an example-box';
   if (html.indexOf('class="tip-box"') === -1) return 'needs a tip-box';
+
+  // Quality floor for a whole lesson. Without it a 900-word note dump with three
+  // thin sections passed every structural check, which is how the corpus ended
+  // up at a 902-word average against 58,278 for the hand-built lessons.
+  // The reference page (lesson-indian-polity.html) has 44,485 words, 20 <h2>
+  // groups, 99 <h3> sub-sections and 33 tables.
+  if (opts.fullLesson) {
+    var text = stripTags(html);
+    var wc = text.split(/\s+/).filter(function (w) { return w.length > 1; }).length;
+    if (wc < (opts.minWords || 2000)) return 'too thin for a full lesson (' + wc + ' words)';
+    var heads = headingList(html);
+    var banned = heads.filter(function (h) {
+      return TEMPLATE_HEADINGS.indexOf(h) !== -1 || h.indexOf('advanced section') === 0;
+    });
+    if (banned.length) return 'template heading reused ("' + banned[0] + '") -- give this lesson its own section titles';
+    var density = punctuationDensity(text);
+    if (density > NOTE_DENSITY_MAX) return 'note-form, not prose (' + density.toFixed(1) + ' colons/semicolons per 100 words)';
+    if (!/<table\b/i.test(html)) return 'needs at least one <table> comparison';
+    // Two-level outline. The reference lesson groups 99 sub-sections under 20
+    // <h2> topics, which is what makes it navigable; a flat run of <h3> is what
+    // made the generated pages unreadable. <h2> was not even an allowed tag.
+    var h2s = (html.match(/<h2\b/g) || []).length;
+    if (h2s < 3) return 'needs a two-level outline: at least 3 <h2> topic groups (found ' + h2s + ')';
+    if (h3s < 6) return 'needs at least 6 <h3> sub-sections under those groups (found ' + h3s + ')';
+  }
   return null;
 }
 
@@ -1076,7 +1134,7 @@ function mergePractice(key, qs) {
 // ---- generation per gap ----------------------------------------------------
 
 function isStructuralReject(msg) {
-  return /^html rejected: (needs at least|needs an example-box|needs a tip-box|too short)/.test(msg);
+  return /^html rejected: (needs at least|needs an example-box|needs a tip-box|too short|too thin for a full lesson|template heading reused|note-form, not prose|needs at least one <table>)/.test(msg);
 }
 
 function generateQuestions(gap, html, timeoutMs) {
@@ -1101,7 +1159,7 @@ function generateOne(gap, timeoutMs) {
   else if (gap.role === 'deepen-page') source = pageSource(gap);
 
   function attempt(extra, n) {
-    return callModel(prompt + (extra || ''), isDepth ? 8000 : 5600, timeoutMs).then(function (raw) {
+    return callModel(prompt + (extra || ''), isDepth ? 8000 : 8000, timeoutMs).then(function (raw) {
       var html = raw;
       var qi = raw.indexOf('===QUESTIONS===');
       if (qi !== -1) html = raw.slice(0, qi);
@@ -1117,7 +1175,11 @@ function generateOne(gap, timeoutMs) {
         console.log('expand: ' + gap.key + ' trimmed an incomplete final sentence (' + trimmed.removed + ' chars)');
         html = trimmed.html;
       }
-      var err = validateHtml(html, { minH3: isDepth ? 2 : 3 });
+      var err = validateHtml(html, {
+        minH3: isDepth ? 2 : 3,
+        fullLesson: !isDepth,
+        minWords: isDepth ? 0 : 1500
+      });
       if (err) {
         var e = new Error('html rejected: ' + err);
         if (n < 2 && isStructuralReject(e.message)) {
