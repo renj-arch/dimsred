@@ -39,6 +39,7 @@ jobs:
             data/category-moves.json
             data/papers.json
             data/official-paper-sources.json
+            data/ocr-cache
             data/archive-answers.json
             data/archive-taxonomy.json
             data/pyq-patterns.json
@@ -120,15 +121,25 @@ jobs:
           curl -s http://127.0.0.1:11434/api/ps | grep -q qwen3.5 && echo "Warmup done (model resident)" || echo "WARNING: model NOT resident after warmup"
 
       # Official papers supply line (ingestor needs no model — pure parsing).
-      # pip + pypdf are tiny; the runners already have python3.
+      # pip + pypdf are tiny; the runners already have python3. Older UPSC
+      # PDFs are scans with no text layer, so the OCR lane needs tesseract +
+      # pymupdf/pytesseract/Pillow as well.
       - name: Setup Python PDF tools
-        run: pip install --quiet pypdf
+        run: |
+          pip install --quiet pypdf pymupdf pytesseract pillow
+          sudo apt-get update -qq && sudo apt-get install -y -qq tesseract-ocr
 
       # Discover official answer-key URLs (portal + archive strategies) for
       # papers that have a QP but no key yet. Verified URLs only, else retry
       # next run — never guessed.
       - name: Discover official paper URLs
         run: python3 scripts/discover-official-papers.py
+
+      # OCR scanned QP/key PDFs into data/ocr-cache/ so the ingestor's strict
+      # validators can run on text-layer-less official papers. Idempotent:
+      # cached papers are skipped, so this only pays the OCR cost once.
+      - name: OCR scanned official papers
+        run: python3 scripts/ocr-paper.py
 
       # Ingest verified official papers (QP + key PDFs → key-joined questions
       # with strict validation; anything uncertain is dropped, never faked)
@@ -193,7 +204,7 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/ocr-cache data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
           bash scripts/ci-push.sh "question-quality: agent fixes checkpoint (run #${{ github.run_number }})"
 
       # Archive answers moved to the dedicated 27B quality lane
@@ -238,5 +249,5 @@ jobs:
           git config user.name "dimsred-bot"
           git config user.email "bot@vlymbooq.qzz.io"
           git reset HEAD -- . 2>/dev/null || true
-          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
+          git add data/questions/ data/agent-log.json data/questions-report.json data/archive-answers.json data/papers.json data/quiz-proper.json data/official-paper-sources.json data/ocr-cache data/mega-quiz.json data/wiki-syllabus-plan.json scripts/wiki-fill-all.cjs 2>/dev/null || true
           bash scripts/ci-push.sh "question-quality: qwen3.5:9b improved questions (run #${{ github.run_number }})"
