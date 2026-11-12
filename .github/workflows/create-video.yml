@@ -132,7 +132,13 @@ jobs:
                 name + '=' + String(value == null ? '' : value).replace(/[\r\n]+/g, ' ') + '\n');
             };
             const bankPath = 'data/films/topic-bank.json';
-            const bank = JSON.parse(fs.readFileSync(bankPath, 'utf8'));
+            // topic-bank.json is gitignored (data/*) and only ever force-added
+            // on film-ci — on main it simply does not exist (runs 43159393601,
+            // 42756012482). Start an empty bank instead of crashing on ENOENT.
+            const bank = fs.existsSync(bankPath)
+              ? JSON.parse(fs.readFileSync(bankPath, 'utf8'))
+              : { topics: [] };
+            if (!Array.isArray(bank.topics)) bank.topics = [];
             const existing = bank.topics.find(x => x.id === process.env.TOPIC);
             if (existing) {
               console.log('topic already exists: ' + process.env.TOPIC);
@@ -263,7 +269,9 @@ jobs:
         run: |
           git config user.name "vlymbooq-bot"
           git config user.email "bot@vlymbooq.qzz.io"
-          git add data/films/topic-bank.json data/films/${TOPIC_ID}.json
+          # -f: data/* is gitignored; film JSONs and the topic bank are only
+          # ever tracked via force-add (same reason build-figures documents).
+          git add -f data/films/topic-bank.json data/films/${TOPIC_ID}.json
           if git diff --staged --quiet; then
             echo "No changes to commit"
           else
