@@ -189,18 +189,36 @@
    "details": []
   },
   {
-   "at": "2026-11-12T08:54:47.278Z",
+   "at": "2026-11-12T08:58:56.789Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 0,
+   "totalFixes": 2,
    "byAgent": [
     {
-     "agent": "mainsfresh",
-     "count": 0
+     "agent": "proposals",
+     "count": 2
     }
    ],
-   "details": []
+   "details": [
+    {
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix Missing Figures for Syllabus Topics",
+       "detail": "The fault board reports 75 syllabus topics missing a figure, which degrades the user experience on static pages.",
+       "text": "Implement a script to scan HTML files in the content directory for images or SVGs; generate placeholder SVG diagrams with text labels for those missing visuals and update the corresponding HTML files via file-system operations."
+      },
+      {
+       "kind": "proposal",
+       "fix": "Resolve Low Priority Faults Automatically",
+       "detail": "There are 41 warnings and 60 critical faults on the board, including broken links and info items that clutter the interface.",
+       "text": "Develop a Node.js script that parses the fault-board data structure, identifies low-severity issues (like 'info' or specific 'warn' tags), and programmatically patches the static HTML files to remove or fix these entries before rebuilding the site."
+      }
+     ]
+    }
+   ]
   }
  ],
- "lastRun": "2026-11-12T08:54:47.278Z",
+ "lastRun": "2026-11-12T08:58:56.789Z",
  "model": "qwen3.5:9b"
 }
