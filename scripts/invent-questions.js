@@ -540,7 +540,7 @@ function validate(raw, section, tier, recentTokenSets) {
   if (!Array.isArray(t.options)) return { ok: false, why: 'options missing' };
   let options = t.options.map(o => String(o == null ? '' : o).trim()).filter(o => o.length > 0);
   if (options.length !== 4) return { ok: false, why: 'options count ' + options.length };
-  if (new Set(options.map(o => o.toLowerCase())).size !== 4) return { ok: false, why: 'duplicate options' };
+  if (new Set(options.map(o => o.toLowerCase().replace(/−|–|—/g, '-').replace(/\s+/g, ''))).size !== 4) return { ok: false, why: 'duplicate options' };
   let answer = String(t.answer == null ? '' : t.answer).trim();
   if (!answer) return { ok: false, why: 'answer missing' };
   let idx = options.findIndex(o => o === answer);

@@ -957,6 +957,15 @@ async function agentContent() {
       let added = 0;
       parsed.forEach((q, i) => {
         if (!q.question || !q.options || !Array.isArray(q.options) || q.options.length !== 4) return;
+        // Two identical options make the MCQ a coin flip (case/whitespace/
+        // dash normalised; "(x-3)", "x<2" and "x>2" stay distinct).
+        const seenOpt = {};
+        if (q.options.some(function (o) {
+          const n = String(o == null ? '' : (o.text || o)).toLowerCase().replace(/−|–|—/g, '-').replace(/\s+/g, '');
+          if (seenOpt[n]) return true;
+          seenOpt[n] = 1;
+          return false;
+        })) return;
         if (!subs[subtopicName]) subs[subtopicName] = [];
         subs[subtopicName].push({
           id: baseId + '-' + i, type: 'mcq', category: catName,
