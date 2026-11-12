@@ -1,17 +1,37 @@
 {
  "meta": {
-  "generatedAt": "2026-11-11T08:33:59.177Z",
+  "generatedAt": "2026-11-12T08:58:56.789Z",
   "model": "qwen3.5:9b",
   "note": "Unreviewed improvement suggestions written by the site's own runner model. The owner approves by filing one as a GitHub issue — nothing is implemented automatically.",
-  "count": 47,
+  "count": 49,
   "lastAttempt": {
-   "at": "2026-11-11T08:33:59.177Z",
+   "at": "2026-11-12T08:58:56.789Z",
    "ok": true,
-   "count": 1,
-   "dropped": 3
+   "count": 2,
+   "dropped": 2
   }
  },
  "proposals": [
+  {
+   "id": "prp-mwdbg785-1",
+   "at": "2026-11-12T08:58:56.789Z",
+   "title": "Fix Missing Figures for Syllabus Topics",
+   "why": "The fault board reports 75 syllabus topics missing a figure, which degrades the user experience on static pages.",
+   "idea": "Implement a script to scan HTML files in the content directory for images or SVGs; generate placeholder SVG diagrams with text labels for those missing visuals and update the corresponding HTML files via file-system operations.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
+  {
+   "id": "prp-mwdbg785-2",
+   "at": "2026-11-12T08:58:56.789Z",
+   "title": "Resolve Low Priority Faults Automatically",
+   "why": "There are 41 warnings and 60 critical faults on the board, including broken links and info items that clutter the interface.",
+   "idea": "Develop a Node.js script that parses the fault-board data structure, identifies low-severity issues (like 'info' or specific 'warn' tags), and programmatically patches the static HTML files to remove or fix these entries before rebuilding the site.",
+   "effort": "medium",
+   "risk": "low",
+   "status": "new"
+  },
   {
    "id": "prp-mwbv48zt-1",
    "at": "2026-11-11T08:33:59.177Z",
