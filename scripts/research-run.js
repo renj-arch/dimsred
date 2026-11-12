@@ -234,8 +234,11 @@ async function investigate(item) {
   const keyOpt = (q.options || []).find(function (o) { return o.correct; });
   const key = keyOpt ? String(keyOpt.label).toUpperCase() : '';
 
+  // numPredict raised 2026-11-12: the qwen3.5:9b tag moved and the new build
+  // spends tokens on self-correction prose, so 900 truncated every scientist
+  // reply before the JSON closed — six straight runs rejected all candidates.
   const sci = await callObject([{ role: 'user', content: scientistPrompt(q) }],
-    { temperature: 0.2, numPredict: 900 }, 'scientist');
+    { temperature: 0.2, numPredict: 1800 }, 'scientist');
   const sciAnswer = normaliseAnswer(sci && sci.answer, q.options);
   if (!sciAnswer) {
     llm.log('  scientist produced no valid answer - skip');
@@ -243,11 +246,11 @@ async function investigate(item) {
   }
 
   const ver = await callObject([{ role: 'user', content: verifierPrompt(q) }],
-    { temperature: 0.15, numPredict: 900 }, 'verifier');
+    { temperature: 0.15, numPredict: 1800 }, 'verifier');
   const verAnswer = normaliseAnswer(ver && ver.answer, q.options);
 
   const inv = await callObject([{ role: 'user', content: inventorPrompt(q, sciAnswer) }],
-    { temperature: 0.65, numPredict: 2200 }, 'inventor');
+    { temperature: 0.65, numPredict: 3200 }, 'inventor');
   const rawMethods = inv && Array.isArray(inv.methods) ? inv.methods : [];
   const seen = {};
   const methods = rawMethods.map(function (m) { return cleanMethod(m, sciAnswer); })

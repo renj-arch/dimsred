@@ -64,6 +64,12 @@ jobs:
       # child_process shells out to `git ls-tree`/`git show` to diff old node
       # parts, so no npm install is needed.
       - name: Rebuild timeline map from question data
+        env:
+          # Carry each relation's mining sentence on the edge (`src`) so
+          # build-timeline.js can emit data/relations.json — the verified-arrow
+          # store flowchart.html fetches. Without it every corpus edge is
+          # evidence-free and the store's own gate would refuse all of them.
+          REL_SRC: '1'
         run: node scripts/build-timeline.js
 
       # Rebuild the Ask engine's retrieval index from the timeline nodes the step

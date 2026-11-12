@@ -361,7 +361,7 @@ function auditQuestion(q) {
 
   if (stem.length < 15 || stem.length > 900) errors.push('stem length ' + stem.length);
   if (options.length !== 4) errors.push('options count ' + options.length);
-  else if (new Set(options.map(o => o.toLowerCase())).size !== 4) errors.push('duplicate options');
+  else if (new Set(options.map(o => o.toLowerCase().replace(/−|–|—/g, '-').replace(/\s+/g, ''))).size !== 4) errors.push('duplicate options');
   else if (options.every(o => /^\[?[A-D]\]?[).:]?$/.test(o)) &&
     /(^|\n)\s*['"]?[A-D][).:]\s+\S/.test(stem)) {
     // Options that are only A/B/C/D labels. Person-name options (A, B, C, D)

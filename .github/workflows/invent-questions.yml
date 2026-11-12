@@ -157,6 +157,11 @@ jobs:
           OLLAMA_HOST: http://127.0.0.1:11434
           INVENT_PER_SLOT: ${{ github.event.inputs.per_slot || '2' }}
           INVENT_DEADLINE_MIN: '110'
+          # 2026-11-12: every slot in a dead run rejected as "truncated JSON
+          # (num_predict cap)" at the 1600 default — the 9B model's self-
+          # correction burns the budget before the JSON closes. 2600 leaves
+          # headroom; the quality gate still decides what ships.
+          INVENT_NUM_PREDICT: '2600'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/invent-questions.js
 
       # Revalidate the pool before it is ever committed. The generator's own

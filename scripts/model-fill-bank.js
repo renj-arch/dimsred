@@ -92,7 +92,7 @@ function validItem(item, bank, batch) {
   if (!Array.isArray(item.options) || item.options.length !== 4) return 'needs exactly 4 options';
   const opts = item.options.map(function (o) { return llm.clean(typeof o === 'string' ? o : (o && o.text)); });
   if (opts.some(function (o) { return o.length < 1 || o.length > 220; })) return 'bad option length';
-  if (new Set(opts.map(function (o) { return llm.norm(o); })).size !== 4) return 'duplicate options';
+  if (new Set(opts.map(function (o) { return llm.norm(o).replace(/\s+/g, ''); })).size !== 4) return 'duplicate options';
   if (opts.every(function (o) { return /^[A-D][.)]?$/.test(o); })) return 'bare-letter options';
   let correct = item.correct;
   if (typeof correct === 'string' && /^[A-Da-d]$/.test(correct)) correct = correct.toUpperCase().charCodeAt(0) - 65;
