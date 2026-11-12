@@ -1,6 +1,6 @@
 {
  "note": "Official-paper source registry. The ingestor downloads ONLY these QP + answer-key PDFs (official origins) and writes verified questions into papers.json. QP URLs are hand-verified once; key URLs are filled by discover-official-papers.py (portal + archive strategies) and HEAD-verified before use. Nothing here is guessed: entries without a verified keyUrl stay status need-key and are never ingested.",
- "updatedAt": "2026-11-02",
+ "updatedAt": "2026-11-10",
  "portals": [
   {
    "name": "UPSC answer keys",
@@ -25,7 +25,71 @@
    "keyUrl": "https://www.upsc.gov.in/sites/default/files/AnsKey-CSP-2023-Paper-I-090524.pdf",
    "status": "need-solve",
    "keyFoundVia": "wayback: 202406 snapshot",
-   "note": "key PDF is scanned (no text layer) — answers produced by agent lane solve-paper-agent.py, gated by apply-paper-solve.js"
+   "note": "no-key-table"
+  },
+  {
+   "status": "need-ingest",
+   "id": "upsc-cds-2024-gs",
+   "exam": "CDS",
+   "year": 2024,
+   "paper": "General Knowledge",
+   "qpUrl": "https://www.upsc.gov.in/sites/default/files/QP_CDSI2024_GENERAL-KNOWLEDGE_22042024.pdf",
+   "keyUrl": "https://www.upsc.gov.in/sites/default/files/AnsKey-CDS-I-2024-GeneralKnowledge-130125.pdf",
+   "keyFoundVia": "wayback CDX verified PDF (www host serves real PDFs; apex serves HTML)",
+   "note": "no-english-pages"
+  },
+  {
+   "status": "need-ingest",
+   "id": "upsc-prelims-2020-gs1",
+   "exam": "UPSC",
+   "year": 2020,
+   "paper": "GS Paper 1",
+   "qpUrl": "https://www.upsc.gov.in/sites/default/files/CSP_2020_GS_Paper-1.pdf",
+   "keyUrl": "https://www.upsc.gov.in/sites/default/files/AnsKey-CSP-20-Paper-I-091121.pdf",
+   "keyFoundVia": "wayback CDX verified PDF",
+   "note": "no-english-pages"
+  },
+  {
+   "status": "need-ingest",
+   "id": "upsc-prelims-2020-gs2",
+   "exam": "UPSC",
+   "year": 2020,
+   "paper": "GS Paper 2",
+   "qpUrl": "https://www.upsc.gov.in/sites/default/files/CSP_2020_GS_Paper-2.pdf",
+   "keyUrl": "https://www.upsc.gov.in/sites/default/files/AnsKey-CSP-20-Paper-II-091121.pdf",
+   "keyFoundVia": "wayback CDX verified PDF",
+   "note": "no-english-pages"
+  },
+  {
+   "status": "need-ingest",
+   "id": "upsc-prelims-2018-gs1",
+   "exam": "UPSC",
+   "year": 2018,
+   "paper": "GS Paper 1",
+   "qpUrl": "https://www.upsc.gov.in/sites/default/files/QP-CSP-18-GS-I-C.pdf",
+   "keyUrl": "https://www.upsc.gov.in/sites/default/files/AnsKey-CSP-18-Paper-I.pdf",
+   "keyFoundVia": "wayback CDX verified PDF",
+   "note": "no-english-pages"
+  },
+  {
+   "status": "need-ingest",
+   "id": "upsc-prelims-2018-gs2",
+   "exam": "UPSC",
+   "year": 2018,
+   "paper": "GS Paper 2",
+   "qpUrl": "https://www.upsc.gov.in/sites/default/files/QP-CSP-18-GS-II-C.pdf",
+   "keyUrl": "https://www.upsc.gov.in/sites/default/files/AnsKey-CSP-18-Paper-II.pdf",
+   "keyFoundVia": "wayback CDX verified PDF",
+   "note": "no-english-pages"
+  },
+  {
+   "id": "upsc-nda-2024-gat",
+   "exam": "NDA",
+   "year": 2024,
+   "paper": "GAT",
+   "qpUrl": "https://www.upsc.gov.in/sites/default/files/QP_NDANAI2024_GENERAL-ABILITY-TEST_22042024.pdf",
+   "status": "need-solve",
+   "note": "UPSC does not publish NDA answer keys; QP is a scan (no text layer) - agent lane solves it, gated by apply-paper-solve.js, labelled agent-solved. OCR cache required (ocr-paper.py)."
   }
  ],
  "wanted": [
