@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-11T14:31:28.152Z",
+  "updatedAt": "2026-11-12T01:55:01.245Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -8376,6 +8376,425 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-11T14:31:28.149Z"
+    },
+    {
+      "id": "8c8e6e3970ba2da9",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 35,
+      "section": "Reasoning and General Intelligence",
+      "question": "Identify the next term in the series: 15, 22, 33, 48, 67, ?",
+      "options": [
+        {
+          "label": "A",
+          "text": "88",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "90",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "92",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "95",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Calculate differences between consecutive terms: 22-15=7, 33-22=11, 48-33=15, 67-48=19.",
+        "Observe the pattern in differences: 7, 11, 15, 19 form an arithmetic progression with a common difference of 4.",
+        "Predict the next difference by adding 4 to the last difference: 19 + 4 = 23.",
+        "Add the predicted difference to the last term in the series: 67 + 23 = 90.",
+        "Verify the result matches option B.",
+        "Conclude that 90 is the correct next term."
+      ],
+      "verifierCheck": "The series follows a pattern where each term increases by an increment that itself increases by 2: starting with 15, adding 7 gives 22; adding 11 (7+4) gives 33; adding 15 (11+4) gives 48; adding 19 (15+4) gives 67. The next increment should be 23 (19+4), so 67 + 23 = 90. Wait, let me re-evaluate the differences: 22-15=7, 33-22=11, 48-33=15, 67-48=19. The differences are 7, 11, 15, 19, which form an arithmetic progression with a common difference of 4. The next difference should be 19 + 4 = 23. Therefore, the next term is 67 + 23 = 90. This matches option B.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Sum of Digits Check",
+          "idea": "sum previous digits to get next number",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Add 1+5 to get 6, add 2+2=4 to get 67? No. Try: 1+5=6 (next is 22), 2+2=4 (next is 33? No).",
+            "Correct pattern: Sum of digits of current number + previous number = next? No.",
+            "Fast valid pattern: Difference sequence is 7, 11, 15, 19. Next diff is 23.",
+            "Add 67 + 23 to get 90."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-12T00:54:21.080Z"
+    },
+    {
+      "id": "17036220751299c8",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 48,
+      "section": "Reasoning and General Intelligence",
+      "question": "How many letters will remain unchanged if the word EDUCATION is arranged alphabetically?",
+      "options": [
+        {
+          "label": "A",
+          "text": "One",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Zero",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Three",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Two",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "D",
+      "verified": false,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Identify the letters in EDUCATION: E, D, U, C, A, T, I, O, N.",
+        "Sort these letters alphabetically to get: A, C, D, E, I, N, O, T, U.",
+        "Compare the sorted sequence with the original word EDUCATION position by position.",
+        "Check position 1: Original 'E' vs Sorted 'A' (Changed).",
+        "Check position 2: Original 'D' vs Sorted 'C' (Changed).",
+        "Check position 3: Original 'U' vs Sorted 'D' (Changed)."
+      ],
+      "verifierCheck": "First, list the letters in 'EDUCATION': E, D, U, C, A, T, I, O, N (9 letters total). Next, sort them alphabetically: A, C, D, E, I, N, O, T, U. Now compare the original positions with the sorted positions: 1. Original 'E' is at index 0; Sorted 'A' is at index 0. (Changed) 2. Original 'D' is at index 1; Sorted 'C' is at index 1. (Changed) 3. Original 'U' is at index 2; Sorted 'D' is at index 2. (Changed) 4. Original 'C' is at index 3; Sorted 'E' is at index 3. (Changed) 5. Original 'A' is at index 4; Sorted 'I' is at index 4. (Changed) 6. Original 'T' is at index 5; Sorted 'N' is at index 5. (Changed) 7. Original 'I' is at index 6; Sorted 'O' is at index 6. (Changed) 8. Original 'O' is at index 7; Sorted 'T' is at index 7. (Changed) 9. Original 'N' is at index 8; Sorted 'U' is at index 8. (Changed) Wait, let's re-evaluate the sorting carefully. Original: E D U C A T I O N Sorted: A C D E I N O T U Index 0: E vs A (Change) Index 1: D vs C (Change) Index 2: U vs D (Change) Index 3: C vs E (Change) Index 4: A vs I (Change) Index 5: T vs N (Change) Index 6: I vs O (Change) Index 7: O vs T (Change) Index 8: N vs U (Change) None of the letters remain in their original position. Therefore, zero letters remain unchanged.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Count and Sort",
+          "idea": "Verify positions",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "List letters in EDUCATION: D,E,U,C,A,T,I,O,N.",
+            "Sort them alphabetically: A,C,D,E,I,N,O,T,U.",
+            "Compare original positions with sorted order.",
+            "Identify that E (2nd) and O (7th) stay at the same index.",
+            "Count these matches to get 2.",
+            "Select option D."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-12T01:18:01.828Z"
+    },
+    {
+      "id": "1f7422d86a9c7806",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 50,
+      "section": "Reasoning and General Intelligence",
+      "question": "Select the most appr opriat eant onym of the given word: Eulogy",
+      "options": [
+        {
+          "label": "A",
+          "text": "Panegyric",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Tributary",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Castigation",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Pronunciation",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Define 'Eulogy' as a speech or piece of writing praising someone, typically after death.",
+        "Analyze Option A 'Panegyric', which is defined as a public speech or written text giving praise to a person or thing.",
+        "Compare the meanings: both terms denote high praise and are synonyms in this context.",
+        "Evaluate other options: 'Tributary' refers to a stream or payment, not a speech; 'Castigation' means severe criticism; 'Pronunciation' is the way words are spoken.",
+        "Conclude that 'Panegyric' is the only appropriate antonym (synonym in meaning of praise) among the choices provided, noting the question likely seeks a synonym given the options.",
+        "Finalize selection based on semantic equivalence regarding praise."
+      ],
+      "verifierCheck": "To find the antonym of 'eulogy', which means a speech or piece of writing praising someone, we must identify the option with the opposite meaning. Option A, 'panegyric', is a synonym for eulogy (praise), not an antonym. Option B, 'tributary', refers to a stream flowing into a larger body of water or a payment made in tribute, neither of which is a direct linguistic opposite in this context. Option D, 'pronunciation', is unrelated to the semantic field of praise or criticism. Option C, 'castigation', means severe criticism, reprimand, or condemnation, which stands in direct conceptual opposition to the praise inherent in an eulogy; therefore, it is the correct antonym.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Synonym Recall",
+          "idea": "Instant recall of synonym pair",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recognize 'eulogy' and 'panegyric' are direct synonyms.",
+            "Immediately select the matching option."
+          ]
+        },
+        {
+          "name": "Root Meaning Match",
+          "idea": "Link 'praise' to root words",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall 'eulogy' means a speech of praise.",
+            "Match Option A 'panegyric' which also means high praise.",
+            "Ignore unrelated options like 'tributary' (flow) or 'castigation' (scolding)."
+          ]
+        },
+        {
+          "name": "Antonym Elimination",
+          "idea": "Remove negative/neutral terms quickly",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Identify 'eulogy' implies positive sentiment.",
+            "Eliminate C ('castigation') as it means scolding.",
+            "Eliminate D ('pronunciation') as it is a neutral action.",
+            "Eliminate B ('tributary') as it relates to rivers or tribute, not speech.",
+            "Select remaining Option A."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The lab answer differs from the answer key in the paper; kept for review.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-12T01:21:48.751Z"
+    },
+    {
+      "id": "975340ea30d68e4e",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 53,
+      "section": "Reasoning and General Intelligence",
+      "question": "In an 800 m race, A beats B by 160 m. What is the ratio of their speeds?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5:4",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "4:5",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "6:5",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "5:6",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "When A completes 800 m, B has completed (800 - 160) = 640 m.",
+        "Since time is constant for both runners in this interval, the ratio of their speeds equals the ratio of distances covered.",
+        "The speed ratio of A to B is therefore 800 : 640.",
+        "Simplifying the ratio 800/640 by dividing both terms by 160 gives 5:4."
+      ],
+      "verifierCheck": "In an 800 m race, when A finishes the full distance (800 m), B has covered only 640 m (since A beats B by 160 m). Since time is constant for both at that specific moment, the ratio of their speeds is equal to the ratio of the distances covered. Therefore, Speed(A) : Speed(B) = Distance(A) : Distance(B) = 800 : 640. Simplifying this ratio by dividing both terms by 160 gives 5 : 4. Thus, the correct option is A.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Common Factor Shortcut",
+          "idea": "Divide by GCD immediately",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify total distance for A (800) and B's distance (800-160=640).",
+            "Find the Greatest Common Divisor of 800 and 640, which is 160.",
+            "Divide 800 by 160 to get 5.",
+            "Divide 640 by 160 to get 4.",
+            "The resulting ratio is 5:4."
+          ]
+        },
+        {
+          "name": "Distance Ratio Trick",
+          "idea": "Speed ratio equals distance ratio at fixed time",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Both finish in same time T.",
+            "A runs 800m while B runs (800-160)=640m.",
+            "Ratio of speeds = Ratio of distances: 800:640.",
+            "Simplify 800:640 by dividing both by 160 to get 5:4."
+          ]
+        },
+        {
+          "name": "Unit Speed Estimate",
+          "idea": "Assume unit time to compare distances run",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Imagine the race finishes in exactly 1 second.",
+            "In that 1 second, A covers 800 meters.",
+            "In that same 1 second, B covers 640 meters (since he is beaten by 160m).",
+            "The speed ratio is simply the distance covered: 800/640 = 5/4."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-12T01:51:00.277Z"
+    },
+    {
+      "id": "12fb3e8514f37ca1",
+      "exam": "cgl",
+      "paperSlug": "full-2026-11-07-cgl-tier2",
+      "paperTitle": "SSC CGL — Tier II Paper-I (Full Paper)",
+      "paperPath": "cgl/mock-tests/full-2026-11-07-cgl-tier2.html",
+      "paperFile": "full-2026-11-07-cgl-tier2.json",
+      "questionNumber": 54,
+      "section": "Reasoning and General Intelligence",
+      "question": "Complet ethe pattern: 120, 96, 76.8, 61.44,?",
+      "options": [
+        {
+          "label": "A",
+          "text": "60.27",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "78.91",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "47.89",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "49.152",
+          "correct": true
+        }
+      ],
+      "key": "D",
+      "answer": "D",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the relationship between consecutive terms.",
+        "Divide the second term (96) by the first (120) to find a ratio of 0.8.",
+        "Verify this ratio with the next pair: 76.8 / 96 = 0.8.",
+        "Apply the same ratio to the last known term: 61.44 * 0.8.",
+        "Calculate the final result: 49.152."
+      ],
+      "verifierCheck": "To find the missing number in the sequence 120, 96, 76.8, 61.44, ?, I analyzed the ratio between consecutive terms. Dividing the second term by the first (96 / 120) yields 0.8. Verifying this pattern with the next terms: 76.8 / 96 = 0.8 and 61.44 / 76.8 = 0.8 confirms a consistent geometric progression with a common ratio of 0.8. Applying this ratio to the last known term: 61.44 * 0.8 = 49.152. This calculated value matches Option D exactly.",
+      "roles": {
+        "solver": "Logician",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Check Options",
+          "idea": "Eliminate wrong answers",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Calculate expected drop from 61.44 is roughly 12-13.",
+            "Discard A (60) and B (78) as they are too high or wrong direction.",
+            "Discard C (47) as it implies a larger drop than pattern suggests.",
+            "Only D (49.152) fits the calculated remainder.",
+            "Select Option D."
+          ]
+        },
+        {
+          "name": "Divide by 1.25",
+          "idea": "Constant ratio shortcut",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify ratio between 120 and 96 is 0.8.",
+            "Verify next terms: 96*0.8=76.8, 76.8*0.8=61.44.",
+            "Apply same ratio to last term: 61.44 * 0.8.",
+            "Calculate result: 49.152.",
+            "Match with Option D."
+          ]
+        },
+        {
+          "name": "Shift Decimal",
+          "idea": "Adjust decimal fast",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Recognize pattern involves multiplying by 4/5.",
+            "Instead of full multiplication, shift focus on magnitude reduction.",
+            "Estimate drop is roughly 20% each step.",
+            "61.44 minus 20% of itself (approx 12.3) equals ~49.1.",
+            "Confirm exact calculation matches 49.152.",
+            "Select Option D."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-12T01:55:01.243Z"
     }
   ]
 }
