@@ -153,7 +153,12 @@ function promptFor(section, count, examName, paperName, seeds) {
     '- Every question must be answerable from the stem and options alone.',
     '- Do not repeat a fact already tested by any seed, even with different wording or quotes.',
     '- For Data Interpretation sections: every question MUST include an imageUrl (bar chart / pie chart / line graph) OR tableData (headers + rows). The stem must reference the image/table (e.g. "As per the chart...").',
-    '- SHORTCUT RULES: Every question must test a shortcut-eligible concept (ratio elimination, percentage shortcuts, approximation, option-elimination, unit-digit patterns, divisibility rules, etc.).\n      '- Every solution MUST include: (a) a short exam-time shortcut/trick method, AND (b) a full step-by-step worked solution. Never just 'calculate normally' without showing a faster method.\n      '- Quantitative: show percentage shortcuts, ratio elimination, unit-digit tricks, approximation methods.\n      '- Reasoning: show pattern-recognition shortcuts (letter positions, mirror positions, coded relationships).\n      '- English: show elimination technique (eliminate wrong options first, then choose between remaining).\n      '- Return exactly ' + count + ' items.'
+    '- SHORTCUT RULES: Every question must test a shortcut-eligible concept (ratio elimination, percentage shortcuts, approximation, option-elimination, unit-digit patterns, divisibility rules, etc.).',
+    '- Every solution MUST include: (a) a short exam-time shortcut/trick method, AND (b) a full step-by-step worked solution. Never just "calculate normally" without showing a faster method.',
+    '- Quantitative: show percentage shortcuts, ratio elimination, unit-digit tricks, approximation methods.',
+    '- Reasoning: show pattern-recognition shortcuts (letter positions, mirror positions, coded relationships).',
+    '- English: show elimination technique (eliminate wrong options first, then choose between remaining).',
+    '- Return exactly ' + count + ' items.'
   ].join('\n');
 }
 

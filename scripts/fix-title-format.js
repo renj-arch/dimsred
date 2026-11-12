@@ -1,5 +1,16 @@
 var fs = require('fs');
-var root = 'C:/Users/Renjith/Desktop/icode (2)/study';
+var root = require('./lib/cli-root').requireRoot();
+var isApply = require('./lib/cli-root').isApply;
+
+// One-off title/meta formatter for paper pages ("SSC CGL CGL" -> "SSC CGL").
+//
+// It used to hardcode one developer machine's absolute path, so a bare run
+// rewrote every matching paper page under a directory you did not choose. Root
+// is now explicit and writing is opt-in.
+//
+//   node scripts/fix-title-format.js --root <dir>            # dry run
+//   node scripts/fix-title-format.js --root <dir> --apply    # write
+var apply = isApply();
 
 function getAllHtmlFiles(dir) {
   var results = [];
@@ -23,23 +34,23 @@ for (var i = 0; i < files.length; i++) {
   var html = fs.readFileSync(files[i], 'utf-8');
   var original = html;
 
-  // Fix "SSC CGL CGL" → "SSC CGL"
+  // Fix "SSC CGL CGL" -> "SSC CGL"
   html = html.replace(/(SSC CGL) CGL/g, '$1');
-  // Fix "Agniveer (Indian Army) Agniveer" → "Agniveer (Indian Army)"
+  // Fix "Agniveer (Indian Army) Agniveer" -> "Agniveer (Indian Army)"
   html = html.replace(/Agniveer \(Indian Army\) Agniveer/g, 'Agniveer (Indian Army)');
-  // Fix "RBI Grade B RBI" → "RBI Grade B"
+  // Fix "RBI Grade B RBI" -> "RBI Grade B"
   html = html.replace(/RBI Grade B RBI/g, 'RBI Grade B');
-  // Fix "IBPS PO IBPS PO" → "IBPS PO"
+  // Fix "IBPS PO IBPS PO" -> "IBPS PO"
   html = html.replace(/IBPS PO IBPS PO/g, 'IBPS PO');
-  // Fix "SBI Clerk SBI Clerk" → "SBI Clerk"
+  // Fix "SBI Clerk SBI Clerk" -> "SBI Clerk"
   html = html.replace(/SBI Clerk SBI Clerk/g, 'SBI Clerk');
-  // Fix "SSC GD Constable SSC GD" → "SSC GD Constable"
+  // Fix "SSC GD Constable SSC GD" -> "SSC GD Constable"
   html = html.replace(/SSC GD Constable SSC GD/g, 'SSC GD Constable');
-  // Fix "CTET CTET" → "CTET"
+  // Fix "CTET CTET" -> "CTET"
   html = html.replace(/CTET CTET/g, 'CTET');
-  // Fix "JEE Main JEE" → "JEE Main"
+  // Fix "JEE Main JEE" -> "JEE Main"
   html = html.replace(/JEE Main JEE/g, 'JEE Main');
-  // Fix "NEET UG NEET" → "NEET UG"
+  // Fix "NEET UG NEET" -> "NEET UG"
   html = html.replace(/NEET UG NEET/g, 'NEET UG');
 
   // Fix lowercase months in titles
@@ -54,9 +65,10 @@ for (var i = 0; i < files.length; i++) {
   html = html.replace(/(<meta name="description" content=".*?)\b(cs|ec|me|ce|ee|in|ch)\b(.*?">)/gi, function(m, a, b, c) { return a + b.toUpperCase() + c; });
 
   if (html !== original) {
-    fs.writeFileSync(files[i], html, 'utf-8');
+    if (apply) fs.writeFileSync(files[i], html, 'utf-8');
+    else console.log('  would fix ' + f.replace(root.replace(/\\/g, '/'), ''));
     fixed++;
   }
 }
 
-console.log('Fixed formatting in ' + fixed + ' files');
+console.log((apply ? 'Fixed formatting in ' : 'Would fix formatting in ') + fixed + ' files');

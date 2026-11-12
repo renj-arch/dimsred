@@ -135,6 +135,14 @@ jobs:
           node scripts/lib/html-repair.test.js
           node scripts/lib/ollama.test.js
           node scripts/lib/exam-blueprint.test.js
+          # 2026-11-10: build-topic-index.js rebuilt data/topic-index.json from a
+          # fixed 14-exam map and dropped the six combined drills — ~6,600
+          # questions left in the repo but unreachable from the page. The guard
+          # fails here instead of publishing the loss silently. The baseline
+          # guard covers the same class for lesson bodies and hand-built pages,
+          # which expand-course, site-agent and selfcheck-quick all rewrite.
+          node scripts/lib/topic-index-guard.test.js
+          node scripts/lib/content-baseline-guard.test.js
       - name: Rebuild slim live tree (orphan root)
         run: |
           set -euo pipefail

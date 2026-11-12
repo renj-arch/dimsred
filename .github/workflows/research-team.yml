@@ -156,15 +156,31 @@ jobs:
       - name: Final publish fallback (merge-with-ours only, no rebase)
         if: always()
         run: |
+          # `pushed` is a shell variable from the previous step and does not
+          # survive into this one, so the old `[ -z "$pushed" ]` test failed
+          # every run even when the push had succeeded (run 43031735754 pushed
+          # 4b8b5c84..4405e5dc, then this step reported "could not be pushed").
+          # Check the remote state instead of a variable we cannot see.
           git fetch origin main 2>/dev/null || true
+          if git merge-base --is-ancestor HEAD origin/main 2>/dev/null; then
+            echo "Already published to main"
+            exit 0
+          fi
           git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
           git add -A 2>/dev/null || true
           git commit --no-edit 2>/dev/null || true
-          git push origin HEAD:main 2>/dev/null || true
-          if [ -z "$pushed" ]; then
-            echo "::error::research methods could not be pushed to main"
-            exit 1
-          fi
+          for i in 1 2 3; do
+            if git push origin HEAD:main; then
+              echo "Published on attempt $i"
+              exit 0
+            fi
+            echo "push attempt $i failed, retrying..."
+            sleep 5
+            git fetch origin main 2>/dev/null || true
+            git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
+          done
+          echo "::error::research methods could not be pushed to main"
+          exit 1
 
       - name: Report
         if: always()

@@ -372,21 +372,38 @@ jobs:
             echo "No figure changes to commit"
           else
             git commit -m "Figures rebuild $(date +'%Y-%m-%d %H:%M UTC')"
-            # The fill chain pushes to the same branch. Rebase onto it and
-            # retry rather than losing a completed figure build to a
-            # non-fast-forward, which is the other way this workflow used to be
-            # starved silently.
+            # The fill chain pushes to the same branch. Merge onto it and retry
+            # rather than losing a completed figure build to a non-fast-forward,
+            # which is the other way this workflow used to be starved silently.
+            # Re-stage only the paths this workflow owns: `git add -A` here
+            # swept untracked scratch files from the repo root into the commit.
+            PUBLISH_PATHS=(
+              geography-diagrams.html
+              geography-figures.html
+              subject-figures-index.html
+              '*-figures.html'
+              figures/
+              data/figure-candidates.json
+              data/figure-published.json
+              data/ask-figures.json
+              data/figure-files-auto.json
+              data/figure-files-curated.json
+              data/figure-topics-curated.json
+              data/figure-added-dates.json
+              data/geo-auto-figures.json
+              data/subject-figures-cache.json
+              data/figure-gaps.json
+            )
             for attempt in 1 2 3; do
               git fetch origin "$GITHUB_REF_NAME" 2>/dev/null || true
               git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || true
-              git add -A 2>/dev/null || true
+              git add -- "${PUBLISH_PATHS[@]}" 2>/dev/null || true
               git commit --no-edit 2>/dev/null || true
               if git push origin "HEAD:$GITHUB_REF_NAME"; then
                 echo "Pushed figures rebuild (attempt $attempt)"
                 exit 0
               fi
               echo "Merge/push attempt $attempt failed; retrying..."
-              fi
               sleep 5
             done
             echo "::warning::could not push figures after 3 attempts; the build is preserved in this run's logs"

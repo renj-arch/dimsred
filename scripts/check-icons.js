@@ -1,5 +1,5 @@
 var fs = require('fs');
-var root = 'C:\\Users\\Renjith\\Desktop\\icode (2)\\study';
+var root = require('./lib/cli-root').requireRoot({ readOnly: true });
 var exams = ['upsc','ibps-po','sbi-clerk','ssc-gd','ctet'];
 
 exams.forEach(function(f) {

@@ -1,6 +1,43 @@
 const fs = require('fs');
 const path = require('path');
-const root = 'C:\\Users\\Renjith\\Desktop\\icode (2)\\study';
+
+// One-off local cleanup from 2026-06 (commit e466e4eabc: "cleanup: remove dead
+// pages (login, guest-login, community)"); unrelated nav fixes from the same
+// era (commit 2791414aec). It is NOT run by any workflow — its work is already
+// in the repo.
+//
+// It used to carry a hardcoded absolute Desktop path to one developer machine.
+// A bare `node scripts/cleanup-dead.js` therefore rewrote EVERY .html file under
+// that directory and then deleted three pages — silently, with no confirmation
+// and no dry run, from any working directory. The path is gone. You now have to
+// say which tree, and writing is opt-in:
+//
+//   node scripts/cleanup-dead.js --root <dir>            # report only (default)
+//   node scripts/cleanup-dead.js --root <dir> --apply    # actually write
+const args = process.argv.slice(2);
+function flag(name) {
+    const i = args.indexOf(name);
+    return i === -1 ? null : args[i + 1];
+}
+const apply = args.indexOf('--apply') !== -1;
+let root = flag('--root');
+
+if (!root) {
+    console.error('Refusing to run: pass the site directory explicitly.');
+    console.error('');
+    console.error('  node scripts/cleanup-dead.js --root <dir> [--apply]');
+    console.error('');
+    console.error('There is deliberately no default. An earlier version defaulted to one');
+    console.error("machine's hardcoded path, so a bare run could rewrite and delete files there.");
+    process.exit(2);
+}
+if (!fs.existsSync(root) || !fs.statSync(root).isDirectory()) {
+    console.error('--root is not a directory: ' + root);
+    process.exit(2);
+}
+root = path.resolve(root);
+console.log((apply ? 'APPLYING to ' : 'DRY RUN over ') + root);
+if (!apply) console.log('(nothing will be written; add --apply to make changes)');
 
 function walk(dir) {
     const files = [];
@@ -55,8 +92,9 @@ for (const f of files) {
     }
 
     if (changed) {
-        fs.writeFileSync(f, content, 'utf8');
         if (f.includes('community')) communityUpdated++;
+        if (apply) fs.writeFileSync(f, content, 'utf8');
+        else console.log('  would update ' + path.relative(root, f));
     }
 }
 
@@ -65,11 +103,16 @@ const deadPages = ['community.html', 'login.html', 'guest-login.html'];
 for (const p of deadPages) {
     const full = path.join(root, p);
     if (fs.existsSync(full)) {
-        fs.unlinkSync(full);
-        console.log('Deleted: ' + p);
+        if (apply) {
+            fs.unlinkSync(full);
+            console.log('Deleted: ' + p);
+        } else {
+            console.log('would delete: ' + p);
+        }
     }
 }
 
-console.log('Community links updated: ' + communityUpdated);
-console.log('Redirect.js refs removed: ' + redirectRemoved);
-console.log('Sign-in buttons removed: ' + signinRemoved);
+console.log('Community links ' + (apply ? 'updated' : 'to update') + ': ' + communityUpdated);
+console.log('Redirect.js refs ' + (apply ? 'removed' : 'to remove') + ': ' + redirectRemoved);
+console.log('Sign-in buttons ' + (apply ? 'removed' : 'to remove') + ': ' + signinRemoved);
+if (!apply) console.log('Dry run complete — re-run with --apply to write these changes.');
