@@ -274,6 +274,13 @@ jobs:
           PUBLISH_PER_PAGE: '200'
         run: node scripts/build-figure-pages.js
 
+      # Per-diagram pages for the hand-drawn SVG set (figures/svg-<id>.html).
+      # The index hero links to them; building them here keeps the hero
+      # reproducible instead of hand-injected markup that rots on rebuild.
+      - name: Build SVG figure pages
+        if: inputs.commit == 'true' || github.event_name == 'schedule'
+        run: node scripts/build-svg-figure-pages.js
+
       # The Ask page's figure strip reads a slim projection of the ledger above,
       # not the gallery itself. Offline, cheap and idempotent: an unchanged
       # projection writes nothing, so this can run beside every publish.
