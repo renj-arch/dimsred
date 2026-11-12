@@ -47,6 +47,38 @@ var MAX_SENTENCES_PER_RECORD = 4;
 var MAX_SENTENCES_PER_ENTITY = Infinity;
 var MIN_SENTENCE_WORDS = 8;
 
+// Refuse to rebuild from a stub index.
+//
+// On 2026-11-07 a rebuild read an archive-cat-index.json that had been
+// overwritten with a 35-question stub and wrote a 109-byte entities.tsv over
+// the 11.4 MB / 472k-entity table. Every later Ask answer, and the timeline
+// regression that reads the table, then behaved as if the corpus held five
+// entities. The stub was restored hours later, but the derived tables stayed
+// poisoned until someone noticed the size.
+//
+// A full index is ~148 categories and ~15M questions. A partial corpus is a
+// legitimate development case, so `--force` exists; a scheduled run must never
+// take this path by accident.
+var MIN_INDEX_CATEGORIES = 100;
+var MIN_INDEX_QUESTIONS = 10000;
+
+function assertIndexIsNotAStub(cats) {
+  var total = cats.reduce(function (a, c) { return a + (Number(c.total) || 0); }, 0);
+  var forced = process.argv.indexOf('--force') !== -1;
+  if (forced) {
+    process.stderr.write('ask-qb: --force given; accepting ' + cats.length +
+      ' categories / ' + total + ' questions\n');
+    return;
+  }
+  if (cats.length >= MIN_INDEX_CATEGORIES && total >= MIN_INDEX_QUESTIONS) return;
+  process.stderr.write('ask-qb: REFUSING to rebuild from a stub index\n');
+  process.stderr.write('  categories: ' + cats.length + ' (minimum ' + MIN_INDEX_CATEGORIES + ')\n');
+  process.stderr.write('  questions:  ' + total + ' (minimum ' + MIN_INDEX_QUESTIONS + ')\n');
+  process.stderr.write('  data/questions/archive-cat-index.json is probably a partial overwrite.\n');
+  process.stderr.write('  Restore it, or pass --force if this really is a partial corpus.\n');
+  process.exit(1);
+}
+
 // classify-global marks the sub-topics it moved with a leading tick ("✓ Chera
 // dynasty"). The mark is meaningful in data/questions, where it records the
 // triage, but it is noise in a name a reader is shown as the source of a quote,
@@ -178,6 +210,7 @@ function slug(s) {
 
 function main() {
   var cats = readCatIndex();
+  assertIndexIsNotAStub(cats);
   process.stderr.write('categories: ' + cats.length + '\n');
   if (!fs.existsSync(OUTDIR)) fs.mkdirSync(OUTDIR, { recursive: true });
 
