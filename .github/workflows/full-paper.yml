@@ -11,7 +11,7 @@ on:
   workflow_dispatch:
     inputs:
       exam:
-        description: 'Exam key (cgl, rbi, jee, neet, gate, agniveer, upsc, ibps-po, sbi-clerk, ssc-gd, ctet, nda, cds, clat)'
+        description: 'Exam key (cgl, rbi, jee, neet, gate, agniveer, upsc, ibps-po, sbi-clerk, ssc-gd, ctet, nda, cds, clat, apfc)'
         required: true
         default: 'cgl'
       paper:
@@ -120,7 +120,7 @@ jobs:
             # GK + Maths) each have more than one paper. Tier-II, CTET Paper II
             # and JEE Paper 2B are the Paper 2 additions; descriptive/mixed
             # papers (UPSC Mains, RBI Phase II, JEE Paper 2A) stay out.
-            PAPERS=(cgl:tier1 cgl:tier2 rbi:phase1 ibps-po:prelims sbi-clerk:prelims ssc-gd:cbt ctet:paper1 ctet:paper2 jee:paper1 jee:paper2b neet:paper1 gate:paper1 agniveer:cee upsc:gs1 upsc:csat nda:maths nda:gat cds:english cds:gk cds:maths clat:paper1)
+            PAPERS=(cgl:tier1 cgl:tier2 rbi:phase1 ibps-po:prelims sbi-clerk:prelims ssc-gd:cbt ctet:paper1 ctet:paper2 jee:paper1 jee:paper2b neet:paper1 gate:paper1 agniveer:cee upsc:gs1 upsc:csat nda:maths nda:gat cds:english cds:gk cds:maths clat:paper1 apfc:rt)
             IDX=$(( 10#$(date +%j) % ${#PAPERS[@]} ))
             PAIR=${PAPERS[$IDX]}
             echo "exam=${PAIR%%:*}" >> $GITHUB_OUTPUT
