@@ -120,6 +120,17 @@ jobs:
         run: |
           node -e "
             const fs = require('fs');
+            // GitHub step outputs, written from Node. These five lines used to
+            // be shell syntax ('echo ... >> $GITHUB_OUTPUT') sitting inside the
+            // JavaScript passed to `node -e`, which is not valid JS: the step
+            // died with "SyntaxError: Unexpected string" before it could create
+            // the topic, so create-video never ran at all (run 42756012482).
+            // Newlines are collapsed because GITHUB_OUTPUT needs the heredoc
+            // form for multi-line values and these are all single-line.
+            const setOut = function (name, value) {
+              fs.appendFileSync(process.env.GITHUB_OUTPUT,
+                name + '=' + String(value == null ? '' : value).replace(/[\r\n]+/g, ' ') + '\n');
+            };
             const bankPath = 'data/films/topic-bank.json';
             const bank = JSON.parse(fs.readFileSync(bankPath, 'utf8'));
             const existing = bank.topics.find(x => x.id === process.env.TOPIC);
@@ -130,6 +141,14 @@ jobs:
               console.log('why=' + existing.why);
               console.log('category=' + existing.category);
               console.log('sources=' + JSON.stringify(existing.sources));
+              // The outputs have to be emitted on this path too: the step used to
+              // exit(0) here, so re-running an existing topic gave every downstream
+              // step an empty title/angle/why/category.
+              setOut('title', existing.title);
+              setOut('angle', existing.angle);
+              setOut('why', existing.why);
+              setOut('category', existing.category);
+              setOut('sources', JSON.stringify(existing.sources || []));
               process.exit(0);
             }
             // Topic not found — create it from dispatch inputs (agent-created topic)
@@ -165,11 +184,11 @@ jobs:
             console.log('why=' + why);
             console.log('category=' + category);
             console.log('sources=' + JSON.stringify(newTopic.sources));
-            echo 'title=' + title >> \$GITHUB_OUTPUT
-            echo 'angle=' + angle >> \$GITHUB_OUTPUT
-            echo 'why=' + why >> \$GITHUB_OUTPUT
-            echo 'category=' + category >> \$GITHUB_OUTPUT
-            echo 'sources=' + JSON.stringify(newTopic.sources) >> \$GITHUB_OUTPUT
+            setOut('title', title);
+            setOut('angle', angle);
+            setOut('why', why);
+            setOut('category', category);
+            setOut('sources', JSON.stringify(newTopic.sources));
           "
         env:
           TITLE: ${{ inputs.title }}
