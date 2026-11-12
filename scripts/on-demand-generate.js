@@ -587,6 +587,15 @@ async function runMentalBatch(p) {
     if (!x || !x.stem || !Array.isArray(x.options)) return;
     const options = x.options.map(clean).filter(Boolean);
     if (options.length !== 4) return;
+    // Two identical options make the MCQ a coin flip. Case, whitespace and
+    // dash style are normalised; "(x-3)", "x<2" and "x>2" stay distinct.
+    const seenOpt = {};
+    if (options.some(function (o) {
+      const n = o.toLowerCase().replace(/−|–|—/g, '-').replace(/\s+/g, '');
+      if (seenOpt[n]) return true;
+      seenOpt[n] = 1;
+      return false;
+    })) return;
     let answer = clean(x.answer);
     // Accept "B" / "2" style answers by mapping to the option, and the exact
     // string; anything else is dropped rather than shipped wrong.
