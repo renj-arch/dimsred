@@ -112,6 +112,13 @@ def compose(spec, palette):
     if hero not in PROPS:
         raise SystemExit(f"unknown hero '{hero}'")
 
+    # reset() deletes every object and then removes every datablock with zero
+    # users -- which includes materials that were created moments earlier and
+    # not yet assigned to anything. Running it AFTER materials() handed the
+    # builders dead references:
+    #   ReferenceError: StructRNA of type Material has been removed
+    # The file has to be wiped before the palette is built.
+    reset()
     m = materials(palette)
     seed = int(spec.get("seed", 1))
     rng = random.Random(seed)
@@ -121,7 +128,6 @@ def compose(spec, palette):
     dressing = spec.get("dressing") or {}
     density = clamp(int(dressing.get("density", 2)), 0, 4)
 
-    reset()
     anchor = SPACES[space](m, dims, seed, {"tone": tone,
                                            "windows": bool(spec.get("windows", True)),
                                            "panel": bool(spec.get("panel", False))})
