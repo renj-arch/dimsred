@@ -157,7 +157,15 @@ jobs:
           EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '6' }}
           EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'
-          EXPAND_DEPTH_PASSES: '4'
+          # Depth converges on a word target, not a pass count. A fixed 4 passes
+          # is ~15,000 words, a quarter of the 58,278-word average of the eight
+          # hand-built UPSC GS lessons. Each scheduled run now adds 2,000-3,500
+          # words to the biggest remaining gaps until they reach the target;
+          # EXPAND_DEPTH_PASS_MAX is only a backstop for a page that cannot
+          # converge.
+          EXPAND_DEPTH_TARGET_WORDS: '20000'
+          EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
+          EXPAND_DEPTH_PASS_MAX: '60'
         run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
 
       # Published addons accumulate small defects: raw LaTeX, a sentence cut
@@ -167,6 +175,13 @@ jobs:
       - name: Clean published addon content
         if: always()
         run: node scripts/clean-course-content.js
+
+      # Publishes the same number the course is judged on. Coverage is measured
+      # in prose words against a depth target, because a pass-count cap let the
+      # generator declare "done" at 4% of hand-built density.
+      - name: Course coverage report
+        if: always()
+        run: node scripts/course-coverage.js --top 20 || true
 
       - name: Regenerate exactly the filled lesson pages
         if: always()

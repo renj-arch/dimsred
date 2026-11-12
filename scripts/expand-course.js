@@ -49,7 +49,17 @@ var THIN = parseInt(process.env.EXPAND_THIN_THRESHOLD || '2500', 10);
 // Depth lane: append NEW advanced sections to lessons that are already full,
 // instead of only fixing empty/stub ones. Off unless the workflow asks for it.
 var DEEPEN = /^(1|true|yes)$/i.test(process.env.EXPAND_DEEPEN || '');
-var DEPTH_PASSES = Math.max(1, parseInt(process.env.EXPAND_DEPTH_PASSES || '5', 10));
+// Depth convergence targets WORDS, not passes.
+//
+// A fixed pass count cannot reach hand-built density. The eight hand-built UPSC
+// GS lessons average 58,278 words of prose each; one depth pass adds 2,000-3,500.
+// Five passes is ~15,000 words — a quarter of the way — and the old code then
+// stopped forever. So the lane now measures the lesson and keeps returning to it
+// on later scheduled runs until it reaches the target. DEPTH_PASS_MAX is only a
+// backstop for a page that can never converge.
+var DEPTH_TARGET_WORDS = Math.max(1000, parseInt(process.env.EXPAND_DEPTH_TARGET_WORDS || '20000', 10));
+var DEPTH_TARGET_WORDS_BUILT = Math.max(1000, parseInt(process.env.EXPAND_DEPTH_TARGET_WORDS_BUILT || '45000', 10));
+var DEPTH_PASS_MAX = Math.max(1, parseInt(process.env.EXPAND_DEPTH_PASS_MAX || '60', 10));
 var DEPTH_FILE = path.join(__dirname, 'course-depth.json');
 var ADDONS_FILE = path.join(__dirname, 'course-addons.json');
 // Full rewrite mode: rewrites ALL lessons (including hand-built ones) with
@@ -219,6 +229,24 @@ function pageSize(fp) {
   try { return fs.statSync(fp).size; } catch (e) { return 0; }
 }
 
+// Visible words in a page, cached per run. pageSize() counts CSS, scripts and
+// inline SVG, which on a hand-built lesson is most of the file, so it cannot be
+// used to decide whether the PROSE is deep enough. cleanPageSource() strips
+// exactly those, then this drops the remaining tags.
+var _wordCache = {};
+function pageWords(fp) {
+  if (_wordCache[fp] !== undefined) return _wordCache[fp];
+  var n = 0;
+  try {
+    var text = cleanPageSource(fs.readFileSync(fp, 'utf8'))
+      .replace(/<[^>]+>/g, ' ')
+      .replace(/&[a-z]+;/gi, ' ');
+    n = text.split(/\s+/).filter(function (w) { return w.length > 1; }).length;
+  } catch (e) { n = 0; }
+  _wordCache[fp] = n;
+  return n;
+}
+
 function collectDeepen() {
   var out = [];
   var seen = {};
@@ -252,7 +280,10 @@ function collectDeepen() {
         var handBuilt = !content || biggest > Math.max(60000, content.length * 4);
         var st = depthState.keys[key] || {};
         var passes = parseInt(st.passes || 0, 10) || 0;
-        if (passes >= DEPTH_PASSES) return;
+        if (passes >= DEPTH_PASS_MAX) return;
+        var words = existing.reduce(function (m, f) { return Math.max(m, pageWords(path.join(ROOT, f))); }, 0);
+        var target = handBuilt ? DEPTH_TARGET_WORDS_BUILT : DEPTH_TARGET_WORDS;
+        if (words >= target) return;
         out.push({
           key: key,
           mk: mk,
@@ -260,6 +291,9 @@ function collectDeepen() {
           role: handBuilt ? 'deepen-page' : 'deepen',
           oldLen: content.length,
           pageSize: biggest,
+          words: words,
+          targetWords: target,
+          deficit: target - words,
           passes: passes,
           lastAt: String(st.at || ''),
           lesson: users[0].lesson,
@@ -373,15 +407,21 @@ function collectHandPages() {
     var key = 'hand/' + slug;
     var st = depthState.keys[key] || {};
     var passes = parseInt(st.passes || 0, 10) || 0;
-    if (passes >= DEPTH_PASSES) return;
+    if (passes >= DEPTH_PASS_MAX) return;
+    var abs = path.join(ROOT, rel);
+    var words = pageWords(abs);
+    if (words >= DEPTH_TARGET_WORDS_BUILT) return;
     out.push({
       key: key,
       mk: 'hand',
       slug: slug,
       role: 'deepen-page',
       target: target,
-      oldLen: pageSize(path.join(ROOT, rel)),
-      pageSize: pageSize(path.join(ROOT, rel)),
+      oldLen: pageSize(abs),
+      pageSize: pageSize(abs),
+      words: words,
+      targetWords: DEPTH_TARGET_WORDS_BUILT,
+      deficit: DEPTH_TARGET_WORDS_BUILT - words,
       passes: passes,
       lastAt: String(st.at || ''),
       lesson: { title: title, desc: desc, topics: topics },
@@ -642,6 +682,11 @@ function deepenPrompt(gap) {
     'End of the existing lesson for tone and continuity:',
     digest || '(no text available)',
     '',
+    gap.targetWords
+      ? ('Progress: the lesson currently has about ' + gap.words + ' words of prose; the depth target is ' +
+         gap.targetWords + ' (' + gap.deficit + ' words still to come across future passes). This pass still has to ' +
+         'stand on its own as a complete, exam-ready set of sections.')
+      : '',
     'Write 4-5 NEW advanced sections that a serious aspirant needs but the list above does not cover (at least 3 if a later one would repeat an existing heading):',
     '- go deeper than the basics: mechanisms, exceptions, comparisons, landmark cases/data where textbook-standard, applied scenarios, chronology, cause and effect, and how the examiner twists the concept',
     '- each section starts with an <h3> title that is clearly different from every existing heading',
@@ -1152,7 +1197,9 @@ async function main() {
   });
   if (thins.length > 10) console.log('  ... and ' + (thins.length - 10) + ' more thin lesson(s)');
   deeps.slice(0, 10).forEach(function (g) {
-    console.log('  [' + (g.role === 'deepen-page' ? 'depth-page' : 'depth') + '] ' + g.key + '  (pass ' + (g.passes + 1) + '/' + DEPTH_PASSES + ', ' + g.oldLen + ' chars)');
+    console.log('  [' + (g.role === 'deepen-page' ? 'depth-page' : 'depth') + '] ' + g.key +
+      '  (pass ' + (g.passes + 1) + '/' + DEPTH_PASS_MAX +
+      (g.targetWords ? ', ' + g.words + '/' + g.targetWords + ' words, ' + g.deficit + ' to go' : ', ' + g.oldLen + ' chars') + ')');
   });
   if (deeps.length > 10) console.log('  ... and ' + (deeps.length - 10) + ' more depth candidate(s)');
 
