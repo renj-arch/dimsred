@@ -85,7 +85,7 @@ async function verifyItem(item, opts, correct, section) {
 }
 
 
-function validItem(item, bank, batch) {
+function validItem(item, bank, batch, section) {
   if (!item || typeof item !== 'object') return 'not an object';
   const text = llm.clean(item.text || item.q || item.stem);
   if (text.length < 12 || text.length > 600) return 'bad stem length';
@@ -192,7 +192,7 @@ async function generateSection(section, sectionDef, need, examName, paperName, b
     let addedThisRound = 0;
     for (const item of items) {
       if (added >= want || budget.left <= 0) break;
-      const reason = validItem(item, bank, batch);
+      const reason = validItem(item, bank, batch, section);
       if (reason) { llm.log('  rejected: ' + reason); continue; }
       const opts = item.options.map(function (o) { return llm.clean(typeof o === 'string' ? o : o.text); });
       const correct = typeof item.correct === 'string' && /^[A-Da-d]$/.test(item.correct)
