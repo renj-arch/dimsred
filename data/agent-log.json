@@ -1,6 +1,42 @@
 {
  "runs": [
   {
+   "at": "2026-11-13T02:49:00.718Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-13T03:10:55.306Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
+   "at": "2026-11-13T03:23:17.981Z",
+   "model": "qwen3.5:9b",
+   "totalFixes": 0,
+   "byAgent": [
+    {
+     "agent": "mainsfresh",
+     "count": 0
+    }
+   ],
+   "details": []
+  },
+  {
    "at": "2026-11-13T03:37:36.421Z",
    "model": "qwen3.5:9b",
    "totalFixes": 0,
@@ -172,46 +208,33 @@
       }
      ]
     }
-   ],
-   "details": []
+   ]
   },
   {
-   "at": "2026-11-13T08:15:07.647Z",
+   "at": "2026-11-13T08:53:12.164Z",
    "model": "qwen3.5:9b",
-   "totalFixes": 0,
+   "totalFixes": 1,
    "byAgent": [
     {
-     "agent": "mainsfresh",
-     "count": 0
+     "agent": "proposals",
+     "count": 1
     }
    ],
-   "details": []
-  },
-  {
-   "at": "2026-11-13T08:35:33.517Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
+   "details": [
     {
-     "agent": "mainsfresh",
-     "count": 0
+     "agent": "proposals",
+     "fixes": [
+      {
+       "kind": "proposal",
+       "fix": "Fix Mains-Fresh Generation Failure Pattern",
+       "detail": "The digest lists a recent failure for 'mains-fresh' where the model could not write an acceptable question because validation required 'at least two checkable anchors'. The fault board shows 60 critical faults.",
+       "text": "Update the prompt template or post-processing filter in the local Ollama workflow to explicitly enforce the inclusion of two specific anchors (e.g., 'committee' and 'scheme') before passing text to the validation regex. This ensures the output meets the strict quality requirement defined in the failure log."
+      }
+     ]
     }
-   ],
-   "details": []
-  },
-  {
-   "at": "2026-11-13T08:48:56.516Z",
-   "model": "qwen3.5:9b",
-   "totalFixes": 0,
-   "byAgent": [
-    {
-     "agent": "mainsfresh",
-     "count": 0
-    }
-   ],
-   "details": []
+   ]
   }
  ],
- "lastRun": "2026-11-13T08:48:56.516Z",
+ "lastRun": "2026-11-13T08:53:12.164Z",
  "model": "qwen3.5:9b"
 }
