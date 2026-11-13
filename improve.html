@@ -153,6 +153,12 @@ html.locked #gateOverlay{display:flex}
     <p id="counts"></p>
     <p class="foot">Corrections are stored in this browser only (localStorage) until you enable auto-sync above. They travel with your Ask answers in one JSONL file — one model, trained on both jobs. <a href="ask.html">Ask questions on the Ask page &rarr;</a></p>
   </div>
+
+  <div class="form-box" id="course-coverage-card" style="margin-top:16px">
+    <h2>Course coverage — live</h2>
+    <p style="font-size:12.5px;color:var(--text-sec);margin-top:4px">Written vs target words per lesson. Refreshed by every expand run (<code>data/course-coverage.json</code>) — always shows the latest published state, including what the parallel lanes are writing right now.</p>
+    <div id="course-coverage-body">loading…</div>
+  </div>
 </div>
 
 <script src="scripts/lib/ask-dataset.js"></script>
@@ -710,6 +716,24 @@ if (window.VlymbooqAskDataset && VlymbooqAskDataset.setSyncHook) {
 
 counts();
 renderFaults();
+// Course coverage panel: reads the same JSON the expand workflow refreshes.
+(function(){
+  var box=document.getElementById('course-coverage-body');if(!box)return;
+  fetch('data/course-coverage.json',{cache:'no-store'}).then(function(r){if(!r.ok)throw new Error('HTTP '+r.status);return r.json()}).then(function(j){
+    var gaps=(j.gaps||[]).slice(0,15);
+    var rows=gaps.map(function(g){
+      var pct=Math.min(100,g.pct||0);
+      return '<div style="margin:7px 0"><div style="display:flex;justify-content:space-between;font-size:.82em"><span>'+esc(g.key)+'</span><span>'+g.words.toLocaleString()+' / '+g.target.toLocaleString()+' words ('+g.pct+'%)</span></div><div style="background:rgba(255,255,255,.07);border-radius:5px;height:7px;margin-top:3px"><div style="background:#34d399;height:7px;border-radius:5px;width:'+pct+'%"></div></div></div>';
+    }).join('');
+    box.innerHTML='<div style="display:flex;gap:18px;flex-wrap:wrap;margin-bottom:10px;font-size:.9em">'+
+      '<span><strong>'+(j.coveragePct||0)+'%</strong> overall coverage</span>'+
+      '<span><strong>'+(j.atTarget||0)+'/'+(j.lessons||0)+'</strong> lessons at target</span>'+
+      '<span>median <strong>'+(j.medianWords||0).toLocaleString()+'</strong> words</span>'+
+      '<span>'+(j.totalWords||0).toLocaleString()+' / '+(j.totalTargetWords||0).toLocaleString()+' words</span></div>'+
+      '<div style="font-size:.78em;color:var(--text-muted,#71717a);margin-bottom:6px">Biggest gaps (top 15 of '+(j.gaps||[]).length+'):</div>'+rows;
+  }).catch(function(e){box.textContent='coverage data unavailable ('+e.message+')';});
+})();
+
 </script>
 </body>
 </html>
