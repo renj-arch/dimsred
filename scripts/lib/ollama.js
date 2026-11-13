@@ -162,7 +162,6 @@ async function callNvidia(messages, opts) {
     clearTimeout(timer);
   }
 }
-
 async function callLLM(messages, opts) {
   opts = opts || {};
   if (FAKE) return { text: FAKE, doneReason: 'stop' };
