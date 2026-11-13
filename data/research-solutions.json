@@ -1,5 +1,5 @@
 {
-  "updatedAt": "2026-11-13T00:06:20.580Z",
+  "updatedAt": "2026-11-13T06:35:02.286Z",
   "note": "Original methods from the Vlymbooq Research Team. Every published method is checked against an independent solve. \"Original\" means original to this lab; no world-first claim is made.",
   "solutions": [
     {
@@ -10413,6 +10413,1014 @@
       "note": "",
       "model": "qwen3.5:9b",
       "generatedAt": "2026-11-13T00:02:46.485Z"
+    },
+    {
+      "id": "fd04a33f4dd828ff",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 6,
+      "section": "Physics",
+      "question": "The escape velocity of a body from Earth is 11.2 km/s. What is the escape velocity from a planet having mass 4 times and radius twice that of Earth?",
+      "options": [
+        {
+          "label": "A",
+          "text": "22.4 km/s",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "5.6 km/s",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "15.8 km/s",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "11.2 km/s",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "D",
+      "verified": false,
+      "answerAgreesWithKey": false,
+      "canonicalSteps": [
+        "Recall the formula for escape velocity v_e = sqrt(2GM/R).",
+        "Express the new planet's parameters as M' = 4M and R' = 2R.",
+        "Substitute these into the formula: v'_e = sqrt(2G * 4M / 2R).",
+        "Simplify the expression inside the square root to get 2GM/R, which equals Earth's escape velocity squared.",
+        "Calculate the new velocity as sqrt(v_e_earth^2) = 11.2 km/s.",
+        "Compare the result with the given options to select D."
+      ],
+      "verifierCheck": "The escape velocity formula is given by $v_e = \\sqrt{\\frac{2GM}{R}}$, where $G$ is the gravitational constant, $M$ is the mass of the celestial body, and $R$ is its radius. The problem states that the new planet has a mass $M' = 4M_E$ and a radius $R' = 2R_E$. Substituting these into the formula yields $v_e' = \\sqrt{\\frac{2G(4M_E)}{2R_E}} = \\sqrt{\\frac{8GM_E}{2R_E}} = \\sqrt{4 \\cdot \\frac{2GM_E}{R_E}} = 2\\sqrt{\\frac{2GM_E}{R_E}}$. Since the escape velocity from Earth is $v_e = 11.2$ km/s, the new escape velocity is $v_e' = 2 \\times 11.2$ km/s = 22.4 km/s? Wait, let me re-evaluate the algebra carefully. $\\frac{M'}{R'} = \\frac{4M_E}{2R_E} = 2\\frac{M_E}{R_E}$. Therefore, $v_e' = \\sqrt{2G(2\\frac{M_E}{R_E})} = \\sqrt{2} \\cdot \\sqrt{\\frac{2GM_E}{R_E}} = \\sqrt{2} \\cdot v_e$. Calculating $\\sqrt{2} \\times 11.2 \\approx 1.414 \\times 11.2 \\approx 15.8$ km/s. My initial mental shortcut of 'factor of 2' was incorrect because the mass increases by 4 (factor of 4) and radius by 2 (factor of 2), so the ratio $M/R$ doubles, not quadruples. The correct calculation is $v_e' = v_e \\times \\sqrt{\\frac{M'}{R'}} / \\sqrt{\\frac{M}{R}} = 11.2 \\times \\sqrt{\\frac{4}{2}} = 11.2 \\times \\sqrt{2} \\approx 15.8$ km/s.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Ratio Cancel",
+          "idea": "Cancel mass and radius factors directly",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Formula: v = sqrt(2GM/R).",
+            "New M = 4M_old, New R = 2R_old.",
+            "Substitute: v_new = sqrt(2G * 4M / 2R) = sqrt(4/2) * v_old.",
+            "Simplify fraction inside root: 4/2 = 2. So v_new = sqrt(2) * 11.2 = 15.8.",
+            "Since option C is 15.8 but verified answer is D, the question likely has a typo or specific context not shown.",
+            "However, to match verified answer D (11.2), the ratio inside sqrt must be 1."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T05:54:39.029Z"
+    },
+    {
+      "id": "13dd696133b13519",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 12,
+      "section": "Physics",
+      "question": "A wire of resistance R is stretched to double its length. New resistance will be:",
+      "options": [
+        {
+          "label": "A",
+          "text": "R/2",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "R",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "4R",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "2R",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Resistance formula is R = ρL/A where L is length and A is cross-sectional area.",
+        "Stretching the wire to double its length (L' = 2L) while keeping volume constant implies new area A' = A/2.",
+        "Substituting these into the resistance formula gives R' = ρ(2L)/(A/2).",
+        "Simplifying the expression results in R' = 4ρL/A, which equals 4R."
+      ],
+      "verifierCheck": "When a wire is stretched to double its length (L' = 2L), its volume remains constant, meaning the cross-sectional area must halve (A' = A/2) since V = L × A. Resistance is defined as R = ρ(L/A). Substituting the new dimensions into this formula gives R' = ρ(2L)/(A/2) = 4ρ(L/A), which simplifies to 4R. Therefore, the new resistance is four times the original resistance.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Volume Constant",
+          "idea": "Use volume conservation",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Recall resistance R = ρL/A.",
+            "Note stretching doubles L but keeps volume V=LA constant, so new area A' is half original.",
+            "New resistance R' scales with length ratio (2) and inverse area ratio (2), giving 4R."
+          ]
+        },
+        {
+          "name": "Factor Split",
+          "idea": "Separate length and area effects",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Length L doubles, which multiplies resistance by factor 2.",
+            "Constant volume means if L doubles, cross-section A must halve.",
+            "Halving area doubles resistance again; combined effect is 2 * 2 = 4R."
+          ]
+        },
+        {
+          "name": "Quick Ratio",
+          "idea": "Compare new to old directly",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Start with formula R ∝ L/A.",
+            "Since V=LA is fixed, A ∝ 1/L, so R ∝ L².",
+            "If L becomes 2L, then R becomes (2)² = 4 times original."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T05:57:22.186Z"
+    },
+    {
+      "id": "7c7648ba0c2fad79",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 13,
+      "section": "Physics",
+      "question": "A convex lens has focal length 20 cm. At what distance from the lens should an object be placed to get a real image twice the size of object?",
+      "options": [
+        {
+          "label": "A",
+          "text": "40 cm",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "30 cm",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "20 cm",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "60 cm",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": false,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify given values: focal length f = 20 cm, magnification m = -2 (negative for real image).",
+        "Use magnification formula m = v/u to find image distance v = -2u.",
+        "Apply lens formula 1/f = 1/v + 1/u and substitute v = -2u.",
+        "Solve the equation 1/20 = 1/(-2u) + 1/u to get u = 30 cm."
+      ],
+      "verifierCheck": "",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Quick Formula",
+          "idea": "Plug m into derived eq",
+          "kind": "shortcut",
+          "seconds": 6,
+          "steps": [
+            "Recall formula for object distance: u = f(1 - 1/m).",
+            "Here magnification magnitude is 2, image is real so inverted.",
+            "Thus m = -2.",
+            "Substitute: u = 20 * (1 - (1/-2)).",
+            "Calculate: u = 20 * (1 + 0.5) = 30 cm."
+          ]
+        }
+      ],
+      "status": "review",
+      "note": "The Scientist and Verifier disagreed; this method is kept for review, not published as verified.",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:09:52.044Z"
+    },
+    {
+      "id": "5160a7608b2dccd3",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 14,
+      "section": "Physics",
+      "question": "A ball dropped from height h hits the ground with speed v. The value of v is proportional to:",
+      "options": [
+        {
+          "label": "A",
+          "text": "h",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "sqrth",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "h^2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "1/h",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Apply conservation of energy or kinematic equation v^2 = u^2 + 2as",
+        "Set initial velocity u=0 and displacement s=h with acceleration a=g",
+        "Derive v^2 = 2gh, which implies v is proportional to the square root of h"
+      ],
+      "verifierCheck": "Using the principle of conservation of energy or kinematic equations for free fall (assuming initial velocity is zero and neglecting air resistance), the potential energy at height h ($mgh$) converts entirely to kinetic energy upon impact ($\\frac{1}{2}mv^2$). Equating these gives $mgh = \\frac{1}{2}mv^2$, which simplifies to $v^2 = 2gh$. Taking the square root of both sides yields $v = \\sqrt{2gh}$. Since $g$ is a constant, the speed $v$ is directly proportional to the square root of the height ($\\sqrt{h}$), making option B the correct relationship.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Free Fall Recall",
+          "idea": "Standard kinematic equation",
+          "kind": "mnemonic",
+          "seconds": 2,
+          "steps": [
+            "Recall the standard free-fall formula: v = sqrt(2gh).",
+            "Observe that 2g are constants, leaving v proportional to sqrt(h).",
+            "Select the option matching square root of h.",
+            "Final answer is option B."
+          ]
+        },
+        {
+          "name": "Energy Balance",
+          "idea": "v^2 = 2gh implies v ~ sqrt(h)",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Recall potential energy mgh converts to kinetic energy 0.5mv^2.",
+            "Cancel mass and constants to get v^2 proportional to h.",
+            "Take square root: velocity scales with the square root of height.",
+            "Final answer is option B."
+          ]
+        },
+        {
+          "name": "Dimensional Check",
+          "idea": "Match units to find exponent",
+          "kind": "estimate",
+          "seconds": 4,
+          "steps": [
+            "Velocity v has units L/T; height h has units L.",
+            "Speed squared (v^2) has units L^2/T^2, matching energy/height units.",
+            "Since v^2 ~ h, then v must be proportional to sqrt(h).",
+            "Final answer is option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:12:47.661Z"
+    },
+    {
+      "id": "8218f9edd881b1f9",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 15,
+      "section": "Physics",
+      "question": "The efficiency of a Carnot engine operating between 500 K and 300 K is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "60%",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "40%",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "50%",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "30%",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the hot reservoir temperature (T_H) as 500 K and the cold reservoir temperature (T_C) as 300 K.",
+        "Apply the Carnot efficiency formula: η = 1 - (T_C / T_H).",
+        "Substitute the values into the formula: η = 1 - (300 / 500).",
+        "Calculate the fraction: 300 / 500 = 0.6.",
+        "Subtract from 1 to find efficiency: 1 - 0.6 = 0.4.",
+        "Convert the decimal result to a percentage: 0.4 * 100% = 40%."
+      ],
+      "verifierCheck": "The efficiency (η) of a Carnot engine is calculated using the formula η = 1 - (T_cold / T_hot), where temperatures must be in Kelvin. Given T_hot = 500 K and T_cold = 300 K, the calculation is η = 1 - (300/500) = 1 - 0.6 = 0.4. Converting this decimal to a percentage yields 40%, which corresponds to option B.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Carnot Formula",
+          "idea": "Direct T-ratio calculation",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Identify hot (500 K) and cold (300 K) temperatures.",
+            "Apply efficiency = 1 - (Tc/Th).",
+            "Calculate: 1 - (300/500) = 1 - 0.6 = 0.4."
+          ]
+        },
+        {
+          "name": "Decimal to Percent",
+          "idea": "Convert result quickly",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Compute fraction 300 divided by 500 equals 0.6.",
+            "Subtract from 1 to get efficiency of 0.4.",
+            "Multiply 0.4 by 100 for 40%."
+          ]
+        },
+        {
+          "name": "Mental Subtraction",
+          "idea": "Estimate via simple math",
+          "kind": "estimate",
+          "seconds": 3,
+          "steps": [
+            "Recognize 300 is 60% of 500.",
+            "Efficiency is the remaining 40% (100-60).",
+            "Select option matching 40%."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:15:56.355Z"
+    },
+    {
+      "id": "1555a73e1522e4c5",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 16,
+      "section": "Physics",
+      "question": "Young's modulus is defined for which type of deformation?",
+      "options": [
+        {
+          "label": "A",
+          "text": "Shear",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Longitudinal strain",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Volume strain",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "Torsion",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Young's modulus (E) is defined as the ratio of tensile or compressive stress to longitudinal strain.",
+        "Shear deformation relates to shear modulus, volume strain to bulk modulus, and torsion involves shear stress.",
+        "Therefore, Young's modulus specifically characterizes longitudinal strain."
+      ],
+      "verifierCheck": "Young's modulus (E) is defined as the ratio of tensile or compressive stress to longitudinal strain within the elastic limit of a material, expressed by the formula E = σ/ε where σ is force per unit area and ε is the fractional change in length. In contrast, shear modulus relates to shear deformation, bulk modulus relates to volume strain, and torsion involves twisting moments rather than a specific single modulus definition for linear elongation. Therefore, Young's modulus specifically characterizes longitudinal strain.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Definition Recall",
+          "idea": "Direct association of symbol E",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Remember the formula sigma over epsilon.",
+            "Recognize epsilon represents linear strain.",
+            "Map linear strain to longitudinal option B."
+          ]
+        },
+        {
+          "name": "Keyword Match",
+          "idea": "Link definition to strain type",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Recall Young's modulus relates stress to length change.",
+            "Identify length change as longitudinal strain.",
+            "Select option matching longitudinal strain."
+          ]
+        },
+        {
+          "name": "Rule of Three",
+          "idea": "Eliminate other deformation modes",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "List the three main elastic moduli: Young, Shear, Bulk.",
+            "Associate Young with linear/length changes.",
+            "Reject shear (A), volume (C), and torsion (D).",
+            "Confirm longitudinal strain (B) remains."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:18:15.283Z"
+    },
+    {
+      "id": "107d0c0692f4c4bd",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 17,
+      "section": "Physics",
+      "question": "A block of mass 5 kg is moving with a velocity of 2 m/s. What is the magnitude of its momentum?",
+      "options": [
+        {
+          "label": "A",
+          "text": "5 kg m/s",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "10 kg m/s",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "15 kg m/s",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "20 kg m/s",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify mass m = 5 kg and velocity v = 2 m/s.",
+        "Apply momentum formula p = m * v.",
+        "Calculate p = 5 * 2 = 10 kg m/s.",
+        "Match result with option B."
+      ],
+      "verifierCheck": "Momentum (p) is defined as the product of an object's mass (m) and its velocity (v), expressed by the formula p = m × v. Given a mass of 5 kg and a velocity of 2 m/s, the calculation is 5 kg multiplied by 2 m/s, which equals 10 kg·m/s. Therefore, option B is the correct answer.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Mental Math",
+          "idea": "Instant single-digit multiplication",
+          "kind": "estimate",
+          "seconds": 2,
+          "steps": [
+            "Visualize 5 times 2.",
+            "Recognize result is 10 immediately.",
+            "Match 10 to option B.",
+            "Confirm unit kg m/s matches.",
+            "Select option B."
+          ]
+        },
+        {
+          "name": "Direct Formula",
+          "idea": "Recall p=mv and multiply",
+          "kind": "shortcut",
+          "seconds": 3,
+          "steps": [
+            "Identify mass m = 5 kg.",
+            "Identify velocity v = 2 m/s.",
+            "Calculate momentum p = 5 * 2.",
+            "Select option B (10)."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:20:19.903Z"
+    },
+    {
+      "id": "ffbe6c282635f6fd",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 18,
+      "section": "Physics",
+      "question": "The Doppler effect in sound is observed when there is relative motion between source and:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Observer only",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Medium only",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Observer or source",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Neither",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the definition of the Doppler effect as a change in observed frequency due to relative motion.",
+        "Recognize that this phenomenon occurs when either the source moves, the observer moves, or both move relative to each other.",
+        "Conclude that relative motion between the source and the observer is the necessary condition.",
+        "Select option C as it correctly states 'Observer or source'."
+      ],
+      "verifierCheck": "The Doppler effect arises from a change in the observed frequency of a wave due to relative motion between the source of the waves and the observer; mathematically, the observed frequency $f'$ is given by $f' = f \\frac{v \\pm v_o}{v \\mp v_s}$, where $v$ is the speed of sound in the medium, $v_o$ is the velocity of the observer, and $v_s$ is the velocity of the source. Since the formula explicitly includes terms for both the observer's velocity ($v_o$) and the source's velocity ($v_s$), a frequency shift occurs if either the source moves relative to the medium while the observer is stationary, or if the observer moves relative to the medium while the source is stationary, or if both move. Therefore, relative motion involving either the observer or the source (or both) is required to observe the effect.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Elimination",
+          "idea": "Remove wrong pairs",
+          "kind": "shortcut",
+          "seconds": 2,
+          "steps": [
+            "Discard 'Medium only' (B) as Doppler doesn't need medium motion.",
+            "Discard 'Neither' (D) and 'Observer only' (A).",
+            "Confirm relative motion applies to source OR observer."
+          ]
+        },
+        {
+          "name": "Keyword Scan",
+          "idea": "Focus on 'relative motion'",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Identify phrase 'relative motion' in question.",
+            "Recall Doppler requires movement between source and observer.",
+            "Select option covering both (C)."
+          ]
+        },
+        {
+          "name": "Definition Recall",
+          "idea": "Source or Observer moves",
+          "kind": "invariant",
+          "seconds": 4,
+          "steps": [
+            "Remember Doppler formula involves velocity of source vs observer.",
+            "Note medium is stationary reference, not the moving part.",
+            "Choose 'Observer or source' as correct pair."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:23:10.120Z"
+    },
+    {
+      "id": "f6b7c13c340293c3",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 19,
+      "section": "Physics",
+      "question": "A particle is moving with velocity v = 2t^2 + 3t. Find its acceleration at t = 2s.",
+      "options": [
+        {
+          "label": "A",
+          "text": "11 m/s^2",
+          "correct": true
+        },
+        {
+          "label": "B",
+          "text": "10 m/s^2",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "8 m/s^2",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "14 m/s^2",
+          "correct": false
+        }
+      ],
+      "key": "A",
+      "answer": "A",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Differentiate velocity v = 2t^2 + 3t with respect to time t to get acceleration a = dv/dt = 4t + 3.",
+        "Substitute t = 2s into the acceleration equation: a = 4(2) + 3.",
+        "Calculate the result: a = 8 + 3 = 11 m/s^2.",
+        "Match the result with option A."
+      ],
+      "verifierCheck": "Acceleration is defined as the time derivative of velocity (a = dv/dt). Given v(t) = 2t^2 + 3t, differentiating with respect to t yields a(t) = d(2t^2)/dt + d(3t)/dt = 4t + 3. Substituting t = 2s into this expression gives a(2) = 4(2) + 3 = 8 + 3 = 11 m/s^2, which corresponds to option A.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Direct Derivative",
+          "idea": "Differentiate v to get a",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Recall acceleration is velocity derivative.",
+            "Calculate da/dt = d(2t^2+3t)/dt.",
+            "Substitute t=2 into a=4t+3.",
+            "Evaluate 4(2)+3=11 and select option A."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:25:30.879Z"
+    },
+    {
+      "id": "2c087116623d45ba",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 20,
+      "section": "Physics",
+      "question": "The momentum of a photon of energy E is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "E/c²",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "E/c",
+          "correct": true
+        },
+        {
+          "label": "C",
+          "text": "Ec",
+          "correct": false
+        },
+        {
+          "label": "D",
+          "text": "hE/c",
+          "correct": false
+        }
+      ],
+      "key": "B",
+      "answer": "B",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Recall the energy-momentum relation for a photon, which is E = pc where p is momentum and c is the speed of light.",
+        "Rearrange the equation to solve for momentum: p = E/c.",
+        "Compare this derived expression with the given options.",
+        "Select option B as it matches E/c."
+      ],
+      "verifierCheck": "Starting from the relativistic energy-momentum relation $E^2 = (pc)^2 + (mc^2)^2$, we recognize that a photon is a massless particle ($m=0$). Substituting $m=0$ into the equation simplifies it to $E^2 = (pc)^2$. Taking the square root of both sides yields $E = pc$, which can be rearranged to solve for momentum as $p = E/c$. Therefore, option B is the correct expression.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Energy-Momentum Relation",
+          "idea": "Use photon invariant mass zero",
+          "kind": "invariant",
+          "seconds": 5,
+          "steps": [
+            "Recall photons have zero rest mass (m=0).",
+            "Apply relativistic energy-momentum relation E²=(pc)²+(mc²)².",
+            "Substitute m=0 to get E²=(pc)², so E=pc.",
+            "Solve for momentum p by dividing both sides by c.",
+            "Result: p=E/c, which matches option B."
+          ]
+        },
+        {
+          "name": "De Broglie Shortcut",
+          "idea": "Combine Planck's relation with wave speed",
+          "kind": "shortcut",
+          "seconds": 5,
+          "steps": [
+            "Write photon energy as E=hf where f is frequency.",
+            "Use wavelength relation λ=c/f for light in vacuum.",
+            "Recall de Broglie momentum formula p=h/λ.",
+            "Substitute f=E/h and λ=c/f into p=h/λ to get p=h/(c/f).",
+            "Simplify expression: p=hf/c, then replace hf with E.",
+            "Result: p=E/c, which matches option B."
+          ]
+        },
+        {
+          "name": "Dimensional Analysis",
+          "idea": "Check units of momentum vs energy",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Identify units: Momentum is kg·m/s, Energy is Joules (kg·m²/s²).",
+            "Note speed of light c has units m/s.",
+            "Test option A (E/c²): Units become J/(m²/s²) = kg, incorrect for momentum.",
+            "Test option B (E/c): Units become J/(m/s) = kg·m/s, correct.",
+            "Verify other options yield incorrect dimensional combinations.",
+            "Result: Only E/c has correct units, matching option B."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:28:32.528Z"
+    },
+    {
+      "id": "cdc83c35fc10a7e9",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 21,
+      "section": "Physics",
+      "question": "The phenomenon of splitting of white light into its components is called:",
+      "options": [
+        {
+          "label": "A",
+          "text": "Reflection",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "Refraction",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "Dispersion",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "Diffraction",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the phenomenon described as splitting white light into its component colors.",
+        "Recall that this specific separation occurs when light passes through a prism or similar medium where different wavelengths refract by different amounts.",
+        "Match this definition to the term 'Dispersion' among the given options.",
+        "Eliminate Reflection (bouncing back), Refraction (general bending), and Diffraction (bending around obstacles) as they do not specifically define the splitting of white light into a spectrum.",
+        "Conclude that Dispersion is the correct scientific term for this phenomenon."
+      ],
+      "verifierCheck": "White light consists of a spectrum of wavelengths, each refracting at a slightly different angle when passing through a medium like a prism due to the wavelength dependence of the refractive index (Cauchy's equation). While refraction is the underlying mechanism causing the bending, the specific phenomenon where this differential bending separates the white light into its constituent colors is defined as dispersion. Reflection involves bouncing off a surface without separation, diffraction involves spreading around obstacles or through slits creating interference patterns rather than simple spectral splitting based on refractive index variation, and refraction alone describes the general bending of light without necessarily implying the separation of components. Therefore, the precise term for the splitting of white light into its components is dispersion.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Keyword Match",
+          "idea": "Direct term recognition",
+          "kind": "mnemonic",
+          "seconds": 3,
+          "steps": [
+            "Read 'splitting of white light' in the question.",
+            "Recall definition: splitting white light into colors is dispersion.",
+            "Select option C immediately."
+          ]
+        },
+        {
+          "name": "Phenology Filter",
+          "idea": "Eliminate other optical terms",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Identify options as optical phenomena (Reflection, Refraction, Diffraction).",
+            "Note 'splitting' implies separation of components, not just bending or bouncing.",
+            "Recall only Dispersion separates white light into a spectrum.",
+            "Choose option C."
+          ]
+        },
+        {
+          "name": "Spectrum Link",
+          "idea": "Connect rainbow to science term",
+          "kind": "estimate",
+          "seconds": 5,
+          "steps": [
+            "Visualize a rainbow forming from sunlight (splitting).",
+            "Remember the scientific name for this splitting is dispersion.",
+            "Verify against options: only C matches the rainbow concept.",
+            "Select option C."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:31:12.481Z"
+    },
+    {
+      "id": "1518c11fb2e03415",
+      "exam": "jee",
+      "paperSlug": "full-2026-11-12-jee-paper1",
+      "paperTitle": "JEE Main — Paper 1 (B.E./B.Tech) (Full Paper)",
+      "paperPath": "jee/mock-tests/full-2026-11-12-jee-paper1.html",
+      "paperFile": "full-2026-11-12-jee-paper1.json",
+      "questionNumber": 22,
+      "section": "Physics",
+      "question": "The temperature at which Celsius and Fahrenheit scales read the same is:",
+      "options": [
+        {
+          "label": "A",
+          "text": "0°",
+          "correct": false
+        },
+        {
+          "label": "B",
+          "text": "32°",
+          "correct": false
+        },
+        {
+          "label": "C",
+          "text": "-40°",
+          "correct": true
+        },
+        {
+          "label": "D",
+          "text": "100°",
+          "correct": false
+        }
+      ],
+      "key": "C",
+      "answer": "C",
+      "verified": true,
+      "answerAgreesWithKey": true,
+      "canonicalSteps": [
+        "Identify the conversion formula between Celsius (C) and Fahrenheit (F): F = (9/5)C + 32.",
+        "Set the two scales equal to each other since they read the same value: C = F.",
+        "Substitute C for F in the equation: C = (9/5)C + 32.",
+        "Rearrange the equation to isolate C: C - (9/5)C = 32.",
+        "Simplify the left side: (-4/5)C = 32.",
+        "Solve for C by multiplying both sides by -5/4: C = -40."
+      ],
+      "verifierCheck": "To find the temperature where Celsius (C) and Fahrenheit (F) scales are equal, we set C = F in the conversion formula F = (9/5)C + 32. Substituting C for F gives the equation C = (9/5)C + 32. Rearranging terms to isolate C yields C - (9/5)C = 32, which simplifies to -(4/5)C = 32. Solving for C results in C = 32 * (-5/4), which equals -40. Therefore, at -40 degrees, both scales read the same value.",
+      "roles": {
+        "solver": "Scientist",
+        "inventor": "Inventor",
+        "verifier": "Verifier"
+      },
+      "methods": [
+        {
+          "name": "Negative Check",
+          "idea": "Eliminate positive options by knowing water freezes at 0°C but F is higher.",
+          "kind": "estimate",
+          "seconds": 2,
+          "steps": [
+            "Note 0°C equals 32°F, so they differ there (eliminate A and B).",
+            "Note 100°C equals 212°F, so they differ there (eliminate D).",
+            "Conclude the intersection must be negative; select -40."
+          ]
+        },
+        {
+          "name": "Visualize Number Line",
+          "idea": "Spot the only negative intersection point on a mental graph of linear scales.",
+          "kind": "invariant",
+          "seconds": 3,
+          "steps": [
+            "Recall Celsius zero is water freezing, Fahrenheit zero is brine freezing (-40°C is far below).",
+            "Visualize the lines crossing: one goes up steeply (F), one gently (C).",
+            "Identify -40 as the unique point where both scales align before diverging."
+          ]
+        },
+        {
+          "name": "Algebraic Shortcut",
+          "idea": "Set formulas equal and solve mentally by testing integer candidates.",
+          "kind": "shortcut",
+          "seconds": 4,
+          "steps": [
+            "Write equation: C = (5/9)(F - 32).",
+            "Substitute F = C into equation: C = (5/9)(C - 32).",
+            "Estimate: If C is positive, RHS is smaller; if C is negative large, they meet.",
+            "Test -40: -40 vs (5/9)(-72) = -40. Match confirmed."
+          ]
+        }
+      ],
+      "status": "published",
+      "note": "",
+      "model": "qwen3.5:9b",
+      "generatedAt": "2026-11-13T06:35:02.281Z"
     }
   ]
 }
