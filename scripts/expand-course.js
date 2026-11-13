@@ -46,6 +46,11 @@ var SKIP_EXAMS = (process.env.EXPAND_SKIP_EXAMS || '').split(',').map(function (
 // Lessons shorter than this (characters of HTML) are treated as brief stubs
 // and rewritten by the enrich role. 0 disables enrichment entirely.
 var THIN = parseInt(process.env.EXPAND_THIN_THRESHOLD || '2500', 10);
+// EXPAND_REVISE=1 runs a critique+rewrite pass on each generated fragment:
+// a second model call fact-checks claims, strips unverifiable assertions
+// (invented quotations, unsupported dates) and tightens prose. Doubles the
+// call count per lesson, so it is opt-in per lane.
+var REVISE = /^(1|true|yes)$/i.test(process.env.EXPAND_REVISE || '');
 // Comma-separated "module/slug" keys restrict every lane to just those
 // lessons — the workflow's "keys" input, for targeted fix runs.
 var ONLY_KEYS = {};
@@ -707,6 +712,18 @@ function addonSource(key) {
   return entry && entry.html ? String(entry.html) : '';
 }
 
+// Gold-standard style exemplar: a compact slice of the hand-built UPSC
+// polity lesson showing the target density — a real h3 section with a
+// table, a worked example-box and exam-relevant specifics. Injected into
+// deepen/enrich prompts so generated sections match the crafted pages
+// instead of drifting into generic prose.
+var STYLE_EXEMPLAR = [
+  '<h3>Parliamentary Sovereignty vs Constitutional Sovereignty</h3>',
+  '<p>The UK follows <strong>parliamentary sovereignty</strong>: Parliament can make or unmake any law, and no court can strike it down. India follows <strong>constitutional sovereignty</strong>: the Constitution is the supreme law, and even Parliament is bound by it (Art. 13). This distinction explains why Indian courts can invalidate laws but British courts (before Factortame) could not.</p>',
+  '<div class="table-wrap"><table><caption>Key Differences</caption><tr><th>Feature</th><th>UK (Parliamentary Sovereignty)</th><th>India (Constitutional Sovereignty)</th></tr><tr><td>Source of authority</td><td>Parliament (convention + statute)</td><td>Constitution (written, Art. 368 amendment)</td></tr><tr><td>Court power over legislation</td><td>None (pre-Factortame)</td><td>Judicial review (Art. 13, 32, 226)</td></tr><tr><td>Amendment rigidity</td><td>Ordinary legislation</td><td>Special majority + sometimes state ratification</td></tr></table></div>',
+  '<div class="example-box"><div class="ex-title">Examiner\'s trap</div><div class="ex-text">A common error is saying India has "parliamentary sovereignty" because Parliament is supreme in its sphere. Correct answer: parliamentary supremacy exists only <em>within</em> constitutional limits; the Constitution itself is beyond Parliament\'s ordinary reach (basic structure, Kesavananda 1973).</div></div>'
+].join('\n');
+
 function deepenPrompt(gap) {
   var source = gap.role === 'deepen' ? String(courseData[gap.key] || '') : pageSource(gap);
   // Pass 2 and 3 must see what pass 1 already added, or the model repeats it.
@@ -719,6 +736,7 @@ function deepenPrompt(gap) {
   var lines = [
     'You are a senior ' + gap.examName + ' ' + gap.modName + ' teacher. The lesson "' + gap.lesson.title + '" already exists; write the NEXT LEVEL, not a rewrite.',
     'IMPORTANT: this text can be injected into sibling exams\' pages that share this lesson key. Never name a specific exam (no "for CLAT", "SSC GD aspirants", "in NDA" etc.) in headings or prose -- write exam-neutral content.',
+    'Factual discipline: assert ONLY what you can state with confidence. No invented quotations presented as real, no specific dates/names/events you are unsure of, no "proves that" claims linking artifacts to language or literary origins, no manuscript or archaeological claims without a named source. For literature, prefer framework-level analysis (themes, forms, critical concepts, textual techniques) over unverifiable specifics. A student who memorises a wrong fact loses marks -- accuracy beats coverage.',
     'What the lesson covers: ' + gap.lesson.desc,
     'Key topics: ' + gap.lesson.topics + '.',
     '',
@@ -727,6 +745,9 @@ function deepenPrompt(gap) {
     '',
     'End of the existing lesson for tone and continuity:',
     digest || '(no text available)',
+    '',
+    'Target quality — match this density and specificity (a real section from the hand-built polity lesson):',
+    STYLE_EXEMPLAR,
     '',
     gap.targetWords
       ? ('Progress: the lesson currently has about ' + gap.words + ' words of prose; the depth target is ' +
@@ -1220,6 +1241,40 @@ function generateQuestions(gap, html, timeoutMs) {
   return attempt('', 1);
 }
 
+// Critique+rewrite pass: a second call reviews the fragment for factual
+// fabrications and generic prose, then returns corrected HTML. Any failure
+// keeps the original fragment -- a bad revise never loses a good draft.
+function reviseHtml(html, gap, timeoutMs) {
+  var prompt = [
+    'You are a strict fact-checker and editor for ' + gap.examName + ' study material.',
+    'Review this HTML fragment and return a corrected version.',
+    '',
+    'Rules:',
+    '- Remove or soften any claim you cannot verify: invented quotations presented as real, specific dates/names/events asserted without basis, archaeological or manuscript claims, "proves that" reasoning about origins.',
+    '- For literature and history: prefer framework-level analysis (themes, forms, critical concepts) over unverifiable specifics.',
+    '- Keep the same <h3> section structure, tables, example-box and tip-box markup; do not add or remove sections.',
+    '- Keep roughly the same length; tighten wordy or generic sentences.',
+    '- Return ONLY the corrected HTML fragment, no commentary, no code fences.',
+    '',
+    'FRAGMENT:',
+    html
+  ].join('\n');
+  return callModel(prompt, 8000, timeoutMs).then(function (raw) {
+    var out = String(raw || '').replace(/^\s*```(?:html)?\s*/i, '').replace(/```\s*$/, '').trim();
+    out = htmlRepair.sanitize(out);
+    var trimmed = htmlRepair.trimIncompleteTail(out);
+    if (trimmed.trimmed) out = trimmed.html;
+    var err = validateHtml(out, { minH3: 1, fullLesson: false, minWords: 0 });
+    if (err) { console.log('expand: ' + gap.key + ' revise rejected (' + err + ') - keeping draft'); return null; }
+    if (out.length < html.length * 0.6) { console.log('expand: ' + gap.key + ' revise shrank too much - keeping draft'); return null; }
+    console.log('expand: ' + gap.key + ' revised (' + html.length + ' -> ' + out.length + ' chars)');
+    return out;
+  }).catch(function (e) {
+    console.log('expand: ' + gap.key + ' revise failed (' + e.message + ') - keeping draft');
+    return null;
+  });
+}
+
 function generateOne(gap, timeoutMs) {
   var isDepth = gap.role === 'deepen' || gap.role === 'deepen-page';
   var prompt = isDepth ? deepenPrompt(gap) : theoryPrompt(gap);
@@ -1290,14 +1345,22 @@ function generateOne(gap, timeoutMs) {
           throw new Error('deep section overlaps the existing lesson too closely');
         }
       }
-      if (gap.role === 'deepen-page') {
-        // Hand-built pages have no practice block; their addon is injected
-        // into static HTML. Do not spend tokens on MCQs no page renders.
-        return { html: html, questions: [] };
+      function finish(finalHtml) {
+        if (gap.role === 'deepen-page') {
+          // Hand-built pages have no practice block; their addon is injected
+          // into static HTML. Do not spend tokens on MCQs no page renders.
+          return { html: finalHtml, questions: [] };
+        }
+        return generateQuestions(gap, finalHtml, timeoutMs).then(function (qs) {
+          return { html: finalHtml, questions: qs };
+        });
       }
-      return generateQuestions(gap, html, timeoutMs).then(function (qs) {
-        return { html: html, questions: qs };
-      });
+      if (REVISE && (isDepth || gap.role === 'enrich')) {
+        return reviseHtml(html, gap, timeoutMs).then(function (rh) {
+          return finish(rh || html);
+        });
+      }
+      return finish(html);
     });
   }
   return attempt('', 1);
