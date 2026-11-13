@@ -1,0 +1,83 @@
+name: Local Deep Rewrite (self-hosted 14B)
+
+# Runs on YOUR hardware — a self-hosted runner (e.g. Oracle Always Free
+# ARM VM, 24GB RAM) with Ollama + qwen2.5:14b already installed by
+# scripts/selfhost/setup-node.sh. No external APIs, no model pull —
+# the model is resident on the node.
+#
+# ~10-20 tok/s on ARM CPU → a full lesson rewrite in minutes, so this
+# lane processes a BATCH (default 5) per night vs the GitHub-hosted
+# 27B lane's single item.
+on:
+  schedule:
+    - cron: '17 5 * * *'   # daily 05:17 UTC
+  workflow_dispatch:
+    inputs:
+      batch:
+        description: 'Lessons to rewrite this run'
+        required: false
+        default: '5'
+
+# Same group as deep-rewrite.yml: both lanes splice into upsc/course and both
+# rewrite data/deep-rewrite-queue.json. Separate groups let a 340-minute 27B
+# run overlap the 05:17 self-hosted run, and whoever pushed last would clobber
+# the other's queue. One group serialises them.
+concurrency:
+  group: deep-rewrite
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  localDeepRewrite:
+    runs-on: [self-hosted, local-llm]
+    timeout-minutes: 300
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.PAT }}
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            data/deep-rewrite-queue.json
+            upsc/course
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Ensure local Ollama is serving
+        run: |
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null || {
+            echo "Ollama not running on this node — start it: sudo systemctl start ollama"
+            exit 1
+          }
+          ollama list | head -8
+
+      - name: Deep-rewrite batch (local 14B)
+        env:
+          OLLAMA_HOST: http://127.0.0.1:11434
+          OLLAMA_MODEL: qwen2.5:14b-instruct-q4_K_M
+          NODE_OPTIONS: '--max-old-space-size=2048'
+          DEEP_BATCH: ${{ inputs.batch || '5' }}
+          DEEP_NUM_PREDICT: '5000'
+        run: node scripts/deep-rewrite.js
+
+      - name: Publish rewritten lessons + queue
+        if: always()
+        timeout-minutes: 10
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          # OLLAMA_MODEL is set on the rewrite step only, so without this the
+          # commit message below published an empty model name.
+          OLLAMA_MODEL: qwen2.5:14b-instruct-q4_K_M
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git reset HEAD -- . 2>/dev/null || true
+          git add -f data/deep-rewrite-queue.json 2>/dev/null || true
+          git add upsc/course 2>/dev/null || true
+          bash scripts/ci-push.sh "local-deep-rewrite: self-hosted ${OLLAMA_MODEL} deepened lessons (run #${{ github.run_number }})"
