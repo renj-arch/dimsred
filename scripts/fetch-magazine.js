@@ -508,7 +508,15 @@ async function main() {
   sources.sections.forEach(function (def) {
     var incoming = bySection[def.id] || [];
     var merged = dedupeByLink(incoming.concat(oldItems(def.id)))
-      .filter(function (item) { return !usedLinks.has(item.link); });
+      .filter(function (item) { return !usedLinks.has(item.link); })
+      // Carry-forward must not ship items the feed validator rejects:
+      // anything older than 30 days (or >24h in the future) fails the
+      // magazine contract and blocks the whole slim-live deploy.
+      .filter(function (item) {
+        var t = Date.parse(item.publishedAt);
+        var nowMs = Date.now();
+        return isFinite(t) && t <= nowMs + 24 * 60 * 60 * 1000 && nowMs - t <= 30 * 24 * 60 * 60 * 1000;
+      });
     merged = sortByDate(merged).slice(0, cap);
     merged.forEach(function (item) { usedLinks.add(item.link); });
     storyTotal += merged.length;
