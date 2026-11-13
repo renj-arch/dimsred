@@ -571,7 +571,7 @@ jobs:
       - name: Pull and merge (rebase-free to avoid infinite conflict loops)
         timeout-minutes: 10
         run: |
-          git fetch origin main 2>/dev/null || true
+          timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
           git merge --no-edit -X ours origin/main 2>/dev/null || {
             echo "Merge conflict — running union merge to keep BOTH runs' data."
             node scripts/resolve-data-merge.js

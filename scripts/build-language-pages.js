@@ -155,6 +155,42 @@ function sampleSection(lang) {
     '</section>';
 }
 
+function coursePath(lang) {
+  var rtl = lang.direction === 'rtl';
+  var modules = [
+    {
+      n: '1', t: 'Script and decoding',
+      d: 'Do not read ' + esc(lang.name) + ' through a transliteration. Work directly in ' + esc(lang.script) + ' (' + esc(lang.unicode) + ', ' + (rtl ? 'right-to-left' : 'left-to-right') + '). Spend the first sessions learning the conjuncts and half-forms you meet most: a slow first read costs minutes in the exam, a fast second read is the skill that scores.'
+    },
+    {
+      n: '2', t: 'Comprehension method',
+      d: 'Read the passage once for the argument, once for the detail. Before answering, write the claim in one line in ' + esc(lang.name) + '. Answer in the language of the question paper, cite the passage rather than your opinion, and keep each answer to two or three sentences. Inference questions reward "the passage suggests", not outside knowledge.'
+    },
+    {
+      n: '3', t: 'Precis method',
+      d: 'Compress to roughly one-third of the original. Keep the claim, the reasons and the tone; drop examples and repetition. Do not add a conclusion the author did not write. After drafting, check every sentence still belongs to the ' + esc(lang.name) + ' register of the original &mdash; a precis that drifts into essay style loses marks.'
+    },
+    {
+      n: '4', t: 'Translation drills',
+      d: 'Translate the same English paragraph both ways. Meaning and register beat word order. Watch the traps listed under the script section &mdash; for ' + esc(lang.name) + ' they are not generic: ' + esc(lang.traps[0]) + ' Check your ' + esc(lang.name) + ' output with the script checker before comparing meaning.'
+    },
+    {
+      n: '5', t: 'Essay structure',
+      d: '250 words in ' + esc(lang.name) + ': one opening that states the position, two developed points with an example each, one closing. Plan in ' + esc(lang.name) + ' for five minutes before writing. The examiner reads organisation and language control first; a correct but shapeless answer scores less than a structured one.'
+    }
+  ];
+  return '<section class="section">' +
+    '<div class="section-head"><h2>Your ' + esc(lang.name) + ' course path</h2><span class="pill">5 modules &middot; do them in order</span></div>' +
+    '<p class="section-sub">Paper A is five skills, not one. Work through these modules, then use the workbook and script checker below. Each module links to the section of this page that carries the material.</p>' +
+    '<div class="grid two">' +
+    modules.map(function (m) {
+      return '<div class="card"><div class="t"><span style="color:var(--purple);font-weight:700">' + m.n + '.</span> ' + m.t + '</div><div class="d">' + m.d + '</div></div>';
+    }).join('') +
+    '</div>' +
+    '<p class="muted" style="margin-top:10px">Suggested pace for a December attempt: one module per week, workbook every other day, script check on every written answer.</p>' +
+    '</section>';
+}
+
 function practiceWorkbook(lang) {
   var enParagraph = 'Reading a newspaper carefully is a skill that improves with practice. A reader who notices the main claim, the evidence and the tone can summarize an article in a few sentences. This habit helps in the examination because it saves time and prevents answers from becoming a list of disconnected points. It also builds vocabulary, which is useful in the translation section. Ten minutes a day is enough if the reading is active.';
   return '<section class="section">' +
@@ -237,6 +273,7 @@ function languagePage(lang) {
     lang.traps.map(function (t) { return '<li>' + esc(t) + '</li>'; }).join('') +
     '</ul></div></div></section>\n' +
     sampleSection(lang) + '\n' +
+    coursePath(lang) + '\n' +
     practiceWorkbook(lang) + '\n' +
     scriptChecker(lang) + '\n' +
     sourcesSection(lang) + '\n' +
@@ -258,14 +295,14 @@ function hubPage() {
     nav('Paper A') + '\n<div class="wrap">\n' +
     '<section class="hero"><div class="kicker">UPSC Mains &middot; Paper A &middot; Indian language</div>' +
     '<h1>One qualifying paper. Twenty-two languages.</h1>' +
-    '<p class="lede">Paper A is 300 marks and three hours, and you need 25% to qualify. The marks do not count in the merit list, but failing the paper ends the attempt. Pick your language below for a script guide, a practice workbook and a Unicode script checker.</p>' +
+    '<p class="lede">Paper A is 300 marks and three hours, and you need 25% to qualify. The marks do not count in the merit list, but failing the paper ends the attempt. Each page below is a complete course for one language: a five-module study path, script guide, practice workbook and Unicode script checker.</p>' +
     '<div class="hero-stats"><div class="s"><div class="n">22</div><div class="l">Languages</div></div><div class="s"><div class="n">300</div><div class="l">Marks</div></div><div class="s"><div class="n">25%</div><div class="l">Qualifying</div></div><div class="s"><div class="n">3h</div><div class="l">Duration</div></div></div></section>\n' +
     '<div class="note"><b>Before you choose.</b> Confirm the language and script printed on the current UPSC notification and question paper. The Commission publishes the list of compulsory language papers with each Mains cycle; this page covers the 22 languages in the Eighth Schedule, but it does not promise that every language is offered in every cycle.</div>\n' +
     '<section class="section"><div class="section-head"><h2>Choose your language</h2><span class="pill g">Practice pages</span></div>' +
     '<div class="lang-picker">' + pickerCards(null, '') + '</div></section>\n' +
     '<section class="section"><div class="section-head"><h2>What is on each page</h2></div><div class="grid three">' +
-    '<div class="card"><div class="t">Script guide</div><div class="d">The script, its direction, its Unicode range and the traps that cost marks.</div></div>' +
-    '<div class="card"><div class="t">Practice workbook</div><div class="d">Comprehension, precis, vocabulary, two-way translation and a short essay. Original prompts, not PYQs.</div></div>' +
+    '<div class="card"><div class="t">Course path</div><div class="d">Five ordered modules: script and decoding, comprehension, precis, translation and essay &mdash; with a suggested pace for a December attempt.</div></div>' +
+    '<div class="card"><div class="t">Script guide &amp; workbook</div><div class="d">The script, its direction, its Unicode range and the traps that cost marks. Then comprehension, precis, vocabulary, two-way translation and a short essay &mdash; original prompts, not PYQs.</div></div>' +
     '<div class="card"><div class="t">Script checker</div><div class="d">Paste an answer and see whether it uses the expected Unicode script. It flags Latin letters; it does not grade grammar.</div></div>' +
     '</div></section>\n' +
     '<section class="section"><div class="section-head"><h2>Low-resource languages</h2><span class="pill a">Label read</span></div>' +

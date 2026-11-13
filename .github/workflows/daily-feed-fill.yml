@@ -221,7 +221,7 @@ jobs:
             git commit -m "Feed fill $(date +'%Y-%m-%d %H:%M UTC') — run #${{ github.run_number }}"
             pushed=""
             for i in 1 2 3; do
-              git fetch origin main 2>/dev/null || true
+              timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
               git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
                 echo "Merge conflict — union-merging to keep BOTH runs' data."
                 node scripts/resolve-data-merge.js
