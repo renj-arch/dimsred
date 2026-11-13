@@ -15,6 +15,13 @@ const GH_MODEL = process.env.GH_MODELS_MODEL || 'gpt-4o-mini';
 const GH_TOKEN = process.env.GH_MODELS_TOKEN || process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '';
 const GH_URL = 'https://models.github.ai/inference/chat/completions';
 
+// Groq hosted inference — free tier, OpenAI-compatible, much stronger than
+// the local 9B (~30 RPM / ~131K tokens/day on llama-3.3-70b). Auto-enabled
+// whenever GROQ_API_KEY is set; sits between GitHub Models and local Ollama.
+const GROQ_KEY = process.env.GROQ_API_KEY || '';
+const GROQ_MODEL = process.env.GROQ_MODEL || 'llama-3.3-70b-versatile';
+const GROQ_URL = 'https://api.groq.com/openai/v1/chat/completions';
+
 function log(msg) { console.log('[model] ' + msg); }
 
 function curlChat(payload) {
@@ -109,6 +116,37 @@ async function callGHModels(messages, opts) {
   }
 }
 
+async function callGroq(messages, opts) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(function () { ctrl.abort(); }, opts.timeoutMs || 240000);
+  try {
+    const res = await fetch(GROQ_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + GROQ_KEY
+      },
+      body: JSON.stringify({
+        model: GROQ_MODEL,
+        messages: messages,
+        temperature: opts.temperature == null ? 0.4 : opts.temperature,
+        max_tokens: opts.numPredict || 2400
+      }),
+      signal: ctrl.signal
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(function () { return ''; });
+      throw new Error('Groq HTTP ' + res.status + ' ' + detail.slice(0, 200));
+    }
+    const j = await res.json();
+    const text = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+    if (!text) throw new Error('Groq returned no text');
+    return { text: String(text).trim(), httpCode: '200', doneReason: 'stop' };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function callLLM(messages, opts) {
   opts = opts || {};
   if (FAKE) return { text: FAKE, doneReason: 'stop' };
@@ -118,7 +156,16 @@ async function callLLM(messages, opts) {
       log('served by GitHub Models ' + GH_MODEL);
       return gh;
     } catch (e) {
-      log('GitHub Models failed (' + e.message + ') - falling back to Ollama ' + MODEL);
+      log('GitHub Models failed (' + e.message + ') - trying Groq ' + GROQ_MODEL);
+    }
+  }
+  if (GROQ_KEY) {
+    try {
+      const gq = await callGroq(messages, opts);
+      log('served by Groq ' + GROQ_MODEL);
+      return gq;
+    } catch (e) {
+      log('Groq failed (' + e.message + ') - falling back to Ollama ' + MODEL);
     }
   }
   const body = {
