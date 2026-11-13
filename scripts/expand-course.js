@@ -604,6 +604,7 @@ function theoryPrompt(gap) {
     '- Under each <h2>, 3-6 numbered <h3> sub-sections (for example "3.1 The Preamble", "3.2 Nature of the Constitution"). Number them continuously through the lesson.',
     '- Every heading must fit THIS lesson only, never a generic label.',
     '- Do NOT use the headings "Common Traps", "Memory Tricks", "Exam Day Checklist", "Quick Formulas", "Exam Pattern", "Standard Sources", "Periods at a Glance", "Key Concepts", or any "Advanced Section" prefix. They appeared in hundreds of lessons and made every page identical.',
+    '- Never name a specific exam anywhere in the output -- shared lesson keys are injected into sibling exams\' pages.',
     '- Include at least two <table> elements comparing things genuinely comparable in this topic (two theories, two periods, two methods, two organisms), each with a <caption>.',
     '- Include one <div class="example-box"> with div.ex-title, div.ex-text and div.ex-soln: an exam-style question with a full worked solution. Place it after the second <h2> group, not at the end.',
     '- Include one <div class="tip-box"> with div.tip-title and div.tip-text: a specific exam-day insight, not generic advice. Place it right after the example-box.',
@@ -717,6 +718,7 @@ function deepenPrompt(gap) {
   var digest = stripTags(source).slice(-4500);
   var lines = [
     'You are a senior ' + gap.examName + ' ' + gap.modName + ' teacher. The lesson "' + gap.lesson.title + '" already exists; write the NEXT LEVEL, not a rewrite.',
+    'IMPORTANT: this text can be injected into sibling exams\' pages that share this lesson key. Never name a specific exam (no "for CLAT", "SSC GD aspirants", "in NDA" etc.) in headings or prose -- write exam-neutral content.',
     'What the lesson covers: ' + gap.lesson.desc,
     'Key topics: ' + gap.lesson.topics + '.',
     '',
@@ -1260,6 +1262,20 @@ function generateOne(gap, timeoutMs) {
       }
       if (gap.role === 'enrich' && html.length < gap.oldLen + 1500) {
         throw new Error('not a real expansion (' + html.length + ' vs ' + gap.oldLen + ' chars)');
+      }
+      // Shared lesson keys are injected into sibling exams' pages: exam names
+      // in the prose leak sideways (a "for CLAT" section reached SSC GD pages).
+      // Deterministic backstop for the prompt instruction above.
+      if (isDepth || gap.role === 'enrich' || gap.role === 'write') {
+        var sharedFiles = gap.files && gap.files.length > 1;
+        if (sharedFiles && /\b(SSC GD|SSC CGL|Agniveer|CLAT|NDA|CDS|CAPF|CISF|IBPS PO|SBI Clerk|RBI Grade B)\b/i.test(html)) {
+          var e2 = new Error('html rejected: names a specific exam on a shared lesson key');
+          if (n < 2) {
+            console.log('expand: ' + gap.key + ' exam-name leak on shared key; retrying once');
+            return attempt('\n\nYour previous reply named a specific exam, but this lesson is shared across exams. Remove every exam name and return the corrected fragment.', n + 1);
+          }
+          throw e2;
+        }
       }
       if (isDepth) {
         if (html.length < 3000) throw new Error('depth section too short (' + html.length + ' chars)');
