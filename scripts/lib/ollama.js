@@ -15,6 +15,22 @@ const GH_MODEL = process.env.GH_MODELS_MODEL || 'gpt-4o-mini';
 const GH_TOKEN = process.env.GH_MODELS_TOKEN || process.env.GH_TOKEN || process.env.GITHUB_TOKEN || '';
 const GH_URL = 'https://models.github.ai/inference/chat/completions';
 
+// Optional NVIDIA NIM backend (free prototyping tier, OpenAI-compatible).
+// Opt in per lane with NVAPI=1 and NVIDIA_API_KEY; never required, and any
+// failure falls through to the local Ollama model exactly like GH Models does.
+//
+// Model ids, as published by NVIDIA on 2026-11-13:
+//   moonshotai/kimi-k3          callable
+//   moonshotai/kimi-k3.1-pro    403/404 - build.nvidia.com states "API access
+//                               for this model is not available yet ... no API
+//                               key will authorize it". Playground only, so it
+//                               is deliberately NOT the default here.
+const NVAPI = process.env.NVAPI === '1';
+const NVIDIA_MODEL = process.env.NVIDIA_MODEL || 'moonshotai/kimi-k3';
+const NVIDIA_KEY = process.env.NVIDIA_API_KEY || '';
+const NVIDIA_URL = process.env.NVIDIA_URL || 'https://integrate.api.nvidia.com/v1/chat/completions';
+const NVIDIA_MAX_TOKENS = 16384;
+
 function log(msg) { console.log('[model] ' + msg); }
 
 function curlChat(payload) {
@@ -109,6 +125,44 @@ async function callGHModels(messages, opts) {
   }
 }
 
+async function callNvidia(messages, opts) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(function () { ctrl.abort(); }, opts.timeoutMs || 240000);
+  try {
+    const res = await fetch(NVIDIA_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'Authorization': 'Bearer ' + NVIDIA_KEY
+      },
+      body: JSON.stringify({
+        model: NVIDIA_MODEL,
+        messages: messages,
+        temperature: opts.temperature == null ? 0.4 : opts.temperature,
+        max_tokens: Math.min(opts.numPredict || 2400, NVIDIA_MAX_TOKENS),
+        stream: false
+      }),
+      signal: ctrl.signal
+    });
+    if (!res.ok) {
+      const detail = await res.text().catch(function () { return ''; });
+      // A 404 here almost always means NVIDIA has the model in playground but
+      // not behind the API. Say so instead of letting it look like a bad key.
+      const hint = res.status === 404 || res.status === 403
+        ? ' (model may be playground-only on build.nvidia.com - check NVIDIA_MODEL)'
+        : '';
+      throw new Error('NVIDIA NIM HTTP ' + res.status + hint + ' ' + detail.slice(0, 200));
+    }
+    const j = await res.json();
+    const text = j.choices && j.choices[0] && j.choices[0].message && j.choices[0].message.content;
+    if (!text) throw new Error('NVIDIA NIM returned no text');
+    return { text: String(text).trim(), httpCode: '200', doneReason: 'stop' };
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function callLLM(messages, opts) {
   opts = opts || {};
   if (FAKE) return { text: FAKE, doneReason: 'stop' };
@@ -119,6 +173,15 @@ async function callLLM(messages, opts) {
       return gh;
     } catch (e) {
       log('GitHub Models failed (' + e.message + ') - falling back to Ollama ' + MODEL);
+    }
+  }
+  if (NVAPI && NVIDIA_KEY) {
+    try {
+      const nv = await callNvidia(messages, opts);
+      log('served by NVIDIA NIM ' + NVIDIA_MODEL);
+      return nv;
+    } catch (e) {
+      log('NVIDIA NIM failed (' + e.message + ') - falling back to Ollama ' + MODEL);
     }
   }
   const body = {
@@ -286,4 +349,4 @@ function leak(text) {
 function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
 function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
 
-module.exports = { HOST: HOST, MODEL: MODEL, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm };
+module.exports = { HOST: HOST, MODEL: MODEL, NVIDIA_MODEL: NVIDIA_MODEL, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm };
