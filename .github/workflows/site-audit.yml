@@ -32,7 +32,7 @@ jobs:
         run: |
           node -e "
             const j=require('./data/audit-findings.json');
-            const hard=['deadLinks','deadAnchors','badJson','badJs'];
+            const hard=['deadLinks','deadAnchors','badJson','badJs','fabrication'];
             let bad=0;
             for(const k of hard){
               const n=j.findings[k].length;

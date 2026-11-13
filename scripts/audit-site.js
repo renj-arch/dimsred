@@ -16,7 +16,7 @@ var path = require('path');
 var cp = require('child_process');
 
 var ROOT = path.resolve(process.argv[2] || path.join(__dirname, '..'));
-var findings = { deadLinks: [], deadAnchors: [], placeholder: [], badJson: [], badJs: [], thinPages: [], dupSections: [] };
+var findings = { deadLinks: [], deadAnchors: [], placeholder: [], badJson: [], badJs: [], thinPages: [], dupSections: [], fabrication: [] };
 
 function walk(dir, out, exts) {
   var es;
@@ -38,6 +38,18 @@ console.log('scanning ' + htmlFiles.length + ' html files...');
 
 var SKIP_DIRS = /node_modules|\.git/;
 var LINK_RE = /(?:href|src)\s*=\s*["']([^"']+)["']/gi;
+// Claims verified false by editorial review. Each entry: a label plus a
+// regex tested against visible prose. Keep patterns tight — a false
+// positive here blocks the weekly audit.
+var FACT_PATTERNS = [
+  { label: 'Pashupati seal mislocated to Vaishali/Sankisa (the seal is from Mohenjo-daro)',
+    re: /pashupati seal[\s\S]{0,400}(sankisa|vaishali)|(?:sankisa|vaishali)[\s\S]{0,400}pashupati seal/i },
+  { label: 'Pashupati seal described as bearing a Brahmi inscription (it carries undeciphered Indus script)',
+    re: /pashupati seal[\s\S]{0,300}brahmi|brahmi[\s\S]{0,300}pashupati seal/i },
+  { label: 'Pashupati seal cited as proof of language/literary origins',
+    re: /pashupati seal[^.]{0,200}\b(proves|demonstrates|establishes|confirms)\b/i }
+];
+
 var PLACEHOLDER_RE = /\b(lorem ipsum|TODO|FIXME|XXX\b|placeholder text|coming soon|under construction|this lesson covers <strong>|\[object Object\]|undefined is not|NaN\b)/i;
 
 htmlFiles.forEach(function (fp) {
@@ -89,6 +101,16 @@ htmlFiles.forEach(function (fp) {
     .replace(/<!--[\s\S]*?-->/g, '');
   var pm = visible.match(PLACEHOLDER_RE);
   if (pm) findings.placeholder.push(rel + ' :: ' + pm[0]);
+
+  // Verified-false factual claims (no invented facts rule). Patterns are
+  // specific enough to avoid false positives; extend as new fabrications
+  // are caught in review.
+  for (var fi = 0; fi < FACT_PATTERNS.length; fi++) {
+    if (FACT_PATTERNS[fi].re.test(visible)) {
+      findings.fabrication.push(rel + ' :: ' + FACT_PATTERNS[fi].label);
+      break;
+    }
+  }
 
   // duplicate h3 sections inside lesson-body
   if (html.indexOf('lesson-body') !== -1) {
