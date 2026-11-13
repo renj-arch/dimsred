@@ -6,6 +6,27 @@ const HOST = process.env.OLLAMA_HOST || 'http://127.0.0.1:11434';
 const MODEL = process.env.OLLAMA_MODEL || 'qwen3.5:9b';
 const FAKE = process.env.OD_FAKE_TEXT || '';
 
+// Transport guards for a single local-model call. These were hard-coded at
+// 55/25/12 minutes, which killed the 27B CPU lane two minutes before it would
+// have finished: deep-rewrite.yml documents 60-120 min per lesson, but the
+// fixed 55-minute cap aborted the call (run 43457466546, "transport: hard cap
+// 55min"). The caps exist to catch a genuinely hung stream, so they are now
+// per-lane environment values rather than a fixed ceiling; the idle guard is
+// what actually detects a stall, and it is unchanged by default.
+//   OLLAMA_HARD_CAP_MIN    total wall clock for one call   (default 55)
+//   OLLAMA_FIRST_BYTE_MIN  time allowed before first byte  (default 25)
+//   OLLAMA_IDLE_MIN        time allowed between bytes      (default 12)
+const HARD_CAP_MIN = Math.max(1, parseInt(process.env.OLLAMA_HARD_CAP_MIN || '55', 10) || 55);
+const FIRST_BYTE_MIN = Math.max(1, parseInt(process.env.OLLAMA_FIRST_BYTE_MIN || '25', 10) || 25);
+const IDLE_MIN = Math.max(1, parseInt(process.env.OLLAMA_IDLE_MIN || '12', 10) || 12);
+// curl must not give up before the guard does, or a slow-but-alive stream would
+// die with a bare "curl exit 28" instead of a readable reason.
+const CURL_MAX_TIME = String(Math.max(5400, (HARD_CAP_MIN + 5) * 60));
+
+function transportGuards() {
+  return { hardCapMin: HARD_CAP_MIN, firstByteMin: FIRST_BYTE_MIN, idleMin: IDLE_MIN, curlMaxTime: CURL_MAX_TIME };
+}
+
 // Optional GitHub Models backend (free tier, OpenAI-compatible). A lane opts in
 // with GH_MODELS=1 and GH_MODELS_TOKEN; every call then tries the hosted model
 // first and falls back to the local Ollama model on any error, so an exhausted
@@ -40,7 +61,7 @@ let warnedUnknownNvidia = false;
 function log(msg) { console.log('[model] ' + msg); }
 
 function curlChat(payload) {
-  const args = ['-sS', '--max-time', '5400', '-w', '\\n%{http_code}',
+  const args = ['-sS', '--max-time', CURL_MAX_TIME, '-w', '\\n%{http_code}',
     HOST + '/api/chat', '-H', 'Content-Type: application/json', '-d', '@-'];
   return new Promise(function (resolve, reject) {
     const child = spawn('curl', args, { stdio: ['pipe', 'pipe', 'pipe'] });
@@ -49,10 +70,10 @@ function curlChat(payload) {
     let firstByteAt = 0, lastByteAt = Date.now();
     const mon = setInterval(function () {
       const now = Date.now();
-      if (now - startedAt > 55 * 60000) return fail('hard cap 55min');
+      if (now - startedAt > HARD_CAP_MIN * 60000) return fail('hard cap ' + HARD_CAP_MIN + 'min');
       if (!firstByteAt) {
-        if (now - startedAt > 25 * 60000) return fail('no first byte in 25min');
-      } else if (now - lastByteAt > 12 * 60000) return fail('no byte for 12min');
+        if (now - startedAt > FIRST_BYTE_MIN * 60000) return fail('no first byte in ' + FIRST_BYTE_MIN + 'min');
+      } else if (now - lastByteAt > IDLE_MIN * 60000) return fail('no byte for ' + IDLE_MIN + 'min');
     }, 5000);
     function fail(why) {
       if (settled) return;
@@ -358,4 +379,4 @@ function leak(text) {
 function clean(s) { return String(s == null ? '' : s).replace(/\s+/g, ' ').trim(); }
 function norm(s) { return String(s || '').toLowerCase().replace(/\s+/g, ' ').trim(); }
 
-module.exports = { HOST: HOST, MODEL: MODEL, NVIDIA_MODEL: NVIDIA_MODEL, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm };
+module.exports = { HOST: HOST, MODEL: MODEL, NVIDIA_MODEL: NVIDIA_MODEL, transportGuards: transportGuards, log: log, callLLM: callLLM, callArray: callArray, extractArray: extractArray, extractLooseItems: extractLooseItems, parseJsonLoose: parseJsonLoose, repairJsonText: repairJsonText, leak: leak, clean: clean, norm: norm };
