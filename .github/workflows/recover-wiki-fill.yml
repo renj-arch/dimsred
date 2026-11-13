@@ -385,7 +385,7 @@ jobs:
             git commit -m "Wiki fill recovery — run ${{ steps.resolve.outputs.run-id }} $(date +'%Y-%m-%d %H:%M UTC')"
             PUSHED=0
             for i in 1 2 3; do
-              git fetch origin main 2>/dev/null || true
+              timeout 240 git fetch origin main 2>/dev/null || echo "fetch timed out or failed - merging last-known origin/main"
               git merge --no-edit -X ours FETCH_HEAD 2>/dev/null || {
                 echo "Merge conflict — running union merge to keep BOTH runs' data."
                 node scripts/resolve-data-merge.js

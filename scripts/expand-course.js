@@ -604,9 +604,11 @@ function theoryPrompt(gap) {
     '- Under each <h2>, 3-6 numbered <h3> sub-sections (for example "3.1 The Preamble", "3.2 Nature of the Constitution"). Number them continuously through the lesson.',
     '- Every heading must fit THIS lesson only, never a generic label.',
     '- Do NOT use the headings "Common Traps", "Memory Tricks", "Exam Day Checklist", "Quick Formulas", "Exam Pattern", "Standard Sources", "Periods at a Glance", "Key Concepts", or any "Advanced Section" prefix. They appeared in hundreds of lessons and made every page identical.',
+    '- Never name a specific exam anywhere in the output -- shared lesson keys are injected into sibling exams\' pages.',
     '- Include at least two <table> elements comparing things genuinely comparable in this topic (two theories, two periods, two methods, two organisms), each with a <caption>.',
-    '- Include one <div class="example-box"> with div.ex-title, div.ex-text and div.ex-soln: an exam-style question with a full worked solution.',
-    '- Include one <div class="tip-box"> with div.tip-title and div.tip-text: a specific exam-day insight, not generic advice.',
+    '- Include one <div class="example-box"> with div.ex-title, div.ex-text and div.ex-soln: an exam-style question with a full worked solution. Place it after the second <h2> group, not at the end.',
+    '- Include one <div class="tip-box"> with div.tip-title and div.tip-text: a specific exam-day insight, not generic advice. Place it right after the example-box.',
+    '- End the reply with a complete sentence inside the last element; never stop mid-word or mid-sentence.',
     '',
     'LENGTH: 2500-4000 words of visible text. A thin lesson on a large topic is a failed lesson. Never pad with repetition to reach the length.',
     '',
@@ -716,6 +718,7 @@ function deepenPrompt(gap) {
   var digest = stripTags(source).slice(-4500);
   var lines = [
     'You are a senior ' + gap.examName + ' ' + gap.modName + ' teacher. The lesson "' + gap.lesson.title + '" already exists; write the NEXT LEVEL, not a rewrite.',
+    'IMPORTANT: this text can be injected into sibling exams\' pages that share this lesson key. Never name a specific exam (no "for CLAT", "SSC GD aspirants", "in NDA" etc.) in headings or prose -- write exam-neutral content.',
     'What the lesson covers: ' + gap.lesson.desc,
     'Key topics: ' + gap.lesson.topics + '.',
     '',
@@ -735,9 +738,10 @@ function deepenPrompt(gap) {
     '- each section starts with an <h3> title that is clearly different from every existing heading',
     '- the title must name the actual content ("The Pashupati Seal and What It Shows"), never a label. Do NOT prefix titles with "Advanced Section"; do NOT use "Common Traps", "Memory Tricks", "Exam Day Checklist", "Quick Formulas", "Periods at a Glance", "Standard Sources" or "Key Concepts" -- those were used in hundreds of lessons and made every page look the same',
     '- each section must be substantial: 400-700 words of specific, correct detail (dates, names, events, statutes, judgments, movements), not generic statements',
-    '- include one <div class="example-box"> with div.ex-title (technique), div.ex-text (question), div.ex-soln (full worked answer)',
-    '- include one <div class="tip-box"> with div.tip-title and div.tip-text for exam-day strategy',
+    '- include one <div class="example-box"> with div.ex-title (technique), div.ex-text (question), div.ex-soln (full worked answer) placed immediately AFTER your second <h3> section -- never at the end of the reply, where a truncated finish deletes it',
+    '- include one <div class="tip-box"> with div.tip-title and div.tip-text for exam-day strategy, right after the example-box',
     '- finish with a "Common Traps" <ul> specific to these advanced sections (5-7 traps)',
+    '- end the reply with a complete sentence inside the last element; never stop mid-word or mid-sentence',
     '',
     'Format: HTML fragment only, tags <h3> <h4> <p> <ul> <ol> <li> <strong> <em> <br> <div> <span> <sup> <sub> <table> <caption> <thead> <tbody> <tr> <th> <td>.',
     'div classes allowed: example-box/ex-title/ex-text/ex-soln and tip-box/tip-title/tip-text. No other attributes, no links, images, scripts or markdown.',
@@ -1249,12 +1253,29 @@ function generateOne(gap, timeoutMs) {
         var e = new Error('html rejected: ' + err);
         if (n < 2 && isStructuralReject(e.message)) {
           console.log('expand: ' + gap.key + ' structural reject (' + err + '); retrying once');
-          return attempt('\n\nYour previous reply was rejected by the validator: ' + err + '. Return the COMPLETE corrected HTML fragment again. Keep every valid section and fix the structure.', n + 1);
+          var fixHint = /example-box|tip-box/.test(err)
+            ? ' Put BOTH the example-box and the tip-box immediately after your second <h3> section this time -- boxes placed at the end get truncated and rejected.'
+            : '';
+          return attempt('\n\nYour previous reply was rejected by the validator: ' + err + '. Return the COMPLETE corrected HTML fragment again. Keep every valid section and fix the structure.' + fixHint, n + 1);
         }
         throw e;
       }
       if (gap.role === 'enrich' && html.length < gap.oldLen + 1500) {
         throw new Error('not a real expansion (' + html.length + ' vs ' + gap.oldLen + ' chars)');
+      }
+      // Shared lesson keys are injected into sibling exams' pages: exam names
+      // in the prose leak sideways (a "for CLAT" section reached SSC GD pages).
+      // Deterministic backstop for the prompt instruction above.
+      if (isDepth || gap.role === 'enrich' || gap.role === 'write') {
+        var sharedFiles = gap.files && gap.files.length > 1;
+        if (sharedFiles && /\b(SSC GD|SSC CGL|Agniveer|CLAT|NDA|CDS|CAPF|CISF|IBPS PO|SBI Clerk|RBI Grade B)\b/i.test(html)) {
+          var e2 = new Error('html rejected: names a specific exam on a shared lesson key');
+          if (n < 2) {
+            console.log('expand: ' + gap.key + ' exam-name leak on shared key; retrying once');
+            return attempt('\n\nYour previous reply named a specific exam, but this lesson is shared across exams. Remove every exam name and return the corrected fragment.', n + 1);
+          }
+          throw e2;
+        }
       }
       if (isDepth) {
         if (html.length < 3000) throw new Error('depth section too short (' + html.length + ' chars)');

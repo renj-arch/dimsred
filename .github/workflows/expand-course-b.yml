@@ -1,0 +1,267 @@
+﻿name: Expand Course Lane B
+
+# The site's course-writing agent: qwen3.5:9b (Ollama on the runner) writes
+# the lesson bodies and practice MCQs that the exam courses are missing, and
+# ONLY those lesson pages are regenerated afterwards.
+#
+# Why the filtered regeneration matters: a full gen-course.js run would
+# rewrite every page of an exam with the raw generator template, reverting
+# per-page repairs (selfcheck's nav/head fixes) and one-off enrichments (NEET
+# biology practice blocks, UPSC's topic layers) that exist only in the
+# committed pages. So the expander records exactly which keys it filled and
+# which files those keys render to, and the workflow regenerates precisely
+# those files.
+#
+# Zero API keys: the model runs locally on the runner through Ollama. The
+# 70% word-overlap rule (same as the rest of the site) drops any accidental
+# duplicate before it can be stored.
+#
+# The model is dispatch-pinnable (input "model", default qwen3.5:9b Î“Ã‡Ã¶ the
+# mid tier). The 4b fast-tier trials decide whether it can go smaller; the
+# old 27B could not complete runs here, so nothing dispatches it anymore.
+
+on:
+  # No fixed cron: runs are chained Î“Ã‡Ã¶ each run self-dispatches the next one
+  # when it finishes (see the "Queue the next deepen run" step below). This
+  # means a new deepen cycle starts as soon as the previous one completes,
+  # instead of waiting for the next 6-hour clock slot. Use workflow_dispatch
+  # to start the chain manually.
+  workflow_dispatch:
+    inputs:
+      per_run:
+        description: 'Lessons to write this run (default 12)'
+        required: false
+        default: '12'
+      model:
+        description: 'Ollama model tag. Default = mid tier (qwen3.5:9b); qwen3:4b is the cached fast tier.'
+        required: false
+        default: 'qwen3.5:9b'
+      keys:
+        description: 'Only these lesson keys, comma-separated (e.g. opt-sanskrit/overview,opt-sanskrit/paper1). Empty = whole site.'
+        required: false
+        default: ''
+
+concurrency:
+  group: expand-course-b
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+  # The chain self-dispatches the next run with GITHUB_TOKEN. Without this the
+  # dispatch is rejected with HTTP 403 and the chain silently dies.
+  actions: write
+
+jobs:
+  expand:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - name: Free runner disk space (swap + 17GB model + repo)
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL /usr/share/swift /usr/local/share/boost 2>/dev/null || true
+          df -h / | tail -1
+
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+          sparse-checkout: |
+            scripts
+            /*.html
+            english
+            neet
+            jee
+            upsc
+            ibps-po
+            sbi-clerk
+            ssc-gd
+            ctet
+            gate
+            agniveer
+            rbi
+            cgl
+            nda
+            cds
+            clat
+          sparse-checkout-cone-mode: false
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      # EXACT same swap as proven llm-autofix / question-quality (kept as a safety net).
+      - name: Create swap (8GB - faster than 16GB, still enough for 9b model)
+        run: |
+          sudo dd if=/dev/zero of=/tmp/swapfile bs=1M count=8192 status=progress
+          sudo chmod 600 /tmp/swapfile
+          sudo mkswap /tmp/swapfile
+          sudo swapon /tmp/swapfile
+          free -h
+
+      - name: Install Ollama
+        run: |
+          curl -fsSL https://ollama.com/install.sh | sh
+          ollama --version
+          mkdir -p ~/.ollama/models
+          # The install script starts a systemd service running as the
+          # "ollama" user (home /usr/share/ollama) Î“Ã‡Ã¶ models were stored THERE,
+          # invisible to the Actions cache (first cache save was a 197-byte
+          # empty dir). Run the service as the runner user, pointed at the
+          # runner home: models become cache-visible and owned by the same
+          # user that restores/saves the cache.
+          sudo mkdir -p /etc/systemd/system/ollama.service.d
+          printf '[Service]\nUser=runner\nGroup=runner\nEnvironment=HOME=/home/runner\nEnvironment=OLLAMA_MODELS=/home/runner/.ollama/models\nEnvironment=OLLAMA_KEEP_ALIVE=60m\n' | sudo tee /etc/systemd/system/ollama.service.d/runner-home.conf > /dev/null
+          sudo systemctl daemon-reload
+          sudo systemctl restart ollama
+
+      # Model cache: one entry per size class (repo budget 10GB) Î“Ã‡Ã¶ "fast" for
+      # small models, "mid" for qwen3.5:9b. Both current default tags are cacheable.
+      - name: Cache Ollama models
+        if: ${{ !contains(inputs.model || 'qwen3.5:9b', '27b') && !contains(inputs.model || 'qwen3.5:9b', '22b') }}
+        continue-on-error: true
+        uses: actions/cache@v4
+        with:
+          path: /home/runner/.ollama/models
+          key: ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-v1' || 'fast-v2' }}
+          restore-keys: |
+            ollama-${{ runner.os }}-${{ contains(inputs.model || 'qwen3.5:9b', '9b') && 'mid-' || 'fast-' }}
+
+      - name: Start Ollama server
+        run: |
+          # Same as llm-smoke: stop the kernel from paging model weights out
+          # under memory pressure (swap thrash is what killed the 18GB era).
+          sudo sysctl -w vm.swappiness=10 || true
+          export OLLAMA_KEEP_ALIVE=60m
+          nohup ollama serve > /tmp/ollama.log 2>&1 &
+          echo $! > /tmp/ollama.pid
+          for i in $(seq 1 30); do
+            if curl -sf http://127.0.0.1:11434/api/tags > /dev/null 2>&1; then
+              echo "Ollama server ready after ${i}s"
+              break
+            fi
+            sleep 1
+          done
+          curl -sf http://127.0.0.1:11434/api/tags > /dev/null && echo " OK" || echo " FAILED"
+          free -h
+
+      - name: Pull model (${{ inputs.model || 'qwen3.5:9b' }})
+        env:
+          MODEL_INPUT: ${{ inputs.model || 'qwen3.5:9b' }}
+        run: |
+          case "$MODEL_INPUT" in *[!A-Za-z0-9._:/-]*) echo "bad model tag: $MODEL_INPUT"; exit 1;; esac
+          timeout 1200 ollama pull "$MODEL_INPUT" || { echo "Model pull timed out"; exit 1; }
+          ollama list
+          # Warm the model into RAM now so lesson calls start warm.
+          echo "Warming $MODEL_INPUT..."
+          timeout 300 ollama run "$MODEL_INPUT" "Reply with exactly: OK" 2>&1 | tail -3 || echo "Warm-up timed out (non-fatal)"
+
+      - name: Write course lessons (${{ inputs.model || 'qwen3.5:9b' }} as teacher)
+        env:
+          OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
+          OLLAMA_HOST: http://127.0.0.1:11434
+          # Prefer the hosted GitHub Models free tier (gpt-4o-mini by default)
+          # for lesson prose; falls back to the local model on any error.
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '6' }}
+          EXPAND_DEADLINE_MIN: '90'
+          EXPAND_DEEPEN: '1'
+          # Depth converges on a word target, not a pass count. A fixed 4 passes
+          # is ~15,000 words, a quarter of the 58,278-word average of the eight
+          # hand-built UPSC GS lessons. Each scheduled run now adds 2,000-3,500
+          # words to the biggest remaining gaps until they reach the target;
+          # EXPAND_DEPTH_PASS_MAX is only a backstop for a page that cannot
+          # converge.
+          EXPAND_DEPTH_TARGET_WORDS: '8000'
+          EXPAND_DEPTH_TARGET_WORDS_BUILT: '45000'
+          EXPAND_DEPTH_PASS_MAX: '60'
+          # Keys restricts the run to named lessons; the thin threshold lifts
+          # the enrich rewrite ceiling from 2.5K to 6K chars so stub-length
+          # lessons (the opt-* papers sit at 2.7-3.4K) get a full rewrite
+          # instead of deepen passes appended onto a weak base. Hand-built
+          # pages are excluded inside collectThins, so hand-enriched content
+          # is safe.
+          EXPAND_ONLY_KEYS: ${{ github.event.inputs.keys || '' }}
+          EXPAND_THIN_THRESHOLD: '6000'
+        run: NODE_OPTIONS=--max-old-space-size=4096 node scripts/expand-course.js
+
+      # Published addons accumulate small defects: raw LaTeX, a sentence cut
+      # off at the token limit, a dangling label, emoji in a heading. Repair
+      # them here and merge the changed keys into .course-touched.json so the
+      # pages regenerate below instead of drifting from the JSON.
+      - name: Clean published addon content
+        if: always()
+        run: node scripts/clean-course-content.js
+
+      # Publishes the same number the course is judged on. Coverage is measured
+      # in prose words against a depth target, because a pass-count cap let the
+      # generator declare "done" at 4% of hand-built density.
+      - name: Course coverage report
+        if: always()
+        run: node scripts/course-coverage.js --top 20 || true
+
+      - name: Regenerate exactly the filled lesson pages
+        if: always()
+        run: |
+          [ -f scripts/.course-touched.json ] || { echo "no touched file"; exit 0; }
+          KEYS=$(node -e "console.log(require('./scripts/.course-touched.json').keys.join(','))")
+          [ -n "$KEYS" ] || { echo "nothing filled this run"; exit 0; }
+          echo "Regenerating: $KEYS"
+          test_exams=$(node -e "console.log((require('./scripts/.course-touched.json').exams||[]).join(','))")
+          COURSE_ONLY_KEYS="$KEYS" COURSE_EXAMS="$test_exams" node scripts/gen-course.js
+          node -e "const t=require('./scripts/.course-touched.json'); require('fs').writeFileSync('/tmp/course-files.txt', t.files.join('\n') + '\n')"
+          node scripts/normalize-course-pages.js $(cat /tmp/course-files.txt)
+          # deepen-page passes can stack byte-identical section blocks; drop
+          # exact duplicates (heading + body) before the loss-guard measures.
+          node scripts/dedupe-lesson-sections.js $(cat /tmp/course-files.txt)
+          # Bulletproof guard: if regenerating a page would drop a large amount
+          # of content (hand-built sections that live only in the committed
+          # file), restore that page instead of publishing the loss.
+          RESTORED=0
+          while read -r f; do
+            [ -f "$f" ] || continue
+            DEL=$(git diff --numstat -- "$f" | awk '{print $2}' | head -1)
+            if [ -n "$DEL" ] && [ "$DEL" -gt 200 ]; then
+              echo "::warning::regen would drop $DEL line(s) from $f -- restored, committed content kept"
+              git checkout -- "$f"
+              RESTORED=$((RESTORED + 1))
+            fi
+          done < /tmp/course-files.txt
+          echo "guard: $RESTORED page(s) restored"
+
+      # Incremental saves mean even a timeout keeps every lesson written so
+      # far -- publish whatever landed. Nothing staged -> ci-push exits 0.
+      - name: Publish expanded lessons
+        if: always()
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          rm -f .git/config.lock .git/index.lock .git/HEAD.lock
+          git config user.name "dimsred-bot"
+          git config user.email "bot@vlymbooq.qzz.io"
+          git add scripts/course-data.json scripts/course-practice.json 2>/dev/null || true
+          git add scripts/course-versions.json 2>/dev/null || true
+          git add scripts/course-depth.json scripts/course-addons.json 2>/dev/null || true
+          if [ -f /tmp/course-files.txt ]; then xargs -a /tmp/course-files.txt git add; fi
+          rm -f scripts/.course-touched.json
+          bash scripts/ci-push.sh "course-expand: ${{ inputs.model || 'qwen3.5:9b' }} wrote new exam lessons (run #${{ github.run_number }})"
+
+      # Queue the next deepen run as soon as this one finishes Î“Ã‡Ã¶ chained
+      # instead of waiting for a fixed 6-hour cron slot.
+      - name: Queue the next deepen run
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # Lane B owns the UPSC mains/CSAT keys so the two lanes never race
+          # on the same lesson. The chain re-dispatches with the same scope.
+          LANE_B_KEYS='csat/comprehension,csat/decision-making,csat/logical-reasoning,csat/quant-aptitude,mains-essay/essay-language,mains-essay/essay-practice,mains-essay/essay-structure,mains-essay/essay-topics,mains-gs1/answer-writing-gs1,mains-gs1/heritage-culture,mains-gs1/indian-geography-mains,mains-gs1/modern-history,mains-gs1/society,mains-gs1/world-geography,mains-gs1/world-history,mains-gs2/answer-writing-gs2,mains-gs2/comparative-polity,mains-gs2/constitution,mains-gs2/governance,mains-gs2/international-relations,mains-gs2/social-justice,mains-gs3/agriculture-food,mains-gs3/answer-writing-gs3,mains-gs3/environment-disaster,mains-gs3/indian-economy-mains,mains-gs3/internal-security,mains-gs3/science-tech,mains-gs4/answer-writing-gs4,mains-gs4/attitude-foundations,mains-gs4/case-studies,mains-gs4/emotional-intelligence,mains-gs4/ethics-theory,mains-interview/current-affairs-interview,mains-interview/daf-analysis,mains-interview/interview-strategy,mains-interview/mock-interview,mains-language/paper-a-indian-language,mains-language/paper-b-english,mains-language/precis-writing,mains-language/translation,mains-optional-guide/choosing-optional'
+          for i in 1 2 3; do
+            if gh workflow run expand-course-b.yml --ref main -f keys="$LANE_B_KEYS" -f per_run=20; then
+              echo "Queued the next course-deepen run (starts when this run completes)"
+              exit 0
+            fi
+            echo "Dispatch attempt $i failed, retrying..."
+            sleep 10
+          done
+          echo "::error title=Chain broken::Could not dispatch the next expand-course run after 3 attempts."
+          exit 1

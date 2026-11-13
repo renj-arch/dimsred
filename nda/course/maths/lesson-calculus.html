@@ -121,7 +121,10 @@
                     <h2 id="limits">1. Limits</h2>
                     <p>The concept of limit is the foundation of calculus. For a function f(x), we say <strong>lim<sub>x&rarr;a</sub> f(x) = L</strong> if f(x) gets arbitrarily close to L when x is sufficiently close to a (but not equal to a). Limits are used to define derivatives, continuity, and integrals.</p>
 
-                    <h3>Basic Limits &amp; Indeterminate Forms</h3>
+                    
+
+<!-- lesson-toc --><style>.lesson-toc{background:var(--card2,#111);border:1px solid var(--border,rgba(255,255,255,.08));border-radius:12px;padding:14px 18px;margin:14px 0}.lesson-toc .t{font-weight:700;font-size:.8em;text-transform:uppercase;letter-spacing:1px;color:var(--text-muted,#71717a);margin-bottom:8px}.lesson-toc ol{margin:0;padding-left:20px}.lesson-toc li{font-size:.88em;line-height:1.9}.lesson-toc a{color:var(--purple,#a78bfa);text-decoration:none}.lesson-toc a:hover{text-decoration:underline}</style><nav class="lesson-toc"><div class="t">Contents</div><ol><li><a href="#ls-1">Basic Limits & Indeterminate Forms</a></li><li><a href="#ls-2">Standard Limits</a></li><li><a href="#ls-3">Series Expansions for Limits</a></li><li><a href="#ls-4">L'Hopital's Rule</a></li><li><a href="#ls-5">Continuity at a Point</a></li><li><a href="#ls-6">Types of Discontinuities</a></li><li><a href="#ls-7">Differentiability</a></li><li><a href="#ls-8">Basic Rules & Formulas</a></li><li><a href="#ls-9">Chain Rule, Product Rule, Quotient Rule</a></li><li><a href="#ls-10">Implicit Differentiation</a></li><li><a href="#ls-11">Logarithmic Differentiation</a></li><li><a href="#ls-12">Second Order Derivatives</a></li><li><a href="#ls-13">Successive Differentiation (n th Derivatives)</a></li><li><a href="#ls-14">Rate of Change</a></li><li><a href="#ls-15">Increasing/Decreasing Functions</a></li><li><a href="#ls-16">Tangents & Normals</a></li><li><a href="#ls-17">Mean Value Theorem & Rolle's Theorem</a></li><li><a href="#ls-18">Maxima & Minima</a></li><li><a href="#ls-19">Approximations & Differentials</a></li><li><a href="#ls-20">Indefinite Integrals</a></li><li><a href="#ls-21">Definite Integrals</a></li><li><a href="#ls-22">Order & Degree</a></li><li><a href="#ls-23">Variable Separable</a></li><li><a href="#ls-24">Homogeneous DE</a></li><li><a href="#ls-25">Linear DE</a></li><li><a href="#ls-26">Bernoulli's Differential Equation</a></li><li><a href="#ls-27">Exact Differential Equations</a></li><li><a href="#ls-28">Applications of Differential Equations</a></li></ol></nav>
+<h3 id="ls-1">1. Basic Limits &amp; Indeterminate Forms</h3>
                     <p>When evaluating limits, we may encounter forms that are not immediately determinate. These require algebraic manipulation, standard limit formulas, or L'Hopital's Rule.</p>
 
                     <h4>Indeterminate Forms</h4>
@@ -172,7 +175,7 @@
                         <div class="tip-text">For rational 0/0 limits, always try factorisation first. If the numerator and denominator are polynomials, check if (x &minus; a) is a common factor before applying L'Hopital. This saves time in NDA exams.</div>
                     </div>
 
-                    <h3>Standard Limits</h3>
+                    <h3 id="ls-2">2. Standard Limits</h3>
                     <p>Memorising standard limits is essential for quick evaluation in NDA exams. The following tables list the most frequently tested limits.</p>
 
                     <h4>Trigonometric Limits</h4>
@@ -222,7 +225,7 @@
                         <div class="tip-text">For limits of the form lim<sub>x&rarr;0</sub> (e<sup>ax</sup> &minus; 1)/(bx), the answer is a/b. Similarly, lim<sub>x&rarr;0</sub> (a<sup>x</sup> &minus; 1)/x = ln a. These direct formulas save 2&minus;3 steps.</div>
                     </div>
 
-                    <h3>Series Expansions for Limits</h3>
+                    <h3 id="ls-3">3. Series Expansions for Limits</h3>
                     <p>Standard series expansions are powerful tools for evaluating limits, especially when L'Hopital's rule becomes tedious. These expansions represent functions as infinite polynomials around x = 0.</p>
 
                     <table>
@@ -252,7 +255,7 @@
                         <div class="tip-text">For limits involving combinations of sin, cos, e<sup>x</sup>, and ln(1+x), series expansion often gives the answer in one step compared to repeated L'Hopital. Memorise the first 2&minus;3 terms of e<sup>x</sup>, sin x, cos x, and ln(1+x).</div>
                     </div>
 
-                    <h3>L'Hopital's Rule</h3>
+                    <h3 id="ls-4">4. L'Hopital's Rule</h3>
                     <p>If lim<sub>x&rarr;a</sub> f(x)/g(x) gives 0/0 or &infin;/&infin;, then <strong>lim<sub>x&rarr;a</sub> f(x)/g(x) = lim<sub>x&rarr;a</sub> f'(x)/g'(x)</strong>, provided the limit exists. The rule can be applied repeatedly until a determinate form is obtained.</p>
 
                     <table>
@@ -279,7 +282,7 @@
 
                     <h2 id="continuity">2. Continuity &amp; Differentiability</h2>
 
-                    <h3>Continuity at a Point</h3>
+                    <h3 id="ls-5">5. Continuity at a Point</h3>
                     <p>A function f(x) is <strong>continuous at x = a</strong> if lim<sub>x&rarr;a</sub> f(x) = f(a). This requires three conditions:</p>
                     <ol>
                         <li>f(a) is defined (a belongs to the domain)</li>
@@ -304,7 +307,7 @@
                         <div class="ex-soln"><strong>Solution:</strong> LHL = lim<sub>x&rarr;3<sup>&minus;</sup></sub> |x &minus; 3| = 0. RHL = lim<sub>x&rarr;3<sup>+</sup></sub> |x &minus; 3| = 0. f(3) = 0. Since LHL = RHL = f(3), f is <strong>continuous</strong> at x = 3.</div>
                     </div>
 
-                    <h3>Types of Discontinuities</h3>
+                    <h3 id="ls-6">6. Types of Discontinuities</h3>
                     <table>
                         <thead>
                             <tr><th>Type</th><th>Description</th><th>Example</th></tr>
@@ -317,7 +320,7 @@
                         </tbody>
                     </table>
 
-                    <h3>Differentiability</h3>
+                    <h3 id="ls-7">7. Differentiability</h3>
                     <p>A function f is <strong>differentiable at x = a</strong> if the derivative f'(a) = lim<sub>h&rarr;0</sub> [f(a + h) &minus; f(a)]/h exists (LHD = RHD). Differentiability implies continuity, but the converse is not true.</p>
 
                     <div class="example-box">
@@ -333,7 +336,7 @@
 
                     <h2 id="differentiation">3. Differentiation</h2>
 
-                    <h3>Basic Rules &amp; Formulas</h3>
+                    <h3 id="ls-8">8. Basic Rules &amp; Formulas</h3>
                     <p>The derivative represents the rate of change. Geometrically, f'(x) is the slope of the tangent at point (x, f(x)).</p>
 
                     <table>
@@ -358,7 +361,7 @@
                         </tbody>
                     </table>
 
-                    <h3>Chain Rule, Product Rule, Quotient Rule</h3>
+                    <h3 id="ls-9">9. Chain Rule, Product Rule, Quotient Rule</h3>
                     <p><strong>Chain Rule:</strong> If y = f(u) and u = g(x), then dy/dx = (dy/du) &times; (du/dx).</p>
                     <p><strong>Product Rule:</strong> (uv)' = u'v + uv'.</p>
                     <p><strong>Quotient Rule:</strong> (u/v)' = (u'v &minus; uv')/v<sup>2</sup>.</p>
@@ -374,7 +377,7 @@
                         <div class="tip-text">For nested functions, differentiate from outside to inside. In NDA exams, chain rule problems often involve trigonometric, exponential, and logarithmic compositions. Remember: derivative of f(g(x)) = f'(g(x)) &times; g'(x).</div>
                     </div>
 
-                    <h3>Implicit Differentiation</h3>
+                    <h3 id="ls-10">10. Implicit Differentiation</h3>
                     <p>When y cannot be expressed explicitly as a function of x, differentiate both sides of the equation with respect to x, treating y as a function of x and using the chain rule (dy/dx appears).</p>
 
                     <div class="example-box">
@@ -383,7 +386,7 @@
                         <div class="ex-soln"><strong>Solution:</strong> Differentiate both sides: 3x<sup>2</sup> + 3y<sup>2</sup>(dy/dx) = 3y + 3x(dy/dx). Rearranging: 3y<sup>2</sup>(dy/dx) &minus; 3x(dy/dx) = 3y &minus; 3x<sup>2</sup>. So dy/dx = (y &minus; x<sup>2</sup>)/(y<sup>2</sup> &minus; x).</div>
                     </div>
 
-                    <h3>Logarithmic Differentiation</h3>
+                    <h3 id="ls-11">11. Logarithmic Differentiation</h3>
                     <p>Used when the function is of the form [f(x)]<sup>g(x)</sup> or a product/quotient of many functions. Take natural log on both sides and then differentiate.</p>
 
                     <div class="example-box">
@@ -397,11 +400,11 @@
                         <div class="tip-text">For y = [f(x)]<sup>g(x)</sup>, the formula is: dy/dx = [f(x)]<sup>g(x)</sup> &times; [g'(x) ln f(x) + g(x) f'(x)/f(x)]. Memorise this to avoid re-deriving each time.</div>
                     </div>
 
-                    <h3>Second Order Derivatives</h3>
+                    <h3 id="ls-12">12. Second Order Derivatives</h3>
                     <p>The second derivative f''(x) or d<sup>2</sup>y/dx<sup>2</sup> is the derivative of the first derivative. It represents the rate of change of slope and is used to determine concavity and classify critical points.</p>
                     <p>If f''(x) &gt; 0 on an interval, the function is <strong>concave up</strong> (holds water). If f''(x) &lt; 0, the function is <strong>concave down</strong> (spills water). Points where concavity changes are called <strong>points of inflection</strong> (f''(x) = 0).</p>
 
-                    <h3>Successive Differentiation (n<sup>th</sup> Derivatives)</h3>
+                    <h3 id="ls-13">13. Successive Differentiation (n<sup>th</sup> Derivatives)</h3>
                     <p>Successive differentiation involves finding higher-order derivatives. Some standard formulas for n<sup>th</sup> derivatives are useful in NDA exams:</p>
                     <table>
                         <thead>
@@ -424,7 +427,7 @@
 
                     <h2 id="applications">4. Applications of Derivatives</h2>
 
-                    <h3>Rate of Change</h3>
+                    <h3 id="ls-14">14. Rate of Change</h3>
                     <p>The derivative dy/dx gives the rate of change of y with respect to x. In NDA problems, this is often used with time as the independent variable: dy/dt = (dy/dx)(dx/dt). Related rates problems involve finding the rate at which one quantity changes with respect to time given the rate of another related quantity.</p>
 
                     <div class="example-box">
@@ -433,7 +436,7 @@
                         <div class="ex-soln"><strong>Solution:</strong> V = (4/3)&pi;r<sup>3</sup>. dV/dt = 4&pi;r<sup>2</sup> &times; dr/dt = 4&pi;(9) &times; 2 = <strong>72&pi; cm<sup>3</sup>/s</strong>.</div>
                     </div>
 
-                    <h3>Increasing/Decreasing Functions</h3>
+                    <h3 id="ls-15">15. Increasing/Decreasing Functions</h3>
                     <p>A function f(x) is <strong>increasing</strong> if f'(x) &gt; 0 and <strong>decreasing</strong> if f'(x) &lt; 0. If f'(x) = 0, the function may have a stationary point.</p>
 
                     <div class="example-box">
@@ -447,7 +450,7 @@
                         <div class="tip-text">To quickly determine increasing/decreasing intervals, factorise f'(x) and check the sign using the number line test. For quadratic f'(x), the sign alternates between roots.</div>
                     </div>
 
-                    <h3>Tangents &amp; Normals</h3>
+                    <h3 id="ls-16">16. Tangents &amp; Normals</h3>
                     <p><strong>Tangent:</strong> Equation at (x<sub>0</sub>, y<sub>0</sub>) is y &minus; y<sub>0</sub> = f'(x<sub>0</sub>)(x &minus; x<sub>0</sub>). The slope of the tangent gives the instantaneous rate of change at that point.</p>
                     <p><strong>Normal:</strong> Equation is y &minus; y<sub>0</sub> = &minus;1/f'(x<sub>0</sub>) &times; (x &minus; x<sub>0</sub>), provided f'(x<sub>0</sub>) &ne; 0. The normal is perpendicular to the tangent (product of slopes = &minus;1).</p>
                     <p><strong>Lengths:</strong> The length of tangent = |y<sub>0</sub> &radic;(1 + (f'(x<sub>0</sub>))<sup>2</sup>)/f'(x<sub>0</sub>)|. The length of normal = |y<sub>0</sub> &radic;(1 + (f'(x<sub>0</sub>))<sup>2</sup>)|. The sub-tangent = |y<sub>0</sub>/f'(x<sub>0</sub>)|. The sub-normal = |y<sub>0</sub> f'(x<sub>0</sub>)|.</p>
@@ -458,7 +461,7 @@
                         <div class="ex-soln"><strong>Solution:</strong> dy/dx = 2x, so slope at (1,1) = 2. Equation: y &minus; 1 = 2(x &minus; 1) &rArr; <strong>y = 2x &minus; 1</strong>.</div>
                     </div>
 
-                    <h3>Mean Value Theorem &amp; Rolle's Theorem</h3>
+                    <h3 id="ls-17">17. Mean Value Theorem &amp; Rolle's Theorem</h3>
                     <p><strong>Rolle's Theorem:</strong> If f is continuous on [a, b] and differentiable on (a, b), and f(a) = f(b), then there exists c &isin; (a, b) such that f'(c) = 0.</p>
                     <p><strong>Lagrange's Mean Value Theorem (LMVT):</strong> If f is continuous on [a, b] and differentiable on (a, b), then there exists c &isin; (a, b) such that f'(c) = [f(b) &minus; f(a)]/(b &minus; a).</p>
 
@@ -473,7 +476,7 @@
                         <div class="tip-text">In NDA exams, Rolle's Theorem is tested by verifying f(a)=f(b) and finding c where f'(c)=0. LMVT is tested by finding c such that f'(c) equals the average rate of change. Both are used to prove inequalities.</div>
                     </div>
 
-                    <h3>Maxima &amp; Minima</h3>
+                    <h3 id="ls-18">18. Maxima &amp; Minima</h3>
                     <p><strong>First Derivative Test:</strong> Find critical points (f'(x) = 0). If f' changes from + to &minus;, it is a local maximum; if &minus; to +, local minimum.</p>
                     <p><strong>Second Derivative Test:</strong> At a critical point, if f''(x) &gt; 0, local minima; if f''(x) &lt; 0, local maxima; if f''(x) = 0, test fails.</p>
 
@@ -500,7 +503,7 @@
                         <div class="tip-text">For NDA objective questions, after finding critical points, instantly check f''(x) sign. If only one critical point exists and it is a maximum, it is the global maximum for the given interval. Similarly for minimum.</div>
                     </div>
 
-                    <h3>Approximations &amp; Differentials</h3>
+                    <h3 id="ls-19">19. Approximations &amp; Differentials</h3>
                     <p>Using differentials: f(x + &Delta;x) &asymp; f(x) + f'(x)&Delta;x. This is useful for approximate calculations when &Delta;x is small. The error in approximation is proportional to (&Delta;x)<sup>2</sup>.</p>
 
                     <p><strong>Absolute Error:</strong> |&Delta;y| &asymp; |f'(x) &Delta;x|. <strong>Relative Error:</strong> |&Delta;y/y| &asymp; |f'(x)/f(x) &Delta;x|. <strong>Percentage Error:</strong> (|&Delta;y/y|) &times; 100%.</p>
@@ -513,7 +516,7 @@
 
                     <h2 id="integration">5. Integration</h2>
 
-                    <h3>Indefinite Integrals</h3>
+                    <h3 id="ls-20">20. Indefinite Integrals</h3>
                     <p>Integration is the inverse process of differentiation. The indefinite integral &int; f(x) dx = F(x) + C, where F'(x) = f(x) and C is the constant of integration. Every differentiation formula gives rise to a corresponding integration formula.</p>
 
                     <table>
@@ -679,7 +682,7 @@
                         <div class="tip-text">For sin<sup>2</sup>x and cos<sup>2</sup>x, use the double-angle identities directly: sin<sup>2</sup>x = (1&minus;cos 2x)/2 and cos<sup>2</sup>x = (1+cos 2x)/2. This is faster than the reduction formula for n=2.</div>
                     </div>
 
-                    <h3>Definite Integrals</h3>
+                    <h3 id="ls-21">21. Definite Integrals</h3>
                     <p>The definite integral &int;<sub>a</sub><sup>b</sup> f(x) dx = F(b) &minus; F(a), where F'(x) = f(x). It represents the signed area under the curve y = f(x) from x = a to x = b.</p>
 
                     <h4>Properties of Definite Integrals</h4>
@@ -746,7 +749,7 @@
 
                     <h2 id="differential-equations">6. Differential Equations</h2>
 
-                    <h3>Order &amp; Degree</h3>
+                    <h3 id="ls-22">22. Order &amp; Degree</h3>
                     <p><strong>Order</strong> is the highest derivative present. <strong>Degree</strong> is the power of the highest derivative after removing radicals and fractions. A differential equation is <strong>linear</strong> if the dependent variable and its derivatives appear in the first degree. If the DE involves products or powers of the dependent variable or its derivatives, it is non-linear.</p>
 
                     <div class="example-box">
@@ -755,7 +758,7 @@
                         <div class="ex-soln"><strong>Solution:</strong> Highest derivative is d<sup>2</sup>y/dx<sup>2</sup> (order 2). Its power is 3 (degree 3). There are no radicals or fractions. So <strong>order = 2, degree = 3</strong>.</div>
                     </div>
 
-                    <h3>Variable Separable</h3>
+                    <h3 id="ls-23">23. Variable Separable</h3>
                     <p>A DE of the form dy/dx = f(x)g(y) can be solved by separating variables: &int; dy/g(y) = &int; f(x) dx.</p>
 
                     <div class="example-box">
@@ -769,7 +772,7 @@
                         <div class="tip-text">In NDA exams, variable separable DEs often come in the form dy/dx = f(x)/g(y). Rearrange to g(y) dy = f(x) dx and integrate directly. Always add the constant of integration on one side.</div>
                     </div>
 
-                    <h3>Homogeneous DE</h3>
+                    <h3 id="ls-24">24. Homogeneous DE</h3>
                     <p>A DE of the form dy/dx = F(y/x) is homogeneous. Substitute y = vx, then dy/dx = v + x(dv/dx) to convert it to a variable separable equation.</p>
 
                     <div class="example-box">
@@ -778,7 +781,7 @@
                         <div class="ex-soln"><strong>Solution:</strong> Rewrite as dy/dx = (x<sup>2</sup> + y<sup>2</sup>)/(2xy). Divide numerator and denominator by x<sup>2</sup>: dy/dx = (1 + (y/x)<sup>2</sup>)/(2(y/x)). Substitute y = vx: v + x(dv/dx) = (1 + v<sup>2</sup>)/(2v). Simplify: x(dv/dx) = (1 + v<sup>2</sup>)/(2v) &minus; v = (1 &minus; v<sup>2</sup>)/(2v). Separate: (2v/(1&minus;v<sup>2</sup>)) dv = dx/x. Integrate: &minus;ln|1&minus;v<sup>2</sup>| = ln|x| + C &rArr; 1/(1&minus;v<sup>2</sup>) = Kx &rArr; <strong>x<sup>2</sup> &minus; y<sup>2</sup> = Cx</strong>.</div>
                     </div>
 
-                    <h3>Linear DE</h3>
+                    <h3 id="ls-25">25. Linear DE</h3>
                     <p>A first-order linear DE is of the form dy/dx + P(x)y = Q(x). The integrating factor (IF) is e<sup>&int; P dx</sup>. The solution is y(IF) = &int; Q(IF) dx + C. Linear DEs appear frequently in NDA exams and can be identified by the dependent variable y and its derivative dy/dx appearing only in the first degree without any product terms.</p>
 
                     <div class="example-box">
@@ -816,7 +819,7 @@
                         <div class="tip-text">In the NDA exam, quickly identify the type of DE: if variables separate easily, it is variable separable; if dy/dx = f(y/x), it is homogeneous; if dy/dx + Py = Q, it is linear. This saves precious time.</div>
                     </div>
 
-                    <h3>Bernoulli's Differential Equation</h3>
+                    <h3 id="ls-26">26. Bernoulli's Differential Equation</h3>
                     <p>A Bernoulli DE has the form dy/dx + P(x)y = Q(x)y<sup>n</sup> where n &ne; 0, 1. To solve, substitute v = y<sup>1&minus;n</sup>. This reduces it to a linear DE in v.</p>
 
                     <div class="example-box">
@@ -825,7 +828,7 @@
                         <div class="ex-soln"><strong>Solution:</strong> Here n = 2. Substitute v = y<sup>1&minus;2</sup> = y<sup>&minus;1</sup>. Then dv/dx = &minus;y<sup>&minus;2</sup> dy/dx. Multiply the original DE by &minus;y<sup>&minus;2</sup>: &minus;y<sup>&minus;2</sup> dy/dx &minus; y<sup>&minus;1</sup> = &minus;x. This gives dv/dx &minus; v = &minus;x. This is linear in v. P = &minus;1, Q = &minus;x. IF = e<sup>&int; &minus;1 dx</sup> = e<sup>&minus;x</sup>. Solution: v e<sup>&minus;x</sup> = &int; &minus;x e<sup>&minus;x</sup> dx = x e<sup>&minus;x</sup> + e<sup>&minus;x</sup> + C. So v = x + 1 + Ce<sup>x</sup>. Substituting back: 1/y = x + 1 + Ce<sup>x</sup>. Hence <strong>y = 1/(x + 1 + Ce<sup>x</sup>)</strong>.</div>
                     </div>
 
-                    <h3>Exact Differential Equations</h3>
+                    <h3 id="ls-27">27. Exact Differential Equations</h3>
                     <p>A DE of the form M(x,y) dx + N(x,y) dy = 0 is exact if &part;M/&part;y = &part;N/&part;x. The solution is &int; M dx + &int; (terms of N not containing x) dy = C.</p>
 
                     <div class="example-box">
@@ -839,7 +842,7 @@
                         <div class="tip-text">To quickly check if a DE is exact, compute &part;M/&part;y and &part;N/&part;x. If equal, it is exact. The solution is simply &int; M dx + &int; (N &minus; &part;/&part;y &int; M dx) dy = C.</div>
                     </div>
 
-                    <h3>Applications of Differential Equations</h3>
+                    <h3 id="ls-28">28. Applications of Differential Equations</h3>
                     <p>Differential equations model real-world phenomena including growth, decay, cooling, and motion. In NDA exams, application problems often involve Newton's Law of Cooling, population growth, and radioactive decay.</p>
 
                     <div class="example-box">

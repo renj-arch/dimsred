@@ -158,6 +158,10 @@ jobs:
         env:
           OLLAMA_MODEL: ${{ inputs.model || 'qwen3.5:9b' }}
           OLLAMA_HOST: http://127.0.0.1:11434
+          # Prefer the hosted GitHub Models free tier (gpt-4o-mini by default)
+          # for lesson prose; falls back to the local model on any error.
+          GH_MODELS: '1'
+          GH_MODELS_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           EXPAND_PER_RUN: ${{ github.event.inputs.per_run || '6' }}
           EXPAND_DEADLINE_MIN: '90'
           EXPAND_DEEPEN: '1'
@@ -206,6 +210,9 @@ jobs:
           COURSE_ONLY_KEYS="$KEYS" COURSE_EXAMS="$test_exams" node scripts/gen-course.js
           node -e "const t=require('./scripts/.course-touched.json'); require('fs').writeFileSync('/tmp/course-files.txt', t.files.join('\n') + '\n')"
           node scripts/normalize-course-pages.js $(cat /tmp/course-files.txt)
+          # deepen-page passes can stack byte-identical section blocks; drop
+          # exact duplicates (heading + body) before the loss-guard measures.
+          node scripts/dedupe-lesson-sections.js $(cat /tmp/course-files.txt)
           # Bulletproof guard: if regenerating a page would drop a large amount
           # of content (hand-built sections that live only in the committed
           # file), restore that page instead of publishing the loss.
